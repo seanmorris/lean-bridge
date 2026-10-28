@@ -1,0 +1,1084 @@
+{
+  "browserConsumerSha256": "59cdd3a722a01a3b05d43ffb6a5ab73cd6a2d7f78579fe11b192a5e2edca2ac8",
+  "browserPackageSha256": "7cf2592af8ed2454d8bd2bd8ffc8331e1869b45c856bc00b747acc68a266812f",
+  "browsers": [
+    {
+      "browser": {
+        "deployments": [
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 8731,
+                "path": "assets/index-CBgqhMtX.js",
+                "sha256": "d67695a93e8de3807a442e05b345f2c59c7718452641af7c4005603fbf12c3ca"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 2199,
+                "path": "assets/preload-helper-CZj_vqJa.js",
+                "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+              },
+              {
+                "bytes": 35664,
+                "path": "assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32"
+              },
+              {
+                "bytes": 15920,
+                "path": "assets/reviewedcallbacks-BRbEoDFC.js",
+                "sha256": "97e0419e0a71a0dcbf09e87ed59a15c85ced4b06a682554227a02956b904b895"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 3580584,
+                "path": "assets/runtime-BnQ-1zfa.js",
+                "sha256": "e3597bf59d8c6b515ed070c7eabe9b24c2a00f28139aef2b5e048f2a8005f509"
+              },
+              {
+                "bytes": 74,
+                "path": "assets/runtime-DMvCr_P1.js",
+                "sha256": "06282e1e3df7993071cbd10df4babbade5f2b540e3f6dc7ed3250ddfa345c276"
+              },
+              {
+                "bytes": 396,
+                "path": "index.html",
+                "sha256": "3ebf097fe5a3d7983bffb6c8b6a7fc02799703ff0350dcc8fdf4d42c181ff1fe"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/reviewedcallbacks/index.mjs",
+              "node_modules/reviewedcallbacks/internal/descriptor.mjs",
+              "node_modules/reviewedcallbacks/internal/runtime.mjs",
+              "node_modules/reviewedcallbacks/internal/validators.mjs"
+            ],
+            "sha256": "2d54eca1641b3eb46eb2db2c8c0acb48b7cf5b186b36f40cf7ee5ced8bd3076c",
+            "variant": "production",
+            "viteVersion": "8.2.1"
+          }
+        ],
+        "executions": [
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "rerun": true
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "reviewedcallbacks",
+              "profile": "browser-javascript",
+              "realm": "window",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "rerun": true
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "reviewedcallbacks",
+              "profile": "browser-javascript",
+              "realm": "window",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "rerun": true
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "reviewedcallbacks",
+              "profile": "browser-javascript",
+              "realm": "window",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          }
+        ],
+        "externalNetworkBlocked": true,
+        "framework": [],
+        "installedAssets": [
+          {
+            "bytes": 35664,
+            "path": "node_modules/reviewedcallbacks/internal/wasm/reviewedcallbacks-99d469b3ee044240.so.wasm",
+            "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32"
+          },
+          {
+            "bytes": 6488025,
+            "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          }
+        ],
+        "installedSourcesRemoved": true,
+        "requestedEngines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ]
+      },
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "reviewedcallbacks",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "checks": 21,
+          "rejections": 20
+        },
+        "schemaVersion": 1
+      },
+      "profile": "browser-javascript",
+      "review": "R2"
+    },
+    {
+      "browser": {
+        "deployments": [
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 495049,
+                "path": "assets/index-DofPm87v.js",
+                "sha256": "172a1fa9b7e1372f29995cfb2e5c47ab377aaae04efe9a1392b83f7dfd12920b"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 2199,
+                "path": "assets/preload-helper-CZj_vqJa.js",
+                "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+              },
+              {
+                "bytes": 35664,
+                "path": "assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32"
+              },
+              {
+                "bytes": 15920,
+                "path": "assets/reviewedcallbacks-BRbEoDFC.js",
+                "sha256": "97e0419e0a71a0dcbf09e87ed59a15c85ced4b06a682554227a02956b904b895"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 3580584,
+                "path": "assets/runtime-BnQ-1zfa.js",
+                "sha256": "e3597bf59d8c6b515ed070c7eabe9b24c2a00f28139aef2b5e048f2a8005f509"
+              },
+              {
+                "bytes": 74,
+                "path": "assets/runtime-DMvCr_P1.js",
+                "sha256": "06282e1e3df7993071cbd10df4babbade5f2b540e3f6dc7ed3250ddfa345c276"
+              },
+              {
+                "bytes": 493,
+                "path": "index.html",
+                "sha256": "5b630e98c14e4484fff8316957ed1a9f0d0e223a5b90574402330c543c5f4296"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/react-dom/cjs/react-dom-client.production.js",
+              "node_modules/react-dom/cjs/react-dom.production.js",
+              "node_modules/react-dom/client.js",
+              "node_modules/react-dom/index.js",
+              "node_modules/react/cjs/react.production.js",
+              "node_modules/react/index.js",
+              "node_modules/reviewedcallbacks/index.mjs",
+              "node_modules/reviewedcallbacks/internal/descriptor.mjs",
+              "node_modules/reviewedcallbacks/internal/runtime.mjs",
+              "node_modules/reviewedcallbacks/internal/validators.mjs",
+              "node_modules/scheduler/cjs/scheduler.production.js",
+              "node_modules/scheduler/index.js"
+            ],
+            "sha256": "54d63681e2f00a2ae3a996763ab986b9787f10786e45dd82fba2173df13fdbf2",
+            "variant": "production",
+            "viteVersion": "8.2.1"
+          },
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 882699,
+                "path": "assets/index-SAwuVE9D.js",
+                "sha256": "889864e2621954815f2a3f69edef6baa92d98347d2e8d06b6dd2fcf1f51fba37"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 2199,
+                "path": "assets/preload-helper-CZj_vqJa.js",
+                "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+              },
+              {
+                "bytes": 35664,
+                "path": "assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32"
+              },
+              {
+                "bytes": 15920,
+                "path": "assets/reviewedcallbacks-BRbEoDFC.js",
+                "sha256": "97e0419e0a71a0dcbf09e87ed59a15c85ced4b06a682554227a02956b904b895"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 3580584,
+                "path": "assets/runtime-BnQ-1zfa.js",
+                "sha256": "e3597bf59d8c6b515ed070c7eabe9b24c2a00f28139aef2b5e048f2a8005f509"
+              },
+              {
+                "bytes": 74,
+                "path": "assets/runtime-DMvCr_P1.js",
+                "sha256": "06282e1e3df7993071cbd10df4babbade5f2b540e3f6dc7ed3250ddfa345c276"
+              },
+              {
+                "bytes": 493,
+                "path": "index.html",
+                "sha256": "d8578f5e931ccdb34fb3d1849fe32738552358a030b9d294c3996d1ef7a5ec0e"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/react-dom/cjs/react-dom-client.development.js",
+              "node_modules/react-dom/cjs/react-dom.development.js",
+              "node_modules/react-dom/client.js",
+              "node_modules/react-dom/index.js",
+              "node_modules/react/cjs/react.development.js",
+              "node_modules/react/index.js",
+              "node_modules/reviewedcallbacks/index.mjs",
+              "node_modules/reviewedcallbacks/internal/descriptor.mjs",
+              "node_modules/reviewedcallbacks/internal/runtime.mjs",
+              "node_modules/reviewedcallbacks/internal/validators.mjs",
+              "node_modules/scheduler/cjs/scheduler.development.js",
+              "node_modules/scheduler/index.js"
+            ],
+            "sha256": "18089dc59d697a15bc2269c165d876017a623a226868755e247bbca0cb2c91f2",
+            "variant": "strict",
+            "viteVersion": "8.2.1"
+          }
+        ],
+        "executions": [
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 2,
+              "commits": 3,
+              "effects": 3,
+              "ignored": 0
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "reviewedcallbacks",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 5,
+              "commits": 3,
+              "effects": 6,
+              "ignored": 3
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "reviewedcallbacks",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "strict"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 2,
+              "commits": 3,
+              "effects": 3,
+              "ignored": 0
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "reviewedcallbacks",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 5,
+              "commits": 3,
+              "effects": 6,
+              "ignored": 3
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "reviewedcallbacks",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "strict"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 2,
+              "commits": 3,
+              "effects": 3,
+              "ignored": 0
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "reviewedcallbacks",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "cleanups": 5,
+              "commits": 3,
+              "effects": 6,
+              "ignored": 3
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "reviewedcallbacks",
+              "profile": "browser-react",
+              "realm": "window",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "pendingUnmount": true,
+            "variant": "strict"
+          }
+        ],
+        "externalNetworkBlocked": true,
+        "framework": [
+          {
+            "archive": "framework/react-19.2.8.tgz",
+            "name": "react",
+            "sha256": "98194e5c2f9003355b8d0f8fbff5ab90970aeaa2fffc98ebeadcfba4ca201a73",
+            "version": "19.2.8"
+          },
+          {
+            "archive": "framework/react-dom-19.2.8.tgz",
+            "name": "react-dom",
+            "sha256": "9ed0cce3ae338576db9a90ad85eb24e5b40f6079589b10b9fce9dbaed53104c4",
+            "version": "19.2.8"
+          },
+          {
+            "archive": "framework/scheduler-0.27.0.tgz",
+            "name": "scheduler",
+            "sha256": "eee584b9bad43f93d70f3e02dd4e564237ad08230b00e4539e1833fc7f6ab0c9",
+            "version": "0.27.0"
+          }
+        ],
+        "installedAssets": [
+          {
+            "bytes": 35664,
+            "path": "node_modules/reviewedcallbacks/internal/wasm/reviewedcallbacks-99d469b3ee044240.so.wasm",
+            "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32"
+          },
+          {
+            "bytes": 6488025,
+            "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          }
+        ],
+        "installedSourcesRemoved": true,
+        "requestedEngines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ]
+      },
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "reviewedcallbacks",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "checks": 21,
+          "rejections": 20
+        },
+        "schemaVersion": 1
+      },
+      "profile": "browser-react",
+      "review": "R2"
+    },
+    {
+      "browser": {
+        "deployments": [
+          {
+            "files": [
+              {
+                "bytes": 285,
+                "path": "assets/__vite-browser-external-D513FCGW.js",
+                "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+              },
+              {
+                "bytes": 2512,
+                "path": "assets/index-DCtMD5zg.js",
+                "sha256": "21631d07cdebd4f3cc3dd12bc340edff453100a6ab9833ffba41f5407feaac1e"
+              },
+              {
+                "bytes": 6488025,
+                "path": "assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+              },
+              {
+                "bytes": 35664,
+                "path": "assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32"
+              },
+              {
+                "bytes": 16016,
+                "path": "assets/reviewedcallbacks-BSK6Cqtb.js",
+                "sha256": "55c0889552a6118256cb8e5f4b92d06ef46b0c90e2d4886d614ee53705b79e65"
+              },
+              {
+                "bytes": 1180,
+                "path": "assets/rolldown-runtime-BPOCksWG.js",
+                "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+              },
+              {
+                "bytes": 74,
+                "path": "assets/runtime-CVj3xIF2.js",
+                "sha256": "29968e575a6c7790a92d23712b639b553eff5ef0375cb368131230890f9106d6"
+              },
+              {
+                "bytes": 3580529,
+                "path": "assets/runtime-kLHaKSPQ.js",
+                "sha256": "43d227a2af6df440b7aa97465421919d96db77367dcb849157248dc5072310c8"
+              },
+              {
+                "bytes": 6929,
+                "path": "assets/worker-C8fZ9Pz0.js",
+                "sha256": "70ee5b94ceaa454a25b4ba21d91a0c238ee65f098c9799ed4ef1d20dca3acbe2"
+              },
+              {
+                "bytes": 301,
+                "path": "index.html",
+                "sha256": "787d246a1168d3c33b12f7e89179cdbeadf597c5e1505fad470a1ce0ed399ef7"
+              }
+            ],
+            "modulePaths": [
+              "node_modules/@lean-bridge/runtime/index.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+              "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+              "node_modules/@lean-bridge/runtime/internal/main.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+              "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+              "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+              "node_modules/reviewedcallbacks/index.mjs",
+              "node_modules/reviewedcallbacks/internal/descriptor.mjs",
+              "node_modules/reviewedcallbacks/internal/runtime.mjs",
+              "node_modules/reviewedcallbacks/internal/validators.mjs"
+            ],
+            "sha256": "88f37c99e8dc8d4810ca684479a2d95aac1dd05cb4ce696b9a53baa87a8f1e61",
+            "variant": "production",
+            "viteVersion": "8.2.1"
+          }
+        ],
+        "executions": [
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              },
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "chromium",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "created": 2,
+              "live": 0,
+              "terminated": 2
+            },
+            "observation": {
+              "hostVersion": "151.0.7922.34",
+              "module": "reviewedcallbacks",
+              "profile": "browser-worker",
+              "realm": "dedicated-worker",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              },
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "firefox",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "created": 2,
+              "live": 0,
+              "terminated": 2
+            },
+            "observation": {
+              "hostVersion": "153.0",
+              "module": "reviewedcallbacks",
+              "profile": "browser-worker",
+              "realm": "dedicated-worker",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          },
+          {
+            "assets": [
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              },
+              {
+                "bytes": 6488025,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                "status": 200
+              },
+              {
+                "bytes": 35664,
+                "mime": "application/wasm",
+                "path": "/corpus/nested/assets/reviewedcallbacks-99d469b3ee044240.so-DFvQuUdp.wasm",
+                "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+                "status": 200
+              }
+            ],
+            "engine": "webkit",
+            "failedAssetRecovery": true,
+            "lifecycle": {
+              "created": 2,
+              "live": 0,
+              "terminated": 2
+            },
+            "observation": {
+              "hostVersion": "26.5",
+              "module": "reviewedcallbacks",
+              "profile": "browser-worker",
+              "realm": "dedicated-worker",
+              "results": {
+                "checks": 21,
+                "rejections": 20
+              },
+              "schemaVersion": 1
+            },
+            "variant": "production"
+          }
+        ],
+        "externalNetworkBlocked": true,
+        "framework": [],
+        "installedAssets": [
+          {
+            "bytes": 35664,
+            "path": "node_modules/reviewedcallbacks/internal/wasm/reviewedcallbacks-99d469b3ee044240.so.wasm",
+            "sha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32"
+          },
+          {
+            "bytes": 6488025,
+            "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          }
+        ],
+        "installedSourcesRemoved": true,
+        "requestedEngines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ]
+      },
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "reviewedcallbacks",
+        "profile": "browser-worker",
+        "realm": "dedicated-worker",
+        "results": {
+          "checks": 21,
+          "rejections": 20
+        },
+        "schemaVersion": 1
+      },
+      "profile": "browser-worker",
+      "review": "R2"
+    }
+  ],
+  "dispatch": "not measured",
+  "observed": {
+    "checks": 21,
+    "rejections": 20
+  },
+  "path": "reviewed-source",
+  "profile": "npm",
+  "receipt": {
+    "bindingIrSha256": "50d38416c124a1312b5bf25d488ecdab4783554f70c281aeea214ec85bd12ffc",
+    "component": {
+      "id": "reviewedcallbacks@1.0.0",
+      "name": "reviewedcallbacks",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "7f1aa024df72afe133c1eeec147beb8e408b454fd48669c717326f11656aae32",
+    "componentBundleSha256": "ea1f79ad0d8ce547ea1739c4e13205e78a44ede2786d691a3de22d887f990f6e",
+    "componentIdentitySha256": "84fcdfc2798469712cc6e3d9419e3f9ee9a3edb2d91dcd53d4b73973a3c697c6",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "reviewedcallbacks-1.0.0.tgz",
+      "package": "reviewedcallbacks@1.0.0",
+      "sha256": "d42ab5cf3d66402b8030e6907d83a4c585e4b69a27beeeb6b77368f41c83666c"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "15f7e83a59133a9a2ea425cffe488e2615231bfaad4f9abcdfc2f0db4021382a",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1",
+      "sha256": "2d0542b611e1eb34730711e0feb87ab26e3e9cea6f364acd6fc648d0d5976d6a"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "01a79577b550ff5b74fdbb5c9dbf81520ec155350c8863c748f9bc2b8fbf1b1c"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "receiptSha256": "a76bbd85478e199df6c8b9cc91fdbb472c7ab893ee07cda226b6ad664c008786",
+  "reproducible": true,
+  "review": "R2",
+  "reviewedBindingIrSha256": "2f0956756509c38c2ff12de38e4bb550459343321c91a0d9980d7ddbab409c8f",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "typescript": {
+    "skipLibCheck": false,
+    "strict": true
+  }
+}

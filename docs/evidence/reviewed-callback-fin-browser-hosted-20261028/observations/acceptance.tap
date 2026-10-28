@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: an independently reviewed npm package installs R1 callback bounds in every requested consumer
+ok 1 - an independently reviewed npm package installs R1 callback bounds in every requested consumer
+  ---
+  duration_ms: 126445.404516
+  type: 'test'
+  ...
+# Subtest: an independently reviewed npm package installs R2 with the Wasm host-reply bound
+ok 2 - an independently reviewed npm package installs R2 with the Wasm host-reply bound
+  ---
+  duration_ms: 125552.659159
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 252643.739665

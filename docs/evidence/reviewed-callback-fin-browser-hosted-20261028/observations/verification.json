@@ -1,0 +1,39 @@
+{
+  "producerCommit": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+  "reports": [
+    {
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "profiles": [
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "receiptSha256": "c2b8d812bcc90ed46486e041ae736f18d8f9190e2f4fc9122571a6a018ed3f84",
+      "review": "R1"
+    },
+    {
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "profiles": [
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "receiptSha256": "a76bbd85478e199df6c8b9cc91fdbb472c7ab893ee07cda226b6ad664c008786",
+      "review": "R2"
+    }
+  ],
+  "runtime": {
+    "arch": "x64",
+    "node": "v22.23.3",
+    "platform": "linux"
+  },
+  "schemaVersion": 1
+}

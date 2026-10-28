@@ -1,0 +1,408 @@
+{
+  "accepted": {
+    "producerCommit": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+    "reports": [
+      {
+        "engines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ],
+        "profiles": [
+          "browser-javascript",
+          "browser-react",
+          "browser-worker"
+        ],
+        "receiptSha256": "c2b8d812bcc90ed46486e041ae736f18d8f9190e2f4fc9122571a6a018ed3f84",
+        "review": "R1"
+      },
+      {
+        "engines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ],
+        "profiles": [
+          "browser-javascript",
+          "browser-react",
+          "browser-worker"
+        ],
+        "receiptSha256": "a76bbd85478e199df6c8b9cc91fdbb472c7ab893ee07cda226b6ad664c008786",
+        "review": "R2"
+      }
+    ],
+    "runtime": {
+      "arch": "x64",
+      "node": "v22.23.3",
+      "platform": "linux"
+    },
+    "schemaVersion": 1
+  },
+  "archiveCommit": "25fb5e453053abf8d8b853f45eb77556487a37c4",
+  "checkerCommit": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+  "engines": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "files": [
+    {
+      "bytes": 768,
+      "path": "hosted/api/artifact.json",
+      "sha256": "b58c351835577a92ea8e0d46979628842513c716264b06a1b35912c7df51b468"
+    },
+    {
+      "bytes": 4233,
+      "path": "hosted/api/job.json",
+      "sha256": "4afec60aef8e360289b19edc9329f25cca0a14a53bc890582c25a8f6f217261b"
+    },
+    {
+      "bytes": 12505,
+      "path": "hosted/api/run.json",
+      "sha256": "e52cf559a11d8c903c3f608c9684657279b9dff57a0350e27e6c020bdd4dd8af"
+    },
+    {
+      "bytes": 3384272,
+      "path": "hosted/artifact.zip.parts/0000.part",
+      "sha256": "b8611c0f598e11ca7a6ec687ed78bdaafd9f66ff27bce45abc295c9c4c5f694e"
+    },
+    {
+      "bytes": 29721,
+      "path": "hosted/logs/engine.log",
+      "sha256": "dcac4fee2fa3dd4ac8ee9acf3889884296e66d2cf3ac7a58ba324555b9a4c824"
+    },
+    {
+      "bytes": 98456,
+      "path": "hosted/logs/runtime.log",
+      "sha256": "b607d6d0720bed470b49e9b07d1640835766a9e88d43edaf3888d41428d7cf40"
+    },
+    {
+      "bytes": 620,
+      "path": "observations/acceptance.tap",
+      "sha256": "999a74e9bb75896263af47aa330729efc5d62f89d77be06222a9e234894ee34e"
+    },
+    {
+      "bytes": 46462,
+      "path": "observations/r1.json",
+      "sha256": "19f4baf52570ad6f0a6c7abb65974da974cb4ad41f3c722e2ccc872408b1d0d8"
+    },
+    {
+      "bytes": 46462,
+      "path": "observations/r2.json",
+      "sha256": "4f79adb398e35696513d162bb580e3a466352e0587135cbd6d5c056aa20f7812"
+    },
+    {
+      "bytes": 52,
+      "path": "observations/runtime-after.json",
+      "sha256": "b9694d7baa0a3ee99fd1f88e66e2887fdb890393c013da609627aa1a3796ac12"
+    },
+    {
+      "bytes": 52,
+      "path": "observations/runtime-before.json",
+      "sha256": "b9694d7baa0a3ee99fd1f88e66e2887fdb890393c013da609627aa1a3796ac12"
+    },
+    {
+      "bytes": 831,
+      "path": "observations/verification.json",
+      "sha256": "c6561fcd1496b1e3557f247387f004be07062d9312f1d504358e8adf31fa203f"
+    },
+    {
+      "bytes": 8326,
+      "path": "sources/archiver/scripts/archive-reviewed-callback-fin-browser-evidence.mjs",
+      "sha256": "3dd4155795701b3e3ba0e8d1e563acc651250b7e995521603189e1ce654c800a"
+    },
+    {
+      "bytes": 14796,
+      "path": "sources/archiver/src/build/native-artifacts.mjs",
+      "sha256": "097b666c9ff12e19f1c21cd5f9127194960ec49d6574a311b412d8d210944675"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/archiver/src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 9540,
+      "path": "sources/archiver/tests/helpers/checked-record-value-index-hosted-archive.mjs",
+      "sha256": "8b1a43464cf8da94faf262ff3ad6b7f59d81794e2382aab6a2bcae92ef317e91"
+    },
+    {
+      "bytes": 7199,
+      "path": "sources/archiver/tests/helpers/reviewed-callback-fin-browser-ci.mjs",
+      "sha256": "775df99b07fa774569611cb73b08d70fb71976b69b76443b1ad95de004bb0bbc"
+    },
+    {
+      "bytes": 4202,
+      "path": "sources/archiver/tests/helpers/reviewed-callback-fin-browser-hosted-archive.mjs",
+      "sha256": "eec7a6ad87eb2248f22176354e378d7be7c1eb1b8988cc566059e849a314ab03"
+    },
+    {
+      "bytes": 735,
+      "path": "sources/checker/scripts/check-reviewed-callback-fin-browser-ci.mjs",
+      "sha256": "8c68d88f188cb09870715421199a427d9ccdcb55dffe3201f691aeb08526e9c2"
+    },
+    {
+      "bytes": 9938,
+      "path": "sources/checker/src/binding-ir/canonical.mjs",
+      "sha256": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20"
+    },
+    {
+      "bytes": 3332,
+      "path": "sources/checker/src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 7199,
+      "path": "sources/checker/tests/helpers/reviewed-callback-fin-browser-ci.mjs",
+      "sha256": "775df99b07fa774569611cb73b08d70fb71976b69b76443b1ad95de004bb0bbc"
+    },
+    {
+      "bytes": 7859,
+      "path": "sources/checker/tests/helpers/reviewed-callback-fin-consumer.mjs",
+      "sha256": "81b1e8700e7673400a69bcdfe66ed4e201321c628c6f971fc74ff63f0835d1f0"
+    },
+    {
+      "bytes": 7122,
+      "path": "sources/checker/tests/helpers/reviewed-callback-fin-fixture.mjs",
+      "sha256": "29cee4a01cd4d7fa9abf8a4d2ffa3d18507aa368b6811ff1c72029d68822b781"
+    },
+    {
+      "bytes": 4014,
+      "path": "sources/producer/.github/workflows/callback-checked-record-browser.yml",
+      "sha256": "2d2629d5b73d26a733aec454c4bbd934e51a28f9a0657b0e10d6f4b6434f4905"
+    },
+    {
+      "bytes": 2081,
+      "path": "sources/producer/scripts/run-reviewed-callback-fin-browser-ci.sh",
+      "sha256": "1a3c271f32e868bfec7f39b4ec687c0b319b8b1095a638476e2da2fa21187620"
+    },
+    {
+      "bytes": 7199,
+      "path": "sources/producer/tests/helpers/reviewed-callback-fin-browser-ci.mjs",
+      "sha256": "775df99b07fa774569611cb73b08d70fb71976b69b76443b1ad95de004bb0bbc"
+    },
+    {
+      "bytes": 7859,
+      "path": "sources/producer/tests/helpers/reviewed-callback-fin-consumer.mjs",
+      "sha256": "81b1e8700e7673400a69bcdfe66ed4e201321c628c6f971fc74ff63f0835d1f0"
+    },
+    {
+      "bytes": 7122,
+      "path": "sources/producer/tests/helpers/reviewed-callback-fin-fixture.mjs",
+      "sha256": "29cee4a01cd4d7fa9abf8a4d2ffa3d18507aa368b6811ff1c72029d68822b781"
+    },
+    {
+      "bytes": 7528,
+      "path": "sources/producer/tests/helpers/reviewed-callback-fin-guards.mjs",
+      "sha256": "d53453b4bff2a75ea9eb2de1a5636c64d550e59072eda5da79fffd82553f24d9"
+    },
+    {
+      "bytes": 29074,
+      "path": "sources/producer/tests/reviewed-callback-fin.test.mjs",
+      "sha256": "f751cd2a2273f1d394e4692c895372957e2605deec45b164fb9468985947b31b"
+    }
+  ],
+  "hostedRun": {
+    "apiRecords": {
+      "artifact": {
+        "bytes": 768,
+        "sha256": "b58c351835577a92ea8e0d46979628842513c716264b06a1b35912c7df51b468"
+      },
+      "job": {
+        "bytes": 4233,
+        "sha256": "4afec60aef8e360289b19edc9329f25cca0a14a53bc890582c25a8f6f217261b"
+      },
+      "run": {
+        "bytes": 12505,
+        "sha256": "e52cf559a11d8c903c3f608c9684657279b9dff57a0350e27e6c020bdd4dd8af"
+      }
+    },
+    "artifact": {
+      "apiDigest": "sha256:b8611c0f598e11ca7a6ec687ed78bdaafd9f66ff27bce45abc295c9c4c5f694e",
+      "bytes": 3384272,
+      "createdAt": "2026-10-28T03:07:09Z",
+      "expiresAt": "2026-11-27T03:07:08Z",
+      "id": 12789016644,
+      "members": [
+        "callback-checked-record-browser-ci/acceptance.tap",
+        "callback-checked-record-browser-ci/records/ordinary/browser-javascript.json",
+        "callback-checked-record-browser-ci/records/ordinary/browser-react.json",
+        "callback-checked-record-browser-ci/records/ordinary/browser-worker.json",
+        "callback-checked-record-browser-ci/records/ordinary/handoff/callbackcheckedrecords-1.0.0.tgz",
+        "callback-checked-record-browser-ci/records/ordinary/handoff/component-package-receipt.json",
+        "callback-checked-record-browser-ci/records/ordinary/handoff/lean-bridge-runtime-0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1.tgz",
+        "callback-checked-record-browser-ci/records/ordinary/handoff/verify-component-package-receipt.mjs",
+        "callback-checked-record-browser-ci/records/report.json",
+        "callback-checked-record-browser-ci/records/reviewed/browser-react.json",
+        "callback-checked-record-browser-ci/records/reviewed/browser-javascript.json",
+        "callback-checked-record-browser-ci/records/reviewed/browser-worker.json",
+        "callback-checked-record-browser-ci/records/reviewed/handoff/callbackcheckedrecords-1.0.0.tgz",
+        "callback-checked-record-browser-ci/records/reviewed/handoff/component-package-receipt.json",
+        "callback-checked-record-browser-ci/records/reviewed/handoff/verify-component-package-receipt.mjs",
+        "callback-checked-record-browser-ci/records/reviewed/handoff/lean-bridge-runtime-0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1.tgz",
+        "callback-checked-record-browser-ci/records/start.json",
+        "callback-checked-record-browser-ci/runtime-after.json",
+        "callback-checked-record-browser-ci/runtime-before.json",
+        "reviewed-callback-fin-browser-ci/acceptance.tap",
+        "callback-checked-record-browser-ci/verification.json",
+        "reviewed-callback-fin-browser-ci/r1.json",
+        "reviewed-callback-fin-browser-ci/r2.json",
+        "reviewed-callback-fin-browser-ci/runtime-after.json",
+        "reviewed-callback-fin-browser-ci/runtime-before.json",
+        "reviewed-callback-fin-browser-ci/verification.json",
+        "callback-checked-record-browser-engine.log",
+        "callback-checked-record-browser-runtime.log"
+      ],
+      "name": "callback-checked-record-browser-4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "parts": [
+        {
+          "bytes": 3384272,
+          "offset": 0,
+          "path": "hosted/artifact.zip.parts/0000.part",
+          "sha256": "b8611c0f598e11ca7a6ec687ed78bdaafd9f66ff27bce45abc295c9c4c5f694e"
+        }
+      ],
+      "sha256": "b8611c0f598e11ca7a6ec687ed78bdaafd9f66ff27bce45abc295c9c4c5f694e"
+    },
+    "createdAt": "2026-10-28T02:27:11Z",
+    "event": "workflow_dispatch",
+    "job": {
+      "completedAt": "2026-10-28T03:07:13Z",
+      "id": 122594771857,
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "name": "Callback checked records in Node and three browsers",
+      "runnerGroup": "GitHub Actions",
+      "runnerName": "GitHub Actions 1000069048",
+      "startedAt": "2026-10-28T02:27:18Z"
+    },
+    "repository": "seanmorris/lean-bridge",
+    "runAttempt": 1,
+    "runId": 40621011838,
+    "updatedAt": "2026-10-28T03:07:14Z",
+    "url": "https://github.com/seanmorris/lean-bridge/actions/runs/40621011838",
+    "workflow": ".github/workflows/callback-checked-record-browser.yml"
+  },
+  "kind": "reviewed-callback-fin-browser-installed-v1",
+  "limitations": [
+    "This evidence covers independently reviewed R1 and R2 callback-Fin packages in Chromium, Firefox and WebKit pages, React production and StrictMode lifecycles, and dedicated workers.",
+    "The Node harness records the runtime identity; strict TypeScript validates declarations but is not a separate runtime execution.",
+    "The original GitHub artifact ZIP, API identities, workflow logs, reports, TAP, checker output and exact selected source snapshots are retained.",
+    "This lane establishes reviewed browser callback parameter/result cells only. Ordinary browser callbacks and copied fields retain their own evidence.",
+    "External browser, Node, compiler, Nix and operating-system distributions remain trusted inputs represented by recorded identities rather than copied toolchains."
+  ],
+  "producerCommit": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+  "profiles": [
+    "browser-javascript",
+    "browser-react",
+    "browser-worker"
+  ],
+  "routes": [
+    "R1",
+    "R2"
+  ],
+  "runtime": {
+    "arch": "x64",
+    "node": "v22.23.3",
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "selectedSources": [
+    {
+      "path": ".github/workflows/callback-checked-record-browser.yml",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "producer"
+    },
+    {
+      "path": "scripts/run-reviewed-callback-fin-browser-ci.sh",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "producer"
+    },
+    {
+      "path": "tests/reviewed-callback-fin.test.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "producer"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-browser-ci.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "producer"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-consumer.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "producer"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-fixture.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "producer"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-guards.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "producer"
+    },
+    {
+      "path": "scripts/check-reviewed-callback-fin-browser-ci.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "checker"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-browser-ci.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "checker"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-consumer.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "checker"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-fixture.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "checker"
+    },
+    {
+      "path": "src/binding-ir/canonical.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "checker"
+    },
+    {
+      "path": "src/capsule/node.mjs",
+      "revision": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+      "role": "checker"
+    },
+    {
+      "path": "scripts/archive-reviewed-callback-fin-browser-evidence.mjs",
+      "revision": "25fb5e453053abf8d8b853f45eb77556487a37c4",
+      "role": "archiver"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-browser-hosted-archive.mjs",
+      "revision": "25fb5e453053abf8d8b853f45eb77556487a37c4",
+      "role": "archiver"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-hosted-archive.mjs",
+      "revision": "25fb5e453053abf8d8b853f45eb77556487a37c4",
+      "role": "archiver"
+    },
+    {
+      "path": "tests/helpers/reviewed-callback-fin-browser-ci.mjs",
+      "revision": "25fb5e453053abf8d8b853f45eb77556487a37c4",
+      "role": "archiver"
+    },
+    {
+      "path": "src/build/native-artifacts.mjs",
+      "revision": "25fb5e453053abf8d8b853f45eb77556487a37c4",
+      "role": "archiver"
+    },
+    {
+      "path": "src/capsule/node.mjs",
+      "revision": "25fb5e453053abf8d8b853f45eb77556487a37c4",
+      "role": "archiver"
+    }
+  ]
+}
