@@ -802,11 +802,21 @@ test("consumer CI history preserves every consumer and pinned build path", async
   assert.equal(packageDocument.scripts["test:type-corpus:python"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=python node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:reviewed"], "LEAN_BRIDGE_REVIEWED_CORPUS_TEST=1 node --test tests/type-corpus-reviewed.test.mjs");
   const reviewedJob = workflow.split("  reviewed-ir-admission:\n")[1].split("  nix-cache:\n")[0];
+  assert.match(reviewedJob, /^ {4}timeout-minutes: 60$/m);
+  assert.doesNotMatch(reviewedJob, /sparse-checkout/u);
+  assert.match(reviewedJob, /intentionally re-hashes the complete retained type-surface/);
   assert.match(reviewedJob, /bootstrap-toolchains\.sh --lean-only/);
   assert.match(reviewedJob, /npm run test:type-corpus:reviewed/);
   assert.doesNotMatch(reviewedJob, /continue-on-error/);
   assert.match(reviewedJob, /name: type-corpus-reviewed-ir-\$\{\{ github\.sha \}\}/);
   assert.match(reviewedJob, /path: build\/type-corpus\/reviewed-ir\.json\n\s*if-no-files-found: error/);
+  const phpWasmObservations = workflow.split("  php-wasm-observations:\n")[1].split("  php-multi-profile:\n")[0];
+  assert.match(phpWasmObservations, /fetch-depth: 1\n {10}persist-credentials: false\n {10}# The aggregator executes only this reporter and its support contract\.\n {10}sparse-checkout: \|\n {12}\/scripts\/consumer-ci\.mjs\n {12}\/src\/adoption\/consumer-support\.mjs\n {12}\/docs\/consumer-support\.v1\.json\n {10}sparse-checkout-cone-mode: false/u);
+  assert.doesNotMatch(phpWasmObservations, /^\s+filter:/mu);
+  for(const required of ["scripts/consumer-ci.mjs", "src/adoption/consumer-support.mjs", "docs/consumer-support.v1.json"])
+    assert.ok(phpWasmObservations.includes(`/${required}`), required);
+  for(const forbidden of ["docs/evidence", "package.json", "package-lock.json", "tests/"])
+    assert.ok(!phpWasmObservations.includes(`/${forbidden}`), forbidden);
   assert.match(workflow, /needs:[\s\S]*- reviewed-ir-admission/);
   for(const profiles of ["c,cpp", "dotnet", "java,kotlin", "php-native", "python", "ruby", "rust", "wit-wasi"])
   {

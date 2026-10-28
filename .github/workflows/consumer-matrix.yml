@@ -20,7 +20,9 @@ jobs:
   reviewed-ir-admission:
     name: Reviewed IR admission corpus
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    # This gate intentionally re-hashes the complete retained type-surface
+    # evidence corpus instead of trusting an upstream receipt.
+    timeout-minutes: 60
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -2837,7 +2839,14 @@ jobs:
       - name: Check out the support reporter
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          # The aggregator executes only this reporter and its support contract.
+          sparse-checkout: |
+            /scripts/consumer-ci.mjs
+            /src/adoption/consumer-support.mjs
+            /docs/consumer-support.v1.json
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
