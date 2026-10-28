@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
 import { generateOwnedAggregateCarriers } from "../../src/build/owned-aggregate-carriers.mjs";
@@ -15,10 +15,10 @@ import { verifiedDotnetAssets } from "../../src/backends/dotnet/verified-assets.
 import { generateCopiedDotnetPackage } from "../../src/backends/dotnet/copied-values.mjs";
 import { dotnetStructuredRegressionFixtures } from "./dotnet-structured-callable-regression.mjs";
 import { ownedDotnetColdProject } from "./owned-dotnet-cold.mjs";
-import { assertOwnedDotnetReports, assertOwnedDotnetIntegration } from "./owned-dotnet-evidence.mjs";
+import { assertOwnedDotnetReports } from "./owned-dotnet-evidence.mjs";
 import { ownedDotnetHistoryPath, ownedDotnetExecutionPath } from "./owned-dotnet-source-history.mjs";
 import { ownedDotnetProcessBaseline, ownedDotnetProcessChangedPaths, ownedDotnetProcessAddedPaths, reverseOwnedDotnetProcess } from "./owned-dotnet-process-history.mjs";
-import { beforeNativeForkRepair, nativeForkRepairHistoricalBytes } from "./native-fork-repair-history.mjs";
+import { nativeForkRepairHistoricalBytes } from "./native-fork-repair-history.mjs";
 
 export const ownedDotnetProcessCommands = {
 	admission: "node --test --test-name-pattern='unsupported native targets' tests/owned-c-packaging.test.mjs"
@@ -129,9 +129,8 @@ const coldExecution = async (cold, peers) => {
  * Require current execution, whole-file history and unchanged original receipts.
  *
  * @param record - Frozen process-origin hardening receipt.
- * @param replay - Also replay the full predecessor evidence chain.
  */
-export const assertOwnedDotnetProcess = async (record, replay = true) => {
+export const assertOwnedDotnetProcess = async record => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "owned-dotnet-process-origin");
 	assert.equal(record.baselineRevision, ownedDotnetProcessBaseline);
@@ -145,6 +144,7 @@ export const assertOwnedDotnetProcess = async (record, replay = true) => {
 	assert.deepEqual(Object.keys(record.sources).sort(), paths);
 	assert.deepEqual(record.updates.map(item => item.path).sort(), ownedDotnetProcessChangedPaths);
 	const updates = new Map(record.updates.map(item => [item.path, item]));
+	let inventory, oldInventory;
 	for(const path of paths)
 	{
 		const bytes = nativeForkRepairHistoricalBytes(path, await readFile(path), record.sources[path]);
@@ -153,7 +153,10 @@ export const assertOwnedDotnetProcess = async (record, replay = true) => {
 		if(update)
 		{
 			assert.equal(update.previousSha256, previous.sourceHashes[path]);
-			assert.equal(sha256(reverseOwnedDotnetProcess(bytes.toString("utf8"), update)), previous.sourceHashes[path], path);
+			const restored = reverseOwnedDotnetProcess(bytes.toString("utf8"), update);
+			assert.equal(sha256(restored), previous.sourceHashes[path], path);
+			if(path === "docs/type-surface.v1.json")
+				[inventory, oldInventory] = [bytes.toString("utf8"), restored];
 		}
 		else if(previous.sourceHashes[path]) assert.equal(record.sources[path], previous.sourceHashes[path], path);
 	}
@@ -179,10 +182,10 @@ export const assertOwnedDotnetProcess = async (record, replay = true) => {
 	await assertOwnedDotnetReports(record, ownedDotnetProcessProducer);
 	assert.equal(record.inventory.promoted, 0);
 	assert.deepEqual(record.inventory, previous.inventory);
-	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
-	const inventory = beforeNativeForkRepair("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const contracts = await readTypeSurfaceContracts();
+	// The loop above already authenticated both inventories.
 	const document = JSON.parse(inventory);
-	const old = JSON.parse(reverseOwnedDotnetProcess(inventory, updates.get("docs/type-surface.v1.json")));
+	const old = JSON.parse(oldInventory);
 	const expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{
@@ -192,5 +195,6 @@ export const assertOwnedDotnetProcess = async (record, replay = true) => {
 	}
 	assert.deepEqual(document, expected);
 	assert.deepEqual(typeSurfaceCells(document, contracts), typeSurfaceCells(old, contracts));
-	if(replay) await assertOwnedDotnetIntegration(previous);
+	// The exact .NET integration receipt is pinned above by path and SHA-256
+	// and verified independently by tests/owned-dotnet-evidence.test.mjs.
 };

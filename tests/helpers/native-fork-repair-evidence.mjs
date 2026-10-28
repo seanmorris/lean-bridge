@@ -24,6 +24,8 @@ export const nativeForkRepairScope = {
 	, sanitizers: ["address", "leak", "undefined"]
 	, installedPackageClaim: false, promotedCells: 0
 };
+const nativeForkRepairPrevious = Object.freeze({ path: ownedDotnetProcessPath
+	, sha256: "0001d8090edbd9fcb9e0f3772bfcefecc863dba6010f3313563ea7f95cc5412d" });
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const carrierResult = {
 	checks: 26746, callbacks: 196, emptyReplies: 1, depth: 64
@@ -39,15 +41,13 @@ const callsResult = {
  * Authenticate each source, reconstruct the caller, and preserve older receipts.
  *
  * @param record - Fresh terminal execution and exact predecessor transitions.
- * @param replay - Also validate the complete previous evidence chain.
  */
-export const assertNativeForkRepair = async (record, replay = true) => {
+export const assertNativeForkRepair = async record => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "native-recursive-fork-repair");
 	assert.equal(record.baselineRevision, nativeForkRepairBaseline);
 	assert.deepEqual(record.scope, nativeForkRepairScope);
-	assert.deepEqual(record.previous, { path: ownedDotnetProcessPath
-		, sha256: "0001d8090edbd9fcb9e0f3772bfcefecc863dba6010f3313563ea7f95cc5412d" });
+	assert.deepEqual(record.previous, nativeForkRepairPrevious);
 	const previousBytes = await readFile(record.previous.path);
 	assert.equal(sha256(previousBytes), record.previous.sha256);
 	const previous = JSON.parse(previousBytes.toString("utf8"));
@@ -117,10 +117,21 @@ export const assertNativeForkRepair = async (record, replay = true) => {
 	}
 	assert.deepEqual(document, expected);
 	assert.deepEqual(typeSurfaceCells(document, contracts), typeSurfaceCells(old, contracts));
-	if(replay)
-	{
-		const { assertOwnedDotnetProcess } = await moduleAtProducerWithSourceReads(
-			nativeForkRepairProducer, "tests/helpers/owned-dotnet-process-evidence.mjs");
-		await assertOwnedDotnetProcess(previous);
-	}
+	// The exact process-origin receipt is pinned above by path and SHA-256 and
+	// verified independently by tests/owned-dotnet-process-evidence.test.mjs;
+	// its producer-era replay runs only in tests/native-fork-repair-evidence.test.mjs.
+};
+
+/**
+ * Replay the pinned process-origin receipt with its producer-era verifier.
+ *
+ * @param record - Fork-status correction receipt.
+ */
+export const assertNativeForkRepairPredecessorReplay = async record => {
+	assert.deepEqual(record.previous, nativeForkRepairPrevious);
+	const previousBytes = await readFile(record.previous.path);
+	assert.equal(sha256(previousBytes), record.previous.sha256);
+	const { assertOwnedDotnetProcess } = await moduleAtProducerWithSourceReads(
+		nativeForkRepairProducer, "tests/helpers/owned-dotnet-process-evidence.mjs");
+	await assertOwnedDotnetProcess(JSON.parse(previousBytes.toString("utf8")));
 };

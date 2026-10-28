@@ -9,7 +9,7 @@ import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { jvmProbeRepairBytes } from "./jvm-probe-repair-history.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { gmpIdentity } from "../../src/backends/c/gmp.mjs";
 import { generateCopiedJvmKotlinPackage } from "../../src/backends/jvm/copied-kotlin.mjs";
@@ -22,7 +22,6 @@ import { assertOwnedJvmCi } from "./owned-jvm-ci.mjs";
 import { assertNativeCiIsolation } from "./native-ci-isolation.mjs";
 import { assertJvmGraphPackageReports } from "./jvm-graph-receipt.mjs";
 import { jvmStructuredRegressionFixtures } from "./jvm-structured-callable-regression.mjs";
-import { assertManagedCiIsolationEvidence } from "./managed-ci-isolation-evidence.mjs";
 import { managedCiIsolationPath } from "./managed-ci-isolation-history.mjs";
 import { ownedJvmBaseline, ownedJvmExecutionPath, ownedJvmChangedPaths, ownedJvmAddedPaths, ownedJvmGeneratedPaths, ownedJvmSortedGeneratedPaths, reverseOwnedJvmUpdate } from "./owned-jvm-source-history.mjs";
 import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
@@ -421,6 +420,7 @@ export const assertOwnedJvmPackageIntegration = async record => {
 	assert.deepEqual(Object.keys(record.sources).sort(), paths);
 	assert.deepEqual(record.updates.map(item => item.path).sort(), ownedJvmChangedPaths);
 	const updates = new Map(record.updates.map(item => [item.path, item]));
+	let source, oldSource;
 	for(const path of paths)
 	{
 		const bytes = jvmProbeRepairBytes(path, await readFile(path), record.sources[path]);
@@ -430,13 +430,14 @@ export const assertOwnedJvmPackageIntegration = async record => {
 		{
 			const restored = reverseOwnedJvmUpdate(bytes.toString("utf8"), update);
 			if(previous.sources[path]) assert.equal(sha256(restored), previous.sources[path], path);
+			if(path === "docs/type-surface.v1.json") [source, oldSource] = [bytes.toString("utf8"), restored];
 		}
 		else if(previous.sources[path]) assert.equal(record.sources[path], previous.sources[path], path);
 	}
-	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
-	const source = jvmProbeRepairBytes("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json"), record.sources["docs/type-surface.v1.json"]).toString("utf8");
+	const contracts = await readTypeSurfaceContracts();
+	// The loop above already authenticated both inventories.
 	const document = JSON.parse(source);
-	const old = JSON.parse(reverseOwnedJvmUpdate(source, updates.get("docs/type-surface.v1.json")));
+	const old = JSON.parse(oldSource);
 	const expected = structuredClone(old);
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -451,7 +452,8 @@ export const assertOwnedJvmPackageIntegration = async record => {
 	const nativeBaseline = JSON.parse(await readFile("tests/fixtures/ci/native-acceptance-before-isolation.json"));
 	assert.equal(nativeBaseline.workflowSha256, updates.get(".github/workflows/consumer-matrix.yml").previousSha256);
 	await assertOwnedJvmPackageExecution(JSON.parse(execution));
-	await assertManagedCiIsolationEvidence(previous);
+	// The exact managed CI receipt is pinned above by path and SHA-256 and
+	// verified independently by tests/managed-ci-isolation-evidence.test.mjs.
 };
 
 /**
