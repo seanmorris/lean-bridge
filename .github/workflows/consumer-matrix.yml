@@ -3177,6 +3177,22 @@ jobs:
       - name: Prepare native compiler for this shard
         run: |
           bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Execute direct proof erasure through prepared C and C++ packages
+        id: direct_proof_native
+        if: matrix.profile == 'c-family'
+        continue-on-error: true
+        run: |
+          source scripts/env.sh
+          bash scripts/run-direct-proof-erasure-native-ci.sh
+      - name: Preserve direct proof-erasure C and C++ packages
+        if: always() && matrix.profile == 'c-family'
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-native-${{ github.sha }}
+          path: build/direct-proof-erasure-native-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Install the TAP log verifier
         timeout-minutes: 20
         run: sudo apt-get install -y ripgrep
@@ -3802,7 +3818,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_FIN_RECORD_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=c,cpp node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=c,cpp LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=c,cpp LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/c-cpp.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-c-cpp.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs c,cpp build/native-fin-record-zero/c-cpp.json build/native-fin-record-zero/reviewed-c-cpp.json"
               consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-package-ci.sh c-cpp && bash scripts/run-structural-subtype-ci.sh c-cpp"
               consumer_command="$consumer_command && LEAN_BRIDGE_CHECKED_RECORD_PROFILES=c,cpp node --test --test-concurrency=1 --test-name-pattern='C and C' tests/checked-records.test.mjs"
-              if [ "${{ steps.ordinary_c.outcome }}" != success ] || [ "${{ steps.type_corpus_c_family.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-native-ci.sh"
+              if [ "${{ steps.ordinary_c.outcome }}" != success ] || [ "${{ steps.type_corpus_c_family.outcome }}" != success ] || [ "${{ steps.direct_proof_native.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
@@ -3899,7 +3916,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce native consumer support
-        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success')))
+        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success')))
         run: exit 1
 
   managed-consumers:
