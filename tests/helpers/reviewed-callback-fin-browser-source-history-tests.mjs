@@ -19,6 +19,7 @@ import {
 	, reverseReviewedCallbackFinBrowserUpdate
 } from "./reviewed-callback-fin-browser-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
@@ -42,7 +43,8 @@ test("reviewed callback Fin browser history retains exact implementation and int
 	assert.deepEqual(value.additions.map(item => item.path)
 		, reviewedCallbackFinBrowserAddedPaths);
 	for(const addition of value.additions)
-		assert.equal(addition.currentSha256, sha256(await readFile(addition.path)));
+		assert.equal(addition.currentSha256, sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256)));
 });
 
 test("reviewed callback Fin browser history reverses every exact source transition", async () => {
@@ -60,7 +62,8 @@ test("reviewed callback Fin browser history reverses every exact source transiti
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const previous = git(["show"
 			, `${reviewedCallbackFinBrowserImplementation}:${update.path}`]);
 		assert.equal(reverseReviewedCallbackFinBrowserUpdate(current, update)

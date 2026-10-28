@@ -21,6 +21,7 @@ import {
 	, reverseCallbackFinHostedWorkflowUpdate
 } from "./callback-fin-hosted-workflow-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
@@ -48,7 +49,8 @@ test("callback Fin hosted workflows retain their exact implementation and integr
 	}
 	assert.deepEqual(record.additions.map(item => item.path), callbackFinHostedWorkflowAddedPaths);
 	for(const addition of record.additions)
-		assert.equal(addition.currentSha256, sha256(await readFile(addition.path)));
+		assert.equal(addition.currentSha256, sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256)));
 });
 
 test("callback Fin hosted workflow history reverses every exact source transition", async () => {
@@ -62,14 +64,19 @@ test("callback Fin hosted workflow history reverses every exact source transitio
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const previous = git(["show", `${callbackFinHostedWorkflowImplementation}:${update.path}`]);
 		assert.equal(reverseCallbackFinHostedWorkflowUpdate(current, update), previous);
 	}
 });
 
 test("callback Fin workflow integration repairs exactly two live inventory pins", async () => {
-	const document = JSON.parse(await readFile("docs/type-surface.v1.json"));
+	// The pins are checked at this layer's own inventory milestone, not the live tree.
+	const inventory = (await read()).integrationUpdates
+		.find(update => update.path === "docs/type-surface.v1.json");
+	const document = JSON.parse(await sourceAtFinHistoryMilestone(
+		inventory.path, inventory.currentSha256));
 	for(const pin of callbackFinHostedWorkflowPins)
 	{
 		const files = document.evidence.flatMap(item => item.files)
