@@ -1,0 +1,71 @@
+{
+  "additions": [
+    {
+      "currentSha256": "61040dff10dd7c0be87b160f929838ccd8526004f5df7d767b27787112db4338",
+      "path": "scripts/update-perl-codegen-merged-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "235a4e2eed8f26c024dd32d4ae44a342090f3b6e064ab0839597025ae500ce46",
+      "path": "tests/helpers/perl-codegen-merged-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d0df95d0ab2314b85cef1df3a2cbdf3bf19317b76af00b287379190136d198bf",
+      "path": "tests/helpers/perl-codegen-merged-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "ba277e22ae55b8f792a175c67229ee2bf3cd75bf",
+  "histories": [
+    {
+      "path": "docs/evidence/perl-codegen-merged-source-history-20261028.json",
+      "sha256": "2dfb85477d395df7a3f128af4cfbc58370dd4bb7ffb7817c644bf0d77cf6fc5b"
+    },
+    {
+      "path": "docs/evidence/perl-codegen-producer-replay-integration-source-history-20261028.json",
+      "sha256": "c15f778db6a898b6206b25d7970ddc467e122366b50f6b997582ce2ee9be0525"
+    }
+  ],
+  "implementationCommit": "f06eb0bc22b12a5f487f55b036b3c5714f8cf139",
+  "milestone": "perl-codegen-merged-integration-v1",
+  "pathCommits": [
+    "8a0e5484ae45dbfc5ee1a785b169862e16c6da73",
+    "f06eb0bc22b12a5f487f55b036b3c5714f8cf139"
+  ],
+  "schemaVersion": 1,
+  "scope": "Join the upstream Perl generator-replay integration to the newer Core repair line. Reverse the complete local hub and partition transition to the exact pre-cherry-pick Core state before either independent history chain continues.",
+  "updates": [
+    {
+      "currentSha256": "7994fed59f146c7678ad6a1b5a31a3e11ad6b490a983bb06fb40da0229404f37",
+      "edits": [
+        {
+          "current": "import { beforePerlCodegenMergedIntegrationSource, perlCodegenMergedIntegrationNormalizationPaths } from \"./perl-codegen-merged-integration-source-history.mjs\";\nimport { beforePerlCodegenMergedSource, perlCodegenMergedNormalizationPaths } from \"./perl-codegen-merged-source-history.mjs\";\nimport { beforePerlCodegenProducerReplayIntegrationSource, perlCodegenProducerReplayIntegrationNormalizationPaths } from \"./perl-codegen-producer-replay-integration-source-history.mjs\";\nimport { beforePerlCodegenProducerReplaySource, perlCodegenProducerReplayNormalizationPaths } from \"./perl-codegen-producer-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...perlCodegenMergedIntegrationNormalizationPaths\n\t, ...perlCodegenMergedNormalizationPaths\n\t, ...perlCodegenProducerReplayIntegrationNormalizationPaths\n\t, ...perlCodegenProducerReplayNormalizationPaths\n\t, ...coreHistoricalContractRepairIntegrationNormalizationPaths\n",
+          "previous": "\t...coreHistoricalContractRepairIntegrationNormalizationPaths\n",
+          "start": 202883
+        },
+        {
+          "current": "\tlet stage = beforePerlCodegenMergedIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlCodegenMergedSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlCodegenProducerReplayIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlCodegenProducerReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreHistoricalContractRepairIntegrationSource(\n",
+          "previous": "\tlet stage = beforeCoreHistoricalContractRepairIntegrationSource(\n",
+          "start": 252826
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0e73d75fc7f15516556f9cfcc9b2174fc43f2717ce81fc17d90bab61ea3b81d8"
+    },
+    {
+      "currentSha256": "c2b7d83b03a963d43fba25aa9d07bb405ac57aa3c8bb7b582539f68143c54f5a",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-codegen-producer-replay-source-history-tests.mjs\";\nimport \"./helpers/perl-codegen-producer-replay-integration-source-history-tests.mjs\";\nimport \"./helpers/perl-codegen-merged-source-history-tests.mjs\";\nimport \"./helpers/perl-codegen-merged-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2915
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "5b19f4c2217aef22adbd45dac016478e2346cab4db1edaedf52fee87193035e2"
+    }
+  ]
+}
