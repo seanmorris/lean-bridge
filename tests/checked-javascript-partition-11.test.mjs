@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/direct-proof-erasure-test-registration-source-history-tests.mjs";
+import "./helpers/direct-proof-erasure-matrix-tests.mjs";
 import "./helpers/proof-erasure-wit-lint-join-source-history-tests.mjs";
 import "./helpers/proof-erasure-lint-pin-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-wit-source-history-tests.mjs";
