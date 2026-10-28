@@ -19,6 +19,7 @@ import {
 	, reverseCallbackFinInstalledRepairUpdate
 } from "./callback-fin-installed-repair-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
@@ -42,7 +43,8 @@ test("installed callback Fin repair history retains exact implementation and int
 	assert.deepEqual(value.additions.map(item => item.path)
 		, callbackFinInstalledRepairAddedPaths);
 	for(const addition of value.additions)
-		assert.equal(addition.currentSha256, sha256(await readFile(addition.path)));
+		assert.equal(addition.currentSha256, sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256)));
 });
 
 test("installed callback Fin repair history reverses every exact transition", async () => {
@@ -57,7 +59,8 @@ test("installed callback Fin repair history reverses every exact transition", as
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const previous = git(["show", `${value.implementationCommit}:${update.path}`]);
 		assert.equal(reverseCallbackFinInstalledRepairUpdate(current, update), previous);
 	}

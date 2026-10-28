@@ -20,6 +20,7 @@ import {
 	, reverseReviewedFinWasmFieldUpdate
 } from "./reviewed-fin-wasm-field-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
 const read = async () => JSON.parse(await readFile(reviewedFinWasmFieldHistoryPath));
@@ -34,7 +35,8 @@ test("reviewed Wasm Fin-field history retains the exact implementation and integ
 	assert.deepEqual(value.updates.map(item => item.path), reviewedFinWasmFieldChangedPaths);
 	assert.deepEqual(value.integrationUpdates.map(item => item.path), reviewedFinWasmFieldIntegrationPaths);
 	assert.deepEqual(value.additions.map(item => item.path), reviewedFinWasmFieldAddedPaths);
-	for(const addition of value.additions) assert.equal(addition.currentSha256, sha256(await readFile(addition.path)));
+	for(const addition of value.additions) assert.equal(addition.currentSha256, sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256)));
 });
 
 test("reviewed Wasm Fin-field history reverses every exact source transition", async () => {
@@ -48,14 +50,19 @@ test("reviewed Wasm Fin-field history reverses every exact source transition", a
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const previous = git(["show", `${reviewedFinWasmFieldImplementation}:${update.path}`]);
 		assert.equal(reverseReviewedFinWasmFieldUpdate(current, update), previous);
 	}
 });
 
 test("reviewed Wasm Fin-field integration repairs every cited live source", async () => {
-	const document = JSON.parse(await readFile("docs/type-surface.v1.json"));
+	// The pins are checked at this layer's own inventory milestone, not the live tree.
+	const inventory = (await read()).integrationUpdates
+		.find(update => update.path === "docs/type-surface.v1.json");
+	const document = JSON.parse(await sourceAtFinHistoryMilestone(
+		inventory.path, inventory.currentSha256));
 	for(const pin of reviewedFinWasmFieldPins)
 	{
 		const files = document.evidence.flatMap(item => item.files).filter(item => item.path === pin.path);
