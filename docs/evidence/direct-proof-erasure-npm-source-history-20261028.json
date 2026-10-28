@@ -1,0 +1,133 @@
+{
+  "additions": [
+    {
+      "currentSha256": "788a064ec9f50fa9a4a3e99abaea53e368cde0a5c1d0cd8ec8bfc915d9d5771a",
+      "path": "scripts/check-direct-proof-erasure-npm-ci.mjs"
+    },
+    {
+      "currentSha256": "68aec5ca2de1cdbad5718727e5be4a1f7fb47f599f95dac779cac6c53efe2f2f",
+      "path": "scripts/run-direct-proof-erasure-npm-ci.sh"
+    },
+    {
+      "currentSha256": "7dab0ed253a0dd9a4f68e416b31a050b41e48a357a76babb2dee08cdf6d605f0",
+      "path": "tests/direct-proof-erasure-npm-installed.test.mjs"
+    },
+    {
+      "currentSha256": "811d63c8d3caa7cdd034d67b39cb91be9e2203cf7a526062617af6ed7854a43d",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/browser.mjs"
+    },
+    {
+      "currentSha256": "3296b6fde6f586039a53870829d2d538ed813cb60d04496855f10feecf711b3f",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/index.mts"
+    },
+    {
+      "currentSha256": "c58379dadc7744f6736b4fad9492af2855136993e553960de661544463cbf4b9",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/javascript.mjs"
+    },
+    {
+      "currentSha256": "e41a4a21255693d30cb220b63a44eec3c99cfa5598c4253e2342f677866e3cf7",
+      "path": "tests/helpers/direct-proof-erasure-browser-tests.mjs"
+    },
+    {
+      "currentSha256": "44e5f65b2e8e1729308cf9f13081d3df4404f9f094f6a44b2092d4185bb4b3dd",
+      "path": "tests/helpers/direct-proof-erasure-browser.mjs"
+    },
+    {
+      "currentSha256": "18bb6f656f411837b7a33efb0cfe0444775b1b99ef17ee5995b0e1d3d5ba7920",
+      "path": "tests/helpers/direct-proof-erasure-npm-report.mjs"
+    },
+    {
+      "currentSha256": "ac97510284e1aebdb1c1c5e439a691a63554d64333ed1aa228a6983d0a021cad",
+      "path": "scripts/update-direct-proof-erasure-npm-source-history.mjs"
+    },
+    {
+      "currentSha256": "5afec44046c9f085d5257f2505e3e62f54f61fbd12688d3cc98dca18387e404f",
+      "path": "tests/helpers/direct-proof-erasure-npm-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "63b64863a19280012748c1b607e2065dde78eb67dab1e77aee4e62362e07d367",
+      "path": "tests/helpers/direct-proof-erasure-npm-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2513857ab9950bf16e26b07cf707c74b2ead3890",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a0a40d792f3404a2bc1b8389c4216c923ec7ecf17340faa1504fd4653a80d42d",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-npm-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "746b52aa3229d2d0aadec5146670d5fa34e656029696a3654c9b159486bb2ac0"
+    },
+    {
+      "currentSha256": "b48330c589a4d40ffe67dc5e0511f8f22665c3e0f64b0bf6bd9cf416916892d2",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureNpmSource, directProofErasureNpmNormalizationPaths } from \"./direct-proof-erasure-npm-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureNpmNormalizationPaths\n\t, ...directProofErasurePackageNormalizationPaths\n",
+          "previous": "\t...directProofErasurePackageNormalizationPaths\n",
+          "start": 209346
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureNpmSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasurePackageSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDirectProofErasurePackageSource(path, text, expected);\n",
+          "start": 261407
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4e9064ad825107e06b8f00d57db940a71c9060662b5655b20150862923e04f2f"
+    }
+  ],
+  "milestone": "direct-proof-erasure-npm-source-v1",
+  "predecessorCommit": "597270ffd263f817602a1f5b726a25bfc73c0a3a",
+  "schemaVersion": 1,
+  "scope": "Build ordinary and independently reviewed direct-proof packages twice; verify exact one-word adapters and receipts; remove author sources; install prepared npm archives offline; execute and relocate Node JavaScript and strict TypeScript consumers; and run browser JavaScript, React and dedicated Workers through all three engines and their complete failure/lifecycle phases.",
+  "updates": [
+    {
+      "commit": "2513857ab9950bf16e26b07cf707c74b2ead3890",
+      "currentSha256": "140dfb6e6b63bf94fc80f6e15ab3579e3072bbd294dd8b2bd569df53a8f30db1",
+      "edits": [
+        {
+          "current": "      - name: Require direct proof erasure in Node, TypeScript and three browsers\n        id: direct_proof_npm\n        timeout-minutes: 60\n        env:\n          LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine\n          LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy\n        run: bash scripts/run-direct-proof-erasure-npm-ci.sh\n      - name: Preserve direct proof-erasure npm and browser records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-node-browser-${{ github.sha }}\n          path: build/direct-proof-erasure-npm-ci/\n          if-no-files-found: error\n          retention-days: 30\n",
+          "previous": "",
+          "start": 68033
+        },
+        {
+          "current": "          test_result=\"${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && steps.reviewed_fin_npm.outcome == 'success' && steps.reviewed_subtype_npm.outcome == 'success' && steps.structural_subtype_npm.outcome == 'success' && steps.direct_proof_npm.outcome == 'success' && steps.dependent_fin_npm.outcome == 'success' && 'passed' || 'failed' }}\"\n          executed=\"${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && steps.reviewed_fin_npm.outcome == 'success' && steps.reviewed_subtype_npm.outcome == 'success' && steps.structural_subtype_npm.outcome == 'success' && steps.direct_proof_npm.outcome == 'success' && steps.dependent_fin_npm.outcome == 'success' && 'true' || 'false' }}\"\n          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs && LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs && bash scripts/run-reviewed-subtype-package-ci.sh npm && bash scripts/run-structural-subtype-ci.sh node-browser && bash scripts/run-direct-proof-erasure-npm-ci.sh && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_ROUTES=ordinary-source,reviewed-ir LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_REPORT=build/dependent-fin-javascript/{route}.json node --test --test-concurrency=1 tests/dependent-fin-javascript.test.mjs\"\n          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs && LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs && bash scripts/run-reviewed-subtype-package-ci.sh npm && bash scripts/run-structural-subtype-ci.sh node-browser && bash scripts/run-direct-proof-erasure-npm-ci.sh && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_ROUTES=ordinary-source,reviewed-ir LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_REPORT=build/dependent-fin-javascript/{route}.json node --test --test-concurrency=1 tests/dependent-fin-javascript.test.mjs\"\n",
+          "previous": "          test_result=\"${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && steps.reviewed_fin_npm.outcome == 'success' && steps.reviewed_subtype_npm.outcome == 'success' && steps.structural_subtype_npm.outcome == 'success' && steps.dependent_fin_npm.outcome == 'success' && 'passed' || 'failed' }}\"\n          executed=\"${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && steps.reviewed_fin_npm.outcome == 'success' && steps.reviewed_subtype_npm.outcome == 'success' && steps.structural_subtype_npm.outcome == 'success' && steps.dependent_fin_npm.outcome == 'success' && 'true' || 'false' }}\"\n          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs && LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs && bash scripts/run-reviewed-subtype-package-ci.sh npm && bash scripts/run-structural-subtype-ci.sh node-browser && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_ROUTES=ordinary-source,reviewed-ir LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_REPORT=build/dependent-fin-javascript/{route}.json node --test --test-concurrency=1 tests/dependent-fin-javascript.test.mjs\"\n          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result \"$test_result\" --package-installation \"$executed\" --real-lean-execution \"$executed\" --command \"npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs && LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs && bash scripts/run-reviewed-subtype-package-ci.sh npm && bash scripts/run-structural-subtype-ci.sh node-browser && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_ROUTES=ordinary-source,reviewed-ir LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_REPORT=build/dependent-fin-javascript/{route}.json node --test --test-concurrency=1 tests/dependent-fin-javascript.test.mjs\"\n",
+          "start": 83849
+        },
+        {
+          "current": "        if: steps.consumer.outcome != 'success' || steps.type_corpus_npm.outcome != 'success' || steps.reviewed_fin_npm.outcome != 'success' || steps.reviewed_subtype_npm.outcome != 'success' || steps.structural_subtype_npm.outcome != 'success' || steps.direct_proof_npm.outcome != 'success' || steps.dependent_fin_npm.outcome != 'success'\n",
+          "previous": "        if: steps.consumer.outcome != 'success' || steps.type_corpus_npm.outcome != 'success' || steps.reviewed_fin_npm.outcome != 'success' || steps.reviewed_subtype_npm.outcome != 'success' || steps.structural_subtype_npm.outcome != 'success' || steps.dependent_fin_npm.outcome != 'success'\n",
+          "start": 88509
+        }
+      ],
+      "parent": "597270ffd263f817602a1f5b726a25bfc73c0a3a",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "24e1f3f00317ee5337d3fb9835815d877e4ba97d06b7e80474c0ed85b677011a"
+    },
+    {
+      "commit": "2513857ab9950bf16e26b07cf707c74b2ead3890",
+      "currentSha256": "746b52aa3229d2d0aadec5146670d5fa34e656029696a3654c9b159486bb2ac0",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-browser-tests.mjs\";\n",
+          "previous": "",
+          "start": 287
+        }
+      ],
+      "parent": "597270ffd263f817602a1f5b726a25bfc73c0a3a",
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c47fcaf558562977d64f639f7971d280700e34ee6bfc2a0d5045ab54bbd554f4"
+    }
+  ]
+}
