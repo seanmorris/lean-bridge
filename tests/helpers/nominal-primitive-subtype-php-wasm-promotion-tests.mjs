@@ -17,6 +17,7 @@ import {
 } from "./nominal-primitive-subtype-php-wasm-promotion-history.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+	, withHistorySourcePins
 } from "./source-history-test-source.mjs";
 import {
 	beforeNestedCheckedRecordNativeCorrectionPins
@@ -169,7 +170,10 @@ test("primitive-base PHP-Wasm promotion supplements six cells only", async () =>
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypePhpWasmPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(document, proposed);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length),
 		proposed.evidence.slice(original.evidence.length));

@@ -15,6 +15,21 @@ import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-histo
 import { beforeFinEdgeCiSource } from "./helpers/fin-container-edge-ci-history.mjs";
 import { beforeFinEdgeIntegrationSource, finEdgeIntegrationBranch, finEdgeIntegrationChangedPaths, finEdgeIntegrationHistoryPath, finEdgeIntegrationPredecessor, reverseFinEdgeIntegrationUpdate } from "./helpers/fin-container-edge-integration-history.mjs";
 import { sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
+import { authenticatedTypeSurfaceEvidence } from "./helpers/type-surface-historical-evidence.mjs";
+
+/**
+ * Prove one historical retained-evidence pin against the receipt-authenticated
+ * live inventory. Retained evidence is immutable, so the pins must be equal.
+ *
+ * @param live - Exact live path/digest pairs after the receipt pass.
+ * @param file - Historical evidence citation.
+ */
+const receiptEvidenceDigest = (live, file) => {
+	assert.ok(file.path.startsWith("docs/evidence/"), file.path);
+	assert.ok(live.has(file.path), file.path);
+	assert.equal(live.get(file.path), file.sha256, file.path);
+	return live.get(file.path);
+};
 
 test("container observer integration authenticates every transition and refuses unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(finEdgeIntegrationHistoryPath, "utf8"));
@@ -68,8 +83,14 @@ test("container integration refreshes exact source pins without changing support
 	assert.deepEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
 	const digests = new Map();
+	// Core shards exclude the retained corpus and authenticate it once by receipt.
+	const live = process.env.LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT
+		? await authenticatedTypeSurfaceEvidence() : undefined;
 	for(const file of current.evidence.flatMap(entry => entry.files))
 	{
+		if(!digests.has(file.path) && live !== undefined
+			&& file.path.startsWith("docs/evidence/"))
+			digests.set(file.path, receiptEvidenceDigest(live, file));
 		if(!digests.has(file.path))
 		{
 			const bytes = await readFile(file.path);
@@ -82,6 +103,16 @@ test("container integration refreshes exact source pins without changing support
 		["docs/evidence/native-fin-diagnostic-ci-source-history-20261010.json", "77d1716708d41789f6dced955d6764d3ca2c86c88a1f2eea8b8df356e1dea8c6"]
 		, ["docs/evidence/native-fin-diagnostic-source-history-20261010.json", "2bc3b1217601bb0eb0c19b9f1496d00ab5df831e3a1bd1881a4429b28fd210ab"]
 	]) assert.equal(sha256(await readFile(path)), digest, path);
+});
+
+test("receipt-mode retained evidence pins must equal their authenticated live pins", () => {
+	const path = "docs/evidence/fin-container-edge-integration-source-history-20261010.json";
+	const live = new Map([[path, "a".repeat(64)]]);
+	assert.equal(receiptEvidenceDigest(live, { path, sha256: "a".repeat(64) }), "a".repeat(64));
+	for(const file of [{ path, sha256: "b".repeat(64) }
+		, { path: `${path}.missing`, sha256: "a".repeat(64) }
+		, { path: "tests/fin-container-edge-integration-history.test.mjs", sha256: "a".repeat(64) }])
+		assert.throws(() => receiptEvidenceDigest(live, file), assert.AssertionError, file.path);
 });
 
 test("every added native container test has an explicit repository profile", () => {
