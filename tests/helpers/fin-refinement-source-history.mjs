@@ -12,6 +12,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeSignatureSpecializationPhpWasmConsumerRepairIntegrationSource, signatureSpecializationPhpWasmConsumerRepairIntegrationNormalizationPaths } from "./signature-specialization-php-wasm-consumer-repair-integration-source-history.mjs";
+import { beforeSignatureSpecializationPhpWasmConsumerRepairSource, signatureSpecializationPhpWasmConsumerRepairNormalizationPaths } from "./signature-specialization-php-wasm-consumer-repair-source-history.mjs";
 import { beforeCoreNativeEvidenceManifestIntegrationSource, coreNativeEvidenceManifestIntegrationNormalizationPaths } from "./core-native-evidence-manifest-integration-source-history.mjs";
 import { beforeCoreNativeEvidenceManifestSource, coreNativeEvidenceManifestNormalizationPaths } from "./core-native-evidence-manifest-source-history.mjs";
 import { beforePerlCodegenMergedIntegrationSource, perlCodegenMergedIntegrationNormalizationPaths } from "./perl-codegen-merged-integration-source-history.mjs";
@@ -2290,7 +2292,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreNativeEvidenceManifestIntegrationNormalizationPaths
+	...signatureSpecializationPhpWasmConsumerRepairIntegrationNormalizationPaths
+	, ...signatureSpecializationPhpWasmConsumerRepairNormalizationPaths
+	, ...coreNativeEvidenceManifestIntegrationNormalizationPaths
 	, ...coreNativeEvidenceManifestNormalizationPaths
 	, ...perlCodegenMergedIntegrationNormalizationPaths
 	, ...perlCodegenMergedNormalizationPaths
@@ -3319,7 +3323,17 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreNativeEvidenceManifestIntegrationSource(
+	let stage = beforeSignatureSpecializationPhpWasmConsumerRepairIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationPhpWasmConsumerRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreNativeEvidenceManifestIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
