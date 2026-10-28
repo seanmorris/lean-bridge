@@ -82,7 +82,8 @@ test("structural workflow rejects missing lanes, wrong hosts, skipped enforcemen
 		, source.replaceAll("if-no-files-found: error", "if-no-files-found: ignore")
 		, source.replaceAll("run: exit 1", "run: exit 0")
 		, source.replace("LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime " + runner, runner)
-		, source.replace("node scripts/prepare-php-wasm-subtype-entry-runtime.mjs", "true missing-runtime")]){ checkMutation(source, changed, name, "enforcement and prepared runtime"); controls++; }
+		, source.replace("node scripts/prepare-php-wasm-subtype-entry-runtime.mjs --output build/php-wasm-subtype-entry-input/php-wasm-runtime"
+			, "true missing-runtime --output build/php-wasm-subtype-entry-input/php-wasm-runtime")]){ checkMutation(source, changed, name, "enforcement and prepared runtime"); controls++; }
 	for(const lane of ["python311", "python312"])
 	{
 		const command = structuralSubtypeWorkflowCommand(lane);

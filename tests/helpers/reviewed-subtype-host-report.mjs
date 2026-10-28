@@ -8,15 +8,47 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
-import { reviewedContractDifference, reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
+import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { nativeSubtypeTargets } from "./native-subtype-install.mjs";
-import { reviewedSubtypeHostConsumer, reviewedSubtypeHostIr, reviewedSubtypeHostProfiles, reviewedSubtypeHostSource } from "./reviewed-subtype-host-fixture.mjs";
+import { reviewedSubtypeHistoricalHostIr, reviewedSubtypeHostConsumer, reviewedSubtypeHostProfiles, reviewedSubtypeHostSource } from "./reviewed-subtype-host-fixture.mjs";
 import { reviewedSubtypeHostChecks } from "./reviewed-subtype-host-install.mjs";
 
 const hash = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const flags = (value, names) => {
 	for(const name of names) assert.equal(value[name], true, name);
+};
+const historicalReviewedSelection = (identity, review) => {
+	const source = canonicalJson(review);
+	assert.deepEqual(identity, {
+		path: "api.binding-ir.json", schemaVersion: 1
+		, semanticSha256: hashBindingIr(review)
+		, source, sourceSha256: sha256(source)
+	});
+	const contractSite = (site, refinement) => ({
+		ownership: site.ownership, lifetime: site.lifetime
+		, ...refinement?.kind === "subtype" && refinement.constructor !== null
+			? { refinement: { constructor: refinement.constructor } } : {}
+	});
+	const contracts = {}, exports = [], specializations = [];
+	for(const declaration of review.declarations)
+	{
+		const extensions = declaration.source.extensions;
+		const specialization = extensions["lean-lang.org/specialization"];
+		const name = specialization?.name ?? declaration.source.declaration;
+		const refinements = extensions["lean-lang.org/refinements"];
+		exports.push(name);
+		contracts[name] = {
+			parameters: declaration.parameters.map((parameter, index) =>
+				contractSite(parameter, refinements.parameters[index]))
+			, result: contractSite(declaration.result, refinements.result)
+		};
+		if(specialization) specializations.push({
+			name: specialization.name, declaration: specialization.declaration
+			, types: specialization.types
+		});
+	}
+	return { contracts, exports: exports.sort(), specializations };
 };
 
 /**
@@ -37,7 +69,7 @@ export const assertReviewedSubtypeHostRecords = async ({ profiles, read, python 
 		assert.equal(Buffer.from(bytes).toString(), canonicalJson(value), `Noncanonical producer record: ${path}`);
 		return value;
 	};
-	const report = await json("report.json"), review = reviewedSubtypeHostIr();
+	const report = await json("report.json"), review = reviewedSubtypeHistoricalHostIr();
 	assert.deepEqual(Object.keys(report).sort(), ["builds", "profiles", "reports", "reproducible", "schemaVersion"]);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.reproducible, true);
 	assert.deepEqual(report.profiles, profiles);
@@ -63,7 +95,7 @@ export const assertReviewedSubtypeHostRecords = async ({ profiles, read, python 
 		assert.equal(identity.reviewedBindingIr.source, canonicalJson(review));
 		assert.equal(identity.reviewedBindingIr.sourceSha256, sha256(canonicalJson(review)));
 		assert.equal(identity.reviewedBindingIr.semanticSha256, hashBindingIr(review));
-		const selection = reviewedSourceSelection(identity.reviewedBindingIr);
+		const selection = historicalReviewedSelection(identity.reviewedBindingIr, review);
 		for(const key of ["contracts", "exports", "specializations"])
 			assert.deepEqual(identity.request[key], selection[key]);
 		for(const key of ["arities", "resources"]) assert.deepEqual(identity.request[key], []);

@@ -105,12 +105,14 @@ const transform = (source, name, enabled) => {
 		const anchor = " && " + group.anchor;
 		source = enabled ? once(source, anchor, anchor + suffix) : once(source, suffix, "");
 	}
-	const anchor = "      - name: Check independently reviewed Subtype npm packages and strict TypeScript\n";
+	const anchor = source.includes("      - name: Require direct proof erasure in Node, TypeScript and three browsers\n")
+		? "      - name: Require direct proof erasure in Node, TypeScript and three browsers\n"
+		: "      - name: Check independently reviewed Subtype npm packages and strict TypeScript\n";
 	source = enabled ? once(source, anchor, structuralSubtypeNodeBlock + anchor) : once(source, structuralSubtypeNodeBlock, "");
 	const success = enabled ? nodeSuccess : nodeSuccess + structuralSuccess;
 	assert.equal(source.split(success).length, 3);
 	source = source.replaceAll(success, enabled ? nodeSuccess + structuralSuccess : nodeSuccess);
-	source = enabled ? once(source, nodeFailure + "\n", nodeFailure + structuralFailure + "\n") : once(source, structuralFailure, "");
+	source = enabled ? once(source, nodeFailure, nodeFailure + structuralFailure) : once(source, structuralFailure, "");
 	let descriptions = 0;
 	source = source.split("\n").map(line => {
 		if(!/--consumer node-(?:javascript|typescript) /u.test(line)) return line;

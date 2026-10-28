@@ -24,13 +24,36 @@ export const nominalSubtypeJvmCiBlock = `      - name: Require nominal Java and 
 `;
 const anchor = "      - name: Upload installed Java and Kotlin corpus observations\n        if: always() && matrix.profile == 'jvm'\n";
 const command = '              consumer_command="$consumer_command && bash scripts/run-nominal-subtype-jvm-ci.sh \\"$JAVA_HOME/bin/java\\" \\"$JAVA_HOME/bin/javac\\" \\"$PWD/build/kotlin-tools/kotlinc/bin/kotlinc\\""\n';
-const summary = '              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ]; then\n';
-const updatedSummary = summary.replace("; then", ' || [ "${{ steps.nominal_jvm.outcome }}" != success ]; then');
-const gate = "(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success'))";
-const updatedGate = gate.replace(/\)\)$/u, " || steps.nominal_jvm.outcome != 'success'))");
+const directProofCommand = '              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh jvm"\n';
+const variants = [
+	{
+		summary: '              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ]; then\n'
+		, updatedSummary: '              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ]; then\n'
+		, gate: "(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success'))"
+		, updatedGate: "(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success'))"
+		, beforeSummary: directProofCommand
+		, afterCommand: directProofCommand
+	}
+	, {
+		summary: '              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ]; then\n'
+		, updatedSummary: '              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ]; then\n'
+		, gate: "(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success'))"
+		, updatedGate: "(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success'))"
+		, beforeSummary: ""
+		, afterCommand: ""
+	}
+];
 const replaceOnce = (source, from, to) => {
 	assert.equal(source.split(from).length, 2);
 	return source.replace(from, () => to);
+};
+const variantFor = (source, enabled) => {
+	const matches = variants.filter(variant => source.includes(enabled
+		? command + variant.afterCommand + variant.updatedSummary
+		: variant.beforeSummary + variant.summary)
+		&& source.includes(enabled ? variant.updatedGate : variant.gate));
+	assert.equal(matches.length, 1, "Expected one coherent JVM nominal-Subtype workflow epoch");
+	return matches[0];
 };
 
 /**
@@ -40,8 +63,9 @@ const replaceOnce = (source, from, to) => {
  */
 export const enableNominalSubtypeJvmWorkflow = source => {
 	assert.ok(!source.includes("run-nominal-subtype-jvm-ci.sh"));
+	const { summary, updatedSummary, gate, updatedGate, beforeSummary, afterCommand } = variantFor(source, false);
 	source = replaceOnce(source, anchor, nominalSubtypeJvmCiBlock + anchor);
-	source = replaceOnce(source, summary, command + updatedSummary);
+	source = replaceOnce(source, beforeSummary + summary, command + afterCommand + updatedSummary);
 	return replaceOnce(source, gate, updatedGate);
 };
 
@@ -51,8 +75,9 @@ export const enableNominalSubtypeJvmWorkflow = source => {
  * @param source - Complete current workflow.
  */
 export const disableNominalSubtypeJvmWorkflow = source => {
+	const { summary, updatedSummary, gate, updatedGate, beforeSummary, afterCommand } = variantFor(source, true);
 	source = replaceOnce(source, nominalSubtypeJvmCiBlock, "");
-	source = replaceOnce(source, command + updatedSummary, summary);
+	source = replaceOnce(source, command + afterCommand + updatedSummary, beforeSummary + summary);
 	return replaceOnce(source, updatedGate, gate);
 };
 
@@ -63,6 +88,7 @@ export const disableNominalSubtypeJvmWorkflow = source => {
  */
 export const assertNominalSubtypeJvmWorkflow = source => {
 	assert.equal(enableNominalSubtypeJvmWorkflow(disableNominalSubtypeJvmWorkflow(source)), source);
+	const { updatedSummary, updatedGate, afterCommand } = variantFor(source, true);
 	const body = source.split("\n  managed-consumers:\n")[1]?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
 	assert.equal(typeof body, "string"); assert.ok(body.includes(nominalSubtypeJvmCiBlock));
 	assert.match(body, /^ {4}runs-on: ubuntu-24\.04$/mu);
@@ -75,7 +101,7 @@ export const assertNominalSubtypeJvmWorkflow = source => {
 	assert.ok(body.includes("echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check"));
 	const previous = "          test -s build/type-corpus/reviewed-native-java-kotlin.json\n";
 	assert.ok(body.includes(previous) && body.indexOf(previous) < body.indexOf(nominalSubtypeJvmCiBlock));
-	assert.ok(body.includes(command + updatedSummary)); assert.ok(body.includes(updatedGate));
+	assert.ok(body.includes(command + afterCommand + updatedSummary)); assert.ok(body.includes(updatedGate));
 	assert.equal(source.split("          bash scripts/run-nominal-subtype-jvm-ci.sh ").length, 2);
 	assert.match(source.split("\n  support-summary:\n")[1], /^ {6}- managed-consumers$/mu);
 };

@@ -170,5 +170,5 @@ export const assertOwnedBorrowCi = (workflow, manifest) => {
 	for(const name of ["owned-borrows/", "owned-borrows-runtime.log", "owned-borrows-installed.log"])
 		assert.ok(upload.split("\n").includes("            build/" + name));
 	assert.ok(workflow.includes("steps.type_corpus_c_family.outcome != 'success'"));
-	assert.ok(workflow.includes('if [ "${{ steps.ordinary_c.outcome }}" != success ] || [ "${{ steps.type_corpus_c_family.outcome }}" != success ]; then'));
+	assert.ok(workflow.includes('if [ "${{ steps.ordinary_c.outcome }}" != success ] || [ "${{ steps.type_corpus_c_family.outcome }}" != success ] || [ "${{ steps.direct_proof_native.outcome }}" != success ]; then'));
 };

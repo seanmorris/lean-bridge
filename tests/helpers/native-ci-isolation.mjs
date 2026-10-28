@@ -14,15 +14,18 @@ export const nativeCiProfiles = {
 	"c-family": {
 		consumers: ["c", "cpp"], ordinary: "ordinary_c"
 		, corpus: "type_corpus_c_family"
+		, additional: ["direct_proof_native"]
 		, upload: "Upload installed C and C++ corpus observations"
 	}
 	, python: {
 		consumers: ["python"], ordinary: "ordinary_python"
 		, corpus: "type_corpus_python"
+		, additional: ["direct_proof_language"]
 		, upload: "Upload the real-Lean type corpus report"
 	}
 	, rust: {
 		consumers: ["rust"], ordinary: "ordinary_rust", corpus: "type_corpus_rust"
+		, additional: ["direct_proof_language"]
 		, upload: "Upload installed Rust corpus observations"
 	}
 };
@@ -66,7 +69,8 @@ const context = (profile, overrides) => ({
 		, ...Object.fromEntries(Object.entries({
 			consumer: "success"
 			, ...Object.fromEntries(Object.entries(nativeCiProfiles).flatMap(([name, spec]) =>
-				[spec.ordinary, spec.corpus].map(id => [id, name === profile ? "success" : "skipped"])))
+				[spec.ordinary, spec.corpus, ...(spec.additional ?? [])]
+					.map(id => [id, name === profile ? "success" : "skipped"])))
 			, ...overrides
 		}).map(([id, outcome]) => [id, { outcome }])) }
 });

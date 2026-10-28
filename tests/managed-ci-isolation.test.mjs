@@ -15,7 +15,16 @@ import { disableNominalSubtypeJvmWorkflow, nominalSubtypeJvmCiBlock } from "./he
 import "./helpers/managed-nominal-gate-history-tests.mjs";
 
 const workflow = () => readFile(".github/workflows/consumer-matrix.yml", "utf8");
-const checkCurrent = source => assertManagedCiIsolation(source, null, { jvm: ["nominal_jvm"] });
+const directProof = { id: "direct_proof_managed", continueOnError: true };
+const checkDirectProof = source => assertManagedCiIsolation(source, null, {
+	dotnet: [directProof]
+	, jvm: [directProof]
+	, ruby: [{ id: "direct_proof_language", continueOnError: true }]
+});
+const checkCurrent = source => assertManagedCiIsolation(source, null, {
+	dotnet: [directProof], jvm: ["nominal_jvm", directProof]
+	, ruby: [{ id: "direct_proof_language", continueOnError: true }]
+});
 
 test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-jvm-bootstrap-"));
@@ -42,7 +51,7 @@ test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => 
 test("managed CI isolates timeout budgets, profile gates and artifact names", async () => {
 	assert.deepEqual(checkCurrent(await workflow()), {
 		profiles: ["dotnet", "jvm", "ruby"], timeoutMinutesPerProfile: 240
-		, failFast: false, selectedOutcomeCases: 30
+		, failFast: false, selectedOutcomeCases: 39
 		, artifactNamesIncludeProfile: true, commandsCompared: 0
 	});
 });
@@ -78,7 +87,7 @@ test("managed CI rejects dropped gates, shared artifacts and incomplete bootstra
 
 test("managed CI retains the historical baseline without accepting a removed current gate", async () => {
 	const previous = disableNominalSubtypeJvmWorkflow(await workflow());
-	assert.equal(assertManagedCiIsolation(previous).selectedOutcomeCases, 27);
+	assert.equal(checkDirectProof(previous).selectedOutcomeCases, 36);
 	assert.throws(() => checkCurrent(previous));
 });
 

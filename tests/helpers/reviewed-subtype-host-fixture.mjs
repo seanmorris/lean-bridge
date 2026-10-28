@@ -29,6 +29,29 @@ export const reviewedSubtypeHostIr = () => {
 	return review;
 };
 
+/** Reconstruct the exact result-constructor annotations retained by the 2026-10-10 producer. */
+export const reviewedSubtypeHistoricalHostIr = () => {
+	const review = reviewedSubtypeHostIr();
+	const constructors = {
+		shout: "Subtypes.checkedWord"
+		, pad: "Subtypes.checkedEven"
+		, join: "Subtypes.checkedWord"
+		, byteValue: "Subtypes.checkedByte"
+		, firstEven: "Subtypes.checkedEven"
+		, secondEven: "Subtypes.checkedEven"
+		, zeroEven: "Subtypes.checkedEven"
+	};
+	for(const [name, constructor] of Object.entries(constructors))
+	{
+		const declaration = review.declarations.find(item => item.id === `lean:Subtypes.${name}`);
+		assert.ok(declaration, `Missing historical reviewed declaration: ${name}`);
+		const result = declaration.source.extensions["lean-lang.org/refinements"].result;
+		assert.deepEqual(result, { kind: "subtype", constructor: null });
+		result.constructor = constructor;
+	}
+	return review;
+};
+
 const calls = {
 	python: /\bapi\.([a-z_]+)\(/gu
 	, rust: /\bapi::([a-z_]+)\(/gu
