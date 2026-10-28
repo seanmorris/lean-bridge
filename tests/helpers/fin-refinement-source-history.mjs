@@ -12,6 +12,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeSignatureSpecializationCompletionPinRepairIntegrationSource, signatureSpecializationCompletionPinRepairIntegrationNormalizationPaths } from "./signature-specialization-completion-pin-repair-integration-source-history.mjs";
+import { beforeSignatureSpecializationCompletionPinRepairSource, signatureSpecializationCompletionPinRepairNormalizationPaths } from "./signature-specialization-completion-pin-repair-source-history.mjs";
 import { beforeSignatureSpecializationCompletionPromotionIntegrationSource, signatureSpecializationCompletionPromotionIntegrationNormalizationPaths } from "./signature-specialization-completion-promotion-integration-source-history.mjs";
 import { beforeSignatureSpecializationCompletionPromotionSource, signatureSpecializationCompletionPromotionNormalizationPaths } from "./signature-specialization-completion-promotion-source-history.mjs";
 import { beforeSignatureSpecializationHostedArchiveReplayIntegrationSource, signatureSpecializationHostedArchiveReplayIntegrationNormalizationPaths } from "./signature-specialization-hosted-archive-replay-integration-source-history.mjs";
@@ -2312,7 +2314,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...signatureSpecializationCompletionPromotionIntegrationNormalizationPaths
+	...signatureSpecializationCompletionPinRepairIntegrationNormalizationPaths
+	, ...signatureSpecializationCompletionPinRepairNormalizationPaths
+	, ...signatureSpecializationCompletionPromotionIntegrationNormalizationPaths
 	, ...signatureSpecializationCompletionPromotionNormalizationPaths
 	, ...signatureSpecializationHostedArchiveReplayIntegrationNormalizationPaths
 	, ...signatureSpecializationHostedArchiveReplayNormalizationPaths
@@ -3363,7 +3367,17 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeSignatureSpecializationCompletionPromotionIntegrationSource(
+	let stage = beforeSignatureSpecializationCompletionPinRepairIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationCompletionPinRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationCompletionPromotionIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

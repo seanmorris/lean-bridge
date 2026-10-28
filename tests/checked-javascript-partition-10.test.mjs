@@ -69,3 +69,5 @@ import "./helpers/signature-specialization-hosted-archive-replay-source-history-
 import "./helpers/signature-specialization-hosted-archive-replay-integration-source-history-tests.mjs";
 import "./helpers/signature-specialization-completion-promotion-source-history-tests.mjs";
 import "./helpers/signature-specialization-completion-promotion-integration-source-history-tests.mjs";
+import "./helpers/signature-specialization-completion-pin-repair-source-history-tests.mjs";
+import "./helpers/signature-specialization-completion-pin-repair-integration-source-history-tests.mjs";
