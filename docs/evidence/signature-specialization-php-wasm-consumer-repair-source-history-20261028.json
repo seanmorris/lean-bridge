@@ -1,0 +1,44 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fb3040829f5cf9a5592d4fb66a6f8bebf75b011f71c827503a58752acd9af57e",
+      "path": "tests/fixtures/specialization-consumers/php-wasm.php"
+    },
+    {
+      "currentSha256": "82c1cb49c50c59e8240c101c7779a6c229ae6b37e40c23ee58661a2199c28efb",
+      "path": "scripts/update-signature-specialization-php-wasm-consumer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "f161b485690ec4973aa615c12d441db620745396b3aa05329caee08980443f91",
+      "path": "tests/helpers/signature-specialization-php-wasm-consumer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bfeb8e241d79fbd8894cb0336a435f4d555796cbb7409b0a2671411599633b5a",
+      "path": "tests/helpers/signature-specialization-php-wasm-consumer-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d37bcc0c33694dc048cc2bd4ce6843064e0beff2",
+  "milestone": "signature-specialization-php-wasm-consumer-repair-v1",
+  "predecessorCommit": "5d2776d2ba190114045426128b82d27dab8e6d37",
+  "schemaVersion": 1,
+  "scope": "Use a dedicated installed PHP-Wasm specialization consumer whose UInt32 and Word values are exact Brick Math BigInteger instances in weak and strict callers. The pre-load overflow probe now supplies the correct carrier and still requires ValueError before lazy code loads. Preserve all 2,020 checks, both author routes, twelve loading arrangements, selected dictionaries, source-free installation and reproducibility.",
+  "updates": [
+    {
+      "currentSha256": "bea757467b167a1ba40152a91048912f09081046445e30241f20fa3537b75042",
+      "edits": [
+        {
+          "current": "const consumerSource = \"tests/fixtures/specialization-consumers/php-wasm.php\";\n",
+          "previous": "const consumerSource = \"tests/fixtures/specialization-consumers/php-native.php\";\n",
+          "start": 1226
+        },
+        {
+          "current": "\t\t\t, phpInvalid: \"try { LeanSpecialized\\\\echo_word(\\\\Brick\\\\Math\\\\BigInteger::of('4294967296')); throw new Exception('Overflow accepted'); } catch (ValueError $error) {}\"\n",
+          "previous": "\t\t\t, phpInvalid: \"try { LeanSpecialized\\\\echo_word(4294967296); throw new Exception('Overflow accepted'); } catch (ValueError $error) {}\"\n",
+          "start": 5372
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-php-wasm.mjs",
+      "previousSha256": "b7ad9db7c9851eb2b5f6cd62020c295b040e1c43ff5744a7b24dcb2713518103"
+    }
+  ]
+}
