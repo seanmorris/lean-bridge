@@ -57,3 +57,5 @@ import "./helpers/signature-specialization-php-wasm-consumer-repair-source-histo
 import "./helpers/signature-specialization-php-wasm-consumer-repair-integration-source-history-tests.mjs";
 import "./helpers/callback-fin-milestone-read-source-history-tests.mjs";
 import "./helpers/callback-fin-milestone-read-integration-source-history-tests.mjs";
+import "./helpers/callback-fin-perl-milestone-read-source-history-tests.mjs";
+import "./helpers/callback-fin-perl-milestone-read-integration-source-history-tests.mjs";
