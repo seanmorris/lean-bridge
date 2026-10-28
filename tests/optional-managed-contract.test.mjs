@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { generateCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
+import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 
 const optionalIr = () => {
@@ -52,5 +53,26 @@ test("C# rejects a positional default before a required argument", () => {
 	declaration.parameters.push({ ...structuredClone(declaration.parameters[0])
 		, name: "required", optional: false, default: null });
 	assert.throws(() => generateCopiedDotnetPackage(ir)
+		, /default before a required positional parameter/u);
+});
+
+test("Java exposes omission as overloads while preserving its full-arity methods", () => {
+	const files = generateCopiedJvmPackage(optionalIr());
+	const source = files["src/main/java/org/leanbridge/defaults/Api.java"];
+	assert.match(source, /public static long word\(long arg0\) \{ return Runtime\.call0\(arg0\); \}/u);
+	assert.match(source, /public static long word\(\) \{ return Runtime\.call0\(7L\); \}/u);
+	assert.match(source, /new java\.math\.BigInteger\("184467440737095516160"\)/u);
+	assert.match(source, /Runtime\.call2\("Lean\\nBridge"\)/u);
+	assert.match(source, /Runtime\.call3\(0x3bb\)/u);
+	assert.match(source, /Runtime\.call4\(Option\.none\(\)\)/u);
+	assert.match(source, /Runtime\.call5\(Option\.some\(9L\)\)/u);
+	assert.equal((source.match(/public static long word\(/gu) ?? []).length, 2);
+});
+
+test("Java rejects a positional default before a required argument", () => {
+	const ir = optionalIr(), declaration = ir.declarations[0];
+	declaration.parameters.push({ ...structuredClone(declaration.parameters[0])
+		, name: "required", optional: false, default: null });
+	assert.throws(() => generateCopiedJvmPackage(ir)
 		, /default before a required positional parameter/u);
 });
