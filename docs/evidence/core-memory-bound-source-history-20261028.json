@@ -1,0 +1,178 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b3d2d59f1d4f24d2888bdaef9121e8652dedc7106d40676f420e163cba5e50c6",
+      "path": "tests/helpers/type-surface-contracts.mjs"
+    },
+    {
+      "currentSha256": "24dc62f32d30d4dbe3290bfb71fd921c8eeaf662031eb8060a2508fbfeaab75f",
+      "path": "scripts/update-core-memory-bound-source-history.mjs"
+    },
+    {
+      "currentSha256": "2ec2bcf971889264a380e10b4e96025a5fbce02b9626dda3cd61323e1d22d714",
+      "path": "tests/helpers/core-memory-bound-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "2be2fb34af53a664e3998df42d8ecef8ed9e9adfa966725c91459d328eaf8209",
+      "path": "tests/helpers/core-memory-bound-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "4f3ed352fbe1efd2251532f3b8497430980c95d6",
+  "implementationCommits": [
+    "4f3ed352fbe1efd2251532f3b8497430980c95d6"
+  ],
+  "milestone": "core-memory-bound-source-v1",
+  "predecessorCommit": "e18a9a306853c6a720927d50befc05c11e84044c",
+  "schemaVersion": 1,
+  "scope": "Bound the memory of the owned .NET, Ruby and Python integration verifiers and the inherited checked-record 102-cell promotion case: reuse inventory bytes the source loop already authenticated, read only the IR schema and consumer contracts, pin predecessor integrations by exact receipt hash instead of re-executing them in-process (each keeps its own registered evidence test), and compare whole inventories by canonical digest against the authenticated milestone. No evidence, observation, receipt or support claim changes. Hub and registration integration are recorded by the integrating seal.",
+  "updates": [
+    {
+      "currentSha256": "52df2413590b9aa739e9cea7c0614b7e1d958bac81eb3707bfbc2a83c518a36d",
+      "edits": [
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 331
+        },
+        {
+          "current": "\ttypeSurfaceCells, validateTypeSurface\n",
+          "previous": "\treadTypeSurface, typeSurfaceCells, validateTypeSurface\n",
+          "start": 408
+        },
+        {
+          "current": "import { readTypeSurfaceContracts } from \"./type-surface-contracts.mjs\";\n",
+          "previous": "",
+          "start": 493
+        },
+        {
+          "current": "\t// Hold at most three parsed inventories at once and compare whole\n\t// documents by canonical digest; key-sorted canonical JSON is equal exactly\n\t// when the parsed documents are deeply equal.\n\tconst digest = document => sha256(canonicalJson(document));\n\tconst original = inventory(), originalDigest = digest(original);\n",
+          "previous": "\tconst original = inventory();\n",
+          "start": 4390
+        },
+        {
+          "current": "\tlet promoted;\n\t{\n\t\t// The unpinned proposal is unreachable once its pinned copy exists.\n\t\tconst proposal = await promoteInheritedCheckedRecords(original, references);\n\t\tassert.deepEqual(proposal.evidence.slice(0, original.evidence.length)\n\t\t\t, original.evidence);\n\t\tpromoted = withHistoryMilestoneSourcePins(\n\t\t\tinheritedCheckedRecordPromotionHistoryPath, proposal\n\t\t);\n\t}\n\tconst contracts = await readTypeSurfaceContracts();\n",
+          "previous": "\tconst proposal = await promoteInheritedCheckedRecords(original, references);\n\tconst promoted = withHistoryMilestoneSourcePins(\n\t\tinheritedCheckedRecordPromotionHistoryPath, proposal\n\t);\n\tconst { document: current, ...contracts } = await readTypeSurface();\n\tconst milestone = JSON.parse(sourceAtHistoryMilestone(\n\t\tinheritedCheckedRecordPromotionHistoryPath, inventoryPath\n\t));\n",
+          "start": 4773
+        },
+        {
+          "current": "\t// sourceAtHistoryMilestone authenticates the recorded milestone digest.\n\tassert.equal(digest(JSON.parse(sourceAtHistoryMilestone(\n\t\tinheritedCheckedRecordPromotionHistoryPath, inventoryPath\n\t))), digest(promoted));\n",
+          "previous": "\tassert.deepEqual(current, milestone);\n\tassert.deepEqual(milestone, promoted);\n",
+          "start": 5243
+        },
+        {
+          "current": "",
+          "previous": "\tassert.deepEqual(proposal.evidence.slice(0, original.evidence.length)\n\t\t, original.evidence);\n",
+          "start": 5607
+        },
+        {
+          "current": "\t// Promotion must not mutate its authenticated predecessor inventory.\n\tassert.equal(digest(original), originalDigest);\n",
+          "previous": "\tassert.deepEqual(original, inventory());\n",
+          "start": 6913
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-promotion-tests.mjs",
+      "previousSha256": "7c7af83ffaf1ec73ffde6f6f309d56c6797450f53fbd76c51133e76b04bacf0e"
+    },
+    {
+      "currentSha256": "cfba53389c0b5c8edf881a2a900ed97716e2ee8a7d09451a3b2af0551cea564e",
+      "edits": [
+        {
+          "current": "import { readTypeSurfaceContracts } from \"./type-surface-contracts.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 254
+        },
+        {
+          "current": "import { ownedRubyExecutionSources } from \"./owned-ruby-evidence.mjs\";\n",
+          "previous": "import { ownedRubyExecutionSources, assertOwnedRubyIntegration } from \"./owned-ruby-evidence.mjs\";\n",
+          "start": 736
+        },
+        {
+          "current": "import { beforeOwnedDotnetProcessGenerated, ownedDotnetProcessHistoricalBytes } from \"./owned-dotnet-process-history.mjs\";\n",
+          "previous": "import { beforeOwnedDotnetProcess, beforeOwnedDotnetProcessGenerated, ownedDotnetProcessHistoricalBytes } from \"./owned-dotnet-process-history.mjs\";\n",
+          "start": 1052
+        },
+        {
+          "current": "\tlet authenticatedInventory;\n",
+          "previous": "",
+          "start": 24706
+        },
+        {
+          "current": "\t\tif(path === \"docs/type-surface.v1.json\") authenticatedInventory = current.toString(\"utf8\");\n",
+          "previous": "",
+          "start": 24938
+        },
+        {
+          "current": "\tconst contracts = await readTypeSurfaceContracts();\n\t// The loop above already authenticated this exact historical inventory.\n\tconst document = JSON.parse(authenticatedInventory);\n",
+          "previous": "\tconst { irSchema, consumers } = await readTypeSurface();\n\tconst contracts = { irSchema, consumers };\n\tconst document = JSON.parse(beforeOwnedDotnetProcess(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\"), record.sourceHashes[\"docs/type-surface.v1.json\"]));\n",
+          "start": 25379
+        },
+        {
+          "current": "\t// The exact Ruby receipt is pinned above by record.previous.sha256 and\n\t// verified independently by tests/owned-ruby-evidence.test.mjs.\n",
+          "previous": "\tawait assertOwnedRubyIntegration(previous);\n",
+          "start": 26492
+        }
+      ],
+      "path": "tests/helpers/owned-dotnet-evidence.mjs",
+      "previousSha256": "d1e9e7bbb71be44a9c7d46494ef7d0fffcbddeca9ddb357d5f90eb40889c7b58"
+    },
+    {
+      "currentSha256": "a8a5fc603bd960a1de9c942748c2cf3dc4db5d52764bbe195b5ca37615a839fc",
+      "edits": [
+        {
+          "current": "import { ownedRustExecutionSources } from \"./owned-rust-evidence.mjs\";\n",
+          "previous": "import { ownedRustExecutionSources, assertOwnedRustIntegration } from \"./owned-rust-evidence.mjs\";\n",
+          "start": 416
+        },
+        {
+          "current": "\t// The exact Rust receipt is pinned above by record.previous.sha256 and\n\t// verified independently by tests/owned-rust-evidence.test.mjs.\n",
+          "previous": "\tawait assertOwnedRustIntegration(previous);\n",
+          "start": 21216
+        }
+      ],
+      "path": "tests/helpers/owned-python-evidence.mjs",
+      "previousSha256": "aaadce14f691059dc269479c12993f5db050931de5e0ae488eddd28827f78101"
+    },
+    {
+      "currentSha256": "56a14ccb9ba320f6ee0cf735c8f9a021bb0f284aedb9de8dec99c347b7ed7cdd",
+      "edits": [
+        {
+          "current": "import { readTypeSurfaceContracts } from \"./type-surface-contracts.mjs\";\n",
+          "previous": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 252
+        },
+        {
+          "current": "import { ownedPythonExecutionSources } from \"./owned-python-evidence.mjs\";\n",
+          "previous": "import { ownedPythonExecutionSources, assertOwnedPythonIntegration } from \"./owned-python-evidence.mjs\";\n",
+          "start": 973
+        },
+        {
+          "current": "import { ownedDotnetHistoricalBytes } from \"./owned-dotnet-source-history.mjs\";\n",
+          "previous": "import { beforeOwnedDotnet, ownedDotnetHistoricalBytes } from \"./owned-dotnet-source-history.mjs\";\n",
+          "start": 1562
+        },
+        {
+          "current": "\tlet authenticatedInventory;\n",
+          "previous": "",
+          "start": 25634
+        },
+        {
+          "current": "\t\tif(path === \"docs/type-surface.v1.json\") authenticatedInventory = current.toString(\"utf8\");\n",
+          "previous": "",
+          "start": 25859
+        },
+        {
+          "current": "\tconst contracts = await readTypeSurfaceContracts();\n\t// The loop above already authenticated this exact historical inventory.\n\tconst document = JSON.parse(authenticatedInventory);\n",
+          "previous": "\tconst { document: currentDocument, ...contracts } = await readTypeSurface(); void currentDocument;\n\tconst document = JSON.parse(beforeOwnedDotnet(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\")));\n",
+          "start": 26298
+        },
+        {
+          "current": "\t// The exact Python receipt is pinned above by record.previous.sha256 and\n\t// verified independently by tests/owned-python-evidence.test.mjs.\n",
+          "previous": "\tawait assertOwnedPythonIntegration(previous);\n",
+          "start": 27448
+        }
+      ],
+      "path": "tests/helpers/owned-ruby-evidence.mjs",
+      "previousSha256": "ed199bbc4e68fc427f3e2ef07190a548b978a6e08953c4c3f96c87635e6af4a3"
+    }
+  ]
+}
