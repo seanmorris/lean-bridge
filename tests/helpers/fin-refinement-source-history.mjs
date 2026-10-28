@@ -12,6 +12,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreHubOrderRepairIntegrationSource, coreHubOrderRepairIntegrationNormalizationPaths } from "./core-hub-order-repair-integration-source-history.mjs";
+import { beforeCoreHubOrderRepairSource, coreHubOrderRepairNormalizationPaths } from "./core-hub-order-repair-source-history.mjs";
 import { beforeSignatureSpecializationCompletionIntegrationSource, signatureSpecializationCompletionIntegrationNormalizationPaths } from "./signature-specialization-completion-integration-source-history.mjs";
 import { beforeSignatureSpecializationCompletionSource, signatureSpecializationCompletionNormalizationPaths } from "./signature-specialization-completion-source-history.mjs";
 import { beforeFinContractTestRegistrationIntegrationSource, finContractTestRegistrationIntegrationNormalizationPaths } from "./fin-contract-test-registration-integration-source-history.mjs";
@@ -2278,7 +2280,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...signatureSpecializationCompletionIntegrationNormalizationPaths
+	...coreHubOrderRepairIntegrationNormalizationPaths
+	, ...coreHubOrderRepairNormalizationPaths
+	, ...signatureSpecializationCompletionIntegrationNormalizationPaths
 	, ...signatureSpecializationCompletionNormalizationPaths
 	, ...finContractTestRegistrationIntegrationNormalizationPaths
 	, ...finContractTestRegistrationNormalizationPaths
@@ -3295,7 +3299,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeSignatureSpecializationCompletionIntegrationSource(
+	let stage = beforeCoreHubOrderRepairIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreHubOrderRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationCompletionIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
