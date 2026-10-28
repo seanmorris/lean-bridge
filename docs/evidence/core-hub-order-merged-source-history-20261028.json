@@ -1,0 +1,130 @@
+{
+  "additions": [
+    {
+      "currentSha256": "48b3a5eb499188d1d4e9ecda664564b58370f7dc10842e152fc304a1eb81378e",
+      "path": "scripts/update-core-hub-order-merged-source-history.mjs"
+    },
+    {
+      "currentSha256": "e47078d89bbe5ebef603abe504686c69ae9128ac5a78d1115edd2e0c7871d9a6",
+      "path": "tests/helpers/core-hub-order-merged-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e83a944e3eb3cae170b33ca661698a08d6fb2a90dedecbbd65abc465dfa3443a",
+      "path": "tests/helpers/core-hub-order-merged-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "5b022abc6030863038df9e8e825673d03ca72dd5",
+  "milestone": "core-hub-order-merged-source-v1",
+  "predecessorCommit": "f51ee14387676aa4bc04f27f8f32407538e97fd0",
+  "schemaVersion": 1,
+  "scope": "Authenticate the exact hub-order repair cherry-pick on the local Core line. Reverse the three source changes and exactly four corresponding live type-surface pin edits without rewriting Claude's independently retained upstream history.",
+  "updates": [
+    {
+      "currentSha256": "211d651d50043acd760ef501910670a89160d774ab67c68a7b391f3dea0eb692",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "previous": "          \"sha256\": \"472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d\"\n",
+          "start": 1669291
+        },
+        {
+          "current": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "previous": "          \"sha256\": \"472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d\"\n",
+          "start": 1673636
+        },
+        {
+          "current": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "previous": "          \"sha256\": \"472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d\"\n",
+          "start": 1677993
+        },
+        {
+          "current": "          \"sha256\": \"867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606\"\n",
+          "previous": "          \"sha256\": \"472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d\"\n",
+          "start": 1682358
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a6af00e49dcc249b38ba633d956d2e39457291b6b384a70401cc75d924528826"
+    },
+    {
+      "currentSha256": "2fbe20ff437124c78c2d432240ee37eb2f3c6f8c338e7755f357b464f2d74a9e",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 743
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256)), addition.currentSha256);\n",
+          "previous": "\t\tassert.equal(addition.currentSha256, sha256(await readFile(addition.path)));\n",
+          "start": 1912
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2595
+        }
+      ],
+      "path": "tests/helpers/callback-fin-perl-runtime-source-history-tests.mjs",
+      "previousSha256": "048b3a42264d9eb4a86436bf8363e7c6b43b9023eca9e23009e6732120b9b28d"
+    },
+    {
+      "currentSha256": "8cfd6c48427d8ffa85e4c7d9d6f295cb982621990a6391a2968a661bdcf2ea68",
+      "edits": [
+        {
+          "current": "import { beforeReplayChainMemorySource, replayChainMemoryNormalizationPaths } from \"./replay-chain-memory-source-history.mjs\";\n",
+          "previous": "",
+          "start": 3468
+        },
+        {
+          "current": "\t, ...replayChainMemoryNormalizationPaths\n\t, ...callbackFinDiagnosticContractNormalizationPaths\n",
+          "previous": "",
+          "start": 202216
+        },
+        {
+          "current": "",
+          "previous": "\t, ...callbackFinDiagnosticContractNormalizationPaths\n",
+          "start": 202403
+        },
+        {
+          "current": "\tstage = beforeReplayChainMemorySource(path, text, expected);\n",
+          "previous": "\tstage = beforeCoreMemoryBoundIntegrationSource(path, text, expected);\n",
+          "start": 253619
+        },
+        {
+          "current": "\tstage = beforeCallbackFinDiagnosticContractSource(path, text, expected);\n",
+          "previous": "\tstage = beforeCoreMemoryBoundSource(path, text, expected);\n",
+          "start": 253770
+        },
+        {
+          "current": "\tstage = beforeCoreMemoryBoundIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreMemoryBoundSource(path, text, expected);\n",
+          "previous": "\tstage = beforeCallbackFinDiagnosticContractSource(path, text, expected);\n",
+          "start": 253933
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "56217c1369586d70323e8af12299c7902d69dc110382a27b18be48ded3e30e60"
+    },
+    {
+      "currentSha256": "867c9f69e4b73f70d2305778d9570c1171179d5ca51ec6b0564cd938dee5d606",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 444
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\"tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean\", report.sourceSha256)), report.sourceSha256);\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\"tests/fixtures/reviewed-fin-wasm/javascript.mjs\", report.consumerSha256)), report.consumerSha256);\n",
+          "previous": "\t\tassert.equal(report.sourceSha256, sha256(await read(\"tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean\")));\n\t\tassert.equal(report.consumerSha256, sha256(await read(\"tests/fixtures/reviewed-fin-wasm/javascript.mjs\")));\n",
+          "start": 2570
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-evidence-tests.mjs",
+      "previousSha256": "472b9ba2f878466f17b0892e3b0f923f2661cc148e26360b8130b539d6bee46d"
+    }
+  ],
+  "upstreamHistory": {
+    "path": "docs/evidence/core-hub-order-repair-source-history-20261028.json",
+    "sha256": "33b5b54fff51ba2453d761eb79d32e9fff0b6261beaf2e25dbde96093f2a50bc"
+  }
+}
