@@ -240,7 +240,7 @@ export const assertPerlStructuredCallableIntegration = async record => {
 	const execution = JSON.parse(bytes); await assertPerlStructuredCallableExecution(execution);
 	assert.equal(record.codegen.path, perlStructuredCodegenPath);
 	const codegenBytes = await readFile(record.codegen.path); assert.equal(sha256(codegenBytes), record.codegen.sha256);
-	const codegen = JSON.parse(codegenBytes); assertPerlStructuredCodegenRegression(codegen);
+	const codegen = JSON.parse(codegenBytes); await assertPerlStructuredCodegenRegression(codegen);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), perlStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), perlStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...perlStructuredCallableChangedPaths, ...perlStructuredCallableAddedPaths])].sort();

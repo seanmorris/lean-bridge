@@ -26,10 +26,13 @@ test("Perl structured callbacks change predecessor XS only for writable scalar s
 		assert.equal(beforePerlRecursiveCallables(path, unrelated, expected), unrelated);
 		assert.notEqual(sha256(unrelated), expected, path);
 	}
-	assertPerlStructuredCodegenRegression(record);
+	await assertPerlStructuredCodegenRegression(record);
 	const changed = structuredClone(record);
 	Object.values(changed.fixtures[0].files)[0].sha256 = "0".repeat(64);
-	assert.throws(() => assertPerlStructuredCodegenRegression(changed));
+	await assert.rejects(() => assertPerlStructuredCodegenRegression(changed));
+	const moved = structuredClone(record);
+	moved.sourceHashes["src/backends/perl/generate.mjs"] = "0".repeat(64);
+	await assert.rejects(() => assertPerlStructuredCodegenRegression(moved));
 });
 
 test("Perl copied Unit, Bool and absent options use writable independent scalar slots", () => {
