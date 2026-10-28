@@ -321,7 +321,7 @@ const perlFinBounds = (model, item) => {
 	const names = perlParameterNames(model, item);
 	const paths = (refinement, path, direction) => {
 		if(refinement?.kind !== "callback")
-			return nativeFinBoundPaths(refinement, path, direction === "result");
+			return nativeFinBoundPaths(refinement, path, direction === "result", names);
 		const producedParameters = direction === "host", producedResult = direction === "closure";
 		const nested = refinement.parameters.flatMap((child, index) =>
 			nativeFinBoundPaths(child, `${path}.arg${index}`, producedParameters));
@@ -358,14 +358,30 @@ const finLeaf = (value, bound, name, path) => {
 	return `{ lean_object *bound = lean_cstr_to_nat(${q(bound)}); int below = lean_nat_lt(${value}, bound); lean_dec(bound);
       if (!below) ${message}; }`;
 };
+const dependentFinLeaf = (value, bound, name, boundName, path) => {
+	const suffix = ` is not below its dependent Fin bound ${boundName}`;
+	const message = path.format
+		? `croak(${[q(`%s${path.format}${suffix}`), q(name), ...path.indices.map(index => `(size_t)${index}`)].join(", ")})`
+		: `croak("%s", ${q(name + suffix)})`;
+	return `{ int below = lean_nat_lt(${value}, ${bound});
+      if (!below) ${message}; }`;
+};
 // Walk a converted argument along its refinement tree, borrowing every element: arrays are read
 // in place, a list is viewed through its scope-owned array, an option is opened only when present,
 // a product through both components and an Except through its active branch only. A Fin 0 leaf
 // is therefore rejected exactly when it is present. The message names the parameter, the failing
 // element's path and the leaf's own bound.
-const finGuard = (type, refinement, value, name, depth = 0, path = { format: "", indices: [] }) => {
-	if(type.kind === "alias") return finGuard(type.target, refinement, value, name, depth, path);
+const finGuard = (type, refinement, value, name, depth = 0, path = { format: "", indices: [] }, parameters = { values: [], names: [] }) => {
+	if(type.kind === "alias") return finGuard(type.target, refinement, value, name, depth, path, parameters);
 	if(refinement.kind === "fin") return finLeaf(value, refinement.bound, name, path);
+	if(refinement.kind === "fin-parameter")
+	{
+		const bound = parameters.values[refinement.parameter];
+		const boundName = parameters.names[refinement.parameter];
+		if(typeof bound !== "string" || typeof boundName !== "string")
+			throw new TypeError(`${name}: dependent Fin has no earlier Nat parameter`);
+		return dependentFinLeaf(value, bound, name, boundName, path);
+	}
 	if(refinement.kind === "array" || refinement.kind === "list")
 	{
 		if(type.kind !== refinement.kind) throw new TypeError(`${name}: refinement does not match its ${type.kind} transport`);
@@ -373,32 +389,32 @@ const finGuard = (type, refinement, value, name, depth = 0, path = { format: "",
 		const inner = { format: `${path.format}[%zu]`, indices: [...path.indices, index] };
 		return `{ ${type.kind === "list" ? `lean_inc(${value}); lean_object *${items} = ${keep(`lb_t${nativeTypeKey(type)}_to_array(${value})`)};` : ""}
       for (size_t ${index} = 0; ${index} < lean_array_size(${items}); ++${index}) { lean_object *${element} = lean_array_get_core(${items}, ${index});
-      ${finGuard(type.element, refinement.arguments[0], element, name, depth + 1, inner)} } }`;
+		${finGuard(type.element, refinement.arguments[0], element, name, depth + 1, inner, parameters)} } }`;
 	}
 	if(refinement.kind === "option" && type.kind === "option")
 		return `{ lean_inc(${value}); if (lb_t${nativeTypeKey(type)}_has(${value})) { lean_inc(${value}); lean_object *v${depth} = ${keep(`lb_t${nativeTypeKey(type)}_get0(${value})`)};
-      ${finGuard(type.element, refinement.arguments[0], `v${depth}`, name, depth + 1, { format: `${path.format}?`, indices: path.indices })} } }`;
+		${finGuard(type.element, refinement.arguments[0], `v${depth}`, name, depth + 1, { format: `${path.format}?`, indices: path.indices }, parameters)} } }`;
 	// Both product components are checked; an Except is checked only on its active branch.
 	// Each projection consumes one reference, so the walk retains the value first.
 	if(refinement.kind === "tuple" && type.kind === "tuple")
 		return `{ ${refinement.arguments.map((child, index) => child === null ? "" : `lean_inc(${value}); lean_object *v${depth}_${index} = ${keep(`lb_t${nativeTypeKey(type)}_get${index}(${value})`)};
-      ${finGuard(type.arguments[index], child, `v${depth}_${index}`, name, depth + 1, { format: `${path.format}.${index}`, indices: path.indices })}`).filter(Boolean).join("\n      ")} }`;
+		${finGuard(type.arguments[index], child, `v${depth}_${index}`, name, depth + 1, { format: `${path.format}.${index}`, indices: path.indices }, parameters)}`).filter(Boolean).join("\n      ")} }`;
 	if(refinement.kind === "result" && type.kind === "result")
 	{
 		const branch = index => refinement.arguments[index] === null ? "" : `lean_inc(${value}); lean_object *v${depth} = ${keep(`lb_t${nativeTypeKey(type)}_get${index}(${value})`)};
-      ${finGuard(type.arguments[index], refinement.arguments[index], `v${depth}`, name, depth + 1, { format: `${path.format}.${index ? "error" : "ok"}`, indices: path.indices })}`;
+		${finGuard(type.arguments[index], refinement.arguments[index], `v${depth}`, name, depth + 1, { format: `${path.format}.${index ? "error" : "ok"}`, indices: path.indices }, parameters)}`;
 		return `{ lean_inc(${value}); if (lb_t${nativeTypeKey(type)}_has(${value})) { ${branch(0)} } else { ${branch(1)} } }`;
 	}
 	// A record is walked field by field and a variant only on its active case, through the same
 	// helpers that convert them; the path names each field and the case.
 	if(refinement.kind === "record" && type.kind === "record")
 		return `{ ${refinement.arguments.map((child, index) => child === null ? "" : `lean_inc(${value}); lean_object *v${depth}_${index} = ${keep(`lb_t${nativeTypeKey(type)}_get${index}(${value})`)};
-      ${finGuard(type.fields[index].type, child, `v${depth}_${index}`, name, depth + 1, { format: `${path.format}.${type.fields[index].name}`, indices: path.indices })}`).filter(Boolean).join("\n      ")} }`;
+		${finGuard(type.fields[index].type, child, `v${depth}_${index}`, name, depth + 1, { format: `${path.format}.${type.fields[index].name}`, indices: path.indices }, parameters)}`).filter(Boolean).join("\n      ")} }`;
 	if(refinement.kind === "variant" && type.kind === "variant")
 	{
 		const key = nativeTypeKey(type);
 		const cases = refinement.cases.map(({ arguments: children }, index) => children.every(child => child === null) ? "" : `if (t${depth} == ${index}u) { ${children.map((child, field) => child === null ? "" : `lean_inc(${value}); lean_object *v${depth}_${field} = ${keep(`lb_t${key}_get${index}_${field}(${value})`)};
-      ${finGuard(type.cases[index].fields[field].type, child, `v${depth}_${field}`, name, depth + 1, { format: `${path.format}.${type.cases[index].name}.${type.cases[index].fields[field].name}`, indices: path.indices })}`).filter(Boolean).join("\n      ")} }`).filter(Boolean);
+		${finGuard(type.cases[index].fields[field].type, child, `v${depth}_${field}`, name, depth + 1, { format: `${path.format}.${type.cases[index].name}.${type.cases[index].fields[field].name}`, indices: path.indices }, parameters)}`).filter(Boolean).join("\n      ")} }`).filter(Boolean);
 		return `{ lean_inc(${value}); uint32_t t${depth} = lb_t${key}_tag(${value});
       ${cases.join(" else ")} }`;
 	}
@@ -407,7 +423,7 @@ const finGuard = (type, refinement, value, name, depth = 0, path = { format: "",
 // Prune only constructor leaves, retaining every Fin in mixed structural/nominal trees.
 const finOnly = refinement => {
 	if(refinement === null || ["subtype", "fin-field"].includes(refinement.kind)) return null;
-	if(refinement.kind === "fin") return refinement;
+	if(["fin", "fin-parameter"].includes(refinement.kind)) return refinement;
 	// Callback bounds are enforced when the callback is invoked through its generated
 	// callable adapter.  A public export receives only the callback handle here, so
 	// there is no structural value for this outer guard to walk.
@@ -486,8 +502,11 @@ const structuralConstructorGuard = (type, refinement, value, symbol, name, depth
 };
 const publicXsub = (name, symbol, parameters, result, refinements = null, names = []) => {
 	const refined = (refinements?.parameters ?? []).map((refinement, index) => [refinement, index]).filter(([refinement]) => refinement);
+	const parameterContext = {
+		values: parameters.map((_, index) => `a${index}`), names
+	};
 	const guards = [
-		...refined.map(([refinement, index]) => [finOnly(refinement), index]).filter(([refinement]) => refinement).map(([refinement, index]) => finGuard(parameters[index], refinement, `a${index}`, names[index]))
+		...refined.map(([refinement, index]) => [finOnly(refinement), index]).filter(([refinement]) => refinement).map(([refinement, index]) => finGuard(parameters[index], refinement, `a${index}`, names[index], 0, { format: "", indices: [] }, parameterContext))
 		, ...refined.filter(([refinement, index]) => constructorRefinementLeaves(refinement, parameters[index]).length)
 			.map(([refinement, index]) => structuralConstructorGuard(parameters[index], refinement
 				, `a${index}`, `${symbol}_refinement_${index}`, names[index]))];

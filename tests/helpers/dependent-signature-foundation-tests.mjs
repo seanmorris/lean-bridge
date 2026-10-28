@@ -14,6 +14,7 @@ import { assertReviewedRefinements } from "../../src/analyze/reviewed-refinement
 import { generateJavaScriptPackage } from "../../src/backends/javascript/generate.mjs";
 import { finRefinementWalk } from "../../src/backends/c/native-copied-values.mjs";
 import { nativeFinSummary } from "../../src/backends/native/fin-refinements.mjs";
+import { generatePerlBindingPackage } from "../../src/backends/perl/generate.mjs";
 import { componentRefinedCall, componentRefinementGuards } from "../../src/build/component-refinements.mjs";
 import { generateCompilerAdapters } from "../../src/build/compiler-adapters.mjs";
 import { createNativeModel } from "../../src/build/native-model.mjs";
@@ -184,7 +185,8 @@ test("native models retain the direct dependency instead of freezing a bound", (
 	];
 	nativeDeclaration.projection.result = nativeNat;
 	const model = createNativeModel({
-		...input, component: {
+		...input, moduleName: "LeanBridge::Sample"
+		, component: {
 			id: "sample@1.0.0", name: "sample", version: "1.0.0"
 		}
 	}, { refinements: true });
@@ -210,6 +212,14 @@ test("native models retain the direct dependency instead of freezing a bound", (
 		, constant: "lb_fin_dependent_1", label: "value"
 		, copy: () => null, bounds: [], reject: String
 	}), /Dependent Fin requires its earlier copied Nat parameter/u);
+	const perl = generatePerlBindingPackage(model, {
+		nativeLibrary: { sha256: "1".repeat(64) }
+		, runtimeIdentity: "2".repeat(64)
+		, initializer: "initialize_sample", library: "libsample.so"
+	});
+	assert.match(perl["Component.xs"]
+		, /lean_object \*\s+a0 = [^;]+;\s+lean_object \*\s+a1 = [^;]+;[\s\S]*int below = lean_nat_lt\(a1, a0\);[\s\S]*if \(!below\) croak\("%s", "arg1 is not below its dependent Fin bound arg0"\);[\s\S]*lb_[0-9a-f]{24}\(a0, a1\)/u);
+	assert.match(perl["lib/LeanBridge/Sample.pm"], /Checked Lean Fin bounds: arg1 < arg0\./u);
 });
 
 test("semantic projection and compiler adapters preserve the dynamic bound", async () => {
