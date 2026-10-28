@@ -1,0 +1,191 @@
+{
+  "additions": [
+    {
+      "currentSha256": "89efee4ad524dcc47abdeced1a1eb805ce51c75307cad776ca38e8b3a60bea8e",
+      "path": "scripts/update-callback-fin-milestone-read-source-history.mjs"
+    },
+    {
+      "currentSha256": "fff8a16ca38c1876bd0f4f012d4a2c662db794eb2d253d3c85bdf188ac30c119",
+      "path": "tests/helpers/callback-fin-milestone-read-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d28117a3558b62e288b880ec52cb9170a52e8e03eaf6bea3cb4ecb8196e05c46",
+      "path": "tests/helpers/callback-fin-milestone-read-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "7d054389ad98e10e246cbcb32b532b9faf6bc3c1",
+  "implementationCommits": [
+    "4255167c69146dfeeea473c2d0fa4851b5b55bde",
+    "7d054389ad98e10e246cbcb32b532b9faf6bc3c1"
+  ],
+  "milestone": "callback-fin-milestone-read-source-v1",
+  "predecessorCommit": "50bd783fd9ec4a7a2d3eec4a807e788891d09446",
+  "schemaVersion": 1,
+  "scope": "Read the additions, integration sources and pinned type-surface inventory of six callback Fin and reviewed Fin layer tests at their authenticated milestones through the Fin history hub instead of the live tree, and reverse the merged hub-order integration (the newest recorded hub transition) before the hosted signature producer-binding integration so hub reversal reaches every recorded predecessor. No claim, observation, evidence payload or type-surface pin changes. Hub and registration integration of this layer are recorded by the integrating seal.",
+  "updates": [
+    {
+      "currentSha256": "2557bcd9cad8f49840bd89dedef164d82574e80018974ddf50b7fd2c010db24f",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 811
+        },
+        {
+          "current": "\t\tassert.equal(addition.currentSha256, sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256)));\n",
+          "previous": "\t\tassert.equal(addition.currentSha256, sha256(await readFile(addition.path)));\n",
+          "start": 2048
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2755
+        }
+      ],
+      "path": "tests/helpers/callback-fin-diagnostic-contract-source-history-tests.mjs",
+      "previousSha256": "756af59cc54435922573075385670a74e62ca8dcca67b82377d5092a4f2865b0"
+    },
+    {
+      "currentSha256": "f8e0605e5652e8dfe567a7b4a80cbace2d36963d194a4e13ffff2bfd2723eccd",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 838
+        },
+        {
+          "current": "\t\tassert.equal(addition.currentSha256, sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256)));\n",
+          "previous": "\t\tassert.equal(addition.currentSha256, sha256(await readFile(addition.path)));\n",
+          "start": 2428
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3160
+        },
+        {
+          "current": "\t// The pins are checked at this layer's own inventory milestone, not the live tree.\n\tconst inventory = (await read()).integrationUpdates\n\t\t.find(update => update.path === \"docs/type-surface.v1.json\");\n\tconst document = JSON.parse(await sourceAtFinHistoryMilestone(\n\t\tinventory.path, inventory.currentSha256));\n",
+          "previous": "\tconst document = JSON.parse(await readFile(\"docs/type-surface.v1.json\"));\n",
+          "start": 3534
+        }
+      ],
+      "path": "tests/helpers/callback-fin-hosted-workflow-source-history-tests.mjs",
+      "previousSha256": "19cd9bf0eaf6ba3310f4a80963db8846431faecae98a9014239690d621c03a1f"
+    },
+    {
+      "currentSha256": "610fc5f036f8f691752dde6e20f9cb664c33d43dfb32076b686360aa2c472d38",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 773
+        },
+        {
+          "current": "\t\tassert.equal(addition.currentSha256, sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256)));\n",
+          "previous": "\t\tassert.equal(addition.currentSha256, sha256(await readFile(addition.path)));\n",
+          "start": 1993
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2696
+        }
+      ],
+      "path": "tests/helpers/callback-fin-installed-repair-source-history-tests.mjs",
+      "previousSha256": "6f8cc9cafc0a9a3ad26db1d2ddc49736e758ed542d7daf913efe723baa1f6eea"
+    },
+    {
+      "currentSha256": "c17dbb7ce15517d72d9a8caa71db493e66d37c0088b28c4c0cbb76b6d6a2a836",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 813
+        },
+        {
+          "current": "\t\tassert.equal(addition.currentSha256, sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256)));\n",
+          "previous": "\t\tassert.equal(addition.currentSha256, sha256(await readFile(addition.path)));\n",
+          "start": 2019
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2758
+        },
+        {
+          "current": "\t// The pins are checked at this layer's own inventory milestone, not the live tree.\n\tconst inventory = (await read()).integrationUpdates\n\t\t.find(update => update.path === \"docs/type-surface.v1.json\");\n\tconst document = JSON.parse(await sourceAtFinHistoryMilestone(\n\t\tinventory.path, inventory.currentSha256));\n",
+          "previous": "\tconst document = JSON.parse(await readFile(\"docs/type-surface.v1.json\"));\n",
+          "start": 3137
+        }
+      ],
+      "path": "tests/helpers/callback-fin-native-capability-source-history-tests.mjs",
+      "previousSha256": "69e4c50e1d23c188eb3d21980a20939d51e828870195d5121d056f31a1112d7a"
+    },
+    {
+      "currentSha256": "f0714b5ee9f35cfb3b20f321d4c05ff1cf23568baaa7ef919b9cf78408fe93db",
+      "edits": [
+        {
+          "current": "\tlet stage = beforeCoreHubOrderMergedIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationHostedProducerBindingIntegrationSource(\n",
+          "previous": "\tlet stage = beforeSignatureSpecializationHostedProducerBindingIntegrationSource(\n",
+          "start": 255101
+        },
+        {
+          "current": "",
+          "previous": "\tstage = beforeCoreHubOrderMergedIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "start": 257503
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7029809d2d346d0de65d31d4053305ceb3b6e09382ee2c76d1fcd177c572d309"
+    },
+    {
+      "currentSha256": "752438a47d360c15730133fbe409c2804abb97b19b2b96c02cd921f3ba84ac90",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 774
+        },
+        {
+          "current": "\t\tassert.equal(addition.currentSha256, sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256)));\n",
+          "previous": "\t\tassert.equal(addition.currentSha256, sha256(await readFile(addition.path)));\n",
+          "start": 1981
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2731
+        }
+      ],
+      "path": "tests/helpers/reviewed-callback-fin-browser-source-history-tests.mjs",
+      "previousSha256": "0ede52f23d6f6f4d6708c286bc84576eb68f79cade93fe1edd19ab8d7b165a88"
+    },
+    {
+      "currentSha256": "9cc974cf1ce5bb422812f7a262327bde55e33c24ccad66abc4c7f8709e45e89f",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 742
+        },
+        {
+          "current": "\tfor(const addition of value.additions) assert.equal(addition.currentSha256, sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256)));\n",
+          "previous": "\tfor(const addition of value.additions) assert.equal(addition.currentSha256, sha256(await readFile(addition.path)));\n",
+          "start": 1833
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2575
+        },
+        {
+          "current": "\t// The pins are checked at this layer's own inventory milestone, not the live tree.\n\tconst inventory = (await read()).integrationUpdates\n\t\t.find(update => update.path === \"docs/type-surface.v1.json\");\n\tconst document = JSON.parse(await sourceAtFinHistoryMilestone(\n\t\tinventory.path, inventory.currentSha256));\n",
+          "previous": "\tconst document = JSON.parse(await readFile(\"docs/type-surface.v1.json\"));\n",
+          "start": 2933
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-field-source-history-tests.mjs",
+      "previousSha256": "021ecdc0168079fa0d0741cbb355280a8d0486fe8c4c46a10d7885c0fcf0f0e3"
+    }
+  ]
+}
