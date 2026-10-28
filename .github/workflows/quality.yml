@@ -223,6 +223,16 @@ jobs:
           LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT: ${{ github.workspace }}/build/core-type-surface/receipt.json
         run: |
           source scripts/env.sh
+          # Sample memory every 30 s so a lost runner still names its largest processes.
+          (
+            while sleep 30; do
+              echo "core-memory $(date -u +%H:%M:%SZ)"
+              free -m
+              ps -eo pid,rss,etime,args --sort=-rss | head -n 6 | cut -c1-200
+            done
+          ) &
+          memory_sampler=$!
+          trap 'kill "$memory_sampler" 2>/dev/null || true' EXIT
           bash scripts/run-test-profile.sh contract \
             --shard "${{ matrix.shard }}/12" \
             --shard-manifest "build/core-shards/core-shard-${{ matrix.shard }}.json"

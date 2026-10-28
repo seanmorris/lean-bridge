@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { access, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -141,6 +141,10 @@ const assertCoreQualityBudget = source => {
 	assert.equal([...source.matchAll(/^\s+test "\$TYPE_SURFACE_RESULT" = success\s*$/gmu)].length, 1);
 	assert.equal([...source.matchAll(/^\s+test "\$CONTRACT_RESULT" = success\s*$/gmu)].length, 1);
 	assert.ok(!/^\s+continue-on-error:\s*true\s*$/mu.test(source), "Core quality failures must remain fatal");
+	assert.match(contractJob, /run: \|\n {10}source scripts\/env\.sh\n {10}# Sample memory every 30 s so a lost runner still names its largest processes\.\n {10}\(\n {12}while sleep 30; do\n {14}echo "core-memory \$\(date -u \+%H:%M:%SZ\)"\n {14}free -m\n {14}ps -eo pid,rss,etime,args --sort=-rss \| head -n 6 \| cut -c1-200\n {12}done\n {10}\) &\n {10}memory_sampler=\$!\n {10}trap 'kill "\$memory_sampler" 2>\/dev\/null \|\| true' EXIT\n {10}bash scripts\/run-test-profile\.sh contract \\\n/u
+		, "Every shard must sample memory in the background and stop the sampler without changing the shard status");
+	assert.equal([...source.matchAll(/^\s+trap /gmu)].length, 1
+		, "Only the shard step may install an exit trap");
 };
 
 const assertCoreProcessBudget = (source, shards) => {
@@ -165,7 +169,11 @@ const assertCoreProcessBudget = (source, shards) => {
 		, "Hosted Core must bound only the hosted contract environment");
 	assert.match(source, /NODE_OPTIONS: \[process\.env\.NODE_OPTIONS, "--max-old-space-size=4096"\]\s*\.filter\(Boolean\)\.join\(" "\)/u
 		, "Hosted Core must preserve prior Node options and append its reviewed heap bound");
-	assert.match(source, /"--test", \.\.\.boundedHostedCore \? \["--test-concurrency=2"\] : \[\], \.\.\.selected\n\]/u
+	assert.equal([...source.matchAll(/"--test-concurrency=1"/gu)].length, 1
+		, "Only one hosted Core shard may run its files serially");
+	assert.match(source, /const hostedCoreConcurrency = shard === "4\/12" \? "--test-concurrency=1" : "--test-concurrency=2";/u
+		, "Shard 4 must run one file at a time while every other shard keeps two");
+	assert.match(source, /"--test", \.\.\.boundedHostedCore \? \[hostedCoreConcurrency\] : \[\], \.\.\.selected\n\]/u
 		, "Hosted Core must pass every explicitly selected shard file to Node");
 	assert.match(source, /\], \{ cwd: root, env: childEnvironment, stdio: "inherit" \}\);/u
 		, "Hosted Core must spawn the child with the bounded environment");
@@ -307,10 +315,52 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 		, source.replace('test "$CONTRACT_RESULT" = success', "true")
 		, source.replace('test "$TYPE_SURFACE_RESULT" = success', "true")
 		, source.replace("        run: |\n          source scripts/env.sh\n", "        continue-on-error: true\n        run: |\n          source scripts/env.sh\n")
+		, source.replace("while sleep 30; do", "while sleep 300; do")
+		, source.replace("              free -m\n", "")
+		, source.replace("--sort=-rss | head -n 6", "--sort=pid | head -n 6")
+		, source.replace("          trap 'kill \"$memory_sampler\" 2>/dev/null || true' EXIT\n", "")
+		, source.replace("2>/dev/null || true' EXIT", "2>/dev/null; exit 0' EXIT")
+		, source.replace("          ) &\n", "          )\n")
 	].entries()) {
 		assert.notEqual(changed, source, `workflow mutation ${index}`);
 		assert.throws(() => assertCoreQualityBudget(changed), undefined
 			, `workflow mutation ${index}`);
+	}
+});
+
+test("Core shard memory sampler stops without masking the shard status", async () => {
+	const source = await readFile(".github/workflows/quality.yml", "utf8");
+	const step = /- name: Run one closed contract shard\n(?: {8}.*\n)*? {8}run: \|\n((?: {10}.*\n)+)/u.exec(source);
+	assert.ok(step, "The shard step must keep one literal run script");
+	const script = step[1].replace(/^ {10}/gmu, "");
+	const shard = /bash scripts\/run-test-profile\.sh contract \\\n.*\\\n.*\n/u;
+	assert.match(script, shard);
+	const directory = await mkdtemp(join(tmpdir(), "core-memory-sampler-"));
+	try
+	{
+		for(const status of [0, 7])
+		{
+			// A shard that outlives several samples and then exits with its own status.
+			const stub = script.replace("source scripts/env.sh\n", "")
+				.replace("while sleep 30; do", "while sleep 0.2; do")
+				.replace(shard, `sleep 1\n(exit ${status})\n`);
+			const result = spawnSync("bash", ["-e", "-c", stub], {
+				cwd: directory, encoding: "utf8", timeout: 10_000
+				, env: { PATH: process.env.PATH }
+			});
+			assert.equal(result.error, undefined
+				, "A leaked sampler keeps the step output open");
+			assert.equal(result.signal, null);
+			assert.equal(result.status, status);
+			assert.ok(result.stdout.split("\n").filter(line =>
+				line.startsWith("core-memory ")).length >= 2, result.stdout);
+			assert.match(result.stdout, /^Mem:/mu);
+			assert.match(result.stdout, /^\s*PID\s+RSS\s+ELAPSED\s+COMMAND$/mu);
+		}
+	}
+	finally
+	{
+		await rm(directory, { recursive: true, force: true });
 	}
 });
 
@@ -333,7 +383,13 @@ test("Hosted Core bounds each closed shard without truncating the profile", asyn
 		, source.replace("boundedHostedCore ? {", "!boundedHostedCore ? {")
 		, source.replace("[process.env.NODE_OPTIONS, \"--max-old-space-size=4096\"]"
 			, "[\"--max-old-space-size=4096\", process.env.NODE_OPTIONS]")
-		, source.replace("...boundedHostedCore ? [\"--test-concurrency=2\"] : []", "...[]")
+		, source.replace("...boundedHostedCore ? [hostedCoreConcurrency] : []", "...[]")
+		, source.replace("...boundedHostedCore ? [hostedCoreConcurrency] : []"
+			, "...boundedHostedCore ? [\"--test-concurrency=2\"] : []")
+		, source.replace("shard === \"4/12\" ?", "shard === \"5/12\" ?")
+		, source.replace("? \"--test-concurrency=1\" :", "? \"--test-concurrency=2\" :")
+		, source.replace("\"--test-concurrency=1\" : \"--test-concurrency=2\""
+			, "\"--test-concurrency=2\" : \"--test-concurrency=1\"")
 	].entries()) {
 		assert.notEqual(changed, source, `runner mutation ${index}`);
 		assert.throws(() => assertCoreProcessBudget(changed, shards), undefined
