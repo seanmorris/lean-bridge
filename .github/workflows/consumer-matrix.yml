@@ -5756,6 +5756,51 @@ jobs:
     name: Perl
     uses: ./.github/workflows/perl-consumer.yml
 
+  optional-parameter-matrix:
+    name: Reconcile optional-parameter package matrix
+    if: always()
+    needs:
+      - node-consumers
+      - php-wasm-consumers
+      - native-consumers
+      - managed-consumers
+      - perl-consumer
+      - wasi-consumer
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out the exact receipt verifier
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Download every same-run optional-parameter artifact
+        uses: actions/download-artifact@v5
+        with:
+          pattern: optional-parameter-*-${{ github.sha }}
+          path: build/optional-parameter-matrix-input
+      - name: Reconcile all seventeen profiles and both author routes
+        run: |
+          node scripts/reconcile-optional-parameter-matrix.mjs \
+            --directory build/optional-parameter-matrix-input \
+            --output build/optional-parameter-matrix/receipt.json \
+            --producer "${{ github.sha }}" \
+            --repository "${{ github.repository }}" \
+            --run-id "${{ github.run_id }}" \
+            --run-attempt "${{ github.run_attempt }}"
+      - name: Preserve the complete optional-parameter receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-matrix-${{ github.sha }}
+          path: build/optional-parameter-matrix/receipt.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+
   support-summary:
     name: Publish consumer support summary
     if: always()
@@ -5793,6 +5838,7 @@ jobs:
       - wasi-consumer
       - owned-wit-receivers
       - docker-engine
+      - optional-parameter-matrix
     runs-on: ubuntu-24.04
     steps:
       - name: Require both C and C++ acceptance jobs
@@ -5888,4 +5934,7 @@ jobs:
         run: exit 1
       - name: Enforce reviewed Fin Wasm entry acceptance
         if: needs.reviewed-fin-wasm-entry.result != 'success'
+        run: exit 1
+      - name: Enforce complete optional-parameter matrix reconciliation
+        if: needs.optional-parameter-matrix.result != 'success'
         run: exit 1
