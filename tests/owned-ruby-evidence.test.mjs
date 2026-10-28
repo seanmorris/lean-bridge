@@ -68,7 +68,8 @@ test("Ruby source history restores only whole recorded identities and preserves 
 	{
 		const source = beforeOwnedDotnet(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseOwnedRubyUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedRuby(update.path, source)), update.previousSha256);
+		// The hub reverses every recognized state, so each predecessor read names its stop.
+		assert.equal(sha256(beforeOwnedRuby(update.path, source, update.previousSha256)), update.previousSha256);
 		assert.equal(beforeOwnedRuby(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedRuby(update.path, unknown), unknown);
