@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCallbackFinPerlLocalJoinSource, callbackFinPerlLocalJoinNormalizationPaths } from "./callback-fin-perl-local-join-source-history.mjs";
 import { beforeCallbackFinPerlMilestoneReadIntegrationSource, callbackFinPerlMilestoneReadIntegrationNormalizationPaths } from "./callback-fin-perl-milestone-read-integration-source-history.mjs";
 import { beforeCallbackFinPerlMilestoneReadSource, callbackFinPerlMilestoneReadNormalizationPaths } from "./callback-fin-perl-milestone-read-source-history.mjs";
 import { beforeCoreRubyPredecessorStopSource, coreRubyPredecessorStopNormalizationPaths } from "./core-ruby-predecessor-stop-source-history.mjs";
@@ -2302,7 +2303,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackFinPerlMilestoneReadIntegrationNormalizationPaths
+	...callbackFinPerlLocalJoinNormalizationPaths
+	, ...callbackFinPerlMilestoneReadIntegrationNormalizationPaths
 	, ...callbackFinPerlMilestoneReadNormalizationPaths
 	, ...coreRubyPredecessorStopNormalizationPaths
 	, ...callbackFinMilestoneReadIntegrationNormalizationPaths
@@ -3343,7 +3345,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCallbackFinPerlMilestoneReadIntegrationSource(
+	let stage = beforeCallbackFinPerlLocalJoinSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCallbackFinPerlMilestoneReadIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

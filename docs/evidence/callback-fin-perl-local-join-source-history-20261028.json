@@ -1,0 +1,113 @@
+{
+  "additions": [
+    {
+      "currentSha256": "80702e03c8de0c6ae48781f2f79f3d0823bdd8c698c9abd32a47a6051c9ed18e",
+      "path": "docs/evidence/callback-fin-perl-milestone-read-integration-source-history-20261028.json"
+    },
+    {
+      "currentSha256": "874420c92ef9b402425ee9f1643afd22089dd1f123e3238bd312c6a74afd3fa8",
+      "path": "scripts/update-callback-fin-perl-milestone-read-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "baccc783ab703ac032fc24f512b82c19b1c5b6e2cd1e02a78f001ab846322103",
+      "path": "tests/helpers/callback-fin-perl-milestone-read-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bfdedd6b8ec4ece8f2f7bf3a7995ce5da03ab2986e3be5da6143348899abb43a",
+      "path": "tests/helpers/callback-fin-perl-milestone-read-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "72dc1a53f2ca87933b24c2c73ca28bf815006c7055caf661a90e433ec504dd35",
+      "path": "scripts/update-callback-fin-perl-local-join-source-history.mjs"
+    },
+    {
+      "currentSha256": "731d1d1c955f669f87b749148df2df4a809acd999993a56cb9f785109ed05d3c",
+      "path": "tests/helpers/callback-fin-perl-local-join-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7f81687722c137b44ec222d57abf313aee48551a5b4701f2338ede4c4053bc53",
+      "path": "tests/helpers/callback-fin-perl-local-join-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "19d745de0aea41fe832f34608ef196f8d97cdadf",
+  "implementationCommits": [
+    "2bf1e3187a62aa7d1356fc9560acda761ea95990",
+    "19d745de0aea41fe832f34608ef196f8d97cdadf"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "cb57683ce0fd28c4edbd48b2cb91262b9c7dc0aaede63acc2ad15f9967b0eebf",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-perl-local-join-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "bd24ee320f82c511864d248552be2b6f3d346ed49b2f10891e3408fcdffaf38f"
+    },
+    {
+      "currentSha256": "1f1590fdaff1a6fcff01aebe43d61f99b36a6adadd6a32181e6266f137f2d939",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinPerlLocalJoinSource, callbackFinPerlLocalJoinNormalizationPaths } from \"./callback-fin-perl-local-join-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...callbackFinPerlLocalJoinNormalizationPaths\n\t, ...callbackFinPerlMilestoneReadIntegrationNormalizationPaths\n",
+          "previous": "\t...callbackFinPerlMilestoneReadIntegrationNormalizationPaths\n",
+          "start": 205582
+        },
+        {
+          "current": "\tlet stage = beforeCallbackFinPerlLocalJoinSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinPerlMilestoneReadIntegrationSource(\n",
+          "previous": "\tlet stage = beforeCallbackFinPerlMilestoneReadIntegrationSource(\n",
+          "start": 256410
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6bec5513fe6f16a2406c06630f48b426d04cd552fb38dd8c6ace87f2851de879"
+    }
+  ],
+  "milestone": "callback-fin-perl-local-join-source-v1",
+  "predecessorCommit": "a6b1a5396af320def336f3106eb22a94720cc713",
+  "schemaVersion": 1,
+  "scope": "Join the authenticated callback Fin Perl milestone-read integration to the independently authenticated Ruby predecessor-stop layer on the actual pushed branch. Reverse the local hub and partition transitions newest-first while retaining Claude's original integration record and immutable commit identities. No runtime, package, type-surface, observation or support claim changes. Final exact-head Core acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "bd24ee320f82c511864d248552be2b6f3d346ed49b2f10891e3408fcdffaf38f",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-perl-milestone-read-source-history-tests.mjs\";\nimport \"./helpers/callback-fin-perl-milestone-read-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4234
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "fa89db4f8322f884d27155e96ad0684ea6fe34394c62571fece3b82af548e387"
+    },
+    {
+      "currentSha256": "6bec5513fe6f16a2406c06630f48b426d04cd552fb38dd8c6ace87f2851de879",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinPerlMilestoneReadIntegrationSource, callbackFinPerlMilestoneReadIntegrationNormalizationPaths } from \"./callback-fin-perl-milestone-read-integration-source-history.mjs\";\nimport { beforeCallbackFinPerlMilestoneReadSource, callbackFinPerlMilestoneReadNormalizationPaths } from \"./callback-fin-perl-milestone-read-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...callbackFinPerlMilestoneReadIntegrationNormalizationPaths\n\t, ...callbackFinPerlMilestoneReadNormalizationPaths\n\t, ...coreRubyPredecessorStopNormalizationPaths\n",
+          "previous": "\t...coreRubyPredecessorStopNormalizationPaths\n",
+          "start": 205432
+        },
+        {
+          "current": "\tlet stage = beforeCallbackFinPerlMilestoneReadIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinPerlMilestoneReadSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreRubyPredecessorStopSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreRubyPredecessorStopSource(path, text, expected);\n",
+          "start": 256211
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "66656f71f04882b7b910cbcae1e0e29a2139befdbcb318949b65a3ce7fc8e9b7"
+    }
+  ]
+}
