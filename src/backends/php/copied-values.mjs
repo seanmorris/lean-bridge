@@ -13,7 +13,10 @@ import { phpValueMethods, phpValueSemantics, phpValueReadme } from "./copied-equ
 import { copiedPhpChecks, copiedPhpConversions, copiedPhpDefinitions } from "./copied-conversions.mjs";
 import { phpVariantClasses, phpVariantReadme } from "./copied-variants.mjs";
 import { phpValue, phpClosurePublic, phpCallableState, phpCallableRuntime, phpNativeCall } from "./callables.mjs";
-import { nativeFinSummary, nativeFinContainerNote, nativeRefinementReadme } from "../native/fin-refinements.mjs";
+import {
+	nativeFinSummary, nativeFinContainerNote, nativeFinRefinements
+	, nativeRefinementReadme
+} from "../native/fin-refinements.mjs";
 
 /**
  * Render the public value API shared by the FFI and Zend transports.
@@ -61,6 +64,10 @@ function ${fn.publicName}(${fn.parameters.map(parameter => `mixed $${parameter.n
 `;
 
 const finBounds = (fn, types) => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameter.name}`), types);
+// A dependent Fin bound is an earlier Nat argument of the same call, not a constant.
+const dependentFin = (functions, types) => functions.some(fn =>
+	nativeFinRefinements(fn.declaration, types)?.parameters
+		.some(site => site?.kind === "fin-parameter"));
 const finDoc = (fn, types) => {
 	const bounds = finBounds(fn, types);
 	return bounds ? ` * Checked Lean Fin bounds: ${bounds}.\n *\n` : "";
@@ -118,7 +125,7 @@ export const renderCopiedPhpPackage = (model, evidence = null) => {
 		files["README.md"] += "\n## Lean Lists\n\nList inputs, results and record fields use consecutive-key PHP arrays with precise list<T> PHPDoc. Empty Lists, order, duplicates and nesting are preserved. Mutable array values and Bytes results are independently copied. List and Array keep distinct IR/native identities. Weak and strict callers get the same element and copy-budget checks. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
 	files["README.md"] += phpAliasReadme(model) + phpVariantReadme(model) + phpValueReadme;
 	const finFunctions = model.surface.functions.filter(fn => finBounds(fn, model.ir.types));
-	if(finFunctions.length) files["README.md"] += `\n## Bounded integers\n\n${nativeRefinementReadme(finFunctions.map(fn => fn.declaration), `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A non-BigInteger argument throws TypeError and a negative value throws ValueError, as for Nat; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), "native PHP packages", model.ir.types)}`, "native PHP packages", model.ir.types)}\n\n${finFunctions.map(fn => `- ${model.namespace}\\${fn.publicName}: ${finBounds(fn, model.ir.types)}`).join("\n")}\n`;
+	if(finFunctions.length) files["README.md"] += `\n## Bounded integers\n\n${nativeRefinementReadme(finFunctions.map(fn => fn.declaration), `Lean Fin n parameters and results are Brick\\Math\\BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A non-BigInteger argument throws TypeError and a negative value throws ValueError, as for Nat; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${dependentFin(finFunctions, model.ir.types) ? "A bound listed below as an earlier parameter name, from a Lean signature such as (n : Nat) → Fin n → α, is that argument's value in the same call: both BigInteger arguments are checked as Nat first, and the LeanBridgeError message names the value and its bound parameter, such as \"arg1 is not below its dependent Fin bound arg0\". " : ""}${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), "native PHP packages", model.ir.types)}`, "native PHP packages", model.ir.types)}\n\n${finFunctions.map(fn => `- ${model.namespace}\\${fn.publicName}: ${finBounds(fn, model.ir.types)}`).join("\n")}\n`;
 	const structuredCallbacks = [...model.surface.callbacks.values()].some(({ type }) =>
 		[...type.callable.parameters, type.callable.result].some(site => site.type.kind !== "primitive"));
 	if(structuredCallbacks)

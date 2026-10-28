@@ -1,7 +1,7 @@
 /**
- * Direct dependent Fin (`(bound : Nat) → Fin bound → …`) in installed, source-free
- * .NET, Java, Kotlin, Python, Ruby, Rust and WIT/WASI packages: the bound is the
- * live earlier argument, compared before Lean runs, never a frozen constant.
+ * Direct dependent Fin (`(bound : Nat) → Fin bound → …`) in installed,
+ * source-free native and language-host packages: the bound is the live earlier
+ * argument, compared before Lean runs, never a frozen constant.
  *
  * @file
  */
@@ -17,6 +17,8 @@ import { renderCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { renderCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
 import { renderCopiedKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
+import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
+import { renderCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
 import { compileCopiedPythonModel } from "../src/backends/python/copied-model.mjs";
 import { renderCopiedPythonPackage } from "../src/backends/python/copied-values.mjs";
 import { compileCopiedRubyModel } from "../src/backends/ruby/copied-model.mjs";
@@ -54,6 +56,14 @@ const hosts = Object.freeze({
 		const files = renderCopiedRubyPackage(compileCopiedRubyModel(ir));
 		return { api: files["lib/lean_bridge/dependentfin.rb"], readme: files["README.md"], error: "RangeError message" };
 	}
+	, "php-native": ir => {
+		const files = renderCopiedPhpPackage(compileCopiedPhpModel(ir));
+		return {
+			api: files["src/Api.php"].replaceAll("$arg", "arg")
+			, readme: files["README.md"].replaceAll("$arg", "arg")
+			, error: "LeanBridgeError message"
+		};
+	}
 	, rust: ir => {
 		const files = renderCopiedRustPackage(compileCopiedRustModel(ir), rustEvidence, { name: "dependentfin", version: "1.0.0" });
 		return { api: files["src/lib.rs"], readme: files["README.md"], error: "Error::Native message" };
@@ -83,9 +93,11 @@ const hosts = Object.freeze({
 });
 const refinements = (ir, name) => ir.declarations.find(item => item.id === `lean:DependentFin.${name}`).source.extensions["lean-lang.org/refinements"];
 
-test("every managed profile has a dependent Fin target, host renderer and installed consumer", async () => {
-	assert.deepEqual(Object.keys(dependentFinTargets).sort(), Object.keys(hosts).sort());
-	assert.deepEqual(Object.keys(dependentFinExtensions).sort(), Object.keys(hosts).sort());
+test("every dependent Fin profile has a target and installed consumer", async () => {
+	assert.deepEqual(Object.keys(dependentFinTargets).sort()
+		, Object.keys(dependentFinExtensions).sort());
+	for(const profile of Object.keys(hosts))
+		assert.ok(Object.hasOwn(dependentFinTargets, profile), profile);
 	for(const [profile, extension] of Object.entries(dependentFinExtensions))
 	{
 		const source = await readFile(`tests/fixtures/dependent-fin-consumers/${profile}.${extension}`, "utf8");
@@ -134,7 +146,7 @@ test("a static Fin keeps its previous documentation without the dependent paragr
 	}
 });
 
-test("altered dependencies and forged dependent sites are refused by every managed renderer", () => {
+test("altered dependencies and forged dependent sites are refused by every host renderer", () => {
 	const forgeries = [
 		["self dependency", ir => { refinements(ir, "mirror").parameters[1] = { kind: "fin-parameter", parameter: 1 }; }]
 		, ["later dependency", ir => { refinements(ir, "label").parameters[2] = { kind: "fin-parameter", parameter: 3 }; }]
@@ -243,6 +255,6 @@ test("the installed-consumer fixture directory is complete before any build", as
 	for(const name of ["DependentFin.lean", "lakefile.toml", "lean-toolchain", "LICENSE", "package.json"]) await access(join(dependentFinFixture, name));
 });
 
-test("source-free installed managed packages check a direct dependent Fin against the live earlier argument", { skip: !profiles.length, timeout: 2_400_000 }, t => checkInstalledDependentFin(t, profiles));
+test("source-free installed host packages check a direct dependent Fin against the live earlier argument", { skip: !profiles.length, timeout: 2_400_000 }, t => checkInstalledDependentFin(t, profiles));
 
-test("independently reviewed managed packages check a direct dependent Fin after source-free installation", { skip: !reviewedProfiles.length, timeout: 2_400_000 }, t => checkInstalledDependentFin(t, reviewedProfiles, true));
+test("independently reviewed host packages check a direct dependent Fin after source-free installation", { skip: !reviewedProfiles.length, timeout: 2_400_000 }, t => checkInstalledDependentFin(t, reviewedProfiles, true));

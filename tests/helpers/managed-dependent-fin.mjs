@@ -1,6 +1,6 @@
 /**
- * Direct dependent Fin (`(bound : Nat) → Fin bound → …`) for the managed and
- * language-host packages: .NET, Java, Kotlin, Python, Ruby, Rust and WIT/WASI.
+ * Direct dependent Fin (`(bound : Nat) → Fin bound → …`) for installed native,
+ * managed and language-host packages.
  *
  * @file
  */
@@ -12,16 +12,26 @@ export { nativeFixtureEnvironment as dependentFinEnvironment } from "./copied-fi
 export const dependentFinFixture = "tests/fixtures/onboarding/native-dependent-fin";
 // The WIT host header and its C prefix both derive from this hyphen-free name.
 const coordinate = { name: "dependentfin", version: "1.0.0" };
-export const dependentFinTargets = Object.freeze({ python: ["pypi", coordinate]
+export const dependentFinTargets = Object.freeze({ c: ["c", coordinate]
+	, cpp: ["cpp", coordinate]
+	, python: ["pypi", coordinate]
 	, rust: ["cargo", coordinate]
 	, dotnet: ["nuget", { name: "DependentFin.Api", version: "1.0.0" }]
 	, java: ["maven", { name: "org.leanbridge:dependentfin", version: "1.0.0" }]
 	, kotlin: ["maven", { name: "org.leanbridge:dependentfin", version: "1.0.0" }]
 	, ruby: ["rubygems", coordinate]
-	, "wit-wasi": ["wit-wasi", coordinate] });
+	, "php-native": ["php-native", {
+		name: "example/dependentfin", version: "1.0.0"
+	}]
+	, "wit-wasi": ["wit-wasi", coordinate]
+	, perl: ["cpan", {
+		module: "LeanBridge::DependentFin", version: "1.000"
+	}]
+});
 export const dependentFinExtensions = Object.freeze({
-	python: "py", rust: "rs", dotnet: "cs", java: "java"
-	, kotlin: "kt", ruby: "rb", "wit-wasi": "c" });
+	c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs"
+	, java: "java", kotlin: "kt", ruby: "rb", "php-native": "php"
+	, "wit-wasi": "c", perl: "pl" });
 
 const dependent = parameter => ({ kind: "fin-parameter", parameter });
 /** Checked refinement trees the native model must carry: a live parameter index, never a bound. */
