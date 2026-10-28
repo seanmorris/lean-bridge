@@ -1,0 +1,260 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2431ce0b2dad3655806814a85109d5579f8cc5fa00487271857921eed405498e",
+      "path": "scripts/update-signature-specialization-completion-source-history.mjs"
+    },
+    {
+      "currentSha256": "1725024503d951ed897d4bde714c120f25571fc0abed2cacaf5b9a3ac16ec522",
+      "path": "tests/helpers/signature-specialization-completion-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "050b33a8491386911e3479cd0c319ca530b16cd7fe69bc2bad9e78e1a295e0cf",
+      "path": "tests/helpers/signature-specialization-completion-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "17f19cf95fc82758438d19e405c922af03f482609524d26e2150cd1178f07eeb",
+      "path": "tests/fixtures/specialization-consumers/javascript.mjs"
+    },
+    {
+      "currentSha256": "8d9089a0523bf3c5c8826a0494a3ae411e9e1b6ac1c8fefb70182ff7940a8a5a",
+      "path": "tests/helpers/signature-specialization-browser.mjs"
+    },
+    {
+      "currentSha256": "1cb3d60eb78b7d3257c1e735d31aabee8206c754cb54bd4897e8663017aa9341",
+      "path": "tests/helpers/signature-specialization-php-wasm.mjs"
+    }
+  ],
+  "implementationCommit": "6cded5e9724bee0209b36c84cabdeaddb2373e75",
+  "implementationCommits": [
+    "83fdd17a81fc6146d17f3830f9f53515d1c216a5",
+    "6cded5e9724bee0209b36c84cabdeaddb2373e75"
+  ],
+  "milestone": "signature-specialization-completion-source-v1",
+  "predecessorCommit": "bb5235e37634d9744e9222e971ae769762a0ec44",
+  "schemaVersion": 1,
+  "scope": "Add source-free installed execution for all 45 outstanding generic, implicit and instance signature cells: 27 reviewed native cells across nine downstream profiles, six ordinary/reviewed PHP-Wasm cells, and twelve ordinary/reviewed browser cells across JavaScript, React and dedicated workers. Exercise compiler-selected dictionaries, concrete signatures and absent open generics; retain exact hosted reports. Refresh only the two pre-existing live pins of the extended specialization test. Make no support claim or evidence promotion before hosted validation.",
+  "updates": [
+    {
+      "currentSha256": "fbb243c0aae6b50c25de8bbeefd126c9e6649e0b832c2708dba540d15ba373ee",
+      "edits": [
+        {
+          "current": "    timeout-minutes: 300\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 416
+        },
+        {
+          "current": "      - name: Exercise ordinary and reviewed finite specializations in every browser realm\n        if: matrix.route == 'reviewed'\n        timeout-minutes: 120\n        env:\n          LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_TEST: \"1\"\n          LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_REPORT: build/signature-specializations/browser.json\n          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit\n        run: |\n          source scripts/env.sh\n          node --test --test-concurrency=1 \\\n            --test-name-pattern='^installed ordinary and reviewed specialization packages execute selected instances in every browser realm$' \\\n            tests/reviewed-specializations.test.mjs\n          test -s build/signature-specializations/browser.json\n      - name: Preserve finite-specialization browser observations\n        if: always() && matrix.route == 'reviewed'\n        uses: actions/upload-artifact@v7\n        with:\n          name: signature-specializations-browser-${{ github.sha }}\n          path: build/signature-specializations/browser.json\n          if-no-files-found: error\n          retention-days: 30\n",
+          "previous": "",
+          "start": 3953
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-npm-browser.yml",
+      "previousSha256": "7579aeda12f58e44da26fd4616c58de5ce3c63879b52d46e7c44a69f7d4188ef"
+    },
+    {
+      "currentSha256": "8d393a07f7bb57d2a095699437fcd84d172ba066b6040898d070f53e7bc57529",
+      "edits": [
+        {
+          "current": "        timeout-minutes: 100\n",
+          "previous": "        timeout-minutes: 45\n",
+          "start": 3583
+        },
+        {
+          "current": "          LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_TEST=1 \\\n          LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_REPORT=build/nominal-subtype-php-wasm-ci/signature-specializations.json \\\n            node --test --test-concurrency=1 \\\n              --test-name-pattern='^installed ordinary and reviewed PHP-Wasm packages execute selected instances in every loading arrangement$' \\\n              tests/reviewed-specializations.test.mjs\n          test -s build/nominal-subtype-php-wasm-ci/signature-specializations.json\n",
+          "previous": "",
+          "start": 3879
+        }
+      ],
+      "path": ".github/workflows/nominal-subtype-php-wasm.yml",
+      "previousSha256": "d5bb94e7efd62a530e0f93cf00bcad321b657f264cb501314fb64423a73ef695"
+    },
+    {
+      "currentSha256": "3bdfd20854f6e021791c8d41ba073354d6b93dfd145985552ec556a3f7f75e6c",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"3cbcb36881906b9941633223e8ae2ae051fa430fc0ed93d854d9485e3eae53a8\"\n",
+          "previous": "          \"sha256\": \"a8cc5418707301c796606da648d2a35a868b459331cc3b24edd3d57690bea353\"\n",
+          "start": 1725585
+        },
+        {
+          "current": "          \"sha256\": \"3cbcb36881906b9941633223e8ae2ae051fa430fc0ed93d854d9485e3eae53a8\"\n",
+          "previous": "          \"sha256\": \"a8cc5418707301c796606da648d2a35a868b459331cc3b24edd3d57690bea353\"\n",
+          "start": 1729751
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "2a43712a6131446d2860cc1c4a0eee3cd9c989e831d04145dfc84724bed0173a"
+    },
+    {
+      "currentSha256": "42ea01d990bf48f37f233df46a89b6e9af3afaed7c5c6525992d49ea807edc9c",
+      "edits": [
+        {
+          "current": "\n",
+          "previous": "",
+          "start": 539
+        },
+        {
+          "current": "\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=dotnet \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT=\"$output_root/reviewed-specializations.json\" \\\n  node --test --test-concurrency=1 --test-reporter=tap \\\n    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \\\n    tests/reviewed-specializations.test.mjs 2>&1 | tee \"$output_root/reviewed-specializations.tap\"\ntest -s \"$output_root/reviewed-specializations.json\"\ntest \"$(git rev-parse HEAD)\" = \"$revision\"\n",
+          "previous": "",
+          "start": 1673
+        }
+      ],
+      "path": "scripts/run-generic-subtype-dotnet-ci.sh",
+      "previousSha256": "26c43749cb981ae27940c270d013d585c2c831906f5def9304ff69dc5e8c4bbf"
+    },
+    {
+      "currentSha256": "55b5d60a28165719bffb45651a658e12df5910555556859d0dd44350376dc51c",
+      "edits": [
+        {
+          "current": "\n",
+          "previous": "",
+          "start": 608
+        },
+        {
+          "current": "\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=java,kotlin \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT=\"$output_root/reviewed-specializations.json\" \\\n  node --test --test-concurrency=1 --test-reporter=tap \\\n    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \\\n    tests/reviewed-specializations.test.mjs 2>&1 | tee \"$output_root/reviewed-specializations.tap\"\ntest -s \"$output_root/reviewed-specializations.json\"\ntest \"$(git rev-parse HEAD)\" = \"$revision\"\n",
+          "previous": "",
+          "start": 2188
+        }
+      ],
+      "path": "scripts/run-generic-subtype-jvm-ci.sh",
+      "previousSha256": "cd452c3feaed61a4df2b1d885928770e5410cc7d2d4415803bb20d651d909f64"
+    },
+    {
+      "currentSha256": "fd7042c8e7f3a15037d3a354e9645cd2e35ecfcabe32e0120d87cca059d836ac",
+      "edits": [
+        {
+          "current": "\nLEAN_BRIDGE_CORPUS_PERL=/usr/bin/perl \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=perl \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT=\"$output_root/reviewed-specializations.json\" \\\n  node --test --test-concurrency=1 --test-reporter=tap \\\n    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \\\n    tests/reviewed-specializations.test.mjs 2>&1 | tee \"$output_root/reviewed-specializations.tap\"\ntest -s \"$output_root/reviewed-specializations.json\"\ntest \"$(git rev-parse HEAD)\" = \"$revision\"\n",
+          "previous": "",
+          "start": 1520
+        }
+      ],
+      "path": "scripts/run-generic-subtype-perl-ci.sh",
+      "previousSha256": "2a6dc1c72a4e62bdf7f76f3cd3cc5782f49b669821f9699eda841a2ebc81b094"
+    },
+    {
+      "currentSha256": "4953d4e21015460ff7994392c4537da1b09e65c88470b134c5b022bcc11cbdba",
+      "edits": [
+        {
+          "current": "\n",
+          "previous": "",
+          "start": 665
+        },
+        {
+          "current": "\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=php-native \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT=\"$output_root/reviewed-specializations.json\" \\\n  node --test --test-concurrency=1 --test-reporter=tap \\\n    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \\\n    tests/reviewed-specializations.test.mjs 2>&1 | tee \"$output_root/reviewed-specializations.tap\"\ntest -s \"$output_root/reviewed-specializations.json\"\ntest \"$(git rev-parse HEAD)\" = \"$revision\"\n",
+          "previous": "",
+          "start": 2542
+        }
+      ],
+      "path": "scripts/run-generic-subtype-php-ci.sh",
+      "previousSha256": "308b3df63ab492a3c4da0485ac47798b3aae64b996d8a4bee0c27bbe6cb95706"
+    },
+    {
+      "currentSha256": "df407493aed244370dada6310196da70edd4f3b4116f6d10c2b077f3ad67bfa6",
+      "edits": [
+        {
+          "current": "\nLEAN_BRIDGE_PYTHON=\"$1\" \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=python \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT=\"$output_root/reviewed-specializations.json\" \\\n  node --test --test-concurrency=1 --test-reporter=tap \\\n    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \\\n    tests/reviewed-specializations.test.mjs 2>&1 | tee \"$output_root/reviewed-specializations.tap\"\ntest -s \"$output_root/reviewed-specializations.json\"\ntest \"$(git rev-parse HEAD)\" = \"$revision\"\n",
+          "previous": "",
+          "start": 1865
+        }
+      ],
+      "path": "scripts/run-generic-subtype-python-ci.sh",
+      "previousSha256": "80262cc4558a6004075fd4be2b8493e8c84c510a57a618c7bba48d5842c3c332"
+    },
+    {
+      "currentSha256": "cc7d2fd036c68bc917df40c4a4f36a258d9c02f55d672b30a84c26bb16fbb114",
+      "edits": [
+        {
+          "current": "\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=ruby \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT=\"$output_root/reviewed-specializations.json\" \\\n  node --test --test-concurrency=1 --test-reporter=tap \\\n    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \\\n    tests/reviewed-specializations.test.mjs 2>&1 | tee \"$output_root/reviewed-specializations.tap\"\ntest -s \"$output_root/reviewed-specializations.json\"\ntest \"$(git rev-parse HEAD)\" = \"$revision\"\n",
+          "previous": "",
+          "start": 1650
+        }
+      ],
+      "path": "scripts/run-generic-subtype-ruby-ci.sh",
+      "previousSha256": "5e4b1ad40ce13d1b982c05886d01254734f9a507b1bc0ef89f7bb6b8b36960bd"
+    },
+    {
+      "currentSha256": "cfcd95ad22141e0d83f65fed6788ca22b9d91db752ad2517965bf62d97ed7f0d",
+      "edits": [
+        {
+          "current": "\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=rust \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT=\"$output_root/reviewed-specializations.json\" \\\n  node --test --test-concurrency=1 --test-reporter=tap \\\n    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \\\n    tests/reviewed-specializations.test.mjs 2>&1 | tee \"$output_root/reviewed-specializations.tap\"\ntest -s \"$output_root/reviewed-specializations.json\"\ntest \"$(git rev-parse HEAD)\" = \"$revision\"\n",
+          "previous": "",
+          "start": 1682
+        }
+      ],
+      "path": "scripts/run-generic-subtype-rust-ci.sh",
+      "previousSha256": "4ec50eff8e9cdbccd16b6d6302bdeb43bd4b8c58ea70c41fdc8f8b815dc4e921"
+    },
+    {
+      "currentSha256": "b2a2b3e9f5985bc9e4719e0cf4899cb37aaa4d617814b45a6bc566542ff7acf4",
+      "edits": [
+        {
+          "current": "\n",
+          "previous": "",
+          "start": 591
+        },
+        {
+          "current": "\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1 \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=wit-wasi \\\nLEAN_BRIDGE_REVIEWED_SPECIALIZATION_REPORT=\"$output_root/reviewed-specializations.json\" \\\n  node --max-old-space-size=3072 --test --test-concurrency=1 --test-reporter=tap \\\n    --test-name-pattern='^independently reviewed native packages install every chosen specialization without its generic$' \\\n    tests/reviewed-specializations.test.mjs 2>&1 | tee \"$output_root/reviewed-specializations.tap\"\ntest -s \"$output_root/reviewed-specializations.json\"\ntest \"$(git rev-parse HEAD)\" = \"$revision\"\n",
+          "previous": "",
+          "start": 2068
+        }
+      ],
+      "path": "scripts/run-generic-subtype-wit-ci.sh",
+      "previousSha256": "f83ca96d89462b2b73238d2117b6bd020f4c0b35ca18f8d25b23539f0d21792d"
+    },
+    {
+      "currentSha256": "3cbcb36881906b9941633223e8ae2ae051fa430fc0ed93d854d9485e3eae53a8",
+      "edits": [
+        {
+          "current": "import { checkSignatureSpecializationBrowserRoute, validateSignatureSpecializationBrowserReport } from \"./helpers/signature-specialization-browser.mjs\";\nimport { checkSignatureSpecializationPhpWasmRoute, validateSignatureSpecializationPhpWasmReport } from \"./helpers/signature-specialization-php-wasm.mjs\";\n",
+          "previous": "",
+          "start": 2302
+        },
+        {
+          "current": "import { prepareRustCorpusDependencies } from \"./helpers/type-corpus-rust.mjs\";\n",
+          "previous": "",
+          "start": 2676
+        },
+        {
+          "current": "assert.equal(new Set(profiles).size, profiles.length, \"Duplicate reviewed specialization profile\");\nassert.ok(profiles.every(profile => Object.hasOwn(nativeSpecializationTargets, profile)), \"Unknown or empty reviewed specialization profile\");\n",
+          "previous": "assert.ok(profiles.every(profile => [\"c\", \"cpp\"].includes(profile)), \"Reviewed specialization acceptance covers C and C++ first\");\n",
+          "start": 22969
+        },
+        {
+          "current": "test(\"independently reviewed native packages install every chosen specialization without its generic\", { skip: !profiles.length, timeout: 2_400_000 }, async t => {\n",
+          "previous": "test(\"independently reviewed C and C++ packages install every chosen specialization without its generic\", { skip: !profiles.length, timeout: 2_400_000 }, async t => {\n",
+          "start": 24603
+        },
+        {
+          "current": "\tif(profiles.includes(\"ruby\"))\n\t{\n\t\tenvironment.LEAN_BRIDGE_RUBY ??= resolve(\".toolchains/ruby33/bin/ruby\");\n\t\tenvironment.LEAN_BRIDGE_GEM ??= join(dirname(environment.LEAN_BRIDGE_RUBY), \"gem\");\n\t}\n",
+          "previous": "",
+          "start": 24967
+        },
+        {
+          "current": "\t\tconst dependencies = attempt === 0 && profiles.includes(\"rust\")\n\t\t\t? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, \"native/rust\"), directory, handoff: join(consumer, \"dependencies\"), environment }) : undefined;\n",
+          "previous": "",
+          "start": 27234
+        },
+        {
+          "current": "\t\t\tconst observation = await installSpecializationConsumer({ profile, consumer, handoff, packages, dependencies, environment });\n",
+          "previous": "\t\t\tconst observation = await installSpecializationConsumer({ profile, consumer, handoff, packages, environment });\n",
+          "start": 27861
+        },
+        {
+          "current": "const browser = process.env.LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_TEST === \"1\";\ntest(\"installed ordinary and reviewed specialization packages execute selected instances in every browser realm\", { skip: !browser, timeout: 4_800_000 }, async t => {\n\tconst routes = [];\n\tfor(const route of [\"ordinary\", \"reviewed\"])\n\t\troutes.push(await checkSignatureSpecializationBrowserRoute(t, route));\n\tconst report = validateSignatureSpecializationBrowserReport({ schemaVersion: 1\n\t\t, kind: \"signature-specialization-browser-installed-v1\", routes });\n\tconst reportPath = resolve(process.env.LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_REPORT\n\t\t?? \"build/signature-specializations/browser.json\");\n\tawait saveLakeFile(dirname(reportPath), reportPath.split(\"/\").at(-1), canonicalJson(report));\n});\n\nconst phpWasm = process.env.LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_TEST === \"1\";\ntest(\"installed ordinary and reviewed PHP-Wasm packages execute selected instances in every loading arrangement\", { skip: !phpWasm, timeout: 4_800_000 }, async t => {\n\tconst reports = [];\n\tfor(const path of [\"ordinary-source\", \"reviewed-ir\"])\n\t\treports.push(await checkSignatureSpecializationPhpWasmRoute(t, path));\n\tconst report = validateSignatureSpecializationPhpWasmReport({ schemaVersion: 1\n\t\t, kind: \"signature-specialization-php-wasm-installed-v1\", reports });\n\tconst reportPath = resolve(process.env.LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_REPORT\n\t\t?? \"build/signature-specializations/php-wasm.json\");\n\tawait saveLakeFile(dirname(reportPath), reportPath.split(\"/\").at(-1), canonicalJson(report));\n});\n\ntest(\"CI runs every reviewed specialization host gate against fresh Lean and retains its report\", async () => {\n",
+          "previous": "test(\"CI runs the reviewed C/C++ and npm specialization gates against fresh Lean and keeps both reports\", async () => {\n",
+          "start": 37210
+        },
+        {
+          "current": "\tconst scripts = {\n\t\tpython: [\"python\"]\n\t\t, ruby: [\"ruby\"]\n\t\t, rust: [\"rust\"]\n\t\t, dotnet: [\"dotnet\"]\n\t\t, jvm: [\"java,kotlin\"]\n\t\t, php: [\"php-native\"]\n\t\t, wit: [\"wit-wasi\"]\n\t\t, perl: [\"perl\"]\n\t};\n\tfor(const [host, [selected]] of Object.entries(scripts))\n\t{\n\t\tconst source = await readFile(`scripts/run-generic-subtype-${host}-ci.sh`, \"utf8\");\n\t\tassert.match(source, new RegExp(`LEAN_BRIDGE_REVIEWED_SPECIALIZATION_PROFILES=${selected}`, \"u\"), host);\n\t\tassert.equal(source.split(\"LEAN_BRIDGE_REVIEWED_SPECIALIZATION_TEST=1\").length, 2, host);\n\t\tassert.match(source, /reviewed-specializations\\.json/u, host);\n\t\tassert.match(source, /independently reviewed native packages install every chosen specialization without its generic/u, host);\n\t}\n\tconst browserWorkflow = await readFile(\".github/workflows/generic-subtype-npm-browser.yml\", \"utf8\");\n\tassert.match(browserWorkflow, /LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_TEST: \"1\"/u);\n\tassert.match(browserWorkflow, /signature-specializations-browser-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tconst phpWasmWorkflow = await readFile(\".github/workflows/nominal-subtype-php-wasm.yml\", \"utf8\");\n\tassert.match(phpWasmWorkflow, /LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_TEST=1/u);\n\tassert.match(phpWasmWorkflow, /nominal-subtype-php-wasm-ci\\/signature-specializations\\.json/u);\n",
+          "previous": "",
+          "start": 40304
+        }
+      ],
+      "path": "tests/reviewed-specializations.test.mjs",
+      "previousSha256": "a8cc5418707301c796606da648d2a35a868b459331cc3b24edd3d57690bea353"
+    }
+  ]
+}
