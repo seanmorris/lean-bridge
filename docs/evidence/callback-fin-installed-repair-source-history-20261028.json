@@ -1,0 +1,493 @@
+{
+  "additions": [
+    {
+      "currentSha256": "711d231d75c1901ca0cb6376c4b8c3b344e43a99f6c572360b7a04f5d7ace06d",
+      "path": "tests/callback-fin-perl-package.test.mjs"
+    },
+    {
+      "currentSha256": "4c346f5602f53468a5a2c82a20676aa1362e05e93bba346ec2c65dde4d9c70b5",
+      "path": "scripts/update-callback-fin-installed-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "6f8cc9cafc0a9a3ad26db1d2ddc49736e758ed542d7daf913efe723baa1f6eea",
+      "path": "tests/helpers/callback-fin-installed-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "9596d965ab9403390df663d9798d525ed1d71e97c0e45c9266647ad8c5eece34",
+      "path": "tests/helpers/callback-fin-installed-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "40232c74a0af9ab0c4057a2d386a5981e8e25ca4",
+  "integrationUpdates": [
+    {
+      "currentSha256": "aced8f0cc256a2bc540b9c3cc6c63b2b6bd780ce3e947e9e37934558dc26e45e",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-installed-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1200
+        }
+      ],
+      "path": "tests/checked-javascript-partition-07.test.mjs",
+      "previousSha256": "eb23c528e70a1ced3891d6f5bba7cca2d1b6a565c11d2ea31107728d0a2885d0"
+    },
+    {
+      "currentSha256": "9d9fe44e7730262436d8dfa3d9b251ce6bbee87c7619240b6a47f358b2f662c4",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinInstalledRepairSource, callbackFinInstalledRepairNormalizationPaths } from \"./callback-fin-installed-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 24243
+        },
+        {
+          "current": "\t...callbackFinInstalledRepairNormalizationPaths\n\t, ...reviewedCallbackFinBrowserNormalizationPaths\n",
+          "previous": "\t...reviewedCallbackFinBrowserNormalizationPaths\n",
+          "start": 197906
+        },
+        {
+          "current": "\tlet stage = beforeCallbackFinInstalledRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeReviewedCallbackFinBrowserSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeReviewedCallbackFinBrowserSource(path, text, expected);\n",
+          "start": 246212
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "422c4f0b9698460ecb21bdd51dfc448216742398962a95f08e4ec03c6cec1989"
+    }
+  ],
+  "milestone": "callback-fin-installed-repair-source-v1",
+  "predecessorCommit": "4ac86a9e06c55c1e2f9e9112512008532706dbd1",
+  "schemaVersion": 1,
+  "scope": "Repair the source-free installed callback-Fin matrix at its actual copied-value ABI. Preserve distinct refined callback identities when JVM and WIT erase them to one carrier, admit compiler-only Perl checked/reply annotations without widening native representations, and execute direct copied callbacks in Python, Ruby, Rust, .NET, Java, Kotlin and native PHP. Exercise the generic installed WIT callable API with checked Fin arguments, returned closures, failure recovery, identity release and unchanged public-output counts.",
+  "updates": [
+    {
+      "currentSha256": "268ff23eacb54c645023a258aa28b00f36204628e1602c01e3eaa9fbd3dd1ba7",
+      "edits": [
+        {
+          "current": "import { sha256 } from \"../../capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 164
+        },
+        {
+          "current": "\tconst callbacks = [...surface.callbacks.values()];\n\tconst callbackBase = callback => {\n\t\tconst signature = callback.type.callable;\n\t\tconst structured = [...signature.parameters, signature.result].some(site => site.type.kind !== \"primitive\");\n\t\treturn structured ? `Fn${pascal(callback.field)}` : `Fn${signature.parameters.map(site => primitiveName(site.type.name)).join(\"\")}To${primitiveName(signature.result.type.name)}`;\n\t};\n\tconst callbackBases = callbacks.map(callbackBase);\n\tconst duplicateCallbackBases = new Set(callbackBases.filter((base, index) =>\n\t\tcallbackBases.some((other, otherIndex) => otherIndex !== index && other === base)));\n\tfor(const [index, callback] of callbacks.entries())\n",
+          "previous": "\tfor(const [index, callback] of [...surface.callbacks.values()].entries())\n",
+          "start": 7216
+        },
+        {
+          "current": "\t\tconst base = callbackBases[index];\n\t\t// Refinements can give distinct nominal callback contracts the same erased\n\t\t// Java signature.  Preserve the old readable name when it is unique, and\n\t\t// authenticate only colliding names with their stable Binding IR identity.\n\t\tcallback.publicName = duplicateCallbackBases.has(base)\n\t\t\t? `${base}Id${sha256(callback.type.id).slice(0, 12)}` : base;\n",
+          "previous": "\t\tcallback.publicName = structured ? `Fn${pascal(callback.field)}` : `Fn${signature.parameters.map(site => primitiveName(site.type.name)).join(\"\")}To${primitiveName(signature.result.type.name)}`;\n",
+          "start": 8143
+        }
+      ],
+      "path": "src/backends/jvm/copied-model.mjs",
+      "previousSha256": "155aa7e4d95e434602c56c64e8c20779b4e30e3c2cf26e19806afb9a9ad366ac"
+    },
+    {
+      "currentSha256": "aa9db30a25eb74b1d654f5fdbd0b6c0635378f26c6f6bf1afa526a2c5f80c1bc",
+      "edits": [
+        {
+          "current": "\tmodel.types.forEach(type => {\n\t\t// `checked` and `reply` are compiler annotations consumed by the native\n\t\t// callback/refinement layers.  They are not fields of the closed native\n\t\t// representation, just as createNativeModel strips them before validating\n\t\t// its representation shapes.\n\t\tconst { key, ...shape } = type;\n\t\tdelete shape.checked; delete shape.reply;\n\t\tvalidateNativeRepresentation(shape);\n",
+          "previous": "\tmodel.types.forEach(({ key, ...type }) => {\n\t\tvalidateNativeRepresentation(type);\n",
+          "start": 31962
+        }
+      ],
+      "path": "src/backends/perl/generate.mjs",
+      "previousSha256": "fe561d62d7ddccf47576fb9d39427b902806731dd69a4637ad204496d6c2a378"
+    },
+    {
+      "currentSha256": "dc92f30786957549e77e8c313a728d369fcd0969701cfb934dcc6f0fdebdbc9a",
+      "edits": [
+        {
+          "current": "import { sha256 } from \"../../capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 236
+        },
+        {
+          "current": "\tconst callbacks = [...surface.callbacks.values()];\n\tconst resourceBase = callback => {\n",
+          "previous": "\tconst resources = [...surface.callbacks.values()].map((callback, index) => {\n",
+          "start": 5713
+        },
+        {
+          "current": "\t\treturn `function-${signature.parameters.map(site => label(site.type)).join(\"-\")}-to-${label(signature.result.type)}`;\n\t};\n\tconst resourceBases = callbacks.map(resourceBase);\n\tconst duplicateResourceBases = new Set(resourceBases.filter((base, index) =>\n\t\tresourceBases.some((other, otherIndex) => otherIndex !== index && other === base)));\n\tconst resources = callbacks.map((callback, index) => {\n\t\tconst base = resourceBases[index];\n\t\tconst inferred = duplicateResourceBases.has(base)\n\t\t\t? `function-${sha256(callback.type.id).slice(0, 24)}` : base;\n\t\tconst witName = admit(callableResourceNames?.get(callback.type.id) ?? inferred\n\t\t\t, ir.declarations[0]);\n",
+          "previous": "\t\tconst witName = admit(callableResourceNames?.get(callback.type.id)\n\t\t\t?? `function-${signature.parameters.map(site => label(site.type)).join(\"-\")}-to-${label(signature.result.type)}`, ir.declarations[0]);\n",
+          "start": 5938
+        }
+      ],
+      "path": "src/backends/wit/copied-model.mjs",
+      "previousSha256": "eee9f9a456a92bc4d9680e92afead3b27fe42e239d586cadc3af9c84926e85d0"
+    },
+    {
+      "currentSha256": "113af64c284c7e2943e5d27baf56a11d1b2fea89c7a814494298ad0720d30d17",
+      "edits": [
+        {
+          "current": "const expectedChecks = { python: 19, ruby: 19, rust: 15 };\n",
+          "previous": "const expectedChecks = { python: 20, ruby: 20, rust: 15 };\n",
+          "start": 1707
+        }
+      ],
+      "path": "tests/callback-fin-language-installed.test.mjs",
+      "previousSha256": "9e92d7649397c03f34ea985fdde4eb8aa14a1462d90a620923a28c6b8a99d8e1"
+    },
+    {
+      "currentSha256": "73fd64c1beb4cf4e6ede6662bcf5d840ce85f122b2cd266c47057c60cfaf2756",
+      "edits": [
+        {
+          "current": "import { generateCopiedPythonPackage } from \"../src/backends/python/copied-values.mjs\";\nimport { generateCopiedRubyPackage } from \"../src/backends/ruby/copied-values.mjs\";\nimport { generateCopiedRustPackage } from \"../src/backends/rust/copied-values.mjs\";\n",
+          "previous": "import { generateCallablePythonGraphPackage } from \"../src/backends/python/callable-graph-package.mjs\";\nimport { generateCallableRubyGraphPackage } from \"../src/backends/ruby/callable-graph-package.mjs\";\nimport { generateCallableRustGraphPackage } from \"../src/backends/rust/callable-graph-package.mjs\";\n",
+          "start": 206
+        },
+        {
+          "current": "\t\t[\"python\", 19], [\"ruby\", 19], [\"rust\", 15]\n",
+          "previous": "\t\t[\"python\", 20], [\"ruby\", 20], [\"rust\", 15]\n",
+          "start": 1108
+        },
+        {
+          "current": "\tconst python = generateCopiedPythonPackage(ir);\n\tconst ruby = generateCopiedRubyPackage(ir);\n\tconst rust = generateCopiedRustPackage(ir, null, {\n",
+          "previous": "\tconst python = generateCallablePythonGraphPackage(ir);\n\tconst ruby = generateCallableRubyGraphPackage(ir);\n\tconst rust = generateCallableRustGraphPackage(ir, null, {\n",
+          "start": 2463
+        },
+        {
+          "current": "",
+          "previous": "\t\t, \"lean_reviewedcallbacks/_assets.py\"\n",
+          "start": 2830
+        },
+        {
+          "current": "\t\tfor(const token of [\"scaler\", \"counter\", \"visit\"\n",
+          "previous": "\t\tfor(const token of [\"with_recovery\", \"scaler\", \"counter\", \"visit\"\n",
+          "start": 3221
+        },
+        {
+          "current": "\t\tassert.ok(!source.includes(\"with_recovery\"));\n",
+          "previous": "",
+          "start": 3365
+        },
+        {
+          "current": "\t{\n",
+          "previous": "",
+          "start": 3951
+        },
+        {
+          "current": "\t\tassert.doesNotMatch(source, /with_recovery/u);\n\t}\n",
+          "previous": "",
+          "start": 4007
+        }
+      ],
+      "path": "tests/callback-fin-language-package.test.mjs",
+      "previousSha256": "18f3975986d95b8936e942282591f8359c31ddaaa6fa018592fe7c238d934724"
+    },
+    {
+      "currentSha256": "366227090c163f4856c5c0d1016ac080f9d9064970c3fdd64f5b2c7b6acb4b4e",
+      "edits": [
+        {
+          "current": "import { generateCopiedDotnetPackage } from \"../src/backends/dotnet/copied-values.mjs\";\nimport { generateCopiedJvmKotlinPackage } from \"../src/backends/jvm/copied-kotlin.mjs\";\nimport { generateCopiedPhpPackage } from \"../src/backends/php/copied-values.mjs\";\nimport { compileCopiedWitModel } from \"../src/backends/wit/copied-model.mjs\";\nimport { renderWitHostHeader } from \"../src/backends/wit/copied-host.mjs\";\n",
+          "previous": "import { generateCallableDotnetGraphPackage } from \"../src/backends/dotnet/callable-graph-package.mjs\";\nimport { generateCallableJvmGraphPackage } from \"../src/backends/jvm/callable-graph-package.mjs\";\nimport { generateCallablePhpGraphPackage } from \"../src/backends/php/callable-graph-package.mjs\";\nimport { compileCallableWitGraphPackageModel } from \"../src/backends/wit/callable-graph-package.mjs\";\n",
+          "start": 208
+        },
+        {
+          "current": "\tconst dotnet = generateCopiedDotnetPackage(ir);\n\tconst jvm = generateCopiedJvmKotlinPackage(ir);\n\tconst php = generateCopiedPhpPackage(ir);\n\tconst wit = compileCopiedWitModel(ir, {\n",
+          "previous": "\tconst dotnet = generateCallableDotnetGraphPackage(ir);\n\tconst jvm = generateCallableJvmGraphPackage(ir);\n\tconst php = generateCallablePhpGraphPackage(ir);\n\tconst wit = compileCallableWitGraphPackageModel(ir, {\n",
+          "start": 827
+        },
+        {
+          "current": "\t}, { callables: true });\n",
+          "previous": "\t});\n",
+          "start": 1056
+        },
+        {
+          "current": "\tconst header = renderWitHostHeader(wit);\n",
+          "previous": "",
+          "start": 2264
+        },
+        {
+          "current": "\tassert.ok(calls.size >= 5);\n",
+          "previous": "\tassert.ok(calls.size >= 12);\n",
+          "start": 2424
+        },
+        {
+          "current": "\t\tassert.ok(header.includes(`${name}(`), name);\n\tassert.equal(wit.resources.length, 7);\n\tassert.equal(new Set(wit.resources.map(resource => resource.witName)).size, 7);\n\tfor(const resource of wit.resources)\n\t{\n\t\tassert.match(resource.witName, /^function-/u);\n\t\tassert.match(wit.wit, new RegExp(`resource ${resource.witName};`, \"u\"));\n\t}\n\tfor(const id of [\"bridge:Callback1469b3ae2047ff62e64f\"\n\t\t, \"bridge:Callbacka1b5e4d2cfa3d3e80004\"\n\t\t, \"bridge:Callback0b35b98375ec45f097a4\"\n\t\t, \"bridge:Callbackf2af9db3bda87ab235db\"])\n\t\tassert.match(witSource, new RegExp(\n\t\t\twit.resources.find(resource => resource.type.id === id).witName, \"u\"));\n\tassert.doesNotMatch(witSource, /WithRecovery|with_recovery/u);\n",
+          "previous": "\t\tif(!name.endsWith(\"_clear\"))\n\t\t\tassert.ok(wit.hostHeader.includes(`${name}(`), name);\n",
+          "start": 2479
+        }
+      ],
+      "path": "tests/callback-fin-remaining-package.test.mjs",
+      "previousSha256": "7af20b51035714a5ab4f0fa81b08710a6c5b5980c55bd485533e00e142e0384c"
+    },
+    {
+      "currentSha256": "8535aa95c9ef2c5b2c0f29d3be10fc3a5333769bd337836a832fd46fac2f14cb",
+      "edits": [
+        {
+          "current": "        Check(Api.Visit(host) == N(10),\n",
+          "previous": "        Check(Api.Visit(new(host, BigInteger.Zero)) == N(10),\n",
+          "start": 1473
+        },
+        {
+          "current": "            _ => throw sentinel)), sentinel), \"callback exception identity\");\n",
+          "previous": "            new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(\n                _ => throw sentinel, BigInteger.Zero))), sentinel), \"callback exception identity\");\n",
+          "start": 1783
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/dotnet.cs",
+      "previousSha256": "990b5aa20b114ae8d92ebab6b008d6aa95b2809e2be85bafbe7426c57cbbb391"
+    },
+    {
+      "currentSha256": "fd5fdde44ae82e0466b52f26ee18870b20f0ca50f288186f176f49c8f016ddf5",
+      "edits": [
+        {
+          "current": "        check(Api.visit(value -> {\n",
+          "previous": "        FnNatToNatHost host = value -> {\n",
+          "start": 1406
+        },
+        {
+          "current": "        }).equals(n(10)),\n",
+          "previous": "        };\n        check(Api.visit(new WithRecovery<>(host, BigInteger.ZERO)).equals(n(10)),\n",
+          "start": 1628
+        },
+        {
+          "current": "        check(reject(IllegalStateException.class, () -> Api.visit(\n            _value -> { throw sentinel; })) == sentinel,\n",
+          "previous": "        check(reject(IllegalStateException.class, () -> Api.visit(new WithRecovery<>(\n            (FnNatToNatHost)(_value -> { throw sentinel; }), BigInteger.ZERO))) == sentinel,\n",
+          "start": 1839
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/java.java",
+      "previousSha256": "80a61f04efbc7dd560a9b0555d1fb6848eed4dcb55ac73fd7ec032ebfb390244"
+    },
+    {
+      "currentSha256": "941f2d32e6afce5ec43e1b7ef7192a0f685ee2324e5bd25eaef5de86b45d4cd2",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import org.leanbridge.reviewedcallbacks.FnNatToNatHost\nimport org.leanbridge.reviewedcallbacks.WithRecovery\n",
+          "start": 104
+        },
+        {
+          "current": "    val visited = Api.visit { value ->\n",
+          "previous": "    val host = FnNatToNatHost { value ->\n",
+          "start": 1219
+        },
+        {
+          "current": "    check(visited == n(10),\n",
+          "previous": "    check(Api.visit(WithRecovery(host, BigInteger.ZERO)) == n(10),\n",
+          "start": 1408
+        },
+        {
+          "current": "        Api.visit { throw sentinel }\n",
+          "previous": "        Api.visit(WithRecovery(FnNatToNatHost { throw sentinel }, BigInteger.ZERO))\n",
+          "start": 1644
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/kotlin.kt",
+      "previousSha256": "a3cae70973b6ad5913798b1a746f99b4ae6baf3a9a1de03f8d546c45e661d9de"
+    },
+    {
+      "currentSha256": "abe01521316e8783ef23f662370b775cdf3c6004cc364cca27cfea6d83d493b1",
+      "edits": [
+        {
+          "current": "",
+          "previous": "use function LeanReviewedcallbacks\\with_recovery;\n",
+          "start": 559
+        },
+        {
+          "current": "$check(visit($host)->isEqualTo($n(10)),\n",
+          "previous": "$check(visit(with_recovery($host, $n(0)))->isEqualTo($n(10)),\n",
+          "start": 1745
+        },
+        {
+          "current": "$check($reject(fn() => visit(fn(BigInteger $_value) => throw $sentinel)) === $sentinel,\n    'callback exception identity');\n",
+          "previous": "$check($reject(fn() => visit(with_recovery(fn(BigInteger $_value) => throw $sentinel,\n    $n(0)))) === $sentinel, 'callback exception identity');\n",
+          "start": 1941
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/php-native.php",
+      "previousSha256": "eee109d9f81a5483bce073661d1b32a3cf5e4087891972ff434ee6eb4b128945"
+    },
+    {
+      "currentSha256": "ca19d2daea8a66624dc40552fc804a4d240344790a41caad91838695b4ad0e4b",
+      "edits": [
+        {
+          "current": "check(api.visit(host) == 10,\n",
+          "previous": "check(api.visit(api.with_recovery(host, 0)) == 10,\n",
+          "start": 904
+        },
+        {
+          "current": "",
+          "previous": "before = calls\nreject(lambda: api.visit(host), TypeError)\ncheck(calls == before, \"missing recovery stops callback entry\")\n",
+          "start": 1027
+        },
+        {
+          "current": "check(reject(lambda: api.visit(\n    lambda _value: (_ for _ in ()).throw(sentinel))) is sentinel,\n",
+          "previous": "check(reject(lambda: api.visit(api.with_recovery(\n    lambda _value: (_ for _ in ()).throw(sentinel), 0))) is sentinel,\n",
+          "start": 1076
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/python.py",
+      "previousSha256": "634d0795bac9e68675afea2392ef93005cd175f17c3de351f5a79bd9fd0b4c46"
+    },
+    {
+      "currentSha256": "448f93c3bd33cb7e6cd10517c8b15fa3eb85545029414475b4b1c671364ac5e2",
+      "edits": [
+        {
+          "current": "check(API.visit(host) == 10,\n",
+          "previous": "check(API.visit(API.with_recovery(host, 0)) == 10,\n",
+          "start": 790
+        },
+        {
+          "current": "",
+          "previous": "before = $calls\nreject(TypeError) { API.visit(host) }\ncheck($calls == before, \"missing recovery stops callback entry\")\n",
+          "start": 914
+        },
+        {
+          "current": "check(reject { API.visit(proc { raise sentinel }) }.equal?(sentinel),\n",
+          "previous": "check(reject { API.visit(API.with_recovery(proc { raise sentinel }, 0)) }.equal?(sentinel),\n",
+          "start": 979
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/ruby.rb",
+      "previousSha256": "834fa0d758556f810cc61c40b7f2de305701f3ce2486780ac805a76ac89c61d2"
+    },
+    {
+      "currentSha256": "1b46f582d4625b991fbe5cad537fe7e9e404e9df1d8c9027a3f5e21707d105bc",
+      "edits": [
+        {
+          "current": "    let visited = api::visit(|value: BigUint| {\n",
+          "previous": "    let visited = api::visit(api::with_recovery(|value: BigUint| {\n",
+          "start": 1064
+        },
+        {
+          "current": "    })?;\n",
+          "previous": "    }, n(0)))?;\n",
+          "start": 1213
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/rust.rs",
+      "previousSha256": "5831301ad3cc01ffb1ddae4c5d421ea54a42ba22c3ffb480219c4d1f1746d6b5"
+    },
+    {
+      "currentSha256": "33a0bb036c28d88d2ff24a4f24837c7368f76ded20a453250abc9f0c9459a3a9",
+      "edits": [
+        {
+          "current": "typedef wasmtime_component_val_t component_value;\ntypedef reviewedcallbacks_wasmtime_value value;\ntypedef reviewedcallbacks_wasmtime_function function;\n",
+          "previous": "typedef reviewedcallbacks_scalar_nat_t nat_t;\ntypedef reviewedcallbacks_wasmtime_function function_t;\n",
+          "start": 260
+        },
+        {
+          "current": "static reviewedcallbacks_wasmtime *session;\nstatic void check(bool condition, const char *label) {\n  if (!condition) { fprintf(stderr, \"%s\\n\", label); assert(condition); }\n",
+          "previous": "static void check(bool value, const char *label) {\n  if (!value) { fprintf(stderr, \"%s\\n\", label); assert(value); }\n",
+          "start": 437
+        },
+        {
+          "current": "static component_value natural(uint32_t number) {\n  component_value result = {.kind = WASMTIME_COMPONENT_LIST};\n  wasmtime_component_vallist_new_uninit(&result.of.list, number ? 1 : 0);\n  if (number) result.of.list.data[0] = (component_value){\n    .kind = WASMTIME_COMPONENT_U32, .of.u32 = number\n  };\n  return result;\n",
+          "previous": "static nat_t natural(const uint32_t *data) {\n  return (nat_t){.data = data, .length = data ? 1 : 0};\n",
+          "start": 1435
+        },
+        {
+          "current": "static value copied(component_value item) { return (value){.value = item}; }\nstatic value callable(function item) { return (value){.function = item}; }\nstatic bool equal_nat(const component_value *item, uint32_t expected) {\n  return item->kind == WASMTIME_COMPONENT_LIST\n    && item->of.list.size == (expected ? 1u : 0u)\n    && (!expected || (item->of.list.data[0].kind == WASMTIME_COMPONENT_U32\n      && item->of.list.data[0].of.u32 == expected));\n}\nstatic void clear(value *item) {\n  if (item->function) ok(reviewedcallbacks_wasmtime_function_close(\n    session, &item->function));\n  else wasmtime_component_val_delete(&item->value);\n  *item = (value){0};\n",
+          "previous": "static bool equal_nat(const nat_t *value, uint32_t expected) {\n  return value->length == (expected ? 1u : 0u)\n    && (!expected || value->data[0] == expected);\n",
+          "start": 1756
+        },
+        {
+          "current": "",
+          "previous": "  uint32_t reply;\n",
+          "start": 2705
+        },
+        {
+          "current": "static wasmtime_error_t *visit_callback(void *data, const component_value *args,\n    size_t count, component_value *out) {\n",
+          "previous": "static wasmtime_error_t *visit_callback(void *data, const nat_t *value, nat_t *out) {\n",
+          "start": 2783
+        },
+        {
+          "current": "  if (count != 1 || args[0].kind != WASMTIME_COMPONENT_LIST\n      || args[0].of.list.size > 1\n      || (args[0].of.list.size\n        && (args[0].of.list.data[0].kind != WASMTIME_COMPONENT_U32\n          || args[0].of.list.data[0].of.u32 >= 5)))\n",
+          "previous": "  if (value->length > 1 || (value->length == 1 && value->data[0] >= 5))\n",
+          "start": 2947
+        },
+        {
+          "current": "  *out = natural(args[0].of.list.size ? args[0].of.list.data[0].of.u32 : 0);\n  return NULL;\n",
+          "previous": "  *out = *value; return NULL;\n",
+          "start": 3325
+        },
+        {
+          "current": "static wasmtime_error_t *apply_callback(void *data, const component_value *args,\n    size_t count, component_value *out) {\n",
+          "previous": "static wasmtime_error_t *apply_callback(void *data, const nat_t *value, nat_t *out) {\n",
+          "start": 3419
+        },
+        {
+          "current": "  if (count != 1 || args[0].kind != WASMTIME_COMPONENT_LIST\n      || args[0].of.list.size > 1\n      || (args[0].of.list.size\n        && args[0].of.list.data[0].kind != WASMTIME_COMPONENT_U32))\n    return wasmtime_error_new(\"invalid Nat callback input\");\n  uint32_t number = args[0].of.list.size ? args[0].of.list.data[0].of.u32 : 0;\n  *out = natural(number + 1); return NULL;\n",
+          "previous": "  state->reply = (value->length ? value->data[0] : 0) + 1;\n  *out = natural(&state->reply); return NULL;\n",
+          "start": 3583
+        },
+        {
+          "current": "",
+          "previous": "  reviewedcallbacks_wasmtime *session = NULL;\n",
+          "start": 3979
+        },
+        {
+          "current": "",
+          "previous": "  uint32_t two_value = 2, three_value = 3, four_value = 4;\n  uint32_t eight_value = 8, nine_value = 9, ten_value = 10;\n  nat_t zero = natural(NULL), two = natural(&two_value), three = natural(&three_value);\n  nat_t four = natural(&four_value), eight = natural(&eight_value);\n  nat_t nine = natural(&nine_value), ten = natural(&ten_value), output = {0};\n",
+          "start": 4071
+        },
+        {
+          "current": "  state_t host_state = {0}; function host = 0;\n  ok(reviewedcallbacks_wasmtime_callback_create(session,\n    \"function-590d6ac46e02e46365788a64\", visit_callback, &host_state,\n    release, &host));\n",
+          "previous": "  state_t host_state = {0}; function_t host = 0;\n  ok(reviewedcallbacks_wasmtime_visit_callback0_create(\n    session, visit_callback, &host_state, release, &zero, &host));\n",
+          "start": 4072
+        },
+        {
+          "current": "  value argument = callable(host), output = {0};\n  ok(reviewedcallbacks_wasmtime_invoke(session, \"visit\", &argument, 1, &output));\n  check(equal_nat(&output.value, 10), \"checked host callback arguments\");\n  clear(&output);\n",
+          "previous": "  ok(reviewedcallbacks_wasmtime_value_visit(session, host, &output));\n  check(equal_nat(&output, 10), \"checked host callback arguments\");\n  reviewedcallbacks_scalar_nat_t_clear(&output);\n",
+          "start": 4313
+        },
+        {
+          "current": "  output = copied((component_value){.kind = WASMTIME_COMPONENT_U32, .of.u32 = 991});\n  rejected(reviewedcallbacks_wasmtime_invoke(session, \"visit\", &argument, 1,\n    &output), \"callback Fin sentinel\");\n  clear(&output); host_state.fail = false;\n  ok(reviewedcallbacks_wasmtime_invoke(session, \"visit\", &argument, 1, &output));\n  check(equal_nat(&output.value, 10), \"host callback recovers\"); clear(&output);\n",
+          "previous": "  rejected(reviewedcallbacks_wasmtime_value_visit(session, host, &output),\n    \"callback Fin sentinel\");\n  host_state.fail = false;\n  ok(reviewedcallbacks_wasmtime_value_visit(session, host, &output));\n  check(equal_nat(&output, 10), \"host callback recovers\");\n  reviewedcallbacks_scalar_nat_t_clear(&output);\n",
+          "start": 4629
+        },
+        {
+          "current": "  value three = copied(natural(3));\n  ok(reviewedcallbacks_wasmtime_invoke(session, \"scaler\", &three, 1, &output));\n  value scaler = output; output = (value){0};\n  check(scaler.function != 0, \"scaler closure created\");\n  value scaler_args[] = {scaler, copied(natural(4))};\n  ok(reviewedcallbacks_wasmtime_invoke(session,\n    \"invoke-function-1a4ceb80e43c4de091fadb1b\", scaler_args, 2, &output));\n  check(equal_nat(&output.value, 12), \"bounded closure argument\"); clear(&output);\n  clear(&scaler_args[1]); scaler_args[1] = copied(natural(10));\n  rejected(reviewedcallbacks_wasmtime_invoke(session,\n    \"invoke-function-1a4ceb80e43c4de091fadb1b\", scaler_args, 2, &output),\n",
+          "previous": "  function_t scaler = 0;\n  ok(reviewedcallbacks_wasmtime_value_scaler(session, &three, &scaler));\n  check(scaler != 0, \"scaler closure created\");\n  ok(reviewedcallbacks_wasmtime_scaler_call(session, scaler, &four, &output));\n  check(equal_nat(&output, 12), \"bounded closure argument\");\n  reviewedcallbacks_scalar_nat_t_clear(&output);\n  rejected(reviewedcallbacks_wasmtime_scaler_call(session, scaler, &ten, &output),\n",
+          "start": 5180
+        },
+        {
+          "current": "  clear(&scaler_args[1]); scaler_args[1] = copied(natural(9));\n  ok(reviewedcallbacks_wasmtime_invoke(session,\n    \"invoke-function-1a4ceb80e43c4de091fadb1b\", scaler_args, 2, &output));\n  check(equal_nat(&output.value, 27), \"closure remains usable\"); clear(&output);\n  clear(&scaler_args[1]); clear(&scaler);\n  check(scaler.function == 0, \"scaler closes\"); clear(&three);\n",
+          "previous": "  ok(reviewedcallbacks_wasmtime_scaler_call(session, scaler, &nine, &output));\n  check(equal_nat(&output, 27), \"closure remains usable\");\n  reviewedcallbacks_scalar_nat_t_clear(&output);\n  ok(reviewedcallbacks_wasmtime_function_close(session, &scaler));\n  check(scaler == 0, \"scaler closes\");\n",
+          "start": 5894
+        },
+        {
+          "current": "  value eight = copied(natural(8));\n  ok(reviewedcallbacks_wasmtime_invoke(session, \"counter\", &eight, 1, &output));\n  value counter = output; output = (value){0};\n  check(counter.function != 0, \"counter closure created\");\n  value counter_args[] = {counter, copied(natural(4))};\n  ok(reviewedcallbacks_wasmtime_invoke(session,\n    \"invoke-function-ffd65d943ca6f04f54c59370\", counter_args, 2, &output));\n  check(equal_nat(&output.value, 2), \"Lean-produced Fin result\"); clear(&output);\n  clear(&counter_args[1]); clear(&counter);\n  check(counter.function == 0, \"counter closes\"); clear(&eight);\n",
+          "previous": "  function_t counter = 0;\n  ok(reviewedcallbacks_wasmtime_value_counter(session, &eight, &counter));\n  check(counter != 0, \"counter closure created\");\n  ok(reviewedcallbacks_wasmtime_counter_call(session, counter, &four, &output));\n  check(equal_nat(&output, 2), \"Lean-produced Fin result\");\n  reviewedcallbacks_scalar_nat_t_clear(&output);\n  ok(reviewedcallbacks_wasmtime_function_close(session, &counter));\n  check(counter == 0, \"counter closes\");\n",
+          "start": 6267
+        },
+        {
+          "current": "  state_t apply_state = {0}; function apply = 0;\n  ok(reviewedcallbacks_wasmtime_callback_create(session,\n    \"function-3dd0024a008567674c9bb4aa\", apply_callback, &apply_state,\n    release, &apply));\n",
+          "previous": "  state_t apply_state = {0}; function_t apply = 0;\n  ok(reviewedcallbacks_wasmtime_apply_callback0_create(\n    session, apply_callback, &apply_state, release, &apply));\n",
+          "start": 6862
+        },
+        {
+          "current": "  value apply_args[] = {callable(apply), copied(natural(2))};\n  ok(reviewedcallbacks_wasmtime_invoke(session, \"apply\", apply_args, 2, &output));\n  check(equal_nat(&output.value, 3), \"unrefined callback stays direct\");\n  clear(&output); clear(&apply_args[1]);\n",
+          "previous": "  ok(reviewedcallbacks_wasmtime_value_apply(session, apply, &two, &output));\n  check(equal_nat(&output, 3), \"unrefined callback stays direct\");\n  reviewedcallbacks_scalar_nat_t_clear(&output);\n",
+          "start": 7112
+        },
+        {
+          "current": "  check(apply == 0 && apply_state.releases == 1,\n    \"ordinary callback closes once\");\n",
+          "previous": "  check(apply == 0 && apply_state.releases == 1, \"ordinary callback closes once\");\n",
+          "start": 7437
+        },
+        {
+          "current": "  reviewedcallbacks_wasmtime_close(session); session = NULL;\n",
+          "previous": "  reviewedcallbacks_wasmtime_close(session);\n",
+          "start": 7525
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/wit-wasi.c",
+      "previousSha256": "8576710be886a299238ec18857a04468e84de4719d9a72e968f86d79657b0b32"
+    },
+    {
+      "currentSha256": "6db78cb9e4a614a7da7f2b1915b08cea8c869e85021c6d8dad0ae538cc6a4a73",
+      "edits": [
+        {
+          "current": "\tpython: 19, ruby: 19, rust: 15\n",
+          "previous": "\tpython: 20, ruby: 20, rust: 15\n",
+          "start": 391
+        }
+      ],
+      "path": "tests/helpers/callback-fin-language-ci.mjs",
+      "previousSha256": "82c58fe22010d7a1ebe4b4009c1076e1d85ef1ca459a20b3401ca0ff21673686"
+    }
+  ]
+}

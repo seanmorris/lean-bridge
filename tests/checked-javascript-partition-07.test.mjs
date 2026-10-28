@@ -18,4 +18,5 @@ import "./helpers/wasmtime-capi-ci-rollout-source-history-tests.mjs";
 import "./helpers/reviewed-fin-wasm-field-source-history-tests.mjs";
 import "./helpers/callback-fin-native-capability-source-history-tests.mjs";
 import "./helpers/callback-fin-hosted-workflow-source-history-tests.mjs";
+import "./helpers/callback-fin-installed-repair-source-history-tests.mjs";
 import "./helpers/owned-checked-record-aligned-publication-source-history-tests.mjs";
