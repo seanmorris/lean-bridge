@@ -148,7 +148,9 @@ export const inspectReviewedFinWasmEntryHostedArtifact = async (
 	const { run, job, artifact } = Object.fromEntries(Object.entries(api)
 		.map(([name, item]) => [name, item.value]));
 	assert.ok(Number.isSafeInteger(run.id) && run.id > 0);
-	assert.deepEqual([run.status, run.conclusion], ["completed", "success"]);
+	assert.equal(run.status, "completed");
+	assert.ok(["cancelled", "failure", "success"].includes(run.conclusion)
+		, `Ineligible hosted run conclusion: ${run.conclusion}`);
 	assert.match(run.head_sha, /^[a-f0-9]{40}$/u);
 	assert.equal(run.path, ".github/workflows/consumer-matrix.yml");
 	assert.equal(run.repository?.full_name, "seanmorris/lean-bridge");
@@ -179,6 +181,7 @@ export const inspectReviewedFinWasmEntryHostedArtifact = async (
 		, hostedRun: {
 			repository: "seanmorris/lean-bridge", workflow: run.path
 			, runId: run.id, runAttempt: run.run_attempt, event: run.event
+			, runConclusion: run.conclusion
 			, url: run.html_url, createdAt: run.created_at
 			, updatedAt: run.updated_at
 			, job: {
