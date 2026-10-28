@@ -22,3 +22,5 @@ import "./helpers/replay-chain-memory-integration-source-history-tests.mjs";
 import "./helpers/callback-fin-host-repair-source-history-tests.mjs";
 import "./helpers/callback-fin-perl-direction-source-history-tests.mjs";
 import "./helpers/core-callback-fin-live-pin-repair-source-history-tests.mjs";
+import "./helpers/core-shard-five-repair-source-history-tests.mjs";
+import "./helpers/core-shard-five-repair-integration-source-history-tests.mjs";
