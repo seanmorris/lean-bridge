@@ -64,7 +64,8 @@ export const nativeGraphRefinementDiagnostics = ({
 	const cycles = normalized.cycles, validators = new Set(), bounds = new Map(), helpers = new Map();
 	const contains = (tree, mode, active = new Set()) => {
 		if(!tree) return false;
-		if(tree.kind === "fin") return mode !== "constructor";
+		if(["fin", "fin-parameter"].includes(tree.kind))
+			return mode !== "constructor";
 		if(tree.kind === "subtype") return mode !== "fin";
 		if(tree.kind === "checked-record") return mode !== "fin"
 			|| (tree.arguments ?? []).some(child => contains(child, mode, active));
@@ -107,6 +108,8 @@ export const nativeGraphRefinementDiagnostics = ({
 		const lines = [`static uint32_t ${name}(const ${node.name} *value, uint32_t depth, uint32_t *nodes) {`
 			, `  if (depth > ${componentRecursiveLimits.valueDepth} || !*nodes) return NG_LIMIT;`
 			, "  --*nodes;"];
+		if(tree.kind === "fin-parameter")
+			throw new TypeError("Dependent Fin graph refinements must stay at a declaration parameter root");
 		if(tree.kind === "fin")
 		{
 			if(mode !== "constructor")
@@ -215,9 +218,31 @@ export const nativeGraphRefinementDiagnostics = ({
 		const passes = [];
 		for(const mode of modes)
 		{
-			const checked = item.refinements.parameters.map((tree, index) => tree && contains(tree, mode)
-				? { index, label: diagnosticParameterNames[index]
-					, name: helper(mode, tree, root.parameters[index], item.symbol, index) } : null).filter(Boolean);
+			const checked = item.refinements.parameters.map((tree, index) => {
+				if(!tree || !contains(tree, mode)) return null;
+				const label = diagnosticParameterNames[index];
+				if(tree.kind !== "fin-parameter") return {
+					index, label
+					, name: helper(
+						mode, tree, root.parameters[index], item.symbol, index
+					)
+				};
+				const dependency = tree.parameter;
+				const value = table.get(root.parameters[index]);
+				const bound = table.get(root.parameters[dependency]);
+				if(Object.keys(tree).length !== 2
+					|| !Number.isSafeInteger(dependency)
+					|| dependency < 0 || dependency >= index
+					|| value?.kind !== "primitive" || value.ref.name !== "nat"
+					|| bound?.kind !== "primitive" || bound.ref.name !== "nat")
+					throw new TypeError("Invalid dependent Fin graph refinement");
+				return { index, label
+					, dependency: {
+						index: dependency
+						, label: diagnosticParameterNames[dependency]
+					}
+				};
+			}).filter(Boolean);
 			if(checked.length) passes.push({ mode, checked });
 		}
 		if(passes.length) calls.set(item.bindingId, passes);
@@ -261,16 +286,33 @@ const char *${accessor}(void) {
 }
 `;
 	// One site's passes: each refused position appends its label and path, restored on success.
-	const checks = bindingId => (calls.get(bindingId) ?? []).flatMap((pass, passIndex) => [
-		passIndex ? `  refinement_nodes = ${componentRecursiveLimits.valueNodes};` : `  uint32_t refinement_nodes = ${componentRecursiveLimits.valueNodes};`
-		, ...pass.checked.flatMap(({ index, label, name }, checkIndex) => {
-			const mark = `refinement_mark_${passIndex}_${checkIndex}`;
-			return [`  size_t ${mark} = ng_refinement_mark();`
-				, `  if (!ng_refinement_text(${JSON.stringify(label)}, sizeof(${JSON.stringify(label)}) - 1)) return NG_LIMIT;`
-				, `  if ((status = ${name}(a${index}, 0, &refinement_nodes))) return status;`
-				, `  ng_refinement_restore(${mark});`];
-		})
-	]);
+	const checks = bindingId => {
+		let nodesDeclared = false;
+		return (calls.get(bindingId) ?? []).flatMap((pass, passIndex) => {
+			const usesNodes = pass.checked.some(item => !item.dependency);
+			const nodeReset = !usesNodes ? [] : [nodesDeclared
+				? `  refinement_nodes = ${componentRecursiveLimits.valueNodes};`
+				: `  uint32_t refinement_nodes = ${componentRecursiveLimits.valueNodes};`];
+			nodesDeclared ||= usesNodes;
+			return [
+				...nodeReset
+				, ...pass.checked.flatMap(({
+					index, label, name, dependency
+				}, checkIndex) => {
+					const mark = `refinement_mark_${passIndex}_${checkIndex}`;
+					return [`  size_t ${mark} = ng_refinement_mark();`
+						, `  if (!ng_refinement_text(${JSON.stringify(label)}, sizeof(${JSON.stringify(label)}) - 1)) return NG_LIMIT;`
+						, ...(dependency ? [
+							`  if (!ng_fin_below(a${index}->data, a${index}->length, a${dependency.index}->data, a${dependency.index}->length))`
+							, `    return ng_refinement_reject(${JSON.stringify(` is not below its dependent Fin bound ${dependency.label}`)});`
+						] : [
+							`  if ((status = ${name}(a${index}, 0, &refinement_nodes))) return status;`
+						])
+						, `  ng_refinement_restore(${mark});`];
+				})
+			];
+		});
+	};
 	return {
 		normalized, validators: [...validators].sort()
 		, bounds: [...bounds.values()].sort()

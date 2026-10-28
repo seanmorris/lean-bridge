@@ -13,6 +13,9 @@ import { projectElaboratedMetadata } from "../../src/analyze/project-elaborated.
 import { assertReviewedRefinements } from "../../src/analyze/reviewed-refinements.mjs";
 import { generateJavaScriptPackage } from "../../src/backends/javascript/generate.mjs";
 import { finRefinementWalk } from "../../src/backends/c/native-copied-values.mjs";
+import {
+	nativeGraphRefinementDiagnostics
+} from "../../src/backends/c/native-graph-adapters.mjs";
 import { nativeFinSummary } from "../../src/backends/native/fin-refinements.mjs";
 import { generatePerlBindingPackage } from "../../src/backends/perl/generate.mjs";
 import { componentRefinedCall, componentRefinementGuards } from "../../src/build/component-refinements.mjs";
@@ -220,6 +223,49 @@ test("native models retain the direct dependency instead of freezing a bound", (
 	assert.match(perl["Component.xs"]
 		, /lean_object \*\s+a0 = [^;]+;\s+lean_object \*\s+a1 = [^;]+;[\s\S]*int below = lean_nat_lt\(a1, a0\);[\s\S]*if \(!below\) croak\("%s", "arg1 is not below its dependent Fin bound arg0"\);[\s\S]*lb_[0-9a-f]{24}\(a0, a1\)/u);
 	assert.match(perl["lib/LeanBridge/Sample.pm"], /Checked Lean Fin bounds: arg1 < arg0\./u);
+});
+
+test("native graph diagnostics compare the two live Nat roots", () => {
+	const nat = id => ({
+		id, kind: "primitive", name: `lb_${id}`, ref: { name: "nat" }
+	});
+	const table = new Map([["bound", nat("bound")], ["value", nat("value")]]);
+	const normalized = {
+		cycles: new Map()
+		, sites: [{
+			bindingId: "lean:Sample.dependent", symbol: "lb_dependent"
+			, diagnosticParameterNames: ["bound", "value"]
+			, refinements
+		}]
+	};
+	const options = {
+		abi: {}, exports: [], nominalRefinements: []
+		, layout: { prefix: "lb", roots: [] }, table
+		, walker: id => `walk_${id}`, normalized
+		, roots: new Map([["lean:Sample.dependent", {
+			parameters: ["bound", "value"]
+		}]])
+	};
+	const diagnostics = nativeGraphRefinementDiagnostics(options);
+	assert.deepEqual(diagnostics.bounds, []);
+	assert.deepEqual(diagnostics.helpers, []);
+	const checks = diagnostics.checks("lean:Sample.dependent").join("\n");
+	assert.doesNotMatch(checks, /refinement_nodes/u);
+	assert.match(checks
+		, /ng_refinement_text\("value"[^]*ng_fin_below\(a1->data, a1->length, a0->data, a0->length\)[^]*is not below its dependent Fin bound bound/u);
+	for(const forge of [
+		{ kind: "fin-parameter", parameter: 1 }
+		, { kind: "fin-parameter", parameter: -1 }
+		, { kind: "fin-parameter", parameter: 0, bound: "10" }
+	]) {
+		const changed = structuredClone(refinements);
+		changed.parameters[1] = forge;
+		assert.throws(() => nativeGraphRefinementDiagnostics({
+			...options, normalized: { ...normalized, sites: [{
+				...normalized.sites[0], refinements: changed
+			}] }
+		}), /Invalid dependent Fin graph refinement/u);
+	}
 });
 
 test("semantic projection and compiler adapters preserve the dynamic bound", async () => {
