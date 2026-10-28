@@ -39,6 +39,7 @@ import { beforeCoreShardFourSerialSource, coreShardFourSerialNormalizationPaths 
 import { beforeCoreLegacyFinArchiveRepairSource, coreLegacyFinArchiveRepairNormalizationPaths } from "./core-legacy-fin-archive-repair-source-history.mjs";
 import { beforeCoreGeneratedDocumentRepairSource, coreGeneratedDocumentRepairNormalizationPaths } from "./core-generated-document-repair-source-history.mjs";
 import { beforeCoreShardFiveEightRepairSource, coreShardFiveEightRepairNormalizationPaths } from "./core-shard-five-eight-repair-source-history.mjs";
+import { beforeWitCallbackFrozenClosureIntegrationSource, witCallbackFrozenClosureIntegrationNormalizationPaths } from "./wit-callback-frozen-closure-integration-source-history.mjs";
 import { beforeWitCallbackFrozenClosureSource, witCallbackFrozenClosureChangedPaths } from "./wit-callback-frozen-closure-source-history.mjs";
 import { beforeCoreDeterministicBoundaryRepairIntegrationSource, coreDeterministicBoundaryRepairIntegrationNormalizationPaths } from "./core-deterministic-boundary-repair-integration-source-history.mjs";
 import { beforeCoreDeterministicBoundaryRepairSource, coreDeterministicBoundaryRepairNormalizationPaths } from "./core-deterministic-boundary-repair-source-history.mjs";
@@ -2371,6 +2372,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...coreLegacyFinArchiveRepairNormalizationPaths
 	, ...coreGeneratedDocumentRepairNormalizationPaths
 	, ...coreShardFiveEightRepairNormalizationPaths
+	, ...witCallbackFrozenClosureIntegrationNormalizationPaths
 	, ...witCallbackFrozenClosureChangedPaths
 	, ...coreDeterministicBoundaryRepairIntegrationNormalizationPaths
 	, ...coreDeterministicBoundaryRepairNormalizationPaths
@@ -3535,6 +3537,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		return stage;
 	text = stage;
 	stage = beforeCoreShardFiveEightRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeWitCallbackFrozenClosureIntegrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
