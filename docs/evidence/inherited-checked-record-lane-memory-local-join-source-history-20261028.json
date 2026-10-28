@@ -1,0 +1,113 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ef26afbe5144bcfd96c5ac48bd1d96b48896551308305626538b8368154b1225",
+      "path": "docs/evidence/inherited-checked-record-lane-memory-integration-source-history-20261028.json"
+    },
+    {
+      "currentSha256": "48bfa3d28632f4e8c3b3f0da7e21a52c207b0871029c437d50cd5682d8d34f40",
+      "path": "scripts/update-inherited-checked-record-lane-memory-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "6c53efb04f4f25d65a1b577763af1548433071de7c6d0027c7e78072012153fe",
+      "path": "tests/helpers/inherited-checked-record-lane-memory-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "063b8c432aa17bddd0a4563ed6f9f4ab14e37d601077a6544568feb0f9701c18",
+      "path": "tests/helpers/inherited-checked-record-lane-memory-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "1709a19606732bba937b0675cae17e4082869d70e0154373d439d6beca6ad7cc",
+      "path": "scripts/update-inherited-checked-record-lane-memory-local-join-source-history.mjs"
+    },
+    {
+      "currentSha256": "43127d1798a4da4799e164012d9cc56bd42dcca994ec50bc1e0ffc9c8422533f",
+      "path": "tests/helpers/inherited-checked-record-lane-memory-local-join-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "800aa4cf954259dc1f5e34b33791a5f4e43d5620f7387436ab06bff8c8dcd583",
+      "path": "tests/helpers/inherited-checked-record-lane-memory-local-join-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "cbccc82efb17ee000b7da2faba5d538ae4e15500",
+  "implementationCommits": [
+    "879a99249056f2f3f81ad2451d90ab1cc085475d",
+    "cbccc82efb17ee000b7da2faba5d538ae4e15500"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "4e0ed6cf7a0ae29fbfef26d4a25b6026ccd0a6f3ea45e10fd09a39f24b14f4f4",
+      "edits": [
+        {
+          "current": "import \"./helpers/inherited-checked-record-lane-memory-local-join-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4652
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "0147ae8baffb860c7fa733f688bbf75ae36f4f10d21d3fd0e8e096a415d4ec75"
+    },
+    {
+      "currentSha256": "30c586c51f2cd8d0dad6753d1d19d018b93fecee5272e5db3eb86b9611f8bd50",
+      "edits": [
+        {
+          "current": "import { beforeInheritedCheckedRecordLaneMemoryLocalJoinSource, inheritedCheckedRecordLaneMemoryLocalJoinNormalizationPaths } from \"./inherited-checked-record-lane-memory-local-join-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...inheritedCheckedRecordLaneMemoryLocalJoinNormalizationPaths\n\t, ...inheritedCheckedRecordLaneMemoryIntegrationNormalizationPaths\n",
+          "previous": "\t...inheritedCheckedRecordLaneMemoryIntegrationNormalizationPaths\n",
+          "start": 206167
+        },
+        {
+          "current": "\tlet stage = beforeInheritedCheckedRecordLaneMemoryLocalJoinSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeInheritedCheckedRecordLaneMemoryIntegrationSource(\n",
+          "previous": "\tlet stage = beforeInheritedCheckedRecordLaneMemoryIntegrationSource(\n",
+          "start": 257186
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1e44a5407250315e7cb1ae24535c5530b23b4ee529c630ea9ca32b3c473b3778"
+    }
+  ],
+  "milestone": "inherited-checked-record-lane-memory-local-join-source-v1",
+  "predecessorCommit": "981a52bbd79a2c0375b3cd75f1127a95e29262fc",
+  "schemaVersion": 1,
+  "scope": "Join the authenticated inherited checked-record lane-memory integration to the independently authenticated Perl milestone-read and Ruby predecessor-stop layers on the actual pushed branch. Reverse the local hub and partition transitions newest-first while retaining Claude's original integration record and immutable commit identities. No runtime, package, type-surface, observation or support claim changes. Final exact-head Core acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "0147ae8baffb860c7fa733f688bbf75ae36f4f10d21d3fd0e8e096a415d4ec75",
+      "edits": [
+        {
+          "current": "import \"./helpers/inherited-checked-record-lane-memory-source-history-tests.mjs\";\nimport \"./helpers/inherited-checked-record-lane-memory-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4476
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "cb57683ce0fd28c4edbd48b2cb91262b9c7dc0aaede63acc2ad15f9967b0eebf"
+    },
+    {
+      "currentSha256": "1e44a5407250315e7cb1ae24535c5530b23b4ee529c630ea9ca32b3c473b3778",
+      "edits": [
+        {
+          "current": "import { beforeInheritedCheckedRecordLaneMemoryIntegrationSource, inheritedCheckedRecordLaneMemoryIntegrationNormalizationPaths } from \"./inherited-checked-record-lane-memory-integration-source-history.mjs\";\nimport { beforeInheritedCheckedRecordLaneMemorySource, inheritedCheckedRecordLaneMemoryNormalizationPaths } from \"./inherited-checked-record-lane-memory-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...inheritedCheckedRecordLaneMemoryIntegrationNormalizationPaths\n\t, ...inheritedCheckedRecordLaneMemoryNormalizationPaths\n\t, ...callbackFinPerlLocalJoinNormalizationPaths\n",
+          "previous": "\t...callbackFinPerlLocalJoinNormalizationPaths\n",
+          "start": 205964
+        },
+        {
+          "current": "\tlet stage = beforeInheritedCheckedRecordLaneMemoryIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeInheritedCheckedRecordLaneMemorySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinPerlLocalJoinSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCallbackFinPerlLocalJoinSource(path, text, expected);\n",
+          "start": 256917
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1f1590fdaff1a6fcff01aebe43d61f99b36a6adadd6a32181e6266f137f2d939"
+    }
+  ]
+}
