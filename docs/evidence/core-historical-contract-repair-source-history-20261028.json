@@ -1,0 +1,676 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9b34b79b30e0cda607e29e3ec0fd9cf1e85b3292a90fec99e2af5ae80575cd4a",
+      "path": "scripts/update-core-historical-contract-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "c2793ac429f9b6e2de4d195bea1de0991dcd453e57f22f3b6b0b39a81092a744",
+      "path": "tests/helpers/core-historical-contract-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c96c34d8729fa5e11e456e2fbc88450510ba9f4f9597e2d629691fe69277c837",
+      "path": "tests/helpers/core-historical-contract-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f51ee14387676aa4bc04f27f8f32407538e97fd0",
+  "implementationCommits": [
+    "db3aac2ef83bf22183cfd4b129de5212280f5ec2",
+    "f51ee14387676aa4bc04f27f8f32407538e97fd0"
+  ],
+  "milestone": "core-historical-contract-repair-source-v1",
+  "predecessorCommit": "e97cbb1b10aab1fd471cb57cd97bee66f58d8ee4",
+  "schemaVersion": 1,
+  "scope": "Repair the residual Core historical contracts without changing their evidence claims. Scope the checked-record workflow's no-dependency assertion to its protected producer job while preserving failure propagation for the whole workflow. Regenerate the ten stale consumer type tables from the current inventory. Recount the immutable October 9 Wasm-entry archive against its retained expectation, TypeScript prelude and adapter columns rather than the later live Fin fixture, while preserving complete byte, transcript, source and refusal authentication. Refresh exactly 78 evidence pins for the changed guides and tests. Hub and registration integration are recorded by the integrating seal.",
+  "updates": [
+    {
+      "currentSha256": "935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40",
+      "edits": [
+        {
+          "current": "| `Fin n` | `System.Numerics.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `System.Numerics.BigInteger checked against the field's closed bound` (field); `The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it` (callback input); `The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use BigInteger values with exact closed bounds. Arrays and Lists use typed arrays, products use binary tuples, Option uses generated None/Some, and Except uses generated Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "previous": "| `Fin n` | `System.Numerics.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `System.Numerics.BigInteger checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use BigInteger values with exact closed bounds. Arrays and Lists use typed arrays, products use binary tuples, Option uses generated None/Some, and Except uses generated Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "start": 67544
+        }
+      ],
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "62a23b6e6b113012389b42f1b4e65f48e541d787079c2bc6c8df2e083eebd214"
+    },
+    {
+      "currentSha256": "701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1",
+      "edits": [
+        {
+          "current": "| `Fin n` | `java.math.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `java.math.BigInteger checked against the field's closed bound` (field); `The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it` (callback input); `The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use BigInteger with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "previous": "| `Fin n` | `java.math.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `java.math.BigInteger checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use BigInteger with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "start": 74199
+        }
+      ],
+      "path": "docs/consume/java.md",
+      "previousSha256": "0173c1fc44a698f75989c4624d09ff0795124003d4ec0ebbc01991d434681328"
+    },
+    {
+      "currentSha256": "00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b",
+      "edits": [
+        {
+          "current": "| `Fin n` | `java.math.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `java.math.BigInteger checked against the field's closed bound` (field); `The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it` (callback input); `The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use BigInteger with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "previous": "| `Fin n` | `java.math.BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `java.math.BigInteger checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use BigInteger with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "start": 66745
+        }
+      ],
+      "path": "docs/consume/kotlin.md",
+      "previousSha256": "0875ef45fc415e6413411e90d22668091ef58f4a8dd8ac73578bb16c97090fbf"
+    },
+    {
+      "currentSha256": "93c408d188ddfcb5c477fd01ec5c18b98fd7dd54448105324b0ce7ab7625a5fa",
+      "edits": [
+        {
+          "current": "| `Fin n` | `Math::BigInt checked against the declared bound` (input); `Math::BigInt below the bound` (result); `Math::BigInt checked against the field's closed bound` (field); `The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it` (callback input); `The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. For Option, use undef for absence and the generated Some->new(value) for presence. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "previous": "| `Fin n` | `Math::BigInt checked against the declared bound` (input); `Math::BigInt below the bound` (result); `Math::BigInt checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use Math::BigInt with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. For Option, use undef for absence and the generated Some->new(value) for presence. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "start": 62759
+        }
+      ],
+      "path": "docs/consume/perl.md",
+      "previousSha256": "37252bfa2362bc562cb0b256bd5e64df3a99b4c0fa116bba14786d3ce70a6bbb"
+    },
+    {
+      "currentSha256": "07ce40e61747c486285edfd6cb21f6a7655a237e7c53adfe0859358dd2ff3b8e",
+      "edits": [
+        {
+          "current": "| `Fin n` | `Exact int below the declared bound; declared list/tuple and Some carriers for containers` (input); `int below the bound; independent tuples and Some carriers for containers` (result); `Exact int checked against the field's closed bound` (field); `The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it` (callback input); `The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use exact int values, rejecting bool and numeric coercions. Arrays/Lists accept lists or tuples and return independent tuples; products use pairs, Option uses None/Some, and Except uses Err/Ok. Record and active variant fields retain their declared bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "previous": "| `Fin n` | `Exact int below the declared bound; declared list/tuple and Some carriers for containers` (input); `int below the bound; independent tuples and Some carriers for containers` (result); `Exact int checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use exact int values, rejecting bool and numeric coercions. Arrays/Lists accept lists or tuples and return independent tuples; products use pairs, Option uses None/Some, and Except uses Err/Ok. Record and active variant fields retain their declared bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "start": 66044
+        }
+      ],
+      "path": "docs/consume/python.md",
+      "previousSha256": "f516292d5d72f5466d5863aab92845cd288dce11fc617e086b87bb9bd304177d"
+    },
+    {
+      "currentSha256": "7290c76d24e0e0873305154484f7941aa23381381c9f2b1bf9a5e2adb1b28905",
+      "edits": [
+        {
+          "current": "| `Fin n` | `Integer checked against the declared bound` (input); `Integer below the declared bound` (result); `Integer checked against the field's closed bound` (field); `The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it` (callback input); `The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use Integer values with exact closed bounds. Arrays/Lists use Array, products use two-element Arrays, Option uses nil/Some, and Except uses Err/Ok. Record and active variant fields retain their declared bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "previous": "| `Fin n` | `Integer checked against the declared bound` (input); `Integer below the declared bound` (result); `Integer checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use Integer values with exact closed bounds. Arrays/Lists use Array, products use two-element Arrays, Option uses nil/Some, and Except uses Err/Ok. Record and active variant fields retain their declared bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "start": 65567
+        }
+      ],
+      "path": "docs/consume/ruby.md",
+      "previousSha256": "aa5ac5856564bfe518233aa0b55356e712ed3130c156da736794eb89f13bc7a8"
+    },
+    {
+      "currentSha256": "a225d5cd7fd1e5ba311faf82c150168a48e5d2173b9147ec3b6ecfd58539e5da",
+      "edits": [
+        {
+          "current": "| `Fin n` | `&BigUint checked against the declared bound` (input); `BigUint below the declared bound` (result); `BigUint checked against the field's closed bound` (field); `The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it` (callback input); `The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use BigUint values with exact closed bounds. Arrays and Lists borrow slices and return owned vectors; products use binary tuples, Option uses None/Some, and Except uses Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "previous": "| `Fin n` | `&BigUint checked against the declared bound` (input); `BigUint below the declared bound` (result); `BigUint checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use BigUint values with exact closed bounds. Arrays and Lists borrow slices and return owned vectors; products use binary tuples, Option uses None/Some, and Except uses Result. Named record and active variant fields retain their bounds. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "start": 66454
+        }
+      ],
+      "path": "docs/consume/rust.md",
+      "previousSha256": "c9c330b7a90de3499a83910da18a1fd809eac1416c8b9dcaf77406f9b7be70cf"
+    },
+    {
+      "currentSha256": "94296e9bd5d5ed00a0eb0db560ebdcf6a39655a544a043ce4dee24dc884f4685",
+      "edits": [
+        {
+          "current": "| `Fin n` | `list<u32> little-endian limbs checked against the declared bound` (input); `list<u32> limbs below the declared bound` (result); `list<u32> little-endian limbs checked against the field's closed bound` (field); `The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it` (callback input); `The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use `list<u32>` Nat limbs with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. A Fin field uses the Nat carrier, a `list<u32>` of little-endian limbs. Generated records and the active variant payload keep each field's closed bound through Array/List/Option/Prod/Except compositions. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. WIT's carrier text does not encode the bound. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "previous": "| `Fin n` | `list<u32> little-endian limbs checked against the declared bound` (input); `list<u32> limbs below the declared bound` (result); `list<u32> little-endian limbs checked against the field's closed bound` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use `list<u32>` Nat limbs with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. A Fin field uses the Nat carrier, a `list<u32>` of little-endian limbs. Generated records and the active variant payload keep each field's closed bound through Array/List/Option/Prod/Except compositions. Empty, absent and inactive Fin 0 payloads are valid; every present Fin 0 value is rejected. WIT's carrier text does not encode the bound. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "start": 81012
+        }
+      ],
+      "path": "docs/consume/wit-wasi.md",
+      "previousSha256": "d889bd4f493138856d4a525d17e5276352879fcb10f1539ed9e7eaa026bd5f53"
+    },
+    {
+      "currentSha256": "ee9cb9cbb02f332bebfa6b84ca738eff2f5c2e57bbe9b4d9a7033aa2064a39e3",
+      "edits": [
+        {
+          "current": "| `Fin n` | Node JavaScript / TypeScript: `bigint checked as 0 <= value < n before Wasm dispatch` (input); `bigint checked as 0 <= value < n after Wasm return` (result); `bigint checked against the declared bound in copied fields and aliases` (field); `bigint checked against the declared bound in callback arguments` (callback input); `bigint checked against the declared bound in callback results` (callback result); `The target's Nat representation, checked against the copied field's declared Fin bound` (field); Browser / React / Worker: `bigint checked as 0 <= value < n before Wasm dispatch` (input); `bigint checked as 0 <= value < n after Wasm return` (result); `The target's Nat representation, checked against the copied field's declared Fin bound` (field); `bigint checked against the declared bound in callback arguments` (callback input); `bigint checked against the declared bound in callback results` (callback result); `The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it` (callback input); `The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Node JavaScript / TypeScript: The public value is bigint. JavaScript validates Nat and the strict upper bound before dispatch and after return; the compiled adapter entry independently fails a direct call with an out-of-bound input before the typed wrapper or source runs. Copied nominal fields keep their bigint representation. JavaScript and typed Lean constructors validate their bounds, including through container aliases and finite recursive values. Callback arguments and replies keep bigint leaves, including in copied fields, aliases and recursive values. JS validates both directions; compiled Lean independently checks host replies and closure inputs before constructing proof-carrying values. Callback errors unwind with valid typed recovery values and leave later calls usable. Use bigint leaves with the declared closed bound. Public JavaScript and raw compiled adapters reject invalid inputs, and later valid calls remain usable. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. Reviewed R1 callback arguments and Lean-produced results; R2 additionally validates the npm-only Fin 3 host-produced reply. Strict TypeScript checks declarations; Node provides the runtime observations. Browser / React / Worker: The public value is bigint. JavaScript validates Nat and the strict upper bound before dispatch and after return; the compiled adapter entry independently fails a direct call with an out-of-bound input before the typed wrapper or source runs. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. Ordinary callback arguments and results in the named browser profile, including host-produced Fin 3 and Fin 5 replies, returned closures, bound rejection, disposal and recovery through public and raw runtime calls. Use bigint leaves with the declared closed bound. Public JavaScript and raw compiled adapters reject invalid inputs, and later valid calls remain usable. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "previous": "| `Fin n` | Node JavaScript / TypeScript: `bigint checked as 0 <= value < n before Wasm dispatch` (input); `bigint checked as 0 <= value < n after Wasm return` (result); `bigint checked against the declared bound in copied fields and aliases` (field); `bigint checked against the declared bound in callback arguments` (callback input); `bigint checked against the declared bound in callback results` (callback result); Browser / React / Worker: `bigint checked as 0 <= value < n before Wasm dispatch` (input); `bigint checked as 0 <= value < n after Wasm return` (result); `bigint checked against the declared bound in callback arguments` (callback input); `bigint checked against the declared bound in callback results` (callback result) | Ordinary source: Node JavaScript / TypeScript: Installed checks passed; Browser / React / Worker: Installed checks passed (input, result, callback input, callback result); Not audited (field). Reviewed IR: Node JavaScript / TypeScript: Installed checks passed (input, result, callback input, callback result); Not audited (field); Browser / React / Worker: Installed checks passed (input, result); Not audited (field, callback input, callback result) | Node JavaScript / TypeScript: The public value is bigint. JavaScript validates Nat and the strict upper bound before dispatch and after return; the compiled adapter entry independently fails a direct call with an out-of-bound input before the typed wrapper or source runs. Copied nominal fields keep their bigint representation. JavaScript and typed Lean constructors validate their bounds, including through container aliases and finite recursive values. Callback arguments and replies keep bigint leaves, including in copied fields, aliases and recursive values. JS validates both directions; compiled Lean independently checks host replies and closure inputs before constructing proof-carrying values. Callback errors unwind with valid typed recovery values and leave later calls usable. Use bigint leaves with the declared closed bound. Public JavaScript and raw compiled adapters reject invalid inputs, and later valid calls remain usable. Reviewed R1 callback arguments and Lean-produced results; R2 additionally validates the npm-only Fin 3 host-produced reply. Strict TypeScript checks declarations; Node provides the runtime observations. Browser / React / Worker: The public value is bigint. JavaScript validates Nat and the strict upper bound before dispatch and after return; the compiled adapter entry independently fails a direct call with an out-of-bound input before the typed wrapper or source runs. Ordinary callback arguments and results in the named browser profile, including host-produced Fin 3 and Fin 5 replies, returned closures, bound rejection, disposal and recovery through public and raw runtime calls. Use bigint leaves with the declared closed bound. Public JavaScript and raw compiled adapters reject invalid inputs, and later valid calls remain usable. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "start": 47608
+        }
+      ],
+      "path": "docs/javascript-typescript.md",
+      "previousSha256": "925ceda1ab6a971a8f62b137480b7c90bebe7c6e5c20c9615eb4c85468a5a184"
+    },
+    {
+      "currentSha256": "2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d",
+      "edits": [
+        {
+          "current": "| `Fin n` | Native PHP: `Brick\\Math\\BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `Brick\\Math\\BigInteger checked against the field's closed bound` (field); `The target's Nat representation, checked against the declared bound before a returned Lean closure or host callback consumes it` (callback input); `The target's Nat representation, checked against the declared bound before a host reply is reconstructed or projected from Lean` (callback result); PHP-Wasm: `Brick\\Math\\BigInteger checked against the declared closed Fin bound` (input, result, field); `Brick\\Math\\BigInteger values at host callback arguments and returned-closure inputs, checked against the declared bound when produced by the host` (callback input); `Brick\\Math\\BigInteger values at host callback replies and returned-closure results, checked against the declared bound when produced by the host` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Native PHP: Use Brick\\Math\\BigInteger with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. Host-produced Nat carriers are checked against the compiler-derived bound before Lean reconstructs Fin. Lean-produced Fin values cross as their proof-erased Nat carriers. Rejection never synthesizes a default Fin value or proof. PHP-Wasm: Use Brick Math integers with exact closed bounds for scalar Fin, direct Array/List/Option compositions, pairs, active Except branches and copied record/variant fields. Empty Array/List (Fin 0) and absent Option (Fin 0) are valid; present Fin 0 values reject. Bounds wider than 64 bits stay exact on wasm32. Weak and strict callers retain inputs and can recover after rejection. Use Brick\\Math\\BigInteger. A host callback whose signature contains Fin uses with_recovery(callback, value); recovery is checked before callback entry and is never successful output. Returned Lean closures reject out-of-bound inputs before their body and remain usable afterward. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "previous": "| `Fin n` | Native PHP: `Brick\\Math\\BigInteger checked against the declared bound` (input); `BigInteger below the declared bound` (result); `Brick\\Math\\BigInteger checked against the field's closed bound` (field); PHP-Wasm: `Brick\\Math\\BigInteger checked against the declared closed Fin bound` (input, result, field); `Brick\\Math\\BigInteger values at host callback arguments and returned-closure inputs, checked against the declared bound when produced by the host` (callback input); `Brick\\Math\\BigInteger values at host callback replies and returned-closure results, checked against the declared bound when produced by the host` (callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Installed checks passed. Reviewed IR: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Installed checks passed | Native PHP: Use Brick\\Math\\BigInteger with the exact closed bound, including inside Array/List/Option/Prod/Except compositions, plain records and active variant fields. Empty containers, absent options and inactive Fin 0 branches are valid; present Fin 0 values are rejected. Rejections preserve caller values and name the failing path and bound. PHP-Wasm: Use Brick Math integers with exact closed bounds for scalar Fin, direct Array/List/Option compositions, pairs, active Except branches and copied record/variant fields. Empty Array/List (Fin 0) and absent Option (Fin 0) are valid; present Fin 0 values reject. Bounds wider than 64 bits stay exact on wasm32. Weak and strict callers retain inputs and can recover after rejection. Use Brick\\Math\\BigInteger. A host callback whose signature contains Fin uses with_recovery(callback, value); recovery is checked before callback entry and is never successful output. Returned Lean closures reject out-of-bound inputs before their body and remain usable afterward. Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n",
+          "start": 120921
+        }
+      ],
+      "path": "docs/php.md",
+      "previousSha256": "f9fe98890b3d5421c171be5959e9a7197b04ba8d5ee301b03601949af21416a0"
+    },
+    {
+      "currentSha256": "a6af00e49dcc249b38ba633d956d2e39457291b6b384a70401cc75d924528826",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40\"\n",
+          "previous": "          \"sha256\": \"62a23b6e6b113012389b42f1b4e65f48e541d787079c2bc6c8df2e083eebd214\"\n",
+          "start": 47352
+        },
+        {
+          "current": "          \"sha256\": \"701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1\"\n",
+          "previous": "          \"sha256\": \"0173c1fc44a698f75989c4624d09ff0795124003d4ec0ebbc01991d434681328\"\n",
+          "start": 47502
+        },
+        {
+          "current": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "previous": "          \"sha256\": \"0875ef45fc415e6413411e90d22668091ef58f4a8dd8ac73578bb16c97090fbf\"\n",
+          "start": 47654
+        },
+        {
+          "current": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "previous": "          \"sha256\": \"f9fe98890b3d5421c171be5959e9a7197b04ba8d5ee301b03601949af21416a0\"\n",
+          "start": 49820
+        },
+        {
+          "current": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "previous": "          \"sha256\": \"0875ef45fc415e6413411e90d22668091ef58f4a8dd8ac73578bb16c97090fbf\"\n",
+          "start": 145336
+        },
+        {
+          "current": "          \"sha256\": \"94296e9bd5d5ed00a0eb0db560ebdcf6a39655a544a043ce4dee24dc884f4685\"\n",
+          "previous": "          \"sha256\": \"d889bd4f493138856d4a525d17e5276352879fcb10f1539ed9e7eaa026bd5f53\"\n",
+          "start": 168722
+        },
+        {
+          "current": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "previous": "          \"sha256\": \"f9fe98890b3d5421c171be5959e9a7197b04ba8d5ee301b03601949af21416a0\"\n",
+          "start": 182032
+        },
+        {
+          "current": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "previous": "          \"sha256\": \"f9fe98890b3d5421c171be5959e9a7197b04ba8d5ee301b03601949af21416a0\"\n",
+          "start": 196931
+        },
+        {
+          "current": "          \"sha256\": \"701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1\"\n",
+          "previous": "          \"sha256\": \"0173c1fc44a698f75989c4624d09ff0795124003d4ec0ebbc01991d434681328\"\n",
+          "start": 209366
+        },
+        {
+          "current": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "previous": "          \"sha256\": \"0875ef45fc415e6413411e90d22668091ef58f4a8dd8ac73578bb16c97090fbf\"\n",
+          "start": 209518
+        },
+        {
+          "current": "          \"sha256\": \"a225d5cd7fd1e5ba311faf82c150168a48e5d2173b9147ec3b6ecfd58539e5da\"\n",
+          "previous": "          \"sha256\": \"c9c330b7a90de3499a83910da18a1fd809eac1416c8b9dcaf77406f9b7be70cf\"\n",
+          "start": 222586
+        },
+        {
+          "current": "          \"sha256\": \"07ce40e61747c486285edfd6cb21f6a7655a237e7c53adfe0859358dd2ff3b8e\"\n",
+          "previous": "          \"sha256\": \"f516292d5d72f5466d5863aab92845cd288dce11fc617e086b87bb9bd304177d\"\n",
+          "start": 231121
+        },
+        {
+          "current": "          \"sha256\": \"935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40\"\n",
+          "previous": "          \"sha256\": \"62a23b6e6b113012389b42f1b4e65f48e541d787079c2bc6c8df2e083eebd214\"\n",
+          "start": 239551
+        },
+        {
+          "current": "          \"sha256\": \"7290c76d24e0e0873305154484f7941aa23381381c9f2b1bf9a5e2adb1b28905\"\n",
+          "previous": "          \"sha256\": \"aa5ac5856564bfe518233aa0b55356e712ed3130c156da736794eb89f13bc7a8\"\n",
+          "start": 248566
+        },
+        {
+          "current": "          \"sha256\": \"93c408d188ddfcb5c477fd01ec5c18b98fd7dd54448105324b0ce7ab7625a5fa\"\n",
+          "previous": "          \"sha256\": \"37252bfa2362bc562cb0b256bd5e64df3a99b4c0fa116bba14786d3ce70a6bbb\"\n",
+          "start": 266811
+        },
+        {
+          "current": "          \"sha256\": \"701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1\"\n",
+          "previous": "          \"sha256\": \"0173c1fc44a698f75989c4624d09ff0795124003d4ec0ebbc01991d434681328\"\n",
+          "start": 1325531
+        },
+        {
+          "current": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "previous": "          \"sha256\": \"0875ef45fc415e6413411e90d22668091ef58f4a8dd8ac73578bb16c97090fbf\"\n",
+          "start": 1325683
+        },
+        {
+          "current": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "previous": "          \"sha256\": \"f9fe98890b3d5421c171be5959e9a7197b04ba8d5ee301b03601949af21416a0\"\n",
+          "start": 1329810
+        },
+        {
+          "current": "          \"sha256\": \"935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40\"\n",
+          "previous": "          \"sha256\": \"62a23b6e6b113012389b42f1b4e65f48e541d787079c2bc6c8df2e083eebd214\"\n",
+          "start": 1352103
+        },
+        {
+          "current": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "previous": "          \"sha256\": \"f9fe98890b3d5421c171be5959e9a7197b04ba8d5ee301b03601949af21416a0\"\n",
+          "start": 1355658
+        },
+        {
+          "current": "          \"sha256\": \"935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40\"\n",
+          "previous": "          \"sha256\": \"62a23b6e6b113012389b42f1b4e65f48e541d787079c2bc6c8df2e083eebd214\"\n",
+          "start": 1374481
+        },
+        {
+          "current": "          \"sha256\": \"701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1\"\n",
+          "previous": "          \"sha256\": \"0173c1fc44a698f75989c4624d09ff0795124003d4ec0ebbc01991d434681328\"\n",
+          "start": 1374631
+        },
+        {
+          "current": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "previous": "          \"sha256\": \"0875ef45fc415e6413411e90d22668091ef58f4a8dd8ac73578bb16c97090fbf\"\n",
+          "start": 1374783
+        },
+        {
+          "current": "          \"sha256\": \"935223b10673a9da3b22e59c5624142a995a2bc490fd584bcf732d16426fdb40\"\n",
+          "previous": "          \"sha256\": \"62a23b6e6b113012389b42f1b4e65f48e541d787079c2bc6c8df2e083eebd214\"\n",
+          "start": 1394148
+        },
+        {
+          "current": "          \"sha256\": \"701902b2ec26ab7fd68c09576d8e0200c03304bb08b2026af2654331b3cd48a1\"\n",
+          "previous": "          \"sha256\": \"0173c1fc44a698f75989c4624d09ff0795124003d4ec0ebbc01991d434681328\"\n",
+          "start": 1394298
+        },
+        {
+          "current": "          \"sha256\": \"00e75754435a067d18abc3f0f1c786b8fbfe4c4b7c33d7f373a5df4fe552896b\"\n",
+          "previous": "          \"sha256\": \"0875ef45fc415e6413411e90d22668091ef58f4a8dd8ac73578bb16c97090fbf\"\n",
+          "start": 1394450
+        },
+        {
+          "current": "          \"sha256\": \"94296e9bd5d5ed00a0eb0db560ebdcf6a39655a544a043ce4dee24dc884f4685\"\n",
+          "previous": "          \"sha256\": \"d889bd4f493138856d4a525d17e5276352879fcb10f1539ed9e7eaa026bd5f53\"\n",
+          "start": 1417538
+        },
+        {
+          "current": "          \"sha256\": \"2cc50ebcbeeff5086591921ac8ec527efee6d9453af5e77c90161f002dce358d\"\n",
+          "previous": "          \"sha256\": \"f9fe98890b3d5421c171be5959e9a7197b04ba8d5ee301b03601949af21416a0\"\n",
+          "start": 1429038
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2191558
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2191722
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2191891
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2220656
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2220820
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2220989
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2249696
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2249860
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2250029
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2278742
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2278906
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2279075
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2307798
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2307962
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2308131
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2336900
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2337064
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2337233
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2366008
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2366172
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2366341
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2395126
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2395290
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2395459
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2424338
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2424502
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2424671
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2453612
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2453776
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2453945
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2482837
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2483001
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2483170
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2512068
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2512232
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2512401
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2541309
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2541473
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2541642
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2570596
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2570760
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2570929
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2599889
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2600053
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2600222
+        },
+        {
+          "current": "          \"sha256\": \"40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2\"\n",
+          "previous": "          \"sha256\": \"a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f\"\n",
+          "start": 2629192
+        },
+        {
+          "current": "          \"sha256\": \"f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e\"\n",
+          "previous": "          \"sha256\": \"0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017\"\n",
+          "start": 2629356
+        },
+        {
+          "current": "          \"sha256\": \"1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d\"\n",
+          "previous": "          \"sha256\": \"15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47\"\n",
+          "start": 2629525
+        },
+        {
+          "current": "          \"sha256\": \"494ec5f4fc08e556031be7c4e5463fa6cba9c367a5afd09f600cc2b1d54d8996\"\n",
+          "previous": "          \"sha256\": \"c557cdac479ff861a2ad65afa0aeaa384304ead5386d659b99350ddab0e9aec4\"\n",
+          "start": 74241836
+        },
+        {
+          "current": "          \"sha256\": \"494ec5f4fc08e556031be7c4e5463fa6cba9c367a5afd09f600cc2b1d54d8996\"\n",
+          "previous": "          \"sha256\": \"c557cdac479ff861a2ad65afa0aeaa384304ead5386d659b99350ddab0e9aec4\"\n",
+          "start": 74244502
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "3bdfd20854f6e021791c8d41ba073354d6b93dfd145985552ec556a3f7f75e6c"
+    },
+    {
+      "currentSha256": "494ec5f4fc08e556031be7c4e5463fa6cba9c367a5afd09f600cc2b1d54d8996",
+      "edits": [
+        {
+          "current": "\tconst jobSource = (source, name) => {\n\t\tconst marker = `\\n${\" \".repeat(2)}${name}:\\n`, parts = source.split(marker);\n\t\tassert.equal(parts.length, 2, `${name} job`);\n\t\tconst next = parts[1].search(/\\n {2}[A-Za-z0-9_-]+:\\n/u);\n\t\treturn next < 0 ? parts[1] : parts[1].slice(0, next);\n\t};\n",
+          "previous": "",
+          "start": 11755
+        },
+        {
+          "current": "\t\t[nativeWorkflow, \"callback-checked-record-native\", [\n",
+          "previous": "\t\t[nativeWorkflow, [\n",
+          "start": 12062
+        },
+        {
+          "current": "\t\t, [perlWorkflow, \"callback-checked-record-perl\", [\n",
+          "previous": "\t\t, [perlWorkflow, [\n",
+          "start": 12321
+        },
+        {
+          "current": "\t\t, [languageWorkflow, \"callback-checked-record-languages\", [\n",
+          "previous": "\t\t, [languageWorkflow, [\n",
+          "start": 12668
+        },
+        {
+          "current": "\tfor(const [source, protectedJob, required] of workflows)\n",
+          "previous": "\tfor(const [source, required] of workflows)\n",
+          "start": 13048
+        },
+        {
+          "current": "\t\tassert.doesNotMatch(source, /continue-on-error:/u);\n\t\tassert.doesNotMatch(jobSource(source, protectedJob), /strategy:|needs:/u);\n",
+          "previous": "\t\tassert.doesNotMatch(source, /continue-on-error:|strategy:|needs:/u);\n",
+          "start": 13473
+        }
+      ],
+      "path": "tests/callback-checked-record-native-ci.test.mjs",
+      "previousSha256": "c557cdac479ff861a2ad65afa0aeaa384304ead5386d659b99350ddab0e9aec4"
+    },
+    {
+      "currentSha256": "4eb459412ab661c928bcd0e515bd50400128bd8f87e1be7881c64385f81292e2",
+      "edits": [
+        {
+          "current": " * @param retainedColumns - Authenticated historical columns; absent for a current run.\n",
+          "previous": "",
+          "start": 14473
+        },
+        {
+          "current": "export const accountReviewedFinWasmEntryReport = (\n\texpected, report, prelude = [], retainedColumns = undefined\n) => {\n",
+          "previous": "export const accountReviewedFinWasmEntryReport = (expected, report, prelude = []) => {\n",
+          "start": 14565
+        },
+        {
+          "current": "\tconst accounted = accountReviewedFinWasmEntry(expected\n\t\t, { mode: entry.mode, result, calls: entry.calls }\n\t\t, entry.lines, retainedColumns);\n",
+          "previous": "\tconst accounted = accountReviewedFinWasmEntry(expected, { mode: entry.mode, result, calls: entry.calls }, entry.lines);\n",
+          "start": 14722
+        },
+        {
+          "current": "\tconst structural = source.includes(\"const box: Box = api.box(\")\n",
+          "previous": "\tassert.deepEqual(prelude, selection === \"structural\"\n",
+          "start": 16283
+        },
+        {
+          "current": "\t\t: [\"mirror\", \"label\", \"rows\", \"nested\"];\n\tassert.deepEqual(prelude, selection === \"structural\"\n\t\t? structural\n",
+          "previous": "",
+          "start": 16397
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-entry-producer.mjs",
+      "previousSha256": "4a543b38f4f27956edbc1889ed9ddeb6186742a35f33480577647c0423c4c809"
+    },
+    {
+      "currentSha256": "3dd260ee4446f4800a8fe6777fa68c3fbcfbe3de40bb31be35ecc83d3e698305",
+      "edits": [
+        {
+          "current": " * @param retainedColumns - Authenticated historical adapter columns; current runs derive them from the live IR.\n",
+          "previous": "",
+          "start": 13814
+        },
+        {
+          "current": "export const accountReviewedFinWasmEntry = (\n\texpected, observed, lines = undefined, retainedColumns = undefined\n) => {\n",
+          "previous": "export const accountReviewedFinWasmEntry = (expected, observed, lines = undefined) => {\n",
+          "start": 13931
+        },
+        {
+          "current": "\tconst expectedColumns = [...new Set(expected.calls.map(call => call[1]))].sort();\n\tconst columns = retainedColumns ?? reviewedFinWasmEntrySymbols(\n\t\tselection, mode).map(item => item.name);\n\tassert.deepEqual(columns, expectedColumns\n\t\t, \"the expectation's complete adapter columns\");\n",
+          "previous": "\tconst columns = reviewedFinWasmEntrySymbols(selection, mode).map(item => item.name);\n",
+          "start": 14090
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-entry.mjs",
+      "previousSha256": "8a18c9bda00dc89e81ef30b1b6e1c7587d05888b4b1736862e7c55802413664e"
+    },
+    {
+      "currentSha256": "40ba6bf9d36717d0efa9419282593125e799606f9351a6f3ee47a06da807b3b2",
+      "edits": [
+        {
+          "current": "\t\t\tconst accounted = accountReviewedFinWasmEntryReport(expected\n\t\t\t\t, browser ? parsed.results : parsed\n\t\t\t\t, browser ? [] : preludes[context.profile]\n\t\t\t\t, observation.columns);\n",
+          "previous": "\t\t\tconst accounted = accountReviewedFinWasmEntryReport(expected, browser ? parsed.results : parsed, browser ? [] : preludes[context.profile]);\n",
+          "start": 31811
+        },
+        {
+          "current": " * @param options.currentSources - True only while the live generators still are the retained producer revision.\n",
+          "previous": " * @param options.currentSources - False only while staging.\n",
+          "start": 38728
+        }
+      ],
+      "path": "tests/helpers/wasm-entry-evidence.mjs",
+      "previousSha256": "a5a94d84d95e82e70eb0198c7e7ac2a0b8c493a2997e184f1798d531d4ec297f"
+    },
+    {
+      "currentSha256": "1777bc201531ebc39f55707d3759ca1d5c1b98ed63b3883d3e286a02978f6a6d",
+      "edits": [
+        {
+          "current": "\tconst { runs } = await assertWasmEntryArchive(receipt, read\n\t\t, { currentSources: false });\n",
+          "previous": "\tconst { runs } = await assertWasmEntryArchive(receipt, read);\n",
+          "start": 2111
+        }
+      ],
+      "path": "tests/helpers/wasm-entry-supplement.mjs",
+      "previousSha256": "15a3a293190b1fc8b4c771d3e55b42000f68bcbc599e0aae96fd6016bb766c47"
+    },
+    {
+      "currentSha256": "f446fc5e0868a0e6cd3f315fb8314b127e456b99598da083ba4ea7e06fe2ed0e",
+      "edits": [
+        {
+          "current": "\tconst { runs } = await assertWasmEntryArchive(value, readFile\n\t\t, { currentSources: false });\n",
+          "previous": "\tconst { runs } = await assertWasmEntryArchive(value);\n",
+          "start": 2583
+        }
+      ],
+      "path": "tests/wasm-entry-evidence.test.mjs",
+      "previousSha256": "0447a48218dc5d98ab80757f2d03000cbc1b66943304cbf67855d1d46c1b5017"
+    }
+  ]
+}
