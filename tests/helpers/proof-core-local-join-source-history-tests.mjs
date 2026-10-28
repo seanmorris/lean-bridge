@@ -88,8 +88,12 @@ test("proof/Core local join reverses live integration to either parent", async (
 		const live = await readFile(path, "utf8");
 		const integration = record.integrationUpdates.find(
 			update => update.path === path);
-		const merged = integration === undefined ? live
-			: reverseProofCoreLocalJoinUpdate(live, integration);
+		const integrated = integration === undefined ? live
+			: beforeFinRefinementSource(
+				path, live, integration.currentSha256
+			);
+		const merged = integration === undefined ? integrated
+			: reverseProofCoreLocalJoinUpdate(integrated, integration);
 		assert.equal(sha256(merged)
 			, record.leftUpdates.find(update => update.path === path)
 				.currentSha256, path);
@@ -101,9 +105,9 @@ test("proof/Core local join reverses live integration to either parent", async (
 			, await gitSha256(proofCoreLocalJoinLeftParent, path), path);
 		assert.equal(sha256(right)
 			, await gitSha256(proofCoreLocalJoinRightParent, path), path);
-		assert.equal(beforeProofCoreLocalJoinSource(path, live, sha256(left))
+		assert.equal(beforeProofCoreLocalJoinSource(path, integrated, sha256(left))
 			, left, path);
-		assert.equal(beforeProofCoreLocalJoinSource(path, live, sha256(right))
+		assert.equal(beforeProofCoreLocalJoinSource(path, integrated, sha256(right))
 			, right, path);
 		assert.ok(finRefinementNormalizationPaths.includes(path));
 	}
@@ -135,8 +139,12 @@ test("proof/Core local join rejects forged transitions", async () => {
 	const unknown = `${current}unknown\n`;
 	assert.equal(beforeProofCoreLocalJoinSource(update.path, unknown), unknown);
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+	{
+		const source = beforeFinRefinementSource(
+			addition.path, await readFile(addition.path), addition.currentSha256
+		);
+		assert.equal(sha256(source), addition.currentSha256, addition.path);
+	}
 });
 
 test("proof/Core local-join writer refuses another checkout", async t => {

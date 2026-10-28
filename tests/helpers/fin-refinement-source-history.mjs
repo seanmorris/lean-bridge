@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDirectProofErasureManagedSource, directProofErasureManagedNormalizationPaths } from "./direct-proof-erasure-managed-source-history.mjs";
 import { beforeProofCoreLocalJoinSource, proofCoreLocalJoinNormalizationPaths } from "./proof-core-local-join-source-history.mjs";
 import { beforeDirectProofErasurePhpSource, directProofErasurePhpNormalizationPaths } from "./direct-proof-erasure-php-source-history.mjs";
 import { beforeDirectProofErasureNativeSource, directProofErasureNativeNormalizationPaths } from "./direct-proof-erasure-native-source-history.mjs";
@@ -2335,7 +2336,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...proofCoreLocalJoinNormalizationPaths
+	...directProofErasureManagedNormalizationPaths
+	, ...proofCoreLocalJoinNormalizationPaths
 	, ...directProofErasurePhpNormalizationPaths
 	, ...directProofErasureNativeNormalizationPaths
 	, ...directProofErasureNpmNormalizationPaths
@@ -3409,7 +3411,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeProofCoreLocalJoinSource(path, text, expected);
+	let stage = beforeDirectProofErasureManagedSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeProofCoreLocalJoinSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

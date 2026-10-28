@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/direct-proof-erasure-managed-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-managed-tests.mjs";
 import "./helpers/direct-proof-erasure-native-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-php-source-history-tests.mjs";

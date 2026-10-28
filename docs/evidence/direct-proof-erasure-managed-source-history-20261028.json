@@ -1,0 +1,161 @@
+{
+  "additions": [
+    {
+      "currentSha256": "39eca8d1b5458f2e019019ccc7de531c11351c97f0a255e2c34060472fa740a3",
+      "path": "scripts/check-direct-proof-erasure-managed-ci.mjs"
+    },
+    {
+      "currentSha256": "54fd6cd0f5d3b74c26697d11cd47a7391779dbd594b6e1ed2d4cb168e658aad3",
+      "path": "scripts/run-direct-proof-erasure-managed-ci.sh"
+    },
+    {
+      "currentSha256": "b27eadfe1697bad76ed23663364a14eef282baa9e2bdb4c1f7477754b76ac2a3",
+      "path": "tests/direct-proof-erasure-managed-installed.test.mjs"
+    },
+    {
+      "currentSha256": "bf6627ebf1cfb458a633e1fbef25f0639db9df822fa00feba77e282171990d16",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/dotnet.cs"
+    },
+    {
+      "currentSha256": "a3a1d4310a0886b21571fb279c36a69e0a73989abe5c69c2e9a40ef0baf4bdef",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/java.java"
+    },
+    {
+      "currentSha256": "b316365add95b076c304ef50ab1187e2569bb2b7a46ce14944fdce90d2a44565",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/kotlin.kt"
+    },
+    {
+      "currentSha256": "856d8be041acc7d4482c69470d686d76aa808458cf1064938cad7399375b75db",
+      "path": "tests/helpers/direct-proof-erasure-managed-report.mjs"
+    },
+    {
+      "currentSha256": "918839b6321b912ec6bdd377c4144d90bd56800e6a541a71ab5c8545b59a78b2",
+      "path": "tests/helpers/direct-proof-erasure-managed-tests.mjs"
+    },
+    {
+      "currentSha256": "cef5eaf45c04be26c25973fe94179bb932d66ab0cbdd5a3ba353b79523f737a1",
+      "path": "scripts/update-direct-proof-erasure-managed-source-history.mjs"
+    },
+    {
+      "currentSha256": "091b01acf4926b64ebc83b1b6c2c5a0f400c952d1a6a317451af2b0f0e037b83",
+      "path": "tests/helpers/direct-proof-erasure-managed-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e1fafe44b48a56fce84179e84ce0c64917e56d59c20d800cfeba0bb0d0408ccd",
+      "path": "tests/helpers/direct-proof-erasure-managed-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "bef91328a598d5a01a1543e788547af7f5f278b5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "19a82a33ec776f82b32b4176a9b0ed0d253c79e0601c2cb2a72092045b22484b",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-managed-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "43dadf85a55ce9d0a2c9d11d04a9443bfbe6dfeb0066c8c9b5679350e0f6c2ea"
+    },
+    {
+      "currentSha256": "d00371a11a7f128f54b0773091792b310bf7619b6bc0daede81431f9e67f1809",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureManagedSource, directProofErasureManagedNormalizationPaths } from \"./direct-proof-erasure-managed-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureManagedNormalizationPaths\n\t, ...proofCoreLocalJoinNormalizationPaths\n",
+          "previous": "\t...proofCoreLocalJoinNormalizationPaths\n",
+          "start": 211283
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureManagedSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeProofCoreLocalJoinSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeProofCoreLocalJoinSource(path, text, expected);\n",
+          "start": 263979
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "250e1facac3f6eb2d91cd6625fc2bddfae643c6be033c0fdfbb8d90ee7a7fc60"
+    },
+    {
+      "currentSha256": "c9a661a9d5a3f88cdc11287f22744d0a727a60603533cdeb0955a1565f35bf19",
+      "edits": [
+        {
+          "current": "\t\tconst integrated = integration === undefined ? live\n\t\t\t: beforeFinRefinementSource(\n\t\t\t\tpath, live, integration.currentSha256\n\t\t\t);\n\t\tconst merged = integration === undefined ? integrated\n\t\t\t: reverseProofCoreLocalJoinUpdate(integrated, integration);\n",
+          "previous": "\t\tconst merged = integration === undefined ? live\n\t\t\t: reverseProofCoreLocalJoinUpdate(live, integration);\n",
+          "start": 3656
+        },
+        {
+          "current": "\t\tassert.equal(beforeProofCoreLocalJoinSource(path, integrated, sha256(left))\n",
+          "previous": "\t\tassert.equal(beforeProofCoreLocalJoinSource(path, live, sha256(left))\n",
+          "start": 4451
+        },
+        {
+          "current": "\t\tassert.equal(beforeProofCoreLocalJoinSource(path, integrated, sha256(right))\n",
+          "previous": "\t\tassert.equal(beforeProofCoreLocalJoinSource(path, live, sha256(right))\n",
+          "start": 4547
+        },
+        {
+          "current": "\t{\n\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, await readFile(addition.path), addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(source), addition.currentSha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 5983
+        }
+      ],
+      "path": "tests/helpers/proof-core-local-join-source-history-tests.mjs",
+      "previousSha256": "c0a35bd55ee7477b4515d30f5fc19651b609e1593f0c3b1cdf50cd79bed59831"
+    }
+  ],
+  "milestone": "direct-proof-erasure-managed-source-v1",
+  "predecessorCommit": "19d2dcc50d5ba36cbf25478b459e01dca9f199d2",
+  "schemaVersion": 1,
+  "scope": "Build ordinary and independently reviewed direct-proof .NET and Maven packages twice; authenticate and retain receipt-closed offline archives; prove the generated C#, Java and Kotlin APIs expose one UInt32 payload and no proof slot; install and execute all three host callers; relocate their complete installations; and reject attempted proof arguments at compile time.",
+  "updates": [
+    {
+      "commit": "bef91328a598d5a01a1543e788547af7f5f278b5",
+      "currentSha256": "c697fef81f214ba5ab86f23d8574880c231d23e97e33dd096f0ed6acf079b487",
+      "edits": [
+        {
+          "current": "      - name: Qualify direct proof erasure in prepared managed packages\n        if: matrix.profile == 'dotnet' || matrix.profile == 'jvm'\n        id: direct_proof_managed\n        continue-on-error: true\n        timeout-minutes: 100\n        run: bash scripts/run-direct-proof-erasure-managed-ci.sh \"${{ matrix.profile }}\"\n      - name: Preserve direct proof-erasure managed acceptance\n        if: always() && (matrix.profile == 'dotnet' || matrix.profile == 'jvm')\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-managed-${{ matrix.profile }}-${{ github.sha }}\n          path: build/direct-proof-erasure-managed-ci/${{ matrix.profile }}/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "previous": "",
+          "start": 290351
+        },
+        {
+          "current": "              consumer_command=\"$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh dotnet\"\n              if [ \"${{ steps.ordinary_dotnet.outcome }}\" != success ] || [ \"${{ steps.type_corpus_dotnet.outcome }}\" != success ] || [ \"${{ steps.direct_proof_managed.outcome }}\" != success ]; then\n",
+          "previous": "              if [ \"${{ steps.ordinary_dotnet.outcome }}\" != success ] || [ \"${{ steps.type_corpus_dotnet.outcome }}\" != success ]; then\n",
+          "start": 298172
+        },
+        {
+          "current": "              consumer_command=\"$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh jvm\"\n              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ] || [ \"${{ steps.nominal_jvm.outcome }}\" != success ] || [ \"${{ steps.direct_proof_managed.outcome }}\" != success ]; then\n",
+          "previous": "              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ] || [ \"${{ steps.nominal_jvm.outcome }}\" != success ]; then\n",
+          "start": 304622
+        },
+        {
+          "current": "        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))\n",
+          "previous": "        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))\n",
+          "start": 311723
+        }
+      ],
+      "parent": "19d2dcc50d5ba36cbf25478b459e01dca9f199d2",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "2671f154ed6187168e43a1d951d2ad772246e5f3ecef1003f94c6381d1da98ee"
+    },
+    {
+      "commit": "bef91328a598d5a01a1543e788547af7f5f278b5",
+      "currentSha256": "43dadf85a55ce9d0a2c9d11d04a9443bfbe6dfeb0066c8c9b5679350e0f6c2ea",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-managed-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "parent": "19d2dcc50d5ba36cbf25478b459e01dca9f199d2",
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "d2738985e5afd46c92583cdf5ce4f1339822fd047681b902be73f11edf69c286"
+    }
+  ]
+}
