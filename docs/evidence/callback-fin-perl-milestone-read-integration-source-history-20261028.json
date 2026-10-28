@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "874420c92ef9b402425ee9f1643afd22089dd1f123e3238bd312c6a74afd3fa8",
+      "path": "scripts/update-callback-fin-perl-milestone-read-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "baccc783ab703ac032fc24f512b82c19b1c5b6e2cd1e02a78f001ab846322103",
+      "path": "tests/helpers/callback-fin-perl-milestone-read-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bfdedd6b8ec4ece8f2f7bf3a7995ce5da03ab2986e3be5da6143348899abb43a",
+      "path": "tests/helpers/callback-fin-perl-milestone-read-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "e40cf42672da5a15f6bf5cd55584795758600f5a",
+  "baseHistory": {
+    "path": "docs/evidence/callback-fin-perl-milestone-read-source-history-20261028.json",
+    "sha256": "e8c07c22b4dd4744149c20903365485d798028d96ceb82084308de995c603840"
+  },
+  "implementationCommit": "9f7de27c9a6fc43007c0f90fc7bcb4c38c0331e1",
+  "milestone": "callback-fin-perl-milestone-read-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated Perl callback Fin milestone-read history newest-first in the reversible Fin source-history hub and checked-JavaScript partition 10. Preserve all runtime behavior, type-surface claims, observations and evidence identities.",
+  "updates": [
+    {
+      "currentSha256": "e38af58087112c68d9db43ae08dd4f974720b903fcf312fe60b51f697e99009e",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinPerlMilestoneReadIntegrationSource, callbackFinPerlMilestoneReadIntegrationNormalizationPaths } from \"./callback-fin-perl-milestone-read-integration-source-history.mjs\";\nimport { beforeCallbackFinPerlMilestoneReadSource, callbackFinPerlMilestoneReadNormalizationPaths } from \"./callback-fin-perl-milestone-read-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...callbackFinPerlMilestoneReadIntegrationNormalizationPaths\n\t, ...callbackFinPerlMilestoneReadNormalizationPaths\n\t, ...callbackFinMilestoneReadIntegrationNormalizationPaths\n",
+          "previous": "\t...callbackFinMilestoneReadIntegrationNormalizationPaths\n",
+          "start": 205286
+        },
+        {
+          "current": "\tlet stage = beforeCallbackFinPerlMilestoneReadIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinPerlMilestoneReadSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinMilestoneReadIntegrationSource(\n",
+          "previous": "\tlet stage = beforeCallbackFinMilestoneReadIntegrationSource(\n",
+          "start": 256017
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "dde41e14d59e40a2b292fafe44fce741873414cc4824220a38b50a3197842af1"
+    },
+    {
+      "currentSha256": "12bb03a5a2f72b90ce52b2de3016bbe92eb774b82a61d40b517d39b78c0855c9",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-perl-milestone-read-source-history-tests.mjs\";\nimport \"./helpers/callback-fin-perl-milestone-read-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4162
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "026ee1db791aa2fefb499bc0ef7e42c134f4d0adfc3a5ee8583a4bf1a9979337"
+    }
+  ]
+}
