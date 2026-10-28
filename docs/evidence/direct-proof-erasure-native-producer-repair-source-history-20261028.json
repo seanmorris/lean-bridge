@@ -1,0 +1,167 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5883e8b4e24a124ff74ceed7ef9d9a41185ecfc6818909caf3b9cfe2c940de7c",
+      "path": "scripts/update-direct-proof-erasure-native-producer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "e589a0a7ad6fded5f94bc372eb3e4ca9e57d99ff879cea567686243d2ee6f6f0",
+      "path": "tests/helpers/direct-proof-erasure-native-producer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "27245515c46901be58836dfef4cb3e9a349b7475677b583d6256c705fb335c8b",
+      "path": "tests/helpers/direct-proof-erasure-native-producer-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "443596fe5896d148ab0ec2ebb4d82842418f8b1b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "ff99a56b2989a01d0373879fc0514efd3c9d229474da69048e742cab7581d694",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-native-producer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "2912bf2d971303dcae0c5db00d1d4365845d90c8b9297b7692755cd8d9e269aa"
+    },
+    {
+      "currentSha256": "7b6fe98d067afe24782ac4e7f0b0bb516993b9f980980bc43e229e83f42eda83",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureNativeProducerRepairSource, directProofErasureNativeProducerRepairNormalizationPaths } from \"./direct-proof-erasure-native-producer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureNativeProducerRepairNormalizationPaths\n\t, ...directProofErasureNativeEvidenceCorrectionNormalizationPaths\n",
+          "previous": "\t...directProofErasureNativeEvidenceCorrectionNormalizationPaths\n",
+          "start": 213443
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureNativeProducerRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureNativeEvidenceCorrectionSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureNativeEvidenceCorrectionSource(\n",
+          "start": 266847
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b3a0e5008490db2a5634ee3fa20e5507fcfca1aaceacf01d81d9bd04f096ab5f"
+    }
+  ],
+  "milestone": "direct-proof-erasure-native-producer-repair-source-v1",
+  "predecessorCommit": "dcfd6245f1018a52d9a4d1c938a24ddc258e5fbb",
+  "schemaVersion": 1,
+  "scope": "Repair the hosted native proof producer without weakening its contract: give generator-owned C locals a namespace disjoint from admitted Lean parameter names, replay the Fin callback diagnostic against its exact implementation commit, free irrelevant hosted toolchains before the evidence checkout, and register every transition newest-first. The complete downstream matrix remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "168e7bb0ab99c27119fb967f5a74712407886422ea04a111b893431f90aa35a8",
+      "edits": [
+        {
+          "current": "      - name: Free hosted runner disk before native builds\n        shell: bash\n        run: |\n          set -euo pipefail\n          df -h /\n          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL\n          df -h /\n",
+          "previous": "",
+          "start": 178094
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "bd92a5c4d5158544fc1cc9503cbfb7842a8f8f133653e32164ff5c85d47eb691"
+    },
+    {
+      "currentSha256": "138f16980755beb0d4174ac5e2eb6fa574d152b14e8e0e5da52ad57ac712abbe",
+      "edits": [
+        {
+          "current": "\t\t\t// Public C parameter names start with a lowercase letter. Keep every\n\t\t\t// generator-owned local in the disjoint _lb_ namespace so an admitted\n\t\t\t// Lean parameter such as `value`, `result`, `status` or `budget` cannot\n\t\t\t// redeclare an implementation local in the same function scope.\n\t\t\t, \"  (void)context; size_t _lb_budget = 16u * 1024u * 1024u;\"\n",
+          "previous": "\t\t\t, \"  (void)context; size_t budget = 16u * 1024u * 1024u;\"\n",
+          "start": 21268
+        },
+        {
+          "current": "\t\t\tlines.push(`  if (!${id(type)}_check(${value}, &_lb_budget)) return lb_invalid(error, \"Invalid copied input or 16 MiB call limit exceeded\");`);\n",
+          "previous": "\t\t\tlines.push(`  if (!${id(type)}_check(${value}, &budget)) return lb_invalid(error, \"Invalid copied input or 16 MiB call limit exceeded\");`);\n",
+          "start": 22094
+        },
+        {
+          "current": "\t\t\tlines.push(`  lean_object *_lb_checked = ${native.symbol}(${args.join(\", \") || \"lean_box(0)\"});`\n\t\t\t\t, `  if (lean_is_scalar(_lb_checked)) return lb_invalid(error, ${JSON.stringify(checkedRejection ? \"Lean rejected an argument outside its checked refinement\" : \"Lean rejected an argument outside its Fin bound\")});`\n\t\t\t\t, \"  lean_object *_lb_boxed = lean_ctor_get(_lb_checked, 0);\");\n\t\t\tif(nativeObjectType(native.result)) lines.push(\"  lean_inc(_lb_boxed);\");\n\t\t\tlines.push(`  ${nativeCType(native.result)} _lb_value = ${unboxed(native.result, \"_lb_boxed\")};`, \"  lean_dec(_lb_checked);\");\n",
+          "previous": "\t\t\tlines.push(`  lean_object *checked = ${native.symbol}(${args.join(\", \") || \"lean_box(0)\"});`\n\t\t\t\t, `  if (lean_is_scalar(checked)) return lb_invalid(error, ${JSON.stringify(checkedRejection ? \"Lean rejected an argument outside its checked refinement\" : \"Lean rejected an argument outside its Fin bound\")});`\n\t\t\t\t, \"  lean_object *boxed = lean_ctor_get(checked, 0);\");\n\t\t\tif(nativeObjectType(native.result)) lines.push(\"  lean_inc(boxed);\");\n\t\t\tlines.push(`  ${nativeCType(native.result)} value = ${unboxed(native.result, \"boxed\")};`, \"  lean_dec(checked);\");\n",
+          "start": 24291
+        },
+        {
+          "current": "\t\telse lines.push(`  ${nativeCType(native.result)} _lb_value = ${native.symbol}(${args.join(\", \") || \"lean_box(0)\"});`);\n",
+          "previous": "\t\telse lines.push(`  ${nativeCType(native.result)} value = ${native.symbol}(${args.join(\", \") || \"lean_box(0)\"});`);\n",
+          "start": 24889
+        },
+        {
+          "current": "\t\t\tlines.push(`  ${copy(native.result).name} _lb_result = {0};`, `  int _lb_status = ${id(native.result)}_out(_lb_value, &_lb_result, &_lb_budget);`);\n\t\t\tif(nativeObjectType(native.result)) lines.push(\"  lean_dec(_lb_value);\");\n\t\t\tlines.push('  if (_lb_status == 0) return lb_invalid(error, \"16 MiB call limit exceeded\");'\n\t\t\t\t, '  if (_lb_status == -2) return lb_failure(error, \"Invalid native Unicode scalar result\");'\n\t\t\t\t, ...(model.types.some(type => type.kind === \"variant\") ? ['  if (_lb_status == -3) return lb_failure(error, \"Invalid native variant result\");'] : [])\n\t\t\t\t, '  if (_lb_status < 0) return lb_failure(error, \"Cannot allocate copied result\");'\n\t\t\t\t, `  if (lb_ready(error) != ${macro}_STATUS_OK) { ${copy(native.result).aggregate ? `${copy(native.result).name}_clear(&_lb_result); ` : \"\"}return ${macro}_STATUS_UNEXPECTED_ERROR; }`, \"  *out = _lb_result;\");\n\t\t} else lines.push(\"  lean_dec(_lb_value); (void)_lb_budget;\", `  if (lb_ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;`);\n",
+          "previous": "\t\t\tlines.push(`  ${copy(native.result).name} result = {0};`, `  int status = ${id(native.result)}_out(value, &result, &budget);`);\n\t\t\tif(nativeObjectType(native.result)) lines.push(\"  lean_dec(value);\");\n\t\t\tlines.push('  if (status == 0) return lb_invalid(error, \"16 MiB call limit exceeded\");'\n\t\t\t\t, '  if (status == -2) return lb_failure(error, \"Invalid native Unicode scalar result\");'\n\t\t\t\t, ...(model.types.some(type => type.kind === \"variant\") ? ['  if (status == -3) return lb_failure(error, \"Invalid native variant result\");'] : [])\n\t\t\t\t, '  if (status < 0) return lb_failure(error, \"Cannot allocate copied result\");'\n\t\t\t\t, `  if (lb_ready(error) != ${macro}_STATUS_OK) { ${copy(native.result).aggregate ? `${copy(native.result).name}_clear(&result); ` : \"\"}return ${macro}_STATUS_UNEXPECTED_ERROR; }`, \"  *out = result;\");\n\t\t} else lines.push(\"  lean_dec(value); (void)budget;\", `  if (lb_ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;`);\n",
+          "start": 25088
+        }
+      ],
+      "path": "src/backends/c/native-copied-values.mjs",
+      "previousSha256": "99f9daf9aaa398995c976bc100d42d9ee28d751f4abfb0715af3e7f9386c3eca"
+    },
+    {
+      "currentSha256": "6c9b5ea45a6c2e2ba1c869eb493d3c46e6098a71d3a6cba3f6b92e4ea18664db",
+      "edits": [
+        {
+          "current": "import { createNativeModel } from \"../../src/build/native-model.mjs\";\nimport { generateCopiedNativeCalls } from \"../../src/backends/c/native-copied-values.mjs\";\n",
+          "previous": "",
+          "start": 293
+        },
+        {
+          "current": "import { compilePrimitiveCSurface } from \"../../src/backends/c/primitive-surface.mjs\";\n",
+          "previous": "",
+          "start": 531
+        },
+        {
+          "current": "import { nativeMetadataFixture } from \"./native-metadata.mjs\";\n",
+          "previous": "",
+          "start": 913
+        },
+        {
+          "current": "\tconst model = structuredClone(createNativeModel({\n\t\t...nativeMetadataFixture()\n\t\t, component: { id: \"directprooferasure@1.0.0\"\n\t\t\t, name: \"directprooferasure\", version: \"1.0.0\" }\n\t}));\n\tmodel.bindingIr = ir;\n\tmodel.exports[0].name = \"DirectProofErasure.keep\";\n\tconst provider = generateCopiedNativeCalls(\n\t\tmodel, compilePrimitiveCSurface(model.bindingIr));\n",
+          "previous": "",
+          "start": 1900
+        },
+        {
+          "current": "\tassert.match(provider\n\t\t, /uint32_t _lb_value = lb_[a-f0-9]+\\(lb_copy_0_in\\(&value\\)\\);/u);\n\tassert.match(provider\n\t\t, /int _lb_status = lb_copy_0_out\\(_lb_value, &_lb_result, &_lb_budget\\);/u);\n\tassert.doesNotMatch(provider, /uint32_t value = lb_[a-f0-9]+/u);\n",
+          "previous": "",
+          "start": 2482
+        },
+        {
+          "current": "\tconst nativeStart = workflow.indexOf(\"\\n  native-consumers:\");\n\tconst nativeJob = workflow.slice(nativeStart\n\t\t, workflow.indexOf(\"\\n  managed-consumers:\", nativeStart));\n\tassert.ok(nativeStart >= 0);\n\tassert.ok(nativeJob.indexOf(\"Free hosted runner disk before native builds\")\n\t\t< nativeJob.indexOf(\"Check out the exact revision\"));\n\tassert.match(nativeJob\n\t\t, /sudo rm -rf \\/usr\\/share\\/dotnet .*\\/opt\\/hostedtoolcache\\/CodeQL/u);\n",
+          "previous": "",
+          "start": 4467
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-native-tests.mjs",
+      "previousSha256": "5db34dca81b8858b133d4cac63cb00d8cb8363c2a899c7952bf88175b60dd5ad"
+    },
+    {
+      "currentSha256": "5f996763755f9f7d623a81e50fa5547bc632e65b18c113fddc3e04138bd1b92f",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "",
+          "previous": "import { beforeSubtypeXsArchiveSource } from \"./subtype-xs-archive-source-history.mjs\";\n",
+          "start": 404
+        },
+        {
+          "current": "const implementation = \"18ad14bb574c1e434fd6d2e2810885ead34007e6\";\n\n",
+          "previous": "",
+          "start": 608
+        },
+        {
+          "current": "\t\tconst source = execFileSync(\n\t\t\t\"git\", [\"show\", `${implementation}:${update.path}`]\n\t\t\t, { encoding: \"utf8\", maxBuffer: 256 * 1024 * 1024 });\n\t\tassert.equal(sha256(source), update.currentSha256, update.path);\n",
+          "previous": "\t\tconst source = beforeSubtypeXsArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1074
+        }
+      ],
+      "path": "tests/helpers/fin-callback-diagnostic-source-history-tests.mjs",
+      "previousSha256": "303524d4cca61563512d72256dc2ed6da226bc2b3c103610eabe82737ad0f3c0"
+    }
+  ]
+}
