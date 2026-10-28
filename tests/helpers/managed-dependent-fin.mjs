@@ -23,6 +23,10 @@ export const dependentFinTargets = Object.freeze({ c: ["c", coordinate]
 	, "php-native": ["php-native", {
 		name: "example/dependentfin", version: "1.0.0"
 	}]
+	, "php-wasm": ["php-wasm", {
+		npm: { name: "dependentfin-wasm", version: "1.0.0" }
+		, composer: { name: "example/dependentfin-wasm", version: "1.0.0" }
+	}]
 	, "wit-wasi": ["wit-wasi", coordinate]
 	, perl: ["cpan", {
 		module: "LeanBridge::DependentFin", version: "1.000"
@@ -31,7 +35,7 @@ export const dependentFinTargets = Object.freeze({ c: ["c", coordinate]
 export const dependentFinExtensions = Object.freeze({
 	c: "c", cpp: "cpp", python: "py", rust: "rs", dotnet: "cs"
 	, java: "java", kotlin: "kt", ruby: "rb", "php-native": "php"
-	, "wit-wasi": "c", perl: "pl" });
+	, "php-wasm": "php", "wit-wasi": "c", perl: "pl" });
 
 const dependent = parameter => ({ kind: "fin-parameter", parameter });
 /** Checked refinement trees the native model must carry: a live parameter index, never a bound. */
@@ -65,4 +69,7 @@ export const installDependentFinConsumer = options => installCopiedConsumer({ ..
 	// A dependent Fin keeps Nat's limb-list transport in WIT; the bound is a live argument, not WIT text.
 	, wit: [/type (bridge-value-\d+) = list<u32>;[^]*mirror: func\([^)]*\) -> \1/]
 	, success: "dependent-fin-ok"
+	, phpInvalid: "try { LeanDependentfin\\mirror(2, \\Brick\\Math\\BigInteger::of(1)); throw new \\Exception('number accepted'); } catch (\\TypeError $error) {}"
+	, removeHandoff: true
+	, attestDeployment: true
 } });

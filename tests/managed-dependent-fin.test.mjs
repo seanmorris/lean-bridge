@@ -42,6 +42,8 @@ for(const selection of [profiles, reviewedProfiles])
 {
 	assert.equal(new Set(selection).size, selection.length, "Duplicate dependent Fin profile");
 	assert.ok(selection.every(profile => Object.hasOwn(dependentFinTargets, profile)), "Unknown or empty dependent Fin profile");
+	assert.ok(!selection.includes("php-wasm") || selection.length === 1
+		, "PHP-Wasm dependent Fin runs in its isolated host lane");
 }
 
 const zero = "0".repeat(64);
@@ -100,7 +102,8 @@ test("every dependent Fin profile has a target and installed consumer", async ()
 		assert.ok(Object.hasOwn(dependentFinTargets, profile), profile);
 	for(const [profile, extension] of Object.entries(dependentFinExtensions))
 	{
-		const source = await readFile(`tests/fixtures/dependent-fin-consumers/${profile}.${extension}`, "utf8");
+		const fixtureProfile = profile === "php-wasm" ? "php-native" : profile;
+		const source = await readFile(`tests/fixtures/dependent-fin-consumers/${fixtureProfile}.${extension}`, "utf8");
 		// Each consumer covers Fin 0, Fin 1, the exact endpoint, a word bound, a 2^70 bound, a live bound
 		// changing per call, a later dependency and 1000 recovering calls, then reports its check count.
 		assert.match(source, /dependent Fin bound/, profile);
@@ -190,6 +193,10 @@ const checkInstalledDependentFin = async (t, selected, reviewed = false) => {
 		environment.LEAN_BRIDGE_RUBY ??= resolve(".toolchains/ruby33/bin/ruby");
 		environment.LEAN_BRIDGE_GEM ??= join(dirname(environment.LEAN_BRIDGE_RUBY), "gem");
 	}
+	if(selected.includes("php-wasm")
+		&& environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME)
+		environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME
+			= environment.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME;
 	for(const attempt of [0, 1])
 	{
 		const directory = await mkdtemp(join(tmpdir(), "lean-bridge-dependent-fin-author-"));
@@ -204,7 +211,11 @@ const checkInstalledDependentFin = async (t, selected, reviewed = false) => {
 		const built = await buildCanonicalProject({ projectRoot, outputRoot, targets: Object.keys(targets), environment }).catch(error => {
 			error.message += `: ${JSON.stringify(error.details)}`; throw error;
 		});
-		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
+		const projection = selected.includes("php-wasm") ? "php-wasm" : "native";
+		const model = JSON.parse(await readFile(join(
+			outputRoot, `${projection}/component/model.json`
+		), "utf8"));
+		if(projection === "php-wasm") assert.equal(model.pointerBits, 32);
 		if(reviewed)
 		{
 			assert.equal(model.sourceIdentity.reviewedBindingIr.source, reviewedSource);
@@ -214,7 +225,9 @@ const checkInstalledDependentFin = async (t, selected, reviewed = false) => {
 		assert.deepEqual(Object.fromEntries(model.exports.map(item => [item.name, item.refinements ?? null])), dependentFinRefinements);
 		for(const item of model.exports) for(const parameter of item.parameters) assert.ok(!JSON.stringify(parameter.type).includes('"refinement"'), item.name);
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
-		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		const receiptPath = join(handoff, "package-set-receipt.json");
+		await verifyPackageSetReceipt({ receiptPath });
+		const receiptSha256 = sha256(await readFile(receiptPath));
 		archives.push(Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => [artifact.path, artifact.sha256]))));
 		const dependencies = attempt === 0 && selected.includes("rust")
 			? await prepareRustCorpusDependencies({ rustRoot: join(outputRoot, "native/rust"), directory, handoff: join(consumer, "dependencies"), environment }) : undefined;
@@ -227,6 +240,15 @@ const checkInstalledDependentFin = async (t, selected, reviewed = false) => {
 			const target = dependentFinTargets[profile][0];
 			const packages = receipt.packages.filter(pkg => pkg.target === target);
 			const observation = await installDependentFinConsumer({ profile, consumer, handoff, packages, dependencies, environment });
+			if(profile === "php-wasm")
+			{
+				assert.equal(observation.executions.length, 12);
+				assert.ok(observation.executions.every(item =>
+					item.checks === observation.checks));
+				for(const flag of ["offlineInstall", "compilerFreePath"
+					, "unchangedDeployment", "handoffRemovedBeforeExecution"])
+					assert.equal(observation[flag], true, flag);
+			}
 			// The interpreter path is machine-specific; the report keeps portable facts only.
 			delete observation.command;
 			reports.push({ profile, path: reviewed ? "reviewed-ir" : "ordinary-source"
@@ -237,9 +259,10 @@ const checkInstalledDependentFin = async (t, selected, reviewed = false) => {
 				, bindingIrSha256: built.bindingIrSha256
 				, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 				, modelSha256: sha256(canonicalJson(model))
-				, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
+				, receiptSha256
 				, ...(reviewed ? { reviewedSourceSha256: model.sourceIdentity.reviewedBindingIr.sourceSha256 } : {})
-				, sourceRemovedBeforeInstallation: true });
+				, sourceRemovedBeforeInstallation: true
+				, handoffRelocatedBeforeInstallation: true });
 			await rm(join(consumer, profile), { recursive: true, force: true });
 		}
 		await rm(consumer, { recursive: true, force: true });
