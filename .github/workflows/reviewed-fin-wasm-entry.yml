@@ -1,6 +1,8 @@
 name: Reviewed Fin Wasm entry evidence
 
 on:
+  # The branch-scoped push permits pre-merge evidence; once this workflow is
+  # present on the default branch, workflow_dispatch remains the normal entry.
   push:
     branches:
       - codex/vo2166-fin-completion
