@@ -37,6 +37,19 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.12'
+      - name: Restore the pinned Lean compiler
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains/downloads
+            .toolchains/elan
+            .toolchains/elan-installer
+          key: lean-toolchain-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'scripts/bootstrap-toolchains.sh') }}
+      - name: Restore the pinned Rust compiler
+        uses: actions/cache@v5
+        with:
+          path: .toolchains/rust-1.90.0
+          key: rust-toolchain-v1-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-rust-ci.sh') }}
       - name: Bound apt network waits
         uses: ./.github/actions/bounded-apt
         timeout-minutes: 1
@@ -46,7 +59,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
       - name: Install dependencies and pinned Lean and Rust compilers
-        timeout-minutes: 30
+        timeout-minutes: 45
         shell: bash
         run: |
           set -euo pipefail
@@ -84,6 +97,7 @@ jobs:
 
   callback-fin-languages:
     name: Checked Fin callbacks in three installed language packages
+    needs: callback-checked-record-languages
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     steps:
@@ -105,6 +119,19 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.12'
+      - name: Restore the pinned Lean compiler
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains/downloads
+            .toolchains/elan
+            .toolchains/elan-installer
+          key: lean-toolchain-v1-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'scripts/bootstrap-toolchains.sh') }}
+      - name: Restore the pinned Rust compiler
+        uses: actions/cache@v5
+        with:
+          path: .toolchains/rust-1.90.0
+          key: rust-toolchain-v1-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-rust-ci.sh') }}
       - name: Bound apt network waits
         uses: ./.github/actions/bounded-apt
         timeout-minutes: 1
@@ -114,7 +141,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
       - name: Install dependencies and pinned Lean and Rust compilers
-        timeout-minutes: 30
+        timeout-minutes: 45
         shell: bash
         run: |
           set -euo pipefail

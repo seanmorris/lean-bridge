@@ -12,7 +12,9 @@ fi
 LEAN_BRIDGE_RUST_DOWNLOAD=$(mktemp -d)
 trap 'rm -rf "$LEAN_BRIDGE_RUST_DOWNLOAD"' EXIT
 LEAN_BRIDGE_RUST_ARCHIVE="rust-$LEAN_BRIDGE_RUST_VERSION-x86_64-unknown-linux-gnu"
-curl --fail --location --retry 3 \
+curl --fail --location --silent --show-error \
+  --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 300 \
+  --connect-timeout 30 --max-time 600 --remove-on-error \
   "https://static.rust-lang.org/dist/$LEAN_BRIDGE_RUST_ARCHIVE.tar.xz" \
   --output "$LEAN_BRIDGE_RUST_DOWNLOAD/rust.tar.xz"
 test "$(sha256sum "$LEAN_BRIDGE_RUST_DOWNLOAD/rust.tar.xz" | cut -d ' ' -f 1)" = bff8974f2d3ee6c0e6ac926b533f65bbdd3697d2c2b925bdae5f45b9eed10a67

@@ -73,7 +73,24 @@ if [[ ! -x "$ELAN_HOME/bin/elan" ]]; then
   "$LEAN_WASM_TOOLCHAINS/elan-installer/elan-init" -y --no-modify-path --default-toolchain none
 fi
 if ! "$ELAN_HOME/bin/elan" toolchain list | cut -d' ' -f1 | grep -Fxq "$LEAN_TOOLCHAIN"; then
-  "$ELAN_HOME/bin/elan" toolchain install "$LEAN_TOOLCHAIN"
+  lean_install_succeeded=0
+  for lean_install_attempt in 1 2; do
+    echo "Installing $LEAN_TOOLCHAIN (attempt $lean_install_attempt of 2)"
+    if timeout --signal=TERM --kill-after=30s 600s \
+      "$ELAN_HOME/bin/elan" toolchain install "$LEAN_TOOLCHAIN"; then
+      lean_install_succeeded=1
+      break
+    fi
+    echo "Lean toolchain installation attempt $lean_install_attempt failed; clearing the partial installation" >&2
+    "$ELAN_HOME/bin/elan" toolchain uninstall "$LEAN_TOOLCHAIN" >/dev/null 2>&1 || true
+    if [[ "$lean_install_attempt" -lt 2 ]]; then
+      sleep 5
+    fi
+  done
+  if [[ "$lean_install_succeeded" -ne 1 ]]; then
+    echo "Failed to install $LEAN_TOOLCHAIN after 2 bounded attempts" >&2
+    exit 1
+  fi
 fi
 "$ELAN_HOME/bin/elan" default "$LEAN_TOOLCHAIN"
 
