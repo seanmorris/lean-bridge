@@ -1,0 +1,52 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7f350a740dbe9a9d2962808d07a540784263e9dd563b8cdaaa118170c3c5cc66",
+      "path": "scripts/update-core-native-evidence-manifest-source-history.mjs"
+    },
+    {
+      "currentSha256": "2542885f3b3e5426036d94af03d9e082b6f8dc84b96d99b0f844d0e02cfb4404",
+      "path": "tests/helpers/core-native-evidence-manifest-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c856d4bf7eaf2ad840f3f1bdedb53c0a0af79b087d2756b76fb2feb69697ceab",
+      "path": "tests/helpers/core-native-evidence-manifest-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d18a3b88a56f15b429976ffef125e72a1b22e1be",
+  "milestone": "core-native-evidence-manifest-source-v1",
+  "predecessorCommit": "a0a3ca7fc6d46b57df6f4a55411c2896abe39851",
+  "schemaVersion": 1,
+  "scope": "Retain the generic-record Array archive whenever the native-specialization inventory closure runs in a sparse Core shard. The closure already authenticates that archive; this transition adds its exact dynamic prefix and a planner regression without changing evidence, observations or support claims.",
+  "updates": [
+    {
+      "currentSha256": "76c9da3959a1bfaea7e754d7d4f37f9eb91c71b8550e1aaee98839116f16b1ae",
+      "edits": [
+        {
+          "current": "\t\t, \"generic-record-arrays-20990101\"\n",
+          "previous": "",
+          "start": 7086
+        },
+        {
+          "current": "\t\t, [\"generic-record-specializations-20990101\"\n\t\t\t, \"generic-record-arrays-20990101\"]);\n",
+          "previous": "\t\t, [\"generic-record-specializations-20990101\"]);\n",
+          "start": 7304
+        }
+      ],
+      "path": "tests/helpers/core-contract-evidence-tests.mjs",
+      "previousSha256": "b259611dac0462bee766cb0f782a54bceb33d3227fb80f05076cfe34afb7bd67"
+    },
+    {
+      "currentSha256": "1402afa3e37d357753062f935f8fb3e13f02842cc2990ec4471b5568f7fd5522",
+      "edits": [
+        {
+          "current": "// core-evidence-prefix: generic-record-arrays-\n",
+          "previous": "",
+          "start": 822
+        }
+      ],
+      "path": "tests/helpers/native-specialization-closure.mjs",
+      "previousSha256": "c96bde457f674aba587d72649f7ac42fb8260d0d990cb61e1631c0b4572f477f"
+    }
+  ]
+}
