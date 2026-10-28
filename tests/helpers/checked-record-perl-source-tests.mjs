@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -16,6 +16,7 @@ import { canonicalJson } from "../../src/capsule/node.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { checkedRecordContracts, checkedRecordFixture, checkedRecordReview } from "./checked-record-fixture.mjs";
 import { readCheckedRecordRemainingHostsArchive } from "./checked-record-remaining-hosts-archive.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const moduleName = "LeanBridge::CheckedRecords";
 const receipt = {
@@ -82,7 +83,10 @@ for(const route of ["ordinary-source", "reviewed-ir", "result-only-ordinary-sour
 	});
 
 test("Perl checked-record package reader enables constructors for every package mode", async () => {
-	const source = await readFile("src/release/cpan-package.mjs", "utf8");
+	const source = await sourceAtFinHistoryMilestone(
+		"src/release/cpan-package.mjs"
+		, "b7a606541cc82a2917851074513a2371e968c8add561e08b86e4701b8b8ad463"
+	);
 	assert.ok(source.includes("nativeCheckedRecords: true"));
 	for(const capability of [
 		"ownedGraphs", "ownedHostCallbacks", "ownedInputTransfers"

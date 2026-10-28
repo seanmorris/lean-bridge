@@ -5,7 +5,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { createReadStream } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import test from "node:test";
@@ -23,6 +22,7 @@ import {
 } from "./owned-checked-record-promotion.mjs";
 import { gitSourceBytes } from "./source-history-stream.mjs";
 import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
+import { ownedCheckedRecordMatrixPublicationImplementation } from "./owned-checked-record-matrix-publication-source-history.mjs";
 import { ownedSubtypeMatrixPublicationImplementation } from "./owned-subtype-matrix-publication-source-history.mjs";
 
 const predecessor = "a9cad3b18a244d7e74918e6e8964455e073e2453";
@@ -41,7 +41,9 @@ const current = () => loaded ??= (async () => {
 		irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json", "utf8"))
 		, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json", "utf8"))
 	};
-	const { document } = await readPromotionInventory(createReadStream("docs/type-surface.v1.json"), contracts);
+	const { document } = await readPromotionInventory(gitSourceBytes(
+		ownedCheckedRecordMatrixPublicationImplementation, "docs/type-surface.v1.json"
+	), contracts);
 	const { document: before } = await readPromotionInventory(gitSourceBytes(predecessor, "docs/type-surface.v1.json"), contracts);
 	// Owned checked-record changes still compare with their original baseline.
 	// Other observations must preserve the separately authenticated Subtype publication.

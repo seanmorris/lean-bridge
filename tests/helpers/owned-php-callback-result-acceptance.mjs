@@ -84,8 +84,12 @@ const ownedPhpCallbackSuccessorPaths = new Set([
 	, "tests/helpers/wit-callback-installed-acceptance-history.mjs"
 ]);
 
-/** Include the completed predecessor and the complete local acceptance closure. */
-export const ownedPhpCallbackSourcePaths = async () => {
+/**
+ * Include the completed predecessor and the complete local acceptance closure.
+ *
+ * @param {Record<string, string>} sources - Exact retained source identities.
+ */
+export const ownedPhpCallbackSourcePaths = async sources => {
 	const predecessor = await readFile(ownedPhpCallbackPrevious.path);
 	assert.equal(sha256(predecessor), ownedPhpCallbackPrevious.sha256);
 	const paths = new Set([
@@ -105,7 +109,9 @@ export const ownedPhpCallbackSourcePaths = async () => {
 		visited.add(path);
 		if(!ownedPhpCallbackSuccessorPaths.has(path)) paths.add(path);
 		if(!path.endsWith(".mjs")) continue;
-		const tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, "utf8")), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+		const tree = ts.createSourceFile(path, beforeFinRefinementSource(
+			path, await readFile(path, "utf8"), sources?.[path]
+		), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 		const visit = node => {
 			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier
 				: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : null;
@@ -195,7 +201,7 @@ export const assertOwnedPhpCallbackAcceptance = async record => {
 		assert.equal(sha256(await readFile(reference.path)), reference.sha256, reference.path);
 	const { archive: runtimeArchive } = await readOwnedPhpCallbackStaged();
 	await assertOwnedPhpCallbackStaged(runtimeArchive);
-	assert.deepEqual(Object.keys(record.sources), await ownedPhpCallbackSourcePaths());
+	assert.deepEqual(Object.keys(record.sources), await ownedPhpCallbackSourcePaths(record.sources));
 	for(const [path, digest] of Object.entries(record.sources))
 	{
 		const source = beforePhpCallbackInstalledStaging(path, await readFile(path), digest);

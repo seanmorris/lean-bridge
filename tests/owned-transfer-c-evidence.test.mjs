@@ -16,8 +16,10 @@ import { phpWasmCorpusPartitionHistoryPath } from "./helpers/php-wasm-corpus-par
 import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedTransferCPath, "utf8"));
-const historical = async path => ownedTransferPackageHistoricalBytes(path, await readFile(path));
-const historicalText = async path => (await historical(path)).toString("utf8");
+const historical = async (path, expected) =>
+	ownedTransferPackageHistoricalBytes(path, await readFile(path), expected);
+const historicalText = async (path, expected) =>
+	(await historical(path, expected)).toString("utf8");
 // The CI check describes the workflow immediately before the PHP-Wasm corpus partition.
 const workflowPath = ".github/workflows/consumer-matrix.yml";
 const prePartitionWorkflow = async () => {
@@ -37,27 +39,28 @@ test("staged C transfers authenticate every source and preserve installed suppor
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources)
 		, ...Object.keys(ownedTransferCRegisteredSources)
 		, ...ownedTransferCAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await historical(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await historical(path, digest)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedTransferCChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedTransferCRegisteredSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await historicalText(update.path), prior = beforeOwnedTransferC(update.path, current);
+		const current = await historicalText(update.path, update.currentSha256), prior = beforeOwnedTransferC(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedTransferC(update.path, prior), prior);
 		assert.equal(beforeOwnedTransferC(update.path, current, update.currentSha256), current);
 	}
-	const current = await historicalText("docs/type-surface.v1.json");
+	const current = await historicalText("docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"]);
 	const prior = JSON.parse(beforeOwnedTransferC("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await historical(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		file.sha256 = sha256(await historical(file.path, record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior, "Staged C transfer execution does not promote installed support");
 });
 
 test("staged C transfer history rejects unknown edits and forged ancestors", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = await historicalText(update.path), unknown = source + "\n/* unrelated */\n";
+		const source = await historicalText(update.path, update.currentSha256), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedTransferC(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedTransferCUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

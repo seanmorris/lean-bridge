@@ -57,8 +57,12 @@ const successorPaths = new Set([
 	"tests/helpers/wit-callback-installed-acceptance-history.mjs"
 ]);
 
-/** Bind the complete local verifier/build closure and its publication surfaces. */
-export const installedWitCallbackSourcePaths = async () => {
+/**
+ * Bind the complete local verifier/build closure and its publication surfaces.
+ *
+ * @param {Record<string, string>} sources - Exact retained source identities.
+ */
+export const installedWitCallbackSourcePaths = async sources => {
 	const predecessor = await readFile(installedWitCallbackPrevious.path);
 	assert.equal(sha256(predecessor), installedWitCallbackPrevious.sha256);
 	const paths = new Set([installedWitCallbackPrevious.path
@@ -73,8 +77,10 @@ export const installedWitCallbackSourcePaths = async () => {
 		const path = pending.pop();
 		if(visited.has(path)) continue;
 		visited.add(path); paths.add(path);
-		const tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, "utf8"))
-			, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+		const tree = ts.createSourceFile(path, beforeFinRefinementSource(
+			path, await readFile(path, "utf8"), sources?.[path]
+		)
+		, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 		const visit = node => {
 			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node)
 				? node.moduleSpecifier
@@ -254,7 +260,7 @@ export const assertInstalledWitCallbackAcceptance = async record => {
 	assert.deepEqual(record.previous, installedWitCallbackPrevious);
 	assert.deepEqual(record.scope, installedWitCallbackScope);
 	assert.equal(sha256(await readFile(record.previous.path)), record.previous.sha256);
-	assert.deepEqual(Object.keys(record.sources), await installedWitCallbackSourcePaths());
+	assert.deepEqual(Object.keys(record.sources), await installedWitCallbackSourcePaths(record.sources));
 	for(const [path, identity] of Object.entries(record.sources))
 		assert.equal(sha256(beforeWitCallbackInstalledAcceptance(path, await readFile(path), identity))
 			, identity, path);

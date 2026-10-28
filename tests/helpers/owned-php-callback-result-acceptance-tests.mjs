@@ -20,7 +20,7 @@ test("native PHP callback acceptance freezes direct runtime and six installed pa
 	assert.deepEqual(record.previous, ownedPhpCallbackPrevious);
 	assert.deepEqual(record.scope, ownedPhpCallbackScope);
 	assert.deepEqual(record.scope.counts, ownedPhpCallbackCounts);
-	assert.deepEqual(Object.keys(record.sources), await ownedPhpCallbackSourcePaths());
+	assert.deepEqual(Object.keys(record.sources), await ownedPhpCallbackSourcePaths(record.sources));
 	assert.equal(Object.keys(record.archive.reports).length, 6);
 	assert.equal(Object.keys(record.handoffs).length, 6);
 	assert.equal(Object.keys(record.logs).length, 6);

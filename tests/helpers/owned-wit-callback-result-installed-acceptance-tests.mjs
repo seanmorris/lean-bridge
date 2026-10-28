@@ -16,7 +16,7 @@ const zero = "0".repeat(64);
 test("installed WIT callback acceptance freezes all six source-free relocated packages", async () => {
 	const record = await receipt(); await assertInstalledWitCallbackAcceptance(record);
 	assert.deepEqual(record.scope, installedWitCallbackScope);
-	assert.deepEqual(Object.keys(record.sources), await installedWitCallbackSourcePaths());
+	assert.deepEqual(Object.keys(record.sources), await installedWitCallbackSourcePaths(record.sources));
 	assert.equal(Object.keys(record.archive.reports).length, 6);
 });
 

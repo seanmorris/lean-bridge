@@ -3,6 +3,17 @@
  *
  * @file
  */
+// core-evidence-prefix: structural-subtype-native-
+// core-evidence-prefix: structural-subtype-python-
+// core-evidence-prefix: structural-subtype-rust-
+// core-evidence-prefix: structural-subtype-ruby-
+// core-evidence-prefix: structural-subtype-dotnet-
+// core-evidence-prefix: structural-subtype-jvm-
+// core-evidence-prefix: structural-subtype-php-
+// core-evidence-prefix: structural-subtype-wit-
+// core-evidence-prefix: structural-subtype-perl-
+// core-evidence-prefix: structural-subtype-browser-
+// core-evidence-prefix: structural-subtype-php-wasm-
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
