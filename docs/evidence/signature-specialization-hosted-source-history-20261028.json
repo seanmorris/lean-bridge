@@ -1,0 +1,70 @@
+{
+  "additions": [
+    {
+      "currentSha256": "eafb66d80e467a1c82d3567af0294158a57a2a7dad3fb886f34e72608ecd2260",
+      "path": "scripts/update-signature-specialization-hosted-source-history.mjs"
+    },
+    {
+      "currentSha256": "379cf6150de6d7d681e27eee917ed4fd0d81c5e9cb4040470cbddd5b433e38f2",
+      "path": "tests/helpers/signature-specialization-hosted-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "bb8cbde46a1bc0875a73dcabab1cb8c2f42c81a458606aa6dfc62114dbae3151",
+      "path": "tests/helpers/signature-specialization-hosted-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "43e41d5901d9b70e9fafcc059cd1c163b3cb624032e0b13e11eec104e40ac348",
+      "path": "scripts/archive-signature-specialization-hosted.mjs"
+    },
+    {
+      "currentSha256": "4fd9e5f0e2c2618faf93e00001cac1095fc30fd8c441f37b281278cf3029c7e6",
+      "path": "tests/helpers/signature-specialization-hosted-archive.mjs"
+    },
+    {
+      "currentSha256": "0ada9ef3705905848eeda8388a871b3662bd664085a446a7cb78ecd884a06dbb",
+      "path": "tests/helpers/signature-specialization-hosted-evidence.mjs"
+    },
+    {
+      "currentSha256": "0b01ed23e4f7fc747f442b4ef9476f5be57422fdb31d7f9a4c8b3fcdfcd12e23",
+      "path": "tests/helpers/signature-specialization-hosted-tests.mjs"
+    }
+  ],
+  "implementationCommit": "182518cc7ca7b4463c68d0dcfe720361b50adf67",
+  "milestone": "signature-specialization-hosted-source-v1",
+  "predecessorCommit": "6e0d941e796db8813ee58bc8fda00e126e0a232c",
+  "schemaVersion": 1,
+  "scope": "Bind the exact ten hosted producer lanes for the 45-cell generic, implicit and instance signature completion to terminal run, job, artifact, ZIP, API, log, report, TAP and transitive source identities. Independently validate all nine reviewed native profiles, all browser engine/variant/lifecycle observations and all twelve PHP-Wasm arrangements per route. Retain complete artifact ZIPs in Git-safe parts and reject incomplete or weakened reports. Make no support claim before the original hosted runs are terminal-green, archived, replayed and promoted.",
+  "updates": [
+    {
+      "currentSha256": "4883bf7f997162bcdaf23968728e857a460835167d8451cb7fda2882b235b2ba",
+      "edits": [
+        {
+          "current": "\t\t{\n\t\t\tconst variants = observation.profile === \"browser-react\"\n\t\t\t\t? [\"production\", \"strict\"] : [\"production\"];\n\t\t\tassert.equal(observation.browser.browser.installedSourcesRemoved, true);\n\t\t\tassert.equal(observation.browser.browser.externalNetworkBlocked, true);\n\t\t\tassert.deepEqual(observation.browser.browser.executions.map(\n\t\t\t\texecution => `${execution.engine}/${execution.variant}`).sort()\n\t\t\t, [\"chromium\", \"firefox\", \"webkit\"].flatMap(engine =>\n\t\t\t\tvariants.map(variant => `${engine}/${variant}`)).sort());\n\t\t\tfor(const execution of observation.browser.browser.executions)\n\t\t\t{\n\t\t\t\tassert.deepEqual(execution.observation.results, {\n\t\t\t\t\tmodule: \"specialized\", route: item.route\n\t\t\t\t\t, ...signatureSpecializationBrowserExpected\n\t\t\t\t});\n\t\t\t\tassert.equal(execution.failedAssetRecovery, true);\n\t\t\t\tif(observation.profile === \"browser-react\")\n\t\t\t\t\tassert.equal(execution.pendingUnmount, true);\n\t\t\t\telse assert.equal(Object.hasOwn(execution, \"pendingUnmount\"), false);\n\t\t\t}\n\t\t\tassert.deepEqual(observation.browser.observation\n\t\t\t\t, observation.browser.browser.executions[0].observation);\n\t\t}\n",
+          "previous": "\t\t\tassert.deepEqual(observation.browser.observation.results, { module: \"specialized\", route: item.route, ...signatureSpecializationBrowserExpected });\n",
+          "start": 12062
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-browser.mjs",
+      "previousSha256": "8d9089a0523bf3c5c8826a0494a3ae411e9e1b6ac1c8fefb70182ff7940a8a5a"
+    },
+    {
+      "currentSha256": "b7ad9db7c9851eb2b5f6cd62020c295b040e1c43ff5744a7b24dcb2713518103",
+      "edits": [
+        {
+          "current": "const executionTuples = Object.freeze([\n\t...([\"embedded\", \"composer\"].flatMap(arrangement =>\n\t\t[\"startup\", \"lazy\"].flatMap(loading =>\n\t\t\t[\"weak\", \"strict\"].map(mode =>\n\t\t\t\t`node/${arrangement}/${loading}/${mode}`))))\n\t, ...([\"startup\", \"lazy\"].flatMap(loading =>\n\t\t[\"weak\", \"strict\"].map(mode =>\n\t\t\t`chromium/bundled/${loading}/${mode}`)))\n].sort());\nconst expectedChecks = 2020;\n",
+          "previous": "",
+          "start": 1373
+        },
+        {
+          "current": "\t\tassert.equal(item.checks, expectedChecks);\n\t\tassert.deepEqual(item.executions.map(value =>\n\t\t\t`${value.realm}/${value.arrangement}/${value.loading}/${value.mode}`\n\t\t).sort(), executionTuples);\n\t\tassert.ok(item.executions.every(value => value.checks === expectedChecks));\n",
+          "previous": "\t\tassert.equal(item.executions.length, 12); assert.ok(item.checks >= 2000);\n\t\tassert.deepEqual([...new Set(item.executions.map(value => value.realm))].sort(), [\"chromium\", \"node\"]);\n\t\tassert.ok(item.executions.every(value => value.checks === item.checks));\n",
+          "start": 7214
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-php-wasm.mjs",
+      "previousSha256": "1cb3d60eb78b7d3257c1e735d31aabee8206c754cb54bd4897e8663017aa9341"
+    }
+  ]
+}
