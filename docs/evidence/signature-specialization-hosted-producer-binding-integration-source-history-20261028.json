@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1fa6e559f569d0dcc3f6012c3943c7f92b60704dd500830329ddd37aa0beb699",
+      "path": "scripts/update-signature-specialization-hosted-producer-binding-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "0fa8f801f936d66b6ee14b58f41b08e35c19609834cc950bbff7ec1ad43e60d5",
+      "path": "tests/helpers/signature-specialization-hosted-producer-binding-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d57b00d6ca091bf249da36292c5422a8e87d25887b8208bc7cd21d6a6c666ea3",
+      "path": "tests/helpers/signature-specialization-hosted-producer-binding-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "ea75f85b2ec3f4c78187b821de4a7702e214c90b",
+  "baseHistory": {
+    "path": "docs/evidence/signature-specialization-hosted-producer-binding-source-history-20261028.json",
+    "sha256": "7ca6df0af12f907ef6bb6a49aa3776adca23f67a813d7606e0d4923b56798d8d"
+  },
+  "implementationCommit": "623e848cea83ed03c42bf33a8e06cc14645bfa76",
+  "milestone": "signature-specialization-hosted-producer-binding-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the exact lane-producer binding transition newest-first in the reversible Fin history hub and checked-JavaScript partition 10.",
+  "updates": [
+    {
+      "currentSha256": "fb736fa8b79c285631a5ad4627a220de157a96adccf16826e55d25e2b3709d7c",
+      "edits": [
+        {
+          "current": "import \"./helpers/signature-specialization-hosted-producer-binding-integration-source-history-tests.mjs\";\nimport \"./helpers/signature-specialization-hosted-producer-binding-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "6bca6fdb29c4ddc8b50605e0303daa49d094c35118b8b6cddd6e91e96981f186"
+    },
+    {
+      "currentSha256": "fb41d8e830532cd7d46714a97af8b5fc1769815d666cfb5fcf772397c0a8981f",
+      "edits": [
+        {
+          "current": "import { beforeSignatureSpecializationHostedProducerBindingIntegrationSource, signatureSpecializationHostedProducerBindingIntegrationNormalizationPaths } from \"./signature-specialization-hosted-producer-binding-integration-source-history.mjs\";\nimport { beforeSignatureSpecializationHostedProducerBindingSource, signatureSpecializationHostedProducerBindingNormalizationPaths } from \"./signature-specialization-hosted-producer-binding-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...signatureSpecializationHostedProducerBindingIntegrationNormalizationPaths\n\t, ...signatureSpecializationHostedProducerBindingNormalizationPaths\n\t, ...signatureSpecializationPhpWasmConsumerRepairIntegrationNormalizationPaths\n",
+          "previous": "\t...signatureSpecializationPhpWasmConsumerRepairIntegrationNormalizationPaths\n",
+          "start": 204300
+        },
+        {
+          "current": "\tlet stage = beforeSignatureSpecializationHostedProducerBindingIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationHostedProducerBindingSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationPhpWasmConsumerRepairIntegrationSource(\n",
+          "previous": "\tlet stage = beforeSignatureSpecializationPhpWasmConsumerRepairIntegrationSource(\n",
+          "start": 254708
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "de2a15418c535a9ad8f19086db76b93c0ffb1119cec92b887e01e8612acdc307"
+    }
+  ]
+}
