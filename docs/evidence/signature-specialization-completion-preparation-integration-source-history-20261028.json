@@ -1,0 +1,57 @@
+{
+  "additions": [
+    {
+      "currentSha256": "824fb96efb137271db51db732a6b750c57f144c4ba53ece6ae18b4c98547b51d",
+      "path": "scripts/update-signature-specialization-completion-preparation-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "928cf92a9f6317773f607d59821c3c5cc33fd69dbe1624b982956f48bc80a762",
+      "path": "tests/helpers/signature-specialization-completion-preparation-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c7d342428fd0407596a254df8cbe7630ca2a9951a8bc88a5c2d8328eb4022114",
+      "path": "tests/helpers/signature-specialization-completion-preparation-integration-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "552992a72e4967d99aeed290165ca124ed125f0a",
+  "milestone": "signature-specialization-completion-preparation-integration-source-v1",
+  "predecessorCommit": "32f8edcc7fb16fe5973e55f567d6a5ca914d4571",
+  "schemaVersion": 1,
+  "scope": "Integrate the authenticated terminal-green hosted-signature completion preparation into the central Fin history and partition newest-first. Preserve exact source reconstruction before generating or promoting the immutable evidence archive.",
+  "updates": [
+    {
+      "currentSha256": "53f55205add76c10b7fe027699414edba69e15fdf439751dfe5b6def845d7380",
+      "edits": [
+        {
+          "current": "import \"./helpers/signature-specialization-completion-preparation-source-history-tests.mjs\";\nimport \"./helpers/signature-specialization-completion-preparation-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4745
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "4e0ed6cf7a0ae29fbfef26d4a25b6026ccd0a6f3ea45e10fd09a39f24b14f4f4"
+    },
+    {
+      "currentSha256": "6c23ba0029215c63744865987c9b354f5cf8d8b2091031b5deceb7ceffa4eb44",
+      "edits": [
+        {
+          "current": "import { beforeSignatureSpecializationCompletionPreparationIntegrationSource, signatureSpecializationCompletionPreparationIntegrationNormalizationPaths } from \"./signature-specialization-completion-preparation-integration-source-history.mjs\";\nimport { beforeSignatureSpecializationCompletionPreparationSource, signatureSpecializationCompletionPreparationNormalizationPaths } from \"./signature-specialization-completion-preparation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...signatureSpecializationCompletionPreparationIntegrationNormalizationPaths\n\t, ...signatureSpecializationCompletionPreparationNormalizationPaths\n\t, ...inheritedCheckedRecordLaneMemoryLocalJoinNormalizationPaths\n",
+          "previous": "\t...inheritedCheckedRecordLaneMemoryLocalJoinNormalizationPaths\n",
+          "start": 206619
+        },
+        {
+          "current": "\tlet stage = beforeSignatureSpecializationCompletionPreparationIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationCompletionPreparationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeInheritedCheckedRecordLaneMemoryLocalJoinSource(\n",
+          "previous": "\tlet stage = beforeInheritedCheckedRecordLaneMemoryLocalJoinSource(\n",
+          "start": 257787
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "30c586c51f2cd8d0dad6753d1d19d018b93fecee5272e5db3eb86b9611f8bd50"
+    }
+  ]
+}
