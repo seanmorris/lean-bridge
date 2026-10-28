@@ -54,3 +54,5 @@ import "./helpers/core-native-evidence-manifest-source-history-tests.mjs";
 import "./helpers/core-native-evidence-manifest-integration-source-history-tests.mjs";
 import "./helpers/signature-specialization-php-wasm-consumer-repair-source-history-tests.mjs";
 import "./helpers/signature-specialization-php-wasm-consumer-repair-integration-source-history-tests.mjs";
+import "./helpers/callback-fin-milestone-read-source-history-tests.mjs";
+import "./helpers/callback-fin-milestone-read-integration-source-history-tests.mjs";
