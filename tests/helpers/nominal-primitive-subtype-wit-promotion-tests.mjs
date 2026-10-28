@@ -13,6 +13,7 @@ import { beforeNominalPrimitiveSubtypeJvmPromotionPins } from "./nominal-primiti
 import { nominalPrimitiveSubtypeWitPromotionHistoryPath, nominalPrimitiveSubtypeWitPromotionPredecessor } from "./nominal-primitive-subtype-wit-promotion-history.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+	, withHistorySourcePins
 } from "./source-history-test-source.mjs";
 import { nominalPrimitiveSubtypeWitProducer } from "./nominal-primitive-subtype-wit-provenance.mjs";
 import {
@@ -128,7 +129,10 @@ test("primitive-base WIT promotion supplements six cells only", async () => {
 		, document.evidence.map(entry => entry.id));
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypeWitPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(document, proposed);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length), proposed.evidence.slice(original.evidence.length));
 	const changedObservations = proposed.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(original.observations[index]));
