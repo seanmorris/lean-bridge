@@ -1,0 +1,57 @@
+{
+  "additions": [
+    {
+      "currentSha256": "eb9cbcf43b3adfb170271ddf514f92de1b2ee5a1ee6d1db7b4352501a5d1b719",
+      "path": "scripts/update-signature-specialization-completion-pin-repair-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "af79f157ecb2c737665f8ce471c602ffd9ef2535a423a228944bc598132f2d9c",
+      "path": "tests/helpers/signature-specialization-completion-pin-repair-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "5712a68db72921e1223df4a43aa625903bc271b16e3d4fbc2e59205e40b8ceb7",
+      "path": "tests/helpers/signature-specialization-completion-pin-repair-integration-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "fe5d8aa74e5849dadf0451a8dee6d51f01cfd5db",
+  "milestone": "signature-specialization-completion-pin-repair-integration-source-v1",
+  "predecessorCommit": "ccdd3bfecd49ba132b961b1384ab539b6ba572f6",
+  "schemaVersion": 1,
+  "scope": "Integrate the claim-neutral one-pin completion repair into the central Fin history and partition newest-first, including its pending integration ledger.",
+  "updates": [
+    {
+      "currentSha256": "84325b84f271973f7c0fd87cb0970bb9c434d477812e3132b7e0fe6c7e0743e5",
+      "edits": [
+        {
+          "current": "import \"./helpers/signature-specialization-completion-pin-repair-source-history-tests.mjs\";\nimport \"./helpers/signature-specialization-completion-pin-repair-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5333
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "e9fa2637710e9ba0d3e7094f46502369ffae4f3fc656d2c47aad0849a31a617a"
+    },
+    {
+      "currentSha256": "343acfd5dddc020a324d4929d9aac0fb83bfe2db056f218c86e8185019ec8e42",
+      "edits": [
+        {
+          "current": "import { beforeSignatureSpecializationCompletionPinRepairIntegrationSource, signatureSpecializationCompletionPinRepairIntegrationNormalizationPaths } from \"./signature-specialization-completion-pin-repair-integration-source-history.mjs\";\nimport { beforeSignatureSpecializationCompletionPinRepairSource, signatureSpecializationCompletionPinRepairNormalizationPaths } from \"./signature-specialization-completion-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...signatureSpecializationCompletionPinRepairIntegrationNormalizationPaths\n\t, ...signatureSpecializationCompletionPinRepairNormalizationPaths\n\t, ...signatureSpecializationCompletionPromotionIntegrationNormalizationPaths\n",
+          "previous": "\t...signatureSpecializationCompletionPromotionIntegrationNormalizationPaths\n",
+          "start": 207943
+        },
+        {
+          "current": "\tlet stage = beforeSignatureSpecializationCompletionPinRepairIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationCompletionPinRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeSignatureSpecializationCompletionPromotionIntegrationSource(\n",
+          "previous": "\tlet stage = beforeSignatureSpecializationCompletionPromotionIntegrationSource(\n",
+          "start": 259546
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "174aa420f2e1ee3a9a9b99d4dba8043a6399e5fb2af327fbed783e542e7db0b7"
+    }
+  ]
+}
