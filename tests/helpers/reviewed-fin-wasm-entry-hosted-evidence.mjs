@@ -147,6 +147,8 @@ export const checkReviewedFinWasmEntryHostedEvidence = async (
 				, "job-log": join(root, `hosted/${leg.mode}/job.log`)
 			}, leg.mode);
 			assert.equal(hosted.revision, index.producerCommit);
+			assert.equal(hosted.hostedRun.runConclusion
+				, leg.hostedRun.runConclusion);
 			const extracted = await extractCheckedRecordValueIndexHostedArtifact(zip);
 			try
 			{
