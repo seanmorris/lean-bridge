@@ -20,6 +20,7 @@ import {
 	renderRustPackageLayout,
 } from "../src/backends/rust/generate.mjs";
 import { auditRustPackage } from "../src/backends/rust/package-audit.mjs";
+import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 
 const run = promisify(execFile);
 const clone = value => structuredClone(value);
@@ -198,6 +199,117 @@ fn ordinary_rust_calls_preserve_values_identity_callbacks_and_drop() {
 {
     await rm(directory, { recursive: true, force: true });
 }
+});
+
+test("ordinary Rust crates expose omission macros while retaining full-arity functions", { timeout: 120000 }, async () => {
+	const option = { option: "uint32" };
+	const signatures = [
+		{ name: "Defaults.uint32", parameters: ["uint32"], result: "uint32" }
+		, { name: "Defaults.optionSome", parameters: [option], result: option }
+		, { name: "Defaults.optionNone", parameters: [option], result: option }
+		, { name: "Defaults.unit", parameters: ["unit"], result: "unit" }
+		, { name: "Defaults.boolean", parameters: ["bool"], result: "bool" }
+		, { name: "Defaults.text", parameters: ["string"], result: "string" }
+		, { name: "Defaults.character", parameters: ["char"], result: "char" }
+		, { name: "Defaults.natural", parameters: ["nat"], result: "nat" }
+		, { name: "Defaults.integer", parameters: ["int"], result: "int" }
+	];
+	const ir = corpusReviewedIr({ id: "defaults" }, signatures);
+	const defaults = [
+		{ kind: "integer", value: "7" }
+		, { kind: "option-some", value: { kind: "integer", value: "9" } }
+		, { kind: "option-none" }
+		, { kind: "unit" }
+		, { kind: "boolean", value: true }
+		, { kind: "string", value: "Lean\nBridge" }
+		, { kind: "char", value: "λ" }
+		, { kind: "integer", value: "184467440737095516160" }
+		, { kind: "integer", value: "-184467440737095516160" }
+	];
+	ir.declarations.forEach((declaration, index) => {
+		declaration.parameters[0].optional = true;
+		declaration.parameters[0].default = defaults[index];
+	});
+	const files = generateRustBindingPackage(ir);
+	const source = files["src/lib.rs"];
+	assert.match(source, /pub fn uint32\(value0: u32\) -> Result<u32, Error>/u);
+	assert.match(source, /macro_rules! uint32 \{\n {4}\(\) => \{ \$crate::uint32\(7\) \};/u);
+	assert.match(source, /macro_rules! option_some \{\n {4}\(\) => \{ \$crate::option_some\(&Some\(9\)\) \};/u);
+	assert.match(source, /macro_rules! option_none \{\n {4}\(\) => \{ \$crate::option_none\(&None\) \};/u);
+	assert.match(source, /\$crate::natural\(&\$crate::BigUint::parse_bytes/u);
+	assert.match(source, /\$crate::integer\(&\$crate::BigInt::parse_bytes/u);
+
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-rust-defaults-"));
+	try
+	{
+		await writePackage(directory, files);
+		await writeFile(join(directory, "src", "__runtime.rs"), `
+use crate::{BigInt, BigUint, Error};
+pub(crate) fn call0(value: u32) -> Result<u32, Error> { Ok(value) }
+pub(crate) fn call1(value: &Option<u32>) -> Result<Option<u32>, Error> { Ok(*value) }
+pub(crate) fn call2(value: &Option<u32>) -> Result<Option<u32>, Error> { Ok(*value) }
+pub(crate) fn call3(value: ()) -> Result<(), Error> { Ok(value) }
+pub(crate) fn call4(value: bool) -> Result<bool, Error> { Ok(value) }
+pub(crate) fn call5(value: &str) -> Result<String, Error> { Ok(value.to_owned()) }
+pub(crate) fn call6(value: char) -> Result<char, Error> { Ok(value) }
+pub(crate) fn call7(value: &BigUint) -> Result<BigUint, Error> { Ok(value.clone()) }
+pub(crate) fn call8(value: &BigInt) -> Result<BigInt, Error> { Ok(value.clone()) }
+`);
+		await mkdir(join(directory, "tests"), { recursive: true });
+		await writeFile(join(directory, "tests", "defaults.rs"), `
+use lean_bridge_defaults::{BigInt, BigUint};
+
+#[test]
+fn defaults_and_explicit_values_use_the_same_functions() {
+    assert_eq!(lean_bridge_defaults::uint32!().unwrap(), 7);
+    assert_eq!(lean_bridge_defaults::uint32(11).unwrap(), 11);
+    assert_eq!(lean_bridge_defaults::option_some!().unwrap(), Some(9));
+    assert_eq!(lean_bridge_defaults::option_some(&None).unwrap(), None);
+    assert_eq!(lean_bridge_defaults::option_none!().unwrap(), None);
+    assert_eq!(lean_bridge_defaults::option_none(&Some(5)).unwrap(), Some(5));
+    assert_eq!(lean_bridge_defaults::unit!().unwrap(), ());
+    assert!(lean_bridge_defaults::boolean!().unwrap());
+    assert!(!lean_bridge_defaults::boolean(false).unwrap());
+    assert_eq!(lean_bridge_defaults::text!().unwrap(), "Lean\\nBridge");
+    assert_eq!(lean_bridge_defaults::text("explicit").unwrap(), "explicit");
+    assert_eq!(lean_bridge_defaults::character!().unwrap(), 'λ');
+    assert_eq!(lean_bridge_defaults::character('x').unwrap(), 'x');
+    assert_eq!(lean_bridge_defaults::natural!().unwrap(), BigUint::parse_bytes(b"184467440737095516160", 10).unwrap());
+    assert_eq!(lean_bridge_defaults::natural(&BigUint::from(12u32)).unwrap(), BigUint::from(12u32));
+    assert_eq!(lean_bridge_defaults::integer!().unwrap(), BigInt::parse_bytes(b"-184467440737095516160", 10).unwrap());
+    assert_eq!(lean_bridge_defaults::integer(&BigInt::from(-12)).unwrap(), BigInt::from(-12));
+}
+`);
+		const { stdout, stderr } = await run("cargo", ["test", "--offline", "--quiet"], {
+			cwd: directory
+			, env: { ...process.env, CARGO_BUILD_JOBS: "1", RUSTFLAGS: "-D warnings" }
+		});
+		assert.match(`${stdout}\n${stderr}`, /1 passed/u);
+	}
+	finally
+	{ await rm(directory, { recursive: true, force: true }); }
+});
+
+test("ordinary Rust crates reject a default before a required positional parameter", () => {
+	const ir = corpusReviewedIr({ id: "defaults" }, [{ name: "Defaults.mixed", parameters: ["uint32", "uint32"], result: "uint32" }]);
+	ir.declarations[0].parameters[0].optional = true;
+	ir.declarations[0].parameters[0].default = { kind: "integer", value: "7" };
+	assert.throws(
+		() => generateRustBindingPackage(ir),
+		error => error.code === "unsupported-rust-signature" && /precedes a required positional parameter/u.test(error.message),
+	);
+});
+
+test("Rust omission macros cover every trailing-default arity", () => {
+	const ir = corpusReviewedIr({ id: "defaults" }, [{ name: "Defaults.combine", parameters: ["uint32", "uint32", "uint32"], result: "uint32" }]);
+	for(const [parameter, value] of ir.declarations[0].parameters.slice(1).map((parameter, index) => [parameter, index === 0 ? "7" : "9"]))
+	{
+		parameter.optional = true;
+		parameter.default = { kind: "integer", value };
+	}
+	const source = generateRustBindingPackage(ir)["src/lib.rs"];
+	assert.match(source, /\(\$arg0:expr\) => \{ \$crate::combine\(\$arg0, 7, 9\) \};/u);
+	assert.match(source, /\(\$arg0:expr, \$arg1:expr\) => \{ \$crate::combine\(\$arg0, \$arg1, 9\) \};/u);
 });
 
 test("finite generic declarations become concrete Rust functions", () => {

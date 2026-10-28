@@ -11,6 +11,7 @@ import { copiedRustAssets } from "./copied-assets.mjs";
 import { copiedRustConversions, copiedRustHelpers, copiedRustTypes } from "./copied-conversions.mjs";
 import { rustSite, rustSignature, rustCallablePublic, rustCallableSymbols, rustNativeFunction, rustCallableNative } from "./callables.mjs";
 import { nativeFinSummary, nativeFinContainerNote, nativeFinRefinements, nativeRefinementReadme } from "../native/fin-refinements.mjs";
+import { renderRustDefault } from "./default-value.mjs";
 
 const finBounds = (fn, types) => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => parameter.name), types);
 // A dependent Fin bound is an earlier Nat argument of the same call, not a constant.
@@ -42,6 +43,22 @@ const publicType = (model, ref, input = false) => {
 		: `${{ array: "Vec", list: "Vec", option: "Option", result: "Result" }[ref.constructor]}<${children}>`;
 };
 const publicAliases = model => !model.surface.aliases.length ? "" : `\n${model.surface.aliases.map(alias => `pub type ${alias.definition.name} = ${publicType(model, alias.definition.target)};`).join("\n")}\n`;
+const defaultMacros = model => model.surface.functions.flatMap(fn => {
+	const parameters = fn.declaration.parameters;
+	const optional = parameters.findIndex(parameter => parameter.optional);
+	if(optional < 0) return [];
+	const arms = [];
+	for(let supplied = optional; supplied < parameters.length; supplied++)
+	{
+		const pattern = fn.parameters.slice(0, supplied).map((_, index) => `$arg${index}:expr`).join(", ");
+		const arguments_ = [
+			...fn.parameters.slice(0, supplied).map((_, index) => `$arg${index}`)
+			, ...parameters.slice(supplied).map(parameter => renderRustDefault(parameter.default, parameter.type, id => model.ir.types.find(type => type.id === id)))
+		];
+		arms.push(`    (${pattern}) => { $crate::${fn.field}(${arguments_.join(", ")}) };`);
+	}
+	return [`#[macro_export]\nmacro_rules! ${fn.field} {\n${arms.join("\n")}\n}\n`];
+}).join("\n");
 const publicSource = model => `//! Typed copied-value functions from ${model.ir.component.id}.
 #[cfg(not(all(target_os = "linux", target_arch = "x86_64", target_env = "gnu")))]
 compile_error!("This Lean crate requires Linux x86-64 with glibc");
@@ -85,7 +102,8 @@ ${model.surface.functions.map((fn, index) => `/// Lean export: ${fn.declaration.
 ${finDoc(fn, model.ir.types)}pub fn ${fn.field}(${fn.parameters.map((parameter, i) => `${parameter.name}: ${publicType(model, fn.declaration.parameters[i].type, true)}`).join(", ")}) -> Result<${publicType(model, fn.declaration.result.type)}, Error> {
     __runtime::call${index}(${fn.parameters.map(parameter => parameter.name).join(", ")})
 }
-`).join("\n")}`;
+`).join("\n")}
+${defaultMacros(model)}`;
 
 const signature = rustSignature;
 
@@ -152,6 +170,8 @@ export const renderCopiedRustPackage = (model, evidence = null, settings = {}) =
 		files["README.md"] += "\nConcrete copied Lean aliases export named pub type declarations, retaining alias chains and named record fields. They use their targets' Rust values without newtype wrappers. String and byte inputs still borrow str and u8 slices; Array and List inputs borrow slices. Other aggregate inputs borrow their named aliases. Results own their copied contents. Aliases of Nat use BigUint, so negative inputs do not typecheck. Recursive and identity-bearing alias targets, and compound callable payloads remain unsupported.\n";
 	if(model.surface.copies.some(copy => copy.variant))
 		files["README.md"] += "\nConcrete copied Lean variants export named Rust enums. Empty cases are unit variants; payload cases have named fields. Construct and match these cases without numeric tags or unsafe code. Constructor names use PascalCase and fields use snake_case, with reserved words gaining a trailing underscore. Inputs borrow the enum and outputs own independent copied contents. Only the active payload is converted. Variants can contain supported copied records, containers and other non-recursive variants. Conversion errors and unwinding release temporary storage and native outputs through RAII. Recursive, callable and identity-bearing payloads remain unsupported.\n";
+	if(model.surface.functions.some(fn => fn.declaration.parameters.some(parameter => parameter.optional)))
+		files["README.md"] += "\nLean-declared defaults keep each full-arity Rust function unchanged. A same-named exported macro accepts every shorter arity formed by omitting trailing defaults; for example, call `crate_name::operation!()` while `crate_name::operation(value)` remains the explicit-value function. The macro supplies only compiler-authenticated defaults before calling the same private native operation.\n";
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: { id: "lean-wasm/rust-copied", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), publicModule: "src/lib.rs", internalModule: "src/__runtime.rs", exports: exported(model), files: [...Object.keys(files), "binding-manifest.json"], capabilityGaps: [{ feature: "identity-and-effects", reason: "Cargo supports copied values and synchronous primitive callables; resources, compound callables and asynchronous operations remain outside this profile." }, { feature: "additional-platforms", reason: "The native profile requires Rust 1.90+ on Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	const structured = [...model.surface.callbacks.values()].some(callback => [...callback.parameters, callback.result].some(copy => copy.ref.kind !== "primitive"));
 	if(structured)

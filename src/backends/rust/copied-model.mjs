@@ -88,6 +88,9 @@ export const compileCopiedRustModel = ir => {
 		if(names.has(fn.field)) fail(fn.declaration, `Rust function name collides: ${fn.field}`);
 		names.add(fn.field);
 		for(const parameter of fn.parameters) if(reserved.has(parameter.name)) fail(fn.declaration, `Rust parameter is reserved: ${parameter.name}`);
+		for(const [index, parameter] of fn.declaration.parameters.entries())
+			if(parameter.optional && fn.declaration.parameters.slice(index + 1).some(item => !item.optional))
+				fail(fn.declaration, `Rust defaulted parameter ${parameter.name} precedes a required positional parameter`);
 	}
 	return { ir, surface, closureSignatures: [...signatures.values()], hasBigints: surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName)) };
 };
