@@ -3,6 +3,8 @@
  *
  * @file
  */
+import "./helpers/core-deterministic-boundary-repair-source-history-tests.mjs";
+import "./helpers/core-deterministic-boundary-repair-integration-source-history-tests.mjs";
 import "./helpers/callback-fin-perl-local-join-source-history-tests.mjs";
 import "./helpers/core-ruby-predecessor-stop-source-history-tests.mjs";
 import "./helpers/signature-specialization-hosted-producer-binding-integration-source-history-tests.mjs";
