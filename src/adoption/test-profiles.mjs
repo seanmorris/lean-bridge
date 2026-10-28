@@ -1095,6 +1095,7 @@ const profileManifest = Object.freeze({
 		, "reviewed-npm-packaging"
 		, "reviewed-callback-fin"
 		, "native-fin-containers"
+		, "managed-dependent-fin"
 		, "fin-container-edges"
 		, "fin-container-foreign-carriers"
 		, "fin-container-edge-closure"
