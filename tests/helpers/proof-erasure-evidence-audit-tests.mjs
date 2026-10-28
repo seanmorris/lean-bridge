@@ -9,20 +9,39 @@ import test from "node:test";
 import { auditProofErasureEvidence } from "./proof-erasure-evidence-audit.mjs";
 import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 
-const inventory = async () => JSON.parse(await readFile(
-	"docs/type-surface.v1.json", "utf8"
-));
+const inventoryPromise = readFile("docs/type-surface.v1.json", "utf8")
+	.then(JSON.parse);
+const contractsPromise = readTypeSurfaceContracts();
+const inventory = () => inventoryPromise;
+const contracts = () => contractsPromise;
 
-test("proof evidence audit partitions all 204 cells without promoting candidates", async () => {
+test("proof evidence audit binds 102 exact cells and preserves 102 gaps", async () => {
 	const result = auditProofErasureEvidence(
-		await inventory(), await readTypeSurfaceContracts());
+		await inventory(), await contracts());
 	assert.equal(result.cells.length, 204);
-	assert.equal(result.candidates.length, 170);
-	assert.equal(result.residual.length, 34);
-	assert.ok(result.candidates.every(item =>
-		item.verification === "pending-exact-replay"));
-	assert.ok(result.residual.every(item =>
-		item.cell.endsWith("/signature")));
+	assert.equal(result.bindings.length, 102);
+	assert.equal(result.residual.length, 102);
+	assert.ok(result.bindings.every(item =>
+		item.verification === "exact-retained-replay"));
+	assert.ok(result.bindings.every(item =>
+		item.retained.archiveIndex.path.endsWith("/index.json")
+		&& item.retained.fixtureSource.path.includes("/sources/")));
+	assert.deepEqual(Object.fromEntries([
+		"field", "callback-parameter", "callback-result"
+	].map(position => [position
+		, result.bindings.filter(item =>
+		item.cell.endsWith(`/${position}`)).length]
+	)), {
+		field: 34, "callback-parameter": 34, "callback-result": 34
+	});
+	assert.deepEqual(Object.fromEntries([
+		"parameter", "result", "signature"
+	].map(position => [position
+		, result.residual.filter(item =>
+		item.cell.endsWith(`/${position}`)).length]
+	)), {
+		parameter: 34, result: 34, signature: 34
+	});
 	assert.deepEqual(
 		Object.fromEntries([
 			"parameter", "result", "field", "callback-parameter"
@@ -39,26 +58,43 @@ test("proof evidence audit partitions all 204 cells without promoting candidates
 });
 
 test("proof evidence audit refuses a missing or non-installed candidate", async () => {
-	const original = await inventory(), contracts = await readTypeSurfaceContracts();
+	const original = await inventory(), currentContracts = await contracts();
 	const id = "zero-payload-native-ordinary-source-hosted-installed";
 	const missing = structuredClone(original);
 	missing.evidence = missing.evidence.filter(item => item.id !== id);
-	assert.throws(() => auditProofErasureEvidence(missing, contracts)
+	assert.throws(() => auditProofErasureEvidence(missing, currentContracts)
 		, new RegExp(id));
 	const inspected = structuredClone(original);
 	inspected.evidence.find(item => item.id === id).kind = "inspection";
-	assert.throws(() => auditProofErasureEvidence(inspected, contracts));
+	assert.throws(() => auditProofErasureEvidence(inspected, currentContracts));
 });
 
 test("proof evidence audit refuses route drift and never binds signatures", async () => {
-	const original = await inventory(), contracts = await readTypeSurfaceContracts();
+	const original = await inventory(), currentContracts = await contracts();
 	const id = "nested-checked-record-native-reviewed-full-installed";
 	const changed = structuredClone(original);
 	changed.evidence.find(item => item.id === id).id
 		= "nested-checked-record-native-reviewed-moved-installed";
-	assert.throws(() => auditProofErasureEvidence(changed, contracts)
+	assert.throws(() => auditProofErasureEvidence(changed, currentContracts)
 		, new RegExp(id));
-	const result = auditProofErasureEvidence(original, contracts);
-	assert.equal(result.candidates.some(item =>
+	const result = auditProofErasureEvidence(original, currentContracts);
+	assert.equal(result.bindings.some(item =>
 		item.cell.endsWith("/signature")), false);
+});
+
+test("proof evidence audit refuses fixture or archive substitution", async () => {
+	const original = await inventory(), currentContracts = await contracts();
+	const evidence = original.evidence.find(item =>
+		item.id === "nested-checked-record-native-ordinary-full-installed");
+	const fixture = evidence.files.find(file =>
+		file.path.includes("/sources/")
+		&& file.path.endsWith("/NestedCheckedRecords.lean"));
+	const changedFixture = structuredClone(original);
+	changedFixture.evidence.find(item => item.id === evidence.id).files.find(
+		file => file.path === fixture.path).sha256 = "0".repeat(64);
+	assert.throws(() => auditProofErasureEvidence(changedFixture, currentContracts));
+	const changedIndex = structuredClone(original);
+	changedIndex.evidence.find(item => item.id === evidence.id).files.find(
+		file => file.path.endsWith("/index.json")).path += ".moved";
+	assert.throws(() => auditProofErasureEvidence(changedIndex, currentContracts));
 });
