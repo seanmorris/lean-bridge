@@ -1,0 +1,171 @@
+{
+  "additions": [
+    {
+      "currentSha256": "604cab1f77129e473577e038a18edc3888573704b77a73ca06d0187d857792c7",
+      "path": "scripts/check-direct-proof-erasure-php-ci.mjs"
+    },
+    {
+      "currentSha256": "69c2372bf76cb739978d86192d0d3af6dcd51a0ee713d56720d0e7817253d463",
+      "path": "scripts/run-direct-proof-erasure-php-ci.sh"
+    },
+    {
+      "currentSha256": "060537584bfb2a9539c9ca679444da7f3c3523ef2045c93532d0f04a4dbba4d9",
+      "path": "tests/direct-proof-erasure-php-installed.test.mjs"
+    },
+    {
+      "currentSha256": "22019d3af4ff790bc3f1ed0aea1c2b095d4a4ac4fbb3d1e27333684ee5a0e137",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/php.php"
+    },
+    {
+      "currentSha256": "1ab24a57fdca0267213376f3de6c7456736364b7f4e1429cf9c1f7edd4b01456",
+      "path": "tests/helpers/direct-proof-erasure-php-report.mjs"
+    },
+    {
+      "currentSha256": "07c42403643f24037fc86baa0010372e5527cfa2f5730b5e4201fd4fd0b59c23",
+      "path": "tests/helpers/direct-proof-erasure-php-tests.mjs"
+    },
+    {
+      "currentSha256": "1cab61435bb6704080b48f6bda30207b5e0d1c83b81c3a6a0c5426023eedda4c",
+      "path": "scripts/update-direct-proof-erasure-php-source-history.mjs"
+    },
+    {
+      "currentSha256": "78ca4c6997a25402679da6f48e9a58644b05dd239b86d5569c41dc53f0ff160a",
+      "path": "tests/helpers/direct-proof-erasure-php-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "061c7aa514c6aff09fa47777204c076060ca80d51e1af9c8320311d2d1e7e87b",
+      "path": "tests/helpers/direct-proof-erasure-php-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "b30ee85ef3cad39a603b034a26fd7f370ac066cd",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d2738985e5afd46c92583cdf5ce4f1339822fd047681b902be73f11edf69c286",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-php-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "091cec949e9e52e18041bce101cdaa7c25ea8877c9e07a216af848f2ae5fb357"
+    },
+    {
+      "currentSha256": "ea1e47efcddd1e0c3deaee674d96099b933cfe00c981020b3674dec563ad6b00",
+      "edits": [
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, live, update.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2560
+        },
+        {
+          "current": "\t\tconst live = exists(directProofErasureNativeImplementation, addition.path)\n",
+          "previous": "\t\tconst source = exists(directProofErasureNativeImplementation, addition.path)\n",
+          "start": 3357
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "previous": "",
+          "start": 3551
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-native-source-history-tests.mjs",
+      "previousSha256": "00a96660681b6f6656379693e4f22251c4f024203c13d6354cec6ec07e0fd441"
+    },
+    {
+      "currentSha256": "86506c7ea667d89c4d1803f52181bf5b393adbe41eb50871447a36f790ec2e65",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasurePhpSource, directProofErasurePhpNormalizationPaths } from \"./direct-proof-erasure-php-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasurePhpNormalizationPaths\n\t, ...directProofErasureNativeNormalizationPaths\n",
+          "previous": "\t...directProofErasureNativeNormalizationPaths\n",
+          "start": 209635
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasurePhpSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureNativeSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDirectProofErasureNativeSource(path, text, expected);\n",
+          "start": 261791
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3a1f1a62830fa9e12e2814f63f3ddc5fc6139cce96d88c41314016107f18967d"
+    }
+  ],
+  "milestone": "direct-proof-erasure-php-source-v1",
+  "predecessorCommit": "82772252f87774db6255d186785afe59345f5ed9",
+  "schemaVersion": 1,
+  "scope": "Build ordinary and independently reviewed native PHP and PHP-Wasm packages twice; authenticate and retain receipt-closed offline archives; prove generated Composer APIs expose one UInt32 payload and no proof slot; install and execute weak and strict callers across native PHP, PHP-Wasm Node and Chromium startup and lazy contexts; relocate installations; and reject named proof arguments.",
+  "updates": [
+    {
+      "commit": "b30ee85ef3cad39a603b034a26fd7f370ac066cd",
+      "currentSha256": "2671f154ed6187168e43a1d951d2ad772246e5f3ecef1003f94c6381d1da98ee",
+      "edits": [
+        {
+          "current": "      - name: Qualify direct proof erasure in native PHP and PHP-Wasm packages\n        id: direct_proof_php\n        continue-on-error: true\n        env:\n          LEAN_BRIDGE_PHP: /usr/bin/php\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\n        run: |\n          source scripts/env.sh\n          node scripts/prepare-php-wasm-subtype-entry-runtime.mjs \\\n            --output build/direct-proof-erasure-php-input/php-wasm-runtime\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$GITHUB_WORKSPACE/build/direct-proof-erasure-php-input/php-wasm-runtime\"\n          bash scripts/run-direct-proof-erasure-php-ci.sh\n",
+          "previous": "",
+          "start": 135913
+        },
+        {
+          "current": "      - name: Upload direct proof-erasure PHP evidence\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-php-${{ github.sha }}\n          path: build/direct-proof-erasure-php-ci/\n          if-no-files-found: error\n          retention-days: 30\n",
+          "previous": "",
+          "start": 140781
+        },
+        {
+          "current": "        if: always() && (steps.consumer.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.direct_proof_php.outcome != 'success' || steps.owned_php_wasm.outcome != 'success')\n",
+          "previous": "        if: always() && (steps.consumer.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.owned_php_wasm.outcome != 'success')\n",
+          "start": 141469
+        }
+      ],
+      "parent": "82772252f87774db6255d186785afe59345f5ed9",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "2fa60cc351ddb357815d45eec82a775b9a8953e0be8933ce3380cccf2c18e93a"
+    },
+    {
+      "commit": "b30ee85ef3cad39a603b034a26fd7f370ac066cd",
+      "currentSha256": "091cec949e9e52e18041bce101cdaa7c25ea8877c9e07a216af848f2ae5fb357",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-php-tests.mjs\";\n",
+          "previous": "",
+          "start": 240
+        }
+      ],
+      "parent": "82772252f87774db6255d186785afe59345f5ed9",
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "f40aee14521362e3016be8561eb9b90d6743ccd536a80a7fdd277cadf4965af7"
+    },
+    {
+      "commit": "b30ee85ef3cad39a603b034a26fd7f370ac066cd",
+      "currentSha256": "2ae9a915733f0b86b5311d7aebf5ba2da87521263905cc872fee74b8ee26ac60",
+      "edits": [
+        {
+          "current": "\tassert.deepEqual(targets[\"php-wasm\"], {\n\t\tnpm: { name: \"@example/directprooferasure-php-wasm\", version: \"1.0.0\" }\n\t\t, composer: { name: \"example/directprooferasure-php-wasm\", version: \"1.0.0\" }\n\t});\n",
+          "previous": "",
+          "start": 3308
+        }
+      ],
+      "parent": "82772252f87774db6255d186785afe59345f5ed9",
+      "path": "tests/direct-proof-erasure.test.mjs",
+      "previousSha256": "c6483f2230fa72bcedc683a248cad9e281b2cedf5d1c44c5807b3a7e368ea262"
+    },
+    {
+      "commit": "b30ee85ef3cad39a603b034a26fd7f370ac066cd",
+      "currentSha256": "4d3d153c19e4236630aa474151e916c0cfb7d692492d51bb2f9f94ae7d0965a6",
+      "edits": [
+        {
+          "current": "\t, \"php-wasm\": Object.freeze([\"php-wasm\", Object.freeze({\n\t\tnpm: Object.freeze({ name: \"@example/directprooferasure-php-wasm\", version: \"1.0.0\" })\n\t\t, composer: Object.freeze({ name: \"example/directprooferasure-php-wasm\", version: \"1.0.0\" })\n\t})])\n",
+          "previous": "\t, \"php-wasm\": Object.freeze([\"php-wasm\", Object.freeze({ name: \"example/directprooferasure\", version: \"1.0.0\" })])\n",
+          "start": 2405
+        }
+      ],
+      "parent": "82772252f87774db6255d186785afe59345f5ed9",
+      "path": "tests/helpers/direct-proof-erasure-fixture.mjs",
+      "previousSha256": "e4ea0a278ab47ee551c7bc5660f87a4ba01d4f7650fe8de98088f76e6e435e9f"
+    }
+  ]
+}
