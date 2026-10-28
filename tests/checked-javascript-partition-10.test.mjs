@@ -40,3 +40,4 @@ import "./helpers/core-hub-order-repair-integration-source-history-tests.mjs";
 import "./helpers/native-fin-callback-role-source-history-tests.mjs";
 import "./helpers/native-fin-callback-role-integration-source-history-tests.mjs";
 import "./helpers/core-historical-contract-repair-source-history-tests.mjs";
+import "./helpers/core-historical-contract-repair-integration-source-history-tests.mjs";
