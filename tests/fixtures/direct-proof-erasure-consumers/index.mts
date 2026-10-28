@@ -1,6 +1,13 @@
+/**
+ * Check direct proof erasure package declarations under strict TypeScript.
+ *
+ * @file
+ */
 import * as api from "direct-proof-erasure";
 
-const unary: (value: number) => number = api.keep;
+const unary: typeof api.keep = api.keep;
+const arity: Parameters<typeof api.keep>["length"] = 1;
+void arity;
 const parameters: Parameters<typeof api.keep> = [42];
 const result: number = unary(parameters[0]);
 
