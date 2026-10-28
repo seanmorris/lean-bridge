@@ -63,7 +63,7 @@ export const snapshotComponentCopiedGraph = descriptor => {
 			return Object.freeze({ kind, id: value.id });
 		}
 		closed(value, ["kind", "constructor", "arguments"]);
-		if(kind !== "apply" || !["array", "list", "option", "result", "tuple"].includes(value.constructor)) invalid("unsupported copied constructor");
+		if(kind !== "apply" || !["array", "host-null", "list", "option", "result", "tuple"].includes(value.constructor)) invalid("unsupported copied constructor");
 		dense(value.arguments, 2);
 		if(value.arguments.length !== (["tuple", "result"].includes(value.constructor) ? 2 : 1)) invalid("constructor arity mismatch");
 		active.add(value);

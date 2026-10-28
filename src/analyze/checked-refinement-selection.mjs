@@ -3,7 +3,7 @@
  *
  * @file
  */
-const arities = Object.freeze({ array: 1, list: 1, option: 1, tuple: 2, result: 2 });
+const arities = Object.freeze({ array: 1, "host-null": 1, list: 1, option: 1, tuple: 2, result: 2 });
 const leanName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/;
 const memberName = /^[A-Za-z][A-Za-z0-9_]*$(?![\s\S])/;
 const fail = () => { throw new TypeError("Invalid checked refinement selection"); };
@@ -202,7 +202,7 @@ export const projectionCheckedSelection = (type, depth = 0) => {
 			return containsRefinement(definitions.get(value.name), definitions, new Set([...seen, value.name]));
 		}
 		if(value.kind === "alias") return containsRefinement(value.target, definitions, seen);
-		if(["array", "list", "option"].includes(value.kind)) return containsRefinement(value.element, definitions, seen);
+		if(["array", "host-null", "list", "option"].includes(value.kind)) return containsRefinement(value.element, definitions, seen);
 		if(["tuple", "result"].includes(value.kind)) return value.arguments.some(child => containsRefinement(child, definitions, seen));
 		if(value.kind === "record") return value.fields.some(field => containsRefinement(field.type, definitions, seen));
 		if(value.kind === "variant") return value.cases.some(branch => branch.fields.some(field => containsRefinement(field.type, definitions, seen)));
@@ -284,7 +284,7 @@ export const projectionCheckedSelection = (type, depth = 0) => {
 			return selected ? result : null;
 		}
 		if(!Object.hasOwn(arities, value.kind)) return null;
-		const arguments_ = ["array", "list", "option"].includes(value.kind) ? [value.element] : value.arguments;
+		const arguments_ = ["array", "host-null", "list", "option"].includes(value.kind) ? [value.element] : value.arguments;
 		const children = arguments_.map(child => visit(child, depth + 1, definitions, seen));
 		return children.every(child => child === null) ? null : { kind: value.kind, arguments: children };
 	};

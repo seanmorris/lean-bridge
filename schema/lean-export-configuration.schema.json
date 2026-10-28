@@ -13,6 +13,7 @@
     "ownedAggregates": {"$ref": "#/$defs/ownedAggregates"},
     "arities": {"type": "object", "propertyNames": {"$ref": "#/$defs/name"}, "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 32}},
     "specializations": {"$ref": "#/$defs/specializations"},
+    "hostProjections": {"$ref": "#/$defs/hostProjections"},
     "contracts": {"$ref": "#/$defs/contracts"},
     "generators": {"$ref": "lake-generator-configuration.schema.json"},
     "targets": {
@@ -78,6 +79,18 @@
     }
   },
   "$defs": {
+    "hostProjections": {
+      "type": "array", "maxItems": 32, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["name", "nullConstructor", "valueConstructor"],
+        "properties": {
+          "name": {"$ref": "#/$defs/specializationName"},
+          "nullConstructor": {"$ref": "#/$defs/specializationName"},
+          "valueConstructor": {"$ref": "#/$defs/specializationName"}
+        }
+      }
+    },
     "ownedAggregates": {
       "type": "object", "additionalProperties": false,
       "required": ["ownership", "disposal", "fallback", "cycles"],
@@ -160,14 +173,14 @@
         {
           "type": "object", "additionalProperties": false, "required": ["kind", "arguments"],
           "properties": {
-            "kind": {"enum": ["array", "list", "option", "tuple", "result"]},
+            "kind": {"enum": ["array", "host-null", "list", "option", "tuple", "result"]},
             "arguments": {
               "type": "array", "minItems": 1, "maxItems": 2,
               "items": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/checkedRefinementSelection"}]},
               "contains": {"not": {"type": "null"}}, "minContains": 1
             }
           },
-          "if": {"properties": {"kind": {"enum": ["array", "list", "option"]}}},
+          "if": {"properties": {"kind": {"enum": ["array", "host-null", "list", "option"]}}},
           "then": {"properties": {"arguments": {"maxItems": 1}}},
           "else": {"properties": {"arguments": {"minItems": 2}}}
         },

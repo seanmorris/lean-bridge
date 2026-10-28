@@ -168,6 +168,7 @@ export const validateCompilerProjectAnalysis = (analysis, inventory, intent) => 
 		|| !same(elaboration.reviewedBindingIr ?? null, review ?? null)
 		|| !same(request.ownedAggregates ?? null, selectionFields.ownedAggregates ?? null)
 		|| !same(request.specializations ?? [], selectionFields.specializations ?? [])
+		|| !same(request.hostProjections ?? [], selectionFields.hostProjections ?? [])
 		|| !same(request.contracts ?? {}, selectionFields.contracts ?? {})
 		|| !request.exportModules.every(name => request.modules.includes(name)))
 		fail("Compiler analysis differs from the authorized source or export selection");

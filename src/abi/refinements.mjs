@@ -140,7 +140,7 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 		}
 		closed(value, ["kind", "arguments"]);
 		const count = ["tuple", "result"].includes(value.kind) ? 2 : 1;
-		if(!["array", "list", "option", "tuple", "result"].includes(value.kind)
+		if(!["array", "host-null", "list", "option", "tuple", "result"].includes(value.kind)
 			|| transport?.kind !== "apply" || transport.constructor !== value.kind || !Array.isArray(transport.arguments) || transport.arguments.length !== count) fail();
 		array(value.arguments, count);
 		let constrained = false;
@@ -174,7 +174,7 @@ export const declarationRefinements = (declaration, value, types = [], { ownedSt
 		}
 		if(tree.kind === "record") return tree.fields.forEach(field => direction(field.refinement, produced));
 		if(tree.kind === "variant") return tree.cases.forEach(branch => branch.fields.forEach(field => direction(field.refinement, produced)));
-		if(["array", "list", "option", "tuple", "result"].includes(tree.kind))
+		if(["array", "host-null", "list", "option", "tuple", "result"].includes(tree.kind))
 			return tree.arguments.forEach(child => direction(child, produced));
 		fail();
 	};
@@ -291,7 +291,7 @@ export const assertCallbackRefinementDirection = (refinement, produced) => {
 	if(refinement.kind === "variant")
 		return refinement.cases.reduce((found, branch) => branch.fields.reduce((nested, field) =>
 			assertCallbackRefinementDirection(field.refinement, produced) || nested, found), false);
-	if(["array", "list", "option", "tuple", "result"].includes(refinement.kind))
+	if(["array", "host-null", "list", "option", "tuple", "result"].includes(refinement.kind))
 		return refinement.arguments.reduce((found, child) => assertCallbackRefinementDirection(child, produced) || found, false);
 	throw new TypeError("Invalid callback refinement metadata");
 };
@@ -332,7 +332,7 @@ export const callbackRefinement = (signature, value, types = [], direction = und
 		const visit = child => child !== null && (["subtype", "checked-record"].includes(child.kind)
 			|| (child.kind === "record" && child.fields.some(field => visit(field.refinement)))
 			|| (child.kind === "variant" && child.cases.some(branch => branch.fields.some(field => visit(field.refinement))))
-			|| (["array", "list", "option", "tuple", "result"].includes(child.kind) && child.arguments.some(visit)));
+			|| (["array", "host-null", "list", "option", "tuple", "result"].includes(child.kind) && child.arguments.some(visit)));
 		return visit(refinement);
 	});
 	const validate = role => {
@@ -386,7 +386,7 @@ export const callbackSubtypeDirection = (signature, value, types = [], { ownedSt
 				const visit = child => child !== null && (["subtype", "checked-record"].includes(child.kind)
 					|| (child.kind === "record" && child.fields.some(field => visit(field.refinement)))
 					|| (child.kind === "variant" && child.cases.some(branch => branch.fields.some(field => visit(field.refinement))))
-					|| (["array", "list", "option", "tuple", "result"].includes(child.kind) && child.arguments.some(visit)));
+					|| (["array", "host-null", "list", "option", "tuple", "result"].includes(child.kind) && child.arguments.some(visit)));
 				return visit(refinement);
 			})) return role;
 		}

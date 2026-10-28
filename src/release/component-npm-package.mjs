@@ -189,7 +189,7 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	assertExportConfigurationSnapshot(record, bundle.manifest.files
 		.filter(item => item.path.startsWith("source/"))
 		.map(item => ({ ...item, path: item.path.slice("source/".length) })));
-	assertExportConfigurationCapabilities(record.configuration, { target: "npm", fields: ["package", "modules", "exports", "arities", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
+	assertExportConfigurationCapabilities(record.configuration, { target: "npm", fields: ["package", "modules", "exports", "arities", "generators", "specializations", "hostProjections", "contracts"], targetFields: ["name", "version"] });
 	const packageIdentity = componentNpmIdentity(bundle.manifest.component, record.configuration.targets?.npm);
 	const runtime = resolve(runtimeRoot);
 	const [ir, abi, artifactManifest, mainModule, mainWasm] = await Promise.all([

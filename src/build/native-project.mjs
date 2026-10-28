@@ -91,7 +91,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 	{
 		assertExportConfigurationCapabilities(config, { target
 			, fields: ["package", "modules", "exports", "resources", "arities"
-				, "specializations", "contracts", "generators"
+				, "specializations", "hostProjections", "contracts", "generators"
 				, ...(ownedGraphs ? ["ownedAggregates"] : [])]
 			, targetFields: target === "cpan" ? ["module", "version"]
 				: target === "wit-wasi" ? ["name", "version", "hostCallbacks"]

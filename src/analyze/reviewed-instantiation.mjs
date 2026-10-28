@@ -9,7 +9,7 @@ import { componentScalarTypes, isClosedValueIndex } from "../abi/component-scala
 
 export const instantiationKey = "lean-lang.org/instantiation";
 const refinementKeys = ["lean-lang.org/nominal-refinements", "lean-lang.org/refinements"];
-const arities = { array: 1, list: 1, option: 1, result: 2, tuple: 2 };
+const arities = { array: 1, "host-null": 1, list: 1, option: 1, result: 2, tuple: 2 };
 const leanName = value => typeof value === "string" && /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value);
 const keys = (value, expected) => value !== null && typeof value === "object" && !Array.isArray(value)
 	&& Object.keys(value).length === expected.length && expected.every(key => Object.hasOwn(value, key));

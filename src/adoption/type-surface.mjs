@@ -31,7 +31,6 @@ const sourceShapes = [
 	, "instance"
 	, "proof"
 	, "optional-parameter"
-	, "host-null"
 	, "io"
 	, "eio"
 	, "declared-error"

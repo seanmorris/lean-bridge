@@ -102,6 +102,7 @@
           }
         },
         "specializations": { "$ref": "lean-export-configuration.schema.json#/$defs/specializations" },
+        "hostProjections": { "$ref": "lean-export-configuration.schema.json#/$defs/hostProjections" },
         "contracts": { "$ref": "lean-export-configuration.schema.json#/$defs/contracts" },
         "metadata": {
           "type": "object",

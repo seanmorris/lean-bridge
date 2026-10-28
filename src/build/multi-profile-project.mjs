@@ -149,7 +149,7 @@ export const buildMultiProfileProject = async ({
 		throw new CanonicalBuildError("invalid-output-root", "Build output cannot replace the source project");
 	await absent(output);
 	const record = await readExportConfiguration(project, { signal });
-	const fields = ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", ...(ownedGraphs ? ["ownedAggregates"] : [])];
+	const fields = ["package", "modules", "exports", "resources", "arities", "specializations", "hostProjections", "contracts", "generators", ...(ownedGraphs ? ["ownedAggregates"] : [])];
 	for(const target of nativeTargets)
 		assertExportConfigurationCapabilities(record.configuration, { target, fields, targetFields: target === "cpan" ? ["module", "version"] : target === "wit-wasi" ? ["name", "version", "hostCallbacks"] : ["name", "version"] });
 	if(phpSelected) assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields, targetFields: ["npm", "composer", "hostCallbacks"] });

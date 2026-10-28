@@ -88,7 +88,7 @@ export const buildOwnedJavaScriptProject = async options => {
 		throw new CanonicalBuildError("cache-directory-unsupported", "Owned JavaScript builds compile fresh and do not implement --cache-directory");
 	const record = await readExportConfiguration(project, { signal });
 	assertExportConfigurationCapabilities(record.configuration, { target: "npm"
-		, fields: ["package", "modules", "exports", "resources", "arities", "ownedAggregates", "specializations", "contracts", "generators"]
+		, fields: ["package", "modules", "exports", "resources", "arities", "ownedAggregates", "specializations", "hostProjections", "contracts", "generators"]
 		, targetFields: ["name", "version"] });
 	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "owned-javascript", ownedGraphs: true });
 	const engineIdentity = await identifyBuildEngine(engineRoot);

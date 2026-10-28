@@ -87,6 +87,51 @@ test("unknown fields fail instead of silently changing binding semantics", () =>
   contractError(() => validateBindingIr(nested), "unknown-property");
 });
 
+test("host-null remains an explicit unary constructor distinct from Option", () => {
+	const hostNull = {
+		kind: "apply"
+		, constructor: "host-null"
+		, arguments: [{ kind: "primitive", name: "uint32" }]
+	};
+	const option = {
+		kind: "apply"
+		, constructor: "option"
+		, arguments: [{ kind: "primitive", name: "uint32" }]
+	};
+	const candidate = clone(fixture);
+	const declaration = candidate.declarations.find(item => item.name === "roundTrip");
+	declaration.parameters[0].type = clone(hostNull);
+	declaration.result = {
+		type: {
+			kind: "apply"
+			, constructor: "option"
+			, arguments: [clone(hostNull)]
+		}
+		, ownership: "copy"
+		, lifetime: null
+	};
+	assert.equal(validateBindingIr(candidate), candidate);
+
+	const reversed = clone(candidate);
+	reversed.declarations.find(item => item.name === "roundTrip").result.type = {
+		kind: "apply"
+		, constructor: "host-null"
+		, arguments: [clone(option)]
+	};
+	assert.equal(validateBindingIr(reversed), reversed);
+	assert.notEqual(hashBindingIr(candidate), hashBindingIr(reversed));
+
+	for(const arguments_ of [[], [option, option]])
+	{
+		const invalid = clone(candidate);
+		invalid.declarations.find(item => item.name === "roundTrip").parameters[0].type.arguments = arguments_;
+		contractError(
+			() => validateBindingIr(invalid),
+			arguments_.length === 0 ? "invalid-type" : "generic-arity",
+		);
+	}
+});
+
 test("copied values cannot acquire handles or lifetimes", () => {
   const candidate = clone(fixture);
   const parameter = candidate.declarations.find(item => item.name === "roundTrip").parameters[0];

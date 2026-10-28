@@ -129,7 +129,7 @@ const assertOwnedCheckedRecordCoverage = (graph, consumed) => {
 		}
 		if(node?.kind === "alias") return visit(node.target, selected, seen);
 		if(node?.kind === "record" && erased(node) && !selected) fail("checked records require a structural native parameter constructor");
-		if(["array", "list", "option"].includes(node?.kind)) return visit(node.element, false, seen);
+		if(["array", "host-null", "list", "option"].includes(node?.kind)) return visit(node.element, false, seen);
 		if(["result", "tuple"].includes(node?.kind)) return node.arguments.forEach(child => visit(child, false, seen));
 	};
 	const visitDefinition = (definition, seen) => {
@@ -163,6 +163,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		, reference: ["kind", "name", "lean", "abi"]
 		, alias: ["kind", "name", "lean", "target", "abi"]
 		, array: ["kind", "element", "abi"]
+		, "host-null": ["kind", "element", "nullConstructor", "valueConstructor", "abi"]
 		, list: ["kind", "element", "abi"]
 		, option: ["kind", "element", "abi"]
 		, result: ["kind", "arguments", "abi"]
@@ -246,7 +247,13 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			, site === "checked-record" ? site : undefined
 			, subtypeStructural, subtypeResult, erasedTransport);
 		if(["cType", "box", "unbox", "heap"].some(field => type.abi[field] !== type.target.abi[field])) fail("alias representation differs from its target");
-	} else if(["array", "list", "option"].includes(type.kind)) recurse(type.element, true);
+	} else if(["array", "host-null", "list", "option"].includes(type.kind))
+	{
+		if(type.kind === "host-null" && (!identifier.test(type.nullConstructor)
+			|| !identifier.test(type.valueConstructor) || type.nullConstructor === type.valueConstructor))
+			fail("invalid host-null projection constructors");
+		recurse(type.element, true);
+	}
 	else if(["result", "tuple"].includes(type.kind))
 	{
 		if(!Array.isArray(type.arguments) || type.arguments.length !== 2 || !Object.hasOwn(type.arguments, 0) || !Object.hasOwn(type.arguments, 1)) fail("native results and products require two arguments");

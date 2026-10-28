@@ -105,7 +105,7 @@ export const snapshotComponentCopiedType = type => {
 			{ active.delete(value); }
 		}
 		fields(value, ["kind", "constructor", "arguments"]);
-		if(kind.value !== "apply" || !["array", "list", "tuple", "option", "result"].includes(value.constructor)) invalid("unsupported constructor");
+		if(kind.value !== "apply" || !["array", "host-null", "list", "tuple", "option", "result"].includes(value.constructor)) invalid("unsupported constructor");
 		const args = value.arguments;
 		if(!Array.isArray(args) || args.length > 32 || Reflect.ownKeys(args).length !== args.length + 1) invalid("invalid type arguments");
 		const count = value.constructor === "tuple" ? args.length : value.constructor === "result" ? 2 : 1;

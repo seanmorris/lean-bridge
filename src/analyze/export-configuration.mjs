@@ -61,7 +61,7 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "contracts", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
 	if(configuration.ownedAggregates !== undefined)
 	{
@@ -161,6 +161,25 @@ export const validateExportConfiguration = configuration => {
 		if(values.some(value => names.has(value.declaration)))
 			fail("invalid-export-configuration", "Specializations must refer to source declarations, not other specializations");
 	}
+	if(configuration.hostProjections !== undefined)
+	{
+		const values = configuration.hostProjections;
+		if(!Array.isArray(values) || values.length > 32)
+			fail("invalid-export-configuration", "hostProjections must be an array of at most 32 explicit Lean wrapper mappings");
+		const names = new Set();
+		for(const value of values)
+		{
+			closed(value, ["name", "nullConstructor", "valueConstructor"], "host projection");
+			if(!specializationName.test(value.name) || names.has(value.name)
+				|| !specializationName.test(value.nullConstructor)
+				|| !specializationName.test(value.valueConstructor)
+				|| value.nullConstructor === value.valueConstructor
+				|| !value.nullConstructor.startsWith(`${value.name}.`)
+				|| !value.valueConstructor.startsWith(`${value.name}.`))
+				fail("invalid-export-configuration", "Each host projection needs a unique Lean type and two distinct constructors owned by that type");
+			names.add(value.name);
+		}
+	}
 	for(const key of ["modules", "exports", "resources"])
 	{
 		if(configuration[key] === undefined) continue;
@@ -257,6 +276,9 @@ export const compilerExportSelection = configuration => {
 	if(configuration.ownedAggregates !== undefined) selection.ownedAggregates = { ...configuration.ownedAggregates };
 	if(configuration.specializations?.length)
 		selection.specializations = configuration.specializations.toSorted((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0);
+	if(configuration.hostProjections?.length)
+		selection.hostProjections = configuration.hostProjections.toSorted((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0)
+			.map(value => ({ ...value }));
 	if(Object.keys(configuration.contracts ?? {}).length)
 	{
 		const entries = [];
@@ -338,7 +360,7 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 				: type.kind === "alias" ? refined(type.target)
 					: type.kind === "record" ? type.fields.some(field => refined(field.type))
 						: type.kind === "variant" ? type.cases.some(branch => branch.fields.some(field => refined(field.type)))
-							: ["array", "list", "option"].includes(type.kind) ? refined(type.element)
+							: ["array", "host-null", "list", "option"].includes(type.kind) ? refined(type.element)
 								: ["tuple", "result"].includes(type.kind) && type.arguments.some(refined));
 		if(site.refinement === "reject" && refined(type)) return `${label}: the contract rejects compiler-checked refined values`;
 		if(site.refinement !== undefined && site.refinement !== "reject"

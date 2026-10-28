@@ -105,7 +105,7 @@ const copiedEvidenceFor = async (root, inventory, artifacts) => {
 	equal(bundle.component, receipt.component, "Bundle and package name different components");
 	const configBytes = inventory.get(`bundle/source/${exportConfigurationFile}`)?.bytes;
 	const configuration = configBytes ? JSON.parse(configBytes) : { schemaVersion: 1 };
-	assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["package", "modules", "exports", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
+	assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["package", "modules", "exports", "generators", "specializations", "hostProjections", "contracts"], targetFields: ["name", "version"] });
 	equal(receipt.package.package, componentNpmIdentity(bundle.component, configuration.targets?.npm).coordinate,
 		"npm package coordinate differs from the bundled author configuration");
 	equal(bundle.files.map(({ path, bytes, sha256 }) => ({ path, bytes, sha256 })).sort((left, right) => left.path.localeCompare(right.path)),

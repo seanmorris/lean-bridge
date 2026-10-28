@@ -55,9 +55,9 @@ export const validateCopiedMetadataGraph = (graph, validate, native = false) => 
 			if(typeof type.name !== "string") fail("expected a named identity");
 			return kind === "primitive" ? { kind, name: type.name } : { kind: "named", id: `lean:${type.name}` };
 		}
-		if(["array", "list", "option"].includes(kind))
+		if(["array", "host-null", "list", "option"].includes(kind))
 		{
-			keys(type, ["kind", "element"]);
+			keys(type, ["kind", "element", ...(native && kind === "host-null" ? ["nullConstructor", "valueConstructor"] : [])]);
 			return { kind: "apply", constructor: kind, arguments: [reference(type.element, depth + 1)] };
 		}
 		if(!["result", "tuple"].includes(kind)) fail("graph edges require copied references, not inline definitions or identities");

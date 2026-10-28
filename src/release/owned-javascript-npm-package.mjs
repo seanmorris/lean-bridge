@@ -75,7 +75,7 @@ export const assembleOwnedJavaScriptNpmPackages = async ({ componentRoot, runtim
 	const { model, receipt, privateAbi } = verified;
 	const config = receipt.sourceIdentity.exportConfigurationSource === null ? { schemaVersion: 1 } : JSON.parse(receipt.sourceIdentity.exportConfigurationSource);
 	assertExportConfigurationCapabilities(config, { target: "npm"
-		, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", "ownedAggregates"]
+		, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "hostProjections", "contracts", "generators", "ownedAggregates"]
 		, targetFields: ["name", "version"] });
 	const coordinate = componentNpmIdentity(model.component, config.targets?.npm);
 	const [mainModule, mainWasm, sideWasm] = await Promise.all([

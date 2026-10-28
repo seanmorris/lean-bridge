@@ -671,6 +671,117 @@ test("namespace collisions remain explicit adapter decisions instead of merged h
 	assert.ok(report.adapterHints.every(item => item.reason === "public-name-collision"));
 });
 
+test("Lean authenticates explicit host-null wrappers without collapsing Option", { skip: !enabled }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "Shop.lean", `namespace Shop
+universe u
+inductive HostNull (α : Type u) where
+  | null
+  | value (value : α)
+inductive BadNull (α : Type u) where
+  | null
+  | value (left right : α)
+inductive ProofNull (α : Type u) where
+  | null
+  | value (value : α) (proof : True)
+inductive RenamedNull (α : Type u) where
+  | null
+  | value (value : α)
+inductive NonGeneric where
+  | null
+  | value (value : UInt32)
+inductive UnmappedNull (α : Type u) where
+  | null
+  | value (value : α)
+structure Packet where
+  nullable : HostNull (Option UInt32)
+  optional : Option (HostNull UInt32)
+def echo (value : HostNull UInt32) : HostNull UInt32 := value
+def nested (value : HostNull (Option UInt32)) : Option (HostNull UInt32) :=
+  match value with
+  | .null => none
+  | .value inner => inner.map HostNull.value
+def packet (value : Packet) : Packet := value
+def viaCallback (callback : HostNull UInt32 → HostNull (Option UInt32))
+    (value : HostNull UInt32) : HostNull (Option UInt32) := callback value
+def bad (value : BadNull UInt32) : BadNull UInt32 := value
+def proofBearing (value : ProofNull UInt32) : ProofNull UInt32 := value
+def renamed (value : RenamedNull UInt32) : RenamedNull UInt32 := value
+def nongeneric (value : NonGeneric) : NonGeneric := value
+def unmapped (value : UnmappedNull UInt32) : UnmappedNull UInt32 := value
+end Shop
+`);
+	const projection = (name, nullConstructor = "null", valueConstructor = "value") => ({
+		name: `Shop.${name}`, nullConstructor: `Shop.${name}.${nullConstructor}`
+		, valueConstructor: `Shop.${name}.${valueConstructor}`
+	});
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({
+		schemaVersion: 1, modules: ["Shop"]
+		, exports: ["echo", "nested", "packet", "viaCallback", "bad", "proofBearing", "renamed", "nongeneric", "unmapped"].map(name => `Shop.${name}`)
+		, hostProjections: [
+			projection("HostNull"), projection("BadNull"), projection("ProofNull")
+			, projection("RenamedNull", "null", "missing"), projection("NonGeneric")
+		]
+	}));
+	const before = await lakeInputState(context.workspace), analysis = await inspect(context);
+	await assertJsonSchema("lake-entry-elaboration", analysis.elaboration);
+	await assertJsonSchema("elaborated-export-metadata", analysis.elaboration.metadata);
+	await assertJsonSchema("binding-ir", analysis.bindingIr.document);
+	assert.deepEqual(analysis.elaboration.request.hostProjections, [
+		projection("BadNull"), projection("HostNull"), projection("NonGeneric")
+		, projection("ProofNull"), projection("RenamedNull", "null", "missing")
+	]);
+	const hostNull = argument => ({ kind: "apply", constructor: "host-null", arguments: [argument] });
+	const option = argument => ({ kind: "apply", constructor: "option", arguments: [argument] });
+	const uint32 = { kind: "primitive", name: "uint32" };
+	const declarations = new Map(analysis.bindingIr.document.declarations.map(item => [item.name, item]));
+	const echoMetadata = analysis.elaboration.metadata.modules[0].declarations.find(item => item.identity === "Shop.echo");
+	assert.deepEqual(echoMetadata.projection.parameters[0].type, {
+		kind: "host-null"
+		, element: uint32
+		, nullConstructor: "Shop.HostNull.null"
+		, valueConstructor: "Shop.HostNull.value"
+	});
+	assert.deepEqual(declarations.get("echo").parameters[0].type, hostNull(uint32));
+	assert.deepEqual(declarations.get("echo").result.type, hostNull(uint32));
+	assert.deepEqual(declarations.get("nested").parameters[0].type, hostNull(option(uint32)));
+	assert.deepEqual(declarations.get("nested").result.type, option(hostNull(uint32)));
+	const callbackDeclaration = declarations.get("viaCallback");
+	const callback = analysis.bindingIr.document.types.find(type => type.id === callbackDeclaration.parameters[0].type.id);
+	assert.equal(callback.kind, "callback");
+	assert.deepEqual(callback.callable.parameters[0].type, hostNull(uint32));
+	assert.deepEqual(callback.callable.result.type, hostNull(option(uint32)));
+	assert.deepEqual(callbackDeclaration.parameters[1].type, hostNull(uint32));
+	assert.deepEqual(callbackDeclaration.result.type, hostNull(option(uint32)));
+	const packet = analysis.bindingIr.document.types.find(type => type.id === "lean:Shop.Packet");
+	assert.deepEqual(packet.fields.map(field => field.type), [hostNull(option(uint32)), option(hostNull(uint32))]);
+	for(const name of ["bad", "proofBearing", "renamed", "nongeneric", "unmapped"])
+	{
+		assert.equal(declarations.has(name), false);
+		const rejected = analysis.elaboration.metadata.modules[0].declarations.find(item => item.identity === `Shop.${name}`);
+		assert.equal(rejected.projection.status, "unsupported");
+		assert.ok(analysis.diagnostics.some(item => item.declaration === `Shop.${name}` && item.code === "unsupported-parameter-type"));
+	}
+	const bad = analysis.elaboration.metadata.modules[0].declarations.find(item => item.identity === "Shop.bad");
+	assert.match(bad.projection.expression, /Shop\.BadNull/u);
+	assert.match(bad.projection.expression, /UInt32/u);
+	assert.doesNotMatch(canonicalJson(analysis.bindingIr.document), /(?:null|value)Constructor/u);
+	const forged = structuredClone(analysis.elaboration.metadata);
+	forged.modules[0].declarations.find(item => item.identity === "Shop.echo")
+		.projection.parameters[0].type.nullConstructor = "Shop.HostNull.other";
+	assert.throws(
+		() => validateElaboratedMetadata(forged, analysis.elaboration.request),
+		/Host-null metadata differs from the authorized projection/u,
+	);
+	const missingSelection = structuredClone(analysis.elaboration.request);
+	delete missingSelection.hostProjections;
+	assert.throws(
+		() => validateElaboratedMetadata(analysis.elaboration.metadata, missingSelection),
+		/Host-null metadata differs from the authorized projection/u,
+	);
+	assert.deepEqual(await lakeInputState(context.workspace), before);
+});
+
 test("finite specializations resolve aliases, universes and instance dictionaries in Lean", { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t);
 	await saveLakeFile(context.root, "Shop.lean", `import Catalog
