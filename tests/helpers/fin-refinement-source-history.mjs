@@ -12,6 +12,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforePerlCodegenProducerReplayIntegrationSource, perlCodegenProducerReplayIntegrationNormalizationPaths } from "./perl-codegen-producer-replay-integration-source-history.mjs";
+import { beforePerlCodegenProducerReplaySource, perlCodegenProducerReplayNormalizationPaths } from "./perl-codegen-producer-replay-source-history.mjs";
 import { beforeNativeFinCallbackRoleIntegrationSource, nativeFinCallbackRoleIntegrationNormalizationPaths } from "./native-fin-callback-role-integration-source-history.mjs";
 import { beforeCoreHubOrderRepairIntegrationSource, coreHubOrderRepairIntegrationNormalizationPaths } from "./core-hub-order-repair-integration-source-history.mjs";
 import { beforeCoreHubOrderRepairSource, coreHubOrderRepairNormalizationPaths } from "./core-hub-order-repair-source-history.mjs";
@@ -2282,7 +2284,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...nativeFinCallbackRoleIntegrationNormalizationPaths
+	...perlCodegenProducerReplayIntegrationNormalizationPaths
+	, ...perlCodegenProducerReplayNormalizationPaths
+	, ...nativeFinCallbackRoleIntegrationNormalizationPaths
 	, ...coreHubOrderRepairIntegrationNormalizationPaths
 	, ...coreHubOrderRepairNormalizationPaths
 	, ...signatureSpecializationCompletionIntegrationNormalizationPaths
@@ -3303,7 +3307,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeNativeFinCallbackRoleIntegrationSource(
+	let stage = beforePerlCodegenProducerReplayIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePerlCodegenProducerReplaySource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeNativeFinCallbackRoleIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
