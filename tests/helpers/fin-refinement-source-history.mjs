@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforePerlDependentRefinementRejectionSource, perlDependentRefinementRejectionNormalizationPaths } from "./perl-dependent-refinement-rejection-source-history.mjs";
 import { beforeWitFrozenClosureHubHookSource, witFrozenClosureHubHookNormalizationPaths } from "./wit-frozen-closure-hub-hook-source-history.mjs";
 import { beforeDownstreamReporterSparseCheckoutSource, downstreamReporterSparseCheckoutNormalizationPaths } from "./downstream-reporter-sparse-checkout-source-history.mjs";
 import { beforeDirectProofErasureNpmArchiveSource, directProofErasureNpmArchiveNormalizationPaths } from "./direct-proof-erasure-npm-archive-source-history.mjs";
@@ -2346,7 +2347,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...witFrozenClosureHubHookNormalizationPaths
+	...perlDependentRefinementRejectionNormalizationPaths
+	, ...witFrozenClosureHubHookNormalizationPaths
 	, ...downstreamReporterSparseCheckoutNormalizationPaths
 	, ...directProofErasureNpmArchiveNormalizationPaths
 	, ...directProofErasureMatrixNormalizationPaths
@@ -3431,7 +3433,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeWitFrozenClosureHubHookSource(path, text, expected);
+	let stage = beforePerlDependentRefinementRejectionSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeWitFrozenClosureHubHookSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

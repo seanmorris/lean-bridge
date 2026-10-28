@@ -1,0 +1,93 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4edfbb3e96effcd3c4c336ab7036561a50ffc843c5fa14508c6919983c14d46b",
+      "path": "scripts/update-perl-dependent-refinement-rejection-source-history.mjs"
+    },
+    {
+      "currentSha256": "d2db793ef7a865d1a1cd06e0ec5b85170b795f3f1c10aac4bb2225b9976828c2",
+      "path": "tests/helpers/perl-dependent-refinement-rejection-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "3a2afb6b3046a5dc929e999092f4d90767d4fefef94d1a206eb606659cf184a9",
+      "path": "tests/helpers/perl-dependent-refinement-rejection-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d534d66bd7bc351dd7bb17fd6e9dfe2c04c83164",
+  "integrationUpdates": [
+    {
+      "currentSha256": "cec19288f444d69f3aface849f5a7efb6a849827f001299b979a6759e81b0c51",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-dependent-refinement-rejection-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "679fc79b9ec7bcadb4deab6c873b75cd4ff21ff9fda3ca36b8e156a173b74360"
+    },
+    {
+      "currentSha256": "24f0feab7b7b3fe8ffa05b1bfbc1dc6242111c8bd8135d96098ecf97b6a94945",
+      "edits": [
+        {
+          "current": "import { beforePerlDependentRefinementRejectionSource, perlDependentRefinementRejectionNormalizationPaths } from \"./perl-dependent-refinement-rejection-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...perlDependentRefinementRejectionNormalizationPaths\n\t, ...witFrozenClosureHubHookNormalizationPaths\n",
+          "previous": "\t...witFrozenClosureHubHookNormalizationPaths\n",
+          "start": 213045
+        },
+        {
+          "current": "\tlet stage = beforePerlDependentRefinementRejectionSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeWitFrozenClosureHubHookSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeWitFrozenClosureHubHookSource(path, text, expected);\n",
+          "start": 266319
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c8f550c93348b0bce83ad3a5a6f1ce4d79ff1540f72461844ce768812f437999"
+    }
+  ],
+  "milestone": "perl-dependent-refinement-rejection-source-v1",
+  "predecessorCommit": "2fd3eda834f1292e8b59cfcd75473214b166b36e",
+  "schemaVersion": 1,
+  "scope": "Update the direct native-component refusal for a dependent Fin export to the exact bound-checking-adapter capability diagnostic, extend the bounded test budget so all seven fresh Lean selections complete, and refresh exactly two live source pins. This does not change dependent Fin support: prepared Perl packages continue to enable their checked adapter, while the raw builder must refuse without it. Register the transition newest-first; hosted Perl and Core remain terminal gates.",
+  "updates": [
+    {
+      "currentSha256": "a7988ad4afe994ce9c10e8706520efa751b2d5dc7a2e38a887ded9cb367c051d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"08d347ad3bdf7f2a76a306e9c57c9e6abe0801fef4209cdedc30427410592b43\"\n",
+          "previous": "          \"sha256\": \"074649d7eb57d9786a60e4f415f3b336c3632a71352e7f4b02e44e382fffebdc\"\n",
+          "start": 981242
+        },
+        {
+          "current": "          \"sha256\": \"08d347ad3bdf7f2a76a306e9c57c9e6abe0801fef4209cdedc30427410592b43\"\n",
+          "previous": "          \"sha256\": \"074649d7eb57d9786a60e4f415f3b336c3632a71352e7f4b02e44e382fffebdc\"\n",
+          "start": 1460807
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "03645a87a0d916aeb5f4d3528d53816f23ef11e4f4883fcb864c26e707d371d5"
+    },
+    {
+      "currentSha256": "08d347ad3bdf7f2a76a306e9c57c9e6abe0801fef4209cdedc30427410592b43",
+      "edits": [
+        {
+          "current": "test(\"fresh Lean metadata rejects unsupported or unreviewed exports before releasing native output\", { skip: !enabled, timeout: 300_000 }, async () => {\n",
+          "previous": "test(\"fresh Lean metadata rejects unsupported or unreviewed exports before releasing native output\", { skip: !enabled, timeout: 180_000 }, async () => {\n",
+          "start": 49254
+        },
+        {
+          "current": "\t\t\t, [\"dependent\", /bound-checking adapters/, []]\n",
+          "previous": "\t\t\t, [\"dependent\", /dependent or implicit/, []]\n",
+          "start": 49765
+        }
+      ],
+      "path": "tests/perl-native.test.mjs",
+      "previousSha256": "074649d7eb57d9786a60e4f415f3b336c3632a71352e7f4b02e44e382fffebdc"
+    }
+  ]
+}
