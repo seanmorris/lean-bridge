@@ -14,6 +14,7 @@ export const optionalParameterIr = () => {
 		, { name: "Defaults.character", parameters: ["char"], result: "char" }
 		, { name: "Defaults.maybe", parameters: [{ option: "uint32" }], result: { option: "uint32" } }
 		, { name: "Defaults.present", parameters: [{ option: "uint32" }], result: { option: "uint32" } }
+		, { name: "Defaults.unitValue", parameters: ["unit"], result: "unit" }
 	];
 	const ir = corpusReviewedIr({ id: "defaults" }, signatures);
 	const defaults = [
@@ -23,6 +24,7 @@ export const optionalParameterIr = () => {
 		, { kind: "char", value: "λ" }
 		, { kind: "option-none" }
 		, { kind: "option-some", value: { kind: "integer", value: "9" } }
+		, { kind: "unit" }
 	];
 	for(const [index, declaration] of ir.declarations.entries())
 	{

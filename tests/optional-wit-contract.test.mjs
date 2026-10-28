@@ -24,8 +24,8 @@ test("WIT retains full exports and names every supported omitted suffix", async 
 	assert.match(wit, /maybe-default: func\(\) -> bridge-value-/u);
 	assert.deepEqual(manifest.declarations[0].defaults
 		, [{ witName: "word-default", suppliedParameters: 0, omittedParameters: 1 }]);
-	assert.equal(manifest.declarations.length, 6);
-	assert.equal(manifest.declarations.flatMap(declaration => declaration.defaults).length, 6);
+	assert.equal(manifest.declarations.length, 7);
+	assert.equal(manifest.declarations.flatMap(declaration => declaration.defaults).length, 7);
 
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-wit-defaults-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
