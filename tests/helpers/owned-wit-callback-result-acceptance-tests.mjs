@@ -18,7 +18,7 @@ test("WIT callback acceptance freezes six direct Lean and Wasmtime executions", 
 	const record = await receipt(); await assertOwnedWitCallbackAcceptance(record);
 	assert.deepEqual(record.scope, ownedWitCallbackScope);
 	assert.deepEqual(record.scope.counts, ownedWitCallbackCounts);
-	assert.deepEqual(Object.keys(record.sources), await ownedWitCallbackSourcePaths());
+	assert.deepEqual(Object.keys(record.sources), await ownedWitCallbackSourcePaths(record.sources));
 	assert.equal(Object.keys(record.archive.reports).length, 6);
 	assert.equal(Object.keys(record.logs).length, 3);
 });

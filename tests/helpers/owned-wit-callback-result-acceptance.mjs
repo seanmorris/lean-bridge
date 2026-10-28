@@ -71,8 +71,12 @@ const ownedWitCallbackSuccessorPaths = new Set([
 	, "tests/helpers/wit-callback-installed-acceptance-history.mjs"
 ]);
 
-/** Include the completed predecessor and the complete local verifier closure. */
-export const ownedWitCallbackSourcePaths = async () => {
+/**
+ * Include the completed predecessor and the complete local verifier closure.
+ *
+ * @param {Record<string, string>} [sources] Exact source identities frozen by the receipt.
+ */
+export const ownedWitCallbackSourcePaths = async sources => {
 	const predecessor = await readFile(ownedWitCallbackPrevious.path);
 	assert.equal(sha256(predecessor), ownedWitCallbackPrevious.sha256);
 	const paths = new Set([
@@ -89,7 +93,9 @@ export const ownedWitCallbackSourcePaths = async () => {
 		if(visited.has(path)) continue;
 		visited.add(path); paths.add(path);
 		if(!path.endsWith(".mjs")) continue;
-		const tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, "utf8")), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+		const tree = ts.createSourceFile(path, beforeFinRefinementSource(
+			path, await readFile(path, "utf8"), sources?.[path]
+		), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 		const visit = node => {
 			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier
 				: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : null;
@@ -161,7 +167,7 @@ export const assertOwnedWitCallbackAcceptance = async record => {
 	readWitCallbackRuntimeHistory();
 	for(const reference of [record.previous, record.sourceHistory])
 		assert.equal(sha256(await readFile(reference.path)), reference.sha256, reference.path);
-	assert.deepEqual(Object.keys(record.sources), await ownedWitCallbackSourcePaths());
+	assert.deepEqual(Object.keys(record.sources), await ownedWitCallbackSourcePaths(record.sources));
 	const sourceBytes = new Map();
 	for(const [path, digest] of Object.entries(record.sources))
 	{
