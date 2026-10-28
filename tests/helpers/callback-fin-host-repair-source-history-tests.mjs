@@ -18,6 +18,7 @@ import {
 	, callbackFinHostRepairPredecessor
 	, reverseCallbackFinHostRepairUpdate
 } from "./callback-fin-host-repair-source-history.mjs";
+import { beforeCallbackFinPerlDirectionSource } from "./callback-fin-perl-direction-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_
@@ -42,7 +43,13 @@ test("callback Fin host repair retains its exact implementation and integration"
 	assert.deepEqual(value.additions.map(item => item.path)
 		, callbackFinHostRepairAddedPaths);
 	for(const addition of value.additions)
-		assert.equal(addition.currentSha256, sha256(await readFile(addition.path)));
+	{
+		const live = await readFile(addition.path, "utf8");
+		const source = beforeCallbackFinPerlDirectionSource(
+			addition.path, live, addition.currentSha256
+		);
+		assert.equal(addition.currentSha256, sha256(source));
+	}
 });
 
 test("callback Fin host repair reverses every exact transition", async () => {
@@ -57,7 +64,10 @@ test("callback Fin host repair reverses every exact transition", async () => {
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const live = await readFile(update.path, "utf8");
+		const current = beforeCallbackFinPerlDirectionSource(
+			update.path, live, update.currentSha256
+		);
 		const previous = git(["show", `${value.implementationCommit}:${update.path}`]);
 		assert.equal(reverseCallbackFinHostRepairUpdate(current, update), previous);
 	}

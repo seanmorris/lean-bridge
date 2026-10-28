@@ -1,0 +1,115 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ea573ec68b679dac18a5c2a4d33afe0931c9513cd7f3bfe63c59b683df7fef28",
+      "path": "scripts/update-callback-fin-perl-direction-source-history.mjs"
+    },
+    {
+      "currentSha256": "9b367582e1e420b34a041f1f94e32c4531a232ebf5a9989ba3d36b17ed121642",
+      "path": "tests/helpers/callback-fin-perl-direction-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "70c3763fcd6884aede5ee9a349ed413c83c76987087ade75df7f12a9a5e82f4d",
+      "path": "tests/helpers/callback-fin-perl-direction-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "b4226db2d563b0ecdfdf8bdac0f3b40e081a7c89",
+  "integrationUpdates": [
+    {
+      "currentSha256": "379b136ebc4637b30d25e08e3a02547b8bebb111659f89f7313121565f9fc797",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-perl-direction-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1309
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "221b8e6040cbd420a21a75921da5d87215452fad3cd524e6b0a7f2c7f17d5091"
+    },
+    {
+      "currentSha256": "7c3784a16f4a74187371185183ff587f4560c0a0e250bdb30365bd11bb885f9e",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinPerlDirectionSource } from \"./callback-fin-perl-direction-source-history.mjs\";\n",
+          "previous": "",
+          "start": 683
+        },
+        {
+          "current": "\t{\n\t\tconst live = await readFile(addition.path, \"utf8\");\n\t\tconst source = beforeCallbackFinPerlDirectionSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n\t\tassert.equal(addition.currentSha256, sha256(source));\n\t}\n",
+          "previous": "\t\tassert.equal(addition.currentSha256, sha256(await readFile(addition.path)));\n",
+          "start": 1916
+        },
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeCallbackFinPerlDirectionSource(\n\t\t\tupdate.path, live, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2693
+        }
+      ],
+      "path": "tests/helpers/callback-fin-host-repair-source-history-tests.mjs",
+      "previousSha256": "a7cec7221088d73cfc04ee4929e5b649bd343d24f9811b7223b85f61bee0b359"
+    },
+    {
+      "currentSha256": "4ce80cfc6b60a7095e18b955d7559f29e231ed3c7d5e6950a94808e8e7e43019",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinPerlDirectionSource, callbackFinPerlDirectionNormalizationPaths } from \"./callback-fin-perl-direction-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...callbackFinPerlDirectionNormalizationPaths\n\t, ...callbackFinHostRepairNormalizationPaths\n",
+          "previous": "\t...callbackFinHostRepairNormalizationPaths\n",
+          "start": 198796
+        },
+        {
+          "current": "\tlet stage = beforeCallbackFinPerlDirectionSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinHostRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCallbackFinHostRepairSource(path, text, expected);\n",
+          "start": 247395
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "535e7f0f34d47f3a2b9623a5427992c692d2f389678e93652058bbf4ad533801"
+    }
+  ],
+  "milestone": "callback-fin-perl-direction-source-v1",
+  "predecessorCommit": "d339d8c212794f4a398931a041e7bd92e682f8dd",
+  "schemaVersion": 1,
+  "scope": "Match generated Perl callback converters to the native component's authenticated directions. A callback type accepted from Perl retains its CODE-to-native wrapper. A returned-closure-only type accepts generated resource objects and never references the absent host wrapper symbol. Its native call symbol and all callback Fin checks remain intact. A source-only model test authenticates both directions before the installed package runs.",
+  "updates": [
+    {
+      "currentSha256": "b182d00f7cf86a9ec39edf5f6d9d61fef22e76ecd1089327dcf13026d258a247",
+      "edits": [
+        {
+          "current": "\t\t// The native component exports `wrap` only for callback types accepted from\n\t\t// the host. Returned-closure-only types export `call` but no `wrap`; their\n\t\t// converter must therefore accept generated resource objects only.\n\t\tconst acceptsHostCode = type.kind === \"callback\" && model.exports.some(item =>\n\t\t\titem.parameters.some(parameter => parameter.type.kind === \"callback\"\n\t\t\t\t&& nativeTypeKey(parameter.type) === type.key));\n\t\tif(acceptsHostCode) from = `\n",
+          "previous": "\t\tif(type.kind === \"callback\") from = `\n",
+          "start": 14341
+        }
+      ],
+      "path": "src/backends/perl/generate.mjs",
+      "previousSha256": "13e0c10283bb5f8e44ce55f0c2ab7477857c764d71ac54b84597048a1f05ef29"
+    },
+    {
+      "currentSha256": "59efeec0290096ba75ff339834abc9abb2f288dd2d07b1ad0cf48acfa319fc9d",
+      "edits": [
+        {
+          "current": "import { nativeTypeKey } from \"../src/build/native-model.mjs\";\n",
+          "previous": "",
+          "start": 266
+        },
+        {
+          "current": "\tconst digits = model.exports.find(item => item.name === \"Sample.digits\");\n\tconst visitKey = nativeTypeKey(visit.parameters[0].type);\n\tconst digitsKey = nativeTypeKey(digits.result);\n",
+          "previous": "",
+          "start": 1517
+        },
+        {
+          "current": "\tassert.ok(xs.includes(`lb_t${visitKey}_wrap(token)`));\n\tassert.ok(!xs.includes(`lb_t${digitsKey}_wrap(token)`));\n\tassert.ok(xs.includes(`lb_t${digitsKey}_call`));\n",
+          "previous": "",
+          "start": 1933
+        }
+      ],
+      "path": "tests/callback-fin-perl-package.test.mjs",
+      "previousSha256": "6ad659fc2da805ff2bfe554e209d943c78a7114180e869a8fa699f5620f8f0a5"
+    }
+  ]
+}
