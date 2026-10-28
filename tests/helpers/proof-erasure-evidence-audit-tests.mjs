@@ -6,7 +6,11 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { auditProofErasureEvidence } from "./proof-erasure-evidence-audit.mjs";
+import {
+	auditProofErasureEvidence
+	, proofErasureEvidenceAuditReport
+	, proofErasureEvidenceAuditReportPath
+} from "./proof-erasure-evidence-audit.mjs";
 import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 
 const inventoryPromise = readFile("docs/type-surface.v1.json", "utf8")
@@ -25,7 +29,9 @@ test("proof evidence audit binds 102 exact cells and preserves 102 gaps", async 
 		item.verification === "exact-retained-replay"));
 	assert.ok(result.bindings.every(item =>
 		item.retained.archiveIndex.path.endsWith("/index.json")
-		&& item.retained.fixtureSource.path.includes("/sources/")));
+		&& item.retained.fixtureSource.path.includes("/sources/")
+		&& item.retained.replaySource.path.endsWith(".mjs")
+		&& item.retained.replayCommand.includes("node --test")));
 	assert.deepEqual(Object.fromEntries([
 		"field", "callback-parameter", "callback-result"
 	].map(position => [position
@@ -55,6 +61,9 @@ test("proof evidence audit binds 102 exact cells and preserves 102 gaps", async 
 			, "callback-parameter": 34, "callback-result": 34, signature: 34
 		}
 	);
+	assert.deepEqual(JSON.parse(await readFile(
+		proofErasureEvidenceAuditReportPath, "utf8"))
+	, proofErasureEvidenceAuditReport(result));
 });
 
 test("proof evidence audit refuses a missing or non-installed candidate", async () => {

@@ -8,6 +8,9 @@
 import assert from "node:assert/strict";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 
+export const proofErasureEvidenceAuditReportPath
+	= "docs/evidence/proof-erasure-retained-audit-20261028.json";
+
 const zeroPayloadLane = Object.freeze({
 	perl: "perl"
 	, "node-javascript": "browser"
@@ -107,9 +110,34 @@ const retainedBinding = (evidence, candidate) => {
 		&& file.path.endsWith(`/${candidate.fixture}`));
 	assert.equal(fixtures.length, 1, evidence.id);
 	assert.equal(fixtures[0].sha256, candidate.fixtureSha256, evidence.id);
+	let replayPath, replayCommand;
+	if(candidate.basis === "erased-record-field")
+	{
+		const match = evidence.id.match(
+			/^nested-checked-record-(.+)-(?:ordinary|reviewed)-full-installed$/u);
+		assert.ok(match, evidence.id);
+		replayPath
+			= `tests/helpers/nested-checked-record-${match[1]}-promotion-tests.mjs`;
+		replayCommand = `node --test ${replayPath}`;
+	}
+	else
+	{
+		let paths = evidence.files.filter(file =>
+			evidence.command.includes(file.path)
+			&& /(?:test|tests)\.mjs$/u.test(file.path));
+		if(paths.length === 0) paths = evidence.files.filter(file =>
+			file.path === "tests/helpers/callback-refinements-php-wasm-hosted-evidence.mjs");
+		assert.equal(paths.length, 1, evidence.id);
+		replayPath = paths[0].path;
+		replayCommand = evidence.command;
+	}
+	const replaySources = evidence.files.filter(file => file.path === replayPath);
+	assert.equal(replaySources.length, 1, evidence.id);
 	return Object.freeze({
 		archiveIndex: Object.freeze({ ...indexes[0] })
 		, fixtureSource: Object.freeze({ ...fixtures[0] })
+		, replaySource: Object.freeze({ ...replaySources[0] })
+		, replayCommand
 	});
 };
 
@@ -157,3 +185,26 @@ export const auditProofErasureEvidence = (inventory, contracts) => {
 		, residual: Object.freeze(residual)
 	});
 };
+
+/**
+ * Render the deterministic retained-evidence audit without changing support.
+ *
+ * @param audit - Result of auditProofErasureEvidence.
+ */
+export const proofErasureEvidenceAuditReport = audit => Object.freeze({
+	schemaVersion: 1, kind: "proof-erasure-retained-evidence-audit-v1"
+	, planNode: 2173
+	, counts: Object.freeze({ cells: audit.cells.length
+		, exactBindings: audit.bindings.length, residual: audit.residual.length
+		, adjacentRecordCandidatesRejected: audit.residual.filter(item =>
+			item.candidate !== undefined).length
+		, directSignaturesUnobserved: audit.residual.filter(item =>
+			item.reason === "direct-proof-signature-not-yet-observed").length })
+	, bindings: audit.bindings, residual: audit.residual
+	, limitations: Object.freeze([
+		"This ledger reuses retained installed evidence only where the archive, replay source and authenticated Lean fixture prove an erased proof field at the named field or callback position."
+		, "Proof-only checked records at top-level parameter and result positions establish the checked-record shape, not direct Prop arguments or results; all sixty-eight such adjacent candidates remain unbound."
+		, "No retained record-field archive establishes a proof-only declaration signature; all thirty-four signature cells remain unbound."
+		, "The ledger does not promote type-surface support. Direct proof parameters, results and declaration signatures require implementation and new installed evidence."
+	])
+});
