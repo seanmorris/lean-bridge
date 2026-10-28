@@ -1,0 +1,412 @@
+{
+  "additions": [
+    {
+      "currentSha256": "192e1103ce8004b1dd9df41815cc690e412bb1394fb45564a27cfe996a61662b",
+      "path": "scripts/update-reviewed-fin-wasm-field-source-history.mjs"
+    },
+    {
+      "currentSha256": "021ecdc0168079fa0d0741cbb355280a8d0486fe8c4c46a10d7885c0fcf0f0e3",
+      "path": "tests/helpers/reviewed-fin-wasm-field-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7c49e460d3180742459d2e5ad461ecbafe9829d3968243cbcd3b79e088932c67",
+      "path": "tests/helpers/reviewed-fin-wasm-field-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "5ab44cd61391ca1839b0b3faee607a448ad39274",
+  "integrationUpdates": [
+    {
+      "currentSha256": "48f8420eee6e8199c5f6ae18b0700f6cbf535030a0b8ddf3c282649989c471d4",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"e2ed5255a2887c608c83cd9e79a519aca2c5d66e090324f8d248da3e8f9d0d0c\"\n",
+          "previous": "          \"sha256\": \"367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07\"\n",
+          "start": 1668415
+        },
+        {
+          "current": "          \"sha256\": \"20708ba30375381aa34738f9a6713d80103eb4f570b8281fd6fad81552255ebe\"\n",
+          "previous": "          \"sha256\": \"dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a\"\n",
+          "start": 1668592
+        },
+        {
+          "current": "          \"sha256\": \"a9931a73a5c50f695fdac6c0c12dd926ecaf4c37f161dc9a1bda2de1bc61e613\"\n",
+          "previous": "          \"sha256\": \"fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625\"\n",
+          "start": 1668765
+        },
+        {
+          "current": "          \"sha256\": \"286f7e65dfa82149a9f21bf48e9bdf6fbdca6c49da0a3169090a07dbc6937b91\"\n",
+          "previous": "          \"sha256\": \"8e0bff658d5ff10d8a62d1021562969d7fcb1a9a95ae2b50ba524b2eb0dc5cd8\"\n",
+          "start": 1668938
+        },
+        {
+          "current": "          \"sha256\": \"e2ed5255a2887c608c83cd9e79a519aca2c5d66e090324f8d248da3e8f9d0d0c\"\n",
+          "previous": "          \"sha256\": \"367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07\"\n",
+          "start": 1672760
+        },
+        {
+          "current": "          \"sha256\": \"20708ba30375381aa34738f9a6713d80103eb4f570b8281fd6fad81552255ebe\"\n",
+          "previous": "          \"sha256\": \"dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a\"\n",
+          "start": 1672937
+        },
+        {
+          "current": "          \"sha256\": \"a9931a73a5c50f695fdac6c0c12dd926ecaf4c37f161dc9a1bda2de1bc61e613\"\n",
+          "previous": "          \"sha256\": \"fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625\"\n",
+          "start": 1673110
+        },
+        {
+          "current": "          \"sha256\": \"286f7e65dfa82149a9f21bf48e9bdf6fbdca6c49da0a3169090a07dbc6937b91\"\n",
+          "previous": "          \"sha256\": \"8e0bff658d5ff10d8a62d1021562969d7fcb1a9a95ae2b50ba524b2eb0dc5cd8\"\n",
+          "start": 1673283
+        },
+        {
+          "current": "          \"sha256\": \"e2ed5255a2887c608c83cd9e79a519aca2c5d66e090324f8d248da3e8f9d0d0c\"\n",
+          "previous": "          \"sha256\": \"367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07\"\n",
+          "start": 1677117
+        },
+        {
+          "current": "          \"sha256\": \"20708ba30375381aa34738f9a6713d80103eb4f570b8281fd6fad81552255ebe\"\n",
+          "previous": "          \"sha256\": \"dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a\"\n",
+          "start": 1677294
+        },
+        {
+          "current": "          \"sha256\": \"a9931a73a5c50f695fdac6c0c12dd926ecaf4c37f161dc9a1bda2de1bc61e613\"\n",
+          "previous": "          \"sha256\": \"fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625\"\n",
+          "start": 1677467
+        },
+        {
+          "current": "          \"sha256\": \"286f7e65dfa82149a9f21bf48e9bdf6fbdca6c49da0a3169090a07dbc6937b91\"\n",
+          "previous": "          \"sha256\": \"8e0bff658d5ff10d8a62d1021562969d7fcb1a9a95ae2b50ba524b2eb0dc5cd8\"\n",
+          "start": 1677640
+        },
+        {
+          "current": "          \"sha256\": \"e2ed5255a2887c608c83cd9e79a519aca2c5d66e090324f8d248da3e8f9d0d0c\"\n",
+          "previous": "          \"sha256\": \"367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07\"\n",
+          "start": 1681482
+        },
+        {
+          "current": "          \"sha256\": \"20708ba30375381aa34738f9a6713d80103eb4f570b8281fd6fad81552255ebe\"\n",
+          "previous": "          \"sha256\": \"dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a\"\n",
+          "start": 1681659
+        },
+        {
+          "current": "          \"sha256\": \"a9931a73a5c50f695fdac6c0c12dd926ecaf4c37f161dc9a1bda2de1bc61e613\"\n",
+          "previous": "          \"sha256\": \"fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625\"\n",
+          "start": 1681832
+        },
+        {
+          "current": "          \"sha256\": \"286f7e65dfa82149a9f21bf48e9bdf6fbdca6c49da0a3169090a07dbc6937b91\"\n",
+          "previous": "          \"sha256\": \"8e0bff658d5ff10d8a62d1021562969d7fcb1a9a95ae2b50ba524b2eb0dc5cd8\"\n",
+          "start": 1682005
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "f2af3b2c0eeb1a96f78efd4c3d9a993aabeae1979cd2a07fe38ed1aa50d259e9"
+    },
+    {
+      "currentSha256": "eb23c528e70a1ced3891d6f5bba7cca2d1b6a565c11d2ea31107728d0a2885d0",
+      "edits": [
+        {
+          "current": "import \"./helpers/reviewed-fin-wasm-field-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 981
+        }
+      ],
+      "path": "tests/checked-javascript-partition-07.test.mjs",
+      "previousSha256": "f721d95e65b91238d795e689c7bc49638c88d17ade2f68aca76699d22c1c9afd"
+    },
+    {
+      "currentSha256": "f86b32fbce6b77691ddb98b46eea7772ce1101950f3c9551031bad07c3b93029",
+      "edits": [
+        {
+          "current": "import { beforeReviewedFinWasmFieldSource, reviewedFinWasmFieldNormalizationPaths } from \"./reviewed-fin-wasm-field-source-history.mjs\";\n",
+          "previous": "",
+          "start": 23951
+        },
+        {
+          "current": "\t...reviewedFinWasmFieldNormalizationPaths\n\t, ...callbackFinNativeCapabilityNormalizationPaths\n",
+          "previous": "\t...callbackFinNativeCapabilityNormalizationPaths\n",
+          "start": 197596
+        },
+        {
+          "current": "\tlet stage = beforeReviewedFinWasmFieldSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinNativeCapabilitySource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCallbackFinNativeCapabilitySource(path, text, expected);\n",
+          "start": 245800
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "04486871a6a824db9573296b9a9a6b7e4a21821ce5f807ca65cd0a848aeb1a67"
+    }
+  ],
+  "milestone": "reviewed-fin-wasm-field-source-v1",
+  "predecessorCommit": "e18a9a306853c6a720927d50befc05c11e84044c",
+  "repairedTypeSurfacePointers": 16,
+  "schemaVersion": 1,
+  "scope": "Extend the existing source-free ordinary and independently reviewed npm/browser Fin corpus with a named record whose field is Fin 10. Exercise exact field typing, invalid values, recovery, private ABI and entry accounting while reconstructing every pre-field archived mismatch identity. This transition refreshes live source pointers but promotes no cell without authenticated hosted execution.",
+  "updates": [
+    {
+      "currentSha256": "e2ed5255a2887c608c83cd9e79a519aca2c5d66e090324f8d248da3e8f9d0d0c",
+      "edits": [
+        {
+          "current": "structure Box where\n  digit : Digit\n  label : String\n\n",
+          "previous": "",
+          "start": 88
+        },
+        {
+          "current": "def box (value : Box) : Box := value\n",
+          "previous": "",
+          "start": 810
+        }
+      ],
+      "path": "tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean",
+      "previousSha256": "367274a75a77938d2358e5b7106937cca0737025e3f887578d76544372b9ba07"
+    },
+    {
+      "currentSha256": "20708ba30375381aa34738f9a6713d80103eb4f570b8281fd6fad81552255ebe",
+      "edits": [
+        {
+          "current": "\t\t\t\t, [[some([3n, { ok: 4n }])], [some([2n, { ok: 5n }])], [some([0n, { error: 2n }])]]]\n\t\t\t, [\"box\", { digit: 9n, label: \"λ🙂\" }, { digit: 9n, label: \"λ🙂\" }\n\t\t\t\t, [{ digit: 10n, label: \"high\" }, { digit: 11n, label: \"higher\" }]]];\n",
+          "previous": "\t\t\t\t, [[some([3n, { ok: 4n }])], [some([2n, { ok: 5n }])], [some([0n, { error: 2n }])]]]];\n",
+          "start": 3141
+        }
+      ],
+      "path": "tests/fixtures/reviewed-fin-wasm/javascript.mjs",
+      "previousSha256": "dcab9f420cd1f7b4d8363cf0de7ddf94f6e6cd610a9a885eefe1987aab86be4a"
+    },
+    {
+      "currentSha256": "4164370d84d54d49d6c931f12b0c9b7c2c5118d9648bd1563b5085734198d93b",
+      "edits": [
+        {
+          "current": "import { reviewedFinWasmMismatches, reviewedFinWasmPreFieldMismatches, reviewedFinWasmRefusal } from \"./reviewed-fin-wasm-mismatches.mjs\";\n",
+          "previous": "import { reviewedFinWasmMismatches, reviewedFinWasmRefusal } from \"./reviewed-fin-wasm-mismatches.mjs\";\n",
+          "start": 984
+        },
+        {
+          "current": "import { nominalRefinementEntries } from \"../../src/abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 1240
+        },
+        {
+          "current": "\t\tassert.equal(document.declarations.length, selection === \"scalar\" ? 6 : 10);\n",
+          "previous": "\t\tassert.equal(document.declarations.length, selection === \"scalar\" ? 6 : 9);\n",
+          "start": 1799
+        },
+        {
+          "current": "\t\tif(selection === \"scalar\") assert.deepEqual(document.types, [], \"bare Fin aliases fold into their uses\");\n\t\telse\n\t\t{\n\t\t\tassert.equal(document.types.length, 1);\n\t\t\tassert.deepEqual(document.types[0].source.extensions[\"lean-lang.org/nominal-refinements\"]\n\t\t\t\t, { kind: \"record\", fields: [{ kind: \"fin\", bound: \"10\" }, null] });\n\t\t}\n",
+          "previous": "\t\tassert.deepEqual(document.types, [], \"bare Fin aliases fold into their uses\");\n",
+          "start": 2071
+        },
+        {
+          "current": "\t\tif(selection === \"structural\")\n\t\t{\n\t\t\tconst nominal = reviewedFinWasmIr(selection);\n\t\t\tnominal.types[0].source.extensions[\"lean-lang.org/nominal-refinements\"].fields[0].bound = \"11\";\n\t\t\tassert.match(reviewedContractDifference(nominal, document), /nominal-refinements/u);\n\t\t}\n",
+          "previous": "",
+          "start": 3810
+        },
+        {
+          "current": "\t\t, box: value => ({ digit: fin(10n)(value.digit), label: value.label })\n",
+          "previous": "",
+          "start": 5389
+        },
+        {
+          "current": "\t\tconst plan = { privateAbi: { version: selection === \"scalar\" ? 2 : 8 }\n\t\t\t, exports: ir.declarations.map(item => ({ sourceDeclaration: item.source.declaration, refinements: item.source.extensions[\"lean-lang.org/refinements\"] }))\n\t\t\t, ...selection === \"structural\" ? { nominalRefinements: nominalRefinementEntries(ir.types) } : {} };\n",
+          "previous": "\t\tconst plan = { privateAbi: { version: selection === \"scalar\" ? 2 : 6 }\n\t\t\t, exports: ir.declarations.map(item => ({ sourceDeclaration: item.source.declaration, refinements: item.source.extensions[\"lean-lang.org/refinements\"] })) };\n",
+          "start": 8184
+        },
+        {
+          "current": "\t\tassert.equal(source.includes(\"type Box =\"), selection === \"structural\");\n",
+          "previous": "",
+          "start": 10871
+        },
+        {
+          "current": "\tassert.deepEqual(reviewedFinWasmPreFieldMismatches(\"structural\").map(({ label, ir }) => ({ label, reviewedSourceSha256: sha256(canonicalJson(ir)) }))\n",
+          "previous": "\tassert.deepEqual(reviewedFinWasmMismatches(\"structural\").map(({ label, ir }) => ({ label, reviewedSourceSha256: sha256(canonicalJson(ir)) }))\n",
+          "start": 14403
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-contract-tests.mjs",
+      "previousSha256": "88fe9b027954d779019372e2ba693b5d272668bea82e18efe89546b8a4e79511"
+    },
+    {
+      "currentSha256": "8a18c9bda00dc89e81ef30b1b6e1c7587d05888b4b1736862e7c55802413664e",
+      "edits": [
+        {
+          "current": "const box = value => value !== null && typeof value === \"object\"\n\t&& fin(value.digit, 10n) && typeof value.label === \"string\";\n",
+          "previous": "",
+          "start": 3044
+        },
+        {
+          "current": "\t, box: { accepts: ([value]) => box(value), run: ([value]) => ({ ...value }) }\n",
+          "previous": "",
+          "start": 4086
+        },
+        {
+          "current": "\t\telse compileComponentCopiedCall(scratch(), operation, signature, () => {}\n\t\t\t, abi.version, abi.types ?? abi.records ?? [])(args);\n",
+          "previous": "\t\telse compileComponentCopiedCall(scratch(), operation, signature, () => {}, abi.version, abi.records ?? [])(args);\n",
+          "start": 8444
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-entry.mjs",
+      "previousSha256": "f3e7d24c3582f8af0d0b9ee246edf5c41d7e7a6981a7bd12fc004e3d7e3cd216"
+    },
+    {
+      "currentSha256": "a9931a73a5c50f695fdac6c0c12dd926ecaf4c37f161dc9a1bda2de1bc61e613",
+      "edits": [
+        {
+          "current": "const boxType = { record: \"ReviewedFin.Box\", fields: { digit: \"nat\", label: \"string\" } };\n",
+          "previous": "",
+          "start": 873
+        },
+        {
+          "current": "\t, [\"nested\", [nestedType], nestedType, [nestedRefinement], nestedRefinement]\n\t, [\"box\", [boxType], boxType, [null], null]];\n",
+          "previous": "\t, [\"nested\", [nestedType], nestedType, [nestedRefinement], nestedRefinement]];\n",
+          "start": 1556
+        },
+        {
+          "current": "\t\tif(result !== null || parameters.some(item => item !== null))\n\t\t\tdeclaration.source.extensions[\"lean-lang.org/refinements\"] = structuredClone({ parameters, result });\n\t}\n\tconst box = document.types.find(type => type.id === \"lean:ReviewedFin.Box\");\n\tif(box) box.source.extensions[\"lean-lang.org/nominal-refinements\"]\n\t\t= { kind: \"record\", fields: [fin(\"10\"), null] };\n\treturn document;\n};\n\n/**\n * The exact pre-field reviewed document retained only for old archive authentication.\n *\n * @param selection - Scalar or structural source selection.\n */\nexport const reviewedFinWasmPreFieldIr = selection => {\n\tconst document = reviewedFinWasmIr(selection);\n\tif(selection === \"structural\")\n\t{\n\t\tdocument.declarations = document.declarations.filter(item => item.name !== \"box\");\n\t\tdocument.types = [];\n",
+          "previous": "\t\tdeclaration.source.extensions[\"lean-lang.org/refinements\"] = structuredClone({ parameters, result });\n",
+          "start": 2470
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-fixture.mjs",
+      "previousSha256": "fbbb18d5875d51ffa74b16d62280bd7d28bf11d85f390429737dd9ae8a4a7625"
+    },
+    {
+      "currentSha256": "286f7e65dfa82149a9f21bf48e9bdf6fbdca6c49da0a3169090a07dbc6937b91",
+      "edits": [
+        {
+          "current": "import { nominalRefinementEntries } from \"../../src/abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 1138
+        },
+        {
+          "current": "\t, structural: Object.freeze({ checks: 234, rejections: 302 })\n",
+          "previous": "\t, structural: Object.freeze({ checks: 200, rejections: 270 })\n",
+          "start": 2218
+        },
+        {
+          "current": "\tassert.equal(plan.privateAbi.version, selection === \"scalar\" ? 2 : 8);\n",
+          "previous": "\tassert.equal(plan.privateAbi.version, selection === \"scalar\" ? 2 : 6);\n",
+          "start": 3583
+        },
+        {
+          "current": "\tconst nominalRefinements = nominalRefinementEntries(expected.types);\n\tassert.deepEqual(plan.nominalRefinements ?? [], nominalRefinements);\n",
+          "previous": "",
+          "start": 3933
+        },
+        {
+          "current": "\t\t, privateAbi: plan.privateAbi.version, nominalRefinements\n",
+          "previous": "\t\t, privateAbi: plan.privateAbi.version\n",
+          "start": 4761
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-install.mjs",
+      "previousSha256": "8e0bff658d5ff10d8a62d1021562969d7fcb1a9a95ae2b50ba524b2eb0dc5cd8"
+    },
+    {
+      "currentSha256": "f5a54da53b4379f3ff920eb6767fcff18adb54d764c94cfe6fc98476a23a81ea",
+      "edits": [
+        {
+          "current": "import { reviewedFinWasmIr, reviewedFinWasmPreFieldIr, reviewedFinWasmSelections, reviewedFinWasmWide } from \"./reviewed-fin-wasm-fixture.mjs\";\n",
+          "previous": "import { reviewedFinWasmIr, reviewedFinWasmSelections, reviewedFinWasmWide } from \"./reviewed-fin-wasm-fixture.mjs\";\n",
+          "start": 387
+        },
+        {
+          "current": "const mismatches = (selection, reviewed) => {\n",
+          "previous": "/**\n * Keep the erased transport unchanged while changing bounds or their semantic positions.\n *\n * @param selection - The actual scalar or structural build selection.\n */\nexport const reviewedFinWasmMismatches = (selection = \"structural\") => {\n",
+          "start": 532
+        },
+        {
+          "current": "\t\tconst ir = reviewed(selection); mutate(ir);\n",
+          "previous": "\t\tconst ir = reviewedFinWasmIr(selection); mutate(ir);\n",
+          "start": 2246
+        },
+        {
+          "current": "\t\tconst expectedField = reviewedContractDifference(ir, reviewed(selection));\n",
+          "previous": "\t\tconst expectedField = reviewedContractDifference(ir, reviewedFinWasmIr(selection));\n",
+          "start": 2482
+        },
+        {
+          "current": "/**\n * Keep the erased transport unchanged while changing bounds or their semantic positions.\n *\n * @param selection - The actual scalar or structural build selection.\n */\nexport const reviewedFinWasmMismatches = (selection = \"structural\") => {\n\treturn mismatches(selection, reviewedFinWasmIr);\n};\n\n/**\n * Reconstruct the mismatch inputs retained by the pre-field archive.\n *\n * @param selection - Scalar or structural source selection.\n */\nexport const reviewedFinWasmPreFieldMismatches = (selection = \"structural\") =>\n\tmismatches(selection, reviewedFinWasmPreFieldIr);\n\n",
+          "previous": "",
+          "start": 2697
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-mismatches.mjs",
+      "previousSha256": "df82d1fcc2c4afc78dafab93db99dfaa4cdec78ddada7a2b32d020d0a6bce0a3"
+    },
+    {
+      "currentSha256": "0b1d7a9f2715a87be81b00d2cd088752ffd3af6619adb722c96ac9b48423db30",
+      "edits": [
+        {
+          "current": "const exported = [\"mirror\", \"never\", \"only\", \"huge\", \"tenth\", \"label\", \"rows\", \"empty\", \"nested\", \"box\"];\n",
+          "previous": "const exported = [\"mirror\", \"never\", \"only\", \"huge\", \"tenth\", \"label\", \"rows\", \"empty\", \"nested\"];\n",
+          "start": 1220
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-source-entry.mjs",
+      "previousSha256": "cd67e53795979d6a5641a2eebef0f605aeba24196b1682850a9c391f9f9cfc41"
+    },
+    {
+      "currentSha256": "6ee795599dbe507aeec877d1dbb9fd99ae28fde26c78f08a271de2b8cf65db02",
+      "edits": [
+        {
+          "current": "type Box = Readonly<{ digit: bigint; label: string }>;\n",
+          "previous": "",
+          "start": 1990
+        },
+        {
+          "current": "export type BoxSignature = Expect<Equal<typeof api.box, (value: Box) => Box>>;\n",
+          "previous": "",
+          "start": 2338
+        },
+        {
+          "current": "const box: Box = api.box({ digit: 9n, label: \"nine\" });\nvoid rows; void nested; void box;\n",
+          "previous": "void rows; void nested;\n",
+          "start": 2539
+        },
+        {
+          "current": "  // @ts-expect-error A Fin field retains Nat's bigint representation.\n  api.box({ digit: 9, label: \"nine\" });\n",
+          "previous": "",
+          "start": 2866
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-typescript.mjs",
+      "previousSha256": "cdfb35044fe6e5ccda580dc5b1df1d2161f026b9c2a99e8a9618949d79d31c77"
+    },
+    {
+      "currentSha256": "74fb5f75cb483a3fb91a6f8e740e39451242b38b2ca0bf3ce339f857234f7caa",
+      "edits": [
+        {
+          "current": "\t\t, structural: { calls: 586, tally: { \"public 11 1\": 142, \"raw 11 1\": 142, \"public 00 0\": 151, \"raw 10 0\": 130, \"raw 00 0\": 21 } }\n",
+          "previous": "\t\t, structural: { calls: 520, tally: { \"public 11 1\": 125, \"raw 11 1\": 125, \"public 00 0\": 135, \"raw 10 0\": 114, \"raw 00 0\": 21 } }\n",
+          "start": 2075
+        },
+        {
+          "current": "\t\tassert.equal(bound.length, selection === \"scalar\" ? 11 + 32 : 11 + 32 + 8 * 11);\n",
+          "previous": "\t\tassert.equal(bound.length, selection === \"scalar\" ? 11 + 32 : 11 + 32 + 8 * 9);\n",
+          "start": 3988
+        },
+        {
+          "current": "\tfor(const [selection, mode, ir, columns] of [[\"structural\", \"original\", reviewedFinWasmIr(\"structural\"), 10], [\"scalar\", \"probe\", instrumentReviewedFinWasmIr(\"scalar\"), 7]])\n",
+          "previous": "\tfor(const [selection, mode, ir, columns] of [[\"structural\", \"original\", reviewedFinWasmIr(\"structural\"), 9], [\"scalar\", \"probe\", instrumentReviewedFinWasmIr(\"scalar\"), 7]])\n",
+          "start": 5665
+        },
+        {
+          "current": "\t\t, [\"nominal field bound\", changed(\"structural\", \"original\", ir => { ir.types[0].source.extensions[\"lean-lang.org/nominal-refinements\"].fields[0].bound = \"11\"; })]\n",
+          "previous": "",
+          "start": 8910
+        },
+        {
+          "current": "\tassert.equal(probe.split(`dbgTrace \"${reviewedFinWasmEntryMarker} `).length - 1, 11);\n",
+          "previous": "\tassert.equal(probe.split(`dbgTrace \"${reviewedFinWasmEntryMarker} `).length - 1, 10);\n",
+          "start": 12217
+        },
+        {
+          "current": "\tassert.deepEqual(accountReviewedFinWasmEntry(expected, original.observed, original.lines), { mode: \"probe\", calls: 596, columns: symbols, source: true });\n",
+          "previous": "\tassert.deepEqual(accountReviewedFinWasmEntry(expected, original.observed, original.lines), { mode: \"probe\", calls: 530, columns: symbols, source: true });\n",
+          "start": 15091
+        }
+      ],
+      "path": "tests/reviewed-fin-wasm-entry-controls.test.mjs",
+      "previousSha256": "f3fa6f59a35698a31cde6908351331a2c56de617e4c9106d5acb6ae4193d9c2c"
+    }
+  ]
+}

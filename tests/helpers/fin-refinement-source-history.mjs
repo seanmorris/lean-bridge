@@ -157,6 +157,7 @@ import { beforeOwnedCheckedManagedMixedCoverageSource, ownedCheckedManagedMixedC
 import { beforeOwnedCheckedPhpWasmMixedCoverageSource, ownedCheckedPhpWasmMixedCoverageNormalizationPaths } from "./owned-checked-php-wasm-mixed-coverage-source-history.mjs";
 import { beforeOwnedCheckedWitBootstrapSource, ownedCheckedWitBootstrapNormalizationPaths } from "./owned-checked-wit-bootstrap-source-history.mjs";
 import { beforeWasmtimeCapiRolloutSource, wasmtimeCapiRolloutNormalizationPaths } from "./wasmtime-capi-ci-rollout-source-history.mjs";
+import { beforeReviewedFinWasmFieldSource, reviewedFinWasmFieldNormalizationPaths } from "./reviewed-fin-wasm-field-source-history.mjs";
 import { beforeCallbackFinNativeCapabilitySource, callbackFinNativeCapabilityNormalizationPaths } from "./callback-fin-native-capability-source-history.mjs";
 import { beforeCallbackFinHostedWorkflowSource, callbackFinHostedWorkflowNormalizationPaths } from "./callback-fin-hosted-workflow-source-history.mjs";
 import { beforeOwnedCheckedPhpWasmContextsSource, ownedCheckedPhpWasmContextsNormalizationPaths } from "./owned-checked-php-wasm-contexts-source-history.mjs";
@@ -2253,7 +2254,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackFinNativeCapabilityNormalizationPaths
+	...reviewedFinWasmFieldNormalizationPaths
+	, ...callbackFinNativeCapabilityNormalizationPaths
 	, ...callbackFinHostedWorkflowNormalizationPaths
 	, ...coreHistoricalEvidenceReuseLivePinRepairNormalizationPaths()
 	, ...coreHistoricalEvidenceReuseNormalizationPaths
@@ -3245,7 +3247,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCallbackFinNativeCapabilitySource(path, text, expected);
+	let stage = beforeReviewedFinWasmFieldSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCallbackFinNativeCapabilitySource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
