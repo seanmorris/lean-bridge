@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ea5e39a0ffb7c7fefc1a41291325a2a9913b0e2a89924fedc900583ba16013e4",
+      "path": "scripts/update-fin-contract-test-registration-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "862286a517a51ef559cef074eedbc0a1fd50950dfdb40d40b3fe498d89508f24",
+      "path": "tests/helpers/fin-contract-test-registration-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "58f744c923e1b5e7f85b8b494a14635662b13ad78c18ad36e6781c9a612fde5f",
+      "path": "tests/helpers/fin-contract-test-registration-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "882ea967f43076f5606f62d09a296f4d47cbbbbb",
+  "baseHistory": {
+    "path": "docs/evidence/fin-contract-test-registration-source-history-20261028.json",
+    "sha256": "d528044d892626367400d1618a7b2a5f2c0aab9b92aca1ff04536fb564694c85"
+  },
+  "implementationCommit": "daf5c9af37da6125667df774bcea3ffaae221941",
+  "milestone": "fin-contract-test-registration-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated final Fin contract-test registration in the newest-first reversible Fin source-history hub and one checked-JavaScript partition. Preserve all runtime behavior, type-surface claims, observations, evidence identities and package surfaces.",
+  "updates": [
+    {
+      "currentSha256": "efd5d2cc12d8f9c66edc5c8063979a7533b568b05d999028e69db7e113732ca3",
+      "edits": [
+        {
+          "current": "import { beforeFinContractTestRegistrationIntegrationSource, finContractTestRegistrationIntegrationNormalizationPaths } from \"./fin-contract-test-registration-integration-source-history.mjs\";\nimport { beforeFinContractTestRegistrationSource, finContractTestRegistrationNormalizationPaths } from \"./fin-contract-test-registration-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...finContractTestRegistrationIntegrationNormalizationPaths\n\t, ...finContractTestRegistrationNormalizationPaths\n\t, ...finCompletionPromotionNormalizationPaths\n",
+          "previous": "\t...finCompletionPromotionNormalizationPaths\n",
+          "start": 200780
+        },
+        {
+          "current": "\tlet stage = beforeFinContractTestRegistrationIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeFinContractTestRegistrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeFinCompletionPromotionSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeFinCompletionPromotionSource(path, text, expected);\n",
+          "start": 250031
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fcefc1249918fe9fce6a082d69a568bf347ed687e4219aae44c98fcdb81d96e3"
+    },
+    {
+      "currentSha256": "32f841eb46673d5bc98ab1eadf1398d8d568cd121f909f924213f3258e591bb3",
+      "edits": [
+        {
+          "current": "import \"./helpers/fin-contract-test-registration-source-history-tests.mjs\";\nimport \"./helpers/fin-contract-test-registration-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2113
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "ba757babba2accf1650326d915767824c40bfcc81300cc5a884c4f3adf8ae7ea"
+    }
+  ]
+}
