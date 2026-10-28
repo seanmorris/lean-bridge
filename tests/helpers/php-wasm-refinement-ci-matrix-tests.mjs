@@ -52,7 +52,7 @@ test("the PHP-Wasm refinement CI audit rejects policy suppression", async t => {
 	{
 		const source = await readFile(lane.path, "utf8");
 		const mutations = [
-			source.replace("  pull_request:\n", "")
+			source.replace("  schedule:\n", "")
 			, source.replace("  workflow_dispatch:\n", "")
 			, source.replace("  workflow_dispatch:\n"
 				, "  workflow_dispatch:\n  merge_group:\n")

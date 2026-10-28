@@ -59,9 +59,12 @@ export const subtypeEntryProbeSource = original => {
 	return { source, entries, edits, originalSha256: sha256(original), probeSha256: sha256(source), appendedControl: control };
 };
 
-/** Independent review retains its constructor decisions and adds only the unrefined control. */
-export const subtypeEntryProbeReview = () => {
-	const review = phpWasmSubtypeReview();
+/**
+ * Independent review retains its constructor decisions and adds only the unrefined control.
+ *
+ * @param review - Fresh current or historical Subtype review.
+ */
+export const subtypeEntryProbeReview = (review = phpWasmSubtypeReview()) => {
 	const extra = corpusReviewedIr({ id: "subtypes" }, [{ name: "Subtypes.unrestricted", parameters: ["nat"], result: "nat" }]).declarations[0];
 	extra.parameters[0].name = "arg0";
 	review.declarations.push(extra);

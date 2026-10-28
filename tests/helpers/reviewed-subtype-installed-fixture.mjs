@@ -19,7 +19,9 @@ end Subtypes
 export const reviewedSubtypeInstalledIr = () => {
 	const review = reviewedSubtypeIr(true);
 	const zero = corpusReviewedIr({ id: "subtypes" }, [{ name: "Subtypes.zeroEven", parameters: [], result: "nat" }]).declarations[0];
-	zero.source.extensions["lean-lang.org/refinements"] = { parameters: [], result: { kind: "subtype", constructor: "Subtypes.checkedEven" } };
+	zero.source.extensions["lean-lang.org/refinements"] = {
+		parameters: [], result: { kind: "subtype", constructor: null }
+	};
 	review.declarations.push(zero);
 	return review;
 };

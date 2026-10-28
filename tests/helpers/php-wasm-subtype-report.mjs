@@ -7,10 +7,12 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { sha256 } from "../../src/capsule/node.mjs";
+import { isDeepStrictEqual } from "node:util";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { compilerExportSelection } from "../../src/analyze/export-configuration.mjs";
 import { reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
-import { phpWasmSubtypeFixture } from "./php-wasm-subtype-fixture.mjs";
+import { phpWasmSubtypeFixture, phpWasmSubtypeHistoricalFixture, phpWasmSubtypeHistoricalRefinements } from "./php-wasm-subtype-fixture.mjs";
 import { assertPhpWasmRefinementObservation } from "./php-wasm-fin-observation.mjs";
 import { assertPhpWasmRefinementPackage } from "./php-wasm-fin-direct-report.mjs";
 
@@ -22,12 +24,71 @@ export const phpWasmSubtypeReportInput = async () => {
 	try
 	{
 		const fixture = await phpWasmSubtypeFixture({ after: callback => cleanup.push(callback) });
-		return { fixture, name: "subtypes"
+		return { fixture
+			, historicalFixture: phpWasmSubtypeHistoricalFixture(fixture)
+			, name: "subtypes"
 			, lean: await readFile(join(fixture.root, "Subtypes.lean"), "utf8")
 			, caller: await readFile(fixture.consumer, "utf8") };
 	}
 	finally
 	{ for(const callback of cleanup.reverse()) await callback(); }
+};
+
+/**
+ * Select one closed current or producer-era fixture from the complete refinement map.
+ *
+ * @param input - Both independently reconstructed fixture versions.
+ * @param refinements - Complete refinements recorded by one producer.
+ */
+export const phpWasmSubtypeFixtureForRefinements = (input, refinements) => {
+	const fixtures = [input.fixture, input.historicalFixture];
+	const matches = fixtures.filter(fixture => isDeepStrictEqual(refinements, fixture.refinements));
+	assert.equal(matches.length, 1, "Subtype refinements must match one exact supported producer contract");
+	return matches[0];
+};
+
+const historical = fixture => isDeepStrictEqual(fixture.refinements, phpWasmSubtypeHistoricalRefinements);
+const historicalContractSite = site => site.refinement === "reject"
+	? { ownership: site.ownership, lifetime: site.lifetime } : structuredClone(site);
+
+/**
+ * Reconstruct the exact compiler request normalization used by each producer.
+ *
+ * @param fixture - Selected current or historical fixture.
+ */
+export const phpWasmSubtypeCompilerSelection = fixture => compilerExportSelection(fixture);
+
+/**
+ * Select current reviewed semantics normally, or authenticate the one immutable
+ * producer-era review byte-for-byte before reconstructing its compiler request.
+ *
+ * @param review - Retained reviewed-source identity.
+ * @param fixture - Selected current or historical fixture.
+ * @param document - Independent expected review document.
+ */
+export const phpWasmSubtypeReviewedSelection = (review, fixture, document = fixture.review()) => {
+	if(!historical(fixture))
+		return reviewedSourceSelection(review);
+	const source = canonicalJson(document);
+	assert.deepEqual(review, {
+		path: "api.binding-ir.json", schemaVersion: 1
+		, semanticSha256: hashBindingIr(document)
+		, source, sourceSha256: sha256(source)
+	});
+	const selection = phpWasmSubtypeCompilerSelection(fixture);
+	const exports = document.declarations.map(declaration =>
+		declaration.source.extensions["lean-lang.org/specialization"]?.name
+			?? declaration.source.declaration).sort();
+	const contracts = Object.fromEntries(Object.entries(fixture.contracts)
+		.map(([name, contract]) => [
+			name
+			, {
+				parameters: contract.parameters.map(historicalContractSite)
+				, result: historicalContractSite(contract.result)
+			}
+		])
+	);
+	return { ...selection, exports, contracts };
 };
 
 /**
@@ -39,7 +100,8 @@ export const phpWasmSubtypeReportInput = async () => {
  */
 export const assertPhpWasmSubtypeReport = (report, route, input) => {
 	assert.ok(["ordinary-source", "reviewed-source"].includes(route));
-	const reviewed = route === "reviewed-source", { fixture, name, lean, caller } = input;
+	const reviewed = route === "reviewed-source", { name, lean, caller } = input;
+	const fixture = phpWasmSubtypeFixtureForRefinements(input, report.refinements);
 	assert.deepEqual(Object.keys(report).sort(), [
 		"schemaVersion", "archives", "bindingIrSha256", "constructorDispatch"
 		, "dispatch", "fixture", "fixtureSources", "label", "modelSha256"
@@ -55,7 +117,7 @@ export const assertPhpWasmSubtypeReport = (report, route, input) => {
 		, autoload: arrangement === "composer" ? "vendor/autoload.php" : `vendor/${fixture.settings.composer.name}/bootstrap.php` })}\n`;
 	assertPhpWasmRefinementObservation(report, fixture, caller, requests, phpWasmSubtypeChecks, reviewed);
 	const identity = report.phpWasm.component.sourceIdentity, request = identity.request;
-	const selection = reviewed ? reviewedSourceSelection(identity.reviewedBindingIr) : compilerExportSelection(fixture);
+	const selection = reviewed ? phpWasmSubtypeReviewedSelection(identity.reviewedBindingIr, fixture) : phpWasmSubtypeCompilerSelection(fixture);
 	assert.deepEqual(request.contracts, selection.contracts);
 	assert.deepEqual(request.specializations, selection.specializations);
 	assert.deepEqual(request.exports, reviewed ? selection.exports : fixture.exports);

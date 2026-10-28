@@ -12,9 +12,8 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { phpWasmCopiedPins } from "../../src/build/php-wasm-copied-artifacts.mjs";
-import { compilerExportSelection } from "../../src/analyze/export-configuration.mjs";
-import { reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
-import { phpWasmSubtypeReportInput } from "./php-wasm-subtype-report.mjs";
+import { phpWasmSubtypeHistoricalReview } from "./php-wasm-subtype-fixture.mjs";
+import { phpWasmSubtypeCompilerSelection, phpWasmSubtypeFixtureForRefinements, phpWasmSubtypeReportInput, phpWasmSubtypeReviewedSelection } from "./php-wasm-subtype-report.mjs";
 import { subtypeEntryProbeReview, subtypeEntryProbeSelection, subtypeEntryProbeSource } from "./php-wasm-subtype-entry-build.mjs";
 import { instrumentSubtypeCEntries, restoreSubtypeCEntries } from "./php-wasm-subtype-entry-c.mjs";
 import { parseSubtypeEntryTrace } from "./php-wasm-subtype-entry-trace.mjs";
@@ -35,7 +34,9 @@ export const phpWasmSubtypeEntryReportInput = async () => {
 		, "entry-trace.mjs": "./php-wasm-subtype-entry-trace.mjs"
 		, "entry-cases.mjs": "./php-wasm-subtype-entry-cases.mjs" };
 	const drivers = Object.fromEntries(await Promise.all(Object.entries(paths).map(async ([name, path]) => [name, identity(await readFile(new URL(path, import.meta.url)))])));
-	return { ...input, drivers, probe: subtypeEntryProbeSource(input.lean), review: subtypeEntryProbeReview() };
+	return { ...input, drivers, probe: subtypeEntryProbeSource(input.lean)
+		, review: subtypeEntryProbeReview()
+		, historicalReview: subtypeEntryProbeReview(phpWasmSubtypeHistoricalReview()) };
 };
 
 /**
@@ -151,7 +152,10 @@ const assertProbeBuild = (build, route, input, receipt, component) => {
 	const { observation: observed, model, sourceProbe, commands, units } = build;
 	assert.deepEqual(sourceProbe, input.probe); assert.equal(observed.schemaVersion, 1); assert.equal(observed.scope, "separate-instrumented-probe");
 	assert.equal(model.schemaVersion, route === "reviewed" ? 3 : 2); assert.equal(model.pointerBits, 32);
-	assert.deepEqual(Object.fromEntries(model.exports.filter(item => item.name !== "Subtypes.unrestricted").map(item => [item.name, item.refinements])), input.fixture.refinements);
+	const refinements = Object.fromEntries(model.exports.filter(item => item.name !== "Subtypes.unrestricted")
+		.map(item => [item.name, item.refinements]));
+	const fixture = phpWasmSubtypeFixtureForRefinements(input, refinements);
+	assert.deepEqual(refinements, fixture.refinements);
 	const unrestricted = model.exports.find(item => item.name === "Subtypes.unrestricted");
 	assert.ok(unrestricted); assert.equal(unrestricted.refinements, undefined);
 	assert.equal(unrestricted.parameters[0].type.name, "nat"); assert.equal(unrestricted.result.name, "nat");
@@ -186,25 +190,28 @@ const assertProbeBuild = (build, route, input, receipt, component) => {
 	}
 	assert.deepEqual(counts, Object.fromEntries(observed.selected.map(item => [item.symbol, 1]))); assert.deepEqual(observed.definitionCounts, counts);
 	const source = component.sourceIdentity, configuration = JSON.parse(source.exportConfigurationSource);
-	const selection = route === "reviewed" ? reviewedSourceSelection(source.reviewedBindingIr)
-		: compilerExportSelection({ ...input.fixture, exports: [...input.fixture.exports, "Subtypes.unrestricted"] });
+	const selectionFixture = { ...fixture, exports: [...fixture.exports, "Subtypes.unrestricted"] };
+	const expectedReview = fixture === input.historicalFixture ? input.historicalReview : input.review;
+	const selection = route === "reviewed"
+		? phpWasmSubtypeReviewedSelection(source.reviewedBindingIr, selectionFixture, expectedReview)
+		: phpWasmSubtypeCompilerSelection(selectionFixture);
 	assert.equal(source.exportConfigurationSha256, sha256(source.exportConfigurationSource));
 	assert.deepEqual(configuration, { schemaVersion: 1
-		, modules: [input.fixture.module]
-		, targets: { "php-wasm": input.fixture.settings }
-		, ...route === "reviewed" ? {} : { exports: [...input.fixture.exports, "Subtypes.unrestricted"], contracts: input.fixture.contracts, specializations: input.fixture.specializations } });
+		, modules: [fixture.module]
+		, targets: { "php-wasm": fixture.settings }
+		, ...route === "reviewed" ? {} : { exports: [...fixture.exports, "Subtypes.unrestricted"], contracts: fixture.contracts, specializations: fixture.specializations } });
 	if(route === "reviewed") assert.deepEqual(source.reviewedBindingIr, {
 		path: "api.binding-ir.json", schemaVersion: 1
-		, semanticSha256: hashBindingIr(input.review)
-		, source: canonicalJson(input.review)
-		, sourceSha256: sha256(canonicalJson(input.review)) });
+		, semanticSha256: hashBindingIr(expectedReview)
+		, source: canonicalJson(expectedReview)
+		, sourceSha256: sha256(canonicalJson(expectedReview)) });
 	else assert.equal(source.reviewedBindingIr, undefined);
 	for(const key of ["contracts", "specializations"]) assert.deepEqual(source.request[key], selection[key]);
-	assert.deepEqual(source.request.exports, route === "reviewed" ? selection.exports : [...input.fixture.exports, "Subtypes.unrestricted"]);
-	assert.deepEqual(source.request.modules, [input.fixture.module]); assert.deepEqual(source.request.exportModules, [input.fixture.module]);
+	assert.deepEqual(source.request.exports, route === "reviewed" ? selection.exports : [...fixture.exports, "Subtypes.unrestricted"]);
+	assert.deepEqual(source.request.modules, [fixture.module]); assert.deepEqual(source.request.exportModules, [fixture.module]);
 	assert.deepEqual(source.request.arities, []); assert.deepEqual(source.request.resources, []); assert.equal(source.request.profile, "native-library-v1");
 	assert.equal(source.leanCommit, phpWasmCopiedPins.leanCommit);
-	assert.deepEqual(source.modules.map(item => item.module), [input.fixture.module]); assert.deepEqual(source.modules[0].source, { ...source.modules[0].source, ...identity(input.probe.source) });
+	assert.deepEqual(source.modules.map(item => item.module), [fixture.module]); assert.deepEqual(source.modules[0].source, { ...source.modules[0].source, ...identity(input.probe.source) });
 };
 
 /**

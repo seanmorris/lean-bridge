@@ -88,7 +88,18 @@ export const phpWasmRefinementCiMatrix = Object.freeze([
 	, workflow("nominal-primitive-subtype-php-wasm"
 		, "primitive-base nominal Subtypes", [1457], 180)
 	, workflow("nominal-subtype-php-wasm"
-		, "nominal Subtypes", [1457], 180)
+		, "nominal Subtypes", [1457], 180, {
+			acceptanceCommand: "bash scripts/run-nominal-subtype-php-wasm-ci.sh"
+			, acceptanceRun: "set -euo pipefail\nsource scripts/env.sh\n"
+				+ "bash scripts/run-nominal-subtype-php-wasm-ci.sh\n"
+				+ "LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_TEST=1 \\\n"
+				+ "LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_REPORT=build/nominal-subtype-php-wasm-ci/signature-specializations.json \\\n"
+				+ "  node --test --test-concurrency=1 \\\n"
+				+ "    --test-name-pattern='^installed ordinary and reviewed PHP-Wasm packages execute selected instances in every loading arrangement$' \\\n"
+				+ "    tests/reviewed-specializations.test.mjs\n"
+				+ "test -s build/nominal-subtype-php-wasm-ci/signature-specializations.json\n"
+		}
+	)
 	, workflow("owned-checked-record-php-wasm"
 		, "owned checked records", [1459, 1484], 180, {
 			acceptanceCommand: "npm run test:owned-checked-record-php-wasm 2>&1 | tee build/owned-checked-record-php-wasm.log"

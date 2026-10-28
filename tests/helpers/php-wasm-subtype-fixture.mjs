@@ -12,19 +12,44 @@ import { reviewedSubtypeInstalledIr, reviewedSubtypeInstalledSource } from "./re
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 const site = constructor => ({ ownership: "copy", lifetime: null, refinement: { constructor } });
+const plain = { ownership: "copy", lifetime: null };
 const checked = constructor => ({ kind: "subtype", constructor });
+const produced = refinement => refinement === null ? null
+	: { ...structuredClone(refinement), constructor: null };
 const extras = {
 	byte: ["Subtypes.checkedByte", "Subtypes.checkedByte"]
 	, firstEven: ["Subtypes.checkedEven", "Subtypes.checkedEven"]
 	, secondEven: ["Subtypes.normalizedEven", "Subtypes.checkedEven"]
 	, zeroEven: [null, "Subtypes.checkedEven"]
 };
-const contracts = { ...nativeSubtypeContracts }, refinements = { ...nativeSubtypeRefinements };
+const historicalContracts = structuredClone(nativeSubtypeContracts);
+const historicalRefinements = structuredClone(nativeSubtypeRefinements);
+const contracts = {}, refinements = {};
+for(const [name, contract] of Object.entries(nativeSubtypeContracts))
+{
+	contracts[name] = { ...contract, result: plain };
+	const refinement = nativeSubtypeRefinements[name];
+	refinements[name] = { ...refinement, result: produced(refinement.result) };
+}
 for(const [name, [input, output]] of Object.entries(extras))
 {
-	contracts[`Subtypes.${name}`] = { parameters: input === null ? [] : [site(input)], result: site(output) };
-	refinements[`Subtypes.${name}`] = { parameters: input === null ? [] : [checked(input)], result: checked(output) };
+	historicalContracts[`Subtypes.${name}`] = {
+		parameters: input === null ? [] : [site(input)], result: site(output)
+	};
+	historicalRefinements[`Subtypes.${name}`] = {
+		parameters: input === null ? [] : [checked(input)], result: checked(output)
+	};
+	contracts[`Subtypes.${name}`] = {
+		parameters: input === null ? [] : [site(input)], result: plain
+	};
+	refinements[`Subtypes.${name}`] = {
+		parameters: input === null ? [] : [checked(input)]
+		, result: produced(checked(output))
+	};
 }
+/** Exact producer-era decisions retained by immutable 2026-10-10 evidence. */
+export const phpWasmSubtypeHistoricalContracts = Object.freeze(historicalContracts);
+export const phpWasmSubtypeHistoricalRefinements = Object.freeze(historicalRefinements);
 export const phpWasmSubtypeContracts = Object.freeze(contracts);
 export const phpWasmSubtypeRefinements = Object.freeze(refinements);
 export const phpWasmSubtypeSpecializations = Object.freeze(["firstEven", "secondEven"].map(name => ({
@@ -39,6 +64,32 @@ export const phpWasmSubtypeReview = () => {
 		declaration.parameters.forEach((parameter, index) => { parameter.name = `arg${index}`; });
 	return review;
 };
+
+/** Reconstruct the exact review semantics used by the retained producer. */
+export const phpWasmSubtypeHistoricalReview = () => {
+	const review = phpWasmSubtypeReview();
+	for(const declaration of review.declarations)
+	{
+		const specialization = declaration.source.extensions["lean-lang.org/specialization"];
+		const name = specialization?.name ?? declaration.source.declaration;
+		const expected = phpWasmSubtypeHistoricalRefinements[name];
+		assert.ok(expected, `Historical refinement for ${name}`);
+		declaration.source.extensions["lean-lang.org/refinements"] = structuredClone(expected);
+	}
+	return review;
+};
+
+/**
+ * Pair immutable producer-era decisions with the otherwise identical fixture.
+ *
+ * @param fixture - Current fixture whose sources and package settings are shared.
+ */
+export const phpWasmSubtypeHistoricalFixture = fixture => ({
+	...fixture
+	, contracts: phpWasmSubtypeHistoricalContracts
+	, refinements: phpWasmSubtypeHistoricalRefinements
+	, review: phpWasmSubtypeHistoricalReview
+});
 
 const supplemental = `// Distinct checked and normalizing constructors for one generic, plus a scalar base and a zero-argument result.
 check(\\LeanSubtypes\\byte(255) === 255, 'nonzero byte');

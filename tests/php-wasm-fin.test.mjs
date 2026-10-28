@@ -162,7 +162,7 @@ test("the PHP-Wasm side module compares caller limbs with each bound before the 
 	assert.ok(provider.includes("static const uint32_t lb_fin_tile_sum_0_0[1] = {0x5u};"));
 });
 
-test("PHP-Wasm preserves scalar and structural checks while refined callable and owned packages remain refused", async () => {
+test("PHP-Wasm preserves scalar, structural and owned checks while mixed copied callables remain refused", async () => {
 	const component = { id: "sample@1.0.0", name: "sample", version: "1.0.0" };
 	const input = parameter => {
 		const value = nativeMetadataFixture(), projection = value.metadata.modules[0].declarations[0].projection;
@@ -181,17 +181,20 @@ test("PHP-Wasm preserves scalar and structural checks while refined callable and
 	const signatures = { tileSum: finRecordCompilerInput().metadata.modules[0].declarations.find(item => item.identity === "Sample.tileSum").projection.parameters[0].type };
 	const mixed = finRecordCompilerInput({}, { callable: [{ kind: "callback", parameters: [finRecordNat], result: finRecordNat, abi: heap }, finRecordNat], tileSum: [signatures.tileSum, finRecordNat] });
 	assert.throws(() => createPhpWasmCopiedModel(mixed), refinedError(/cannot share a PHP-Wasm package with callables/u));
-	// Copied graph packages share the recursive carrier's Fin walk. Owned packages still use a
-	// separate transport and remain outside this refinement route.
+	// Copied graph packages share the recursive carrier's Fin walk. Owned packages use their
+	// separate refinement carrier and must retain the same compiler-selected Fin site.
 	const reselect = (value, extra = {}) => {
 		const { metadata, ...selection } = value.sourceIdentity.request;
 		void metadata;
-		Object.assign(selection, extra, { exports: value.metadata.modules[0].declarations.map(item => item.identity) });
-		const modules = [{ name: "Sample", sourcePath: "Sample.lean", sourceSha256: "e".repeat(64), interfaceSha256: "1".repeat(64) }];
+		Object.assign(selection, extra, {
+			exports: extra.exports
+				?? value.metadata.modules[0].declarations.map(item => item.identity)
+		});
+		const modules = value.sourceIdentity.request.metadata.modules;
 		const identity = { toolchain: "leanprover/lean4:v4.32.2", modules, leanCompilerSha256: value.sourceIdentity.leanCompilerSha256, extractorSha256: value.sourceIdentity.extractorSha256 };
 		value.sourceIdentity.request = { ...selection, metadata: createMetadataRequest(selection, identity).metadata };
 		value.metadata.producer.invocationIdentitySha256 = value.sourceIdentity.request.metadata.invocationIdentitySha256;
-		return { ...value, component };
+		return { ...value, component: value.component ?? component };
 	};
 	const fin = { kind: "refinement", base: finRecordNat, predicate: { kind: "fin", bound: "10" }, abi: finRecordNat.abi };
 	const graphed = nativeMetadataFixture(), declaration = graphed.metadata.modules[0].declarations[0];
@@ -215,10 +218,23 @@ test("PHP-Wasm preserves scalar and structural checks while refined callable and
 	const plainGraph = nativeMetadataFixture(), alone = plainGraph.metadata.modules[0].declarations[0].projection;
 	alone.parameters[0].type = graph; alone.result = graph;
 	assert.ok(createCompiledPhpWasmModel(reselect(plainGraph)).copiedGraph);
-	const owned = nativeMetadataFixture(), site = owned.metadata.modules[0].declarations[0].projection;
-	site.parameters[0].type = fin; site.result = finRecordNat;
-	const ownedAggregates = JSON.parse(await readFile("docs/evidence/owned-php-transfers-20260930.json", "utf8")).runtime[0].input.sourceIdentity.request.ownedAggregates;
-	assert.throws(() => createCompiledPhpWasmModel(reselect(owned, { ownedAggregates })), refinedError(/implemented only for ordinary native packages with bound-checking adapters/u));
+	const evidence = JSON.parse(await readFile(
+		"docs/evidence/owned-php-transfers-20260930.json", "utf8"));
+	const owned = structuredClone(evidence.runtime[0].input);
+	const selected = owned.sourceIdentity.request.exports;
+	const ticket = owned.metadata.modules[0].declarations
+		.find(item => item.identity === "Owned.newTicket").projection;
+	ticket.parameters[0].type = fin;
+	const ownedModel = createCompiledPhpWasmModel(reselect(owned, {
+		exports: selected
+	}));
+	assert.ok(ownedModel.ownedGraph);
+	const selectedTicket = ownedModel.bindingIr.declarations.find(item =>
+		item.source.declaration === "Owned.newTicket");
+	assert.deepEqual(selectedTicket.source.extensions["lean-lang.org/refinements"]
+		.parameters[0], fin.predicate);
+	assert.match(generateCompiledPhpWasmLeanAdapters(ownedModel).leanSource
+		, /let _source\d+ ← \(if proof : \(a0\) < 10 then/u);
 });
 
 test("PHP-Wasm packages document each checked path, and packages without bounds document nothing new", () => {
