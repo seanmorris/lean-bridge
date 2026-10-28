@@ -36,7 +36,7 @@ const closed = (value, keys) => {
 const text = value => typeof value === "string" && value.length > 0;
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const ordered = values => Array.isArray(values) && values.every(text) && same(values, [...new Set(values)].sort());
-const reasons = ["implicit-parameter", "instance-parameter", "dependent-type", "unsupported-effect", "unsupported-parameter-type", "unsupported-result-type", "unsupported-native-type", "visibility", "specialization-required", "invalid-specialization", "type-declaration", "proof-only", "admitted-implementation", "unreviewed-implementation", "arity-limit", "export-contract-mismatch"];
+const reasons = ["implicit-parameter", "instance-parameter", "dependent-type", "unsupported-effect", "unsupported-parameter-type", "unsupported-result-type", "unsupported-native-type", "unsupported-proof-obligation", "visibility", "specialization-required", "invalid-specialization", "type-declaration", "proof-only", "admitted-implementation", "unreviewed-implementation", "arity-limit", "export-contract-mismatch"];
 
 /**
  * Hash every interface artifact that Lean may import, including server/private data.
@@ -171,10 +171,28 @@ export const validateElaboratedMetadata = (report, request) => {
 			}
 			else
 			{
-				closed(projection, ["status", "bindingShape", "parameters", "result"]);
+				const erasedProofs = projection.erasedProofs ?? [];
+				closed(projection, ["status", "bindingShape", "parameters", "result"
+					, ...(erasedProofs.length ? ["erasedProofs"] : [])]);
 				const arity = new Map(request.arities).get(declaration.identity) ?? (native ? 1024 : 32);
+				if(!Array.isArray(erasedProofs) || erasedProofs.length > 1024) fail("Invalid erased proof parameters");
+				let previousProof = -1;
+				for(const proof of erasedProofs)
+				{
+					closed(proof, ["sourceIndex", "name", "proposition", "witness"]);
+					const source = declaration.parameters[proof.sourceIndex];
+					if(!Number.isSafeInteger(proof.sourceIndex) || proof.sourceIndex <= previousProof || !source
+						|| source.binderInfo !== "explicit" || proof.name !== source.name
+						|| proof.proposition !== source.typeExpression || proof.witness !== "True.intro")
+						fail("Invalid erased proof parameter");
+					previousProof = proof.sourceIndex;
+				}
+				const proofIndexes = new Set(erasedProofs.map(proof => proof.sourceIndex));
+				const runtimeSources = declaration.parameters.map((_, index) => index).filter(index => !proofIndexes.has(index));
 				if(projection.status !== "supported" || projection.bindingShape !== (native ? "native-function" : "pure-function") || !Array.isArray(projection.parameters)
-					|| projection.parameters.length > (native ? 1024 : 32) || projection.parameters.length !== Math.min(arity, declaration.parameters.length)
+					|| projection.parameters.length > (native ? 1024 : 32)
+					|| (erasedProofs.length ? projection.parameters.length !== runtimeSources.length || projection.parameters.length > arity
+						: projection.parameters.length !== Math.min(arity, declaration.parameters.length))
 					|| declaration.parameters.some(parameter => parameter.binderInfo !== "explicit") || declaration.effects.length) fail("Invalid supported projection");
 				const scalar = type => { closed(type, ["kind", "name"]); if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Unsupported runtime projection type"); };
 				const copied = (type, depth = 0, references, refinements = true, subtypeStructural = depth === 0 && !references && refinements === true, produced = false, checkedRecord = false) => {
@@ -386,7 +404,7 @@ export const validateElaboratedMetadata = (report, request) => {
 				const validateType = native ? nativeType : component;
 				projection.parameters.forEach((parameter, index) => {
 					closed(parameter, ["name", "type"]);
-					if(parameter.name !== declaration.parameters[index].name) fail("Runtime binder differs from the elaborated binder");
+					if(parameter.name !== declaration.parameters[runtimeSources[index]].name) fail("Runtime binder differs from the elaborated binder");
 					validateType(parameter.type, "parameter", index);
 				});
 				validateType(projection.result, "result");

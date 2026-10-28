@@ -76,6 +76,7 @@ export const projectNativeMetadata = (metadata, sourceIdentity, { copiedGraphs =
 			name: item.identity, module: module.name
 			, parameters: item.projection.parameters
 			, result: item.projection.result
+			, ...(item.projection.erasedProofs ? { erasedProofs: structuredClone(item.projection.erasedProofs) } : {})
 			, documentation: item.documentation, sourcePosition: item.source
 			, theoremReferences: item.theoremReferences
 			, ...(item.specialization ? { specialization: { name: item.identity, ...item.specialization } } : {})

@@ -13,6 +13,7 @@ import test from "node:test";
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { createComponentBuildPlan, prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
 import { CompilerAdapterError, generateCompilerAdapters, validateCompilerAdapterPlan, writeCompilerAdapters } from "../src/build/compiler-adapters.mjs";
+import { componentRefinedCall, erasedProofApplicationArguments } from "../src/build/component-refinements.mjs";
 
 const generate = async projectRoot => {
 	const analysis = await analyzeLeanProject(projectRoot);
@@ -31,6 +32,23 @@ test("plain functions receive deterministic generated Lean exports and direct pr
   assert.ok(generated.plan.privateAbi.exports.every(item => /^lean_bridge_[0-9a-f]{24}$/.test(item.symbol)));
   assert.doesNotMatch(JSON.stringify(generated), /ccall|cwrap|generic.?dispatch|Alpha/);
   assert.doesNotMatch(await readFile("tests/fixtures/onboarding/small/OnboardingSmall.lean", "utf8"), /@\[export/);
+});
+
+test("generated calls restore closed proof witnesses without host arguments", () => {
+	const item = { sourceDeclaration: "Proofs.keep"
+		, erasedProofs: [
+			{ sourceIndex: 0, name: "first", proposition: "True", witness: "True.intro" }
+			, { sourceIndex: 2, name: "second", proposition: "True", witness: "True.intro" }
+		]
+	};
+	assert.deepEqual(erasedProofApplicationArguments(item, ["a0", "a1"])
+		, ["_root_.True.intro", "a0", "_root_.True.intro", "a1"]);
+	assert.equal(componentRefinedCall(item, ["a0", "a1"]).call
+		, "_root_.Proofs.keep _root_.True.intro a0 _root_.True.intro a1");
+	const altered = structuredClone(item);
+	altered.erasedProofs[0].witness = "False.elim";
+	assert.throws(() => erasedProofApplicationArguments(altered, ["a0", "a1"])
+		, /Unsupported erased proof witness/u);
 });
 
 test("compiler adapters are identical across source checkout roots", async () => {
@@ -79,6 +97,12 @@ test("compiler adapter plan fields and direct dispatch fail closed", async () =>
     () => validateCompilerAdapterPlan(changed),
     error => error instanceof CompilerAdapterError && error.code === "invalid-compiler-adapter-plan",
   );
+	const proof = structuredClone(generated.plan);
+	proof.exports[0].erasedProofs = [{ sourceIndex: proof.exports[0].parameters.length + 1
+		, name: "_proof", proposition: "True", witness: "True.intro" }];
+	assert.throws(() => validateCompilerAdapterPlan(proof)
+		, error => error instanceof CompilerAdapterError
+			&& error.code === "invalid-compiler-adapter-plan");
 });
 
 test("source-scanned APIs cannot supply compiler specialization applications", async () => {

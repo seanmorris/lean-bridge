@@ -107,6 +107,24 @@ const validateParameter = (parameter, path) => {
 	if(typeof parameter.leanType !== "string" || parameter.leanType === "") fail("invalid-compiler-adapter-plan", `${path} has no Lean type`);
 };
 
+const validateErasedProofs = (value, runtimeArity) => {
+	if(!Array.isArray(value) || !value.length || value.length > 1024)
+		fail("invalid-compiler-adapter-plan", "Compiler erased proofs must be a nonempty bounded array");
+	const sourceArity = runtimeArity + value.length;
+	let previous = -1;
+	for(const proof of value)
+	{
+		exactKeys(proof, ["sourceIndex", "name", "proposition", "witness"], "compiler erased proof");
+		if(!Number.isSafeInteger(proof.sourceIndex) || proof.sourceIndex <= previous
+			|| proof.sourceIndex >= sourceArity
+			|| typeof proof.name !== "string" || !proof.name.length
+			|| typeof proof.proposition !== "string" || !proof.proposition.length
+			|| proof.witness !== "True.intro")
+			fail("invalid-compiler-adapter-plan", "Compiler erased proof metadata is invalid");
+		previous = proof.sourceIndex;
+	}
+};
+
 const validateRefinement = (value, path, leanType, depth = 0, produced = false, budget = { nodes: 0 }, dependent = false) => {
 	if(++budget.nodes > 4096) fail("invalid-compiler-adapter-plan", `${path} exceeds the refinement node budget`);
 	if(value === null) return;
@@ -228,7 +246,7 @@ export const validateCompilerAdapterPlan = plan => {
 	const symbols = new Set();
 	for(const item of plan.exports)
 	{
-		exactKeys(item, ["bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "parameters", "leanResultType", "resultMode", "leanEffect", ...(item.sourceApplication === undefined ? [] : ["sourceApplication"]), ...(item.refinements === undefined ? [] : ["refinements"])], "compiler export");
+		exactKeys(item, ["bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "parameters", "leanResultType", "resultMode", "leanEffect", ...(item.sourceApplication === undefined ? [] : ["sourceApplication"]), ...(item.refinements === undefined ? [] : ["refinements"]), ...(item.erasedProofs === undefined ? [] : ["erasedProofs"])], "compiler export");
 		if(item.sourceApplication !== undefined && (typeof item.sourceApplication !== "string" || !item.sourceApplication.length)) fail("invalid-compiler-adapter-plan", "Specialized exports require a compiler application");
 		for(const key of ["bindingId", "sourceDeclaration", "sourceModule", "wrapper", "symbol", "leanResultType"]) if(typeof item[key] !== "string" || item[key] === "") fail("invalid-compiler-adapter-plan", `compiler export ${key} must be a string`);
 		if(!/^lean_bridge_[0-9a-f]{24}$/.test(item.symbol) || symbols.has(item.symbol)) fail("invalid-compiler-adapter-plan", "compiler export symbols must be unique generated names");
@@ -236,6 +254,8 @@ export const validateCompilerAdapterPlan = plan => {
 		if(!Array.isArray(item.parameters)) fail("invalid-compiler-adapter-plan", "compiler export parameters must be an array");
 		item.parameters.forEach((parameter, index) => validateParameter(parameter, `parameter ${index}`));
 		if(item.refinements !== undefined) validateRefinements(item.refinements, item);
+		if(item.erasedProofs !== undefined)
+			validateErasedProofs(item.erasedProofs, item.parameters.length);
 		if(!new Set(["value", "promise"]).has(item.resultMode)) fail("invalid-compiler-adapter-plan", "compiler adapters currently support value and promise results");
 		if(item.leanEffect !== null && !new Set(["IO", "Task"]).has(item.leanEffect)) fail("invalid-compiler-adapter-plan", "compiler adapter effect is unsupported");
 		if((item.resultMode === "promise") !== (item.leanEffect !== null)) fail("invalid-compiler-adapter-plan", "promise adapters require IO or Task");
@@ -392,6 +412,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
     }
     const effect = declaration.source.extensions["lean-lang.org/effect"] ?? null;
     const refinements = declaration.source.extensions["lean-lang.org/refinements"];
+    const erasedProofs = declaration.source.extensions["lean-lang.org/erased-proofs"]?.parameters;
     const item = Object.freeze({
       bindingId: declaration.id
       , sourceDeclaration
@@ -402,6 +423,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
       , parameters: Object.freeze(declaration.parameters.map(parameter => Object.freeze({ name: parameter.name, leanType: leanType(parameter.type, callbackTypes) })))
       , leanResultType: leanType(declaration.result.type, callbackTypes)
       , ...(refinements === undefined ? {} : { refinements: structuredClone(refinements) })
+      , ...(erasedProofs === undefined ? {} : { erasedProofs: structuredClone(erasedProofs) })
       , resultMode: declaration.resultMode
       , leanEffect: effect
     });

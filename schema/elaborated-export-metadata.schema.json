@@ -149,6 +149,22 @@
         }
       }
     },
+    "erasedProofs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1024,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sourceIndex", "name", "proposition", "witness"],
+        "properties": {
+          "sourceIndex": { "type": "integer", "minimum": 0, "maximum": 1023 },
+          "name": { "type": "string", "minLength": 1 },
+          "proposition": { "type": "string", "minLength": 1 },
+          "witness": { "const": "True.intro" }
+        }
+      }
+    },
     "projection": {
       "oneOf": [
         {
@@ -190,6 +206,9 @@
             },
             "result": {
               "$ref": "#/$defs/runtimeType"
+            },
+            "erasedProofs": {
+              "$ref": "#/$defs/erasedProofs"
             }
           }
         },
@@ -232,6 +251,9 @@
             },
             "result": {
               "$ref": "native-metadata-type.schema.json"
+            },
+            "erasedProofs": {
+              "$ref": "#/$defs/erasedProofs"
             }
           }
         },
@@ -255,6 +277,7 @@
                 "unsupported-effect",
                 "unsupported-parameter-type",
                 "unsupported-result-type",
+                "unsupported-proof-obligation",
                 "visibility",
                 "specialization-required",
                 "invalid-specialization",

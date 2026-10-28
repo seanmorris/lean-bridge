@@ -28,6 +28,25 @@ const unsupported = (message, details) => fail("reviewed-ir-build-unsupported", 
 const callbackFailure = { mode: "declared", errors: ["error:native-callback"], unexpected: "poison-runtime" };
 const pureFailure = { mode: "none", errors: [], unexpected: "poison-runtime" };
 
+const validErasedProofs = (item, value) => {
+	if(value === null || typeof value !== "object" || Array.isArray(value)
+		|| !same(Object.keys(value), ["parameters"]) || !Array.isArray(value.parameters)
+		|| !value.parameters.length || value.parameters.length > 1024) return false;
+	const sourceArity = item.parameters.length + value.parameters.length;
+	let previous = -1;
+	for(const proof of value.parameters)
+	{
+		if(proof === null || typeof proof !== "object" || Array.isArray(proof)
+			|| !same(Object.keys(proof).sort(), ["name", "proposition", "sourceIndex", "witness"])
+			|| !Number.isSafeInteger(proof.sourceIndex) || proof.sourceIndex <= previous
+			|| proof.sourceIndex >= sourceArity || typeof proof.name !== "string" || !proof.name.length
+			|| typeof proof.proposition !== "string" || !proof.proposition.length
+			|| proof.witness !== "True.intro") return false;
+		previous = proof.sourceIndex;
+	}
+	return true;
+};
+
 const parse = source => {
 	let document;
 	try
@@ -63,8 +82,10 @@ const checkReview = document => {
 		// A checked record names its erased proof fields once, whether its value is copied or
 		// owned; every other definition and every declaration-level key stays closed.
 		const record = !declaration && !callbackName && item.kind === "record";
-		const allowed = declaration || callbackName ? [refinementKey]
-			: record ? [erasedProofsKey] : [];
+		let allowed = [];
+		if(declaration) allowed = [refinementKey, erasedProofsKey];
+		else if(callbackName) allowed = [refinementKey];
+		else if(record) allowed = [erasedProofsKey];
 		reject(Object.keys(item.source.extensions).some(key => !allowed.includes(key))
 			, `${item.id}.source.extensions`);
 		if(record && Object.hasOwn(item.source.extensions, erasedProofsKey))
@@ -75,6 +96,9 @@ const checkReview = document => {
 				|| erased.fields.some(name => typeof name !== "string" || !/^[A-Za-z_][A-Za-z0-9_']*$/u.test(name) || item.fields.some(field => field.name === name))
 			, `${item.id}.source.extensions.${erasedProofsKey}`);
 		}
+		if(declaration && Object.hasOwn(item.source.extensions, erasedProofsKey))
+			reject(!validErasedProofs(item, item.source.extensions[erasedProofsKey])
+				, `${item.id}.source.extensions.${erasedProofsKey}`);
 		if((declaration || callbackName)
 			&& Object.hasOwn(item.source.extensions, refinementKey)){
 			try

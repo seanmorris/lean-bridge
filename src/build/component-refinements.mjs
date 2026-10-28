@@ -229,7 +229,8 @@ export const componentRefinedCall = (item, arguments_, emptyArgumentSpace = fals
 		return ["fin", "fin-parameter"].includes(refinement.kind)
 			? `⟨${argument}, _bridgeFin${index}⟩` : `_bridgeSubtype${index}`;
 	});
-	const application = `${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${parameters.length ? ` ${parameters.join(" ")}` : emptyArgumentSpace ? " " : ""}`;
+	const sourceParameters = erasedProofApplicationArguments(item, parameters);
+	const application = `${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${sourceParameters.length ? ` ${sourceParameters.join(" ")}` : emptyArgumentSpace ? " " : ""}`;
 	return {
 		call: selected.result === null ? application : ["fin", "subtype"].includes(selected.result.kind)
 			? componentRefinementConversion(selected.result, application, false)
@@ -241,6 +242,34 @@ export const componentRefinedCall = (item, arguments_, emptyArgumentSpace = fals
 				: [{ kind: "checked", binding: `_bridgeSubtype${index}`
 					, conversion: componentRefinementConversion(refinement, arguments_[index]) }])
 	};
+};
+
+/**
+ * Restore compiler-approved proof arguments in source order without exposing a
+ * host argument. Only the closed True witness is currently admitted upstream.
+ *
+ * @param item - Compiler-owned export with optional erased proof metadata.
+ * @param runtimeArguments - Runtime arguments in Binding IR order.
+ */
+export const erasedProofApplicationArguments = (item, runtimeArguments) => {
+	const proofs = item.erasedProofs ?? [];
+	if(!proofs.length) return runtimeArguments;
+	const byIndex = new Map(proofs.map(proof => [proof.sourceIndex, proof]));
+	const result = [];
+	let runtime = 0;
+	for(let sourceIndex = 0; sourceIndex < runtimeArguments.length + proofs.length; sourceIndex++)
+	{
+		const proof = byIndex.get(sourceIndex);
+		if(proof)
+		{
+			if(proof.witness !== "True.intro") throw new TypeError("Unsupported erased proof witness");
+			result.push("_root_.True.intro");
+		}
+		else result.push(runtimeArguments[runtime++]);
+	}
+	if(runtime !== runtimeArguments.length || result.some(value => value === undefined))
+		throw new TypeError("Erased proof parameters do not match the runtime signature");
+	return result;
 };
 
 /**

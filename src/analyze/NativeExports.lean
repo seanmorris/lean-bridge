@@ -1147,16 +1147,33 @@ def shape (request : Request) (e : Expr) (checked : Option Json := none)
     (callableDecision := callableDecision)).run { parentAliases }
   return ← finiteCopiedGraph state.types value request.ownedAggregates
 
+def expression (e : Expr) : MetaM String := do
+  withOptions (fun opts => opts.setBool `pp.fullNames true |>.setBool `pp.universes true) do
+    return (← ppExpr e).pretty
+
 partial def signature (request : Request) (e : Expr) (limit : Nat)
     (parameterSites : Array (Option Json) := #[]) (resultSite : Option Json := none)
-    (index : Nat := 0) (parentAliases : Option (IO.Ref ParentAliasCache) := none)
-    (previous : Array (Expr × Json) := #[]) : MetaM (Array Json × Json) := do
+    (index : Nat := 0) (sourceIndex : Nat := 0)
+    (parentAliases : Option (IO.Ref ParentAliasCache) := none)
+    (previous : Array (Expr × Json) := #[]) : MetaM (Array Json × Json × Array Json) := do
   let reduced ← whnf e
   if index < limit then
     if let .forallE name argument result binder := reduced then
       if binder != .default then reject e "dependent or implicit parameter"
       return ← withLocalDecl name binder argument fun boundVariable => do
         let result := result.instantiate1 boundVariable
+        if ← isProp argument then
+          unless ← isDefEq (← whnf argument) (mkConst ``True) do
+            reject argument "proof parameters currently require the closed proposition True"
+          let (rest, result, proofs) ← signature request result limit parameterSites resultSite
+            index (sourceIndex + 1) parentAliases previous
+          let proposition ← expression argument
+          let proof := obj [
+            ("sourceIndex", toJson sourceIndex),
+            ("name", str name.toString),
+            ("proposition", str proposition),
+            ("witness", str "True.intro")]
+          return (rest, result, #[proof] ++ proofs)
         let site := parameterSites[index]?.join
         let checked := site.bind fun value => do
           let refinement ← (value.getObjVal? "refinement").toOption
@@ -1179,19 +1196,16 @@ partial def signature (request : Request) (e : Expr) (limit : Nat)
           else
             shape request argument checked (callbackSite := some false)
               (parentAliases := parentAliases) (callableDecision := callable)
-        let (rest, result) ← signature request result limit parameterSites resultSite
-          (index + 1) parentAliases (previous.push (boundVariable, parameter))
-        return (#[obj [("name", str s!"arg{index}"), ("type", parameter)]] ++ rest, result)
+        let (rest, result, proofs) ← signature request result limit parameterSites resultSite
+          (index + 1) (sourceIndex + 1) parentAliases (previous.push (boundVariable, parameter))
+        return (#[obj [("name", str s!"arg{index}"), ("type", parameter),
+          ("sourceIndex", toJson sourceIndex)]] ++ rest, result, proofs)
   let checked := resultSite.bind fun value => do
     let refinement ← (value.getObjVal? "refinement").toOption
     if refinement == str "reject" then none else some refinement
   let callable := resultSite.bind fun value => (value.getObjVal? "callable").toOption
   return (#[], ← shape request e checked (callbackSite := some true)
-    (parentAliases := parentAliases) (callableDecision := callable))
-
-def expression (e : Expr) : MetaM String := do
-  withOptions (fun opts => opts.setBool `pp.fullNames true |>.setBool `pp.universes true) do
-    return (← ppExpr e).pretty
+    (parentAliases := parentAliases) (callableDecision := callable), #[])
 
 def binderName : BinderInfo → String
   | .default => "explicit"
@@ -1293,8 +1307,10 @@ def describeScalarSignature (request : Request) (type : Expr) : MetaM (Array Jso
       let text ← expression binder.type
       parameters := parameters.push <| obj [("name", str binder.userName.toString),
         ("binderInfo", str (binderName binder.binderInfo)), ("typeExpression", str text)]
+      let proof ← isProp binder.type
       let reason := if binder.binderInfo == .instImplicit then some "instance-parameter"
         else if binder.binderInfo != .default then some "implicit-parameter"
+        else if proof then some "unsupported-proof-obligation"
         else if binder.type.hasFVar then some "dependent-type" else none
       if let some reason := reason then
         if problem.isNone then problem := some (unsupported reason text)
@@ -1578,17 +1594,23 @@ def describeSignature (request : Request) (name : String) (type : Expr) (parentA
       if let some value := choice then
         if value == Json.null then throwError "invalid checked refinement selection"
         if let some problem := (checkedSelectionProblem value).run' 0 then throwError "{problem}"
-    let (nativeParameters, result) ← signature request type arity parameterSites resultSite (parentAliases := parentAliases)
+    let (nativeParameters, result, erasedProofs) ← signature request type arity parameterSites resultSite
+      (parentAliases := parentAliases)
     if !native && nativeParameters.size > 32 then throwError "components support at most 32 arguments"
     let nativeParameters ← if native then pure nativeParameters else nativeParameters.mapM fun (parameter : Json) => do
       pure <| obj [("name", ← ofExcept <| parameter.getObjVal? "name"),
         ("type", ← componentType (← ofExcept <| parameter.getObjVal? "type"))]
     let result ← if native then pure result else componentType result
     let nativeParameters := nativeParameters.mapIdx fun index parameter =>
-      obj [("name", (parameters[index]?.bind fun value => (value.getObjVal? "name").toOption).getD (str s!"arg{index}")),
+      let sourceIndex := (parameter.getObjValAs? Nat "sourceIndex").toOption.getD index
+      obj [("name", (parameters[sourceIndex]?.bind fun value =>
+          (value.getObjVal? "name").toOption).getD (str s!"arg{index}")),
         ("type", (parameter.getObjVal? "type").toOption.getD Json.null)]
-    return (parameters, resultText, obj [("status", str "supported"),
-      ("bindingShape", str (if native then "native-function" else "pure-function")), ("parameters", toJson nativeParameters), ("result", result)])
+    return (parameters, resultText, obj ([
+      ("status", str "supported"),
+      ("bindingShape", str (if native then "native-function" else "pure-function")),
+      ("parameters", toJson nativeParameters), ("result", result)] ++
+      if erasedProofs.isEmpty then [] else [("erasedProofs", toJson erasedProofs)]))
   catch error =>
     if !native then
       if (scalarProjection.getObjValAs? String "status").toOption == some "supported" ||
@@ -1596,7 +1618,8 @@ def describeSignature (request : Request) (name : String) (type : Expr) (parentA
         return (parameters, resultText, unsupported "unsupported-native-type" (← error.toMessageData.toString))
       return (parameters, resultText, scalarProjection)
     let reason := (scalarProjection.getObjValAs? String "reason").toOption.getD "unsupported-native-type"
-    let reason := if ["implicit-parameter", "instance-parameter", "dependent-type"].contains reason then reason else "unsupported-native-type"
+    let reason := if ["implicit-parameter", "instance-parameter", "dependent-type",
+        "unsupported-proof-obligation"].contains reason then reason else "unsupported-native-type"
     return (parameters, resultText, unsupported reason (← error.toMessageData.toString))
 
 def diagnostic (category code message moduleName : String) (name : Option String) : Json :=

@@ -10,7 +10,7 @@ import { createElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedSource } from "../analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { projectPerlNames } from "../backends/perl/naming.mjs";
-import { componentRefinedCall, componentRefinementConversion, componentRefinementGuards, constructorRefinementLeaves } from "./component-refinements.mjs";
+import { componentRefinedCall, componentRefinementConversion, componentRefinementGuards, constructorRefinementLeaves, erasedProofApplicationArguments } from "./component-refinements.mjs";
 import { refinementMirrorNames, renderRefinementMirrors } from "./refinement-mirrors.mjs";
 
 export { validateNativeType };
@@ -475,7 +475,8 @@ const nativeCallbackRefinedCall = (item, application) => {
 		// reply the C check should have refused reaches only the Fin-free reject.
 		return `(fun ${names.join(" ")} => let _bridgeReply := ${reply}; match ${componentRefinementConversion(tree.result, "_bridgeReply", true)} with | .some _bridgeChecked => _bridgeChecked | .none => reply_reject_${nativeTypeKey(parameter.type)} _bridgeReply)`;
 	});
-	const call = `${application} ${args.join(" ")}`;
+	const sourceArguments = erasedProofApplicationArguments(item, args);
+	const call = `${application} ${sourceArguments.join(" ")}`;
 	const tree = item.refinements.result;
 	if(tree === null) return call;
 	const names = binders(tree.parameters.length);
@@ -528,7 +529,9 @@ export const generateNativeLeanAdapters = model => {
 		const application = item.specialization ? `(${item.specialization.application})` : `_root_.${item.name}`;
 		if(!item.refinements)
 		{
-			emit(item.symbol, parameters, item.result, `${application} ${item.parameters.map((_, i) => `a${i}`).join(" ")}`);
+			const arguments_ = erasedProofApplicationArguments(item
+				, item.parameters.map((_, i) => `a${i}`));
+			emit(item.symbol, parameters, item.result, `${application} ${arguments_.join(" ")}`);
 			continue;
 		}
 		if([...item.refinements.parameters, item.refinements.result].every(tree => tree === null || tree.kind === "callback"))
@@ -538,7 +541,9 @@ export const generateNativeLeanAdapters = model => {
 		}
 		// Every proof exists only inside a decidable branch; container elements are checked
 		// by the same conversions the component adapters use. Rejected inputs return none.
-		const source = { refinements: item.refinements, sourceDeclaration: item.name, ...(item.specialization ? { sourceApplication: item.specialization.application } : {}) };
+		const source = { refinements: item.refinements, sourceDeclaration: item.name
+			, ...(item.erasedProofs ? { erasedProofs: item.erasedProofs } : {})
+			, ...(item.specialization ? { sourceApplication: item.specialization.application } : {}) };
 		const { call, guards } = componentRefinedCall(source, item.parameters.map((_, i) => `a${i}`), true);
 		if(!guards.length) emit(item.symbol, parameters, item.result, call);
 		else emit(item.symbol, parameters, nativeRefinedResult(item.result)

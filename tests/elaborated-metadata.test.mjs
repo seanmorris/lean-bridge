@@ -79,6 +79,37 @@ test("Binding IR uses structural compiler types and never parses rendered expres
 	assert.deepEqual(analysis().bindingIr.document.assurance, []);
 });
 
+test("compiler metadata erases an exact closed True proof parameter without changing runtime arity", async () => {
+	const { request, report } = sample();
+	const declaration = report.modules[0].declarations[0];
+	declaration.typeExpression = "(value : UInt32) → (_proof : True) → UInt32";
+	declaration.parameters.push({ name: "_proof", binderInfo: "explicit", typeExpression: "True" });
+	declaration.projection.erasedProofs = [{ sourceIndex: 1, name: "_proof"
+		, proposition: "True", witness: "True.intro" }];
+	assert.equal(validateElaboratedMetadata(report, request), true);
+	await assertJsonSchema("elaborated-export-metadata", report);
+	const project = { name: "sample", version: "1.0.0", toolchain: request.metadata.toolchain };
+	const analysis = projectElaboratedMetadata({ project, inputs: [], sourceTreeSha256: "e".repeat(64) }
+		, [{ module: "Sample", path: "Sample.lean" }], { request, metadata: report });
+	const runtime = analysis.bindingIr.document.declarations[0];
+	assert.equal(runtime.parameters.length, 1);
+	assert.deepEqual(runtime.source.extensions["lean-lang.org/erased-proofs"], {
+		parameters: declaration.projection.erasedProofs
+	});
+	for(const change of [
+		value => { value.sourceIndex = 0; }
+		, value => { value.sourceIndex = 2; }
+		, value => { value.name = "other"; }
+		, value => { value.proposition = "False"; }
+		, value => { value.witness = "fabricated"; }
+	]) {
+		const invalid = structuredClone(report);
+		change(invalid.modules[0].declarations[0].projection.erasedProofs[0]);
+		assert.throws(() => validateElaboratedMetadata(invalid, request)
+			, { code: "invalid-elaborated-metadata" });
+	}
+});
+
 for(const reason of ["unsupported-effect", "missing-declaration"])
 	test(`analysis preserves ${reason} when no usable declarations remain`, () => {
 		const { request, report } = sample();
@@ -522,6 +553,42 @@ end Shop
 	assert.equal(report.bindingIr, null);
 	assert.deepEqual(report.elaboration.metadata.diagnostics.map(item => item.code).sort(), ["dependent-type", "implicit-parameter", "instance-parameter", "proof-only", "specialization-required", "unsupported-effect"]);
 	assert.ok(report.adapterHints.every(item => item.required));
+	await assertJsonSchema("elaborated-export-metadata", report.elaboration.metadata);
+});
+
+test("fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs", { skip: !enabled }, async t => {
+	const context = await lakeWorkspaceFixture(t);
+	await saveLakeFile(context.root, "Shop.lean", `namespace Shop
+def keep (value : UInt32) (_proof : True) : UInt32 := value
+theorem keep_eq (value : UInt32) (proof : True) : keep value proof = value := rfl
+def conditional (value : UInt32) (_proof : value = 0) : UInt32 := value
+def proofValue : True := True.intro
+end Shop
+`);
+	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({
+		schemaVersion: 1, modules: ["Shop"]
+		, exports: ["Shop.keep", "Shop.conditional", "Shop.proofValue"]
+	}));
+	const report = await inspect(context);
+	const declarations = report.elaboration.metadata.modules[0].declarations;
+	const keep = declarations.find(item => item.identity === "Shop.keep");
+	assert.equal(keep.projection.status, "supported");
+	assert.equal(keep.projection.parameters.length, 1);
+	assert.deepEqual(keep.projection.erasedProofs, [{ sourceIndex: 1
+		, name: "_proof"
+		, proposition: "True", witness: "True.intro" }]);
+	assert.deepEqual(keep.theoremReferences, ["Shop.keep_eq"]);
+	const runtime = report.bindingIr.document.declarations.find(item => item.id === "lean:Shop.keep");
+	assert.equal(runtime.parameters.length, 1);
+	assert.deepEqual(runtime.source.extensions["lean-lang.org/erased-proofs"], {
+		parameters: keep.projection.erasedProofs
+	});
+	assert.deepEqual(report.elaboration.metadata.diagnostics.map(item => item.code).sort()
+		, ["proof-only", "unsupported-proof-obligation"]);
+	assert.equal(declarations.find(item => item.identity === "Shop.conditional").projection.reason
+		, "unsupported-proof-obligation");
+	assert.equal(declarations.find(item => item.identity === "Shop.proofValue").projection.reason
+		, "proof-only");
 	await assertJsonSchema("elaborated-export-metadata", report.elaboration.metadata);
 });
 

@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../src/binding-ir/contract.mjs";
 import { reviewedContractDifference, reconcileReviewedSource, validateReviewedSource } from "../../src/analyze/reviewed-source.mjs";
-import { createNativeModel } from "../../src/build/native-model.mjs";
+import { createNativeModel, generateNativeLeanAdapters } from "../../src/build/native-model.mjs";
 import { nativeMetadataFixture } from "./native-metadata.mjs";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
 import { callableReviewedIr } from "./callable-fixture.mjs";
@@ -22,6 +22,7 @@ const reviewInput = document => {
 		, sourceSha256: sha256(source), semanticSha256: hashBindingIr(document) };
 };
 const location = "bindingIr.declarations[0].source.extensions";
+const erasedProofsKey = "lean-lang.org/erased-proofs";
 
 // These are schema-valid synthetic comparison documents, not installed evidence.
 const decisions = [
@@ -102,6 +103,65 @@ test("source locations, producer facts, theorem references and public annotation
 	assert.equal(reviewedContractDifference(reviewed, compiled), null);
 	assert.equal(reviewedContractDifference(compiled, reviewed), null);
 	assert.deepEqual(compiled.declarations[0].source.extensions["lean-lang.org/theorem-references"], ["Decisions.proof"]);
+});
+
+test("an independently reviewed closed proof binder preserves one runtime slot and exact compiler evidence", () => {
+	const fixture = nativeMetadataFixture();
+	const declaration = fixture.metadata.modules[0].declarations[0];
+	declaration.typeExpression = "(value : UInt32) → (_proof : True) → UInt32";
+	declaration.parameters.push({ name: "_proof", binderInfo: "explicit"
+		, typeExpression: "True" });
+	declaration.projection.erasedProofs = [{ sourceIndex: 1, name: "_proof"
+		, proposition: "True", witness: "True.intro" }];
+	const model = createNativeModel({ ...fixture
+		, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } });
+	assert.equal(model.exports[0].parameters.length, 1);
+	assert.deepEqual(model.exports[0].erasedProofs
+		, declaration.projection.erasedProofs);
+	const generated = generateNativeLeanAdapters(model);
+	assert.match(generated.leanSource
+		, /_root_\.Sample\.increment a0 _root_\.True\.intro/u);
+	assert.match(generated.header
+		, new RegExp(`uint32_t ${model.exports[0].symbol}\\(uint32_t a0\\);`, "u"));
+	assert.doesNotMatch(generated.header, /proof/iu);
+	const refinedModel = structuredClone(model);
+	refinedModel.exports[0].refinements = { parameters: [null], result: null };
+	assert.match(generateNativeLeanAdapters(refinedModel).leanSource
+		, /_root_\.Sample\.increment a0 _root_\.True\.intro/u);
+
+	const compiled = model.bindingIr;
+	const reviewed = structuredClone(compiled);
+	for(const producer of reviewed.producers) producer.extensions = {};
+	for(const item of reviewed.declarations)
+		item.source.extensions = { [erasedProofsKey]: structuredClone(
+			item.source.extensions[erasedProofsKey]) };
+	const review = reviewInput(reviewed);
+	validateReviewedSource(review);
+	const configuration = { schemaVersion: 1, modules: ["Sample"] };
+	const exportConfigurationSource = canonicalJson(configuration);
+	const identity = { ...fixture.sourceIdentity, exportConfigurationSource
+		, exportConfigurationSha256: sha256(exportConfigurationSource) };
+	assert.deepEqual(reconcileReviewedSource(review, compiled, identity), compiled);
+
+	for(const mutate of [
+		proof => { proof.sourceIndex = 0; }
+		, proof => { proof.name = "other"; }
+		, proof => { proof.proposition = "False"; }
+	]) {
+		const changed = structuredClone(reviewed);
+		mutate(changed.declarations[0].source.extensions[erasedProofsKey].parameters[0]);
+		assert.throws(() => reconcileReviewedSource(reviewInput(changed), compiled, identity)
+			, { code: "reviewed-ir-source-mismatch" });
+	}
+	const changedSource = structuredClone(compiled);
+	changedSource.declarations[0].source.declaration = "Sample.other";
+	assert.throws(() => reconcileReviewedSource(review, changedSource, identity)
+		, { code: "reviewed-ir-source-mismatch" });
+	const forgedTheorem = structuredClone(reviewed);
+	forgedTheorem.declarations[0].source.extensions["lean-lang.org/theorem-references"]
+		= ["Sample.fabricated"];
+	assert.throws(() => validateReviewedSource(reviewInput(forgedTheorem))
+		, { code: "reviewed-ir-build-unsupported" });
 });
 
 test("semantic comparison does not authorize misplaced decisions or compiler evidence", () => {

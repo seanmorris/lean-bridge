@@ -41,6 +41,26 @@ const erasedProofsKey = "lean-lang.org/erased-proofs";
 // The compiler's application text is compared with a fresh compilation, never executed from the review.
 const applicationText = value => typeof value === "string" && value.length > 0 && value.length <= 4096 && ![...value].some(character => character.codePointAt(0) < 32 || character.codePointAt(0) === 127);
 
+const checkErasedProofs = (item, value) => {
+	if(value === null || typeof value !== "object" || Array.isArray(value)
+		|| !same(Object.keys(value), ["parameters"])) return false;
+	const parameters = value?.parameters;
+	if(!Array.isArray(parameters) || !parameters.length || parameters.length > 1024) return false;
+	const sourceArity = item.parameters.length + parameters.length;
+	let previous = -1;
+	for(const proof of parameters)
+	{
+		if(proof === null || typeof proof !== "object" || Array.isArray(proof)
+			|| !same(Object.keys(proof).sort(), ["name", "proposition", "sourceIndex", "witness"])
+			|| !Number.isSafeInteger(proof.sourceIndex) || proof.sourceIndex <= previous
+			|| proof.sourceIndex >= sourceArity || typeof proof.name !== "string" || !proof.name.length
+			|| typeof proof.proposition !== "string" || !proof.proposition.length
+			|| proof.witness !== "True.intro") return false;
+		previous = proof.sourceIndex;
+	}
+	return true;
+};
+
 /**
  * Admit one closed specialization decision on a reviewed declaration.
  *
@@ -98,8 +118,15 @@ const checkReview = document => {
 		const refinementKey = declaration || item.kind === "callback" ? "lean-lang.org/refinements" : ["alias", "record", "variant"].includes(item.kind) ? "lean-lang.org/nominal-refinements" : null;
 		// A record may restate its compiler-owned instantiation; it never selects a compilation.
 		const record = !declaration && item.kind === "record";
-		const allowed = [refinementKey, declaration ? specializationKey : record ? instantiationKey : null, record ? erasedProofsKey : null];
+		const allowed = [
+			refinementKey
+			, declaration ? specializationKey : record ? instantiationKey : null
+			, declaration || record ? erasedProofsKey : null
+		];
 		reject(Object.keys(item.source.extensions).some(key => !allowed.includes(key)), `${item.id}.source.extensions`);
+		if(declaration && Object.hasOwn(item.source.extensions, erasedProofsKey))
+			reject(!checkErasedProofs(item, item.source.extensions[erasedProofsKey])
+				, `${item.id}.source.extensions.${erasedProofsKey}`);
 		if(refinementKey !== null && Object.hasOwn(item.source.extensions, refinementKey))
 		{
 			try

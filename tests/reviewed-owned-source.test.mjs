@@ -110,6 +110,27 @@ test("owned reconciliation preserves nested annotations and compiled provenance"
 	assert.deepEqual({ document, review, compiled, sourceIdentity }, before);
 });
 
+test("owned review preserves exact direct proof erasure without adding a payload field", () => {
+	const { document, compiled, sourceIdentity } = fixture();
+	const declaration = document.declarations[0];
+	const proof = { sourceIndex: declaration.parameters.length, name: "_proof"
+		, proposition: "True", witness: "True.intro" };
+	declaration.source.extensions["lean-lang.org/erased-proofs"]
+		= { parameters: [proof] };
+	compiled.declarations[0].source.extensions["lean-lang.org/erased-proofs"]
+		= { parameters: [structuredClone(proof)] };
+	const review = capture(document);
+	sourceIdentity.reviewedBindingIr = review;
+	assert.deepEqual(reconcileReviewedOwnedSource(review, compiled, sourceIdentity)
+		.declarations[0].parameters, compiled.declarations[0].parameters);
+	const changed = structuredClone(document);
+	changed.declarations[0].source.extensions["lean-lang.org/erased-proofs"]
+		.parameters[0].proposition = "False";
+	assert.throws(() => reconcileReviewedOwnedSource(
+		capture(changed), compiled, { ...sourceIdentity, reviewedBindingIr: capture(changed) }
+	), { code: "reviewed-ir-source-mismatch" });
+});
+
 for(const [label, mutate] of Object.entries({
 	"record field order": ir => { ir.types.find(item => item.name === "Bundle").fields.reverse(); }
 	, "variant branch order": ir => { ir.types.find(item => item.name === "Choice").cases.reverse(); }

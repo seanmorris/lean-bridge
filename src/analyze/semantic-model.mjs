@@ -307,6 +307,8 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 				, declaration: item.specialization?.declaration ?? item.identity
 				, extensions: { "lean-lang.org/theorem-references": item.theoremReferences
 					, "lean-lang.org/source-position": item.source
+					, ...(projection.erasedProofs ? { "lean-lang.org/erased-proofs": {
+						parameters: structuredClone(projection.erasedProofs) } } : {})
 					, ...(hasRefinements ? { "lean-lang.org/refinements": refinements } : {})
 					, ...(item.specialization ? { "lean-lang.org/specialization": { name: item.identity, ...item.specialization } } : {})
 					, ...(exportContractFor(request.contracts, item.identity) ? { "lean-lang.org/export-contract": request.contracts[item.identity] } : {}) } } };
