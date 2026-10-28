@@ -1,0 +1,137 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ba2c5f70f984ff4427afe86f1528db8b84fe797bf5f879345fcfeaee1bec9c1b",
+      "path": "scripts/update-core-shard-four-serial-source-history.mjs"
+    },
+    {
+      "currentSha256": "fbb5944adaa79bb7977005f5b54f45f8e5644fccae5ab1f5790671608d8f21e5",
+      "path": "tests/helpers/core-shard-four-serial-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "529cc10b2afdbe7dfcadbd84f2c9269dad4895115ccd20b2624a710b560cffdb",
+      "path": "tests/helpers/core-shard-four-serial-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "0d07f628494cee8db7c77b9b0875a87475ebd7a7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "74fddcc7e8c7c896944ca4d20dddd5224dbba65da918d95ef9d38909a406794a",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-shard-four-serial-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "fb1bf859880795f49945214fcd47ec561908c7232db660da7b42722b8dfd4c18"
+    },
+    {
+      "currentSha256": "1ee6f76dea403fd4b8c9cab22ac26812a5a20ceec6059ac397c105c6997abc2c",
+      "edits": [
+        {
+          "current": "import { beforeCoreShardFourSerialSource, coreShardFourSerialNormalizationPaths } from \"./core-shard-four-serial-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreShardFourSerialNormalizationPaths\n\t, ...coreGeneratedDocumentRepairNormalizationPaths\n",
+          "previous": "\t...coreGeneratedDocumentRepairNormalizationPaths\n",
+          "start": 208902
+        },
+        {
+          "current": "\tlet stage = beforeCoreShardFourSerialSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreGeneratedDocumentRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreGeneratedDocumentRepairSource(path, text, expected);\n",
+          "start": 260816
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1f28e87a6d86bc975d5e196eda6f9c61dbd65839eda6b172a8d3ba70335970ab"
+    }
+  ],
+  "milestone": "core-shard-four-serial-source-v1",
+  "predecessorCommit": "fb217d6a39e77ef96c39f3f82d036bf167293bbc",
+  "schemaVersion": 1,
+  "scope": "Run hosted Core shard 4 with one contract file at a time, keep two for every other shard, sample free -m and the largest processes every 30 s during each shard step, stop the sampler without changing the shard status, and refresh exactly the one matching workflow source pin. The Core profile, shard partition, support cells and evidence scope are unchanged. Register the complete transition newest-first; hosted Core remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "0218d99b4a3dbfaeb6386761a38bbdda80040c6950616bcf6bda8aa3d2ddcf44",
+      "edits": [
+        {
+          "current": "          # Sample memory every 30 s so a lost runner still names its largest processes.\n          (\n            while sleep 30; do\n              echo \"core-memory $(date -u +%H:%M:%SZ)\"\n              free -m\n              ps -eo pid,rss,etime,args --sort=-rss | head -n 6 | cut -c1-200\n            done\n          ) &\n          memory_sampler=$!\n          trap 'kill \"$memory_sampler\" 2>/dev/null || true' EXIT\n",
+          "previous": "",
+          "start": 7763
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "cf4a071d64ae61b1a30b3878eed489055e34d741e8e423380041620067ff0397"
+    },
+    {
+      "currentSha256": "a3b3c8fdcac8c92ebe252ae200900cdc47d8b28c6f9bc4e0191599763e8965f6",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"0218d99b4a3dbfaeb6386761a38bbdda80040c6950616bcf6bda8aa3d2ddcf44\"\n",
+          "previous": "          \"sha256\": \"cf4a071d64ae61b1a30b3878eed489055e34d741e8e423380041620067ff0397\"\n",
+          "start": 1351460
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "df2050dd6bc989294cb95e8077d2d4e2403b056dd1af01827e4e33f973c9d0fd"
+    },
+    {
+      "currentSha256": "9cbceab675754268ab9725754c598b3df94d9d764bc021213fd51d9db3374d9e",
+      "edits": [
+        {
+          "current": "// Shard 4 lost its hosted runner twice with two concurrent files; run it serially.\nconst hostedCoreConcurrency = shard === \"4/12\" ? \"--test-concurrency=1\" : \"--test-concurrency=2\";\n",
+          "previous": "",
+          "start": 2685
+        },
+        {
+          "current": "\t\"--test\", ...boundedHostedCore ? [hostedCoreConcurrency] : [], ...selected\n",
+          "previous": "\t\"--test\", ...boundedHostedCore ? [\"--test-concurrency=2\"] : [], ...selected\n",
+          "start": 3089
+        }
+      ],
+      "path": "scripts/run-test-profile.mjs",
+      "previousSha256": "643a8717a711cc226f6c74e22f15fb550e1962181f2f7fac2a1b1f7ef7e348c7"
+    },
+    {
+      "currentSha256": "da3552f8bd06e8904d530358374790ad5c55d469303e0e74a5d5ba6bfab98f6e",
+      "edits": [
+        {
+          "current": "import { execFileSync, spawnSync } from \"node:child_process\";\n",
+          "previous": "import { execFileSync } from \"node:child_process\";\n",
+          "start": 144
+        },
+        {
+          "current": "\tassert.match(contractJob, /run: \\|\\n {10}source scripts\\/env\\.sh\\n {10}# Sample memory every 30 s so a lost runner still names its largest processes\\.\\n {10}\\(\\n {12}while sleep 30; do\\n {14}echo \"core-memory \\$\\(date -u \\+%H:%M:%SZ\\)\"\\n {14}free -m\\n {14}ps -eo pid,rss,etime,args --sort=-rss \\| head -n 6 \\| cut -c1-200\\n {12}done\\n {10}\\) &\\n {10}memory_sampler=\\$!\\n {10}trap 'kill \"\\$memory_sampler\" 2>\\/dev\\/null \\|\\| true' EXIT\\n {10}bash scripts\\/run-test-profile\\.sh contract \\\\\\n/u\n\t\t, \"Every shard must sample memory in the background and stop the sampler without changing the shard status\");\n\tassert.equal([...source.matchAll(/^\\s+trap /gmu)].length, 1\n\t\t, \"Only the shard step may install an exit trap\");\n",
+          "previous": "",
+          "start": 10276
+        },
+        {
+          "current": "\tassert.equal([...source.matchAll(/\"--test-concurrency=1\"/gu)].length, 1\n\t\t, \"Only one hosted Core shard may run its files serially\");\n\tassert.match(source, /const hostedCoreConcurrency = shard === \"4\\/12\" \\? \"--test-concurrency=1\" : \"--test-concurrency=2\";/u\n\t\t, \"Shard 4 must run one file at a time while every other shard keeps two\");\n\tassert.match(source, /\"--test\", \\.\\.\\.boundedHostedCore \\? \\[hostedCoreConcurrency\\] : \\[\\], \\.\\.\\.selected\\n\\]/u\n",
+          "previous": "\tassert.match(source, /\"--test\", \\.\\.\\.boundedHostedCore \\? \\[\"--test-concurrency=2\"\\] : \\[\\], \\.\\.\\.selected\\n\\]/u\n",
+          "start": 12803
+        },
+        {
+          "current": "\t\t, source.replace(\"while sleep 30; do\", \"while sleep 300; do\")\n\t\t, source.replace(\"              free -m\\n\", \"\")\n\t\t, source.replace(\"--sort=-rss | head -n 6\", \"--sort=pid | head -n 6\")\n\t\t, source.replace(\"          trap 'kill \\\"$memory_sampler\\\" 2>/dev/null || true' EXIT\\n\", \"\")\n\t\t, source.replace(\"2>/dev/null || true' EXIT\", \"2>/dev/null; exit 0' EXIT\")\n\t\t, source.replace(\"          ) &\\n\", \"          )\\n\")\n",
+          "previous": "",
+          "start": 20604
+        },
+        {
+          "current": "test(\"Core shard memory sampler stops without masking the shard status\", async () => {\n\tconst source = await readFile(\".github/workflows/quality.yml\", \"utf8\");\n\tconst step = /- name: Run one closed contract shard\\n(?: {8}.*\\n)*? {8}run: \\|\\n((?: {10}.*\\n)+)/u.exec(source);\n\tassert.ok(step, \"The shard step must keep one literal run script\");\n\tconst script = step[1].replace(/^ {10}/gmu, \"\");\n\tconst shard = /bash scripts\\/run-test-profile\\.sh contract \\\\\\n.*\\\\\\n.*\\n/u;\n\tassert.match(script, shard);\n\tconst directory = await mkdtemp(join(tmpdir(), \"core-memory-sampler-\"));\n\ttry\n\t{\n\t\tfor(const status of [0, 7])\n\t\t{\n\t\t\t// A shard that outlives several samples and then exits with its own status.\n\t\t\tconst stub = script.replace(\"source scripts/env.sh\\n\", \"\")\n\t\t\t\t.replace(\"while sleep 30; do\", \"while sleep 0.2; do\")\n\t\t\t\t.replace(shard, `sleep 1\\n(exit ${status})\\n`);\n\t\t\tconst result = spawnSync(\"bash\", [\"-e\", \"-c\", stub], {\n\t\t\t\tcwd: directory, encoding: \"utf8\", timeout: 10_000\n\t\t\t\t, env: { PATH: process.env.PATH }\n\t\t\t});\n\t\t\tassert.equal(result.error, undefined\n\t\t\t\t, \"A leaked sampler keeps the step output open\");\n\t\t\tassert.equal(result.signal, null);\n\t\t\tassert.equal(result.status, status);\n\t\t\tassert.ok(result.stdout.split(\"\\n\").filter(line =>\n\t\t\t\tline.startsWith(\"core-memory \")).length >= 2, result.stdout);\n\t\t\tassert.match(result.stdout, /^Mem:/mu);\n\t\t\tassert.match(result.stdout, /^\\s*PID\\s+RSS\\s+ELAPSED\\s+COMMAND$/mu);\n\t\t}\n\t}\n\tfinally\n\t{\n\t\tawait rm(directory, { recursive: true, force: true });\n\t}\n});\n\n",
+          "previous": "",
+          "start": 21209
+        },
+        {
+          "current": "\t\t, source.replace(\"...boundedHostedCore ? [hostedCoreConcurrency] : []\", \"...[]\")\n\t\t, source.replace(\"...boundedHostedCore ? [hostedCoreConcurrency] : []\"\n\t\t\t, \"...boundedHostedCore ? [\\\"--test-concurrency=2\\\"] : []\")\n\t\t, source.replace(\"shard === \\\"4/12\\\" ?\", \"shard === \\\"5/12\\\" ?\")\n\t\t, source.replace(\"? \\\"--test-concurrency=1\\\" :\", \"? \\\"--test-concurrency=2\\\" :\")\n\t\t, source.replace(\"\\\"--test-concurrency=1\\\" : \\\"--test-concurrency=2\\\"\"\n\t\t\t, \"\\\"--test-concurrency=2\\\" : \\\"--test-concurrency=1\\\"\")\n",
+          "previous": "\t\t, source.replace(\"...boundedHostedCore ? [\\\"--test-concurrency=2\\\"] : []\", \"...[]\")\n",
+          "start": 23896
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "5c87e92c05b947493f09fbcb03de66c8e8848ae7a17dbe4749956cc7f0f5eb89"
+    }
+  ]
+}
