@@ -1,0 +1,195 @@
+{
+  "additions": [
+    {
+      "currentSha256": "68a6fe5e8e565deffe36a63b5e7b77e8bfad88c99d9f89d08ba7226cba078512",
+      "path": ".github/workflows/reviewed-fin-wasm-entry.yml"
+    },
+    {
+      "currentSha256": "d12cafe409066ece63376256571829c121cf62b6360e8e1b471e2d4a7ca64b89",
+      "path": "tests/reviewed-fin-wasm-entry-workflow.test.mjs"
+    },
+    {
+      "currentSha256": "99a173e3d88836816b22bc36bae4e775947b46845239fb3d5e1cb28a4ec6b2c3",
+      "path": "scripts/update-reviewed-fin-focused-producer-source-history.mjs"
+    },
+    {
+      "currentSha256": "2171177a8aaf49878342e627cd80a3b680fd3c80aed406d4611d129bd4a55bf5",
+      "path": "tests/helpers/reviewed-fin-focused-producer-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ace09ddcfff17959324e7f66afad2a2c31b16fec6494c0de4711cc7a4221be19",
+      "path": "tests/helpers/reviewed-fin-focused-producer-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "ac015a8ef9d15b7cdb5a41ee2b2d80ba64d46153",
+  "integrationCommit": "0a05279ec80697955a4b3af04fb45c7bd7c3d166",
+  "integrationUpdates": [
+    {
+      "currentSha256": "171132822f4547c7cb8346b4a5e55a351d1b22569b6dd7e65a90a7dd7694a360",
+      "edits": [
+        {
+          "current": "import \"./helpers/reviewed-fin-focused-producer-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1968
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "88a9cc433d31f00325936ebdd25c001667a79d17510e0bedd56a0c4bab2e2b4f"
+    },
+    {
+      "currentSha256": "435165a67e058700ebc6279a17a8d15dfbcb9787c02608cdeafe830f5864179f",
+      "edits": [
+        {
+          "current": "import { beforeReviewedFinFocusedProducerSource, reviewedFinFocusedProducerNormalizationPaths } from \"./reviewed-fin-focused-producer-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...reviewedFinFocusedProducerNormalizationPaths\n\t, ...reviewedFinJobScopeNormalizationPaths\n",
+          "previous": "\t...reviewedFinJobScopeNormalizationPaths\n",
+          "start": 200288
+        },
+        {
+          "current": "\tlet stage = beforeReviewedFinFocusedProducerSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeReviewedFinJobScopeSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeReviewedFinJobScopeSource(path, text, expected);\n",
+          "start": 249377
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "004dd9da52429602f1b2914dc155e6d02fa8c8d21af09e652ef8483522ef68d7"
+    }
+  ],
+  "milestone": "reviewed-fin-focused-producer-source-v1",
+  "predecessorCommit": "8975d3aa4aa978b207c87d6f5dbcad7258f9cad2",
+  "schemaVersion": 1,
+  "scope": "Repair the structural TypeScript prelude oracle to include its existing api.box call. Add a focused hosted producer that builds the locked engine/runtime and installs browsers once, executes original and probe modes independently, preserves both artifacts even after one mode fails, and is guarded by the repository's reviewed trigger budget. Retarget the field archiver to that exact producer while retaining terminal run and successful selected-job requirements. Preserve product contracts and type-surface claims until hosted evidence is green.",
+  "triggerCommit": "f12e40df7226d716573c4e86ba6f1e90ff3b797d",
+  "triggerUpdates": [
+    {
+      "currentSha256": "68a6fe5e8e565deffe36a63b5e7b77e8bfad88c99d9f89d08ba7226cba078512",
+      "edits": [
+        {
+          "current": "  # The branch-scoped push permits pre-merge evidence; once this workflow is\n  # present on the default branch, workflow_dispatch remains the normal entry.\n",
+          "previous": "",
+          "start": 44
+        }
+      ],
+      "path": ".github/workflows/reviewed-fin-wasm-entry.yml",
+      "previousSha256": "0e7598ef55c42731030898864382b24b672109a22628058376fac575e96c8960"
+    }
+  ],
+  "updates": [
+    {
+      "currentSha256": "0e1a556201613d96468915af073559fba93b963f009e2b7b097fcf2b3fb4c3ea",
+      "edits": [
+        {
+          "current": "\t\t, \"The retained field job must complete successfully and match both exact artifacts even if the enclosing hosted run later fails or is cancelled. The enclosing run conclusion is retained per leg; no result from another job is claimed.\"\n",
+          "previous": "\t\t, \"Each retained field job must complete successfully and match its exact artifact even when unrelated jobs make the enclosing Downstream run fail or when the run is cancelled after both field jobs finish. The enclosing run conclusion is retained per leg; no result from another matrix job is claimed.\"\n",
+          "start": 7950
+        }
+      ],
+      "path": "scripts/archive-reviewed-fin-wasm-entry-hosted.mjs",
+      "previousSha256": "414b9d35b9fce5e5db12186ff6acdb6c09c26dcbba2fae2512d5100ae9fbd602"
+    },
+    {
+      "currentSha256": "420307f26ef0d2a9554027b80030da2d1133026491e3c7ac9bc3da9b4d8b3dba",
+      "edits": [
+        {
+          "current": "import { reviewedFinWasmTypeScriptPrelude } from \"./reviewed-fin-wasm-entry-producer.mjs\";\n",
+          "previous": "",
+          "start": 851
+        },
+        {
+          "current": "\t\tassert.deepEqual(reviewedFinWasmTypeScriptPrelude(source, selection)\n\t\t\t, selection === \"structural\"\n\t\t\t\t? [\"mirror\", \"label\", \"rows\", \"nested\", \"box\"]\n\t\t\t\t: [\"mirror\", \"label\"]);\n",
+          "previous": "",
+          "start": 11037
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-contract-tests.mjs",
+      "previousSha256": "4164370d84d54d49d6c931f12b0c9b7c2c5118d9648bd1563b5085734198d93b"
+    },
+    {
+      "currentSha256": "dc893d6607c7a9e2f0d1242de600ddca1be9b3d65a8a7af651355833f8be16c6",
+      "edits": [
+        {
+          "current": "\t\t\".github/workflows/reviewed-fin-wasm-entry.yml\"\n",
+          "previous": "\t\t\".github/workflows/consumer-matrix.yml\"\n",
+          "start": 867
+        },
+        {
+          "current": "\tassert.equal(run.path, \".github/workflows/reviewed-fin-wasm-entry.yml\");\n",
+          "previous": "\tassert.equal(run.path, \".github/workflows/consumer-matrix.yml\");\n",
+          "start": 5469
+        },
+        {
+          "current": "\tassert.equal(job.name, \"Reviewed Fin Wasm entries\");\n",
+          "previous": "\tassert.equal(job.name, `Reviewed Fin Wasm entry (${mode})`);\n",
+          "start": 6029
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-entry-hosted-archive.mjs",
+      "previousSha256": "f1cdb39dd872863076cf485b5147817ccdaab68136aa28f9f379e8658a43c84d"
+    },
+    {
+      "currentSha256": "4a543b38f4f27956edbc1889ed9ddeb6186742a35f33480577647c0423c4c809",
+      "edits": [
+        {
+          "current": "\tassert.deepEqual(prelude, selection === \"structural\"\n\t\t? [\"mirror\", \"label\", \"rows\", \"nested\", \"box\"]\n\t\t: [\"mirror\", \"label\"], \"the TypeScript consumer's prelude\");\n",
+          "previous": "\tassert.deepEqual(prelude, selection === \"structural\" ? [\"mirror\", \"label\", \"rows\", \"nested\"] : [\"mirror\", \"label\"], \"the TypeScript consumer's prelude\");\n",
+          "start": 16140
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-entry-producer.mjs",
+      "previousSha256": "e379ec40739cc5eacac19c7deb812261ebc6687be24665688ef30f7722dd5a37"
+    },
+    {
+      "currentSha256": "93e9cb1046d0a496b7029e3e19a560f24515b1b82ed018333b81d33afe84d665",
+      "edits": [
+        {
+          "current": "\t\t, head_sha: revision\n\t\t, path: \".github/workflows/reviewed-fin-wasm-entry.yml\"\n",
+          "previous": "\t\t, head_sha: revision, path: \".github/workflows/consumer-matrix.yml\"\n",
+          "start": 674
+        },
+        {
+          "current": "\t\t, name: \"Reviewed Fin Wasm entries\"\n",
+          "previous": "\t\t, name: \"Reviewed Fin Wasm entry (original)\"\n",
+          "start": 1173
+        }
+      ],
+      "path": "tests/reviewed-fin-wasm-entry-hosted-archive.test.mjs",
+      "previousSha256": "3acef207bf519a2e2299f5a217ed499eaa1dd7cbc4e41939d99e24157326e625"
+    },
+    {
+      "currentSha256": "ce114b5cfae552a42c0b16841b6f6c5a50878c95208d4c2c82542e16f2ced6b2",
+      "edits": [
+        {
+          "current": "\t, [\"reviewed-fin-wasm-entry.yml\", [\"push\"]]\n",
+          "previous": "",
+          "start": 803
+        },
+        {
+          "current": "\t, \"reviewed-fin-wasm-entry.yml\"\n",
+          "previous": "",
+          "start": 982
+        },
+        {
+          "current": "\t, \"reviewed-fin-wasm-entry.yml\"\n",
+          "previous": "",
+          "start": 1362
+        },
+        {
+          "current": "\tassert.equal(names.length, 123, \"review every workflow added to the repository\");\n",
+          "previous": "\tassert.equal(names.length, 122, \"review every workflow added to the repository\");\n",
+          "start": 4176
+        },
+        {
+          "current": "\tassert.equal(approvedAutomaticEvents.size, 8);\n\tassert.equal(pathScopedAutomaticWorkflows.size, 3);\n\tassert.equal(nonSweepWorkflows.size, 11);\n",
+          "previous": "\tassert.equal(approvedAutomaticEvents.size, 7);\n\tassert.equal(pathScopedAutomaticWorkflows.size, 2);\n\tassert.equal(nonSweepWorkflows.size, 10);\n",
+          "start": 4753
+        }
+      ],
+      "path": "tests/workflow-trigger-policy.test.mjs",
+      "previousSha256": "c5861d5e92a34de941049c98ba90d5b825d25ee1e3785f996992a9bd412bedad"
+    }
+  ]
+}
