@@ -1,0 +1,129 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1cd013e967d44b02d9c8d1ce56e8f1594db0fd8d6d8dc4d2eeefaa7cbfa38a93",
+      "path": "tests/helpers/recorded-transition-source.mjs"
+    },
+    {
+      "currentSha256": "695c7e7c3f36cc4794ef87973dabc15ecf6af4fdc5b020f9a1132c25fe8bd5c8",
+      "path": "scripts/update-core-recorded-transition-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "c06d9b2032f5c500b28c4d41a33a36243731cc5dcf201cee6b776005ac811325",
+      "path": "tests/helpers/core-recorded-transition-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "9455c4ba7a8ac073e24bd57e3f52277a0d4c535e7c34c729f4bd9fc675103ac2",
+      "path": "tests/helpers/core-recorded-transition-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "3dbfb1accc908ae1003ef50fe3b139a15edf3560",
+  "integrationUpdates": [
+    {
+      "currentSha256": "08919cb3127a1693e4865f5fb3ffd7f665382b52b242c5545c207c0d3f6c5e8e",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-recorded-transition-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "819222a85992fc57d50986b784e826316ee623948cea6b74f061816ed2d24dab"
+    },
+    {
+      "currentSha256": "5f9a3a3713f3a08d75f8f3fc592b8b8fb987ffff1ed61799fd4ee76cf1465541",
+      "edits": [
+        {
+          "current": "import { beforeCoreRecordedTransitionRepairSource, coreRecordedTransitionRepairNormalizationPaths } from \"./core-recorded-transition-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreRecordedTransitionRepairNormalizationPaths\n\t, ...coreReadSiteRepairNormalizationPaths\n",
+          "previous": "\t...coreReadSiteRepairNormalizationPaths\n",
+          "start": 209825
+        },
+        {
+          "current": "\tlet stage = beforeCoreRecordedTransitionRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreReadSiteRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreReadSiteRepairSource(path, text, expected);\n",
+          "start": 262041
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cedc1488fe2fb3811f803f01ff0de41cf02e0949a8212a7e187f617a70fa8835"
+    }
+  ],
+  "milestone": "core-recorded-transition-repair-source-v1",
+  "predecessorCommit": "bce6b208a2b0bae380279aa5abdf57f1621e9d8f",
+  "schemaVersion": 1,
+  "scope": "Rebuild the recorded current state of three integration records whose commits were later re-applied onto the Core line with joins (Perl codegen producer replay, Perl callback Fin milestone reads, inherited checked-record lane memory) forward from each record's own base, authenticated by both recorded digests, instead of reversing from the live tree. Every reverse, hub, idempotence and forgery assertion is kept, with refusals for a forged digest and a wrong base. No record, support cell, evidence scope, source pin or archive changes. Register the transition newest-first; hosted Core remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "723f44b1254ac0f77a17e5396e75de81a41ab481886122f93da91924d7b42696",
+      "edits": [
+        {
+          "current": "import { sourceAtRecordedTransition } from \"./recorded-transition-source.mjs\";\n",
+          "previous": "",
+          "start": 1118
+        },
+        {
+          "current": "\t\t// The recorded integration commit was later re-applied with a join, so it is\n\t\t// rebuilt from its own base rather than reversed from the live tree.\n\t\tconst current = sourceAtRecordedTransition(callbackFinPerlMilestoneReadIntegrationBase, update);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(update.path\n\t\t\t, update.currentSha256\n\t\t\t, beforeCallbackFinPerlMilestoneReadIntegrationSource);\n",
+          "start": 2572
+        },
+        {
+          "current": "\tconst current = sourceAtRecordedTransition(callbackFinPerlMilestoneReadIntegrationBase, update);\n\tassert.throws(() => sourceAtRecordedTransition(callbackFinPerlMilestoneReadIntegrationBase\n\t\t, { ...update, currentSha256: \"0\".repeat(64) }));\n\tassert.throws(() => sourceAtRecordedTransition(callbackFinPerlMilestoneReadIntegrationImplementation, update));\n",
+          "previous": "\tconst current = await sourceAtFinHistoryMilestone(update.path\n\t\t, update.currentSha256\n\t\t, beforeCallbackFinPerlMilestoneReadIntegrationSource);\n",
+          "start": 3722
+        }
+      ],
+      "path": "tests/helpers/callback-fin-perl-milestone-read-integration-source-history-tests.mjs",
+      "previousSha256": "baccc783ab703ac032fc24f512b82c19b1c5b6e2cd1e02a78f001ab846322103"
+    },
+    {
+      "currentSha256": "1e7ac505e9a0025c3e7fee06c7e83ceeabfc2408a4ded8527cee6e4b7a1fc90a",
+      "edits": [
+        {
+          "current": "import { sourceAtRecordedTransition } from \"./recorded-transition-source.mjs\";\n",
+          "previous": "",
+          "start": 1160
+        },
+        {
+          "current": "\t\t// The recorded integration commit was later re-applied with a join, so it is\n\t\t// rebuilt from its own base rather than reversed from the live tree.\n\t\tconst current = sourceAtRecordedTransition(inheritedCheckedRecordLaneMemoryIntegrationBase, update);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(update.path\n\t\t\t, update.currentSha256\n\t\t\t, beforeInheritedCheckedRecordLaneMemoryIntegrationSource);\n",
+          "start": 2650
+        },
+        {
+          "current": "\tconst current = sourceAtRecordedTransition(inheritedCheckedRecordLaneMemoryIntegrationBase, update);\n\tassert.throws(() => sourceAtRecordedTransition(inheritedCheckedRecordLaneMemoryIntegrationBase\n\t\t, { ...update, currentSha256: \"0\".repeat(64) }));\n\tassert.throws(() => sourceAtRecordedTransition(inheritedCheckedRecordLaneMemoryIntegrationImplementation, update));\n",
+          "previous": "\tconst current = await sourceAtFinHistoryMilestone(update.path\n\t\t, update.currentSha256\n\t\t, beforeInheritedCheckedRecordLaneMemoryIntegrationSource);\n",
+          "start": 3820
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-lane-memory-integration-source-history-tests.mjs",
+      "previousSha256": "6c53efb04f4f25d65a1b577763af1548433071de7c6d0027c7e78072012153fe"
+    },
+    {
+      "currentSha256": "9150cd4eb3c645753573ca1743d80c3e95eb0b746d0c2b2d19e92bd30d011fcc",
+      "edits": [
+        {
+          "current": "import { sourceAtRecordedTransition } from \"./recorded-transition-source.mjs\";\n",
+          "previous": "",
+          "start": 1074
+        },
+        {
+          "current": "\t\t// The recorded integration commit was later re-applied with a join, so it is\n\t\t// rebuilt from its own base rather than reversed from the live tree.\n\t\tconst current = sourceAtRecordedTransition(perlCodegenProducerReplayIntegrationBase, update);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(update.path\n\t\t\t, update.currentSha256\n\t\t\t, beforePerlCodegenProducerReplayIntegrationSource);\n",
+          "start": 2499
+        },
+        {
+          "current": "\tconst current = sourceAtRecordedTransition(perlCodegenProducerReplayIntegrationBase, update);\n\tassert.throws(() => sourceAtRecordedTransition(perlCodegenProducerReplayIntegrationBase\n\t\t, { ...update, currentSha256: \"0\".repeat(64) }));\n\tassert.throws(() => sourceAtRecordedTransition(perlCodegenProducerReplayIntegrationImplementation, update));\n",
+          "previous": "\tconst current = await sourceAtFinHistoryMilestone(update.path\n\t\t, update.currentSha256\n\t\t, beforePerlCodegenProducerReplayIntegrationSource);\n",
+          "start": 3633
+        }
+      ],
+      "path": "tests/helpers/perl-codegen-producer-replay-integration-source-history-tests.mjs",
+      "previousSha256": "6d284dfd6477b9a778b1816e8a2043a3e5a69334e1e182f0f0e7977792996571"
+    }
+  ]
+}

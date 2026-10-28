@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreRecordedTransitionRepairSource, coreRecordedTransitionRepairNormalizationPaths } from "./core-recorded-transition-repair-source-history.mjs";
 import { beforeCoreReadSiteRepairSource, coreReadSiteRepairNormalizationPaths } from "./core-read-site-repair-source-history.mjs";
 import { beforeCoreOwnedCallbackPicRepairSource, coreOwnedCallbackPicRepairNormalizationPaths } from "./core-owned-callback-pic-repair-source-history.mjs";
 import { beforeCorePreBoxRecountRepairSource, corePreBoxRecountRepairNormalizationPaths } from "./core-pre-box-recount-repair-source-history.mjs";
@@ -2325,7 +2326,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreReadSiteRepairNormalizationPaths
+	...coreRecordedTransitionRepairNormalizationPaths
+	, ...coreReadSiteRepairNormalizationPaths
 	, ...coreOwnedCallbackPicRepairNormalizationPaths
 	, ...corePreBoxRecountRepairNormalizationPaths
 	, ...coreReviewedFinBoxHarnessRepairNormalizationPaths
@@ -3389,7 +3391,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreReadSiteRepairSource(path, text, expected);
+	let stage = beforeCoreRecordedTransitionRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreReadSiteRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
