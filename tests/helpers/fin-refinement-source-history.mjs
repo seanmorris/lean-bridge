@@ -12,6 +12,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeSignatureSpecializationHostedProducerBindingIntegrationSource, signatureSpecializationHostedProducerBindingIntegrationNormalizationPaths } from "./signature-specialization-hosted-producer-binding-integration-source-history.mjs";
+import { beforeSignatureSpecializationHostedProducerBindingSource, signatureSpecializationHostedProducerBindingNormalizationPaths } from "./signature-specialization-hosted-producer-binding-source-history.mjs";
 import { beforeSignatureSpecializationPhpWasmConsumerRepairIntegrationSource, signatureSpecializationPhpWasmConsumerRepairIntegrationNormalizationPaths } from "./signature-specialization-php-wasm-consumer-repair-integration-source-history.mjs";
 import { beforeSignatureSpecializationPhpWasmConsumerRepairSource, signatureSpecializationPhpWasmConsumerRepairNormalizationPaths } from "./signature-specialization-php-wasm-consumer-repair-source-history.mjs";
 import { beforeCoreNativeEvidenceManifestIntegrationSource, coreNativeEvidenceManifestIntegrationNormalizationPaths } from "./core-native-evidence-manifest-integration-source-history.mjs";
@@ -2293,7 +2295,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...signatureSpecializationPhpWasmConsumerRepairIntegrationNormalizationPaths
+	...signatureSpecializationHostedProducerBindingIntegrationNormalizationPaths
+	, ...signatureSpecializationHostedProducerBindingNormalizationPaths
+	, ...signatureSpecializationPhpWasmConsumerRepairIntegrationNormalizationPaths
 	, ...signatureSpecializationPhpWasmConsumerRepairNormalizationPaths
 	, ...coreNativeEvidenceManifestIntegrationNormalizationPaths
 	, ...coreNativeEvidenceManifestNormalizationPaths
@@ -3325,7 +3329,17 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeSignatureSpecializationPhpWasmConsumerRepairIntegrationSource(
+	let stage = beforeSignatureSpecializationHostedProducerBindingIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationHostedProducerBindingSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationPhpWasmConsumerRepairIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
