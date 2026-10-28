@@ -23,6 +23,7 @@ import {
 } from "./inherited-checked-record-lane-memory-integration-source-history.mjs";
 import { inheritedCheckedRecordLaneMemoryHistoryPath } from "./inherited-checked-record-lane-memory-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtRecordedTransition } from "./recorded-transition-source.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -53,9 +54,9 @@ test("inherited checked-record lane memory integration restores its exact hub an
 	});
 	for(const update of record.updates)
 	{
-		const current = await sourceAtFinHistoryMilestone(update.path
-			, update.currentSha256
-			, beforeInheritedCheckedRecordLaneMemoryIntegrationSource);
+		// The recorded integration commit was later re-applied with a join, so it is
+		// rebuilt from its own base rather than reversed from the live tree.
+		const current = sourceAtRecordedTransition(inheritedCheckedRecordLaneMemoryIntegrationBase, update);
 		const previous = git(["show"
 			, `${inheritedCheckedRecordLaneMemoryIntegrationBase}:${update.path}`]);
 		assert.equal(reverseInheritedCheckedRecordLaneMemoryIntegrationUpdate(
@@ -75,9 +76,10 @@ test("inherited checked-record lane memory integration restores its exact hub an
 test("inherited checked-record lane memory integration rejects altered transitions", async () => {
 	const record = await readRecord();
 	const update = record.updates[0];
-	const current = await sourceAtFinHistoryMilestone(update.path
-		, update.currentSha256
-		, beforeInheritedCheckedRecordLaneMemoryIntegrationSource);
+	const current = sourceAtRecordedTransition(inheritedCheckedRecordLaneMemoryIntegrationBase, update);
+	assert.throws(() => sourceAtRecordedTransition(inheritedCheckedRecordLaneMemoryIntegrationBase
+		, { ...update, currentSha256: "0".repeat(64) }));
+	assert.throws(() => sourceAtRecordedTransition(inheritedCheckedRecordLaneMemoryIntegrationImplementation, update));
 	assert.throws(() => reverseInheritedCheckedRecordLaneMemoryIntegrationUpdate(
 		current, { ...update, currentSha256: "0".repeat(64) }));
 	assert.equal(beforeInheritedCheckedRecordLaneMemoryIntegrationSource(update.path
