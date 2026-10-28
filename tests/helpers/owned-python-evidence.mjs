@@ -10,7 +10,7 @@ import { moduleAtProducer } from "./producer-module.mjs";
 import {
 	bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer
 } from "./producer-source.mjs";
-import { ownedRustExecutionSources, assertOwnedRustIntegration } from "./owned-rust-evidence.mjs";
+import { ownedRustExecutionSources } from "./owned-rust-evidence.mjs";
 import { ownedRustHistoryPath, ownedRustExecutionPath } from "./owned-rust-source-history.mjs";
 import { ownedPythonBaseline, ownedPythonChangedPaths, ownedPythonAddedPaths, ownedPythonExecutionPath, reverseOwnedPythonUpdate } from "./owned-python-source-history.mjs";
 
@@ -327,5 +327,6 @@ export const assertOwnedPythonIntegration = async record => {
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(cells.length, record.inventory.total);
 	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, record.inventory.installed);
 	await assertOwnedPythonExecution(await json(record.execution.path));
-	await assertOwnedRustIntegration(previous);
+	// The exact Rust receipt is pinned above by record.previous.sha256 and
+	// verified independently by tests/owned-rust-evidence.test.mjs.
 };

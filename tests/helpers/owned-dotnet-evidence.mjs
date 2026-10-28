@@ -6,16 +6,16 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import { gmpIdentity } from "../../src/backends/c/gmp.mjs";
 import { assertDotnetRecursiveProbes } from "./dotnet-recursive-callable-faults.mjs";
 import { assertDotnetStructuredFaults } from "./dotnet-structured-callable-faults.mjs";
-import { ownedRubyExecutionSources, assertOwnedRubyIntegration } from "./owned-ruby-evidence.mjs";
+import { ownedRubyExecutionSources } from "./owned-ruby-evidence.mjs";
 import { ownedRubyHistoryPath } from "./owned-ruby-source-history.mjs";
 import { ownedDotnetBaseline, ownedDotnetChangedPaths, ownedDotnetAddedPaths, ownedDotnetExecutionPath, reverseOwnedDotnetUpdate } from "./owned-dotnet-source-history.mjs";
-import { beforeOwnedDotnetProcess, beforeOwnedDotnetProcessGenerated, ownedDotnetProcessHistoricalBytes } from "./owned-dotnet-process-history.mjs";
+import { beforeOwnedDotnetProcessGenerated, ownedDotnetProcessHistoricalBytes } from "./owned-dotnet-process-history.mjs";
 
 export const ownedDotnetScope = { profiles: ["nuget"]
 	, paths: ["ordinary-source", "reviewed-ir"], installedPackage: true
@@ -340,18 +340,20 @@ export const assertOwnedDotnetIntegration = async record => {
 	assert.deepEqual(record.updates.map(update => update.path).sort(), ownedDotnetChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), ownedDotnetAddedPaths);
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
+	let authenticatedInventory;
 	for(const path of paths)
 	{
 		const current = ownedDotnetProcessHistoricalBytes(path, await readFile(path), record.sourceHashes[path]);
 		assert.equal(sha256(current), record.sourceHashes[path], path);
+		if(path === "docs/type-surface.v1.json") authenticatedInventory = current.toString("utf8");
 		const update = updates.get(path);
 		if(update) restored[path] = reverseOwnedDotnetUpdate(current.toString("utf8"), update);
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { irSchema, consumers } = await readTypeSurface();
-	const contracts = { irSchema, consumers };
-	const document = JSON.parse(beforeOwnedDotnetProcess("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sourceHashes["docs/type-surface.v1.json"]));
+	const contracts = await readTypeSurfaceContracts();
+	// The loop above already authenticated this exact historical inventory.
+	const document = JSON.parse(authenticatedInventory);
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
@@ -366,5 +368,6 @@ export const assertOwnedDotnetIntegration = async record => {
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(cells.length, record.inventory.total);
 	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, record.inventory.installed);
 	await assertOwnedDotnetExecution(await json(record.execution.path));
-	await assertOwnedRubyIntegration(previous);
+	// The exact Ruby receipt is pinned above by record.previous.sha256 and
+	// verified independently by tests/owned-ruby-evidence.test.mjs.
 };
