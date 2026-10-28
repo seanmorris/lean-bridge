@@ -1,0 +1,93 @@
+{
+  "additions": [
+    {
+      "currentSha256": "3acef207bf519a2e2299f5a217ed499eaa1dd7cbc4e41939d99e24157326e625",
+      "path": "tests/reviewed-fin-wasm-entry-hosted-archive.test.mjs"
+    },
+    {
+      "currentSha256": "599e7e939ce8e6b7fb01ee1737babfc734f9b485282a87779350790b11f051e2",
+      "path": "scripts/update-reviewed-fin-job-scope-source-history.mjs"
+    },
+    {
+      "currentSha256": "085140b124f961c1c357c05d51bd45b2fb117d065e6ea65b66607f1da7f618d1",
+      "path": "tests/helpers/reviewed-fin-job-scope-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ca922cc7c6a6e35bb05a2a6cf33a48fd306ff8e8d2a66faa9645c523fddde396",
+      "path": "tests/helpers/reviewed-fin-job-scope-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "4ce9ba029ff2de9a4d7becf4148572ae5535c342",
+  "integrationCommit": "44ddc4ae5483f8ff2208327f261cf73bc525429c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "88a9cc433d31f00325936ebdd25c001667a79d17510e0bedd56a0c4bab2e2b4f",
+      "edits": [
+        {
+          "current": "import \"./helpers/reviewed-fin-job-scope-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1900
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "450cc1388fe1dfa6b7a5f7d1502157eb04efc3610d646e2d7697174742b1d5f3"
+    },
+    {
+      "currentSha256": "004dd9da52429602f1b2914dc155e6d02fa8c8d21af09e652ef8483522ef68d7",
+      "edits": [
+        {
+          "current": "import { beforeReviewedFinJobScopeSource, reviewedFinJobScopeNormalizationPaths } from \"./reviewed-fin-job-scope-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...reviewedFinJobScopeNormalizationPaths\n\t, ...leanToolchainReleaseFallbackNormalizationPaths\n",
+          "previous": "\t...leanToolchainReleaseFallbackNormalizationPaths\n",
+          "start": 200133
+        },
+        {
+          "current": "\tlet stage = beforeReviewedFinJobScopeSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeLeanToolchainReleaseFallbackSource(\n",
+          "previous": "\tlet stage = beforeLeanToolchainReleaseFallbackSource(\n",
+          "start": 249171
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "128651d7a70a6118dde6f190b6a01271e866f211b9ad643ef893f3423ab718e8"
+    }
+  ],
+  "milestone": "reviewed-fin-job-scope-source-v1",
+  "predecessorCommit": "f31e944d024cd3d1ef6b403e306f1c51cf4a1f7b",
+  "schemaVersion": 1,
+  "scope": "Authenticate the exact successful reviewed-Fin original and probe jobs and their independently replayed artifacts without coupling those results to unrelated jobs in the enclosing Downstream matrix. Require the run to be terminal with a success, failure or cancelled conclusion; retain that conclusion per evidence leg; continue to require each selected job itself to complete successfully. Claim no result from another matrix job.",
+  "updates": [
+    {
+      "currentSha256": "414b9d35b9fce5e5db12186ff6acdb6c09c26dcbba2fae2512d5100ae9fbd602",
+      "edits": [
+        {
+          "current": "\t\t, \"Each retained field job must complete successfully and match its exact artifact even when unrelated jobs make the enclosing Downstream run fail or when the run is cancelled after both field jobs finish. The enclosing run conclusion is retained per leg; no result from another matrix job is claimed.\"\n",
+          "previous": "",
+          "start": 7950
+        }
+      ],
+      "path": "scripts/archive-reviewed-fin-wasm-entry-hosted.mjs",
+      "previousSha256": "be6f0602f0c2aaaeb3fc2ebd998d87ac6deb181d477d5d2df2c67e2535a0c51b"
+    },
+    {
+      "currentSha256": "f1cdb39dd872863076cf485b5147817ccdaab68136aa28f9f379e8658a43c84d",
+      "edits": [
+        {
+          "current": "\tassert.equal(run.status, \"completed\");\n\tassert.ok([\"cancelled\", \"failure\", \"success\"].includes(run.conclusion)\n\t\t, `Ineligible hosted run conclusion: ${run.conclusion}`);\n",
+          "previous": "\tassert.deepEqual([run.status, run.conclusion], [\"completed\", \"success\"]);\n",
+          "start": 5241
+        },
+        {
+          "current": "\t\t\t, runConclusion: run.conclusion\n",
+          "previous": "",
+          "start": 7075
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-entry-hosted-archive.mjs",
+      "previousSha256": "b38572231f7ebf39ba1046fab726a91cd2697fed4c72949377197a24c9b372ea"
+    }
+  ]
+}
