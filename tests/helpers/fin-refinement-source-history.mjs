@@ -30,6 +30,7 @@ import { beforeCallbackFinPerlRuntimeSource, callbackFinPerlRuntimeNormalization
 import { beforeCallbackFinPerlDirectionSource, callbackFinPerlDirectionNormalizationPaths } from "./callback-fin-perl-direction-source-history.mjs";
 import { beforeCallbackFinHostRepairSource, callbackFinHostRepairNormalizationPaths } from "./callback-fin-host-repair-source-history.mjs";
 import { beforeReplayChainMemoryIntegrationSource, replayChainMemoryIntegrationNormalizationPaths } from "./replay-chain-memory-integration-source-history.mjs";
+import { beforeReplayChainMemorySource, replayChainMemoryNormalizationPaths } from "./replay-chain-memory-source-history.mjs";
 import { beforeCoreMemoryBoundIntegrationSource, coreMemoryBoundIntegrationNormalizationPaths } from "./core-memory-bound-integration-source-history.mjs";
 import { beforeCoreMemoryBoundSource, coreMemoryBoundNormalizationPaths } from "./core-memory-bound-source-history.mjs";
 import { beforeCoreHistoricalEvidenceReuseLivePinRepairSource, coreHistoricalEvidenceReuseLivePinRepairNormalizationPaths } from "./core-historical-evidence-reuse-live-pin-repair-source-history.mjs";
@@ -2295,9 +2296,10 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...callbackFinPerlDirectionNormalizationPaths
 	, ...callbackFinHostRepairNormalizationPaths
 	, ...replayChainMemoryIntegrationNormalizationPaths
+	, ...replayChainMemoryNormalizationPaths
+	, ...callbackFinDiagnosticContractNormalizationPaths
 	, ...coreMemoryBoundIntegrationNormalizationPaths
 	, ...coreMemoryBoundNormalizationPaths
-	, ...callbackFinDiagnosticContractNormalizationPaths
 	, ...callbackFinInstalledRepairNormalizationPaths
 	, ...reviewedCallbackFinBrowserNormalizationPaths
 	, ...reviewedFinWasmFieldNormalizationPaths
@@ -3370,15 +3372,19 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
+	stage = beforeReplayChainMemorySource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCallbackFinDiagnosticContractSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
 	stage = beforeCoreMemoryBoundIntegrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
 	stage = beforeCoreMemoryBoundSource(path, text, expected);
-	if(expected !== undefined && sha256(stage) === expected)
-		return stage;
-	text = stage;
-	stage = beforeCallbackFinDiagnosticContractSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

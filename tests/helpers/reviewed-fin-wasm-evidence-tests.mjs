@@ -9,6 +9,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { reviewedFinWasmIr } from "./reviewed-fin-wasm-fixture.mjs";
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const directory = "docs/evidence/reviewed-fin-npm-20261007";
 const identities = {
@@ -43,8 +44,8 @@ test("npm Fin archives retain both routes, exact scalar/structural ABIs and inst
 			assert.equal(report[flag], true, flag);
 		const expected = reviewedFinWasmIr(selection);
 		assert.deepEqual(report.refinements, Object.fromEntries(expected.declarations.map(item => [item.source.declaration, item.source.extensions["lean-lang.org/refinements"]])));
-		assert.equal(report.sourceSha256, sha256(await read("tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean")));
-		assert.equal(report.consumerSha256, sha256(await read("tests/fixtures/reviewed-fin-wasm/javascript.mjs")));
+		assert.equal(sha256(await sourceAtFinHistoryMilestone("tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean", report.sourceSha256)), report.sourceSha256);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone("tests/fixtures/reviewed-fin-wasm/javascript.mjs", report.consumerSha256)), report.consumerSha256);
 		if(reviewed) assert.equal(report.reviewedSourceSha256, sha256(canonicalJson(expected)));
 		else assert.equal(Object.hasOwn(report, "reviewedSourceSha256"), false);
 		assert.equal(report.typescript.strict, true);
