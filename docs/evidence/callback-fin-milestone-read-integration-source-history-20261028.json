@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6cd2b325aa22179ac88ecdad2d4122a0d764ded97b1b371a3d912a663888eb89",
+      "path": "scripts/update-callback-fin-milestone-read-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "4fa4c117c4ab63d1c5edba6304d215653fc9b2310c61518aed1ae725ccc1ab50",
+      "path": "tests/helpers/callback-fin-milestone-read-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "076738af9c0b1e71d127ae58d3b71e7a0ac4f64cd504f1fc5ed4f3375bf9ecd7",
+      "path": "tests/helpers/callback-fin-milestone-read-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "4628fbc711dcb8db8ed2e030a8b1e7c270ea0c64",
+  "baseHistory": {
+    "path": "docs/evidence/callback-fin-milestone-read-source-history-20261028.json",
+    "sha256": "8a7b0604c38144a0b3733d0add82f10ae21ff4d15fd56366498544d4e8e7cfd8"
+  },
+  "implementationCommit": "dc6e4a1287b8e23a7b69829462bab92759f6109e",
+  "milestone": "callback-fin-milestone-read-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated callback Fin milestone-read history newest-first in the reversible Fin source-history hub and checked-JavaScript partition 10. Preserve all runtime behavior, type-surface claims, observations and evidence identities.",
+  "updates": [
+    {
+      "currentSha256": "dde41e14d59e40a2b292fafe44fce741873414cc4824220a38b50a3197842af1",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinMilestoneReadIntegrationSource, callbackFinMilestoneReadIntegrationNormalizationPaths } from \"./callback-fin-milestone-read-integration-source-history.mjs\";\nimport { beforeCallbackFinMilestoneReadSource, callbackFinMilestoneReadNormalizationPaths } from \"./callback-fin-milestone-read-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...callbackFinMilestoneReadIntegrationNormalizationPaths\n\t, ...callbackFinMilestoneReadNormalizationPaths\n\t, ...signatureSpecializationHostedProducerBindingIntegrationNormalizationPaths\n",
+          "previous": "\t...signatureSpecializationHostedProducerBindingIntegrationNormalizationPaths\n",
+          "start": 204928
+        },
+        {
+          "current": "\tlet stage = beforeCallbackFinMilestoneReadIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinMilestoneReadSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreHubOrderMergedIntegrationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreHubOrderMergedIntegrationSource(path, text, expected);\n",
+          "start": 255542
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f0714b5ee9f35cfb3b20f321d4c05ff1cf23568baaa7ef919b9cf78408fe93db"
+    },
+    {
+      "currentSha256": "026ee1db791aa2fefb499bc0ef7e42c134f4d0adfc3a5ee8583a4bf1a9979337",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-milestone-read-source-history-tests.mjs\";\nimport \"./helpers/callback-fin-milestone-read-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4004
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "9d029ab201a59b9820216770c04e705af73308d178d89300b745019a62a0cd6a"
+    }
+  ]
+}
