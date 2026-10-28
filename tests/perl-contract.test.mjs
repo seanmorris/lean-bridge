@@ -12,12 +12,14 @@ import test from "node:test";
 import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { createNativeModel, validateNativeType, generateNativeLeanAdapters, nativeCallbackDefault } from "../src/build/native-model.mjs";
 import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
+import { renderPerlDefault } from "../src/backends/perl/default-value.mjs";
 import { perlAliasApiDocs } from "../src/backends/perl/copied-aliases.mjs";
 import { validateNativeElf } from "../src/build/native-artifacts.mjs";
 import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "../src/release/deterministic-archive.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { auditGeneratedPublicSurface, generateNativeBindingPackages } from "../src/binding-ir/package-gate.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { execFileSync } from "node:child_process";
 import { assertArchiveBytesEqual } from "./helpers/archive-bytes.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
@@ -411,6 +413,90 @@ test("Perl requires compiler-checked representations and does not guess from sem
   assert.ok(generateNativeBindingPackages(model, { ...receipt, bindingIrSha256: model.bindingIrSha256 }).perl);
   assert.throws(() => generateNativeBindingPackages(model.bindingIr, receipt), /native metadata/);
   assert.throws(() => generatePerlBindingPackage({ ...model, types: [{ ...model.types[0], key: "bad" }] }, receipt), /identity changed/);
+});
+
+test("Perl canonical defaults preserve Option, Unit, exact integers and text", () => {
+	const primitive = name => ({ kind: "primitive", name });
+	const option = type => ({ kind: "apply", constructor: "option", arguments: [type] });
+	const render = (value, type) => renderPerlDefault(value, type
+		, () => null, "LeanBridge::Defaults");
+	assert.equal(render({ kind: "unit" }, primitive("unit")), "undef");
+	assert.equal(render({ kind: "boolean", value: true }, primitive("bool")), "true()");
+	assert.equal(render({ kind: "integer", value: "7" }, primitive("uint32")), "7");
+	assert.equal(render({ kind: "integer", value: "184467440737095516160" }
+		, primitive("nat")), "Math::BigInt->new('184467440737095516160')");
+	assert.equal(render({ kind: "integer", value: "-184467440737095516160" }
+		, primitive("int")), "Math::BigInt->new('-184467440737095516160')");
+	assert.equal(render({ kind: "string", value: "Lean\nBridge" }
+		, primitive("string")), "'Lean\nBridge'");
+	assert.equal(render({ kind: "char", value: "λ" }, primitive("char")), "'λ'");
+	assert.equal(render({ kind: "option-none" }, option(primitive("uint32")))
+		, "undef");
+	assert.equal(render({ kind: "option-some", value: { kind: "integer", value: "9" } }
+		, option(primitive("uint32"))), "LeanBridge::Defaults::Some->new(9)");
+});
+
+test("Perl wrappers apply authenticated defaults only to omitted arguments", async t => {
+	const model = structuredClone(fixture());
+	const declaration = model.bindingIr.declarations[0];
+	declaration.parameters[0].optional = true;
+	declaration.parameters[0].default = { kind: "integer", value: "7" };
+	model.bindingIrSha256 = hashBindingIr(model.bindingIr);
+	const receipt = { library: "libcomponent_test.so"
+		, nativeLibrary: { sha256: "b".repeat(64) }
+		, runtimeIdentity: "c".repeat(64), initializer: "initialize_Sample" };
+	const files = generatePerlBindingPackage(model, receipt);
+	const source = files["lib/LeanBridge/Sample.pm"];
+	assert.match(source, /my \$native = \\&increment;/u);
+	assert.match(source, /push @args, 7 if @args == 0;/u);
+	assert.match(source, /if @_ < 0 \|\| @_ > 1;/u);
+
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-perl-defaults-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await writeFile(join(root, "Sample.pm"), source);
+	await writeFile(join(root, "consumer.pl"), `BEGIN {
+  $INC{'LeanBridge/Runtime.pm'} = 1;
+  package LeanBridge::Runtime;
+  sub import {}
+  sub _load_component {}
+  $INC{'XSLoader.pm'} = 1;
+  package XSLoader;
+  sub import {}
+  sub load {
+    no strict 'refs';
+    *{'LeanBridge::Sample::increment'} = sub { return [@_] };
+  }
+}
+use lib '.';
+require 'Sample.pm';
+my $omitted = LeanBridge::Sample::increment();
+die 'missing default' unless @$omitted == 1 && $omitted->[0] == 7;
+my $explicit = LeanBridge::Sample::increment(11);
+die 'changed explicit value' unless @$explicit == 1 && $explicit->[0] == 11;
+my $undef = LeanBridge::Sample::increment(undef);
+die 'explicit undef became omission' unless @$undef == 1 && !defined($undef->[0]);
+`);
+	const result = execFileSync("/usr/bin/perl", ["consumer.pl"], {
+		cwd: root, encoding: "utf8"
+	});
+	assert.equal(result, "");
+});
+
+test("Perl wrappers reject a default before a required positional argument", () => {
+	const model = structuredClone(fixture());
+	const declaration = model.bindingIr.declarations[0];
+	const second = structuredClone(declaration.parameters[0]);
+	second.name = "required";
+	declaration.parameters = [declaration.parameters[0], second];
+	declaration.parameters[0].optional = true;
+	declaration.parameters[0].default = { kind: "integer", value: "7" };
+	model.exports[0].parameters.push(structuredClone(model.exports[0].parameters[0]));
+	model.bindingIrSha256 = hashBindingIr(model.bindingIr);
+	const receipt = { library: "libcomponent_test.so"
+		, nativeLibrary: { sha256: "b".repeat(64) }
+		, runtimeIdentity: "c".repeat(64), initializer: "initialize_Sample" };
+	assert.throws(() => generatePerlBindingPackage(model, receipt)
+		, /default before a required positional parameter/u);
 });
 
 test("adapters expose explicit typed native prototypes", () => {
