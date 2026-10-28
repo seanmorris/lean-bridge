@@ -15,6 +15,21 @@ const reserved = new Set("as async bool borrow char constructor enum export f32 
 const primitive = { char: "char", bool: "bool", uint8: "u8", uint16: "u16", uint32: "u32", uint64: "u64", int8: "s8", int16: "s16", int32: "s32", int64: "s64", float32: "f32", float64: "f64", string: "string" };
 const identifier = value => reserved.has(value) ? `%${value}` : value;
 
+const defaultFunctionNames = fn => {
+	const sites = fn.declaration.parameters;
+	const first = sites.findIndex(site => site.optional);
+	if(first < 0) return [];
+	if(sites.slice(first).some(site => !site.optional))
+		throw new TypeError(`${fn.declaration.id} has a default before a required positional parameter`);
+	return sites.slice(first).map((_, offset) => {
+		const supplied = first + offset, omitted = sites.length - supplied;
+		return { supplied
+			, omitted
+			, label: omitted === 1
+			? `${kebab(fn.field)}-default` : `${kebab(fn.field)}-defaults-${omitted}` };
+	});
+};
+
 /**
  * Validate archive coordinates without normalizing distinct WIT identities.
  *
@@ -75,7 +90,8 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 			}
 		}
 	}
-	const functionNames = new Set(surface.functions.map(fn => kebab(fn.field)));
+	const functionNames = new Set(surface.functions.flatMap(fn => [kebab(fn.field)
+		, ...defaultFunctionNames(fn).map(item => item.label)]));
 	const admitAlias = (name, declaration) => {
 		let label = kebab(name);
 		while(functionNames.has(label)) label = `alias-${label}`;
@@ -114,7 +130,17 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 		{ parameter.witName = admit(parameter.name, fn.declaration, parameters); parameter.copy = value(fn.declaration.parameters[index].type); }
 		fn.resultCopy = value(fn.declaration.result.type, true);
 	}
-	const functions = [...surface.functions
+	const defaultFunctions = surface.functions.flatMap(fn => defaultFunctionNames(fn).map(item => ({
+		...fn
+		, field: item.label.replaceAll("-", "_")
+		, witName: admit(item.label, fn.declaration)
+		, parameters: fn.parameters.slice(0, item.supplied)
+		, declaration: { ...fn.declaration, parameters: fn.declaration.parameters.slice(0, item.supplied) }
+		, defaultOf: fn.declaration.id
+		, supplied: item.supplied
+		, omitted: item.omitted
+	})));
+	const functions = [...surface.functions, ...defaultFunctions
 		, ...resources.map(resource => ({
 			witName: admit(`invoke-${resource.witName}`, ir.declarations[0])
 			, resource
@@ -159,14 +185,38 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 	}).join("\n")}\n${resourceWat}${functions.map(fn => `    (export "${fn.witName}" (func ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${parameter.copy.wat})`).join(" ")} (result ${fn.resultCopy.wat})))`).join("\n")}`;
 	const variants = types.filter(copy => copy.variant && !copy.aliasTarget);
 	const wat = renderCopiedWitComponent({ surface, functions, types, resources, typeBody, importName, exportName, preserveTypes: !!aliasModel || variants.length > 0 });
-	const manifest = { schemaVersion: 1, backend: "ordinary-wit-native-v1", component: ir.component, bindingIrSha256: hashBindingIr(ir), wit: { package: packageName, world: name, apiInterface: exportName, nativeImport: importName }, declarations: surface.functions.map(fn => ({ id: fn.declaration.id, witName: fn.witName })), deferred: [], assurance: ir.assurance };
+	const defaultManifest = fn => defaultFunctions.filter(item => item.defaultOf === fn.declaration.id).map(item => ({ witName: item.witName
+		, suppliedParameters: item.supplied, omittedParameters: item.omitted }));
+	const manifest = {
+		schemaVersion: 1
+		, backend: "ordinary-wit-native-v1"
+		, component: ir.component
+		, bindingIrSha256: hashBindingIr(ir)
+		, wit: { package: packageName, world: name, apiInterface: exportName, nativeImport: importName }
+		, declarations: surface.functions.map(fn => {
+			const defaults = defaultManifest(fn);
+			return { id: fn.declaration.id, witName: fn.witName
+				, ...defaults.length ? { defaults } : {} };
+		})
+		, deferred: []
+		, assurance: ir.assurance
+	};
 	if(aliasModel || variants.length)
 	{
 		if(aliasModel) manifest.aliases = aliasModel.aliases;
 		manifest.contracts = {
-			declarations: surface.functions.map(fn => ({ id: fn.declaration.id
-				, parameters: fn.declaration.parameters.map((site, index) => ({ name: site.name, type: site.type, witType: fn.parameters[index].copy.wit }))
-				, result: { type: fn.declaration.result.type, witType: fn.resultCopy.wit } }))
+			declarations: surface.functions.map(fn => {
+				const defaults = defaultManifest(fn);
+				return { id: fn.declaration.id
+					, parameters: fn.declaration.parameters.map((site, index) => ({
+						name: site.name
+						, type: site.type
+						, witType: fn.parameters[index].copy.wit
+						, ...site.optional ? { optional: true, default: site.default } : {}
+					}))
+					, ...defaults.length ? { defaults } : {}
+					, result: { type: fn.declaration.result.type, witType: fn.resultCopy.wit } };
+			})
 			, records: types.filter(copy => copy.record && !copy.aliasTarget).map(copy => ({ id: copy.record.id
 				, witName: copy.witName
 				, fields: copy.record.fields.map((field, index) => ({ name: field.name, type: field.type, witType: copy.fields[index].type.wit })) }))
