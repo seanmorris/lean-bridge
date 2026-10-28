@@ -12,6 +12,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeFinContractTestRegistrationIntegrationSource, finContractTestRegistrationIntegrationNormalizationPaths } from "./fin-contract-test-registration-integration-source-history.mjs";
+import { beforeFinContractTestRegistrationSource, finContractTestRegistrationNormalizationPaths } from "./fin-contract-test-registration-source-history.mjs";
 import { beforeFinCompletionPromotionSource, finCompletionPromotionNormalizationPaths } from "./fin-completion-promotion-source-history.mjs";
 import { beforeReviewedFinFocusedProducerSource, reviewedFinFocusedProducerNormalizationPaths } from "./reviewed-fin-focused-producer-source-history.mjs";
 import { beforeReviewedFinJobScopeSource, reviewedFinJobScopeNormalizationPaths } from "./reviewed-fin-job-scope-source-history.mjs";
@@ -2273,7 +2275,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...finCompletionPromotionNormalizationPaths
+	...finContractTestRegistrationIntegrationNormalizationPaths
+	, ...finContractTestRegistrationNormalizationPaths
+	, ...finCompletionPromotionNormalizationPaths
 	, ...reviewedFinFocusedProducerNormalizationPaths
 	, ...reviewedFinJobScopeNormalizationPaths
 	, ...leanToolchainReleaseFallbackNormalizationPaths
@@ -3285,7 +3289,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeFinCompletionPromotionSource(path, text, expected);
+	let stage = beforeFinContractTestRegistrationIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeFinContractTestRegistrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeFinCompletionPromotionSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

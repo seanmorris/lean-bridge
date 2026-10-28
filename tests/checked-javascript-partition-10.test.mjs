@@ -31,3 +31,5 @@ import "./helpers/lean-toolchain-release-fallback-source-history-tests.mjs";
 import "./helpers/reviewed-fin-job-scope-source-history-tests.mjs";
 import "./helpers/reviewed-fin-focused-producer-source-history-tests.mjs";
 import "./helpers/fin-completion-promotion-source-history-tests.mjs";
+import "./helpers/fin-contract-test-registration-source-history-tests.mjs";
+import "./helpers/fin-contract-test-registration-integration-source-history-tests.mjs";
