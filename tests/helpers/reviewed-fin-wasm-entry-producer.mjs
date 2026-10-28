@@ -23,9 +23,9 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { refinementEngineTransport } from "./refinement-engine.mjs";
 import { installReviewedFinWasm } from "./reviewed-fin-wasm-install.mjs";
 import { reviewedFinBrowserProfiles } from "./reviewed-fin-wasm-browser.mjs";
-import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
+import { reviewedFinWasmPreFieldTypeScript, reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 import { installedBrowserCorpus, browserFrameworkArchives } from "./type-corpus-browser.mjs";
-import { accountReviewedFinWasmEntry, expectReviewedFinWasmEntry, reviewedFinWasmEntryIr, reviewedFinWasmEntryMarker, reviewedFinWasmEntrySelection } from "./reviewed-fin-wasm-entry.mjs";
+import { accountReviewedFinWasmEntry, expectReviewedFinWasmEntry, reviewedFinWasmEntryIr, reviewedFinWasmEntryMarker, reviewedFinWasmEntrySelection, reviewedFinWasmEntrySymbols } from "./reviewed-fin-wasm-entry.mjs";
 import { instrumentReviewedFinWasmLean, reviewedFinWasmSourceControls, reviewedFinWasmSourceInstrumentation } from "./reviewed-fin-wasm-source-entry.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
@@ -297,11 +297,19 @@ export const assertReviewedFinWasmEntryPhases = context => {
  * @param expected - Expectation of the report's selection and mode.
  * @param coverage - The run's declared coverage.
  * @param coverage.engines - Browser engines the run was required to cover; empty for a Node-only run.
+ * @param coverage.preField - A retained report produced before the Box field fixture: its pre-field expectation is
+ * accounted on the pre-field contract's columns against the pre-field TypeScript consumer and prelude. Current
+ * reports never take this path.
  */
-export const recountReviewedFinWasmEntryReport = (report, expected, { engines }) => {
+export const recountReviewedFinWasmEntryReport = (report, expected, { engines, preField = false }) => {
 	assert.ok(Array.isArray(engines), "declared coverage");
+	assert.equal(typeof preField, "boolean", "an explicit contract generation");
 	assert.deepEqual([report.mode, report.selection, report.calls], [expected.mode, expected.selection, expected.calls.length]);
-	const source = reviewedFinWasmTypeScript(expected.selection);
+	if(preField) assert.ok(expected.calls.every(call => call[1] !== "box"), "a pre-field recount accepts only a pre-field expectation");
+	const source = (preField ? reviewedFinWasmPreFieldTypeScript : reviewedFinWasmTypeScript)(expected.selection);
+	const columns = preField
+		? reviewedFinWasmEntrySymbols(expected.selection, expected.mode, { preField }).map(item => item.name)
+		: undefined;
 	assert.equal(report.typescriptSha256, sha256(source), "the strict TypeScript consumer");
 	const preludes = { "node-javascript": [], "node-typescript": reviewedFinWasmTypeScriptPrelude(source, expected.selection) };
 	assert.deepEqual(report.contexts.map(context => context.profile), [...Object.keys(preludes), ...engines.length ? reviewedFinBrowserProfiles : []], "the declared contexts, no more and no fewer");
@@ -330,7 +338,7 @@ export const recountReviewedFinWasmEntryReport = (report, expected, { engines })
 		{
 			const parsed = transcript(observation.transcriptSha256);
 			const prelude = browser ? [] : preludes[context.profile];
-			assert.deepEqual(accountReviewedFinWasmEntryReport(expected, browser ? parsed.results : parsed, prelude), { mode: observation.mode, calls: observation.calls, columns: observation.columns, source: observation.source, prelude: observation.prelude }, `${context.profile} recount`);
+			assert.deepEqual(accountReviewedFinWasmEntryReport(expected, browser ? parsed.results : parsed, prelude, columns), { mode: observation.mode, calls: observation.calls, columns: observation.columns, source: observation.source, prelude: observation.prelude }, `${context.profile} recount`);
 			runs++;
 		}
 	}
