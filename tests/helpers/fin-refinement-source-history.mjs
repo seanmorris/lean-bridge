@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCallbackFinHostRepairSource, callbackFinHostRepairNormalizationPaths } from "./callback-fin-host-repair-source-history.mjs";
 import { beforeReplayChainMemoryIntegrationSource, replayChainMemoryIntegrationNormalizationPaths } from "./replay-chain-memory-integration-source-history.mjs";
 import { beforeCoreMemoryBoundIntegrationSource, coreMemoryBoundIntegrationNormalizationPaths } from "./core-memory-bound-integration-source-history.mjs";
 import { beforeCoreMemoryBoundSource, coreMemoryBoundNormalizationPaths } from "./core-memory-bound-source-history.mjs";
@@ -2260,7 +2261,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...replayChainMemoryIntegrationNormalizationPaths
+	...callbackFinHostRepairNormalizationPaths
+	, ...replayChainMemoryIntegrationNormalizationPaths
 	, ...coreMemoryBoundIntegrationNormalizationPaths
 	, ...coreMemoryBoundNormalizationPaths
 	, ...callbackFinDiagnosticContractNormalizationPaths
@@ -3259,7 +3261,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeReplayChainMemoryIntegrationSource(path, text, expected);
+	let stage = beforeCallbackFinHostRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeReplayChainMemoryIntegrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

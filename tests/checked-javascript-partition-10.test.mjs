@@ -19,3 +19,4 @@ import "./helpers/core-memory-bound-source-history-tests.mjs";
 import "./helpers/core-memory-bound-integration-source-history-tests.mjs";
 import "./helpers/replay-chain-memory-source-history-tests.mjs";
 import "./helpers/replay-chain-memory-integration-source-history-tests.mjs";
+import "./helpers/callback-fin-host-repair-source-history-tests.mjs";
