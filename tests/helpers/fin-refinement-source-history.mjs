@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCallbackFinSparseCheckoutSource, callbackFinSparseCheckoutNormalizationPaths } from "./callback-fin-sparse-checkout-source-history.mjs";
 import { beforeCallbackFinShallowCheckoutSource, callbackFinShallowCheckoutNormalizationPaths } from "./callback-fin-shallow-checkout-source-history.mjs";
 import { beforeCoreCiReliabilitySource, coreCiReliabilityNormalizationPaths } from "./core-ci-reliability-source-history.mjs";
 import { beforeCoreShardFiveRepairIntegrationSource, coreShardFiveRepairIntegrationNormalizationPaths } from "./core-shard-five-repair-integration-source-history.mjs";
@@ -2268,7 +2269,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackFinShallowCheckoutNormalizationPaths
+	...callbackFinSparseCheckoutNormalizationPaths
+	, ...callbackFinShallowCheckoutNormalizationPaths
 	, ...coreCiReliabilityNormalizationPaths
 	, ...coreShardFiveRepairIntegrationNormalizationPaths
 	, ...coreShardFiveRepairNormalizationPaths
@@ -3275,7 +3277,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCallbackFinShallowCheckoutSource(path, text, expected);
+	let stage = beforeCallbackFinSparseCheckoutSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCallbackFinShallowCheckoutSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
