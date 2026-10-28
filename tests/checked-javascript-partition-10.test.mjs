@@ -43,3 +43,5 @@ import "./helpers/core-historical-contract-repair-source-history-tests.mjs";
 import "./helpers/core-historical-contract-repair-integration-source-history-tests.mjs";
 import "./helpers/perl-codegen-producer-replay-source-history-tests.mjs";
 import "./helpers/perl-codegen-producer-replay-integration-source-history-tests.mjs";
+import "./helpers/perl-codegen-merged-source-history-tests.mjs";
+import "./helpers/perl-codegen-merged-integration-source-history-tests.mjs";

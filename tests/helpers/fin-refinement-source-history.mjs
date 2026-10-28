@@ -12,6 +12,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforePerlCodegenMergedIntegrationSource, perlCodegenMergedIntegrationNormalizationPaths } from "./perl-codegen-merged-integration-source-history.mjs";
+import { beforePerlCodegenMergedSource, perlCodegenMergedNormalizationPaths } from "./perl-codegen-merged-source-history.mjs";
 import { beforePerlCodegenProducerReplayIntegrationSource, perlCodegenProducerReplayIntegrationNormalizationPaths } from "./perl-codegen-producer-replay-integration-source-history.mjs";
 import { beforePerlCodegenProducerReplaySource, perlCodegenProducerReplayNormalizationPaths } from "./perl-codegen-producer-replay-source-history.mjs";
 import { beforeCoreHistoricalContractRepairIntegrationSource, coreHistoricalContractRepairIntegrationNormalizationPaths } from "./core-historical-contract-repair-integration-source-history.mjs";
@@ -2286,7 +2288,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...perlCodegenProducerReplayIntegrationNormalizationPaths
+	...perlCodegenMergedIntegrationNormalizationPaths
+	, ...perlCodegenMergedNormalizationPaths
+	, ...perlCodegenProducerReplayIntegrationNormalizationPaths
 	, ...perlCodegenProducerReplayNormalizationPaths
 	, ...coreHistoricalContractRepairIntegrationNormalizationPaths
 	, ...coreHistoricalContractRepairNormalizationPaths
@@ -3311,7 +3315,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforePerlCodegenProducerReplayIntegrationSource(
+	let stage = beforePerlCodegenMergedIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePerlCodegenMergedSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePerlCodegenProducerReplayIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
