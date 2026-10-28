@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeWitFrozenClosureHubHookSource, witFrozenClosureHubHookNormalizationPaths } from "./wit-frozen-closure-hub-hook-source-history.mjs";
 import { beforeDownstreamReporterSparseCheckoutSource, downstreamReporterSparseCheckoutNormalizationPaths } from "./downstream-reporter-sparse-checkout-source-history.mjs";
 import { beforeDirectProofErasureNpmArchiveSource, directProofErasureNpmArchiveNormalizationPaths } from "./direct-proof-erasure-npm-archive-source-history.mjs";
 import { beforeDirectProofErasureMatrixSource, directProofErasureMatrixNormalizationPaths } from "./direct-proof-erasure-matrix-source-history.mjs";
@@ -2345,7 +2346,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...downstreamReporterSparseCheckoutNormalizationPaths
+	...witFrozenClosureHubHookNormalizationPaths
+	, ...downstreamReporterSparseCheckoutNormalizationPaths
 	, ...directProofErasureNpmArchiveNormalizationPaths
 	, ...directProofErasureMatrixNormalizationPaths
 	, ...directProofErasureTestRegistrationNormalizationPaths
@@ -3429,7 +3431,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDownstreamReporterSparseCheckoutSource(
+	let stage = beforeWitFrozenClosureHubHookSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDownstreamReporterSparseCheckoutSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

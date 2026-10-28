@@ -1,0 +1,93 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7dd928a4f10a2c58dde41aa891ce5464c32d960ddc77211dfdfcb08601579c51",
+      "path": "scripts/update-wit-frozen-closure-hub-hook-source-history.mjs"
+    },
+    {
+      "currentSha256": "81d0d469b3e220d7b3d924b548521d316925eaeb0bf2d0c9e19ee93f5ec2e6b2",
+      "path": "tests/helpers/wit-frozen-closure-hub-hook-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8545795eddd6979c30a8c1df0559949c3c20e05c79e4649bd90cb46e8c9ca4bb",
+      "path": "tests/helpers/wit-frozen-closure-hub-hook-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "1ffade673e7667acbfa618269c41823770be0765",
+  "integrationUpdates": [
+    {
+      "currentSha256": "23af40caac1506cda2f62bb11ccf7a57fe6c47e31eea3ba8ee596391e4769de3",
+      "edits": [
+        {
+          "current": "import \"./helpers/wit-frozen-closure-hub-hook-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "0ea3f8b8de060faf04f8cd6d73a2b545caa895e37a8f3098f8601afeac7d13dd"
+    },
+    {
+      "currentSha256": "c8f550c93348b0bce83ad3a5a6f1ce4d79ff1540f72461844ce768812f437999",
+      "edits": [
+        {
+          "current": "import { beforeWitFrozenClosureHubHookSource, witFrozenClosureHubHookNormalizationPaths } from \"./wit-frozen-closure-hub-hook-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...witFrozenClosureHubHookNormalizationPaths\n\t, ...downstreamReporterSparseCheckoutNormalizationPaths\n",
+          "previous": "\t...downstreamReporterSparseCheckoutNormalizationPaths\n",
+          "start": 212872
+        },
+        {
+          "current": "\tlet stage = beforeWitFrozenClosureHubHookSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDownstreamReporterSparseCheckoutSource(\n",
+          "previous": "\tlet stage = beforeDownstreamReporterSparseCheckoutSource(\n",
+          "start": 266089
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6f279567291a3a947ac8225e089edcf91fe860afc99aa00f9ec14f7ef67a3ada"
+    }
+  ],
+  "milestone": "wit-frozen-closure-hub-hook-source-v1",
+  "predecessorCommit": "79b57c627ae660ff3319f5c66b68b9fe57185bf7",
+  "schemaVersion": 1,
+  "scope": "Hook the already recorded WIT frozen-closure integration layer (wit-callback-frozen-closure-integration-source-history-20261028.json, hub transition into 908ef1a) into the Fin refinement hub at its chronological slot, immediately before the WIT frozen-closure implementation stage, and register its authentication tests in checked-JavaScript partition 10. Before this hook every hub walk from the live tree stopped at the 908ef1a hub digest and could not reach older milestones. No record, support cell, evidence scope, product source, pin or archive changes. Register the transition newest-first; hosted Core remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "0ea3f8b8de060faf04f8cd6d73a2b545caa895e37a8f3098f8601afeac7d13dd",
+      "edits": [
+        {
+          "current": "import \"./helpers/wit-callback-frozen-closure-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 297
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "b6e7bf4e44597e95c8c3b384d9f8ff487492df0b1ab1bd71b52621b6c3bc12ad"
+    },
+    {
+      "currentSha256": "6f279567291a3a947ac8225e089edcf91fe860afc99aa00f9ec14f7ef67a3ada",
+      "edits": [
+        {
+          "current": "import { beforeWitCallbackFrozenClosureIntegrationSource, witCallbackFrozenClosureIntegrationNormalizationPaths } from \"./wit-callback-frozen-closure-integration-source-history.mjs\";\n",
+          "previous": "",
+          "start": 4732
+        },
+        {
+          "current": "\t, ...witCallbackFrozenClosureIntegrationNormalizationPaths\n",
+          "previous": "",
+          "start": 214063
+        },
+        {
+          "current": "\tstage = beforeWitCallbackFrozenClosureIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 270190
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "38a1053bb3faff69995e1f5ccf8dff70ef12b225f267eedd1c27d70cbd962078"
+    }
+  ]
+}
