@@ -1,0 +1,101 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0a3242d486f6d48f56dd37a5bff9f70325239110fe7df1e67b01c2c808451fcd",
+      "path": "tests/direct-proof-erasure.test.mjs"
+    },
+    {
+      "currentSha256": "e2ecffaa369035c0e3684dedd198d94da3add1b7c3979f33339d203b7409f500",
+      "path": "tests/fixtures/onboarding/direct-proof-erasure/DirectProofErasure.lean"
+    },
+    {
+      "currentSha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca",
+      "path": "tests/fixtures/onboarding/direct-proof-erasure/LICENSE"
+    },
+    {
+      "currentSha256": "c6ce47effdc630989bc678989d5b68847b444eef0dde608bfa7a8d991f97360e",
+      "path": "tests/fixtures/onboarding/direct-proof-erasure/lakefile.toml"
+    },
+    {
+      "currentSha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+      "path": "tests/fixtures/onboarding/direct-proof-erasure/lean-toolchain"
+    },
+    {
+      "currentSha256": "034b3c7985ca232534824ca3e3521a3777d4377e276c586c4643f16baa098ed0",
+      "path": "tests/fixtures/onboarding/direct-proof-erasure/package.json"
+    },
+    {
+      "currentSha256": "2e9380c04e92fa633177e04e13003fd2f96ca23326ca0ca92bab7085d0c31026",
+      "path": "tests/helpers/direct-proof-erasure-fixture.mjs"
+    },
+    {
+      "currentSha256": "a96aafa290039a1f9fa9350051e0192d9bd0f9e2e0caf1ef965c81fdc8907ff4",
+      "path": "scripts/update-direct-proof-erasure-fixture-source-history.mjs"
+    },
+    {
+      "currentSha256": "a42baf20086b5a0a5a0b9e8ccb01b95fb9d5d2edc7cfb047b3f7b7bf91120bfa",
+      "path": "tests/helpers/direct-proof-erasure-fixture-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "74e72b1781f6e69fc52b9766225a0a115635e77e664652ea8f9f19ebf6e829ac",
+      "path": "tests/helpers/direct-proof-erasure-fixture-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "bb0eb6bc52a12c8b76c1c5d0eb3c31e258af655d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "003ee26d243f3494b9cfb745b6e2700ec7b83c125a0c1343f90f710ed1bc5137",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-fixture-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "8697b826d13f7dbaf03ab01e654605abd9c03dafabc567a62194c0fdb1705f6d"
+    },
+    {
+      "currentSha256": "5b11d997291128615ff4eb0b0f82842b15e7210b06f2c0b3527e81b2f12fd47f",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureFixtureSource, directProofErasureFixtureNormalizationPaths } from \"./direct-proof-erasure-fixture-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureFixtureNormalizationPaths\n\t, ...directProofErasureNormalizationPaths\n",
+          "previous": "\t...directProofErasureNormalizationPaths\n",
+          "start": 209054
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureFixtureSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDirectProofErasureSource(path, text, expected);\n",
+          "start": 261019
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "bd8c2c7fbc44e5cb0fdafb47b7bf399ce5b9de96ae0a204cf10ed964f56a8ecf"
+    }
+  ],
+  "milestone": "direct-proof-erasure-fixture-source-v1",
+  "predecessorCommit": "19b96729b8360b8970dc2feb918a01a27049ff04",
+  "schemaVersion": 1,
+  "scope": "Define the shared ordinary and independently reviewed direct-proof fixture, two erased True binders around one unchanged UInt32 payload, explicit conditional/proof-result refusals, seventeen profile identities and exact proof/source/theorem mutation controls without promoting installed support.",
+  "updates": [
+    {
+      "commit": "bb0eb6bc52a12c8b76c1c5d0eb3c31e258af655d",
+      "currentSha256": "8697b826d13f7dbaf03ab01e654605abd9c03dafabc567a62194c0fdb1705f6d",
+      "edits": [
+        {
+          "current": "import \"./direct-proof-erasure.test.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "parent": "19b96729b8360b8970dc2feb918a01a27049ff04",
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "fcced7346f4a1dab926db22ae3afe7b1f471b0a84e9f25c5985d59ba72a21e80"
+    }
+  ]
+}
