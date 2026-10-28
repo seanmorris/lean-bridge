@@ -1,0 +1,100 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b1297d93eca28efff0252e21af2ffccf06b33ff35b83d3a059bc4f902207a3d7",
+      "path": "scripts/update-direct-proof-erasure-npm-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "999017d2e342da9e5a35a05fc0ae3c6dbb0a13b70c11ad444dce6ac7e1311cf6",
+      "path": "tests/helpers/direct-proof-erasure-npm-archive-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8f72ef1d77d99ad625bda338cc8539bf4358fce79d88639a0ac18c66e558a1ef",
+      "path": "tests/helpers/direct-proof-erasure-npm-archive-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "dee53b51d0889e44c2875c0f25dc94a1b9ad3d5b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c332afcf59ecc9694169417b54c9545f63ee59f6bbf09c41e6b7714b809008e5",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-npm-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "f06043d60a1ab914b465ab6bb57535dca281585f5cca842c373bc7f600ff951f"
+    },
+    {
+      "currentSha256": "28cd81a4512db374492a6ac54aff4a98b4092e567cf5e81c9731c033306a2712",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureNpmArchiveSource, directProofErasureNpmArchiveNormalizationPaths } from \"./direct-proof-erasure-npm-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureNpmArchiveNormalizationPaths\n\t, ...directProofErasureMatrixNormalizationPaths\n",
+          "previous": "\t...directProofErasureMatrixNormalizationPaths\n",
+          "start": 212369
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureNpmArchiveSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureMatrixSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDirectProofErasureMatrixSource(path, text, expected);\n",
+          "start": 265421
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5b6f08d2aa24cfd140f4ab9fe022627687732fde8b7896133341617cc52384f5"
+    }
+  ],
+  "milestone": "direct-proof-erasure-npm-archive-source-v1",
+  "predecessorCommit": "83017aaa62e6b68526da64204cdb43800287ce75",
+  "schemaVersion": 1,
+  "scope": "Retain both original npm handoff archives beside their canonical receipt, independently hash them against that receipt, retain the standalone verifier, and reject any absent or substituted package byte before hosted matrix closure.",
+  "updates": [
+    {
+      "currentSha256": "6d2309f136c7dfe671bccb92315d6324de116c4677963c1e82acacde7223fd7c",
+      "edits": [
+        {
+          "current": "\t\tawait cp(handoff, join(records, \"handoff\"), {\n\t\t\trecursive: true, errorOnExist: true, force: false\n\t\t});\n",
+          "previous": "",
+          "start": 10039
+        }
+      ],
+      "path": "tests/direct-proof-erasure-npm-installed.test.mjs",
+      "previousSha256": "7dab0ed253a0dd9a4f68e416b31a050b41e48a357a76babb2dee08cdf6d605f0"
+    },
+    {
+      "currentSha256": "41be19cb7ea1997d5feeff7309d7736f78b09535d7bb9b741382eaa87c8ac3d4",
+      "edits": [
+        {
+          "current": "\tassert.match(installed\n\t\t, /cp\\(handoff, join\\(records, \"handoff\"\\)/u);\n",
+          "previous": "",
+          "start": 3618
+        },
+        {
+          "current": "\tconst checker = await readFile(\n\t\t\"tests/helpers/direct-proof-erasure-npm-report.mjs\", \"utf8\"\n\t);\n\tassert.match(checker, /handoff\\/component-package-receipt\\.json/u);\n\tassert.match(checker, /handoff\\/\\$\\{item\\.archive\\}/u);\n",
+          "previous": "",
+          "start": 4084
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-browser-tests.mjs",
+      "previousSha256": "e41a4a21255693d30cb220b63a44eec3c99cfa5598c4253e2342f677866e3cf7"
+    },
+    {
+      "currentSha256": "f6d58f46a33a12ca080514752a115194e7c79e25efc59f5b3a28354890a08c1f",
+      "edits": [
+        {
+          "current": "\tconst handoff = await json(\"handoff/component-package-receipt.json\");\n\tassert.deepEqual(handoff, report.receipt);\n\tfor(const item of [handoff.runtime, handoff.package])\n\t\tassert.equal(sha256(await read(`handoff/${item.archive}`))\n\t\t\t, item.sha256, item.archive);\n\tassert.match((await read(\n\t\t\"handoff/verify-component-package-receipt.mjs\"\n\t)).toString(), /verifyComponentPackageReceipt/u);\n",
+          "previous": "",
+          "start": 8204
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-npm-report.mjs",
+      "previousSha256": "18bb6f656f411837b7a33efb0cfe0444775b1b99ef17ee5995b0e1d3d5ba7920"
+    }
+  ]
+}
