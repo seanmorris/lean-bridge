@@ -12,6 +12,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeSignatureSpecializationCompletionIntegrationSource, signatureSpecializationCompletionIntegrationNormalizationPaths } from "./signature-specialization-completion-integration-source-history.mjs";
+import { beforeSignatureSpecializationCompletionSource, signatureSpecializationCompletionNormalizationPaths } from "./signature-specialization-completion-source-history.mjs";
 import { beforeFinContractTestRegistrationIntegrationSource, finContractTestRegistrationIntegrationNormalizationPaths } from "./fin-contract-test-registration-integration-source-history.mjs";
 import { beforeFinContractTestRegistrationSource, finContractTestRegistrationNormalizationPaths } from "./fin-contract-test-registration-source-history.mjs";
 import { beforeFinCompletionPromotionSource, finCompletionPromotionNormalizationPaths } from "./fin-completion-promotion-source-history.mjs";
@@ -2275,7 +2277,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...finContractTestRegistrationIntegrationNormalizationPaths
+	...signatureSpecializationCompletionIntegrationNormalizationPaths
+	, ...signatureSpecializationCompletionNormalizationPaths
+	, ...finContractTestRegistrationIntegrationNormalizationPaths
 	, ...finContractTestRegistrationNormalizationPaths
 	, ...finCompletionPromotionNormalizationPaths
 	, ...reviewedFinFocusedProducerNormalizationPaths
@@ -3289,7 +3293,17 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeFinContractTestRegistrationIntegrationSource(
+	let stage = beforeSignatureSpecializationCompletionIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationCompletionSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeFinContractTestRegistrationIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
