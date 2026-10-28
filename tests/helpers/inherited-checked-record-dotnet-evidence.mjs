@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { posix } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { inheritedCheckedRecordLaneFiles } from "./inherited-checked-record-lane-files.mjs";
 import {
 	inspectInheritedCheckedRecordDotnetCiHandoff
 } from "./inherited-checked-record-dotnet-ci-handoff.mjs";
@@ -84,7 +85,8 @@ export const checkInheritedCheckedRecordDotnetEvidence = async (
 			`${inheritedCheckedRecordDotnetEvidence}/index.json`));
 		assert.equal(sha256(indexBytes)
 			, inheritedCheckedRecordDotnetEvidenceSha256);
-		const index = json(indexBytes, "index.json"), files = new Map();
+		const index = json(indexBytes, "index.json"), files = inheritedCheckedRecordLaneFiles(
+			read, inheritedCheckedRecordDotnetEvidence);
 		assert.deepEqual(Object.keys(index).sort(), [
 			"archiveCommit", "checkerCommit", "files", "floor", "framework"
 			, "hostedRun", "kind", "limitations", "loadCeiling"
@@ -141,17 +143,9 @@ export const checkInheritedCheckedRecordDotnetEvidence = async (
 			previous = entry.path;
 			assert.ok(Number.isSafeInteger(entry.bytes) && entry.bytes >= 0);
 			assert.match(entry.sha256, /^[a-f0-9]{64}$/u);
-			const value = Buffer.from(await read(
-				`${inheritedCheckedRecordDotnetEvidence}/${entry.path}`));
-			assert.equal(value.length, entry.bytes, entry.path);
-			assert.equal(sha256(value), entry.sha256, entry.path);
-			files.set(entry.path, value);
+			await files.authenticate(entry);
 		}
-		const get = path => {
-			const value = files.get(path);
-			assert.ok(Buffer.isBuffer(value), path);
-			return value;
-		};
+		const get = files.get;
 		const selectedSources
 			= await inheritedCheckedRecordDotnetSelectedSources();
 		assert.deepEqual(index.selectedSources, selectedSources);
@@ -160,7 +154,7 @@ export const checkInheritedCheckedRecordDotnetEvidence = async (
 		{
 			const path = `sources/${source.role}/${source.path}`;
 			expectedPaths.push(path);
-			assert.deepEqual(get(path)
+			assert.deepEqual(await get(path)
 				, inheritedCheckedRecordDotnetEvidenceOriginal(
 					source.revision, source.path), path);
 		}
@@ -177,16 +171,15 @@ export const checkInheritedCheckedRecordDotnetEvidence = async (
 			const label = `${run.route}-${run.mode}`;
 			assert.equal(run.label, label);
 			const prefix = `${label}/records/`, records = new Map();
-			for(const [path, bytes] of files)
-				if(path.startsWith(prefix))
-					records.set(path.slice(prefix.length), bytes);
+			for(const path of files.paths(prefix))
+				records.set(path.slice(prefix.length), path);
 			const originalRead = async path => {
 				assert.ok(records.has(path), path);
-				return records.get(path);
+				return get(records.get(path));
 			};
-			const nuget = json(get(prefix + "nuget.json")
+			const nuget = json(await get(prefix + "nuget.json")
 				, prefix + "nuget.json");
-			const context = json(get(prefix + "installation.json")
+			const context = json(await get(prefix + "installation.json")
 				, prefix + "installation.json");
 			const recordPaths = inheritedCheckedRecordDotnetRecords(
 				run.route, run.mode, nuget, context).sort();
@@ -196,7 +189,7 @@ export const checkInheritedCheckedRecordDotnetEvidence = async (
 			const original
 				= await inspectInheritedCheckedRecordDotnetCiHandoff(originalRead);
 			assert.equal(run.archiveSha256, original.archiveSha256);
-			const tap = get(`${label}/run.tap`);
+			const tap = await get(`${label}/run.tap`);
 			assertInheritedCheckedRecordDotnetCiTap(
 				tap.toString(), run.route, run.mode);
 			const checked = await checkInheritedCheckedRecordDotnetCiRecords({
@@ -211,9 +204,9 @@ export const checkInheritedCheckedRecordDotnetEvidence = async (
 			});
 			assert.deepEqual(run.accepted, checked);
 			assert.equal(run.reportSha256
-				, sha256(get(prefix + "report.json")));
+				, sha256(await get(prefix + "report.json")));
 			assert.equal(run.tapSha256, sha256(tap));
-			const verification = get(`${label}/verification.json`);
+			const verification = await get(`${label}/verification.json`);
 			assert.equal(verification.toString(), canonicalJson({
 				...checked, archiveSha256: original.archiveSha256
 			}));
@@ -222,7 +215,7 @@ export const checkInheritedCheckedRecordDotnetEvidence = async (
 			const controlCounts = expectedControls(
 				recordPaths.length, run.mode);
 			assert.deepEqual(run.controls, controlCounts);
-			assert.deepEqual(json(get(controlsPath), controlsPath)
+			assert.deepEqual(json(await get(controlsPath), controlsPath)
 				, controlCounts);
 			if(controls === "all"
 				|| controls === "representative" && position === 0) {

@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { posix } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { inheritedCheckedRecordLaneFiles } from "./inherited-checked-record-lane-files.mjs";
 import {
 	inspectInheritedCheckedRecordJvmCiHandoff
 } from "./inherited-checked-record-jvm-ci-handoff.mjs";
@@ -76,7 +77,8 @@ export const checkInheritedCheckedRecordJvmEvidence = async (
 			`${inheritedCheckedRecordJvmEvidence}/index.json`));
 		assert.equal(sha256(indexBytes)
 			, inheritedCheckedRecordJvmEvidenceSha256);
-		const index = json(indexBytes, "index.json"), files = new Map();
+		const index = json(indexBytes, "index.json"), files = inheritedCheckedRecordLaneFiles(
+			read, inheritedCheckedRecordJvmEvidence);
 		assert.deepEqual(Object.keys(index).sort(), [
 			"archiveCommit", "checkerCommit", "files", "floor", "hostedRun"
 			, "kind", "limitations", "loadCeiling", "producerCommit", "runs"
@@ -148,17 +150,9 @@ export const checkInheritedCheckedRecordJvmEvidence = async (
 			previous = entry.path;
 			assert.ok(Number.isSafeInteger(entry.bytes) && entry.bytes >= 0);
 			assert.match(entry.sha256, /^[a-f0-9]{64}$/u);
-			const value = Buffer.from(await read(
-				`${inheritedCheckedRecordJvmEvidence}/${entry.path}`));
-			assert.equal(value.length, entry.bytes, entry.path);
-			assert.equal(sha256(value), entry.sha256, entry.path);
-			files.set(entry.path, value);
+			await files.authenticate(entry);
 		}
-		const get = path => {
-			const value = files.get(path);
-			assert.ok(Buffer.isBuffer(value), path);
-			return value;
-		};
+		const get = files.get;
 		const selectedSources
 			= await inheritedCheckedRecordJvmSelectedSources();
 		assert.deepEqual(index.selectedSources, selectedSources);
@@ -167,7 +161,7 @@ export const checkInheritedCheckedRecordJvmEvidence = async (
 		{
 			const path = `sources/${source.role}/${source.path}`;
 			expectedPaths.push(path);
-			assert.deepEqual(get(path)
+			assert.deepEqual(await get(path)
 				, inheritedCheckedRecordJvmEvidenceOriginal(
 					source.revision, source.path), path);
 		}
@@ -184,19 +178,18 @@ export const checkInheritedCheckedRecordJvmEvidence = async (
 			const label = `${run.route}-${run.mode}`;
 			assert.equal(run.label, label);
 			const prefix = `${label}/records/`, records = new Map();
-			for(const [path, bytes] of files)
-				if(path.startsWith(prefix))
-					records.set(path.slice(prefix.length), bytes);
+			for(const path of files.paths(prefix))
+				records.set(path.slice(prefix.length), path);
 			assert.equal(run.recordCount, records.size);
 			const originalRead = async path => {
 				assert.ok(records.has(path), path);
-				return records.get(path);
+				return get(records.get(path));
 			};
 			const original = await inspectInheritedCheckedRecordJvmCiHandoff(
 				originalRead, { floor: index.floor, mode: run.mode }
 			);
 			assert.equal(run.archiveSha256, original.archiveSha256);
-			const tap = get(`${label}/run.tap`);
+			const tap = await get(`${label}/run.tap`);
 			assertInheritedCheckedRecordJvmCiTap(
 				tap.toString(), run.route, run.mode);
 			const checked = await checkInheritedCheckedRecordJvmCiRecords({
@@ -212,16 +205,16 @@ export const checkInheritedCheckedRecordJvmEvidence = async (
 			});
 			assert.deepEqual(run.accepted, checked);
 			assert.equal(run.reportSha256
-				, sha256(get(prefix + "report.json")));
+				, sha256(await get(prefix + "report.json")));
 			assert.equal(run.tapSha256, sha256(tap));
-			const verification = get(`${label}/verification.json`);
+			const verification = await get(`${label}/verification.json`);
 			assert.equal(verification.toString(), canonicalJson(checked));
 			assert.equal(run.verificationSha256, sha256(verification));
 			const controlsPath = `${label}/controls.json`;
 			const controlCounts = expectedControls(
 				checked.records.length, run.mode);
 			assert.deepEqual(run.controls, controlCounts);
-			assert.deepEqual(json(get(controlsPath), controlsPath)
+			assert.deepEqual(json(await get(controlsPath), controlsPath)
 				, controlCounts);
 			if(controls === "all"
 				|| controls === "representative" && position === 0) {
