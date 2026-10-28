@@ -12,6 +12,7 @@ import "./helpers/core-inventory-endpoint-tests.mjs";
 import "./helpers/core-perl-consumer-endpoint-repair-source-history-tests.mjs";
 import "./helpers/promotion-file-transaction-tests.mjs";
 import "./helpers/owned-checked-record-semantic-audit-tests.mjs";
+import "./helpers/proof-erasure-evidence-audit-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-publication-tests.mjs";
 import "./helpers/core-recursive-endpoint-tests.mjs";
 import "./helpers/owned-native-promotion-scope-source-history-tests.mjs";
