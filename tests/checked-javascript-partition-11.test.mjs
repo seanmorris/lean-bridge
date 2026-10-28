@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/optional-parameter-source-history-tests.mjs";
 import "./helpers/perl-dependent-refinement-rejection-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-npm-archive-source-history-tests.mjs";
 import "./helpers/downstream-reporter-sparse-checkout-source-history-tests.mjs";
