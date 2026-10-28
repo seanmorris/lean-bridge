@@ -34,6 +34,7 @@ import { reviewedCallbackBrowserConsumer, reviewedCallbackBrowserPackage, review
 import { browserFrameworkArchives, installedBrowserCorpus } from "./helpers/type-corpus-browser.mjs";
 import { corpusBrowserSelection } from "./helpers/type-corpus.mjs";
 import "./helpers/reviewed-callback-harness-source-history-tests.mjs";
+import "./helpers/reviewed-callback-fin-browser-source-history-tests.mjs";
 
 const key = "lean-lang.org/refinements", nominalKey = "lean-lang.org/nominal-refinements";
 const reviewInput = document => {

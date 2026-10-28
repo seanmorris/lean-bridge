@@ -1,0 +1,195 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8c68d88f188cb09870715421199a427d9ccdcb55dffe3201f691aeb08526e9c2",
+      "path": "scripts/check-reviewed-callback-fin-browser-ci.mjs"
+    },
+    {
+      "currentSha256": "1a3c271f32e868bfec7f39b4ec687c0b319b8b1095a638476e2da2fa21187620",
+      "path": "scripts/run-reviewed-callback-fin-browser-ci.sh"
+    },
+    {
+      "currentSha256": "775df99b07fa774569611cb73b08d70fb71976b69b76443b1ad95de004bb0bbc",
+      "path": "tests/helpers/reviewed-callback-fin-browser-ci.mjs"
+    },
+    {
+      "currentSha256": "4e66e4c5aeb247d2417ad8f74da16806e62f7ed83cb4c1044433742c9e8dfe43",
+      "path": "tests/reviewed-callback-fin-browser-ci.test.mjs"
+    },
+    {
+      "currentSha256": "d21cc387863c5a9df63de834727d0c30da8de54164f276c5bd310b8b472f3b01",
+      "path": "scripts/update-reviewed-callback-fin-browser-source-history.mjs"
+    },
+    {
+      "currentSha256": "0ede52f23d6f6f4d6708c286bc84576eb68f79cade93fe1edd19ab8d7b165a88",
+      "path": "tests/helpers/reviewed-callback-fin-browser-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "773d1b2b14982b3fde22e89c2791d2380e2883976b296d97df716c4a0650e345",
+      "path": "tests/helpers/reviewed-callback-fin-browser-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "85aea33d363d8e0bbaea52e35aa3ebb7d36d6063",
+  "integrationUpdates": [
+    {
+      "currentSha256": "422c4f0b9698460ecb21bdd51dfc448216742398962a95f08e4ec03c6cec1989",
+      "edits": [
+        {
+          "current": "import { beforeReviewedCallbackFinBrowserSource, reviewedCallbackFinBrowserNormalizationPaths } from \"./reviewed-callback-fin-browser-source-history.mjs\";\n",
+          "previous": "",
+          "start": 24088
+        },
+        {
+          "current": "\t...reviewedCallbackFinBrowserNormalizationPaths\n\t, ...reviewedFinWasmFieldNormalizationPaths\n",
+          "previous": "\t...reviewedFinWasmFieldNormalizationPaths\n",
+          "start": 197751
+        },
+        {
+          "current": "\tlet stage = beforeReviewedCallbackFinBrowserSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeReviewedFinWasmFieldSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeReviewedFinWasmFieldSource(path, text, expected);\n",
+          "start": 246006
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f86b32fbce6b77691ddb98b46eea7772ce1101950f3c9551031bad07c3b93029"
+    },
+    {
+      "currentSha256": "6c937b115223ee0ea1da05acf998623871365cff785bbf60490118b145ab3814",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 146
+        },
+        {
+          "current": "import { finRefinementNormalizationPaths } from \"./fin-refinement-source-history.mjs\";\n",
+          "previous": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\nimport { beforeReviewedSpecializationArchiveSource } from \"./reviewed-specialization-archive-source-history.mjs\";\n",
+          "start": 325
+        },
+        {
+          "current": "const implementation = \"f9cda046e0b624bd847fe41d521b9cb9f84f21a3\";\nconst git = arguments_ => execFileSync(\"git\", arguments_\n\t, { encoding: \"utf8\", maxBuffer: 256 * 1024 * 1024 });\n\n",
+          "previous": "",
+          "start": 626
+        },
+        {
+          "current": "\tassert.equal(git([\"show\", \"-s\", \"--format=%P\", implementation]).trim()\n\t\t, record.predecessorCommit);\n",
+          "previous": "",
+          "start": 1072
+        },
+        {
+          "current": "\t\tconst source = git([\"show\", `${implementation}:${update.path}`]);\n",
+          "previous": "\t\tconst source = beforeReviewedSpecializationArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1314
+        },
+        {
+          "current": "\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n",
+          "previous": "\t\tassert.equal(sha256(beforeFinRefinementSource(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "start": 1692
+        }
+      ],
+      "path": "tests/helpers/reviewed-callback-harness-source-history-tests.mjs",
+      "previousSha256": "e0956a4101213da0637918a2e08d1e520967b97bff8d66f8c53182e94342a43d"
+    },
+    {
+      "currentSha256": "f751cd2a2273f1d394e4692c895372957e2605deec45b164fb9468985947b31b",
+      "edits": [
+        {
+          "current": "import \"./helpers/reviewed-callback-fin-browser-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2738
+        }
+      ],
+      "path": "tests/reviewed-callback-fin.test.mjs",
+      "previousSha256": "dbeb9584c259dea369916271bd11e22e05c085dec4e4e96d81a3995e32c1ad1b"
+    }
+  ],
+  "milestone": "reviewed-callback-fin-browser-source-v1",
+  "predecessorCommit": "638f961832fa024f1a4ff8ba93f960ec3bdd5d8d",
+  "schemaVersion": 1,
+  "scope": "Run both independently reviewed callback-Fin routes through source-free installed npm packages in browser pages, React effects and dedicated workers. Authenticate the public and raw rejection layers, closure lifecycle, recovery, three browser engines and retained hosted output without changing the earlier Node corpus bytes or promoting cells before hosted execution.",
+  "updates": [
+    {
+      "currentSha256": "2d2629d5b73d26a733aec454c4bbd934e51a28f9a0657b0e10d6f4b6434f4905",
+      "edits": [
+        {
+          "current": "      - name: Require both reviewed callback Fin routes in Node, pages, React and workers\n        id: callback_fin\n        timeout-minutes: 150\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          bash scripts/run-reviewed-callback-fin-browser-ci.sh \"$PWD/build/lean-link-spike/lazy\"\n",
+          "previous": "",
+          "start": 2869
+        },
+        {
+          "current": "            build/reviewed-callback-fin-browser-ci/\n",
+          "previous": "",
+          "start": 3481
+        },
+        {
+          "current": "      - name: Enforce reviewed callback Fin browser acceptance\n        if: always() && steps.callback_fin.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 3867
+        }
+      ],
+      "path": ".github/workflows/callback-checked-record-browser.yml",
+      "previousSha256": "2a1142c227321e9e17ceee9d933c6c7416ca7daa0f4b4ec0f49ca89cad4f2f65"
+    },
+    {
+      "currentSha256": "1aa598101bf949565e47071a12f179628d50c3c1221e9e7a57f69b23ca95c5b9",
+      "edits": [
+        {
+          "current": "\t\tconst changed = before === \"run: exit 1\"\n\t\t\t? source.replaceAll(before, after) : source.replace(before, after);\n",
+          "previous": "\t\tconst changed = source.replace(before, after);\n",
+          "start": 8126
+        }
+      ],
+      "path": "tests/callback-checked-record-browser-ci.test.mjs",
+      "previousSha256": "bccfd8e49f37f52ef34fa4f38cefd9414661186d91c5832733e73e8e28f1d8df"
+    },
+    {
+      "currentSha256": "81b1e8700e7673400a69bcdfe66ed4e201321c628c6f971fc74ff63f0835d1f0",
+      "edits": [
+        {
+          "current": "const browserBody = hostReply => reviewedCallbackNodeConsumer(hostReply)\n\t.split(\"\\n\").slice(3, -2).join(\"\\n\");\nconst browserFunction = (name, hostReply) => `const ${name} = (api, raw) => {\n${browserBody(hostReply)}\nreturn { checks, rejections };\n};`;\n\n/** Browser-consumer module derived from the exact reviewed Node corpus body. */\nexport const reviewedCallbackBrowserConsumer = `${browserFunction(\"r1\", false)}\n${browserFunction(\"r2\", true)}\nexport const executeCorpus = (request, api) => (request.hostReply ? r2 : r1)(api, api.raw);\n`;\n\n/** Browser loader exposing both the public package and its private runtime route. */\nexport const reviewedCallbackBrowserPackage = `import request from \"./request.json\";\nexport { request };\nexport const loadApi = async () => {\n\tconst [installed, { runtime }] = await Promise.all([import(\"reviewedcallbacks\"), import(\"./node_modules/reviewedcallbacks/internal/runtime.mjs\")]);\n\treturn { ...installed, raw: (name, args) => runtime.call(\"lean:ReviewedCallbacks.\" + name, args) };\n};\n`;\n\n",
+          "previous": "",
+          "start": 3840
+        }
+      ],
+      "path": "tests/helpers/reviewed-callback-fin-consumer.mjs",
+      "previousSha256": "455c4016f6c9d013d868319039c5e1e5ab827200c339027ed1c7b21a1dadb18b"
+    },
+    {
+      "currentSha256": "dbeb9584c259dea369916271bd11e22e05c085dec4e4e96d81a3995e32c1ad1b",
+      "edits": [
+        {
+          "current": "import { reviewedCallbackBrowserConsumer, reviewedCallbackBrowserPackage, reviewedCallbackMockPackage, reviewedCallbackNodeConsumer, reviewedCallbackNodeExpected, reviewedCallbackTypescript } from \"./helpers/reviewed-callback-fin-consumer.mjs\";\nimport { browserFrameworkArchives, installedBrowserCorpus } from \"./helpers/type-corpus-browser.mjs\";\nimport { corpusBrowserSelection } from \"./helpers/type-corpus.mjs\";\n",
+          "previous": "import { reviewedCallbackMockPackage, reviewedCallbackNodeConsumer, reviewedCallbackNodeExpected, reviewedCallbackTypescript } from \"./helpers/reviewed-callback-fin-consumer.mjs\";\n",
+          "start": 2252
+        },
+        {
+          "current": "const browser = process.env.LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_BROWSER_TEST === \"1\";\nconst npm = process.env.LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_NPM_TEST === \"1\" || browser;\n",
+          "previous": "const npm = process.env.LEAN_BRIDGE_REVIEWED_CALLBACK_FIN_NPM_TEST === \"1\";\n",
+          "start": 15813
+        },
+        {
+          "current": " * the Node and strict TypeScript consumers, plus every browser context when requested.\n",
+          "previous": " * the Node and strict TypeScript consumers.\n",
+          "start": 16389
+        },
+        {
+          "current": "\tconst browsers = [];\n\tif(browser)\n\t{\n\t\tconst requestedEngines = corpusBrowserSelection(process.env.LEAN_BRIDGE_TYPE_CORPUS_BROWSERS);\n\t\tassert.deepEqual(requestedEngines, [\"chromium\", \"firefox\", \"webkit\"]);\n\t\tfor(const profile of [\"browser-javascript\", \"browser-react\", \"browser-worker\"])\n\t\t{\n\t\t\tconst root = join(directory, `${hostReply ? \"r2\" : \"r1\"}-${profile}`), browserBin = join(root, \"bin\");\n\t\t\tawait mkdir(browserBin, { recursive: true });\n\t\t\tawait symlink(process.execPath, join(browserBin, \"node\"));\n\t\t\tawait saveLakeFile(root, \"package.json\", canonicalJson({ private: true, type: \"module\" }));\n\t\t\tfor(const name of [\"user.npmrc\", \"global.npmrc\"]) await saveLakeFile(root, name, \"\");\n\t\t\tconst framework = profile === \"browser-react\" ? await browserFrameworkArchives(root) : [];\n\t\t\tconst browserConfiguration = [\"--userconfig\", join(root, \"user.npmrc\"), \"--globalconfig\", join(root, \"global.npmrc\"), \"--cache\", join(root, \"empty-cache\")];\n\t\t\tawait processBuildRunner.capture({ command: process.execPath\n\t\t\t\t, args: [npmCli, \"install\", \"--offline\", \"--ignore-scripts\"\n\t\t\t\t\t, \"--no-audit\", \"--no-fund\", ...browserConfiguration\n\t\t\t\t\t, join(handoff, receipt.runtime.archive)\n\t\t\t\t\t, join(handoff, receipt.package.archive)\n\t\t\t\t\t, ...framework.map(item => join(root, item.archive))]\n\t\t\t\t, cwd: root, env: { ...clean, PATH: browserBin }, timeoutMs: 300_000 });\n\t\t\tawait saveLakeFile(root, \"request.json\", canonicalJson({ module: \"reviewedcallbacks\", profile, hostReply }));\n\t\t\tawait saveLakeFile(root, \"javascript.mjs\", reviewedCallbackBrowserConsumer);\n\t\t\tconst expected = reviewedCallbackNodeExpected[hostReply ? \"r2\" : \"r1\"];\n\t\t\tconst result = await installedBrowserCorpus({ library: { npmModule: \"reviewedcallbacks\" }\n\t\t\t\t, profile, root, framework, environment: { ...clean, PATH: browserBin }\n\t\t\t\t, consumer: {\n\t\t\t\t\tpackageSource: reviewedCallbackBrowserPackage\n\t\t\t\t\t, validateObservation: value => assert.deepEqual(value, {\n\t\t\t\t\t\tschemaVersion: 1, profile, module: \"reviewedcallbacks\"\n\t\t\t\t\t\t, realm: profile === \"browser-worker\" ? \"dedicated-worker\" : \"window\"\n\t\t\t\t\t\t, results: expected, hostVersion: value.hostVersion\n\t\t\t\t\t})\n\t\t\t\t}\n\t\t\t});\n\t\t\tbrowsers.push({ profile, review: hostReply ? \"R2\" : \"R1\", ...result });\n\t\t}\n\t}\n",
+          "previous": "",
+          "start": 20552
+        },
+        {
+          "current": "\t\t, browsers\n\t\t, browserConsumerSha256: sha256(reviewedCallbackBrowserConsumer)\n\t\t, browserPackageSha256: sha256(reviewedCallbackBrowserPackage)\n",
+          "previous": "",
+          "start": 23292
+        },
+        {
+          "current": "test(\"an independently reviewed npm package installs R1 callback bounds in every requested consumer\", { skip: !npm, timeout: 3_600_000 }, t => checkReviewedNpm(t, false));\ntest(\"an independently reviewed npm package installs R2 with the Wasm host-reply bound\", { skip: !npm, timeout: 3_600_000 }, t => checkReviewedNpm(t, true));\n",
+          "previous": "test(\"an independently reviewed npm package installs R1 callback bounds for Node and strict TypeScript\", { skip: !npm, timeout: 3_600_000 }, t => checkReviewedNpm(t, false));\ntest(\"an independently reviewed npm package installs R2 with the npm-only host-reply bound\", { skip: !npm, timeout: 3_600_000 }, t => checkReviewedNpm(t, true));\n",
+          "start": 23688
+        }
+      ],
+      "path": "tests/reviewed-callback-fin.test.mjs",
+      "previousSha256": "6f248436721fbc5790bfaaebe187f6b435eb068c761ce1eb471c8ada94b898b7"
+    }
+  ]
+}
