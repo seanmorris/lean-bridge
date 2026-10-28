@@ -1,0 +1,157 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b4e3204d29645484a44f4c129ffe3b7941e78c0fc8f3c9575c54b6acaa6b4fe2",
+      "path": "scripts/update-callback-fin-diagnostic-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "756af59cc54435922573075385670a74e62ca8dcca67b82377d5092a4f2865b0",
+      "path": "tests/helpers/callback-fin-diagnostic-contract-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "eb17952d58e6340722312dcea36ff27b0debffbfc8315808cb1ffd9df553456e",
+      "path": "tests/helpers/callback-fin-diagnostic-contract-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "028fef2b4b5fd34256ddad4e2fe414fb4ad0f451",
+  "integrationUpdates": [
+    {
+      "currentSha256": "90149f6fe16cb9889a53e99c3c96a02855cedc547698398d3da546b58bca22a8",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-diagnostic-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1275
+        }
+      ],
+      "path": "tests/checked-javascript-partition-07.test.mjs",
+      "previousSha256": "aced8f0cc256a2bc540b9c3cc6c63b2b6bd780ce3e947e9e37934558dc26e45e"
+    },
+    {
+      "currentSha256": "2204ba714b73aa7f1cc1803660670c09cefe2a2c8f4e29c39205650f3cc6f748",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinDiagnosticContractSource, callbackFinDiagnosticContractNormalizationPaths } from \"./callback-fin-diagnostic-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 24674
+        },
+        {
+          "current": "\t, ...callbackFinDiagnosticContractNormalizationPaths\n",
+          "previous": "",
+          "start": 198435
+        },
+        {
+          "current": "\tstage = beforeCallbackFinDiagnosticContractSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 247110
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "407d4a22e8cd04a85d93f8d64607d690403caa3a4ad5c245fac4cf1d73913f49"
+    }
+  ],
+  "milestone": "callback-fin-diagnostic-contract-source-v1",
+  "predecessorCommit": "ad0967cf2bb752d6857ba29544da956fe0bca5c9",
+  "schemaVersion": 1,
+  "scope": "Align the installed .NET, Java and Kotlin callback-Fin acceptance fixtures with the path-specific diagnostics already emitted by the authenticated native adapter. Retain exact scalar, nested-array and nominal-field rejection text instead of accepting the obsolete generic copied-input message.",
+  "updates": [
+    {
+      "currentSha256": "b0b7d8d380f514bebdca5d88e79af614fbe05156b096345d0eecb735ad3e2c8d",
+      "edits": [
+        {
+          "current": "\t\tif([\"dotnet\", \"java\", \"kotlin\"].includes(profile))\n\t\t\tfor(const diagnostic of [\"arg0 is not below its Fin 10 bound\"\n\t\t\t\t, \"arg0[0] is not below its Fin 3 bound\"\n\t\t\t\t, \"arg0[0].digit is not below its Fin 5 bound\"])\n\t\t\t\tassert.ok(source.includes(diagnostic), `${profile}: ${diagnostic}`);\n",
+          "previous": "",
+          "start": 2163
+        }
+      ],
+      "path": "tests/callback-fin-remaining-package.test.mjs",
+      "previousSha256": "366227090c163f4856c5c0d1016ac080f9d9064970c3fdd64f5b2c7b6acb4b4e"
+    },
+    {
+      "currentSha256": "bd5a72180101b50cf92271402929da9ebb7cc5a22ca41470e0453866582bf5ad",
+      "edits": [
+        {
+          "current": "    private static bool Refuses(Action operation, string message) =>\n        Reject<ArgumentException>(operation).Message == message;\n",
+          "previous": "    private static bool Refuses(Action operation) =>\n        Reject<ArgumentException>(operation).Message == \"Invalid native copied input\";\n",
+          "start": 668
+        },
+        {
+          "current": "        Check(Refuses(() => scaler.Invoke(N(10)),\n            \"arg0 is not below its Fin 10 bound\"), \"Fin 10 is refused\");\n",
+          "previous": "        Check(Refuses(() => scaler.Invoke(N(10))), \"Fin 10 is refused\");\n",
+          "start": 951
+        },
+        {
+          "current": "        Check(Refuses(() => digits.Invoke(new[] { N(3) }),\n            \"arg0[0] is not below its Fin 3 bound\"), \"nested bound is refused\");\n",
+          "previous": "        Check(Refuses(() => digits.Invoke(new[] { N(3) })), \"nested bound is refused\");\n",
+          "start": 2175
+        },
+        {
+          "current": "        Check(Refuses(() => tiles.Invoke(new[] { new Tile(N(5), N(2)) }),\n            \"arg0[0].digit is not below its Fin 5 bound\"),\n",
+          "previous": "        Check(Refuses(() => tiles.Invoke(new[] { new Tile(N(5), N(2)) })),\n",
+          "start": 2593
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/dotnet.cs",
+      "previousSha256": "8535aa95c9ef2c5b2c0f29d3be10fc3a5333769bd337836a832fd46fac2f14cb"
+    },
+    {
+      "currentSha256": "64392b034c0bc6c78756eb961dfcec64fdcfdc4e6c351802bc7ac5bd60468c4b",
+      "edits": [
+        {
+          "current": "    private static boolean refuses(Runnable operation, String message) {\n",
+          "previous": "    private static boolean refuses(Runnable operation) {\n",
+          "start": 775
+        },
+        {
+          "current": "            .getMessage().equals(message);\n",
+          "previous": "            .getMessage().equals(\"Invalid native copied input\");\n",
+          "start": 913
+        },
+        {
+          "current": "        check(refuses(() -> scaler.invoke(n(10)),\n            \"arg0 is not below its Fin 10 bound\"), \"Fin 10 is refused\");\n",
+          "previous": "        check(refuses(() -> scaler.invoke(n(10))), \"Fin 10 is refused\");\n",
+          "start": 1130
+        },
+        {
+          "current": "        check(refuses(() -> digits.invoke(new BigInteger[] { n(3) }),\n            \"arg0[0] is not below its Fin 3 bound\"),\n",
+          "previous": "        check(refuses(() -> digits.invoke(new BigInteger[] { n(3) })),\n",
+          "start": 2348
+        },
+        {
+          "current": "        check(refuses(() -> tiles.invoke(new Tile[] { new Tile(n(5), n(2)) }),\n            \"arg0[0].digit is not below its Fin 5 bound\"),\n",
+          "previous": "        check(refuses(() -> tiles.invoke(new Tile[] { new Tile(n(5), n(2)) })),\n",
+          "start": 2799
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/java.java",
+      "previousSha256": "fd5fdde44ae82e0466b52f26ee18870b20f0ca50f288186f176f49c8f016ddf5"
+    },
+    {
+      "currentSha256": "385eb7b8c1c2b9794c97a24196649f9cb92bdf956f5cb62836f6b29d871b6b40",
+      "edits": [
+        {
+          "current": "private fun refuses(operation: () -> Unit, message: String) =\n    reject<IllegalArgumentException>(operation).message == message\n",
+          "previous": "private fun refuses(operation: () -> Unit) =\n    reject<IllegalArgumentException>(operation).message == \"Invalid native copied input\"\n",
+          "start": 732
+        },
+        {
+          "current": "    check(refuses({ scaler.invoke(n(10)) },\n        \"arg0 is not below its Fin 10 bound\"), \"Fin 10 is refused\")\n",
+          "previous": "    check(refuses { scaler.invoke(n(10)) }, \"Fin 10 is refused\")\n",
+          "start": 977
+        },
+        {
+          "current": "    check(refuses({ digits.invoke(arrayOf(n(3))) },\n        \"arg0[0] is not below its Fin 3 bound\"), \"nested bound is refused\")\n",
+          "previous": "    check(refuses { digits.invoke(arrayOf(n(3))) }, \"nested bound is refused\")\n",
+          "start": 2023
+        },
+        {
+          "current": "    check(refuses({ tiles.invoke(arrayOf(Tile(n(5), n(2)))) },\n        \"arg0[0].digit is not below its Fin 5 bound\"),\n",
+          "previous": "    check(refuses { tiles.invoke(arrayOf(Tile(n(5), n(2)))) },\n",
+          "start": 2379
+        }
+      ],
+      "path": "tests/fixtures/callback-fin-consumers/kotlin.kt",
+      "previousSha256": "941f2d32e6afce5ec43e1b7ef7192a0f685ee2324e5bd25eaef5de86b45d4cd2"
+    }
+  ]
+}

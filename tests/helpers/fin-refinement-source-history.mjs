@@ -162,6 +162,7 @@ import { beforeWasmtimeCapiRolloutSource, wasmtimeCapiRolloutNormalizationPaths 
 import { beforeReviewedFinWasmFieldSource, reviewedFinWasmFieldNormalizationPaths } from "./reviewed-fin-wasm-field-source-history.mjs";
 import { beforeReviewedCallbackFinBrowserSource, reviewedCallbackFinBrowserNormalizationPaths } from "./reviewed-callback-fin-browser-source-history.mjs";
 import { beforeCallbackFinInstalledRepairSource, callbackFinInstalledRepairNormalizationPaths } from "./callback-fin-installed-repair-source-history.mjs";
+import { beforeCallbackFinDiagnosticContractSource, callbackFinDiagnosticContractNormalizationPaths } from "./callback-fin-diagnostic-contract-source-history.mjs";
 import { beforeCallbackFinNativeCapabilitySource, callbackFinNativeCapabilityNormalizationPaths } from "./callback-fin-native-capability-source-history.mjs";
 import { beforeCallbackFinHostedWorkflowSource, callbackFinHostedWorkflowNormalizationPaths } from "./callback-fin-hosted-workflow-source-history.mjs";
 import { beforeOwnedCheckedPhpWasmContextsSource, ownedCheckedPhpWasmContextsNormalizationPaths } from "./owned-checked-php-wasm-contexts-source-history.mjs";
@@ -2260,6 +2261,7 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	...coreMemoryBoundIntegrationNormalizationPaths
 	, ...coreMemoryBoundNormalizationPaths
+	, ...callbackFinDiagnosticContractNormalizationPaths
 	, ...callbackFinInstalledRepairNormalizationPaths
 	, ...reviewedCallbackFinBrowserNormalizationPaths
 	, ...reviewedFinWasmFieldNormalizationPaths
@@ -3260,6 +3262,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		return stage;
 	text = stage;
 	stage = beforeCoreMemoryBoundSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCallbackFinDiagnosticContractSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
