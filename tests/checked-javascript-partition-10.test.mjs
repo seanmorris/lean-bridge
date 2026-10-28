@@ -17,3 +17,5 @@ import "./helpers/owned-checked-native-mixed-coverage-source-history-tests.mjs";
 import "./helpers/owned-checked-retained-identity-source-history-tests.mjs";
 import "./helpers/core-memory-bound-source-history-tests.mjs";
 import "./helpers/core-memory-bound-integration-source-history-tests.mjs";
+import "./helpers/replay-chain-memory-source-history-tests.mjs";
+import "./helpers/replay-chain-memory-integration-source-history-tests.mjs";

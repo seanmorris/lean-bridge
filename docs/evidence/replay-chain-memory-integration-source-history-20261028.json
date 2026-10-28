@@ -1,0 +1,60 @@
+{
+  "additions": [
+    {
+      "currentSha256": "20f6ecd24750de45141e719eaf6b9e7f811c2a63e5591c7fa6c474783f74c4c3",
+      "path": "scripts/update-replay-chain-memory-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "d358274a654264c875681c93607048d504f2014c316a9267c49c471890b9cec5",
+      "path": "tests/helpers/replay-chain-memory-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "aa1118d2e1461598260ab149f336516bbb2f6b5396259cad307964e470311c24",
+      "path": "tests/helpers/replay-chain-memory-integration-source-history.mjs"
+    }
+  ],
+  "baseHistory": {
+    "path": "docs/evidence/replay-chain-memory-source-history-20261028.json",
+    "sha256": "8a118946ce11d0845762a307ce303b77ec0c5ab465a60f6a0eda4706ed04a5d1"
+  },
+  "integrationBaseCommit": "9fd749f78048fe70b3581ec00848e1461b3b16bf",
+  "integrationUpdates": [
+    {
+      "currentSha256": "80787d58a0d2784179d1e2486d9967e5301503bfe240d94d223eb1e0b1ae9d77",
+      "edits": [
+        {
+          "current": "import { beforeReplayChainMemoryIntegrationSource, replayChainMemoryIntegrationNormalizationPaths } from \"./replay-chain-memory-integration-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...replayChainMemoryIntegrationNormalizationPaths\n\t, ...coreMemoryBoundIntegrationNormalizationPaths\n",
+          "previous": "\t...coreMemoryBoundIntegrationNormalizationPaths\n",
+          "start": 198507
+        },
+        {
+          "current": "\tlet stage = beforeReplayChainMemoryIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreMemoryBoundIntegrationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreMemoryBoundIntegrationSource(path, text, expected);\n",
+          "start": 247011
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2204ba714b73aa7f1cc1803660670c09cefe2a2c8f4e29c39205650f3cc6f748"
+    },
+    {
+      "currentSha256": "2cc286cd5043907c2f0f3f44d13c40b4e2d4384f906c0eec7e0a3f12c8796064",
+      "edits": [
+        {
+          "current": "import \"./helpers/replay-chain-memory-source-history-tests.mjs\";\nimport \"./helpers/replay-chain-memory-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1097
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "0cf044b23495f24d00b0a2d2e943333fcb0e7b977c01b428953559c80cd2f7af"
+    }
+  ],
+  "milestone": "replay-chain-memory-integration-source-v1",
+  "schemaVersion": 1,
+  "scope": "Register the independently authenticated replay-chain memory bound in the reversible source-history hub and one schedulable Core partition. Preserve every source, evidence and support claim; this seal records only the exact hub and registration transitions."
+}
