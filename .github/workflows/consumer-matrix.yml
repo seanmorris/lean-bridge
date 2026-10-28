@@ -52,12 +52,36 @@ jobs:
   nix-cache:
     name: Signed Nix cache recipes
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          # This acceptance executes one dependency-free Node test against two
+          # documentation recipes. Do not materialize the immutable evidence
+          # corpus merely to read these five current-tree files.
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            !/.github/*
+            /.github/workflows/
+            !/.github/workflows/*
+            /.github/workflows/consumer-matrix.yml
+            /docs/
+            !/docs/*
+            /docs/consume/
+            !/docs/consume/*
+            /docs/consume/receive-package.md
+            /docs/publish/
+            !/docs/publish/*
+            /docs/publish/nix.md
+            /tests/
+            !/tests/*
+            /tests/nix-publication.test.mjs
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
