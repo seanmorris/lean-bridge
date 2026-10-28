@@ -27,9 +27,11 @@ const consumerWorkflow = ".github/workflows/consumer-matrix.yml";
 const perlWorkflow = ".github/workflows/perl-consumer.yml";
 const native = ({
 	id, profiles, jobName, artifactPrefix, reportStem, acceptanceStep, uploadStep
+	, jobConclusion = "success"
 }) => Object.freeze({
 	id, profiles: Object.freeze(profiles), runId: dependentSignatureConsumerRun
 	, workflow: consumerWorkflow, jobName, artifactPrefix
+	, jobConclusion
 	, kind: "managed"
 	, reportPaths: Object.freeze([
 		`managed-dependent-fin/${reportStem}.json`
@@ -43,11 +45,12 @@ const perl = configuration => Object.freeze({
 	, jobName: `Perl XS (${configuration})`
 	, artifactPrefix: `type-corpus-perl-${configuration}`
 	, kind: "managed"
+	, jobConclusion: "success"
 	, reportPaths: Object.freeze([
 		"managed-dependent-fin/perl.json"
 		, "managed-dependent-fin/reviewed-perl.json"
 	])
-	, acceptanceStep: "Compare installed Perl corpus packages with the shared Lean corpus"
+	, acceptanceStep: "Compare installed Perl corpus packages with fresh Lean results"
 	, uploadStep: "Upload this configuration's real-Lean corpus report"
 });
 
@@ -61,6 +64,7 @@ export const dependentSignatureHostedLanes = Object.freeze([
 		, runId: dependentSignatureConsumerRun, workflow: consumerWorkflow
 		, jobName: "Node and browser npm consumers"
 		, artifactPrefix: "dependent-fin-npm", kind: "javascript"
+		, jobConclusion: "success"
 		, reportPaths: Object.freeze(["ordinary-source.json", "reviewed-ir.json"])
 		, acceptanceStep: "Check ordinary and reviewed dependent Fin in Node, TypeScript and browsers"
 		, uploadStep: "Preserve ordinary and reviewed dependent Fin npm observations"
@@ -69,43 +73,46 @@ export const dependentSignatureHostedLanes = Object.freeze([
 		id: "c-family", profiles: ["c", "cpp"]
 		, jobName: "Native consumer (c-family)"
 		, artifactPrefix: "type-corpus-c-family", reportStem: "c-cpp"
-		, acceptanceStep: "Compare relocated C and C++ corpus consumers with the shared Lean corpus"
+		, acceptanceStep: "Compare relocated C and C++ corpus consumers with fresh Lean"
 		, uploadStep: "Upload installed C and C++ corpus observations"
+		, jobConclusion: "failure"
 	})
 	, native({
 		id: "python", profiles: ["python"], jobName: "Native consumer (python)"
 		, artifactPrefix: "type-corpus-python", reportStem: "python"
-		, acceptanceStep: "Compare installed Python corpus packages with the shared Lean corpus"
-		, uploadStep: "Upload installed Python corpus observations"
+		, acceptanceStep: "Compare installed Python corpus packages with fresh Lean results"
+		, uploadStep: "Upload the real-Lean type corpus report"
+		, jobConclusion: "failure"
 	})
 	, native({
 		id: "rust", profiles: ["rust"], jobName: "Native consumer (rust)"
 		, artifactPrefix: "type-corpus-rust", reportStem: "rust"
-		, acceptanceStep: "Compare isolated Cargo corpus consumers with the shared Lean corpus"
+		, acceptanceStep: "Compare isolated Cargo corpus consumers with fresh Lean"
 		, uploadStep: "Upload installed Rust corpus observations"
+		, jobConclusion: "failure"
 	})
 	, native({
 		id: "dotnet", profiles: ["dotnet"], jobName: "Managed consumer (dotnet)"
 		, artifactPrefix: "type-corpus-dotnet", reportStem: "dotnet"
-		, acceptanceStep: "Compare installed NuGet corpus packages with the shared Lean corpus"
-		, uploadStep: "Upload installed .NET corpus observations"
+		, acceptanceStep: "Compare installed NuGet corpus packages with fresh Lean results"
+		, uploadStep: "Upload the .NET real-Lean type corpus report"
 	})
 	, native({
 		id: "jvm", profiles: ["java", "kotlin"], jobName: "Managed consumer (jvm)"
 		, artifactPrefix: "type-corpus-jvm", reportStem: "java-kotlin"
-		, acceptanceStep: "Compare isolated Java and Kotlin corpus consumers with the shared Lean corpus"
-		, uploadStep: "Upload installed JVM corpus observations"
+		, acceptanceStep: "Compare isolated Java and Kotlin corpus consumers with fresh Lean"
+		, uploadStep: "Upload installed Java and Kotlin corpus observations"
 	})
 	, native({
 		id: "ruby", profiles: ["ruby"], jobName: "Managed consumer (ruby)"
 		, artifactPrefix: "type-corpus-ruby", reportStem: "ruby"
-		, acceptanceStep: "Compare installed Ruby corpus packages with the shared Lean corpus"
-		, uploadStep: "Upload installed Ruby corpus observations"
+		, acceptanceStep: "Compare installed Ruby corpus packages with fresh Lean results"
+		, uploadStep: "Upload the Ruby real-Lean type corpus report"
 	})
 	, native({
 		id: "php-native", profiles: ["php-native"], jobName: "Native PHP"
 		, artifactPrefix: "type-corpus-php-native", reportStem: "php-native"
-		, acceptanceStep: "Compare weak and strict installed Composer callers with the shared Lean corpus"
+		, acceptanceStep: "Compare weak and strict installed Composer callers with fresh Lean"
 		, uploadStep: "Upload installed PHP corpus observations"
 	})
 	, native({
@@ -178,7 +185,7 @@ export const inspectDependentSignatureHostedArtifact = async (
 	const hosted = await inspectCheckedRecordValueIndexHostedArtifact(selected, {
 		workflow: lane.workflow, jobName: lane.jobName
 		, artifactPrefix: lane.artifactPrefix
-		, conclusions: { run: runConclusion, job: "success" }
+		, conclusions: { run: runConclusion, job: lane.jobConclusion }
 	});
 	assert.equal(hosted.hostedRun.runId, lane.runId, lane.id);
 	assert.equal(hosted.revision, dependentSignatureHostedProducer, lane.id);

@@ -78,7 +78,11 @@ test("the hosted plan closes exactly 17 profiles across both author routes", () 
 		for(const profile of lane.profiles) ordinaryProfiles.add(profile);
 		assert.equal(lane.runId, lane.id.startsWith("perl-")
 			? dependentSignaturePerlRun : dependentSignatureConsumerRun);
+		assert.ok(["failure", "success"].includes(lane.jobConclusion));
 	}
+	assert.deepEqual(dependentSignatureHostedLanes.filter(lane =>
+		lane.jobConclusion === "failure").map(lane => lane.id)
+	, ["c-family", "python", "rust"]);
 	assert.deepEqual([...ordinaryProfiles].sort(), [
 		"browser-javascript", "browser-react", "browser-worker", "c", "cpp"
 		, "dotnet", "java", "kotlin", "node-javascript", "node-typescript"
@@ -88,6 +92,22 @@ test("the hosted plan closes exactly 17 profiles across both author routes", () 
 	assert.equal(ordinaryProfiles.size * 2, 34);
 	assert.equal(dependentSignatureHostedLanes.filter(
 		lane => lane.id.startsWith("perl-")).length, 4);
+});
+
+test("every lane names exact ordered steps in its immutable producer workflow", () => {
+	const workflows = new Map();
+	for(const lane of dependentSignatureHostedLanes)
+	{
+		if(!workflows.has(lane.workflow)) workflows.set(lane.workflow
+			, dependentSignatureHostedOriginal(
+				dependentSignatureHostedProducer, lane.workflow).toString());
+		const workflow = workflows.get(lane.workflow);
+		const acceptance = `- name: ${lane.acceptanceStep}`;
+		const upload = `- name: ${lane.uploadStep}`;
+		assert.equal(workflow.split(acceptance).length, 2, lane.id);
+		assert.equal(workflow.split(upload).length, 2, lane.id);
+		assert.ok(workflow.indexOf(acceptance) < workflow.indexOf(upload), lane.id);
+	}
 });
 
 test("the archive CLI accepts one canonical absolute input root only", async t => {
