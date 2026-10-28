@@ -57,11 +57,12 @@ export const supportsNativeRefinementTargets = targets => targets.every(target =
 
 /**
  * Admit Fin in a leased closure's arguments and in values Lean gives the host only when every
- * requested projection checks closure arguments before Lean runs: C and C++ today.
+ * requested projection checks closure arguments before Lean runs.
  *
  * @param targets - Validated native package target names.
  */
-export const supportsNativeCallbackRefinementTargets = targets => targets.every(target => ["c", "cpp"].includes(target));
+export const supportsNativeCallbackRefinementTargets = targets => targets.every(target =>
+	["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi", "cpan"].includes(target));
 
 /**
  * Build Lean once, compile XS per Perl ABI, then archive the checked inputs.

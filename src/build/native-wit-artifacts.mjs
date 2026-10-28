@@ -30,7 +30,7 @@ export const wasmtimeCapiIdentity = Object.freeze({
  */
 export const ordinaryWitEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot, settings }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true, nativeRefinements: true, nativeCheckedRecords: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true, nativeRefinements: true, nativeCallbackRefinements: true, nativeCheckedRecords: true });
 	const projection = model.copiedGraph
 		? model.copiedGraph.callbacks ? compileCallableWitGraphPackageModel(model.bindingIr, settings)
 			: compileCopiedWitGraphPackageModel(model.bindingIr, settings

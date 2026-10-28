@@ -16,6 +16,7 @@ import { copiedConversions, copiedNativeTypes } from "../../src/backends/dotnet/
 import { copiedJvmConversions } from "../../src/backends/jvm/copied-conversions.mjs";
 import { copiedPhpConversions, copiedPhpDefinitions, copiedPhpChecks } from "../../src/backends/php/copied-conversions.mjs";
 import { renderWitConversions } from "../../src/backends/wit/copied-conversions.mjs";
+import { supportsNativeCallbackRefinementTargets } from "../../src/build/native-project.mjs";
 
 test("checked-record host conversions retain ordinary record layouts and copy ownership", () => {
 	const renderers = { python: [copiedPythonTypes, copiedPythonConversions]
@@ -128,16 +129,19 @@ test("native Subtype package documentation names reviewed constructor reconcilia
 	assert.doesNotMatch(readme, /reviewed Binding IR is not supported/u);
 });
 
-test("all native package readers opt into checked-record mirrors without admitting refined callbacks", async () => {
+test("all native package readers opt into checked-record mirrors and refined callbacks", async () => {
+	assert.equal(supportsNativeCallbackRefinementTargets(["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi", "cpan"]), true);
+	assert.equal(supportsNativeCallbackRefinementTargets(["unsupported"]), false);
 	for(const host of ["python", "rust", "ruby", "dotnet", "jvm", "php", "wit"])
 	{
 		const source = await readFile(`src/build/native-${host}-artifacts.mjs`, "utf8");
-		assert.ok(source.includes("{ copiedGraphs: true, nativeRefinements: true, nativeCheckedRecords: true }"), host);
-		assert.doesNotMatch(source, /nativeCallbackRefinements: true/u);
+		assert.ok(source.includes("{ copiedGraphs: true, nativeRefinements: true, nativeCallbackRefinements: true, nativeCheckedRecords: true }"), host);
 	}
 	const source = await readFile("src/build/native-c-projection.mjs", "utf8");
 	assert.ok(source.includes('nativeCheckedRecords: targets.every(target => ["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi"].includes(target))'));
-	assert.ok(source.includes('nativeCallbackRefinements: targets.every(target => ["c", "cpp"].includes(target))'));
+	assert.ok(source.includes('nativeCallbackRefinements: targets.every(target => ["c", "cpp", "pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi"].includes(target))'));
+	const cpan = await readFile("src/release/cpan-package.mjs", "utf8");
+	assert.ok(cpan.includes("nativeRefinements: true, nativeCallbackRefinements: true, nativeCheckedRecords: true"));
 	const artifact = await readFile("src/build/native-artifacts.mjs", "utf8");
 	assert.ok(artifact.includes("nativeCheckedRecords = false"));
 	assert.ok(artifact.includes('code: "native-checked-records-unavailable"'));
