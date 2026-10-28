@@ -3333,7 +3333,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeSignatureSpecializationHostedProducerBindingIntegrationSource(
+	let stage = beforeCoreHubOrderMergedIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationHostedProducerBindingIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
@@ -3391,10 +3395,6 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	text = stage;
 	stage = beforeNativeFinCallbackRoleIntegrationSource(
 		path, text, expected);
-	if(expected !== undefined && sha256(stage) === expected)
-		return stage;
-	text = stage;
-	stage = beforeCoreHubOrderMergedIntegrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
