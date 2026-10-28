@@ -1,0 +1,53 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8b3346d96c98cb31be0a283596f1faaa6e93394c95c757ca7dd08a5e9bf65478",
+      "path": "scripts/update-signature-specialization-hosted-archive-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "b00a02d45b063db0ff40b812a7f5ab488c65948dc16c3e8304c8c46c435b472f",
+      "path": "tests/helpers/signature-specialization-hosted-archive-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "41012302c1983d3f676a0f2c406cfb1aa59c2ed8ad2f0fab96ad0be932dfc29c",
+      "path": "tests/helpers/signature-specialization-hosted-archive-replay-source-history.mjs"
+    }
+  ],
+  "archive": {
+    "bytes": 2465722,
+    "files": 5726,
+    "path": "docs/evidence/signature-specializations-hosted-20261028/index.json",
+    "sha256": "d595448b28dfce051f64a7e1d55f0f7ba91e1ec5e69ff605a0c7e25c6d6d4789"
+  },
+  "implementationCommit": "6f505c1b130dffa19a68d2539cf7c80259da44e3",
+  "milestone": "signature-specialization-hosted-archive-replay-source-v1",
+  "predecessorCommit": "54d51f40c8f9441779aff1cea7b0a808dd84f1f4",
+  "schemaVersion": 1,
+  "scope": "Commit the fully replayed ten-lane hosted signature archive and make its replay/promotion readers insensitive to canonical JSON object-key order while still requiring the complete exact producer map. The archive index authenticates all 5,725 retained children; no evidence bytes or support cells are rewritten by this layer.",
+  "updates": [
+    {
+      "currentSha256": "918ebf9126ff4012bb789d47b51d66d5175e5fb27e9f11826e559caca19c88f0",
+      "edits": [
+        {
+          "current": "\tassert.deepEqual(Object.keys(index.producerCommits).sort()\n\t\t, signatureSpecializationHostedLanes.map(lane => lane.id).sort());\n",
+          "previous": "\tassert.deepEqual(Object.keys(index.producerCommits)\n\t\t, signatureSpecializationHostedLanes.map(lane => lane.id));\n",
+          "start": 3040
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-completion-promotion.mjs",
+      "previousSha256": "1a08775e73b1fe71a6c138abfdddcdbc43f24302e09f16f6b745661688f1f8da"
+    },
+    {
+      "currentSha256": "0e1c6c27baca99ca77270756cc7a75df6969afd5ab7827e008e03d4d43406d09",
+      "edits": [
+        {
+          "current": "\tassert.deepEqual(Object.keys(index.producerCommits).sort()\n\t\t, signatureSpecializationHostedLanes.map(lane => lane.id).sort());\n",
+          "previous": "\tassert.deepEqual(Object.keys(index.producerCommits)\n\t\t, signatureSpecializationHostedLanes.map(lane => lane.id));\n",
+          "start": 9027
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-hosted-evidence.mjs",
+      "previousSha256": "fe5e1b62815df027699cc717e231fb66281d54adf1a00d8da9d5627880b5b7f4"
+    }
+  ]
+}
