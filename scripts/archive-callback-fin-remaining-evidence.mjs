@@ -62,6 +62,8 @@ const archiveCommit = execFileSync("git", ["rev-parse", "HEAD"], {
 assert.match(archiveCommit, /^[a-f0-9]{40}$/u);
 
 const descriptors = new Map();
+const stagingRoot = await mkdtemp(join(
+	tmpdir(), "lean-bridge-callback-fin-evidence-staging-"));
 const putBytes = (path, value) => {
 	assert.ok(!descriptors.has(path), path);
 	const bytes = Buffer.from(value);
@@ -73,9 +75,14 @@ const putFile = async (path, source) => {
 	assert.ok(!descriptors.has(path), path);
 	const information = await stat(source);
 	assert.ok(information.isFile(), source);
+	const staged = join(stagingRoot, path);
+	await mkdir(dirname(staged), { recursive: true });
+	await copyFile(source, staged, constants.COPYFILE_FICLONE);
+	assert.equal((await stat(staged)).size, information.size, path);
 	descriptors.set(path, {
 		bytes: information.size
-		, sha256: await checkedRecordValueIndexHostedDigest(source), source
+		, sha256: await checkedRecordValueIndexHostedDigest(staged)
+		, source: staged
 	});
 };
 
@@ -210,6 +217,7 @@ for(const [path, descriptor] of descriptors)
 const indexBytes = Buffer.from(canonicalJson(index));
 await writeFile(join(callbackFinRemainingHostedEvidenceDirectory
 	, "index.json"), indexBytes, { flag: "wx" });
+await rm(stagingRoot, { recursive: true });
 process.stdout.write(canonicalJson({
 	destination: callbackFinRemainingHostedEvidenceDirectory
 	, files: files.length + 1
