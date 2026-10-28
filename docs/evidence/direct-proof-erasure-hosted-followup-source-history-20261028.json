@@ -1,0 +1,137 @@
+{
+  "additions": [
+    {
+      "currentSha256": "821904bac2e045107970d13d6f1931bf440524bc6b66261bd373dc2796956c04",
+      "path": "scripts/update-direct-proof-erasure-hosted-followup-source-history.mjs"
+    },
+    {
+      "currentSha256": "cadcfc3aab8550cc65e13bc0f207ae722e15c14c0c35feabbb35630495691401",
+      "path": "tests/helpers/direct-proof-erasure-hosted-followup-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "5e7330c515f5648c5a8277135de669b368570f47ab894bc89bb3f216ab0fc5a6",
+      "path": "tests/helpers/direct-proof-erasure-hosted-followup-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "8b9c42c2bd5d6c0c1025be3f454cc9357aaad427",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4d49d5d8751d9a4ee22aeccb65466b9f997a05a5a10b29ddc76ca7b0c6109fce",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-hosted-followup-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "ff99a56b2989a01d0373879fc0514efd3c9d229474da69048e742cab7581d694"
+    },
+    {
+      "currentSha256": "f7198cd845d108a40839ae61dd1f6511d954db777f49f506084663185928d570",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureHostedFollowupSource, directProofErasureHostedFollowupNormalizationPaths } from \"./direct-proof-erasure-hosted-followup-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureHostedFollowupNormalizationPaths\n\t, ...directProofErasureNativeProducerRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureNativeProducerRepairNormalizationPaths\n",
+          "start": 213617
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureHostedFollowupSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureNativeProducerRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureNativeProducerRepairSource(\n",
+          "start": 267078
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7b6fe98d067afe24782ac4e7f0b0bb516993b9f980980bc43e229e83f42eda83"
+    }
+  ],
+  "milestone": "direct-proof-erasure-hosted-followup-source-v1",
+  "predecessorCommit": "859466ef8fe078f7349bdfaa2704aed3802ecf92",
+  "schemaVersion": 1,
+  "scope": "Repair both hosted follow-up failures without rewriting retained evidence: reviewed Subtype results carry no input constructor choice, while immutable WIT reports authenticate their exact producer-era trampoline and generated-source identities. Register every transition newest-first; the complete downstream matrix remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "19784a5e283083ced6ea56948766d09e93bafbab2382e3e32f10709e56f5b08d",
+      "edits": [
+        {
+          "current": "\t\t, [\"output constructor selection\", ir => { half(ir).source.extensions[key].result = { kind: \"subtype\", constructor: \"Subtypes.wrongEven\" }; }, /transport signature/u]\n",
+          "previous": "\t\t, [\"wrong output subtype\", ir => { half(ir).source.extensions[key].parameters[0].constructor = \"Subtypes.wrongEven\"; }, /return Option of the exact subtype/u]\n",
+          "start": 2284
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-build-tests.mjs",
+      "previousSha256": "6413f0f63467c77d6acc36ab594a91f6100792b0fbecea8f198b7501932d2e51"
+    },
+    {
+      "currentSha256": "3999cc2661a2a1a8f7b4c0741aa05005ede3abf33cfddad32af2339f09ab22f2",
+      "edits": [
+        {
+          "current": "const inputSubtype = constructor => constructor === null ? null\n\t: { kind: \"subtype\", constructor: `Subtypes.${constructor}` };\nconst outputSubtype = predicate => predicate === null ? null\n\t: { kind: \"subtype\", constructor: null };\n",
+          "previous": "const subtype = constructor => constructor === null ? null : { kind: \"subtype\", constructor: `Subtypes.${constructor}` };\n",
+          "start": 201
+        },
+        {
+          "current": "\t\tdeclaration.source.extensions[\"lean-lang.org/refinements\"] = {\n\t\t\tparameters: parameters.map(inputSubtype), result: outputSubtype(result)\n\t\t};\n",
+          "previous": "\t\tdeclaration.source.extensions[\"lean-lang.org/refinements\"] = { parameters: parameters.map(subtype), result: subtype(result) };\n",
+          "start": 1699
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-fixture.mjs",
+      "previousSha256": "98f50aa4b5075142bb29f0938827e0a5b0fbd0713eb0b76b374db64fb550a197"
+    },
+    {
+      "currentSha256": "689db8f466e387566daacea7f414ed2cf009bf9241b3f58d4301062713d22e10",
+      "edits": [
+        {
+          "current": "import { ownedWitCallbackResultProbe } from \"./wit-owned-callback-result-probe.mjs\";\n",
+          "previous": "import { ownedWitCallbackResultProbe, ownedWitCallbackNativeSource } from \"./wit-owned-callback-result-probe.mjs\";\n",
+          "start": 890
+        },
+        {
+          "current": "const historicalOutputs = Object.freeze({\n\t\"ordinary-no-host\": [null\n\t\t, \"01ab47fdc80ab3e9917832172520fa312e9d85ee9ebf1ae34536fd5f76684969\"\n\t\t, \"60ca21245e8f950055cb42427a06a0ec691cc77284ce1169499998216dfc0adb\"]\n\t, \"ordinary-host\": [\"0ff764cadeaeb29edf6f1862134abc122204195085f5ff3a8eead81c7d5767db\"\n\t\t, \"bdab79b0c67cd570175cf9a4b0715da93273ed768597c28512f94bce5fe44944\"\n\t\t, \"5fa0d704bba324e8ea95bf5d53018f15f1dff2edf40008470e1255566c9bf38c\"]\n\t, \"ordinary-combined\": [\"78f7e93c897ee843cb375d9dba67b0934be9dc0d1edfc6e65a723fa1094af851\"\n\t\t, \"4af072e19327892a2f954aabf82d832491b4c291bcfcdc8e071d976188d00543\"\n\t\t, \"ff45754eba0783e7b639a00bb35125ab423460420fe39921a43631d7cd7c321f\"]\n\t, \"reviewed-no-host\": [null\n\t\t, \"47c0fe1721f429c9cf5025d208a65d7d5274c0c4273cd55ace4550cdc5f04505\"\n\t\t, \"5f567d58438c99e86f0b702ba42e56de1fc316e7ca6526c26aeef93af40f024c\"]\n\t, \"reviewed-host\": [\"152824c43217cb44fa0c045377d1ba4b59e202e7b37fb6e6db315cfc9930f71c\"\n\t\t, \"b3953fcd02955c94cfdd9a6efff2c0a29151eb0160bde37c66b7c258d127f291\"\n\t\t, \"c0d2cd321803ea8298de9488adbd0c94eb4d81f5f2b7f7348280c9b0a1728b34\"]\n\t, \"reviewed-combined\": [\"bf8052b08c71d885c7cca28f693568f2e046ff366be01bff1f8d3068fd559011\"\n\t\t, \"ecb978e6d9cb3b39ce9be3780038b31e996c15e15bb38d3da42ed806705427ab\"\n\t\t, \"2dd7d178b0818aa6acad40c8b0e97dd48622294f3a8c7cf587865c1e119894fd\"]\n});\n",
+          "previous": "",
+          "start": 4222
+        },
+        {
+          "current": "\tconst [historicalTrampoline, historicalSource, historicalObservedSource]\n\t\t= historicalOutputs[`${mode}-${variant}`];\n\tassert.equal(item.native.ownedGraph.hostCallbacks?.trampolineSha256 ?? null\n\t\t, historicalTrampoline);\n\tif(historicalTrampoline !== null)\n\t\tnative.ownedGraph.hostCallbacks.trampolineSha256 = historicalTrampoline;\n",
+          "previous": "",
+          "start": 9745
+        },
+        {
+          "current": "\tconst ownedValues = ownedWitValueContract(native, { generated, files: generated.files });\n\townedValues.sourceSha256 = historicalSource;\n\tassert.deepEqual(item.ownedValues, ownedValues);\n",
+          "previous": "\tassert.deepEqual(item.ownedValues, ownedWitValueContract(native, { generated, files: generated.files }));\n",
+          "start": 10854
+        },
+        {
+          "current": "\tassert.equal(item.sourceSha256, historicalSource);\n\tassert.equal(item.observedSourceSha256, historicalObservedSource);\n",
+          "previous": "\tassert.equal(item.sourceSha256, sha256(generated.source));\n\tassert.equal(item.observedSourceSha256, sha256(ownedWitCallbackNativeSource(generated)));\n",
+          "start": 11091
+        }
+      ],
+      "path": "tests/helpers/wit-owned-callback-result-runtime-evidence.mjs",
+      "previousSha256": "6c0b0b11adc12246cb4769489b5f973629fc3173ed2b9a48944d5a54be5e5960"
+    },
+    {
+      "currentSha256": "8570247b4c50df9f013f5bf6eacef16f7b6fedae8ed66e7608edda1385853edf",
+      "edits": [
+        {
+          "current": "\t\t\t, ...original.native.ownedGraph.hostCallbacks ? [\n\t\t\t\titem => { item.native.ownedGraph.hostCallbacks.trampolineSha256 = zero; }\n\t\t\t\t, item => { item.ownedValues.hostCallbacks.trampolineSha256 = zero; }\n\t\t\t] : []\n",
+          "previous": "",
+          "start": 3524
+        },
+        {
+          "current": "\tassert.equal(rejected, 764);\n",
+          "previous": "\tassert.equal(rejected, 756);\n",
+          "start": 7439
+        }
+      ],
+      "path": "tests/wit-owned-callback-result-runtime-evidence.test.mjs",
+      "previousSha256": "1df9f3f54cd00e64c8ae0eb5d02783cc2a2075a54c14a2d26b4f0407d1a5ffb0"
+    }
+  ]
+}
