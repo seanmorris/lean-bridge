@@ -3,11 +3,11 @@
  *
  * @file
  */
-import { assertRefinement, callbackDefinitionRefinement, callbackSubtypeDirection, nominalRefinement } from "../abi/refinements.mjs";
+import { callbackDefinitionRefinement, callbackSubtypeDirection, declarationRefinements, nominalRefinement } from "../abi/refinements.mjs";
 
 // Run only after the shared validator has checked tree shape and depth.
 const finOnly = refinement => {
-	if(refinement === null || ["fin", "fin-field"].includes(refinement.kind)) return;
+	if(refinement === null || ["fin", "fin-field", "fin-parameter"].includes(refinement.kind)) return;
 	if(refinement.kind === "subtype") throw new TypeError("Reviewed Subtype decisions require a checked constructor selection");
 	if(refinement.kind === "checked-record") throw new TypeError("Reviewed checked records cross only at top-level sites");
 	if(refinement.kind === "record") return refinement.fields.forEach(field => finOnly(field.refinement));
@@ -46,13 +46,7 @@ export const assertReviewedFinCallback = assertReviewedSubtypeCallback;
  * @param types - Reviewed definitions for per-use record and variant choices.
  */
 export const assertReviewedRefinements = (declaration, value, types = []) => {
-	const fail = () => { throw new TypeError("Invalid reviewed refinement decision"); };
-	if(!value || typeof value !== "object" || Array.isArray(value)
-		|| Object.keys(value).length !== 2 || !Object.hasOwn(value, "parameters") || !Object.hasOwn(value, "result")
-		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length) fail();
-	for(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, declaration.parameters[index].type, 0, true, types);
-	assertRefinement(value.result, declaration.result.type, 0, true, types, true);
-	if(value.result === null && value.parameters.every(refinement => refinement === null)) fail();
+	declarationRefinements(declaration, value, types);
 };
 
 /**

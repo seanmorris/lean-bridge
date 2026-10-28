@@ -53,8 +53,9 @@ const finBelow = `static inline int lb_fin_below(const uint32_t *data, size_t le
  * @param options.copy - Copied C type for a native representation.
  * @param options.bounds - Receives static bound constant definitions.
  * @param options.reject - Statement rejecting the call with a quoted message.
+ * @param options.parameterBounds - Live copied parameter expressions and labels, in declaration order.
  */
-export const finRefinementWalk = ({ refinement, type: root, value: argument, constant, label, copy, bounds, reject }) => {
+export const finRefinementWalk = ({ refinement, type: root, value: argument, constant, label, copy, bounds, reject, parameterBounds = [] }) => {
 	let sites = 0;
 	const check = (site, type, value, indent, path) => {
 		if(site === null || ["subtype", "fin-field"].includes(site.kind)) return [];
@@ -75,6 +76,19 @@ export const finRefinementWalk = ({ refinement, type: root, value: argument, con
 			if(limbs.length) bounds.push(`static const uint32_t ${name}[${limbs.length}] = {${limbs.map(limb => `0x${limb.toString(16)}u`).join(", ")}};`);
 			const rejected = finDiagnosticRejection({ path, bound: site.bound, name, indent, reject });
 			return [`${indent}if (!lb_fin_below(${value}->data, ${value}->length, ${limbs.length ? name : "NULL"}, ${limbs.length})) ${rejected}`];
+		}
+		if(site.kind === "fin-parameter")
+		{
+			const bound = parameterBounds[site.parameter], name = `${constant}_${sites}`;
+			sites += 1;
+			if(type.kind !== "primitive" || type.name !== "nat" || !bound
+				|| typeof bound.value !== "string" || typeof bound.label !== "string")
+				throw new TypeError("Dependent Fin requires its earlier copied Nat parameter");
+			const rejected = refinementDiagnosticRejection({
+				path, suffix: ` is not below its dependent Fin bound ${bound.label}`
+				, name, indent, reject
+			});
+			return [`${indent}if (!lb_fin_below(${value}->data, ${value}->length, ${bound.value}->data, ${bound.value}->length)) ${rejected}`];
 		}
 		const fields = copy(type).fields;
 		if(site.kind === "array" || site.kind === "list")
@@ -119,7 +133,7 @@ export const finRefinementWalk = ({ refinement, type: root, value: argument, con
  */
 export const constructorRefinementWalk = ({ refinement, type: root, value: argument, symbol, label, copy, input, reject }) => {
 	const check = (site, type, value, indent, path, suffix) => {
-		if(site === null || ["fin", "fin-field"].includes(site.kind)) return [];
+		if(site === null || ["fin", "fin-field", "fin-parameter"].includes(site.kind)) return [];
 		if(type.kind === "alias") return check(site, type.target, value, indent, path, suffix);
 		if(site.kind === "subtype")
 		{
@@ -325,6 +339,10 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			, "  (void)context; size_t budget = 16u * 1024u * 1024u;"
 			, `  if (lb_ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;`];
 		const refinements = native.refinements?.parameters ?? [];
+		const parameterBounds = fn.parameters.map(({ name }, index) => ({
+			label: name
+			, value: copy(native.parameters[index].type).aggregate ? name : `(&${name})`
+		}));
 		const args = fn.parameters.map(({ name }, i) => {
 			const type = native.parameters[i].type, value = copy(type).aggregate ? name : `&${name}`;
 			lines.push(`  if (!${id(type)}_check(${value}, &budget)) return lb_invalid(error, "Invalid copied input or 16 MiB call limit exceeded");`);
@@ -338,7 +356,7 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			if(!refinement) return;
 			const value = copy(native.parameters[i].type).aggregate ? fn.parameters[i].name : `(&${fn.parameters[i].name})`;
 			const reject = message => `return lb_invalid(error, ${message});`;
-			lines.push(...finRefinementWalk({ refinement, type: native.parameters[i].type, value, constant: `lb_fin_${fn.field}_${i}`, label: fn.parameters[i].name, copy, bounds, reject }));
+			lines.push(...finRefinementWalk({ refinement, type: native.parameters[i].type, value, constant: `lb_fin_${fn.field}_${i}`, label: fn.parameters[i].name, copy, bounds, reject, parameterBounds }));
 		});
 		// Author-checked constructors run only after every structural and Fin check, on a fresh
 		// conversion that the exported validator owns and releases; the call converts again.

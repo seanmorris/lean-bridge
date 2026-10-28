@@ -111,6 +111,12 @@ export const checkedRefinementSelection = refinement => {
 			if(typeof value.field !== "string" || !memberName.test(value.field)) fail();
 			return null;
 		}
+		if(value?.kind === "fin-parameter")
+		{
+			closed(value, ["kind", "parameter"]);
+			if(!Number.isSafeInteger(value.parameter) || value.parameter < 0 || value.parameter > 1023) fail();
+			return null;
+		}
 		if(value?.kind === "checked-record" && Object.hasOwn(value, "fields"))
 		{
 			closed(value, ["kind", "name", "constructor", "fields"]);

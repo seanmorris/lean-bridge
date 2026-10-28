@@ -305,6 +305,17 @@
       "required": ["kind", "base", "predicate", "abi"],
       "properties": {
         "kind": { "const": "refinement" },
+        "base": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "const": "primitive" }, "name": { "const": "nat" } } }] },
+        "predicate": { "type": "object", "additionalProperties": false, "required": ["kind", "parameter"],
+          "properties": { "kind": { "const": "fin-parameter" }, "parameter": { "type": "integer", "minimum": 0, "maximum": 1023 } } },
+        "abi": { "$ref": "#/$defs/abi" }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "base", "predicate", "abi"],
+      "properties": {
+        "kind": { "const": "refinement" },
         "base": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "const": "primitive" } } }] },
         "predicate": {
           "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],

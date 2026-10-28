@@ -25,7 +25,7 @@ export const checkedRecordVia = (constructor, refinement = null) =>
  * @param suffix - Exported validator suffix, empty for an existing scalar site.
  */
 export const constructorRefinementLeaves = (refinement, type, suffix = "") => {
-	if(refinement === null || ["fin", "fin-field"].includes(refinement.kind)) return [];
+	if(refinement === null || ["fin", "fin-field", "fin-parameter"].includes(refinement.kind)) return [];
 	if(type.kind === "alias") return constructorRefinementLeaves(refinement, type.target, suffix);
 	if(refinement.kind === "subtype") return [{ refinement, type, suffix }];
 	if(refinement.kind === "checked-record")
@@ -75,7 +75,7 @@ export const componentRecursiveRefinementLeaves = (refinement, type, definitions
 		return resolve(definition.target, new Set([...aliases, reference.id]));
 	};
 	const visit = (tree, reference, active = new Set()) => {
-		if(tree === null || tree === undefined || ["fin", "fin-field"].includes(tree.kind)) return;
+		if(tree === null || tree === undefined || ["fin", "fin-field", "fin-parameter"].includes(tree.kind)) return;
 		const concrete = resolve(reference);
 		if(tree.kind === "subtype")
 		{
@@ -176,6 +176,8 @@ export const componentRefinementConversion = (refinement, value, checked = true,
 	if(refinement.kind === "fin") return checked
 		? `(if proof : ${input} < ${refinement.bound} then _root_.Option.some (⟨${input}, proof⟩ : _root_.Fin ${refinement.bound}) else _root_.Option.none)`
 		: `${input}.val`;
+	if(refinement.kind === "fin-parameter")
+		throw new TypeError("A dependent Fin conversion requires its declaration parameter context");
 	// The surrounding checked-record constructor validates the relationship between
 	// sibling fields. This leaf only transports the dependent Fin as its Nat value.
 	if(refinement.kind === "fin-field") return checked
@@ -224,7 +226,8 @@ export const componentRefinedCall = (item, arguments_, emptyArgumentSpace = fals
 	const parameters = arguments_.map((argument, index) => {
 		const refinement = selected.parameters[index];
 		if(refinement === null) return argument;
-		return refinement.kind === "fin" ? `⟨${argument}, _bridgeFin${index}⟩` : `_bridgeSubtype${index}`;
+		return ["fin", "fin-parameter"].includes(refinement.kind)
+			? `⟨${argument}, _bridgeFin${index}⟩` : `_bridgeSubtype${index}`;
 	});
 	const application = `${item.sourceApplication ? `(${item.sourceApplication})` : `_root_.${item.sourceDeclaration}`}${parameters.length ? ` ${parameters.join(" ")}` : emptyArgumentSpace ? " " : ""}`;
 	return {
@@ -232,7 +235,8 @@ export const componentRefinedCall = (item, arguments_, emptyArgumentSpace = fals
 			? componentRefinementConversion(selected.result, application, false)
 			: `(let _bridgeResult := ${application}; ${componentRefinementConversion(selected.result, "_bridgeResult", false)})`
 		, guards: selected.parameters.flatMap((refinement, index) => refinement === null ? []
-			: refinement.kind === "fin" ? [{ kind: "fin", bound: refinement.bound
+			: ["fin", "fin-parameter"].includes(refinement.kind) ? [{ kind: "fin"
+				, bound: refinement.kind === "fin" ? refinement.bound : arguments_[refinement.parameter]
 				, proof: `_bridgeFin${index}`, value: arguments_[index] }]
 				: [{ kind: "checked", binding: `_bridgeSubtype${index}`
 					, conversion: componentRefinementConversion(refinement, arguments_[index]) }])
@@ -267,7 +271,7 @@ export const componentRefinementGuards = (guards, success, rejected) => {
  * @param inputGuard - Optional Fin-only predicate, evaluated before any selected constructor.
  */
 export const componentCarrierRefinementValidators = (item, includeFin = false, inputGuard) => (item.refinements?.parameters ?? []).flatMap((refinement, index) => {
-	if(!refinement || (!includeFin && refinement.kind === "fin")) return [];
+	if(!refinement || (!includeFin && ["fin", "fin-parameter"].includes(refinement.kind))) return [];
 	const carrier = item.parameters?.[index]?.leanType;
 	if(typeof carrier !== "string" || carrier.length === 0)
 		throw new TypeError(`Refinement validator ${index} has no carrier Lean type`);

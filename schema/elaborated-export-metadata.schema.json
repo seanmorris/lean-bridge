@@ -333,6 +333,13 @@
                 }
               },
               {
+                "type": "object", "additionalProperties": false, "required": ["kind", "parameter"],
+                "properties": {
+                  "kind": { "const": "fin-parameter" },
+                  "parameter": { "type": "integer", "minimum": 0, "maximum": 1023 }
+                }
+              },
+              {
                 "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
                 "properties": {
                   "kind": { "const": "subtype" },

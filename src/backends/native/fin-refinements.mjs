@@ -4,7 +4,7 @@
  *
  * @file
  */
-import { assertRefinement } from "../../abi/refinements.mjs";
+import { declarationRefinements } from "../../abi/refinements.mjs";
 
 /**
  * Read exact refinements from compiler-checked declaration and type metadata.
@@ -21,11 +21,10 @@ export const nativeFinRefinements = (declaration, types = []) => {
 		|| JSON.stringify(Object.keys(value).sort()) !== JSON.stringify(["parameters", "result"])
 		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length)
 		throw new TypeError(`${declaration.id} has malformed refinement metadata`);
-	value.parameters.forEach((refinement, index) => assertRefinement(refinement, declaration.parameters[index].type, 0, true, types));
-	assertRefinement(value.result, declaration.result.type, 0, true, types, true);
+	declarationRefinements(declaration, value, types);
 	// Nominal Subtypes and checked records keep their per-use constructor decisions
 	// separate from shared Fin bounds.
-	const supported = refinement => refinement === null || ["fin", "fin-field", "subtype"].includes(refinement.kind)
+	const supported = refinement => refinement === null || ["fin", "fin-field", "fin-parameter", "subtype"].includes(refinement.kind)
 		|| (refinement.kind === "checked-record" && (!Object.hasOwn(refinement, "fields")
 			|| refinement.fields.every(field => supported(field.refinement))))
 		|| (refinement.kind === "record" && refinement.fields.every(field => supported(field.refinement, false)))
@@ -137,25 +136,32 @@ const nativeFinExpansion = (declaration, types) => {
  * @param refinement - Validated refinement tree.
  * @param path - Site name followed by the path so far.
  * @param produced - Whether Lean produces this export result, rather than checking an input.
+ * @param parameterNames - Live declaration parameter names used by direct dependent Fin sites.
  */
-export const nativeFinBoundPaths = (refinement, path, produced = false) => {
+export const nativeFinBoundPaths = (refinement, path, produced = false, parameterNames = []) => {
 	if(refinement === null) return [];
 	if(refinement.kind === "checked-record") return [
 		refinement.constructor === null
 			? `${path} projects proof-backed record payload fields`
 			: `${path} checked by ${refinement.constructor}`
 		, ...(refinement.arguments ?? []).flatMap((child, index) =>
-			nativeFinBoundPaths(child, `${path}.${refinement.fields[index]}`, produced))
+			nativeFinBoundPaths(child, `${path}.${refinement.fields[index]}`, produced, parameterNames))
 	];
 	if(refinement.kind === "subtype") return [produced || refinement.constructor === null
 		? `${path} projects the Subtype base value` : `${path} checked by ${refinement.constructor}`];
 	if(refinement.kind === "fin") return [`${path} < ${refinement.bound}`];
+	if(refinement.kind === "fin-parameter")
+	{
+		const bound = parameterNames[refinement.parameter];
+		if(produced || typeof bound !== "string") throw new TypeError("Dependent Fin requires its earlier parameter name");
+		return [`${path} < ${bound}`];
+	}
 	if(refinement.kind === "fin-field") return [`${path} < ${path.slice(0, path.lastIndexOf(".") + 1)}${refinement.field}`];
-	if(refinement.kind === "tuple") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index}`, produced));
-	if(refinement.kind === "result") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index ? "error" : "ok"}`, produced));
-	if(refinement.kind === "record") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${refinement.fields[index]}`, produced));
-	if(refinement.kind === "variant") return refinement.cases.flatMap(branch => branch.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${branch.name}.${branch.fields[index]}`, produced)));
-	return nativeFinBoundPaths(refinement.arguments[0], `${path}${refinement.kind === "option" ? "?" : "[*]"}`, produced);
+	if(refinement.kind === "tuple") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index}`, produced, parameterNames));
+	if(refinement.kind === "result") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index ? "error" : "ok"}`, produced, parameterNames));
+	if(refinement.kind === "record") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${refinement.fields[index]}`, produced, parameterNames));
+	if(refinement.kind === "variant") return refinement.cases.flatMap(branch => branch.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${branch.name}.${branch.fields[index]}`, produced, parameterNames)));
+	return nativeFinBoundPaths(refinement.arguments[0], `${path}${refinement.kind === "option" ? "?" : "[*]"}`, produced, parameterNames);
 };
 
 /**
@@ -168,8 +174,8 @@ export const nativeFinBoundPaths = (refinement, path, produced = false) => {
 export const nativeFinSummary = (declaration, names, types = []) => {
 	const value = nativeFinRefinements(declaration, types);
 	if(!value) return null;
-	const parts = value.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, names[index]));
-	parts.push(...nativeFinBoundPaths(value.result, "result", true));
+	const parts = value.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, names[index], false, names));
+	parts.push(...nativeFinBoundPaths(value.result, "result", true, names));
 	return parts.length ? parts.join("; ") : null;
 };
 
@@ -191,7 +197,7 @@ export const nativeFinContainerNote = (declarations, packages, types = []) => {
 	// Nominal fields need paths identifying the record member or active variant case.
 	if(trees.some(nominal))
 		return `Fin inside arrays, lists, options, products, Except values, records and variants is checked before Lean runs: every array or list element, a present option value, both product components, only the active Except branch, every record field and only the fields of the active variant case. An empty array, an absent option or an inactive branch or case is valid even for Fin 0. Bounds below list every element as name[*], a present option value as name?, product components as name.0 and name.1, the active branch as name.ok or name.error, a record field as name.field and a field of the active variant case as name.Case.field. Fin inside callbacks or generic record instantiations is not supported in ${packages}.`;
-	const structural = trees.some(refinement => refinement !== null && refinement.kind !== "fin");
+	const structural = trees.some(refinement => refinement !== null && !["fin", "fin-parameter"].includes(refinement.kind));
 	const product = refinement => refinement !== null && refinement.arguments !== undefined
 		&& (["tuple", "result"].includes(refinement.kind) || refinement.arguments.some(product));
 	// Products check both components; results check only their active branch.
@@ -219,7 +225,8 @@ export const nativeRefinementReadme = (declarations, finParagraph, packages, typ
 	const walk = refinement => {
 		if(refinement === null) return;
 		if(["record", "variant", "checked-record"].includes(refinement.kind) && hasSubtype(refinement)) nominalSubtype = true;
-		if(["fin", "subtype", "checked-record"].includes(refinement.kind)) kinds.add(refinement.kind);
+		if(refinement.kind === "fin-parameter") kinds.add("fin");
+		else if(["fin", "subtype", "checked-record"].includes(refinement.kind)) kinds.add(refinement.kind);
 		const children = refinement.kind === "variant" ? refinement.cases.flatMap(branch => branch.arguments)
 			: refinement.arguments ?? [];
 		children.forEach(walk);

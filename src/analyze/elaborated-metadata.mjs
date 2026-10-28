@@ -221,6 +221,13 @@ export const validateElaboratedMetadata = (report, request) => {
 							if(type.base.name !== "nat" || typeof type.predicate.bound !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(type.predicate.bound))
 								fail("Invalid Fin refinement");
 						}
+						else if(type.predicate?.kind === "fin-parameter")
+						{
+							closed(type.predicate, ["kind", "parameter"]);
+							if(type.base.name !== "nat" || !Number.isSafeInteger(type.predicate.parameter)
+								|| type.predicate.parameter < 0 || type.predicate.parameter > 1023)
+								fail("Invalid dependent Fin refinement");
+						}
 						else
 						{
 							closed(type.predicate, ["kind", "constructor"]);
@@ -327,7 +334,27 @@ export const validateElaboratedMetadata = (report, request) => {
 					closed(type, ["kind", "element"]);
 					recurse(type.element);
 				};
-				const component = (type, site) => {
+				const dependentFinParameter = (type, site, index) => {
+					let count = 0;
+					const visit = value => {
+						if(!value || typeof value !== "object") return;
+						if(value.kind === "refinement" && value.predicate?.kind === "fin-parameter") count++;
+						for(const child of Object.values(value))
+							if(child && typeof child === "object") Array.isArray(child)
+								? child.forEach(visit) : visit(child);
+					};
+					visit(type);
+					if(count === 0) return;
+					const dependency = type?.predicate?.parameter;
+					if(count !== 1 || type?.kind !== "refinement" || type.predicate?.kind !== "fin-parameter"
+						|| site !== "parameter" || !Number.isSafeInteger(index) || !Number.isSafeInteger(dependency)
+						|| dependency < 0 || dependency >= index
+						|| projection.parameters[dependency]?.type?.kind !== "primitive"
+						|| projection.parameters[dependency].type.name !== "nat")
+						fail("Dependent Fin requires the exact value of an earlier explicit Nat parameter");
+				};
+				const component = (type, site, index) => {
+					dependentFinParameter(type, site, index);
 					if(type?.kind !== "callback") return copied(type, 0, undefined, true, true, site === "result");
 					closed(type, ["kind", "parameters", "result"]);
 					if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("Invalid component callback arity");
@@ -338,7 +365,8 @@ export const validateElaboratedMetadata = (report, request) => {
 					for(const parameter of type.parameters) copied(parameter, 0, undefined, true, true, host);
 					copied(type.result, 0, undefined, true, true, !host);
 				};
-				const nativeType = (type, site) => {
+				const nativeType = (type, site, index) => {
+					dependentFinParameter(type, site, index);
 					if(request.ownedAggregates === undefined) validateNativeType(type, 0, false, site);
 					else validateOwnedNativeType(type, request.ownedAggregates, site);
 					const check = value => {
@@ -359,7 +387,7 @@ export const validateElaboratedMetadata = (report, request) => {
 				projection.parameters.forEach((parameter, index) => {
 					closed(parameter, ["name", "type"]);
 					if(parameter.name !== declaration.parameters[index].name) fail("Runtime binder differs from the elaborated binder");
-					validateType(parameter.type, "parameter");
+					validateType(parameter.type, "parameter", index);
 				});
 				validateType(projection.result, "result");
 				// Every record provenance reference must name a nominal definition this declaration carries:

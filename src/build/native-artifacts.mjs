@@ -28,7 +28,7 @@ const containsRefinement = (tree, predicate) => tree !== null && typeof tree ===
 // host's raw callback-bound adapter.
 const containsUnownedFin = tree => tree !== null && typeof tree === "object"
 	&& (!["checked-record", "subtype"].includes(tree.kind)
-		&& (["fin", "fin-field"].includes(tree.kind)
+		&& (["fin", "fin-field", "fin-parameter"].includes(tree.kind)
 			|| refinementChildren(tree).some(containsUnownedFin)));
 /**
  * Recover reader capabilities from both export refinements and callable-graph

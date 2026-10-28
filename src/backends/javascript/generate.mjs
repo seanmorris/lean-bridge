@@ -11,7 +11,7 @@ import {
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compileOverloadV1 } from "../../abi/overload.mjs";
 import { compileGenericSpecializationV1 } from "../../abi/generic-specialization.mjs";
-import { assertRefinement, nominalRefinementEntries, callbackDefinitionRefinement, callbackSubtypeDirection } from "../../abi/refinements.mjs";
+import { declarationRefinements as assertDeclarationRefinements, nominalRefinementEntries, callbackDefinitionRefinement, callbackSubtypeDirection } from "../../abi/refinements.mjs";
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
@@ -35,8 +35,7 @@ const declarationRefinements = (declaration, types) => {
 		fail("invalid-refinement", `${declaration.id} has malformed refinement metadata`);
 	try
 	{
-		value.parameters.forEach((refinement, index) => assertRefinement(refinement, declaration.parameters[index].type, 0, true, types));
-		assertRefinement(value.result, declaration.result.type, 0, true, types, true);
+		assertDeclarationRefinements(declaration, value, types);
 	}
 	catch(error)
 	{ fail("invalid-refinement", `${declaration.id}: ${error.message}`); }
@@ -62,8 +61,14 @@ const hostSubtypeCallbacks = (ir, typeMap = new Map(ir.types.map(type => [type.i
 	.filter(id => ir.declarations.some(declaration => declaration.parameters.some(parameter => parameter.type.kind === "named"
 		&& parameter.type.id === id && typeMap.has(id)))));
 
-const emitFinCheck = (output, refinement, expression, path, indent) => {
+const emitFinCheck = (output, refinement, expression, path, indent, parameterExpressions = []) => {
 	if(refinement?.kind === "fin") output.push(`${indent}validate.assertFin(${expression}, ${quote(refinement.bound)}, ${quote(path)});`);
+	else if(refinement?.kind === "fin-parameter")
+	{
+		const bound = parameterExpressions[refinement.parameter];
+		if(typeof bound !== "string") fail("invalid-refinement", `${path} has no live dependent Fin bound`);
+		output.push(`${indent}validate.assertFin(${expression}, ${bound}, ${quote(path)});`);
+	}
 	// Lean runs a Subtype or checked-record constructor itself; the host has no bound to check.
 	else if(refinement && !["subtype", "checked-record"].includes(refinement.kind)) output.push(`${indent}validate.assertNestedFin(${expression}, ${quote(refinement)}, ${quote(path)});`);
 };
@@ -507,6 +512,7 @@ const emitDeclarations = (ir, typeMap) => {
 			{
 				const target = overloads.find(item => item.id === branch.declarationId);
 				const refinements = declarationRefinements(target, ir.types);
+				const parameterExpressions = target.parameters.map(parameter => parameter.name);
 				output.push(`    case ${branch.arity}: {`);
 				if(target.parameters.length > 0)
 				{
@@ -519,7 +525,7 @@ const emitDeclarations = (ir, typeMap) => {
 					output.push(
 						`      validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${target.name}.${parameter.name}`)});`,
 					);
-					emitFinCheck(output, refinements.parameters[index], parameter.name, `${target.name}.${parameter.name}`, "      ");
+					emitFinCheck(output, refinements.parameters[index], parameter.name, `${target.name}.${parameter.name}`, "      ", parameterExpressions);
 				}
 				const mappedErrors = declarationErrors(ir, target);
 				const indent = mappedErrors.length > 0 ? "        " : "      ";
@@ -578,6 +584,7 @@ const emitDeclarations = (ir, typeMap) => {
 		}
 		ensureSupportedGenerics(declaration);
 		const refinements = declarationRefinements(declaration, ir.types);
+		const parameterExpressions = declaration.parameters.map(parameter => parameter.name);
 		const asyncPrefix = declaration.resultMode === "promise" ? "async " : "";
 		output.push(docComment(declaration.documentation));
 		output.push(
@@ -587,7 +594,7 @@ const emitDeclarations = (ir, typeMap) => {
       output.push(
         `  validate.${validatorName(parameter.type, typeMap)}(${parameter.name}, ${quote(`${declaration.name}.${parameter.name}`)});`,
       );
-			emitFinCheck(output, refinements.parameters[index], parameter.name, `${declaration.name}.${parameter.name}`, "  ");
+			emitFinCheck(output, refinements.parameters[index], parameter.name, `${declaration.name}.${parameter.name}`, "  ", parameterExpressions);
 		});
 		const operation = declaration.resultMode === "iterator" ? "iterate" : declaration.resultMode === "async-iterator" ? "iterateAsync" : "call";
 		const callbackWrapper = (type, value, path) => {
@@ -690,7 +697,7 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertFin = (value, bound, path) => { assertNat(value, path); if (value >= BigInt(bound)) invalid(path, `bigint below ${bound}`); return value; };"
 		, ...(nominalRefinementEntries(ir.types).length || ir.types.some(type => type.kind === "callback" && callbackDefinitionRefinement(type, ir.types)) || ir.declarations.some(item => {
 			const value = declarationRefinements(item, ir.types);
-			return [...value.parameters, value.result].some(refinement => refinement && !["fin", "subtype", "checked-record"].includes(refinement.kind));
+			return [...value.parameters, value.result].some(refinement => refinement && !["fin", "fin-parameter", "subtype", "checked-record"].includes(refinement.kind));
 		})) ? [
 				"export const assertNestedFin = (value, refinement, path) => {"
 				, structuralSubtype ? "  if (refinement === null || refinement.kind === 'subtype') return;" : "  if (refinement === null) return;"

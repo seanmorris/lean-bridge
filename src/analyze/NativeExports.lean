@@ -1149,20 +1149,39 @@ def shape (request : Request) (e : Expr) (checked : Option Json := none)
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
     (parameterSites : Array (Option Json) := #[]) (resultSite : Option Json := none)
-    (index : Nat := 0) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM (Array Json × Json) := do
+    (index : Nat := 0) (parentAliases : Option (IO.Ref ParentAliasCache) := none)
+    (previous : Array (Expr × Json) := #[]) : MetaM (Array Json × Json) := do
   let reduced ← whnf e
   if index < limit then
-    if let .forallE _ argument result binder := reduced then
-      if binder != .default || result.hasLooseBVars then reject e "dependent or implicit parameter"
-      let site := parameterSites[index]?.join
-      let checked := site.bind fun value => do
-        let refinement ← (value.getObjVal? "refinement").toOption
-        if refinement == str "reject" then none else some refinement
-      let callable := site.bind fun value => (value.getObjVal? "callable").toOption
-      let parameter ← shape request argument checked (callbackSite := some false)
-        (parentAliases := parentAliases) (callableDecision := callable)
-      let (rest, result) ← signature request result limit parameterSites resultSite (index + 1) parentAliases
-      return (#[obj [("name", str s!"arg{index}"), ("type", parameter)]] ++ rest, result)
+    if let .forallE name argument result binder := reduced then
+      if binder != .default then reject e "dependent or implicit parameter"
+      return ← withLocalDecl name binder argument fun boundVariable => do
+        let result := result.instantiate1 boundVariable
+        let site := parameterSites[index]?.join
+        let checked := site.bind fun value => do
+          let refinement ← (value.getObjVal? "refinement").toOption
+          if refinement == str "reject" then none else some refinement
+        let callable := site.bind fun value => (value.getObjVal? "callable").toOption
+        let reducedArgument ← whnf argument
+        let parameter ← if reducedArgument.isAppOfArity ``Fin 1 && reducedArgument.hasFVar then do
+            let bound ← whnf reducedArgument.appArg!
+            let some dependency := previous.findIdx? (fun item => item.1 == bound)
+              | reject argument "dependent Fin refinements require the exact value of an earlier explicit Nat parameter"
+            let base := previous[dependency]!.2
+            unless (base.getObjValAs? String "kind").toOption == some "primitive" &&
+                (base.getObjValAs? String "name").toOption == some "nat" do
+              reject argument "dependent Fin refinements require an earlier explicit Nat parameter"
+            pure <| obj [
+              ("kind", str "refinement"), ("base", base),
+              ("predicate", obj [("kind", str "fin-parameter"),
+                ("parameter", toJson dependency)]),
+              ("abi", ← abi reducedArgument)]
+          else
+            shape request argument checked (callbackSite := some false)
+              (parentAliases := parentAliases) (callableDecision := callable)
+        let (rest, result) ← signature request result limit parameterSites resultSite
+          (index + 1) parentAliases (previous.push (boundVariable, parameter))
+        return (#[obj [("name", str s!"arg{index}"), ("type", parameter)]] ++ rest, result)
   let checked := resultSite.bind fun value => do
     let refinement ← (value.getObjVal? "refinement").toOption
     if refinement == str "reject" then none else some refinement

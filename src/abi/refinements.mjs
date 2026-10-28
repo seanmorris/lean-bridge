@@ -165,7 +165,7 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 export const declarationRefinements = (declaration, value, types = [], { ownedStructural = false } = {}) => {
 	const fail = () => { throw new TypeError("Invalid declaration refinement metadata"); };
 	const direction = (tree, produced) => {
-		if(tree === null || ["fin", "fin-field"].includes(tree.kind)) return;
+		if(tree === null || ["fin", "fin-field", "fin-parameter"].includes(tree.kind)) return;
 		if(["subtype", "checked-record"].includes(tree.kind))
 		{
 			if(produced ? tree.constructor !== null : typeof tree.constructor !== "string") fail();
@@ -183,7 +183,18 @@ export const declarationRefinements = (declaration, value, types = [], { ownedSt
 		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length) fail();
 	for(const [index, refinement] of value.parameters.entries())
 	{
-		assertRefinement(refinement, declaration.parameters[index].type, 0, true, types, false, ownedStructural);
+		if(refinement?.kind === "fin-parameter")
+		{
+			const keys = Object.keys(refinement).sort();
+			const dependency = refinement.parameter;
+			if(keys.length !== 2 || keys[0] !== "kind" || keys[1] !== "parameter"
+				|| !Number.isSafeInteger(dependency) || dependency < 0 || dependency >= index
+				|| declaration.parameters[index].type?.kind !== "primitive"
+				|| declaration.parameters[index].type.name !== "nat"
+				|| declaration.parameters[dependency]?.type?.kind !== "primitive"
+				|| declaration.parameters[dependency].type.name !== "nat") fail();
+		}
+		else assertRefinement(refinement, declaration.parameters[index].type, 0, true, types, false, ownedStructural);
 		direction(refinement, false);
 	}
 	assertRefinement(value.result, declaration.result.type, 0, true, types, true, ownedStructural);
@@ -259,6 +270,8 @@ export const nominalRefinementEntries = types => types.flatMap(definition => {
  */
 export const assertCallbackRefinementDirection = (refinement, produced) => {
 	if(refinement === null || ["fin", "fin-field"].includes(refinement.kind)) return false;
+	if(refinement.kind === "fin-parameter")
+		throw new TypeError("Dependent Fin refinements are valid only on direct declaration parameters");
 	if(refinement.kind === "subtype")
 	{
 		if(produced ? refinement.constructor !== null : typeof refinement.constructor !== "string")

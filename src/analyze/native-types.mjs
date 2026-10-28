@@ -220,6 +220,14 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			recurse(type.base, true);
 			if(type.base.kind !== "primitive") fail("Subtype refinements require a primitive base");
 		}
+		else if(type.predicate?.kind === "fin-parameter")
+		{
+			closed(type.predicate, ["kind", "parameter"], "refinement predicate");
+			if(!Number.isSafeInteger(type.predicate.parameter) || type.predicate.parameter < 0 || type.predicate.parameter > 1023)
+				fail("invalid dependent Fin refinement");
+			recurse(type.base, true);
+			if(type.base.kind !== "primitive" || type.base.name !== "nat") fail("dependent Fin refinements require a Nat base");
+		}
 		else
 		{
 			closed(type.predicate, ["kind", "bound"], "refinement predicate");

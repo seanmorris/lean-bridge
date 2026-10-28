@@ -8,7 +8,7 @@ import { componentScalarTypes, assertComponentSignature } from "../abi/component
 import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs";
 import { assertComponentCopiedBindings, componentCopiedAbi, componentCopiedDispatch } from "../abi/component-copied.mjs";
 import { sha256 } from "../capsule/node.mjs";
-import { assertRefinement, nominalRefinementEntries, callbackDefinitionRefinement } from "../abi/refinements.mjs";
+import { callbackDefinitionRefinement, declarationRefinements, nominalRefinementEntries } from "../abi/refinements.mjs";
 import { componentRecordAbi, componentRecordDispatch, componentCompoundAbi, componentCompoundDispatch, componentNominalAbi, componentNominalDispatch, componentRecordDefinitions, assertComponentRecordBindings } from "../abi/component-records.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
 import { componentStructuredCallableAbi, componentStructuredCallableDispatch, componentStructuredCallableSignatureText, assertComponentStructuredCallableBindings } from "../abi/component-structured-callables.mjs";
@@ -30,8 +30,7 @@ export const createComponentPrivateAbi = document => {
 		if(!value || typeof value !== "object" || Array.isArray(value)
 			|| Object.keys(value).sort().join(",") !== "parameters,result" || !Array.isArray(value.parameters)
 			|| value.parameters.length !== declaration.parameters.length) throw new TypeError("Invalid component export refinements");
-		value.parameters.forEach((tree, index) => assertRefinement(tree, declaration.parameters[index].type, 0, true, document.types));
-		assertRefinement(value.result, declaration.result.type, 0, true, document.types, true);
+		declarationRefinements(declaration, value, document.types);
 		selectedNominal ||= [...value.parameters, value.result].some(tree => hasComponentNominalRefinements(tree));
 	}
 	const records = document.types.some(type => type.kind === "record");
