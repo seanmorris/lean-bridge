@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeNativeFinCallbackRoleIntegrationSource, nativeFinCallbackRoleIntegrationNormalizationPaths } from "./native-fin-callback-role-integration-source-history.mjs";
 import { beforeCoreHubOrderRepairIntegrationSource, coreHubOrderRepairIntegrationNormalizationPaths } from "./core-hub-order-repair-integration-source-history.mjs";
 import { beforeCoreHubOrderRepairSource, coreHubOrderRepairNormalizationPaths } from "./core-hub-order-repair-source-history.mjs";
 import { beforeSignatureSpecializationCompletionIntegrationSource, signatureSpecializationCompletionIntegrationNormalizationPaths } from "./signature-specialization-completion-integration-source-history.mjs";
@@ -186,6 +187,7 @@ import { beforeCallbackFinInstalledRepairSource, callbackFinInstalledRepairNorma
 import { beforeCallbackFinDiagnosticContractSource, callbackFinDiagnosticContractNormalizationPaths } from "./callback-fin-diagnostic-contract-source-history.mjs";
 import { beforeCallbackFinNativeCapabilitySource, callbackFinNativeCapabilityNormalizationPaths } from "./callback-fin-native-capability-source-history.mjs";
 import { beforeCallbackFinHostedWorkflowSource, callbackFinHostedWorkflowNormalizationPaths } from "./callback-fin-hosted-workflow-source-history.mjs";
+import { beforeNativeFinCallbackRoleSource, nativeFinCallbackRoleNormalizationPaths } from "./native-fin-callback-role-source-history.mjs";
 import { beforeOwnedCheckedPhpWasmContextsSource, ownedCheckedPhpWasmContextsNormalizationPaths } from "./owned-checked-php-wasm-contexts-source-history.mjs";
 import { beforeCoreEvidenceMemoryRepairSource, coreEvidenceMemoryRepairNormalizationPaths } from "./core-evidence-memory-repair-source-history.mjs";
 import { beforeValueIndexPromotionMilestoneRepairSource, valueIndexPromotionMilestoneRepairNormalizationPaths } from "./value-index-promotion-milestone-repair-source-history.mjs";
@@ -2280,7 +2282,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreHubOrderRepairIntegrationNormalizationPaths
+	...nativeFinCallbackRoleIntegrationNormalizationPaths
+	, ...coreHubOrderRepairIntegrationNormalizationPaths
 	, ...coreHubOrderRepairNormalizationPaths
 	, ...signatureSpecializationCompletionIntegrationNormalizationPaths
 	, ...signatureSpecializationCompletionNormalizationPaths
@@ -2309,6 +2312,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...reviewedFinWasmFieldNormalizationPaths
 	, ...callbackFinNativeCapabilityNormalizationPaths
 	, ...callbackFinHostedWorkflowNormalizationPaths
+	, ...nativeFinCallbackRoleNormalizationPaths
 	, ...coreHistoricalEvidenceReuseLivePinRepairNormalizationPaths()
 	, ...coreHistoricalEvidenceReuseNormalizationPaths
 	, ...coreExactHeadMatrixRepairNormalizationPaths
@@ -3299,7 +3303,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreHubOrderRepairIntegrationSource(
+	let stage = beforeNativeFinCallbackRoleIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreHubOrderRepairIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
@@ -3418,6 +3427,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		return stage;
 	text = stage;
 	stage = beforeCallbackFinHostedWorkflowSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeNativeFinCallbackRoleSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
