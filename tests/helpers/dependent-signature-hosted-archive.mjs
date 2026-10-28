@@ -17,7 +17,7 @@ export const dependentSignatureHostedProducer
 export const dependentSignatureConsumerRun = 40697329977;
 export const dependentSignaturePerlRun = 40697334600;
 export const dependentSignatureHostedRunConclusions = Object.freeze({
-	[String(dependentSignatureConsumerRun)]: "success"
+	[String(dependentSignatureConsumerRun)]: "failure"
 	, [String(dependentSignaturePerlRun)]: "success"
 });
 export const dependentSignatureHostedEvidenceDirectory

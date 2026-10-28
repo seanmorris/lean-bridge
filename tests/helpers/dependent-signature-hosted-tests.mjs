@@ -12,6 +12,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	dependentSignatureConsumerRun
+	, dependentSignatureHostedRunConclusions
 	, dependentSignatureHostedLanes
 	, dependentSignatureHostedOriginal
 	, dependentSignatureHostedProducer
@@ -64,6 +65,10 @@ const managedReport = route => {
 };
 
 test("the hosted plan closes exactly 17 profiles across both author routes", () => {
+	assert.deepEqual(dependentSignatureHostedRunConclusions, {
+		[String(dependentSignatureConsumerRun)]: "failure"
+		, [String(dependentSignaturePerlRun)]: "success"
+	});
 	assert.equal(dependentSignatureHostedLanes.length, 14);
 	const ordinaryProfiles = new Set();
 	for(const lane of dependentSignatureHostedLanes)
