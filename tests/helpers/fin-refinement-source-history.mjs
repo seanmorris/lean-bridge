@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCorePreBoxRecountRepairSource, corePreBoxRecountRepairNormalizationPaths } from "./core-pre-box-recount-repair-source-history.mjs";
 import { beforeCoreReviewedFinBoxHarnessRepairSource, coreReviewedFinBoxHarnessRepairNormalizationPaths } from "./core-reviewed-fin-box-harness-repair-source-history.mjs";
 import { beforeCoreShardFourSerialSource, coreShardFourSerialNormalizationPaths } from "./core-shard-four-serial-source-history.mjs";
 import { beforeCoreLegacyFinArchiveRepairSource, coreLegacyFinArchiveRepairNormalizationPaths } from "./core-legacy-fin-archive-repair-source-history.mjs";
@@ -2322,7 +2323,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreReviewedFinBoxHarnessRepairNormalizationPaths
+	...corePreBoxRecountRepairNormalizationPaths
+	, ...coreReviewedFinBoxHarnessRepairNormalizationPaths
 	, ...coreShardFourSerialNormalizationPaths
 	, ...coreLegacyFinArchiveRepairNormalizationPaths
 	, ...coreGeneratedDocumentRepairNormalizationPaths
@@ -3383,7 +3385,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreReviewedFinBoxHarnessRepairSource(path, text, expected);
+	let stage = beforeCorePreBoxRecountRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreReviewedFinBoxHarnessRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
