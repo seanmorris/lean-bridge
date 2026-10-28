@@ -238,6 +238,69 @@ test("canonical optional defaults remain parseable across PHP value projections"
 	{ await rm(directory, { recursive: true, force: true }); }
 });
 
+test("generated PHP distinguishes an omitted Option.some default from explicit null", async () => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-option-default-"));
+	try
+	{
+		const ir = clone(alpha.bindingIr);
+		const constructor = ir.declarations.find(declaration => declaration.id === "lean:Alpha.box");
+		const read = ir.declarations.find(declaration => declaration.id === "lean:Alpha.Box.read");
+		const option = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] };
+		constructor.parameters[0].type = option;
+		constructor.parameters[0].optional = true;
+		constructor.parameters[0].default = { kind: "option-some", value: { kind: "integer", value: "9" } };
+		read.result.type = option;
+		const generated = generatePhpBindingPackage(ir);
+		assert.match(generated["src/Box.php"], /__construct\(int\|null \$value = 9\)/u);
+		await writePackage(directory, generated);
+		await run("composer", ["dump-autoload", "--quiet", "--no-interaction"], { cwd: directory });
+		await writeFile(join(directory, "FakeTransport.php"), `<?php
+declare(strict_types=1);
+namespace Test;
+
+use LeanAlpha\\Internal\\Identity;
+use LeanAlpha\\Internal\\Transport;
+use LeanAlpha\\Payload;
+
+final class FakeTransport implements Transport
+{
+    private int $next = 0;
+    public function initialize(): void {}
+    public function leanAlphaBox(?int $value): Identity { return new Identity('Box', 'box:' . ++$this->next, $value); }
+    public function leanAlphaBoxRead(Identity $self): ?int { return $self->value(); }
+    public function bridgeAlphaBoxIdentity(Identity $self): Identity { return $self; }
+    public function leanAlphaRoundTrip(Payload $payload): Payload { return $payload; }
+    public function leanAlphaWithCallback(int $value, callable $transform): int { return $transform($value); }
+    public function leanAlphaMakeAdder(int $base): Identity { return new Identity('Transform', 'transform:' . ++$this->next, $base); }
+    public function boxClose(Identity $self): void {}
+    public function transformCall(Identity $self, int $value): int { return (int) $self->value() + $value; }
+    public function transformClose(Identity $self): void {}
+}
+`);
+		await writeFile(join(directory, "consumer.php"), `<?php
+declare(strict_types=1);
+require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/FakeTransport.php';
+
+use LeanAlpha\\Box;
+use LeanAlpha\\Internal\\Runtime;
+use Test\\FakeTransport;
+
+Runtime::install(new FakeTransport());
+$omitted = new Box();
+$none = new Box(null);
+$some = new Box(11);
+echo json_encode([$omitted->read(), $none->read(), $some->read()], JSON_THROW_ON_ERROR);
+`);
+		const { stdout } = await run("php", ["consumer.php"], { cwd: directory });
+		assert.deepEqual(JSON.parse(stdout), [9, null, 11]);
+	}
+	finally
+	{
+		await rm(directory, { recursive: true, force: true });
+	}
+});
+
 test("generated PHP executes through ordinary values, functions, resources, and callables", async () => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-run-"));
   try

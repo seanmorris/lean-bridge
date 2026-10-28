@@ -273,6 +273,14 @@ test("generated wrappers distinguish omission from explicit JavaScript values", 
 			, rejected: [undefined, null]
 		}
 		, {
+			name: "option-some"
+			, type: { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] }
+			, default: { kind: "option-some", value: { kind: "integer", value: "7" } }
+			, omitted: { tag: "some", value: 7 }
+			, accepted: [[{ tag: "none" }, { tag: "none" }], [{ tag: "some", value: 9 }, { tag: "some", value: 9 }]]
+			, rejected: [undefined, null]
+		}
+		, {
 			name: "unit"
 			, type: { kind: "primitive", name: "unit" }
 			, default: { kind: "unit" }
