@@ -1,0 +1,297 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0ce592ca02c32a991c20b14a5fcb2b5be72447655aeab2fa76a772091f9c662f",
+      "path": "scripts/update-signature-specialization-hosted-producer-binding-source-history.mjs"
+    },
+    {
+      "currentSha256": "061fd8b8f9453dd0f569c7e33ec98b9d4dcf4f2c2a763e9d951099bcffec8e07",
+      "path": "tests/helpers/signature-specialization-hosted-producer-binding-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "39e5c40183a075437da1a328b16bd760c9ba0366be9fd8df38dd7b6ed8d1f8af",
+      "path": "tests/helpers/signature-specialization-hosted-producer-binding-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "6c17dc9032d72fac34dca2979ab179948311f9ee",
+  "milestone": "signature-specialization-hosted-producer-binding-v1",
+  "predecessorCommit": "95c4f736139fd95968793bf3ed69c1e43ab59870",
+  "schemaVersion": 1,
+  "scope": "Bind each hosted specialization lane to the exact successful producer commit: eight previously accepted lanes remain at 6e0d941, while repaired Perl and PHP-Wasm lanes use d37bcc0. Retain collision-free source closures for both immutable producers, validate each report against its lane producer, and use the dedicated BigInteger PHP-Wasm consumer. Register the pre-existing hosted-retention history in the central reversible hub and Core partition. Change no type-surface support claim.",
+  "updates": [
+    {
+      "currentSha256": "287f09b129be467c1eab55709afef688d6f1d847535633c6240ebadddd1304d4",
+      "edits": [
+        {
+          "current": "\t, signatureSpecializationHostedSourcePath\n",
+          "previous": "\t, signatureSpecializationHostedProducer\n",
+          "start": 1087
+        },
+        {
+          "current": "\tproducers: [...new Set(signatureSpecializationHostedLanes.map(\n\t\tlane => lane.producerCommit))].sort()\n",
+          "previous": "\tproducer: signatureSpecializationHostedProducer\n",
+          "start": 2396
+        },
+        {
+          "current": "",
+          "previous": "\t\tassert.equal(hosted.revision, signatureSpecializationHostedProducer);\n",
+          "start": 3672
+        },
+        {
+          "current": "\t\tputBytes(signatureSpecializationHostedSourcePath(source)\n",
+          "previous": "\t\tputBytes(`sources/${source.role}/${source.path}`\n",
+          "start": 5602
+        },
+        {
+          "current": "\t\t, producerCommits: Object.fromEntries(\n\t\t\tsignatureSpecializationHostedLanes.map(lane => [\n\t\t\t\tlane.id, lane.producerCommit\n\t\t\t])\n\t\t)\n",
+          "previous": "\t\t, producerCommit: signatureSpecializationHostedProducer\n",
+          "start": 6011
+        }
+      ],
+      "path": "scripts/archive-signature-specialization-hosted.mjs",
+      "previousSha256": "43e41d5901d9b70e9fafcc059cd1c163b3cb624032e0b13e11eec104e40ac348"
+    },
+    {
+      "currentSha256": "6bca6fdb29c4ddc8b50605e0303daa49d094c35118b8b6cddd6e91e96981f186",
+      "edits": [
+        {
+          "current": "import \"./helpers/signature-specialization-hosted-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2597
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "005a4a1aef06ea8f6c6fbadea3511fb1b500b4913d49005aef6f5564ff6c04ca"
+    },
+    {
+      "currentSha256": "de2a15418c535a9ad8f19086db76b93c0ffb1119cec92b887e01e8612acdc307",
+      "edits": [
+        {
+          "current": "import { beforeSignatureSpecializationHostedSource, signatureSpecializationHostedNormalizationPaths } from \"./signature-specialization-hosted-source-history.mjs\";\n",
+          "previous": "",
+          "start": 2902
+        },
+        {
+          "current": "\t, ...signatureSpecializationHostedNormalizationPaths\n",
+          "previous": "",
+          "start": 204583
+        },
+        {
+          "current": "\tstage = beforeSignatureSpecializationHostedSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 256289
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4347972706e2c1b03414a9376c842f5f779cd6bde10380fccfaefb2c6a76bae0"
+    },
+    {
+      "currentSha256": "6f491e84e32ab91f55c13bfce978fc26763c60a5488ee115d451d2d6bccdc5f9",
+      "edits": [
+        {
+          "current": "export const signatureSpecializationHostedRepairProducer\n\t= \"d37bcc0c33694dc048cc2bd4ce6843064e0beff2\";\n",
+          "previous": "",
+          "start": 629
+        },
+        {
+          "current": "\t, producerCommit = signatureSpecializationHostedProducer\n",
+          "previous": "",
+          "start": 1277
+        },
+        {
+          "current": "\t, workflow, jobName, artifactPrefix, producerCommit\n",
+          "previous": "\t, workflow, jobName, artifactPrefix\n",
+          "start": 1419
+        },
+        {
+          "current": "\t, native({ id: \"perl\", profiles: [\"perl\"], runId: 40668752235\n",
+          "previous": "\t, native({ id: \"perl\", profiles: [\"perl\"], runId: 40660586942\n",
+          "start": 4702
+        },
+        {
+          "current": "\t\t, outputRoot: \"generic-subtype-perl-ci\"\n\t\t, producerCommit: signatureSpecializationHostedRepairProducer })\n",
+          "previous": "\t\t, outputRoot: \"generic-subtype-perl-ci\" })\n",
+          "start": 4913
+        },
+        {
+          "current": "\t\t, producerCommit: signatureSpecializationHostedProducer\n",
+          "previous": "",
+          "start": 5199
+        },
+        {
+          "current": "\t\t, runId: 40668748649, kind: \"php-wasm\"\n\t\t, producerCommit: signatureSpecializationHostedRepairProducer\n",
+          "previous": "\t\t, runId: 40660594472, kind: \"php-wasm\"\n",
+          "start": 5755
+        },
+        {
+          "current": "\tassert.equal(hosted.revision, lane.producerCommit, lane.id);\n",
+          "previous": "\tassert.equal(hosted.revision, signatureSpecializationHostedProducer, lane.id);\n",
+          "start": 9787
+        },
+        {
+          "current": "\t\t, [\"archiver\", \"checker\", \"producers\"]);\n\tassert.ok(Array.isArray(revisions.producers)\n\t\t&& revisions.producers.length > 0);\n\tassert.deepEqual(revisions.producers\n\t\t, [...new Set(revisions.producers)].sort());\n\tfor(const revision of [\n\t\t...revisions.producers, revisions.checker, revisions.archiver\n\t])\n",
+          "previous": "\t\t, [\"archiver\", \"checker\", \"producer\"]);\n\tfor(const revision of Object.values(revisions))\n",
+          "start": 11144
+        },
+        {
+          "current": "\tconst producers = revisions.producers.map(revision => [\n\t\trevision\n\t\t, [\n\t\t\t...closure(revision, producerEntries)\n\t\t\t, ...tree(revision\n\t\t\t\t, \"tests/fixtures/onboarding/native-specializations\")\n\t\t\t, ...tree(revision\n\t\t\t\t, \"tests/fixtures/specialization-consumers\")\n\t\t]\n\t]);\n",
+          "previous": "\tconst producer = [\n\t\t...closure(revisions.producer, producerEntries)\n\t\t, ...tree(revisions.producer\n\t\t\t, \"tests/fixtures/onboarding/native-specializations\")\n\t\t, ...tree(revisions.producer\n\t\t\t, \"tests/fixtures/specialization-consumers\")\n\t];\n",
+          "start": 11494
+        },
+        {
+          "current": "\t\t...producers.map(([revision, paths]) => [\"producer\", revision, paths])\n",
+          "previous": "\t\t[\"producer\", revisions.producer, producer]\n",
+          "start": 11786
+        },
+        {
+          "current": "/**\n * Return the collision-free retained path for one selected source.\n *\n * @param source - Selected source identity.\n */\nexport const signatureSpecializationHostedSourcePath = source => {\n\tassert.ok(source && typeof source === \"object\");\n\tassert.ok([\"producer\", \"checker\", \"archiver\"].includes(source.role));\n\tassert.match(source.revision, /^[a-f0-9]{40}$/u);\n\treturn source.role === \"producer\"\n\t\t? `sources/producer/${source.revision}/${source.path}`\n\t\t: `sources/${source.role}/${source.path}`;\n};\n\n",
+          "previous": "",
+          "start": 12303
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-hosted-archive.mjs",
+      "previousSha256": "4fd9e5f0e2c2618faf93e00001cac1095fc30fd8c441f37b281278cf3029c7e6"
+    },
+    {
+      "currentSha256": "a3d0ecdf09c5d1b43d33166aa6088cb769e7c42edad513d8f9cd29bea92fc56b",
+      "edits": [
+        {
+          "current": "\t, signatureSpecializationHostedSourcePath\n",
+          "previous": "\t, signatureSpecializationHostedProducer\n",
+          "start": 895
+        },
+        {
+          "current": "\tlane, reportBytes, tapBytes, revision = lane.producerCommit\n",
+          "previous": "\tlane, reportBytes, tapBytes, revision = signatureSpecializationHostedProducer\n",
+          "start": 2481
+        },
+        {
+          "current": "\t\t\titem.producerCommit === lane.producerCommit));\n",
+          "previous": "\t\t\titem.producerCommit === signatureSpecializationHostedProducer));\n",
+          "start": 6271
+        },
+        {
+          "current": "\t\titem.producerCommit === lane.producerCommit));\n",
+          "previous": "\t\titem.producerCommit === signatureSpecializationHostedProducer));\n",
+          "start": 7002
+        },
+        {
+          "current": "\t\tlane.producerCommit\n\t\t, \"tests/fixtures/specialization-consumers/php-wasm.php\");\n",
+          "previous": "\t\tsignatureSpecializationHostedProducer\n\t\t, \"tests/fixtures/specialization-consumers/php-native.php\");\n",
+          "start": 7114
+        },
+        {
+          "current": "\t\t, \"limitations\", \"producerCommits\", \"schemaVersion\", \"selectedSources\"\n",
+          "previous": "\t\t, \"limitations\", \"producerCommit\", \"schemaVersion\", \"selectedSources\"\n",
+          "start": 8832
+        },
+        {
+          "current": "\tassert.deepEqual(Object.keys(index.producerCommits)\n\t\t, signatureSpecializationHostedLanes.map(lane => lane.id));\n\tassert.deepEqual(index.producerCommits, Object.fromEntries(\n\t\tsignatureSpecializationHostedLanes.map(lane => [\n\t\t\tlane.id, lane.producerCommit\n\t\t])\n\t));\n\tfor(const key of [\"checkerCommit\", \"archiveCommit\"])\n",
+          "previous": "\tassert.equal(index.producerCommit, signatureSpecializationHostedProducer);\n\tfor(const key of [\"producerCommit\", \"checkerCommit\", \"archiveCommit\"])\n",
+          "start": 9025
+        },
+        {
+          "current": "\tfor(const [lane, revision] of Object.entries(index.producerCommits))\n\t\tassert.match(revision, /^[a-f0-9]{40}$/u, lane);\n",
+          "previous": "",
+          "start": 9400
+        },
+        {
+          "current": "\t\tproducers: [...new Set(Object.values(index.producerCommits))].sort()\n\t\t, checker: index.checkerCommit\n",
+          "previous": "\t\tproducer: index.producerCommit, checker: index.checkerCommit\n",
+          "start": 10308
+        },
+        {
+          "current": "\t\t\tawait readFile(join(root\n\t\t\t\t, signatureSpecializationHostedSourcePath(source)))\n",
+          "previous": "\t\t\tawait readFile(join(root, `sources/${source.role}/${source.path}`))\n",
+          "start": 10608
+        },
+        {
+          "current": "\t\t\tassert.equal(hosted.revision, index.producerCommits[lane.id]);\n",
+          "previous": "\t\t\tassert.equal(hosted.revision, index.producerCommit);\n",
+          "start": 11787
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-hosted-evidence.mjs",
+      "previousSha256": "0ada9ef3705905848eeda8388a871b3662bd664085a446a7cb78ecd884a06dbb"
+    },
+    {
+      "currentSha256": "468ad2a800abb658d783e502340642df012ac3ff7caeff3f66333c7f9b5d6b95",
+      "edits": [
+        {
+          "current": "\t, signatureSpecializationHostedRepairProducer\n\t, signatureSpecializationHostedSourcePath\n",
+          "previous": "",
+          "start": 860
+        },
+        {
+          "current": "\t\tproducers: [\n\t\t\tsignatureSpecializationHostedProducer\n\t\t\t, signatureSpecializationHostedRepairProducer\n\t\t].sort()\n",
+          "previous": "\t\tproducer: signatureSpecializationHostedProducer\n",
+          "start": 3580
+        },
+        {
+          "current": "\tfor(const [revision, entry] of [\n\t\t[signatureSpecializationHostedProducer\n\t\t\t, \"tests/fixtures/specialization-consumers/php-native.php\"]\n\t\t, [signatureSpecializationHostedRepairProducer\n\t\t\t, \"tests/fixtures/specialization-consumers/php-wasm.php\"]\n\t]) assert.ok(sources.some(source => source.role === \"producer\"\n\t\t&& source.revision === revision && source.path === entry)\n\t, `${revision}:${entry}`);\n\tassert.equal(new Set(sources.map(signatureSpecializationHostedSourcePath)).size\n\t\t, sources.length);\n",
+          "previous": "",
+          "start": 4162
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-hosted-source-history-tests.mjs",
+      "previousSha256": "379cf6150de6d7d681e27eee917ed4fd0d81c5e9cb4040470cbddd5b433e38f2"
+    },
+    {
+      "currentSha256": "56545f8cc9072fb825abd9b28eb5dfe00b6ec344bce2ddc9de2d59c6a20f0894",
+      "edits": [
+        {
+          "current": "\t, signatureSpecializationHostedRepairProducer\n",
+          "previous": "",
+          "start": 399
+        },
+        {
+          "current": "\t\t\t\tlane.producerCommit\n",
+          "previous": "\t\t\t\tsignatureSpecializationHostedProducer\n",
+          "start": 1671
+        },
+        {
+          "current": "const browserReport = lane => ({\n",
+          "previous": "const browserReport = () => ({\n",
+          "start": 3399
+        },
+        {
+          "current": "\t\troute, producerCommit: lane.producerCommit\n",
+          "previous": "\t\troute, producerCommit: signatureSpecializationHostedProducer\n",
+          "start": 3557
+        },
+        {
+          "current": "const phpReport = lane => ({\n",
+          "previous": "const phpReport = () => ({\n",
+          "start": 4548
+        },
+        {
+          "current": "\t\t, producerCommit: lane.producerCommit\n",
+          "previous": "\t\t, producerCommit: signatureSpecializationHostedProducer\n",
+          "start": 4741
+        },
+        {
+          "current": "\t\t\tlane.producerCommit\n\t\t\t, \"tests/fixtures/specialization-consumers/php-wasm.php\")\n",
+          "previous": "\t\t\tsignatureSpecializationHostedProducer\n\t\t\t, \"tests/fixtures/specialization-consumers/php-native.php\")\n",
+          "start": 4900
+        },
+        {
+          "current": "\tconst producers = {\n\t\tpython: signatureSpecializationHostedProducer\n\t\t, ruby: signatureSpecializationHostedProducer\n\t\t, rust: signatureSpecializationHostedProducer\n\t\t, dotnet: signatureSpecializationHostedProducer\n\t\t, jvm: signatureSpecializationHostedProducer\n\t\t, \"php-native\": signatureSpecializationHostedProducer\n\t\t, \"wit-wasi\": signatureSpecializationHostedProducer\n\t\t, perl: signatureSpecializationHostedRepairProducer\n\t\t, browser: signatureSpecializationHostedProducer\n\t\t, \"php-wasm\": signatureSpecializationHostedRepairProducer\n\t};\n\tassert.deepEqual(Object.fromEntries(signatureSpecializationHostedLanes.map(\n\t\tlane => [lane.id, lane.producerCommit])), producers);\n",
+          "previous": "",
+          "start": 6381
+        },
+        {
+          "current": "\tconst report = browserReport(lane);\n",
+          "previous": "\tconst report = browserReport();\n",
+          "start": 7999
+        },
+        {
+          "current": "\tconst report = phpReport(lane);\n",
+          "previous": "\tconst report = phpReport();\n",
+          "start": 8749
+        }
+      ],
+      "path": "tests/helpers/signature-specialization-hosted-tests.mjs",
+      "previousSha256": "0b01ed23e4f7fc747f442b4ef9476f5be57422fdb31d7f9a4c8b3fcdfcd12e23"
+    }
+  ]
+}
