@@ -167,7 +167,9 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 		}
 		return { ...surface, declaration };
 	});
-	const projection = compileCProjectionModel(ir);
+	// This surface is the private full-arity ABI shared by host packages. Each
+	// public host wrapper applies an authenticated default before calling it.
+	const projection = compileCProjectionModel(ir, { allowOptional: true });
 	const aliases = describeCopiedCAliases(ir).map(alias => {
 		if(!safe(cIdentifier(alias.definition.name))) rejectPrimitiveSurface(functions[0].declaration, "C/C++ alias name collides with a reserved identifier");
 		return { ...alias, copy: visit(alias.definition.target, functions[0].declaration) };

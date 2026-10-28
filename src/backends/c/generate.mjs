@@ -204,7 +204,7 @@ const collectUsedTypes = ir => {
 	return used;
 };
 
-const validateCoverage = ir => {
+const validateCoverage = (ir, allowOptional = false) => {
 	const names = new Map();
 	const addName = (name, id) => {
 		if(names.has(name))
@@ -285,7 +285,7 @@ const validateCoverage = ir => {
 				, resultMode: declaration.resultMode
 			});
 		}
-		if(declaration.parameters.some(parameter => parameter.optional))
+		if(!allowOptional && declaration.parameters.some(parameter => parameter.optional))
 		{
 			fail("unsupported-optional-parameter", `${declaration.id} has an optional parameter`, {
 				declaration: declaration.id
@@ -1083,10 +1083,13 @@ const emitDocumentation = ir => {
  * Compiles canonical Binding IR into the closed C backend projection model.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param options - Internal projection options for full-arity native surfaces.
+ * @param options.allowOptional - Admit authenticated defaults without changing
+ * the generated C public API. Host packages must lower omission themselves.
  */
-export const compileCProjectionModel = ir => {
+export const compileCProjectionModel = (ir, { allowOptional = false } = {}) => {
 	validateBindingIr(ir);
-	validateCoverage(ir);
+	validateCoverage(ir, allowOptional);
 	return Object.freeze({
 		ir
 		, component: ir.component.id

@@ -107,6 +107,9 @@ export const compileCopiedPythonModel = ir => {
 		if(names.has(fn.field)) fail(fn.declaration, `Python function name is reserved or duplicated: ${fn.field}`);
 		names.add(fn.field);
 		for(const parameter of fn.parameters) if(reserved.has(parameter.name)) fail(fn.declaration, `Python parameter name is reserved: ${parameter.name}`);
+		for(const [index, parameter] of fn.declaration.parameters.entries())
+			if(parameter.optional && fn.declaration.parameters.slice(index + 1).some(item => !item.optional))
+				fail(fn.declaration, `Python defaulted parameter ${parameter.name} precedes a required positional parameter`);
 	}
 	for(const alias of surface.aliases)
 	{

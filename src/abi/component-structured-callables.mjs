@@ -8,6 +8,7 @@ import { snapshotComponentCopiedGraph } from "./component-recursive.mjs";
 import { componentRecordDefinitions } from "./component-records.mjs";
 import { componentCallableCapacity } from "./component-callables.mjs";
 import { callbackRefinement, callbackDefinitionRefinement, callbackSubtypeDirection, nominalRefinement, nominalRefinementEntries } from "./refinements.mjs";
+import { defaultValueTypeProblem } from "../binding-ir/default-value.mjs";
 
 export const componentStructuredCallableAbi = 9;
 export const componentStructuredCallableDispatch = "copied-callable-frame-v1";
@@ -234,10 +235,14 @@ export const assertComponentStructuredCallableBindings = (abi, ir) => {
 		}
 		else if(value.lifetime !== null) fail("copied values cannot retain identity");
 	};
-	const parameters = (actual, expected) => {
+	const parameters = (actual, expected, defaults = false) => {
 		if(actual.length !== expected.length) fail("binding arity mismatch");
 		actual.forEach((value, index) => {
-			if(value.optional || value.default !== null || value.mutability !== "immutable") fail("unsupported parameter semantics");
+			const defaultProblem = !defaults ? value.optional || value.default !== null
+				: value.optional
+					? value.default === null ? "missing default" : defaultValueTypeProblem(value.default, value.type, id => ir.types.find(type => type.id === id))
+					: value.default !== null;
+			if(defaultProblem || value.mutability !== "immutable") fail("unsupported parameter semantics");
 			site(value, expected[index]);
 		});
 	};
@@ -261,7 +266,7 @@ export const assertComponentStructuredCallableBindings = (abi, ir) => {
 		const expected = abi.exports.find(item => item.bindingId === declaration.id);
 		if(!expected || declaration.kind !== "function" || declaration.owner !== null || declaration.receiver !== null || declaration.typeParameters.length
 			|| declaration.resultMode !== "value" || declaration.mutability !== "immutable" || declaration.capabilities.length) fail("unsupported export semantics");
-		parameters(declaration.parameters, expected.parameters); site(declaration.result, expected.result, true);
+		parameters(declaration.parameters, expected.parameters, true); site(declaration.result, expected.result, true);
 		const hostCall = expected.parameters.some(type => type.kind === "named" && callbacks.has(type.id));
 		if(!same(declaration.effects.toSorted(), hostCall ? ["fails", "host-call"] : [])) fail("binding effect mismatch");
 		failure(declaration.failure, hostCall);

@@ -4,6 +4,7 @@
  * @file
  */
 import { componentScalarTypes, scalarCopyLimit } from "./component-scalars.mjs";
+import { defaultValueTypeProblem } from "../binding-ir/default-value.mjs";
 
 // Leave space for additional primitive tags without renumbering scalar ABI 2.
 // Lists retain their semantic constructor but share the ordered sequence wire layout.
@@ -201,7 +202,12 @@ export const assertComponentCopySemantics = (abi, ir, resolve) => {
 			|| declaration.parameters.length !== expected.parameters.length) invalid("unsupported copied export semantics");
 		seen.add(declaration.id);
 		declaration.parameters.forEach((value, index) => {
-			if(value.optional || value.default !== null || value.mutability !== "immutable") invalid("unsupported copied parameter semantics");
+			// Defaults are a public host-language concern. The authenticated
+			// component ABI remains full arity after the wrapper supplies them.
+			const defaultProblem = value.optional
+				? value.default === null ? "missing default" : defaultValueTypeProblem(value.default, value.type, id => ir.types.find(type => type.id === id))
+				: value.default === null ? null : "required parameter has a default";
+			if(defaultProblem || value.mutability !== "immutable") invalid("unsupported copied parameter semantics");
 			site(value, expected.parameters[index]);
 		});
 		site(declaration.result, expected.result);
