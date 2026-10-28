@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/wit-callback-frozen-closure-source-history-tests.mjs";
+import "./helpers/core-shard-five-eight-repair-source-history-tests.mjs";
 import "./helpers/core-deterministic-boundary-repair-source-history-tests.mjs";
 import "./helpers/core-deterministic-boundary-repair-integration-source-history-tests.mjs";
 import "./helpers/callback-fin-perl-local-join-source-history-tests.mjs";
