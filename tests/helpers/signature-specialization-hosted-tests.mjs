@@ -10,6 +10,8 @@ import {
 	parseSignatureSpecializationHostedArchiveArgs
 	, signatureSpecializationHostedConsumerSha256
 	, signatureSpecializationHostedLanes
+	, signatureSpecializationHostedPerlProducer
+	, signatureSpecializationHostedPhpWasmConsumerSha256
 	, signatureSpecializationHostedProducer
 	, signatureSpecializationHostedRepairProducer
 } from "./signature-specialization-hosted-archive.mjs";
@@ -135,9 +137,8 @@ const phpReport = lane => ({
 		path, profile: "php-wasm"
 		, producerCommit: lane.producerCommit
 		, reviewedBindingIrSha256: hash, driverSha256: hash
-		, consumerSha256: signatureSpecializationHostedConsumerSha256(
-			lane.producerCommit
-			, "tests/fixtures/specialization-consumers/php-wasm.php")
+		, consumerSha256: signatureSpecializationHostedPhpWasmConsumerSha256(
+			lane.producerCommit)
 		, builds: [{ receipt: hash }, { receipt: hash }]
 		, independentBuilds: 2, reproducible: true
 		, sourceRemovedBeforeInstallation: true
@@ -178,7 +179,7 @@ test("the ten closed lanes retain all nine native profiles plus browser and PHP-
 		, jvm: signatureSpecializationHostedProducer
 		, "php-native": signatureSpecializationHostedProducer
 		, "wit-wasi": signatureSpecializationHostedProducer
-		, perl: signatureSpecializationHostedRepairProducer
+		, perl: signatureSpecializationHostedPerlProducer
 		, browser: signatureSpecializationHostedProducer
 		, "php-wasm": signatureSpecializationHostedRepairProducer
 	};
@@ -225,8 +226,16 @@ test("PHP-Wasm reports require the exact twelve arrangements and 2020 checks", (
 	const lane = signatureSpecializationHostedLanes.find(
 		item => item.kind === "php-wasm");
 	const report = phpReport(lane);
+	assert.equal(report.reports[0].consumerSha256
+		, "161f5c16fbb05d4b928f306f70c93145a06189ad6081e6c59713f61352e13016");
 	assert.equal(validateSignatureSpecializationHostedReport(
 		lane, bytes(report)).executions, 24);
+	const unadapted = clone(report);
+	unadapted.reports[0].consumerSha256
+		= signatureSpecializationHostedConsumerSha256(lane.producerCommit
+			, "tests/fixtures/specialization-consumers/php-wasm.php");
+	assert.throws(() => validateSignatureSpecializationHostedReport(
+		lane, bytes(unadapted)));
 	const missing = clone(report); missing.reports[0].executions.pop();
 	assert.throws(() => validateSignatureSpecializationHostedReport(
 		lane, bytes(missing)));

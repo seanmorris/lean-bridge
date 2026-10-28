@@ -85,6 +85,7 @@ test("every repository test receives exactly one named execution profile", async
 		, "reviewed-fin-wasm-entry-hosted-archive"
 		, "reviewed-fin-wasm-entry-hosted-evidence"
 		, "reviewed-fin-wasm-entry-workflow"
+		, "signature-specialization-hosted-evidence"
 	]) assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);
 	assert.ok(grouped.contract.includes("tests/wit-owned-callback-result-installed-acceptance.test.mjs"));
 	assert.ok(grouped.contract.includes("tests/owned-checked-record-javascript-packaging.test.mjs"));

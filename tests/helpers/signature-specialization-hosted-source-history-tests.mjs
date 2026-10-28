@@ -20,7 +20,8 @@ import {
 	, signatureSpecializationHostedPredecessor
 } from "./signature-specialization-hosted-source-history.mjs";
 import {
-	signatureSpecializationHostedProducer
+	signatureSpecializationHostedPerlProducer
+	, signatureSpecializationHostedProducer
 	, signatureSpecializationHostedRepairProducer
 	, signatureSpecializationHostedSourcePath
 	, signatureSpecializationHostedSources
@@ -84,10 +85,11 @@ test("hosted specialization retention additions and source roles restore exactly
 			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 	const sources = signatureSpecializationHostedSources({
-		producers: [
+		producers: [...new Set([
 			signatureSpecializationHostedProducer
 			, signatureSpecializationHostedRepairProducer
-		].sort()
+			, signatureSpecializationHostedPerlProducer
+		])].sort()
 		, checker: signatureSpecializationHostedImplementation
 		, archiver: signatureSpecializationHostedImplementation
 	});
@@ -102,6 +104,8 @@ test("hosted specialization retention additions and source roles restore exactly
 			, "tests/fixtures/specialization-consumers/php-native.php"]
 		, [signatureSpecializationHostedRepairProducer
 			, "tests/fixtures/specialization-consumers/php-wasm.php"]
+		, [signatureSpecializationHostedPerlProducer
+			, "tests/fixtures/specialization-consumers/perl.pl"]
 	]) assert.ok(sources.some(source => source.role === "producer"
 		&& source.revision === revision && source.path === entry)
 	, `${revision}:${entry}`);

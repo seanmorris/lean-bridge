@@ -325,6 +325,7 @@ const profileManifest = Object.freeze({
 		, "wasm-ci-array-history"
 		, "native-edge-array-harness-history"
 		, "hosted-specialization-evidence"
+		, "signature-specialization-hosted-evidence"
 		, "fin-scalar-dispatch-inventory"
 		, "reviewed-fin-refusal-history"
 		, "perl-contract-repair-evidence"

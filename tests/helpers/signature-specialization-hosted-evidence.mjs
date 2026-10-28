@@ -21,6 +21,7 @@ import {
 	, signatureSpecializationHostedEvidenceDirectory
 	, signatureSpecializationHostedLanes
 	, signatureSpecializationHostedOriginal
+	, signatureSpecializationHostedPhpWasmConsumerSha256
 	, signatureSpecializationHostedSourcePath
 	, signatureSpecializationHostedSources
 } from "./signature-specialization-hosted-archive.mjs";
@@ -169,9 +170,8 @@ export const validateSignatureSpecializationHostedReport = (
 	validateSignatureSpecializationPhpWasmReport(report);
 	assert.ok(report.reports.every(item =>
 		item.producerCommit === lane.producerCommit));
-	const consumer = signatureSpecializationHostedConsumerSha256(
-		lane.producerCommit
-		, "tests/fixtures/specialization-consumers/php-wasm.php");
+	const consumer = signatureSpecializationHostedPhpWasmConsumerSha256(
+		lane.producerCommit);
 	for(const item of report.reports)
 	{
 		assert.equal(item.consumerSha256, consumer);

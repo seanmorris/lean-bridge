@@ -16,7 +16,9 @@ import { moduleSpecifiers } from "./module-closure.mjs";
 export const signatureSpecializationHostedProducer
 	= "6e0d941e796db8813ee58bc8fda00e126e0a232c";
 export const signatureSpecializationHostedRepairProducer
-	= "d37bcc0c33694dc048cc2bd4ce6843064e0beff2";
+	= "50bd783fd9ec4a7a2d3eec4a807e788891d09446";
+export const signatureSpecializationHostedPerlProducer
+	= "60f6c69a5a9de9969715e0333d72d0a73588c876";
 export const signatureSpecializationHostedEvidenceDirectory
 	= "docs/evidence/signature-specializations-hosted-20261028";
 
@@ -102,12 +104,12 @@ export const signatureSpecializationHostedLanes = Object.freeze([
 		, jobName: "Generic Subtypes in WIT and WASI components"
 		, artifactPrefix: "generic-subtype-wit"
 		, outputRoot: "generic-subtype-wit-ci" })
-	, native({ id: "perl", profiles: ["perl"], runId: 40668752235
+	, native({ id: "perl", profiles: ["perl"], runId: 40674033403
 		, workflow: workflows.perl
 		, jobName: "Ordinary and reviewed generic Subtypes across four Perl ABIs"
 		, artifactPrefix: "generic-subtype-perl"
 		, outputRoot: "generic-subtype-perl-ci"
-		, producerCommit: signatureSpecializationHostedRepairProducer })
+		, producerCommit: signatureSpecializationHostedPerlProducer })
 	, Object.freeze({
 		id: "browser"
 		, profiles: Object.freeze([
@@ -127,7 +129,7 @@ export const signatureSpecializationHostedLanes = Object.freeze([
 	})
 	, Object.freeze({
 		id: "php-wasm", profiles: Object.freeze(["php-wasm"])
-		, runId: 40668748649, kind: "php-wasm"
+		, runId: 40673140281, kind: "php-wasm"
 		, producerCommit: signatureSpecializationHostedRepairProducer
 		, workflow: workflows.phpWasm
 		, jobName: "Four nominal Subtype selections in PHP-Wasm"
@@ -362,3 +364,17 @@ export const assertSignatureSpecializationHostedLocalSources = async (
 export const signatureSpecializationHostedConsumerSha256 = (
 	revision, path
 ) => sha256(signatureSpecializationHostedOriginal(revision, path));
+
+/**
+ * Hash the exact PHP-Wasm caller after its installed-package adapter removes
+ * the Composer autoload line supplied separately by the copied runtime.
+ *
+ * @param revision - Exact producer revision.
+ */
+export const signatureSpecializationHostedPhpWasmConsumerSha256 = revision => {
+	const source = signatureSpecializationHostedOriginal(revision
+		, "tests/fixtures/specialization-consumers/php-wasm.php").toString();
+	const consumer = source.replace("require 'vendor/autoload.php';", "");
+	assert.notEqual(consumer, source);
+	return sha256(consumer);
+};
