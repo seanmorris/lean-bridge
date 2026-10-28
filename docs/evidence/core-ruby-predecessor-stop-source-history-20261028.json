@@ -1,0 +1,71 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2a453bc18d2de11b6ecdcad33a3aeec59d80948b2c15d8cb4259154a2282b33a",
+      "path": "scripts/update-core-ruby-predecessor-stop-source-history.mjs"
+    },
+    {
+      "currentSha256": "195d6be3f1e646e48c15c6ba88ff6b4543da20b7cbd967881b446656e8c5c535",
+      "path": "tests/helpers/core-ruby-predecessor-stop-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "30c3cdcd033de2edc4d1caef2fdf3c9db68de97ef0e800cca87998075dd90cff",
+      "path": "tests/helpers/core-ruby-predecessor-stop-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "83703de7f3f3e578603cf1b468effd5f00867ce0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "fa89db4f8322f884d27155e96ad0684ea6fe34394c62571fece3b82af548e387",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-ruby-predecessor-stop-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "026ee1db791aa2fefb499bc0ef7e42c134f4d0adfc3a5ee8583a4bf1a9979337"
+    },
+    {
+      "currentSha256": "66656f71f04882b7b910cbcae1e0e29a2139befdbcb318949b65a3ce7fc8e9b7",
+      "edits": [
+        {
+          "current": "import { beforeCoreRubyPredecessorStopSource, coreRubyPredecessorStopNormalizationPaths } from \"./core-ruby-predecessor-stop-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreRubyPredecessorStopNormalizationPaths\n\t, ...callbackFinMilestoneReadIntegrationNormalizationPaths\n",
+          "previous": "\t...callbackFinMilestoneReadIntegrationNormalizationPaths\n",
+          "start": 205074
+        },
+        {
+          "current": "\tlet stage = beforeCoreRubyPredecessorStopSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCallbackFinMilestoneReadIntegrationSource(\n",
+          "previous": "\tlet stage = beforeCallbackFinMilestoneReadIntegrationSource(\n",
+          "start": 255736
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "dde41e14d59e40a2b292fafe44fce741873414cc4824220a38b50a3197842af1"
+    }
+  ],
+  "milestone": "core-ruby-predecessor-stop-source-v1",
+  "predecessorCommit": "60f6c69a5a9de9969715e0333d72d0a73588c876",
+  "schemaVersion": 1,
+  "scope": "Stop the retained Ruby ownership source-history test at each authenticated predecessor digest, matching the existing .NET repair, instead of traversing the entire recursive history hub. Preserve the original Ruby evidence, unknown-content refusal, forged-transition checks, runtime implementation, packages and support claims. Register this source history newest-first in the central hub and contract partition. Final exact-head Core acceptance remains required.",
+  "updates": [
+    {
+      "currentSha256": "eac2e039c8b0c139e0d494849164e3c0bb56b3102b117b00afb09aedfd6d616b",
+      "edits": [
+        {
+          "current": "\t\t// The hub reverses every recognized state, so each predecessor read names its stop.\n\t\tassert.equal(sha256(beforeOwnedRuby(update.path, source, update.previousSha256)), update.previousSha256);\n",
+          "previous": "\t\tassert.equal(sha256(beforeOwnedRuby(update.path, source)), update.previousSha256);\n",
+          "start": 4436
+        }
+      ],
+      "path": "tests/owned-ruby-evidence.test.mjs",
+      "previousSha256": "8da040d1476fb393a7fb695bfc163f5ed90a059ae6a3d67a561a659eafea8498"
+    }
+  ]
+}
