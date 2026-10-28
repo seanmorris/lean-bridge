@@ -1,0 +1,60 @@
+{
+  "additions": [
+    {
+      "currentSha256": "758601eb6af5b4d5e7f77a35dbd82266fae60a14b9d896c9ae6a0816cf4ed92c",
+      "path": "scripts/update-wit-callback-frozen-closure-source-history.mjs"
+    },
+    {
+      "currentSha256": "1cc8249b6060d3443a9b60f3f982202b33dc4c27fc7e0b983756215b8ef02a6e",
+      "path": "tests/helpers/wit-callback-frozen-closure-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c7fc10f998c7ce9008346829e18ea23a815e5365cd15409eece25f7bea15af56",
+      "path": "tests/helpers/wit-callback-frozen-closure-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "3e4df85197bafcb09bd9942ed93107189e59bc32",
+  "implementationCommits": [
+    "3e4df85197bafcb09bd9942ed93107189e59bc32"
+  ],
+  "milestone": "wit-callback-frozen-closure-source-v1",
+  "predecessorCommit": "68e4d21963da27b4a031ff5894ce2c76b381d864",
+  "schemaVersion": 1,
+  "scope": "Stop the non-installed WIT callback verifier closure at every exact source identity frozen by its authenticated receipt. This repairs historical replay only; it changes no support claim, runtime behavior or retained observation. Hub integration is recorded separately.",
+  "updates": [
+    {
+      "currentSha256": "a987f65cfda526cf73ebff044e7504b795b140f503c413fad4578bf51d387d10",
+      "edits": [
+        {
+          "current": "\tassert.deepEqual(Object.keys(record.sources), await ownedWitCallbackSourcePaths(record.sources));\n",
+          "previous": "\tassert.deepEqual(Object.keys(record.sources), await ownedWitCallbackSourcePaths());\n",
+          "start": 949
+        }
+      ],
+      "path": "tests/helpers/owned-wit-callback-result-acceptance-tests.mjs",
+      "previousSha256": "f6c13e8d2843acd3ff4ca277fc2b80e6dcdac7c8417003ba31e549c3ecc0e4e8"
+    },
+    {
+      "currentSha256": "942f201ac4a1149d4eb83f2ec5f38b18935de5fdba0e84ae5580db9a3a6433ed",
+      "edits": [
+        {
+          "current": "/**\n * Include the completed predecessor and the complete local verifier closure.\n *\n * @param {Record<string, string>} [sources] Exact source identities frozen by the receipt.\n */\nexport const ownedWitCallbackSourcePaths = async sources => {\n",
+          "previous": "/** Include the completed predecessor and the complete local verifier closure. */\nexport const ownedWitCallbackSourcePaths = async () => {\n",
+          "start": 3767
+        },
+        {
+          "current": "\t\tconst tree = ts.createSourceFile(path, beforeFinRefinementSource(\n\t\t\tpath, await readFile(path, \"utf8\"), sources?.[path]\n\t\t), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);\n",
+          "previous": "\t\tconst tree = ts.createSourceFile(path, beforeFinRefinementSource(path, await readFile(path, \"utf8\")), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);\n",
+          "start": 4725
+        },
+        {
+          "current": "\tassert.deepEqual(Object.keys(record.sources), await ownedWitCallbackSourcePaths(record.sources));\n",
+          "previous": "\tassert.deepEqual(Object.keys(record.sources), await ownedWitCallbackSourcePaths());\n",
+          "start": 8478
+        }
+      ],
+      "path": "tests/helpers/owned-wit-callback-result-acceptance.mjs",
+      "previousSha256": "5573022a9649561a9abae9931a6b3d0ca720aaa971498feb9a4d2ff6f04f096a"
+    }
+  ]
+}
