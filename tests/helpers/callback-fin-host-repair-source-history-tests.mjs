@@ -18,9 +18,8 @@ import {
 	, callbackFinHostRepairPredecessor
 	, reverseCallbackFinHostRepairUpdate
 } from "./callback-fin-host-repair-source-history.mjs";
-import { beforeCallbackFinPerlDirectionSource } from "./callback-fin-perl-direction-source-history.mjs";
-import { beforeCallbackFinPerlRuntimeSource } from "./callback-fin-perl-runtime-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
@@ -45,13 +44,8 @@ test("callback Fin host repair retains its exact implementation and integration"
 		, callbackFinHostRepairAddedPaths);
 	for(const addition of value.additions)
 	{
-		const live = await readFile(addition.path, "utf8");
-		const afterRuntime = beforeCallbackFinPerlRuntimeSource(
-			addition.path, live
-		);
-		const source = beforeCallbackFinPerlDirectionSource(
-			addition.path, afterRuntime, addition.currentSha256
-		);
+		const source = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256);
 		assert.equal(addition.currentSha256, sha256(source));
 	}
 });
@@ -68,13 +62,8 @@ test("callback Fin host repair reverses every exact transition", async () => {
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const live = await readFile(update.path, "utf8");
-		const afterRuntime = beforeCallbackFinPerlRuntimeSource(
-			update.path, live
-		);
-		const current = beforeCallbackFinPerlDirectionSource(
-			update.path, afterRuntime, update.currentSha256
-		);
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const previous = git(["show", `${value.implementationCommit}:${update.path}`]);
 		assert.equal(reverseCallbackFinHostRepairUpdate(current, update), previous);
 	}
