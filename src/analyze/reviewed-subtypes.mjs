@@ -4,15 +4,24 @@
  *
  * @file
  */
-import { assertRefinement, callbackDefinitionRefinement, callbackSubtypeDirection } from "../abi/refinements.mjs";
+import {
+	assertRefinement, callbackDefinitionRefinement, callbackSubtypeDirection
+	, declarationRefinements
+} from "../abi/refinements.mjs";
 import { checkedRefinementSelection } from "./checked-refinement-selection.mjs";
 import { compilerExportSelection, validateExportConfiguration } from "./export-configuration.mjs";
 
 const key = "lean-lang.org/refinements";
 const exportName = item => item.source.extensions["lean-lang.org/specialization"]?.name ?? item.source.declaration;
 const fail = () => { throw new TypeError("Invalid reviewed Subtype constructor decision"); };
-const contractSite = (site, refinement, types, produced = false) => {
-	assertRefinement(refinement, site.type, 0, true, types, produced);
+const contractSite = (
+	site, refinement, types, produced = false, declarationValidated = false
+) => {
+	if(refinement?.kind === "fin-parameter")
+	{
+		if(!declarationValidated) fail();
+	}
+	else assertRefinement(refinement, site.type, 0, true, types, produced);
 	// A Subtype or checked-record constructor is selected per site, over a copied value.
 	const selection = checkedRefinementSelection(refinement);
 	if(refinement !== null && (site.ownership !== "copy" || site.lifetime !== null)) fail();
@@ -71,6 +80,8 @@ export const reviewedSubtypeContracts = document => {
 			|| value.parameters.length !== declaration.parameters.length
 			|| (value.result === null
 				&& value.parameters.every(item => item === null)))) fail();
+		if(value !== undefined)
+			declarationRefinements(declaration, value, document.types);
 		const callbackParameters = declaration.parameters.map(site =>
 			callbackContractSite(site, document.types));
 		const callbackResult = callbackContractSite(
@@ -81,10 +92,12 @@ export const reviewedSubtypeContracts = document => {
 		const parameters = declaration.parameters.map(
 			(site, index) => callbackParameters[index] ?? contractSite(
 				site, value?.parameters?.[index] ?? null, document.types
+				, false, value !== undefined
 			)
 		);
 		const result = callbackResult ?? contractSite(
 			declaration.result, value?.result ?? null, document.types, true
+			, value !== undefined
 		);
 		if(!callbackParameters.some(Boolean) && callbackResult === null
 			&& !parameters.some(site => site.refinement)
