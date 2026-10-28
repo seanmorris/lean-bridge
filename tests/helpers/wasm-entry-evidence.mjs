@@ -348,7 +348,10 @@ export const recountArchivedWasmEntryReport = (report, expected, typescript, eng
 		for(const observation of browser ? context.observations : [context])
 		{
 			const parsed = transcript(observation.transcriptSha256);
-			const accounted = accountReviewedFinWasmEntryReport(expected, browser ? parsed.results : parsed, browser ? [] : preludes[context.profile]);
+			const accounted = accountReviewedFinWasmEntryReport(expected
+				, browser ? parsed.results : parsed
+				, browser ? [] : preludes[context.profile]
+				, observation.columns);
 			assert.deepEqual(accounted, { mode: observation.mode, calls: observation.calls, columns: observation.columns, source: observation.source, prelude: observation.prelude }, `${context.profile} recount`);
 			runs++;
 		}
@@ -465,7 +468,7 @@ const inflate = (path, bytes, expected) => path.endsWith(".gz") ? gunzipSync(byt
  * @param receipt - Parsed archive receipt.
  * @param read - Archive-byte reader, injectable for corruption tests.
  * @param options - Whether to compare the frozen members with the live generators too.
- * @param options.currentSources - False only while staging.
+ * @param options.currentSources - True only while the live generators still are the retained producer revision.
  */
 export const assertWasmEntryArchive = async (receipt, read = readFile, { currentSources = true } = {}) => {
 	assert.ok(Array.isArray(receipt.artifacts));

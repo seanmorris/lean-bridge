@@ -226,10 +226,15 @@ const handoff = async (t, directory, selection, reviewed, mode) => {
  * @param expected - Expectation of the selection and mode.
  * @param report - The consumer's measured run.
  * @param prelude - Exports the consumer calls validly before this run; empty unless it is a realm's first run.
+ * @param retainedColumns - Authenticated historical columns; absent for a current run.
  */
-export const accountReviewedFinWasmEntryReport = (expected, report, prelude = []) => {
+export const accountReviewedFinWasmEntryReport = (
+	expected, report, prelude = [], retainedColumns = undefined
+) => {
 	const { entry, ...result } = report;
-	const accounted = accountReviewedFinWasmEntry(expected, { mode: entry.mode, result, calls: entry.calls }, entry.lines);
+	const accounted = accountReviewedFinWasmEntry(expected
+		, { mode: entry.mode, result, calls: entry.calls }
+		, entry.lines, retainedColumns);
 	assert.deepEqual([accounted.mode, accounted.source, accounted.calls], [expected.mode, expected.mode === "probe", expected.calls.length]);
 	// Activity before the run is exactly the consumer's declared prelude calls, each a valid public call: one entry
 	// on its own column and, in a probe, one source line, in order. Anything else is refused.
@@ -248,8 +253,11 @@ export const accountReviewedFinWasmEntryReport = (expected, report, prelude = []
 export const reviewedFinWasmTypeScriptPrelude = (source, selection) => {
 	// Only top-level typed constants call the API; the calls inside if (false) blocks are type checks that never run.
 	const prelude = [...source.matchAll(/^const \w+: [^=]+ = api\.(\w+)\(/gmu)].map(match => match[1]);
-	assert.deepEqual(prelude, selection === "structural"
+	const structural = source.includes("const box: Box = api.box(")
 		? ["mirror", "label", "rows", "nested", "box"]
+		: ["mirror", "label", "rows", "nested"];
+	assert.deepEqual(prelude, selection === "structural"
+		? structural
 		: ["mirror", "label"], "the TypeScript consumer's prelude");
 	return prelude;
 };

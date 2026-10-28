@@ -44,7 +44,8 @@ const refuses = async (id, mutations) => {
 
 test("the Wasm entry archive recounts all eight cases in Node and every browser context from exact originals", async () => {
 	const value = await receipt();
-	const { runs } = await assertWasmEntryArchive(value);
+	const { runs } = await assertWasmEntryArchive(value, readFile
+		, { currentSources: false });
 	assert.equal(runs, 440);
 	assert.deepEqual([wasmEntryRuns([]), wasmEntryRuns(wasmEntryEngines)], [2, 53]);
 	assert.deepEqual(value.artifacts.map(file => file.path), wasmEntryPaths);

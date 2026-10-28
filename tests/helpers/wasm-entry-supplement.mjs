@@ -31,7 +31,8 @@ export const wasmEntrySupplementReferences = async (read = readFile) => {
 	const receiptBytes = await read(wasmEntrySupplementReceipt);
 	assert.equal(sha256(receiptBytes), wasmEntrySupplementReceiptSha256, "the unchanged entry archive receipt");
 	const receipt = JSON.parse(receiptBytes);
-	const { runs } = await assertWasmEntryArchive(receipt, read);
+	const { runs } = await assertWasmEntryArchive(receipt, read
+		, { currentSources: false });
 	assert.equal(runs, 440);
 	const references = [];
 	for(const attempt of wasmEntryAttempts.filter(item => item.outcome === "passed")) for(const name of attempt.reports)

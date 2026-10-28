@@ -244,10 +244,17 @@ const describe = call => `${call[2]} ${call[1]}(${call[3]}) #${call[0]}`;
  * @param expected - Result of expectReviewedFinWasmEntry.
  * @param observed - The measured run: its mode, corpus result and calls.
  * @param lines - A probe run's captured console.error lines; absent for an original run.
+ * @param retainedColumns - Authenticated historical adapter columns; current runs derive them from the live IR.
  */
-export const accountReviewedFinWasmEntry = (expected, observed, lines = undefined) => {
+export const accountReviewedFinWasmEntry = (
+	expected, observed, lines = undefined, retainedColumns = undefined
+) => {
 	const { mode, selection } = expected;
-	const columns = reviewedFinWasmEntrySymbols(selection, mode).map(item => item.name);
+	const expectedColumns = [...new Set(expected.calls.map(call => call[1]))].sort();
+	const columns = retainedColumns ?? reviewedFinWasmEntrySymbols(
+		selection, mode).map(item => item.name);
+	assert.deepEqual(columns, expectedColumns
+		, "the expectation's complete adapter columns");
 	assert.equal(new Set(columns).size, columns.length, "unique adapter columns");
 	assert.equal(columns.includes(reviewedFinWasmSourceControl), mode === "probe", "the control is a probe column only");
 	assert.equal(observed?.mode, mode, `a ${mode} run`);

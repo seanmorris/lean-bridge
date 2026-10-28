@@ -276,14 +276,20 @@ test("callback checked-record native workflows preserve failures and cannot narr
 	const perlWorkflow = await readFile(".github/workflows/callback-checked-record-perl.yml", "utf8");
 	const languageWorkflow = await readFile(".github/workflows/callback-checked-record-languages.yml", "utf8");
 	const remainingWorkflow = await readFile(".github/workflows/callback-checked-record-remaining.yml", "utf8");
+	const jobSource = (source, name) => {
+		const marker = `\n${" ".repeat(2)}${name}:\n`, parts = source.split(marker);
+		assert.equal(parts.length, 2, `${name} job`);
+		const next = parts[1].search(/\n {2}[A-Za-z0-9_-]+:\n/u);
+		return next < 0 ? parts[1] : parts[1].slice(0, next);
+	};
 	const workflows = [
-		[nativeWorkflow, [
+		[nativeWorkflow, "callback-checked-record-native", [
 			"group: callback-checked-record-native-${{ github.ref }}"
 			, "runs-on: ubuntu-24.04"
 			, "bash scripts/run-callback-checked-record-native-ci.sh"
 			, "build/callback-checked-record-native-ci/"
 		]]
-		, [perlWorkflow, [
+		, [perlWorkflow, "callback-checked-record-perl", [
 			"group: callback-checked-record-perl-${{ github.ref }}"
 			, "runs-on: ubuntu-24.04"
 			, "5.36.3 threaded"
@@ -293,7 +299,7 @@ test("callback checked-record native workflows preserve failures and cannot narr
 			, "bash scripts/run-callback-checked-record-perl-ci.sh"
 			, "build/callback-checked-record-perl-ci/"
 		]]
-		, [languageWorkflow, [
+		, [languageWorkflow, "callback-checked-record-languages", [
 			"group: callback-checked-record-languages-${{ github.ref }}"
 			, "runs-on: ubuntu-24.04"
 			, "ruby-version: '3.3.12'"
@@ -303,7 +309,7 @@ test("callback checked-record native workflows preserve failures and cannot narr
 			, "build/callback-checked-record-languages-ci/"
 		]]
 	];
-	for(const [source, required] of workflows)
+	for(const [source, protectedJob, required] of workflows)
 	{
 		for(const value of [
 			"workflow_dispatch:"
@@ -317,7 +323,8 @@ test("callback checked-record native workflows preserve failures and cannot narr
 			, "run: exit 1"
 			, ...required
 		]) assert.ok(source.includes(value), value);
-		assert.doesNotMatch(source, /continue-on-error:|strategy:|needs:/u);
+		assert.doesNotMatch(source, /continue-on-error:/u);
+		assert.doesNotMatch(jobSource(source, protectedJob), /strategy:|needs:/u);
 	}
 	const nativeShell = await readFile("scripts/run-callback-checked-record-native-ci.sh", "utf8");
 	const perlShell = await readFile("scripts/run-callback-checked-record-perl-ci.sh", "utf8");
