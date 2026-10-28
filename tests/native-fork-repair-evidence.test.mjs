@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { assertNativeForkRepair, nativeForkRepairProducer } from "./helpers/native-fork-repair-evidence.mjs";
+import { assertNativeForkRepair, assertNativeForkRepairPredecessorReplay, nativeForkRepairProducer } from "./helpers/native-fork-repair-evidence.mjs";
 import { beforeNativeForkRepair, nativeForkRepairHistoricalBytes, nativeForkRepairPath, reverseNativeForkRepair } from "./helpers/native-fork-repair-history.mjs";
 import { ownedDotnetHistoricalBytes, ownedDotnetNormalizationPaths } from "./helpers/owned-dotnet-source-history.mjs";
 import { ownedRubyHistoricalBytes } from "./helpers/owned-ruby-source-history.mjs";
@@ -16,7 +16,10 @@ import { sourceAtProducer } from "./helpers/producer-source.mjs";
 const receipt = async () => JSON.parse(await readFile(nativeForkRepairPath, "utf8"));
 
 test("native fork regression repair authenticates fresh callers and immutable predecessors", async () => {
-	await assertNativeForkRepair(await receipt());
+	const record = await receipt();
+	await assertNativeForkRepair(record);
+	// Only this independent test replays the predecessor with its producer-era verifier.
+	await assertNativeForkRepairPredecessorReplay(record);
 });
 
 test("native fork repair evidence rejects changed statuses, execution and source history", async () => {
