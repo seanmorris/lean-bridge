@@ -354,12 +354,13 @@ export const validateElaboratedMetadata = (report, request) => {
 				};
 				const dependentFinParameter = (type, site, index) => {
 					let count = 0;
-					const visit = value => {
+					const visit = (value, depth = 0) => {
 						if(!value || typeof value !== "object") return;
+						if(depth > 32) fail("Component copied type nesting exceeds 32");
 						if(value.kind === "refinement" && value.predicate?.kind === "fin-parameter") count++;
 						for(const child of Object.values(value))
 							if(child && typeof child === "object") Array.isArray(child)
-								? child.forEach(visit) : visit(child);
+								? child.forEach(item => visit(item, depth + 1)) : visit(child, depth + 1);
 					};
 					visit(type);
 					if(count === 0) return;

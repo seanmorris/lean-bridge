@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { access, mkdir, mkdtemp, readFile, readdir, rename, rm, statfs, symlink } from "node:fs/promises";
+import { access, chmod, mkdir, mkdtemp, readFile, readdir, rename, rm, stat, statfs, symlink } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -65,11 +65,12 @@ const inspectAssets = async ({ consumer, prefix, perl, owned, paths }) => {
 	for(const asset of assets) for(const mode of ["cold", "warm"])
 	{
 		const original = await readFile(asset), forged = Buffer.concat([original, Buffer.from("\nchanged installed native asset\n")]);
+		const permissions = (await stat(asset)).mode & 0o777;
 		const replacement = join(consumer, "changed-native-file");
 		await saveLakeFile(consumer, "changed-native-file", forged);
 		try
 		{
-			const args = ["inspect-assets.pl", mode, asset, replacement, ...assets];
+			const args = ["inspect-assets.pl", mode, asset, replacement, "LeanBridge::OwnedProbe", ...assets];
 			const execution = await capture(perl, args, consumer, {
 				...copiedCleanEnvironment, PERL5LIB: join(prefix, "lib/perl5")
 			});
@@ -79,7 +80,13 @@ const inspectAssets = async ({ consumer, prefix, perl, owned, paths }) => {
 			assert.equal(observation.brokerIdentities, 0);
 			observations.push({ asset: basename(asset), original: identity(original), forged: identity(forged), execution, observation });
 		} finally
-		{ await saveLakeFile(dirname(asset), basename(asset), original); }
+		{
+			await chmod(asset, permissions | 0o200);
+			try
+			{ await saveLakeFile(dirname(asset), basename(asset), original); }
+			finally
+			{ await chmod(asset, permissions); }
+		}
 	}
 	return { sourceSha256: sha256(source), observations };
 };

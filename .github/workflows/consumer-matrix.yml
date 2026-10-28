@@ -1298,6 +1298,13 @@ jobs:
     # remaining multi-profile, installed CLI and registry/browser gates.
     timeout-minutes: 330
     steps:
+      - name: Free hosted runner disk before npm and Nix builds
+        shell: bash
+        run: |
+          set -euo pipefail
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h /
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:

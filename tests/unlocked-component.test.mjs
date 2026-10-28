@@ -332,10 +332,10 @@ end LeanBridgeGenerated${sha256("onboarding-small@1.0.0").slice(0, 16)}
 	const copy = { ownership: "copy", lifetime: null };
 	const contracts = { "OnboardingSmall.echoWord": { parameters: [copy], result: { ...copy, refinement: "reject" }, effects: [] }
 		, "OnboardingSmall.echoNonEmpty": { parameters: [{ ...copy, refinement: { constructor: "OnboardingSmall.checkedText" } }]
-			, result: { ...copy, refinement: { constructor: "OnboardingSmall.checkedText" } }
+			, result: copy
 			, effects: [] }
 		, "OnboardingSmall.echoSmall": { parameters: [{ ...copy, refinement: { constructor: "OnboardingSmall.checkedSmall" } }]
-			, result: { ...copy, refinement: { constructor: "OnboardingSmall.checkedSmall" } }
+			, result: copy
 			, effects: [] }
 		, "OnboardingSmall.plainWord": { parameters: [copy], result: copy, effects: [] } };
 	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports: [...specializations.map(item => item.name), "OnboardingSmall.bounded", "OnboardingSmall.echoNonEmpty", "OnboardingSmall.echoSmall", "OnboardingSmall.plainWord"], specializations, contracts }));

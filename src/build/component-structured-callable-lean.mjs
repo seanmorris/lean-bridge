@@ -262,6 +262,12 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 	for(const [id, value] of callbackRefinements) if(!conversion && callbackDirections.get(id) === null
 		&& value && [...value.parameters, value.result].some(hasComponentNominalRefinements))
 		throw new TypeError("Nominal Subtype selections cannot share a component with callbacks yet");
+	const source = (type, refinement = null) => componentStructuredLeanType(type, new Map(), refinement);
+	const sourceCallbackType = signature => {
+		const selected = callbackRefinements.get(signature.id);
+		return `(${[...signature.parameters.map((type, index) => source(type, selected?.parameters[index]))
+			, source(signature.result, selected?.result)].join(" → ")})`;
+	};
 	// Wire types: a checked record crosses as its erased mirror wherever mirrors exist.
 	const wire = type => type.kind === "named" && callbacks.has(type.id)
 		? wireCallbackType(callbacks.get(type.id))
@@ -271,12 +277,16 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 		if(direction === "host") return "_root_.USize";
 		if(direction === "closure") return `(${[...signature.parameters.map(wire)
 			, `(_root_.Option ${wire(signature.result)})`].join(" → ")})`;
-		return componentStructuredLeanType({ kind: "named", id: signature.id }, callbacks);
+		// A shared identity stores the source-level function. Its native invocation still
+		// crosses through the erased wire carriers below. Keeping these two types distinct
+		// is essential for nominal Fin mirrors and transparent aliases.
+		return sourceCallbackType(signature);
 	};
 	const carrier = type => `(_root_.Array ${wire(type)})`;
 	const constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);
-	const defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements
-		, new Set([...conversion?.names ?? []].map(name => `lean:${name}`)));
+	// Failure defaults are returned by a source-level callback, so construct them in
+	// source types. The invoke carriers themselves continue to use erased mirrors.
+	const defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements);
 	const lines = [
 		...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], componentStructuredLeanType
 			, nominalRefinements, conversion ? { conversion, emitSites: false } : {})
@@ -339,7 +349,7 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 			? [`    let wire_${name} := ${componentRefinementConversion(refinements.parameters[index], name, false)}`] : []);
 		const lambdaParameters = names.map((name, index) => refinements ? `(${name} : ${componentStructuredLeanType(signature.parameters[index], new Map(), refinements.parameters[index])})` : name);
 		const invocation = `carrierValue (invoke_${key} token ${invokeArguments})`;
-		const result = refinements?.result ? `(show _root_.Option ${componentStructuredLeanType(signature.result, new Map(), refinements.result)} from do let value : ${componentStructuredLeanType(signature.result)} ← ${invocation}; ${componentRefinementConversion(refinements.result, "value")})` : invocation;
+		const result = refinements?.result ? `(show _root_.Option ${source(signature.result, refinements.result)} from do let value : ${wire(signature.result)} ← ${invocation}; ${componentRefinementConversion(refinements.result, "value")})` : invocation;
 		const application = refinements ? ["carrierResult (do"
 			, ...["closure", ...names].map(name => `  let ${name} ← carrierValue ${name}`)
 			, ...refinements.parameters.flatMap((refinement, index) => refinement ? [`  let ${names[index]} ← ${componentRefinementConversion(refinement, names[index])}`] : [])

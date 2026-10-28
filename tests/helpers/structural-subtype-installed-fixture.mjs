@@ -20,6 +20,21 @@ const wide = { kind: "fin", bound: "184467440737095516170" };
 const bytePairs = array(option({ tuple: ["uint8", "nat"] }));
 const byteChecks = tree("array", tree("option", tree("tuple", constructor("checkedByte"), positive)));
 const nestedChecks = tree("array", tree("list", tree("option", tree("tuple", positive, wide))));
+const produced = refinement => {
+	if(refinement === null) return null;
+	if(["subtype", "checked-record"].includes(refinement.kind)) return {
+		...structuredClone(refinement), constructor: null
+		, ...refinement.fields ? { fields: refinement.fields.map(field => ({ ...field, refinement: produced(field.refinement) })) } : {}
+	};
+	if(refinement.fields) return { ...structuredClone(refinement)
+		, fields: refinement.fields.map(field => ({ ...field, refinement: produced(field.refinement) })) };
+	if(refinement.cases) return { ...structuredClone(refinement)
+		, cases: refinement.cases.map(branch => ({ ...branch
+			, fields: branch.fields.map(field => ({ ...field, refinement: produced(field.refinement) })) })) };
+	if(refinement.arguments) return { ...structuredClone(refinement)
+		, arguments: refinement.arguments.map(produced) };
+	return structuredClone(refinement);
+};
 
 // [name, parameter transports, result transport, parameter refinements, result refinement].
 const signatures = [
@@ -43,7 +58,7 @@ export const structuralSubtypeReview = () => {
 	for(const [index, declaration] of document.declarations.entries())
 	{
 		const [, , , parameters, result] = signatures[index];
-		declaration.source.extensions["lean-lang.org/refinements"] = structuredClone({ parameters, result });
+		declaration.source.extensions["lean-lang.org/refinements"] = structuredClone({ parameters, result: produced(result) });
 		if(declaration.name === "specialized")
 		{
 			declaration.source.declaration = `${structuralSubtypeModule}.generic`;
@@ -61,7 +76,8 @@ export const structuralSubtypeReview = () => {
 // Derive ordinary author choices from this hand-authored fixture, not production derivation code.
 const choices = refinement => {
 	if(refinement === null || refinement.kind === "fin") return null;
-	if(refinement.kind === "subtype") return { constructor: refinement.constructor };
+	if(refinement.kind === "subtype") return refinement.constructor === null
+		? null : { constructor: refinement.constructor };
 	const arguments_ = refinement.arguments.map(choices);
 	return arguments_.some(Boolean) ? tree(refinement.kind, ...arguments_) : null;
 };
@@ -79,7 +95,7 @@ export const structuralSubtypeConfiguration = (route, profiles) => {
 	const targets = Object.fromEntries(profiles.map(profile => [profile, { name: structuralSubtypeName, version: "1.0.0" }]));
 	const base = { schemaVersion: 1, modules: [structuralSubtypeModule], targets };
 	if(route === "reviewed") return base;
-	const contracts = Object.fromEntries(signatures.map(([name, , , parameters, result]) => [`${structuralSubtypeModule}.${name}`, { parameters: parameters.map(site), result: site(result) }]));
+	const contracts = Object.fromEntries(signatures.map(([name, , , parameters, result]) => [`${structuralSubtypeModule}.${name}`, { parameters: parameters.map(site), result: site(produced(result)) }]));
 	return { ...base, exports: Object.keys(contracts), contracts
 		, specializations: [{ name: `${structuralSubtypeModule}.specialized`, declaration: `${structuralSubtypeModule}.generic`, types: [`${structuralSubtypeModule}.Positive`] }] };
 };

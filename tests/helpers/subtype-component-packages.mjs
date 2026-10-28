@@ -122,7 +122,7 @@ export const checkSubtypeComponentPackages = async (t, { fixture, build, runtime
 		const callback = [3, 9].includes(version);
 		const exports = ["OnboardingSmall.echo", "OnboardingSmall.use", ...callback ? ["OnboardingSmall.make"] : [], ...version >= 8 ? ["OnboardingSmall.echoTree"] : []];
 		const contracts = {
-			"OnboardingSmall.echo": { parameters: [refined("checkedText")], result: refined("checkedText") }
+			"OnboardingSmall.echo": { parameters: [refined("checkedText")], result: copy }
 			, "OnboardingSmall.use": { parameters: [refined("checkedText"), refined("checkedSmall"), callback ? { ownership: "borrow", lifetime: { scope: "call", anchor: null } } : copy] }
 			, ...callback ? { "OnboardingSmall.make": { parameters: [refined("checkedText")] } } : {}
 		};

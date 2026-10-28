@@ -6,7 +6,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { assertComponentRecursiveAbi } from "../src/abi/component-recursive-abi.mjs";
+import { componentStructuredCallbackDirection } from "../src/abi/component-structured-callables.mjs";
 import { componentRecursiveTypes } from "../src/build/component-recursive-lean.mjs";
+import { createNativeCallableGraphDescriptor, nativeCallableGraphCarrierAbi } from "../src/build/native-callable-graph.mjs";
 import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
 import { descriptor, sourceExports } from "./helpers/npm-structured-callable-fixture.mjs";
 import { componentStructuredCopiedView, componentStructuredCallableLeanSource } from "../src/build/component-structured-callable-lean.mjs";
@@ -46,4 +48,41 @@ test("all callback, closure and exported arguments use typed one-element Array c
     const changed = structuredClone(exports); changed[1] = changed[0];
     assert.throws(() => componentStructuredCallableLeanSource(abi, changed), /identity mismatch/);
 }
+});
+
+test("a shared nominal Fin callback keeps source functions separate from erased wire carriers", () => {
+	const ir = structuredCallableReviewedIr();
+	const payload = ir.types.find(type => type.id === "lean:Structured.Payload");
+	payload.source.extensions["lean-lang.org/nominal-refinements"] = {
+		kind: "record", fields: [null, null, { kind: "fin", bound: "10" }, null]
+	};
+	const retained = ir.declarations.find(item => item.source.declaration === "Structured.retainRecord");
+	const callbackType = ir.types.find(item => item.id === retained.parameters[0].type.id);
+	const payloadRefinement = {
+		kind: "record", name: "Structured.Payload"
+		, fields: ["text", "rows", "count", "nested"].map(name => ({
+			name, refinement: name === "count" ? { kind: "fin", bound: "10" } : null
+		}))
+	};
+	callbackType.source.extensions["lean-lang.org/refinements"] = {
+		parameters: [structuredClone(payloadRefinement)]
+		, result: structuredClone(payloadRefinement)
+	};
+	const descriptor = createNativeCallableGraphDescriptor(ir);
+	const abi = nativeCallableGraphCarrierAbi(descriptor, ir);
+	const callback = abi.callbacks.find(item => item.id === retained.parameters[0].type.id);
+	assert.equal(componentStructuredCallbackDirection(abi, callback), null);
+	const exports = abi.exports.map((item, index) => ({
+		bindingId: item.bindingId, symbol: item.symbol, wrapper: `export${index}`
+		, sourceDeclaration: ir.declarations.find(declaration => declaration.id === item.bindingId).source.declaration
+		, parameters: item.parameters.map(() => ({ leanType: "" }))
+	}));
+	const source = componentStructuredCallableLeanSource(abi, exports).join("\n");
+	const section = source.slice(source.indexOf(`opaque invoke_${callback.key}`)
+		, source.indexOf(`@[export ${abi.exports.find(item => item.bindingId === retained.id).symbol}_lean]`));
+	assert.match(section, /_root_\.Array \(_root_\.Structured\.Payload → _root_\.Structured\.Payload\)/u);
+	assert.match(section, /_root_\.Array LbErased\.Structured\.Payload/u);
+	assert.match(section, /let value : LbErased\.Structured\.Payload ← carrierValue/u);
+	assert.match(source, /def callbackDefault_[a-f0-9]{20} : _root_\.Structured\.Payload :=/u);
+	assert.doesNotMatch(source, /def callbackDefault_[a-f0-9]{20} : LbErased\.Structured\.Payload :=/u);
 });
