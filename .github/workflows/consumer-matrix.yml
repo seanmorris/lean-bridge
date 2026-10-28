@@ -2496,6 +2496,19 @@ jobs:
           bash scripts/build-lean-runtime.sh
           node --test tests/php-wasm-ordinary.test.mjs
           test -s build/recursive/php-wasm-shared-regressions.json
+      - name: Qualify direct proof erasure in native PHP and PHP-Wasm packages
+        id: direct_proof_php
+        continue-on-error: true
+        env:
+          LEAN_BRIDGE_PHP: /usr/bin/php
+          LEAN_BRIDGE_COMPOSER: /usr/bin/composer
+          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm
+        run: |
+          source scripts/env.sh
+          node scripts/prepare-php-wasm-subtype-entry-runtime.mjs \
+            --output build/direct-proof-erasure-php-input/php-wasm-runtime
+          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME="$GITHUB_WORKSPACE/build/direct-proof-erasure-php-input/php-wasm-runtime"
+          bash scripts/run-direct-proof-erasure-php-ci.sh
       - name: Execute owned PHP-Wasm values and installed CLI releases
         id: owned_php_wasm
         continue-on-error: true
@@ -2568,6 +2581,14 @@ jobs:
             build/recursive/php-wasm-shared-regressions.json
           if-no-files-found: error
           retention-days: 30
+      - name: Upload direct proof-erasure PHP evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-php-${{ github.sha }}
+          path: build/direct-proof-erasure-php-ci/
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload PHP-Wasm performance for combined observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -2578,7 +2599,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce PHP support
-        if: always() && (steps.consumer.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.owned_php_wasm.outcome != 'success')
+        if: always() && (steps.consumer.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.direct_proof_php.outcome != 'success' || steps.owned_php_wasm.outcome != 'success')
         run: exit 1
 
   php-wasm-corpus:

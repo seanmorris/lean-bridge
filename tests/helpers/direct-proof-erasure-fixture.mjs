@@ -35,7 +35,10 @@ export const directProofErasureTargets = Object.freeze({
 	, "node-typescript": Object.freeze(["npm", Object.freeze({ name: "direct-proof-erasure", version: "1.0.0" })])
 	, perl: Object.freeze(["cpan", Object.freeze({ module: "LeanBridge::DirectProofErasure", version: "1.000" })])
 	, "php-native": Object.freeze(["php-native", Object.freeze({ name: "example/directprooferasure", version: "1.0.0" })])
-	, "php-wasm": Object.freeze(["php-wasm", Object.freeze({ name: "example/directprooferasure", version: "1.0.0" })])
+	, "php-wasm": Object.freeze(["php-wasm", Object.freeze({
+		npm: Object.freeze({ name: "@example/directprooferasure-php-wasm", version: "1.0.0" })
+		, composer: Object.freeze({ name: "example/directprooferasure-php-wasm", version: "1.0.0" })
+	})])
 	, python: Object.freeze(["pypi", Object.freeze({ name: "directprooferasure", version: "1.0.0" })])
 	, ruby: Object.freeze(["rubygems", Object.freeze({ name: "directprooferasure", version: "1.0.0" })])
 	, rust: Object.freeze(["cargo", Object.freeze({ name: "directprooferasure", version: "1.0.0" })])

@@ -79,6 +79,10 @@ test("seventeen consumer profiles collapse to twelve exact package targets", () 
 		, { name: "direct-proof-erasure", version: "1.0.0" });
 	assert.deepEqual(targets.maven
 		, { name: "org.leanbridge:directprooferasure", version: "1.0.0" });
+	assert.deepEqual(targets["php-wasm"], {
+		npm: { name: "@example/directprooferasure-php-wasm", version: "1.0.0" }
+		, composer: { name: "example/directprooferasure-php-wasm", version: "1.0.0" }
+	});
 	assert.throws(() => directProofErasureTargetConfiguration([]), TypeError);
 	assert.throws(() => directProofErasureTargetConfiguration(["unknown"]), TypeError);
 	assert.throws(() => directProofErasureTargetConfiguration(["c", "c"]), TypeError);
