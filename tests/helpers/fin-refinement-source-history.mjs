@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeWitCallbackFrozenClosureSource, witCallbackFrozenClosureChangedPaths } from "./wit-callback-frozen-closure-source-history.mjs";
 import { beforeCoreDeterministicBoundaryRepairIntegrationSource, coreDeterministicBoundaryRepairIntegrationNormalizationPaths } from "./core-deterministic-boundary-repair-integration-source-history.mjs";
 import { beforeCoreDeterministicBoundaryRepairSource, coreDeterministicBoundaryRepairNormalizationPaths } from "./core-deterministic-boundary-repair-source-history.mjs";
 import { beforeSignatureSpecializationCompletionPinRepairIntegrationSource, signatureSpecializationCompletionPinRepairIntegrationNormalizationPaths } from "./signature-specialization-completion-pin-repair-integration-source-history.mjs";
@@ -2316,7 +2317,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreDeterministicBoundaryRepairIntegrationNormalizationPaths
+	...witCallbackFrozenClosureChangedPaths
+	, ...coreDeterministicBoundaryRepairIntegrationNormalizationPaths
 	, ...coreDeterministicBoundaryRepairNormalizationPaths
 	, ...signatureSpecializationCompletionPinRepairIntegrationNormalizationPaths
 	, ...signatureSpecializationCompletionPinRepairNormalizationPaths
@@ -3371,7 +3373,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreDeterministicBoundaryRepairIntegrationSource(
+	let stage = beforeWitCallbackFrozenClosureSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreDeterministicBoundaryRepairIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
