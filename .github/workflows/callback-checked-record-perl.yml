@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     steps:
-      - name: Check out the exact revision and original evidence history
+      - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -86,10 +86,10 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     steps:
-      - name: Check out the exact revision and original evidence history
+      - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
