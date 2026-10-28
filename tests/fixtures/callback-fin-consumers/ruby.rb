@@ -18,7 +18,8 @@ end
 
 scaler = API.scaler(3)
 check(scaler.call(4) == 12, "bounded closure argument")
-check(reject(API::LeanBridgeError) { scaler.call(10) }.is_a?(API::LeanBridgeError),
+scaler_error = reject(RangeError) { scaler.call(10) }
+check(scaler_error.message == "arg0 is not below its Fin 10 bound",
       "Fin 10 is refused")
 check(scaler.call(9) == 27, "closure remains usable")
 
@@ -41,17 +42,19 @@ check(API.apply(proc { |value| value + 1 }, 2) == 3,
 
 digits = API.digits(API::UNIT)
 check(digits.call([1, 2]) == 5, "nested Fin callback argument")
-check(reject(API::LeanBridgeError) { digits.call([3]) }.is_a?(API::LeanBridgeError),
+nested_error = reject(RangeError) { digits.call([3]) }
+check(nested_error.message == "arg0[0] is not below its Fin 3 bound",
       "nested bound is refused")
 check(digits.call([]) == 0, "nested closure remains usable")
 
 tiles = API.tiles(API::UNIT)
 check(tiles.call([API::Tile.new(digit: 4, count: 2)]) == 402,
       "nominal Fin callback field")
-tile_error = reject(API::LeanBridgeError) do
+tile_error = reject(RangeError) do
   tiles.call([API::Tile.new(digit: 5, count: 2)])
 end
-check(tile_error.is_a?(API::LeanBridgeError), "nominal Fin field is refused")
+check(tile_error.message == "arg0[0].digit is not below its Fin 5 bound",
+      "nominal Fin field is refused")
 
 tile_maker = API.tile_maker(3)
 check(tile_maker.call(4) == API::Tile.new(digit: 2, count: 4),

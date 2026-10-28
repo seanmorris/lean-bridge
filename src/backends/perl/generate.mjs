@@ -244,17 +244,33 @@ const perlFinBounds = (model, item) => {
 	if(!item.refinements) return null;
 	// Reviewed APIs own their parameter names; ordinary-source positional names stay stable.
 	const names = perlParameterNames(model, item);
-	const parts = item.refinements.parameters.flatMap((refinement, index) => nativeFinBoundPaths(refinement, names[index]));
-	parts.push(...nativeFinBoundPaths(item.refinements.result, "result", true));
+	const paths = (refinement, path, direction) => {
+		if(refinement?.kind !== "callback")
+			return nativeFinBoundPaths(refinement, path, direction === "result");
+		const producedParameters = direction === "host", producedResult = direction === "closure";
+		const nested = refinement.parameters.flatMap((child, index) =>
+			nativeFinBoundPaths(child, `${path}.arg${index}`, producedParameters));
+		nested.push(...nativeFinBoundPaths(refinement.result, `${path}.result`, producedResult));
+		return nested;
+	};
+	const parts = item.refinements.parameters.flatMap((refinement, index) =>
+		paths(refinement, names[index], refinement?.kind === "callback" ? "host" : "parameter"));
+	parts.push(...paths(item.refinements.result, "result"
+		, item.refinements.result?.kind === "callback" ? "closure" : "result"));
 	return parts.length ? parts.join("; ") : null;
 };
 const scalarFastType = type => type.kind === "primitive" && !["nat", "int", "string", "bytes"].includes(type.name);
 // Packages without record or variant bounds keep their earlier closing sentence byte for byte.
 const perlNominalFinNote = model => {
 	const nominal = tree => tree !== null && typeof tree === "object" && (["record", "variant"].includes(tree.kind) || (tree.arguments ?? []).some(nominal));
+	const callbacks = model.exports.some(item => item.refinements
+		&& [...item.refinements.parameters, item.refinements.result].some(tree => tree?.kind === "callback"));
+	const tail = callbacks
+		? "Generic record instantiations remain unsupported. Synchronous host callbacks and returned Lean closures apply the same checks at their documented argument and result paths."
+		: null;
 	return model.exports.some(item => item.refinements && [...item.refinements.parameters, item.refinements.result].some(nominal))
-		? "Every field of a record and only the fields of the active variant case are checked the same way; a rejection names the field path, such as C<arg0.inner.digit> or C<arg0.circle.radius>. Fin inside callbacks, generic record instantiations or reviewed Binding IR is not supported in CPAN packages."
-		: "Fin inside records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.";
+		? `Every field of a record and only the fields of the active variant case are checked the same way; a rejection names the field path, such as C<arg0.inner.digit> or C<arg0.circle.radius>. ${tail ?? "Fin inside callbacks, generic record instantiations or reviewed Binding IR is not supported in CPAN packages."}`
+		: tail ?? "Fin inside records, variants, callbacks or reviewed Binding IR is not supported in CPAN packages.";
 };
 // Compare a Lean Nat argument with its exact Fin bound before the guarded adapter runs.
 // The surrounding scope still owns every argument, so croak releases them all.
@@ -317,6 +333,10 @@ const finGuard = (type, refinement, value, name, depth = 0, path = { format: "",
 const finOnly = refinement => {
 	if(refinement === null || ["subtype", "fin-field"].includes(refinement.kind)) return null;
 	if(refinement.kind === "fin") return refinement;
+	// Callback bounds are enforced when the callback is invoked through its generated
+	// callable adapter.  A public export receives only the callback handle here, so
+	// there is no structural value for this outer guard to walk.
+	if(refinement.kind === "callback") return null;
 	if(refinement.kind === "checked-record")
 	{
 		const arguments_ = (refinement.arguments ?? []).map(finOnly);

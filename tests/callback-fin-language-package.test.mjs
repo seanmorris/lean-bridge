@@ -94,6 +94,13 @@ test("callback Fin consumers match generated Python, Ruby and Rust package surfa
 	};
 	assert.match(consumers.python, /import lean_reviewedcallbacks as api/u);
 	assert.match(consumers.ruby, /require "lean_bridge\/reviewedcallbacks"/u);
+	for(const message of [
+		"arg0 is not below its Fin 10 bound"
+		, "arg0[0] is not below its Fin 3 bound"
+		, "arg0[0].digit is not below its Fin 5 bound"
+	]) assert.ok(consumers.ruby.includes(message), message);
+	assert.equal(consumers.ruby.match(/reject\(RangeError\)/gu)?.length, 3);
+	assert.doesNotMatch(consumers.ruby, /reject\(API::LeanBridgeError\)/u);
 	assert.match(consumers.rust, /use reviewedcallbacks as api;/u);
 	for(const source of Object.values(consumers))
 	{
