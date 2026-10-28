@@ -531,6 +531,7 @@ const profileManifest = Object.freeze({
 		, "optional-parameter-native-installed"
 		, "optional-parameter-npm-contract"
 		, "optional-parameter-npm-installed"
+		, "optional-parameter-php-installed"
 		, "optional-wit-contract"
 		, "wit-graph-refinement-diagnostics"
 		, "fin-python-ruby-evidence"

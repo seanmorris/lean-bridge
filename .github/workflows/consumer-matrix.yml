@@ -2526,6 +2526,18 @@ jobs:
             --output build/direct-proof-erasure-php-input/php-wasm-runtime
           export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME="$GITHUB_WORKSPACE/build/direct-proof-erasure-php-input/php-wasm-runtime"
           bash scripts/run-direct-proof-erasure-php-ci.sh
+      - name: Qualify optional parameters in native PHP and PHP-Wasm packages
+        id: optional_parameters_php
+        continue-on-error: true
+        env:
+          LEAN_BRIDGE_PHP: /usr/bin/php
+          LEAN_BRIDGE_COMPOSER: /usr/bin/composer
+          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm
+        run: |
+          source scripts/env.sh
+          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME="$GITHUB_WORKSPACE/build/direct-proof-erasure-php-input/php-wasm-runtime"
+          test -d "$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME"
+          bash scripts/run-optional-parameter-php-ci.sh
       - name: Execute owned PHP-Wasm values and installed CLI releases
         id: owned_php_wasm
         continue-on-error: true
@@ -2606,6 +2618,14 @@ jobs:
           path: build/direct-proof-erasure-php-ci/
           if-no-files-found: error
           retention-days: 30
+      - name: Upload optional-parameter PHP evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-php-${{ github.sha }}
+          path: build/optional-parameter-php-ci/
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload PHP-Wasm performance for combined observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -2616,7 +2636,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce PHP support
-        if: always() && (steps.consumer.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.direct_proof_php.outcome != 'success' || steps.owned_php_wasm.outcome != 'success')
+        if: always() && (steps.consumer.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.direct_proof_php.outcome != 'success' || steps.optional_parameters_php.outcome != 'success' || steps.owned_php_wasm.outcome != 'success')
         run: exit 1
 
   php-wasm-corpus:

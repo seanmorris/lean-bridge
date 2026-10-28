@@ -24,6 +24,7 @@ import {
 	PhpPackageAuditError,
 	auditPhpPackage,
 } from "../src/backends/php/package-audit.mjs";
+import { optionalParameterReview } from "./helpers/optional-parameter-fixture.mjs";
 
 const run = promisify(execFile);
 const clone = value => structuredClone(value);
@@ -299,6 +300,32 @@ echo json_encode([$omitted->read(), $none->read(), $some->read()], JSON_THROW_ON
 	{
 		await rm(directory, { recursive: true, force: true });
 	}
+});
+
+test("copied PHP functions expose every authenticated optional default", async () => {
+	const files = generatePhpBindingPackage(optionalParameterReview());
+	const api = files["src/Api.php"];
+	assert.match(api, /function word\(mixed \$value0 = 7\): int/u);
+	assert.match(api, /function natural\(mixed \$value0 = null\)/u);
+	assert.match(api
+		, /if \(\\func_num_args\(\) <= 0\) \{ \$value0 = \\Brick\\Math\\BigInteger::of\('184467440737095516160'\); \}/u);
+	assert.match(api, /function text\(mixed \$value0 = 'Lean\nBridge'\)/u);
+	assert.match(api, /function character\(mixed \$value0 = 'λ'\)/u);
+	assert.match(api, /function maybe\(mixed \$value0 = null\)/u);
+	assert.match(api, /function present\(mixed \$value0 = null\)/u);
+	assert.match(api
+		, /if \(\\func_num_args\(\) <= 0\) \{ \$value0 = new Some\(9\); \}/u);
+	assert.match(api, /function unit_value\(mixed \$value0 = null\): null/u);
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-function-defaults-"));
+	try
+	{
+		const path = join(directory, "Api.php");
+		await writeFile(path, api);
+		const { stdout } = await run("php", ["-l", path]);
+		assert.match(stdout, /No syntax errors detected/u);
+	}
+	finally
+	{ await rm(directory, { recursive: true, force: true }); }
 });
 
 test("generated PHP executes through ordinary values, functions, resources, and callables", async () => {
