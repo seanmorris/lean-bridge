@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/proof-core-local-join-source-history-tests.mjs";
 import "./helpers/dependent-signature-completion-source-history-tests.mjs";
 import "./helpers/dependent-signature-hosted-tests.mjs";
 import "./helpers/wit-callback-frozen-closure-source-history-tests.mjs";
