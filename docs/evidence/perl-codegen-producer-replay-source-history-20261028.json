@@ -1,0 +1,139 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fd7d7d04e024a6451c3947c0651912fe1e9c8e68fbc72f1532cbe827440ae5b1",
+      "path": "scripts/update-perl-codegen-producer-replay-source-history.mjs"
+    },
+    {
+      "currentSha256": "d9ca5e3ab128292edb95708366212bfcf945228ed4753f42728802a54a0949d3",
+      "path": "tests/helpers/perl-codegen-producer-replay-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8335e358049231b99ae57c46ecb0bef7706b1170676945d5c68c99ab13df2099",
+      "path": "tests/helpers/perl-codegen-producer-replay-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "fc9077597e898133fef488f4173c8e1afdb11962",
+  "implementationCommits": [
+    "fc9077597e898133fef488f4173c8e1afdb11962"
+  ],
+  "milestone": "perl-codegen-producer-replay-source-v1",
+  "predecessorCommit": "4d16da9b53e25273ce1a75b7ce0dd0d15661b92c",
+  "schemaVersion": 1,
+  "scope": "Replay the Perl structured codegen regression with the exact generator closure that produced its frozen fixtures (8538d3f, whose generate.mjs and copied-aliases.mjs digests the record pins) instead of the live generator that 54426dd changed. The regression becomes asynchronous and both callers await it; a forged generator digest is refused. Exactly the seven type-surface pins of the three edited helpers are refreshed. No claim, observation, evidence payload or other pin changes. Hub and registration integration are recorded by the integrating seal.",
+  "updates": [
+    {
+      "currentSha256": "51e3f9d444a82d25a5928d64650a1d168ba41d7abd9d66654bf3f0c4308fdac0",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"f6cd3331f7c12619284bf6a11f03af3600dcdf234b7138792e39d92a0356358a\"\n",
+          "previous": "          \"sha256\": \"ff62b6529ef22e91f7a8b85a7e53b5f7f7d96636a4841c25d2c62b08bdf26f87\"\n",
+          "start": 1129613
+        },
+        {
+          "current": "          \"sha256\": \"2e8e5a894f8803c2854c391d9456033fd3c064afa5dbe4a2bb1e9c53689af5dd\"\n",
+          "previous": "          \"sha256\": \"200074d872aa08b57a5fdd080540bc13a1e09bfc53a5f14a0b4fe2cc247d3d1b\"\n",
+          "start": 1130335
+        },
+        {
+          "current": "          \"sha256\": \"5c4f8cb4dd3bf0cb3966d26a59b48938381595c06cd02bb48e94e5a826c27891\"\n",
+          "previous": "          \"sha256\": \"fe9f7f7e0b6852c63992df871702470d81a170de0020d61072d66aeade0d462a\"\n",
+          "start": 1131376
+        },
+        {
+          "current": "          \"sha256\": \"f6cd3331f7c12619284bf6a11f03af3600dcdf234b7138792e39d92a0356358a\"\n",
+          "previous": "          \"sha256\": \"ff62b6529ef22e91f7a8b85a7e53b5f7f7d96636a4841c25d2c62b08bdf26f87\"\n",
+          "start": 1146626
+        },
+        {
+          "current": "          \"sha256\": \"f6cd3331f7c12619284bf6a11f03af3600dcdf234b7138792e39d92a0356358a\"\n",
+          "previous": "          \"sha256\": \"ff62b6529ef22e91f7a8b85a7e53b5f7f7d96636a4841c25d2c62b08bdf26f87\"\n",
+          "start": 1316079
+        },
+        {
+          "current": "          \"sha256\": \"2e8e5a894f8803c2854c391d9456033fd3c064afa5dbe4a2bb1e9c53689af5dd\"\n",
+          "previous": "          \"sha256\": \"200074d872aa08b57a5fdd080540bc13a1e09bfc53a5f14a0b4fe2cc247d3d1b\"\n",
+          "start": 1316801
+        },
+        {
+          "current": "          \"sha256\": \"5c4f8cb4dd3bf0cb3966d26a59b48938381595c06cd02bb48e94e5a826c27891\"\n",
+          "previous": "          \"sha256\": \"fe9f7f7e0b6852c63992df871702470d81a170de0020d61072d66aeade0d462a\"\n",
+          "start": 1320813
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "354a0bd0d4db6c34886224476888f1f70b114213501e619e7e6dc39f0eae886a"
+    },
+    {
+      "currentSha256": "f6cd3331f7c12619284bf6a11f03af3600dcdf234b7138792e39d92a0356358a",
+      "edits": [
+        {
+          "current": "\tconst codegen = JSON.parse(codegenBytes); await assertPerlStructuredCodegenRegression(codegen);\n",
+          "previous": "\tconst codegen = JSON.parse(codegenBytes); assertPerlStructuredCodegenRegression(codegen);\n",
+          "start": 15070
+        }
+      ],
+      "path": "tests/helpers/perl-structured-callable-evidence.mjs",
+      "previousSha256": "ff62b6529ef22e91f7a8b85a7e53b5f7f7d96636a4841c25d2c62b08bdf26f87"
+    },
+    {
+      "currentSha256": "2e8e5a894f8803c2854c391d9456033fd3c064afa5dbe4a2bb1e9c53689af5dd",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generatePerlBindingPackage } from \"../../src/backends/perl/generate.mjs\";\n",
+          "start": 277
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 340
+        },
+        {
+          "current": "// The frozen fixtures were generated here; later generator changes must not rewrite them.\nexport const perlStructuredCodegenProducer = \"8538d3f67b0cdfffabf35b95153a15ecd56d84f5\";\n\n",
+          "previous": "",
+          "start": 5016
+        },
+        {
+          "current": " * Compare all files with independent predecessor bytes and explicit scalar\n * repairs, regenerated by the exact recorded generator closure.\n",
+          "previous": " * Compare all files with independent predecessor bytes and explicit scalar repairs.\n",
+          "start": 5201
+        },
+        {
+          "current": "export const assertPerlStructuredCodegenRegression = async record => {\n",
+          "previous": "export const assertPerlStructuredCodegenRegression = record => {\n",
+          "start": 5428
+        },
+        {
+          "current": "\tassert.deepEqual(Object.keys(record.sourceHashes).sort()\n\t\t, [\"src/backends/perl/copied-aliases.mjs\", \"src/backends/perl/generate.mjs\"]);\n\tfor(const [path, digest] of Object.entries(record.sourceHashes))\n\t\tassert.equal(sha256(bytesAtProducer(perlStructuredCodegenProducer, path)), digest, path);\n\tconst { generatePerlBindingPackage: generate } = await moduleAtProducer(\n\t\tperlStructuredCodegenProducer, \"src/backends/perl/generate.mjs\");\n",
+          "previous": "",
+          "start": 5905
+        },
+        {
+          "current": "\t\tconst files = generate(selected, perlStructuredRegressionReceipt);\n",
+          "previous": "\t\tconst files = generatePerlBindingPackage(selected, perlStructuredRegressionReceipt);\n",
+          "start": 6523
+        }
+      ],
+      "path": "tests/helpers/perl-structured-callable-regression.mjs",
+      "previousSha256": "200074d872aa08b57a5fdd080540bc13a1e09bfc53a5f14a0b4fe2cc247d3d1b"
+    },
+    {
+      "currentSha256": "5c4f8cb4dd3bf0cb3966d26a59b48938381595c06cd02bb48e94e5a826c27891",
+      "edits": [
+        {
+          "current": "\tawait assertPerlStructuredCodegenRegression(record);\n",
+          "previous": "\tassertPerlStructuredCodegenRegression(record);\n",
+          "start": 1709
+        },
+        {
+          "current": "\tawait assert.rejects(() => assertPerlStructuredCodegenRegression(changed));\n\tconst moved = structuredClone(record);\n\tmoved.sourceHashes[\"src/backends/perl/generate.mjs\"] = \"0\".repeat(64);\n\tawait assert.rejects(() => assertPerlStructuredCodegenRegression(moved));\n",
+          "previous": "\tassert.throws(() => assertPerlStructuredCodegenRegression(changed));\n",
+          "start": 1875
+        }
+      ],
+      "path": "tests/perl-structured-callable-contract.test.mjs",
+      "previousSha256": "fe9f7f7e0b6852c63992df871702470d81a170de0020d61072d66aeade0d462a"
+    }
+  ]
+}
