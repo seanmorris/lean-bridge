@@ -65,3 +65,5 @@ import "./helpers/inherited-checked-record-lane-memory-integration-source-histor
 import "./helpers/inherited-checked-record-lane-memory-local-join-source-history-tests.mjs";
 import "./helpers/signature-specialization-completion-preparation-source-history-tests.mjs";
 import "./helpers/signature-specialization-completion-preparation-integration-source-history-tests.mjs";
+import "./helpers/signature-specialization-hosted-archive-replay-source-history-tests.mjs";
+import "./helpers/signature-specialization-hosted-archive-replay-integration-source-history-tests.mjs";

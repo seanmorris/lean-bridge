@@ -12,6 +12,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeSignatureSpecializationHostedArchiveReplayIntegrationSource, signatureSpecializationHostedArchiveReplayIntegrationNormalizationPaths } from "./signature-specialization-hosted-archive-replay-integration-source-history.mjs";
+import { beforeSignatureSpecializationHostedArchiveReplaySource, signatureSpecializationHostedArchiveReplayNormalizationPaths } from "./signature-specialization-hosted-archive-replay-source-history.mjs";
 import { beforeSignatureSpecializationCompletionPreparationIntegrationSource, signatureSpecializationCompletionPreparationIntegrationNormalizationPaths } from "./signature-specialization-completion-preparation-integration-source-history.mjs";
 import { beforeSignatureSpecializationCompletionPreparationSource, signatureSpecializationCompletionPreparationNormalizationPaths } from "./signature-specialization-completion-preparation-source-history.mjs";
 import { beforeInheritedCheckedRecordLaneMemoryLocalJoinSource, inheritedCheckedRecordLaneMemoryLocalJoinNormalizationPaths } from "./inherited-checked-record-lane-memory-local-join-source-history.mjs";
@@ -2308,7 +2310,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...signatureSpecializationCompletionPreparationIntegrationNormalizationPaths
+	...signatureSpecializationHostedArchiveReplayIntegrationNormalizationPaths
+	, ...signatureSpecializationHostedArchiveReplayNormalizationPaths
+	, ...signatureSpecializationCompletionPreparationIntegrationNormalizationPaths
 	, ...signatureSpecializationCompletionPreparationNormalizationPaths
 	, ...inheritedCheckedRecordLaneMemoryLocalJoinNormalizationPaths
 	, ...inheritedCheckedRecordLaneMemoryIntegrationNormalizationPaths
@@ -3355,7 +3359,17 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeSignatureSpecializationCompletionPreparationIntegrationSource(
+	let stage = beforeSignatureSpecializationHostedArchiveReplayIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationHostedArchiveReplaySource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeSignatureSpecializationCompletionPreparationIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
