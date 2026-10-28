@@ -232,7 +232,29 @@ export const validateSignatureSpecializationBrowserReport = report => {
 		assert.deepEqual(item.browsers.requestedEngines, ["chromium", "firefox", "webkit"]);
 		assert.deepEqual(item.browsers.observations.map(value => value.profile), signatureSpecializationBrowserProfiles);
 		for(const observation of item.browsers.observations)
-			assert.deepEqual(observation.browser.observation.results, { module: "specialized", route: item.route, ...signatureSpecializationBrowserExpected });
+		{
+			const variants = observation.profile === "browser-react"
+				? ["production", "strict"] : ["production"];
+			assert.equal(observation.browser.browser.installedSourcesRemoved, true);
+			assert.equal(observation.browser.browser.externalNetworkBlocked, true);
+			assert.deepEqual(observation.browser.browser.executions.map(
+				execution => `${execution.engine}/${execution.variant}`).sort()
+			, ["chromium", "firefox", "webkit"].flatMap(engine =>
+				variants.map(variant => `${engine}/${variant}`)).sort());
+			for(const execution of observation.browser.browser.executions)
+			{
+				assert.deepEqual(execution.observation.results, {
+					module: "specialized", route: item.route
+					, ...signatureSpecializationBrowserExpected
+				});
+				assert.equal(execution.failedAssetRecovery, true);
+				if(observation.profile === "browser-react")
+					assert.equal(execution.pendingUnmount, true);
+				else assert.equal(Object.hasOwn(execution, "pendingUnmount"), false);
+			}
+			assert.deepEqual(observation.browser.observation
+				, observation.browser.browser.executions[0].observation);
+		}
 	}
 	return report;
 };

@@ -22,6 +22,16 @@ import { reviewedNativeSpecializationIr } from "./reviewed-native-specialization
 const fixture = "tests/fixtures/onboarding/native-specializations";
 const consumerSource = "tests/fixtures/specialization-consumers/php-native.php";
 const routes = Object.freeze(["ordinary-source", "reviewed-ir"]);
+const executionTuples = Object.freeze([
+	...(["embedded", "composer"].flatMap(arrangement =>
+		["startup", "lazy"].flatMap(loading =>
+			["weak", "strict"].map(mode =>
+				`node/${arrangement}/${loading}/${mode}`))))
+	, ...(["startup", "lazy"].flatMap(loading =>
+		["weak", "strict"].map(mode =>
+			`chromium/bundled/${loading}/${mode}`)))
+].sort());
+const expectedChecks = 2020;
 const configuration = path => ({ schemaVersion: 1, modules: ["Specialized"]
 	, targets: { "php-wasm": {
 		npm: { name: "lean-bridge-specialized-wasm", version: "1.0.0" }
@@ -132,9 +142,11 @@ export const validateSignatureSpecializationPhpWasmReport = report => {
 			, "unchangedDeployment"
 			, "handoffRemovedBeforeExecution"])
 			assert.equal(item[flag], true, `${item.path}:${flag}`);
-		assert.equal(item.executions.length, 12); assert.ok(item.checks >= 2000);
-		assert.deepEqual([...new Set(item.executions.map(value => value.realm))].sort(), ["chromium", "node"]);
-		assert.ok(item.executions.every(value => value.checks === item.checks));
+		assert.equal(item.checks, expectedChecks);
+		assert.deepEqual(item.executions.map(value =>
+			`${value.realm}/${value.arrangement}/${value.loading}/${value.mode}`
+		).sort(), executionTuples);
+		assert.ok(item.executions.every(value => value.checks === expectedChecks));
 	}
 	return report;
 };
