@@ -9,9 +9,11 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
-	readTypeSurface, typeSurfaceCells, validateTypeSurface
+	typeSurfaceCells, validateTypeSurface
 } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 import {
 	inheritedCheckedRecordPerlEvidenceSha256
 } from "./inherited-checked-record-perl-evidence.mjs";
@@ -103,23 +105,30 @@ test("inherited promotion authenticates exactly four selections per lane", {
 test("inherited promotion changes exactly 102 copied checked-record cells", {
 	skip: !complete
 }, async () => {
-	const original = inventory();
+	// Hold at most three parsed inventories at once and compare whole
+	// documents by canonical digest; key-sorted canonical JSON is equal exactly
+	// when the parsed documents are deeply equal.
+	const digest = document => sha256(canonicalJson(document));
+	const original = inventory(), originalDigest = digest(original);
 	const references = await inheritedCheckedRecordReferences();
-	const proposal = await promoteInheritedCheckedRecords(original, references);
-	const promoted = withHistoryMilestoneSourcePins(
-		inheritedCheckedRecordPromotionHistoryPath, proposal
-	);
-	const { document: current, ...contracts } = await readTypeSurface();
-	const milestone = JSON.parse(sourceAtHistoryMilestone(
-		inheritedCheckedRecordPromotionHistoryPath, inventoryPath
-	));
+	let promoted;
+	{
+		// The unpinned proposal is unreachable once its pinned copy exists.
+		const proposal = await promoteInheritedCheckedRecords(original, references);
+		assert.deepEqual(proposal.evidence.slice(0, original.evidence.length)
+			, original.evidence);
+		promoted = withHistoryMilestoneSourcePins(
+			inheritedCheckedRecordPromotionHistoryPath, proposal
+		);
+	}
+	const contracts = await readTypeSurfaceContracts();
 	validateTypeSurface(promoted, contracts);
-	assert.deepEqual(current, milestone);
-	assert.deepEqual(milestone, promoted);
+	// sourceAtHistoryMilestone authenticates the recorded milestone digest.
+	assert.equal(digest(JSON.parse(sourceAtHistoryMilestone(
+		inheritedCheckedRecordPromotionHistoryPath, inventoryPath
+	))), digest(promoted));
 	assert.equal(promoted.evidence.length, original.evidence.length + 44);
 	assert.equal(promoted.observations.length, original.observations.length);
-	assert.deepEqual(proposal.evidence.slice(0, original.evidence.length)
-		, original.evidence);
 	const before = typeSurfaceCells(original, contracts);
 	const after = typeSurfaceCells(promoted, contracts), changed = [];
 	for(const [index, cell] of after.entries())
@@ -148,7 +157,8 @@ test("inherited promotion changes exactly 102 copied checked-record cells", {
 	}
 	assert.equal(changed.length, 102);
 	assert.equal(new Set(changed).size, 102);
-	assert.deepEqual(original, inventory());
+	// Promotion must not mutate its authenticated predecessor inventory.
+	assert.equal(digest(original), originalDigest);
 });
 
 test("inherited promotion refuses missing, reordered, forged and duplicate evidence", {

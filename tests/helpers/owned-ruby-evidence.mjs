@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
@@ -14,13 +14,13 @@ import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage } from "
 import { ownedRubyAdapterSources } from "../../src/build/owned-ruby-artifacts.mjs";
 import { gmpIdentity } from "../../src/backends/c/gmp.mjs";
 import { copiedRustLock } from "../../src/backends/rust/copied-values.mjs";
-import { ownedPythonExecutionSources, assertOwnedPythonIntegration } from "./owned-python-evidence.mjs";
+import { ownedPythonExecutionSources } from "./owned-python-evidence.mjs";
 import { ownedPythonHistoryPath } from "./owned-python-source-history.mjs";
 import { assertOwnedRubyConversions } from "./owned-ruby-conversion-evidence.mjs";
 import { assertRubyRecursiveFaults } from "./ruby-recursive-callable-install.mjs";
 import { assertRubyStructuredFaults } from "./ruby-structured-callable-install.mjs";
 import { ownedRubyBaseline, ownedRubyChangedPaths, ownedRubyAddedPaths, ownedRubyExecutionPath, reverseOwnedRubyUpdate, ownedRubyHistoricalBytes } from "./owned-ruby-source-history.mjs";
-import { beforeOwnedDotnet, ownedDotnetHistoricalBytes } from "./owned-dotnet-source-history.mjs";
+import { ownedDotnetHistoricalBytes } from "./owned-dotnet-source-history.mjs";
 
 export const ownedRubyScope = { profiles: ["rubygems"]
 	, companions: ["c", "cpp", "cargo", "pypi"]
@@ -344,17 +344,20 @@ export const assertOwnedRubyIntegration = async record => {
 	assert.deepEqual(record.updates.map(update => update.path).sort(), ownedRubyChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), ownedRubyAddedPaths);
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
+	let authenticatedInventory;
 	for(const path of paths)
 	{
 		const current = ownedDotnetHistoricalBytes(path, await readFile(path), record.sourceHashes[path]);
 		assert.equal(sha256(current), record.sourceHashes[path], path);
+		if(path === "docs/type-surface.v1.json") authenticatedInventory = current.toString("utf8");
 		const update = updates.get(path);
 		if(update) restored[path] = reverseOwnedRubyUpdate(current.toString("utf8"), update);
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document: currentDocument, ...contracts } = await readTypeSurface(); void currentDocument;
-	const document = JSON.parse(beforeOwnedDotnet("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	const contracts = await readTypeSurfaceContracts();
+	// The loop above already authenticated this exact historical inventory.
+	const document = JSON.parse(authenticatedInventory);
 	const previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(previousDocument);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
@@ -369,5 +372,6 @@ export const assertOwnedRubyIntegration = async record => {
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(cells.length, record.inventory.total);
 	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, record.inventory.installed);
 	await assertOwnedRubyExecution(await json(record.execution.path));
-	await assertOwnedPythonIntegration(previous);
+	// The exact Python receipt is pinned above by record.previous.sha256 and
+	// verified independently by tests/owned-python-evidence.test.mjs.
 };
