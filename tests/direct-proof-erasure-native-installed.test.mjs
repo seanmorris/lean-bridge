@@ -19,7 +19,8 @@ import {
 } from "./helpers/copied-fixture-install.mjs";
 import { verifyFinContainerEdgeArchiveClosure } from "./helpers/fin-container-edge-closure.mjs";
 import {
-	assertDirectProofErasureBundle, prepareDirectProofErasureProject
+	assertDirectProofErasureNativeComponent, prepareDirectProofErasureProject
+	, retainDirectProofErasureNativeComponent
 } from "./helpers/direct-proof-erasure-packages.mjs";
 import { directProofErasureNativeProfiles } from "./helpers/direct-proof-erasure-native-report.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -83,8 +84,7 @@ for(const route of routes) test(
 				error.message += `: ${JSON.stringify(error.details)}`;
 				throw error;
 			});
-			const bundleRoot = join(outputRoot, "bundle");
-			const bundle = await assertDirectProofErasureBundle(bundleRoot);
+			const component = await assertDirectProofErasureNativeComponent(outputRoot);
 			await verifyPackageSetReceipt({
 				receiptPath: join(outputRoot, "package-set-receipt.json")
 			});
@@ -97,17 +97,10 @@ for(const route of routes) test(
 				.flatMap(pkg => pkg.artifacts.map(item => [item.path, item.sha256]))
 				.sort(([left], [right]) => left.localeCompare(right)));
 			const fact = {
-				...bundle, bindingIrSha256: built.bindingIrSha256
+				...component, bindingIrSha256: built.bindingIrSha256
 				, packageSetReceiptSha256: sha256(receiptBytes), archives
 			};
-			for(const [name, path] of [
-				["binding-ir.json", "binding/binding-ir.json"]
-				, ["compiler-adapters.json", "locks/compiler-adapters.json"]
-				, ["component-build-plan.json", "locks/component-build-plan.json"]
-				, ["LeanBridgeGenerated.lean", "generated/LeanBridgeGenerated.lean"]
-				, ["provenance.json", "metadata/provenance.json"]
-			]) await saveLakeFile(records, `build-${attempt}/${name}`
-				, await readFile(join(bundleRoot, path)));
+			await retainDirectProofErasureNativeComponent(records, attempt, outputRoot);
 			await saveLakeFile(records, `build-${attempt}/package-set-receipt.json`
 				, receiptBytes);
 			await saveLakeFile(records, `build-${attempt}/configuration.json`
@@ -160,9 +153,10 @@ for(const route of routes) test(
 			const header = await readFile(join(installed, "include", headerName));
 			assert.doesNotMatch(header.toString()
 				, /(?:\bTrue\b|\bproof\b|_before|_after)/iu);
+			const parameter = route === "ordinary" ? "arg0" : "value";
 			const expectedHeader = profile === "c"
-				? /directprooferasure_status directprooferasure_keep\(uint32_t value, uint32_t \*out, directprooferasure_error \*error\);/u
-				: /inline uint32_t keep\(uint32_t value\)/u;
+				? new RegExp(`directprooferasure_status directprooferasure_keep\\(uint32_t ${parameter}, uint32_t \\*out, directprooferasure_error \\*error\\);`, "u")
+				: new RegExp(`inline uint32_t keep\\(uint32_t ${parameter}\\)`, "u");
 			assert.match(header.toString(), expectedHeader);
 			const run = await runCopied(join(relocated, "consumer"), [], relocated, {
 				...copiedCleanEnvironment, LD_LIBRARY_PATH: join(installed, "lib")

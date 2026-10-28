@@ -74,16 +74,19 @@ export const directProofErasureReview = ({
  *
  * @param document - Compiled or independently reviewed Binding IR.
  * @param module - Expected Lean module and namespace.
+ * @param parameterNames - Admitted compiler or reviewed runtime parameter names.
  */
 export const assertDirectProofErasureIr = (
-	document, module = directProofErasureModule
+	document, module = directProofErasureModule, parameterNames = ["value"]
 ) => {
+	assert.ok(Array.isArray(parameterNames) && parameterNames.length
+		&& parameterNames.every(name => typeof name === "string"));
 	const declaration = document.declarations.find(
 		item => item.id === `lean:${module}.keep`
 	);
 	assert.ok(declaration);
 	assert.equal(declaration.parameters.length, 1);
-	assert.equal(declaration.parameters[0].name, "value");
+	assert.ok(parameterNames.includes(declaration.parameters[0].name));
 	assert.deepEqual(declaration.parameters[0].type
 		, { kind: "primitive", name: "uint32" });
 	assert.deepEqual(declaration.result.type

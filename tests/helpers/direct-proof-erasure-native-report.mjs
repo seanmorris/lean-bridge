@@ -6,22 +6,18 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { validateCompilerAdapterPlan } from "../../src/build/compiler-adapters.mjs";
-import { validateComponentBuildPlan } from "../../src/build/component-plan.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
+import { directProofErasureModule } from "./direct-proof-erasure-fixture.mjs";
 import {
-	assertDirectProofErasureIr
-	, directProofErasureModule
-	, directProofErasureProofs
-} from "./direct-proof-erasure-fixture.mjs";
-import {
-	directProofErasureTargetConfiguration
+	checkDirectProofErasureNativeComponentRecords
+	, directProofErasureNativeComponentFactKeys
+	, directProofErasureNativeRecordNames
+	, directProofErasureTargetConfiguration
 } from "./direct-proof-erasure-packages.mjs";
 
 export const directProofErasureNativeProfiles = Object.freeze(["c", "cpp"]);
 const factKeys = [
-	"archives", "bindingIrFileSha256", "bindingIrSha256"
-	, "compilerAdaptersSha256", "erasedProofs", "generatedLeanSha256"
+	"archives", ...directProofErasureNativeComponentFactKeys.slice(0, -1)
 	, "packageSetReceiptSha256", "runtimeParameters"
 ];
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
@@ -133,44 +129,31 @@ export const checkDirectProofErasureNativeRecords = async (read, options) => {
 		assert.deepEqual(await json(prefix + "configuration.json")
 			, expectedConfiguration);
 		assert.deepEqual(await read(prefix + "DirectProofErasure.lean"), leanSource);
-		const irBytes = await read(prefix + "binding-ir.json");
-		const ir = JSON.parse(irBytes); assertDirectProofErasureIr(ir);
-		const adaptersBytes = await read(prefix + "compiler-adapters.json");
-		const adapters = JSON.parse(adaptersBytes);
-		validateCompilerAdapterPlan(adapters);
-		assert.equal(adapters.exports.length, 1);
-		assert.equal(adapters.exports[0].parameters.length, 1);
-		assert.deepEqual(adapters.exports[0].erasedProofs
-			, directProofErasureProofs);
-		validateComponentBuildPlan(await json(prefix + "component-build-plan.json"));
+		const component = await checkDirectProofErasureNativeComponentRecords(
+			read, prefix
+		);
 		const receiptBytes = await read(prefix + "package-set-receipt.json");
 		const receipt = JSON.parse(receiptBytes);
 		validatePackageSetReceipt(receipt);
-		const leanBytes = await read(prefix + "LeanBridgeGenerated.lean");
-		const lean = leanBytes.toString();
-		assert.match(lean, /keep _root_\.True\.intro value _root_\.True\.intro/u);
-		assert.doesNotMatch(lean, /(?:sorry|unsafeCast|\baxiom\b)/u);
 		const fact = report.builds[attempt];
-		assert.equal(fact.bindingIrFileSha256, sha256(irBytes));
-		assert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));
-		assert.equal(fact.generatedLeanSha256, sha256(leanBytes));
+		for(const key of directProofErasureNativeComponentFactKeys)
+			assert.equal(fact[key], component[key], key);
 		assert.equal(fact.packageSetReceiptSha256, sha256(receiptBytes));
 		assert.deepEqual(receipt, report.receipt);
 	}
 	for(const name of [
-		"binding-ir.json", "compiler-adapters.json", "component-build-plan.json"
-		, "LeanBridgeGenerated.lean", "provenance.json"
+		...directProofErasureNativeRecordNames
 		, "package-set-receipt.json", "configuration.json"
 		, "DirectProofErasure.lean"
 	]) assert.deepEqual(await read(`build-0/${name}`)
 		, await read(`build-1/${name}`), name);
 	const patterns = {
 		c: {
-			header: /directprooferasure_status directprooferasure_keep\(uint32_t value, uint32_t \*out, directprooferasure_error \*error\);/u
+			header: new RegExp(`directprooferasure_status directprooferasure_keep\\(uint32_t ${options.route === "ordinary" ? "arg0" : "value"}, uint32_t \\*out, directprooferasure_error \\*error\\);`, "u")
 			, source: "tests/fixtures/direct-proof-erasure-consumers/c.c"
 		}
 		, cpp: {
-			header: /inline uint32_t keep\(uint32_t value\)/u
+			header: new RegExp(`inline uint32_t keep\\(uint32_t ${options.route === "ordinary" ? "arg0" : "value"}\\)`, "u")
 			, source: "tests/fixtures/direct-proof-erasure-consumers/cpp.cpp"
 		}
 	};

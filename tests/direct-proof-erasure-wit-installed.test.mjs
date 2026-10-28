@@ -20,7 +20,8 @@ import {
 } from "./helpers/copied-fixture-install.mjs";
 import { verifyFinContainerEdgeArchiveClosure } from "./helpers/fin-container-edge-closure.mjs";
 import {
-	assertDirectProofErasureBundle, prepareDirectProofErasureProject
+	assertDirectProofErasureNativeComponent, prepareDirectProofErasureProject
+	, retainDirectProofErasureNativeComponent
 } from "./helpers/direct-proof-erasure-packages.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { retainPackageSetEvidence } from "./helpers/package-set.mjs";
@@ -100,8 +101,7 @@ for(const route of routes) test(
 				error.message += `: ${JSON.stringify(error.details)}`;
 				throw error;
 			});
-			const bundleRoot = join(outputRoot, "bundle");
-			const bundle = await assertDirectProofErasureBundle(bundleRoot);
+			const component = await assertDirectProofErasureNativeComponent(outputRoot);
 			await verifyPackageSetReceipt({
 				receiptPath: join(outputRoot, "package-set-receipt.json")
 			});
@@ -114,17 +114,10 @@ for(const route of routes) test(
 				.flatMap(pkg => pkg.artifacts.map(item => [item.path, item.sha256]))
 				.sort(([left], [right]) => left.localeCompare(right)));
 			const fact = {
-				...bundle, bindingIrSha256: built.bindingIrSha256
+				...component, bindingIrSha256: built.bindingIrSha256
 				, packageSetReceiptSha256: sha256(receiptBytes), archives
 			};
-			for(const [name, path] of [
-				["binding-ir.json", "binding/binding-ir.json"]
-				, ["compiler-adapters.json", "locks/compiler-adapters.json"]
-				, ["component-build-plan.json", "locks/component-build-plan.json"]
-				, ["LeanBridgeGenerated.lean", "generated/LeanBridgeGenerated.lean"]
-				, ["provenance.json", "metadata/provenance.json"]
-			]) await saveLakeFile(records, `build-${attempt}/${name}`
-				, await readFile(join(bundleRoot, path)));
+			await retainDirectProofErasureNativeComponent(records, attempt, outputRoot);
 			await saveLakeFile(records, `build-${attempt}/package-set-receipt.json`
 				, receiptBytes);
 			await saveLakeFile(records, `build-${attempt}/configuration.json`
@@ -148,6 +141,10 @@ for(const route of routes) test(
 		assert.equal(packages.length, 1);
 		const pkg = packages[0];
 		assert.equal(pkg.role, "component");
+		const parameter = route === "ordinary" ? "arg0" : "value";
+		const witSignature = new RegExp(
+			`keep: func\\(${parameter}: u32\\) -> u32;`, "gu"
+		);
 		const source = await readFile(sourcePath, "utf8");
 		const consumerRoot = join(suite, "consumers");
 		const installed = await installCopiedConsumer({
@@ -155,7 +152,7 @@ for(const route of routes) test(
 			, fixture: {
 				source: () => source, success: "direct-proof-wit-wasi"
 				, expectedChecks: 1005
-				, wit: [/keep: func\(value: u32\) -> u32;/u]
+				, wit: [new RegExp(witSignature.source, "u")]
 				, verifyInstalledPackage: verifyFinContainerEdgeArchiveClosure
 			}
 		});
@@ -188,12 +185,12 @@ for(const route of routes) test(
 		for(const bytes of [header, wit])
 			assert.doesNotMatch(bytes.toString()
 				, /(?:\bTrue\b|\bproof\b|_before|_after)/iu);
-		assert.equal((wit.toString().match(/keep: func\(value: u32\) -> u32;/gu)
+		assert.equal((wit.toString().match(witSignature)
 			?? []).length, 2);
 		const componentWit = (await runCopied(environment.LEAN_BRIDGE_WASM_TOOLS, [
 			"component", "wit", join(installedRoot, `component/${pkg.name}.wasm`)
 		], relocated)).stdout;
-		assert.match(componentWit, /keep: func\(value: u32\) -> u32;/u);
+		assert.match(componentWit, new RegExp(witSignature.source, "u"));
 		assert.doesNotMatch(componentWit
 			, /(?:\bTrue\b|\bproof\b|_before|_after)/iu);
 		await saveLakeFile(relocated, "proof-argument-negative.c", negativeSource);

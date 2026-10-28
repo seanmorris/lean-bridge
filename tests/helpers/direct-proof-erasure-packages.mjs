@@ -9,6 +9,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
+import {
+	readVerifiedNativeComponent, readVerifiedNativeRuntime
+} from "../../src/build/native-artifacts.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import {
 	assertDirectProofErasureIr
@@ -108,4 +111,118 @@ export const assertDirectProofErasureBundle = async bundleRoot => {
 		, runtimeParameters: item.parameters.length
 		, erasedProofs: item.erasedProofs.length
 	};
+};
+
+export const directProofErasureNativeRecordNames = Object.freeze([
+	"artifacts.json", "binding-ir.json", "generated.lean", "metadata.json"
+	, "model.json", "native-component.json"
+]);
+export const directProofErasureNativeComponentFactKeys = Object.freeze([
+	"artifactsSha256", "bindingIrFileSha256", "bindingIrSha256", "erasedProofs"
+	, "generatedLeanSha256", "metadataSha256", "modelSha256"
+	, "nativeComponentReceiptSha256", "runtimeParameters"
+]);
+
+const canonicalDocument = (bytes, label) => {
+	const value = JSON.parse(bytes);
+	assert.equal(bytes.toString(), canonicalJson(value), label);
+	return value;
+};
+
+const assertNativeDirectProofErasureDocuments = ({
+	artifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes
+}) => {
+	const artifacts = canonicalDocument(artifactsBytes, "artifacts.json");
+	const ir = canonicalDocument(irBytes, "binding-ir.json");
+	canonicalDocument(metadataBytes, "metadata.json");
+	const model = canonicalDocument(modelBytes, "model.json");
+	const receipt = canonicalDocument(receiptBytes, "native-component.json");
+	assertDirectProofErasureIr(ir, directProofErasureModule, ["arg0", "value"]);
+	assert.deepEqual(model.bindingIr, ir);
+	assert.equal(model.bindingIrSha256, hashBindingIr(ir));
+	assert.equal(model.exports.length, 1);
+	const item = model.exports[0];
+	assert.equal(item.name, directProofErasureExport);
+	assert.equal(item.parameters.length, 1);
+	assert.deepEqual(item.erasedProofs, directProofErasureProofs);
+	assert.equal(receipt.bindingIrSha256, model.bindingIrSha256);
+	assert.equal(receipt.metadataSha256, sha256(metadataBytes));
+	assert.equal(receipt.modelSha256, sha256(modelBytes));
+	assert.equal(receipt.adaptersSha256, sha256(leanBytes));
+	assert.equal(receipt.exports.length, 1);
+	assert.equal(receipt.exports[0].declaration, directProofErasureExport);
+	const lean = leanBytes.toString("utf8");
+	assert.match(lean
+		, /_root_\.DirectProofErasure\.keep _root_\.True\.intro a0 _root_\.True\.intro/u);
+	assert.doesNotMatch(lean, /(?:sorry|unsafeCast|\baxiom\b)/u);
+	assert.equal(artifacts.schemaVersion, 1);
+	assert.equal(artifacts.profile, "native-library-v1");
+	for(const [name, bytes] of [
+		["binding-ir.json", irBytes], ["generated.lean", leanBytes]
+		, ["metadata.json", metadataBytes], ["model.json", modelBytes]
+		, ["native-component.json", receiptBytes]
+	]) assert.deepEqual(artifacts.files[name]
+		, { bytes: bytes.length, sha256: sha256(bytes) }, name);
+	return {
+		artifactsSha256: sha256(artifactsBytes)
+		, bindingIrFileSha256: sha256(irBytes)
+		, bindingIrSha256: model.bindingIrSha256
+		, erasedProofs: item.erasedProofs.length
+		, generatedLeanSha256: sha256(leanBytes)
+		, metadataSha256: sha256(metadataBytes)
+		, modelSha256: sha256(modelBytes)
+		, nativeComponentReceiptSha256: sha256(receiptBytes)
+		, runtimeParameters: item.parameters.length
+	};
+};
+
+/**
+ * Verify the authenticated native build products that package projections consume.
+ *
+ * @param outputRoot - Completed ordinary native release root.
+ */
+export const assertDirectProofErasureNativeComponent = async outputRoot => {
+	const nativeRoot = join(outputRoot, "native/component");
+	const runtime = await readVerifiedNativeRuntime(join(outputRoot, "native/runtime"));
+	await readVerifiedNativeComponent(nativeRoot, runtime.identity);
+	const [
+		artifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes
+	] = await Promise.all(directProofErasureNativeRecordNames.map(name =>
+		readFile(join(nativeRoot, name))));
+	return assertNativeDirectProofErasureDocuments({
+		artifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes
+	});
+};
+
+/**
+ * Retain the exact authenticated native component inputs beside route evidence.
+ *
+ * @param records - Route evidence directory.
+ * @param attempt - Independent build index.
+ * @param outputRoot - Completed ordinary native release root.
+ */
+export const retainDirectProofErasureNativeComponent = async (
+	records, attempt, outputRoot
+) => {
+	for(const name of directProofErasureNativeRecordNames)
+		await saveLakeFile(records, `build-${attempt}/${name}`
+			, await readFile(join(outputRoot, "native/component", name)));
+};
+
+/**
+ * Recheck retained native component documents without trusting the producer report.
+ *
+ * @param read - Safe reader rooted at one route's evidence directory.
+ * @param prefix - Independent build record prefix.
+ */
+export const checkDirectProofErasureNativeComponentRecords = async (
+	read, prefix
+) => {
+	const [
+		artifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes
+	] = await Promise.all(directProofErasureNativeRecordNames.map(name =>
+		read(prefix + name)));
+	return assertNativeDirectProofErasureDocuments({
+		artifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes
+	});
 };
