@@ -1,0 +1,61 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5bc7dee947eadd4c607dc7c5bbcf96e2c07921ca98b536e6f910d90ce6a1393e",
+      "path": "scripts/update-core-hub-order-merged-integration-source-history.mjs"
+    },
+    {
+      "currentSha256": "abd592f908a632d2e248bdcb66b5cd5aa219e9a9b200ddbda3d2af1631868934",
+      "path": "tests/helpers/core-hub-order-merged-integration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d90061f9bc2bde18b246c608305a74cc6300b7df9d56def150640102fb0c2401",
+      "path": "tests/helpers/core-hub-order-merged-integration-source-history.mjs"
+    }
+  ],
+  "baseCommit": "14e5f79f08d62f523a7b1abd25567e038d899af2",
+  "baseHistory": {
+    "path": "docs/evidence/core-hub-order-merged-source-history-20261028.json",
+    "sha256": "664a83e5b45b694a3f582367b9fbd070c3250d0058288199ca0bb6f73451dcc7"
+  },
+  "implementationCommit": "54bd4126e98e30a5e76adf5398153f55d7345812",
+  "milestone": "core-hub-order-merged-integration-v1",
+  "schemaVersion": 1,
+  "scope": "Register the authenticated local Core hub-order join newest-first in the reversible Fin history hub and checked-JavaScript partition 10.",
+  "updates": [
+    {
+      "currentSha256": "9d029ab201a59b9820216770c04e705af73308d178d89300b745019a62a0cd6a",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-hub-order-merged-source-history-tests.mjs\";\nimport \"./helpers/core-hub-order-merged-integration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2797
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "fb736fa8b79c285631a5ad4627a220de157a96adccf16826e55d25e2b3709d7c"
+    },
+    {
+      "currentSha256": "7029809d2d346d0de65d31d4053305ceb3b6e09382ee2c76d1fcd177c572d309",
+      "edits": [
+        {
+          "current": "import { beforeCoreHubOrderMergedIntegrationSource, coreHubOrderMergedIntegrationNormalizationPaths } from \"./core-hub-order-merged-integration-source-history.mjs\";\nimport { beforeCoreHubOrderMergedSource, coreHubOrderMergedNormalizationPaths } from \"./core-hub-order-merged-source-history.mjs\";\n",
+          "previous": "",
+          "start": 3060
+        },
+        {
+          "current": "\t, ...coreHubOrderMergedIntegrationNormalizationPaths\n\t, ...coreHubOrderMergedNormalizationPaths\n",
+          "previous": "",
+          "start": 205385
+        },
+        {
+          "current": "\tstage = beforeCoreHubOrderMergedIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreHubOrderMergedSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 257340
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fb41d8e830532cd7d46714a97af8b5fc1769815d666cfb5fcf772397c0a8981f"
+    }
+  ]
+}
