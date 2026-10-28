@@ -30,21 +30,24 @@ test("WIT transfers preserve predecessor receipts without promoting unrelated su
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedBorrow(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedWitTransfer(update.path, source);
+		// Stop each reversal at its recorded identity; the hub otherwise walks past it.
+		const source = beforeOwnedBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedWitTransfer(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedWitTransfer(update.path, prior), prior);
+		assert.equal(beforeOwnedWitTransfer(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedWitTransfer(update.path, source, update.currentSha256), source);
 	}
-	const current = beforeOwnedBorrow("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const prior = JSON.parse(beforeOwnedWitTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedBorrowHistoricalBytes(file.path, await readFile(file.path)));
+	const path = "docs/type-surface.v1.json";
+	const current = beforeOwnedBorrow(path, await readFile(path, "utf8"), record.sources[path]);
+	const prior = JSON.parse(beforeOwnedWitTransfer(path, current, previous.sources[path]));
+	const pins = new Map(JSON.parse(current).evidence.flatMap(evidence => evidence.files.map(file => [file.path, file.sha256])));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path] ?? pins.get(file.path)));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
 test("WIT transfer history rejects unknown edits and forged history", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = beforeOwnedBorrow(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedWitTransfer(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedWitTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

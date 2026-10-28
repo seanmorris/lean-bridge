@@ -20,6 +20,8 @@ const fixture = () => {
 			, ["reviewed-callback-fin-npm-r1-installed", "reviewed-callback-fin-npm-r2-installed"]])
 		, ...["browser-javascript", "browser-react", "browser-worker"].map(profile => [profile
 			, "ordinary-source", ["browser-callback-fin-ordinary-installed"]])
+		, ...["browser-javascript", "browser-react", "browser-worker"].map(profile => [profile
+			, "reviewed-ir", ["hosted-reviewed-callback-fin-browser-installed"]])
 		, ...["c", "cpp"].flatMap(profile => [
 			[profile, "ordinary-source", ["native-callback-fin-ordinary-installed", "native-callback-fin-host-replies-installed"]]
 			, [profile, "reviewed-ir", ["reviewed-callback-fin-c-cpp-installed"]]
@@ -40,9 +42,11 @@ const fixture = () => {
 	);
 };
 
-test("Fin coverage accepts all 26 independently enumerated callback cells", () => {
+test("Fin coverage accepts all 32 independently enumerated callback cells", () => {
 	const cells = fixture();
-	assert.equal(cells.length, 26);
+	assert.equal(cells.length, 32);
+	assert.equal(cells.filter(cell => cell.profile.startsWith("browser-")
+		&& cell.path === "reviewed-ir").length, 6);
 	assert.equal(cells.filter(cell => cell.profile === "php-wasm").length, 4);
 	assertCallbackFinCoverage(cells);
 });
@@ -66,6 +70,9 @@ test("Fin coverage rejects missing, duplicated, widened or misattributed evidenc
 		])
 		, cells => { cells.find(cell => cell.id === "c/fin/reviewed-ir/callback-result")
 			.stages.installedExecution.evidence = ["native-callback-fin-ordinary-installed"]; }
+		, cells => { cells.find(cell => cell.id === "browser-worker/fin/reviewed-ir/callback-parameter")
+			.stages.installedExecution.evidence = ["browser-callback-fin-ordinary-installed"]; }
+		, cells => cells.splice(cells.findIndex(cell => cell.id === "browser-react/fin/reviewed-ir/callback-result"), 1)
 	];
 	for(const mutate of mutations)
 	{

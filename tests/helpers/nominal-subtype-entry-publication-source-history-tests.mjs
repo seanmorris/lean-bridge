@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { createReadStream } from "node:fs";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -132,8 +131,9 @@ test("nominal Subtype entry publication preserves every support observation"
 		const contracts = { irSchema, consumers };
 		const before = await readPromotionInventory(gitSourceBytes(
 			nominalSubtypeEntryPublicationCommits.at(-2), inventoryPath), contracts);
-		const after = await readPromotionInventory(
-			createReadStream(inventoryPath), contracts);
+		// The publication's own inventory: later promotions change other observations.
+		const after = await readPromotionInventory(gitSourceBytes(
+			nominalSubtypeEntryPublicationCommits.at(-1), inventoryPath), contracts);
 		assert.deepEqual(after.document.observations, before.document.observations);
 		const ids = ["nominal-subtype-entry-native-hosted-instrumented"
 			, "nominal-subtype-entry-browser-hosted-instrumented"];
