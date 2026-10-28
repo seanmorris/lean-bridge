@@ -30,3 +30,4 @@ import "./helpers/callback-fin-sparse-checkout-source-history-tests.mjs";
 import "./helpers/lean-toolchain-release-fallback-source-history-tests.mjs";
 import "./helpers/reviewed-fin-job-scope-source-history-tests.mjs";
 import "./helpers/reviewed-fin-focused-producer-source-history-tests.mjs";
+import "./helpers/fin-completion-promotion-source-history-tests.mjs";

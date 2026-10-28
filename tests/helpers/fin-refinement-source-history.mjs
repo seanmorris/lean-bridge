@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeFinCompletionPromotionSource, finCompletionPromotionNormalizationPaths } from "./fin-completion-promotion-source-history.mjs";
 import { beforeReviewedFinFocusedProducerSource, reviewedFinFocusedProducerNormalizationPaths } from "./reviewed-fin-focused-producer-source-history.mjs";
 import { beforeReviewedFinJobScopeSource, reviewedFinJobScopeNormalizationPaths } from "./reviewed-fin-job-scope-source-history.mjs";
 import { beforeLeanToolchainReleaseFallbackSource, leanToolchainReleaseFallbackNormalizationPaths } from "./lean-toolchain-release-fallback-source-history.mjs";
@@ -2272,7 +2273,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...reviewedFinFocusedProducerNormalizationPaths
+	...finCompletionPromotionNormalizationPaths
+	, ...reviewedFinFocusedProducerNormalizationPaths
 	, ...reviewedFinJobScopeNormalizationPaths
 	, ...leanToolchainReleaseFallbackNormalizationPaths
 	, ...callbackFinSparseCheckoutNormalizationPaths
@@ -3283,7 +3285,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeReviewedFinFocusedProducerSource(path, text, expected);
+	let stage = beforeFinCompletionPromotionSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeReviewedFinFocusedProducerSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
