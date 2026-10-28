@@ -7,7 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
-import { reviewedFinWasmIr, reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
+import { reviewedFinWasmIr, reviewedFinWasmPreFieldIr, reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
 import { sourceEntryMarker as reviewedFinWasmEntryMarker } from "../fixtures/reviewed-fin-wasm/javascript-entry.mjs";
 
 export const reviewedFinWasmSourceControl = "traceNat";
@@ -46,15 +46,19 @@ export const instrumentReviewedFinWasmLean = lean => {
  * has no refinement extension.
  *
  * @param selection - Scalar-only or structural corpus.
+ * @param options - Contract generation.
+ * @param options.preField - The contract that predates the Box field fixture, for retained historical reports only.
  */
-export const instrumentReviewedFinWasmIr = selection => {
+export const instrumentReviewedFinWasmIr = (selection, { preField = false } = {}) => {
 	assert.ok(reviewedFinWasmSelections.includes(selection));
-	const document = reviewedFinWasmIr(selection);
+	assert.equal(typeof preField, "boolean", "an explicit contract generation");
+	const reviewed = preField ? reviewedFinWasmPreFieldIr : reviewedFinWasmIr;
+	const document = reviewed(selection);
 	const [control] = corpusReviewedIr({ id: "reviewed-fin" }, [{ name: `ReviewedFin.${reviewedFinWasmSourceControl}`, parameters: ["nat"], result: "nat" }]).declarations;
 	control.parameters.forEach((parameter, position) => { parameter.name = `arg${position}`; });
 	// An unrefined export carries no refinement extension, as the compiler emits it; an all-null one is refused.
 	assert.equal(Object.hasOwn(control.source.extensions, "lean-lang.org/refinements"), false);
 	const instrumented = { ...document, declarations: [...document.declarations, control] };
-	assert.deepEqual(instrumented.declarations.slice(0, -1), reviewedFinWasmIr(selection).declarations, "reviewed refinements are unchanged");
+	assert.deepEqual(instrumented.declarations.slice(0, -1), reviewed(selection).declarations, "reviewed refinements are unchanged");
 	return instrumented;
 };
