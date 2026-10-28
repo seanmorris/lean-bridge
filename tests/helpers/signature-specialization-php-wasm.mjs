@@ -20,7 +20,7 @@ import { nativeSpecializationEnvironment, nativeSpecializations, nativeSpecializ
 import { reviewedNativeSpecializationIr } from "./reviewed-native-specialization-fixture.mjs";
 
 const fixture = "tests/fixtures/onboarding/native-specializations";
-const consumerSource = "tests/fixtures/specialization-consumers/php-native.php";
+const consumerSource = "tests/fixtures/specialization-consumers/php-wasm.php";
 const routes = Object.freeze(["ordinary-source", "reviewed-ir"]);
 const executionTuples = Object.freeze([
 	...(["embedded", "composer"].flatMap(arrangement =>
@@ -95,7 +95,7 @@ export const checkSignatureSpecializationPhpWasmRoute = async (t, path) => {
 		, fixture: {
 			source: () => readFile(consumerSource, "utf8")
 			, success: "specialization-ok"
-			, phpInvalid: "try { LeanSpecialized\\echo_word(4294967296); throw new Exception('Overflow accepted'); } catch (ValueError $error) {}"
+			, phpInvalid: "try { LeanSpecialized\\echo_word(\\Brick\\Math\\BigInteger::of('4294967296')); throw new Exception('Overflow accepted'); } catch (ValueError $error) {}"
 			, removeHandoff: true
 			, attestDeployment: true
 		}
