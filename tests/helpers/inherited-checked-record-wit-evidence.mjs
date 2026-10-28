@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { inheritedCheckedRecordLaneFiles } from "./inherited-checked-record-lane-files.mjs";
 import {
 	checkInheritedCheckedRecordWitCiRecords
 } from "./inherited-checked-record-wit-ci-report.mjs";
@@ -54,7 +55,8 @@ export const checkInheritedCheckedRecordWitEvidence = async (
 		const indexBytes = Buffer.from(await read(
 			`${inheritedCheckedRecordWitEvidence}/index.json`));
 		assert.equal(sha256(indexBytes), inheritedCheckedRecordWitEvidenceSha256);
-		const index = json(indexBytes, "index.json"), files = new Map();
+		const index = json(indexBytes, "index.json"), files = inheritedCheckedRecordLaneFiles(
+			read, inheritedCheckedRecordWitEvidence);
 		assert.deepEqual(Object.keys(index).sort(), [
 			"archiveCommit", "checkerCommit", "files", "hostedRun", "kind"
 			, "limitations", "loadCeiling", "producerCommit", "runs", "runtime"
@@ -89,17 +91,9 @@ export const checkInheritedCheckedRecordWitEvidence = async (
 			assert.ok(safePath(entry.path) && !files.has(entry.path), entry.path);
 			assert.ok(!previous || previous.localeCompare(entry.path) < 0);
 			previous = entry.path;
-			const value = Buffer.from(await read(
-				`${inheritedCheckedRecordWitEvidence}/${entry.path}`));
-			assert.equal(value.length, entry.bytes, entry.path);
-			assert.equal(sha256(value), entry.sha256, entry.path);
-			files.set(entry.path, value);
+			await files.authenticate(entry);
 		}
-		const get = path => {
-			const value = files.get(path);
-			assert.ok(Buffer.isBuffer(value), path);
-			return value;
-		};
+		const get = files.get;
 		const selectedSources = await inheritedCheckedRecordWitSelectedSources();
 		assert.deepEqual(index.selectedSources, selectedSources);
 		const expectedPaths = [];
@@ -107,7 +101,7 @@ export const checkInheritedCheckedRecordWitEvidence = async (
 		{
 			const path = `sources/${source.role}/${source.path}`;
 			expectedPaths.push(path);
-			assert.deepEqual(get(path), inheritedCheckedRecordWitOriginal(
+			assert.deepEqual(await get(path), inheritedCheckedRecordWitOriginal(
 				source.revision, source.path), path);
 		}
 		assert.deepEqual(index.runs.map(run => [run.route, run.mode])
@@ -122,15 +116,15 @@ export const checkInheritedCheckedRecordWitEvidence = async (
 			const label = `${run.route}-${run.mode}`;
 			assert.equal(run.label, label);
 			const prefix = `${label}/records/`, records = new Map();
-			for(const [path, bytes] of files)
-				if(path.startsWith(prefix)) records.set(path.slice(prefix.length), bytes);
+			for(const path of files.paths(prefix))
+				records.set(path.slice(prefix.length), path);
 			const originalRead = async path => {
-				assert.ok(records.has(path), path); return records.get(path);
+				assert.ok(records.has(path), path); return get(records.get(path));
 			};
 			const handoff = await inspectInheritedCheckedRecordWitHandoff(originalRead);
 			const recordRead = path => handoff.supplements.get(path)
 				?? originalRead(path);
-			const tap = get(`${label}/run.tap`);
+			const tap = await get(`${label}/run.tap`);
 			const options = {
 				route: run.route, mode: run.mode, producer: revisions.producer
 				, directory: "records", tap: "run.tap", glibc: "2.38"
@@ -147,7 +141,7 @@ export const checkInheritedCheckedRecordWitEvidence = async (
 			assert.equal(run.reportSha256, checked.reportSha256);
 			assert.equal(run.recordCount, records.size);
 			assert.equal(run.tapSha256, sha256(tap));
-			const verification = get(`${label}/verification.json`);
+			const verification = await get(`${label}/verification.json`);
 			assert.equal(verification.toString(), canonicalJson(checked));
 			assert.equal(run.verificationSha256, sha256(verification));
 			expectedPaths.push(`${label}/run.tap`, `${label}/verification.json`

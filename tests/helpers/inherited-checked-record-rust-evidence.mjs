@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { posix } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { inheritedCheckedRecordLaneFiles } from "./inherited-checked-record-lane-files.mjs";
 import {
 	checkInheritedCheckedRecordRustControls
 } from "./inherited-checked-record-rust-controls.mjs";
@@ -75,7 +76,8 @@ export const checkInheritedCheckedRecordRustEvidence = async (
 		const indexBytes = Buffer.from(await read(
 			`${inheritedCheckedRecordRustEvidence}/index.json`));
 		assert.equal(sha256(indexBytes), inheritedCheckedRecordRustEvidenceSha256);
-		const index = json(indexBytes, "index.json"), files = new Map();
+		const index = json(indexBytes, "index.json"), files = inheritedCheckedRecordLaneFiles(
+			read, inheritedCheckedRecordRustEvidence);
 		assert.deepEqual(Object.keys(index).sort(), [
 			"archiveCommit", "checkerCommit", "files", "floor", "hostedRun"
 			, "kind", "limitations", "loadCeiling", "producerCommit", "runs"
@@ -111,17 +113,9 @@ export const checkInheritedCheckedRecordRustEvidence = async (
 			assert.ok(safePath(entry.path) && !files.has(entry.path), entry.path);
 			assert.ok(!previous || previous.localeCompare(entry.path) < 0);
 			previous = entry.path;
-			const value = Buffer.from(await read(
-				`${inheritedCheckedRecordRustEvidence}/${entry.path}`));
-			assert.equal(value.length, entry.bytes, entry.path);
-			assert.equal(sha256(value), entry.sha256, entry.path);
-			files.set(entry.path, value);
+			await files.authenticate(entry);
 		}
-		const get = path => {
-			const value = files.get(path);
-			assert.ok(Buffer.isBuffer(value), path);
-			return value;
-		};
+		const get = files.get;
 		const selectedSources = await inheritedCheckedRecordRustSelectedSources();
 		assert.deepEqual(index.selectedSources, selectedSources);
 		const expectedPaths = [];
@@ -129,7 +123,7 @@ export const checkInheritedCheckedRecordRustEvidence = async (
 		{
 			const path = `sources/${source.role}/${source.path}`;
 			expectedPaths.push(path);
-			assert.deepEqual(get(path), inheritedCheckedRecordRustOriginal(
+			assert.deepEqual(await get(path), inheritedCheckedRecordRustOriginal(
 				source.revision, source.path), path);
 		}
 		assert.deepEqual(index.runs.map(run => [run.route, run.mode])
@@ -144,13 +138,13 @@ export const checkInheritedCheckedRecordRustEvidence = async (
 			const label = `${run.route}-${run.mode}`;
 			assert.equal(run.label, label);
 			const prefix = `${label}/records/`, records = new Map();
-			for(const [path, bytes] of files)
-				if(path.startsWith(prefix)) records.set(path.slice(prefix.length), bytes);
+			for(const path of files.paths(prefix))
+				records.set(path.slice(prefix.length), path);
 			const originalRead = async path => {
-				assert.ok(records.has(path), path); return records.get(path);
+				assert.ok(records.has(path), path); return get(records.get(path));
 			};
 			const recordRead = await inheritedCheckedRecordRustCiReader(originalRead);
-			const tap = get(`${label}/run.tap`);
+			const tap = await get(`${label}/run.tap`);
 			const options = {
 				route: run.route, mode: run.mode, producer: revisions.producer
 				, directory: "records", tap: "run.tap", glibc: index.floor
@@ -162,24 +156,24 @@ export const checkInheritedCheckedRecordRustEvidence = async (
 				, toolchain: index.toolchain
 			});
 			assert.deepEqual(run.accepted, checked);
-			const crate = json(get(prefix + "crate.json"), prefix + "crate.json");
-			const dependencies = json(get(prefix + "dependencies.json")
+			const crate = json(await get(prefix + "crate.json"), prefix + "crate.json");
+			const dependencies = json(await get(prefix + "dependencies.json")
 				, prefix + "dependencies.json");
 			const recordPaths = inheritedCheckedRecordRustRecords(
 				run.route, crate, dependencies);
 			assert.equal(run.recordCount, recordPaths.length);
 			assert.equal(records.size, recordPaths.length);
 			assert.deepEqual([...records.keys()].sort(), recordPaths.sort());
-			assert.equal(run.reportSha256, sha256(get(prefix + "report.json")));
+			assert.equal(run.reportSha256, sha256(await get(prefix + "report.json")));
 			assert.equal(run.tapSha256, sha256(tap));
 			assertInheritedCheckedRecordRustCiTap(tap.toString(), run.route, run.mode);
-			const verification = get(`${label}/verification.json`);
+			const verification = await get(`${label}/verification.json`);
 			assert.equal(verification.toString(), canonicalJson(checked));
 			assert.equal(run.verificationSha256, sha256(verification));
 			const controlsPath = `${label}/controls.json`;
 			const controlCounts = expectedControls(recordPaths.length, run.mode);
 			assert.deepEqual(run.controls, controlCounts);
-			assert.deepEqual(json(get(controlsPath), controlsPath), controlCounts);
+			assert.deepEqual(json(await get(controlsPath), controlsPath), controlCounts);
 			if(controls === "all" || controls === "representative" && position === 0)
 			{
 				const controlOptions = {

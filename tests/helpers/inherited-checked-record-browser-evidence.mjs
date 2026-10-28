@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { inheritedCheckedRecordLaneFiles } from "./inherited-checked-record-lane-files.mjs";
 import {
 	checkInheritedCheckedRecordBrowserCiRecords
 } from "./inherited-checked-record-browser-ci-report.mjs";
@@ -60,7 +61,8 @@ export const checkInheritedCheckedRecordBrowserEvidence = async (
 			`${inheritedCheckedRecordBrowserEvidence}/index.json`));
 		assert.equal(sha256(indexBytes)
 			, inheritedCheckedRecordBrowserEvidenceSha256);
-		const index = json(indexBytes, "index.json"), files = new Map();
+		const index = json(indexBytes, "index.json"), files = inheritedCheckedRecordLaneFiles(
+			read, inheritedCheckedRecordBrowserEvidence);
 		assert.deepEqual(Object.keys(index).sort(), [
 			"archiveCommit", "browserVersions", "checkerCommit", "consumerCommit"
 			, "files", "hostedRun", "kind", "limitations", "loadCeiling"
@@ -93,17 +95,9 @@ export const checkInheritedCheckedRecordBrowserEvidence = async (
 			assert.ok(safePath(entry.path) && !files.has(entry.path), entry.path);
 			assert.ok(!previousPath || previousPath.localeCompare(entry.path) < 0);
 			previousPath = entry.path;
-			const value = Buffer.from(await read(
-				`${inheritedCheckedRecordBrowserEvidence}/${entry.path}`));
-			assert.equal(value.length, entry.bytes, entry.path);
-			assert.equal(sha256(value), entry.sha256, entry.path);
-			files.set(entry.path, value);
+			await files.authenticate(entry);
 		}
-		const get = path => {
-			const value = files.get(path);
-			assert.ok(Buffer.isBuffer(value), path);
-			return value;
-		};
+		const get = files.get;
 		const selectedSources = inheritedCheckedRecordBrowserSelectedSources();
 		assert.deepEqual(index.selectedSources, selectedSources);
 		const expectedPaths = [];
@@ -111,7 +105,7 @@ export const checkInheritedCheckedRecordBrowserEvidence = async (
 		{
 			const path = `sources/${source.role}/${source.path}`;
 			expectedPaths.push(path);
-			assert.deepEqual(get(path), inheritedCheckedRecordBrowserOriginal(
+			assert.deepEqual(await get(path), inheritedCheckedRecordBrowserOriginal(
 				source.revision, source.path), path);
 		}
 		assert.deepEqual(index.runs.map(run => run.route)
@@ -130,11 +124,11 @@ export const checkInheritedCheckedRecordBrowserEvidence = async (
 			assert.equal(run.mode, selection.mode);
 			assert.equal(run.resultOnly, selection.resultOnly);
 			const prefix = `${run.route}/records/`, records = new Map();
-			for(const [path, bytes] of files)
-				if(path.startsWith(prefix)) records.set(path.slice(prefix.length), bytes);
+			for(const path of files.paths(prefix))
+				records.set(path.slice(prefix.length), path);
 			const cell = path => get(`${run.route}/${path}`);
-			const before = cell("runtime-before.json");
-			assert.deepEqual(cell("runtime-after.json"), before);
+			const before = await cell("runtime-before.json");
+			assert.deepEqual(await cell("runtime-after.json"), before);
 			assert.equal(run.runtimeSha256, sha256(before));
 			const runtime = JSON.parse(before);
 			assert.deepEqual(runtime, index.runtime);
@@ -145,8 +139,8 @@ export const checkInheritedCheckedRecordBrowserEvidence = async (
 				, "npm-tap": "npm.tap", "browser-tap": "browser.tap"
 				, "controls-tap": "controls.tap", runtime: "runtime-before.json"
 			};
-			const npmTap = cell("npm.tap"), browserTap = cell("browser.tap");
-			const controlsTap = cell("controls.tap");
+			const npmTap = await cell("npm.tap"), browserTap = await cell("browser.tap");
+			const controlsTap = await cell("controls.tap");
 			assert.equal(run.npmTapSha256, sha256(npmTap));
 			assert.equal(run.browserTapSha256, sha256(browserTap));
 			assert.equal(run.controlsTapSha256, sha256(controlsTap));
@@ -156,7 +150,7 @@ export const checkInheritedCheckedRecordBrowserEvidence = async (
 					, controlsTap: controlsTap.toString(), runtime
 					, paths: [...records.keys()].sort()
 					, read: path => {
-						assert.ok(records.has(path), path); return records.get(path);
+						assert.ok(records.has(path), path); return get(records.get(path));
 					}
 				}
 			);
@@ -164,14 +158,14 @@ export const checkInheritedCheckedRecordBrowserEvidence = async (
 			assert.deepEqual(run.accepted, checked);
 			assert.deepEqual(run.controls, checked.controls);
 			assert.deepEqual(checked.browserVersions, index.browserVersions);
-			assert.equal(run.reportSha256, sha256(records.get("report.json")));
+			assert.equal(run.reportSha256, sha256(await get(records.get("report.json"))));
 			assert.equal(run.browserReportSha256
-				, sha256(records.get("browser.json")));
+				, sha256(await get(records.get("browser.json"))));
 			assert.equal(run.npmControlsSha256
-				, sha256(records.get("controls.json")));
+				, sha256(await get(records.get("controls.json"))));
 			assert.equal(run.browserControlsSha256
-				, sha256(records.get("browser-controls.json")));
-			const verification = cell("verification.json");
+				, sha256(await get(records.get("browser-controls.json"))));
+			const verification = await cell("verification.json");
 			assert.equal(run.verificationSha256, sha256(verification));
 			assert.equal(verification.toString(), canonicalJson(checked));
 			expectedPaths.push(...[...records.keys()].map(path => prefix + path)

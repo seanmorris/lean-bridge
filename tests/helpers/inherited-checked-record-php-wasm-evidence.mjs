@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { inheritedCheckedRecordLaneFiles } from "./inherited-checked-record-lane-files.mjs";
 import {
 	checkInheritedCheckedRecordPhpWasmCiRecords
 } from "./inherited-checked-record-php-wasm-ci-report.mjs";
@@ -71,7 +72,8 @@ export const checkInheritedCheckedRecordPhpWasmEvidence = async (
 		));
 		assert.equal(sha256(indexBytes)
 			, inheritedCheckedRecordPhpWasmEvidenceSha256);
-		const index = json(indexBytes, "index.json"), files = new Map();
+		const index = json(indexBytes, "index.json"), files = inheritedCheckedRecordLaneFiles(
+			read, inheritedCheckedRecordPhpWasmEvidence);
 		assert.deepEqual(Object.keys(index).sort(), [
 			"archiveCommit", "checkerCommit", "diskFloorBytes", "files", "host"
 			, "hostedRun", "kind", "limitations", "loadCeiling"
@@ -117,18 +119,9 @@ export const checkInheritedCheckedRecordPhpWasmEvidence = async (
 			previous = entry.path;
 			assert.ok(Number.isSafeInteger(entry.bytes) && entry.bytes >= 0);
 			assert.match(entry.sha256, /^[a-f0-9]{64}$/u);
-			const value = Buffer.from(await read(
-				`${inheritedCheckedRecordPhpWasmEvidence}/${entry.path}`
-			));
-			assert.equal(value.length, entry.bytes, entry.path);
-			assert.equal(sha256(value), entry.sha256, entry.path);
-			files.set(entry.path, value);
+			await files.authenticate(entry);
 		}
-		const get = path => {
-			const value = files.get(path);
-			assert.ok(Buffer.isBuffer(value), path);
-			return value;
-		};
+		const get = files.get;
 		const expectedPaths = [];
 		const selectedSources = inheritedCheckedRecordPhpWasmSelectedSources();
 		assert.deepEqual(index.selectedSources, selectedSources);
@@ -136,7 +129,7 @@ export const checkInheritedCheckedRecordPhpWasmEvidence = async (
 		{
 			const retained = `sources/${source.role}/${source.path}`;
 			expectedPaths.push(retained);
-			assert.deepEqual(get(retained), inheritedCheckedRecordPhpWasmOriginal(
+			assert.deepEqual(await get(retained), inheritedCheckedRecordPhpWasmOriginal(
 				source.revision, source.path
 			), `${source.role}:${source.path}`);
 		}
@@ -157,7 +150,7 @@ export const checkInheritedCheckedRecordPhpWasmEvidence = async (
 			assert.deepEqual([run.label, run.route, run.mode], [label, route, mode]);
 			assert.equal(run.loadCeiling, inheritedCheckedRecordPhpWasmLoadCeiling);
 			assert.equal(run.runtimeSnapshotSha256, index.runtimeSnapshotSha256);
-			const recordRead = path => Promise.resolve(get(prefix + path));
+			const recordRead = path => get(prefix + path);
 			const result = await checkInheritedCheckedRecordPhpWasmReport(
 				recordRead, { route, mode, producerCommit: revisions.producer }
 			);
@@ -165,15 +158,15 @@ export const checkInheritedCheckedRecordPhpWasmEvidence = async (
 			for(const key of [
 				"counts", "executions", "dispatchObserved", "packageFiles"
 			]) assert.deepEqual(run[key], result[key], `${label} ${key}`);
-			assert.equal(run.reportSha256, sha256(get(prefix + "report.json")));
-			const tapPath = `${label}/run.tap`, tap = get(tapPath);
+			assert.equal(run.reportSha256, sha256(await get(prefix + "report.json")));
+			const tapPath = `${label}/run.tap`, tap = await get(tapPath);
 			assertInheritedCheckedRecordPhpWasmTap(tap.toString(), route, mode);
 			assert.equal(run.tapSha256, sha256(tap));
 			const beforePath = `${label}/runtime-before.json`;
 			const afterPath = `${label}/runtime-after.json`;
 			const beforeLogPath = `${label}/runtime-before.log`;
 			const afterLogPath = `${label}/runtime-after.log`;
-			const before = get(beforePath), after = get(afterPath);
+			const before = await get(beforePath), after = await get(afterPath);
 			assert.deepEqual(after, before);
 			assert.equal(sha256(before), index.runtimeSnapshotSha256);
 			const runtime = json(before, beforePath, false);
@@ -181,25 +174,26 @@ export const checkInheritedCheckedRecordPhpWasmEvidence = async (
 			assert.equal(runtime.producerCommit, revisions.producer);
 			assert.deepEqual(runtime.host, index.host);
 			assert.equal(runtime.runtime.identity, index.runtimeIdentity);
-			assert.equal(run.runtimeBeforeLogSha256, sha256(get(beforeLogPath)));
-			assert.equal(run.runtimeAfterLogSha256, sha256(get(afterLogPath)));
+			assert.equal(run.runtimeBeforeLogSha256, sha256(await get(beforeLogPath)));
+			assert.equal(run.runtimeAfterLogSha256, sha256(await get(afterLogPath)));
 			const ci = await checkInheritedCheckedRecordPhpWasmCiRecords({
 				route, mode, producer: revisions.producer, directory: prefix
 				, tap: tapPath, runtime: beforePath
 			}, { tap: tap.toString(), runtime, paths: result.records, read: recordRead });
 			assert.deepEqual(ci, result);
 			const verificationPath = `${label}/verification.json`;
-			const verification = get(verificationPath);
+			const verification = await get(verificationPath);
 			assert.equal(verification.toString(), canonicalJson(result));
 			assert.equal(run.verificationSha256, sha256(verification));
 			const controlCounts = expectedControls(result.records.length, mode);
 			assert.deepEqual(run.controls, controlCounts);
 			const controlsPath = `${label}/controls.json`;
-			assert.deepEqual(json(get(controlsPath), controlsPath), controlCounts);
+			assert.deepEqual(json(await get(controlsPath), controlsPath), controlCounts);
 			if(controls === "all"
 				|| controls === "representative" && position === 0)
 				assert.deepEqual(await checkInheritedCheckedRecordPhpWasmControls(
-					new Map(result.records.map(path => [path, get(prefix + path)]))
+					new Map(await Promise.all(result.records.map(
+						async path => [path, await get(prefix + path)])))
 					, { route, mode, producerCommit: revisions.producer }
 				), controlCounts);
 			expectedPaths.push(
