@@ -59,7 +59,11 @@ test("direct proof erasure reverses implementation and integration bytes", async
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const live = await readFile(update.path, "utf8");
+		const current = beforeFinRefinementSource(
+			update.path, live, update.currentSha256
+		);
+		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = git(["show"
 			, `${directProofErasureImplementation}:${update.path}`]);
 		assert.equal(reverseDirectProofErasureUpdate(current, update)
@@ -76,7 +80,10 @@ test("direct proof erasure history additions retain exact identities", async () 
 	{
 		assert.equal(git(["ls-tree", "--name-only"
 			, directProofErasureImplementation, "--", addition.path]).trim(), "");
-		assert.equal(sha256(await readFile(addition.path))
+		const source = beforeFinRefinementSource(
+			addition.path, await readFile(addition.path), addition.currentSha256
+		);
+		assert.equal(sha256(source)
 			, addition.currentSha256, addition.path);
 	}
 });

@@ -1,0 +1,230 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6e66c59702a9b70067fdd4370e825e5948147a8bc3ea355731b9e62ef94aaadb",
+      "path": "scripts/check-direct-proof-erasure-native-ci.mjs"
+    },
+    {
+      "currentSha256": "f9f02d413c4ae9470a9b74ca4f541ea2798fa1b9b353c19bf51e9646de329efc",
+      "path": "scripts/run-direct-proof-erasure-native-ci.sh"
+    },
+    {
+      "currentSha256": "311ff039b89b763be199dc6821319ccc4793ddee20e21747d71cf0561c0d2871",
+      "path": "tests/direct-proof-erasure-native-installed.test.mjs"
+    },
+    {
+      "currentSha256": "6e241a29da88cc0694e62906c3201002da4d238e1513ed0c8088c270df70599e",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/c.c"
+    },
+    {
+      "currentSha256": "115c762e717cba43216ba6a481dce21c358ddb1d66a3124141bf7d1a77b45496",
+      "path": "tests/fixtures/direct-proof-erasure-consumers/cpp.cpp"
+    },
+    {
+      "currentSha256": "624b4fc8eef4464e813fad2a56decbcaf8751a1e7afcba7b028d1a1126ddf2d0",
+      "path": "tests/helpers/direct-proof-erasure-native-report.mjs"
+    },
+    {
+      "currentSha256": "5db34dca81b8858b133d4cac63cb00d8cb8363c2a899c7952bf88175b60dd5ad",
+      "path": "tests/helpers/direct-proof-erasure-native-tests.mjs"
+    },
+    {
+      "currentSha256": "f9549ab370c3c1bc3063883af4886e0c11946872e57b1503335855ff1f6be92d",
+      "path": "scripts/update-direct-proof-erasure-native-source-history.mjs"
+    },
+    {
+      "currentSha256": "00a96660681b6f6656379693e4f22251c4f024203c13d6354cec6ec07e0fd441",
+      "path": "tests/helpers/direct-proof-erasure-native-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "dee329c5d617a5d5c1d51efe486fa8f38dbda97fb346befe8eafbe814ead73c3",
+      "path": "tests/helpers/direct-proof-erasure-native-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d3d7d1a9cf72e0e9bddbe695a71bf68e4ee54a2c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f40aee14521362e3016be8561eb9b90d6743ccd536a80a7fdd277cadf4965af7",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-native-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c5ba13746fd7e0624e936309c58e5a9a0ebab747ecb218b2c9f5c018f1decd49"
+    },
+    {
+      "currentSha256": "6eb51b61ad6e6e37d617845c0d7523164c3671c546678ad7000c3a59f059cdab",
+      "edits": [
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, live, update.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2590
+        },
+        {
+          "current": "\t\tconst live = exists(directProofErasureFixtureImplementation, addition.path)\n",
+          "previous": "\t\tconst source = exists(directProofErasureFixtureImplementation, addition.path)\n",
+          "start": 3395
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "previous": "",
+          "start": 3591
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-fixture-source-history-tests.mjs",
+      "previousSha256": "a42baf20086b5a0a5a0b9e8ccb01b95fb9d5d2edc7cfb047b3f7b7bf91120bfa"
+    },
+    {
+      "currentSha256": "f10b7d7d77e5f124a1da071bc463bf3a3dfb3d479ef2b5eb07376907c0486010",
+      "edits": [
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, live, update.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2493
+        },
+        {
+          "current": "\t\tconst live = exists(directProofErasureNpmImplementation, addition.path)\n",
+          "previous": "\t\tconst source = exists(directProofErasureNpmImplementation, addition.path)\n",
+          "start": 3278
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "previous": "",
+          "start": 3466
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-npm-source-history-tests.mjs",
+      "previousSha256": "5afec44046c9f085d5257f2505e3e62f54f61fbd12688d3cc98dca18387e404f"
+    },
+    {
+      "currentSha256": "464ad325a2bb41e76883b02417cc43728104bf01dcc54a58a7248c19e16b4a08",
+      "edits": [
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, live, update.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2581
+        },
+        {
+          "current": "\t\tconst live = exists(directProofErasurePackageImplementation, addition.path)\n",
+          "previous": "\t\tconst source = exists(directProofErasurePackageImplementation, addition.path)\n",
+          "start": 3382
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "previous": "",
+          "start": 3578
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-package-source-history-tests.mjs",
+      "previousSha256": "68832f073355ae909ccd53d134a0cfd8bc89bd558b86ecbd4a660bcec5e0f102"
+    },
+    {
+      "currentSha256": "82d78809ea164fc72cc1c8a8352a9c68e10d141730834baf074823238763b3c9",
+      "edits": [
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, live, update.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2307
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, await readFile(addition.path), addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(source)\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 3210
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-source-history-tests.mjs",
+      "previousSha256": "c47529e004539bd2c9afce22c3dca092d2636df5abc17ea4717c3e6767984a58"
+    },
+    {
+      "currentSha256": "3a1f1a62830fa9e12e2814f63f3ddc5fc6139cce96d88c41314016107f18967d",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureNativeSource, directProofErasureNativeNormalizationPaths } from \"./direct-proof-erasure-native-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureNativeNormalizationPaths\n\t, ...directProofErasureNpmNormalizationPaths\n",
+          "previous": "\t...directProofErasureNpmNormalizationPaths\n",
+          "start": 209495
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureNativeSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureNpmSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDirectProofErasureNpmSource(path, text, expected);\n",
+          "start": 261605
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b48330c589a4d40ffe67dc5e0511f8f22665c3e0f64b0bf6bd9cf416916892d2"
+    },
+    {
+      "currentSha256": "34b4f4397b3ac8f618f54d62bc24353885d6c5e656890321b8b1c36d589909b4",
+      "edits": [
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, live, update.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2333
+        },
+        {
+          "current": "\t\tconst live = proofErasureEvidenceAuditCommits.some(commit =>\n",
+          "previous": "\t\tconst source = proofErasureEvidenceAuditCommits.some(commit =>\n",
+          "start": 3281
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "previous": "",
+          "start": 3534
+        }
+      ],
+      "path": "tests/helpers/proof-erasure-evidence-audit-source-history-tests.mjs",
+      "previousSha256": "9d8bb29209ce8757a5170e3f65bb3c479b6f2df2f3d48ec4c4f3592c01343337"
+    }
+  ],
+  "milestone": "direct-proof-erasure-native-source-v1",
+  "predecessorCommit": "48ad5784dc7d6ca6fa968223b0a4e46e2352a541",
+  "schemaVersion": 1,
+  "scope": "Build ordinary and independently reviewed direct-proof C/C++ packages twice; authenticate and retain receipt-closed offline archives; prove the generated headers expose one UInt32 payload and no proof slot; install and execute both host callers; relocate the complete installations; and reject attempted proof arguments at compile time.",
+  "updates": [
+    {
+      "commit": "d3d7d1a9cf72e0e9bddbe695a71bf68e4ee54a2c",
+      "currentSha256": "2fa60cc351ddb357815d45eec82a775b9a8953e0be8933ce3380cccf2c18e93a",
+      "edits": [
+        {
+          "current": "      - name: Execute direct proof erasure through prepared C and C++ packages\n        id: direct_proof_native\n        if: matrix.profile == 'c-family'\n        continue-on-error: true\n        run: |\n          source scripts/env.sh\n          bash scripts/run-direct-proof-erasure-native-ci.sh\n      - name: Preserve direct proof-erasure C and C++ packages\n        if: always() && matrix.profile == 'c-family'\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-native-${{ github.sha }}\n          path: build/direct-proof-erasure-native-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "previous": "",
+          "start": 177826
+        },
+        {
+          "current": "              consumer_command=\"$consumer_command && bash scripts/run-direct-proof-erasure-native-ci.sh\"\n              if [ \"${{ steps.ordinary_c.outcome }}\" != success ] || [ \"${{ steps.type_corpus_c_family.outcome }}\" != success ] || [ \"${{ steps.direct_proof_native.outcome }}\" != success ]; then\n",
+          "previous": "              if [ \"${{ steps.ordinary_c.outcome }}\" != success ] || [ \"${{ steps.type_corpus_c_family.outcome }}\" != success ]; then\n",
+          "start": 225390
+        },
+        {
+          "current": "        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success')))\n",
+          "previous": "        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success')))\n",
+          "start": 243115
+        }
+      ],
+      "parent": "48ad5784dc7d6ca6fa968223b0a4e46e2352a541",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "140dfb6e6b63bf94fc80f6e15ab3579e3072bbd294dd8b2bd569df53a8f30db1"
+    },
+    {
+      "commit": "d3d7d1a9cf72e0e9bddbe695a71bf68e4ee54a2c",
+      "currentSha256": "c5ba13746fd7e0624e936309c58e5a9a0ebab747ecb218b2c9f5c018f1decd49",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-native-tests.mjs\";\n",
+          "previous": "",
+          "start": 167
+        }
+      ],
+      "parent": "48ad5784dc7d6ca6fa968223b0a4e46e2352a541",
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "a0a40d792f3404a2bc1b8389c4216c923ec7ecf17340faa1504fd4653a80d42d"
+    }
+  ]
+}

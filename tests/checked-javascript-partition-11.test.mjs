@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/direct-proof-erasure-native-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-npm-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-native-tests.mjs";
 import "./helpers/direct-proof-erasure-fixture-source-history-tests.mjs";
