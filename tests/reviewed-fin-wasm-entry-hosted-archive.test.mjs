@@ -19,7 +19,8 @@ const fixture = async root => {
 	const zip = Buffer.from("authenticated hosted artifact\n");
 	const run = {
 		id: 4242, status: "completed", conclusion: "success"
-		, head_sha: revision, path: ".github/workflows/consumer-matrix.yml"
+		, head_sha: revision
+		, path: ".github/workflows/reviewed-fin-wasm-entry.yml"
 		, repository: { full_name: "seanmorris/lean-bridge" }
 		, head_repository: { full_name: "seanmorris/lean-bridge" }
 		, event: "push", run_attempt: 3
@@ -30,7 +31,7 @@ const fixture = async root => {
 	const job = {
 		id: 4343, run_id: run.id, head_sha: revision
 		, status: "completed", conclusion: "success"
-		, name: "Reviewed Fin Wasm entry (original)"
+		, name: "Reviewed Fin Wasm entries"
 		, labels: ["ubuntu-24.04"], runner_name: "GitHub Actions 1"
 		, runner_group_name: "GitHub Actions"
 		, started_at: "2026-10-28T00:01:00Z"

@@ -14,6 +14,7 @@ import { reviewedContractDifference, reviewedSourceSelection, validateReviewedSo
 import { reviewedFinWasmIr, reviewedFinWasmWide } from "./reviewed-fin-wasm-fixture.mjs";
 import { executeCorpus } from "../fixtures/reviewed-fin-wasm/javascript.mjs";
 import { reviewedFinWasmBuildFacts, reviewedFinWasmExpected } from "./reviewed-fin-wasm-install.mjs";
+import { reviewedFinWasmTypeScriptPrelude } from "./reviewed-fin-wasm-entry-producer.mjs";
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { reviewedFinWasmMismatches, reviewedFinWasmPreFieldMismatches, reviewedFinWasmRefusal } from "./reviewed-fin-wasm-mismatches.mjs";
@@ -203,6 +204,10 @@ test("Fin TypeScript consumers state exact public signatures and reject erased n
 		assert.match(source, /executeCorpus\(request, await loadApi\(\)\)/u);
 		assert.equal(source.includes("type Items ="), selection === "structural");
 		assert.equal(source.includes("type Box ="), selection === "structural");
+		assert.deepEqual(reviewedFinWasmTypeScriptPrelude(source, selection)
+			, selection === "structural"
+				? ["mirror", "label", "rows", "nested", "box"]
+				: ["mirror", "label"]);
 	}
 	assert.throws(() => reviewedFinWasmTypeScript("missing"), /Unknown Fin selection/u);
 });

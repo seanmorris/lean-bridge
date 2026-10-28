@@ -22,7 +22,7 @@ export const reviewedFinWasmEntryHostedModes = Object.freeze([
 
 const sourceEntries = Object.freeze({
 	producer: Object.freeze([
-		".github/workflows/consumer-matrix.yml"
+		".github/workflows/reviewed-fin-wasm-entry.yml"
 		, "tests/reviewed-fin-wasm-entry.test.mjs"
 		, "tests/helpers/reviewed-fin-wasm-entry-producer.mjs"
 		, "tests/helpers/reviewed-fin-wasm-entry.mjs"
@@ -152,7 +152,7 @@ export const inspectReviewedFinWasmEntryHostedArtifact = async (
 	assert.ok(["cancelled", "failure", "success"].includes(run.conclusion)
 		, `Ineligible hosted run conclusion: ${run.conclusion}`);
 	assert.match(run.head_sha, /^[a-f0-9]{40}$/u);
-	assert.equal(run.path, ".github/workflows/consumer-matrix.yml");
+	assert.equal(run.path, ".github/workflows/reviewed-fin-wasm-entry.yml");
 	assert.equal(run.repository?.full_name, "seanmorris/lean-bridge");
 	assert.equal(run.head_repository?.full_name, "seanmorris/lean-bridge");
 	assert.ok(["push", "workflow_dispatch"].includes(run.event));
@@ -160,7 +160,7 @@ export const inspectReviewedFinWasmEntryHostedArtifact = async (
 	assert.ok(Number.isSafeInteger(job.id) && job.id > 0);
 	assert.equal(job.run_id, run.id); assert.equal(job.head_sha, run.head_sha);
 	assert.deepEqual([job.status, job.conclusion], ["completed", "success"]);
-	assert.equal(job.name, `Reviewed Fin Wasm entry (${mode})`);
+	assert.equal(job.name, "Reviewed Fin Wasm entries");
 	assert.ok(Array.isArray(job.labels) && job.labels.includes("ubuntu-24.04"));
 	assert.ok(Number.isSafeInteger(artifact.id) && artifact.id > 0);
 	assert.equal(artifact.name

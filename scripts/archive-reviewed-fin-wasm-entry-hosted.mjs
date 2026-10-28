@@ -199,7 +199,7 @@ const index = {
 		"The two hosted legs cover original and instrumented-probe ordinary-source and independently reviewed copied Fin entry positions in Node JavaScript, strict TypeScript, Chromium, Firefox and WebKit pages, React production and StrictMode lifecycles, and dedicated workers."
 		, "The promotion scope is limited to the eight previously unreviewed copied-field cells: reviewed Node JavaScript/TypeScript fields and ordinary plus reviewed browser JavaScript/React/worker fields. Existing parameter/result cells retain their earlier evidence."
 		, "Each report is independently recounted across 53 Node/browser context, engine and phase observations. The original artifact ZIPs, API identities, complete job logs, reports, TAP and selected exact source snapshots are retained."
-		, "Each retained field job must complete successfully and match its exact artifact even when unrelated jobs make the enclosing Downstream run fail or when the run is cancelled after both field jobs finish. The enclosing run conclusion is retained per leg; no result from another matrix job is claimed."
+		, "The retained field job must complete successfully and match both exact artifacts even if the enclosing hosted run later fails or is cancelled. The enclosing run conclusion is retained per leg; no result from another job is claimed."
 		, "The retained selected sources are not a complete transitive source or toolchain closure. External browser, Node, Lean, Nix and operating-system distributions remain trusted recorded inputs."
 	]
 };

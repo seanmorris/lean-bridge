@@ -1,0 +1,130 @@
+name: Reviewed Fin Wasm entry evidence
+
+on:
+  push:
+    branches:
+      - codex/vo2166-fin-completion
+    paths:
+      - .github/workflows/reviewed-fin-wasm-entry.yml
+      - scripts/check-reviewed-fin-wasm-entry-run.mjs
+      - tests/reviewed-fin-wasm-entry.test.mjs
+      - tests/helpers/reviewed-fin-wasm-**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reviewed-fin-wasm-entry-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reviewed-fin-wasm-entry:
+    name: Reviewed Fin Wasm entries
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          # The producer uses current source/package bytes only. Exclude the
+          # immutable evidence corpus and publication inventory.
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/*
+            /docs/consumer-support.v1.json
+          sparse-checkout-cone-mode: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install browser engines
+        timeout-minutes: 20
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
+      - name: Build the locked engine and prepared runtime once
+        run: |
+          nix build .#universal-core-artifacts --out-link build/consumer-ci-runtime
+          nix build .#component-build-engine --out-link build/locked-lake-engine
+      - name: Account original adapters and Lean entry
+        id: original
+        continue-on-error: true
+        shell: bash
+        env:
+          LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_BROWSER_TEST: "1"
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+          LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR: build/reviewed-fin-wasm-entry/original
+          LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+          LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
+        run: |
+          set -euo pipefail
+          mkdir -p "$LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR"
+          node --test --test-concurrency=1 --test-reporter=tap \
+            --test-name-pattern='^original (ordinary|independently reviewed) (scalar|structural) Fin entry is accounted in installed npm packages$' \
+            tests/reviewed-fin-wasm-entry.test.mjs \
+            2>&1 | tee "$LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR/run.tap"
+          node scripts/check-reviewed-fin-wasm-entry-run.mjs \
+            "$LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR" --mode=original
+      - name: Account probe adapters and Lean entry
+        id: probe
+        continue-on-error: true
+        shell: bash
+        env:
+          LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_BROWSER_TEST: "1"
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+          LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR: build/reviewed-fin-wasm-entry/probe
+          LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+          LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
+        run: |
+          set -euo pipefail
+          mkdir -p "$LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR"
+          node --test --test-concurrency=1 --test-reporter=tap \
+            --test-name-pattern='^probe (ordinary|independently reviewed) (scalar|structural) Fin entry is accounted in installed npm packages$' \
+            tests/reviewed-fin-wasm-entry.test.mjs \
+            2>&1 | tee "$LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR/run.tap"
+          node scripts/check-reviewed-fin-wasm-entry-run.mjs \
+            "$LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR" --mode=probe
+      - name: Preserve original observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: reviewed-fin-wasm-entry-original-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/reviewed-fin-wasm-entry/original/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Preserve probe observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: reviewed-fin-wasm-entry-probe-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/reviewed-fin-wasm-entry/probe/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce both reviewed Fin entry modes
+        if: always() && (steps.original.outcome != 'success' || steps.probe.outcome != 'success')
+        run: exit 1

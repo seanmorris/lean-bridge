@@ -20,11 +20,13 @@ const approvedAutomaticEvents = new Map([
 	, ["performance.yml", ["push"]]
 	, ["quality.yml", ["pull_request", "push"]]
 	, ["reproducible-release.yml", ["pull_request"]]
+	, ["reviewed-fin-wasm-entry.yml", ["push"]]
 ]);
 
 const pathScopedAutomaticWorkflows = new Set([
 	"checked-record-value-index-matrix.yml"
 	, "dependent-checked-record-matrix.yml"
+	, "reviewed-fin-wasm-entry.yml"
 ]);
 
 const nonSweepWorkflows = new Set([
@@ -38,6 +40,7 @@ const nonSweepWorkflows = new Set([
 	, "php-wasm-refinement-entry-promotion.yml"
 	, "quality.yml"
 	, "reproducible-release.yml"
+	, "reviewed-fin-wasm-entry.yml"
 ]);
 
 const sweepCron = index => {
@@ -111,7 +114,7 @@ test("all workflows obey the reviewed automatic-trigger budget", async () => {
 	const names = (await readdir(workflowDirectory))
 		.filter(name => name.endsWith(".yml"))
 		.sort();
-	assert.equal(names.length, 122, "review every workflow added to the repository");
+	assert.equal(names.length, 123, "review every workflow added to the repository");
 	const sources = new Map();
 
 	for(const name of names)
@@ -127,9 +130,9 @@ test("all workflows obey the reviewed automatic-trigger budget", async () => {
 	assert.equal(new Set(crons).size, sweep.length
 		, "weekly sweep slots do not overlap");
 
-	assert.equal(approvedAutomaticEvents.size, 7);
-	assert.equal(pathScopedAutomaticWorkflows.size, 2);
-	assert.equal(nonSweepWorkflows.size, 10);
+	assert.equal(approvedAutomaticEvents.size, 8);
+	assert.equal(pathScopedAutomaticWorkflows.size, 3);
+	assert.equal(nonSweepWorkflows.size, 11);
 });
 
 test("the trigger policy fails closed on accidental dedicated-workflow fan-out", async () => {

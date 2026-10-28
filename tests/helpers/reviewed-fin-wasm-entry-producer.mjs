@@ -248,7 +248,9 @@ export const accountReviewedFinWasmEntryReport = (expected, report, prelude = []
 export const reviewedFinWasmTypeScriptPrelude = (source, selection) => {
 	// Only top-level typed constants call the API; the calls inside if (false) blocks are type checks that never run.
 	const prelude = [...source.matchAll(/^const \w+: [^=]+ = api\.(\w+)\(/gmu)].map(match => match[1]);
-	assert.deepEqual(prelude, selection === "structural" ? ["mirror", "label", "rows", "nested"] : ["mirror", "label"], "the TypeScript consumer's prelude");
+	assert.deepEqual(prelude, selection === "structural"
+		? ["mirror", "label", "rows", "nested", "box"]
+		: ["mirror", "label"], "the TypeScript consumer's prelude");
 	return prelude;
 };
 
