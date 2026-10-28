@@ -39,15 +39,12 @@ def host(value):
     return value
 
 
-check(api.visit(api.with_recovery(host, 0)) == 10,
+check(api.visit(host) == 10,
       "checked host callback arguments")
 check(calls == 5, "host receives every Fin 5 value")
-before = calls
-reject(lambda: api.visit(host), TypeError)
-check(calls == before, "missing recovery stops callback entry")
 sentinel = RuntimeError("callback Fin sentinel")
-check(reject(lambda: api.visit(api.with_recovery(
-    lambda _value: (_ for _ in ()).throw(sentinel), 0))) is sentinel,
+check(reject(lambda: api.visit(
+    lambda _value: (_ for _ in ()).throw(sentinel))) is sentinel,
     "callback exception identity")
 check(api.apply(lambda value: value + 1, 2) == 3,
       "unrefined callback stays direct")

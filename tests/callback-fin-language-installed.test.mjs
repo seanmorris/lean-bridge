@@ -35,7 +35,7 @@ const targets = {
 	, ruby: ["rubygems", { name: "reviewedcallbacks", version: "1.0.0" }]
 	, rust: ["cargo", { name: "reviewedcallbacks", version: "1.0.0" }]
 };
-const expectedChecks = { python: 20, ruby: 20, rust: 15 };
+const expectedChecks = { python: 19, ruby: 19, rust: 15 };
 
 test("ordinary and reviewed Python, Ruby and Rust callback Fin packages install offline", {
 	skip: !profiles.length, timeout: 3_600_000

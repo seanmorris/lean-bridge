@@ -1,7 +1,5 @@
 // Installed Kotlin acceptance for checked Fin callbacks and Lean closures.
 import java.math.BigInteger
-import org.leanbridge.reviewedcallbacks.FnNatToNatHost
-import org.leanbridge.reviewedcallbacks.WithRecovery
 import org.leanbridge.reviewedcallbacks.Unit as LeanUnit
 import org.leanbridge.reviewedcallbacks.kotlin.Api
 import org.leanbridge.reviewedcallbacks.kotlin.Tile
@@ -33,18 +31,18 @@ fun main() {
     val counter = Api.counter(n(8))
     check(counter.invoke(n(4)) == n(2), "Lean-produced Fin result")
 
-    val host = FnNatToNatHost { value ->
+    val visited = Api.visit { value ->
         calls++
         if (value.signum() < 0 || value >= n(5))
             throw AssertionError("Lean supplied an invalid Fin")
         value
     }
-    check(Api.visit(WithRecovery(host, BigInteger.ZERO)) == n(10),
+    check(visited == n(10),
         "checked host callback arguments")
     check(calls == 5, "host receives every Fin 5 value")
     val sentinel = IllegalStateException("callback Fin sentinel")
     check(reject<IllegalStateException> {
-        Api.visit(WithRecovery(FnNatToNatHost { throw sentinel }, BigInteger.ZERO))
+        Api.visit { throw sentinel }
     } === sentinel, "callback exception identity")
     check(Api.apply({ value -> value + BigInteger.ONE }, n(2)) == n(3),
         "unrefined callback stays direct")

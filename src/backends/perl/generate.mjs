@@ -454,8 +454,14 @@ export const validatePerlModel = model => {
 		return [...types.some(type => type.kind === "option") ? ["Some"] : []
 			, ...types.some(type => type.kind === "result") ? ["Ok", "Err"] : []];
 	}
-	model.types.forEach(({ key, ...type }) => {
-		validateNativeRepresentation(type);
+	model.types.forEach(type => {
+		// `checked` and `reply` are compiler annotations consumed by the native
+		// callback/refinement layers.  They are not fields of the closed native
+		// representation, just as createNativeModel strips them before validating
+		// its representation shapes.
+		const { key, ...shape } = type;
+		delete shape.checked; delete shape.reply;
+		validateNativeRepresentation(shape);
 		if(key !== nativeTypeKey(type)) throw new TypeError("native type identity changed");
 	});
 	const branches = [...(model.types.some(type => type.kind === "option") ? ["Some"] : [])

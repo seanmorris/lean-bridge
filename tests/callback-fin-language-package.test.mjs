@@ -6,9 +6,9 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { generateCallablePythonGraphPackage } from "../src/backends/python/callable-graph-package.mjs";
-import { generateCallableRubyGraphPackage } from "../src/backends/ruby/callable-graph-package.mjs";
-import { generateCallableRustGraphPackage } from "../src/backends/rust/callable-graph-package.mjs";
+import { generateCopiedPythonPackage } from "../src/backends/python/copied-values.mjs";
+import { generateCopiedRubyPackage } from "../src/backends/ruby/copied-values.mjs";
+import { generateCopiedRustPackage } from "../src/backends/rust/copied-values.mjs";
 import {
 	callbackFinLanguageTestName, callbackFinLanguageVerification
 	, checkCallbackFinLanguageReport, parseCallbackFinLanguageCiArgs
@@ -36,7 +36,7 @@ ok 1 - ${callbackFinLanguageTestName}
 const report = () => ({
 	schemaVersion: 1
 	, reports: [...["ordinary", "reviewed"].flatMap(route => [
-		["python", 20], ["ruby", 20], ["rust", 15]
+		["python", 19], ["ruby", 19], ["rust", 15]
 	].map(([profile, checks]) => ({
 		route, profile, checks, bindingIrSha256: digest, consumerSha256: digest
 		, receiptSha256: digest, compilerFreePath: true, offlineInstall: true
@@ -64,16 +64,15 @@ test("callback Fin language checker closes the hosted six-cell report", () => {
 
 test("callback Fin consumers match generated Python, Ruby and Rust package surfaces", async () => {
 	const ir = callbackFinReviewedIr();
-	const python = generateCallablePythonGraphPackage(ir);
-	const ruby = generateCallableRubyGraphPackage(ir);
-	const rust = generateCallableRustGraphPackage(ir, null, {
+	const python = generateCopiedPythonPackage(ir);
+	const ruby = generateCopiedRubyPackage(ir);
+	const rust = generateCopiedRustPackage(ir, null, {
 		name: "reviewedcallbacks", version: "1.0.0"
 	});
 	assert.deepEqual(Object.keys(python).sort(), [
 		"README.md", "binding-manifest.json"
 		, "lean_reviewedcallbacks/__init__.py"
 		, "lean_reviewedcallbacks/__init__.pyi"
-		, "lean_reviewedcallbacks/_assets.py"
 		, "lean_reviewedcallbacks/_native.py"
 		, "lean_reviewedcallbacks/py.typed"
 	].sort());
@@ -83,9 +82,10 @@ test("callback Fin consumers match generated Python, Ruby and Rust package surfa
 		, ruby["lib/lean_bridge/reviewedcallbacks.rb"], rust["src/lib.rs"]];
 	for(const source of packageSources)
 	{
-		for(const token of ["with_recovery", "scaler", "counter", "visit"
+		for(const token of ["scaler", "counter", "visit"
 			, "digits", "tiles", "tile_maker", "apply"])
 			assert.ok(source.includes(token), token);
+		assert.ok(!source.includes("with_recovery"));
 	}
 	const consumers = {
 		python: await readFile("tests/fixtures/callback-fin-consumers/python.py", "utf8")
@@ -96,5 +96,8 @@ test("callback Fin consumers match generated Python, Ruby and Rust package surfa
 	assert.match(consumers.ruby, /require "lean_bridge\/reviewedcallbacks"/u);
 	assert.match(consumers.rust, /use reviewedcallbacks as api;/u);
 	for(const source of Object.values(consumers))
+	{
 		assert.match(source, /callback-fin-language-ok/u);
+		assert.doesNotMatch(source, /with_recovery/u);
+	}
 });

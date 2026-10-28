@@ -32,18 +32,17 @@ final class Consumer {
         var counter = Api.counter(n(8));
         check(counter.invoke(n(4)).equals(n(2)), "Lean-produced Fin result");
 
-        FnNatToNatHost host = value -> {
+        check(Api.visit(value -> {
             calls++;
             if (value.signum() < 0 || value.compareTo(n(5)) >= 0)
                 throw new AssertionError("Lean supplied an invalid Fin");
             return value;
-        };
-        check(Api.visit(new WithRecovery<>(host, BigInteger.ZERO)).equals(n(10)),
+        }).equals(n(10)),
             "checked host callback arguments");
         check(calls == 5, "host receives every Fin 5 value");
         var sentinel = new IllegalStateException("callback Fin sentinel");
-        check(reject(IllegalStateException.class, () -> Api.visit(new WithRecovery<>(
-            (FnNatToNatHost)(_value -> { throw sentinel; }), BigInteger.ZERO))) == sentinel,
+        check(reject(IllegalStateException.class, () -> Api.visit(
+            _value -> { throw sentinel; })) == sentinel,
             "callback exception identity");
         check(Api.apply(value -> value.add(BigInteger.ONE), n(2)).equals(n(3)),
             "unrefined callback stays direct");

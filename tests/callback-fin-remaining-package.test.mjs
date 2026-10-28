@@ -6,20 +6,21 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { generateCallableDotnetGraphPackage } from "../src/backends/dotnet/callable-graph-package.mjs";
-import { generateCallableJvmGraphPackage } from "../src/backends/jvm/callable-graph-package.mjs";
-import { generateCallablePhpGraphPackage } from "../src/backends/php/callable-graph-package.mjs";
-import { compileCallableWitGraphPackageModel } from "../src/backends/wit/callable-graph-package.mjs";
+import { generateCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
+import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
+import { generateCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
+import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
+import { renderWitHostHeader } from "../src/backends/wit/copied-host.mjs";
 import { callbackFinReviewedIr } from "./helpers/callback-fin-fixture.mjs";
 
 test("callback Fin remaining consumers name generated public package surfaces", async () => {
 	const ir = callbackFinReviewedIr();
-	const dotnet = generateCallableDotnetGraphPackage(ir);
-	const jvm = generateCallableJvmGraphPackage(ir);
-	const php = generateCallablePhpGraphPackage(ir);
-	const wit = compileCallableWitGraphPackageModel(ir, {
+	const dotnet = generateCopiedDotnetPackage(ir);
+	const jvm = generateCopiedJvmKotlinPackage(ir);
+	const php = generateCopiedPhpPackage(ir);
+	const wit = compileCopiedWitModel(ir, {
 		name: "reviewed-callbacks", version: "1.0.0"
-	});
+	}, { callables: true });
 	const apiNames = ["scaler", "counter", "visit", "digits", "tiles"
 		, "tileMaker", "apply"];
 	const dotnetApi = dotnet["src/LeanBridge.Reviewedcallbacks/Api.cs"];
@@ -45,10 +46,24 @@ test("callback Fin remaining consumers name generated public package surfaces", 
 	}
 	const witSource = await readFile(
 		"tests/fixtures/callback-fin-consumers/wit-wasi.c", "utf8");
+	const header = renderWitHostHeader(wit);
 	const calls = new Set([...witSource.matchAll(
 		/\b(reviewedcallbacks_[a-z0-9_]+)\s*\(/gu)].map(match => match[1]));
-	assert.ok(calls.size >= 12);
+	assert.ok(calls.size >= 5);
 	for(const name of calls)
-		if(!name.endsWith("_clear"))
-			assert.ok(wit.hostHeader.includes(`${name}(`), name);
+		assert.ok(header.includes(`${name}(`), name);
+	assert.equal(wit.resources.length, 7);
+	assert.equal(new Set(wit.resources.map(resource => resource.witName)).size, 7);
+	for(const resource of wit.resources)
+	{
+		assert.match(resource.witName, /^function-/u);
+		assert.match(wit.wit, new RegExp(`resource ${resource.witName};`, "u"));
+	}
+	for(const id of ["bridge:Callback1469b3ae2047ff62e64f"
+		, "bridge:Callbacka1b5e4d2cfa3d3e80004"
+		, "bridge:Callback0b35b98375ec45f097a4"
+		, "bridge:Callbackf2af9db3bda87ab235db"])
+		assert.match(witSource, new RegExp(
+			wit.resources.find(resource => resource.type.id === id).witName, "u"));
+	assert.doesNotMatch(witSource, /WithRecovery|with_recovery/u);
 });

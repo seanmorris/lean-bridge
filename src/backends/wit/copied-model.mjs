@@ -5,6 +5,7 @@
  */
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
+import { sha256 } from "../../capsule/node.mjs";
 import { renderCopiedWitComponent } from "./copied-component.mjs";
 import { compileCopiedWitAliases } from "./copied-aliases.mjs";
 import { witVariantMember, witVariantPayloads } from "./copied-variants.mjs";
@@ -84,11 +85,21 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 	const copied = aliasModel?.copy ?? surface.copy;
 	const { types, nextIndex } = witVariantPayloads(aliasModel?.types ?? surface.copies.filter(copy => copy.witName)
 		, aliasModel?.nextIndex ?? surface.copies.length, value => admit(value, ir.declarations[0]));
-	const resources = [...surface.callbacks.values()].map((callback, index) => {
+	const callbacks = [...surface.callbacks.values()];
+	const resourceBase = callback => {
 		const signature = callback.type.callable;
 		const label = type => type.kind === "primitive" ? kebab(type.name) : copied(type).witName;
-		const witName = admit(callableResourceNames?.get(callback.type.id)
-			?? `function-${signature.parameters.map(site => label(site.type)).join("-")}-to-${label(signature.result.type)}`, ir.declarations[0]);
+		return `function-${signature.parameters.map(site => label(site.type)).join("-")}-to-${label(signature.result.type)}`;
+	};
+	const resourceBases = callbacks.map(resourceBase);
+	const duplicateResourceBases = new Set(resourceBases.filter((base, index) =>
+		resourceBases.some((other, otherIndex) => otherIndex !== index && other === base)));
+	const resources = callbacks.map((callback, index) => {
+		const base = resourceBases[index];
+		const inferred = duplicateResourceBases.has(base)
+			? `function-${sha256(callback.type.id).slice(0, 24)}` : base;
+		const witName = admit(callableResourceNames?.get(callback.type.id) ?? inferred
+			, ir.declarations[0]);
 		const resource = { ...callback, index: nextIndex + index, witName };
 		resource.borrow = { resource: true, resourceIndex: resource.index, borrowed: true, wit: `borrow<${witName}>`, wat: `$borrow${resource.index}` };
 		resource.own = { resource: true, resourceIndex: resource.index, borrowed: false, wit: `own<${witName}>`, wat: `$own${resource.index}` };

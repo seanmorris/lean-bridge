@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 export const callbackFinLanguageTestName
 	= "ordinary and reviewed Python, Ruby and Rust callback Fin packages install offline";
 export const callbackFinLanguageChecks = Object.freeze({
-	python: 20, ruby: 20, rust: 15
+	python: 19, ruby: 19, rust: 15
 });
 
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);

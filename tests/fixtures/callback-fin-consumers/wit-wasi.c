@@ -8,12 +8,14 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef reviewedcallbacks_scalar_nat_t nat_t;
-typedef reviewedcallbacks_wasmtime_function function_t;
+typedef wasmtime_component_val_t component_value;
+typedef reviewedcallbacks_wasmtime_value value;
+typedef reviewedcallbacks_wasmtime_function function;
 
 static unsigned checks;
-static void check(bool value, const char *label) {
-  if (!value) { fprintf(stderr, "%s\n", label); assert(value); }
+static reviewedcallbacks_wasmtime *session;
+static void check(bool condition, const char *label) {
+  if (!condition) { fprintf(stderr, "%s\n", label); assert(condition); }
   ++checks;
 }
 static void ok(wasmtime_error_t *error) {
@@ -32,12 +34,27 @@ static void rejected(wasmtime_error_t *error, const char *pattern) {
   wasm_name_delete(&message); wasmtime_error_delete(error);
   check(found, "expected error text");
 }
-static nat_t natural(const uint32_t *data) {
-  return (nat_t){.data = data, .length = data ? 1 : 0};
+static component_value natural(uint32_t number) {
+  component_value result = {.kind = WASMTIME_COMPONENT_LIST};
+  wasmtime_component_vallist_new_uninit(&result.of.list, number ? 1 : 0);
+  if (number) result.of.list.data[0] = (component_value){
+    .kind = WASMTIME_COMPONENT_U32, .of.u32 = number
+  };
+  return result;
 }
-static bool equal_nat(const nat_t *value, uint32_t expected) {
-  return value->length == (expected ? 1u : 0u)
-    && (!expected || value->data[0] == expected);
+static value copied(component_value item) { return (value){.value = item}; }
+static value callable(function item) { return (value){.function = item}; }
+static bool equal_nat(const component_value *item, uint32_t expected) {
+  return item->kind == WASMTIME_COMPONENT_LIST
+    && item->of.list.size == (expected ? 1u : 0u)
+    && (!expected || (item->of.list.data[0].kind == WASMTIME_COMPONENT_U32
+      && item->of.list.data[0].of.u32 == expected));
+}
+static void clear(value *item) {
+  if (item->function) ok(reviewedcallbacks_wasmtime_function_close(
+    session, &item->function));
+  else wasmtime_component_val_delete(&item->value);
+  *item = (value){0};
 }
 static int loaded(struct dl_phdr_info *info, size_t size, void *raw) {
   (void)size;
@@ -50,84 +67,101 @@ static int loaded(struct dl_phdr_info *info, size_t size, void *raw) {
 typedef struct {
   unsigned calls, releases;
   bool fail;
-  uint32_t reply;
 } state_t;
 static void release(void *data) { ++((state_t *)data)->releases; }
-static wasmtime_error_t *visit_callback(void *data, const nat_t *value, nat_t *out) {
+static wasmtime_error_t *visit_callback(void *data, const component_value *args,
+    size_t count, component_value *out) {
   state_t *state = data; ++state->calls;
-  if (value->length > 1 || (value->length == 1 && value->data[0] >= 5))
+  if (count != 1 || args[0].kind != WASMTIME_COMPONENT_LIST
+      || args[0].of.list.size > 1
+      || (args[0].of.list.size
+        && (args[0].of.list.data[0].kind != WASMTIME_COMPONENT_U32
+          || args[0].of.list.data[0].of.u32 >= 5)))
     return wasmtime_error_new("Lean supplied an invalid Fin");
   if (state->fail) return wasmtime_error_new("callback Fin sentinel");
-  *out = *value; return NULL;
+  *out = natural(args[0].of.list.size ? args[0].of.list.data[0].of.u32 : 0);
+  return NULL;
 }
-static wasmtime_error_t *apply_callback(void *data, const nat_t *value, nat_t *out) {
+static wasmtime_error_t *apply_callback(void *data, const component_value *args,
+    size_t count, component_value *out) {
   state_t *state = data; ++state->calls;
-  state->reply = (value->length ? value->data[0] : 0) + 1;
-  *out = natural(&state->reply); return NULL;
+  if (count != 1 || args[0].kind != WASMTIME_COMPONENT_LIST
+      || args[0].of.list.size > 1
+      || (args[0].of.list.size
+        && args[0].of.list.data[0].kind != WASMTIME_COMPONENT_U32))
+    return wasmtime_error_new("invalid Nat callback input");
+  uint32_t number = args[0].of.list.size ? args[0].of.list.data[0].of.u32 : 0;
+  *out = natural(number + 1); return NULL;
 }
 
 int main(void) {
-  reviewedcallbacks_wasmtime *session = NULL;
   ok(reviewedcallbacks_wasmtime_open(&session));
   check(session != NULL, "session opens");
-  uint32_t two_value = 2, three_value = 3, four_value = 4;
-  uint32_t eight_value = 8, nine_value = 9, ten_value = 10;
-  nat_t zero = natural(NULL), two = natural(&two_value), three = natural(&three_value);
-  nat_t four = natural(&four_value), eight = natural(&eight_value);
-  nat_t nine = natural(&nine_value), ten = natural(&ten_value), output = {0};
 
-  state_t host_state = {0}; function_t host = 0;
-  ok(reviewedcallbacks_wasmtime_visit_callback0_create(
-    session, visit_callback, &host_state, release, &zero, &host));
+  state_t host_state = {0}; function host = 0;
+  ok(reviewedcallbacks_wasmtime_callback_create(session,
+    "function-590d6ac46e02e46365788a64", visit_callback, &host_state,
+    release, &host));
   check(host != 0, "host callback created");
-  ok(reviewedcallbacks_wasmtime_value_visit(session, host, &output));
-  check(equal_nat(&output, 10), "checked host callback arguments");
-  reviewedcallbacks_scalar_nat_t_clear(&output);
+  value argument = callable(host), output = {0};
+  ok(reviewedcallbacks_wasmtime_invoke(session, "visit", &argument, 1, &output));
+  check(equal_nat(&output.value, 10), "checked host callback arguments");
+  clear(&output);
   check(host_state.calls == 5, "host receives every Fin 5 value");
   host_state.fail = true;
-  rejected(reviewedcallbacks_wasmtime_value_visit(session, host, &output),
-    "callback Fin sentinel");
-  host_state.fail = false;
-  ok(reviewedcallbacks_wasmtime_value_visit(session, host, &output));
-  check(equal_nat(&output, 10), "host callback recovers");
-  reviewedcallbacks_scalar_nat_t_clear(&output);
+  output = copied((component_value){.kind = WASMTIME_COMPONENT_U32, .of.u32 = 991});
+  rejected(reviewedcallbacks_wasmtime_invoke(session, "visit", &argument, 1,
+    &output), "callback Fin sentinel");
+  clear(&output); host_state.fail = false;
+  ok(reviewedcallbacks_wasmtime_invoke(session, "visit", &argument, 1, &output));
+  check(equal_nat(&output.value, 10), "host callback recovers"); clear(&output);
   ok(reviewedcallbacks_wasmtime_function_close(session, &host));
   check(host == 0 && host_state.releases == 1, "host callback closes once");
 
-  function_t scaler = 0;
-  ok(reviewedcallbacks_wasmtime_value_scaler(session, &three, &scaler));
-  check(scaler != 0, "scaler closure created");
-  ok(reviewedcallbacks_wasmtime_scaler_call(session, scaler, &four, &output));
-  check(equal_nat(&output, 12), "bounded closure argument");
-  reviewedcallbacks_scalar_nat_t_clear(&output);
-  rejected(reviewedcallbacks_wasmtime_scaler_call(session, scaler, &ten, &output),
+  value three = copied(natural(3));
+  ok(reviewedcallbacks_wasmtime_invoke(session, "scaler", &three, 1, &output));
+  value scaler = output; output = (value){0};
+  check(scaler.function != 0, "scaler closure created");
+  value scaler_args[] = {scaler, copied(natural(4))};
+  ok(reviewedcallbacks_wasmtime_invoke(session,
+    "invoke-function-1a4ceb80e43c4de091fadb1b", scaler_args, 2, &output));
+  check(equal_nat(&output.value, 12), "bounded closure argument"); clear(&output);
+  clear(&scaler_args[1]); scaler_args[1] = copied(natural(10));
+  rejected(reviewedcallbacks_wasmtime_invoke(session,
+    "invoke-function-1a4ceb80e43c4de091fadb1b", scaler_args, 2, &output),
     "arg0 is not below its Fin 10 bound");
-  ok(reviewedcallbacks_wasmtime_scaler_call(session, scaler, &nine, &output));
-  check(equal_nat(&output, 27), "closure remains usable");
-  reviewedcallbacks_scalar_nat_t_clear(&output);
-  ok(reviewedcallbacks_wasmtime_function_close(session, &scaler));
-  check(scaler == 0, "scaler closes");
+  clear(&scaler_args[1]); scaler_args[1] = copied(natural(9));
+  ok(reviewedcallbacks_wasmtime_invoke(session,
+    "invoke-function-1a4ceb80e43c4de091fadb1b", scaler_args, 2, &output));
+  check(equal_nat(&output.value, 27), "closure remains usable"); clear(&output);
+  clear(&scaler_args[1]); clear(&scaler);
+  check(scaler.function == 0, "scaler closes"); clear(&three);
 
-  function_t counter = 0;
-  ok(reviewedcallbacks_wasmtime_value_counter(session, &eight, &counter));
-  check(counter != 0, "counter closure created");
-  ok(reviewedcallbacks_wasmtime_counter_call(session, counter, &four, &output));
-  check(equal_nat(&output, 2), "Lean-produced Fin result");
-  reviewedcallbacks_scalar_nat_t_clear(&output);
-  ok(reviewedcallbacks_wasmtime_function_close(session, &counter));
-  check(counter == 0, "counter closes");
+  value eight = copied(natural(8));
+  ok(reviewedcallbacks_wasmtime_invoke(session, "counter", &eight, 1, &output));
+  value counter = output; output = (value){0};
+  check(counter.function != 0, "counter closure created");
+  value counter_args[] = {counter, copied(natural(4))};
+  ok(reviewedcallbacks_wasmtime_invoke(session,
+    "invoke-function-ffd65d943ca6f04f54c59370", counter_args, 2, &output));
+  check(equal_nat(&output.value, 2), "Lean-produced Fin result"); clear(&output);
+  clear(&counter_args[1]); clear(&counter);
+  check(counter.function == 0, "counter closes"); clear(&eight);
 
-  state_t apply_state = {0}; function_t apply = 0;
-  ok(reviewedcallbacks_wasmtime_apply_callback0_create(
-    session, apply_callback, &apply_state, release, &apply));
+  state_t apply_state = {0}; function apply = 0;
+  ok(reviewedcallbacks_wasmtime_callback_create(session,
+    "function-3dd0024a008567674c9bb4aa", apply_callback, &apply_state,
+    release, &apply));
   check(apply != 0, "ordinary callback created");
-  ok(reviewedcallbacks_wasmtime_value_apply(session, apply, &two, &output));
-  check(equal_nat(&output, 3), "unrefined callback stays direct");
-  reviewedcallbacks_scalar_nat_t_clear(&output);
+  value apply_args[] = {callable(apply), copied(natural(2))};
+  ok(reviewedcallbacks_wasmtime_invoke(session, "apply", apply_args, 2, &output));
+  check(equal_nat(&output.value, 3), "unrefined callback stays direct");
+  clear(&output); clear(&apply_args[1]);
   ok(reviewedcallbacks_wasmtime_function_close(session, &apply));
-  check(apply == 0 && apply_state.releases == 1, "ordinary callback closes once");
+  check(apply == 0 && apply_state.releases == 1,
+    "ordinary callback closes once");
 
-  reviewedcallbacks_wasmtime_close(session);
+  reviewedcallbacks_wasmtime_close(session); session = NULL;
   printf("{\"checks\":%u,\"loadedLibraries\":[", checks);
   bool comma = false; dl_iterate_phdr(loaded, &comma); puts("]}");
   return 0;

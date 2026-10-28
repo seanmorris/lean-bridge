@@ -29,11 +29,11 @@ fn main() -> Result<(), Error> {
     check(&mut checks, counter.call(&n(4))? == n(2), "Lean-produced Fin result");
 
     let mut calls = 0usize;
-    let visited = api::visit(api::with_recovery(|value: BigUint| {
+    let visited = api::visit(|value: BigUint| {
         calls += 1;
         assert!(value < n(5), "Lean supplied an invalid Fin");
         Ok(value)
-    }, n(0)))?;
+    })?;
     check(&mut checks, visited == n(10), "checked host callback arguments");
     check(&mut checks, calls == 5, "host receives every Fin 5 value");
     check(&mut checks, api::apply(|value: BigUint| Ok(value + n(1)), &n(2))? == n(3),

@@ -4,6 +4,7 @@
  * @file
  */
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
+import { sha256 } from "../../capsule/node.mjs";
 
 const pascal = name => name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("");
 const camel = name => { const value = pascal(name); return value[0].toLowerCase() + value.slice(1); };
@@ -109,13 +110,27 @@ export const compileCopiedJvmModel = ir => {
 		functionNames.add(fn.publicName);
 	}
 	const primitiveName = name => ({ uint8: "UInt8", uint16: "UInt16", uint32: "UInt32", uint64: "UInt64", usize: "USize", isize: "ISize" })[name] ?? pascal(name);
-	for(const [index, callback] of [...surface.callbacks.values()].entries())
+	const callbacks = [...surface.callbacks.values()];
+	const callbackBase = callback => {
+		const signature = callback.type.callable;
+		const structured = [...signature.parameters, signature.result].some(site => site.type.kind !== "primitive");
+		return structured ? `Fn${pascal(callback.field)}` : `Fn${signature.parameters.map(site => primitiveName(site.type.name)).join("")}To${primitiveName(signature.result.type.name)}`;
+	};
+	const callbackBases = callbacks.map(callbackBase);
+	const duplicateCallbackBases = new Set(callbackBases.filter((base, index) =>
+		callbackBases.some((other, otherIndex) => otherIndex !== index && other === base)));
+	for(const [index, callback] of callbacks.entries())
 	{
 		callback.index = index;
 		const signature = callback.type.callable;
 		const structured = [...signature.parameters, signature.result].some(site => site.type.kind !== "primitive");
 		if(structured) callback.structured = true;
-		callback.publicName = structured ? `Fn${pascal(callback.field)}` : `Fn${signature.parameters.map(site => primitiveName(site.type.name)).join("")}To${primitiveName(signature.result.type.name)}`;
+		const base = callbackBases[index];
+		// Refinements can give distinct nominal callback contracts the same erased
+		// Java signature.  Preserve the old readable name when it is unique, and
+		// authenticate only colliding names with their stable Binding IR identity.
+		callback.publicName = duplicateCallbackBases.has(base)
+			? `${base}Id${sha256(callback.type.id).slice(0, 12)}` : base;
 		if(names.has(callback.publicName)) fail(ir.declarations[0], `Java callable name collides: ${callback.publicName}`);
 		names.add(callback.publicName);
 		Object.assign(callback, { nativeType: "MemorySegment", layout: "ADDRESS", size: 8, alignment: 8 });

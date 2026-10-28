@@ -30,14 +30,11 @@ host = proc do |value|
   raise "Lean supplied an invalid Fin" unless value >= 0 && value < 5
   value
 end
-check(API.visit(API.with_recovery(host, 0)) == 10,
+check(API.visit(host) == 10,
       "checked host callback arguments")
 check($calls == 5, "host receives every Fin 5 value")
-before = $calls
-reject(TypeError) { API.visit(host) }
-check($calls == before, "missing recovery stops callback entry")
 sentinel = Class.new(StandardError).new("callback Fin sentinel")
-check(reject { API.visit(API.with_recovery(proc { raise sentinel }, 0)) }.equal?(sentinel),
+check(reject { API.visit(proc { raise sentinel }) }.equal?(sentinel),
       "callback exception identity")
 check(API.apply(proc { |value| value + 1 }, 2) == 3,
       "unrefined callback stays direct")

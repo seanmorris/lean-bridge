@@ -38,13 +38,12 @@ static class Consumer
                 throw new InvalidOperationException("Lean supplied an invalid Fin");
             return value;
         };
-        Check(Api.Visit(new(host, BigInteger.Zero)) == N(10),
+        Check(Api.Visit(host) == N(10),
             "checked host callback arguments");
         Check(calls == 5, "host receives every Fin 5 value");
         var sentinel = new InvalidOperationException("callback Fin sentinel");
         Check(ReferenceEquals(Reject<InvalidOperationException>(() => Api.Visit(
-            new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(
-                _ => throw sentinel, BigInteger.Zero))), sentinel), "callback exception identity");
+            _ => throw sentinel)), sentinel), "callback exception identity");
         Check(Api.Apply(value => value + BigInteger.One, N(2)) == N(3),
             "unrefined callback stays direct");
 

@@ -13,7 +13,6 @@ use function LeanReviewedcallbacks\scaler;
 use function LeanReviewedcallbacks\tile_maker;
 use function LeanReviewedcallbacks\tiles;
 use function LeanReviewedcallbacks\visit;
-use function LeanReviewedcallbacks\with_recovery;
 
 $checks = 0;
 $calls = 0;
@@ -47,12 +46,12 @@ $host = function(BigInteger $value) use (&$calls, $n): BigInteger {
         throw new RuntimeException('Lean supplied an invalid Fin');
     return $value;
 };
-$check(visit(with_recovery($host, $n(0)))->isEqualTo($n(10)),
+$check(visit($host)->isEqualTo($n(10)),
     'checked host callback arguments');
 $check($calls === 5, 'host receives every Fin 5 value');
 $sentinel = new RuntimeException('callback Fin sentinel');
-$check($reject(fn() => visit(with_recovery(fn(BigInteger $_value) => throw $sentinel,
-    $n(0)))) === $sentinel, 'callback exception identity');
+$check($reject(fn() => visit(fn(BigInteger $_value) => throw $sentinel)) === $sentinel,
+    'callback exception identity');
 $check(apply(fn(BigInteger $value) => $value->plus(1), $n(2))->isEqualTo($n(3)),
     'unrefined callback stays direct');
 
