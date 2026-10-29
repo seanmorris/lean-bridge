@@ -1,0 +1,97 @@
+name: Complete dependent-signature acceptance
+
+on:
+  push:
+    paths:
+      - ".github/workflows/dependent-signature-complete.yml"
+      - "docs/consume/**"
+      - "docs/evidence/dependent-signatures-hosted-*/**"
+      - "docs/javascript-typescript.md"
+      - "docs/lean/**"
+      - "docs/php.md"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*dependent-signature*.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/dependent-signature-complete-*.test.mjs"
+      - "tests/helpers/dependent-signature-complete-*.mjs"
+      - "tests/helpers/dependent-signature-hosted-*.mjs"
+  pull_request:
+    paths:
+      - ".github/workflows/dependent-signature-complete.yml"
+      - "docs/consume/**"
+      - "docs/evidence/dependent-signatures-hosted-*/**"
+      - "docs/javascript-typescript.md"
+      - "docs/lean/**"
+      - "docs/php.md"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*dependent-signature*.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/dependent-signature-complete-*.test.mjs"
+      - "tests/helpers/dependent-signature-complete-*.mjs"
+      - "tests/helpers/dependent-signature-hosted-*.mjs"
+  workflow_dispatch:
+  # One low-cost replay in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "19 9 * * 0"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependent-signature-complete-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out complete source history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Replay all fourteen immutable host archives
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/dependent-signature-complete
+          node --test --test-concurrency=1 \
+            tests/dependent-signature-complete-hosted-evidence.test.mjs \
+            | tee build/dependent-signature-complete/evidence.tap
+      - name: Audit all 34 promoted cells and generated documentation
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test --test-concurrency=1 \
+            tests/dependent-signature-complete-promotion.test.mjs \
+            | tee build/dependent-signature-complete/promotion.tap
+      - name: Preserve the complete dependent-signature audit
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependent-signature-complete-${{ github.run_id }}
+          path: build/dependent-signature-complete/
+          if-no-files-found: error
+          retention-days: 14

@@ -206,6 +206,32 @@ const hasDependentCheckedRecordMatrixEvidence = document =>
 	dependentCheckedRecordMatrixEvidenceIds.every(id =>
 		document.evidence.some(item => item.id === id));
 const dependentCheckedRecordMatrixReference = "[Hosted dependent checked-record acceptance](../evidence/dependent-checked-record-promotion.md) covers top-level copied parameters and results in all seventeen consumer profiles through eleven independently retained host archives and all four ordinary/reviewed full/result-only routes. The proof-free host value carries `bound` and `below : Fin bound` as payload fields. Full packages rebuild host inputs through `DependentRecords.mkDependent`, reject `below >= bound` before Lean code runs, preserve rejected caller values and recover on a later valid call. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain separate work.";
+const dependentSignatureCompleteEvidenceId
+	= "hosted-dependent-signature-complete";
+const dependentSignatureCompleteProfiles = new Set([
+	"node-javascript", "node-typescript", "browser-javascript"
+	, "browser-react", "browser-worker", "c", "cpp", "dotnet", "java"
+	, "kotlin", "php-native", "php-wasm", "python", "ruby", "rust"
+	, "perl", "wit-wasi"
+]);
+const hasDependentSignatureCompleteEvidence = document => {
+	const evidence = document.evidence.filter(item =>
+		item.id === dependentSignatureCompleteEvidenceId);
+	if(evidence.length !== 1 || evidence[0].kind !== "installed") return false;
+	for(const profile of dependentSignatureCompleteProfiles)
+		for(const path of ["ordinary-source", "reviewed-ir"])
+		{
+			const observations = document.observations.filter(item =>
+				item.profiles.includes(profile) && item.path === path
+				&& item.shapes.includes("dependent")
+				&& item.positions.includes("signature"));
+			if(observations.length !== 1 || !document.stages.every(stage =>
+				observations[0].stages[stage]?.state === "passed"
+				&& observations[0].stages[stage].evidence.includes(
+					dependentSignatureCompleteEvidenceId))) return false;
+		}
+	return true;
+};
 const hostNullCompleteEvidenceId = "hosted-host-null-complete-installed";
 const hostNullCompleteProfiles = new Set([
 	"node-javascript", "node-typescript", "browser-javascript"
@@ -310,6 +336,18 @@ const dependentCheckedRecordMatrixGuide = (
 	const evidence = reference.replace(/reference\/types\.md$/u
 		, "evidence/dependent-checked-record-promotion.md");
 	return `[Hosted dependent checked-record acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The proof-free host value carries the tested runtime bound and bounded value. Full packages validate inputs with the selected dependent constructor before Lean execution; standalone result-only packages expose Lean-produced values without checked-input metadata. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain outside this evidence.`;
+};
+const dependentSignatureCompleteGuide = (
+	document, profiles, reference
+) => {
+	if(!hasDependentSignatureCompleteEvidence(document)) return null;
+	const selected = profiles.filter(profile =>
+		dependentSignatureCompleteProfiles.has(profile));
+	assert.equal(selected.length, profiles.length
+		, "Complete dependent-signature evidence must cover every rendered profile");
+	const evidence = reference.replace(/reference\/types\.md$/u
+		, "evidence/dependent-signatures-hosted-20261028/index.json");
+	return `[Complete hosted dependent-signature acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit \`Nat\` bound followed by \`Fin bound\`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.`;
 };
 const hostNullCompleteGuide = (document, profiles, reference) => {
 	if(!hasHostNullCompleteEvidence(document)) return null;
@@ -459,6 +497,8 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		document, profiles, reference);
 	const dependentCheckedRecordMatrix = dependentCheckedRecordMatrixGuide(
 		document, profiles, reference);
+	const dependentSignatureComplete = dependentSignatureCompleteGuide(
+		document, profiles, reference);
 	const hostNullComplete = hostNullCompleteGuide(
 		document, profiles, reference);
 	const directProofErasureComplete = directProofErasureCompleteGuide(
@@ -472,6 +512,8 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		, ...(zeroPayloadMatrix ? ["", zeroPayloadMatrix] : [])
 		, ...(dependentCheckedRecordMatrix
 			? ["", dependentCheckedRecordMatrix] : [])
+		, ...(dependentSignatureComplete
+			? ["", dependentSignatureComplete] : [])
 		, ...(callbackSubtype ? ["", callbackSubtype] : [])
 		, ...(ownedSubtype ? ["", ownedSubtype] : [])
 		, ...(hostNullComplete ? ["", hostNullComplete] : [])
