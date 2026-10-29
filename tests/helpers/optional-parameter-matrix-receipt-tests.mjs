@@ -133,7 +133,8 @@ const assertFocusedProducer = (source, specification) => {
 };
 const focusedCalls = focusedProducers.map(item => `./${item.file}`);
 const assertFocusedCaller = source => {
-	assert.ok(source.includes("on:\n  workflow_dispatch:\n"));
+	assert.ok(source.includes("on:\n  workflow_call:\n"));
+	assert.ok(source.includes("  workflow_dispatch:\n"));
 	assert.ok(source.includes("  schedule:\n"));
 	assert.deepEqual([...source.matchAll(/^ {4}uses: (\.\/\.github\/workflows\/[a-z0-9-]+\.yml)$/gmu)]
 		.map(match => match[1]), focusedCalls);

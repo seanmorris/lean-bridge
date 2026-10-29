@@ -1,6 +1,7 @@
 name: Complete optional-parameter matrix
 
 on:
+  workflow_call:
   workflow_dispatch:
   # Reconcile one bounded exact-head receipt after the five recurring producers.
   schedule:

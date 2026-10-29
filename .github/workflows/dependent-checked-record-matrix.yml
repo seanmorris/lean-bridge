@@ -44,6 +44,15 @@ on:
       - "tests/dependent-checked-record-promotion.test.mjs"
       - "tests/helpers/dependent-checked-record-*.mjs"
   workflow_dispatch:
+    inputs:
+      suite:
+        description: "Bounded matrix to execute"
+        required: true
+        default: dependent-checked-record
+        type: choice
+        options:
+          - dependent-checked-record
+          - optional-parameter
   schedule:
     - cron: "41 7 * * 1"
 
@@ -56,6 +65,7 @@ concurrency:
 
 jobs:
   audit:
+    if: inputs.suite != 'optional-parameter'
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
@@ -92,3 +102,8 @@ jobs:
           path: build/dependent-checked-record-matrix/
           if-no-files-found: error
           retention-days: 14
+
+  optional-parameter:
+    name: Complete optional-parameter matrix
+    if: inputs.suite == 'optional-parameter'
+    uses: ./.github/workflows/optional-parameter-complete.yml
