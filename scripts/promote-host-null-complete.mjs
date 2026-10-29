@@ -10,6 +10,7 @@ import { execFileSync } from "node:child_process";
 import { createReadStream } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { sha256 } from "../src/capsule/node.mjs";
 import { renderReferenceDocuments } from "./generate-reference-docs.mjs";
 import {
 	hostNullCompletePromotionReference, promoteHostNullComplete
@@ -19,7 +20,11 @@ import {
 	, renderHostNullCompleteDocumentation
 } from "../tests/helpers/host-null-complete-documentation.mjs";
 import {
-	readPromotionInventory, stagePromotionInventory
+	hostNullPerlRequalifiedEvidenceIds, hostNullPerlSharedSource
+	, refreshHostNullPerlEvidence
+} from "../tests/helpers/host-null-complete-perl-evidence-refresh.mjs";
+import {
+	readPromotionInventory, stageEvidenceRefresh, stagePromotionInventory
 } from "../tests/helpers/type-surface-promotion-io.mjs";
 import {
 	commitPromotionFiles, promotionFileIdentity
@@ -32,6 +37,9 @@ const checkOnly = process.argv[2] === "--check";
 const root = process.cwd();
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 1024 * 1024
+});
+const gitBytes = arguments_ => execFileSync("git", arguments_, {
+	maxBuffer: 1024 * 1024
 });
 const head = git(["rev-parse", "HEAD"]).trim();
 const clean = () => {
@@ -47,8 +55,9 @@ const [irSchema, consumers] = await Promise.all([
 	readFile("schema/binding-ir.schema.json", "utf8").then(JSON.parse)
 	, readFile("docs/consumer-support.v1.json", "utf8").then(JSON.parse)
 ]);
+const retain = { retainEvidence: hostNullPerlRequalifiedEvidenceIds };
 const original = await readPromotionInventory(createReadStream(path)
-	, { irSchema, consumers });
+	, { irSchema, consumers }, retain);
 const sources = {};
 for(const [name, documentPath] of Object.entries(
 	hostNullCompleteDocumentationPaths))
@@ -56,8 +65,15 @@ for(const [name, documentPath] of Object.entries(
 renderHostNullCompleteDocumentation(sources);
 
 const reference = await hostNullCompletePromotionReference();
+const currentPerlSource = await readFile(hostNullPerlSharedSource);
+assert.equal(sha256(gitBytes([
+	"show", `${reference.revision}:${hostNullPerlSharedSource}`
+])), sha256(currentPerlSource)
+, "Hosted producer must authenticate the current shared Perl source");
+const refreshedDocument = refreshHostNullPerlEvidence(
+	original.document, reference, sha256(currentPerlSource));
 const promoted = promoteHostNullComplete(
-	original.document, { irSchema, consumers }, reference);
+	refreshedDocument, { irSchema, consumers }, reference);
 const generated = await renderReferenceDocuments({
 	root, inventory: { document: promoted, irSchema, consumers }
 });
@@ -79,9 +95,17 @@ const staging = await mkdtemp(join(root, "build/host-null-complete-promotion-"))
 let installing = false, completed = false;
 try
 {
+	const refreshedPath = join(staging, "refreshed-inventory.json");
+	const refreshedIdentity = await stageEvidenceRefresh(
+		path, refreshedPath, original, refreshedDocument);
+	assert.equal(refreshedIdentity.bytes, original.source.bytes
+		, "Digest-only Perl refresh must preserve inventory size");
+	const refreshed = {
+		...original, document: refreshedDocument, source: refreshedIdentity
+	};
 	const staged = join(staging, "inventory.json");
 	const next = await stagePromotionInventory(
-		path, staged, original, promoted);
+		refreshedPath, staged, refreshed, promoted);
 	const files = [{ path, staged, previous: original.source, next }];
 	const documentEntries = Object.entries(documents).entries();
 	for(const [number, [documentPath, content]] of documentEntries)
@@ -105,6 +129,7 @@ try
 		, cells: 170
 		, observations: promoted.observations.length
 			- original.document.observations.length
+		, refreshedEvidence: hostNullPerlRequalifiedEvidenceIds.length
 		, inventory: next, files: files.map(file => file.path), head
 	}, null, 2) + "\n");
 }

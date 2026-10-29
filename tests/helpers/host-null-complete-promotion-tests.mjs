@@ -46,6 +46,8 @@ const referencePaths = [
 	, "tests/helpers/host-null-complete-ci-tests.mjs"
 	, "tests/helpers/host-null-complete-documentation.mjs"
 	, "tests/helpers/host-null-complete-documentation-tests.mjs"
+	, "tests/helpers/host-null-complete-perl-evidence-refresh.mjs"
+	, "tests/helpers/host-null-complete-perl-evidence-refresh-tests.mjs"
 	, "tests/helpers/host-null-complete-promotion.mjs"
 	, "tests/helpers/host-null-complete-promotion-tests.mjs"
 	, "tests/helpers/host-null-complete-promotion-transaction-tests.mjs"

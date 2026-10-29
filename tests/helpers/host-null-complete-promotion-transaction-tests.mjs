@@ -14,10 +14,14 @@ test("complete HostNull promotion is clean, checkable and transactional", () => 
 	assert.match(source, /HostNull promotion requires a clean committed checkout/u);
 	assert.match(source, /readPromotionInventory\(createReadStream\(path\)/u);
 	assert.match(source, /hostNullCompletePromotionReference\(\)/u);
+	assert.match(source, /refreshHostNullPerlEvidence\(/u);
 	assert.match(source, /promoteHostNullComplete\(/u);
 	assert.match(source, /renderReferenceDocuments\(/u);
 	assert.match(source, /renderHostNullCompleteDocumentation\(/u);
 	assert.match(source, /stagePromotionInventory\(/u);
+	assert.match(source, /stageEvidenceRefresh\(/u);
+	assert.match(source
+		, /Hosted producer must authenticate the current shared Perl source/u);
 	assert.match(source, /commitPromotionFiles\(\{ root, staging, files \}\)/u);
 	assert.match(source, /if\(!checkOnly\)[\s\S]*installing = true;[\s\S]*commitPromotionFiles/u);
 	assert.match(source, /HostNull promotion recovery files retained/u);
@@ -33,4 +37,6 @@ test("complete HostNull promotion keeps generated and manual docs together", () 
 		, /files\.push\(\{ path: documentPath, staged, previous, next \}\)/u);
 	assert.match(source, /mode: checkOnly \? "check" : "promote"/u);
 	assert.match(source, /cells: 170/u);
+	assert.match(source
+		, /refreshedEvidence: hostNullPerlRequalifiedEvidenceIds\.length/u);
 });
