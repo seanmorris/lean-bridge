@@ -8,6 +8,75 @@ import { compilePrimitiveCSurface, rejectPrimitiveSurface } from "./primitive-su
 import { gmpAddress, gmpInput, gmpInteger, gmpName, gmpOutput, renderGmpValues } from "./gmp-values.mjs";
 import { generateCallableBorrowViews } from "./native-callables.mjs";
 
+const gmpIntegerLiteral = (value, name) => {
+	const number = BigInt(value), match = /^(u?)int(8|16|32|64)$/u.exec(name);
+	if(!match) throw new TypeError(`Unsupported GMP facade integer: ${name}`);
+	const width = Number(match[2]), macro = `${match[1] ? "U" : ""}INT${width}_C`;
+	if(match[1]) return `${macro}(${number})`;
+	const maximum = (1n << BigInt(width - 1)) - 1n;
+	if(number === -maximum - 1n)
+		return `(-${macro}(${maximum}) - ${macro}(1))`;
+	return number < 0n ? `(-${macro}(${-number}))` : `${macro}(${number})`;
+};
+
+const gmpDefaultAssignments = (surface, value, copy, expression, stem, state) => {
+	if(copy.compound === "option")
+	{
+		const present = value.kind === "option-some";
+		const lines = [`${expression}.has_value = ${present ? "1" : "0"};`];
+		if(present) lines.push(...gmpDefaultAssignments(
+			surface, value.value, copy.fields[0].type, `${expression}.value`
+			, stem, state));
+		return lines;
+	}
+	if(gmpInteger(copy))
+		return [`mpz_set_str(${expression}, "${value.value}", 10);`];
+	if(copy.scalarName === "string")
+	{
+		const bytes = [...new TextEncoder().encode(value.value)];
+		if(!bytes.length) return [];
+		const name = `${stem}_bytes_${state.index++}`;
+		return [
+			`static const char ${name}[] = { ${bytes.map(byte =>
+				`(char)0x${byte.toString(16).padStart(2, "0")}`).join(", ")} };`
+			, `${expression}.data = ${name};`
+			, `${expression}.length = ${bytes.length};`
+		];
+	}
+	if(copy.scalarName === "char")
+		return [`${expression} = UINT32_C(0x${value.value.codePointAt(0)
+			.toString(16)});`];
+	if(copy.scalarName === "bool")
+		return [`${expression} = ${value.value ? "true" : "false"};`];
+	if(copy.scalarName === "unit") return [`${expression} = (uint8_t)0;`];
+	if(value.kind === "integer")
+		return [`${expression} = ${gmpIntegerLiteral(
+			value.value, copy.scalarName)};`];
+	throw new TypeError(`Unsupported GMP facade default kind: ${value.kind}`);
+};
+
+const gmpDefaultLocal = (surface, value, copy, stem, state) => {
+	const name = `${stem}_${state.index++}`, type = gmpName(surface, copy);
+	const lines = [], cleanup = [];
+	if(gmpInteger(copy))
+	{
+		lines.push(`mpz_t ${name};`, `mpz_init(${name});`);
+		cleanup.push(`mpz_clear(${name});`);
+	}
+	else if(copy.aggregate)
+	{
+		lines.push(`${type} ${name};`, `${type}_init(&${name});`);
+		cleanup.push(`${type}_clear(&${name});`);
+	}
+	else lines.push(`${type} ${name} = 0;`);
+	lines.push(...gmpDefaultAssignments(
+		surface, value, copy, name, stem, state));
+	return {
+		argument: copy.aggregate ? gmpAddress(copy, name) : name
+		, cleanup, lines
+	};
+};
+
 /**
  * Reject public GMP identifiers that would collide before native compilation.
  *
@@ -49,6 +118,62 @@ export const generateGmpProjection = ir => {
 	const owned = copy => `${p}_owned_${copy.field}`, publicOwned = copy => `${g}_owned_${copy.field}`;
 	const input = (copy, name) => callable(copy) ? `${gmpName(surface, copy)} const* ${name}` : gmpInput(surface, copy, name);
 	const output = (copy, name) => callable(copy) ? `${publicOwned(copy)}** ${name}` : gmpOutput(surface, copy, name);
+	const defaultWrappers = fn => {
+		const declaration = fn.declaration;
+		const first = declaration.parameters.findIndex(parameter =>
+			parameter.optional);
+		if(first < 0) return [];
+		const nonTrailing = declaration.parameters.slice(first).some(
+			parameter => !parameter.optional);
+		if(nonTrailing) rejectPrimitiveSurface(declaration
+			, "C GMP facade has a default before a required positional parameter");
+		const parameterCopies = declaration.parameters.map(parameter =>
+			site(parameter.type));
+		const result = site(declaration.result.type), wrappers = [];
+		const parameterCount = declaration.parameters.length;
+		for(let supplied = first; supplied < parameterCount; supplied++)
+		{
+			const state = { index: 0 };
+			const defaults = declaration.parameters.slice(supplied).map(
+				(parameter, index) => gmpDefaultLocal(
+					surface, parameter.default, parameterCopies[supplied + index]
+					, `${fn.name}_default_${supplied}_${index}`, state));
+			const parameters = declaration.parameters.slice(0, supplied)
+				.map((parameter, index) => input(
+					parameterCopies[index], `_lb_arg${index}`));
+			if(!unit(result)) parameters.push(output(result, "out"));
+			parameters.push(`${p}_error* error`);
+			const args = declaration.parameters.slice(0, supplied)
+				.map((parameter, index) => `_lb_arg${index}`);
+			args.push(...defaults.map(item => item.argument));
+			if(!unit(result)) args.push("out");
+			args.push("error");
+			const helper = `${fn.name}_default_${supplied}`;
+			wrappers.push({
+				helper
+				, source: [
+					`static inline ${p}_status ${helper}(${parameters.join(", ")}) {`
+					, ...defaults.flatMap(item => item.lines.map(line => `  ${line}`))
+					, `  ${p}_status _lb_status = ${fn.name}(${args.join(", ")});`
+					, ...defaults.slice().reverse().flatMap(item =>
+						item.cleanup.map(line => `  ${line}`))
+					, "  return _lb_status;", "}"
+				].join("\n")
+			});
+		}
+		const maximum = declaration.parameters.length
+			+ (unit(result) ? 0 : 1) + 1;
+		const select = `${fn.name.toUpperCase()}_DEFAULT_SELECT`;
+		const candidates = [fn.name
+			, ...wrappers.slice().reverse().map(wrapper => wrapper.helper)];
+		return [
+			...wrappers.map(wrapper => wrapper.source)
+			, `#define ${select}(${Array.from({ length: maximum }
+				, (_, index) => `_${index + 1}`).join(", ")}, NAME, ...) NAME`
+			, `#define ${fn.name}(...) ${select}(__VA_ARGS__, `
+				+ `${candidates.join(", ")})(__VA_ARGS__)`
+		];
+	};
 	const errorValues = [["NONE", 0], ["INVALID_ARGUMENT", 1], ["RUNTIME_UNAVAILABLE", 2], ...ir.errors.map((error, i) => [cIdentifier(error.name).toUpperCase(), i + 100]), ["UNEXPECTED", 65535]];
 	const statusNames = ["OK", "INVALID_ARGUMENT", "RUNTIME_UNAVAILABLE", "RUNTIME_REJECTED", "DECLARED_ERROR", "UNEXPECTED_ERROR"];
 	const describe = (name, result, parameters, args) => { const fn = { name, result, parameters, args }; functions.push(fn); return `${result} ${name}(${parameters.join(", ")})`; };
@@ -157,6 +282,7 @@ export const generateGmpProjection = ir => {
 	}
 	for(const callback of converters) for(const [raw, name] of [[callback.name, gmpName(surface, callback)], [`${callback.name}_fn`, `${gmpName(surface, callback)}_fn`], [owned(callback), publicOwned(callback)]]) aliases.push(`typedef ${name} ${raw};`);
 	for(const fn of functions) aliases.push(`static inline ${fn.result.replace(`${g}_`, `${p}_`)} ${fn.name.replace(`${g}_`, `${p}_`)}(${fn.parameters.join(", ").replaceAll(`${g}_`, `${p}_`)}) { ${fn.result === "void" ? "" : "return "}${fn.name}(${fn.args.join(", ")}); }`);
+	aliases.push(...surface.functions.flatMap(defaultWrappers));
 	const header = `#pragma once
 #include <stdbool.h>
 #include <stddef.h>

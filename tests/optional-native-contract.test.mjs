@@ -10,6 +10,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
+import { generateGmpProjection } from "../src/backends/c/gmp-projection.mjs";
 import { generateCppBindingPackage } from "../src/backends/cpp/generate.mjs";
 import { optionalParameterIr } from "./helpers/optional-parameter-ir.mjs";
 
@@ -38,6 +39,23 @@ test("C macros dispatch omitted suffixes to authenticated default wrappers", () 
 	assert.match(header, /defaults_present_default_0_0_0\.has_value = 1;/u);
 	assert.match(implementation, /#define DEFAULTS_DISABLE_DEFAULT_ARGUMENTS 1/u);
 	assert.doesNotMatch(implementation, /defaults_word_default_0/u);
+});
+
+test("prepared C/GMP facade preserves authenticated omission", () => {
+	const header = generateGmpProjection(optionalParameterIr())
+		.files["include/defaults.h"];
+	const names = [
+		"word", "natural", "text", "character", "maybe", "present", "unit_value"
+	];
+	for(const name of names)
+	{
+		assert.match(header, new RegExp(
+			`defaults_${name}_default_0`, "u"), name);
+		assert.match(header, new RegExp(
+			`#define defaults_${name}\\(\\.\\.\\.\\)`, "u"), name);
+	}
+	assert.match(header, /mpz_set_str\([^,]+, "184467440737095516160", 10\)/u);
+	assert.match(header, /\.has_value = 1;/u);
 });
 
 test("C rejects a positional default before a required argument", () => {
@@ -124,17 +142,24 @@ test("C11 matrix caller compiles and C++ caller names every optional case", asyn
 	await mkdir(join(root, "src"));
 	const ir = optionalParameterIr();
 	const c = generateCBindingPackage(ir);
+	const gmp = generateGmpProjection(ir);
 	const cpp = generateCppBindingPackage(ir);
 	for(const [path, source] of Object.entries(c))
 		if(path.endsWith(".h") || path.endsWith(".c"))
 			await writeFile(join(root, path), source);
 	await writeFile(join(root, "include/defaults.hpp"), cpp["include/defaults.hpp"]);
+	for(const [path, source] of Object.entries(gmp.files))
+		if(path.endsWith(".h"))
+		{
+			await mkdir(join(root, "gmp", path.split("/").slice(0, -1).join("/"))
+				, { recursive: true });
+			await writeFile(join(root, "gmp", path), source);
+		}
 	await writeFile(join(root, "consumer.c"), await readFile(
 		"tests/fixtures/optional-parameter-consumers/c.c"));
 	const options = { cwd: root, encoding: "utf8", stdio: "pipe" };
 	execFileSync("cc", ["-std=c11", "-Wall", "-Wextra", "-Werror"
-		, "-Iinclude", "-Iinternal", "-fsyntax-only", "src/defaults.c"
-		, "consumer.c"], options);
+		, "-Igmp/include", "-fsyntax-only", "consumer.c"], options);
 	const cppSource = await readFile(
 		"tests/fixtures/optional-parameter-consumers/cpp.cpp", "utf8");
 	for(const name of [

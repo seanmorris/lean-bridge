@@ -8,9 +8,12 @@
 static unsigned checks;
 #define CHECK(condition) do { assert(condition); ++checks; } while (0)
 
-static int nat_is(const defaults_nat *value, const uint32_t *data, size_t length) {
-  return value->length == length
-      && (length == 0 || memcmp(value->data, data, length * sizeof(uint32_t)) == 0);
+static int nat_is(mpz_srcptr value, const char *decimal) {
+  mpz_t expected;
+  mpz_init_set_str(expected, decimal, 10);
+  const int equal = mpz_cmp(value, expected) == 0;
+  mpz_clear(expected);
+  return equal;
 }
 
 int main(void) {
@@ -20,20 +23,16 @@ int main(void) {
   CHECK(defaults_word(UINT32_C(7), &word, &error) == DEFAULTS_STATUS_OK && word == 7);
   CHECK(defaults_word(UINT32_C(11), &word, &error) == DEFAULTS_STATUS_OK && word == 11);
 
-  const uint32_t large[] = {UINT32_C(0), UINT32_C(0), UINT32_C(10)};
-  const uint32_t eleven[] = {UINT32_C(11)};
-  const defaults_nat large_input = {large, 3, NULL, NULL};
-  const defaults_nat eleven_input = {eleven, 1, NULL, NULL};
-  defaults_nat natural = {0};
-  CHECK(defaults_natural(&natural, &error) == DEFAULTS_STATUS_OK
-      && nat_is(&natural, large, 3));
-  defaults_nat_clear(&natural);
-  CHECK(defaults_natural(&large_input, &natural, &error) == DEFAULTS_STATUS_OK
-      && nat_is(&natural, large, 3));
-  defaults_nat_clear(&natural);
-  CHECK(defaults_natural(&eleven_input, &natural, &error) == DEFAULTS_STATUS_OK
-      && nat_is(&natural, eleven, 1));
-  defaults_nat_clear(&natural);
+  mpz_t large_input, eleven_input, natural;
+  mpz_init_set_str(large_input, "184467440737095516160", 10);
+  mpz_init_set_ui(eleven_input, 11);
+  mpz_init(natural);
+  CHECK(defaults_natural(natural, &error) == DEFAULTS_STATUS_OK
+      && nat_is(natural, "184467440737095516160"));
+  CHECK(defaults_natural(large_input, natural, &error) == DEFAULTS_STATUS_OK
+      && nat_is(natural, "184467440737095516160"));
+  CHECK(defaults_natural(eleven_input, natural, &error) == DEFAULTS_STATUS_OK
+      && nat_is(natural, "11"));
 
   const defaults_string default_text = {"Lean\nBridge", 11, NULL, NULL};
   const defaults_string other_text = {"other", 5, NULL, NULL};
@@ -82,7 +81,9 @@ int main(void) {
   CHECK(defaults_unit_value(&error) == DEFAULTS_STATUS_OK);
   CHECK(defaults_unit_value(UINT8_C(0), &error) == DEFAULTS_STATUS_OK);
   CHECK(defaults_present(NULL, &option, &error) == DEFAULTS_STATUS_INVALID_ARGUMENT);
-  CHECK(defaults_natural(NULL, &natural, &error) == DEFAULTS_STATUS_INVALID_ARGUMENT);
+  CHECK(defaults_natural(NULL, natural, &error) == DEFAULTS_STATUS_INVALID_ARGUMENT);
+
+  mpz_clears(large_input, eleven_input, natural, NULL);
 
   printf("optional-parameter-c:%u\n", checks);
   return 0;
