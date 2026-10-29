@@ -1,0 +1,204 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-current-repair-history-isolation-source-history.mjs",
+      "sha256": "0dae3078b1da08374e20e905c2ff18dda516441c8b45b91c02efc0c7f92c8eb3"
+    },
+    {
+      "path": "tests/helpers/current-repair-history-isolation-source-history-tests.mjs",
+      "sha256": "3e4f41d3bc6a3b3643aa397b11cbf99f621f4bf2dfea987dbad14aabf1b591a0"
+    },
+    {
+      "path": "tests/helpers/current-repair-history-isolation-source-history.mjs",
+      "sha256": "4d93f73f3c5cd0d49408c56fa3b5684342ae5a30e06eede9671a6d478bd61223"
+    }
+  ],
+  "implementationAdditions": [],
+  "implementationCommit": "b3515cd8c962d2edf93b130fbedd8675a2d78994",
+  "integrationUpdates": [
+    {
+      "currentSha256": "eb66819e1e0ea2d180906e55455bad5a64cac493150bef1efde2ff89f3e69df4",
+      "edits": [
+        {
+          "current": "import \"./helpers/current-repair-history-isolation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 229
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "03d3fd0f268cea6d0e800b144644b7edbd25862be9201caa63ae719d76f99e61"
+    }
+  ],
+  "milestone": "current-repair-history-isolation-source-v1",
+  "predecessorCommit": "60f148548a236632f099fedb334ff21bb8380191",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Restore the historical Fin hub and optional installed-contract test to their last known-good exact bytes. Keep four current repair histories registered through an existing contract test outside that source lineage, and reconstruct their immutable integration states from the commits that introduced their records.",
+  "updates": [
+    {
+      "currentSha256": "03d3fd0f268cea6d0e800b144644b7edbd25862be9201caa63ae719d76f99e61",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-repair-history-registration-source-history-tests.mjs\";\nimport \"./helpers/optional-parameter-package-checker-repair-source-history-tests.mjs\";\nimport \"./helpers/optional-parameter-wit-identity-repair-source-history-tests.mjs\";\nimport \"./helpers/focused-producer-efficiency-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 229
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "26a88650d672291df9f5fe0b6fc6b8312c95d2c2ecf26f203122596e4ef4ebcd"
+    },
+    {
+      "currentSha256": "53772fdfac610b8458feb463bfe9f094d04a603723adfddd1b0f301fa18fa109",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeOptionalRepairHistoryRegistrationSource, optionalRepairHistoryRegistrationNormalizationPaths } from \"./optional-repair-history-registration-source-history.mjs\";\nimport { beforeOptionalParameterPackageCheckerRepairSource, optionalParameterPackageCheckerRepairNormalizationPaths } from \"./optional-parameter-package-checker-repair-source-history.mjs\";\nimport { beforeOptionalParameterWitIdentityRepairSource, optionalParameterWitIdentityRepairNormalizationPaths } from \"./optional-parameter-wit-identity-repair-source-history.mjs\";\nimport { beforeFocusedProducerEfficiencySource, focusedProducerEfficiencyNormalizationPaths } from \"./focused-producer-efficiency-source-history.mjs\";\n",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterRouteBinderRepairNormalizationPaths\n",
+          "previous": "\t...optionalRepairHistoryRegistrationNormalizationPaths\n\t, ...optionalParameterPackageCheckerRepairNormalizationPaths\n\t, ...optionalParameterWitIdentityRepairNormalizationPaths\n\t, ...focusedProducerEfficiencyNormalizationPaths\n\t, ...optionalParameterRouteBinderRepairNormalizationPaths\n",
+          "start": 219404
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterRouteBinderRepairSource(\n",
+          "previous": "\tlet stage = beforeOptionalRepairHistoryRegistrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterPackageCheckerRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterWitIdentityRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeFocusedProducerEfficiencySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterRouteBinderRepairSource(\n",
+          "start": 274587
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5a1ec1bc47b9253fdef5afe5fc0e4877c82a14b429752624a9b1e2de5ae7b94d"
+    },
+    {
+      "currentSha256": "588325994e00bd9dab6641d8d4d5eea903c8a4ee276e2542f452579427dd69b1",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryRecordSource }\n",
+          "previous": "import { beforeFinRefinementSource }\n\tfrom \"./fin-refinement-source-history.mjs\";\nimport { sourceAtFinHistoryMilestone }\n",
+          "start": 707
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryRecordSource(\n\t\t\tfocusedProducerEfficiencyHistoryPath, update.path\n\t\t\t, update.currentSha256);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "start": 2651
+        },
+        {
+          "current": "\t\tassert.equal(beforeFocusedProducerEfficiencySource(\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n",
+          "start": 2987
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tfocusedProducerEfficiencyHistoryPath, addition.path, addition.sha256))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256))\n",
+          "start": 3568
+        }
+      ],
+      "path": "tests/helpers/focused-producer-efficiency-source-history-tests.mjs",
+      "previousSha256": "4888846b0d93622fbfce8230a6c5fea68104ef6f034859ca84ffe7d1407e1212"
+    },
+    {
+      "currentSha256": "3ceaa57623453978f9d3b2d87ff95abaa336492db13547815285fe3375944761",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryRecordSource }\n",
+          "previous": "import { beforeFinRefinementSource }\n\tfrom \"./fin-refinement-source-history.mjs\";\nimport { sourceAtFinHistoryMilestone }\n",
+          "start": 837
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryRecordSource(\n\t\t\toptionalParameterPackageCheckerRepairHistoryPath, update.path\n\t\t\t, update.currentSha256);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "start": 2681
+        },
+        {
+          "current": "\t\tassert.equal(beforeOptionalParameterPackageCheckerRepairSource(\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n",
+          "start": 3053
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\toptionalParameterPackageCheckerRepairHistoryPath, addition.path\n\t\t\t, addition.sha256)), addition.sha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256)), addition.sha256, addition.path);\n",
+          "start": 3658
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-package-checker-repair-source-history-tests.mjs",
+      "previousSha256": "1284209501b59fe49215951943df7785c32d6bf625533c8dd2e56595799821b0"
+    },
+    {
+      "currentSha256": "4955181632ebcaff4601c3b9acc94eb3b7d47e835513ae544cfae25e27b18c36",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryRecordSource }\n",
+          "previous": "import { beforeFinRefinementSource }\n\tfrom \"./fin-refinement-source-history.mjs\";\nimport { sourceAtFinHistoryMilestone }\n",
+          "start": 810
+        },
+        {
+          "current": "\t\t\tconst current = await sourceAtFinHistoryRecordSource(\n\t\t\t\toptionalParameterWitIdentityRepairHistoryPath, update.path\n\t\t\t\t, update.currentSha256);\n",
+          "previous": "\t\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256);\n",
+          "start": 2635
+        },
+        {
+          "current": "\t\t\tassert.equal(beforeOptionalParameterWitIdentityRepairSource(\n",
+          "previous": "\t\t\tassert.equal(beforeFinRefinementSource(\n",
+          "start": 3005
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\toptionalParameterWitIdentityRepairHistoryPath, addition.path\n\t\t\t, addition.sha256)), addition.sha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256)), addition.sha256, addition.path);\n",
+          "start": 3612
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-wit-identity-repair-source-history-tests.mjs",
+      "previousSha256": "85af6743bc5c046dc187eb9d19794e07cfbfb56545de956d8b1bd1443eb0ef02"
+    },
+    {
+      "currentSha256": "16d9bf6bc3d80b2ba96ec4601babfd8c439a35bd4b2801d0093db534e12971af",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryRecordSource }\n",
+          "previous": "import { beforeFinRefinementSource }\n\tfrom \"./fin-refinement-source-history.mjs\";\nimport { sourceAtFinHistoryMilestone }\n",
+          "start": 793
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryRecordSource(\n\t\t\toptionalRepairHistoryRegistrationHistoryPath, update.path\n\t\t\t, update.currentSha256);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "start": 2578
+        },
+        {
+          "current": "\t\tassert.equal(beforeOptionalRepairHistoryRegistrationSource(\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n",
+          "start": 2938
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\toptionalRepairHistoryRegistrationHistoryPath, addition.path\n\t\t\t, addition.sha256)), addition.sha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256)), addition.sha256, addition.path);\n",
+          "start": 3535
+        },
+        {
+          "current": "\tconst names = [\n",
+          "previous": "\tconst contract = await readFile(\n\t\t\"tests/optional-parameter-installed-contract.test.mjs\", \"utf8\");\n\tfor(const name of [\n",
+          "start": 4262
+        },
+        {
+          "current": "\t];\n\tconst contractPath = \"tests/optional-parameter-installed-contract.test.mjs\";\n\tconst contractUpdate = value.integrationUpdates.find(\n\t\titem => item.path === contractPath);\n\tassert.ok(contractUpdate);\n\tconst milestoneContract = await sourceAtFinHistoryRecordSource(\n\t\toptionalRepairHistoryRegistrationHistoryPath, contractPath\n\t\t, contractUpdate.currentSha256);\n\tfor(const name of names) assert.match(\n\t\tmilestoneContract, new RegExp(name, \"u\"));\n\tconst contract = await readFile(contractPath, \"utf8\");\n\tfor(const name of names) assert.doesNotMatch(\n\t\tcontract, new RegExp(name, \"u\"));\n\tconst carrier = await readFile(\n\t\t\"tests/canonical-package-manifest.test.mjs\", \"utf8\");\n\tfor(const name of names) assert.match(carrier, new RegExp(name, \"u\"));\n",
+          "previous": "\t]) assert.match(contract, new RegExp(name, \"u\"));\n",
+          "start": 4447
+        }
+      ],
+      "path": "tests/helpers/optional-repair-history-registration-source-history-tests.mjs",
+      "previousSha256": "72c9832e99e27335e8da1dcdae350fb63b51e1a0d3dadf9547a19b77d730417a"
+    },
+    {
+      "currentSha256": "7e50eb24eccb044f770857bdc9a1c951f4f2bb02633e67ff03ea57a3d7f4b804",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./helpers/optional-repair-history-registration-source-history-tests.mjs\";\nimport \"./helpers/optional-parameter-package-checker-repair-source-history-tests.mjs\";\nimport \"./helpers/optional-parameter-wit-identity-repair-source-history-tests.mjs\";\nimport \"./helpers/focused-producer-efficiency-source-history-tests.mjs\";\n",
+          "start": 84
+        }
+      ],
+      "path": "tests/optional-parameter-installed-contract.test.mjs",
+      "previousSha256": "c4923c45cc48faa64587c01740dc738b028d52d0648fabecb9aecaab5b519974"
+    }
+  ]
+}
