@@ -132,9 +132,54 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  proof-refusal:
+    name: Fresh Lean proof refusal
+    if: inputs.suite == 'produce'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out the exact producer revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            schema
+            scripts
+            src
+            tests
+          sparse-checkout-cone-mode: true
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Restore the pinned Lean toolchain
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains/elan
+            .toolchains/elan-installer
+          key: proof-erasure-lean-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'scripts/bootstrap-toolchains.sh') }}
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install pinned Lean
+        run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Prove fresh Lean erases closed proofs and refuses proof-valued APIs
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/direct-proof-erasure-refusal
+          source scripts/env.sh
+          LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-concurrency=1 \
+            --test-name-pattern "fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs" \
+            tests/elaborated-metadata.test.mjs \
+            | tee build/direct-proof-erasure-refusal/run.tap
+
   npm-browser:
     name: Node and browser producer
-    if: inputs.suite == 'produce'
+    needs: proof-refusal
+    if: inputs.suite == 'produce' && needs.proof-refusal.result == 'success'
     uses: ./.github/workflows/generic-subtype-npm-browser.yml
     with:
       direct_proof_erasure: true
@@ -175,6 +220,7 @@ jobs:
     name: Reconcile the exact same-run receipt
     if: always() && inputs.suite == 'produce'
     needs:
+      - proof-refusal
       - npm-browser
       - native-perl
       - languages
@@ -247,7 +293,8 @@ jobs:
       - name: Enforce every producer and exact receipt reconciliation
         if: >-
           always() &&
-          (needs.npm-browser.result != 'success' ||
+          (needs.proof-refusal.result != 'success' ||
+           needs.npm-browser.result != 'success' ||
            needs.native-perl.result != 'success' ||
            needs.languages.result != 'success' ||
            needs.managed-wit.result != 'success' ||

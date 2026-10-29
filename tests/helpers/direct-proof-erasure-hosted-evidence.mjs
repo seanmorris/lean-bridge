@@ -15,8 +15,7 @@ import {
 	, extractCheckedRecordValueIndexHostedArtifact as extractArtifact
 } from "./checked-record-value-index-hosted-archive.mjs";
 import {
-	directProofErasureHostedCoreRunId
-	, directProofErasureHostedEvidenceDirectory
+	directProofErasureHostedEvidenceDirectory
 	, directProofErasureHostedInputs
 	, directProofErasureHostedLanes
 	, directProofErasureHostedOriginal
@@ -38,7 +37,6 @@ export const directProofErasureHostedEvidencePins = Object.freeze({
 	, producer: directProofErasureHostedProducer
 	, archive: "PENDING_DIRECT_PROOF_ERASURE_ARCHIVE"
 	, runId: directProofErasureHostedRunId
-	, coreRunId: directProofErasureHostedCoreRunId
 });
 
 const exactKeys = (value, keys, label) => assert.deepEqual(
@@ -71,7 +69,6 @@ export const checkDirectProofErasureHostedEvidence = async (
 		assert.match(pins.producer, /^[a-f0-9]{40}$/u);
 		assert.match(pins.archive, /^[a-f0-9]{40}$/u);
 		assert.ok(Number.isSafeInteger(pins.runId) && pins.runId > 0);
-		assert.ok(Number.isSafeInteger(pins.coreRunId) && pins.coreRunId > 0);
 		const indexPath = `${directProofErasureHostedEvidenceDirectory}/index.json`;
 		const indexBytes = Buffer.from(await read(indexPath));
 		assert.equal(sha256(indexBytes), pins.index, "index.json");
@@ -246,7 +243,7 @@ export const checkDirectProofErasureHostedEvidence = async (
 
 		exactKeys(index.refusal, ["diagnostic", "job", "runId", "test"]
 			, "refusal");
-		assert.equal(index.refusal.runId, pins.coreRunId);
+		assert.equal(index.refusal.runId, pins.runId);
 		assert.equal(index.refusal.job, directProofErasureHostedRefusal.jobName);
 		assert.equal(index.refusal.test, directProofErasureHostedRefusal.testName);
 		assert.equal(index.refusal.diagnostic
@@ -261,12 +258,12 @@ export const checkDirectProofErasureHostedEvidence = async (
 		const refusalLogPath = "hosted/refusal/job.log";
 		expectedPaths.push(refusalLogPath);
 		const refusalLog = get(refusalLogPath).toString();
-		assert.equal(refusal.run.id, pins.coreRunId);
+		assert.equal(refusal.run.id, pins.runId);
 		assert.equal(refusal.run.head_sha, pins.producer);
 		assert.equal(refusal.run.status, "completed");
 		assert.equal(refusal.run.conclusion, "success");
 		assert.equal(refusal.run.path, directProofErasureHostedRefusal.workflow);
-		assert.equal(refusal.job.run_id, pins.coreRunId);
+		assert.equal(refusal.job.run_id, pins.runId);
 		assert.equal(refusal.job.head_sha, pins.producer);
 		assert.equal(refusal.job.status, "completed");
 		assert.equal(refusal.job.conclusion, "success");
@@ -276,7 +273,7 @@ export const checkDirectProofErasureHostedEvidence = async (
 		assert.deepEqual([...files.keys()].sort(), [...new Set(expectedPaths)].sort());
 		return Object.freeze({
 			producerCommit: pins.producer, archiveCommit: pins.archive
-			, runId: pins.runId, coreRunId: pins.coreRunId
+			, runId: pins.runId
 			, cells: index.closure.cells, lanes: index.lanes
 			, artifacts: Object.freeze(artifacts), limitations: index.limitations
 			, hostedAcceptance: true, supportPromoted: false

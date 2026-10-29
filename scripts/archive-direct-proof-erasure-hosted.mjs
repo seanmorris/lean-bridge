@@ -24,13 +24,13 @@ import {
 import {
 	assertDirectProofErasureHostedLocalSources
 	, assertDirectProofErasureHostedSteps
-	, directProofErasureHostedCoreRunId
 	, directProofErasureHostedEvidenceDirectory
 	, directProofErasureHostedInputs
 	, directProofErasureHostedLanes
 	, directProofErasureHostedOriginal
 	, directProofErasureHostedProducer
 	, directProofErasureHostedRefusal
+	, directProofErasureHostedRunId
 	, directProofErasureHostedSourcePath
 	, directProofErasureHostedSources
 	, inspectDirectProofErasureHostedArtifact
@@ -200,12 +200,12 @@ try
 		refusal[name] = { bytes, value: JSON.parse(bytes), sha256: sha256(bytes) };
 	}
 	const refusalLog = await readFile(join(refusalRoot, "job.log"));
-	assert.equal(refusal.run.value.id, directProofErasureHostedCoreRunId);
+	assert.equal(refusal.run.value.id, directProofErasureHostedRunId);
 	assert.equal(refusal.run.value.head_sha, directProofErasureHostedProducer);
 	assert.equal(refusal.run.value.path, directProofErasureHostedRefusal.workflow);
 	assert.equal(refusal.run.value.status, "completed");
 	assert.equal(refusal.run.value.conclusion, "success");
-	assert.equal(refusal.job.value.run_id, directProofErasureHostedCoreRunId);
+	assert.equal(refusal.job.value.run_id, directProofErasureHostedRunId);
 	assert.equal(refusal.job.value.head_sha, directProofErasureHostedProducer);
 	assert.equal(refusal.job.value.name, directProofErasureHostedRefusal.jobName);
 	assert.equal(refusal.job.value.status, "completed");
@@ -236,7 +236,7 @@ try
 		, hostedRunConclusion: firstRun.conclusion
 		, matrix, closure: closure.counts, lanes
 		, refusal: {
-			runId: directProofErasureHostedCoreRunId
+			runId: directProofErasureHostedRunId
 			, job: directProofErasureHostedRefusal.jobName
 			, test: directProofErasureHostedRefusal.testName
 			, diagnostic: directProofErasureHostedRefusal.diagnostic

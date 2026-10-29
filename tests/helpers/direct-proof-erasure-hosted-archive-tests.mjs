@@ -8,7 +8,6 @@ import { execFileSync } from "node:child_process";
 import test from "node:test";
 import {
 	assertDirectProofErasureHostedSteps
-	, directProofErasureHostedCoreRunId
 	, directProofErasureHostedLanes
 	, directProofErasureHostedProducer
 	, directProofErasureHostedRefusal
@@ -20,7 +19,6 @@ import {
 test("hosted proof-erasure capture closes ten lanes and seventeen profiles", () => {
 	assert.match(directProofErasureHostedProducer, /^[a-f0-9]{40}$/u);
 	assert.ok(Number.isSafeInteger(directProofErasureHostedRunId));
-	assert.ok(Number.isSafeInteger(directProofErasureHostedCoreRunId));
 	assert.equal(directProofErasureHostedLanes.length, 10);
 	assert.equal(new Set(directProofErasureHostedLanes.flatMap(
 		lane => lane.profiles)).size, 17);

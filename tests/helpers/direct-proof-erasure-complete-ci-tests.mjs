@@ -10,7 +10,8 @@ import test from "node:test";
 
 const workflowPath = ".github/workflows/direct-proof-erasure-complete.yml";
 const producerDependencies = new Map([
-	["native-perl", "npm-browser"], ["languages", "native-perl"]
+	["npm-browser", "proof-refusal"], ["native-perl", "npm-browser"]
+	, ["languages", "native-perl"]
 	, ["managed-wit", "languages"], ["php", "managed-wit"]
 ]);
 const sparseSourcePatterns = Object.freeze([
@@ -119,7 +120,8 @@ export const assertDirectProofErasureCompleteWorkflow = source => {
 		.map(match => match[1]);
 	assert.deepEqual(keys
 		, ["push", "pull_request", "workflow_dispatch", "schedule", "audit"
-			, "npm-browser", "native-perl", "languages", "managed-wit", "php"
+			, "proof-refusal", "npm-browser", "native-perl", "languages"
+			, "managed-wit", "php"
 			, "receipt"]);
 	for(const input of requiredInputs)
 		assert.equal(source.split(`      - "${input}"\n`).length - 1
@@ -132,7 +134,7 @@ export const assertDirectProofErasureCompleteWorkflow = source => {
 	assert.match(source, /set -o pipefail\n {10}mkdir -p build\/direct-proof-erasure-complete\n {10}node --test --test-concurrency=1 \\\n {12}tests\/direct-proof-erasure-complete-hosted-evidence\.test\.mjs \\\n {12}\| tee build\/direct-proof-erasure-complete\/evidence\.tap/u);
 	assert.match(source, /set -o pipefail\n {10}node --test --test-concurrency=1 \\\n {12}tests\/direct-proof-erasure-complete-promotion\.test\.mjs \\\n {12}\| tee build\/direct-proof-erasure-complete\/promotion\.tap/u);
 	const audit = source.slice(source.indexOf("  audit:\n")
-		, source.indexOf("  npm-browser:\n"));
+		, source.indexOf("  proof-refusal:\n"));
 	assert.deepEqual(sparseCheckoutPatterns(audit), [
 		...sparseSourcePatterns, "/docs/evidence/direct-proof-erasure-hosted-*/"
 	]);
@@ -140,6 +142,19 @@ export const assertDirectProofErasureCompleteWorkflow = source => {
 	assert.match(audit, /if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
 	assert.match(audit, /if-no-files-found: error/u);
 	assert.doesNotMatch(audit, /continue-on-error|\|\| true/u);
+	const refusal = source.slice(source.indexOf("  proof-refusal:\n")
+		, source.indexOf("  npm-browser:\n"));
+	assert.match(refusal, /^ {4}name: Fresh Lean proof refusal$/mu);
+	assert.match(refusal, /^ {4}if: inputs\.suite == 'produce'$/mu);
+	assert.match(refusal, /^ {4}runs-on: ubuntu-24\.04$/mu);
+	assert.match(refusal, /fetch-depth: 1/u);
+	assert.match(refusal, /sparse-checkout-cone-mode: true/u);
+	assert.match(refusal, /bash scripts\/bootstrap-toolchains\.sh --lean-only/u);
+	assert.match(refusal, /LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-concurrency=1/u);
+	assert.match(refusal, /--test-name-pattern "fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs"/u);
+	assert.match(refusal, /tests\/elaborated-metadata\.test\.mjs/u);
+	assert.match(refusal, /\| tee build\/direct-proof-erasure-refusal\/run\.tap/u);
+	assert.doesNotMatch(refusal, /continue-on-error|\|\| true/u);
 	for(const [job, workflow] of [
 		["npm-browser", "generic-subtype-npm-browser"]
 		, ["native-perl", "generic-subtype-native-perl"]
@@ -154,15 +169,12 @@ export const assertDirectProofErasureCompleteWorkflow = source => {
 		const body = source.slice(start
 			, ends.length === 0 ? undefined : Math.min(...ends));
 		const dependency = producerDependencies.get(job);
-		if(dependency === undefined)
-		{
-			assert.doesNotMatch(body, /^ {4}needs:/mu, job);
-			assert.match(body, /^ {4}if: inputs\.suite == 'produce'$/mu, job);
-		}
-		else
+		if(dependency !== undefined)
 		{
 			assert.match(body, new RegExp(`^    needs: ${dependency}$`, "mu"), job);
-			assert.match(body
+			if(job === "npm-browser") assert.match(body
+				, /^ {4}if: inputs\.suite == 'produce' && needs\.proof-refusal\.result == 'success'$/mu, job);
+			else assert.match(body
 				, /^ {4}if: always\(\) && inputs\.suite == 'produce'$/mu, job);
 		}
 		assert.ok(body.includes(`uses: ./.github/workflows/${workflow}.yml`));
@@ -180,7 +192,8 @@ export const assertDirectProofErasureCompleteWorkflow = source => {
 	assert.match(receipt
 		, /name: direct-proof-erasure-matrix-\$\{\{ github\.sha \}\}/u);
 	assert.equal(receipt.match(/^ {8}continue-on-error: true$/gmu)?.length, 2);
-	for(const job of ["npm-browser", "native-perl", "languages", "managed-wit", "php"])
+	for(const job of ["proof-refusal", "npm-browser", "native-perl", "languages"
+		, "managed-wit", "php"])
 		assert.ok(receipt.includes(`needs.${job}.result != 'success'`));
 	assert.ok(receipt.includes("steps.download.outcome != 'success'"));
 	assert.ok(receipt.includes("steps.reconciliation.outcome != 'success'"));
@@ -209,6 +222,11 @@ test("complete proof-erasure replay rejects missing inputs and bypasses", async 
 		, source.replace("if-no-files-found: error", "if-no-files-found: ignore")
 		, source.replace("          - produce\n", "")
 		, source.replace("direct_proof_erasure: true", "direct_proof_erasure: false")
+		, source.replace("  proof-refusal:\n", "  disabled-refusal:\n")
+		, source.replace("bash scripts/bootstrap-toolchains.sh --lean-only"
+			, "true")
+		, source.replace("LEAN_BRIDGE_ELABORATED_METADATA_TEST=1", "")
+		, source.replace("needs.proof-refusal.result != 'success'", "false")
 		, source.replace("            !/docs/evidence/*\n", "")
 		, source.replace(
 			"            /docs/evidence/direct-proof-erasure-hosted-*/\n", "")

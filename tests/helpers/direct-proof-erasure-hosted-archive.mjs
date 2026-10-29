@@ -20,12 +20,11 @@ import { moduleSpecifiers } from "./module-closure.mjs";
 export const directProofErasureHostedProducer
 	= "52622818425c3fb69a81ef87b5af26ce429e3136";
 export const directProofErasureHostedRunId = 40824858819;
-export const directProofErasureHostedCoreRunId = 40824858718;
 export const directProofErasureHostedEvidenceDirectory
 	= "docs/evidence/direct-proof-erasure-hosted-20261028";
 export const directProofErasureHostedRefusal = Object.freeze({
-	id: "refusal", workflow: ".github/workflows/quality.yml"
-	, jobName: "Static quality contract"
+	id: "refusal", workflow: directProofErasureMatrixWorkflow
+	, jobName: "Fresh Lean proof refusal"
 	, testName: "fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs"
 	, diagnostic: "proof-only"
 });

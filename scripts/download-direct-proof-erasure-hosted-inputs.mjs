@@ -16,7 +16,6 @@ import {
 } from "../tests/helpers/checked-record-value-index-hosted-archive.mjs";
 import {
 	assertDirectProofErasureHostedSteps
-	, directProofErasureHostedCoreRunId
 	, directProofErasureHostedInputs
 	, directProofErasureHostedLanes
 	, directProofErasureHostedProducer
@@ -164,10 +163,8 @@ try
 		assertDirectProofErasureHostedSteps(lane, captured.api.job.bytes);
 	}
 
-	const coreRun = readRun(directProofErasureHostedCoreRunId);
-	assert.equal(coreRun.value.path, directProofErasureHostedRefusal.workflow);
-	const coreJobs = await collection(directProofErasureHostedCoreRunId, "jobs");
-	const refusalJobs = coreJobs.filter(job =>
+	assert.equal(hostedRun.value.path, directProofErasureHostedRefusal.workflow);
+	const refusalJobs = jobs.filter(job =>
 		job.name === directProofErasureHostedRefusal.jobName);
 	assert.equal(refusalJobs.length, 1, directProofErasureHostedRefusal.jobName);
 	const refusalJob = refusalJobs[0];
@@ -175,7 +172,7 @@ try
 	assert.equal(refusalJob.conclusion, "success");
 	const refusal = join(output, directProofErasureHostedRefusal.id);
 	await mkdir(refusal);
-	await writeFile(join(refusal, "run.json"), coreRun.bytes, { flag: "wx" });
+	await writeFile(join(refusal, "run.json"), hostedRun.bytes, { flag: "wx" });
 	await writeFile(join(refusal, "job.json")
 		, api(`${repository}/actions/jobs/${refusalJob.id}`), { flag: "wx" });
 	await stream(`${repository}/actions/jobs/${refusalJob.id}/logs`
@@ -185,7 +182,6 @@ try
 	process.stdout.write(JSON.stringify({
 		output, producerCommit: directProofErasureHostedProducer
 		, runId: directProofErasureHostedRunId
-		, coreRunId: directProofErasureHostedCoreRunId
 		, lanes: directProofErasureHostedLanes.length, profiles: 17, cells: 204
 	}, null, 2) + "\n");
 }
