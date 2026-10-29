@@ -1,0 +1,76 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-php-wasm-count-contract-source-history.mjs",
+      "sha256": "ba09e26734a2cf04edaff471e9a6e6e566ceb35089d9f31438fa6e868649f547"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-php-wasm-count-contract-source-history-tests.mjs",
+      "sha256": "b8c0f533bd8de0a09e1b20ab03c4b55567384463851a94259e143619f07f20f2"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-php-wasm-count-contract-source-history.mjs",
+      "sha256": "9cf9c121b604204201db0108b820ca99f28d922ad14fa0531e329eb42ae12131"
+    }
+  ],
+  "implementationAdditions": [],
+  "implementationCommit": "acee7f7109aea8d9702f845d11ae70b5522cece2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "ce6ed940ea35ccafc924ed8833c766e6aaa5899c601371109916226fd3b4beb4",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-php-wasm-count-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 229
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "74e1a825d1434f7c5deb9ec1c0da0021d4debb3c81504561880490e8e062a23e"
+    }
+  ],
+  "milestone": "optional-parameter-php-wasm-count-contract-source-v1",
+  "predecessorCommit": "349df1c9320d0d92133aa88c6f16673dd14e49be",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Permit an explicit exact check count for small PHP-Wasm fixtures while preserving the existing thousand-check minimum for every fixture that does not opt into an exact count.",
+  "updates": [
+    {
+      "currentSha256": "9afc409736a716196eb988b4389f7bebc9db18a2528ad598b86313cad0640e85",
+      "edits": [
+        {
+          "current": "\tconst expectedChecks = fixture.expectedChecks ?? executions[0].checks;\n\tassert.ok(Number.isSafeInteger(expectedChecks) && expectedChecks > 0);\n\tassert.ok(executions.every(item => item.checks === expectedChecks));\n\tif(fixture.expectedChecks === undefined) assert.ok(expectedChecks >= 1000);\n",
+          "previous": "\tassert.ok(executions.every(item => item.checks === executions[0].checks && item.checks >= 1000));\n",
+          "start": 11972
+        }
+      ],
+      "path": "tests/helpers/copied-fixture-php-wasm.mjs",
+      "previousSha256": "eb2a38bc4ed3acab22277d871d036fa25a8e32986f29f87b2ad4f6c13cd1e579"
+    },
+    {
+      "currentSha256": "e1cb95f59ca017a84f08a97c3723ed6d9d6040835e7138c5bc10ca42f3eb2062",
+      "edits": [
+        {
+          "current": "\ntest(\"optional PHP-Wasm uses an exact small-fixture check count\", async () => {\n\tconst [installed, helper] = await Promise.all([\n\t\treadFile(\"tests/optional-parameter-php-installed.test.mjs\", \"utf8\")\n\t\t, readFile(\"tests/helpers/copied-fixture-php-wasm.mjs\", \"utf8\")\n\t]);\n\tassert.match(installed, /expectedChecks: 23/u);\n\tassert.match(helper\n\t\t, /const expectedChecks = fixture\\.expectedChecks \\?\\? executions\\[0\\]\\.checks/u);\n\tassert.match(helper\n\t\t, /executions\\.every\\(item => item\\.checks === expectedChecks\\)/u);\n\tassert.match(helper\n\t\t, /fixture\\.expectedChecks === undefined\\) assert\\.ok\\(expectedChecks >= 1000\\)/u);\n});\n",
+          "previous": "",
+          "start": 1170
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-php-tests.mjs",
+      "previousSha256": "d7514311a184901f259562c35862e10a9b48aec237c5882d693f80693474aa70"
+    },
+    {
+      "currentSha256": "1d9a7c6b087e16387b3b8fe0715eab0ba0b0bdf2588a9146a5d7b59e46101780",
+      "edits": [
+        {
+          "current": "\t\t\t\t, expectedChecks: 23\n",
+          "previous": "",
+          "start": 8102
+        }
+      ],
+      "path": "tests/optional-parameter-php-installed.test.mjs",
+      "previousSha256": "b15878c4d78c4d64c304fb8ceafeb472400fe97ce49a577d2d243ac89d89dc0d"
+    }
+  ]
+}
