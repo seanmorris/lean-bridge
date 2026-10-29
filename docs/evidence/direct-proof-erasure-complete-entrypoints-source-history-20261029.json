@@ -1,0 +1,85 @@
+{
+  "auditEntrypoints": 2,
+  "cells": 204,
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-complete-entrypoints-source-history.mjs",
+      "sha256": "be5980e320a0c397c88582db022778ef111b16dab65868235ee9448e0d122065"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-complete-entrypoints-source-history-tests.mjs",
+      "sha256": "ee3879ff8f91a5d05f6610dee196f7e1e95c45e4af3a15721dfa1289e455ac45"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-complete-entrypoints-source-history.mjs",
+      "sha256": "445a2d0406b995d6726f9faefa11edd0c282967035910d0cad611a41b94022af"
+    }
+  ],
+  "hostedLanes": 10,
+  "implementationAdditions": [
+    {
+      "path": "tests/direct-proof-erasure-complete-hosted-evidence.test.mjs",
+      "sha256": "cc453641312db6529e63ab1cc5deed6d76aa62c3ab13f3073e30f31b99f6f0b2"
+    },
+    {
+      "path": "tests/direct-proof-erasure-complete-promotion.test.mjs",
+      "sha256": "1dd5964e104b2f72fcfb685f5e149ab5c6f837bd8f2d357644af1de076bcead6"
+    }
+  ],
+  "implementationCommit": "3e9758fbba302ab3b2adf9048d069f3a0ff276d1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "59479cc5d8c93064d6899672729d1c3ef1c2c114b8a8174ab64b1d4b1ae0d778",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-complete-entrypoints-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "93d0be60a877e44871d9f6bec8350b7baab4b3f2c0fdc8cd3fd2b9ef83baca08"
+    },
+    {
+      "currentSha256": "5ad37899f69e98126dc7228405509c70a6939fca02281b5a4ffa73f314e07252",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureCompleteEntrypointsSource, directProofErasureCompleteEntrypointsNormalizationPaths } from \"./direct-proof-erasure-complete-entrypoints-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureCompleteEntrypointsNormalizationPaths\n\t, ...dependentSignatureFocusedArchiveNormalizationPaths\n",
+          "previous": "\t...dependentSignatureFocusedArchiveNormalizationPaths\n",
+          "start": 221362
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureCompleteEntrypointsSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDependentSignatureFocusedArchiveSource(\n",
+          "previous": "\tlet stage = beforeDependentSignatureFocusedArchiveSource(\n",
+          "start": 277189
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "33cb38d1cfcf4da9871533a2bc0dc6fb1a0a8d9aac4c579c130b563c9e226773"
+    }
+  ],
+  "milestone": "direct-proof-erasure-complete-entrypoints-source-v1",
+  "predecessorCommit": "5a2014dcfdb59c8332031bf1dd44509a32dffb12",
+  "schemaVersion": 1,
+  "scope": "Add the two workflow-owned top-level audit entry points that independently replay the complete hosted proof-erasure archive and verify the exact 204-cell publication. Bind both entry points into the promotion source pins without claiming hosted acceptance or promoted support before evidence exists.",
+  "updates": [
+    {
+      "currentSha256": "3716e5cdf5ecb7f87ff50074455cf8c94415bb9ff0b89eb98962877e82b66b73",
+      "edits": [
+        {
+          "current": "\t, \"tests/direct-proof-erasure-complete-hosted-evidence.test.mjs\"\n\t, \"tests/direct-proof-erasure-complete-promotion.test.mjs\"\n",
+          "previous": "",
+          "start": 2510
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-promotion.mjs",
+      "previousSha256": "56b208a2b093bef0808e3877ae0259224ddd36d6b9dec9bbf98c20e4fe5e298a"
+    }
+  ]
+}
