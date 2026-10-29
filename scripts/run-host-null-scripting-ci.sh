@@ -23,7 +23,7 @@ if [[ -e $output || -e $tap ]]; then
 	printf '%s\n' 'Scripting HostNull output already exists.' >&2
 	exit 2
 fi
-mkdir -p "$output"
+mkdir -p "$(dirname "$output")"
 export LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 CMAKE_BUILD_PARALLEL_LEVEL=1
 export LEAN_BRIDGE_SCRIPTING_HOST_NULL_TEST=1
 export LEAN_BRIDGE_HOST_NULL_SCRIPTING_OUTPUT="$output"

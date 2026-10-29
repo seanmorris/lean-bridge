@@ -17,6 +17,8 @@ test("hosted scripting HostNull runs once on the pinned Perl lane and preserves 
 	assert.match(workflow, /name: Preserve HostNull scripting acceptance[\s\S]*host-null-scripting-\$\{\{ github\.sha \}\}[\s\S]*build\/host-null-scripting-ci\/[\s\S]*if-no-files-found: error/u);
 	assert.match(workflow, /name: Enforce scripting HostNull support[\s\S]*steps\.host_null_scripting\.outcome != 'success'[\s\S]*run: exit 1/u);
 	assert.match(runner, /LEAN_BRIDGE_HOST_NULL_SCRIPTING_ROUTES=ordinary,reviewed/u);
+	assert.match(runner, /mkdir -p "\$\(dirname "\$output"\)"/u);
+	assert.doesNotMatch(runner, /mkdir -p "\$output"/u);
 	assert.match(runner, /--test-name-pattern='\^installed scripting HostNull preserves all five positions on both author routes\$'/u);
 	assert.match(runner, /node scripts\/check-host-null-scripting-ci\.mjs/u);
 	assert.match(checker, /verifyPackageSetReceipt/u);
