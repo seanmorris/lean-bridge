@@ -86,6 +86,12 @@ export const directProofErasureHostedLanes = Object.freeze(
 		, producerCommit: directProofErasureHostedProducer
 		, workflow: directProofErasureMatrixWorkflow
 		, steps: laneSteps(lane)
+		, jobConclusion: lane.key === "language-perl" ? "failure" : "success"
+		, failedSteps: Object.freeze(lane.key === "language-perl" ? [
+			"Preserve HostNull scripting acceptance"
+			, "Upload this configuration's real-Lean corpus report"
+			, "Enforce scripting HostNull support"
+		] : [])
 	}))
 );
 
@@ -138,7 +144,7 @@ export const inspectDirectProofErasureHostedArtifact = async (
 		selected, {
 			workflow: lane.workflow, jobName: lane.job
 			, artifactPrefix: lane.artifactPrefix
-			, conclusions: { run: runConclusion, job: "success" }
+			, conclusions: { run: runConclusion, job: lane.jobConclusion }
 		}
 	);
 	assert.equal(hosted.hostedRun.runId, lane.runId, lane.key);
@@ -162,6 +168,8 @@ export const assertDirectProofErasureHostedSteps = (lane, jobBytes) => {
 	assert.equal(named(lane.steps.acceptance).conclusion, "success");
 	assert.equal(named(lane.steps.upload).conclusion, "success");
 	assert.equal(named(lane.steps.enforce).conclusion, "skipped");
+	assert.deepEqual(job.steps.filter(step => step.conclusion === "failure")
+		.map(step => step.name), lane.failedSteps);
 	return true;
 };
 

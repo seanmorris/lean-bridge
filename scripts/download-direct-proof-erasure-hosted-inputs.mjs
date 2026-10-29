@@ -128,7 +128,7 @@ try
 		assert.equal(job.run_id, directProofErasureHostedRunId);
 		assert.equal(job.head_sha, directProofErasureHostedProducer);
 		assert.equal(job.status, "completed");
-		assert.equal(job.conclusion, "success");
+		assert.equal(job.conclusion, lane.jobConclusion);
 		const artifactName = `${lane.artifactPrefix}-${directProofErasureHostedProducer}`;
 		const matchingArtifacts = artifacts.filter(item =>
 			item.name === artifactName);

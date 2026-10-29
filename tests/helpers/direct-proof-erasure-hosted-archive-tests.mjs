@@ -7,7 +7,8 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
 import {
-	directProofErasureHostedCoreRunId
+	assertDirectProofErasureHostedSteps
+	, directProofErasureHostedCoreRunId
 	, directProofErasureHostedLanes
 	, directProofErasureHostedProducer
 	, directProofErasureHostedRefusal
@@ -31,8 +32,34 @@ test("hosted proof-erasure capture closes ten lanes and seventeen profiles", () 
 		assert.equal(lane.producerCommit, directProofErasureHostedProducer);
 		assert.deepEqual(Object.keys(lane.steps).sort()
 			, ["acceptance", "enforce", "upload"]);
+		assert.equal(lane.jobConclusion
+			, lane.key === "language-perl" ? "failure" : "success");
+		assert.deepEqual(lane.failedSteps, lane.key === "language-perl" ? [
+			"Preserve HostNull scripting acceptance"
+			, "Upload this configuration's real-Lean corpus report"
+			, "Enforce scripting HostNull support"
+		] : []);
 	}
 	assert.equal(directProofErasureHostedRefusal.diagnostic, "proof-only");
+});
+
+test("hosted proof-erasure steps isolate the exact unrelated Perl failures", () => {
+	for(const lane of directProofErasureHostedLanes)
+	{
+		const steps = [
+			{ name: lane.steps.acceptance, conclusion: "success" }
+			, { name: lane.steps.upload, conclusion: "success" }
+			, { name: lane.steps.enforce, conclusion: "skipped" }
+			, ...lane.failedSteps.map(name => ({ name, conclusion: "failure" }))
+		];
+		assert.equal(assertDirectProofErasureHostedSteps(
+			lane, Buffer.from(JSON.stringify({ steps }))), true);
+		assert.throws(() => assertDirectProofErasureHostedSteps(lane
+			, Buffer.from(JSON.stringify({
+				steps: [...steps, { name: "unexpected", conclusion: "failure" }]
+			}))
+		));
+	}
 });
 
 test("hosted proof-erasure archiver accepts only one canonical root", () => {
