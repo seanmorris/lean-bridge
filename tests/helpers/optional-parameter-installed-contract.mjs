@@ -56,6 +56,44 @@ export const optionalParameterPhpPatterns = route => {
 };
 
 /**
+ * Return exact Python signatures for one authoring route.
+ *
+ * @param route - Ordinary or independently reviewed authoring route.
+ */
+export const optionalParameterPythonPatterns = route => {
+	const argument = routeBinder(route);
+	return Object.freeze([
+		new RegExp(`def word\\(${argument}: int = 7\\) -> int:`, "u")
+		, new RegExp(
+			`def present\\(${argument}: Option\\[int\\] = Some\\(9\\)\\)`, "u")
+	]);
+};
+
+/**
+ * Return exact Ruby signatures for one authoring route.
+ *
+ * @param route - Ordinary or independently reviewed authoring route.
+ */
+export const optionalParameterRubyPatterns = route => {
+	const argument = routeBinder(route);
+	return Object.freeze([
+		new RegExp(`def word\\(${argument} = 7\\)`, "u")
+		, new RegExp(`def present\\(${argument} = Some\\.new\\(9\\)\\)`, "u")
+		, new RegExp(`def unit_value\\(${argument} = UNIT\\)`, "u")
+	]);
+};
+
+/**
+ * Return the exact C++ optional signature for one authoring route.
+ *
+ * @param route - Ordinary or independently reviewed authoring route.
+ */
+export const optionalParameterCppPattern = route => new RegExp(
+	`inline std::optional<uint32_t> present\\(std::optional<uint32_t> const& ${routeBinder(route)} =`
+	, "u"
+);
+
+/**
  * Preserve compiler diagnostics regardless of which captured stream a tool
  * uses. In particular, dotnet build writes C# diagnostics to stdout.
  *

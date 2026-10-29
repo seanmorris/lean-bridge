@@ -23,6 +23,9 @@ import {
 	optionalParameterNativeProfiles
 } from "./helpers/optional-parameter-native-report.mjs";
 import {
+	optionalParameterCppPattern
+} from "./helpers/optional-parameter-installed-contract.mjs";
+import {
 	assertOptionalParameterNativeComponent, prepareOptionalParameterProject
 	, retainOptionalParameterNativeComponent
 } from "./helpers/optional-parameter-packages.mjs";
@@ -150,7 +153,7 @@ for(const route of routes) test(
 			const header = await readFile(join(installed, "include", headerName));
 			const expectedHeader = profile === "c"
 				? /#define defaults_present\(\.\.\.\).*defaults_present_default_0/u
-				: /inline std::optional<uint32_t> present\(std::optional<uint32_t> const& value0 =/u;
+				: optionalParameterCppPattern(route);
 			assert.match(header.toString(), expectedHeader);
 			const run = await runCopied(join(relocated, "consumer"), [], relocated, {
 				...copiedCleanEnvironment, LD_LIBRARY_PATH: join(installed, "lib")

@@ -16,6 +16,9 @@ import {
 	, optionalParameterComponentFactKeys, optionalParameterNativeRecordNames
 	, optionalParameterTargetConfiguration
 } from "./optional-parameter-packages.mjs";
+import {
+	optionalParameterPythonPatterns, optionalParameterRubyPatterns
+} from "./optional-parameter-installed-contract.mjs";
 
 export const optionalParameterLanguageProfiles = Object.freeze([
 	"perl", "python", "ruby", "rust"
@@ -50,15 +53,6 @@ const apiPatterns = Object.freeze({
 	perl: [
 		/\*word = sub/u, /push @args, 7 if @args == 0/u
 		, /\*present = sub/u, /Some->new\(9\)/u
-	]
-	, python: [
-		/def word\(value0: int = 7\) -> int:/u
-		, /def present\(value0: Option\[int\] = Some\(9\)\)/u
-	]
-	, ruby: [
-		/def word\(arg0 = 7\)/u
-		, /def present\(arg0 = Some\.new\(9\)\)/u
-		, /def unit_value\(arg0 = UNIT\)/u
 	]
 	, rust: [
 		/macro_rules! word/u, /\$crate::word\(7\)/u
@@ -214,7 +208,12 @@ export const checkOptionalParameterLanguageRecords = async (read, options) => {
 	));
 	assert.equal(report.observation.consumerSha256, sha256(source));
 	const api = await read(`${options.profile}/api.txt`);
-	for(const pattern of apiPatterns[options.profile])
+	const patterns = options.profile === "python"
+		? optionalParameterPythonPatterns(options.route)
+		: options.profile === "ruby"
+			? optionalParameterRubyPatterns(options.route)
+			: apiPatterns[options.profile];
+	for(const pattern of patterns)
 		assert.match(api.toString(), pattern);
 	assert.equal(report.observation.apiSha256, sha256(api));
 	assert.deepEqual(await json("handoff/package-set-receipt.json")

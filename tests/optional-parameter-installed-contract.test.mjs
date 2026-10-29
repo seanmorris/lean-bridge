@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
 	managedCompilationDiagnostic, managedDiagnosticCount, managedDiagnosticPattern
-	, optionalParameterPhpPatterns, optionalParameterWitPatterns
+	, optionalParameterCppPattern, optionalParameterPhpPatterns
+	, optionalParameterPythonPatterns, optionalParameterRubyPatterns
+	, optionalParameterWitPatterns
 } from "./helpers/optional-parameter-installed-contract.mjs";
 import {
 	validateOptionalParameterLanguageClosure
@@ -52,6 +54,30 @@ function word(mixed $arg0 = 7): int {}
 		assert.match(reviewed, pattern);
 	assert.throws(() => optionalParameterPhpPatterns("foreign"), /unknown/u);
 	assert.doesNotMatch(source, optionalParameterPhpPatterns("reviewed")[0]);
+});
+
+test("optional language contracts retain route-specific binders", () => {
+	const python = "def word(arg0: int = 7) -> int:\n"
+		+ "def present(arg0: Option[int] = Some(9)):\n";
+	const ruby = "def word(arg0 = 7)\n"
+		+ "def present(arg0 = Some.new(9))\n"
+		+ "def unit_value(arg0 = UNIT)\n";
+	for(const pattern of optionalParameterPythonPatterns("ordinary"))
+		assert.match(python, pattern);
+	for(const pattern of optionalParameterPythonPatterns("reviewed"))
+		assert.match(python.replaceAll("arg0", "value0"), pattern);
+	for(const pattern of optionalParameterRubyPatterns("ordinary"))
+		assert.match(ruby, pattern);
+	for(const pattern of optionalParameterRubyPatterns("reviewed"))
+		assert.match(ruby.replaceAll("arg0", "value0"), pattern);
+	const cpp = "inline std::optional<uint32_t> present("
+		+ "std::optional<uint32_t> const& arg0 = std::nullopt)";
+	assert.match(cpp, optionalParameterCppPattern("ordinary"));
+	assert.match(cpp.replace("arg0", "value0")
+		, optionalParameterCppPattern("reviewed"));
+	assert.throws(() => optionalParameterPythonPatterns("foreign"), /unknown/u);
+	assert.throws(() => optionalParameterRubyPatterns("foreign"), /unknown/u);
+	assert.throws(() => optionalParameterCppPattern("foreign"), /unknown/u);
 });
 
 test("managed compiler diagnostics retain stdout and stderr", () => {

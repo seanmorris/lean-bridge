@@ -16,6 +16,9 @@ import {
 	, optionalParameterComponentFactKeys, optionalParameterNativeRecordNames
 	, optionalParameterTargetConfiguration
 } from "./optional-parameter-packages.mjs";
+import {
+	managedDiagnosticPattern
+} from "./optional-parameter-installed-contract.mjs";
 
 export const optionalParameterManagedGroups = Object.freeze({
 	dotnet: Object.freeze(["dotnet"])
@@ -28,12 +31,6 @@ const factKeys = [
 const extension = profile => profile === "dotnet" ? "cs"
 	: profile === "java" ? "java" : "kt";
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
-const diagnostics = Object.freeze({
-	dotnet: /(?:CS1503|cannot convert from '<null>'|non-nullable value type)/iu
-	, java: /(?:incompatible types|cannot be converted to (?:long|int))/iu
-	, kotlin: /(?:null can not be a value of a non-null type|type mismatch)/iu
-});
-
 /**
  * Validate one complete ordinary or reviewed managed report.
  *
@@ -95,7 +92,8 @@ export const validateOptionalParameterManagedReport = (report, {
 		]);
 		assert.equal(item.invalidCompile.rejected, true);
 		assert.equal(item.invalidCompile.values, 2);
-		assert.match(item.invalidCompile.diagnostic, diagnostics[item.profile]);
+		assert.match(item.invalidCompile.diagnostic
+			, managedDiagnosticPattern(item.profile));
 		for(const [key, value] of Object.entries(item.closure))
 		{
 			assert.match(key, /Sha256$/u); digest(value);

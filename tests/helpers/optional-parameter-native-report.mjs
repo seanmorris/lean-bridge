@@ -18,6 +18,9 @@ import {
 	, optionalParameterComponentFactKeys, optionalParameterNativeRecordNames
 	, optionalParameterTargetConfiguration
 } from "./optional-parameter-packages.mjs";
+import {
+	optionalParameterCppPattern
+} from "./optional-parameter-installed-contract.mjs";
 
 export const optionalParameterNativeProfiles = Object.freeze(["c", "cpp"]);
 const checks = Object.freeze({ c: 22, cpp: 21 });
@@ -159,7 +162,7 @@ export const checkOptionalParameterNativeRecords = async (read, options) => {
 			, source: "tests/fixtures/optional-parameter-consumers/c.c"
 		}
 		, cpp: {
-			header: /inline std::optional<uint32_t> present\(std::optional<uint32_t> const& value0 =/u
+			header: optionalParameterCppPattern(options.route)
 			, source: "tests/fixtures/optional-parameter-consumers/cpp.cpp"
 		}
 	};
