@@ -9,7 +9,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import {
 	dependentSignatureHostedEvidenceDirectory
-	, dependentSignatureHostedLanes
+	, dependentSignatureHostedLanes, dependentSignatureHostedReceipt
 } from "./dependent-signature-hosted-archive.mjs";
 import {
 	checkDependentSignatureHostedEvidence
@@ -52,6 +52,9 @@ export const dependentSignatureCompleteReferencePaths = Object.freeze([
 	, "tests/helpers/dependent-signature-complete-promotion-transaction-tests.mjs"
 	, "tests/helpers/dependent-signature-hosted-archive.mjs"
 	, "tests/helpers/dependent-signature-hosted-evidence.mjs"
+	, "tests/helpers/dependent-signature-hosted-tests.mjs"
+	, "tests/dependent-signature-complete-hosted-evidence.test.mjs"
+	, "tests/dependent-signature-complete-promotion.test.mjs"
 	, "tests/helpers/promotion-file-transaction.mjs"
 	, "tests/helpers/type-surface-promotion-io.mjs"
 ]);
@@ -60,20 +63,24 @@ export const dependentSignatureCompleteReferencePaths = Object.freeze([
 export const dependentSignatureCompleteReference = async () => {
 	const checked = await checkDependentSignatureHostedEvidence();
 	assert.equal(checked.kind, "dependent-signatures-hosted-installed-v1");
-	assert.equal(checked.lanes.length, 14);
+	assert.equal(checked.lanes.length, 11);
 	assert.deepEqual(checked.lanes.map(lane => lane.id)
 		, dependentSignatureHostedLanes.map(lane => lane.id));
 	return Object.freeze({
 		id: dependentSignatureCompleteEvidenceId
 		, revision: checked.producerCommit
 		, command: "node --test --test-concurrency=1 tests/dependent-signature-complete-hosted-evidence.test.mjs"
-		, scope: "Fourteen same-revision hosted artifacts close the exact direct `(bound : Nat) (value : Fin bound)` dependency across seventeen profiles, ordinary Lean source and independently reviewed Binding IR."
+		, scope: "Eleven same-run producer artifacts and their aggregate receipt close the exact direct `(bound : Nat) (value : Fin bound)` dependency across seventeen profiles, ordinary Lean source and independently reviewed Binding IR."
 		, files: await Promise.all(dependentSignatureCompleteReferencePaths
 			.map(async path => ({ path, sha256: sha256(await readFile(path)) })))
-		, artifacts: Object.freeze(checked.lanes.map(lane => ({
+		, artifacts: Object.freeze([...checked.lanes.map(lane => ({
 			path: `${lane.hostedRun.artifact.name}.zip`
 			, sha256: lane.hostedRun.artifact.sha256
-		})))
+		}))
+		, {
+			path: `${checked.aggregate.hostedRun.artifact.name}.zip`
+			, sha256: checked.aggregate.hostedRun.artifact.sha256
+		}])
 		, limitations: checked.limitations
 	});
 };
@@ -116,16 +123,19 @@ export const promoteDependentSignatureComplete = (
 		exactKeys(file, ["path", "sha256"], "dependent-signature reference file");
 		assert.match(file.sha256, /^[a-f0-9]{64}$/u);
 	}
-	assert.equal(reference.artifacts.length, 14);
-	assert.equal(new Set(reference.artifacts.map(item => item.path)).size, 14);
+	assert.equal(reference.artifacts.length, 12);
+	assert.equal(new Set(reference.artifacts.map(item => item.path)).size, 12);
 	for(const artifact of reference.artifacts)
 	{
 		exactKeys(artifact, ["path", "sha256"], "dependent-signature artifact");
 		assert.match(artifact.sha256, /^[a-f0-9]{64}$/u);
 	}
-	assert.deepEqual(reference.artifacts.map(item => item.path).sort()
-		, dependentSignatureHostedLanes.map(lane =>
-			`${lane.artifactPrefix}-${reference.revision}.zip`).sort());
+	assert.deepEqual(reference.artifacts.map(item => item.path).sort(), [
+		...dependentSignatureHostedLanes.map(lane =>
+			`${lane.artifactPrefix}-${reference.revision}.zip`)
+		, `${dependentSignatureHostedReceipt.artifactPrefix}`
+			+ `-${reference.revision}.zip`
+	].sort());
 	assert.equal(reference.limitations.length, 5);
 	assert.ok(reference.limitations.every(item => typeof item === "string"
 		&& item.length > 0));

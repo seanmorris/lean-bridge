@@ -20,21 +20,27 @@ import {
 } from "../tests/helpers/checked-record-value-index-hosted-archive.mjs";
 import {
 	assertDependentSignatureHostedLocalSources
+	, assertDependentSignatureHostedReceiptSteps
 	, assertDependentSignatureHostedSteps
 	, dependentSignatureHostedEvidenceDirectory
 	, dependentSignatureHostedInputs
 	, dependentSignatureHostedLanes
 	, dependentSignatureHostedOriginal
 	, dependentSignatureHostedProducer
-	, dependentSignatureHostedRunConclusions
+	, dependentSignatureHostedReceipt
+	, dependentSignatureHostedRunId
 	, dependentSignatureHostedSourcePath
 	, dependentSignatureHostedSources
 	, inspectDependentSignatureHostedArtifact
+	, inspectDependentSignatureHostedReceipt
 	, parseDependentSignatureHostedArchiveArgs
+	, validateDependentSignatureHostedReceipt
 } from "../tests/helpers/dependent-signature-hosted-archive.mjs";
 import {
-	validateDependentSignatureHostedReports
-} from "../tests/helpers/dependent-signature-hosted-evidence.mjs";
+	buildDependentSignatureMatrixReceipt
+	, dependentSignatureMatrixResultPath
+	, dependentSignatureMatrixRoutes
+} from "../tests/helpers/dependent-signature-matrix-receipt.mjs";
 
 let inputRoot;
 try
@@ -47,10 +53,12 @@ catch(error)
 }
 assert.equal(await realpath(inputRoot), inputRoot
 	, "Hosted input root must be canonical");
+const selections = [...dependentSignatureHostedLanes
+	, dependentSignatureHostedReceipt];
 assert.deepEqual((await readdir(inputRoot)).sort()
-	, dependentSignatureHostedLanes.map(lane => lane.id).sort());
-for(const lane of dependentSignatureHostedLanes)
-	assert.deepEqual((await readdir(join(inputRoot, lane.id))).sort(), [
+	, selections.map(item => item.id).sort());
+for(const item of selections)
+	assert.deepEqual((await readdir(join(inputRoot, item.id))).sort(), [
 		"artifact.json", "artifact.zip", "job.json", "job.log", "run.json"
 	]);
 await assert.rejects(access(dependentSignatureHostedEvidenceDirectory)
@@ -91,8 +99,34 @@ const putFile = async (path, source) => {
 		, source: staged
 	});
 };
+const retainedHosted = async (item, hosted, extracted, partsRoot) => {
+	const selected = dependentSignatureHostedInputs(inputRoot, item);
+	await putFile(`hosted/${item.id}/job.log`, selected["job-log"]);
+	for(const [name, record] of Object.entries(hosted.api))
+		putBytes(`hosted/api/${item.id}/${name}.json`, record.bytes);
+	const parts = await splitCheckedRecordValueIndexHostedArtifact(
+		selected["artifact-zip"], partsRoot);
+	for(const part of parts)
+		await putFile(`hosted/${item.id}/artifact.zip.parts/${part.name}`
+			, part.path);
+	return {
+		...hosted.hostedRun
+		, apiRecords: Object.fromEntries(Object.entries(hosted.api).map(
+			([name, record]) => [name, {
+				bytes: record.bytes.length, sha256: record.sha256
+			}]
+		))
+		, artifact: {
+			...hosted.hostedRun.artifact, members: extracted.entries
+			, parts: parts.map(part => ({
+				path: `hosted/${item.id}/artifact.zip.parts/${part.name}`
+				, offset: part.offset, bytes: part.bytes, sha256: part.sha256
+			}))
+		}
+	};
+};
 
-const lanes = [];
+const lanes = [], summaries = new Map();
 try
 {
 	for(const lane of dependentSignatureHostedLanes)
@@ -107,43 +141,23 @@ try
 			tmpdir(), `lean-bridge-dependent-${lane.id}-zip-`));
 		try
 		{
-			const reports = {};
-			for(const path of lane.reportPaths)
+			for(const route of dependentSignatureMatrixRoutes)
 			{
-				reports[path] = await readFile(join(extracted.root, path));
-				putBytes(`hosted/output/${lane.id}/${path}`, reports[path]);
+				const path = dependentSignatureMatrixResultPath(
+					lane.matrixLane, route, dependentSignatureHostedProducer);
+				const relative = path.slice(path.indexOf("/") + 1);
+				const bytes = await readFile(join(extracted.root, relative));
+				const value = JSON.parse(bytes);
+				assert.equal(bytes.toString(), canonicalJson(value)
+					, `${lane.id}:${route}`);
+				assert.ok(!summaries.has(path), path);
+				summaries.set(path, bytes);
+				putBytes(`hosted/output/${lane.id}/${route}.json`, bytes);
 			}
-			const accepted = validateDependentSignatureHostedReports(
-				lane, reports);
-			await putFile(`hosted/${lane.id}/job.log`, selected["job-log"]);
-			for(const [name, item] of Object.entries(hosted.api))
-				putBytes(`hosted/api/${lane.id}/${name}.json`, item.bytes);
-			const parts = await splitCheckedRecordValueIndexHostedArtifact(
-				selected["artifact-zip"], partsRoot);
-			for(const part of parts)
-				await putFile(
-					`hosted/${lane.id}/artifact.zip.parts/${part.name}`
-					, part.path);
 			lanes.push({
-				id: lane.id, profiles: [...lane.profiles], accepted
-				, hostedRun: {
-					...hosted.hostedRun
-					, apiRecords: Object.fromEntries(Object.entries(hosted.api).map(
-						([name, item]) => [name, {
-							bytes: item.bytes.length, sha256: item.sha256
-						}]
-					))
-					, artifact: {
-						...hosted.hostedRun.artifact
-						, members: extracted.entries
-						, parts: parts.map(({
-							name, offset, bytes, sha256: value
-						}) => ({
-							path: `hosted/${lane.id}/artifact.zip.parts/${name}`
-							, offset, bytes, sha256: value
-						}))
-					}
-				}
+				id: lane.id, profiles: [...lane.profiles]
+				, hostedRun: await retainedHosted(
+					lane, hosted, extracted, partsRoot)
 			});
 		}
 		finally
@@ -152,6 +166,45 @@ try
 			await rm(partsRoot, { recursive: true });
 		}
 	}
+
+	const receiptInputs = dependentSignatureHostedInputs(
+		inputRoot, dependentSignatureHostedReceipt);
+	const receiptHosted = await inspectDependentSignatureHostedReceipt(
+		receiptInputs);
+	assertDependentSignatureHostedReceiptSteps(receiptHosted.api.job.bytes);
+	const receiptExtracted
+		= await extractCheckedRecordValueIndexHostedArtifact(
+			receiptInputs["artifact-zip"]);
+	const receiptPartsRoot = await mkdtemp(join(
+		tmpdir(), "lean-bridge-dependent-signature-matrix-zip-"));
+	let aggregate, receipt;
+	try
+	{
+		const receiptBytes = await readFile(join(
+			receiptExtracted.root, "receipt.json"));
+		receipt = JSON.parse(receiptBytes);
+		assert.equal(receiptBytes.toString(), canonicalJson(receipt));
+		validateDependentSignatureHostedReceipt(receipt);
+		const replayed = await buildDependentSignatureMatrixReceipt(path => {
+			assert.ok(summaries.has(path), path); return summaries.get(path);
+		}, receipt.run);
+		assert.deepEqual(replayed, receipt);
+		putBytes("hosted/output/matrix/receipt.json", receiptBytes);
+		aggregate = {
+			receipt
+			, hostedRun: await retainedHosted(
+				dependentSignatureHostedReceipt, receiptHosted
+				, receiptExtracted, receiptPartsRoot)
+		};
+	}
+	finally
+	{
+		await rm(receiptExtracted.root, { recursive: true });
+		await rm(receiptPartsRoot, { recursive: true });
+	}
+	for(const lane of lanes)
+		lane.results = receipt.records.filter(record => record.lane === lane.id);
+
 	const selectedSources = dependentSignatureHostedSources(revisions);
 	for(const source of selectedSources)
 		putBytes(dependentSignatureHostedSourcePath(source)
@@ -165,14 +218,14 @@ try
 		, kind: "dependent-signatures-hosted-installed-v1"
 		, producerCommit: dependentSignatureHostedProducer
 		, checkerCommit: archiveCommit, archiveCommit
-		, runConclusions: dependentSignatureHostedRunConclusions
-		, lanes, selectedSources, files
+		, runId: dependentSignatureHostedRunId
+		, matrix: receipt.matrix, lanes, aggregate, selectedSources, files
 		, limitations: [
-			"The retained runs establish all thirty-four direct dependent-signature cells: seventeen supported profiles across ordinary Lean source and independently reviewed Binding IR."
+			"The eleven same-run producer artifacts establish all thirty-four direct dependent-signature cells: seventeen supported profiles across ordinary Lean source and independently reviewed Binding IR."
 			, "Every installed package checks a concrete Fin value against the live earlier Nat argument before entering Lean, exercises rejected endpoints and huge values, preserves caller data, and recovers for later calls."
-			, "The JavaScript-family lane uses two independent author builds, source-free offline npm installation, strict TypeScript, and page, React and worker execution in Chromium, Firefox and WebKit."
-			, "The native, managed, dynamic-language, WIT/WASI and four Perl ABI lanes use reproducible source-free package handoffs and public host APIs. PHP-Wasm additionally covers twelve loading, packaging, realm and strictness arrangements."
-			, "The archive retains each complete original GitHub artifact ZIP, API identities, job log, selected reports and exact producer, checker and archiver source closures. External toolchains, runners, browsers and operating-system packages remain trusted recorded inputs."
+			, "The same-run receipt authenticates all forty-four independent checker summaries across eleven lanes, two author routes and full and result-only public APIs."
+			, "The native, managed, dynamic-language, browser, WIT/WASI and four-ABI Perl lanes use reproducible source-free package handoffs and public host APIs."
+			, "The archive retains all twelve complete original GitHub artifact ZIPs, API identities, job logs, canonical summaries and exact producer, checker and archiver source closures. External toolchains, runners, browsers and operating-system packages remain trusted recorded inputs."
 		]
 	};
 
@@ -197,9 +250,9 @@ try
 		, bytes: files.reduce((sum, file) => sum + file.bytes
 			, indexBytes.length)
 		, ...revisions
-		, lanes: lanes.map(lane => ({
-			id: lane.id, artifact: lane.hostedRun.artifact
-		}))
+		, runId: dependentSignatureHostedRunId
+		, artifacts: [...lanes.map(lane => lane.hostedRun.artifact)
+			, aggregate.hostedRun.artifact]
 		, indexSha256: sha256(indexBytes)
 	}));
 }

@@ -15,14 +15,19 @@ import {
 	checkedRecordValueIndexHostedDigest as digestFile
 } from "../tests/helpers/checked-record-value-index-hosted-archive.mjs";
 import {
-	assertDependentSignatureHostedSteps
-	, dependentSignatureConsumerRun
+	assertDependentSignatureHostedReceiptSteps
+	, assertDependentSignatureHostedSteps
 	, dependentSignatureHostedInputs
 	, dependentSignatureHostedLanes
 	, dependentSignatureHostedProducer
-	, dependentSignatureHostedRunConclusions
+	, dependentSignatureHostedReceipt
+	, dependentSignatureHostedRunId
+	, inspectDependentSignatureHostedReceipt
 	, inspectDependentSignatureHostedArtifact
 } from "../tests/helpers/dependent-signature-hosted-archive.mjs";
+import {
+	dependentSignatureFocusedWorkflow
+} from "../tests/helpers/dependent-signature-matrix-receipt.mjs";
 
 const usage = "Usage: download-dependent-signature-hosted-inputs.mjs --output /absolute/hosted-input";
 assert.deepEqual(process.argv.slice(2, 3), ["--output"], usage);
@@ -47,7 +52,7 @@ const collection = async key => {
 	while(true)
 	{
 		const value = object(api(
-			`${repository}/actions/runs/${dependentSignatureConsumerRun}/${key}?per_page=100&page=${page}`
+			`${repository}/actions/runs/${dependentSignatureHostedRunId}/${key}?per_page=100&page=${page}`
 		), `${key} API page ${page}`);
 		assert.ok(Number.isSafeInteger(value.total_count)
 			&& value.total_count >= 0);
@@ -99,14 +104,13 @@ const stream = (endpoint, path) => new Promise((accept, reject) => {
 });
 
 const runBytes = api(
-	`${repository}/actions/runs/${dependentSignatureConsumerRun}`);
-const run = object(runBytes, `run ${dependentSignatureConsumerRun}`);
-assert.equal(run.id, dependentSignatureConsumerRun);
+	`${repository}/actions/runs/${dependentSignatureHostedRunId}`);
+const run = object(runBytes, `run ${dependentSignatureHostedRunId}`);
+assert.equal(run.id, dependentSignatureHostedRunId);
 assert.equal(run.head_sha, dependentSignatureHostedProducer);
 assert.equal(run.status, "completed");
-assert.equal(run.conclusion
-	, dependentSignatureHostedRunConclusions[String(run.id)]);
-assert.equal(run.path, ".github/workflows/consumer-matrix.yml");
+assert.equal(run.conclusion, "success");
+assert.equal(run.path, dependentSignatureFocusedWorkflow);
 assert.equal(run.repository?.full_name, "seanmorris/lean-bridge");
 assert.equal(run.head_repository?.full_name, "seanmorris/lean-bridge");
 
@@ -117,27 +121,29 @@ try
 	const [jobs, artifacts] = await Promise.all([
 		collection("jobs"), collection("artifacts")
 	]);
-	for(const lane of dependentSignatureHostedLanes)
+	const selected = [...dependentSignatureHostedLanes
+		, dependentSignatureHostedReceipt];
+	for(const item of selected)
 	{
-		const matchingJobs = jobs.filter(job => job.name === lane.jobName);
-		assert.equal(matchingJobs.length, 1, lane.jobName);
+		const matchingJobs = jobs.filter(job => job.name === item.jobName);
+		assert.equal(matchingJobs.length, 1, item.jobName);
 		const job = matchingJobs[0];
-		assert.equal(job.run_id, dependentSignatureConsumerRun);
+		assert.equal(job.run_id, dependentSignatureHostedRunId);
 		assert.equal(job.head_sha, dependentSignatureHostedProducer);
 		assert.equal(job.status, "completed");
 		assert.equal(job.conclusion, "success");
 		const artifactName
-			= `${lane.artifactPrefix}-${dependentSignatureHostedProducer}`;
+			= `${item.artifactPrefix}-${dependentSignatureHostedProducer}`;
 		const matchingArtifacts = artifacts.filter(item =>
 			item.name === artifactName);
 		assert.equal(matchingArtifacts.length, 1, artifactName);
 		const artifact = matchingArtifacts[0];
 		assert.equal(artifact.expired, false);
-		assert.equal(artifact.workflow_run?.id, dependentSignatureConsumerRun);
+		assert.equal(artifact.workflow_run?.id, dependentSignatureHostedRunId);
 		assert.equal(artifact.workflow_run?.head_sha
 			, dependentSignatureHostedProducer);
 
-		const root = join(output, lane.id);
+		const root = join(output, item.id);
 		await mkdir(root);
 		const jobBytes = api(`${repository}/actions/jobs/${job.id}`);
 		const artifactBytes = api(
@@ -157,16 +163,26 @@ try
 			, "artifact API record");
 		assert.equal((await stat(zip)).size, metadata.size_in_bytes);
 		assert.equal(metadata.digest, `sha256:${await digestFile(zip)}`);
-		const captured = await inspectDependentSignatureHostedArtifact(
-			dependentSignatureHostedInputs(output, lane), lane);
-		assertDependentSignatureHostedSteps(lane, captured.api.job.bytes);
+		const inputs = dependentSignatureHostedInputs(output, item);
+		if(item === dependentSignatureHostedReceipt)
+		{
+			const captured = await inspectDependentSignatureHostedReceipt(inputs);
+			assertDependentSignatureHostedReceiptSteps(captured.api.job.bytes);
+		}
+		else
+		{
+			const captured = await inspectDependentSignatureHostedArtifact(
+				inputs, item);
+			assertDependentSignatureHostedSteps(item, captured.api.job.bytes);
+		}
 	}
 
 	complete = true;
 	process.stdout.write(JSON.stringify({
 		output, producerCommit: dependentSignatureHostedProducer
-		, runId: dependentSignatureConsumerRun
+		, runId: dependentSignatureHostedRunId
 		, lanes: dependentSignatureHostedLanes.length, profiles: 17, cells: 34
+		, reports: 44, artifacts: selected.length
 	}, null, 2) + "\n");
 }
 finally

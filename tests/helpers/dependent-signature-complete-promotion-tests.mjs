@@ -20,7 +20,7 @@ import {
 	, promoteDependentSignatureComplete
 } from "./dependent-signature-complete-promotion.mjs";
 import {
-	dependentSignatureHostedLanes
+	dependentSignatureHostedLanes, dependentSignatureHostedReceipt
 } from "./dependent-signature-hosted-archive.mjs";
 
 const load = async () => {
@@ -40,12 +40,16 @@ const reference = Object.freeze({
 			path, sha256: ((index + 1) % 16).toString(16).repeat(64)
 		})
 	))
-	, artifacts: Object.freeze(dependentSignatureHostedLanes.map(
+	, artifacts: Object.freeze([...dependentSignatureHostedLanes.map(
 		(lane, index) => ({
 			path: `${lane.artifactPrefix}-${revision}.zip`
 			, sha256: ((index + 6) % 16).toString(16).repeat(64)
 		})
-	))
+	)
+	, {
+		path: `${dependentSignatureHostedReceipt.artifactPrefix}-${revision}.zip`
+		, sha256: "1".repeat(64)
+	}])
 	, limitations: Object.freeze(Array.from({ length: 5 }, (_, index) =>
 		`dependent-signature limitation ${index + 1}`))
 });

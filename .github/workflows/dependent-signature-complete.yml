@@ -108,7 +108,7 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Replay all fourteen immutable host archives
+      - name: Replay all twelve immutable host archives
         shell: bash
         run: |
           set -o pipefail

@@ -10,123 +10,105 @@ import { extname, isAbsolute, posix, resolve } from "node:path";
 import {
 	inspectCheckedRecordValueIndexHostedArtifact
 } from "./checked-record-value-index-hosted-archive.mjs";
+import {
+	dependentSignatureFocusedWorkflow, dependentSignatureMatrixLanes
+	, dependentSignatureMatrixRoutes
+	, validateDependentSignatureMatrixReceipt
+} from "./dependent-signature-matrix-receipt.mjs";
 import { moduleSpecifiers } from "./module-closure.mjs";
 
 export const dependentSignatureHostedProducer
-	= "52622818425c3fb69a81ef87b5af26ce429e3136";
-export const dependentSignatureConsumerRun = 40824858819;
-export const dependentSignaturePerlRun = dependentSignatureConsumerRun;
+	= "7f206cdbf35d650c48917572e6344fdc0194aeb7";
+export const dependentSignatureHostedRunId = 40927405318;
 export const dependentSignatureHostedRunConclusions = Object.freeze({
-	[String(dependentSignatureConsumerRun)]: "failure"
+	[String(dependentSignatureHostedRunId)]: "success"
 });
 export const dependentSignatureHostedEvidenceDirectory
 	= "docs/evidence/dependent-signatures-hosted-20261028";
-
-const consumerWorkflow = ".github/workflows/consumer-matrix.yml";
-const perlWorkflow = ".github/workflows/perl-consumer.yml";
-const native = ({
-	id, profiles, jobName, artifactPrefix, reportStem, acceptanceStep, uploadStep
-}) => Object.freeze({
-	id, profiles: Object.freeze(profiles), runId: dependentSignatureConsumerRun
-	, workflow: consumerWorkflow, jobName, artifactPrefix
-	, kind: "managed"
-	, reportPaths: Object.freeze([
-		`managed-dependent-fin/${reportStem}.json`
-		, `managed-dependent-fin/reviewed-${reportStem}.json`
-	])
-	, acceptanceStep, uploadStep
-});
-const perl = configuration => Object.freeze({
-	id: `perl-${configuration}`, profiles: Object.freeze(["perl"])
-	, runId: dependentSignaturePerlRun, workflow: consumerWorkflow
-	, jobName: `Perl / Perl XS (${configuration})`
-	, artifactPrefix: `type-corpus-perl-${configuration}`
-	, kind: "managed"
-	, reportPaths: Object.freeze([
-		"managed-dependent-fin/perl.json"
-		, "managed-dependent-fin/reviewed-perl.json"
-	])
-	, acceptanceStep: "Compare installed Perl corpus packages with fresh Lean results"
-	, uploadStep: "Upload this configuration's real-Lean corpus report"
+export const dependentSignatureHostedReceipt = Object.freeze({
+	id: "matrix", artifactPrefix: "dependent-signature-matrix"
+	, jobName: "Reconcile the exact same-run receipt"
 });
 
-export const dependentSignatureHostedLanes = Object.freeze([
-	Object.freeze({
-		id: "javascript"
-		, profiles: Object.freeze([
-			"node-javascript", "node-typescript", "browser-javascript"
-			, "browser-react", "browser-worker"
-		])
-		, runId: dependentSignatureConsumerRun, workflow: consumerWorkflow
-		, jobName: "Node and browser npm consumers"
-		, artifactPrefix: "dependent-fin-npm", kind: "javascript"
-		, reportPaths: Object.freeze(["ordinary-source.json", "reviewed-ir.json"])
-		, acceptanceStep: "Check ordinary and reviewed dependent Fin in Node, TypeScript and browsers"
-		, uploadStep: "Preserve ordinary and reviewed dependent Fin npm observations"
+const contracts = Object.freeze({
+	javascript: Object.freeze({
+		jobName: "JavaScript and browser producer / Four dependent-record routes in Node and three browsers"
+		, acceptanceStep: "Run all dependent checked-record author routes"
+		, uploadStep: "Preserve original and partial installed records"
+		, enforceStep: "Enforce dependent checked-record acceptance"
 	})
-	, native({
-		id: "c-family", profiles: ["c", "cpp"]
-		, jobName: "Native consumer (c-family)"
-		, artifactPrefix: "type-corpus-c-family", reportStem: "c-cpp"
-		, acceptanceStep: "Compare relocated C and C++ corpus consumers with fresh Lean"
-		, uploadStep: "Upload installed C and C++ corpus observations"
+	, "c-family": Object.freeze({
+		jobName: "C and C++ producer / Four dependent-record routes in C11/GMP and C++20/Boost"
+		, acceptanceStep: "Require every dependent-record author route in C and C++"
+		, uploadStep: "Preserve complete and partial installed records"
+		, enforceStep: "Enforce dependent checked-record native acceptance"
 	})
-	, native({
-		id: "python", profiles: ["python"], jobName: "Native consumer (python)"
-		, artifactPrefix: "type-corpus-python", reportStem: "python"
-		, acceptanceStep: "Compare installed Python corpus packages with fresh Lean results"
-		, uploadStep: "Upload installed Python corpus observations"
+	, perl: Object.freeze({
+		jobName: "Perl producer / Four ABI dependent checked-record CPAN matrix"
+		, acceptanceStep: "Require every source route and API mode across each Perl ABI"
+		, uploadStep: "Preserve original and partial installed records"
+		, enforceStep: "Enforce installed dependent checked-record Perl acceptance"
 	})
-	, native({
-		id: "rust", profiles: ["rust"], jobName: "Native consumer (rust)"
-		, artifactPrefix: "type-corpus-rust", reportStem: "rust"
-		, acceptanceStep: "Compare isolated Cargo corpus consumers with fresh Lean"
-		, uploadStep: "Upload installed Rust corpus observations"
+	, python: Object.freeze({
+		jobName: "Python producer / Four dependent checked-record selections on both Python floors"
+		, acceptanceStep: "Require every source route and API mode on both Python floors"
+		, uploadStep: "Preserve original and partial installed records"
+		, enforceStep: "Enforce installed dependent checked-record Python acceptance"
 	})
-	, native({
-		id: "dotnet", profiles: ["dotnet"], jobName: "Managed consumer (dotnet)"
-		, artifactPrefix: "type-corpus-dotnet", reportStem: "dotnet"
-		, acceptanceStep: "Compare installed NuGet corpus packages with fresh Lean results"
-		, uploadStep: "Upload installed .NET corpus observations"
+	, rust: Object.freeze({
+		jobName: "Rust producer / Four dependent checked-record selections in Rust"
+		, acceptanceStep: "Require all four author and API routes in Rust"
+		, uploadStep: "Preserve original and partial installed records"
+		, enforceStep: "Enforce installed dependent checked-record Rust acceptance"
 	})
-	, native({
-		id: "jvm", profiles: ["java", "kotlin"], jobName: "Managed consumer (jvm)"
-		, artifactPrefix: "type-corpus-jvm", reportStem: "java-kotlin"
-		, acceptanceStep: "Compare isolated Java and Kotlin corpus consumers with fresh Lean"
-		, uploadStep: "Upload installed JVM corpus observations"
+	, dotnet: Object.freeze({
+		jobName: ".NET producer / Four dependent checked-record checked-record routes in .NET"
+		, acceptanceStep: "Require every source and API route"
+		, uploadStep: "Preserve original and partial installed records"
+		, enforceStep: "Enforce installed dependent checked-record .NET acceptance"
 	})
-	, native({
-		id: "ruby", profiles: ["ruby"], jobName: "Managed consumer (ruby)"
-		, artifactPrefix: "type-corpus-ruby", reportStem: "ruby"
-		, acceptanceStep: "Compare installed Ruby corpus packages with fresh Lean results"
-		, uploadStep: "Upload installed Ruby corpus observations"
+	, jvm: Object.freeze({
+		jobName: "Java and Kotlin producer / Four dependent checked-record routes in Java and Kotlin"
+		, acceptanceStep: "Require every source and API route in Java and Kotlin"
+		, uploadStep: "Preserve original and partial installed records"
+		, enforceStep: "Enforce installed dependent checked-record Java and Kotlin acceptance"
 	})
-	, native({
-		id: "php-native", profiles: ["php-native"], jobName: "Native PHP"
-		, artifactPrefix: "type-corpus-php-native", reportStem: "php-native"
-		, acceptanceStep: "Compare weak and strict installed Composer callers with fresh Lean"
-		, uploadStep: "Upload installed PHP corpus observations"
+	, ruby: Object.freeze({
+		jobName: "Ruby producer / Four dependent checked-record selections in Ruby"
+		, acceptanceStep: "Require every source route and API mode in Ruby"
+		, uploadStep: "Preserve original and partial installed records"
+		, enforceStep: "Enforce installed dependent checked-record Ruby acceptance"
 	})
-	, native({
-		id: "php-wasm", profiles: ["php-wasm"]
-		, jobName: "PHP-Wasm corpus (refinements)"
-		, artifactPrefix: "type-corpus-php-wasm-refinements"
-		, reportStem: "php-wasm"
-		, acceptanceStep: "Compare installed PHP-Wasm refinements with the shared Lean corpus"
-		, uploadStep: "Upload PHP-Wasm refinement corpus evidence"
+	, "php-native": Object.freeze({
+		jobName: "Native PHP producer / Four dependent checked-record checked-record routes in native PHP"
+		, acceptanceStep: "Require every source route and API mode in native PHP"
+		, uploadStep: "Preserve original and partial installed records"
+		, enforceStep: "Enforce installed dependent checked-record native PHP acceptance"
 	})
-	, native({
-		id: "wit-wasi", profiles: ["wit-wasi"]
-		, jobName: "WIT and WASI Component Model"
-		, artifactPrefix: "type-corpus-wit-wasi", reportStem: "wit-wasi"
-		, acceptanceStep: "Compile ordinary Lean APIs and consume relocated WIT packages"
-		, uploadStep: "Upload WIT shared corpus evidence"
+	, "php-wasm": Object.freeze({
+		jobName: "PHP-Wasm producer / Four dependent checked-record routes in PHP-Wasm"
+		, acceptanceStep: "Require ordinary, reviewed, and both result-only installed packages"
+		, uploadStep: "Preserve original and partial installed records"
+		, enforceStep: "Enforce installed dependent PHP-Wasm acceptance"
 	})
-	, ...[
-		"5.36.3-threaded", "5.36.3-unthreaded"
-		, "5.38.2-threaded", "5.38.2-unthreaded"
-	].map(perl)
-]);
+	, "wit-wasi": Object.freeze({
+		jobName: "WIT and WASI producer / Four dependent checked-record checked-record routes through Wasmtime"
+		, acceptanceStep: "Require both source routes and API modes through Wasmtime"
+		, uploadStep: "Preserve original and partial installed records"
+		, enforceStep: "Enforce installed dependent checked-record checked-record WIT acceptance"
+	})
+});
+
+export const dependentSignatureHostedLanes = Object.freeze(
+	dependentSignatureMatrixLanes.map(lane => Object.freeze({
+		...lane
+		, id: lane.key, matrixLane: lane
+		, ...contracts[lane.key]
+		, runId: dependentSignatureHostedRunId
+		, workflow: dependentSignatureFocusedWorkflow
+		, artifactPrefix: `dependent-checked-record-${lane.workflowStem}`
+	}))
+);
 
 /**
  * Parse the sole canonical hosted-input root.
@@ -147,11 +129,12 @@ export const parseDependentSignatureHostedArchiveArgs = args => {
  * Select the five original hosted inputs for one lane.
  *
  * @param root - Canonical input root.
- * @param lane - Closed hosted lane.
+ * @param selected - Closed hosted lane or aggregate receipt.
  */
-export const dependentSignatureHostedInputs = (root, lane) => {
-	assert.ok(dependentSignatureHostedLanes.includes(lane));
-	const prefix = `${root}/${lane.id}`;
+export const dependentSignatureHostedInputs = (root, selected) => {
+	assert.ok(dependentSignatureHostedLanes.includes(selected)
+		|| selected === dependentSignatureHostedReceipt);
+	const prefix = `${root}/${selected.id}`;
 	return {
 		"artifact-zip": `${prefix}/artifact.zip`
 		, "run-json": `${prefix}/run.json`
@@ -171,16 +154,30 @@ export const inspectDependentSignatureHostedArtifact = async (
 	selected, lane
 ) => {
 	assert.ok(dependentSignatureHostedLanes.includes(lane));
-	const runConclusion
-		= dependentSignatureHostedRunConclusions[String(lane.runId)];
-	assert.ok(["failure", "success"].includes(runConclusion));
 	const hosted = await inspectCheckedRecordValueIndexHostedArtifact(selected, {
 		workflow: lane.workflow, jobName: lane.jobName
 		, artifactPrefix: lane.artifactPrefix
-		, conclusions: { run: runConclusion, job: "success" }
+		, conclusions: { run: "success", job: "success" }
 	});
 	assert.equal(hosted.hostedRun.runId, lane.runId, lane.id);
 	assert.equal(hosted.revision, dependentSignatureHostedProducer, lane.id);
+	return hosted;
+};
+
+/**
+ * Bind the aggregate same-run receipt artifact to its successful job.
+ *
+ * @param selected - Exact ZIP, API and log paths.
+ */
+export const inspectDependentSignatureHostedReceipt = async selected => {
+	const hosted = await inspectCheckedRecordValueIndexHostedArtifact(selected, {
+		workflow: dependentSignatureFocusedWorkflow
+		, jobName: dependentSignatureHostedReceipt.jobName
+		, artifactPrefix: dependentSignatureHostedReceipt.artifactPrefix
+		, conclusions: { run: "success", job: "success" }
+	});
+	assert.equal(hosted.hostedRun.runId, dependentSignatureHostedRunId);
+	assert.equal(hosted.revision, dependentSignatureHostedProducer);
 	return hosted;
 };
 
@@ -200,6 +197,49 @@ export const assertDependentSignatureHostedSteps = (lane, jobBytes) => {
 	assert.equal(acceptance.conclusion, "success", lane.id);
 	assert.equal(upload.conclusion, "success", lane.id);
 	assert.ok(upload.number > acceptance.number, lane.id);
+	assert.equal(named(lane.enforceStep).conclusion, "skipped", lane.id);
+	return true;
+};
+
+/**
+ * Require the exact receipt download, reconciliation and preservation path.
+ *
+ * @param jobBytes - Exact GitHub job API bytes.
+ */
+export const assertDependentSignatureHostedReceiptSteps = jobBytes => {
+	const job = JSON.parse(jobBytes), named = name => {
+		const matches = job.steps.filter(step => step.name === name);
+		assert.equal(matches.length, 1, `receipt:${name}`); return matches[0];
+	};
+	const download = named("Download every same-run dependent-signature artifact");
+	const reconciliation = named("Reconcile every profile, author route, and API mode");
+	const upload = named("Preserve the complete dependent-signature receipt");
+	assert.equal(download.conclusion, "success");
+	assert.equal(reconciliation.conclusion, "success");
+	assert.equal(upload.conclusion, "success");
+	assert.ok(reconciliation.number > download.number);
+	assert.ok(upload.number > reconciliation.number);
+	assert.equal(named(
+		"Enforce every producer and exact receipt reconciliation"
+	).conclusion, "skipped");
+	return true;
+};
+
+/**
+ * Validate the aggregate receipt against all retained canonical summaries.
+ *
+ * @param receipt - Same-run aggregate receipt.
+ */
+export const validateDependentSignatureHostedReceipt = receipt => {
+	validateDependentSignatureMatrixReceipt(receipt);
+	assert.equal(receipt.run.repository, "seanmorris/lean-bridge");
+	assert.equal(receipt.run.workflow, dependentSignatureFocusedWorkflow);
+	assert.equal(receipt.run.runId, dependentSignatureHostedRunId);
+	assert.equal(receipt.run.producerCommit, dependentSignatureHostedProducer);
+	assert.equal(receipt.records.length
+		, dependentSignatureHostedLanes.length
+			* dependentSignatureMatrixRoutes.length);
+	return receipt;
 };
 
 const sourceCache = new Map();
@@ -229,10 +269,32 @@ const closure = (revision, entries) => {
 const tree = (revision, prefix) => execFileSync("git", [
 	"ls-tree", "-r", "--name-only", revision, "--", prefix
 ], { encoding: "utf8" }).trim().split("\n").filter(Boolean);
+const producerStems = Object.freeze(
+	dependentSignatureMatrixLanes.map(lane => lane.workflowStem));
 const producerEntries = Object.freeze([
-	consumerWorkflow, perlWorkflow
-	, "tests/dependent-fin-javascript.test.mjs"
-	, "tests/managed-dependent-fin.test.mjs"
+	dependentSignatureFocusedWorkflow
+	, ...producerStems.map(stem =>
+		`.github/workflows/dependent-checked-record-${stem}.yml`)
+	, "scripts/reconcile-dependent-signature-matrix.mjs"
+	, ...producerStems.map(stem =>
+		`scripts/run-dependent-checked-record-${stem}-ci.sh`)
+	, ...producerStems.map(stem =>
+		`scripts/check-dependent-checked-record-${stem}-ci.mjs`)
+	, "scripts/check-dependent-checked-record-php-wasm-compiler-ci.mjs"
+	, "scripts/select-nominal-subtype-php-ci-tools.mjs"
+	, "scripts/select-nominal-subtype-wit-ci-tools.mjs"
+	, "tests/helpers/dependent-checked-record-browser-installed-tests.mjs"
+	, "tests/helpers/dependent-checked-record-native-installed-tests.mjs"
+	, "tests/helpers/dependent-checked-record-perl-installed-tests.mjs"
+	, "tests/helpers/dependent-checked-record-python-installed-tests.mjs"
+	, "tests/helpers/dependent-checked-record-rust-installed-tests.mjs"
+	, "tests/helpers/dependent-checked-record-dotnet-installed-tests.mjs"
+	, "tests/helpers/dependent-checked-record-jvm-installed-tests.mjs"
+	, "tests/helpers/dependent-checked-record-ruby-installed-tests.mjs"
+	, "tests/helpers/dependent-checked-record-php-installed-tests.mjs"
+	, "tests/helpers/dependent-checked-record-php-wasm-lean-tests.mjs"
+	, "tests/helpers/dependent-checked-record-php-wasm-installed-tests.mjs"
+	, "tests/helpers/dependent-checked-record-wit-installed-tests.mjs"
 	, ".github/actions/bounded-apt/action.yml", "scripts/env.sh"
 	, "scripts/bootstrap-toolchains.sh", "scripts/bootstrap-rust-ci.sh"
 	, "scripts/bootstrap-php-wasm-ci.sh"
@@ -252,13 +314,16 @@ export const dependentSignatureHostedSources = revisions => {
 	]);
 	for(const revision of Object.values(revisions))
 		assert.match(revision, /^[a-f0-9]{40}$/u);
+	assert.equal(revisions.producer, dependentSignatureHostedProducer);
 	const roles = [
 		["producer", revisions.producer, [
 			...closure(revisions.producer, producerEntries)
 			, ...tree(revisions.producer
-				, "tests/fixtures/onboarding/native-dependent-fin")
+				, "tests/fixtures/onboarding/dependent-checked-records")
 			, ...tree(revisions.producer
-				, "tests/fixtures/dependent-fin-consumers")
+				, "tests/fixtures/dependent-checked-record-browser")
+			, ...tree(revisions.producer
+				, "tests/fixtures/dependent-checked-record-consumers")
 		]]
 		, [
 			"checker"
