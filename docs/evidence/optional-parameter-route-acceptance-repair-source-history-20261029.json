@@ -1,0 +1,204 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-route-acceptance-repair-source-history.mjs",
+      "sha256": "54c0f4ea30f7ee81454380e191ad45414da6748f5118159d9bf659b776382a08"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-route-acceptance-repair-source-history-tests.mjs",
+      "sha256": "35ee5459ad8e787017e468c072772ab8aee8db6c231007a40e484541c3896736"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-route-acceptance-repair-source-history.mjs",
+      "sha256": "ff580b944eb65d5addcd9d602576a3f72ad18daff5edcfcbf634a491cfea66b2"
+    }
+  ],
+  "implementationAdditions": [],
+  "implementationCommit": "cdda9e12eb6ae04b2c836d84456577915d8384f3",
+  "integrationUpdates": [
+    {
+      "currentSha256": "dc5d80e492270c7b738d35be32f0451ab3b4c91a2d18022a487cd3ba1bf34c79",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-route-acceptance-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 229
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "748f7c228e02fbea22dd3ade7f85d2477305d2cb5c435fe485c1fe03b41b8fb5"
+    }
+  ],
+  "milestone": "optional-parameter-route-acceptance-repair-source-v1",
+  "predecessorCommit": "f84fe638f97b47829774ddb1ed1835e95bf37464",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Use the compiler-authenticated ordinary or reviewed binder in npm and PHP acceptance, distinguish native PHP integers from PHP-Wasm BigInteger values, and validate each generated PHP surface against its exact runtime profile.",
+  "updates": [
+    {
+      "currentSha256": "860865d35e2aec545f331723864b0de2507f38857d1a2f81455a52d138f8dc4f",
+      "edits": [
+        {
+          "current": "\t++$checks;\n",
+          "previous": "    ++$checks;\n",
+          "start": 509
+        },
+        {
+          "current": "function same_number(mixed $actual, mixed $expected): bool\n{\n\tif ($actual instanceof BigInteger && $expected instanceof BigInteger) {\n\t\treturn $actual->isEqualTo($expected);\n\t}\n\treturn $actual === $expected;\n}\n\n$defaultWord = word();\n$wasmNumbers = $defaultWord instanceof BigInteger;\n$wordSeven = $wasmNumbers ? BigInteger::of(7) : 7;\n$wordEleven = $wasmNumbers ? BigInteger::of(11) : 11;\ncheck($wasmNumbers ? $defaultWord->isEqualTo(7) : $defaultWord === 7);\n$wordSevenResult = word($wordSeven);\ncheck($wasmNumbers ? $wordSevenResult->isEqualTo(7) : $wordSevenResult === 7);\n$wordElevenResult = word($wordEleven);\ncheck($wasmNumbers ? $wordElevenResult->isEqualTo(11) : $wordElevenResult === 11);\n",
+          "previous": "check(word() === 7);\ncheck(word(7) === 7);\ncheck(word(11) === 11);\n",
+          "start": 524
+        },
+        {
+          "current": "check(same_number(maybe(new Some($wordEleven))->value, $wordEleven));\n",
+          "previous": "check(maybe(new Some(11))->value === 11);\n",
+          "start": 1668
+        },
+        {
+          "current": "check($omittedPresent instanceof Some && ($wasmNumbers\n    ? $omittedPresent->value->isEqualTo(9)\n    : $omittedPresent->value === 9));\ncheck(same_number(present(new Some($wordSeven))->value, $wordSeven));\n",
+          "previous": "check($omittedPresent instanceof Some && $omittedPresent->value === 9);\ncheck(present(new Some(9))->value === 9);\n",
+          "start": 1768
+        },
+        {
+          "current": "check(same_number(present(new Some($wordEleven))->value, $wordEleven));\n",
+          "previous": "check(present(new Some(11))->value === 11);\n",
+          "start": 2005
+        }
+      ],
+      "path": "tests/fixtures/optional-parameter-consumers/php.php",
+      "previousSha256": "67b2d65e76ab55033c15b77a464a14c6815115601b6e56481cc2980fcf006d5c"
+    },
+    {
+      "currentSha256": "3e11fdfa3f547e5dbe6e20ebcc957bab0e157bb1c97cb406f2b7672e336856f1",
+      "edits": [
+        {
+          "current": "/**\n * Return exact public PHP signatures for one authoring route and runtime.\n *\n * @param route - Ordinary or independently reviewed authoring route.\n * @param profile - Native PHP or PHP-Wasm package profile.\n */\nexport const optionalParameterPhpProfilePatterns = (route, profile) => {\n\tconst argument = routeBinder(route);\n\tif(![\"php-native\", \"php-wasm\"].includes(profile))\n\t\tthrow new TypeError(\"unknown optional-parameter PHP profile\");\n\tif(profile === \"php-native\") return optionalParameterPhpPatterns(route);\n\treturn Object.freeze([\n\t\tnew RegExp(\n\t\t\t`function word\\\\(mixed \\\\$${argument} = null\\\\): \\\\\\\\Brick\\\\\\\\Math\\\\\\\\BigInteger`, \"u\")\n\t\t, /Brick\\\\Math\\\\BigInteger::of\\('7'\\)/u\n\t\t, new RegExp(`function natural\\\\(mixed \\\\$${argument} = null\\\\)`, \"u\")\n\t\t, new RegExp(`function present\\\\(mixed \\\\$${argument} = null\\\\)`, \"u\")\n\t\t, new RegExp(\n\t\t\t`\\\\$${argument} = new Some\\\\(\\\\\\\\Brick\\\\\\\\Math\\\\\\\\BigInteger::of\\\\('9'\\\\)\\\\)`, \"u\")\n\t\t, new RegExp(\n\t\t\t`function unit_value\\\\(mixed \\\\$${argument} = null\\\\): null`, \"u\")\n\t]);\n};\n\n/**\n * Return exact TypeScript declarations for one authoring route.\n *\n * @param route - Ordinary or independently reviewed authoring route.\n */\nexport const optionalParameterTypescriptPatterns = route => {\n\tconst argument = routeBinder(route);\n\treturn Object.freeze([\n\t\tnew RegExp(`word\\\\(${argument}\\\\?: number\\\\): number;`, \"u\")\n\t\t, new RegExp(`natural\\\\(${argument}\\\\?: bigint\\\\): bigint;`, \"u\")\n\t\t, new RegExp(`present\\\\(${argument}\\\\?: Readonly<`, \"u\")\n\t\t, new RegExp(`unitValue\\\\(${argument}\\\\?: void\\\\): void;`, \"u\")\n\t]);\n};\n\n",
+          "previous": "",
+          "start": 2075
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-installed-contract.mjs",
+      "previousSha256": "91d849fbd8ba243d1d921dd39e8e3fe9d668bb78f9d6ff825bc0d3bffcedbe0a"
+    },
+    {
+      "currentSha256": "68167a33a67c0a6e1fa5bced0b9e247ced1e773f0de955b8a28b88a6c908e89b",
+      "edits": [
+        {
+          "current": "import { optionalParameterTypescriptPatterns }\n\tfrom \"./optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 902
+        },
+        {
+          "current": "\tfor(const signature of optionalParameterTypescriptPatterns(options.route))\n\t\tassert.match((await read(\"index.d.ts\")).toString(), signature);\n",
+          "previous": "\tfor(const signature of [\n\t\t/word\\(value0\\?: number\\): number;/u\n\t\t, /natural\\(value0\\?: bigint\\): bigint;/u\n\t\t, /unitValue\\(value0\\?: void\\): void;/u\n\t]) assert.match((await read(\"index.d.ts\")).toString(), signature);\n",
+          "start": 8267
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-npm-report.mjs",
+      "previousSha256": "521dd04346583d649b51e05e428c8368bcdd89d4c80e8c07a0c8bf1e602d55d5"
+    },
+    {
+      "currentSha256": "a257eaff02ea76530d6183a53898ae9d97afb7abf0e7d2949b6e8b8ccab7f7b2",
+      "edits": [
+        {
+          "current": "import { optionalParameterPhpProfilePatterns }\n\tfrom \"./optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 474
+        },
+        {
+          "current": "",
+          "previous": "const apiPatterns = [\n\t/function word\\(mixed \\$value0 = 7\\): int/u\n\t, /function natural\\(mixed \\$value0 = null\\)/u\n\t, /function present\\(mixed \\$value0 = null\\)/u\n\t, /\\$value0 = new Some\\(9\\)/u\n\t, /function unit_value\\(mixed \\$value0 = null\\): null/u\n];\n",
+          "start": 1208
+        },
+        {
+          "current": "\t\tfor(const pattern of optionalParameterPhpProfilePatterns(\n\t\t\toptions.route, item.profile)) assert.match(api.toString(), pattern);\n",
+          "previous": "\t\tfor(const pattern of apiPatterns) assert.match(api.toString(), pattern);\n",
+          "start": 7324
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-php-report.mjs",
+      "previousSha256": "f0456807b5c90fd4ad4413cfec6f3b5dc9ba43b22195553fccd672f36735cbd8"
+    },
+    {
+      "currentSha256": "ea2e40c62fdd8a3251521eae124b4507f6899719f9ba8964e87574bba81b3d2f",
+      "edits": [
+        {
+          "current": "\t, optionalParameterPhpProfilePatterns\n",
+          "previous": "",
+          "start": 234
+        },
+        {
+          "current": "\t, optionalParameterTypescriptPatterns\n",
+          "previous": "",
+          "start": 339
+        },
+        {
+          "current": "\tconst wasm = source\n\t\t.replace(\"= 7): int\", \"= null): \\\\Brick\\\\Math\\\\BigInteger\")\n\t\t.replace(\"$arg0 = new Some(9)\"\n\t\t\t, \"$arg0 = new Some(\\\\Brick\\\\Math\\\\BigInteger::of('9'))\")\n\t\t+ \"\\\\Brick\\\\Math\\\\BigInteger::of('7');\\n\";\n\tfor(const pattern of optionalParameterPhpProfilePatterns(\n\t\t\"ordinary\", \"php-wasm\")) assert.match(wasm, pattern);\n\tassert.throws(() => optionalParameterPhpProfilePatterns(\n\t\t\"ordinary\", \"foreign\"), /unknown/u);\n});\n\ntest(\"optional-parameter TypeScript contracts retain route-specific binders\", () => {\n\tconst ordinaryDeclarations = [\n\t\t\"word(arg0?: number): number;\"\n\t\t, \"natural(arg0?: bigint): bigint;\"\n\t\t, \"present(arg0?: Readonly<{ tag: \\\"none\\\" }>): Readonly<unknown>;\"\n\t\t, \"unitValue(arg0?: void): void;\"\n\t].join(\"\\n\");\n\tfor(const pattern of optionalParameterTypescriptPatterns(\"ordinary\"))\n\t\tassert.match(ordinaryDeclarations, pattern);\n\tconst reviewed = ordinaryDeclarations.replaceAll(\"arg0\", \"value0\");\n\tfor(const pattern of optionalParameterTypescriptPatterns(\"reviewed\"))\n\t\tassert.match(reviewed, pattern);\n\tassert.doesNotMatch(ordinaryDeclarations\n\t\t, optionalParameterTypescriptPatterns(\"reviewed\")[0]);\n\tassert.throws(() => optionalParameterTypescriptPatterns(\"foreign\")\n\t\t, /unknown/u);\n",
+          "previous": "",
+          "start": 2457
+        }
+      ],
+      "path": "tests/optional-parameter-installed-contract.test.mjs",
+      "previousSha256": "7e50eb24eccb044f770857bdc9a1c951f4f2bb02633e67ff03ea57a3d7f4b804"
+    },
+    {
+      "currentSha256": "4bc515a01e182b5be02542f6d73a4b2a21efce4d1114ec1e3708a11160f73bb4",
+      "edits": [
+        {
+          "current": "import { optionalParameterTypescriptPatterns }\n\tfrom \"./helpers/optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 964
+        },
+        {
+          "current": "\t\tfor(const signature of optionalParameterTypescriptPatterns(route))\n\t\t\tassert.match(declarations, signature);\n",
+          "previous": "\t\tfor(const signature of [\n\t\t\t/word\\(value0\\?: number\\): number;/u\n\t\t\t, /natural\\(value0\\?: bigint\\): bigint;/u\n\t\t\t, /present\\(value0\\?: Readonly</u\n\t\t\t, /unitValue\\(value0\\?: void\\): void;/u\n\t\t]) assert.match(declarations, signature);\n",
+          "start": 8137
+        }
+      ],
+      "path": "tests/optional-parameter-npm-installed.test.mjs",
+      "previousSha256": "e73c1b482419fdca365e0a1684e19b87e4595235e3d4dd3fa3ee69fc67acdfe1"
+    },
+    {
+      "currentSha256": "b15878c4d78c4d64c304fb8ceafeb472400fe97ce49a577d2d243ac89d89dc0d",
+      "edits": [
+        {
+          "current": "\toptionalParameterPhpProfilePatterns\n",
+          "previous": "\toptionalParameterPhpPatterns\n",
+          "start": 850
+        },
+        {
+          "current": "import { optionalParameterBinder }\n\tfrom \"./helpers/optional-parameter-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1156
+        },
+        {
+          "current": "const phpInvalid = route => `$rejected = false;\ntry { \\\\LeanDefaults\\\\word(${optionalParameterBinder(route)}: 7, extra: null); } catch (\\\\Error) { $rejected = true; }\n",
+          "previous": "const phpInvalid = `$rejected = false;\ntry { \\\\LeanDefaults\\\\word(value0: 7, extra: null); } catch (\\\\Error) { $rejected = true; }\n",
+          "start": 2209
+        },
+        {
+          "current": "const assertApi = (source, route, profile) => {\n\tfor(const pattern of optionalParameterPhpProfilePatterns(route, profile))\n",
+          "previous": "const assertApi = (source, route) => {\n\tfor(const pattern of optionalParameterPhpPatterns(route))\n",
+          "start": 2460
+        },
+        {
+          "current": "\t\tassertApi(nativeApi.toString(), route, \"php-native\");\n",
+          "previous": "\t\tassertApi(nativeApi.toString(), route);\n",
+          "start": 6589
+        },
+        {
+          "current": "\t\t\t\t, phpInvalid: phpInvalid(route), removeHandoff: true\n",
+          "previous": "\t\t\t\t, phpInvalid, removeHandoff: true\n",
+          "start": 8102
+        },
+        {
+          "current": "\t\tassertApi(wasmApi.toString(), route, \"php-wasm\");\n",
+          "previous": "\t\tassertApi(wasmApi.toString(), route);\n",
+          "start": 8408
+        }
+      ],
+      "path": "tests/optional-parameter-php-installed.test.mjs",
+      "previousSha256": "4fafb8ddebf885547b811d693a61ae1165795cf9bf3df52167f6c1fceb2dd51b"
+    }
+  ]
+}
