@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { posix } from "node:path";
 import test from "node:test";
 import { assembleComponentNpmRuntime } from "../src/release/component-npm-package.mjs";
 import { createDeterministicTarGzFromFiles } from "../src/release/deterministic-archive.mjs";
@@ -19,6 +20,23 @@ const archive = runtime => createDeterministicTarGzFromFiles({ sourceDateEpoch: 
 	, files: [...runtime.files].map(([path, bytes]) => ({ path: `package/${path}`
 		, bytes: Buffer.from(bytes), mode: 0o644 })) });
 
+const relativeImports = source => [
+	...source.matchAll(/\bfrom\s+["'](\.[^"']+)["']/gu)
+	, ...source.matchAll(/\bimport\s*(?:\(\s*)?["'](\.[^"']+)["']/gu)
+].map(match => match[1]);
+
+const assertClosedRuntimeModules = runtime => {
+	for(const [path, bytes] of runtime.files)
+	{
+		if(!path.endsWith(".mjs")) continue;
+		for(const specifier of relativeImports(Buffer.from(bytes).toString("utf8")))
+		{
+			const dependency = posix.normalize(posix.join(posix.dirname(path), specifier));
+			assert.ok(runtime.files.has(dependency), `${path} imports missing ${dependency}`);
+		}
+	}
+};
+
 test("equivalent copied and owned runtime metadata produces identical npm bytes", async () => {
 	const ordinary = await assembleComponentNpmRuntime({ ...inputs, runtimeRequirement: requirement });
 	const restored = await assembleComponentNpmRuntime({ ...inputs, runtimeRequirement: JSON.parse(canonicalJson(requirement)) });
@@ -33,6 +51,8 @@ test("equivalent copied and owned runtime metadata produces identical npm bytes"
 	const metadata = JSON.parse(ordinary.files.get("package.json"));
 	assert.equal(ordinary.files.get("package.json"), canonicalJson(metadata));
 	assert.equal(metadata.leanBridge.runtimeIdentity, sha256(ordinary.files.get("runtime-identity.json")));
+	assert.ok(ordinary.files.has("internal/binding-ir/default-value.mjs"));
+	assertClosedRuntimeModules(ordinary);
 });
 
 test("runtime metadata and binary changes retain distinct content-addressed coordinates", async () => {
