@@ -1,0 +1,207 @@
+{
+  "additions": [
+    {
+      "currentSha256": "995e4cbf6b72f8a4dbbc623deb516b36f5d0fc80eb02f8264dba0255d92cd07d",
+      "path": "scripts/update-npm-runtime-default-value-copy-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "998c76a23a62f42ef4658b5ea8db4d6b2f84b69e238bad6158f54bddc94fdffd",
+      "path": "tests/helpers/npm-runtime-default-value-copy-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c210c3d0fd534fed8dee9df0dbd19c55454e31113830fc76a426d1d3b4cef2c1",
+      "path": "tests/helpers/npm-runtime-default-value-copy-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f161f81a588f65c965bd437ac73a4fdec9b52d82",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bbc86deb9fdae04345ba17109400125601ed76db98855a05a731b509999589b4",
+      "edits": [
+        {
+          "current": "import \"./helpers/npm-runtime-default-value-copy-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "51f2e177132f98681d4d52853c15fef97c4c34c6fe2f391639b1f076130b6455"
+    },
+    {
+      "currentSha256": "25e060cf10c08981f4267d23e091a3af47788e6a738d88bfb6a7b4ba9591d99b",
+      "edits": [
+        {
+          "current": "import { beforeNpmRuntimeDefaultValueCopyRepairSource, npmRuntimeDefaultValueCopyRepairNormalizationPaths } from \"./npm-runtime-default-value-copy-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...npmRuntimeDefaultValueCopyRepairNormalizationPaths\n\t, ...hostNullJavaScriptNormalizationPaths\n",
+          "previous": "\t...hostNullJavaScriptNormalizationPaths\n",
+          "start": 214769
+        },
+        {
+          "current": "\tlet stage = beforeNpmRuntimeDefaultValueCopyRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullJavaScriptSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullJavaScriptSource(path, text, expected);\n",
+          "start": 268608
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fb2704f7dec424454593a4a85b53a019479ad2358c0e09a631fb165d50e727e5"
+    }
+  ],
+  "milestone": "npm-runtime-default-value-copy-repair-source-v1",
+  "predecessorCommit": "e5827ccbdb36fbb940accb9c104090dc025f9e6b",
+  "schemaVersion": 1,
+  "scope": "Remove the stray default-value entry that the HostNull npm commit 5f7a6cb added to the binding-ir copy list of the shared npm runtime package, together with the three component npm package assertions that claimed an internal/binding-ir/default-value.mjs file and imports of it from the copied, callable and structured-callable runtime modules. No src/binding-ir/default-value.mjs exists at this milestone and none of those runtime modules import it, so every installed npm build failed with ENOENT. The HostNull JavaScript history test now resolves its history-added files and its integration paths through their authenticated Fin history milestones instead of the live working tree, so later newest-first layers no longer change the bytes it authenticates; every assertion, digest, order and refusal is unchanged. The 16 src/release/component-npm-package.mjs type-surface pins are refreshed to the repaired bytes; no other pin, record, support cell or product source changes. Register the transition newest-first; hosted Downstream remains the terminal acceptance gate.",
+  "updates": [
+    {
+      "currentSha256": "26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed",
+      "edits": [
+        {
+          "current": "\tfor(const name of [\"canonical\", \"contract\", \"sha256\"])\n",
+          "previous": "\tfor(const name of [\"canonical\", \"contract\", \"default-value\", \"sha256\"])\n",
+          "start": 10208
+        }
+      ],
+      "path": "src/release/component-npm-package.mjs",
+      "previousSha256": "373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f"
+    },
+    {
+      "currentSha256": "bfe106b0d53af4ed3737ddf8f339805b8b1716ba15f4c94bee619b4d4cff277b",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t\tawait access(join(runtimeRoot, \"internal/binding-ir/default-value.mjs\"));\n\t\tfor(const name of [\"component-callables\", \"component-copied\", \"component-structured-callables\"])\n\t\t\tassert.match(await readFile(join(runtimeRoot, `internal/${name}.mjs`), \"utf8\"), /from \"\\.\\/binding-ir\\/default-value\\.mjs\"/u);\n",
+          "start": 11206
+        }
+      ],
+      "path": "tests/component-npm-package.test.mjs",
+      "previousSha256": "f9ba0e9160d3fed90afa77dfa40584106cb850c9b9e8e0a8183170a311f48415"
+    },
+    {
+      "currentSha256": "fd1b11a97bdd2f1429116fdc2ce6cde08a8bd9448469151aa407ab1714be2e42",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { createReadStream } from \"node:fs\";\n",
+          "start": 215
+        },
+        {
+          "current": "import { Readable } from \"node:stream\";\n",
+          "previous": "",
+          "start": 359
+        },
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 1338
+        },
+        {
+          "current": "\t\t\t: await sourceAtFinHistoryMilestone(addition.path, addition.currentSha256);\n",
+          "previous": "\t\t\t: await readFile(addition.path);\n",
+          "start": 4878
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(update.path, update.currentSha256);\n",
+          "previous": "",
+          "start": 5355
+        },
+        {
+          "current": "\t\t\tReadable.from([Buffer.from(current)]), update), true);\n",
+          "previous": "\t\t\tcreateReadStream(update.path), update), true);\n\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 5498
+        }
+      ],
+      "path": "tests/helpers/host-null-javascript-source-history-tests.mjs",
+      "previousSha256": "22c1f7aae035d2ad2ca05d4d59d58f662f356f8220332d383ce41da80dd45a3c"
+    },
+    {
+      "currentSha256": "59fc23f7f946ae53ac1704449848f7d2d05552fafe9963b7ffa69dc59dd81bb0",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 139635
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 468785
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 669174
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 677415
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 685100
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 692372
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 831456
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 991171
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 1053094
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 1142225
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 1492128
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 1714890
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 1720669
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 1725454
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 1729620
+        },
+        {
+          "current": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "previous": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "start": 1951188
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "61baaf89d3bc0271410ce4dba23bbd8506c49bc1f7fb734d045db90b55fd0fdd"
+    }
+  ]
+}
