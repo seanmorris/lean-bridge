@@ -136,8 +136,10 @@ test("the clean build gate isolates two committed source and build roots", async
 test("performance jobs check out live source without the retained evidence tree", async () => {
   const workflow = await readFile(".github/workflows/performance.yml", "utf8");
   const sparse = "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n";
+  // The build job's native graph test imports the history hub, which reads retained records and commits.
+  const full = "          fetch-depth: 0\n          persist-credentials: false\n";
   const jobs = new Map([
-    ["build", 1], ["spatial", 1], ["scaling", 1], ["overhead", 1]
+    ["build", null], ["spatial", 1], ["scaling", 1], ["overhead", 1]
     , ["lifecycle", 1], ["reproducibility", 0], ["report", 1]
   ]);
   const bodies = workflow.slice(workflow.indexOf("\njobs:\n")).split(/^ {2}(?=[a-z]+:\n)/mu).slice(1);
@@ -149,10 +151,16 @@ test("performance jobs check out live source without the retained evidence tree"
       /uses: actions\/checkout@v6\n {8}with:\n((?: {10}.*\n)+)/gu
     )];
     assert.equal(checkouts.length, 1, job);
+    if(jobs.get(job) === null)
+    {
+      assert.equal(checkouts[0][1], full, job);
+      continue;
+    }
     const options = checkouts[0][1].replaceAll(/^ {10}#.*\n/gmu, "");
     assert.equal(options, `          fetch-depth: ${jobs.get(job)}\n          persist-credentials: false\n${sparse}`, job);
   }
   const uncommented = workflow.replaceAll(/^ *#.*\n/gmu, "");
-  assert.equal(uncommented.split("docs/evidence").length - 1, jobs.size);
+  assert.equal(uncommented.split("docs/evidence").length - 1, jobs.size - 1);
+  assert.match(workflow, /tests\/native-graph-model\.test\.mjs/u);
   assert.ok(workflow.includes("      - name: Report disk after the sparse checkout\n        run: df -h / \"$GITHUB_WORKSPACE\"\n"));
 });
