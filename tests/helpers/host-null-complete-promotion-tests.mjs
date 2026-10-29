@@ -16,11 +16,9 @@ import {
 	hostNullCompletePromotionCells, hostNullCompletePromotionEvidenceId
 	, hostNullCompletePromotionGroups, hostNullCompletePromotionPaths
 	, hostNullCompletePromotionPositions, hostNullCompletePromotionProfiles
+	, hostNullCompletePromotionReferencePaths
 	, promoteHostNullComplete
 } from "./host-null-complete-promotion.mjs";
-import {
-	hostNullCompleteHostedEvidence
-} from "./host-null-complete-hosted-evidence.mjs";
 import {
 	hostNullCompleteHostedLanes
 } from "./host-null-complete-hosted-archive.mjs";
@@ -33,27 +31,6 @@ const load = async () => {
 	return { document, contracts: { irSchema, consumers } };
 };
 const revision = "1".repeat(40);
-const referencePaths = [
-	".github/workflows/host-null-complete.yml"
-	, `${hostNullCompleteHostedEvidence}/index.json`
-	, "scripts/archive-host-null-complete-evidence.mjs"
-	, "scripts/download-host-null-complete-inputs.mjs"
-	, "scripts/generate-reference-docs.mjs"
-	, "scripts/generate-type-docs.mjs"
-	, "scripts/promote-host-null-complete.mjs"
-	, "tests/helpers/host-null-complete-hosted-archive.mjs"
-	, "tests/helpers/host-null-complete-hosted-evidence.mjs"
-	, "tests/helpers/host-null-complete-ci-tests.mjs"
-	, "tests/helpers/host-null-complete-documentation.mjs"
-	, "tests/helpers/host-null-complete-documentation-tests.mjs"
-	, "tests/helpers/host-null-complete-perl-evidence-refresh.mjs"
-	, "tests/helpers/host-null-complete-perl-evidence-refresh-tests.mjs"
-	, "tests/helpers/host-null-complete-promotion.mjs"
-	, "tests/helpers/host-null-complete-promotion-tests.mjs"
-	, "tests/helpers/host-null-complete-promotion-transaction-tests.mjs"
-	, "tests/helpers/promotion-file-transaction.mjs"
-	, "tests/helpers/type-surface-promotion-io.mjs"
-];
 const artifacts = hostNullCompleteHostedLanes.map((selectedLane, index) => ({
 	path: `${selectedLane.artifactPrefix}-${revision}.zip`
 	, sha256: "abcdef0"[index].repeat(64)
@@ -62,9 +39,10 @@ const reference = Object.freeze({
 	id: hostNullCompletePromotionEvidenceId, revision
 	, command: "hosted complete HostNull command"
 	, scope: "hosted complete HostNull scope"
-	, files: Object.freeze(referencePaths.map((path, index) => ({
-		path, sha256: ((index + 1) % 16).toString(16).repeat(64)
-	})))
+	, files: Object.freeze(hostNullCompletePromotionReferencePaths.map(
+		(path, index) => ({
+			path, sha256: ((index + 1) % 16).toString(16).repeat(64)})
+	))
 	, artifacts: Object.freeze(artifacts)
 	, limitations: Object.freeze(Array.from({ length: 6 }, (_, index) =>
 		`complete hosted limitation ${index + 1}`))

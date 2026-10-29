@@ -65,7 +65,7 @@ export const hostNullCompletePromotionGroups = Object.freeze([
 assert.deepEqual(hostNullCompletePromotionGroups.flatMap(item => item.profiles)
 	, hostNullCompletePromotionProfiles);
 
-const referencePaths = Object.freeze([
+export const hostNullCompletePromotionReferencePaths = Object.freeze([
 	".github/workflows/host-null-complete.yml"
 	, `${hostNullCompleteHostedEvidence}/index.json`
 	, "scripts/archive-host-null-complete-evidence.mjs"
@@ -83,6 +83,8 @@ const referencePaths = Object.freeze([
 	, "tests/helpers/host-null-complete-promotion.mjs"
 	, "tests/helpers/host-null-complete-promotion-tests.mjs"
 	, "tests/helpers/host-null-complete-promotion-transaction-tests.mjs"
+	, "tests/host-null-complete-hosted-evidence.test.mjs"
+	, "tests/host-null-complete-promotion.test.mjs"
 	, "tests/helpers/promotion-file-transaction.mjs"
 	, "tests/helpers/type-surface-promotion-io.mjs"
 ]);
@@ -99,9 +101,10 @@ export const hostNullCompletePromotionReference = async () => {
 		, revision: checked.producerCommit
 		, command: "node --test --test-concurrency=1 tests/host-null-complete-hosted-evidence.test.mjs"
 		, scope: "One same-revision hosted run executes source-free installed HostNull packages for all seventeen profiles, both compiler-authenticated and independently reviewed author routes, and parameter, result, record-field, callback-parameter and callback-result positions."
-		, files: await Promise.all(referencePaths.map(async path => ({
-			path, sha256: sha256(await readFile(path))
-		})))
+		, files: await Promise.all(hostNullCompletePromotionReferencePaths
+			.map(async path => ({
+				path, sha256: sha256(await readFile(path))}))
+		)
 		, artifacts: Object.freeze(checked.captures.map(capture => ({
 			path: `${capture.hostedRun.artifact.name}.zip`
 			, sha256: capture.hostedRun.artifact.sha256
@@ -138,7 +141,8 @@ export const promoteHostNullComplete = (
 	], "HostNull complete reference");
 	assert.equal(reference.id, hostNullCompletePromotionEvidenceId);
 	assert.match(reference.revision, /^[a-f0-9]{40}$/u);
-	assert.deepEqual(reference.files.map(item => item.path), referencePaths);
+	assert.deepEqual(reference.files.map(item => item.path)
+		, hostNullCompletePromotionReferencePaths);
 	assert.equal(new Set(reference.files.map(item => item.path)).size
 		, reference.files.length);
 	for(const file of reference.files)
