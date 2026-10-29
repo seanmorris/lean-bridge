@@ -86,7 +86,7 @@ const renderDocuments = async document => {
 };
 const documents = await renderDocuments(semanticPromotion);
 const currentSourcePaths = dependentCheckedRecordPromotionCurrentSourcePaths(
-	semanticPromotion, Object.keys(documents));
+	original.document, Object.keys(documents));
 assert.ok(currentSourcePaths.length > 0
 	, "Optional-parameter publication must own changed live-source pins");
 const currentDigests = new Map(currentSourcePaths.map(documentPath => {
