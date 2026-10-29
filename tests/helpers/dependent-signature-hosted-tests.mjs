@@ -67,8 +67,8 @@ const managedReport = route => {
 test("the hosted plan closes exactly 17 profiles across both author routes", () => {
 	assert.deepEqual(dependentSignatureHostedRunConclusions, {
 		[String(dependentSignatureConsumerRun)]: "failure"
-		, [String(dependentSignaturePerlRun)]: "success"
 	});
+	assert.equal(dependentSignaturePerlRun, dependentSignatureConsumerRun);
 	assert.equal(dependentSignatureHostedLanes.length, 14);
 	const ordinaryProfiles = new Set();
 	for(const lane of dependentSignatureHostedLanes)
@@ -76,8 +76,14 @@ test("the hosted plan closes exactly 17 profiles across both author routes", () 
 		assert.equal(lane.reportPaths.length, 2, lane.id);
 		assert.equal(new Set(lane.profiles).size, lane.profiles.length, lane.id);
 		for(const profile of lane.profiles) ordinaryProfiles.add(profile);
-		assert.equal(lane.runId, lane.id.startsWith("perl-")
-			? dependentSignaturePerlRun : dependentSignatureConsumerRun);
+		assert.equal(lane.runId, dependentSignatureConsumerRun);
+		assert.equal(lane.workflow, ".github/workflows/consumer-matrix.yml");
+		if(lane.id.startsWith("perl-"))
+		{
+			assert.match(lane.jobName, /^Perl \/ Perl XS \(.+\)$/u);
+			assert.equal(lane.acceptanceStep
+				, "Compare installed Perl corpus packages with fresh Lean results");
+		}
 	}
 	assert.deepEqual([...ordinaryProfiles].sort(), [
 		"browser-javascript", "browser-react", "browser-worker", "c", "cpp"
@@ -124,9 +130,12 @@ test("managed reports bind the source, packages and live dependency graph", () =
 	}
 });
 
-const closureCommitted = spawnSync("git", [
-	"cat-file", "-e", "HEAD:scripts/archive-dependent-signature-hosted.mjs"
-]).status === 0;
+const closureCommitted = [
+	"scripts/archive-dependent-signature-hosted.mjs"
+	, "scripts/download-dependent-signature-hosted-inputs.mjs"
+].every(path => spawnSync("git", [
+	"cat-file", "-e", `HEAD:${path}`
+]).status === 0);
 test("source selection freezes producer fixtures plus checker and archiver", {
 	skip: !closureCommitted
 }, () => {
@@ -142,6 +151,11 @@ test("source selection freezes producer fixtures plus checker and archiver", {
 		&& source.path === "tests/managed-dependent-fin.test.mjs"));
 	assert.ok(producer.some(source => source.role === "producer"
 		&& source.path === "tests/fixtures/dependent-fin-consumers/perl.pl"));
+	assert.ok(producer.some(source => source.role === "producer"
+		&& source.path === ".github/workflows/perl-consumer.yml"));
+	assert.ok(producer.some(source => source.role === "archiver"
+		&& source.path
+			=== "scripts/download-dependent-signature-hosted-inputs.mjs"));
 	assert.equal(new Set(producer.map(source =>
 		`${source.role}:${source.path}`)).size, producer.length);
 });

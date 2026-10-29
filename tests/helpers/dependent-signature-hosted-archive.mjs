@@ -13,12 +13,11 @@ import {
 import { moduleSpecifiers } from "./module-closure.mjs";
 
 export const dependentSignatureHostedProducer
-	= "8984bf53578ce36adde659c9ac6008bb893c59b2";
-export const dependentSignatureConsumerRun = 40697329977;
-export const dependentSignaturePerlRun = 40697334600;
+	= "52622818425c3fb69a81ef87b5af26ce429e3136";
+export const dependentSignatureConsumerRun = 40824858819;
+export const dependentSignaturePerlRun = dependentSignatureConsumerRun;
 export const dependentSignatureHostedRunConclusions = Object.freeze({
 	[String(dependentSignatureConsumerRun)]: "failure"
-	, [String(dependentSignaturePerlRun)]: "success"
 });
 export const dependentSignatureHostedEvidenceDirectory
 	= "docs/evidence/dependent-signatures-hosted-20261028";
@@ -39,15 +38,15 @@ const native = ({
 });
 const perl = configuration => Object.freeze({
 	id: `perl-${configuration}`, profiles: Object.freeze(["perl"])
-	, runId: dependentSignaturePerlRun, workflow: perlWorkflow
-	, jobName: `Perl XS (${configuration})`
+	, runId: dependentSignaturePerlRun, workflow: consumerWorkflow
+	, jobName: `Perl / Perl XS (${configuration})`
 	, artifactPrefix: `type-corpus-perl-${configuration}`
 	, kind: "managed"
 	, reportPaths: Object.freeze([
 		"managed-dependent-fin/perl.json"
 		, "managed-dependent-fin/reviewed-perl.json"
 	])
-	, acceptanceStep: "Compare installed Perl corpus packages with the shared Lean corpus"
+	, acceptanceStep: "Compare installed Perl corpus packages with fresh Lean results"
 	, uploadStep: "Upload this configuration's real-Lean corpus report"
 });
 
@@ -69,43 +68,43 @@ export const dependentSignatureHostedLanes = Object.freeze([
 		id: "c-family", profiles: ["c", "cpp"]
 		, jobName: "Native consumer (c-family)"
 		, artifactPrefix: "type-corpus-c-family", reportStem: "c-cpp"
-		, acceptanceStep: "Compare relocated C and C++ corpus consumers with the shared Lean corpus"
+		, acceptanceStep: "Compare relocated C and C++ corpus consumers with fresh Lean"
 		, uploadStep: "Upload installed C and C++ corpus observations"
 	})
 	, native({
 		id: "python", profiles: ["python"], jobName: "Native consumer (python)"
 		, artifactPrefix: "type-corpus-python", reportStem: "python"
-		, acceptanceStep: "Compare installed Python corpus packages with the shared Lean corpus"
+		, acceptanceStep: "Compare installed Python corpus packages with fresh Lean results"
 		, uploadStep: "Upload installed Python corpus observations"
 	})
 	, native({
 		id: "rust", profiles: ["rust"], jobName: "Native consumer (rust)"
 		, artifactPrefix: "type-corpus-rust", reportStem: "rust"
-		, acceptanceStep: "Compare isolated Cargo corpus consumers with the shared Lean corpus"
+		, acceptanceStep: "Compare isolated Cargo corpus consumers with fresh Lean"
 		, uploadStep: "Upload installed Rust corpus observations"
 	})
 	, native({
 		id: "dotnet", profiles: ["dotnet"], jobName: "Managed consumer (dotnet)"
 		, artifactPrefix: "type-corpus-dotnet", reportStem: "dotnet"
-		, acceptanceStep: "Compare installed NuGet corpus packages with the shared Lean corpus"
+		, acceptanceStep: "Compare installed NuGet corpus packages with fresh Lean results"
 		, uploadStep: "Upload installed .NET corpus observations"
 	})
 	, native({
 		id: "jvm", profiles: ["java", "kotlin"], jobName: "Managed consumer (jvm)"
 		, artifactPrefix: "type-corpus-jvm", reportStem: "java-kotlin"
-		, acceptanceStep: "Compare isolated Java and Kotlin corpus consumers with the shared Lean corpus"
+		, acceptanceStep: "Compare isolated Java and Kotlin corpus consumers with fresh Lean"
 		, uploadStep: "Upload installed JVM corpus observations"
 	})
 	, native({
 		id: "ruby", profiles: ["ruby"], jobName: "Managed consumer (ruby)"
 		, artifactPrefix: "type-corpus-ruby", reportStem: "ruby"
-		, acceptanceStep: "Compare installed Ruby corpus packages with the shared Lean corpus"
+		, acceptanceStep: "Compare installed Ruby corpus packages with fresh Lean results"
 		, uploadStep: "Upload installed Ruby corpus observations"
 	})
 	, native({
 		id: "php-native", profiles: ["php-native"], jobName: "Native PHP"
 		, artifactPrefix: "type-corpus-php-native", reportStem: "php-native"
-		, acceptanceStep: "Compare weak and strict installed Composer callers with the shared Lean corpus"
+		, acceptanceStep: "Compare weak and strict installed Composer callers with fresh Lean"
 		, uploadStep: "Upload installed PHP corpus observations"
 	})
 	, native({
@@ -273,6 +272,7 @@ export const dependentSignatureHostedSources = revisions => {
 			, revisions.archiver
 			, closure(revisions.archiver, [
 				"scripts/archive-dependent-signature-hosted.mjs"
+				, "scripts/download-dependent-signature-hosted-inputs.mjs"
 			])
 		]
 	];
