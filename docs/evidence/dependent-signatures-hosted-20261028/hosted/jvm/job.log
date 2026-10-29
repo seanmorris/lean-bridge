@@ -1,0 +1,1909 @@
+﻿2026-10-29T22:42:00.3675492Z Current runner version: '2.338.0'
+2026-10-29T22:42:00.3710084Z ##[group]Runner Image Provisioner
+2026-10-29T22:42:00.3711509Z Hosted Compute Agent
+2026-10-29T22:42:00.3712627Z Version: 20261021.618
+2026-10-29T22:42:00.3713953Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-29T22:42:00.3715205Z Build Date: 2026-10-21T00:45:21Z
+2026-10-29T22:42:00.3716555Z Worker ID: {b9d1655f-8057-4114-b5f9-9fae03178762}
+2026-10-29T22:42:00.3717822Z Region: eastus2
+2026-10-29T22:42:00.3719400Z Cloud: Azure
+2026-10-29T22:42:00.3720323Z ##[endgroup]
+2026-10-29T22:42:00.3722672Z ##[group]Operating System
+2026-10-29T22:42:00.3724240Z Ubuntu
+2026-10-29T22:42:00.3725237Z 24.04.5
+2026-10-29T22:42:00.3726197Z LTS
+2026-10-29T22:42:00.3727097Z ##[endgroup]
+2026-10-29T22:42:00.3728062Z ##[group]Runner Image
+2026-10-29T22:42:00.3729199Z Image: ubuntu-24.04
+2026-10-29T22:42:00.3730169Z Version: 20261025.353.1
+2026-10-29T22:42:00.3732467Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-29T22:42:00.3735588Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+2026-10-29T22:42:00.3737318Z ##[endgroup]
+2026-10-29T22:42:00.3739375Z ##[group]GITHUB_TOKEN Permissions
+2026-10-29T22:42:00.3742346Z Contents: read
+2026-10-29T22:42:00.3743658Z Metadata: read
+2026-10-29T22:42:00.3744818Z ##[endgroup]
+2026-10-29T22:42:00.3747869Z Secret source: Actions
+2026-10-29T22:42:00.3749525Z Cache mode: write
+2026-10-29T22:42:00.3751033Z Prepare workflow directory
+2026-10-29T22:42:00.4317682Z Prepare all required actions
+2026-10-29T22:42:00.4390180Z Getting action download info
+2026-10-29T22:42:00.6655645Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-29T22:42:00.7674888Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-29T22:42:00.8627879Z Download action repository 'actions/setup-java@v4' (SHA:cf277c60eb25467037889841efdb72551f06f6c3)
+2026-10-29T22:42:01.1141559Z Download action repository 'actions/upload-artifact@v7' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-10-29T22:42:01.3528937Z Uses: seanmorris/lean-bridge/.github/workflows/dependent-checked-record-jvm.yml@refs/heads/codex/vo2168-current-shallow-checkout (70652587f69c330ea0feebb7bc4c6da6b20f4f04)
+2026-10-29T22:42:01.3534241Z ##[group] Inputs
+2026-10-29T22:42:01.3535161Z   shallow_checkout: true
+2026-10-29T22:42:01.3535671Z   max-load: 6
+2026-10-29T22:42:01.3536118Z   suite: produce
+2026-10-29T22:42:01.3536576Z ##[endgroup]
+2026-10-29T22:42:01.3537363Z Complete job name: Java and Kotlin producer / Four dependent checked-record routes in Java and Kotlin
+2026-10-29T22:42:01.4462454Z ##[group]Run actions/checkout@v6
+2026-10-29T22:42:01.4463749Z with:
+2026-10-29T22:42:01.4464208Z   fetch-depth: 1
+2026-10-29T22:42:01.4464684Z   persist-credentials: false
+2026-10-29T22:42:01.4466284Z   sparse-checkout: /*
+!/*/
+/.github/
+/acceptance/
+/config/
+/containers/
+/demos/
+/nix/
+/notices/
+/patches/
+/poc/
+/schema/
+/scripts/
+/site/
+/src/
+/tests/
+/docs/
+!/docs/evidence/*
+/docs/evidence/*.json
+/docs/evidence/*.md
+/docs/evidence/*.xml
+
+2026-10-29T22:42:01.4467921Z   sparse-checkout-cone-mode: false
+2026-10-29T22:42:01.4468483Z   repository: seanmorris/lean-bridge
+2026-10-29T22:42:01.4472285Z   token: ***
+2026-10-29T22:42:01.4472724Z   ssh-strict: true
+2026-10-29T22:42:01.4473362Z   ssh-user: git
+2026-10-29T22:42:01.4473847Z   clean: true
+2026-10-29T22:42:01.4474318Z   fetch-tags: false
+2026-10-29T22:42:01.4474813Z   show-progress: true
+2026-10-29T22:42:01.4475263Z   lfs: false
+2026-10-29T22:42:01.4475682Z   submodules: false
+2026-10-29T22:42:01.4476170Z   set-safe-directory: true
+2026-10-29T22:42:01.4476686Z   allow-unsafe-pr-checkout: false
+2026-10-29T22:42:01.4477511Z env:
+2026-10-29T22:42:01.4477933Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:42:01.4478395Z ##[endgroup]
+2026-10-29T22:42:01.9599363Z Syncing repository: seanmorris/lean-bridge
+2026-10-29T22:42:01.9601544Z ##[group]Getting Git version info
+2026-10-29T22:42:01.9602850Z Working directory is '/home/runner/work/lean-bridge/lean-bridge'
+2026-10-29T22:42:01.9605277Z [command]/usr/bin/git version
+2026-10-29T22:42:01.9711944Z git version 2.56.0
+2026-10-29T22:42:01.9739243Z ##[endgroup]
+2026-10-29T22:42:01.9756811Z Temporarily overriding HOME='/home/runner/work/_temp/d19c0552-0d45-4049-a227-2438d0a9b37c' before making global git config changes
+2026-10-29T22:42:01.9760170Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-29T22:42:01.9762968Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lean-bridge/lean-bridge
+2026-10-29T22:42:01.9834269Z Deleting the contents of '/home/runner/work/lean-bridge/lean-bridge'
+2026-10-29T22:42:01.9845742Z ##[group]Determining repository object format
+2026-10-29T22:42:01.9847635Z ##[endgroup]
+2026-10-29T22:42:01.9849100Z ##[group]Initializing the repository
+2026-10-29T22:42:01.9850336Z [command]/usr/bin/git init /home/runner/work/lean-bridge/lean-bridge
+2026-10-29T22:42:02.0039390Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-29T22:42:02.0041662Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-29T22:42:02.0044067Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-29T22:42:02.0045706Z hint: call:
+2026-10-29T22:42:02.0046513Z hint:
+2026-10-29T22:42:02.0047615Z hint: 	git config --global init.defaultBranch <name>
+2026-10-29T22:42:02.0048911Z hint:
+2026-10-29T22:42:02.0050088Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-29T22:42:02.0052258Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-29T22:42:02.0054045Z hint:
+2026-10-29T22:42:02.0054941Z hint: 	git branch -m <name>
+2026-10-29T22:42:02.0056035Z hint:
+2026-10-29T22:42:02.0057324Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-29T22:42:02.0061371Z Initialized empty Git repository in /home/runner/work/lean-bridge/lean-bridge/.git/
+2026-10-29T22:42:02.0067812Z [command]/usr/bin/git remote add origin https://github.com/seanmorris/lean-bridge
+2026-10-29T22:42:02.0119349Z ##[endgroup]
+2026-10-29T22:42:02.0121018Z ##[group]Disabling automatic garbage collection
+2026-10-29T22:42:02.0124273Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-29T22:42:02.0166324Z ##[endgroup]
+2026-10-29T22:42:02.0168494Z ##[group]Setting up auth
+2026-10-29T22:42:02.0169774Z Removing SSH command configuration
+2026-10-29T22:42:02.0176256Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T22:42:02.0235774Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-29T22:42:02.0746725Z Removing HTTP extra header
+2026-10-29T22:42:02.0756576Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T22:42:02.0810335Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-29T22:42:02.1061383Z Removing includeIf entries pointing to credentials config files
+2026-10-29T22:42:02.1068766Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T22:42:02.1120698Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-29T22:42:02.1384300Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-29T22:42:02.1440493Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path /home/runner/work/_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:42:02.1591125Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:42:02.1600322Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:42:02.1608064Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:42:02.1648816Z ##[endgroup]
+2026-10-29T22:42:02.1650358Z ##[group]Fetching the repository
+2026-10-29T22:42:02.1659548Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +70652587f69c330ea0feebb7bc4c6da6b20f4f04:refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:42:02.5561741Z From https://github.com/seanmorris/lean-bridge
+2026-10-29T22:42:02.5563919Z  * [new ref]         70652587f69c330ea0feebb7bc4c6da6b20f4f04 -> origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:42:02.5575061Z [command]/usr/bin/git branch --list --remote origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:42:02.5614477Z   origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:42:02.5624330Z [command]/usr/bin/git rev-parse refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:42:02.5658922Z 70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T22:42:02.5664913Z ##[endgroup]
+2026-10-29T22:42:02.5666078Z ##[group]Determining the checkout info
+2026-10-29T22:42:02.5667231Z ##[endgroup]
+2026-10-29T22:42:02.5668092Z ##[group]Setting up sparse checkout
+2026-10-29T22:42:02.5671970Z [command]/usr/bin/git config core.sparseCheckout true
+2026-10-29T22:42:02.5717955Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+2026-10-29T22:42:02.5751230Z .git/info/sparse-checkout
+2026-10-29T22:42:02.5760205Z ##[endgroup]
+2026-10-29T22:42:02.5761783Z ##[group]Checking out the ref
+2026-10-29T22:42:02.5767444Z [command]/usr/bin/git checkout --progress --force -B codex/vo2168-current-shallow-checkout refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:42:03.7339897Z Updating index flags:  32% (74398/226097)
+2026-10-29T22:42:03.7629533Z Updating index flags:  33% (74613/226097)
+2026-10-29T22:42:03.7917652Z Updating index flags:  34% (76873/226097)
+2026-10-29T22:42:03.8201585Z Updating index flags:  35% (79134/226097)
+2026-10-29T22:42:03.8492108Z Updating index flags:  36% (81395/226097)
+2026-10-29T22:42:03.8775334Z Updating index flags:  37% (83656/226097)
+2026-10-29T22:42:03.9061428Z Updating index flags:  38% (85917/226097)
+2026-10-29T22:42:03.9348853Z Updating index flags:  39% (88178/226097)
+2026-10-29T22:42:03.9633136Z Updating index flags:  40% (90439/226097)
+2026-10-29T22:42:03.9919794Z Updating index flags:  41% (92700/226097)
+2026-10-29T22:42:04.0205391Z Updating index flags:  42% (94961/226097)
+2026-10-29T22:42:04.0533764Z Updating index flags:  43% (97222/226097)
+2026-10-29T22:42:04.0811022Z Updating index flags:  44% (99483/226097)
+2026-10-29T22:42:04.1099685Z Updating index flags:  45% (101744/226097)
+2026-10-29T22:42:04.1384239Z Updating index flags:  46% (104005/226097)
+2026-10-29T22:42:04.1691772Z Updating index flags:  47% (106266/226097)
+2026-10-29T22:42:04.1974486Z Updating index flags:  48% (108527/226097)
+2026-10-29T22:42:04.2272329Z Updating index flags:  49% (110788/226097)
+2026-10-29T22:42:04.2560272Z Updating index flags:  50% (113049/226097)
+2026-10-29T22:42:04.2846728Z Updating index flags:  51% (115310/226097)
+2026-10-29T22:42:04.3131883Z Updating index flags:  52% (117571/226097)
+2026-10-29T22:42:04.3425571Z Updating index flags:  53% (119832/226097)
+2026-10-29T22:42:04.3709638Z Updating index flags:  54% (122093/226097)
+2026-10-29T22:42:04.3981787Z Updating index flags:  55% (124354/226097)
+2026-10-29T22:42:04.4264170Z Updating index flags:  56% (126615/226097)
+2026-10-29T22:42:04.4556390Z Updating index flags:  57% (128876/226097)
+2026-10-29T22:42:04.4849315Z Updating index flags:  58% (131137/226097)
+2026-10-29T22:42:04.5136418Z Updating index flags:  59% (133398/226097)
+2026-10-29T22:42:04.5427378Z Updating index flags:  60% (135659/226097)
+2026-10-29T22:42:04.5717702Z Updating index flags:  61% (137920/226097)
+2026-10-29T22:42:04.6008715Z Updating index flags:  62% (140181/226097)
+2026-10-29T22:42:04.6298872Z Updating index flags:  63% (142442/226097)
+2026-10-29T22:42:04.6595086Z Updating index flags:  64% (144703/226097)
+2026-10-29T22:42:04.6882511Z Updating index flags:  65% (146964/226097)
+2026-10-29T22:42:04.7174217Z Updating index flags:  66% (149225/226097)
+2026-10-29T22:42:04.7308574Z Updating index flags:  67% (151485/226097)
+2026-10-29T22:42:04.7464681Z Updating index flags:  67% (152524/226097)
+2026-10-29T22:42:04.7754933Z Updating index flags:  68% (153746/226097)
+2026-10-29T22:42:04.8050964Z Updating index flags:  69% (156007/226097)
+2026-10-29T22:42:04.8346185Z Updating index flags:  70% (158268/226097)
+2026-10-29T22:42:04.8602900Z Updating index flags:  71% (160529/226097)
+2026-10-29T22:42:04.8885475Z Updating index flags:  72% (162790/226097)
+2026-10-29T22:42:04.9165697Z Updating index flags:  73% (165051/226097)
+2026-10-29T22:42:04.9446834Z Updating index flags:  74% (167312/226097)
+2026-10-29T22:42:04.9730371Z Updating index flags:  75% (169573/226097)
+2026-10-29T22:42:05.0007015Z Updating index flags:  76% (171834/226097)
+2026-10-29T22:42:05.0294344Z Updating index flags:  77% (174095/226097)
+2026-10-29T22:42:05.0580085Z Updating index flags:  78% (176356/226097)
+2026-10-29T22:42:05.0866394Z Updating index flags:  79% (178617/226097)
+2026-10-29T22:42:05.1145303Z Updating index flags:  80% (180878/226097)
+2026-10-29T22:42:05.1440143Z Updating index flags:  81% (183139/226097)
+2026-10-29T22:42:05.1791387Z Updating index flags:  82% (185400/226097)
+2026-10-29T22:42:05.2155206Z Updating index flags:  83% (187661/226097)
+2026-10-29T22:42:05.2417757Z Updating index flags:  84% (189922/226097)
+2026-10-29T22:42:05.2708169Z Updating index flags:  85% (192183/226097)
+2026-10-29T22:42:05.2998362Z Updating index flags:  86% (194444/226097)
+2026-10-29T22:42:05.3288147Z Updating index flags:  87% (196705/226097)
+2026-10-29T22:42:05.3590932Z Updating index flags:  88% (198966/226097)
+2026-10-29T22:42:05.3881649Z Updating index flags:  89% (201227/226097)
+2026-10-29T22:42:05.4176364Z Updating index flags:  90% (203488/226097)
+2026-10-29T22:42:05.4476411Z Updating index flags:  91% (205749/226097)
+2026-10-29T22:42:05.4765363Z Updating index flags:  92% (208010/226097)
+2026-10-29T22:42:05.5052846Z Updating index flags:  93% (210271/226097)
+2026-10-29T22:42:05.5342278Z Updating index flags:  94% (212532/226097)
+2026-10-29T22:42:05.5595566Z Updating index flags:  95% (214793/226097)
+2026-10-29T22:42:05.5843949Z Updating index flags:  96% (217054/226097)
+2026-10-29T22:42:05.6094827Z Updating index flags:  97% (219315/226097)
+2026-10-29T22:42:05.6344036Z Updating index flags:  98% (221576/226097)
+2026-10-29T22:42:05.6591223Z Updating index flags:  99% (223837/226097)
+2026-10-29T22:42:05.6591783Z Updating index flags: 100% (226097/226097)
+2026-10-29T22:42:05.6592322Z Updating index flags: 100% (226097/226097), done.
+2026-10-29T22:43:10.2777674Z Updating files:   0% (1/13607)
+2026-10-29T22:43:10.3137054Z Updating files:   1% (137/13607)
+2026-10-29T22:43:10.3354531Z Updating files:   2% (273/13607)
+2026-10-29T22:43:10.3542187Z Updating files:   3% (409/13607)
+2026-10-29T22:43:10.6655301Z Updating files:   4% (545/13607)
+2026-10-29T22:43:10.6774217Z Updating files:   4% (625/13607)
+2026-10-29T22:43:10.7599143Z Updating files:   5% (681/13607)
+2026-10-29T22:43:10.8088279Z Updating files:   6% (817/13607)
+2026-10-29T22:43:10.8893808Z Updating files:   7% (953/13607)
+2026-10-29T22:43:11.2174001Z Updating files:   8% (1089/13607)
+2026-10-29T22:43:11.2731907Z Updating files:   9% (1225/13607)
+2026-10-29T22:43:11.3209277Z Updating files:  10% (1361/13607)
+2026-10-29T22:43:11.6137769Z Updating files:  11% (1497/13607)
+2026-10-29T22:43:11.6795938Z Updating files:  12% (1633/13607)
+2026-10-29T22:43:12.0161927Z Updating files:  12% (1654/13607)
+2026-10-29T22:43:12.1504436Z Updating files:  13% (1769/13607)
+2026-10-29T22:43:12.2164822Z Updating files:  14% (1905/13607)
+2026-10-29T22:43:12.2886252Z Updating files:  15% (2042/13607)
+2026-10-29T22:43:12.6147256Z Updating files:  16% (2178/13607)
+2026-10-29T22:43:12.6638614Z Updating files:  17% (2314/13607)
+2026-10-29T22:43:12.6651693Z Updating files:  18% (2450/13607)
+2026-10-29T22:43:13.0568076Z Updating files:  18% (2467/13607)
+2026-10-29T22:43:13.3620354Z Updating files:  19% (2586/13607)
+2026-10-29T22:43:13.3701330Z Updating files:  20% (2722/13607)
+2026-10-29T22:43:13.3784757Z Updating files:  21% (2858/13607)
+2026-10-29T22:43:13.3847960Z Updating files:  22% (2994/13607)
+2026-10-29T22:43:13.3916763Z Updating files:  23% (3130/13607)
+2026-10-29T22:43:13.3979677Z Updating files:  24% (3266/13607)
+2026-10-29T22:43:13.4057550Z Updating files:  25% (3402/13607)
+2026-10-29T22:43:13.4132035Z Updating files:  26% (3538/13607)
+2026-10-29T22:43:13.4201958Z Updating files:  27% (3674/13607)
+2026-10-29T22:43:13.4271806Z Updating files:  28% (3810/13607)
+2026-10-29T22:43:13.4337375Z Updating files:  29% (3947/13607)
+2026-10-29T22:43:13.4405807Z Updating files:  30% (4083/13607)
+2026-10-29T22:43:13.4469509Z Updating files:  31% (4219/13607)
+2026-10-29T22:43:13.4528226Z Updating files:  32% (4355/13607)
+2026-10-29T22:43:13.4595055Z Updating files:  33% (4491/13607)
+2026-10-29T22:43:13.4712995Z Updating files:  34% (4627/13607)
+2026-10-29T22:43:13.4837480Z Updating files:  35% (4763/13607)
+2026-10-29T22:43:13.4944704Z Updating files:  36% (4899/13607)
+2026-10-29T22:43:13.5050610Z Updating files:  37% (5035/13607)
+2026-10-29T22:43:13.5153376Z Updating files:  38% (5171/13607)
+2026-10-29T22:43:13.5244700Z Updating files:  39% (5307/13607)
+2026-10-29T22:43:13.5347797Z Updating files:  40% (5443/13607)
+2026-10-29T22:43:13.5439109Z Updating files:  41% (5579/13607)
+2026-10-29T22:43:13.5522052Z Updating files:  42% (5715/13607)
+2026-10-29T22:43:13.5589250Z Updating files:  43% (5852/13607)
+2026-10-29T22:43:13.5662660Z Updating files:  44% (5988/13607)
+2026-10-29T22:43:13.5742565Z Updating files:  45% (6124/13607)
+2026-10-29T22:43:13.5801556Z Updating files:  46% (6260/13607)
+2026-10-29T22:43:13.5857821Z Updating files:  47% (6396/13607)
+2026-10-29T22:43:13.5936162Z Updating files:  48% (6532/13607)
+2026-10-29T22:43:13.6024008Z Updating files:  49% (6668/13607)
+2026-10-29T22:43:13.6117255Z Updating files:  50% (6804/13607)
+2026-10-29T22:43:13.6198854Z Updating files:  51% (6940/13607)
+2026-10-29T22:43:13.6289119Z Updating files:  52% (7076/13607)
+2026-10-29T22:43:13.6370017Z Updating files:  53% (7212/13607)
+2026-10-29T22:43:13.6459570Z Updating files:  54% (7348/13607)
+2026-10-29T22:43:13.6548330Z Updating files:  55% (7484/13607)
+2026-10-29T22:43:13.6630053Z Updating files:  56% (7620/13607)
+2026-10-29T22:43:13.6651423Z Updating files:  57% (7756/13607)
+2026-10-29T22:43:13.6713364Z Updating files:  57% (7790/13607)
+2026-10-29T22:43:13.6790619Z Updating files:  58% (7893/13607)
+2026-10-29T22:43:13.6866807Z Updating files:  59% (8029/13607)
+2026-10-29T22:43:13.6944438Z Updating files:  60% (8165/13607)
+2026-10-29T22:43:13.7041895Z Updating files:  61% (8301/13607)
+2026-10-29T22:43:13.7119256Z Updating files:  62% (8437/13607)
+2026-10-29T22:43:13.7213098Z Updating files:  63% (8573/13607)
+2026-10-29T22:43:13.7299513Z Updating files:  64% (8709/13607)
+2026-10-29T22:43:13.7381070Z Updating files:  65% (8845/13607)
+2026-10-29T22:43:13.7461859Z Updating files:  66% (8981/13607)
+2026-10-29T22:43:13.7549524Z Updating files:  67% (9117/13607)
+2026-10-29T22:43:13.7633072Z Updating files:  68% (9253/13607)
+2026-10-29T22:43:13.7714671Z Updating files:  69% (9389/13607)
+2026-10-29T22:43:13.7785266Z Updating files:  70% (9525/13607)
+2026-10-29T22:43:13.7874476Z Updating files:  71% (9661/13607)
+2026-10-29T22:43:13.7945634Z Updating files:  72% (9798/13607)
+2026-10-29T22:43:13.8028009Z Updating files:  73% (9934/13607)
+2026-10-29T22:43:13.8104386Z Updating files:  74% (10070/13607)
+2026-10-29T22:43:13.8177643Z Updating files:  75% (10206/13607)
+2026-10-29T22:43:13.8260722Z Updating files:  76% (10342/13607)
+2026-10-29T22:43:13.8357546Z Updating files:  77% (10478/13607)
+2026-10-29T22:43:13.8452169Z Updating files:  78% (10614/13607)
+2026-10-29T22:43:13.8541425Z Updating files:  79% (10750/13607)
+2026-10-29T22:43:13.8621517Z Updating files:  80% (10886/13607)
+2026-10-29T22:43:13.8700534Z Updating files:  81% (11022/13607)
+2026-10-29T22:43:13.8799943Z Updating files:  82% (11158/13607)
+2026-10-29T22:43:13.8913432Z Updating files:  83% (11294/13607)
+2026-10-29T22:43:13.9010027Z Updating files:  84% (11430/13607)
+2026-10-29T22:43:13.9083190Z Updating files:  85% (11566/13607)
+2026-10-29T22:43:13.9158767Z Updating files:  86% (11703/13607)
+2026-10-29T22:43:13.9236048Z Updating files:  87% (11839/13607)
+2026-10-29T22:43:13.9314840Z Updating files:  88% (11975/13607)
+2026-10-29T22:43:13.9397743Z Updating files:  89% (12111/13607)
+2026-10-29T22:43:13.9478696Z Updating files:  90% (12247/13607)
+2026-10-29T22:43:13.9550794Z Updating files:  91% (12383/13607)
+2026-10-29T22:43:13.9633298Z Updating files:  92% (12519/13607)
+2026-10-29T22:43:13.9736251Z Updating files:  93% (12655/13607)
+2026-10-29T22:43:13.9832318Z Updating files:  94% (12791/13607)
+2026-10-29T22:43:13.9922683Z Updating files:  95% (12927/13607)
+2026-10-29T22:43:14.0018895Z Updating files:  96% (13063/13607)
+2026-10-29T22:43:14.0106725Z Updating files:  97% (13199/13607)
+2026-10-29T22:43:14.0194057Z Updating files:  98% (13335/13607)
+2026-10-29T22:43:14.0284290Z Updating files:  99% (13471/13607)
+2026-10-29T22:43:14.0285131Z Updating files: 100% (13607/13607)
+2026-10-29T22:43:14.0285840Z Updating files: 100% (13607/13607), done.
+2026-10-29T22:43:14.2599974Z Switched to a new branch 'codex/vo2168-current-shallow-checkout'
+2026-10-29T22:43:14.2601604Z branch 'codex/vo2168-current-shallow-checkout' set up to track 'origin/codex/vo2168-current-shallow-checkout'.
+2026-10-29T22:43:14.2754608Z ##[endgroup]
+2026-10-29T22:43:14.2820530Z [command]/usr/bin/git log -1 --format=%H
+2026-10-29T22:43:14.2859927Z 70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T22:43:14.2872218Z ##[group]Removing auth
+2026-10-29T22:43:14.2874403Z Removing SSH command configuration
+2026-10-29T22:43:14.2878456Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T22:43:14.2930909Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-29T22:43:14.3602862Z Removing HTTP extra header
+2026-10-29T22:43:14.3609804Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T22:43:14.3662822Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-29T22:43:14.4336302Z Removing includeIf entries pointing to credentials config files
+2026-10-29T22:43:14.4342125Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T22:43:14.4383843Z includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path
+2026-10-29T22:43:14.4384881Z includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path
+2026-10-29T22:43:14.4385392Z includeif.gitdir:/github/workspace/.git.path
+2026-10-29T22:43:14.4385763Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-29T22:43:14.4395598Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path
+2026-10-29T22:43:14.4434174Z /home/runner/work/_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:43:14.4444159Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path /home/runner/work/_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:43:14.4492265Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path
+2026-10-29T22:43:14.4532710Z /home/runner/work/_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:43:14.4543543Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:43:14.4607540Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-29T22:43:14.4643098Z /github/runner_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:43:14.4651538Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:43:14.4695507Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-29T22:43:14.4729554Z /github/runner_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:43:14.4737818Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config
+2026-10-29T22:43:14.4783984Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-29T22:43:14.5430255Z Removing credentials config '/home/runner/work/_temp/git-credentials-c3532d1e-a59e-4bf5-a020-7f5292e141d2.config'
+2026-10-29T22:43:14.5440892Z ##[endgroup]
+2026-10-29T22:43:14.5717226Z ##[group]Run actions/setup-node@v6
+2026-10-29T22:43:14.5717529Z with:
+2026-10-29T22:43:14.5717729Z   node-version: 22
+2026-10-29T22:43:14.5717938Z   cache: npm
+2026-10-29T22:43:14.5718154Z   check-latest: false
+2026-10-29T22:43:14.5720399Z   token: ***
+2026-10-29T22:43:14.5720612Z   package-manager-cache: true
+2026-10-29T22:43:14.5720852Z env:
+2026-10-29T22:43:14.5721029Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:43:14.5721236Z ##[endgroup]
+2026-10-29T22:43:14.7274653Z Found in cache @ /opt/hostedtoolcache/node/22.23.4/x64
+2026-10-29T22:43:14.7275408Z ##[group]Environment details
+2026-10-29T22:43:15.1509039Z node: v22.23.4
+2026-10-29T22:43:15.1509319Z npm: 10.9.9
+2026-10-29T22:43:15.1509514Z yarn: 1.22.22
+2026-10-29T22:43:15.1517312Z ##[endgroup]
+2026-10-29T22:43:15.1530875Z [command]/opt/hostedtoolcache/node/22.23.4/x64/bin/npm config get cache
+2026-10-29T22:43:15.2735954Z /home/runner/.npm
+2026-10-29T22:43:15.3666002Z Cache hit for: node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e
+2026-10-29T22:43:15.8962528Z Received 55090959 of 55090959 (100.0%), 114.5 MBs/sec
+2026-10-29T22:43:15.8963159Z Cache Size: ~53 MB (55090959 B)
+2026-10-29T22:43:15.8991854Z [command]/usr/bin/tar -xf /home/runner/work/_temp/73d7b0f1-6eed-4712-896d-24490943c617/cache.tzst -P -C /home/runner/work/lean-bridge/lean-bridge --use-compress-program unzstd
+2026-10-29T22:43:16.0616481Z Cache restored successfully
+2026-10-29T22:43:16.0647777Z Cache restored from key: node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e
+2026-10-29T22:43:16.0998891Z Prepare all required actions
+2026-10-29T22:43:16.1038040Z ##[group]Run ./.github/actions/bounded-apt
+2026-10-29T22:43:16.1038361Z env:
+2026-10-29T22:43:16.1038564Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:43:16.1038781Z ##[endgroup]
+2026-10-29T22:43:16.1098329Z ##[start-action display=Configure apt network limits;id=__self.__run]
+2026-10-29T22:43:16.1159151Z ##[group]Run sudo install -m 0644 "/home/runner/work/lean-bridge/lean-bridge/./.github/actions/bounded-apt/apt-network.conf" /etc/apt/apt.conf.d/99lean-bridge-network
+2026-10-29T22:43:16.1160440Z [36;1msudo install -m 0644 "/home/runner/work/lean-bridge/lean-bridge/./.github/actions/bounded-apt/apt-network.conf" /etc/apt/apt.conf.d/99lean-bridge-network[0m
+2026-10-29T22:43:16.1161387Z [36;1mapt-config dump[0m
+2026-10-29T22:43:16.1196004Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-29T22:43:16.1196388Z env:
+2026-10-29T22:43:16.1196593Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:43:16.1196820Z ##[endgroup]
+2026-10-29T22:43:16.1505980Z APT "";
+2026-10-29T22:43:16.1506381Z APT::Architecture "amd64";
+2026-10-29T22:43:16.1506705Z APT::Build-Essential "";
+2026-10-29T22:43:16.1507062Z APT::Build-Essential:: "build-essential";
+2026-10-29T22:43:16.1507401Z APT::Install-Recommends "1";
+2026-10-29T22:43:16.1507687Z APT::Install-Suggests "0";
+2026-10-29T22:43:16.1507929Z APT::Key "";
+2026-10-29T22:43:16.1508784Z APT::Key::Assert-Pubkey-Algo ">=rsa1024,ed25519,ed448,nistp256,nistp384,nistp512,brainpoolP256r1,brainpoolP320r1,brainpoolP384r1,brainpoolP512r1,secp256k1";
+2026-10-29T22:43:16.1509788Z APT::Key::Assert-Pubkey-Algo::Next ">=rsa2048,ed25519,ed448,nistp256,nistp384,nistp512";
+2026-10-29T22:43:16.1510409Z APT::Key::Assert-Pubkey-Algo::Future ">=rsa3072,ed25519,ed448";
+2026-10-29T22:43:16.1510765Z APT::Sandbox "";
+2026-10-29T22:43:16.1511007Z APT::Sandbox::User "_apt";
+2026-10-29T22:43:16.1511277Z APT::NeverAutoRemove "";
+2026-10-29T22:43:16.1511612Z APT::NeverAutoRemove:: "^firmware-linux.*";
+2026-10-29T22:43:16.1511987Z APT::NeverAutoRemove:: "^linux-firmware$";
+2026-10-29T22:43:16.1512378Z APT::NeverAutoRemove:: "^linux-image-[a-z0-9]*$";
+2026-10-29T22:43:16.1512834Z APT::NeverAutoRemove:: "^linux-image-[a-z0-9]*-[a-z0-9]*$";
+2026-10-29T22:43:16.1513622Z APT::NeverAutoRemove:: "^postgresql.*-16";
+2026-10-29T22:43:16.1514034Z APT::VersionedKernelPackages "";
+2026-10-29T22:43:16.1514400Z APT::VersionedKernelPackages:: "linux-.*";
+2026-10-29T22:43:16.1514811Z APT::VersionedKernelPackages:: "kfreebsd-.*";
+2026-10-29T22:43:16.1515223Z APT::VersionedKernelPackages:: "gnumach-.*";
+2026-10-29T22:43:16.1515599Z APT::VersionedKernelPackages:: ".*-modules";
+2026-10-29T22:43:16.1515983Z APT::VersionedKernelPackages:: ".*-kernel";
+2026-10-29T22:43:16.1516329Z APT::Never-MarkAuto-Sections "";
+2026-10-29T22:43:16.1516691Z APT::Never-MarkAuto-Sections:: "metapackages";
+2026-10-29T22:43:16.1517059Z APT::Never-MarkAuto-Sections:: "tasks";
+2026-10-29T22:43:16.1517386Z APT::Move-Autobit-Sections "";
+2026-10-29T22:43:16.1517713Z APT::Move-Autobit-Sections:: "oldlibs";
+2026-10-29T22:43:16.1517987Z APT::Get "";
+2026-10-29T22:43:16.1518237Z APT::Get::AutomaticRemove "0";
+2026-10-29T22:43:16.1518514Z APT::Get::HideAutoRemove "1";
+2026-10-29T22:43:16.1518795Z APT::Get::Assume-Yes "true";
+2026-10-29T22:43:16.1519145Z APT::Get::Always-Include-Phased-Updates "true";
+2026-10-29T22:43:16.1519472Z APT::Periodic "";
+2026-10-29T22:43:16.1519763Z APT::Periodic::Update-Package-Lists "1";
+2026-10-29T22:43:16.1520152Z APT::Periodic::Download-Upgradeable-Packages "0";
+2026-10-29T22:43:16.1520530Z APT::Periodic::AutocleanInterval "0";
+2026-10-29T22:43:16.1520804Z APT::Update "";
+2026-10-29T22:43:16.1521076Z APT::Update::Post-Invoke-Success "";
+2026-10-29T22:43:16.1521705Z APT::Update::Post-Invoke-Success:: "touch /var/lib/apt/periodic/update-success-stamp 2>/dev/null || true";
+2026-10-29T22:43:16.1524468Z APT::Update::Post-Invoke-Success:: "/usr/bin/test -e /usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service && /usr/bin/test -S /var/run/dbus/system_bus_socket && /usr/bin/gdbus call --system --dest org.freedesktop.PackageKit --object-path /org/freedesktop/PackageKit --timeout 4 --method org.freedesktop.PackageKit.StateHasChanged cache-update > /dev/null; /bin/echo > /dev/null";
+2026-10-29T22:43:16.1526669Z APT::Update::Post-Invoke-Success:: "if /usr/bin/test -w /var/cache/swcatalog -a -e /usr/bin/appstreamcli; then appstreamcli refresh --source=os > /dev/null || true; fi";
+2026-10-29T22:43:16.1527943Z APT::Update::Post-Invoke-Success:: "if /usr/bin/test -w /var/lib/command-not-found/ -a -e /usr/lib/cnf-update-db; then /usr/lib/cnf-update-db > /dev/null; fi";
+2026-10-29T22:43:16.1529132Z APT::Update::Post-Invoke-Success:: "/usr/lib/update-notifier/update-motd-updates-available 2>/dev/null || true";
+2026-10-29T22:43:16.1529691Z APT::Update::Pre-Invoke "";
+2026-10-29T22:43:16.1530550Z APT::Update::Pre-Invoke:: "[ ! -e /run/systemd/system ] || [ $(id -u) -ne 0 ] || systemctl start --no-block apt-news.service esm-cache.service >/dev/null 2>&1 || true";
+2026-10-29T22:43:16.1531295Z APT::Update::Error-Mode "any";
+2026-10-29T22:43:16.1531614Z APT::Archives "";
+2026-10-29T22:43:16.1531858Z APT::Archives::MaxAge "30";
+2026-10-29T22:43:16.1532122Z APT::Archives::MinAge "2";
+2026-10-29T22:43:16.1532386Z APT::Archives::MaxSize "500";
+2026-10-29T22:43:16.1532656Z APT::Architectures "";
+2026-10-29T22:43:16.1532907Z APT::Architectures:: "amd64";
+2026-10-29T22:43:16.1533163Z APT::Compressor "";
+2026-10-29T22:43:16.1534030Z APT::Compressor::. "";
+2026-10-29T22:43:16.1534289Z APT::Compressor::.::Name ".";
+2026-10-29T22:43:16.1534588Z APT::Compressor::.::Extension "";
+2026-10-29T22:43:16.1534968Z APT::Compressor::.::Binary "";
+2026-10-29T22:43:16.1535241Z APT::Compressor::.::Cost "0";
+2026-10-29T22:43:16.1535506Z APT::Compressor::zstd "";
+2026-10-29T22:43:16.1535797Z APT::Compressor::zstd::Name "zstd";
+2026-10-29T22:43:16.1536161Z APT::Compressor::zstd::Extension ".zst";
+2026-10-29T22:43:16.1536505Z APT::Compressor::zstd::Binary "zstd";
+2026-10-29T22:43:16.1536833Z APT::Compressor::zstd::Cost "60";
+2026-10-29T22:43:16.1537162Z APT::Compressor::zstd::CompressArg "";
+2026-10-29T22:43:16.1537516Z APT::Compressor::zstd::CompressArg:: "-19";
+2026-10-29T22:43:16.1537880Z APT::Compressor::zstd::UncompressArg "";
+2026-10-29T22:43:16.1538252Z APT::Compressor::zstd::UncompressArg:: "-d";
+2026-10-29T22:43:16.1538567Z APT::Compressor::lz4 "";
+2026-10-29T22:43:16.1538854Z APT::Compressor::lz4::Name "lz4";
+2026-10-29T22:43:16.1539173Z APT::Compressor::lz4::Extension ".lz4";
+2026-10-29T22:43:16.1539508Z APT::Compressor::lz4::Binary "lz4";
+2026-10-29T22:43:16.1539828Z APT::Compressor::lz4::Cost "50";
+2026-10-29T22:43:16.1540152Z APT::Compressor::lz4::CompressArg "";
+2026-10-29T22:43:16.1540497Z APT::Compressor::lz4::CompressArg:: "-1";
+2026-10-29T22:43:16.1540841Z APT::Compressor::lz4::UncompressArg "";
+2026-10-29T22:43:16.1541198Z APT::Compressor::lz4::UncompressArg:: "-d";
+2026-10-29T22:43:16.1541517Z APT::Compressor::gzip "";
+2026-10-29T22:43:16.1541809Z APT::Compressor::gzip::Name "gzip";
+2026-10-29T22:43:16.1542137Z APT::Compressor::gzip::Extension ".gz";
+2026-10-29T22:43:16.1542471Z APT::Compressor::gzip::Binary "gzip";
+2026-10-29T22:43:16.1542799Z APT::Compressor::gzip::Cost "100";
+2026-10-29T22:43:16.1543169Z APT::Compressor::gzip::CompressArg "";
+2026-10-29T22:43:16.1543813Z APT::Compressor::gzip::CompressArg:: "-6n";
+2026-10-29T22:43:16.1544186Z APT::Compressor::gzip::UncompressArg "";
+2026-10-29T22:43:16.1544550Z APT::Compressor::gzip::UncompressArg:: "-d";
+2026-10-29T22:43:16.1544863Z APT::Compressor::xz "";
+2026-10-29T22:43:16.1545145Z APT::Compressor::xz::Name "xz";
+2026-10-29T22:43:16.1545454Z APT::Compressor::xz::Extension ".xz";
+2026-10-29T22:43:16.1545776Z APT::Compressor::xz::Binary "xz";
+2026-10-29T22:43:16.1546083Z APT::Compressor::xz::Cost "200";
+2026-10-29T22:43:16.1546400Z APT::Compressor::xz::CompressArg "";
+2026-10-29T22:43:16.1546736Z APT::Compressor::xz::CompressArg:: "-6";
+2026-10-29T22:43:16.1547079Z APT::Compressor::xz::UncompressArg "";
+2026-10-29T22:43:16.1547600Z APT::Compressor::xz::UncompressArg:: "-d";
+2026-10-29T22:43:16.1547925Z APT::Compressor::bzip2 "";
+2026-10-29T22:43:16.1548231Z APT::Compressor::bzip2::Name "bzip2";
+2026-10-29T22:43:16.1548577Z APT::Compressor::bzip2::Extension ".bz2";
+2026-10-29T22:43:16.1548924Z APT::Compressor::bzip2::Binary "bzip2";
+2026-10-29T22:43:16.1549258Z APT::Compressor::bzip2::Cost "300";
+2026-10-29T22:43:16.1549589Z APT::Compressor::bzip2::CompressArg "";
+2026-10-29T22:43:16.1549946Z APT::Compressor::bzip2::CompressArg:: "-6";
+2026-10-29T22:43:16.1550305Z APT::Compressor::bzip2::UncompressArg "";
+2026-10-29T22:43:16.1550680Z APT::Compressor::bzip2::UncompressArg:: "-d";
+2026-10-29T22:43:16.1551125Z APT::Compressor::lzma "";
+2026-10-29T22:43:16.1551422Z APT::Compressor::lzma::Name "lzma";
+2026-10-29T22:43:16.1551762Z APT::Compressor::lzma::Extension ".lzma";
+2026-10-29T22:43:16.1552107Z APT::Compressor::lzma::Binary "xz";
+2026-10-29T22:43:16.1552422Z APT::Compressor::lzma::Cost "400";
+2026-10-29T22:43:16.1552752Z APT::Compressor::lzma::CompressArg "";
+2026-10-29T22:43:16.1553151Z APT::Compressor::lzma::CompressArg:: "--format=lzma";
+2026-10-29T22:43:16.1553867Z APT::Compressor::lzma::CompressArg:: "-6";
+2026-10-29T22:43:16.1554232Z APT::Compressor::lzma::UncompressArg "";
+2026-10-29T22:43:16.1554650Z APT::Compressor::lzma::UncompressArg:: "--format=lzma";
+2026-10-29T22:43:16.1555071Z APT::Compressor::lzma::UncompressArg:: "-d";
+2026-10-29T22:43:16.1555362Z Dir "/";
+2026-10-29T22:43:16.1555584Z Dir::State "var/lib/apt";
+2026-10-29T22:43:16.1555862Z Dir::State::lists "lists/";
+2026-10-29T22:43:16.1556163Z Dir::State::cdroms "cdroms.list";
+2026-10-29T22:43:16.1556523Z Dir::State::extended_states "extended_states";
+2026-10-29T22:43:16.1556904Z Dir::State::status "/var/lib/dpkg/status";
+2026-10-29T22:43:16.1557215Z Dir::Cache "var/cache/apt";
+2026-10-29T22:43:16.1557508Z Dir::Cache::archives "archives/";
+2026-10-29T22:43:16.1557850Z Dir::Cache::srcpkgcache "srcpkgcache.bin";
+2026-10-29T22:43:16.1558192Z Dir::Cache::pkgcache "pkgcache.bin";
+2026-10-29T22:43:16.1558480Z Dir::Etc "etc/apt";
+2026-10-29T22:43:16.1558758Z Dir::Etc::sourcelist "sources.list";
+2026-10-29T22:43:16.1559097Z Dir::Etc::sourceparts "sources.list.d";
+2026-10-29T22:43:16.1559403Z Dir::Etc::main "apt.conf";
+2026-10-29T22:43:16.1559670Z Dir::Etc::netrc "auth.conf";
+2026-10-29T22:43:16.1559981Z Dir::Etc::netrcparts "auth.conf.d";
+2026-10-29T22:43:16.1560273Z Dir::Etc::parts "apt.conf.d";
+2026-10-29T22:43:16.1560588Z Dir::Etc::preferences "preferences";
+2026-10-29T22:43:16.1560940Z Dir::Etc::preferencesparts "preferences.d";
+2026-10-29T22:43:16.1561288Z Dir::Etc::trusted "trusted.gpg";
+2026-10-29T22:43:16.1561611Z Dir::Etc::trustedparts "trusted.gpg.d";
+2026-10-29T22:43:16.1561880Z Dir::Bin "";
+2026-10-29T22:43:16.1562153Z Dir::Bin::methods "/usr/lib/apt/methods";
+2026-10-29T22:43:16.1562444Z Dir::Bin::solvers "";
+2026-10-29T22:43:16.1562741Z Dir::Bin::solvers:: "/usr/lib/apt/solvers";
+2026-10-29T22:43:16.1563043Z Dir::Bin::planners "";
+2026-10-29T22:43:16.1563601Z Dir::Bin::planners:: "/usr/lib/apt/planners";
+2026-10-29T22:43:16.1563956Z Dir::Bin::dpkg "/usr/bin/dpkg";
+2026-10-29T22:43:16.1564234Z Dir::Bin::gzip "/bin/gzip";
+2026-10-29T22:43:16.1564501Z Dir::Bin::bzip2 "/bin/bzip2";
+2026-10-29T22:43:16.1564764Z Dir::Bin::xz "/usr/bin/xz";
+2026-10-29T22:43:16.1565029Z Dir::Bin::lz4 "/usr/bin/lz4";
+2026-10-29T22:43:16.1565317Z Dir::Bin::zstd "/usr/bin/zstd";
+2026-10-29T22:43:16.1565594Z Dir::Bin::lzma "/usr/bin/xz";
+2026-10-29T22:43:16.1565831Z Dir::Media "";
+2026-10-29T22:43:16.1566099Z Dir::Media::MountPath "/media/apt";
+2026-10-29T22:43:16.1566386Z Dir::Log "var/log/apt";
+2026-10-29T22:43:16.1566673Z Dir::Log::Terminal "term.log";
+2026-10-29T22:43:16.1566973Z Dir::Log::History "history.log";
+2026-10-29T22:43:16.1567281Z Dir::Log::Planner "eipp.log.xz";
+2026-10-29T22:43:16.1567590Z Dir::Ignore-Files-Silently "";
+2026-10-29T22:43:16.1567906Z Dir::Ignore-Files-Silently:: "~$";
+2026-10-29T22:43:16.1568251Z Dir::Ignore-Files-Silently:: "\.disabled$";
+2026-10-29T22:43:16.1568751Z Dir::Ignore-Files-Silently:: "\.bak$";
+2026-10-29T22:43:16.1569139Z Dir::Ignore-Files-Silently:: "\.dpkg-[a-z]+$";
+2026-10-29T22:43:16.1569534Z Dir::Ignore-Files-Silently:: "\.ucf-[a-z]+$";
+2026-10-29T22:43:16.1569900Z Dir::Ignore-Files-Silently:: "\.save$";
+2026-10-29T22:43:16.1570239Z Dir::Ignore-Files-Silently:: "\.orig$";
+2026-10-29T22:43:16.1570602Z Dir::Ignore-Files-Silently:: "\.distUpgrade$";
+2026-10-29T22:43:16.1570896Z Acquire "";
+2026-10-29T22:43:16.1571166Z Acquire::AllowInsecureRepositories "0";
+2026-10-29T22:43:16.1571507Z Acquire::AllowWeakRepositories "0";
+2026-10-29T22:43:16.1571892Z Acquire::AllowDowngradeToInsecureRepositories "0";
+2026-10-29T22:43:16.1572353Z Acquire::cdrom "";
+2026-10-29T22:43:16.1572632Z Acquire::cdrom::mount "/media/cdrom/";
+2026-10-29T22:43:16.1572928Z Acquire::IndexTargets "";
+2026-10-29T22:43:16.1573454Z Acquire::IndexTargets::deb "";
+2026-10-29T22:43:16.1573799Z Acquire::IndexTargets::deb::Packages "";
+2026-10-29T22:43:16.1574392Z Acquire::IndexTargets::deb::Packages::MetaKey "$(COMPONENT)/binary-$(ARCHITECTURE)/Packages";
+2026-10-29T22:43:16.1575024Z Acquire::IndexTargets::deb::Packages::flatMetaKey "Packages";
+2026-10-29T22:43:16.1575549Z Acquire::IndexTargets::deb::Packages::ShortDescription "Packages";
+2026-10-29T22:43:16.1576244Z Acquire::IndexTargets::deb::Packages::Description "$(RELEASE)/$(COMPONENT) $(ARCHITECTURE) Packages";
+2026-10-29T22:43:16.1576946Z Acquire::IndexTargets::deb::Packages::flatDescription "$(RELEASE) Packages";
+2026-10-29T22:43:16.1577459Z Acquire::IndexTargets::deb::Packages::Optional "0";
+2026-10-29T22:43:16.1577864Z Acquire::IndexTargets::deb::Translations "";
+2026-10-29T22:43:16.1578449Z Acquire::IndexTargets::deb::Translations::MetaKey "$(COMPONENT)/i18n/Translation-$(LANGUAGE)";
+2026-10-29T22:43:16.1579095Z Acquire::IndexTargets::deb::Translations::flatMetaKey "$(LANGUAGE)";
+2026-10-29T22:43:16.1579724Z Acquire::IndexTargets::deb::Translations::ShortDescription "Translation-$(LANGUAGE)";
+2026-10-29T22:43:16.1580499Z Acquire::IndexTargets::deb::Translations::Description "$(RELEASE)/$(COMPONENT) Translation-$(LANGUAGE)";
+2026-10-29T22:43:16.1581291Z Acquire::IndexTargets::deb::Translations::flatDescription "$(RELEASE) Translation-$(LANGUAGE)";
+2026-10-29T22:43:16.1581827Z Acquire::IndexTargets::deb::DEP-11 "";
+2026-10-29T22:43:16.1582438Z Acquire::IndexTargets::deb::DEP-11::MetaKey "$(COMPONENT)/dep11/Components-$(NATIVE_ARCHITECTURE).yml";
+2026-10-29T22:43:16.1583447Z Acquire::IndexTargets::deb::DEP-11::ShortDescription "Components-$(NATIVE_ARCHITECTURE)";
+2026-10-29T22:43:16.1584290Z Acquire::IndexTargets::deb::DEP-11::Description "$(RELEASE)/$(COMPONENT) $(NATIVE_ARCHITECTURE) Components";
+2026-10-29T22:43:16.1584943Z Acquire::IndexTargets::deb::DEP-11::KeepCompressed "true";
+2026-10-29T22:43:16.1585418Z Acquire::IndexTargets::deb::DEP-11::KeepCompressedAs "gz";
+2026-10-29T22:43:16.1585898Z Acquire::IndexTargets::deb::DEP-11::DefaultEnabled "false";
+2026-10-29T22:43:16.1586335Z Acquire::IndexTargets::deb::DEP-11-icons-small "";
+2026-10-29T22:43:16.1586938Z Acquire::IndexTargets::deb::DEP-11-icons-small::MetaKey "$(COMPONENT)/dep11/icons-48x48.tar";
+2026-10-29T22:43:16.1587646Z Acquire::IndexTargets::deb::DEP-11-icons-small::ShortDescription "icons-48x48";
+2026-10-29T22:43:16.1588391Z Acquire::IndexTargets::deb::DEP-11-icons-small::Description "$(RELEASE)/$(COMPONENT) Icons (48x48)";
+2026-10-29T22:43:16.1589067Z Acquire::IndexTargets::deb::DEP-11-icons-small::KeepCompressed "true";
+2026-10-29T22:43:16.1589647Z Acquire::IndexTargets::deb::DEP-11-icons-small::KeepCompressedAs "gz";
+2026-10-29T22:43:16.1590220Z Acquire::IndexTargets::deb::DEP-11-icons-small::DefaultEnabled "false";
+2026-10-29T22:43:16.1590700Z Acquire::IndexTargets::deb::DEP-11-icons "";
+2026-10-29T22:43:16.1591256Z Acquire::IndexTargets::deb::DEP-11-icons::MetaKey "$(COMPONENT)/dep11/icons-64x64.tar";
+2026-10-29T22:43:16.1591892Z Acquire::IndexTargets::deb::DEP-11-icons::ShortDescription "icons-64x64";
+2026-10-29T22:43:16.1592721Z Acquire::IndexTargets::deb::DEP-11-icons::Description "$(RELEASE)/$(COMPONENT) Icons (64x64)";
+2026-10-29T22:43:16.1593655Z Acquire::IndexTargets::deb::DEP-11-icons::KeepCompressed "true";
+2026-10-29T22:43:16.1594197Z Acquire::IndexTargets::deb::DEP-11-icons::KeepCompressedAs "gz";
+2026-10-29T22:43:16.1594718Z Acquire::IndexTargets::deb::DEP-11-icons::DefaultEnabled "false";
+2026-10-29T22:43:16.1595185Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi "";
+2026-10-29T22:43:16.1595802Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::MetaKey "$(COMPONENT)/dep11/icons-64x64@2.tar";
+2026-10-29T22:43:16.1596502Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::ShortDescription "icons-64x64@2";
+2026-10-29T22:43:16.1597394Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::Description "$(RELEASE)/$(COMPONENT) Icons (64x64@2)";
+2026-10-29T22:43:16.1598066Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::KeepCompressed "true";
+2026-10-29T22:43:16.1598634Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::KeepCompressedAs "gz";
+2026-10-29T22:43:16.1599220Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::DefaultEnabled "false";
+2026-10-29T22:43:16.1599712Z Acquire::IndexTargets::deb::DEP-11-icons-large "";
+2026-10-29T22:43:16.1600314Z Acquire::IndexTargets::deb::DEP-11-icons-large::MetaKey "$(COMPONENT)/dep11/icons-128x128.tar";
+2026-10-29T22:43:16.1601014Z Acquire::IndexTargets::deb::DEP-11-icons-large::ShortDescription "icons-128x128";
+2026-10-29T22:43:16.1601756Z Acquire::IndexTargets::deb::DEP-11-icons-large::Description "$(RELEASE)/$(COMPONENT) Icons (128x128)";
+2026-10-29T22:43:16.1602419Z Acquire::IndexTargets::deb::DEP-11-icons-large::KeepCompressed "true";
+2026-10-29T22:43:16.1602990Z Acquire::IndexTargets::deb::DEP-11-icons-large::KeepCompressedAs "gz";
+2026-10-29T22:43:16.1603873Z Acquire::IndexTargets::deb::DEP-11-icons-large::DefaultEnabled "false";
+2026-10-29T22:43:16.1604403Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi "";
+2026-10-29T22:43:16.1605083Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::MetaKey "$(COMPONENT)/dep11/icons-128x128@2.tar";
+2026-10-29T22:43:16.1605846Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::ShortDescription "icons-128x128@2";
+2026-10-29T22:43:16.1606656Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::Description "$(RELEASE)/$(COMPONENT) Icons (128x128@2)";
+2026-10-29T22:43:16.1607392Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::KeepCompressed "true";
+2026-10-29T22:43:16.1608005Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::KeepCompressedAs "gz";
+2026-10-29T22:43:16.1608620Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::DefaultEnabled "false";
+2026-10-29T22:43:16.1609099Z Acquire::IndexTargets::deb::CNF "";
+2026-10-29T22:43:16.1609641Z Acquire::IndexTargets::deb::CNF::MetaKey "$(COMPONENT)/cnf/Commands-$(NATIVE_ARCHITECTURE)";
+2026-10-29T22:43:16.1610323Z Acquire::IndexTargets::deb::CNF::ShortDescription "Commands-$(NATIVE_ARCHITECTURE)";
+2026-10-29T22:43:16.1611098Z Acquire::IndexTargets::deb::CNF::Description "$(RELEASE)/$(COMPONENT) $(NATIVE_ARCHITECTURE) c-n-f Metadata";
+2026-10-29T22:43:16.1611667Z Acquire::IndexTargets::deb-src "";
+2026-10-29T22:43:16.1612012Z Acquire::IndexTargets::deb-src::Sources "";
+2026-10-29T22:43:16.1612530Z Acquire::IndexTargets::deb-src::Sources::MetaKey "$(COMPONENT)/source/Sources";
+2026-10-29T22:43:16.1613092Z Acquire::IndexTargets::deb-src::Sources::flatMetaKey "Sources";
+2026-10-29T22:43:16.1613901Z Acquire::IndexTargets::deb-src::Sources::ShortDescription "Sources";
+2026-10-29T22:43:16.1614534Z Acquire::IndexTargets::deb-src::Sources::Description "$(RELEASE)/$(COMPONENT) Sources";
+2026-10-29T22:43:16.1615184Z Acquire::IndexTargets::deb-src::Sources::flatDescription "$(RELEASE) Sources";
+2026-10-29T22:43:16.1615709Z Acquire::IndexTargets::deb-src::Sources::Optional "0";
+2026-10-29T22:43:16.1616056Z Acquire::Changelogs "";
+2026-10-29T22:43:16.1616315Z Acquire::Changelogs::URI "";
+2026-10-29T22:43:16.1616624Z Acquire::Changelogs::URI::Origin "";
+2026-10-29T22:43:16.1617449Z Acquire::Changelogs::URI::Origin::Debian "https://metadata.ftp-master.debian.org/changelogs/@CHANGEPATH@_changelog";
+2026-10-29T22:43:16.1618395Z Acquire::Changelogs::URI::Origin::Ubuntu "https://changelogs.ubuntu.com/changelogs/pool/@CHANGEPATH@/changelog";
+2026-10-29T22:43:16.1618987Z Acquire::Changelogs::AlwaysOnline "true";
+2026-10-29T22:43:16.1619372Z Acquire::Changelogs::AlwaysOnline::Origin "";
+2026-10-29T22:43:16.1619783Z Acquire::Changelogs::AlwaysOnline::Origin::Ubuntu "1";
+2026-10-29T22:43:16.1620118Z Acquire::Snapshots "";
+2026-10-29T22:43:16.1620376Z Acquire::Snapshots::URI "";
+2026-10-29T22:43:16.1620679Z Acquire::Snapshots::URI::Origin "";
+2026-10-29T22:43:16.1621256Z Acquire::Snapshots::URI::Origin::Debian "https://snapshot.debian.org/archive/debian/@SNAPSHOTID@/";
+2026-10-29T22:43:16.1622133Z Acquire::Snapshots::URI::Origin::Ubuntu "https://snapshot.ubuntu.com/ubuntu/@SNAPSHOTID@/";
+2026-10-29T22:43:16.1622643Z Acquire::Snapshots::URI::Override "";
+2026-10-29T22:43:16.1622996Z Acquire::Snapshots::URI::Override::Label "";
+2026-10-29T22:43:16.1623909Z Acquire::Snapshots::URI::Override::Label::Debian-Security "https://snapshot.debian.org/archive/debian-security/@SNAPSHOTID@/";
+2026-10-29T22:43:16.1624550Z Acquire::Snapshots::URI::Host "";
+2026-10-29T22:43:16.1625138Z Acquire::Snapshots::URI::Host::archive.ubuntu.com "https://snapshot.ubuntu.com/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:43:16.1625956Z Acquire::Snapshots::URI::Host::deb.debian.org "https://snapshot.debian.org/archive/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:43:16.1626770Z Acquire::Snapshots::URI::Host::.archive.ubuntu.com "https://snapshot.ubuntu.com/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:43:16.1627566Z Acquire::Snapshots::URI::Host::security.ubuntu.com "https://snapshot.ubuntu.com/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:43:16.1628499Z Acquire::Snapshots::URI::Host::ppa.launchpadcontent.net "https://snapshot.ppa.launchpadcontent.net/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:43:16.1629488Z Acquire::Snapshots::URI::Host::ppa.launchpad.net "https://snapshot.ppa.launchpadcontent.net/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:43:16.1630037Z Acquire::http "";
+2026-10-29T22:43:16.1630367Z Acquire::http::User-Agent-Non-Interactive "true";
+2026-10-29T22:43:16.1630708Z Acquire::http::Timeout "15";
+2026-10-29T22:43:16.1631023Z Acquire::http::Pipeline-Depth "0";
+2026-10-29T22:43:16.1631346Z Acquire::http::No-Cache "true";
+2026-10-29T22:43:16.1631618Z Acquire::Retries "1";
+2026-10-29T22:43:16.1631858Z Acquire::https "";
+2026-10-29T22:43:16.1632107Z Acquire::https::Timeout "15";
+2026-10-29T22:43:16.1632425Z Acquire::https::Pipeline-Depth "0";
+2026-10-29T22:43:16.1632745Z Acquire::https::No-Cache "true";
+2026-10-29T22:43:16.1633026Z Acquire::BrokenProxy "true";
+2026-10-29T22:43:16.1633590Z Acquire::Languages "";
+2026-10-29T22:43:16.1633854Z Acquire::Languages:: "en";
+2026-10-29T22:43:16.1634123Z Acquire::Languages:: "none";
+2026-10-29T22:43:16.1634400Z Acquire::CompressionTypes "";
+2026-10-29T22:43:16.1634724Z Acquire::CompressionTypes::xz "xz";
+2026-10-29T22:43:16.1635066Z Acquire::CompressionTypes::bz2 "bzip2";
+2026-10-29T22:43:16.1635418Z Acquire::CompressionTypes::lzma "lzma";
+2026-10-29T22:43:16.1635769Z Acquire::CompressionTypes::gz "gzip";
+2026-10-29T22:43:16.1636104Z Acquire::CompressionTypes::lz4 "lz4";
+2026-10-29T22:43:16.1636442Z Acquire::CompressionTypes::zst "zstd";
+2026-10-29T22:43:16.1636713Z DPkg "";
+2026-10-29T22:43:16.1636994Z DPkg::Path "/usr/sbin:/usr/bin:/sbin:/bin";
+2026-10-29T22:43:16.1637295Z DPkg::Options "";
+2026-10-29T22:43:16.1637577Z DPkg::Options:: "--force-confdef";
+2026-10-29T22:43:16.1637907Z DPkg::Options:: "--force-confold";
+2026-10-29T22:43:16.1638229Z DPkg::Options:: "--force-unsafe-io";
+2026-10-29T22:43:16.1638552Z DPkg::Options:: "--force-confdef";
+2026-10-29T22:43:16.1638871Z DPkg::Options:: "--force-confold";
+2026-10-29T22:43:16.1639145Z DPkg::Post-Invoke "";
+2026-10-29T22:43:16.1641163Z DPkg::Post-Invoke:: "/usr/bin/test -e /usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service && /usr/bin/test -S /var/run/dbus/system_bus_socket && /usr/bin/gdbus call --system --dest org.freedesktop.PackageKit --object-path /org/freedesktop/PackageKit --timeout 4 --method org.freedesktop.PackageKit.StateHasChanged cache-update > /dev/null; /bin/echo > /dev/null";
+2026-10-29T22:43:16.1643071Z DPkg::Post-Invoke:: "test -x /usr/lib/needrestart/apt-pinvoke && /usr/lib/needrestart/apt-pinvoke -m u || true";
+2026-10-29T22:43:16.1644474Z DPkg::Post-Invoke:: "if [ -d /var/lib/update-notifier ]; then touch /var/lib/update-notifier/dpkg-run-stamp; fi; /usr/lib/update-notifier/update-motd-updates-available 2>/dev/null || true";
+2026-10-29T22:43:16.1645300Z DPkg::Pre-Install-Pkgs "";
+2026-10-29T22:43:16.1645741Z DPkg::Pre-Install-Pkgs:: "/usr/sbin/dpkg-preconfigure --apt || true";
+2026-10-29T22:43:16.1646271Z binary "apt-config";
+2026-10-29T22:43:16.1646498Z binary::apt "";
+2026-10-29T22:43:16.1646741Z binary::apt::AptCli "";
+2026-10-29T22:43:16.1647023Z binary::apt::AptCli::Hooks "";
+2026-10-29T22:43:16.1647355Z binary::apt::AptCli::Hooks::Upgrade "";
+2026-10-29T22:43:16.1648442Z binary::apt::AptCli::Hooks::Upgrade:: "[ ! -f /usr/lib/ubuntu-advantage/apt-esm-json-hook ] || [ $(id -u) -ne 0 ] || /usr/lib/ubuntu-advantage/apt-esm-json-hook 2>> /var/log/ubuntu-advantage-apt-hook.log || true";
+2026-10-29T22:43:16.1649344Z binary::apt::AptCli::Hooks::Install "";
+2026-10-29T22:43:16.1650009Z binary::apt::AptCli::Hooks::Install:: "[ ! -f /usr/bin/snap ] || /usr/bin/snap advise-snap --from-apt 2>/dev/null || true";
+2026-10-29T22:43:16.1650543Z binary::apt::APT "";
+2026-10-29T22:43:16.1650792Z binary::apt::APT::Color "1";
+2026-10-29T22:43:16.1651071Z binary::apt::APT::Cache "";
+2026-10-29T22:43:16.1651375Z binary::apt::APT::Cache::Show "";
+2026-10-29T22:43:16.1651721Z binary::apt::APT::Cache::Show::Version "2";
+2026-10-29T22:43:16.1652096Z binary::apt::APT::Cache::AllVersions "0";
+2026-10-29T22:43:16.1652453Z binary::apt::APT::Cache::ShowVirtuals "1";
+2026-10-29T22:43:16.1652794Z binary::apt::APT::Cache::Search "";
+2026-10-29T22:43:16.1653147Z binary::apt::APT::Cache::Search::Version "2";
+2026-10-29T22:43:16.1653694Z binary::apt::APT::Cache::ShowDependencyType "1";
+2026-10-29T22:43:16.1654075Z binary::apt::APT::Cache::ShowVersion "1";
+2026-10-29T22:43:16.1654380Z binary::apt::APT::Get "";
+2026-10-29T22:43:16.1654701Z binary::apt::APT::Get::Upgrade-Allow-New "1";
+2026-10-29T22:43:16.1655049Z binary::apt::APT::Get::Update "";
+2026-10-29T22:43:16.1655472Z binary::apt::APT::Get::Update::InteractiveReleaseInfoChanges "1";
+2026-10-29T22:43:16.1655862Z binary::apt::APT::Cmd "";
+2026-10-29T22:43:16.1656188Z binary::apt::APT::Cmd::Show-Update-Stats "1";
+2026-10-29T22:43:16.1656552Z binary::apt::APT::Cmd::Pattern-Only "1";
+2026-10-29T22:43:16.1656937Z binary::apt::APT::Keep-Downloaded-Packages "0";
+2026-10-29T22:43:16.1657260Z binary::apt::DPkg "";
+2026-10-29T22:43:16.1657557Z binary::apt::DPkg::Progress-Fancy "1";
+2026-10-29T22:43:16.1657865Z binary::apt::DPkg::Lock "";
+2026-10-29T22:43:16.1658173Z binary::apt::DPkg::Lock::Timeout "120";
+2026-10-29T22:43:16.1658452Z CommandLine "";
+2026-10-29T22:43:16.1658739Z CommandLine::AsString "apt-config dump";
+2026-10-29T22:43:16.1673008Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=57]
+2026-10-29T22:43:16.1712453Z ##[group]Run sudo apt-get update
+2026-10-29T22:43:16.1712797Z [36;1msudo apt-get update[0m
+2026-10-29T22:43:16.1713677Z [36;1msudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep unzip xz-utils zstd[0m
+2026-10-29T22:43:16.1734904Z shell: /usr/bin/bash -e {0}
+2026-10-29T22:43:16.1735161Z env:
+2026-10-29T22:43:16.1735363Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:43:16.1735590Z ##[endgroup]
+2026-10-29T22:43:16.2542910Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-29T22:43:16.2874886Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2026-10-29T22:43:16.2884673Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2026-10-29T22:43:16.2886977Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-10-29T22:43:16.2929042Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-10-29T22:43:16.2954455Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-10-29T22:43:16.4274864Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [617 kB]
+2026-10-29T22:43:16.4433780Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [682 kB]
+2026-10-29T22:43:16.4829896Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1406 kB]
+2026-10-29T22:43:16.4899569Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [310 kB]
+2026-10-29T22:43:16.4924929Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1707 kB]
+2026-10-29T22:43:16.4996354Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [343 kB]
+2026-10-29T22:43:16.5020029Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1809 kB]
+2026-10-29T22:43:16.5105173Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [411 kB]
+2026-10-29T22:43:16.5130349Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.3 kB]
+2026-10-29T22:43:16.6022732Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1146 kB]
+2026-10-29T22:43:16.6082347Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
+2026-10-29T22:43:16.6096605Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1223 kB]
+2026-10-29T22:43:16.6563948Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
+2026-10-29T22:43:20.0117244Z Fetched 10.5 MB in 1s (9508 kB/s)
+2026-10-29T22:43:21.1479181Z Reading package lists...
+2026-10-29T22:43:21.1867141Z Reading package lists...
+2026-10-29T22:43:21.4221966Z Building dependency tree...
+2026-10-29T22:43:21.4230071Z Reading state information...
+2026-10-29T22:43:21.5854297Z git is already the newest version (1:2.56.0-0ppa1~ubuntu24.04.2).
+2026-10-29T22:43:21.5855111Z git set to manually installed.
+2026-10-29T22:43:21.5855939Z jq is already the newest version (1.7.1-3ubuntu0.24.04.2).
+2026-10-29T22:43:21.5856885Z libgmp-dev is already the newest version (2:6.3.0+dfsg-2ubuntu6.1).
+2026-10-29T22:43:21.5857732Z m4 is already the newest version (1.4.19-4build1).
+2026-10-29T22:43:21.5858559Z pkg-config is already the newest version (1.8.1-2build1).
+2026-10-29T22:43:21.5859345Z unzip is already the newest version (6.0-28ubuntu4.1).
+2026-10-29T22:43:21.5860238Z xz-utils is already the newest version (5.6.1+really5.4.5-1ubuntu0.4).
+2026-10-29T22:43:21.5861112Z zstd is already the newest version (1.5.5+dfsg2-2build1.1).
+2026-10-29T22:43:21.5861786Z zstd set to manually installed.
+2026-10-29T22:43:21.5862429Z The following additional packages will be installed:
+2026-10-29T22:43:21.5863613Z   cmake-data libjsoncpp25 librhash0
+2026-10-29T22:43:21.5872150Z Suggested packages:
+2026-10-29T22:43:21.5872724Z   cmake-doc cmake-format elpa-cmake-mode ninja-build
+2026-10-29T22:43:21.6071673Z The following NEW packages will be installed:
+2026-10-29T22:43:21.6080789Z   build-essential cmake cmake-data libjsoncpp25 librhash0 libuv1-dev ripgrep
+2026-10-29T22:43:21.6295078Z 0 upgraded, 7 newly installed, 0 to remove and 6 not upgraded.
+2026-10-29T22:43:21.6295756Z Need to get 15.2 MB of archives.
+2026-10-29T22:43:21.6296211Z After this operation, 55.1 MB of additional disk space will be used.
+2026-10-29T22:43:21.6296730Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-29T22:43:21.6673914Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 build-essential amd64 12.10ubuntu1 [4928 B]
+2026-10-29T22:43:21.6870315Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libjsoncpp25 amd64 1.9.5-6build1 [82.8 kB]
+2026-10-29T22:43:21.7088404Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 librhash0 amd64 1.4.3-3build1 [129 kB]
+2026-10-29T22:43:21.7298156Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 cmake-data all 3.28.3-1build7 [2155 kB]
+2026-10-29T22:43:21.8082093Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 cmake amd64 3.28.3-1build7 [11.2 MB]
+2026-10-29T22:43:22.0773604Z Get:7 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libuv1-dev amd64 1.48.0-1.1build1 [136 kB]
+2026-10-29T22:43:22.1064214Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 ripgrep amd64 14.1.0-1 [1551 kB]
+2026-10-29T22:43:22.4402651Z Fetched 15.2 MB in 1s (29.2 MB/s)
+2026-10-29T22:43:22.4660628Z Selecting previously unselected package build-essential.
+2026-10-29T22:43:22.4929470Z (Reading database ... 
+2026-10-29T22:43:22.4930263Z (Reading database ... 5%
+2026-10-29T22:43:22.4930985Z (Reading database ... 10%
+2026-10-29T22:43:22.4931707Z (Reading database ... 15%
+2026-10-29T22:43:22.4932293Z (Reading database ... 20%
+2026-10-29T22:43:22.4932713Z (Reading database ... 25%
+2026-10-29T22:43:22.4933087Z (Reading database ... 30%
+2026-10-29T22:43:22.4933965Z (Reading database ... 35%
+2026-10-29T22:43:22.4934325Z (Reading database ... 40%
+2026-10-29T22:43:22.4934679Z (Reading database ... 45%
+2026-10-29T22:43:22.4935000Z (Reading database ... 50%
+2026-10-29T22:43:22.4982281Z (Reading database ... 55%
+2026-10-29T22:43:22.5598913Z (Reading database ... 60%
+2026-10-29T22:43:22.5984043Z (Reading database ... 65%
+2026-10-29T22:43:22.6541131Z (Reading database ... 70%
+2026-10-29T22:43:22.7203165Z (Reading database ... 75%
+2026-10-29T22:43:22.7987905Z (Reading database ... 80%
+2026-10-29T22:43:22.8568984Z (Reading database ... 85%
+2026-10-29T22:43:22.9534643Z (Reading database ... 90%
+2026-10-29T22:43:23.0633826Z (Reading database ... 95%
+2026-10-29T22:43:23.0634426Z (Reading database ... 100%
+2026-10-29T22:43:23.0635263Z (Reading database ... 215504 files and directories currently installed.)
+2026-10-29T22:43:23.0685211Z Preparing to unpack .../0-build-essential_12.10ubuntu1_amd64.deb ...
+2026-10-29T22:43:23.0712441Z Unpacking build-essential (12.10ubuntu1) ...
+2026-10-29T22:43:23.1008322Z Selecting previously unselected package libjsoncpp25:amd64.
+2026-10-29T22:43:23.1158959Z Preparing to unpack .../1-libjsoncpp25_1.9.5-6build1_amd64.deb ...
+2026-10-29T22:43:23.1178351Z Unpacking libjsoncpp25:amd64 (1.9.5-6build1) ...
+2026-10-29T22:43:23.1460858Z Selecting previously unselected package librhash0:amd64.
+2026-10-29T22:43:23.1609056Z Preparing to unpack .../2-librhash0_1.4.3-3build1_amd64.deb ...
+2026-10-29T22:43:23.1618349Z Unpacking librhash0:amd64 (1.4.3-3build1) ...
+2026-10-29T22:43:23.1888865Z Selecting previously unselected package cmake-data.
+2026-10-29T22:43:23.2038425Z Preparing to unpack .../3-cmake-data_3.28.3-1build7_all.deb ...
+2026-10-29T22:43:23.2127150Z Unpacking cmake-data (3.28.3-1build7) ...
+2026-10-29T22:43:23.7470786Z Selecting previously unselected package cmake.
+2026-10-29T22:43:23.7636399Z Preparing to unpack .../4-cmake_3.28.3-1build7_amd64.deb ...
+2026-10-29T22:43:23.7645444Z Unpacking cmake (3.28.3-1build7) ...
+2026-10-29T22:43:23.9499985Z Selecting previously unselected package libuv1-dev:amd64.
+2026-10-29T22:43:23.9653110Z Preparing to unpack .../5-libuv1-dev_1.48.0-1.1build1_amd64.deb ...
+2026-10-29T22:43:23.9662623Z Unpacking libuv1-dev:amd64 (1.48.0-1.1build1) ...
+2026-10-29T22:43:23.9957406Z Selecting previously unselected package ripgrep.
+2026-10-29T22:43:24.0106428Z Preparing to unpack .../6-ripgrep_14.1.0-1_amd64.deb ...
+2026-10-29T22:43:24.0115650Z Unpacking ripgrep (14.1.0-1) ...
+2026-10-29T22:43:24.0779482Z Setting up libuv1-dev:amd64 (1.48.0-1.1build1) ...
+2026-10-29T22:43:24.0803605Z Setting up libjsoncpp25:amd64 (1.9.5-6build1) ...
+2026-10-29T22:43:24.0825108Z Setting up ripgrep (14.1.0-1) ...
+2026-10-29T22:43:24.0846975Z Setting up librhash0:amd64 (1.4.3-3build1) ...
+2026-10-29T22:43:24.0867586Z Setting up build-essential (12.10ubuntu1) ...
+2026-10-29T22:43:24.0891159Z Setting up cmake-data (3.28.3-1build7) ...
+2026-10-29T22:43:24.0962366Z Setting up cmake (3.28.3-1build7) ...
+2026-10-29T22:43:24.0988631Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-10-29T22:43:24.1011550Z Not building database; man-db/auto-update is not 'true'.
+2026-10-29T22:43:24.1025334Z Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+2026-10-29T22:43:24.8117861Z 
+2026-10-29T22:43:24.8118472Z Running kernel seems to be up-to-date.
+2026-10-29T22:43:24.8118814Z 
+2026-10-29T22:43:24.8119017Z No services need to be restarted.
+2026-10-29T22:43:24.8119261Z 
+2026-10-29T22:43:24.8119461Z No containers need to be restarted.
+2026-10-29T22:43:24.8119713Z 
+2026-10-29T22:43:24.8119954Z No user sessions are running outdated binaries.
+2026-10-29T22:43:24.8120253Z 
+2026-10-29T22:43:24.8120955Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-10-29T22:43:25.9293891Z ##[group]Run set -euo pipefail
+2026-10-29T22:43:25.9294371Z [36;1mset -euo pipefail[0m
+2026-10-29T22:43:25.9294701Z [36;1mnpm ci --ignore-scripts --no-audit --no-fund[0m
+2026-10-29T22:43:25.9295041Z [36;1mmkdir -p build[0m
+2026-10-29T22:43:25.9295568Z [36;1mbash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/dependent-checked-record-jvm-toolchain.log[0m
+2026-10-29T22:43:25.9317147Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-29T22:43:25.9317504Z env:
+2026-10-29T22:43:25.9317700Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:43:25.9317917Z ##[endgroup]
+2026-10-29T22:43:30.4379143Z 
+2026-10-29T22:43:30.4379785Z added 422 packages in 4s
+2026-10-29T22:43:30.7489678Z /home/runner/work/lean-bridge/lean-bridge/.toolchains/downloads/elan-x86_64-unknown-linux-gnu.tar.gz: OK
+2026-10-29T22:43:30.8647168Z Installing leanprover/lean4:v4.32.2 (attempt 1 of 2)
+2026-10-29T22:43:30.9392945Z info: Version 4.2.4 of elan is available! Use `elan self update` to update.
+2026-10-29T22:43:31.2982455Z info: downloading https://releases.lean-lang.org/lean4/v4.32.2/lean-4.32.2-linux.tar.zst
+2026-10-29T22:43:34.8477194Z info: installing /home/runner/work/lean-bridge/lean-bridge/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2
+2026-10-29T22:43:41.7457902Z 
+2026-10-29T22:43:41.7859834Z leanprover/lean4:v4.32.2 installed - Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)
+2026-10-29T22:43:41.7860444Z 
+2026-10-29T22:43:41.9936712Z info: default toolchain set to 'leanprover/lean4:v4.32.2'
+2026-10-29T22:43:42.0968057Z ##[group]Run actions/setup-java@v4
+2026-10-29T22:43:42.0968427Z with:
+2026-10-29T22:43:42.0968638Z   distribution: temurin
+2026-10-29T22:43:42.0968873Z   java-version: 22.0.2
+2026-10-29T22:43:42.0969100Z   java-package: jdk
+2026-10-29T22:43:42.0969319Z   check-latest: false
+2026-10-29T22:43:42.0969533Z   server-id: github
+2026-10-29T22:43:42.0969765Z   server-username: GITHUB_ACTOR
+2026-10-29T22:43:42.0970018Z   server-password: GITHUB_TOKEN
+2026-10-29T22:43:42.0970267Z   overwrite-settings: true
+2026-10-29T22:43:42.0970506Z   job-status: success
+2026-10-29T22:43:42.0972737Z   token: ***
+2026-10-29T22:43:42.0972947Z env:
+2026-10-29T22:43:42.0973129Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:43:42.0973692Z ##[endgroup]
+2026-10-29T22:43:42.3615554Z ##[warning]setup-java v4 is deprecated and will no longer receive updates. Please migrate to actions/setup-java@v5.
+2026-10-29T22:43:42.3628607Z ##[group]Installed distributions
+2026-10-29T22:43:42.5036817Z Trying to resolve the latest version from remote
+2026-10-29T22:43:42.5156154Z (node:3025) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-29T22:43:42.5157717Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-29T22:43:42.8523988Z Resolved latest version as 22.0.2+9
+2026-10-29T22:43:42.8524703Z Trying to download...
+2026-10-29T22:43:42.8526587Z Downloading Java 22.0.2+9 (Temurin-Hotspot) from https://github.com/adoptium/temurin22-binaries/releases/download/jdk-22.0.2%2B9/OpenJDK22U-jdk_x64_linux_hotspot_22.0.2_9.tar.gz ...
+2026-10-29T22:43:43.9189679Z Extracting Java archive...
+2026-10-29T22:43:43.9343702Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/e90833c0-5ba0-4120-afd0-947145694b66 -f /home/runner/work/_temp/e895c807-64ea-4dd4-b68e-c938545dc734
+2026-10-29T22:43:47.1548883Z Java 22.0.2+9 was downloaded
+2026-10-29T22:43:47.1549538Z Setting Java 22.0.2+9 as the default
+2026-10-29T22:43:47.1558909Z Creating toolchains.xml for JDK version 22.0.2 from temurin
+2026-10-29T22:43:47.1639675Z Writing to /home/runner/.m2/toolchains.xml
+2026-10-29T22:43:47.1640410Z 
+2026-10-29T22:43:47.1640659Z Java configuration:
+2026-10-29T22:43:47.1641061Z   Distribution: temurin
+2026-10-29T22:43:47.1641425Z   Version: 22.0.2+9
+2026-10-29T22:43:47.1641976Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64
+2026-10-29T22:43:47.1642832Z 
+2026-10-29T22:43:47.1643636Z ##[endgroup]
+2026-10-29T22:43:47.1648428Z Creating settings.xml with server-id: github
+2026-10-29T22:43:47.1656938Z Writing to /home/runner/.m2/settings.xml
+2026-10-29T22:43:47.3050426Z ##[group]Run set -euo pipefail
+2026-10-29T22:43:47.3050776Z [36;1mset -euo pipefail[0m
+2026-10-29T22:43:47.3051035Z [36;1mmkdir -p build[0m
+2026-10-29T22:43:47.3051700Z [36;1mcurl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip[0m
+2026-10-29T22:43:47.3052707Z [36;1mecho '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check[0m
+2026-10-29T22:43:47.3053752Z [36;1munzip -q build/kotlin-compiler.zip -d build/kotlin-tools[0m
+2026-10-29T22:43:47.3075433Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-29T22:43:47.3075785Z env:
+2026-10-29T22:43:47.3076003Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:43:47.3076353Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64
+2026-10-29T22:43:47.3076857Z   JAVA_HOME_22_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64
+2026-10-29T22:43:47.3077295Z ##[endgroup]
+2026-10-29T22:43:47.4080599Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2026-10-29T22:43:47.4081889Z                                  Dload  Upload   Total   Spent    Left  Speed
+2026-10-29T22:43:47.4085053Z 
+2026-10-29T22:43:47.5154701Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-29T22:43:47.5155599Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-29T22:43:47.8525109Z 
+2026-10-29T22:43:47.8526240Z 100 74.4M  100 74.4M    0     0   167M      0 --:--:-- --:--:-- --:--:--  167M
+2026-10-29T22:43:47.9164491Z build/kotlin-compiler.zip: OK
+2026-10-29T22:43:48.7059217Z ##[group]Run set -euo pipefail
+2026-10-29T22:43:48.7059563Z [36;1mset -euo pipefail[0m
+2026-10-29T22:43:48.7059817Z [36;1msource scripts/env.sh[0m
+2026-10-29T22:43:48.7060506Z [36;1mbash scripts/run-dependent-checked-record-jvm-ci.sh "$JAVA_HOME/bin/java" "$JAVA_HOME/bin/javac" "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc" "6"[0m
+2026-10-29T22:43:48.7081683Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-29T22:43:48.7082027Z env:
+2026-10-29T22:43:48.7082229Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:43:48.7082565Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64
+2026-10-29T22:43:48.7083058Z   JAVA_HOME_22_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64
+2026-10-29T22:43:48.7083705Z ##[endgroup]
+2026-10-29T22:43:48.7742513Z TAP version 13
+2026-10-29T22:46:38.3702537Z # Subtest: installed dependent checked-record JVM packages reproduce and relocate for ordinary-source
+2026-10-29T22:46:38.3710844Z ok 1 - installed dependent checked-record JVM packages reproduce and relocate for ordinary-source
+2026-10-29T22:46:38.3712336Z   ---
+2026-10-29T22:46:38.3713092Z   duration_ms: 169293.291366
+2026-10-29T22:46:38.3713938Z   type: 'test'
+2026-10-29T22:46:38.3714357Z   ...
+2026-10-29T22:46:38.3715042Z # ordinary-source author 0: reproducible Maven package
+2026-10-29T22:46:38.3716490Z # ordinary-source author 1: reproducible Maven package
+2026-10-29T22:46:38.4081487Z 1..1
+2026-10-29T22:46:38.4081973Z # tests 1
+2026-10-29T22:46:38.4083610Z # suites 0
+2026-10-29T22:46:38.4084962Z # pass 1
+2026-10-29T22:46:38.4085529Z # fail 0
+2026-10-29T22:46:38.4087374Z # cancelled 0
+2026-10-29T22:46:38.4087807Z # skipped 0
+2026-10-29T22:46:38.4088629Z # todo 0
+2026-10-29T22:46:38.4089754Z # duration_ms 169647.067511
+2026-10-29T22:46:44.6799874Z {
+2026-10-29T22:46:44.6800456Z   "archiveSha256": "f5879d29ea71d2d6762c2a1ee67de4e9eafc02d83cb7885945aa3928aeef278e",
+2026-10-29T22:46:44.6801071Z   "consumerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:46:44.6801465Z   "counts": {
+2026-10-29T22:46:44.6801678Z     "calls": 1289,
+2026-10-29T22:46:44.6802261Z     "checks": 2326,
+2026-10-29T22:46:44.6802483Z     "recoveries": 258,
+2026-10-29T22:46:44.6802725Z     "rejections": 258,
+2026-10-29T22:46:44.6802956Z     "snapshots": 1289
+2026-10-29T22:46:44.6803845Z   },
+2026-10-29T22:46:44.6804092Z   "floor": "2.38",
+2026-10-29T22:46:44.6804945Z   "javaVersion": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n",
+2026-10-29T22:46:44.6805820Z   "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:46:44.6806181Z   "profiles": [
+2026-10-29T22:46:44.6806474Z     "java",
+2026-10-29T22:46:44.6806690Z     "kotlin"
+2026-10-29T22:46:44.6806988Z   ],
+2026-10-29T22:46:44.6807202Z   "recordCount": 101,
+2026-10-29T22:46:44.6807479Z   "records": [
+2026-10-29T22:46:44.6807742Z     "build-0/DependentRecords.lean",
+2026-10-29T22:46:44.6808127Z     "build-0/author-inputs.json",
+2026-10-29T22:46:44.6808488Z     "build-0/lean-bridge.exports.json",
+2026-10-29T22:46:44.6808838Z     "build-0/model.json",
+2026-10-29T22:46:44.6809115Z     "build-0/native-jvm.json",
+2026-10-29T22:46:44.6809535Z     "build-0/package-set-receipt.json",
+2026-10-29T22:46:44.6810179Z     "build-1/DependentRecords.lean",
+2026-10-29T22:46:44.6810598Z     "build-1/author-inputs.json",
+2026-10-29T22:46:44.6810954Z     "build-1/lean-bridge.exports.json",
+2026-10-29T22:46:44.6811629Z     "build-1/model.json",
+2026-10-29T22:46:44.6812395Z     "build-1/native-jvm.json",
+2026-10-29T22:46:44.6813089Z     "build-1/package-set-receipt.json",
+2026-10-29T22:46:44.6813855Z     "configuration.json",
+2026-10-29T22:46:44.6814255Z     "consumer.java",
+2026-10-29T22:46:44.6814619Z     "consumer.kt",
+2026-10-29T22:46:44.6815010Z     "expected.binding-ir.json",
+2026-10-29T22:46:44.6815370Z     "handoff/archives/dependentrecords-1.0.0.jar",
+2026-10-29T22:46:44.6816261Z     "handoff/archives/dependentrecords-1.0.0.pom",
+2026-10-29T22:46:44.6816939Z     "handoff/package-set-receipt.json",
+2026-10-29T22:46:44.6817548Z     "handoff/package-set-receipt.json.sha256",
+2026-10-29T22:46:44.6818090Z     "installation.json",
+2026-10-29T22:46:44.6818574Z     "java/api-probe/classes/Probe.class",
+2026-10-29T22:46:44.6819174Z     "java/api-probe/probe.java",
+2026-10-29T22:46:44.6819672Z     "java/api-probe/record.json",
+2026-10-29T22:46:44.6820123Z     "java/installed.json",
+2026-10-29T22:46:44.6820543Z     "java/relocated.json",
+2026-10-29T22:46:44.6820878Z     "java/source-free.json",
+2026-10-29T22:46:44.6821231Z     "kotlin/api-probe/classes/META-INF/main.kotlin_module",
+2026-10-29T22:46:44.6821744Z     "kotlin/api-probe/classes/ProbeKt$probeDependentRoundtrip$1.class",
+2026-10-29T22:46:44.6822293Z     "kotlin/api-probe/classes/ProbeKt$probeDependentTotal$1.class",
+2026-10-29T22:46:44.6822722Z     "kotlin/api-probe/classes/ProbeKt.class",
+2026-10-29T22:46:44.6823068Z     "kotlin/api-probe/probe.kt",
+2026-10-29T22:46:44.6823727Z     "kotlin/api-probe/record.json",
+2026-10-29T22:46:44.6824026Z     "kotlin/installed.json",
+2026-10-29T22:46:44.6824341Z     "kotlin/nullability-false/NullProbe.kt",
+2026-10-29T22:46:44.6824766Z     "kotlin/nullability-false/classes/META-INF/main.kotlin_module",
+2026-10-29T22:46:44.6825220Z     "kotlin/nullability-false/classes/NullProbeKt.class",
+2026-10-29T22:46:44.6825601Z     "kotlin/nullability-false/record.json",
+2026-10-29T22:46:44.6825932Z     "kotlin/nullability-true/NullProbe.kt",
+2026-10-29T22:46:44.6826255Z     "kotlin/nullability-true/record.json",
+2026-10-29T22:46:44.6826551Z     "kotlin/relocated.json",
+2026-10-29T22:46:44.6826822Z     "kotlin/source-free.json",
+2026-10-29T22:46:44.6827104Z     "package/META-INF/MANIFEST.MF",
+2026-10-29T22:46:44.6827488Z     "package/META-INF/lean-bridge/component/allocation-guard.h",
+2026-10-29T22:46:44.6827959Z     "package/META-INF/lean-bridge/component/artifacts.json",
+2026-10-29T22:46:44.6828410Z     "package/META-INF/lean-bridge/component/binding-ir.json",
+2026-10-29T22:46:44.6828842Z     "package/META-INF/lean-bridge/component/component.h",
+2026-10-29T22:46:44.6829464Z     "package/META-INF/lean-bridge/component/generated.lean",
+2026-10-29T22:46:44.6829883Z     "package/META-INF/lean-bridge/component/metadata.json",
+2026-10-29T22:46:44.6830295Z     "package/META-INF/lean-bridge/component/model.json",
+2026-10-29T22:46:44.6830737Z     "package/META-INF/lean-bridge/component/native-component.json",
+2026-10-29T22:46:44.6831199Z     "package/META-INF/lean-bridge/jvm/binding-manifest.json",
+2026-10-29T22:46:44.6831799Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Api.java",
+2026-10-29T22:46:44.6832521Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Dependent.java",
+2026-10-29T22:46:44.6833713Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/KotlinBridge.java",
+2026-10-29T22:46:44.6834649Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/KotlinRuntime.java",
+2026-10-29T22:46:44.6835494Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/LeanBridgeException.java",
+2026-10-29T22:46:44.6836306Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/NativeAssets.java",
+2026-10-29T22:46:44.6837043Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Runtime.java",
+2026-10-29T22:46:44.6837750Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Scope.java",
+2026-10-29T22:46:44.6838449Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Unit.java",
+2026-10-29T22:46:44.6839179Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/KotlinCalls.kt",
+2026-10-29T22:46:44.6839936Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Api.kt",
+2026-10-29T22:46:44.6840923Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Dependent.kt",
+2026-10-29T22:46:44.6841808Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/LeanBridgeException.kt",
+2026-10-29T22:46:44.6842631Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Unit.kt",
+2026-10-29T22:46:44.6843199Z     "package/META-INF/lean-bridge/licenses/Lean-LICENSE",
+2026-10-29T22:46:44.6844042Z     "package/META-INF/lean-bridge/licenses/Lean-LICENSES",
+2026-10-29T22:46:44.6844505Z     "package/META-INF/lean-bridge/licenses/LeanBridge-LICENSE",
+2026-10-29T22:46:44.6844971Z     "package/META-INF/lean-bridge/licenses/source-notices.json",
+2026-10-29T22:46:44.6845697Z     "package/META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+2026-10-29T22:46:44.6846380Z     "package/META-INF/lean-bridge/native-c-adapter.json",
+2026-10-29T22:46:44.6846790Z     "package/META-INF/lean-bridge/native-jvm.json",
+2026-10-29T22:46:44.6847313Z     "package/META-INF/lean-bridge/native/linux-x64/libcomponent_ca8ca903379eb247d9eb.so",
+2026-10-29T22:46:44.6847919Z     "package/META-INF/lean-bridge/native/linux-x64/libdependentrecords.so",
+2026-10-29T22:46:44.6848477Z     "package/META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so",
+2026-10-29T22:46:44.6849014Z     "package/META-INF/lean-bridge/native/linux-x64/libleanshared.so",
+2026-10-29T22:46:44.6849465Z     "package/META-INF/lean-bridge/package-receipt.json",
+2026-10-29T22:46:44.6849849Z     "package/META-INF/lean-bridge/runtime.json",
+2026-10-29T22:46:44.6850332Z     "package/META-INF/lean_bridge_org_leanbridge_dependentrecords.kotlin_module",
+2026-10-29T22:46:44.6850880Z     "package/META-INF/maven/org.leanbridge/dependentrecords/pom.xml",
+2026-10-29T22:46:44.6851256Z     "package/README.md",
+2026-10-29T22:46:44.6851579Z     "package/org/leanbridge/dependentrecords/Api.class",
+2026-10-29T22:46:44.6852016Z     "package/org/leanbridge/dependentrecords/Dependent.class",
+2026-10-29T22:46:44.6852492Z     "package/org/leanbridge/dependentrecords/KotlinBridge.class",
+2026-10-29T22:46:44.6853130Z     "package/org/leanbridge/dependentrecords/KotlinCalls.class",
+2026-10-29T22:46:44.6853882Z     "package/org/leanbridge/dependentrecords/KotlinRuntime.class",
+2026-10-29T22:46:44.6854401Z     "package/org/leanbridge/dependentrecords/LeanBridgeException.class",
+2026-10-29T22:46:44.6854954Z     "package/org/leanbridge/dependentrecords/NativeAssets$_Assets.class",
+2026-10-29T22:46:44.6855463Z     "package/org/leanbridge/dependentrecords/NativeAssets.class",
+2026-10-29T22:46:44.6855922Z     "package/org/leanbridge/dependentrecords/Runtime.class",
+2026-10-29T22:46:44.6856359Z     "package/org/leanbridge/dependentrecords/Scope.class",
+2026-10-29T22:46:44.6856771Z     "package/org/leanbridge/dependentrecords/Unit.class",
+2026-10-29T22:46:44.6869044Z     "package/org/leanbridge/dependentrecords/kotlin/Api$Companion.class",
+2026-10-29T22:46:44.6869869Z     "package/org/leanbridge/dependentrecords/kotlin/Api.class",
+2026-10-29T22:46:44.6870766Z     "package/org/leanbridge/dependentrecords/kotlin/Dependent.class",
+2026-10-29T22:46:44.6871796Z     "package/org/leanbridge/dependentrecords/kotlin/LeanBridgeExceptionKt.class",
+2026-10-29T22:46:44.6872778Z     "package/org/leanbridge/dependentrecords/kotlin/UnitKt.class",
+2026-10-29T22:46:44.6873694Z     "report.json",
+2026-10-29T22:46:44.6874104Z     "resources.json",
+2026-10-29T22:46:44.6874508Z     "runtime.json"
+2026-10-29T22:46:44.6874876Z   ],
+2026-10-29T22:46:44.6875609Z   "reportSha256": "717180ea17e2be977f28d18ec4ab0b04b4fc568d879dfcefc7046469cb7f9d02",
+2026-10-29T22:46:44.6876409Z   "resultOnly": false,
+2026-10-29T22:46:44.6876833Z   "reviewed": false,
+2026-10-29T22:46:44.6877259Z   "route": "ordinary-source",
+2026-10-29T22:46:44.6877717Z   "runtime": {
+2026-10-29T22:46:44.6878098Z     "arch": "x64",
+2026-10-29T22:46:44.6878328Z     "glibc": "2.39",
+2026-10-29T22:46:44.6878793Z     "platform": "linux"
+2026-10-29T22:46:44.6879030Z   },
+2026-10-29T22:46:44.6879217Z   "tools": {
+2026-10-29T22:46:44.6879426Z     "java": {
+2026-10-29T22:46:44.6879841Z       "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/java",
+2026-10-29T22:46:44.6880460Z       "sha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+2026-10-29T22:46:44.6881460Z       "version": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n"
+2026-10-29T22:46:44.6882203Z     },
+2026-10-29T22:46:44.6882395Z     "javac": {
+2026-10-29T22:46:44.6882804Z       "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+2026-10-29T22:46:44.6883746Z       "sha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+2026-10-29T22:46:44.6884205Z       "version": "javac 22.0.2"
+2026-10-29T22:46:44.6884456Z     },
+2026-10-29T22:46:44.6884653Z     "kotlinc": {
+2026-10-29T22:46:44.6885120Z       "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+2026-10-29T22:46:44.6885621Z       "compilerFiles": {
+2026-10-29T22:46:44.6886162Z         "allopen-compiler-plugin.jar": "4e71266b484ca70149379b9f65fd0fdc2014df481f30f7026fac23cc11c2b69d",
+2026-10-29T22:46:44.6886961Z         "android-extensions-compiler.jar": "a58b87f9104123efb9c4089830f935dd04ced75dedcce4c90122242766638cb5",
+2026-10-29T22:46:44.6887772Z         "android-extensions-runtime.jar": "b43fa546caf93a17c76ca22ffae8d3cbc3bd615a5daf81588d0472d7932cbed2",
+2026-10-29T22:46:44.6888532Z         "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+2026-10-29T22:46:44.6889299Z         "assignment-compiler-plugin.jar": "71592c36dc068b210e6ac5e8983297aac85418ccc1f2aa0cc3ce697fbd553366",
+2026-10-29T22:46:44.6890075Z         "compose-compiler-plugin.jar": "471e82ec9809643c41b3b849fe91ed3182d1c50e7cca6aa1943d6fd7d5427798",
+2026-10-29T22:46:44.6890794Z         "jvm-abi-gen.jar": "d66b8e150ab3b9934536788bf6eb3b7897db85f01e183506d9108dce38b2df37",
+2026-10-29T22:46:44.6891760Z         "kotlin-annotation-processing-cli.jar": "8acfb152e1fc6bf906c4fa8d0c4534d8e74036a1bc614fa3c618e590bac75570",
+2026-10-29T22:46:44.6892699Z         "kotlin-annotation-processing-runtime.jar": "31bd9facf35b536cf94a575c671e6d31701dcfd72b0deafa902f850294e95ee4",
+2026-10-29T22:46:44.6893863Z         "kotlin-annotation-processing.jar": "dbeccd9cb6c2272c4d664deb1dc6a15d4099e144333851852d5133fa9164150e",
+2026-10-29T22:46:44.6894712Z         "kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+2026-10-29T22:46:44.6895513Z         "kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+2026-10-29T22:46:44.6896215Z         "kotlin-ant.jar": "332c5abb8040dbb092917764c33bcf65fbd66a1a49c85bbee9c0f4059712d878",
+2026-10-29T22:46:44.6896912Z         "kotlin-compiler.jar": "cb2b7b0b82ad5b6ddc2e8c6c41c73e837a2b42e2abf64af64dda1b6173609790",
+2026-10-29T22:46:44.6897645Z         "kotlin-daemon-client.jar": "21293da016e4ba12a128ac26fd920a74e8b87f574cf9bc43c60a3d2e7645a7ae",
+2026-10-29T22:46:44.6898368Z         "kotlin-daemon.jar": "efd0b911bd952c91a74acdf2861b74a61516b869cc9a22aa1858197a87a66c35",
+2026-10-29T22:46:44.6899187Z         "kotlin-imports-dumper-compiler-plugin.jar": "1acbe1d35d5800fbf9b5c9615779cf8af5887db0d4184fac42ca70fa1782da05",
+2026-10-29T22:46:44.6899986Z         "kotlin-main-kts.jar": "cae50d93ce288a4a784b858eae00d0d96a52393f588921d8a0f77a5520d692dd",
+2026-10-29T22:46:44.6900736Z         "kotlin-metadata-jvm-sources.jar": "2ab97ab16e203e715633593c480bcf0ac1cc151e54cd2adaaa7dca1085835ede",
+2026-10-29T22:46:44.6901504Z         "kotlin-metadata-jvm.jar": "501222ae7d63527e55f2e5e645f18d4eff2c19074c85b9bc055866e3ed2b17bf",
+2026-10-29T22:46:44.6902217Z         "kotlin-preloader.jar": "9fc99ab6db8fb5ce1552d248e1f1472fdf48a287ef435770092c70f7e0903411",
+2026-10-29T22:46:44.6903135Z         "kotlin-reflect-sources.jar": "e9719062ea18b7c10f231ee170306f95acf78c31b4f4592d32e8376ca3779f0b",
+2026-10-29T22:46:44.6904188Z         "kotlin-reflect.jar": "230d91c2e410e3cfca3a4dc73d255455f62ff52aac091a33397a6e30bde91bf7",
+2026-10-29T22:46:44.6905112Z         "kotlin-runner.jar": "97e742218ac6888b9893c61cd67f10fe34317fcca469ed2e4afec0269c200a18",
+2026-10-29T22:46:44.6905879Z         "kotlin-script-runtime-sources.jar": "d9d6b416bf1267d5d9a2fffb309c8d02fa707608154d7b0d7dd318d2dd7daa96",
+2026-10-29T22:46:44.6906671Z         "kotlin-script-runtime.jar": "4ed97fd1e0c9bb1d0948ed5e63cc91456313a59518295b92b2c1514aef556150",
+2026-10-29T22:46:44.6907428Z         "kotlin-scripting-common.jar": "7c9ac8499fa91b201ea7836537c625dd52a82549e57e6b3f175cc0c79e9ab604",
+2026-10-29T22:46:44.6908235Z         "kotlin-scripting-compiler-impl.jar": "9a8c5eb59547320b098ebb09a6c63926cf61e091cd22043d7f447034f6cdf4dd",
+2026-10-29T22:46:44.6909060Z         "kotlin-scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90",
+2026-10-29T22:46:44.6909830Z         "kotlin-scripting-jvm.jar": "60a8c742d61f44f2311fbdc8a86b767d171ba09d97be72d6ba450d37f7e3fdbf",
+2026-10-29T22:46:44.6910670Z         "kotlin-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+2026-10-29T22:46:44.6911500Z         "kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+2026-10-29T22:46:44.6912264Z         "kotlin-stdlib-jdk7.jar": "0d10bc0d42b8605f23629a3f31ea27c19cdbca9dcdf4f53f6d22cd6366836d18",
+2026-10-29T22:46:44.6913023Z         "kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+2026-10-29T22:46:44.6914065Z         "kotlin-stdlib-jdk8.jar": "adc16648dbbcf35b0d10e7ec301c35d746d1c2fe460c606aba59f12b117cf9b0",
+2026-10-29T22:46:44.6914829Z         "kotlin-stdlib-js-sources.jar": "14ad20758afba0957d67c512002a763064add63053f8b6aaef145dc4c6d6c33b",
+2026-10-29T22:46:44.6915591Z         "kotlin-stdlib-sources.jar": "967ad9599254e3a60d96d6c789547cc35c22d770d9c8fb1e3f15fac3b4c3b65d",
+2026-10-29T22:46:44.6916483Z         "kotlin-stdlib.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+2026-10-29T22:46:44.6917204Z         "kotlin-test-js-sources.jar": "4a7a5f653f89107e847345688171be7b2d4172332f7f9a5771b9240bf07e8f18",
+2026-10-29T22:46:44.6917961Z         "kotlin-test-junit-sources.jar": "c411a0dad1218f3f652b6619f228fefee498903ee6e11c36c990fbc3fe823f18",
+2026-10-29T22:46:44.6918701Z         "kotlin-test-junit.jar": "f45ed32e721d901d3cbe83ece7f41c98533b34155186368a79bfdc667e433dce",
+2026-10-29T22:46:44.6919451Z         "kotlin-test-junit5-sources.jar": "891c56d8183d2cd3e912cf250adeca889dba51d02b07fce3015321e08f72b4a2",
+2026-10-29T22:46:44.6920191Z         "kotlin-test-junit5.jar": "716c89ba2e387c4422ea0e9a85c5731f9a328b669a7a0bbed3259e52291b555e",
+2026-10-29T22:46:44.6920895Z         "kotlin-test-sources.jar": "c8445545032c2e09195fc883b274260dd414b33f2cdc1dadd4f3441c1a4e456b",
+2026-10-29T22:46:44.6921639Z         "kotlin-test-testng-sources.jar": "748366365d0b3e985289aab702aecab84d0bd8ef6dd104659e86c1f31359c5aa",
+2026-10-29T22:46:44.6922395Z         "kotlin-test-testng.jar": "381e3c4a4aaaacf4f0a7944ec7908e914ededcd49e9794e4417d97edb63d932b",
+2026-10-29T22:46:44.6923083Z         "kotlin-test.jar": "8db175a3f56cf139ebdf8936f293ce5a64a16b52a0408804e0ec077e8848eb32",
+2026-10-29T22:46:44.6924003Z         "kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+2026-10-29T22:46:44.6924849Z         "kotlinx-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+2026-10-29T22:46:44.6925678Z         "lombok-compiler-plugin.jar": "970a55e6837e7cd4787157ca8f41da60825b1d29199d4a430aa628293c5a05c3",
+2026-10-29T22:46:44.6926469Z         "mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+2026-10-29T22:46:44.6927390Z         "noarg-compiler-plugin.jar": "60f1c4d25a87bf3368b7a2512543cbc108fb27f1224ca30f86f62363efe0bd1c",
+2026-10-29T22:46:44.6928133Z         "parcelize-compiler.jar": "c7141f771089e7ca0bc5267f5d39c55a5f3ab27f2b36602efeb689edc5da9ed0",
+2026-10-29T22:46:44.6928871Z         "parcelize-runtime.jar": "ffd266a80d58ea089f8ae78cfcc81f19f276ef491fb05c0777bdc99f22ae84a1",
+2026-10-29T22:46:44.6929676Z         "power-assert-compiler-plugin.jar": "3d508b1c7597cf85735b561233bfdb9bc07c4445fda2982cc9842269aeff3f95",
+2026-10-29T22:46:44.6930518Z         "sam-with-receiver-compiler-plugin.jar": "75623f2d557812415e59ecfe67359545d8066894a53227c7e4883b318fb25239",
+2026-10-29T22:46:44.6931314Z         "scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90"
+2026-10-29T22:46:44.6931831Z       },
+2026-10-29T22:46:44.6932220Z       "sha256": "64d62a197fbec5f32f77c6724cce33ead4034b2ec3f873c056cde19fe00f324e",
+2026-10-29T22:46:44.6932724Z       "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)"
+2026-10-29T22:46:44.6933031Z     }
+2026-10-29T22:46:44.6933363Z   }
+2026-10-29T22:46:44.6933548Z }
+2026-10-29T22:46:44.7942576Z TAP version 13
+2026-10-29T22:49:33.7447204Z # Subtest: installed dependent checked-record JVM packages reproduce and relocate for reviewed-ir
+2026-10-29T22:49:33.7457008Z ok 1 - installed dependent checked-record JVM packages reproduce and relocate for reviewed-ir
+2026-10-29T22:49:33.7458240Z   ---
+2026-10-29T22:49:33.7459014Z   duration_ms: 168630.768914
+2026-10-29T22:49:33.7459727Z   type: 'test'
+2026-10-29T22:49:33.7460190Z   ...
+2026-10-29T22:49:33.7464642Z # reviewed-ir author 0: reproducible Maven package
+2026-10-29T22:49:33.7468526Z # reviewed-ir author 1: reproducible Maven package
+2026-10-29T22:49:33.7877459Z 1..1
+2026-10-29T22:49:33.7894289Z # tests 1
+2026-10-29T22:49:33.7894663Z # suites 0
+2026-10-29T22:49:33.7894952Z # pass 1
+2026-10-29T22:49:33.7895207Z # fail 0
+2026-10-29T22:49:33.7895441Z # cancelled 0
+2026-10-29T22:49:33.7895711Z # skipped 0
+2026-10-29T22:49:33.7895971Z # todo 0
+2026-10-29T22:49:33.7896284Z # duration_ms 169007.384785
+2026-10-29T22:49:40.0603635Z {
+2026-10-29T22:49:40.0604763Z   "archiveSha256": "f65afe5869221743939d8099aa6c52038625464ca26f233e8badf8f3e474b7cf",
+2026-10-29T22:49:40.0605807Z   "consumerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:49:40.0606419Z   "counts": {
+2026-10-29T22:49:40.0606797Z     "calls": 1289,
+2026-10-29T22:49:40.0607183Z     "checks": 2326,
+2026-10-29T22:49:40.0607582Z     "recoveries": 258,
+2026-10-29T22:49:40.0607990Z     "rejections": 258,
+2026-10-29T22:49:40.0608399Z     "snapshots": 1289
+2026-10-29T22:49:40.0608789Z   },
+2026-10-29T22:49:40.0609127Z   "floor": "2.38",
+2026-10-29T22:49:40.0610387Z   "javaVersion": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n",
+2026-10-29T22:49:40.0611445Z   "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:49:40.0611870Z   "profiles": [
+2026-10-29T22:49:40.0612141Z     "java",
+2026-10-29T22:49:40.0612381Z     "kotlin"
+2026-10-29T22:49:40.0612621Z   ],
+2026-10-29T22:49:40.0612855Z   "recordCount": 103,
+2026-10-29T22:49:40.0613126Z   "records": [
+2026-10-29T22:49:40.0613741Z     "build-0/DependentRecords.lean",
+2026-10-29T22:49:40.0614131Z     "build-0/api.binding-ir.json",
+2026-10-29T22:49:40.0614490Z     "build-0/author-inputs.json",
+2026-10-29T22:49:40.0614854Z     "build-0/lean-bridge.exports.json",
+2026-10-29T22:49:40.0615195Z     "build-0/model.json",
+2026-10-29T22:49:40.0615505Z     "build-0/native-jvm.json",
+2026-10-29T22:49:40.0615857Z     "build-0/package-set-receipt.json",
+2026-10-29T22:49:40.0616229Z     "build-1/DependentRecords.lean",
+2026-10-29T22:49:40.0616583Z     "build-1/api.binding-ir.json",
+2026-10-29T22:49:40.0616936Z     "build-1/author-inputs.json",
+2026-10-29T22:49:40.0617343Z     "build-1/lean-bridge.exports.json",
+2026-10-29T22:49:40.0617669Z     "build-1/model.json",
+2026-10-29T22:49:40.0617975Z     "build-1/native-jvm.json",
+2026-10-29T22:49:40.0618517Z     "build-1/package-set-receipt.json",
+2026-10-29T22:49:40.0618867Z     "configuration.json",
+2026-10-29T22:49:40.0619144Z     "consumer.java",
+2026-10-29T22:49:40.0619402Z     "consumer.kt",
+2026-10-29T22:49:40.0619704Z     "expected.binding-ir.json",
+2026-10-29T22:49:40.0620093Z     "handoff/archives/dependentrecords-1.0.0.jar",
+2026-10-29T22:49:40.0620497Z     "handoff/archives/dependentrecords-1.0.0.pom",
+2026-10-29T22:49:40.0620846Z     "handoff/package-set-receipt.json",
+2026-10-29T22:49:40.0621184Z     "handoff/package-set-receipt.json.sha256",
+2026-10-29T22:49:40.0621491Z     "installation.json",
+2026-10-29T22:49:40.0621778Z     "java/api-probe/classes/Probe.class",
+2026-10-29T22:49:40.0622094Z     "java/api-probe/probe.java",
+2026-10-29T22:49:40.0622389Z     "java/api-probe/record.json",
+2026-10-29T22:49:40.0622662Z     "java/installed.json",
+2026-10-29T22:49:40.0622904Z     "java/relocated.json",
+2026-10-29T22:49:40.0623146Z     "java/source-free.json",
+2026-10-29T22:49:40.0623744Z     "kotlin/api-probe/classes/META-INF/main.kotlin_module",
+2026-10-29T22:49:40.0624239Z     "kotlin/api-probe/classes/ProbeKt$probeDependentRoundtrip$1.class",
+2026-10-29T22:49:40.0624743Z     "kotlin/api-probe/classes/ProbeKt$probeDependentTotal$1.class",
+2026-10-29T22:49:40.0625157Z     "kotlin/api-probe/classes/ProbeKt.class",
+2026-10-29T22:49:40.0625519Z     "kotlin/api-probe/probe.kt",
+2026-10-29T22:49:40.0625808Z     "kotlin/api-probe/record.json",
+2026-10-29T22:49:40.0626083Z     "kotlin/installed.json",
+2026-10-29T22:49:40.0626377Z     "kotlin/nullability-false/NullProbe.kt",
+2026-10-29T22:49:40.0626786Z     "kotlin/nullability-false/classes/META-INF/main.kotlin_module",
+2026-10-29T22:49:40.0627234Z     "kotlin/nullability-false/classes/NullProbeKt.class",
+2026-10-29T22:49:40.0627602Z     "kotlin/nullability-false/record.json",
+2026-10-29T22:49:40.0627929Z     "kotlin/nullability-true/NullProbe.kt",
+2026-10-29T22:49:40.0628245Z     "kotlin/nullability-true/record.json",
+2026-10-29T22:49:40.0628543Z     "kotlin/relocated.json",
+2026-10-29T22:49:40.0628814Z     "kotlin/source-free.json",
+2026-10-29T22:49:40.0629245Z     "package/META-INF/MANIFEST.MF",
+2026-10-29T22:49:40.0629628Z     "package/META-INF/lean-bridge/component/allocation-guard.h",
+2026-10-29T22:49:40.0630067Z     "package/META-INF/lean-bridge/component/artifacts.json",
+2026-10-29T22:49:40.0630498Z     "package/META-INF/lean-bridge/component/binding-ir.json",
+2026-10-29T22:49:40.0630926Z     "package/META-INF/lean-bridge/component/component.h",
+2026-10-29T22:49:40.0631340Z     "package/META-INF/lean-bridge/component/generated.lean",
+2026-10-29T22:49:40.0631751Z     "package/META-INF/lean-bridge/component/metadata.json",
+2026-10-29T22:49:40.0632162Z     "package/META-INF/lean-bridge/component/model.json",
+2026-10-29T22:49:40.0632601Z     "package/META-INF/lean-bridge/component/native-component.json",
+2026-10-29T22:49:40.0633057Z     "package/META-INF/lean-bridge/jvm/binding-manifest.json",
+2026-10-29T22:49:40.0634011Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Api.java",
+2026-10-29T22:49:40.0634743Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Dependent.java",
+2026-10-29T22:49:40.0635507Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/KotlinBridge.java",
+2026-10-29T22:49:40.0636277Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/KotlinRuntime.java",
+2026-10-29T22:49:40.0637071Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/LeanBridgeException.java",
+2026-10-29T22:49:40.0637863Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/NativeAssets.java",
+2026-10-29T22:49:40.0638594Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Runtime.java",
+2026-10-29T22:49:40.0639302Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Scope.java",
+2026-10-29T22:49:40.0640162Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Unit.java",
+2026-10-29T22:49:40.0640892Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/KotlinCalls.kt",
+2026-10-29T22:49:40.0641680Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Api.kt",
+2026-10-29T22:49:40.0642436Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Dependent.kt",
+2026-10-29T22:49:40.0643510Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/LeanBridgeException.kt",
+2026-10-29T22:49:40.0644334Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Unit.kt",
+2026-10-29T22:49:40.0644901Z     "package/META-INF/lean-bridge/licenses/Lean-LICENSE",
+2026-10-29T22:49:40.0645322Z     "package/META-INF/lean-bridge/licenses/Lean-LICENSES",
+2026-10-29T22:49:40.0645760Z     "package/META-INF/lean-bridge/licenses/LeanBridge-LICENSE",
+2026-10-29T22:49:40.0646222Z     "package/META-INF/lean-bridge/licenses/source-notices.json",
+2026-10-29T22:49:40.0646954Z     "package/META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+2026-10-29T22:49:40.0647626Z     "package/META-INF/lean-bridge/native-c-adapter.json",
+2026-10-29T22:49:40.0648019Z     "package/META-INF/lean-bridge/native-jvm.json",
+2026-10-29T22:49:40.0648537Z     "package/META-INF/lean-bridge/native/linux-x64/libcomponent_ca8ca903379eb247d9eb.so",
+2026-10-29T22:49:40.0649132Z     "package/META-INF/lean-bridge/native/linux-x64/libdependentrecords.so",
+2026-10-29T22:49:40.0649685Z     "package/META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so",
+2026-10-29T22:49:40.0650219Z     "package/META-INF/lean-bridge/native/linux-x64/libleanshared.so",
+2026-10-29T22:49:40.0650665Z     "package/META-INF/lean-bridge/package-receipt.json",
+2026-10-29T22:49:40.0651045Z     "package/META-INF/lean-bridge/runtime.json",
+2026-10-29T22:49:40.0651525Z     "package/META-INF/lean_bridge_org_leanbridge_dependentrecords.kotlin_module",
+2026-10-29T22:49:40.0652247Z     "package/META-INF/maven/org.leanbridge/dependentrecords/pom.xml",
+2026-10-29T22:49:40.0652619Z     "package/README.md",
+2026-10-29T22:49:40.0652943Z     "package/org/leanbridge/dependentrecords/Api.class",
+2026-10-29T22:49:40.0653621Z     "package/org/leanbridge/dependentrecords/Dependent.class",
+2026-10-29T22:49:40.0654099Z     "package/org/leanbridge/dependentrecords/KotlinBridge.class",
+2026-10-29T22:49:40.0654567Z     "package/org/leanbridge/dependentrecords/KotlinCalls.class",
+2026-10-29T22:49:40.0655042Z     "package/org/leanbridge/dependentrecords/KotlinRuntime.class",
+2026-10-29T22:49:40.0655554Z     "package/org/leanbridge/dependentrecords/LeanBridgeException.class",
+2026-10-29T22:49:40.0656090Z     "package/org/leanbridge/dependentrecords/NativeAssets$_Assets.class",
+2026-10-29T22:49:40.0656600Z     "package/org/leanbridge/dependentrecords/NativeAssets.class",
+2026-10-29T22:49:40.0657057Z     "package/org/leanbridge/dependentrecords/Runtime.class",
+2026-10-29T22:49:40.0657477Z     "package/org/leanbridge/dependentrecords/Scope.class",
+2026-10-29T22:49:40.0657881Z     "package/org/leanbridge/dependentrecords/Unit.class",
+2026-10-29T22:49:40.0658349Z     "package/org/leanbridge/dependentrecords/kotlin/Api$Companion.class",
+2026-10-29T22:49:40.0658836Z     "package/org/leanbridge/dependentrecords/kotlin/Api.class",
+2026-10-29T22:49:40.0659310Z     "package/org/leanbridge/dependentrecords/kotlin/Dependent.class",
+2026-10-29T22:49:40.0659869Z     "package/org/leanbridge/dependentrecords/kotlin/LeanBridgeExceptionKt.class",
+2026-10-29T22:49:40.0660410Z     "package/org/leanbridge/dependentrecords/kotlin/UnitKt.class",
+2026-10-29T22:49:40.0660762Z     "report.json",
+2026-10-29T22:49:40.0660982Z     "resources.json",
+2026-10-29T22:49:40.0661204Z     "runtime.json"
+2026-10-29T22:49:40.0661402Z   ],
+2026-10-29T22:49:40.0661933Z   "reportSha256": "efd562b6b9f04d2151608fb007c7988a3da95a4a869d388b2291bc7545a79325",
+2026-10-29T22:49:40.0662366Z   "resultOnly": false,
+2026-10-29T22:49:40.0662593Z   "reviewed": true,
+2026-10-29T22:49:40.0662818Z   "route": "reviewed-ir",
+2026-10-29T22:49:40.0663047Z   "runtime": {
+2026-10-29T22:49:40.0663566Z     "arch": "x64",
+2026-10-29T22:49:40.0663811Z     "glibc": "2.39",
+2026-10-29T22:49:40.0664046Z     "platform": "linux"
+2026-10-29T22:49:40.0664269Z   },
+2026-10-29T22:49:40.0664455Z   "tools": {
+2026-10-29T22:49:40.0664659Z     "java": {
+2026-10-29T22:49:40.0665058Z       "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/java",
+2026-10-29T22:49:40.0665689Z       "sha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+2026-10-29T22:49:40.0666663Z       "version": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n"
+2026-10-29T22:49:40.0667398Z     },
+2026-10-29T22:49:40.0667593Z     "javac": {
+2026-10-29T22:49:40.0667988Z       "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+2026-10-29T22:49:40.0668586Z       "sha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+2026-10-29T22:49:40.0669009Z       "version": "javac 22.0.2"
+2026-10-29T22:49:40.0669244Z     },
+2026-10-29T22:49:40.0669427Z     "kotlinc": {
+2026-10-29T22:49:40.0669887Z       "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+2026-10-29T22:49:40.0670350Z       "compilerFiles": {
+2026-10-29T22:49:40.0670869Z         "allopen-compiler-plugin.jar": "4e71266b484ca70149379b9f65fd0fdc2014df481f30f7026fac23cc11c2b69d",
+2026-10-29T22:49:40.0671659Z         "android-extensions-compiler.jar": "a58b87f9104123efb9c4089830f935dd04ced75dedcce4c90122242766638cb5",
+2026-10-29T22:49:40.0672458Z         "android-extensions-runtime.jar": "b43fa546caf93a17c76ca22ffae8d3cbc3bd615a5daf81588d0472d7932cbed2",
+2026-10-29T22:49:40.0673430Z         "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+2026-10-29T22:49:40.0674379Z         "assignment-compiler-plugin.jar": "71592c36dc068b210e6ac5e8983297aac85418ccc1f2aa0cc3ce697fbd553366",
+2026-10-29T22:49:40.0675160Z         "compose-compiler-plugin.jar": "471e82ec9809643c41b3b849fe91ed3182d1c50e7cca6aa1943d6fd7d5427798",
+2026-10-29T22:49:40.0675866Z         "jvm-abi-gen.jar": "d66b8e150ab3b9934536788bf6eb3b7897db85f01e183506d9108dce38b2df37",
+2026-10-29T22:49:40.0676627Z         "kotlin-annotation-processing-cli.jar": "8acfb152e1fc6bf906c4fa8d0c4534d8e74036a1bc614fa3c618e590bac75570",
+2026-10-29T22:49:40.0677513Z         "kotlin-annotation-processing-runtime.jar": "31bd9facf35b536cf94a575c671e6d31701dcfd72b0deafa902f850294e95ee4",
+2026-10-29T22:49:40.0678371Z         "kotlin-annotation-processing.jar": "dbeccd9cb6c2272c4d664deb1dc6a15d4099e144333851852d5133fa9164150e",
+2026-10-29T22:49:40.0679242Z         "kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+2026-10-29T22:49:40.0680046Z         "kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+2026-10-29T22:49:40.0680733Z         "kotlin-ant.jar": "332c5abb8040dbb092917764c33bcf65fbd66a1a49c85bbee9c0f4059712d878",
+2026-10-29T22:49:40.0681467Z         "kotlin-compiler.jar": "cb2b7b0b82ad5b6ddc2e8c6c41c73e837a2b42e2abf64af64dda1b6173609790",
+2026-10-29T22:49:40.0682190Z         "kotlin-daemon-client.jar": "21293da016e4ba12a128ac26fd920a74e8b87f574cf9bc43c60a3d2e7645a7ae",
+2026-10-29T22:49:40.0682890Z         "kotlin-daemon.jar": "efd0b911bd952c91a74acdf2861b74a61516b869cc9a22aa1858197a87a66c35",
+2026-10-29T22:49:40.0684088Z         "kotlin-imports-dumper-compiler-plugin.jar": "1acbe1d35d5800fbf9b5c9615779cf8af5887db0d4184fac42ca70fa1782da05",
+2026-10-29T22:49:40.0684885Z         "kotlin-main-kts.jar": "cae50d93ce288a4a784b858eae00d0d96a52393f588921d8a0f77a5520d692dd",
+2026-10-29T22:49:40.0685793Z         "kotlin-metadata-jvm-sources.jar": "2ab97ab16e203e715633593c480bcf0ac1cc151e54cd2adaaa7dca1085835ede",
+2026-10-29T22:49:40.0686577Z         "kotlin-metadata-jvm.jar": "501222ae7d63527e55f2e5e645f18d4eff2c19074c85b9bc055866e3ed2b17bf",
+2026-10-29T22:49:40.0687283Z         "kotlin-preloader.jar": "9fc99ab6db8fb5ce1552d248e1f1472fdf48a287ef435770092c70f7e0903411",
+2026-10-29T22:49:40.0688013Z         "kotlin-reflect-sources.jar": "e9719062ea18b7c10f231ee170306f95acf78c31b4f4592d32e8376ca3779f0b",
+2026-10-29T22:49:40.0688721Z         "kotlin-reflect.jar": "230d91c2e410e3cfca3a4dc73d255455f62ff52aac091a33397a6e30bde91bf7",
+2026-10-29T22:49:40.0689398Z         "kotlin-runner.jar": "97e742218ac6888b9893c61cd67f10fe34317fcca469ed2e4afec0269c200a18",
+2026-10-29T22:49:40.0690166Z         "kotlin-script-runtime-sources.jar": "d9d6b416bf1267d5d9a2fffb309c8d02fa707608154d7b0d7dd318d2dd7daa96",
+2026-10-29T22:49:40.0690942Z         "kotlin-script-runtime.jar": "4ed97fd1e0c9bb1d0948ed5e63cc91456313a59518295b92b2c1514aef556150",
+2026-10-29T22:49:40.0691696Z         "kotlin-scripting-common.jar": "7c9ac8499fa91b201ea7836537c625dd52a82549e57e6b3f175cc0c79e9ab604",
+2026-10-29T22:49:40.0692486Z         "kotlin-scripting-compiler-impl.jar": "9a8c5eb59547320b098ebb09a6c63926cf61e091cd22043d7f447034f6cdf4dd",
+2026-10-29T22:49:40.0693538Z         "kotlin-scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90",
+2026-10-29T22:49:40.0694338Z         "kotlin-scripting-jvm.jar": "60a8c742d61f44f2311fbdc8a86b767d171ba09d97be72d6ba450d37f7e3fdbf",
+2026-10-29T22:49:40.0695158Z         "kotlin-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+2026-10-29T22:49:40.0695981Z         "kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+2026-10-29T22:49:40.0696724Z         "kotlin-stdlib-jdk7.jar": "0d10bc0d42b8605f23629a3f31ea27c19cdbca9dcdf4f53f6d22cd6366836d18",
+2026-10-29T22:49:40.0697478Z         "kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+2026-10-29T22:49:40.0698367Z         "kotlin-stdlib-jdk8.jar": "adc16648dbbcf35b0d10e7ec301c35d746d1c2fe460c606aba59f12b117cf9b0",
+2026-10-29T22:49:40.0699125Z         "kotlin-stdlib-js-sources.jar": "14ad20758afba0957d67c512002a763064add63053f8b6aaef145dc4c6d6c33b",
+2026-10-29T22:49:40.0699878Z         "kotlin-stdlib-sources.jar": "967ad9599254e3a60d96d6c789547cc35c22d770d9c8fb1e3f15fac3b4c3b65d",
+2026-10-29T22:49:40.0700581Z         "kotlin-stdlib.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+2026-10-29T22:49:40.0701281Z         "kotlin-test-js-sources.jar": "4a7a5f653f89107e847345688171be7b2d4172332f7f9a5771b9240bf07e8f18",
+2026-10-29T22:49:40.0702040Z         "kotlin-test-junit-sources.jar": "c411a0dad1218f3f652b6619f228fefee498903ee6e11c36c990fbc3fe823f18",
+2026-10-29T22:49:40.0702774Z         "kotlin-test-junit.jar": "f45ed32e721d901d3cbe83ece7f41c98533b34155186368a79bfdc667e433dce",
+2026-10-29T22:49:40.0703815Z         "kotlin-test-junit5-sources.jar": "891c56d8183d2cd3e912cf250adeca889dba51d02b07fce3015321e08f72b4a2",
+2026-10-29T22:49:40.0704580Z         "kotlin-test-junit5.jar": "716c89ba2e387c4422ea0e9a85c5731f9a328b669a7a0bbed3259e52291b555e",
+2026-10-29T22:49:40.0705287Z         "kotlin-test-sources.jar": "c8445545032c2e09195fc883b274260dd414b33f2cdc1dadd4f3441c1a4e456b",
+2026-10-29T22:49:40.0706033Z         "kotlin-test-testng-sources.jar": "748366365d0b3e985289aab702aecab84d0bd8ef6dd104659e86c1f31359c5aa",
+2026-10-29T22:49:40.0706814Z         "kotlin-test-testng.jar": "381e3c4a4aaaacf4f0a7944ec7908e914ededcd49e9794e4417d97edb63d932b",
+2026-10-29T22:49:40.0707493Z         "kotlin-test.jar": "8db175a3f56cf139ebdf8936f293ce5a64a16b52a0408804e0ec077e8848eb32",
+2026-10-29T22:49:40.0708222Z         "kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+2026-10-29T22:49:40.0709198Z         "kotlinx-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+2026-10-29T22:49:40.0710031Z         "lombok-compiler-plugin.jar": "970a55e6837e7cd4787157ca8f41da60825b1d29199d4a430aa628293c5a05c3",
+2026-10-29T22:49:40.0710836Z         "mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+2026-10-29T22:49:40.0711619Z         "noarg-compiler-plugin.jar": "60f1c4d25a87bf3368b7a2512543cbc108fb27f1224ca30f86f62363efe0bd1c",
+2026-10-29T22:49:40.0712356Z         "parcelize-compiler.jar": "c7141f771089e7ca0bc5267f5d39c55a5f3ab27f2b36602efeb689edc5da9ed0",
+2026-10-29T22:49:40.0713073Z         "parcelize-runtime.jar": "ffd266a80d58ea089f8ae78cfcc81f19f276ef491fb05c0777bdc99f22ae84a1",
+2026-10-29T22:49:40.0714094Z         "power-assert-compiler-plugin.jar": "3d508b1c7597cf85735b561233bfdb9bc07c4445fda2982cc9842269aeff3f95",
+2026-10-29T22:49:40.0714930Z         "sam-with-receiver-compiler-plugin.jar": "75623f2d557812415e59ecfe67359545d8066894a53227c7e4883b318fb25239",
+2026-10-29T22:49:40.0715700Z         "scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90"
+2026-10-29T22:49:40.0716165Z       },
+2026-10-29T22:49:40.0716570Z       "sha256": "64d62a197fbec5f32f77c6724cce33ead4034b2ec3f873c056cde19fe00f324e",
+2026-10-29T22:49:40.0717062Z       "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)"
+2026-10-29T22:49:40.0717366Z     }
+2026-10-29T22:49:40.0717554Z   }
+2026-10-29T22:49:40.0717734Z }
+2026-10-29T22:49:40.1686808Z TAP version 13
+2026-10-29T22:52:27.8635426Z # Subtest: installed dependent checked-record JVM packages reproduce and relocate for result-only-ordinary-source
+2026-10-29T22:52:27.8655320Z ok 1 - installed dependent checked-record JVM packages reproduce and relocate for result-only-ordinary-source
+2026-10-29T22:52:27.8656145Z   ---
+2026-10-29T22:52:27.8656470Z   duration_ms: 167383.945276
+2026-10-29T22:52:27.8656745Z   type: 'test'
+2026-10-29T22:52:27.8656961Z   ...
+2026-10-29T22:52:27.8657386Z # result-only-ordinary-source author 0: reproducible Maven package
+2026-10-29T22:52:27.8658264Z # result-only-ordinary-source author 1: reproducible Maven package
+2026-10-29T22:52:27.9033811Z 1..1
+2026-10-29T22:52:27.9045218Z # tests 1
+2026-10-29T22:52:27.9045951Z # suites 0
+2026-10-29T22:52:27.9046346Z # pass 1
+2026-10-29T22:52:27.9046668Z # fail 0
+2026-10-29T22:52:27.9046989Z # cancelled 0
+2026-10-29T22:52:27.9047233Z # skipped 0
+2026-10-29T22:52:27.9047464Z # todo 0
+2026-10-29T22:52:27.9047716Z # duration_ms 167747.783542
+2026-10-29T22:52:34.2066496Z {
+2026-10-29T22:52:34.2067310Z   "archiveSha256": "b7efa380671c93cc5e20aab0bec5457cbb7202d5927eea9d665d4e9506842135",
+2026-10-29T22:52:34.2068333Z   "consumerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:52:34.2068904Z   "counts": {
+2026-10-29T22:52:34.2069231Z     "calls": 513,
+2026-10-29T22:52:34.2069560Z     "checks": 516,
+2026-10-29T22:52:34.2069904Z     "recoveries": 0,
+2026-10-29T22:52:34.2070262Z     "rejections": 0,
+2026-10-29T22:52:34.2070616Z     "snapshots": 513
+2026-10-29T22:52:34.2070990Z   },
+2026-10-29T22:52:34.2071297Z   "floor": "2.38",
+2026-10-29T22:52:34.2072637Z   "javaVersion": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n",
+2026-10-29T22:52:34.2074386Z   "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:52:34.2074950Z   "profiles": [
+2026-10-29T22:52:34.2075287Z     "java",
+2026-10-29T22:52:34.2075612Z     "kotlin"
+2026-10-29T22:52:34.2075922Z   ],
+2026-10-29T22:52:34.2076242Z   "recordCount": 96,
+2026-10-29T22:52:34.2076604Z   "records": [
+2026-10-29T22:52:34.2077026Z     "build-0/DependentRecords.lean",
+2026-10-29T22:52:34.2077548Z     "build-0/author-inputs.json",
+2026-10-29T22:52:34.2078046Z     "build-0/lean-bridge.exports.json",
+2026-10-29T22:52:34.2078533Z     "build-0/model.json",
+2026-10-29T22:52:34.2078958Z     "build-0/native-jvm.json",
+2026-10-29T22:52:34.2079463Z     "build-0/package-set-receipt.json",
+2026-10-29T22:52:34.2080334Z     "build-1/DependentRecords.lean",
+2026-10-29T22:52:34.2080850Z     "build-1/author-inputs.json",
+2026-10-29T22:52:34.2081354Z     "build-1/lean-bridge.exports.json",
+2026-10-29T22:52:34.2081802Z     "build-1/model.json",
+2026-10-29T22:52:34.2082240Z     "build-1/native-jvm.json",
+2026-10-29T22:52:34.2082707Z     "build-1/package-set-receipt.json",
+2026-10-29T22:52:34.2083180Z     "configuration.json",
+2026-10-29T22:52:34.2083740Z     "consumer.java",
+2026-10-29T22:52:34.2084097Z     "consumer.kt",
+2026-10-29T22:52:34.2084511Z     "expected.binding-ir.json",
+2026-10-29T22:52:34.2085045Z     "handoff/archives/dependentrecords-1.0.0.jar",
+2026-10-29T22:52:34.2085675Z     "handoff/archives/dependentrecords-1.0.0.pom",
+2026-10-29T22:52:34.2086242Z     "handoff/package-set-receipt.json",
+2026-10-29T22:52:34.2086801Z     "handoff/package-set-receipt.json.sha256",
+2026-10-29T22:52:34.2087297Z     "installation.json",
+2026-10-29T22:52:34.2087738Z     "java/api-probe/probe.java",
+2026-10-29T22:52:34.2088221Z     "java/api-probe/record.json",
+2026-10-29T22:52:34.2088666Z     "java/installed.json",
+2026-10-29T22:52:34.2089056Z     "java/relocated.json",
+2026-10-29T22:52:34.2089464Z     "java/source-free.json",
+2026-10-29T22:52:34.2089906Z     "kotlin/api-probe/probe.kt",
+2026-10-29T22:52:34.2090392Z     "kotlin/api-probe/record.json",
+2026-10-29T22:52:34.2090854Z     "kotlin/installed.json",
+2026-10-29T22:52:34.2091346Z     "kotlin/nullability-false/NullProbe.kt",
+2026-10-29T22:52:34.2092040Z     "kotlin/nullability-false/classes/META-INF/main.kotlin_module",
+2026-10-29T22:52:34.2092786Z     "kotlin/nullability-false/classes/NullProbeKt.class",
+2026-10-29T22:52:34.2093627Z     "kotlin/nullability-false/record.json",
+2026-10-29T22:52:34.2094213Z     "kotlin/nullability-true/NullProbe.kt",
+2026-10-29T22:52:34.2094772Z     "kotlin/nullability-true/record.json",
+2026-10-29T22:52:34.2095254Z     "kotlin/relocated.json",
+2026-10-29T22:52:34.2095712Z     "kotlin/source-free.json",
+2026-10-29T22:52:34.2096199Z     "package/META-INF/MANIFEST.MF",
+2026-10-29T22:52:34.2096847Z     "package/META-INF/lean-bridge/component/allocation-guard.h",
+2026-10-29T22:52:34.2097858Z     "package/META-INF/lean-bridge/component/artifacts.json",
+2026-10-29T22:52:34.2098600Z     "package/META-INF/lean-bridge/component/binding-ir.json",
+2026-10-29T22:52:34.2099317Z     "package/META-INF/lean-bridge/component/component.h",
+2026-10-29T22:52:34.2100021Z     "package/META-INF/lean-bridge/component/generated.lean",
+2026-10-29T22:52:34.2100743Z     "package/META-INF/lean-bridge/component/metadata.json",
+2026-10-29T22:52:34.2101441Z     "package/META-INF/lean-bridge/component/model.json",
+2026-10-29T22:52:34.2102214Z     "package/META-INF/lean-bridge/component/native-component.json",
+2026-10-29T22:52:34.2103039Z     "package/META-INF/lean-bridge/jvm/binding-manifest.json",
+2026-10-29T22:52:34.2104276Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Api.java",
+2026-10-29T22:52:34.2105547Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Dependent.java",
+2026-10-29T22:52:34.2106886Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/KotlinBridge.java",
+2026-10-29T22:52:34.2108225Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/KotlinRuntime.java",
+2026-10-29T22:52:34.2109624Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/LeanBridgeException.java",
+2026-10-29T22:52:34.2111007Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/NativeAssets.java",
+2026-10-29T22:52:34.2112287Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Runtime.java",
+2026-10-29T22:52:34.2113701Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Scope.java",
+2026-10-29T22:52:34.2114927Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Unit.java",
+2026-10-29T22:52:34.2116369Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/KotlinCalls.kt",
+2026-10-29T22:52:34.2117677Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Api.kt",
+2026-10-29T22:52:34.2118985Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Dependent.kt",
+2026-10-29T22:52:34.2120461Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/LeanBridgeException.kt",
+2026-10-29T22:52:34.2121864Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Unit.kt",
+2026-10-29T22:52:34.2122909Z     "package/META-INF/lean-bridge/licenses/Lean-LICENSE",
+2026-10-29T22:52:34.2123807Z     "package/META-INF/lean-bridge/licenses/Lean-LICENSES",
+2026-10-29T22:52:34.2124513Z     "package/META-INF/lean-bridge/licenses/LeanBridge-LICENSE",
+2026-10-29T22:52:34.2125252Z     "package/META-INF/lean-bridge/licenses/source-notices.json",
+2026-10-29T22:52:34.2126417Z     "package/META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+2026-10-29T22:52:34.2127506Z     "package/META-INF/lean-bridge/native-c-adapter.json",
+2026-10-29T22:52:34.2128139Z     "package/META-INF/lean-bridge/native-jvm.json",
+2026-10-29T22:52:34.2129013Z     "package/META-INF/lean-bridge/native/linux-x64/libcomponent_ca8ca903379eb247d9eb.so",
+2026-10-29T22:52:34.2130052Z     "package/META-INF/lean-bridge/native/linux-x64/libdependentrecords.so",
+2026-10-29T22:52:34.2131004Z     "package/META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so",
+2026-10-29T22:52:34.2131926Z     "package/META-INF/lean-bridge/native/linux-x64/libleanshared.so",
+2026-10-29T22:52:34.2132708Z     "package/META-INF/lean-bridge/package-receipt.json",
+2026-10-29T22:52:34.2133552Z     "package/META-INF/lean-bridge/runtime.json",
+2026-10-29T22:52:34.2134434Z     "package/META-INF/lean_bridge_org_leanbridge_dependentrecords.kotlin_module",
+2026-10-29T22:52:34.2135396Z     "package/META-INF/maven/org.leanbridge/dependentrecords/pom.xml",
+2026-10-29T22:52:34.2136387Z     "package/README.md",
+2026-10-29T22:52:34.2136928Z     "package/org/leanbridge/dependentrecords/Api.class",
+2026-10-29T22:52:34.2137664Z     "package/org/leanbridge/dependentrecords/Dependent.class",
+2026-10-29T22:52:34.2138476Z     "package/org/leanbridge/dependentrecords/KotlinBridge.class",
+2026-10-29T22:52:34.2139294Z     "package/org/leanbridge/dependentrecords/KotlinCalls.class",
+2026-10-29T22:52:34.2140114Z     "package/org/leanbridge/dependentrecords/KotlinRuntime.class",
+2026-10-29T22:52:34.2141010Z     "package/org/leanbridge/dependentrecords/LeanBridgeException.class",
+2026-10-29T22:52:34.2141939Z     "package/org/leanbridge/dependentrecords/NativeAssets$_Assets.class",
+2026-10-29T22:52:34.2142819Z     "package/org/leanbridge/dependentrecords/NativeAssets.class",
+2026-10-29T22:52:34.2143793Z     "package/org/leanbridge/dependentrecords/Runtime.class",
+2026-10-29T22:52:34.2144527Z     "package/org/leanbridge/dependentrecords/Scope.class",
+2026-10-29T22:52:34.2145235Z     "package/org/leanbridge/dependentrecords/Unit.class",
+2026-10-29T22:52:34.2146060Z     "package/org/leanbridge/dependentrecords/kotlin/Api$Companion.class",
+2026-10-29T22:52:34.2146904Z     "package/org/leanbridge/dependentrecords/kotlin/Api.class",
+2026-10-29T22:52:34.2147724Z     "package/org/leanbridge/dependentrecords/kotlin/Dependent.class",
+2026-10-29T22:52:34.2148698Z     "package/org/leanbridge/dependentrecords/kotlin/LeanBridgeExceptionKt.class",
+2026-10-29T22:52:34.2149651Z     "package/org/leanbridge/dependentrecords/kotlin/UnitKt.class",
+2026-10-29T22:52:34.2150270Z     "report.json",
+2026-10-29T22:52:34.2150648Z     "resources.json",
+2026-10-29T22:52:34.2151026Z     "runtime.json"
+2026-10-29T22:52:34.2151369Z   ],
+2026-10-29T22:52:34.2152053Z   "reportSha256": "a43fc8687276edf5007ec16cfe61db7a4d35e34163dbc478d8523c82575cdb40",
+2026-10-29T22:52:34.2152796Z   "resultOnly": true,
+2026-10-29T22:52:34.2153547Z   "reviewed": false,
+2026-10-29T22:52:34.2154058Z   "route": "result-only-ordinary-source",
+2026-10-29T22:52:34.2154547Z   "runtime": {
+2026-10-29T22:52:34.2154890Z     "arch": "x64",
+2026-10-29T22:52:34.2155241Z     "glibc": "2.39",
+2026-10-29T22:52:34.2155621Z     "platform": "linux"
+2026-10-29T22:52:34.2155989Z   },
+2026-10-29T22:52:34.2156306Z   "tools": {
+2026-10-29T22:52:34.2156639Z     "java": {
+2026-10-29T22:52:34.2157316Z       "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/java",
+2026-10-29T22:52:34.2158352Z       "sha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+2026-10-29T22:52:34.2160080Z       "version": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n"
+2026-10-29T22:52:34.2161328Z     },
+2026-10-29T22:52:34.2161648Z     "javac": {
+2026-10-29T22:52:34.2162347Z       "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+2026-10-29T22:52:34.2163585Z       "sha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+2026-10-29T22:52:34.2164340Z       "version": "javac 22.0.2"
+2026-10-29T22:52:34.2164748Z     },
+2026-10-29T22:52:34.2165063Z     "kotlinc": {
+2026-10-29T22:52:34.2165855Z       "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+2026-10-29T22:52:34.2166677Z       "compilerFiles": {
+2026-10-29T22:52:34.2167574Z         "allopen-compiler-plugin.jar": "4e71266b484ca70149379b9f65fd0fdc2014df481f30f7026fac23cc11c2b69d",
+2026-10-29T22:52:34.2168969Z         "android-extensions-compiler.jar": "a58b87f9104123efb9c4089830f935dd04ced75dedcce4c90122242766638cb5",
+2026-10-29T22:52:34.2170402Z         "android-extensions-runtime.jar": "b43fa546caf93a17c76ca22ffae8d3cbc3bd615a5daf81588d0472d7932cbed2",
+2026-10-29T22:52:34.2171743Z         "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+2026-10-29T22:52:34.2173145Z         "assignment-compiler-plugin.jar": "71592c36dc068b210e6ac5e8983297aac85418ccc1f2aa0cc3ce697fbd553366",
+2026-10-29T22:52:34.2174914Z         "compose-compiler-plugin.jar": "471e82ec9809643c41b3b849fe91ed3182d1c50e7cca6aa1943d6fd7d5427798",
+2026-10-29T22:52:34.2176164Z         "jvm-abi-gen.jar": "d66b8e150ab3b9934536788bf6eb3b7897db85f01e183506d9108dce38b2df37",
+2026-10-29T22:52:34.2177538Z         "kotlin-annotation-processing-cli.jar": "8acfb152e1fc6bf906c4fa8d0c4534d8e74036a1bc614fa3c618e590bac75570",
+2026-10-29T22:52:34.2179098Z         "kotlin-annotation-processing-runtime.jar": "31bd9facf35b536cf94a575c671e6d31701dcfd72b0deafa902f850294e95ee4",
+2026-10-29T22:52:34.2180618Z         "kotlin-annotation-processing.jar": "dbeccd9cb6c2272c4d664deb1dc6a15d4099e144333851852d5133fa9164150e",
+2026-10-29T22:52:34.2182081Z         "kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+2026-10-29T22:52:34.2183667Z         "kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+2026-10-29T22:52:34.2184905Z         "kotlin-ant.jar": "332c5abb8040dbb092917764c33bcf65fbd66a1a49c85bbee9c0f4059712d878",
+2026-10-29T22:52:34.2186100Z         "kotlin-compiler.jar": "cb2b7b0b82ad5b6ddc2e8c6c41c73e837a2b42e2abf64af64dda1b6173609790",
+2026-10-29T22:52:34.2187384Z         "kotlin-daemon-client.jar": "21293da016e4ba12a128ac26fd920a74e8b87f574cf9bc43c60a3d2e7645a7ae",
+2026-10-29T22:52:34.2188747Z         "kotlin-daemon.jar": "efd0b911bd952c91a74acdf2861b74a61516b869cc9a22aa1858197a87a66c35",
+2026-10-29T22:52:34.2190293Z         "kotlin-imports-dumper-compiler-plugin.jar": "1acbe1d35d5800fbf9b5c9615779cf8af5887db0d4184fac42ca70fa1782da05",
+2026-10-29T22:52:34.2205561Z         "kotlin-main-kts.jar": "cae50d93ce288a4a784b858eae00d0d96a52393f588921d8a0f77a5520d692dd",
+2026-10-29T22:52:34.2206607Z         "kotlin-metadata-jvm-sources.jar": "2ab97ab16e203e715633593c480bcf0ac1cc151e54cd2adaaa7dca1085835ede",
+2026-10-29T22:52:34.2207418Z         "kotlin-metadata-jvm.jar": "501222ae7d63527e55f2e5e645f18d4eff2c19074c85b9bc055866e3ed2b17bf",
+2026-10-29T22:52:34.2208212Z         "kotlin-preloader.jar": "9fc99ab6db8fb5ce1552d248e1f1472fdf48a287ef435770092c70f7e0903411",
+2026-10-29T22:52:34.2208970Z         "kotlin-reflect-sources.jar": "e9719062ea18b7c10f231ee170306f95acf78c31b4f4592d32e8376ca3779f0b",
+2026-10-29T22:52:34.2209695Z         "kotlin-reflect.jar": "230d91c2e410e3cfca3a4dc73d255455f62ff52aac091a33397a6e30bde91bf7",
+2026-10-29T22:52:34.2210375Z         "kotlin-runner.jar": "97e742218ac6888b9893c61cd67f10fe34317fcca469ed2e4afec0269c200a18",
+2026-10-29T22:52:34.2211125Z         "kotlin-script-runtime-sources.jar": "d9d6b416bf1267d5d9a2fffb309c8d02fa707608154d7b0d7dd318d2dd7daa96",
+2026-10-29T22:52:34.2211928Z         "kotlin-script-runtime.jar": "4ed97fd1e0c9bb1d0948ed5e63cc91456313a59518295b92b2c1514aef556150",
+2026-10-29T22:52:34.2212700Z         "kotlin-scripting-common.jar": "7c9ac8499fa91b201ea7836537c625dd52a82549e57e6b3f175cc0c79e9ab604",
+2026-10-29T22:52:34.2213895Z         "kotlin-scripting-compiler-impl.jar": "9a8c5eb59547320b098ebb09a6c63926cf61e091cd22043d7f447034f6cdf4dd",
+2026-10-29T22:52:34.2214766Z         "kotlin-scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90",
+2026-10-29T22:52:34.2215543Z         "kotlin-scripting-jvm.jar": "60a8c742d61f44f2311fbdc8a86b767d171ba09d97be72d6ba450d37f7e3fdbf",
+2026-10-29T22:52:34.2216391Z         "kotlin-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+2026-10-29T22:52:34.2217215Z         "kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+2026-10-29T22:52:34.2217962Z         "kotlin-stdlib-jdk7.jar": "0d10bc0d42b8605f23629a3f31ea27c19cdbca9dcdf4f53f6d22cd6366836d18",
+2026-10-29T22:52:34.2218737Z         "kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+2026-10-29T22:52:34.2219536Z         "kotlin-stdlib-jdk8.jar": "adc16648dbbcf35b0d10e7ec301c35d746d1c2fe460c606aba59f12b117cf9b0",
+2026-10-29T22:52:34.2220511Z         "kotlin-stdlib-js-sources.jar": "14ad20758afba0957d67c512002a763064add63053f8b6aaef145dc4c6d6c33b",
+2026-10-29T22:52:34.2221280Z         "kotlin-stdlib-sources.jar": "967ad9599254e3a60d96d6c789547cc35c22d770d9c8fb1e3f15fac3b4c3b65d",
+2026-10-29T22:52:34.2221990Z         "kotlin-stdlib.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+2026-10-29T22:52:34.2222712Z         "kotlin-test-js-sources.jar": "4a7a5f653f89107e847345688171be7b2d4172332f7f9a5771b9240bf07e8f18",
+2026-10-29T22:52:34.2223904Z         "kotlin-test-junit-sources.jar": "c411a0dad1218f3f652b6619f228fefee498903ee6e11c36c990fbc3fe823f18",
+2026-10-29T22:52:34.2224679Z         "kotlin-test-junit.jar": "f45ed32e721d901d3cbe83ece7f41c98533b34155186368a79bfdc667e433dce",
+2026-10-29T22:52:34.2225457Z         "kotlin-test-junit5-sources.jar": "891c56d8183d2cd3e912cf250adeca889dba51d02b07fce3015321e08f72b4a2",
+2026-10-29T22:52:34.2226212Z         "kotlin-test-junit5.jar": "716c89ba2e387c4422ea0e9a85c5731f9a328b669a7a0bbed3259e52291b555e",
+2026-10-29T22:52:34.2226936Z         "kotlin-test-sources.jar": "c8445545032c2e09195fc883b274260dd414b33f2cdc1dadd4f3441c1a4e456b",
+2026-10-29T22:52:34.2227686Z         "kotlin-test-testng-sources.jar": "748366365d0b3e985289aab702aecab84d0bd8ef6dd104659e86c1f31359c5aa",
+2026-10-29T22:52:34.2228441Z         "kotlin-test-testng.jar": "381e3c4a4aaaacf4f0a7944ec7908e914ededcd49e9794e4417d97edb63d932b",
+2026-10-29T22:52:34.2229150Z         "kotlin-test.jar": "8db175a3f56cf139ebdf8936f293ce5a64a16b52a0408804e0ec077e8848eb32",
+2026-10-29T22:52:34.2229893Z         "kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+2026-10-29T22:52:34.2230760Z         "kotlinx-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+2026-10-29T22:52:34.2231734Z         "lombok-compiler-plugin.jar": "970a55e6837e7cd4787157ca8f41da60825b1d29199d4a430aa628293c5a05c3",
+2026-10-29T22:52:34.2232541Z         "mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+2026-10-29T22:52:34.2233576Z         "noarg-compiler-plugin.jar": "60f1c4d25a87bf3368b7a2512543cbc108fb27f1224ca30f86f62363efe0bd1c",
+2026-10-29T22:52:34.2234324Z         "parcelize-compiler.jar": "c7141f771089e7ca0bc5267f5d39c55a5f3ab27f2b36602efeb689edc5da9ed0",
+2026-10-29T22:52:34.2235055Z         "parcelize-runtime.jar": "ffd266a80d58ea089f8ae78cfcc81f19f276ef491fb05c0777bdc99f22ae84a1",
+2026-10-29T22:52:34.2235836Z         "power-assert-compiler-plugin.jar": "3d508b1c7597cf85735b561233bfdb9bc07c4445fda2982cc9842269aeff3f95",
+2026-10-29T22:52:34.2236672Z         "sam-with-receiver-compiler-plugin.jar": "75623f2d557812415e59ecfe67359545d8066894a53227c7e4883b318fb25239",
+2026-10-29T22:52:34.2237530Z         "scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90"
+2026-10-29T22:52:34.2238007Z       },
+2026-10-29T22:52:34.2238399Z       "sha256": "64d62a197fbec5f32f77c6724cce33ead4034b2ec3f873c056cde19fe00f324e",
+2026-10-29T22:52:34.2238911Z       "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)"
+2026-10-29T22:52:34.2239217Z     }
+2026-10-29T22:52:34.2239404Z   }
+2026-10-29T22:52:34.2239596Z }
+2026-10-29T22:52:34.3233913Z TAP version 13
+2026-10-29T22:55:22.3989041Z # Subtest: installed dependent checked-record JVM packages reproduce and relocate for result-only-reviewed-ir
+2026-10-29T22:55:22.3998906Z ok 1 - installed dependent checked-record JVM packages reproduce and relocate for result-only-reviewed-ir
+2026-10-29T22:55:22.3999891Z   ---
+2026-10-29T22:55:22.4000438Z   duration_ms: 167759.232808
+2026-10-29T22:55:22.4000963Z   type: 'test'
+2026-10-29T22:55:22.4001405Z   ...
+2026-10-29T22:55:22.4001957Z # result-only-reviewed-ir author 0: reproducible Maven package
+2026-10-29T22:55:22.4009215Z # result-only-reviewed-ir author 1: reproducible Maven package
+2026-10-29T22:55:22.4390284Z 1..1
+2026-10-29T22:55:22.4390710Z # tests 1
+2026-10-29T22:55:22.4391715Z # suites 0
+2026-10-29T22:55:22.4392591Z # pass 1
+2026-10-29T22:55:22.4394545Z # fail 0
+2026-10-29T22:55:22.4395430Z # cancelled 0
+2026-10-29T22:55:22.4396151Z # skipped 0
+2026-10-29T22:55:22.4396817Z # todo 0
+2026-10-29T22:55:22.4397662Z # duration_ms 168129.536432
+2026-10-29T22:55:28.6427303Z {
+2026-10-29T22:55:28.6428172Z   "archiveSha256": "baf7e8167f8d15dc8beb241b63485e7e5033540be060315514e19d105cb2419b",
+2026-10-29T22:55:28.6429101Z   "consumerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:55:28.6429656Z   "counts": {
+2026-10-29T22:55:28.6430001Z     "calls": 513,
+2026-10-29T22:55:28.6430348Z     "checks": 516,
+2026-10-29T22:55:28.6430686Z     "recoveries": 0,
+2026-10-29T22:55:28.6431067Z     "rejections": 0,
+2026-10-29T22:55:28.6431427Z     "snapshots": 513
+2026-10-29T22:55:28.6431776Z   },
+2026-10-29T22:55:28.6432099Z   "floor": "2.38",
+2026-10-29T22:55:28.6433709Z   "javaVersion": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n",
+2026-10-29T22:55:28.6435182Z   "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:55:28.6435764Z   "profiles": [
+2026-10-29T22:55:28.6436105Z     "java",
+2026-10-29T22:55:28.6436482Z     "kotlin"
+2026-10-29T22:55:28.6436805Z   ],
+2026-10-29T22:55:28.6437121Z   "recordCount": 98,
+2026-10-29T22:55:28.6437478Z   "records": [
+2026-10-29T22:55:28.6437889Z     "build-0/DependentRecords.lean",
+2026-10-29T22:55:28.6438419Z     "build-0/api.binding-ir.json",
+2026-10-29T22:55:28.6438925Z     "build-0/author-inputs.json",
+2026-10-29T22:55:28.6439439Z     "build-0/lean-bridge.exports.json",
+2026-10-29T22:55:28.6439931Z     "build-0/model.json",
+2026-10-29T22:55:28.6440380Z     "build-0/native-jvm.json",
+2026-10-29T22:55:28.6440884Z     "build-0/package-set-receipt.json",
+2026-10-29T22:55:28.6441745Z     "build-1/DependentRecords.lean",
+2026-10-29T22:55:28.6442269Z     "build-1/api.binding-ir.json",
+2026-10-29T22:55:28.6442785Z     "build-1/author-inputs.json",
+2026-10-29T22:55:28.6443499Z     "build-1/lean-bridge.exports.json",
+2026-10-29T22:55:28.6443977Z     "build-1/model.json",
+2026-10-29T22:55:28.6444419Z     "build-1/native-jvm.json",
+2026-10-29T22:55:28.6444913Z     "build-1/package-set-receipt.json",
+2026-10-29T22:55:28.6445385Z     "configuration.json",
+2026-10-29T22:55:28.6445781Z     "consumer.java",
+2026-10-29T22:55:28.6446152Z     "consumer.kt",
+2026-10-29T22:55:28.6446581Z     "expected.binding-ir.json",
+2026-10-29T22:55:28.6447133Z     "handoff/archives/dependentrecords-1.0.0.jar",
+2026-10-29T22:55:28.6447777Z     "handoff/archives/dependentrecords-1.0.0.pom",
+2026-10-29T22:55:28.6448375Z     "handoff/package-set-receipt.json",
+2026-10-29T22:55:28.6448948Z     "handoff/package-set-receipt.json.sha256",
+2026-10-29T22:55:28.6449464Z     "installation.json",
+2026-10-29T22:55:28.6449937Z     "java/api-probe/probe.java",
+2026-10-29T22:55:28.6450425Z     "java/api-probe/record.json",
+2026-10-29T22:55:28.6450882Z     "java/installed.json",
+2026-10-29T22:55:28.6451300Z     "java/relocated.json",
+2026-10-29T22:55:28.6451712Z     "java/source-free.json",
+2026-10-29T22:55:28.6452188Z     "kotlin/api-probe/probe.kt",
+2026-10-29T22:55:28.6452684Z     "kotlin/api-probe/record.json",
+2026-10-29T22:55:28.6453376Z     "kotlin/installed.json",
+2026-10-29T22:55:28.6453882Z     "kotlin/nullability-false/NullProbe.kt",
+2026-10-29T22:55:28.6454583Z     "kotlin/nullability-false/classes/META-INF/main.kotlin_module",
+2026-10-29T22:55:28.6455346Z     "kotlin/nullability-false/classes/NullProbeKt.class",
+2026-10-29T22:55:28.6455981Z     "kotlin/nullability-false/record.json",
+2026-10-29T22:55:28.6456551Z     "kotlin/nullability-true/NullProbe.kt",
+2026-10-29T22:55:28.6457104Z     "kotlin/nullability-true/record.json",
+2026-10-29T22:55:28.6457592Z     "kotlin/relocated.json",
+2026-10-29T22:55:28.6458053Z     "kotlin/source-free.json",
+2026-10-29T22:55:28.6458536Z     "package/META-INF/MANIFEST.MF",
+2026-10-29T22:55:28.6459422Z     "package/META-INF/lean-bridge/component/allocation-guard.h",
+2026-10-29T22:55:28.6460189Z     "package/META-INF/lean-bridge/component/artifacts.json",
+2026-10-29T22:55:28.6460932Z     "package/META-INF/lean-bridge/component/binding-ir.json",
+2026-10-29T22:55:28.6461660Z     "package/META-INF/lean-bridge/component/component.h",
+2026-10-29T22:55:28.6462379Z     "package/META-INF/lean-bridge/component/generated.lean",
+2026-10-29T22:55:28.6463104Z     "package/META-INF/lean-bridge/component/metadata.json",
+2026-10-29T22:55:28.6463981Z     "package/META-INF/lean-bridge/component/model.json",
+2026-10-29T22:55:28.6464742Z     "package/META-INF/lean-bridge/component/native-component.json",
+2026-10-29T22:55:28.6465531Z     "package/META-INF/lean-bridge/jvm/binding-manifest.json",
+2026-10-29T22:55:28.6466504Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Api.java",
+2026-10-29T22:55:28.6467753Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Dependent.java",
+2026-10-29T22:55:28.6469066Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/KotlinBridge.java",
+2026-10-29T22:55:28.6470384Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/KotlinRuntime.java",
+2026-10-29T22:55:28.6471763Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/LeanBridgeException.java",
+2026-10-29T22:55:28.6473118Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/NativeAssets.java",
+2026-10-29T22:55:28.6474551Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Runtime.java",
+2026-10-29T22:55:28.6475765Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Scope.java",
+2026-10-29T22:55:28.6477142Z     "package/META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/dependentrecords/Unit.java",
+2026-10-29T22:55:28.6478399Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/KotlinCalls.kt",
+2026-10-29T22:55:28.6479687Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Api.kt",
+2026-10-29T22:55:28.6481015Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Dependent.kt",
+2026-10-29T22:55:28.6482473Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/LeanBridgeException.kt",
+2026-10-29T22:55:28.6484056Z     "package/META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/dependentrecords/kotlin/Unit.kt",
+2026-10-29T22:55:28.6485041Z     "package/META-INF/lean-bridge/licenses/Lean-LICENSE",
+2026-10-29T22:55:28.6485742Z     "package/META-INF/lean-bridge/licenses/Lean-LICENSES",
+2026-10-29T22:55:28.6486491Z     "package/META-INF/lean-bridge/licenses/LeanBridge-LICENSE",
+2026-10-29T22:55:28.6487295Z     "package/META-INF/lean-bridge/licenses/source-notices.json",
+2026-10-29T22:55:28.6488563Z     "package/META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+2026-10-29T22:55:28.6489730Z     "package/META-INF/lean-bridge/native-c-adapter.json",
+2026-10-29T22:55:28.6490412Z     "package/META-INF/lean-bridge/native-jvm.json",
+2026-10-29T22:55:28.6491290Z     "package/META-INF/lean-bridge/native/linux-x64/libcomponent_ca8ca903379eb247d9eb.so",
+2026-10-29T22:55:28.6492380Z     "package/META-INF/lean-bridge/native/linux-x64/libdependentrecords.so",
+2026-10-29T22:55:28.6493496Z     "package/META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so",
+2026-10-29T22:55:28.6494420Z     "package/META-INF/lean-bridge/native/linux-x64/libleanshared.so",
+2026-10-29T22:55:28.6495191Z     "package/META-INF/lean-bridge/package-receipt.json",
+2026-10-29T22:55:28.6495846Z     "package/META-INF/lean-bridge/runtime.json",
+2026-10-29T22:55:28.6496669Z     "package/META-INF/lean_bridge_org_leanbridge_dependentrecords.kotlin_module",
+2026-10-29T22:55:28.6497603Z     "package/META-INF/maven/org.leanbridge/dependentrecords/pom.xml",
+2026-10-29T22:55:28.6498441Z     "package/README.md",
+2026-10-29T22:55:28.6498983Z     "package/org/leanbridge/dependentrecords/Api.class",
+2026-10-29T22:55:28.6499717Z     "package/org/leanbridge/dependentrecords/Dependent.class",
+2026-10-29T22:55:28.6500518Z     "package/org/leanbridge/dependentrecords/KotlinBridge.class",
+2026-10-29T22:55:28.6501318Z     "package/org/leanbridge/dependentrecords/KotlinCalls.class",
+2026-10-29T22:55:28.6502138Z     "package/org/leanbridge/dependentrecords/KotlinRuntime.class",
+2026-10-29T22:55:28.6503023Z     "package/org/leanbridge/dependentrecords/LeanBridgeException.class",
+2026-10-29T22:55:28.6504787Z     "package/org/leanbridge/dependentrecords/NativeAssets$_Assets.class",
+2026-10-29T22:55:28.6505968Z     "package/org/leanbridge/dependentrecords/NativeAssets.class",
+2026-10-29T22:55:28.6506900Z     "package/org/leanbridge/dependentrecords/Runtime.class",
+2026-10-29T22:55:28.6507637Z     "package/org/leanbridge/dependentrecords/Scope.class",
+2026-10-29T22:55:28.6508368Z     "package/org/leanbridge/dependentrecords/Unit.class",
+2026-10-29T22:55:28.6509193Z     "package/org/leanbridge/dependentrecords/kotlin/Api$Companion.class",
+2026-10-29T22:55:28.6510059Z     "package/org/leanbridge/dependentrecords/kotlin/Api.class",
+2026-10-29T22:55:28.6510897Z     "package/org/leanbridge/dependentrecords/kotlin/Dependent.class",
+2026-10-29T22:55:28.6511873Z     "package/org/leanbridge/dependentrecords/kotlin/LeanBridgeExceptionKt.class",
+2026-10-29T22:55:28.6512828Z     "package/org/leanbridge/dependentrecords/kotlin/UnitKt.class",
+2026-10-29T22:55:28.6513693Z     "report.json",
+2026-10-29T22:55:28.6514096Z     "resources.json",
+2026-10-29T22:55:28.6514471Z     "runtime.json"
+2026-10-29T22:55:28.6514818Z   ],
+2026-10-29T22:55:28.6515505Z   "reportSha256": "343eff9e93f87981a1ae46eaacf8fa4b417a95ab022ad286257e7ffd9a608f71",
+2026-10-29T22:55:28.6516470Z   "resultOnly": true,
+2026-10-29T22:55:28.6516868Z   "reviewed": true,
+2026-10-29T22:55:28.6517322Z   "route": "result-only-reviewed-ir",
+2026-10-29T22:55:28.6517785Z   "runtime": {
+2026-10-29T22:55:28.6518134Z     "arch": "x64",
+2026-10-29T22:55:28.6518497Z     "glibc": "2.39",
+2026-10-29T22:55:28.6518871Z     "platform": "linux"
+2026-10-29T22:55:28.6519240Z   },
+2026-10-29T22:55:28.6519562Z   "tools": {
+2026-10-29T22:55:28.6519894Z     "java": {
+2026-10-29T22:55:28.6520568Z       "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/java",
+2026-10-29T22:55:28.6521598Z       "sha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+2026-10-29T22:55:28.6523442Z       "version": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n"
+2026-10-29T22:55:28.6524678Z     },
+2026-10-29T22:55:28.6525009Z     "javac": {
+2026-10-29T22:55:28.6525724Z       "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+2026-10-29T22:55:28.6526790Z       "sha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+2026-10-29T22:55:28.6527550Z       "version": "javac 22.0.2"
+2026-10-29T22:55:28.6527967Z     },
+2026-10-29T22:55:28.6528289Z     "kotlinc": {
+2026-10-29T22:55:28.6529102Z       "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+2026-10-29T22:55:28.6530026Z       "compilerFiles": {
+2026-10-29T22:55:28.6530937Z         "allopen-compiler-plugin.jar": "4e71266b484ca70149379b9f65fd0fdc2014df481f30f7026fac23cc11c2b69d",
+2026-10-29T22:55:28.6532334Z         "android-extensions-compiler.jar": "a58b87f9104123efb9c4089830f935dd04ced75dedcce4c90122242766638cb5",
+2026-10-29T22:55:28.6533938Z         "android-extensions-runtime.jar": "b43fa546caf93a17c76ca22ffae8d3cbc3bd615a5daf81588d0472d7932cbed2",
+2026-10-29T22:55:28.6535282Z         "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+2026-10-29T22:55:28.6536673Z         "assignment-compiler-plugin.jar": "71592c36dc068b210e6ac5e8983297aac85418ccc1f2aa0cc3ce697fbd553366",
+2026-10-29T22:55:28.6538417Z         "compose-compiler-plugin.jar": "471e82ec9809643c41b3b849fe91ed3182d1c50e7cca6aa1943d6fd7d5427798",
+2026-10-29T22:55:28.6539658Z         "jvm-abi-gen.jar": "d66b8e150ab3b9934536788bf6eb3b7897db85f01e183506d9108dce38b2df37",
+2026-10-29T22:55:28.6541003Z         "kotlin-annotation-processing-cli.jar": "8acfb152e1fc6bf906c4fa8d0c4534d8e74036a1bc614fa3c618e590bac75570",
+2026-10-29T22:55:28.6542583Z         "kotlin-annotation-processing-runtime.jar": "31bd9facf35b536cf94a575c671e6d31701dcfd72b0deafa902f850294e95ee4",
+2026-10-29T22:55:28.6544296Z         "kotlin-annotation-processing.jar": "dbeccd9cb6c2272c4d664deb1dc6a15d4099e144333851852d5133fa9164150e",
+2026-10-29T22:55:28.6545764Z         "kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+2026-10-29T22:55:28.6547168Z         "kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+2026-10-29T22:55:28.6548390Z         "kotlin-ant.jar": "332c5abb8040dbb092917764c33bcf65fbd66a1a49c85bbee9c0f4059712d878",
+2026-10-29T22:55:28.6549596Z         "kotlin-compiler.jar": "cb2b7b0b82ad5b6ddc2e8c6c41c73e837a2b42e2abf64af64dda1b6173609790",
+2026-10-29T22:55:28.6550875Z         "kotlin-daemon-client.jar": "21293da016e4ba12a128ac26fd920a74e8b87f574cf9bc43c60a3d2e7645a7ae",
+2026-10-29T22:55:28.6552121Z         "kotlin-daemon.jar": "efd0b911bd952c91a74acdf2861b74a61516b869cc9a22aa1858197a87a66c35",
+2026-10-29T22:55:28.6553740Z         "kotlin-imports-dumper-compiler-plugin.jar": "1acbe1d35d5800fbf9b5c9615779cf8af5887db0d4184fac42ca70fa1782da05",
+2026-10-29T22:55:28.6555145Z         "kotlin-main-kts.jar": "cae50d93ce288a4a784b858eae00d0d96a52393f588921d8a0f77a5520d692dd",
+2026-10-29T22:55:28.6556649Z         "kotlin-metadata-jvm-sources.jar": "2ab97ab16e203e715633593c480bcf0ac1cc151e54cd2adaaa7dca1085835ede",
+2026-10-29T22:55:28.6558012Z         "kotlin-metadata-jvm.jar": "501222ae7d63527e55f2e5e645f18d4eff2c19074c85b9bc055866e3ed2b17bf",
+2026-10-29T22:55:28.6559727Z         "kotlin-preloader.jar": "9fc99ab6db8fb5ce1552d248e1f1472fdf48a287ef435770092c70f7e0903411",
+2026-10-29T22:55:28.6561045Z         "kotlin-reflect-sources.jar": "e9719062ea18b7c10f231ee170306f95acf78c31b4f4592d32e8376ca3779f0b",
+2026-10-29T22:55:28.6562312Z         "kotlin-reflect.jar": "230d91c2e410e3cfca3a4dc73d255455f62ff52aac091a33397a6e30bde91bf7",
+2026-10-29T22:55:28.6563725Z         "kotlin-runner.jar": "97e742218ac6888b9893c61cd67f10fe34317fcca469ed2e4afec0269c200a18",
+2026-10-29T22:55:28.6565076Z         "kotlin-script-runtime-sources.jar": "d9d6b416bf1267d5d9a2fffb309c8d02fa707608154d7b0d7dd318d2dd7daa96",
+2026-10-29T22:55:28.6566467Z         "kotlin-script-runtime.jar": "4ed97fd1e0c9bb1d0948ed5e63cc91456313a59518295b92b2c1514aef556150",
+2026-10-29T22:55:28.6567863Z         "kotlin-scripting-common.jar": "7c9ac8499fa91b201ea7836537c625dd52a82549e57e6b3f175cc0c79e9ab604",
+2026-10-29T22:55:28.6569279Z         "kotlin-scripting-compiler-impl.jar": "9a8c5eb59547320b098ebb09a6c63926cf61e091cd22043d7f447034f6cdf4dd",
+2026-10-29T22:55:28.6570704Z         "kotlin-scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90",
+2026-10-29T22:55:28.6572056Z         "kotlin-scripting-jvm.jar": "60a8c742d61f44f2311fbdc8a86b767d171ba09d97be72d6ba450d37f7e3fdbf",
+2026-10-29T22:55:28.6573665Z         "kotlin-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+2026-10-29T22:55:28.6575128Z         "kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+2026-10-29T22:55:28.6576440Z         "kotlin-stdlib-jdk7.jar": "0d10bc0d42b8605f23629a3f31ea27c19cdbca9dcdf4f53f6d22cd6366836d18",
+2026-10-29T22:55:28.6577771Z         "kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+2026-10-29T22:55:28.6579096Z         "kotlin-stdlib-jdk8.jar": "adc16648dbbcf35b0d10e7ec301c35d746d1c2fe460c606aba59f12b117cf9b0",
+2026-10-29T22:55:28.6580616Z         "kotlin-stdlib-js-sources.jar": "14ad20758afba0957d67c512002a763064add63053f8b6aaef145dc4c6d6c33b",
+2026-10-29T22:55:28.6581943Z         "kotlin-stdlib-sources.jar": "967ad9599254e3a60d96d6c789547cc35c22d770d9c8fb1e3f15fac3b4c3b65d",
+2026-10-29T22:55:28.6583357Z         "kotlin-stdlib.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+2026-10-29T22:55:28.6584611Z         "kotlin-test-js-sources.jar": "4a7a5f653f89107e847345688171be7b2d4172332f7f9a5771b9240bf07e8f18",
+2026-10-29T22:55:28.6585945Z         "kotlin-test-junit-sources.jar": "c411a0dad1218f3f652b6619f228fefee498903ee6e11c36c990fbc3fe823f18",
+2026-10-29T22:55:28.6587262Z         "kotlin-test-junit.jar": "f45ed32e721d901d3cbe83ece7f41c98533b34155186368a79bfdc667e433dce",
+2026-10-29T22:55:28.6588589Z         "kotlin-test-junit5-sources.jar": "891c56d8183d2cd3e912cf250adeca889dba51d02b07fce3015321e08f72b4a2",
+2026-10-29T22:55:28.6589840Z         "kotlin-test-junit5.jar": "716c89ba2e387c4422ea0e9a85c5731f9a328b669a7a0bbed3259e52291b555e",
+2026-10-29T22:55:28.6591051Z         "kotlin-test-sources.jar": "c8445545032c2e09195fc883b274260dd414b33f2cdc1dadd4f3441c1a4e456b",
+2026-10-29T22:55:28.6592329Z         "kotlin-test-testng-sources.jar": "748366365d0b3e985289aab702aecab84d0bd8ef6dd104659e86c1f31359c5aa",
+2026-10-29T22:55:28.6593782Z         "kotlin-test-testng.jar": "381e3c4a4aaaacf4f0a7944ec7908e914ededcd49e9794e4417d97edb63d932b",
+2026-10-29T22:55:28.6594962Z         "kotlin-test.jar": "8db175a3f56cf139ebdf8936f293ce5a64a16b52a0408804e0ec077e8848eb32",
+2026-10-29T22:55:28.6596204Z         "kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+2026-10-29T22:55:28.6597651Z         "kotlinx-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+2026-10-29T22:55:28.6599261Z         "lombok-compiler-plugin.jar": "970a55e6837e7cd4787157ca8f41da60825b1d29199d4a430aa628293c5a05c3",
+2026-10-29T22:55:28.6600623Z         "mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+2026-10-29T22:55:28.6601973Z         "noarg-compiler-plugin.jar": "60f1c4d25a87bf3368b7a2512543cbc108fb27f1224ca30f86f62363efe0bd1c",
+2026-10-29T22:55:28.6603391Z         "parcelize-compiler.jar": "c7141f771089e7ca0bc5267f5d39c55a5f3ab27f2b36602efeb689edc5da9ed0",
+2026-10-29T22:55:28.6604644Z         "parcelize-runtime.jar": "ffd266a80d58ea089f8ae78cfcc81f19f276ef491fb05c0777bdc99f22ae84a1",
+2026-10-29T22:55:28.6605976Z         "power-assert-compiler-plugin.jar": "3d508b1c7597cf85735b561233bfdb9bc07c4445fda2982cc9842269aeff3f95",
+2026-10-29T22:55:28.6607385Z         "sam-with-receiver-compiler-plugin.jar": "75623f2d557812415e59ecfe67359545d8066894a53227c7e4883b318fb25239",
+2026-10-29T22:55:28.6608700Z         "scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90"
+2026-10-29T22:55:28.6609471Z       },
+2026-10-29T22:55:28.6610099Z       "sha256": "64d62a197fbec5f32f77c6724cce33ead4034b2ec3f873c056cde19fe00f324e",
+2026-10-29T22:55:28.6610918Z       "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)"
+2026-10-29T22:55:28.6611413Z     }
+2026-10-29T22:55:28.6611705Z   }
+2026-10-29T22:55:28.6611996Z }
+2026-10-29T22:55:28.7185421Z ##[group]Run actions/upload-artifact@v7
+2026-10-29T22:55:28.7185795Z with:
+2026-10-29T22:55:28.7186154Z   name: dependent-checked-record-jvm-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T22:55:28.7186802Z   path: build/dependent-checked-record-jvm-ci/
+build/dependent-checked-record-jvm-toolchain.log
+
+2026-10-29T22:55:28.7187314Z   include-hidden-files: true
+2026-10-29T22:55:28.7187571Z   if-no-files-found: error
+2026-10-29T22:55:28.7187801Z   retention-days: 30
+2026-10-29T22:55:28.7188022Z   compression-level: 6
+2026-10-29T22:55:28.7188242Z   overwrite: false
+2026-10-29T22:55:28.7188455Z   archive: true
+2026-10-29T22:55:28.7188645Z env:
+2026-10-29T22:55:28.7188826Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:55:28.7189333Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64
+2026-10-29T22:55:28.7189834Z   JAVA_HOME_22_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64
+2026-10-29T22:55:28.7190204Z ##[endgroup]
+2026-10-29T22:55:28.9388930Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-29T22:55:28.9391713Z The least common ancestor is /home/runner/work/lean-bridge/lean-bridge/build. This will be the root directory of the artifact
+2026-10-29T22:55:28.9393068Z With the provided path, there will be 187 files uploaded
+2026-10-29T22:55:28.9399818Z Artifact name is valid!
+2026-10-29T22:55:28.9400874Z Root directory input is valid!
+2026-10-29T22:55:29.2008881Z Uploading artifact: dependent-checked-record-jvm-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip
+2026-10-29T22:55:29.2051527Z Beginning upload of artifact content to blob storage
+2026-10-29T22:55:29.7659744Z Uploaded bytes 8388608
+2026-10-29T22:55:30.1072912Z Uploaded bytes 16777216
+2026-10-29T22:55:30.3580179Z Uploaded bytes 25165824
+2026-10-29T22:55:30.7097633Z Uploaded bytes 33554432
+2026-10-29T22:55:30.8648046Z Uploaded bytes 41943040
+2026-10-29T22:55:31.0200672Z Uploaded bytes 50331648
+2026-10-29T22:55:31.3146929Z Uploaded bytes 58720256
+2026-10-29T22:55:31.5590437Z Uploaded bytes 67108864
+2026-10-29T22:55:31.7261720Z Uploaded bytes 75497472
+2026-10-29T22:55:32.0140763Z Uploaded bytes 83886080
+2026-10-29T22:55:32.2404399Z Uploaded bytes 92274688
+2026-10-29T22:55:32.4376266Z Uploaded bytes 100663296
+2026-10-29T22:55:32.8174591Z Uploaded bytes 109051904
+2026-10-29T22:55:32.9394976Z Uploaded bytes 117440512
+2026-10-29T22:55:33.2682051Z Uploaded bytes 125829120
+2026-10-29T22:55:33.4231269Z Uploaded bytes 134217728
+2026-10-29T22:55:33.6857883Z Uploaded bytes 142606336
+2026-10-29T22:55:33.9428807Z Uploaded bytes 150994944
+2026-10-29T22:55:34.3596265Z Uploaded bytes 159383552
+2026-10-29T22:55:34.6492646Z Uploaded bytes 167772160
+2026-10-29T22:55:34.7904900Z Uploaded bytes 176160768
+2026-10-29T22:55:35.0675777Z Uploaded bytes 184549376
+2026-10-29T22:55:35.5261114Z Uploaded bytes 192937984
+2026-10-29T22:55:35.5439929Z Uploaded bytes 201326592
+2026-10-29T22:55:35.7377586Z Uploaded bytes 205430780
+2026-10-29T22:55:35.7592013Z Finished uploading artifact content to blob storage!
+2026-10-29T22:55:35.7595729Z SHA256 digest of uploaded artifact is 89ea12007863c668bfa15713c16e003248d8622c1f9e95872b7cbdb5f535358a
+2026-10-29T22:55:35.7597677Z Finalizing artifact upload
+2026-10-29T22:55:36.2024696Z Artifact dependent-checked-record-jvm-70652587f69c330ea0feebb7bc4c6da6b20f4f04 successfully finalized. Artifact ID 12940250879
+2026-10-29T22:55:36.2027157Z Artifact dependent-checked-record-jvm-70652587f69c330ea0feebb7bc4c6da6b20f4f04 has been successfully uploaded! Final size is 205430780 bytes. Artifact ID is 12940250879
+2026-10-29T22:55:36.2029962Z Artifact download URL: https://github.com/seanmorris/lean-bridge/actions/runs/40961670189/artifacts/12940250879
+2026-10-29T22:55:36.2309383Z Post job cleanup.
+2026-10-29T22:55:36.3817714Z (node:6567) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-29T22:55:36.3819170Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-29T22:55:36.4013148Z Post job cleanup.
+2026-10-29T22:55:36.5508908Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e, not saving cache.
+2026-10-29T22:55:36.5644846Z Post job cleanup.
+2026-10-29T22:55:36.6596422Z [command]/usr/bin/git version
+2026-10-29T22:55:36.6704079Z git version 2.56.0
+2026-10-29T22:55:36.6757351Z Temporarily overriding HOME='/home/runner/work/_temp/58fe262a-93f1-4c58-bffa-f085fd1b0606' before making global git config changes
+2026-10-29T22:55:36.6784350Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-29T22:55:36.6806051Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lean-bridge/lean-bridge
+2026-10-29T22:55:36.6808212Z Removing SSH command configuration
+2026-10-29T22:55:36.6874510Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T22:55:36.6916512Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-29T22:55:36.7891814Z Removing HTTP extra header
+2026-10-29T22:55:36.7897074Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T22:55:36.7903215Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-29T22:55:36.8904602Z Removing includeIf entries pointing to credentials config files
+2026-10-29T22:55:36.8906019Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T22:55:36.8960651Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-29T22:55:36.9850493Z Cleaning up orphan processes
+2026-10-29T22:55:37.0457000Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/setup-java@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
