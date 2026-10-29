@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/host-null-partition-gap-source-history-tests.mjs";
 import "./helpers/npm-runtime-default-value-copy-repair-source-history-tests.mjs";
 import "./helpers/host-null-javascript-source-history-tests.mjs";
 import "./host-null-javascript-hosted-report.test.mjs";

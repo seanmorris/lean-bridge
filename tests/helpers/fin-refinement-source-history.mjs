@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeHostNullPartitionGapIntegrationSource, beforeHostNullPartitionGapSource, hostNullPartitionGapNormalizationPaths } from "./host-null-partition-gap-source-history.mjs";
 import { beforeNpmRuntimeDefaultValueCopyRepairSource, npmRuntimeDefaultValueCopyRepairNormalizationPaths } from "./npm-runtime-default-value-copy-repair-source-history.mjs";
 import { beforeHostNullJavaScriptSource, hostNullJavaScriptNormalizationPaths } from "./host-null-javascript-source-history.mjs";
 import { beforeCorpusTrapBuildCheckoutRepairSource, corpusTrapBuildCheckoutRepairNormalizationPaths } from "./corpus-trap-build-checkout-repair-source-history.mjs";
@@ -2357,7 +2358,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...npmRuntimeDefaultValueCopyRepairNormalizationPaths
+	...hostNullPartitionGapNormalizationPaths
+	, ...npmRuntimeDefaultValueCopyRepairNormalizationPaths
 	, ...hostNullJavaScriptNormalizationPaths
 	, ...corpusTrapBuildCheckoutRepairNormalizationPaths
 	, ...performanceReproducibilityCheckoutNormalizationPaths
@@ -3453,7 +3455,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeNpmRuntimeDefaultValueCopyRepairSource(path, text, expected);
+	let stage = beforeHostNullPartitionGapIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeNpmRuntimeDefaultValueCopyRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	// The recovered HostNull PHP and promotion partition transitions precede the npm repair.
+	stage = beforeHostNullPartitionGapSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

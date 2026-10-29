@@ -1,0 +1,138 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7693518ae707974b669e7a0af88bd5a94ccb16e65bab7b0f2f1d61c3966b7d7d",
+      "path": "scripts/update-host-null-partition-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "4f964289e77b7f4c833f4e16097b3f7741fa1a1506e79c305a6db293e7a03c45",
+      "path": "tests/helpers/host-null-partition-gap-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "19f880a0a1b45101d93b7dea1517057b42cf6a05f1a04e2d6dc5efab61324fb7",
+      "path": "tests/helpers/host-null-partition-gap-source-history.mjs"
+    }
+  ],
+  "anchorSha256": "c2d430c26cef1cfd214a28f164ca51bb4e035133b1df483b71b6699cf504de57",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e21ada209e73ecf20baf941915020f29f1d26fc2ff86064571bcf04b46795943",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-partition-gap-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "bbc86deb9fdae04345ba17109400125601ed76db98855a05a731b509999589b4"
+    },
+    {
+      "currentSha256": "35a9ff02b285d91f0a5f7bfe569e86bc02b22149e919562a0c10e74df3809a36",
+      "edits": [
+        {
+          "current": "import { beforeHostNullPartitionGapIntegrationSource, beforeHostNullPartitionGapSource, hostNullPartitionGapNormalizationPaths } from \"./host-null-partition-gap-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullPartitionGapNormalizationPaths\n\t, ...npmRuntimeDefaultValueCopyRepairNormalizationPaths\n",
+          "previous": "\t...npmRuntimeDefaultValueCopyRepairNormalizationPaths\n",
+          "start": 214951
+        },
+        {
+          "current": "\tlet stage = beforeHostNullPartitionGapIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNpmRuntimeDefaultValueCopyRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\t// The recovered HostNull PHP and promotion partition transitions precede the npm repair.\n\tstage = beforeHostNullPartitionGapSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeNpmRuntimeDefaultValueCopyRepairSource(path, text, expected);\n",
+          "start": 268835
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "25e060cf10c08981f4267d23e091a3af47788e6a738d88bfb6a7b4ba9591d99b"
+    }
+  ],
+  "milestone": "host-null-partition-gap-source-v1",
+  "predecessorCommit": "9a333bafef6b77c112d4f36c40d45a439dfae84e",
+  "schemaVersion": 1,
+  "scope": "Recover the six first-parent transitions of tests/checked-javascript-partition-11.test.mjs made by fbcaebe, d215a37, 68c4b2d, acbedcb, c890fa9 and 806b4c3 after HostNull JavaScript recorded the partition at c2d430c2, ending at the 51f2e177 state that the npm runtime default-value copy repair reverses to. The historical normalizer sits below that repair and above HostNull JavaScript so current partition bytes reverse through the npm repair, this contiguous six-transition chain, then the original HostNull JavaScript layer. This layer's own registration reverses first, newest-first. No test import, assertion, PHP claim, pin, record or product source changes.",
+  "targetSha256": "51f2e177132f98681d4d52853c15fef97c4c34c6fe2f391639b1f076130b6455",
+  "updates": [
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "f9686aea2f0ab09b8337c5602ef5a092500e955624619107d014a1c2f92bafd6",
+      "edits": [
+        {
+          "current": "import \"./php-host-null-contract.test.mjs\";\n",
+          "previous": "",
+          "start": 163
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c2d430c26cef1cfd214a28f164ca51bb4e035133b1df483b71b6699cf504de57"
+    },
+    {
+      "commit": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "currentSha256": "18e19953ba9fe0f612772bb1f04d52d5fe538771c4c51d8c2306d2a039a7737d",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-php-report-tests.mjs\";\n",
+          "previous": "",
+          "start": 163
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "f9686aea2f0ab09b8337c5602ef5a092500e955624619107d014a1c2f92bafd6"
+    },
+    {
+      "commit": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "currentSha256": "7d2535fba1823966ea4dcf8029337b58bc0bd8747f425f40fb021fbb6f55bbb2",
+      "edits": [
+        {
+          "current": "import \"./host-null-documentation.test.mjs\";\n",
+          "previous": "",
+          "start": 214
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "18e19953ba9fe0f612772bb1f04d52d5fe538771c4c51d8c2306d2a039a7737d"
+    },
+    {
+      "commit": "acbedcb054c2afc41e821c9af0d7c16a88eebd8b",
+      "currentSha256": "3afaf58b7ec15555d5484d5cef0357cf87ae0db6fd629c4249a37741da667ea2",
+      "edits": [
+        {
+          "current": "import \"./host-null-javascript-hosted-report.test.mjs\";\n",
+          "previous": "",
+          "start": 163
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "7d2535fba1823966ea4dcf8029337b58bc0bd8747f425f40fb021fbb6f55bbb2"
+    },
+    {
+      "commit": "c890fa905a7aaf795134621597ce02b3a51bf61e",
+      "currentSha256": "38eb170b0f56f9d5cb0ec0cf491f22c5f9e420a1d3d2c851b1ded64f08730aa9",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-javascript-promotion-tests.mjs\";\n",
+          "previous": "",
+          "start": 219
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "3afaf58b7ec15555d5484d5cef0357cf87ae0db6fd629c4249a37741da667ea2"
+    },
+    {
+      "commit": "806b4c3a3aeac87d8cf85c4cea3f6aac395d071c",
+      "currentSha256": "51f2e177132f98681d4d52853c15fef97c4c34c6fe2f391639b1f076130b6455",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-php-promotion-tests.mjs\";\n",
+          "previous": "",
+          "start": 331
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "38eb170b0f56f9d5cb0ec0cf491f22c5f9e420a1d3d2c851b1ded64f08730aa9"
+    }
+  ]
+}
