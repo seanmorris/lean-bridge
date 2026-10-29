@@ -18,6 +18,8 @@ import "./helpers/npm-runtime-default-value-copy-repair-source-history-tests.mjs
 import "./helpers/host-null-javascript-source-history-tests.mjs";
 import "./host-null-javascript-hosted-report.test.mjs";
 import "./helpers/host-null-complete-ci-tests.mjs";
+import "./helpers/host-null-complete-documentation-tests.mjs";
+import "./helpers/host-null-complete-promotion-transaction-tests.mjs";
 import "./helpers/host-null-javascript-promotion-tests.mjs";
 import "./helpers/host-null-php-report-tests.mjs";
 import "./helpers/host-null-php-promotion-tests.mjs";

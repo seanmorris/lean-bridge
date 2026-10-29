@@ -43,8 +43,11 @@ const referencePaths = [
 	, "tests/helpers/host-null-complete-hosted-archive.mjs"
 	, "tests/helpers/host-null-complete-hosted-evidence.mjs"
 	, "tests/helpers/host-null-complete-ci-tests.mjs"
+	, "tests/helpers/host-null-complete-documentation.mjs"
+	, "tests/helpers/host-null-complete-documentation-tests.mjs"
 	, "tests/helpers/host-null-complete-promotion.mjs"
 	, "tests/helpers/host-null-complete-promotion-tests.mjs"
+	, "tests/helpers/host-null-complete-promotion-transaction-tests.mjs"
 ];
 const artifacts = hostNullCompleteHostedLanes.map((selectedLane, index) => ({
 	path: `${selectedLane.artifactPrefix}-${revision}.zip`

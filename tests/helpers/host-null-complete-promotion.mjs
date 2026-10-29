@@ -73,8 +73,11 @@ const referencePaths = Object.freeze([
 	, "tests/helpers/host-null-complete-hosted-archive.mjs"
 	, "tests/helpers/host-null-complete-hosted-evidence.mjs"
 	, "tests/helpers/host-null-complete-ci-tests.mjs"
+	, "tests/helpers/host-null-complete-documentation.mjs"
+	, "tests/helpers/host-null-complete-documentation-tests.mjs"
 	, "tests/helpers/host-null-complete-promotion.mjs"
 	, "tests/helpers/host-null-complete-promotion-tests.mjs"
+	, "tests/helpers/host-null-complete-promotion-transaction-tests.mjs"
 ]);
 
 /** Authenticate the complete archive and describe its type-surface evidence. */
