@@ -4,7 +4,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	typeSurfaceCells, validateTypeSurface
@@ -14,14 +13,11 @@ import {
 	, hostNullPhpPromotionPositions, hostNullPhpPromotionProfiles
 	, promoteHostNullPhp
 } from "./host-null-php-promotion.mjs";
+import {
+	loadHostNullPrePromotionInventory
+} from "./host-null-pre-promotion-inventory.mjs";
 
-const load = async () => {
-	const [document, irSchema, consumers] = await Promise.all([
-		"docs/type-surface.v1.json", "schema/binding-ir.schema.json"
-		, "docs/consumer-support.v1.json"
-	].map(async path => JSON.parse(await readFile(path, "utf8"))));
-	return { document, contracts: { irSchema, consumers } };
-};
+const load = loadHostNullPrePromotionInventory;
 const reference = profile => Object.freeze({
 	id: `hosted-host-null-${profile}-installed`, profile
 	, revision: (profile === "php-native" ? "1" : "2").repeat(40)

@@ -5,7 +5,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import {
@@ -16,14 +15,11 @@ import {
 	, hostNullJavaScriptPromotionProfiles
 	, promoteHostNullJavaScript
 } from "./host-null-javascript-promotion.mjs";
+import {
+	loadHostNullPrePromotionInventory
+} from "./host-null-pre-promotion-inventory.mjs";
 
-const load = async () => {
-	const [document, irSchema, consumers] = await Promise.all([
-		"docs/type-surface.v1.json", "schema/binding-ir.schema.json"
-		, "docs/consumer-support.v1.json"
-	].map(async path => JSON.parse(await readFile(path, "utf8"))));
-	return { document, contracts: { irSchema, consumers } };
-};
+const load = loadHostNullPrePromotionInventory;
 const reference = Object.freeze({
 	id: hostNullJavaScriptPromotionEvidenceId
 	, revision: "1d13d30f174d0f4750061cd601a6aebde3f3d69b"
