@@ -153,7 +153,7 @@ const assertFocusedProducer = (source, specification) => {
 };
 const focusedCalls = focusedProducers.map(item => `./${item.file}`);
 const assertFocusedCaller = source => {
-	assert.ok(source.includes("on:\n  workflow_call:\n"));
+	assert.match(source, /^ {2}workflow_call:\n/mu);
 	assert.ok(source.includes("  workflow_dispatch:\n"));
 	assert.ok(source.includes("  schedule:\n"));
 	assert.deepEqual([...source.matchAll(/^ {4}uses: (\.\/\.github\/workflows\/[a-z0-9-]+\.yml)$/gmu)]
@@ -162,7 +162,8 @@ const assertFocusedCaller = source => {
 	const receiptStart = source.indexOf("  receipt:\n");
 	assert.notEqual(receiptStart, -1);
 	const receipt = source.slice(receiptStart);
-	assert.match(receipt, /^ {4}if: always\(\)$/mu);
+	assert.match(receipt
+		, /^ {4}if: always\(\) && inputs\.suite == 'produce'$/mu);
 	assert.doesNotMatch(receipt, /^ {4}continue-on-error:/mu);
 	assert.match(receipt
 		, /fetch-depth: 1\n {10}persist-credentials: false\n {10}sparse-checkout: \|\n {12}\/\*\n {12}!\/docs\/evidence\/\n {10}sparse-checkout-cone-mode: false/u);
@@ -258,7 +259,7 @@ test("focused recurring CI produces and reconciles the exact optional matrix", a
 	const callerMutations = [
 		caller.replace(focusedCalls[0], "./.github/workflows/quality.yml")
 		, caller.replace("      - npm-browser\n", "")
-		, caller.replace("if-no-files-found: error", "if-no-files-found: ignore")
+		, caller.replaceAll("if-no-files-found: error", "if-no-files-found: ignore")
 		, caller.replace("steps.download.outcome != 'success'", "false")
 		, caller.replace("optional-parameter-*-${{ github.sha }}"
 			, "optional-parameter-node-browser-${{ github.sha }}")

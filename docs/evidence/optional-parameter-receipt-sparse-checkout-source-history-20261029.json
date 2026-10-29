@@ -1,0 +1,118 @@
+{
+  "currentSourcePaths": [],
+  "excludedTree": "docs/evidence",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-receipt-sparse-checkout-source-history.mjs",
+      "sha256": "ba2431ad4d03fce927300160dd48d3299e26209ac21068403d809211b7b50db6"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-receipt-sparse-checkout-source-history-tests.mjs",
+      "sha256": "6e4060e84893802190bf189a7bbaaf4ee81eb7f17d0e206f2960424c40e32788"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-receipt-sparse-checkout-source-history.mjs",
+      "sha256": "4f77360ef60d1e9ed77966366fea9ca04703721aee2bbccd941476754104c99a"
+    }
+  ],
+  "implementationCommit": "6e903f1656b58494e171ccef0586e5fd8ff06b91",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6f7fd70b36dab0df50451391e5ffd3dff022f94274224a95ddadfeb51b00347a",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-receipt-sparse-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "89ee17cb31740a0e42bfde9f1b929eb8a5e82cd5a35bce7264d1d5326703194b"
+    },
+    {
+      "currentSha256": "7a1e45dbc385a24ac9b912e7305d2c139505d5be21f307f51647ee4449fa4cd6",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterReceiptSparseCheckoutSource, optionalParameterReceiptSparseCheckoutNormalizationPaths } from \"./optional-parameter-receipt-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterReceiptSparseCheckoutNormalizationPaths\n\t, ...optionalParameterRouteBinderRepairNormalizationPaths\n",
+          "previous": "\t...optionalParameterRouteBinderRepairNormalizationPaths\n",
+          "start": 219596
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterReceiptSparseCheckoutSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterRouteBinderRepairSource(\n",
+          "previous": "\tlet stage = beforeOptionalParameterRouteBinderRepairSource(\n",
+          "start": 274842
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "53772fdfac610b8458feb463bfe9f094d04a603723adfddd1b0f301fa18fa109"
+    },
+    {
+      "currentSha256": "5a12578f7d65dc25cfa12684d1d83b4fd01e10662302667b04f2639031f8372a",
+      "edits": [
+        {
+          "current": "\tassert.match(source, /^ {2}workflow_call:\\n/mu);\n",
+          "previous": "\tassert.ok(source.includes(\"on:\\n  workflow_call:\\n\"));\n",
+          "start": 6675
+        },
+        {
+          "current": "\tassert.match(receipt\n\t\t, /^ {4}if: always\\(\\) && inputs\\.suite == 'produce'$/mu);\n",
+          "previous": "\tassert.match(receipt, /^ {4}if: always\\(\\)$/mu);\n",
+          "start": 7181
+        },
+        {
+          "current": "\t\t, caller.replaceAll(\"if-no-files-found: error\", \"if-no-files-found: ignore\")\n",
+          "previous": "\t\t, caller.replace(\"if-no-files-found: error\", \"if-no-files-found: ignore\")\n",
+          "start": 11863
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-matrix-receipt-tests.mjs",
+      "previousSha256": "80f36fbfbc33cd18a36248cf2d0c16db6e815eb5a9855524383cee90c5dcebc9"
+    }
+  ],
+  "milestone": "optional-parameter-receipt-sparse-checkout-source-v1",
+  "predecessorCommit": "6701ca73f32cb1c67974fdae79e95b44281d758b",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Keep the exact same-run optional-parameter receipt off the 43 GiB immutable evidence corpus. Check out the complete current source tree except docs/evidence at depth one; preserve all producer needs, artifact identities, reconciliation inputs, fail-closed enforcement and archive semantics.",
+  "updates": [
+    {
+      "currentSha256": "4fbc669cc0eaf9730592c424a2e5468ab26f40862eafc198fc670a8cb8f395a0",
+      "edits": [
+        {
+          "current": "          # The receipt executes current reconciliation source and downloads\n          # hosted artifacts. The 43 GiB immutable evidence corpus is neither\n          # read nor trusted by this job, so never materialize it on a runner.\n",
+          "previous": "",
+          "start": 4934
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 5230
+        }
+      ],
+      "path": ".github/workflows/optional-parameter-complete.yml",
+      "previousSha256": "3994af6dd39e81dcea6f6839bc8e6af97e6bc0b723dbb54ace652174ec180999"
+    },
+    {
+      "currentSha256": "80f36fbfbc33cd18a36248cf2d0c16db6e815eb5a9855524383cee90c5dcebc9",
+      "edits": [
+        {
+          "current": "\tassert.match(receipt\n\t\t, /fetch-depth: 1\\n {10}persist-credentials: false\\n {10}sparse-checkout: \\|\\n {12}\\/\\*\\n {12}!\\/docs\\/evidence\\/\\n {10}sparse-checkout-cone-mode: false/u);\n",
+          "previous": "",
+          "start": 7297
+        },
+        {
+          "current": "\t\t, caller.replace(\"            !/docs/evidence/\\n\", \"\")\n",
+          "previous": "",
+          "start": 12177
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-matrix-receipt-tests.mjs",
+      "previousSha256": "e7c4f62e7d1ab0f2c46f75d37145a02cdb34db984b3707645dae880fb1cd9065"
+    }
+  ]
+}
