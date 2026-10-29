@@ -2,6 +2,17 @@ name: Generic Subtypes in Python, Ruby and Rust
 
 on:
   workflow_call:
+    inputs:
+      optional_parameters:
+        description: Run the complete optional-parameter package matrix.
+        required: false
+        type: boolean
+        default: false
+      direct_proof_erasure:
+        description: Run direct proof-erasure package acceptance.
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -18,7 +29,7 @@ jobs:
   python:
     name: Ordinary and reviewed generic Subtypes on Python 3.11 and 3.12
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 300
     steps:
       - name: Free hosted runner disk before checkout
         shell: bash
@@ -85,11 +96,12 @@ jobs:
           retention-days: 30
       - name: Execute optional parameters through the prepared Python package
         id: optional_parameters
+        if: inputs.optional_parameters
         continue-on-error: true
         timeout-minutes: 125
         run: bash scripts/run-optional-parameter-language-ci.sh python
       - name: Preserve optional-parameter Python records
-        if: always()
+        if: always() && inputs.optional_parameters
         uses: actions/upload-artifact@v7
         with:
           name: optional-parameter-language-python-${{ github.sha }}
@@ -98,7 +110,25 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce optional-parameter Python acceptance
-        if: always() && steps.optional_parameters.outcome != 'success'
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in prepared language packages
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-direct-proof-erasure-language-ci.sh python
+      - name: Preserve direct proof-erasure language acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-language-python-${{ github.sha }}
+          path: build/direct-proof-erasure-language-ci/python/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce native consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed Python acceptance
         if: always() && steps.acceptance.outcome != 'success'
@@ -107,7 +137,7 @@ jobs:
   ruby:
     name: Ordinary and reviewed generic Subtypes on Ruby 3.3
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 300
     steps:
       - name: Free hosted runner disk before checkout
         shell: bash
@@ -165,11 +195,12 @@ jobs:
           retention-days: 30
       - name: Execute optional parameters through the prepared Ruby package
         id: optional_parameters
+        if: inputs.optional_parameters
         continue-on-error: true
         timeout-minutes: 125
         run: bash scripts/run-optional-parameter-language-ci.sh ruby
       - name: Preserve optional-parameter Ruby records
-        if: always()
+        if: always() && inputs.optional_parameters
         uses: actions/upload-artifact@v7
         with:
           name: optional-parameter-language-ruby-${{ github.sha }}
@@ -178,7 +209,25 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce optional-parameter Ruby acceptance
-        if: always() && steps.optional_parameters.outcome != 'success'
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in the prepared Ruby package
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-direct-proof-erasure-language-ci.sh ruby
+      - name: Preserve direct proof-erasure Ruby acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-language-ruby-${{ github.sha }}
+          path: build/direct-proof-erasure-language-ci/ruby/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce managed consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed Ruby acceptance
         if: always() && steps.acceptance.outcome != 'success'
@@ -187,7 +236,7 @@ jobs:
   rust:
     name: Ordinary and reviewed generic Subtypes on Rust 1.90
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 300
     steps:
       - name: Free hosted runner disk before checkout
         shell: bash
@@ -242,11 +291,12 @@ jobs:
           retention-days: 30
       - name: Execute optional parameters through the prepared Rust package
         id: optional_parameters
+        if: inputs.optional_parameters
         continue-on-error: true
         timeout-minutes: 125
         run: bash scripts/run-optional-parameter-language-ci.sh rust
       - name: Preserve optional-parameter Rust records
-        if: always()
+        if: always() && inputs.optional_parameters
         uses: actions/upload-artifact@v7
         with:
           name: optional-parameter-language-rust-${{ github.sha }}
@@ -255,7 +305,25 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce optional-parameter Rust acceptance
-        if: always() && steps.optional_parameters.outcome != 'success'
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in prepared language packages
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-direct-proof-erasure-language-ci.sh rust
+      - name: Preserve direct proof-erasure language acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-language-rust-${{ github.sha }}
+          path: build/direct-proof-erasure-language-ci/rust/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce native consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed Rust acceptance
         if: always() && steps.acceptance.outcome != 'success'

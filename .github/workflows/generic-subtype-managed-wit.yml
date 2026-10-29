@@ -2,6 +2,17 @@ name: Generic Subtypes in .NET, JVM, native PHP and WIT
 
 on:
   workflow_call:
+    inputs:
+      optional_parameters:
+        description: Run the complete optional-parameter package matrix.
+        required: false
+        type: boolean
+        default: false
+      direct_proof_erasure:
+        description: Run direct proof-erasure package acceptance.
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -18,7 +29,7 @@ jobs:
   dotnet:
     name: Generic Subtypes in .NET
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 300
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -73,11 +84,12 @@ jobs:
           retention-days: 30
       - name: Execute optional parameters through the prepared .NET package
         id: optional_parameters
+        if: inputs.optional_parameters
         continue-on-error: true
         timeout-minutes: 125
         run: bash scripts/run-optional-parameter-managed-ci.sh dotnet
       - name: Preserve optional-parameter .NET records
-        if: always()
+        if: always() && inputs.optional_parameters
         uses: actions/upload-artifact@v7
         with:
           name: optional-parameter-managed-dotnet-${{ github.sha }}
@@ -86,7 +98,25 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce optional-parameter .NET acceptance
-        if: always() && steps.optional_parameters.outcome != 'success'
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in prepared managed packages
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-direct-proof-erasure-managed-ci.sh dotnet
+      - name: Preserve direct proof-erasure managed acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-managed-dotnet-${{ github.sha }}
+          path: build/direct-proof-erasure-managed-ci/dotnet/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce managed consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed .NET acceptance
         if: always() && steps.acceptance.outcome != 'success'
@@ -95,7 +125,7 @@ jobs:
   jvm:
     name: Generic Subtypes in Java and Kotlin
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 300
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -156,11 +186,12 @@ jobs:
           retention-days: 30
       - name: Execute optional parameters through prepared Java and Kotlin packages
         id: optional_parameters
+        if: inputs.optional_parameters
         continue-on-error: true
         timeout-minutes: 125
         run: bash scripts/run-optional-parameter-managed-ci.sh jvm
       - name: Preserve optional-parameter JVM records
-        if: always()
+        if: always() && inputs.optional_parameters
         uses: actions/upload-artifact@v7
         with:
           name: optional-parameter-managed-jvm-${{ github.sha }}
@@ -169,7 +200,25 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce optional-parameter JVM acceptance
-        if: always() && steps.optional_parameters.outcome != 'success'
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in prepared managed packages
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-direct-proof-erasure-managed-ci.sh jvm
+      - name: Preserve direct proof-erasure managed acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-managed-jvm-${{ github.sha }}
+          path: build/direct-proof-erasure-managed-ci/jvm/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce managed consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed JVM acceptance
         if: always() && steps.acceptance.outcome != 'success'
@@ -231,7 +280,7 @@ jobs:
   wit:
     name: Generic Subtypes in WIT and WASI components
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 300
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -304,6 +353,7 @@ jobs:
           retention-days: 30
       - name: Execute optional parameters through the prepared WIT package
         id: optional_parameters
+        if: inputs.optional_parameters
         continue-on-error: true
         timeout-minutes: 125
         shell: bash
@@ -313,7 +363,7 @@ jobs:
           source scripts/env.sh
           bash scripts/run-optional-parameter-wit-ci.sh
       - name: Preserve optional-parameter WIT records
-        if: always()
+        if: always() && inputs.optional_parameters
         uses: actions/upload-artifact@v7
         with:
           name: optional-parameter-wit-${{ github.sha }}
@@ -322,7 +372,30 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce optional-parameter WIT acceptance
-        if: always() && steps.optional_parameters.outcome != 'success'
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in the prepared WIT package
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+          source scripts/env.sh
+          bash scripts/run-direct-proof-erasure-wit-ci.sh
+      - name: Preserve direct proof-erasure WIT acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-wit-${{ github.sha }}
+          path: build/direct-proof-erasure-wit-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce WIT and WASI support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed WIT acceptance
         if: always() && steps.acceptance.outcome != 'success'

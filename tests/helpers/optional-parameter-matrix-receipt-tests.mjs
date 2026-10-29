@@ -109,7 +109,9 @@ const step = (source, name) => {
 	return source.slice(start, next === -1 ? undefined : next);
 };
 const assertFocusedProducer = (source, specification) => {
-	assert.match(source, /^on:\n {2}workflow_call:\n/mu);
+	assert.match(source
+		, /^on:\n {2}workflow_call:\n {4}inputs:\n {6}optional_parameters:/mu);
+	assert.match(source, /^ {8}default: false$/mu);
 	for(const record of specification.records)
 	{
 		const runName = record.name === "Node and browser"
@@ -117,17 +119,20 @@ const assertFocusedProducer = (source, specification) => {
 			: `Execute optional parameters through ${record.name === "PHP" ? "native PHP and PHP-Wasm packages" : record.name.startsWith("C ") ? "prepared C and C++ packages" : record.name === "JVM" ? "prepared Java and Kotlin packages" : `the prepared ${record.name} package`}`;
 		const run = step(source, runName);
 		assert.match(run, /^ {8}id: optional_parameters$/mu);
+		assert.match(run, /inputs\.optional_parameters/u);
 		assert.match(run, /^ {8}continue-on-error: true$/mu);
 		assert.ok(run.includes(`bash scripts/${record.script}`));
 		const upload = step(source, `Preserve optional-parameter ${record.name} records`);
 		assert.ok(upload.includes(`name: ${record.artifact}-\${{ github.sha }}`));
 		assert.ok(upload.includes(`path: ${record.path}`));
+		assert.match(upload, /inputs\.optional_parameters/u);
 		assert.match(upload, /^ {10}if-no-files-found: error$/mu);
 		assert.doesNotMatch(upload, /continue-on-error:/u);
 		const enforce = step(source
 			, `Enforce optional-parameter ${record.name} acceptance`);
 		assert.match(enforce
 			, /steps\.optional_parameters\.outcome != 'success'/u);
+		assert.match(enforce, /inputs\.optional_parameters/u);
 		assert.doesNotMatch(enforce, /continue-on-error:/u);
 	}
 };
@@ -138,6 +143,7 @@ const assertFocusedCaller = source => {
 	assert.ok(source.includes("  schedule:\n"));
 	assert.deepEqual([...source.matchAll(/^ {4}uses: (\.\/\.github\/workflows\/[a-z0-9-]+\.yml)$/gmu)]
 		.map(match => match[1]), focusedCalls);
+	assert.equal(source.match(/^ {6}optional_parameters: true$/gmu)?.length, 5);
 	const receiptStart = source.indexOf("  receipt:\n");
 	assert.notEqual(receiptStart, -1);
 	const receipt = source.slice(receiptStart);

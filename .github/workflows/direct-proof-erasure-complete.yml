@@ -22,6 +22,7 @@ on:
       - "tests/direct-proof-erasure-complete-*.test.mjs"
       - "tests/helpers/direct-proof-erasure-complete-*.mjs"
       - "tests/helpers/direct-proof-erasure-hosted-*.mjs"
+      - "tests/helpers/direct-proof-erasure-matrix-receipt.mjs"
   pull_request:
     paths:
       - ".github/workflows/direct-proof-erasure-complete.yml"
@@ -43,7 +44,17 @@ on:
       - "tests/direct-proof-erasure-complete-*.test.mjs"
       - "tests/helpers/direct-proof-erasure-complete-*.mjs"
       - "tests/helpers/direct-proof-erasure-hosted-*.mjs"
+      - "tests/helpers/direct-proof-erasure-matrix-receipt.mjs"
   workflow_dispatch:
+    inputs:
+      suite:
+        description: Bounded direct proof-erasure suite to execute
+        required: true
+        default: audit
+        type: choice
+        options:
+          - audit
+          - produce
   # One low-cost lane in the bounded weekly default-branch acceptance sweep.
   schedule:
     - cron: "47 8 * * 6"
@@ -57,6 +68,7 @@ concurrency:
 
 jobs:
   audit:
+    if: inputs.suite != 'produce'
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
@@ -95,3 +107,100 @@ jobs:
           path: build/direct-proof-erasure-complete/
           if-no-files-found: error
           retention-days: 14
+
+  npm-browser:
+    name: Node and browser producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/generic-subtype-npm-browser.yml
+    with:
+      direct_proof_erasure: true
+
+  native-perl:
+    name: Native and Perl producers
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/generic-subtype-native-perl.yml
+    with:
+      direct_proof_erasure: true
+
+  languages:
+    name: Python, Ruby and Rust producers
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/generic-subtype-languages.yml
+    with:
+      direct_proof_erasure: true
+
+  managed-wit:
+    name: Managed and WIT producers
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/generic-subtype-managed-wit.yml
+    with:
+      direct_proof_erasure: true
+
+  php:
+    name: PHP and PHP-Wasm producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/nominal-subtype-php-wasm.yml
+    with:
+      direct_proof_erasure: true
+
+  receipt:
+    name: Reconcile the exact same-run receipt
+    if: always() && inputs.suite == 'produce'
+    needs:
+      - npm-browser
+      - native-perl
+      - languages
+      - managed-wit
+      - php
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out the exact producer revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Download every same-run direct proof-erasure artifact
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@v5
+        with:
+          pattern: direct-proof-erasure-*-${{ github.sha }}
+          path: build/direct-proof-erasure-matrix-input
+      - name: Reconcile all seventeen profiles and both author routes
+        id: reconciliation
+        if: always()
+        continue-on-error: true
+        run: |
+          node scripts/reconcile-direct-proof-erasure-matrix.mjs \
+            --directory build/direct-proof-erasure-matrix-input \
+            --output build/direct-proof-erasure-matrix/receipt.json \
+            --producer "${{ github.sha }}" \
+            --repository "${{ github.repository }}" \
+            --workflow ".github/workflows/direct-proof-erasure-complete.yml" \
+            --run-id "${{ github.run_id }}" \
+            --run-attempt "${{ github.run_attempt }}"
+      - name: Preserve the complete direct proof-erasure receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-matrix-${{ github.sha }}
+          path: build/direct-proof-erasure-matrix/receipt.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce every producer and exact receipt reconciliation
+        if: >-
+          always() &&
+          (needs.npm-browser.result != 'success' ||
+           needs.native-perl.result != 'success' ||
+           needs.languages.result != 'success' ||
+           needs.managed-wit.result != 'success' ||
+           needs.php.result != 'success' ||
+           steps.download.outcome != 'success' ||
+           steps.reconciliation.outcome != 'success')
+        run: exit 1

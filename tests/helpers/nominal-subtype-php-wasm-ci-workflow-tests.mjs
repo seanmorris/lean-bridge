@@ -53,7 +53,7 @@ test("nominal PHP-Wasm workflow controls refuse skipped acceptance, altered tool
 		, ["if-no-files-found: error", "if-no-files-found: ignore"]
 		, ["steps.acceptance.outcome", "steps.unmeasured.outcome"]
 		, ["run: exit 1", "run: exit 0"]
-		, ["timeout-minutes: 180", "timeout-minutes: 360"]
+		, ["timeout-minutes: 360", "timeout-minutes: 180"]
 		, ["        id: acceptance\n        timeout-minutes: 100\n", "        id: acceptance\n        timeout-minutes: 1\n"]
 		, ["LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_TEST=1", "LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_PHP_WASM_TEST=0"]
 		, ["--test-name-pattern='^installed ordinary and reviewed PHP-Wasm packages execute selected instances in every loading arrangement$'", "--test-name-pattern='^installed ordinary'"]

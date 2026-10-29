@@ -2,6 +2,17 @@ name: Generic Subtypes in C, C++ and Perl
 
 on:
   workflow_call:
+    inputs:
+      optional_parameters:
+        description: Run the complete optional-parameter package matrix.
+        required: false
+        type: boolean
+        default: false
+      direct_proof_erasure:
+        description: Run direct proof-erasure package acceptance.
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -87,7 +98,7 @@ jobs:
   native:
     name: Ordinary and reviewed generic Subtypes in C and C++
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 300
     steps:
       - name: Free hosted runner disk before checkout
         shell: bash
@@ -142,6 +153,7 @@ jobs:
           retention-days: 30
       - name: Execute optional parameters through prepared C and C++ packages
         id: optional_parameters
+        if: inputs.optional_parameters
         continue-on-error: true
         timeout-minutes: 125
         shell: bash
@@ -150,7 +162,7 @@ jobs:
           source scripts/env.sh
           bash scripts/run-optional-parameter-native-ci.sh
       - name: Preserve optional-parameter C and C++ records
-        if: always()
+        if: always() && inputs.optional_parameters
         uses: actions/upload-artifact@v7
         with:
           name: optional-parameter-native-${{ github.sha }}
@@ -159,7 +171,29 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce optional-parameter C and C++ acceptance
-        if: always() && steps.optional_parameters.outcome != 'success'
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Execute direct proof erasure through prepared C and C++ packages
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-direct-proof-erasure-native-ci.sh
+      - name: Preserve direct proof-erasure C and C++ packages
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-native-${{ github.sha }}
+          path: build/direct-proof-erasure-native-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce native consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed native acceptance
         if: always() && steps.acceptance.outcome != 'success'
@@ -168,7 +202,7 @@ jobs:
   perl:
     name: Ordinary and reviewed generic Subtypes across four Perl ABIs
     runs-on: ubuntu-24.04
-    timeout-minutes: 210
+    timeout-minutes: 330
     steps:
       - name: Free hosted runner disk before checkout
         shell: bash
@@ -232,6 +266,7 @@ jobs:
           retention-days: 30
       - name: Execute optional parameters through the prepared Perl package
         id: optional_parameters
+        if: inputs.optional_parameters
         continue-on-error: true
         timeout-minutes: 135
         shell: bash
@@ -240,7 +275,7 @@ jobs:
           source scripts/env.sh
           bash scripts/run-optional-parameter-language-ci.sh perl
       - name: Preserve optional-parameter Perl records
-        if: always()
+        if: always() && inputs.optional_parameters
         uses: actions/upload-artifact@v7
         with:
           name: optional-parameter-language-perl-${{ github.sha }}
@@ -249,7 +284,31 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce optional-parameter Perl acceptance
-        if: always() && steps.optional_parameters.outcome != 'success'
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in the prepared Perl package
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 135
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/5.38.2-threaded/bin/perl"
+          test -x "$LEAN_BRIDGE_CORPUS_PERL"
+          bash scripts/run-direct-proof-erasure-language-ci.sh perl
+      - name: Preserve direct proof-erasure Perl acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-language-perl-${{ github.sha }}
+          path: build/direct-proof-erasure-language-ci/perl/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce direct proof-erasure Perl support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed Perl acceptance
         if: always() && steps.acceptance.outcome != 'success'

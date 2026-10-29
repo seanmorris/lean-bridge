@@ -46,6 +46,7 @@ import "./helpers/direct-proof-erasure-test-registration-source-history-tests.mj
 import "./helpers/direct-proof-erasure-matrix-tests.mjs";
 import "./helpers/direct-proof-erasure-hosted-archive-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-ci-tests.mjs";
+import "./helpers/direct-proof-erasure-matrix-receipt-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-documentation-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-promotion-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-promotion-transaction-tests.mjs";

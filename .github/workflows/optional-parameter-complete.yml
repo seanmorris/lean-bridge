@@ -18,22 +18,32 @@ jobs:
   npm-browser:
     name: Node and browser producer
     uses: ./.github/workflows/generic-subtype-npm-browser.yml
+    with:
+      optional_parameters: true
 
   native-perl:
     name: Native and Perl producers
     uses: ./.github/workflows/generic-subtype-native-perl.yml
+    with:
+      optional_parameters: true
 
   languages:
     name: Python, Ruby and Rust producers
     uses: ./.github/workflows/generic-subtype-languages.yml
+    with:
+      optional_parameters: true
 
   managed-wit:
     name: Managed and WIT producers
     uses: ./.github/workflows/generic-subtype-managed-wit.yml
+    with:
+      optional_parameters: true
 
   php:
     name: PHP and PHP-Wasm producer
     uses: ./.github/workflows/nominal-subtype-php-wasm.yml
+    with:
+      optional_parameters: true
 
   receipt:
     name: Reconcile the exact same-run receipt

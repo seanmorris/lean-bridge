@@ -2,6 +2,17 @@ name: Generic Subtypes in npm and browsers
 
 on:
   workflow_call:
+    inputs:
+      optional_parameters:
+        description: Run the complete optional-parameter package matrix.
+        required: false
+        type: boolean
+        default: false
+      direct_proof_erasure:
+        description: Run direct proof-erasure package acceptance.
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -124,7 +135,7 @@ jobs:
           retention-days: 30
       - name: Execute the complete optional-parameter Node and browser matrix
         id: optional_parameters
-        if: matrix.route == 'reviewed'
+        if: inputs.optional_parameters && matrix.route == 'reviewed'
         continue-on-error: true
         timeout-minutes: 120
         shell: bash
@@ -133,7 +144,7 @@ jobs:
           source scripts/env.sh
           bash scripts/run-optional-parameter-npm-ci.sh
       - name: Preserve optional-parameter Node and browser records
-        if: always() && matrix.route == 'reviewed'
+        if: always() && inputs.optional_parameters && matrix.route == 'reviewed'
         uses: actions/upload-artifact@v7
         with:
           name: optional-parameter-node-browser-${{ github.sha }}
@@ -142,7 +153,29 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce optional-parameter Node and browser acceptance
-        if: always() && matrix.route == 'reviewed' && steps.optional_parameters.outcome != 'success'
+        if: always() && inputs.optional_parameters && matrix.route == 'reviewed' && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Require direct proof erasure in Node, TypeScript and three browsers
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure && matrix.route == 'reviewed'
+        continue-on-error: true
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-direct-proof-erasure-npm-ci.sh
+      - name: Preserve direct proof-erasure npm and browser records
+        if: always() && inputs.direct_proof_erasure && matrix.route == 'reviewed'
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-node-browser-${{ github.sha }}
+          path: build/direct-proof-erasure-npm-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce Node support and the browser corpus
+        if: always() && inputs.direct_proof_erasure && matrix.route == 'reviewed' && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce generic Subtype acceptance
         if: always() && steps.acceptance.outcome != 'success'

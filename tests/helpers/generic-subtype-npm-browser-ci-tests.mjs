@@ -19,9 +19,11 @@ test("CI installs each generic Subtype author route in Node and all browser real
 		, "if-no-files-found: error"
 		, "if: always() && steps.acceptance.outcome != 'success'"
 	]) assert.ok(workflow.includes(text), text);
-	assert.equal(workflow.match(/^ {8}continue-on-error: true$/gmu)?.length, 1);
+	assert.equal(workflow.match(/^ {8}continue-on-error: true$/gmu)?.length, 2);
 	assert.match(workflow
-		, /id: optional_parameters\n {8}if: matrix\.route == 'reviewed'\n {8}continue-on-error: true/u);
+		, /id: optional_parameters\n {8}if: inputs\.optional_parameters && matrix\.route == 'reviewed'\n {8}continue-on-error: true/u);
+	assert.match(workflow
+		, /id: direct_proof_erasure\n {8}if: inputs\.direct_proof_erasure && matrix\.route == 'reviewed'\n {8}continue-on-error: true/u);
 	assert.ok(workflow.indexOf("Build the locked component engine") < workflow.indexOf("id: acceptance"));
 	assert.ok(workflow.indexOf("Build the pinned shared Wasm runtime") < workflow.indexOf("id: acceptance"));
 });
