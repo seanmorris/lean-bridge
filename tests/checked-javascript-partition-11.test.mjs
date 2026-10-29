@@ -5,6 +5,7 @@
  */
 import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
 import "./helpers/large-evidence-transaction-source-history-tests.mjs";
+import "./helpers/optional-parameter-promotion-io-pin-repair-source-history-tests.mjs";
 import "./helpers/optional-parameter-promotion-io-pin-repair-tests.mjs";
 import "./helpers/transactional-directory-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-entrypoints-source-history-tests.mjs";
