@@ -152,7 +152,8 @@ for(const route of routes) test(
 		const header = await readFile(
 			join(installedRoot, "include/defaults_wasmtime.h")
 		);
-		const wit = await readFile(join(installedRoot, "wit/defaults.wit"));
+		const wit = await readFile(
+			join(installedRoot, `wit/${pkg.name}.wit`));
 		for(const pattern of witPatterns)
 			assert.match(wit.toString(), pattern);
 		const componentWit = (await runCopied(environment.LEAN_BRIDGE_WASM_TOOLS, [
