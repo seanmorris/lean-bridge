@@ -5,7 +5,11 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { checkHostNullPhpEvidence } from "./host-null-php-evidence.mjs";
+import { hostNullPhpHostedPolicy } from "./host-null-php-hosted-policy.mjs";
 
 export const hostNullPhpPromotionProfiles = Object.freeze([
 	"php-native", "php-wasm"
@@ -52,6 +56,48 @@ const notes = Object.freeze({
 	, packaging: "Both author routes reproduce exact receipt-closed packages, install offline after source and handoff removal, and execute after relocation."
 	, installedExecution: "Weak and strict PHP callers exercise five value positions, nested Option distinctions, refusals and recovery; PHP-Wasm repeats them in Node and Chromium with startup and lazy loading."
 });
+
+const referencePaths = Object.freeze([
+	"scripts/archive-host-null-php-evidence.mjs"
+	, "scripts/generate-type-docs.mjs"
+	, "scripts/promote-host-null-php.mjs"
+	, "tests/helpers/host-null-php-evidence.mjs"
+	, "tests/helpers/host-null-php-hosted-evidence-sources.mjs"
+	, "tests/helpers/host-null-php-hosted-policy.mjs"
+	, "tests/helpers/host-null-php-promotion.mjs"
+	, "tests/helpers/host-null-php-promotion-tests.mjs"
+	, "tests/helpers/host-null-php-report.mjs"
+]);
+
+/** Authenticate both hosted archives and describe their evidence entries. */
+export const hostNullPhpPromotionReferences = async () => Promise.all(
+	hostNullPhpPromotionProfiles.map(async profile => {
+		const checked = await checkHostNullPhpEvidence(profile);
+		const policy = hostNullPhpHostedPolicy(profile);
+		assert.equal(checked.hostedAcceptance, true);
+		assert.equal(checked.supportPromoted, false);
+		return Object.freeze({
+			id: evidenceId(profile), profile, revision: checked.producer
+			, command: `LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/${profile} ${profile === "php-native" ? "LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-host-null.test.mjs" : "LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-wasm-host-null.test.mjs"}`
+			, scope: `Hosted ${profile} installed-package acceptance verifies ordinary-source and independently reviewed HostNull packages through five value positions, both Option nestings, refusals and recovery across ${checked.accepted.executions} executions.`
+			, files: [
+				{
+					path: `${policy.evidence}/index.json`
+					, sha256: sha256(await readFile(
+						`${policy.evidence}/index.json`))
+				}
+				, ...await Promise.all(referencePaths.map(async path => ({
+					path, sha256: sha256(await readFile(path))
+				})))
+			]
+			, artifacts: Object.freeze([{
+				path: `${checked.hostedRun.artifact.name}.zip`
+				, sha256: checked.hostedRun.artifact.sha256
+			}])
+			, limitations: checked.limitations
+		});
+	})
+);
 
 /**
  * Add two evidence entries and four route observations, changing exactly 20
