@@ -180,3 +180,17 @@ export const checkDependentCheckedRecordPythonCiRecords = async (args, {
 		, runtime, floor: selected.glibc
 	});
 };
+
+/**
+ * Render one independently checked route for exact same-run reconciliation.
+ *
+ * @param result - Closed checker result returned by this module.
+ */
+export const renderDependentCheckedRecordPythonCiVerification = result => {
+	assert.ok(result && typeof result === "object" && !Array.isArray(result));
+	assert.deepEqual(Object.keys(result).sort(), [
+		"archiveSha256", "executions", "floor", "producerCommit", "records"
+		, "reportSha256", "route", "runtime"
+	]);
+	return canonicalJson(result);
+};

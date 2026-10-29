@@ -13,10 +13,12 @@ import test from "node:test";
 import { auditPythonPackage } from "../../src/backends/python/package-audit.mjs";
 import { generateCopiedPythonPackage } from "../../src/backends/python/copied-values.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
+import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
 	assertDependentCheckedRecordPythonCiTap
 	, dependentCheckedRecordPythonCiTestName
 	, parseDependentCheckedRecordPythonCiArgs
+	, renderDependentCheckedRecordPythonCiVerification
 } from "./dependent-checked-record-python-ci-report.mjs";
 import {
 	dependentCheckedRecordPythonCaller
@@ -179,6 +181,19 @@ test("dependent Python hosted checker binds one complete original TAP route", ()
 		, tap.replace("# skipped 0", "# skipped 1")])
 		assert.throws(() => assertDependentCheckedRecordPythonCiTap(
 			changed, options.route));
+	const verification = {
+		route: options.route, producerCommit: options.producer
+		, runtime: { platform: "linux", arch: "x64", glibc: "2.39" }
+		, floor: options.glibc, records: 15, executions: 4
+		, archiveSha256: "b".repeat(64), reportSha256: "c".repeat(64)
+	};
+	assert.equal(renderDependentCheckedRecordPythonCiVerification(verification)
+		, canonicalJson(verification));
+	assert.notEqual(renderDependentCheckedRecordPythonCiVerification(verification)
+		, `${JSON.stringify(verification, null, 2)}\n`);
+	assert.throws(() => renderDependentCheckedRecordPythonCiVerification({
+		...verification, unbound: true
+	}));
 });
 
 test("dependent Python workflow preserves all routes, floors and failures", async () => {
@@ -186,6 +201,8 @@ test("dependent Python workflow preserves all routes, floors and failures", asyn
 		".github/workflows/dependent-checked-record-python.yml", "utf8");
 	const runner = await readFile(
 		"scripts/run-dependent-checked-record-python-ci.sh", "utf8");
+	const checker = await readFile(
+		"scripts/check-dependent-checked-record-python-ci.mjs", "utf8");
 	for(const required of [
 		"on:\n  workflow_dispatch:\n"
 		, "runs-on: ubuntu-24.04", "timeout-minutes: 210"
@@ -207,6 +224,9 @@ test("dependent Python workflow preserves all routes, floors and failures", asyn
 		, "check-dependent-checked-record-python-ci.mjs"
 	]) assert.ok(runner.includes(required), required);
 	assert.doesNotMatch(runner, /curl|pip install .*https?:/u);
+	assert.match(checker
+		, /process\.stdout\.write\(renderDependentCheckedRecordPythonCiVerification\(result\)\)/u);
+	assert.doesNotMatch(checker, /JSON\.stringify\(result/u);
 });
 
 test("dependent Python caller enforces results, refusals and recovery independently", async t => {

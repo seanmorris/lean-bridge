@@ -11,6 +11,7 @@ import { execFileSync } from "node:child_process";
 import {
 	checkDependentCheckedRecordPythonCiRecords
 	, parseDependentCheckedRecordPythonCiArgs
+	, renderDependentCheckedRecordPythonCiVerification
 } from "../tests/helpers/dependent-checked-record-python-ci-report.mjs";
 
 const options = parseDependentCheckedRecordPythonCiArgs(process.argv.slice(2));
@@ -30,4 +31,4 @@ assert.equal((await read("run.tap")).toString(), tap, "Retained TAP drift");
 const result = await checkDependentCheckedRecordPythonCiRecords(process.argv.slice(2), {
 	tap, read, runtime
 });
-process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+process.stdout.write(renderDependentCheckedRecordPythonCiVerification(result));
