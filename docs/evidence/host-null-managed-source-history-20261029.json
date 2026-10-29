@@ -1,0 +1,397 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0b43c9cd9f8a2be848482dc4020b98c677082346dce3efb4f9f03b123bf7b1df",
+      "path": "scripts/refresh-host-null-managed-pins.mjs"
+    },
+    {
+      "currentSha256": "d97c801a99a113d445db20aef2a75141e9e88aec45f8a28c1f8bf418520e451f",
+      "path": "tests/dotnet-host-null-contract.test.mjs"
+    },
+    {
+      "currentSha256": "94d75491c3dd9e9dc80064d7173b5c0d5db88464b263db0bdd3b19333050840f",
+      "path": "tests/jvm-host-null-contract.test.mjs"
+    },
+    {
+      "currentSha256": "dd9558d98adc89a6aec4e88bee77650b851c442d91b6b02bc7e7fb9645bf9d76",
+      "path": "scripts/update-host-null-managed-source-history.mjs"
+    },
+    {
+      "currentSha256": "605c0e88fd07ef206358be09897a62cebe219c75b1194c14059bac7df8a60535",
+      "path": "tests/helpers/host-null-managed-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "7c79225aea6a933b7657bd6a3409880910095b41d2a98f4acc93fb72a000dd87",
+      "path": "tests/helpers/host-null-managed-source-history.mjs"
+    }
+  ],
+  "commits": [
+    {
+      "added": [
+        "tests/dotnet-host-null-contract.test.mjs"
+      ],
+      "commit": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "modified": [
+        "src/backends/dotnet/copied-conversions.mjs",
+        "src/backends/dotnet/copied-model.mjs",
+        "src/backends/dotnet/copied-values.mjs"
+      ],
+      "parent": "e5827ccbdb36fbb940accb9c104090dc025f9e6b",
+      "subject": "Project HostNull through .NET packages [skip ci]"
+    },
+    {
+      "added": [
+        "tests/jvm-host-null-contract.test.mjs"
+      ],
+      "commit": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+      "modified": [
+        "src/adoption/test-profiles.mjs",
+        "src/backends/jvm/callables.mjs",
+        "src/backends/jvm/copied-aliases.mjs",
+        "src/backends/jvm/copied-conversions.mjs",
+        "src/backends/jvm/copied-kotlin.mjs",
+        "src/backends/jvm/copied-model.mjs",
+        "src/backends/jvm/copied-values.mjs",
+        "tests/test-profiles.test.mjs"
+      ],
+      "parent": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "subject": "Project HostNull through JVM packages [skip ci]"
+    },
+    {
+      "added": [
+        "scripts/refresh-host-null-managed-pins.mjs"
+      ],
+      "commit": "0b9150ea62cade9de1b6bc5d26a61e1294a7984b",
+      "modified": [],
+      "parent": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+      "subject": "Define exact HostNull managed pin refresh [skip ci]"
+    },
+    {
+      "added": [],
+      "commit": "d68fd8deb389ead51fbc6eda279c19fe85579bab",
+      "modified": [
+        "docs/type-surface.v1.json"
+      ],
+      "parent": "0b9150ea62cade9de1b6bc5d26a61e1294a7984b",
+      "subject": "Refresh HostNull managed source pins [skip ci]"
+    }
+  ],
+  "implementationCommit": "d68fd8deb389ead51fbc6eda279c19fe85579bab",
+  "integrationParent": "be0fb43f42ea8af52e2fb80c96b65955e4ad2e5d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2f76273bea6b2a71f439795972092cba59ec2ebc15fe6cb943bd75b053a2a538",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-managed-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "2724c7f6e2ed97ed02451b5dae1c6799418434166d6e72641973b6ed805ebfc1"
+    },
+    {
+      "currentSha256": "b436f1c4e420b2fadb3f008f59794acd7c7db54b4190b06e05be3e236017d57b",
+      "edits": [
+        {
+          "current": "import { beforeHostNullManagedIntegrationSource, beforeHostNullManagedSource, hostNullManagedNormalizationPaths } from \"./host-null-managed-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullManagedNormalizationPaths\n\t, ...hostNullPhpNormalizationPaths\n",
+          "previous": "\t...hostNullPhpNormalizationPaths\n",
+          "start": 215464
+        },
+        {
+          "current": "\tlet stage = beforeHostNullManagedIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullPhpIntegrationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullPhpIntegrationSource(path, text, expected);\n",
+          "start": 269475
+        },
+        {
+          "current": "\tstage = beforeHostNullManagedSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 270553
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b23d212aae8b6cf3a678d70d4c1c8025dd199cd1a0ae937de5df5190429a2372"
+    }
+  ],
+  "milestone": "host-null-managed-source-v1",
+  "predecessorCommit": "e5827ccbdb36fbb940accb9c104090dc025f9e6b",
+  "schemaVersion": 1,
+  "scope": "Project explicit HostNull through direct nullable .NET carriers, boxed nullable Java carriers and Kotlin nullable carriers without collapsing HostNull (Option T) into Option (HostNull T). Preserve the exact three-state copied-value, record, callback and returned-closure contracts, reject direct nested HostNull, and register every managed source test as closed. The combined HostNull type-surface lineage layer exclusively authenticates the 244-pin inventory transition.",
+  "updates": [
+    {
+      "commit": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "currentSha256": "3706bba9855175339bf60677517dafc6dccd155431c08e5cb279fd35bf33dafd",
+      "edits": [
+        {
+          "current": "\t\t} else if(copy.compound === \"host-null\")\n\t\t{\n\t\t\tinput += `if (value is not { } present) return default;\n        return new ${native} { Flag = 1, F0 = ${to(copy.fields[0], \"present\")} };`;\n\t\t\toutput = `return value.Flag switch { 0 => null, 1 => ${from(copy.fields[0], 0)}, _ => throw new InvalidOperationException(\"Invalid native HostNull flag\") };`;\n",
+          "previous": "",
+          "start": 4628
+        }
+      ],
+      "parent": "e5827ccbdb36fbb940accb9c104090dc025f9e6b",
+      "path": "src/backends/dotnet/copied-conversions.mjs",
+      "previousSha256": "c4f9976033c28c671473ee5941b2320f390c52f0cfda7d45896bb5514fc6efc4"
+    },
+    {
+      "commit": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "currentSha256": "5843f3d7a1759225cd960f4f33ec0576a1e9024feb659eb2ce18da1dedb45c71",
+      "edits": [
+        {
+          "current": "\t\t\t: copy.compound === \"host-null\" ? `${publicType(copy.fields[0].type)}?`\n\t\t\t\t: `${copy.compound === \"option\" ? \"Option\" : \"Result\"}<${copy.fields.map(field => publicType(field.type)).join(\", \")}>`\n",
+          "previous": "\t\t\t: `${copy.compound === \"option\" ? \"Option\" : \"Result\"}<${copy.fields.map(field => publicType(field.type)).join(\", \")}>`\n",
+          "start": 4762
+        },
+        {
+          "current": "\tfor(const copy of surface.copies.filter(copy => copy.compound === \"host-null\"))\n\t\tif(copy.fields[0].type.compound === \"host-null\")\n\t\t\tfail(ir.declarations[0], \"C# HostNull payloads must retain a value distinct from null\");\n",
+          "previous": "",
+          "start": 5040
+        }
+      ],
+      "parent": "e5827ccbdb36fbb940accb9c104090dc025f9e6b",
+      "path": "src/backends/dotnet/copied-model.mjs",
+      "previousSha256": "5b35d4b8dadaceaa68030d2e2e15164f5bca3ea5b99fdadf1ecef7ae9e034064"
+    },
+    {
+      "commit": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "currentSha256": "0c81a42810a6a632e5fcfcc4213baf08fbfdea31f378ccf8802c4c59994353ff",
+      "edits": [
+        {
+          "current": "\tfiles[\"README.md\"] += \"\\nLean HostNull T uses the direct nullable CLR carrier T?: null is the HostNull null branch and every non-null T is its value branch. HostNull (Option T) is Option<T>?, while Option (HostNull T) is Option<T?>, retaining None, Some(null), and Some(value) as distinct values. Directly nested HostNull is rejected because one CLR null cannot retain both branches. Lean Option uses Option<T>.None or Option<T>.Some(value); default(Option<T>) is None. Except E T uses Result<T, E>.Ok(value) or .Err(error); default(Result<T, E>) is invalid. Branches expose IsSome/Value or IsOk/IsError/Value/Error, and accessing an inactive payload throws. Domain errors return Err; bridge failures throw exceptions. Binary products use C# (A, B) tuples and retain their nesting. These values can nest with arrays and copied records. Null payloads reject unless their declared type is HostNull; a missing option never reads its inactive payload. Returned arrays own independent storage. Compound callable values and resource-containing copies remain unsupported.\\n\";\n",
+          "previous": "\tfiles[\"README.md\"] += \"\\nLean Option uses Option<T>.None or Option<T>.Some(value); default(Option<T>) is None. Except E T uses Result<T, E>.Ok(value) or .Err(error); default(Result<T, E>) is invalid. Branches expose IsSome/Value or IsOk/IsError/Value/Error, and accessing an inactive payload throws. Domain errors return Err; bridge failures throw exceptions. Binary products use C# (A, B) tuples and retain their nesting. These values can nest with arrays and copied records. Active null reference payloads reject; a missing option never reads its inactive payload. Returned arrays own independent storage. Compound callable values and resource-containing copies remain unsupported.\\n\";\n",
+          "start": 11243
+        }
+      ],
+      "parent": "e5827ccbdb36fbb940accb9c104090dc025f9e6b",
+      "path": "src/backends/dotnet/copied-values.mjs",
+      "previousSha256": "70225180476de3bbaf74980a122fcf56ed38bbc6e7f9bb0275555e41544c7b65"
+    },
+    {
+      "commit": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+      "currentSha256": "90b6874003ac3cae73b9111f276ad9f3d3557e79e058909eb3d7500243fff429",
+      "edits": [
+        {
+          "current": "\t\t, \"reviewed-host-null\"\n\t\t, \"host-null-documentation\"\n\t\t, \"host-null-javascript-hosted-report\"\n\t\t, \"host-null-npm-installed\"\n",
+          "previous": "",
+          "start": 2321
+        },
+        {
+          "current": "\t\t, \"dotnet-host-null-contract\"\n",
+          "previous": "",
+          "start": 25270
+        },
+        {
+          "current": "\t\t, \"jvm-host-null-contract\"\n",
+          "previous": "",
+          "start": 25724
+        },
+        {
+          "current": "\t\t, \"php-host-null-contract\"\n\t\t, \"php-host-null\"\n\t\t, \"php-wasm-host-null\"\n",
+          "previous": "",
+          "start": 26708
+        }
+      ],
+      "parent": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "8ffc0d5d56ec8f64ed09ac0ff8178aac6deb8ba69f4dbefd780be2effddd8616"
+    },
+    {
+      "commit": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+      "currentSha256": "a53ead38455f0181878d7da88e37fd4cd4b0f490e2875fb98528ad750a0144ee",
+      "edits": [
+        {
+          "current": "\tconst output = jvmValue(model, result.type), publicType = model.annotatedPublicType ?? model.publicType;\n\tconst type = callable(output) ? `${output.publicName}.LeanClosure` : unit(output) ? \"void\" : publicType(output);\n",
+          "previous": "\tconst output = jvmValue(model, result.type), type = jvmResult(model, output);\n",
+          "start": 4566
+        },
+        {
+          "current": "\tconst signature = parameters.map((site, i) => `${publicType(jvmValue(model, site.type))} arg${i}`).join(\", \");\n",
+          "previous": "\tconst signature = parameters.map((site, i) => `${model.publicType(jvmValue(model, site.type))} arg${i}`).join(\", \");\n",
+          "start": 4848
+        }
+      ],
+      "parent": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "path": "src/backends/jvm/callables.mjs",
+      "previousSha256": "6c9345f2a05213c8c6bb1dccbbbb6e9ea8c175e2e7d0bb08a7945169e2837b7d"
+    },
+    {
+      "commit": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+      "currentSha256": "65cf1145e81afb777f0417abc1c1fcc51fb50869c0960ca5f2bb86cb0d6ab52c",
+      "edits": [
+        {
+          "current": "\t: copy.compound === \"host-null\" ? `${kotlinType(copy.fields[0].type)}?`\n\t\t: copy.compound ? `${{ option: \"Option\", result: \"Result\", tuple: \"Pair\" }[copy.compound]}<${copy.fields.map(field => kotlinType(field.type)).join(\", \")}>`\n\t\t\t: copy.element ? [\"Boolean\", \"Byte\", \"Short\", \"Int\", \"Long\", \"Float\", \"Double\"].includes(kotlinType(copy.element))\n\t\t\t\t? `${kotlinType(copy.element)}Array` : `Array<${kotlinType(copy.element)}>`\n\t\t\t\t: kotlinPrimitives[copy.scalarName];\n",
+          "previous": "\t: copy.compound ? `${{ option: \"Option\", result: \"Result\", tuple: \"Pair\" }[copy.compound]}<${copy.fields.map(field => kotlinType(field.type)).join(\", \")}>`\n\t\t: copy.element ? [\"Boolean\", \"Byte\", \"Short\", \"Int\", \"Long\", \"Float\", \"Double\"].includes(kotlinType(copy.element))\n\t\t\t? `${kotlinType(copy.element)}Array` : `Array<${kotlinType(copy.element)}>`\n\t\t\t: kotlinPrimitives[copy.scalarName];\n",
+          "start": 1136
+        }
+      ],
+      "parent": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "path": "src/backends/jvm/copied-aliases.mjs",
+      "previousSha256": "1428ce4c2a583668b0d2a835bcf9179082b7b396b065952d0649b157055c637e"
+    },
+    {
+      "commit": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+      "currentSha256": "63e9cc6699d792a32781ccaea58e156ce2a98d4b7e9a7f366d3cc0fbcc0007c2",
+      "edits": [
+        {
+          "current": "\t\t} else if(copy.compound === \"host-null\")\n\t\t{\n\t\t\tinput = `var result = scope.allocate(${copy.size}, ${copy.alignment});\n        if (value != null) { result.set(JAVA_BYTE, 0, (byte)1); ${to(copy.fields[0], \"value\")} }\n        return result;`;\n\t\t\toutput = `return switch (value.get(JAVA_BYTE, 0)) { case 0 -> null; case 1 -> ${from(copy.fields[0])}; default -> throw new IllegalStateException(\"Invalid native HostNull flag\"); };`;\n",
+          "previous": "",
+          "start": 2992
+        }
+      ],
+      "parent": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "path": "src/backends/jvm/copied-conversions.mjs",
+      "previousSha256": "d41050ddcad1ebbbe19c74d681f311903764128ebed212616b0f6098b4fbefbe"
+    },
+    {
+      "commit": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+      "currentSha256": "3487ae6d6e7b7abdc898f262b24696d93a6c0ed136f8527c85ec30adad0896f0",
+      "edits": [
+        {
+          "current": "\t\t: copy.compound === \"host-null\" ? boxed(publicType(copy.fields[0].type))\n\t\t\t: copy.compound ? `${compoundNames[copy.compound]}<${copy.fields.map(field => boxed(publicType(field.type))).join(\", \")}>`\n\t\t\t\t: copy.element ? `${publicType(copy.element)}[]` : primitiveType(copy);\n\tconst annotatedPublicType = copy => copy.type?.callable || copy.record || copy.variant ? copy.publicName\n\t\t: copy.compound === \"host-null\" ? `@org.jetbrains.annotations.Nullable ${boxed(publicType(copy.fields[0].type))}`\n\t\t\t: copy.compound ? `${compoundNames[copy.compound]}<${copy.fields.map(field => boxed(annotatedPublicType(field.type))).join(\", \")}>`\n\t\t\t\t: copy.element ? `${annotatedPublicType(copy.element)}[]` : primitiveType(copy);\n\tconst erasedType = copy => copy.compound === \"host-null\" ? boxed(erasedType(copy.fields[0].type))\n\t\t: copy.compound ? compoundNames[copy.compound]\n\t\t\t: copy.element ? `${erasedType(copy.element)}[]` : publicType(copy);\n",
+          "previous": "\t\t: copy.compound ? `${compoundNames[copy.compound]}<${copy.fields.map(field => boxed(publicType(field.type))).join(\", \")}>`\n\t\t\t: copy.element ? `${publicType(copy.element)}[]` : primitiveType(copy);\n\tconst erasedType = copy => copy.compound ? compoundNames[copy.compound]\n\t\t: copy.element ? `${erasedType(copy.element)}[]` : publicType(copy);\n",
+          "start": 2781
+        },
+        {
+          "current": "\t\tif(copy.compound === \"host-null\") return `${kotlinType(copy.fields[0].type)}?`;\n",
+          "previous": "",
+          "start": 3839
+        },
+        {
+          "current": "\t\t...model\n\t\t, publicType, annotatedPublicType\n\t\t, erasedType, kotlinType\n\t\t, kotlinNamespace: namespace\n",
+          "previous": "\t\t...model, publicType, erasedType, kotlinType, kotlinNamespace: namespace\n",
+          "start": 4415
+        },
+        {
+          "current": "\tfiles[\"README.md\"] += `\\nKotlin callers can import ${kotlin.namespace}.Api and its generated copied value classes. These signatures carry Kotlin metadata, including deeply nested arrays and explicit T? HostNull carriers. Fields expose immutable val references and named accessors; equality and hashing compare nested contents. Empty classes retain nominal identity. This API shares the Java native asset loader and callable ownership state. Maven resolves kotlin-stdlib 2.2.0 through the package POM. The original Java API remains available in ${kotlin.namespace.slice(0, -7)}.\\n`;\n",
+          "previous": "\tfiles[\"README.md\"] += `\\nKotlin callers can import ${kotlin.namespace}.Api and its generated copied value classes. These signatures carry Kotlin metadata, including deeply nested arrays. Fields expose immutable val references and named accessors; equality and hashing compare nested contents. Empty classes retain nominal identity. This API shares the Java native asset loader and callable ownership state. Maven resolves kotlin-stdlib 2.2.0 through the package POM. The original Java API remains available in ${kotlin.namespace.slice(0, -7)}.\\n`;\n",
+          "start": 10750
+        },
+        {
+          "current": "\tOption: `sealed interface Option<out T> {\n",
+          "previous": "\tOption: `sealed interface Option<out T : kotlin.Any> {\n",
+          "start": 11814
+        },
+        {
+          "current": "        @kotlin.jvm.JvmStatic fun <T> none(): Option<T> = None()\n        @kotlin.jvm.JvmStatic fun <T> some(value: T): Option<T> = Some(value)\n",
+          "previous": "        @kotlin.jvm.JvmStatic fun <T : kotlin.Any> none(): Option<T> = None()\n        @kotlin.jvm.JvmStatic fun <T : kotlin.Any> some(value: T): Option<T> = Some(value)\n",
+          "start": 11932
+        },
+        {
+          "current": "    class None<out T> : Option<T> {\n",
+          "previous": "    class None<out T : kotlin.Any> : Option<T> {\n",
+          "start": 12081
+        },
+        {
+          "current": "    class Some<out T>(@kotlin.jvm.JvmField val value: T) : Option<T> {\n",
+          "previous": "    class Some<out T : kotlin.Any>(@kotlin.jvm.JvmField val value: T) : Option<T> {\n        init { java.util.Objects.requireNonNull(value) }\n",
+          "start": 12291
+        },
+        {
+          "current": "\t, Result: `sealed interface Result<out T, out E> {\n",
+          "previous": "\t, Result: `sealed interface Result<out T : kotlin.Any, out E : kotlin.Any> {\n",
+          "start": 12503
+        },
+        {
+          "current": "        @kotlin.jvm.JvmStatic fun <T, E> ok(value: T): Result<T, E> = Ok(value)\n        @kotlin.jvm.JvmStatic fun <T, E> err(error: E): Result<T, E> = Err(error)\n",
+          "previous": "        @kotlin.jvm.JvmStatic fun <T : kotlin.Any, E : kotlin.Any> ok(value: T): Result<T, E> = Ok(value)\n        @kotlin.jvm.JvmStatic fun <T : kotlin.Any, E : kotlin.Any> err(error: E): Result<T, E> = Err(error)\n",
+          "start": 12647
+        },
+        {
+          "current": "    class Ok<out T, out E>(@kotlin.jvm.JvmField val value: T) : Result<T, E> {\n",
+          "previous": "    class Ok<out T : kotlin.Any, out E : kotlin.Any>(@kotlin.jvm.JvmField val value: T) : Result<T, E> {\n        init { java.util.Objects.requireNonNull(value) }\n",
+          "start": 12815
+        },
+        {
+          "current": "    class Err<out T, out E>(@kotlin.jvm.JvmField val error: E) : Result<T, E> {\n",
+          "previous": "    class Err<out T : kotlin.Any, out E : kotlin.Any>(@kotlin.jvm.JvmField val error: E) : Result<T, E> {\n        init { java.util.Objects.requireNonNull(error) }\n",
+          "start": 13111
+        },
+        {
+          "current": "\t, Pair: `class Pair<out A, out B>(@kotlin.jvm.JvmField val first: A, @kotlin.jvm.JvmField val second: B) {\n",
+          "previous": "\t, Pair: `class Pair<out A : kotlin.Any, out B : kotlin.Any>(@kotlin.jvm.JvmField val first: A, @kotlin.jvm.JvmField val second: B) {\n    init { java.util.Objects.requireNonNull(first); java.util.Objects.requireNonNull(second) }\n",
+          "start": 13423
+        }
+      ],
+      "parent": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "path": "src/backends/jvm/copied-kotlin.mjs",
+      "previousSha256": "749d8c48e0eeff3eda7820f6cbf88d29c0344c94562e1ac77ac250504bb47728"
+    },
+    {
+      "commit": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+      "currentSha256": "2ed821c8494a8153451927a965f16c910d39a6ad032f921827fafa68215af0a0",
+      "edits": [
+        {
+          "current": "\tfield.type.compound !== \"host-null\" && !primitivePublicTypes.has(model.publicType(field.type));\n",
+          "previous": "\t!primitivePublicTypes.has(model.publicType(field.type));\n",
+          "start": 2799
+        },
+        {
+          "current": "\t\t: copy.compound === \"host-null\" ? boxed(publicType(copy.fields[0].type))\n\t\t\t: copy.compound ? `${wrapper(copy)}<${copy.fields.map(field => boxed(publicType(field.type))).join(\", \")}>`\n\t\t\t\t: copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.scalarName];\n\tfor(const copy of surface.copies.filter(copy => copy.compound === \"host-null\"))\n\t\tif(copy.fields[0].type.compound === \"host-null\")\n\t\t\tfail(ir.declarations[0], \"JVM HostNull payloads must retain a value distinct from null\");\n\tconst erasedType = copy => copy.compound === \"host-null\" ? boxed(erasedType(copy.fields[0].type))\n\t\t: copy.compound ? wrapper(copy) : copy.element ? `${erasedType(copy.element)}[]` : publicType(copy);\n",
+          "previous": "\t\t: copy.compound ? `${wrapper(copy)}<${copy.fields.map(field => boxed(publicType(field.type))).join(\", \")}>`\n\t\t\t: copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.scalarName];\n\tconst erasedType = copy => copy.compound ? wrapper(copy) : copy.element ? `${erasedType(copy.element)}[]` : publicType(copy);\n",
+          "start": 9198
+        }
+      ],
+      "parent": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "path": "src/backends/jvm/copied-model.mjs",
+      "previousSha256": "268ff23eacb54c645023a258aa28b00f36204628e1602c01e3eaa9fbd3dd1ba7"
+    },
+    {
+      "commit": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+      "currentSha256": "8c4190156ddfa50ad8273a72ed4fd90ded966bada168eda268c48bc2ac521bc9",
+      "edits": [
+        {
+          "current": "\tfiles[\"README.md\"] = `# ${model.namespace}\\n\\nCall ${model.namespace}.Api from Java or Kotlin. Requires Java 22 or newer with --enable-native-access=ALL-UNNAMED on Linux x86-64. Prepared Maven JARs contain their native adapter, component and shared Lean runtime. No compiler, JNI declarations or runtime-path settings are needed by the consumer.\\n\\nUInt8/UInt16 use checked int, UInt32 uses checked long, and UInt64/Nat/Int use java.math.BigInteger. Signed values use corresponding JVM primitives. Unit parameters use Unit.INSTANCE; Unit results return void. Arrays, byte arrays and record contents are copied on calls. Null is accepted only for a declared HostNull branch; other nulls, invalid unsigned ranges and malformed UTF-16 reject before invoking Lean. Pure acyclic copied values are bounded to 32 type levels and a 16 MiB native input/output conversion budget. Native assets are verified and extracted into private process-lifetime temporary directories, removed at normal JVM shutdown.\\n`;\n",
+          "previous": "\tfiles[\"README.md\"] = `# ${model.namespace}\\n\\nCall ${model.namespace}.Api from Java or Kotlin. Requires Java 22 or newer with --enable-native-access=ALL-UNNAMED on Linux x86-64. Prepared Maven JARs contain their native adapter, component and shared Lean runtime. No compiler, JNI declarations or runtime-path settings are needed by the consumer.\\n\\nUInt8/UInt16 use checked int, UInt32 uses checked long, and UInt64/Nat/Int use java.math.BigInteger. Signed values use corresponding JVM primitives. Unit parameters use Unit.INSTANCE; Unit results return void. Arrays, byte arrays and record contents are copied on calls. Null, invalid unsigned ranges and malformed UTF-16 are rejected. Pure acyclic copied values are bounded to 32 type levels and a 16 MiB native input/output conversion budget. Native assets are verified and extracted into private process-lifetime temporary directories, removed at normal JVM shutdown.\\n`;\n",
+          "start": 5907
+        },
+        {
+          "current": "\tif(model.surface.copies.some(copy => copy.compound)) files[\"README.md\"] += \"\\nHostNull T uses the direct boxed Java payload with null as its null branch; Kotlin metadata exposes the same value as T?. HostNull (Option T) is a nullable Option<T>, while Option (HostNull T) retains None, Some(null), and Some(value). Directly nested HostNull rejects because one JVM null cannot retain both branches. Option<T> is a sealed None/Some hierarchy with none()/some(value) factories and isSome()/value(). Result<T,E> preserves Lean Except through ok(value)/err(error), isOk()/value()/error(). Pair<A,B> retains binary product nesting. Generic wrappers permit a null payload so nested HostNull remains representable; conversion rejects that null whenever the declared payload is not HostNull. Inactive payload access throws. Nested Unit options remain distinct. Domain errors return Err; bridge failures throw exceptions. These generic types box primitive payloads and compose with copied arrays and records. Import the generated Pair explicitly in Kotlin; it is not kotlin.Pair. Equality and hashing compare active payloads by contents, including nested arrays.\\n\";\n",
+          "previous": "\tif(model.surface.copies.some(copy => copy.compound)) files[\"README.md\"] += \"\\nOption<T> is a sealed None/Some hierarchy with none()/some(value) factories and isSome()/value(). Result<T,E> preserves Lean Except through ok(value)/err(error), isOk()/value()/error(). Inactive payload access throws; null containers and payloads reject. Nested Unit options remain distinct. Domain errors return Err; bridge failures throw exceptions. Pair<A,B> retains binary product nesting. These generic types box primitive payloads and compose with copied arrays and records. Import the generated Pair explicitly in Kotlin; it is not kotlin.Pair. Equality and hashing compare active payloads by contents, including nested arrays.\\n\";\n",
+          "start": 7515
+        },
+        {
+          "current": "",
+          "previous": "        public Some { java.util.Objects.requireNonNull(value); }\n",
+          "start": 15247
+        },
+        {
+          "current": "",
+          "previous": "        public Ok { java.util.Objects.requireNonNull(value); }\n",
+          "start": 15757
+        },
+        {
+          "current": "",
+          "previous": "        public Err { java.util.Objects.requireNonNull(error); }\n",
+          "start": 15991
+        },
+        {
+          "current": "",
+          "previous": "    public Pair { java.util.Objects.requireNonNull(first); java.util.Objects.requireNonNull(second); }\n",
+          "start": 16317
+        }
+      ],
+      "parent": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "path": "src/backends/jvm/copied-values.mjs",
+      "previousSha256": "2b601ca6eda956ca1a5a006eaf5d54631cd2b0b6d9590154fad79b3efb9aa79c"
+    },
+    {
+      "commit": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+      "currentSha256": "960df974aeaa6be4af8254e3fe921fdc76f5fed367cecaa323695ef47f2ed529",
+      "edits": [
+        {
+          "current": "\tfor(const name of [\n\t\t\"reviewed-host-null\"\n\t\t, \"host-null-documentation\"\n\t\t, \"host-null-javascript-hosted-report\"\n\t\t, \"host-null-npm-installed\"\n\t\t, \"dotnet-host-null-contract\"\n\t\t, \"jvm-host-null-contract\"\n\t\t, \"php-host-null-contract\"\n\t\t, \"php-host-null\"\n\t\t, \"php-wasm-host-null\"\n\t]) assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);\n",
+          "previous": "",
+          "start": 3565
+        }
+      ],
+      "parent": "ac3773f08f54bc9d98635c21a648916bddd4ca07",
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "eb92f7b76fce5d9b339b0cbaa5af1d4454006b56390dc80e5e8c7d9ba4df643c"
+    }
+  ]
+}
