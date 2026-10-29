@@ -93,7 +93,7 @@ for(const route of routes) test(
 			});
 			const before = await lakeInputState(prepared.projectRoot);
 			const outputRoot = join(prepared.directory, "release");
-			const built = await buildCanonicalProject({
+			await buildCanonicalProject({
 				projectRoot: prepared.projectRoot, outputRoot, engineRoot
 				, environment, targets: ["npm"]
 			}).catch(error => {
@@ -110,9 +110,11 @@ for(const route of routes) test(
 				receiptPath: join(
 					release.output, "component-package-receipt.json")
 			});
+			assert.equal(release.report.bindingIrSha256
+				, bundle.bindingIrSha256);
 			assert.deepEqual(await lakeInputState(prepared.projectRoot), before);
 			const fact = {
-				...bundle, bindingIrSha256: built.bindingIrSha256
+				...bundle
 				, componentArchiveSha256: sha256(
 					await readFile(release.componentArchive))
 				, runtimeArchiveSha256: sha256(

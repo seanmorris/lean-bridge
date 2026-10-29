@@ -1,5 +1,6 @@
 /** @file */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	managedCompilationDiagnostic, managedDiagnosticCount, managedDiagnosticPattern
@@ -141,4 +142,12 @@ test("optional Python closure retains version and receipt identity", () => {
 	assert.throws(() => validateOptionalParameterLanguageClosure("python", {
 		...closure, python: sha
 	}));
+});
+
+test("optional npm evidence keeps the authenticated bundle identity", async () => {
+	const source = await readFile(
+		"tests/optional-parameter-npm-installed.test.mjs", "utf8");
+	assert.match(source, /assert\.equal\(release\.report\.bindingIrSha256\s*, bundle\.bindingIrSha256\)/u);
+	assert.doesNotMatch(source
+		, /\.\.\.bundle, bindingIrSha256: built\.bindingIrSha256/u);
 });
