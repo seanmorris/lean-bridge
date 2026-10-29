@@ -203,9 +203,16 @@ test("Perl CI runs four independent ABI jobs and gates its single observation on
 	assert.deepEqual([...matrix.matchAll(/^ {10}- ([\w.-]+)$/gm)].map(match => match[1]), perlConfigurations.map(item => item.label));
 	assert.match(matrix, /fail-fast: false/);
 	assert.doesNotMatch(matrix, /needs:|lake-workspace\.test/);
-	assert.equal([...matrix.matchAll(/^ {8}continue-on-error: true$/gmu)].length, 1);
-	assert.match(matrix, /id: direct_proof_language\n {8}continue-on-error: true/u);
-	assert.match(matrix, /steps\.direct_proof_language\.outcome != 'success'/u);
+	assert.equal([...matrix.matchAll(/^ {8}continue-on-error: true$/gmu)].length, 3);
+	for(const id of [
+		"direct_proof_language", "host_null_scripting"
+		, "optional_parameters_language"
+	]) {
+		assert.match(matrix
+			, new RegExp(`id: ${id}\\n {8}continue-on-error: true`, "u"));
+		assert.match(matrix
+			, new RegExp(`steps\\.${id}\\.outcome != 'success'`, "u"));
+	}
 	assert.match(matrix, /npm run test:consumer:perl -- --configuration "\$\{\{ matrix\.configuration \}\}"/);
 	assert.match(matrix, /path: \.toolchains\/perl\/\$\{\{ matrix\.configuration \}\}/);
 	assert.match(matrix, /key: perl-abi-v2-\$\{\{ runner\.os \}\}-\$\{\{ matrix\.configuration \}\}/);
