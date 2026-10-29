@@ -55,6 +55,12 @@ ${copy.cases.map((branch, index) => `            case ${index} -> new ${branch.p
 		{
 			input += `if (value.isSome()) { result.set(JAVA_BYTE, 0, (byte)1); ${to(copy.fields[0], "value.value()")} }\n        return result;`;
 			output = `return switch (value.get(JAVA_BYTE, 0)) { case 0 -> ${wrapper}.none(); case 1 -> ${wrapper}.some(${from(copy.fields[0])}); default -> throw new IllegalStateException("Invalid native Option flag"); };`;
+		} else if(copy.compound === "host-null")
+		{
+			input = `var result = scope.allocate(${copy.size}, ${copy.alignment});
+        if (value != null) { result.set(JAVA_BYTE, 0, (byte)1); ${to(copy.fields[0], "value")} }
+        return result;`;
+			output = `return switch (value.get(JAVA_BYTE, 0)) { case 0 -> null; case 1 -> ${from(copy.fields[0])}; default -> throw new IllegalStateException("Invalid native HostNull flag"); };`;
 		} else if(copy.compound === "result")
 		{
 			input += `if (value.isOk()) { result.set(JAVA_BYTE, 0, (byte)1); ${to(copy.fields[0], "value.value()")} }\n        else { ${to(copy.fields[1], "value.error()")} }\n        return result;`;

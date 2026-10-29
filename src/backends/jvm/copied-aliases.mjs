@@ -21,10 +21,11 @@ const kotlinPrimitives = { unit: "Unit", bool: "Boolean", uint8: "Int"
 	, char: "Int", string: "String", bytes: "ByteArray"
 };
 const kotlinType = copy => copy.record || copy.variant ? copy.publicName
-	: copy.compound ? `${{ option: "Option", result: "Result", tuple: "Pair" }[copy.compound]}<${copy.fields.map(field => kotlinType(field.type)).join(", ")}>`
-		: copy.element ? ["Boolean", "Byte", "Short", "Int", "Long", "Float", "Double"].includes(kotlinType(copy.element))
-			? `${kotlinType(copy.element)}Array` : `Array<${kotlinType(copy.element)}>`
-			: kotlinPrimitives[copy.scalarName];
+	: copy.compound === "host-null" ? `${kotlinType(copy.fields[0].type)}?`
+		: copy.compound ? `${{ option: "Option", result: "Result", tuple: "Pair" }[copy.compound]}<${copy.fields.map(field => kotlinType(field.type)).join(", ")}>`
+			: copy.element ? ["Boolean", "Byte", "Short", "Int", "Long", "Float", "Double"].includes(kotlinType(copy.element))
+				? `${kotlinType(copy.element)}Array` : `Array<${kotlinType(copy.element)}>`
+				: kotlinPrimitives[copy.scalarName];
 
 /**
  * Retain original targets and chains beside both consumer-language spellings.

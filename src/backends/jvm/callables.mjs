@@ -94,9 +94,10 @@ export const jvmCallablePublic = (model, callback) => {
 	const { parameters, result } = callback.type.callable;
 	const name = callback.publicName.split(".").at(-1);
 	const runtime = model.runtimeName ?? "Runtime", state = model.callableStateRuntime ?? runtime;
-	const output = jvmValue(model, result.type), type = jvmResult(model, output);
+	const output = jvmValue(model, result.type), publicType = model.annotatedPublicType ?? model.publicType;
+	const type = callable(output) ? `${output.publicName}.LeanClosure` : unit(output) ? "void" : publicType(output);
 	const args = parameters.map((_, i) => `arg${i}`).join(", ");
-	const signature = parameters.map((site, i) => `${model.publicType(jvmValue(model, site.type))} arg${i}`).join(", ");
+	const signature = parameters.map((site, i) => `${publicType(jvmValue(model, site.type))} arg${i}`).join(", ");
 	return `package ${model.namespace};
 /** A synchronous ${callback.structured ? "copied-value" : "primitive"} function. Arguments and results are copied. */
 @FunctionalInterface

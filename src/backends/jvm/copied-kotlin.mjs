@@ -56,12 +56,19 @@ export const compileCopiedKotlinModel = ir => {
 	}
 	const compoundNames = Object.fromEntries(Object.entries({ option: "Option", result: "Result", tuple: "Pair" }).map(([key, name]) => [key, `${namespace}.${name}`]));
 	const publicType = copy => copy.type?.callable || copy.record || copy.variant ? copy.publicName
-		: copy.compound ? `${compoundNames[copy.compound]}<${copy.fields.map(field => boxed(publicType(field.type))).join(", ")}>`
-			: copy.element ? `${publicType(copy.element)}[]` : primitiveType(copy);
-	const erasedType = copy => copy.compound ? compoundNames[copy.compound]
-		: copy.element ? `${erasedType(copy.element)}[]` : publicType(copy);
+		: copy.compound === "host-null" ? boxed(publicType(copy.fields[0].type))
+			: copy.compound ? `${compoundNames[copy.compound]}<${copy.fields.map(field => boxed(publicType(field.type))).join(", ")}>`
+				: copy.element ? `${publicType(copy.element)}[]` : primitiveType(copy);
+	const annotatedPublicType = copy => copy.type?.callable || copy.record || copy.variant ? copy.publicName
+		: copy.compound === "host-null" ? `@org.jetbrains.annotations.Nullable ${boxed(publicType(copy.fields[0].type))}`
+			: copy.compound ? `${compoundNames[copy.compound]}<${copy.fields.map(field => boxed(annotatedPublicType(field.type))).join(", ")}>`
+				: copy.element ? `${annotatedPublicType(copy.element)}[]` : primitiveType(copy);
+	const erasedType = copy => copy.compound === "host-null" ? boxed(erasedType(copy.fields[0].type))
+		: copy.compound ? compoundNames[copy.compound]
+			: copy.element ? `${erasedType(copy.element)}[]` : publicType(copy);
 	const kotlinType = copy => {
 		if(copy.type?.callable || copy.record || copy.variant) return quoted(copy.publicName);
+		if(copy.compound === "host-null") return `${kotlinType(copy.fields[0].type)}?`;
 		if(copy.compound) return `${quoted(compoundNames[copy.compound])}<${copy.fields.map(field => kotlinType(field.type)).join(", ")}>`;
 		if(copy.element)
 		{
@@ -72,7 +79,10 @@ export const compileCopiedKotlinModel = ir => {
 		return type === null ? `${quoted(model.namespace)}.Unit` : type.includes(".") ? type : `kotlin.${type}`;
 	};
 	return {
-		...model, publicType, erasedType, kotlinType, kotlinNamespace: namespace
+		...model
+		, publicType, annotatedPublicType
+		, erasedType, kotlinType
+		, kotlinNamespace: namespace
 		, compoundNames
 		, helpers
 		, runtimeName: helpers.runtime
@@ -182,7 +192,7 @@ export const generateCopiedJvmKotlinPackage = (ir, evidence = null) => {
 	const manifest = JSON.parse(java["binding-manifest.json"]);
 	for(const path of Object.keys(kotlin.files)) if(Object.hasOwn(java, path)) throw new Error(`Kotlin source collides with Java: ${path}`);
 	const files = { ...java, ...kotlin.files };
-	files["README.md"] += `\nKotlin callers can import ${kotlin.namespace}.Api and its generated copied value classes. These signatures carry Kotlin metadata, including deeply nested arrays. Fields expose immutable val references and named accessors; equality and hashing compare nested contents. Empty classes retain nominal identity. This API shares the Java native asset loader and callable ownership state. Maven resolves kotlin-stdlib 2.2.0 through the package POM. The original Java API remains available in ${kotlin.namespace.slice(0, -7)}.\n`;
+	files["README.md"] += `\nKotlin callers can import ${kotlin.namespace}.Api and its generated copied value classes. These signatures carry Kotlin metadata, including deeply nested arrays and explicit T? HostNull carriers. Fields expose immutable val references and named accessors; equality and hashing compare nested contents. Empty classes retain nominal identity. This API shares the Java native asset loader and callable ownership state. Maven resolves kotlin-stdlib 2.2.0 through the package POM. The original Java API remains available in ${kotlin.namespace.slice(0, -7)}.\n`;
 	files["binding-manifest.json"] = `${JSON.stringify({ ...manifest
 		, files: [...manifest.files, ...Object.keys(kotlin.files)]
 		, publicFiles: [...manifest.publicFiles, ...kotlin.publicFiles]
@@ -194,43 +204,40 @@ export const generateCopiedJvmKotlinPackage = (ir, evidence = null) => {
 };
 
 const compounds = {
-	Option: `sealed interface Option<out T : kotlin.Any> {
+	Option: `sealed interface Option<out T> {
     fun isSome(): kotlin.Boolean
     fun value(): T
     companion object {
-        @kotlin.jvm.JvmStatic fun <T : kotlin.Any> none(): Option<T> = None()
-        @kotlin.jvm.JvmStatic fun <T : kotlin.Any> some(value: T): Option<T> = Some(value)
+        @kotlin.jvm.JvmStatic fun <T> none(): Option<T> = None()
+        @kotlin.jvm.JvmStatic fun <T> some(value: T): Option<T> = Some(value)
     }
-    class None<out T : kotlin.Any> : Option<T> {
+    class None<out T> : Option<T> {
         override fun isSome(): kotlin.Boolean = false
         override fun value(): T = throw IllegalStateException("None has no value")
 ${equality("None", [], "<*>")}
     }
-    class Some<out T : kotlin.Any>(@kotlin.jvm.JvmField val value: T) : Option<T> {
-        init { java.util.Objects.requireNonNull(value) }
+    class Some<out T>(@kotlin.jvm.JvmField val value: T) : Option<T> {
         override fun isSome(): kotlin.Boolean = true
         override fun value(): T = value
 ${equality("Some", ["value"], "<*>")}
     }
 }
 `
-	, Result: `sealed interface Result<out T : kotlin.Any, out E : kotlin.Any> {
+	, Result: `sealed interface Result<out T, out E> {
     fun isOk(): kotlin.Boolean
     fun value(): T
     fun error(): E
     companion object {
-        @kotlin.jvm.JvmStatic fun <T : kotlin.Any, E : kotlin.Any> ok(value: T): Result<T, E> = Ok(value)
-        @kotlin.jvm.JvmStatic fun <T : kotlin.Any, E : kotlin.Any> err(error: E): Result<T, E> = Err(error)
+        @kotlin.jvm.JvmStatic fun <T, E> ok(value: T): Result<T, E> = Ok(value)
+        @kotlin.jvm.JvmStatic fun <T, E> err(error: E): Result<T, E> = Err(error)
     }
-    class Ok<out T : kotlin.Any, out E : kotlin.Any>(@kotlin.jvm.JvmField val value: T) : Result<T, E> {
-        init { java.util.Objects.requireNonNull(value) }
+    class Ok<out T, out E>(@kotlin.jvm.JvmField val value: T) : Result<T, E> {
         override fun isOk(): kotlin.Boolean = true
         override fun value(): T = value
         override fun error(): E = throw IllegalStateException("Ok has no error")
 ${equality("Ok", ["value"], "<*, *>")}
     }
-    class Err<out T : kotlin.Any, out E : kotlin.Any>(@kotlin.jvm.JvmField val error: E) : Result<T, E> {
-        init { java.util.Objects.requireNonNull(error) }
+    class Err<out T, out E>(@kotlin.jvm.JvmField val error: E) : Result<T, E> {
         override fun isOk(): kotlin.Boolean = false
         override fun value(): T = throw IllegalStateException("Err has no success value")
         override fun error(): E = error
@@ -238,8 +245,7 @@ ${equality("Err", ["error"], "<*, *>")}
     }
 }
 `
-	, Pair: `class Pair<out A : kotlin.Any, out B : kotlin.Any>(@kotlin.jvm.JvmField val first: A, @kotlin.jvm.JvmField val second: B) {
-    init { java.util.Objects.requireNonNull(first); java.util.Objects.requireNonNull(second) }
+	, Pair: `class Pair<out A, out B>(@kotlin.jvm.JvmField val first: A, @kotlin.jvm.JvmField val second: B) {
     fun first(): A = first
     fun second(): B = second
 ${equality("Pair", ["first", "second"], "<*, *>")}

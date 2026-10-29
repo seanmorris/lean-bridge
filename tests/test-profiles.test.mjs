@@ -70,6 +70,17 @@ test("every repository test receives exactly one named execution profile", async
 	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-result-evidence.test.mjs"));
 	assert.ok(grouped.contract.includes("tests/callback-subtype-php-wasm.test.mjs"));
 	for(const name of [
+		"reviewed-host-null"
+		, "host-null-documentation"
+		, "host-null-javascript-hosted-report"
+		, "host-null-npm-installed"
+		, "dotnet-host-null-contract"
+		, "jvm-host-null-contract"
+		, "php-host-null-contract"
+		, "php-host-null"
+		, "php-wasm-host-null"
+	]) assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);
+	for(const name of [
 		"callback-fin-language-installed"
 		, "callback-fin-language-package"
 		, "callback-fin-native-hosted-evidence"

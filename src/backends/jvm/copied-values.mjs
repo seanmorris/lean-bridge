@@ -70,9 +70,9 @@ export const renderCopiedJvmPackage = (model, evidence = null) => {
 	const publicFiles = Object.keys(files), internalFiles = [`${prefix}/Runtime.java`, `${prefix}/NativeAssets.java`, `${prefix}/Scope.java`];
 	files[internalFiles[0]] = renderCopiedJvmRuntime(model); files[internalFiles[1]] = copiedJvmAssets(model, evidence);
 	files[internalFiles[2]] = `package ${model.namespace};\nimport java.lang.foreign.*;\n${copiedJvmScope}\n`;
-	files["README.md"] = `# ${model.namespace}\n\nCall ${model.namespace}.Api from Java or Kotlin. Requires Java 22 or newer with --enable-native-access=ALL-UNNAMED on Linux x86-64. Prepared Maven JARs contain their native adapter, component and shared Lean runtime. No compiler, JNI declarations or runtime-path settings are needed by the consumer.\n\nUInt8/UInt16 use checked int, UInt32 uses checked long, and UInt64/Nat/Int use java.math.BigInteger. Signed values use corresponding JVM primitives. Unit parameters use Unit.INSTANCE; Unit results return void. Arrays, byte arrays and record contents are copied on calls. Null, invalid unsigned ranges and malformed UTF-16 are rejected. Pure acyclic copied values are bounded to 32 type levels and a 16 MiB native input/output conversion budget. Native assets are verified and extracted into private process-lifetime temporary directories, removed at normal JVM shutdown.\n`;
+	files["README.md"] = `# ${model.namespace}\n\nCall ${model.namespace}.Api from Java or Kotlin. Requires Java 22 or newer with --enable-native-access=ALL-UNNAMED on Linux x86-64. Prepared Maven JARs contain their native adapter, component and shared Lean runtime. No compiler, JNI declarations or runtime-path settings are needed by the consumer.\n\nUInt8/UInt16 use checked int, UInt32 uses checked long, and UInt64/Nat/Int use java.math.BigInteger. Signed values use corresponding JVM primitives. Unit parameters use Unit.INSTANCE; Unit results return void. Arrays, byte arrays and record contents are copied on calls. Null is accepted only for a declared HostNull branch; other nulls, invalid unsigned ranges and malformed UTF-16 reject before invoking Lean. Pure acyclic copied values are bounded to 32 type levels and a 16 MiB native input/output conversion budget. Native assets are verified and extracted into private process-lifetime temporary directories, removed at normal JVM shutdown.\n`;
 	files["README.md"] += "\nGenerated records compare nested arrays and records by contents and produce matching hash codes. Nominal record and constructor identities remain distinct. Floating-point equality follows Java: NaNs compare equal and signed zeros differ. Standalone arrays retain JVM reference equality; use Arrays.deepEquals/Arrays.equals in Java or contentDeepEquals/contentEquals in Kotlin. Nested arrays remain mutable. Do not mutate their contents while a containing value is a map key or set member. Record accessors preserve distinguishing trailing underscores and escape Java keywords.\n";
-	if(model.surface.copies.some(copy => copy.compound)) files["README.md"] += "\nOption<T> is a sealed None/Some hierarchy with none()/some(value) factories and isSome()/value(). Result<T,E> preserves Lean Except through ok(value)/err(error), isOk()/value()/error(). Inactive payload access throws; null containers and payloads reject. Nested Unit options remain distinct. Domain errors return Err; bridge failures throw exceptions. Pair<A,B> retains binary product nesting. These generic types box primitive payloads and compose with copied arrays and records. Import the generated Pair explicitly in Kotlin; it is not kotlin.Pair. Equality and hashing compare active payloads by contents, including nested arrays.\n";
+	if(model.surface.copies.some(copy => copy.compound)) files["README.md"] += "\nHostNull T uses the direct boxed Java payload with null as its null branch; Kotlin metadata exposes the same value as T?. HostNull (Option T) is a nullable Option<T>, while Option (HostNull T) retains None, Some(null), and Some(value). Directly nested HostNull rejects because one JVM null cannot retain both branches. Option<T> is a sealed None/Some hierarchy with none()/some(value) factories and isSome()/value(). Result<T,E> preserves Lean Except through ok(value)/err(error), isOk()/value()/error(). Pair<A,B> retains binary product nesting. Generic wrappers permit a null payload so nested HostNull remains representable; conversion rejects that null whenever the declared payload is not HostNull. Inactive payload access throws. Nested Unit options remain distinct. Domain errors return Err; bridge failures throw exceptions. These generic types box primitive payloads and compose with copied arrays and records. Import the generated Pair explicitly in Kotlin; it is not kotlin.Pair. Equality and hashing compare active payloads by contents, including nested arrays.\n";
 	files["README.md"] += jvmAliasReadme(model);
 	const finFunctions = model.surface.functions.filter(fn => finBounds(fn, model.ir.types));
 	if(finFunctions.length) files["README.md"] += `\n${nativeRefinementReadme(finFunctions.map(fn => fn.declaration), `Lean Fin n parameters and results are java.math.BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A null argument throws NullPointerException; a negative value throws IllegalArgumentException("Nat cannot be negative"), as for Nat; a value at or above its bound throws IllegalArgumentException whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a method taking one is rejected. Results are BigInteger values below their declared bound. ${dependentFin(finFunctions, model.ir.types) ? "A bound listed below as an earlier parameter name, from a Lean signature such as (n : Nat) → Fin n → α, is that argument's value in the same call: both BigInteger arguments are checked as Nat first, and the IllegalArgumentException message names the value and its bound parameter, such as \"arg1 is not below its dependent Fin bound arg0\". " : ""}${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), "Maven packages", model.ir.types)}`, "Maven packages", model.ir.types)}\n\n${finFunctions.map(fn => `- ${model.namespace}.Api.${fn.publicName}: ${finBounds(fn, model.ir.types)}`).join("\n")}\n`;
@@ -115,7 +115,6 @@ public sealed interface Option<T> permits Option.None, Option.Some {
         public T value() { throw new IllegalStateException("None has no value"); }
     }
     record Some<T>(T value) implements Option<T> {
-        public Some { java.util.Objects.requireNonNull(value); }
         public boolean isSome() { return true; }
 ${valueEquality("Some", ["value"], "<?>")}
     }
@@ -129,13 +128,11 @@ public sealed interface Result<T, E> permits Result.Ok, Result.Err {
     static <T, E> Result<T, E> ok(T value) { return new Ok<>(value); }
     static <T, E> Result<T, E> err(E error) { return new Err<>(error); }
     record Ok<T, E>(T value) implements Result<T, E> {
-        public Ok { java.util.Objects.requireNonNull(value); }
         public boolean isOk() { return true; }
         public E error() { throw new IllegalStateException("Ok has no error"); }
 ${valueEquality("Ok", ["value"], "<?, ?>")}
     }
     record Err<T, E>(E error) implements Result<T, E> {
-        public Err { java.util.Objects.requireNonNull(error); }
         public boolean isOk() { return false; }
         public T value() { throw new IllegalStateException("Err has no success value"); }
 ${valueEquality("Err", ["error"], "<?, ?>")}
@@ -144,7 +141,6 @@ ${valueEquality("Err", ["error"], "<?, ?>")}
 `
 	, Pair: `/** A copied binary Lean product. Nested products retain their structure. */
 public record Pair<A, B>(A first, B second) {
-    public Pair { java.util.Objects.requireNonNull(first); java.util.Objects.requireNonNull(second); }
 ${valueEquality("Pair", ["first", "second"], "<?, ?>")}
 }
 `

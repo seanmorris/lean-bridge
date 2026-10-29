@@ -29,7 +29,7 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * @param field - Copied record or variant field.
  */
 export const copiedJvmFieldNeedsNullCheck = (model, field) =>
-	!primitivePublicTypes.has(model.publicType(field.type));
+	field.type.compound !== "host-null" && !primitivePublicTypes.has(model.publicType(field.type));
 
 /**
  * Validate copied source types and calculate their Java names and C layouts.
@@ -138,9 +138,14 @@ export const compileCopiedJvmModel = ir => {
 	const wrapper = copy => ({ option: "Option", result: "Result", tuple: "Pair" })[copy.compound];
 	const boxed = type => ({ boolean: "Boolean", byte: "Byte", short: "Short", int: "Integer", long: "Long", float: "Float", double: "Double" })[type] ?? type;
 	const publicType = copy => copy.type?.callable ? copy.publicName : copy.record || copy.variant ? copy.publicName
-		: copy.compound ? `${wrapper(copy)}<${copy.fields.map(field => boxed(publicType(field.type))).join(", ")}>`
-			: copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.scalarName];
-	const erasedType = copy => copy.compound ? wrapper(copy) : copy.element ? `${erasedType(copy.element)}[]` : publicType(copy);
+		: copy.compound === "host-null" ? boxed(publicType(copy.fields[0].type))
+			: copy.compound ? `${wrapper(copy)}<${copy.fields.map(field => boxed(publicType(field.type))).join(", ")}>`
+				: copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.scalarName];
+	for(const copy of surface.copies.filter(copy => copy.compound === "host-null"))
+		if(copy.fields[0].type.compound === "host-null")
+			fail(ir.declarations[0], "JVM HostNull payloads must retain a value distinct from null");
+	const erasedType = copy => copy.compound === "host-null" ? boxed(erasedType(copy.fields[0].type))
+		: copy.compound ? wrapper(copy) : copy.element ? `${erasedType(copy.element)}[]` : publicType(copy);
 	return { ir, surface, namespace: `org.leanbridge.${surface.prefix}`, publicType, erasedType };
 };
 
