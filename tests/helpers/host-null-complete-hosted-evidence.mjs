@@ -226,6 +226,7 @@ export const checkHostNullCompleteHostedEvidence = async (
 			producerCommit: pins.producer, archiveCommit: pins.archive
 			, runId: pins.runId, captures: index.captures
 			, cells: index.cells, files: index.files
+			, limitations: index.limitations
 			, hostedAcceptance: true, supportPromoted: false
 		});
 	})();
