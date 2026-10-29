@@ -1,0 +1,69 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-php-binding-identity-source-history.mjs",
+      "sha256": "ce4d533ad1141bf14612bf10dd7256aa05cd220dd13070d100f1dc455e5fcea3"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-php-binding-identity-source-history-tests.mjs",
+      "sha256": "98b61cf66e01fbf8e95a14e9fee76afb86c6cf4d5382720efa16bcb04d34db07"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-php-binding-identity-source-history.mjs",
+      "sha256": "32a7fbd3f72ca253387edaa210fd5bcf0f4efecb590af91f4c0d175b66ea5e85"
+    }
+  ],
+  "implementationAdditions": [],
+  "implementationCommit": "2d2e68726242e78f1ce0ae4a6ced0471fd3f2727",
+  "integrationUpdates": [
+    {
+      "currentSha256": "fb608cdfd46356e7e0d10d5c929cc59d406f9dc69ace03c183cf971a46390abb",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-php-binding-identity-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 314
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "2a86073f44a2520410b59949fe34f60c0d6ea3ac5e43bce44f063c49408bd6bf"
+    }
+  ],
+  "milestone": "optional-parameter-php-binding-identity-source-v1",
+  "predecessorCommit": "22dea36cae11f28d42dfabbc3daec4204dea9295",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Preserve the binding identity independently authenticated from the native and PHP-Wasm component records instead of overwriting it with an undefined canonical-build return field.",
+  "updates": [
+    {
+      "currentSha256": "b178ab25918b4e1d07cefec9d176b5adb570e3ef96d185d14e9cda481a23efa5",
+      "edits": [
+        {
+          "current": "\ntest(\"optional PHP evidence keeps the authenticated component identity\"\n\t, async () => {\n\t\tconst source = await readFile(\n\t\t\t\"tests/optional-parameter-php-installed.test.mjs\", \"utf8\");\n\t\tassert.match(source\n\t\t\t, /\\.\\.\\.optionalParameterPhpComponentFact\\(components\\)/u);\n\t\tassert.doesNotMatch(source\n\t\t\t, /bindingIrSha256: built\\.bindingIrSha256/u);\n\t}\n);\n",
+          "previous": "",
+          "start": 1798
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-php-tests.mjs",
+      "previousSha256": "e1cb95f59ca017a84f08a97c3723ed6d9d6040835e7138c5bc10ca42f3eb2062"
+    },
+    {
+      "currentSha256": "b7e224ceffd5029b8f20836761d04ca8273079417d2eb174cf5b49d9d25f339a",
+      "edits": [
+        {
+          "current": "\t\t\tawait buildCanonicalProject({\n",
+          "previous": "\t\t\tconst built = await buildCanonicalProject({\n",
+          "start": 3973
+        },
+        {
+          "current": "",
+          "previous": "\t\t\t\t, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 4870
+        }
+      ],
+      "path": "tests/optional-parameter-php-installed.test.mjs",
+      "previousSha256": "1d9a7c6b087e16387b3b8fe0715eab0ba0b0bdf2588a9146a5d7b59e46101780"
+    }
+  ]
+}

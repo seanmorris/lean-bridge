@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import test from "node:test";
 import "./helpers/optional-parameter-npm-binding-identity-source-history-tests.mjs";
+import "./helpers/optional-parameter-php-binding-identity-source-history-tests.mjs";
 import "./helpers/optional-parameter-php-wasm-count-contract-source-history-tests.mjs";
 import "./helpers/optional-parameter-publication-preparation-source-history-tests.mjs";
 import "./helpers/optional-parameter-ruby-verifier-contract-source-history-tests.mjs";
