@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -11,7 +12,9 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	hostNullCompleteCells, hostNullCompleteHostedInputs
-	, hostNullCompleteHostedLanes, hostNullCompletePositions
+	, hostNullCompleteHostedLanes, hostNullCompleteHostedOriginal
+	, hostNullCompleteHostedSourcePath, hostNullCompleteHostedSources
+	, hostNullCompletePositions
 	, hostNullCompleteProfiles, hostNullCompleteRoutes
 	, hostNullCompleteWorkflow, inspectHostNullCompleteHostedArtifacts
 	, parseHostNullCompleteHostedArchiveArgs
@@ -127,4 +130,29 @@ test("complete HostNull selection rejects malformed and mixed identities", async
 	t.after(() => rm(root, { recursive: true, force: true }));
 	await assert.rejects(inspectHostNullCompleteHostedArtifacts(
 		root, "b".repeat(40)));
+});
+
+test("complete HostNull replay retains a closed immutable source inventory", () => {
+	const head = execFileSync("git", ["rev-parse", "HEAD"], {
+		encoding: "utf8"
+	}).trim();
+	const sources = hostNullCompleteHostedSources({
+		producer: head, checker: head, archiver: head
+	});
+	assert.ok(sources.length > 100);
+	assert.equal(new Set(sources.map(source =>
+		`${source.role}:${source.path}`)).size, sources.length);
+	for(const role of ["producer", "checker", "archiver"])
+		assert.ok(sources.some(source => source.role === role));
+	for(const source of sources)
+	{
+		assert.equal(source.revision, head);
+		assert.ok(hostNullCompleteHostedOriginal(
+			source.revision, source.path).length > 0, source.path);
+		assert.equal(hostNullCompleteHostedSourcePath(source)
+			, `sources/${source.role}/${source.path}`);
+	}
+	assert.throws(() => hostNullCompleteHostedSourcePath({
+		role: "unknown", revision: head, path: "package.json"
+	}));
 });
