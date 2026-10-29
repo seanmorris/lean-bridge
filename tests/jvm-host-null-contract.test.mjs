@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { delimiter, dirname, join } from "node:path";
 import test from "node:test";
@@ -14,6 +14,7 @@ import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs"
 import { compileCopiedKotlinModel, generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { hostNullReviewedIr } from "./helpers/host-null-fixture.mjs";
+import { runHostNullManagedAcceptance } from "./helpers/host-null-managed-installed.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { javaCompilerOptions, kotlinCompilerOptions } from "./helpers/type-corpus-jvm-tools.mjs";
 
@@ -74,36 +75,14 @@ test("generated Java and Kotlin HostNull APIs compile all three absence states w
 }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-jvm-host-null-contract-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
-	const ir = hostNullReviewedIr(), model = compileCopiedKotlinModel(ir), files = generateCopiedJvmKotlinPackage(ir);
+	const ir = hostNullReviewedIr(), files = generateCopiedJvmKotlinPackage(ir);
 	for(const [path, source] of Object.entries(files)) await saveLakeFile(root, path, source);
-	const callback = [...model.surface.callbacks.values()][0].aliasName;
-	await saveLakeFile(root, "JavaHostNullProbe.java", `import org.leanbridge.host_null_demo.*;
-final class JavaHostNullProbe {
-    static void check() {
-        Long direct = null;
-        Option<Long> nullableOption = null;
-        Option<Long> missing = Option.none();
-        Option<Long> someNull = Option.some(null);
-        var packet = new Packet(direct, nullableOption, someNull);
-        ${callback} callback = value -> value == null ? null : Option.some(value);
-        Object keep = new Object[] { packet, missing, callback };
-        if (keep == null) throw new AssertionError();
-    }
-}
-`);
-	await saveLakeFile(root, "KotlinHostNullProbe.kt", `import org.leanbridge.host_null_demo.kotlin.*
-fun checkHostNull() {
-    val direct: Long? = null
-    val nullableOption: Option<Long>? = null
-    val missing: Option<Long?> = Option.none()
-    val someNull: Option<Long?> = Option.some(null)
-    val packet = Packet(direct, nullableOption, someNull)
-    val callback: ${callback} = ${callback} { value: Long? -> if (value == null) null else Option.some(value) }
-    check(listOf(packet, missing, callback).size == 3)
-}
-`);
-	const javaSources = [...Object.keys(files).filter(path => path.endsWith(".java")), "JavaHostNullProbe.java"];
-	const kotlinSources = [...Object.keys(files).filter(path => path.endsWith(".kt")), "KotlinHostNullProbe.kt"];
+	await saveLakeFile(root, "consumer.java", await readFile(
+		"tests/fixtures/host-null-consumers/java.java"));
+	await saveLakeFile(root, "consumer.kt", await readFile(
+		"tests/fixtures/host-null-consumers/kotlin.kt"));
+	const javaSources = [...Object.keys(files).filter(path => path.endsWith(".java")), "consumer.java"];
+	const kotlinSources = [...Object.keys(files).filter(path => path.endsWith(".kt")), "consumer.kt"];
 	const kotlinHome = dirname(dirname(environment.LEAN_BRIDGE_KOTLINC)), kotlinLib = join(kotlinHome, "lib");
 	const jdk = dirname(dirname(environment.LEAN_BRIDGE_JAVA)), classpath = [
 		join(kotlinLib, "kotlin-stdlib.jar"), join(kotlinLib, "annotations-13.0.jar")
@@ -136,3 +115,10 @@ fun checkHostNull() {
 		, ...javaSources
 	], root, process.env);
 });
+
+const installedFlag = process.env.LEAN_BRIDGE_JVM_HOST_NULL_TEST;
+assert.ok(installedFlag === undefined || ["0", "1"].includes(installedFlag)
+	, "Invalid LEAN_BRIDGE_JVM_HOST_NULL_TEST");
+test("installed Maven HostNull preserves all absence states on both author routes", {
+	skip: installedFlag !== "1", timeout: 3_600_000
+}, t => runHostNullManagedAcceptance(t, "jvm"));

@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
@@ -13,6 +13,7 @@ import { compileCopiedDotnetModel } from "../src/backends/dotnet/copied-model.mj
 import { generateCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { hostNullReviewedIr } from "./helpers/host-null-fixture.mjs";
+import { runHostNullManagedAcceptance } from "./helpers/host-null-managed-installed.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 test(".NET HostNull keeps null, Option absence, records and callback directions distinct", () => {
@@ -51,25 +52,25 @@ test("generated .NET HostNull sources and all three absence states compile witho
 	t.after(() => rm(root, { recursive: true, force: true }));
 	for(const [path, source] of Object.entries(generateCopiedDotnetPackage(hostNullReviewedIr())))
 		await saveLakeFile(root, path, source);
-	await saveLakeFile(root, "src/LeanBridge.HostNullDemo/HostNullCompileProbe.cs", `namespace LeanBridge.HostNullDemo;
-internal static class HostNullCompileProbe
-{
-    internal static void Check()
-    {
-        uint? directNull = null;
-        Option<uint?> optionalNull = Option<uint?>.Some(null);
-        Option<uint?> optionalMissing = Option<uint?>.None;
-        Option<uint>? nullableOption = null;
-        var packet = new Packet(directNull, nullableOption, optionalNull);
-        global::System.Func<uint?, Option<uint>?> callback = value => value is null ? null : Option<uint>.Some(value.Value);
-        _ = (packet, optionalMissing, callback);
-    }
-}
-	`);
+	await saveLakeFile(root, "consumer/consumer.cs", await readFile(
+		"tests/fixtures/host-null-consumers/dotnet.cs"));
+	await saveLakeFile(root, "consumer/Consumer.csproj", `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UseAppHost>false</UseAppHost>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../src/LeanBridge.HostNullDemo/LeanBridge.HostNullDemo.csproj" />
+  </ItemGroup>
+</Project>
+`);
 	const command = environment.LEAN_BRIDGE_DOTNET;
 	await runCopied(command, [
 		"build"
-		, "src/LeanBridge.HostNullDemo/LeanBridge.HostNullDemo.csproj"
+		, "consumer/Consumer.csproj"
 		, "--disable-build-servers"
 		, "-p:UseSharedCompilation=false"
 		, "-o"
@@ -83,3 +84,28 @@ internal static class HostNullCompileProbe
 		, NUGET_PACKAGES: join(root, "packages")
 	});
 });
+
+test("managed HostNull CI retains both routes and gates .NET plus JVM observations", async () => {
+	const runner = await readFile("scripts/run-host-null-managed-ci.sh", "utf8");
+	for(const required of [
+		"<dotnet|jvm>", "LEAN_BRIDGE_HOST_NULL_MANAGED_OUTPUT"
+		, "LEAN_BRIDGE_DOTNET_HOST_NULL_TEST=1"
+		, "LEAN_BRIDGE_JVM_HOST_NULL_TEST=1"
+		, "check-host-null-managed-ci.mjs"
+	]) assert.ok(runner.includes(required), required);
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	for(const required of [
+		"id: host_null_managed"
+		, "bash scripts/run-host-null-managed-ci.sh \"${{ matrix.profile }}\""
+		, "name: host-null-managed-${{ matrix.profile }}-${{ github.sha }}"
+		, "steps.host_null_managed.outcome"
+	]) assert.ok(workflow.includes(required), required);
+	assert.equal(workflow.match(/bash scripts\/run-host-null-managed-ci\.sh/gu)?.length, 3);
+});
+
+const installedFlag = process.env.LEAN_BRIDGE_DOTNET_HOST_NULL_TEST;
+assert.ok(installedFlag === undefined || ["0", "1"].includes(installedFlag)
+	, "Invalid LEAN_BRIDGE_DOTNET_HOST_NULL_TEST");
+test("installed NuGet HostNull preserves all absence states on both author routes", {
+	skip: installedFlag !== "1", timeout: 3_600_000
+}, t => runHostNullManagedAcceptance(t, "dotnet"));

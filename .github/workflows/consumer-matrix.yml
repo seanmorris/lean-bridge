@@ -4840,6 +4840,21 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Qualify HostNull in prepared managed packages
+        if: matrix.profile == 'dotnet' || matrix.profile == 'jvm'
+        id: host_null_managed
+        continue-on-error: true
+        timeout-minutes: 100
+        run: bash scripts/run-host-null-managed-ci.sh "${{ matrix.profile }}"
+      - name: Preserve HostNull managed acceptance
+        if: always() && (matrix.profile == 'dotnet' || matrix.profile == 'jvm')
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-managed-${{ matrix.profile }}-${{ github.sha }}
+          path: build/host-null-managed-ci/${{ matrix.profile }}/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Record managed consumer observations
         if: always()
         shell: bash
@@ -4880,7 +4895,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
               consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh dotnet"
-              if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-host-null-managed-ci.sh dotnet"
+              if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ] || [ "${{ steps.host_null_managed.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -4913,7 +4929,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs"
               consumer_command="$consumer_command && bash scripts/run-nominal-subtype-jvm-ci.sh \"$JAVA_HOME/bin/java\" \"$JAVA_HOME/bin/javac\" \"$PWD/build/kotlin-tools/kotlinc/bin/kotlinc\""
               consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh jvm"
-              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-host-null-managed-ci.sh jvm"
+              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ] || [ "${{ steps.host_null_managed.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
