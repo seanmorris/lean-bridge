@@ -114,12 +114,16 @@ export const checkHostNullPhpEvidence = async (
 			, "workflow"
 		], "hosted run");
 		const api = {};
+		const apiRecords = {};
 		for(const name of ["artifact", "job", "run"])
 		{
 			const path = `hosted/api/${name}.json`, bytes = get(path);
 			expectedPaths.push(path); api[name] = bytes;
+			apiRecords[name] = {
+				bytes: bytes.length, sha256: sha256(bytes)
+			};
 			assert.deepEqual(index.hostedRun.apiRecords[name]
-				, { bytes: bytes.length, sha256: sha256(bytes) });
+				, apiRecords[name]);
 		}
 		let offset = 0; const parts = [];
 		for(const part of index.hostedRun.artifact.parts)
@@ -156,6 +160,14 @@ export const checkHostNullPhpEvidence = async (
 			extracted = await extractArtifact(selected["artifact-zip"]);
 			assert.deepEqual(extracted.entries
 				, index.hostedRun.artifact.members);
+			assert.deepEqual(index.hostedRun, {
+				...inspected.hostedRun, apiRecords
+				, artifact: {
+					...inspected.hostedRun.artifact
+					, members: extracted.entries
+					, parts: index.hostedRun.artifact.parts
+				}
+			});
 			for(const path of extracted.entries.filter(path => !path.endsWith("/")))
 			{
 				const evidencePath = `artifact/${path}`;
