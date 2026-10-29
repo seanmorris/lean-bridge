@@ -3,6 +3,8 @@
  *
  * @file
  */
+import "./helpers/optional-parameter-installed-acceptance-repair-source-history-tests.mjs";
+import "./optional-parameter-installed-contract.test.mjs";
 import "./helpers/focused-type-surface-producer-repair-source-history-tests.mjs";
 import "./helpers/npm-runtime-module-graph-closure-source-history-tests.mjs";
 import "./helpers/optional-parameter-native-evidence-repair-source-history-tests.mjs";

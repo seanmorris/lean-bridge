@@ -101,7 +101,8 @@ test("optional native evidence repair normalizes to its predecessor", async () =
 	for(const update of value.updates)
 	{
 		const previous = beforeOptionalParameterNativeEvidenceRepairSource(
-			update.path, await readFile(update.path, "utf8")
+			update.path, await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256)
 			, update.previousSha256);
 		assert.equal(sha256(previous), update.previousSha256, update.path);
 	}

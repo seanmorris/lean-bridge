@@ -1,0 +1,325 @@
+{
+  "currentSourcePaths": [
+    "src/backends/c/gmp-projection.mjs"
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-installed-acceptance-repair-source-history.mjs",
+      "sha256": "eaa976f27086486c4a4029230b8c4fdc54aad80623c56e873027598f43c2a812"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-installed-acceptance-repair-source-history-tests.mjs",
+      "sha256": "aab11474c286cfc65d19dade1ed5798892d899918da2d3aa100b61af64594dbe"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-installed-acceptance-repair-source-history.mjs",
+      "sha256": "9ef27bb698ead20d0ef332dcf3536be91260940680a42f9d3685557930456985"
+    }
+  ],
+  "hostedRun": 40856632076,
+  "implementationAdditions": [
+    {
+      "path": "scripts/refresh-optional-parameter-installed-acceptance-repair-pins.mjs",
+      "sha256": "f66fe5984082feb1ad4fbe4a5b46c844cee853fef9c3dc0ab87aa43ae1306abf"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-installed-contract.mjs",
+      "sha256": "1b7f03f234ec51d30bd57fde94a0ec0696198e73b0323dbfc6961e46c0a69596"
+    },
+    {
+      "path": "tests/optional-parameter-installed-contract.test.mjs",
+      "sha256": "dc663f53dd7151a9b895f3c1acbfbbb022648f033e0fd9bc0069499e5a2b0371"
+    }
+  ],
+  "implementationCommit": "14a8a77ba49e15e167f693124a7ba4015e4d08ba",
+  "implementationCommits": [
+    "47b5a1fc524664d6f6619415528a84524b8d6ec8",
+    "891de40598ff94769283ff00bc84ffc01c1d3a34",
+    "14a8a77ba49e15e167f693124a7ba4015e4d08ba"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "ecd237922c2414272b7caf841f39fb7c21a00cb84b99ea53ddb2cd037c3d3d55",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-installed-acceptance-repair-source-history-tests.mjs\";\nimport \"./optional-parameter-installed-contract.test.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "6da8800bdd4716b6cf858d7366c3135588a45c3ff226606e2c8775ec35b449bf"
+    },
+    {
+      "currentSha256": "2b3f1b4627bebb94a3e50cf9aa6dc58d6194a03f915d5f7262b9bd49cb23a7db",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterInstalledAcceptanceRepairSource, optionalParameterInstalledAcceptanceRepairNormalizationPaths } from \"./optional-parameter-installed-acceptance-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterInstalledAcceptanceRepairNormalizationPaths\n\t, ...npmRuntimeModuleGraphClosureNormalizationPaths\n",
+          "previous": "\t...npmRuntimeModuleGraphClosureNormalizationPaths\n",
+          "start": 219022
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterInstalledAcceptanceRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNpmRuntimeModuleGraphClosureSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeNpmRuntimeModuleGraphClosureSource(path, text, expected);\n",
+          "start": 274080
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cdb65ced1a8feb9ef5875abbb5684652502a2561d705328370e234a6f59d6b47"
+    },
+    {
+      "currentSha256": "c614ce5a8a501c957297a1b5196575f8417b6a175f643b9c62154fe35df79739",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 1103
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3371
+        },
+        {
+          "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.sha256))\n",
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path, \"utf8\"))\n",
+          "start": 4794
+        }
+      ],
+      "path": "tests/helpers/npm-runtime-module-graph-closure-source-history-tests.mjs",
+      "previousSha256": "c05c027a43bf1be219433f014655e1bc8337be134c1a6bf9f5d0386f19c28fd0"
+    },
+    {
+      "currentSha256": "2fc5e001c974352a93cceb24677d825285feb157f11c4313c0297f60805c04a9",
+      "edits": [
+        {
+          "current": "\t\t\tupdate.path, await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256)\n",
+          "previous": "\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n",
+          "start": 4208
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-native-evidence-repair-source-history-tests.mjs",
+      "previousSha256": "3ad14b7ab5620b342047ab9d6237d4b61544619d4946b0d9635d923c52896a0a"
+    }
+  ],
+  "milestone": "optional-parameter-installed-acceptance-repair-source-v1",
+  "predecessorCommit": "147e49e0f3a69769fedcdf0e6f2f022d1cd5c44d",
+  "refreshedPins": 8,
+  "repairedProfiles": [
+    "c",
+    "dotnet",
+    "kotlin",
+    "python",
+    "wit-wasi"
+  ],
+  "schemaVersion": 1,
+  "scope": "Repair exact installed optional-parameter acceptance after the first complete hosted wave. Bind ordinary WIT exports to arg0 and reviewed exports to value0 while retaining seven direct and seven default signatures. Capture managed compiler diagnostics from both streams, admit both exact Kotlin null-diagnostic spellings, retain the Python wheel receipt digest beside its authenticated environment and validate every language closure as an exact schema. Preserve the ordinary C omission surface through the public GMP facade, including Nat, Int, String, Char, Bool, Unit and nested Option defaults, while keeping the full-arity ABI and distinguishing omission, Option, Unit and explicit host null.",
+  "updates": [
+    {
+      "currentSha256": "d181795c0c76abbcdd3a39aaed7c774efe8d41222c9fc4d6512ac1abd542e39f",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"8e3d25676449aef88d3ca88b597716fe2a6267a9d060ed65d293ff7819018d98\"\n",
+          "previous": "          \"sha256\": \"1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82\"\n",
+          "start": 258729
+        },
+        {
+          "current": "          \"sha256\": \"8e3d25676449aef88d3ca88b597716fe2a6267a9d060ed65d293ff7819018d98\"\n",
+          "previous": "          \"sha256\": \"1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82\"\n",
+          "start": 367623
+        },
+        {
+          "current": "          \"sha256\": \"8e3d25676449aef88d3ca88b597716fe2a6267a9d060ed65d293ff7819018d98\"\n",
+          "previous": "          \"sha256\": \"1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82\"\n",
+          "start": 454161
+        },
+        {
+          "current": "          \"sha256\": \"8e3d25676449aef88d3ca88b597716fe2a6267a9d060ed65d293ff7819018d98\"\n",
+          "previous": "          \"sha256\": \"1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82\"\n",
+          "start": 569626
+        },
+        {
+          "current": "          \"sha256\": \"8e3d25676449aef88d3ca88b597716fe2a6267a9d060ed65d293ff7819018d98\"\n",
+          "previous": "          \"sha256\": \"1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82\"\n",
+          "start": 658255
+        },
+        {
+          "current": "          \"sha256\": \"8e3d25676449aef88d3ca88b597716fe2a6267a9d060ed65d293ff7819018d98\"\n",
+          "previous": "          \"sha256\": \"1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82\"\n",
+          "start": 754874
+        },
+        {
+          "current": "          \"sha256\": \"8e3d25676449aef88d3ca88b597716fe2a6267a9d060ed65d293ff7819018d98\"\n",
+          "previous": "          \"sha256\": \"1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82\"\n",
+          "start": 1019348
+        },
+        {
+          "current": "          \"sha256\": \"8e3d25676449aef88d3ca88b597716fe2a6267a9d060ed65d293ff7819018d98\"\n",
+          "previous": "          \"sha256\": \"1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82\"\n",
+          "start": 1073777
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "34594bea0af231f0119f5fc75a30564f4b4adb6ab61132706a16c34dafb48508"
+    },
+    {
+      "currentSha256": "8e3d25676449aef88d3ca88b597716fe2a6267a9d060ed65d293ff7819018d98",
+      "edits": [
+        {
+          "current": "const gmpIntegerLiteral = (value, name) => {\n\tconst number = BigInt(value), match = /^(u?)int(8|16|32|64)$/u.exec(name);\n\tif(!match) throw new TypeError(`Unsupported GMP facade integer: ${name}`);\n\tconst width = Number(match[2]), macro = `${match[1] ? \"U\" : \"\"}INT${width}_C`;\n\tif(match[1]) return `${macro}(${number})`;\n\tconst maximum = (1n << BigInt(width - 1)) - 1n;\n\tif(number === -maximum - 1n)\n\t\treturn `(-${macro}(${maximum}) - ${macro}(1))`;\n\treturn number < 0n ? `(-${macro}(${-number}))` : `${macro}(${number})`;\n};\n\nconst gmpDefaultAssignments = (surface, value, copy, expression, stem, state) => {\n\tif(copy.compound === \"option\")\n\t{\n\t\tconst present = value.kind === \"option-some\";\n\t\tconst lines = [`${expression}.has_value = ${present ? \"1\" : \"0\"};`];\n\t\tif(present) lines.push(...gmpDefaultAssignments(\n\t\t\tsurface, value.value, copy.fields[0].type, `${expression}.value`\n\t\t\t, stem, state));\n\t\treturn lines;\n\t}\n\tif(gmpInteger(copy))\n\t\treturn [`mpz_set_str(${expression}, \"${value.value}\", 10);`];\n\tif(copy.scalarName === \"string\")\n\t{\n\t\tconst bytes = [...new TextEncoder().encode(value.value)];\n\t\tif(!bytes.length) return [];\n\t\tconst name = `${stem}_bytes_${state.index++}`;\n\t\treturn [\n\t\t\t`static const char ${name}[] = { ${bytes.map(byte =>\n\t\t\t\t`(char)0x${byte.toString(16).padStart(2, \"0\")}`).join(\", \")} };`\n\t\t\t, `${expression}.data = ${name};`\n\t\t\t, `${expression}.length = ${bytes.length};`\n\t\t];\n\t}\n\tif(copy.scalarName === \"char\")\n\t\treturn [`${expression} = UINT32_C(0x${value.value.codePointAt(0)\n\t\t\t.toString(16)});`];\n\tif(copy.scalarName === \"bool\")\n\t\treturn [`${expression} = ${value.value ? \"true\" : \"false\"};`];\n\tif(copy.scalarName === \"unit\") return [`${expression} = (uint8_t)0;`];\n\tif(value.kind === \"integer\")\n\t\treturn [`${expression} = ${gmpIntegerLiteral(\n\t\t\tvalue.value, copy.scalarName)};`];\n\tthrow new TypeError(`Unsupported GMP facade default kind: ${value.kind}`);\n};\n\nconst gmpDefaultLocal = (surface, value, copy, stem, state) => {\n\tconst name = `${stem}_${state.index++}`, type = gmpName(surface, copy);\n\tconst lines = [], cleanup = [];\n\tif(gmpInteger(copy))\n\t{\n\t\tlines.push(`mpz_t ${name};`, `mpz_init(${name});`);\n\t\tcleanup.push(`mpz_clear(${name});`);\n\t}\n\telse if(copy.aggregate)\n\t{\n\t\tlines.push(`${type} ${name};`, `${type}_init(&${name});`);\n\t\tcleanup.push(`${type}_clear(&${name});`);\n\t}\n\telse lines.push(`${type} ${name} = 0;`);\n\tlines.push(...gmpDefaultAssignments(\n\t\tsurface, value, copy, name, stem, state));\n\treturn {\n\t\targument: copy.aggregate ? gmpAddress(copy, name) : name\n\t\t, cleanup, lines\n\t};\n};\n\n",
+          "previous": "",
+          "start": 419
+        },
+        {
+          "current": "\tconst defaultWrappers = fn => {\n\t\tconst declaration = fn.declaration;\n\t\tconst first = declaration.parameters.findIndex(parameter =>\n\t\t\tparameter.optional);\n\t\tif(first < 0) return [];\n\t\tconst nonTrailing = declaration.parameters.slice(first).some(\n\t\t\tparameter => !parameter.optional);\n\t\tif(nonTrailing) rejectPrimitiveSurface(declaration\n\t\t\t, \"C GMP facade has a default before a required positional parameter\");\n\t\tconst parameterCopies = declaration.parameters.map(parameter =>\n\t\t\tsite(parameter.type));\n\t\tconst result = site(declaration.result.type), wrappers = [];\n\t\tconst parameterCount = declaration.parameters.length;\n\t\tfor(let supplied = first; supplied < parameterCount; supplied++)\n\t\t{\n\t\t\tconst state = { index: 0 };\n\t\t\tconst defaults = declaration.parameters.slice(supplied).map(\n\t\t\t\t(parameter, index) => gmpDefaultLocal(\n\t\t\t\t\tsurface, parameter.default, parameterCopies[supplied + index]\n\t\t\t\t\t, `${fn.name}_default_${supplied}_${index}`, state));\n\t\t\tconst parameters = declaration.parameters.slice(0, supplied)\n\t\t\t\t.map((parameter, index) => input(\n\t\t\t\t\tparameterCopies[index], `_lb_arg${index}`));\n\t\t\tif(!unit(result)) parameters.push(output(result, \"out\"));\n\t\t\tparameters.push(`${p}_error* error`);\n\t\t\tconst args = declaration.parameters.slice(0, supplied)\n\t\t\t\t.map((parameter, index) => `_lb_arg${index}`);\n\t\t\targs.push(...defaults.map(item => item.argument));\n\t\t\tif(!unit(result)) args.push(\"out\");\n\t\t\targs.push(\"error\");\n\t\t\tconst helper = `${fn.name}_default_${supplied}`;\n\t\t\twrappers.push({\n\t\t\t\thelper\n\t\t\t\t, source: [\n\t\t\t\t\t`static inline ${p}_status ${helper}(${parameters.join(\", \")}) {`\n\t\t\t\t\t, ...defaults.flatMap(item => item.lines.map(line => `  ${line}`))\n\t\t\t\t\t, `  ${p}_status _lb_status = ${fn.name}(${args.join(\", \")});`\n\t\t\t\t\t, ...defaults.slice().reverse().flatMap(item =>\n\t\t\t\t\t\titem.cleanup.map(line => `  ${line}`))\n\t\t\t\t\t, \"  return _lb_status;\", \"}\"\n\t\t\t\t].join(\"\\n\")\n\t\t\t});\n\t\t}\n\t\tconst maximum = declaration.parameters.length\n\t\t\t+ (unit(result) ? 0 : 1) + 1;\n\t\tconst select = `${fn.name.toUpperCase()}_DEFAULT_SELECT`;\n\t\tconst candidates = [fn.name\n\t\t\t, ...wrappers.slice().reverse().map(wrapper => wrapper.helper)];\n\t\treturn [\n\t\t\t...wrappers.map(wrapper => wrapper.source)\n\t\t\t, `#define ${select}(${Array.from({ length: maximum }\n\t\t\t\t, (_, index) => `_${index + 1}`).join(\", \")}, NAME, ...) NAME`\n\t\t\t, `#define ${fn.name}(...) ${select}(__VA_ARGS__, `\n\t\t\t\t+ `${candidates.join(\", \")})(__VA_ARGS__)`\n\t\t];\n\t};\n",
+          "previous": "",
+          "start": 6220
+        },
+        {
+          "current": "\taliases.push(...surface.functions.flatMap(defaultWrappers));\n",
+          "previous": "",
+          "start": 18821
+        }
+      ],
+      "path": "src/backends/c/gmp-projection.mjs",
+      "previousSha256": "1669f605cfc646ac96e0c2258de26bb10630f9621cfd582cbfe986663a3b6e82"
+    },
+    {
+      "currentSha256": "5c2f8b7bd70c4f14c7816afd0db93564874711efd06fab9d1326f58a5243fc2a",
+      "edits": [
+        {
+          "current": "static int nat_is(mpz_srcptr value, const char *decimal) {\n  mpz_t expected;\n  mpz_init_set_str(expected, decimal, 10);\n  const int equal = mpz_cmp(value, expected) == 0;\n  mpz_clear(expected);\n  return equal;\n",
+          "previous": "static int nat_is(const defaults_nat *value, const uint32_t *data, size_t length) {\n  return value->length == length\n      && (length == 0 || memcmp(value->data, data, length * sizeof(uint32_t)) == 0);\n",
+          "start": 199
+        },
+        {
+          "current": "  mpz_t large_input, eleven_input, natural;\n  mpz_init_set_str(large_input, \"184467440737095516160\", 10);\n  mpz_init_set_ui(eleven_input, 11);\n  mpz_init(natural);\n  CHECK(defaults_natural(natural, &error) == DEFAULTS_STATUS_OK\n      && nat_is(natural, \"184467440737095516160\"));\n  CHECK(defaults_natural(large_input, natural, &error) == DEFAULTS_STATUS_OK\n      && nat_is(natural, \"184467440737095516160\"));\n  CHECK(defaults_natural(eleven_input, natural, &error) == DEFAULTS_STATUS_OK\n      && nat_is(natural, \"11\"));\n",
+          "previous": "  const uint32_t large[] = {UINT32_C(0), UINT32_C(0), UINT32_C(10)};\n  const uint32_t eleven[] = {UINT32_C(11)};\n  const defaults_nat large_input = {large, 3, NULL, NULL};\n  const defaults_nat eleven_input = {eleven, 1, NULL, NULL};\n  defaults_nat natural = {0};\n  CHECK(defaults_natural(&natural, &error) == DEFAULTS_STATUS_OK\n      && nat_is(&natural, large, 3));\n  defaults_nat_clear(&natural);\n  CHECK(defaults_natural(&large_input, &natural, &error) == DEFAULTS_STATUS_OK\n      && nat_is(&natural, large, 3));\n  defaults_nat_clear(&natural);\n  CHECK(defaults_natural(&eleven_input, &natural, &error) == DEFAULTS_STATUS_OK\n      && nat_is(&natural, eleven, 1));\n  defaults_nat_clear(&natural);\n",
+          "start": 731
+        },
+        {
+          "current": "  CHECK(defaults_natural(NULL, natural, &error) == DEFAULTS_STATUS_INVALID_ARGUMENT);\n\n  mpz_clears(large_input, eleven_input, natural, NULL);\n",
+          "previous": "  CHECK(defaults_natural(NULL, &natural, &error) == DEFAULTS_STATUS_INVALID_ARGUMENT);\n",
+          "start": 3720
+        }
+      ],
+      "path": "tests/fixtures/optional-parameter-consumers/c.c",
+      "previousSha256": "e093a56becc4846c20eec296232823fd46c1fb2025bcc33676a6be2c8f31b64d"
+    },
+    {
+      "currentSha256": "2da5f404727d533289e97924cf87a60cc115a91fee6dde468c4b6a3142c57b04",
+      "edits": [
+        {
+          "current": "const closureKeys = Object.freeze({\n\tperl: [\"installedFilesSha256\", \"interpreterSha256\", \"receiptsSha256\"]\n\t, python: [\n\t\t\"baselineSha256\", \"environmentSha256\", \"interpreterSha256\", \"python\"\n\t\t, \"receiptSha256\"\n\t]\n\t, ruby: [\n\t\t\"environmentSha256\", \"gemspecSha256\", \"interpreterSha256\"\n\t\t, \"packageFileSetSha256\", \"receiptSha256\"\n\t]\n\t, rust: [\n\t\t\"cargoSha256\", \"compilerSha256\", \"executableSha256\"\n\t\t, \"packageFileSetSha256\", \"receiptSha256\"\n\t]\n});\n",
+          "previous": "",
+          "start": 1192
+        },
+        {
+          "current": "/**\n * Validate the exact installed-package closure for one language profile.\n *\n * @param profile - Perl, Python, Ruby or Rust profile.\n * @param closure - Retained closure observation.\n */\nexport const validateOptionalParameterLanguageClosure = (profile, closure) => {\n\tassert.ok(optionalParameterLanguageProfiles.includes(profile));\n\tassert.ok(closure && typeof closure === \"object\");\n\tassert.deepEqual(Object.keys(closure).sort(), [...closureKeys[profile]].sort());\n\tfor(const key of closureKeys[profile].filter(key => key.endsWith(\"Sha256\")))\n\t\tdigest(closure[key]);\n\tif(profile === \"python\")\n\t\tassert.match(closure.python, /^3\\.(?:1[1-9]|[2-9][0-9])\\.[0-9]+$/u);\n};\n\n",
+          "previous": "",
+          "start": 2121
+        },
+        {
+          "current": "\tvalidateOptionalParameterLanguageClosure(profile, item.closure);\n",
+          "previous": "\tassert.ok(item.closure && typeof item.closure === \"object\");\n\tfor(const [key, value] of Object.entries(item.closure))\n\t{\n\t\tassert.match(key, /Sha256$/u); digest(value);\n\t}\n\tfor(const key of profile === \"perl\"\n\t\t? [\"installedFilesSha256\", \"interpreterSha256\", \"receiptsSha256\"]\n\t\t: profile === \"python\"\n\t\t\t? [\"receiptSha256\", \"packageFileSetSha256\", \"environmentSha256\", \"interpreterSha256\"]\n\t\t\t: profile === \"ruby\"\n\t\t\t\t? [\"receiptSha256\", \"packageFileSetSha256\", \"environmentSha256\", \"interpreterSha256\", \"gemspecSha256\"]\n\t\t\t\t: [\"receiptSha256\", \"packageFileSetSha256\", \"compilerSha256\", \"cargoSha256\", \"executableSha256\"])\n\t\tdigest(item.closure[key]);\n",
+          "start": 5256
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-language-report.mjs",
+      "previousSha256": "7e492cf5f14fb5df9cc39b11ba4d6e7168bae1ccf95acebe30668936ee01e070"
+    },
+    {
+      "currentSha256": "8621761b57fd60c0e4d8c231cc72498cf22d13cf00971b26236daabd5aa6aa32",
+      "edits": [
+        {
+          "current": "import { generateGmpProjection } from \"../src/backends/c/gmp-projection.mjs\";\n",
+          "previous": "",
+          "start": 439
+        },
+        {
+          "current": "test(\"prepared C/GMP facade preserves authenticated omission\", () => {\n\tconst header = generateGmpProjection(optionalParameterIr())\n\t\t.files[\"include/defaults.h\"];\n\tconst names = [\n\t\t\"word\", \"natural\", \"text\", \"character\", \"maybe\", \"present\", \"unit_value\"\n\t];\n\tfor(const name of names)\n\t{\n\t\tassert.match(header, new RegExp(\n\t\t\t`defaults_${name}_default_0`, \"u\"), name);\n\t\tassert.match(header, new RegExp(\n\t\t\t`#define defaults_${name}\\\\(\\\\.\\\\.\\\\.\\\\)`, \"u\"), name);\n\t}\n\tassert.match(header, /mpz_set_str\\([^,]+, \"184467440737095516160\", 10\\)/u);\n\tassert.match(header, /\\.has_value = 1;/u);\n});\n\n",
+          "previous": "",
+          "start": 2404
+        },
+        {
+          "current": "\tconst gmp = generateGmpProjection(ir);\n",
+          "previous": "",
+          "start": 8002
+        },
+        {
+          "current": "\tfor(const [path, source] of Object.entries(gmp.files))\n\t\tif(path.endsWith(\".h\"))\n\t\t{\n\t\t\tawait mkdir(join(root, \"gmp\", path.split(\"/\").slice(0, -1).join(\"/\"))\n\t\t\t\t, { recursive: true });\n\t\t\tawait writeFile(join(root, \"gmp\", path), source);\n\t\t}\n",
+          "previous": "",
+          "start": 8312
+        },
+        {
+          "current": "\t\t, \"-Igmp/include\", \"-fsyntax-only\", \"consumer.c\"], options);\n",
+          "previous": "\t\t, \"-Iinclude\", \"-Iinternal\", \"-fsyntax-only\", \"src/defaults.c\"\n\t\t, \"consumer.c\"], options);\n",
+          "start": 8798
+        }
+      ],
+      "path": "tests/optional-native-contract.test.mjs",
+      "previousSha256": "9336187b4751ffb95b7bd2fe5b24d0db21388516f12a7b8e76356ef7e68a7086"
+    },
+    {
+      "currentSha256": "6470de704faa718155c1e7e3050f197875d1697ee2dcd8a08946749c1569073a",
+      "edits": [
+        {
+          "current": "\t\t\t\tclosure = {\n\t\t\t\t\t...await verifyFinContainerEdgePythonEnvironment(context)\n\t\t\t\t\t, receiptSha256: context.receiptSha256\n\t\t\t\t};\n",
+          "previous": "\t\t\tclosure = await verifyFinContainerEdgePythonEnvironment(context);\n",
+          "start": 8218
+        }
+      ],
+      "path": "tests/optional-parameter-language-installed.test.mjs",
+      "previousSha256": "074bf4331731b1140ff82eb37304a940e4689f550c392fb09f741a3120458245"
+    },
+    {
+      "currentSha256": "ead5ac4cc279c5cbfb00301ae2c152f7225fb0804cac18645cbefaa02185dda1",
+      "edits": [
+        {
+          "current": "import {\n\tmanagedCompilationDiagnostic, managedDiagnosticCount, managedDiagnosticPattern\n} from \"./helpers/optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 1227
+        },
+        {
+          "current": "",
+          "previous": "const diagnosticPattern = profile => profile === \"dotnet\"\n\t? /(?:CS1503|cannot convert from '<null>'|non-nullable value type)/iu\n\t: profile === \"java\"\n\t\t? /(?:incompatible types|cannot be converted to (?:long|int))/iu\n\t\t: /(?:null can not be a value of a non-null type|type mismatch)/iu;\nconst diagnosticCount = (profile, diagnostic) => profile === \"dotnet\"\n\t? (diagnostic.match(/CS1503/gu) ?? []).length\n\t: profile === \"java\"\n\t\t? (diagnostic.match(/incompatible types/gu) ?? []).length\n\t\t: (diagnostic.match(/(?:null can not be a value of a non-null type|type mismatch)/giu) ?? []).length;\n\n",
+          "start": 2828
+        },
+        {
+          "current": "\t\t\t\tdiagnostic = managedCompilationDiagnostic(error);\n\t\t\t\tassert.match(diagnostic, managedDiagnosticPattern(profile));\n\t\t\t\tassert.ok(managedDiagnosticCount(profile, diagnostic) >= 2, diagnostic);\n",
+          "previous": "\t\t\t\tdiagnostic = error.details?.stderr ?? error.message;\n\t\t\t\tassert.match(diagnostic, diagnosticPattern(profile));\n\t\t\t\tassert.ok(diagnosticCount(profile, diagnostic) >= 2, diagnostic);\n",
+          "start": 8171
+        }
+      ],
+      "path": "tests/optional-parameter-managed-installed.test.mjs",
+      "previousSha256": "5dee37b538c86fc86c5c3b10493605bcfc58eda7b524a00fd1137bed3819af60"
+    },
+    {
+      "currentSha256": "8a0235566cb0ecd1ef46f0fd0039418633eb83725d265f3fd0aca32e1026b3ba",
+      "edits": [
+        {
+          "current": "import {\n\toptionalParameterWitPatterns\n} from \"./helpers/optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 1106
+        },
+        {
+          "current": "",
+          "previous": "const witPatterns = Object.freeze([\n\t/word: func\\(value0: u32\\) -> u32;/u\n\t, /word-default: func\\(\\) -> u32;/u\n\t, /natural-default: func\\(\\) -> bridge-value-/u\n\t, /text-default: func\\(\\) -> string;/u\n\t, /character-default: func\\(\\) -> char;/u\n\t, /maybe-default: func\\(\\) -> bridge-value-/u\n\t, /present-default: func\\(\\) -> bridge-value-/u\n\t, /unit-value-default: func\\(\\) -> bridge-value-/u\n]);\n\n",
+          "start": 1987
+        },
+        {
+          "current": "\t\tconst witPatterns = optionalParameterWitPatterns(route);\n",
+          "previous": "",
+          "start": 2190
+        }
+      ],
+      "path": "tests/optional-parameter-wit-installed.test.mjs",
+      "previousSha256": "00c67fd841be8c7a4d3f958c9f7cface585debca290f3afdb3caaad2e874b01f"
+    }
+  ]
+}
