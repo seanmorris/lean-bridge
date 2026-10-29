@@ -201,15 +201,6 @@ export const checkHostNullCompleteHostedEvidence = async (
 				{
 					assert.deepEqual(extracted.entries
 						, capture.hostedRun.artifact.members);
-					const artifactFiles = extracted.entries.filter(
-						item => !item.endsWith("/"));
-					for(const path of artifactFiles)
-					{
-						const evidencePath = `artifacts/${selectedLane.id}/${path}`;
-						expectedPaths.push(evidencePath);
-						assert.deepEqual(await readFile(join(extracted.root, path))
-							, get(evidencePath), evidencePath);
-					}
 					const accepted = await verifyHostNullCompleteExtractedLane(
 						selectedLane, extracted.root, pins.producer
 					);

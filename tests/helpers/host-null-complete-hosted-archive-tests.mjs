@@ -46,6 +46,12 @@ test("complete HostNull archive publishes one validated sibling transaction"
 		assert.match(source, /await transaction\.publish\(\)/u);
 		assert.match(source, /finally[\s\S]*await transaction\.dispose\(\)/u);
 		assert.doesNotMatch(source, /await mkdir\(evidence\)/u);
+		assert.doesNotMatch(source, /`artifacts\/\$\{selectedLane\.id\}/u);
+		const replay = await readFile(
+			"tests/helpers/host-null-complete-hosted-evidence.mjs", "utf8");
+		assert.match(replay, /extractArtifact\(inputs\["artifact-zip"\]\)/u);
+		assert.match(replay, /verifyHostNullCompleteExtractedLane\(/u);
+		assert.doesNotMatch(replay, /`artifacts\/\$\{selectedLane\.id\}/u);
 	}
 );
 

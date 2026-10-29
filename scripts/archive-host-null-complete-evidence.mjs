@@ -89,9 +89,6 @@ try
 			const accepted = await verifyHostNullCompleteExtractedLane(
 				selectedLane, extracted.root, selected.producerCommit
 			);
-			for(const path of extracted.entries.filter(path => !path.endsWith("/")))
-				await retainFile(`artifacts/${selectedLane.id}/${path}`
-					, join(extracted.root, path));
 			for(const name of ["run", "job", "artifact"])
 				await retainFile(`hosted/${selectedLane.id}/api/${name}.json`
 					, inputs[`${name}-json`]);
