@@ -1,0 +1,119 @@
+{
+  "excludedPattern": "!/docs/evidence/",
+  "focusedFetchDepth": 1,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-focused-managed-checkout-source-history.mjs",
+      "sha256": "953833edbba313f71ede81075c04fb45ab1208a876e4129fc85bb9209111bba5"
+    },
+    {
+      "path": "tests/helpers/focused-managed-checkout-source-history-tests.mjs",
+      "sha256": "75706100032d9e006b8dbe000c42bf1346a857b681d3ff6f0785fe8e8dc1913e"
+    },
+    {
+      "path": "tests/helpers/focused-managed-checkout-source-history.mjs",
+      "sha256": "3e25b0e99cfd6c44721b75b58b6fe0109742b41f9fea82248eddd43a0736c1ac"
+    }
+  ],
+  "implementationCommit": "479b508671da6f860155ec882adeef251b818ebd",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2e74297ba5213d1597c41d1492a27c5abef740070955f3ad5c96fbc49489773f",
+      "edits": [
+        {
+          "current": "import \"./helpers/focused-managed-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1519
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "dc89106585e5d59cc00fd83d2f2bd56012e36c1ef72aeaff7dcb3a3859e97e8c"
+    },
+    {
+      "currentSha256": "e0ff3e6b8fe3278152f912dc684f807e5d85076dc3fc65fe75d8bfb25893b7d2",
+      "edits": [
+        {
+          "current": "import { beforeFocusedManagedCheckoutSource, focusedManagedCheckoutNormalizationPaths } from \"./focused-managed-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...focusedManagedCheckoutNormalizationPaths\n\t, ...dependentSignatureReceiptSparseCheckoutNormalizationPaths\n",
+          "previous": "\t...dependentSignatureReceiptSparseCheckoutNormalizationPaths\n",
+          "start": 222662
+        },
+        {
+          "current": "\tlet stage = beforeFocusedManagedCheckoutSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDependentSignatureReceiptSparseCheckoutSource(\n",
+          "previous": "\tlet stage = beforeDependentSignatureReceiptSparseCheckoutSource(\n",
+          "start": 278916
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5df4fbe67c25eecb10df421047c43b7faea363a0a07be8405c1fd39c7036d159"
+    }
+  ],
+  "milestone": "focused-managed-checkout-source-v1",
+  "predecessorCommit": "cd8b427a323d30ee10788042f80879f2a075fd83",
+  "schemaVersion": 1,
+  "scope": "Keep the focused .NET producer checkout at depth one while excluding the immutable evidence corpus. Preserve full history for standalone acceptance, and fail closed in both direct proof-erasure and HostNull CI contracts if the sparse checkout is removed.",
+  "sparseCheckoutConeMode": false,
+  "standaloneFetchDepth": 0,
+  "updates": [
+    {
+      "currentSha256": "1f945a8e62f9d86c6e0e62e7bdcdf162813817939a4f0a42ddd35dadf6238dff",
+      "edits": [
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 947
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n",
+          "previous": "",
+          "start": 1366
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\n",
+          "start": 1514
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-managed-wit.yml",
+      "previousSha256": "edff2ebda010632c3f3d4a330f276003fdb40df55fc7b63346e6ce7a08f6f6a1"
+    },
+    {
+      "currentSha256": "a23db399fb7de83c08e789bb47a1520de8ffad817a83f1c19e3b5d848733f8cd",
+      "edits": [
+        {
+          "current": "\tif(specification.file.endsWith(\"generic-subtype-managed-wit.yml\"))\n\t{\n\t\tconst dotnet = source.slice(source.indexOf(\"  dotnet:\\n\")\n\t\t\t, source.indexOf(\"  jvm:\\n\"));\n\t\tassert.match(dotnet\n\t\t\t, /if: \\$\\{\\{ inputs\\.optional_parameters \\|\\| inputs\\.direct_proof_erasure \\|\\| inputs\\.host_null \\}\\}/u);\n\t\tassert.match(dotnet, /fetch-depth: 1/u);\n\t\tassert.match(dotnet, /sparse-checkout: \\|\\n {12}\\/\\*\\n {12}!\\/docs\\/evidence\\//u);\n\t\tassert.match(dotnet, /sparse-checkout-cone-mode: false/u);\n\t\tassert.match(dotnet\n\t\t\t, /if: \\$\\{\\{ !inputs\\.optional_parameters && !inputs\\.direct_proof_erasure && !inputs\\.host_null \\}\\}/u);\n\t\tassert.match(dotnet, /fetch-depth: 0/u);\n\t}\n",
+          "previous": "",
+          "start": 3812
+        },
+        {
+          "current": "\t\t\t, ...(specification.file.endsWith(\"generic-subtype-managed-wit.yml\")\n\t\t\t\t? [source.replace(\"            !/docs/evidence/\\n\", \"\")] : [])\n",
+          "previous": "",
+          "start": 12486
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-ci-tests.mjs",
+      "previousSha256": "9b954b406f872d105f1ddbeb872f0a9e2c1a2f77427e0b516e4677ee40050b8e"
+    },
+    {
+      "currentSha256": "6b20dc9de34bd6546b983f8b19b6a4d73932617270d6880eea19396a77f9dab4",
+      "edits": [
+        {
+          "current": "\tif(specification.file.endsWith(\"generic-subtype-managed-wit.yml\"))\n\t{\n\t\tconst dotnet = source.slice(source.indexOf(\"  dotnet:\\n\")\n\t\t\t, source.indexOf(\"  jvm:\\n\"));\n\t\tassert.match(dotnet\n\t\t\t, /if: \\$\\{\\{ inputs\\.optional_parameters \\|\\| inputs\\.direct_proof_erasure \\|\\| inputs\\.host_null \\}\\}/u);\n\t\tassert.match(dotnet, /fetch-depth: 1/u);\n\t\tassert.match(dotnet, /sparse-checkout: \\|\\n {12}\\/\\*\\n {12}!\\/docs\\/evidence\\//u);\n\t\tassert.match(dotnet, /sparse-checkout-cone-mode: false/u);\n\t\tassert.match(dotnet\n\t\t\t, /if: \\$\\{\\{ !inputs\\.optional_parameters && !inputs\\.direct_proof_erasure && !inputs\\.host_null \\}\\}/u);\n\t\tassert.match(dotnet, /fetch-depth: 0/u);\n\t}\n",
+          "previous": "",
+          "start": 3090
+        },
+        {
+          "current": "\t\t\t, ...(specification.file.endsWith(\"generic-subtype-managed-wit.yml\")\n\t\t\t\t? [source.replace(\"            !/docs/evidence/\\n\", \"\")] : [])\n",
+          "previous": "",
+          "start": 10001
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-ci-tests.mjs",
+      "previousSha256": "3e1f27db479c5503d1e930f029c33508067638715d014eabe4b60374e35a29be"
+    }
+  ]
+}
