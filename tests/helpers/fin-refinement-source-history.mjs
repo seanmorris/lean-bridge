@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOptionalParameterNativeEvidenceRepairSource, optionalParameterNativeEvidenceRepairNormalizationPaths } from "./optional-parameter-native-evidence-repair-source-history.mjs";
 import { beforeHostNullFocusedArchiveInputSource, hostNullFocusedArchiveInputNormalizationPaths } from "./host-null-focused-archive-input-source-history.mjs";
 import { beforeHostNullFocusedCiSource, hostNullFocusedCiNormalizationPaths } from "./host-null-focused-ci-source-history.mjs";
 import { beforeCoreCurrentSourcePinRepairSource, coreCurrentSourcePinRepairNormalizationPaths } from "./core-current-source-pin-repair-source-history.mjs";
@@ -2378,7 +2379,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostNullFocusedArchiveInputNormalizationPaths
+	...optionalParameterNativeEvidenceRepairNormalizationPaths
+	, ...hostNullFocusedArchiveInputNormalizationPaths
 	, ...hostNullFocusedCiNormalizationPaths
 	, ...coreCurrentSourcePinRepairNormalizationPaths
 	, ...focusedTypeSurfaceProducerRepairNormalizationPaths
@@ -3495,7 +3497,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeHostNullFocusedArchiveInputSource(path, text, expected);
+	let stage = beforeOptionalParameterNativeEvidenceRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullFocusedArchiveInputSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

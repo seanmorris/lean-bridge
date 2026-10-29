@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/focused-type-surface-producer-repair-source-history-tests.mjs";
+import "./helpers/optional-parameter-native-evidence-repair-source-history-tests.mjs";
 import "./helpers/core-current-source-pin-repair-source-history-tests.mjs";
 import "./helpers/host-null-focused-ci-source-history-tests.mjs";
 import "./helpers/host-null-focused-archive-input-source-history-tests.mjs";

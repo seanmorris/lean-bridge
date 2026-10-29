@@ -1,0 +1,494 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-native-evidence-repair-source-history.mjs",
+      "sha256": "d0b8ef63fd94c88a8e15a4b4c0d6b9f5ed77b4e1d146509fd514cc29d0db6b08"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-native-evidence-repair-source-history-tests.mjs",
+      "sha256": "ba005f6e649145001c142e99cf6d98efd6010f8f34e7bd217873b535412f9d9c"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-native-evidence-repair-source-history.mjs",
+      "sha256": "051b02455d93eee5a41df7db7cfb630043881cfdc9a20a24f58440a8dbdf724d"
+    }
+  ],
+  "implementationCommit": "b73efe13172fe7bb922ffc83ecf1f8926b95ab24",
+  "integrationUpdates": [
+    {
+      "currentSha256": "36bb6db055b1ba35fcf7007034e5107cae8f445b0b8805f1b1f1f8ae3aaac7dc",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-native-evidence-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 179
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "6e9e37460b72ebd9211959a0b756a587d90516f9f1713f2c0d70769a64b9fcdd"
+    },
+    {
+      "currentSha256": "7ddd099e2389a834bce0766b9b766d36e99475b40aeffb20ac816236ce8ee5ae",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterNativeEvidenceRepairSource, optionalParameterNativeEvidenceRepairNormalizationPaths } from \"./optional-parameter-native-evidence-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterNativeEvidenceRepairNormalizationPaths\n\t, ...hostNullFocusedArchiveInputNormalizationPaths\n",
+          "previous": "\t...hostNullFocusedArchiveInputNormalizationPaths\n",
+          "start": 218656
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterNativeEvidenceRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullFocusedArchiveInputSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullFocusedArchiveInputSource(path, text, expected);\n",
+          "start": 273594
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8781b90fcf37e9864223cfbdc01efdb7e4419fa7e512b211dc134261b79c7ca9"
+    }
+  ],
+  "milestone": "optional-parameter-native-evidence-repair-source-v1",
+  "predecessorCommit": "0c356ca0152263470297e0583fc26bf75f63427e",
+  "profileCount": 12,
+  "refreshedPins": 0,
+  "repairedLaneGroups": 5,
+  "schemaVersion": 1,
+  "scope": "Replace the impossible wasm bundle assumption in every non-npm optional-parameter lane with the authenticated compiler profile each prepared package actually consumes. Native language, managed, C/C++ and WIT lanes retain closed native-component records; the combined PHP lane retains and independently checks both native and PHP-Wasm component records. Preserve ordinary arg0 and reviewed value0 binder identities without weakening exact default, type, receipt, adapter or artifact authentication.",
+  "updates": [
+    {
+      "currentSha256": "c90b74f4d2ed41afe7f359096867b2fcdea75f2dd4b85739bec997f9a06ba27e",
+      "edits": [
+        {
+          "current": " * @param parameterNames - Exact admitted compiler and reviewed binder names.\n",
+          "previous": "",
+          "start": 3146
+        },
+        {
+          "current": "export const assertOptionalParameterIr = (\n\tdocument, parameterNames = [\"value0\"]\n) => {\n\tassert.ok(Array.isArray(parameterNames) && parameterNames.length\n\t\t&& parameterNames.every(name => typeof name === \"string\"));\n",
+          "previous": "export const assertOptionalParameterIr = document => {\n",
+          "start": 3228
+        },
+        {
+          "current": "\t\tassert.ok(parameterNames.includes(declaration.parameters[0].name));\n",
+          "previous": "\t\tassert.equal(declaration.parameters[0].name, \"value0\");\n",
+          "start": 3822
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-fixture.mjs",
+      "previousSha256": "4e50e8bca0aee8fcf4707de6f0024844e65febd8bcbd5dac2a5814ec8970eff4"
+    },
+    {
+      "currentSha256": "7e492cf5f14fb5df9cc39b11ba4d6e7168bae1ccf95acebe30668936ee01e070",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { validateCompilerAdapterPlan } from \"../../src/build/compiler-adapters.mjs\";\nimport { validateComponentBuildPlan } from \"../../src/build/component-plan.mjs\";\n",
+          "start": 253
+        },
+        {
+          "current": "\toptionalParameterExports, optionalParameterModule\n",
+          "previous": "\tassertOptionalParameterIr, optionalParameterExports, optionalParameterModule\n",
+          "start": 349
+        },
+        {
+          "current": "\tcheckOptionalParameterNativeComponentRecords\n\t, optionalParameterComponentFactKeys, optionalParameterNativeRecordNames\n\t, optionalParameterTargetConfiguration\n",
+          "previous": "\toptionalParameterTargetConfiguration\n",
+          "start": 532
+        },
+        {
+          "current": "\t\"archives\", ...optionalParameterComponentFactKeys\n\t, \"packageSetReceiptSha256\"\n",
+          "previous": "\t\"archives\", \"authenticatedDefaults\", \"bindingIrFileSha256\"\n\t, \"bindingIrSha256\", \"compilerAdaptersSha256\", \"declarations\"\n\t, \"generatedLeanSha256\", \"packageSetReceiptSha256\"\n",
+          "start": 1045
+        },
+        {
+          "current": "\t\tconst component = await checkOptionalParameterNativeComponentRecords(\n\t\t\tread, prefix);\n",
+          "previous": "\t\tconst irBytes = await read(prefix + \"binding-ir.json\");\n\t\tconst ir = JSON.parse(irBytes); assertOptionalParameterIr(ir);\n\t\tconst adaptersBytes = await read(prefix + \"compiler-adapters.json\");\n\t\tconst adapters = JSON.parse(adaptersBytes);\n\t\tvalidateCompilerAdapterPlan(adapters);\n\t\tassert.equal(adapters.exports.length, 7);\n\t\tassert.ok(adapters.exports.every(item => item.parameters.length === 1));\n\t\tvalidateComponentBuildPlan(await json(prefix + \"component-build-plan.json\"));\n",
+          "start": 6692
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst leanBytes = await read(prefix + \"LeanBridgeGenerated.lean\");\n\t\tassert.doesNotMatch(leanBytes.toString()\n\t\t\t, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n",
+          "start": 6936
+        },
+        {
+          "current": "\t\tfor(const key of optionalParameterComponentFactKeys)\n\t\t\tassert.equal(fact[key], component[key], key);\n",
+          "previous": "\t\tassert.equal(fact.bindingIrFileSha256, sha256(irBytes));\n\t\tassert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));\n\t\tassert.equal(fact.generatedLeanSha256, sha256(leanBytes));\n",
+          "start": 6975
+        },
+        {
+          "current": "\t\t...optionalParameterNativeRecordNames\n",
+          "previous": "\t\t\"binding-ir.json\", \"compiler-adapters.json\", \"component-build-plan.json\"\n\t\t, \"LeanBridgeGenerated.lean\", \"provenance.json\"\n",
+          "start": 7216
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-language-report.mjs",
+      "previousSha256": "21414aba80d76f7a458d2f9d13271099a810848e84b22e8e9977be98aa8d8c58"
+    },
+    {
+      "currentSha256": "41926b17130c47a0ab5567ae08ec5bc4afe20af308b811fbef2da5954e6efba7",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { validateCompilerAdapterPlan } from \"../../src/build/compiler-adapters.mjs\";\nimport { validateComponentBuildPlan } from \"../../src/build/component-plan.mjs\";\n",
+          "start": 252
+        },
+        {
+          "current": "\toptionalParameterExports, optionalParameterModule\n",
+          "previous": "\tassertOptionalParameterIr, optionalParameterExports, optionalParameterModule\n",
+          "start": 348
+        },
+        {
+          "current": "\tcheckOptionalParameterNativeComponentRecords\n\t, optionalParameterComponentFactKeys, optionalParameterNativeRecordNames\n\t, optionalParameterTargetConfiguration\n",
+          "previous": "\toptionalParameterTargetConfiguration\n",
+          "start": 531
+        },
+        {
+          "current": "\t\"archives\", ...optionalParameterComponentFactKeys\n\t, \"packageSetReceiptSha256\"\n",
+          "previous": "\t\"archives\", \"authenticatedDefaults\", \"bindingIrFileSha256\"\n\t, \"bindingIrSha256\", \"compilerAdaptersSha256\", \"declarations\"\n\t, \"generatedLeanSha256\", \"packageSetReceiptSha256\"\n",
+          "start": 898
+        },
+        {
+          "current": "\t\tconst component = await checkOptionalParameterNativeComponentRecords(\n\t\t\tread, prefix);\n",
+          "previous": "\t\tconst irBytes = await read(prefix + \"binding-ir.json\");\n\t\tconst ir = JSON.parse(irBytes); assertOptionalParameterIr(ir);\n\t\tconst adaptersBytes = await read(prefix + \"compiler-adapters.json\");\n\t\tconst adapters = JSON.parse(adaptersBytes);\n\t\tvalidateCompilerAdapterPlan(adapters);\n\t\tassert.equal(adapters.exports.length, 7);\n\t\tassert.ok(adapters.exports.every(item => item.parameters.length === 1));\n\t\tvalidateComponentBuildPlan(await json(prefix + \"component-build-plan.json\"));\n",
+          "start": 6271
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst leanBytes = await read(prefix + \"LeanBridgeGenerated.lean\");\n\t\tassert.doesNotMatch(leanBytes.toString()\n\t\t\t, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n",
+          "start": 6515
+        },
+        {
+          "current": "\t\tfor(const key of optionalParameterComponentFactKeys)\n\t\t\tassert.equal(fact[key], component[key], key);\n",
+          "previous": "\t\tassert.equal(fact.bindingIrFileSha256, sha256(irBytes));\n\t\tassert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));\n\t\tassert.equal(fact.generatedLeanSha256, sha256(leanBytes));\n",
+          "start": 6554
+        },
+        {
+          "current": "\t\t...optionalParameterNativeRecordNames\n",
+          "previous": "\t\t\"binding-ir.json\", \"compiler-adapters.json\", \"component-build-plan.json\"\n\t\t, \"LeanBridgeGenerated.lean\", \"provenance.json\"\n",
+          "start": 6795
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-managed-report.mjs",
+      "previousSha256": "4ff776e16dfbe806a13b14a46a4b6f511dd9bdf643babe86c611c464dd2d4418"
+    },
+    {
+      "currentSha256": "f0d2eb5a151904754240f886011b08e29859c6ee65777f98ad1565313d84e069",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { validateCompilerAdapterPlan } from \"../../src/build/compiler-adapters.mjs\";\nimport { validateComponentBuildPlan } from \"../../src/build/component-plan.mjs\";\n",
+          "start": 184
+        },
+        {
+          "current": "\toptionalParameterExports, optionalParameterModule\n",
+          "previous": "\tassertOptionalParameterIr, optionalParameterExports, optionalParameterModule\n",
+          "start": 348
+        },
+        {
+          "current": "\tcheckOptionalParameterNativeComponentRecords\n\t, optionalParameterComponentFactKeys, optionalParameterNativeRecordNames\n\t, optionalParameterTargetConfiguration\n",
+          "previous": "\toptionalParameterTargetConfiguration\n",
+          "start": 532
+        },
+        {
+          "current": "\t\"archives\", ...optionalParameterComponentFactKeys\n\t, \"packageSetReceiptSha256\"\n",
+          "previous": "\t\"archives\", \"authenticatedDefaults\", \"bindingIrFileSha256\"\n\t, \"bindingIrSha256\", \"compilerAdaptersSha256\", \"declarations\"\n\t, \"generatedLeanSha256\", \"packageSetReceiptSha256\"\n",
+          "start": 882
+        },
+        {
+          "current": "\t\tconst component = await checkOptionalParameterNativeComponentRecords(\n\t\t\tread, prefix);\n",
+          "previous": "\t\tconst irBytes = await read(prefix + \"binding-ir.json\");\n\t\tconst ir = JSON.parse(irBytes); assertOptionalParameterIr(ir);\n\t\tconst adaptersBytes = await read(prefix + \"compiler-adapters.json\");\n\t\tconst adapters = JSON.parse(adaptersBytes);\n\t\tvalidateCompilerAdapterPlan(adapters);\n\t\tassert.equal(adapters.exports.length, 7);\n\t\tassert.ok(adapters.exports.every(item => item.parameters.length === 1));\n\t\tvalidateComponentBuildPlan(await json(prefix + \"component-build-plan.json\"));\n",
+          "start": 5459
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst leanBytes = await read(prefix + \"LeanBridgeGenerated.lean\");\n\t\tassert.doesNotMatch(leanBytes.toString()\n\t\t\t, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n",
+          "start": 5703
+        },
+        {
+          "current": "\t\tfor(const key of optionalParameterComponentFactKeys)\n\t\t\tassert.equal(fact[key], component[key], key);\n",
+          "previous": "\t\tassert.equal(fact.bindingIrFileSha256, sha256(irBytes));\n\t\tassert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));\n\t\tassert.equal(fact.generatedLeanSha256, sha256(leanBytes));\n",
+          "start": 5742
+        },
+        {
+          "current": "\t\t...optionalParameterNativeRecordNames\n",
+          "previous": "\t\t\"binding-ir.json\", \"compiler-adapters.json\", \"component-build-plan.json\"\n\t\t, \"LeanBridgeGenerated.lean\", \"provenance.json\"\n",
+          "start": 5983
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-native-report.mjs",
+      "previousSha256": "f5cce95614ce15c482fe8d102049c3825159cd3ded849c544db1b254039c3883"
+    },
+    {
+      "currentSha256": "d400188743636c11080af4dad84732154c9fe8b82e3cb6e632fd3a3cef7e4c63",
+      "edits": [
+        {
+          "current": "import {\n\treadVerifiedNativeComponent, readVerifiedNativeRuntime\n} from \"../../src/build/native-artifacts.mjs\";\nimport {\n\treadVerifiedPhpWasmCopiedComponent, readVerifiedPhpWasmCopiedRuntime\n} from \"../../src/build/php-wasm-copied-artifacts.mjs\";\n",
+          "previous": "",
+          "start": 338
+        },
+        {
+          "current": "\nexport const optionalParameterNativeRecordNames = Object.freeze([\n\t\"artifacts.json\", \"binding-ir.json\", \"generated.lean\", \"metadata.json\"\n\t, \"model.json\", \"native-component.json\"\n]);\nexport const optionalParameterPhpWasmRecordNames = Object.freeze([\n\t\"artifacts.json\", \"binding-ir.json\", \"generated.lean\", \"metadata.json\"\n\t, \"model.json\", \"php-wasm-component.json\"\n]);\nexport const optionalParameterComponentFactKeys = Object.freeze([\n\t\"artifactsSha256\", \"authenticatedDefaults\", \"bindingIrFileSha256\"\n\t, \"bindingIrSha256\", \"componentReceiptSha256\", \"declarations\"\n\t, \"generatedLeanSha256\", \"metadataSha256\", \"modelSha256\"\n]);\nexport const optionalParameterPhpComponentFactKeys = Object.freeze([\n\t\"authenticatedDefaults\", \"bindingIrSha256\", \"declarations\"\n\t, ...[\"native\", \"phpWasm\"].flatMap(prefix => [\n\t\t\"ArtifactsSha256\", \"BindingIrFileSha256\", \"ComponentReceiptSha256\"\n\t\t, \"GeneratedLeanSha256\", \"MetadataSha256\", \"ModelSha256\"\n\t].map(suffix => `${prefix}${suffix}`))\n]);\n\nconst canonicalDocument = (bytes, label) => {\n\tconst value = JSON.parse(bytes);\n\tassert.equal(bytes.toString(), canonicalJson(value), label);\n\treturn value;\n};\n\nconst assertOptionalParameterComponentDocuments = ({\n\tartifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes\n\t, profile, receiptName\n}) => {\n\tconst artifacts = canonicalDocument(artifactsBytes, \"artifacts.json\");\n\tconst ir = canonicalDocument(irBytes, \"binding-ir.json\");\n\tcanonicalDocument(metadataBytes, \"metadata.json\");\n\tconst model = canonicalDocument(modelBytes, \"model.json\");\n\tconst receipt = canonicalDocument(receiptBytes, receiptName);\n\tconst declarations = assertOptionalParameterIr(ir, [\"arg0\", \"value0\"]);\n\tassert.equal(artifacts.schemaVersion, 1);\n\tassert.equal(artifacts.profile, profile);\n\tassert.equal(receipt.profile, profile);\n\tassert.deepEqual(model.bindingIr, ir);\n\tassert.equal(model.bindingIrSha256, hashBindingIr(ir));\n\tassert.equal(receipt.bindingIrSha256, model.bindingIrSha256);\n\tassert.equal(receipt.metadataSha256, sha256(metadataBytes));\n\tassert.equal(receipt.modelSha256, sha256(modelBytes));\n\tassert.equal(receipt.adaptersSha256, sha256(leanBytes));\n\tassert.equal(receipt.exports.length, declarations.length);\n\tassert.doesNotMatch(leanBytes.toString(), /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n\tfor(const [name, bytes] of [\n\t\t[\"binding-ir.json\", irBytes], [\"generated.lean\", leanBytes]\n\t\t, [\"metadata.json\", metadataBytes], [\"model.json\", modelBytes]\n\t\t, [receiptName, receiptBytes]\n\t]) assert.deepEqual(artifacts.files[name]\n\t\t, { bytes: bytes.length, sha256: sha256(bytes) }, name);\n\treturn {\n\t\tartifactsSha256: sha256(artifactsBytes)\n\t\t, authenticatedDefaults: declarations.filter(declaration =>\n\t\t\tdeclaration.parameters[0].optional).length\n\t\t, bindingIrFileSha256: sha256(irBytes)\n\t\t, bindingIrSha256: model.bindingIrSha256\n\t\t, componentReceiptSha256: sha256(receiptBytes)\n\t\t, declarations: declarations.length\n\t\t, generatedLeanSha256: sha256(leanBytes)\n\t\t, metadataSha256: sha256(metadataBytes)\n\t\t, modelSha256: sha256(modelBytes)\n\t};\n};\n\nconst readComponentDocuments = async (root, names) => {\n\tconst values = await Promise.all(names.map(name => readFile(join(root, name))));\n\treturn {\n\t\tartifactsBytes: values[0], irBytes: values[1], leanBytes: values[2]\n\t\t, metadataBytes: values[3], modelBytes: values[4], receiptBytes: values[5]\n\t};\n};\n\n/**\n * Verify the native component actually consumed by non-wasm packages.\n *\n * @param outputRoot - Completed native or native-profile release root.\n * @param prefix - Relative native runtime and component directory.\n */\nexport const assertOptionalParameterNativeComponent = async (\n\toutputRoot, prefix = \"native\"\n) => {\n\tconst runtimeRoot = join(outputRoot, prefix, \"runtime\");\n\tconst componentRoot = join(outputRoot, prefix, \"component\");\n\tconst runtime = await readVerifiedNativeRuntime(runtimeRoot);\n\tawait readVerifiedNativeComponent(componentRoot, runtime.identity);\n\treturn assertOptionalParameterComponentDocuments({\n\t\t...await readComponentDocuments(\n\t\t\tcomponentRoot, optionalParameterNativeRecordNames)\n\t\t, profile: \"native-library-v1\", receiptName: \"native-component.json\"\n\t});\n};\n\n/**\n * Retain the closed native compiler records beside route evidence.\n *\n * @param records - Route evidence directory.\n * @param attempt - Independent build index.\n * @param outputRoot - Completed release root.\n * @param prefix - Relative native runtime and component directory.\n * @param destination - Relative evidence subdirectory.\n */\nexport const retainOptionalParameterNativeComponent = async (\n\trecords, attempt, outputRoot, prefix = \"native\", destination = \"\"\n) => {\n\tconst root = join(outputRoot, prefix, \"component\");\n\tfor(const name of optionalParameterNativeRecordNames)\n\t\tawait saveLakeFile(records, join(`build-${attempt}`, destination, name)\n\t\t\t, await readFile(join(root, name)));\n};\n\n/**\n * Recheck retained native compiler records without trusting the report.\n *\n * @param read - Safe reader rooted at one route's evidence directory.\n * @param prefix - Independent build record prefix.\n */\nexport const checkOptionalParameterNativeComponentRecords = async (\n\tread, prefix\n) => {\n\tconst values = await Promise.all(optionalParameterNativeRecordNames.map(\n\t\tname => read(prefix + name)));\n\treturn assertOptionalParameterComponentDocuments({\n\t\tartifactsBytes: values[0], irBytes: values[1], leanBytes: values[2]\n\t\t, metadataBytes: values[3], modelBytes: values[4]\n\t\t, receiptBytes: values[5], profile: \"native-library-v1\"\n\t\t, receiptName: \"native-component.json\"\n\t});\n};\n\n/**\n * Verify both independently compiled profiles in a combined PHP release.\n *\n * @param outputRoot - Completed combined PHP release root.\n */\nexport const assertOptionalParameterPhpComponents = async outputRoot => {\n\tconst nativeRoot = join(outputRoot, \"profiles/native\");\n\tconst phpRoot = join(outputRoot, \"profiles/php-wasm/php-wasm\");\n\tconst native = await assertOptionalParameterNativeComponent(nativeRoot);\n\tconst runtime = await readVerifiedPhpWasmCopiedRuntime(join(phpRoot, \"runtime\"));\n\tawait readVerifiedPhpWasmCopiedComponent(join(phpRoot, \"component\")\n\t\t, runtime.identity);\n\tconst phpWasm = assertOptionalParameterComponentDocuments({\n\t\t...await readComponentDocuments(\n\t\t\tjoin(phpRoot, \"component\"), optionalParameterPhpWasmRecordNames)\n\t\t, profile: \"php-wasm-copied-v1\"\n\t\t, receiptName: \"php-wasm-component.json\"\n\t});\n\tassert.equal(phpWasm.bindingIrSha256, native.bindingIrSha256);\n\treturn { native, phpWasm };\n};\n\n/**\n * Flatten the two compiler profiles into a closed reproducibility fact.\n *\n * @param root0 - Independently verified native and PHP-Wasm facts.\n * @param root0.native - Native PHP compiler fact.\n * @param root0.phpWasm - PHP-Wasm compiler fact.\n */\nexport const optionalParameterPhpComponentFact = ({ native, phpWasm }) => ({\n\tauthenticatedDefaults: native.authenticatedDefaults\n\t, bindingIrSha256: native.bindingIrSha256\n\t, declarations: native.declarations\n\t, ...Object.fromEntries([native, phpWasm].flatMap((fact, index) => {\n\t\tconst prefix = index === 0 ? \"native\" : \"phpWasm\";\n\t\treturn [\n\t\t\t[\"ArtifactsSha256\", \"artifactsSha256\"]\n\t\t\t, [\"BindingIrFileSha256\", \"bindingIrFileSha256\"]\n\t\t\t, [\"ComponentReceiptSha256\", \"componentReceiptSha256\"]\n\t\t\t, [\"GeneratedLeanSha256\", \"generatedLeanSha256\"]\n\t\t\t, [\"MetadataSha256\", \"metadataSha256\"]\n\t\t\t, [\"ModelSha256\", \"modelSha256\"]\n\t\t].map(([suffix, key]) => [`${prefix}${suffix}`, fact[key]]);\n\t}))\n});\n\n/**\n * Retain both PHP profile compiler records beside route evidence.\n *\n * @param records - Route evidence directory.\n * @param attempt - Independent build index.\n * @param outputRoot - Completed combined PHP release root.\n */\nexport const retainOptionalParameterPhpComponents = async (\n\trecords, attempt, outputRoot\n) => {\n\tawait retainOptionalParameterNativeComponent(records, attempt\n\t\t, join(outputRoot, \"profiles/native\"), \"native\", \"native\");\n\tconst root = join(outputRoot, \"profiles/php-wasm/php-wasm/component\");\n\tfor(const name of optionalParameterPhpWasmRecordNames)\n\t\tawait saveLakeFile(records, `build-${attempt}/php-wasm/${name}`\n\t\t\t, await readFile(join(root, name)));\n};\n\n/**\n * Recheck both retained PHP profile compiler record sets.\n *\n * @param read - Safe reader rooted at one route's evidence directory.\n * @param prefix - Independent build record prefix.\n */\nexport const checkOptionalParameterPhpComponentRecords = async (\n\tread, prefix\n) => {\n\tconst native = await checkOptionalParameterNativeComponentRecords(\n\t\tread, `${prefix}native/`);\n\tconst values = await Promise.all(optionalParameterPhpWasmRecordNames.map(\n\t\tname => read(`${prefix}php-wasm/${name}`)));\n\tconst phpWasm = assertOptionalParameterComponentDocuments({\n\t\tartifactsBytes: values[0], irBytes: values[1], leanBytes: values[2]\n\t\t, metadataBytes: values[3], modelBytes: values[4]\n\t\t, receiptBytes: values[5], profile: \"php-wasm-copied-v1\"\n\t\t, receiptName: \"php-wasm-component.json\"\n\t});\n\tassert.equal(phpWasm.bindingIrSha256, native.bindingIrSha256);\n\treturn { native, phpWasm };\n};\n",
+          "previous": "",
+          "start": 5236
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-packages.mjs",
+      "previousSha256": "d274a9240af1e0090ae125c8a4587d4328d72ee537f50964f59efc3dbe86472f"
+    },
+    {
+      "currentSha256": "f0456807b5c90fd4ad4413cfec6f3b5dc9ba43b22195553fccd672f36735cbd8",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { validateCompilerAdapterPlan } from \"../../src/build/compiler-adapters.mjs\";\nimport { validateComponentBuildPlan } from \"../../src/build/component-plan.mjs\";\n",
+          "start": 216
+        },
+        {
+          "current": "\toptionalParameterExports, optionalParameterModule\n",
+          "previous": "\tassertOptionalParameterIr, optionalParameterExports, optionalParameterModule\n",
+          "start": 380
+        },
+        {
+          "current": "\tcheckOptionalParameterPhpComponentRecords\n\t, optionalParameterNativeRecordNames, optionalParameterPhpComponentFact\n\t, optionalParameterPhpComponentFactKeys, optionalParameterPhpWasmRecordNames\n\t, optionalParameterTargetConfiguration\n",
+          "previous": "\toptionalParameterTargetConfiguration\n",
+          "start": 563
+        },
+        {
+          "current": "\t\"archives\", ...optionalParameterPhpComponentFactKeys\n\t, \"packageSetReceiptSha256\"\n].sort();\n",
+          "previous": "\t\"archives\", \"authenticatedDefaults\", \"bindingIrFileSha256\"\n\t, \"bindingIrSha256\", \"compilerAdaptersSha256\", \"declarations\"\n\t, \"generatedLeanSha256\", \"packageSetReceiptSha256\"\n];\n",
+          "start": 951
+        },
+        {
+          "current": "\t\tconst components = await checkOptionalParameterPhpComponentRecords(\n\t\t\tread, prefix);\n",
+          "previous": "\t\tconst irBytes = await read(prefix + \"binding-ir.json\");\n\t\tconst ir = JSON.parse(irBytes); assertOptionalParameterIr(ir);\n\t\tconst adaptersBytes = await read(prefix + \"compiler-adapters.json\");\n\t\tconst adapters = JSON.parse(adaptersBytes);\n\t\tvalidateCompilerAdapterPlan(adapters);\n\t\tassert.equal(adapters.exports.length, 7);\n\t\tassert.ok(adapters.exports.every(item => item.parameters.length === 1));\n\t\tvalidateComponentBuildPlan(await json(prefix + \"component-build-plan.json\"));\n",
+          "start": 5974
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst leanBytes = await read(prefix + \"LeanBridgeGenerated.lean\");\n\t\tassert.doesNotMatch(leanBytes.toString()\n\t\t\t, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n",
+          "start": 6216
+        },
+        {
+          "current": "\t\tconst componentFact = optionalParameterPhpComponentFact(components);\n\t\tfor(const key of optionalParameterPhpComponentFactKeys)\n\t\t\tassert.equal(fact[key], componentFact[key], key);\n",
+          "previous": "\t\tassert.equal(fact.bindingIrFileSha256, sha256(irBytes));\n\t\tassert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));\n\t\tassert.equal(fact.generatedLeanSha256, sha256(leanBytes));\n",
+          "start": 6255
+        },
+        {
+          "current": "\t\t...optionalParameterNativeRecordNames.map(value => `native/${value}`)\n\t\t, ...optionalParameterPhpWasmRecordNames.map(value => `php-wasm/${value}`)\n",
+          "previous": "\t\t\"binding-ir.json\", \"compiler-adapters.json\", \"component-build-plan.json\"\n\t\t, \"LeanBridgeGenerated.lean\", \"provenance.json\"\n",
+          "start": 6574
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-php-report.mjs",
+      "previousSha256": "6ecfbc68a156f0b5f378ce595e946ab8cdc77c33aaabb3f8c13ba508548505f0"
+    },
+    {
+      "currentSha256": "577b28500330c74cbef53f0f4901e279ce2cfb42b48502bd4c981d5cfa3833b3",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { validateCompilerAdapterPlan } from \"../../src/build/compiler-adapters.mjs\";\nimport { validateComponentBuildPlan } from \"../../src/build/component-plan.mjs\";\n",
+          "start": 255
+        },
+        {
+          "current": "\toptionalParameterExports, optionalParameterModule\n",
+          "previous": "\tassertOptionalParameterIr, optionalParameterExports, optionalParameterModule\n",
+          "start": 351
+        },
+        {
+          "current": "\tcheckOptionalParameterNativeComponentRecords\n\t, optionalParameterComponentFactKeys, optionalParameterNativeRecordNames\n\t, optionalParameterTargetConfiguration\n",
+          "previous": "\toptionalParameterTargetConfiguration\n",
+          "start": 534
+        },
+        {
+          "current": "\t\"archives\", ...optionalParameterComponentFactKeys\n\t, \"packageSetReceiptSha256\"\n",
+          "previous": "\t\"archives\", \"authenticatedDefaults\", \"bindingIrFileSha256\"\n\t, \"bindingIrSha256\", \"compilerAdaptersSha256\", \"declarations\"\n\t, \"generatedLeanSha256\", \"packageSetReceiptSha256\"\n",
+          "start": 758
+        },
+        {
+          "current": "\t\tconst component = await checkOptionalParameterNativeComponentRecords(\n\t\t\tread, prefix);\n",
+          "previous": "\t\tconst irBytes = await read(prefix + \"binding-ir.json\");\n\t\tconst ir = JSON.parse(irBytes); assertOptionalParameterIr(ir);\n\t\tconst adaptersBytes = await read(prefix + \"compiler-adapters.json\");\n\t\tconst adapters = JSON.parse(adaptersBytes);\n\t\tvalidateCompilerAdapterPlan(adapters);\n\t\tassert.equal(adapters.exports.length, 7);\n\t\tassert.ok(adapters.exports.every(item => item.parameters.length === 1));\n\t\tvalidateComponentBuildPlan(await json(prefix + \"component-build-plan.json\"));\n",
+          "start": 5503
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst leanBytes = await read(prefix + \"LeanBridgeGenerated.lean\");\n\t\tassert.doesNotMatch(leanBytes.toString()\n\t\t\t, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n",
+          "start": 5747
+        },
+        {
+          "current": "\t\tfor(const key of optionalParameterComponentFactKeys)\n\t\t\tassert.equal(fact[key], component[key], key);\n",
+          "previous": "\t\tassert.equal(fact.bindingIrFileSha256, sha256(irBytes));\n\t\tassert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));\n\t\tassert.equal(fact.generatedLeanSha256, sha256(leanBytes));\n",
+          "start": 5786
+        },
+        {
+          "current": "\t\t...optionalParameterNativeRecordNames\n",
+          "previous": "\t\t\"binding-ir.json\", \"compiler-adapters.json\", \"component-build-plan.json\"\n\t\t, \"LeanBridgeGenerated.lean\", \"provenance.json\"\n",
+          "start": 6027
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-wit-report.mjs",
+      "previousSha256": "d870c543387771c792cf7dd0f850d04bfe1109e907ef37ccdfacea10dd2599c3"
+    },
+    {
+      "currentSha256": "7b06709fad19b8b117b55f79eb4cbd87d1e5b7e93983f9a7bd7dcb14f0b0c276",
+      "edits": [
+        {
+          "current": "import { hashBindingIr } from \"../src/binding-ir/canonical.mjs\";\nimport { canonicalJson, sha256 } from \"../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 212
+        },
+        {
+          "current": "\tcheckOptionalParameterNativeComponentRecords\n\t, optionalParameterTargetConfiguration\n",
+          "previous": "\toptionalParameterTargetConfiguration\n",
+          "start": 550
+        },
+        {
+          "current": "\ntest(\"retained native component records authenticate optional defaults\", async () => {\n\tconst bytes = value => Buffer.from(typeof value === \"string\"\n\t\t? value : canonicalJson(value));\n\tconst ir = optionalParameterReview(), irBytes = bytes(ir);\n\tconst metadataBytes = bytes({ schemaVersion: 1 });\n\tconst leanBytes = bytes(\"def generatedOptionalAdapters : Nat := 7\\n\");\n\tconst modelBytes = bytes({\n\t\tprofile: \"native-library-v1\", bindingIr: ir\n\t\t, bindingIrSha256: hashBindingIr(ir)\n\t});\n\tconst receiptBytes = bytes({\n\t\tprofile: \"native-library-v1\", bindingIrSha256: hashBindingIr(ir)\n\t\t, metadataSha256: sha256(metadataBytes)\n\t\t, modelSha256: sha256(modelBytes), adaptersSha256: sha256(leanBytes)\n\t\t, exports: ir.declarations.map(item => item.id)\n\t});\n\tconst files = Object.fromEntries([\n\t\t[\"binding-ir.json\", irBytes], [\"generated.lean\", leanBytes]\n\t\t, [\"metadata.json\", metadataBytes], [\"model.json\", modelBytes]\n\t\t, [\"native-component.json\", receiptBytes]\n\t].map(([name, value]) => [name, {\n\t\tbytes: value.length, sha256: sha256(value)\n\t}]));\n\tconst records = new Map([\n\t\t[\"build/binding-ir.json\", irBytes]\n\t\t, [\"build/generated.lean\", leanBytes]\n\t\t, [\"build/metadata.json\", metadataBytes]\n\t\t, [\"build/model.json\", modelBytes]\n\t\t, [\"build/native-component.json\", receiptBytes]\n\t\t, [\"build/artifacts.json\"\n\t\t\t, bytes({\n\t\t\tschemaVersion: 1, profile: \"native-library-v1\", files\n\t\t\t})\n\t\t]\n\t]);\n\tconst read = async path => {\n\t\tassert.ok(records.has(path), path);\n\t\treturn records.get(path);\n\t};\n\tconst fact = await checkOptionalParameterNativeComponentRecords(\n\t\tread, \"build/\");\n\tassert.equal(fact.declarations, 7);\n\tassert.equal(fact.authenticatedDefaults, 7);\n\trecords.set(\"build/generated.lean\", bytes(\"axiom forged : Nat\\n\"));\n\tawait assert.rejects(checkOptionalParameterNativeComponentRecords(\n\t\tread, \"build/\"));\n});\n\ntest(\"non-npm optional lanes retain the compiler profile they consume\", async () => {\n\tfor(const lane of [\"language\", \"managed\", \"native\", \"wit\"])\n\t{\n\t\tconst source = await readFile(\n\t\t\t`tests/optional-parameter-${lane}-installed.test.mjs`, \"utf8\");\n\t\tassert.match(source, /assertOptionalParameterNativeComponent\\(outputRoot\\)/u);\n\t\tassert.match(source, /retainOptionalParameterNativeComponent/u);\n\t\tassert.doesNotMatch(source, /join\\(outputRoot, \"bundle\"\\)/u);\n\t}\n\tconst php = await readFile(\n\t\t\"tests/optional-parameter-php-installed.test.mjs\", \"utf8\");\n\tassert.match(php, /assertOptionalParameterPhpComponents\\(outputRoot\\)/u);\n\tassert.match(php, /retainOptionalParameterPhpComponents/u);\n\tassert.doesNotMatch(php, /join\\(outputRoot, \"bundle\"\\)/u);\n});\n",
+          "previous": "",
+          "start": 3269
+        }
+      ],
+      "path": "tests/optional-parameter-foundation.test.mjs",
+      "previousSha256": "97a68b5ed0332a1bd4bb456691c2f223d7fa19c9a1fb58c8e7ef251d54be7b8f"
+    },
+    {
+      "currentSha256": "074bf4331731b1140ff82eb37304a940e4689f550c392fb09f741a3120458245",
+      "edits": [
+        {
+          "current": "\tassertOptionalParameterNativeComponent, prepareOptionalParameterProject\n\t, retainOptionalParameterNativeComponent\n",
+          "previous": "\tassertOptionalParameterBundle, prepareOptionalParameterProject\n",
+          "start": 1460
+        },
+        {
+          "current": "\t\t\tconst component = await assertOptionalParameterNativeComponent(outputRoot);\n",
+          "previous": "\t\t\tconst bundleRoot = join(outputRoot, \"bundle\");\n\t\t\tconst bundle = await assertOptionalParameterBundle(bundleRoot);\n",
+          "start": 4910
+        },
+        {
+          "current": "\t\t\t\t...component, bindingIrSha256: built.bindingIrSha256\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 5509
+        },
+        {
+          "current": "\t\t\tawait retainOptionalParameterNativeComponent(\n\t\t\t\trecords, attempt, outputRoot);\n",
+          "previous": "\t\t\tfor(const [name, path] of [\n\t\t\t\t[\"binding-ir.json\", \"binding/binding-ir.json\"]\n\t\t\t\t, [\"compiler-adapters.json\", \"locks/compiler-adapters.json\"]\n\t\t\t\t, [\"component-build-plan.json\", \"locks/component-build-plan.json\"]\n\t\t\t\t, [\"LeanBridgeGenerated.lean\", \"generated/LeanBridgeGenerated.lean\"]\n\t\t\t\t, [\"provenance.json\", \"metadata/provenance.json\"]\n\t\t\t]) await saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 5634
+        }
+      ],
+      "path": "tests/optional-parameter-language-installed.test.mjs",
+      "previousSha256": "ca86ff4cb45b1205611d2a490b8cc5086cae58301a9e1aa474270637fd56932a"
+    },
+    {
+      "currentSha256": "5dee37b538c86fc86c5c3b10493605bcfc58eda7b524a00fd1137bed3819af60",
+      "edits": [
+        {
+          "current": "\tassertOptionalParameterNativeComponent, prepareOptionalParameterProject\n\t, retainOptionalParameterNativeComponent\n",
+          "previous": "\tassertOptionalParameterBundle, prepareOptionalParameterProject\n",
+          "start": 1236
+        },
+        {
+          "current": "\t\t\tconst component = await assertOptionalParameterNativeComponent(outputRoot);\n",
+          "previous": "\t\t\tconst bundleRoot = join(outputRoot, \"bundle\");\n\t\t\tconst bundle = await assertOptionalParameterBundle(bundleRoot);\n",
+          "start": 4439
+        },
+        {
+          "current": "\t\t\t\t...component, bindingIrSha256: built.bindingIrSha256\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 5038
+        },
+        {
+          "current": "\t\t\tawait retainOptionalParameterNativeComponent(\n\t\t\t\trecords, attempt, outputRoot);\n",
+          "previous": "\t\t\tfor(const [name, path] of [\n\t\t\t\t[\"binding-ir.json\", \"binding/binding-ir.json\"]\n\t\t\t\t, [\"compiler-adapters.json\", \"locks/compiler-adapters.json\"]\n\t\t\t\t, [\"component-build-plan.json\", \"locks/component-build-plan.json\"]\n\t\t\t\t, [\"LeanBridgeGenerated.lean\", \"generated/LeanBridgeGenerated.lean\"]\n\t\t\t\t, [\"provenance.json\", \"metadata/provenance.json\"]\n\t\t\t]) await saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 5163
+        }
+      ],
+      "path": "tests/optional-parameter-managed-installed.test.mjs",
+      "previousSha256": "e10d0dbf28a788bea527c9c078b007da2b1d05ee4596eb260cabcba9ecb53720"
+    },
+    {
+      "currentSha256": "7f6baa4e9fa6711ff83da2cd537e7e545a1207df3d2e4d7d807b0187429d9137",
+      "edits": [
+        {
+          "current": "\tassertOptionalParameterNativeComponent, prepareOptionalParameterProject\n\t, retainOptionalParameterNativeComponent\n",
+          "previous": "\tassertOptionalParameterBundle, prepareOptionalParameterProject\n",
+          "start": 955
+        },
+        {
+          "current": "\t\t\tconst component = await assertOptionalParameterNativeComponent(outputRoot);\n",
+          "previous": "\t\t\tconst bundleRoot = join(outputRoot, \"bundle\");\n\t\t\tconst bundle = await assertOptionalParameterBundle(bundleRoot);\n",
+          "start": 3520
+        },
+        {
+          "current": "\t\t\t\t...component, bindingIrSha256: built.bindingIrSha256\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 4119
+        },
+        {
+          "current": "\t\t\tawait retainOptionalParameterNativeComponent(\n\t\t\t\trecords, attempt, outputRoot);\n",
+          "previous": "\t\t\tfor(const [name, path] of [\n\t\t\t\t[\"binding-ir.json\", \"binding/binding-ir.json\"]\n\t\t\t\t, [\"compiler-adapters.json\", \"locks/compiler-adapters.json\"]\n\t\t\t\t, [\"component-build-plan.json\", \"locks/component-build-plan.json\"]\n\t\t\t\t, [\"LeanBridgeGenerated.lean\", \"generated/LeanBridgeGenerated.lean\"]\n\t\t\t\t, [\"provenance.json\", \"metadata/provenance.json\"]\n\t\t\t]) await saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 4244
+        }
+      ],
+      "path": "tests/optional-parameter-native-installed.test.mjs",
+      "previousSha256": "8d1c97e3177bb2bc3a65a1f1d09f113aa635602bfe820f241add614c47e89fe9"
+    },
+    {
+      "currentSha256": "0d0082563d8cc021b16fe7e129d08ddd9070ce83820c4d523f854b82c5a74abe",
+      "edits": [
+        {
+          "current": "\tassertOptionalParameterPhpComponents, optionalParameterPhpComponentFact\n\t, prepareOptionalParameterProject, retainOptionalParameterPhpComponents\n",
+          "previous": "\tassertOptionalParameterBundle, prepareOptionalParameterProject\n",
+          "start": 850
+        },
+        {
+          "current": "\t\t\tconst components = await assertOptionalParameterPhpComponents(outputRoot);\n",
+          "previous": "\t\t\tconst bundleRoot = join(outputRoot, \"bundle\");\n\t\t\tconst bundle = await assertOptionalParameterBundle(bundleRoot);\n",
+          "start": 4214
+        },
+        {
+          "current": "\t\t\t\t...optionalParameterPhpComponentFact(components)\n\t\t\t\t, bindingIrSha256: built.bindingIrSha256\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 4812
+        },
+        {
+          "current": "\t\t\tawait retainOptionalParameterPhpComponents(\n\t\t\t\trecords, attempt, outputRoot);\n",
+          "previous": "\t\t\tfor(const [name, path] of [\n\t\t\t\t[\"binding-ir.json\", \"binding/binding-ir.json\"]\n\t\t\t\t, [\"compiler-adapters.json\", \"locks/compiler-adapters.json\"]\n\t\t\t\t, [\"component-build-plan.json\", \"locks/component-build-plan.json\"]\n\t\t\t\t, [\"LeanBridgeGenerated.lean\", \"generated/LeanBridgeGenerated.lean\"]\n\t\t\t\t, [\"provenance.json\", \"metadata/provenance.json\"]\n\t\t\t]) await saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 4978
+        }
+      ],
+      "path": "tests/optional-parameter-php-installed.test.mjs",
+      "previousSha256": "46dbaaf194ddf9890b8525949ed1bd9cc4e68a4de6eb34d2129ec74b18b55e1c"
+    },
+    {
+      "currentSha256": "00c67fd841be8c7a4d3f958c9f7cface585debca290f3afdb3caaad2e874b01f",
+      "edits": [
+        {
+          "current": "\tassertOptionalParameterNativeComponent, prepareOptionalParameterProject\n\t, retainOptionalParameterNativeComponent\n",
+          "previous": "\tassertOptionalParameterBundle, prepareOptionalParameterProject\n",
+          "start": 939
+        },
+        {
+          "current": "\t\t\tconst component = await assertOptionalParameterNativeComponent(outputRoot);\n",
+          "previous": "\t\t\tconst bundleRoot = join(outputRoot, \"bundle\");\n\t\t\tconst bundle = await assertOptionalParameterBundle(bundleRoot);\n",
+          "start": 3600
+        },
+        {
+          "current": "\t\t\t\t...component, bindingIrSha256: built.bindingIrSha256\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 4199
+        },
+        {
+          "current": "\t\t\tawait retainOptionalParameterNativeComponent(\n\t\t\t\trecords, attempt, outputRoot);\n",
+          "previous": "\t\t\tfor(const [name, path] of [\n\t\t\t\t[\"binding-ir.json\", \"binding/binding-ir.json\"]\n\t\t\t\t, [\"compiler-adapters.json\", \"locks/compiler-adapters.json\"]\n\t\t\t\t, [\"component-build-plan.json\", \"locks/component-build-plan.json\"]\n\t\t\t\t, [\"LeanBridgeGenerated.lean\", \"generated/LeanBridgeGenerated.lean\"]\n\t\t\t\t, [\"provenance.json\", \"metadata/provenance.json\"]\n\t\t\t]) await saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 4324
+        }
+      ],
+      "path": "tests/optional-parameter-wit-installed.test.mjs",
+      "previousSha256": "06f05b1da8e779f2f7de3e9474461ce25c63027dd06cc252a02e2927b75716f0"
+    }
+  ]
+}
