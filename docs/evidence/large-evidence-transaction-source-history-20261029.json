@@ -1,0 +1,233 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-large-evidence-transaction-source-history.mjs",
+      "sha256": "86f8e8bf709b933f68059bc6edceee40fca8c4aeef6ffc0c48a5a6a196de77f7"
+    },
+    {
+      "path": "tests/helpers/large-evidence-transaction-source-history-tests.mjs",
+      "sha256": "bb3a55a5241aa706259bf327b44e6b6adac756bf8311e1d96c4a34521a87bb68"
+    },
+    {
+      "path": "tests/helpers/large-evidence-transaction-source-history.mjs",
+      "sha256": "c478dcde61a81ca275556d772ea905f63e93f6a196bc005732c49bb9866c7c58"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "src/capsule/transactional-directory.mjs",
+      "sha256": "63c109d5825db04b5428bbf5269aa075f65c978c6327e6d43c61e96ae7e81149"
+    },
+    {
+      "path": "tests/helpers/transactional-directory-tests.mjs",
+      "sha256": "7b442416c2a5164d755e9e818fe45481359df99a463457cee2b7cd58d5b3dae4"
+    }
+  ],
+  "implementationCommit": "5627693e8ba57f0a8df7a48969893c1225bff6f6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e12f25de807e0c9a53874c231cc684ec1ee9dd11bfe07b18c13b11cabf477249",
+      "edits": [
+        {
+          "current": "import \"./helpers/large-evidence-transaction-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "ea5796f13ad7314ff3ecb56f1d180989b2a17e3652f43d93fdb211b211e58295"
+    },
+    {
+      "currentSha256": "b314f57083094003380ee440164df07bef452c704f3bbbb840e094c2738614e4",
+      "edits": [
+        {
+          "current": "import { beforeLargeEvidenceTransactionSource, largeEvidenceTransactionNormalizationPaths } from \"./large-evidence-transaction-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...largeEvidenceTransactionNormalizationPaths\n\t, ...hostNullCompleteEntrypointsNormalizationPaths\n",
+          "previous": "\t...hostNullCompleteEntrypointsNormalizationPaths\n",
+          "start": 221668
+        },
+        {
+          "current": "\tlet stage = beforeLargeEvidenceTransactionSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullCompleteEntrypointsSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullCompleteEntrypointsSource(path, text, expected);\n",
+          "start": 277596
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1b9c10feedc3be55948367ade9758f736a904f7995ec1aab8379adae43d9ac7d"
+    }
+  ],
+  "milestone": "large-evidence-transaction-source-v1",
+  "optimizedArchivers": 2,
+  "predecessorCommit": "1fcff01cda6ef081c56936ac66aa848ee8f8a87f",
+  "schemaVersion": 1,
+  "scope": "Publish dependent-signature and direct proof-erasure archives from one validated sibling staging tree with an inode-preserving rename. Remove the ext4 input-to-staging-to-destination duplicate while preserving absent-destination, clean-source, complete-byte validation, abort cleanup and collision refusal contracts.",
+  "transactionTests": 3,
+  "updates": [
+    {
+      "currentSha256": "93fbb19673da98691eabcefadeb9702034f6da56b510f9a0f44c12edec807a18",
+      "edits": [
+        {
+          "current": "import {\n\tcreateTransactionalDirectory\n} from \"../src/capsule/transactional-directory.mjs\";\n",
+          "previous": "",
+          "start": 483
+        },
+        {
+          "current": "const transaction = await createTransactionalDirectory(\n\tdependentSignatureHostedEvidenceDirectory);\nconst stagingRoot = transaction.root;\nconst putBytes = async (path, value) => {\n",
+          "previous": "const stagingRoot = await mkdtemp(join(\n\ttmpdir(), \"lean-bridge-dependent-signature-hosted-staging-\"));\nconst putBytes = (path, value) => {\n",
+          "start": 2923
+        },
+        {
+          "current": "\tconst staged = join(stagingRoot, path);\n\tawait mkdir(dirname(staged), { recursive: true });\n\tawait writeFile(staged, bytes, { flag: \"wx\" });\n\tdescriptors.set(path, { bytes: bytes.length, sha256: sha256(bytes) });\n",
+          "previous": "\tdescriptors.set(path, {\n\t\tbytes: bytes.length, sha256: sha256(bytes), value: bytes\n\t});\n",
+          "start": 3181
+        },
+        {
+          "current": "",
+          "previous": "\t\t, source: staged\n",
+          "start": 3832
+        },
+        {
+          "current": "\t\tawait putBytes(`hosted/api/${item.id}/${name}.json`, record.bytes);\n",
+          "previous": "\t\tputBytes(`hosted/api/${item.id}/${name}.json`, record.bytes);\n",
+          "start": 4101
+        },
+        {
+          "current": "\t\t\t\tawait putBytes(`hosted/output/${lane.id}/${route}.json`, bytes);\n",
+          "previous": "\t\t\t\tputBytes(`hosted/output/${lane.id}/${route}.json`, bytes);\n",
+          "start": 5863
+        },
+        {
+          "current": "\t\tawait putBytes(\"hosted/output/matrix/receipt.json\", receiptBytes);\n",
+          "previous": "\t\tputBytes(\"hosted/output/matrix/receipt.json\", receiptBytes);\n",
+          "start": 7167
+        },
+        {
+          "current": "\t\tawait putBytes(dependentSignatureHostedSourcePath(source)\n",
+          "previous": "\t\tputBytes(dependentSignatureHostedSourcePath(source)\n",
+          "start": 7734
+        },
+        {
+          "current": "",
+          "previous": "\tawait mkdir(dependentSignatureHostedEvidenceDirectory);\n",
+          "start": 9397
+        },
+        {
+          "current": "\t\tconst target = join(stagingRoot, path);\n",
+          "previous": "\t\tconst target = join(dependentSignatureHostedEvidenceDirectory, path);\n\t\tawait mkdir(dirname(target), { recursive: true });\n\t\tif(descriptor.source) await copyFile(\n\t\t\tdescriptor.source, target, constants.COPYFILE_FICLONE);\n\t\telse await writeFile(target, descriptor.value, { flag: \"wx\" });\n",
+          "start": 9446
+        },
+        {
+          "current": "\tawait writeFile(join(stagingRoot, \"index.json\"), indexBytes, { flag: \"wx\" });\n\tawait transaction.publish();\n",
+          "previous": "\tawait writeFile(join(dependentSignatureHostedEvidenceDirectory\n\t\t, \"index.json\"), indexBytes, { flag: \"wx\" });\n",
+          "start": 9709
+        },
+        {
+          "current": "{ await transaction.dispose(); }\n",
+          "previous": "{ await rm(stagingRoot, { recursive: true }); }\n",
+          "start": 10228
+        }
+      ],
+      "path": "scripts/archive-dependent-signature-hosted.mjs",
+      "previousSha256": "2b454763fbe7ab2e3d421b97429309bf1770ff4fe9f6f1bb566154efc0fad63e"
+    },
+    {
+      "currentSha256": "49b74681b697684d5a1ea4702ccb87bc57dbd438d6b6c404f4b5eb063351ddda",
+      "edits": [
+        {
+          "current": "import {\n\tcreateTransactionalDirectory\n} from \"../src/capsule/transactional-directory.mjs\";\n",
+          "previous": "",
+          "start": 484
+        },
+        {
+          "current": "const transaction = await createTransactionalDirectory(\n\tdirectProofErasureHostedEvidenceDirectory);\nconst stagingRoot = transaction.root;\nconst putBytes = async (path, value) => {\n",
+          "previous": "const stagingRoot = await mkdtemp(join(\n\ttmpdir(), \"lean-bridge-direct-proof-hosted-staging-\"));\nconst putBytes = (path, value) => {\n",
+          "start": 2985
+        },
+        {
+          "current": "\tconst staged = join(stagingRoot, path);\n\tawait mkdir(dirname(staged), { recursive: true });\n\tawait writeFile(staged, bytes, { flag: \"wx\" });\n\tdescriptors.set(path, { bytes: bytes.length, sha256: sha256(bytes) });\n",
+          "previous": "\tdescriptors.set(path, {\n\t\tbytes: bytes.length, sha256: sha256(bytes), value: bytes\n\t});\n",
+          "start": 3243
+        },
+        {
+          "current": "",
+          "previous": "\t\t, source: staged\n",
+          "start": 3894
+        },
+        {
+          "current": "\t\t\t\tawait putBytes(`hosted/output/${lane.key}/${route}/run.tap`, tap);\n\t\t\t\tawait putBytes(`hosted/output/${lane.key}/${route}/verified.json`\n",
+          "previous": "\t\t\t\tputBytes(`hosted/output/${lane.key}/${route}/run.tap`, tap);\n\t\t\t\tputBytes(`hosted/output/${lane.key}/${route}/verified.json`\n",
+          "start": 5359
+        },
+        {
+          "current": "\t\t\t\tawait putBytes(`hosted/output/${lane.key}/${route}/report.json`\n",
+          "previous": "\t\t\t\tputBytes(`hosted/output/${lane.key}/${route}/report.json`\n",
+          "start": 5518
+        },
+        {
+          "current": "\t\t\t\tawait putBytes(`hosted/output/${lane.key}/${route}/receipt.json`\n",
+          "previous": "\t\t\t\tputBytes(`hosted/output/${lane.key}/${route}/receipt.json`\n",
+          "start": 5602
+        },
+        {
+          "current": "\t\t\t\tawait putBytes(`hosted/api/${lane.key}/${name}.json`, item.bytes);\n",
+          "previous": "\t\t\t\tputBytes(`hosted/api/${lane.key}/${name}.json`, item.bytes);\n",
+          "start": 5915
+        },
+        {
+          "current": "\tawait putBytes(\"closure/proof-erasure-retained-audit.json\", auditBytes);\n\tawait putBytes(\"closure/dispositions.json\", canonicalJson({\n",
+          "previous": "\tputBytes(\"closure/proof-erasure-retained-audit.json\", auditBytes);\n\tputBytes(\"closure/dispositions.json\", canonicalJson({\n",
+          "start": 7255
+        },
+        {
+          "current": "\t\tawait putBytes(`hosted/api/refusal/${name}.json`, item.bytes);\n",
+          "previous": "\t\tputBytes(`hosted/api/refusal/${name}.json`, item.bytes);\n",
+          "start": 8989
+        },
+        {
+          "current": "\t\tawait putBytes(directProofErasureHostedSourcePath(source)\n",
+          "previous": "\t\tputBytes(directProofErasureHostedSourcePath(source)\n",
+          "start": 9234
+        },
+        {
+          "current": "",
+          "previous": "\tawait mkdir(directProofErasureHostedEvidenceDirectory);\n",
+          "start": 10926
+        },
+        {
+          "current": "\t\tconst target = join(stagingRoot, path);\n",
+          "previous": "\t\tconst target = join(directProofErasureHostedEvidenceDirectory, path);\n\t\tawait mkdir(dirname(target), { recursive: true });\n\t\tif(descriptor.source) await copyFile(\n\t\t\tdescriptor.source, target, constants.COPYFILE_FICLONE);\n\t\telse await writeFile(target, descriptor.value, { flag: \"wx\" });\n",
+          "start": 10975
+        },
+        {
+          "current": "\tawait writeFile(join(stagingRoot, \"index.json\"), indexBytes, { flag: \"wx\" });\n\tawait transaction.publish();\n",
+          "previous": "\tawait writeFile(join(directProofErasureHostedEvidenceDirectory\n\t\t, \"index.json\"), indexBytes, { flag: \"wx\" });\n",
+          "start": 11238
+        },
+        {
+          "current": "{ await transaction.dispose(); }\n",
+          "previous": "{ await rm(stagingRoot, { recursive: true }); }\n",
+          "start": 11707
+        }
+      ],
+      "path": "scripts/archive-direct-proof-erasure-hosted.mjs",
+      "previousSha256": "2f29deea8eed3f3274b76693cd66b1dcdfa31011111927db8a72e81fdbf94c91"
+    },
+    {
+      "currentSha256": "ea5796f13ad7314ff3ecb56f1d180989b2a17e3652f43d93fdb211b211e58295",
+      "edits": [
+        {
+          "current": "import \"./helpers/transactional-directory-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "4e798da97ba5a670d24028407811d3b73e71c20ad5bbae37e0badb1c533ef141"
+    }
+  ]
+}

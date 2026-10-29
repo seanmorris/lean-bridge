@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
+import "./helpers/large-evidence-transaction-source-history-tests.mjs";
 import "./helpers/transactional-directory-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-entrypoints-source-history-tests.mjs";
 import "./helpers/dependent-signature-focused-archive-source-history-tests.mjs";
