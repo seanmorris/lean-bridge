@@ -1,0 +1,129 @@
+{
+  "archivePattern": "docs/evidence/dependent-signatures-hosted-*/",
+  "currentSourcePaths": [],
+  "fetchDepth": 0,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-signature-audit-sparse-checkout-source-history.mjs",
+      "sha256": "57efa311830f5112be3ae942f47928a4b6a77b843229c571e9337a329e7e003c"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-audit-sparse-checkout-source-history-tests.mjs",
+      "sha256": "f4b8a0bc6e14e10a76f706a3647ed635208b1d14c5ff6c44193ce25cc0c1b7eb"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-audit-sparse-checkout-source-history.mjs",
+      "sha256": "a11efe0ad58593123837eb62bec25baee044ec72eb69770b32bdff45e5fc6b60"
+    }
+  ],
+  "implementationCommit": "e33b182f5522d0e559fd27336d4b639bf3290c29",
+  "integrationUpdates": [
+    {
+      "currentSha256": "548719eb58874e92e2fb4f83d03df423ddf22ee18a004a763092df64c866b93c",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-signature-audit-sparse-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "a19b92cb063f3a2cb516d046db13252a1318b47e20c5772c0d992430b1911326"
+    },
+    {
+      "currentSha256": "015c84d5d13bc74d5e4cbf19b4adfeeafc18f59f64331ade92aa50c6519cf8f0",
+      "edits": [
+        {
+          "current": "import { beforeDependentSignatureAuditSparseCheckoutSource, dependentSignatureAuditSparseCheckoutNormalizationPaths } from \"./dependent-signature-audit-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentSignatureAuditSparseCheckoutNormalizationPaths\n\t, ...dependentSignatureShallowCheckoutNormalizationPaths\n",
+          "previous": "\t...dependentSignatureShallowCheckoutNormalizationPaths\n",
+          "start": 220140
+        },
+        {
+          "current": "\tlet stage = beforeDependentSignatureAuditSparseCheckoutSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDependentSignatureShallowCheckoutSource(\n",
+          "previous": "\tlet stage = beforeDependentSignatureShallowCheckoutSource(\n",
+          "start": 275565
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3bfc9e315092219e3c43d150694ca305b7c831bea92b6db8a497fe6cde3330e8"
+    },
+    {
+      "currentSha256": "dbfec2cb95d849e6800e91d0ea477de97e02e1a050d95bcf876932b18fde603e",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import {\n\tbeforeDependentSignatureShallowCheckoutSource\n} from \"./dependent-signature-shallow-checkout-source-history.mjs\";\n",
+          "start": 463
+        },
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 1049
+        },
+        {
+          "current": "\t\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\t\tconst current = beforeDependentSignatureShallowCheckoutSource(\n\t\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t\t\t, update.currentSha256);\n",
+          "start": 2990
+        },
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256);\n",
+          "previous": "\t\tconst source = beforeDependentSignatureShallowCheckoutSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.sha256);\n",
+          "start": 3746
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-complete-promotion-source-history-tests.mjs",
+      "previousSha256": "a601acbc5e2ff4ce45bc379841fdb27a37e05aa5ca848281521dbde577df0a79"
+    }
+  ],
+  "milestone": "dependent-signature-audit-sparse-checkout-source-v1",
+  "predecessorCommit": "1c64e3e673655634f8ee9505c0530a9ce922dcb4",
+  "schemaVersion": 1,
+  "scope": "Retain complete dependent-signature source history while materializing only live source, root evidence records and the selected dependent-signature archive. Exclude unrelated retained payloads without changing either replay or promotion semantics.",
+  "sparseCheckoutConeMode": false,
+  "updates": [
+    {
+      "currentSha256": "74c64f6005e2b311c89dffd3176ad0c49b659dc5f6f2a8afa27a6f9a36bb0a7f",
+      "edits": [
+        {
+          "current": "      - name: Check out complete history and the exact audit corpus\n",
+          "previous": "      - name: Check out complete source history\n",
+          "start": 2305
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n            /docs/evidence/dependent-signatures-hosted-*/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 2483
+        }
+      ],
+      "path": ".github/workflows/dependent-signature-complete.yml",
+      "previousSha256": "8497e0fc5c3635e58e3df3aa018568060ee66fc06604086e8c4c281172c05140"
+    },
+    {
+      "currentSha256": "5466d220efc72d00d944d511bdb78e719ea8a39219389e22860024836834092c",
+      "edits": [
+        {
+          "current": "const auditCheckout = `      - name: Check out complete history and the exact audit corpus\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n            /docs/evidence/dependent-signatures-hosted-*/\n          sparse-checkout-cone-mode: false\n`;\n",
+          "previous": "",
+          "start": 893
+        },
+        {
+          "current": "\tassert.equal(source.split(auditCheckout).length - 1, 1);\n",
+          "previous": "\tassert.match(source, /uses: actions\\/checkout@v6\\n {8}with:\\n {10}fetch-depth: 0\\n {10}persist-credentials: false/u);\n",
+          "start": 3366
+        },
+        {
+          "current": "\t\t, source.replace(\"            !/docs/evidence/*\\n\", \"\")\n\t\t, source.replace(\n\t\t\t\"            /docs/evidence/dependent-signatures-hosted-*/\\n\", \"\")\n\t\t, source.replace(\"          sparse-checkout-cone-mode: false\\n\", \"\")\n",
+          "previous": "",
+          "start": 7706
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-complete-ci-tests.mjs",
+      "previousSha256": "35984025f9758b648be57c6f8af1203c93900a260be7b87546b29279ccb098c3"
+    }
+  ]
+}

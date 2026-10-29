@@ -13,9 +13,6 @@ import {
 	authenticateSourceHistoryReverse, gitSourceBytes
 } from "./source-history-stream.mjs";
 import {
-	beforeDependentSignatureShallowCheckoutSource
-} from "./dependent-signature-shallow-checkout-source-history.mjs";
-import {
 	beforeOptionalParameterCompletePromotionSource
 	, optionalParameterCompletePromotionChangedPaths
 	, optionalParameterCompletePromotionCommits
@@ -27,6 +24,8 @@ import {
 	, optionalParameterCompletePromotionPredecessor
 	, reverseOptionalParameterCompletePromotionUpdate
 } from "./optional-parameter-complete-promotion-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -70,9 +69,8 @@ test("complete optional publication reverses every authenticated source"
 			), update), true, update.path);
 		for(const update of record.integrationUpdates)
 		{
-			const current = beforeDependentSignatureShallowCheckoutSource(
-				update.path, await readFile(update.path, "utf8")
-				, update.currentSha256);
+			const current = await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256);
 			const previous = git(["show"
 				, `${optionalParameterCompletePromotionImplementation}:${update.path}`]);
 			assert.equal(reverseOptionalParameterCompletePromotionUpdate(
@@ -89,9 +87,8 @@ test("complete optional publication authenticates history controls", async () =>
 		, optionalParameterCompletePromotionHistoryAdditions);
 	for(const addition of record.historyAdditions)
 	{
-		const source = beforeDependentSignatureShallowCheckoutSource(
-			addition.path, await readFile(addition.path, "utf8")
-			, addition.sha256);
+		const source = await sourceAtFinHistoryMilestone(
+			addition.path, addition.sha256);
 		assert.equal(sha256(source), addition.sha256, addition.path);
 	}
 	assert.deepEqual(git(["rev-list", "--reverse"

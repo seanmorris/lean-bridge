@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDependentSignatureAuditSparseCheckoutSource, dependentSignatureAuditSparseCheckoutNormalizationPaths } from "./dependent-signature-audit-sparse-checkout-source-history.mjs";
 import { beforeDependentSignatureShallowCheckoutSource, dependentSignatureShallowCheckoutNormalizationPaths } from "./dependent-signature-shallow-checkout-source-history.mjs";
 import { beforeOptionalParameterCompletePromotionSource, optionalParameterCompletePromotionNormalizationPaths } from "./optional-parameter-complete-promotion-source-history.mjs";
 import { beforeOptionalParameterReceiptSparseCheckoutSource, optionalParameterReceiptSparseCheckoutNormalizationPaths } from "./optional-parameter-receipt-sparse-checkout-source-history.mjs";
@@ -2386,7 +2387,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentSignatureShallowCheckoutNormalizationPaths
+	...dependentSignatureAuditSparseCheckoutNormalizationPaths
+	, ...dependentSignatureShallowCheckoutNormalizationPaths
 	, ...optionalParameterCompletePromotionNormalizationPaths
 	, ...optionalParameterReceiptSparseCheckoutNormalizationPaths
 	, ...optionalParameterRouteBinderRepairNormalizationPaths
@@ -3511,7 +3513,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDependentSignatureShallowCheckoutSource(
+	let stage = beforeDependentSignatureAuditSparseCheckoutSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDependentSignatureShallowCheckoutSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
