@@ -1,0 +1,209 @@
+{
+  "auditFetchDepth": 0,
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-complete-acceptance-budget-source-history.mjs",
+      "sha256": "f2c7a388d96158e06ad34bc60eddaff0051d76476a64f03ba4436ee596be8e39"
+    },
+    {
+      "path": "tests/helpers/complete-acceptance-budget-source-history-tests.mjs",
+      "sha256": "1f56ea26f286816b323584b24775931abb3f96baca579ec8cba9f2077d64efe4"
+    },
+    {
+      "path": "tests/helpers/complete-acceptance-budget-source-history.mjs",
+      "sha256": "2ee238da731d81120a0430d058c74caf462f28aea33d9b1d1dcfb7a6dc30d421"
+    }
+  ],
+  "hostNullProducerGroups": 4,
+  "implementationCommit": "0da9138d991bf36755bcb16bf42e87fabcec8271",
+  "integrationUpdates": [
+    {
+      "currentSha256": "063473efe669bf64feac786d6bc602c29d51e6952513148063ffd1ebede31651",
+      "edits": [
+        {
+          "current": "import \"./helpers/complete-acceptance-budget-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "dd8423a49ca59fee67506c0181e4e1987db495a6c53d57354daa37779545f7a3"
+    },
+    {
+      "currentSha256": "b03ed833e136560a3c09ca1b76865c08f2089529248ecb56431e981586f4ff8c",
+      "edits": [
+        {
+          "current": "import { beforeCompleteAcceptanceBudgetSource, completeAcceptanceBudgetNormalizationPaths } from \"./complete-acceptance-budget-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...completeAcceptanceBudgetNormalizationPaths\n\t, ...dependentSignatureProducerSparseCheckoutNormalizationPaths\n",
+          "previous": "\t...dependentSignatureProducerSparseCheckoutNormalizationPaths\n",
+          "start": 220830
+        },
+        {
+          "current": "\tlet stage = beforeCompleteAcceptanceBudgetSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDependentSignatureProducerSparseCheckoutSource(\n",
+          "previous": "\tlet stage = beforeDependentSignatureProducerSparseCheckoutSource(\n",
+          "start": 276482
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "521a881831ccfc4d8029e554d6382559beb217221f0a00e51b50b87c210ae1fd"
+    }
+  ],
+  "maximumInternalProducerConcurrency": 3,
+  "milestone": "complete-acceptance-budget-source-v1",
+  "predecessorCommit": "449f858a9bad7890466079fd959ef6421771826a",
+  "proofErasureProducerGroups": 5,
+  "receiptFetchDepth": 1,
+  "schemaVersion": 1,
+  "scope": "Bound direct proof-erasure and HostNull focused producer groups to no more than three internal jobs at once. Retain fail-independent execution and exact receipt reconciliation while excluding unrelated hosted evidence from audit and receipt worktrees.",
+  "sparseCheckoutConeMode": false,
+  "updates": [
+    {
+      "currentSha256": "61f858359bec8fec4f20972ad75e836a7690a67caca93fa907bb3fa36d4e0ffc",
+      "edits": [
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n            /docs/evidence/direct-proof-erasure-hosted-*/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 2488
+        },
+        {
+          "current": "    needs: npm-browser\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 4580
+        },
+        {
+          "current": "    needs: native-perl\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 4810
+        },
+        {
+          "current": "    needs: languages\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 5034
+        },
+        {
+          "current": "    needs: managed-wit\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 5250
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 5850
+        }
+      ],
+      "path": ".github/workflows/direct-proof-erasure-complete.yml",
+      "previousSha256": "e53599817ee2dbfb3143c8424433d86485adf6276507eabebea0dec85a8f70ad"
+    },
+    {
+      "currentSha256": "b175b97484f639c1474db6c2e145fcb48e498934edd8482e6629f65e88cc5109",
+      "edits": [
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n            /docs/evidence/host-null-complete-*/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 2084
+        },
+        {
+          "current": "    needs: npm-browser\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 4039
+        },
+        {
+          "current": "    needs: native-perl\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 4258
+        },
+        {
+          "current": "    needs: managed-wit\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 4465
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 5036
+        }
+      ],
+      "path": ".github/workflows/host-null-complete.yml",
+      "previousSha256": "9cedb71dcfb24683b62a82812512bfa4bbf9ee6926f7666c2e9e2d57025b924c"
+    },
+    {
+      "currentSha256": "41339e32cfe39dc4bf60fef05a9e8e9bbff1b481a8c81eff6491867a130026ad",
+      "edits": [
+        {
+          "current": "const producerDependencies = new Map([\n\t[\"native-perl\", \"npm-browser\"], [\"languages\", \"native-perl\"]\n\t, [\"managed-wit\", \"languages\"], [\"php\", \"managed-wit\"]\n]);\nconst sparseSourcePatterns = Object.freeze([\n\t\"/*\", \"!/*/\", \"/.github/\", \"/acceptance/\", \"/config/\", \"/containers/\"\n\t, \"/demos/\", \"/nix/\", \"/notices/\", \"/patches/\", \"/poc/\", \"/schema/\"\n\t, \"/scripts/\", \"/site/\", \"/src/\", \"/tests/\", \"/docs/\"\n\t, \"!/docs/evidence/*\", \"/docs/evidence/*.json\"\n\t, \"/docs/evidence/*.md\", \"/docs/evidence/*.xml\"\n]);\n",
+          "previous": "",
+          "start": 329
+        },
+        {
+          "current": "const sparseCheckoutPatterns = source => {\n\tassert.equal(source.split(\"          sparse-checkout: |\\n\").length - 1, 1);\n\tassert.match(source, /sparse-checkout-cone-mode: false/u);\n\treturn source.split(\"          sparse-checkout: |\\n\")[1]\n\t\t.split(\"          sparse-checkout-cone-mode: false\\n\")[0]\n\t\t.trim().split(\"\\n\").map(line => line.trim());\n};\n\n",
+          "previous": "",
+          "start": 3780
+        },
+        {
+          "current": "\tassert.deepEqual(sparseCheckoutPatterns(audit), [\n\t\t...sparseSourcePatterns, \"/docs/evidence/direct-proof-erasure-hosted-*/\"\n\t]);\n",
+          "previous": "",
+          "start": 5865
+        },
+        {
+          "current": "\t\tconst dependency = producerDependencies.get(job);\n\t\tif(dependency === undefined)\n\t\t{\n\t\t\tassert.doesNotMatch(body, /^ {4}needs:/mu, job);\n\t\t\tassert.match(body, /^ {4}if: inputs\\.suite == 'produce'$/mu, job);\n\t\t}\n\t\telse\n\t\t{\n\t\t\tassert.match(body, new RegExp(`^    needs: ${dependency}$`, \"mu\"), job);\n\t\t\tassert.match(body\n\t\t\t\t, /^ {4}if: always\\(\\) && inputs\\.suite == 'produce'$/mu, job);\n\t\t}\n",
+          "previous": "\t\tassert.match(body, /^ {4}if: inputs\\.suite == 'produce'$/mu);\n",
+          "start": 6810
+        },
+        {
+          "current": "\tassert.deepEqual(sparseCheckoutPatterns(receipt), sparseSourcePatterns);\n",
+          "previous": "",
+          "start": 7400
+        },
+        {
+          "current": "\t\t, source.replace(\"            !/docs/evidence/*\\n\", \"\")\n\t\t, source.replace(\n\t\t\t\"            /docs/evidence/direct-proof-erasure-hosted-*/\\n\", \"\")\n\t\t, source.replace(\"    needs: npm-browser\\n\", \"\")\n\t\t, source.replace(\"    if: always() && inputs.suite == 'produce'\\n\"\n\t\t\t, \"    if: inputs.suite == 'produce'\\n\")\n",
+          "previous": "",
+          "start": 9384
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-ci-tests.mjs",
+      "previousSha256": "b0d52f8df376597e9c0c144ac978da482cbcbd3a6ed8ba4e037ed96653199402"
+    },
+    {
+      "currentSha256": "3e1f27db479c5503d1e930f029c33508067638715d014eabe4b60374e35a29be",
+      "edits": [
+        {
+          "current": "const producerDependencies = new Map([\n\t[\"native-perl\", \"npm-browser\"], [\"managed-wit\", \"native-perl\"]\n\t, [\"php\", \"managed-wit\"]\n]);\nconst sparseSourcePatterns = Object.freeze([\n\t\"/*\", \"!/*/\", \"/.github/\", \"/acceptance/\", \"/config/\", \"/containers/\"\n\t, \"/demos/\", \"/nix/\", \"/notices/\", \"/patches/\", \"/poc/\", \"/schema/\"\n\t, \"/scripts/\", \"/site/\", \"/src/\", \"/tests/\", \"/docs/\"\n\t, \"!/docs/evidence/*\", \"/docs/evidence/*.json\"\n\t, \"/docs/evidence/*.md\", \"/docs/evidence/*.xml\"\n]);\n",
+          "previous": "",
+          "start": 309
+        },
+        {
+          "current": "const sparseCheckoutPatterns = source => {\n\tassert.equal(source.split(\"          sparse-checkout: |\\n\").length - 1, 1);\n\tassert.match(source, /sparse-checkout-cone-mode: false/u);\n\treturn source.split(\"          sparse-checkout: |\\n\")[1]\n\t\t.split(\"          sparse-checkout-cone-mode: false\\n\")[0]\n\t\t.trim().split(\"\\n\").map(line => line.trim());\n};\n\n",
+          "previous": "",
+          "start": 3094
+        },
+        {
+          "current": "\tassert.deepEqual(sparseCheckoutPatterns(audit), [\n\t\t...sparseSourcePatterns, \"/docs/evidence/host-null-complete-*/\"\n\t]);\n",
+          "previous": "",
+          "start": 4932
+        },
+        {
+          "current": "\t\tconst dependency = producerDependencies.get(job);\n\t\tif(dependency === undefined)\n\t\t{\n\t\t\tassert.doesNotMatch(body, /^ {4}needs:/mu, job);\n\t\t\tassert.match(body, /^ {4}if: inputs\\.suite == 'produce'$/mu, job);\n\t\t}\n\t\telse\n\t\t{\n\t\t\tassert.match(body, new RegExp(`^    needs: ${dependency}$`, \"mu\"), job);\n\t\t\tassert.match(body\n\t\t\t\t, /^ {4}if: always\\(\\) && inputs\\.suite == 'produce'$/mu, job);\n\t\t}\n",
+          "previous": "\t\tassert.match(body, /^ {4}if: inputs\\.suite == 'produce'$/mu);\n",
+          "start": 5821
+        },
+        {
+          "current": "\tassert.deepEqual(sparseCheckoutPatterns(receipt), sparseSourcePatterns);\n",
+          "previous": "",
+          "start": 6400
+        },
+        {
+          "current": "\t\t, source.replace(\"            !/docs/evidence/*\\n\", \"\")\n\t\t, source.replace(\"            /docs/evidence/host-null-complete-*/\\n\", \"\")\n\t\t, source.replace(\"    needs: npm-browser\\n\", \"\")\n\t\t, source.replace(\"    if: always() && inputs.suite == 'produce'\\n\"\n\t\t\t, \"    if: inputs.suite == 'produce'\\n\")\n",
+          "previous": "",
+          "start": 8241
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-ci-tests.mjs",
+      "previousSha256": "a71c199e4052a47e3c119954ff7c908646eaad87e9b5567d4bab166cf46fcaee"
+    }
+  ]
+}
