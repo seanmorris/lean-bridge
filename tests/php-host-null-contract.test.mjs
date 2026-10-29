@@ -144,11 +144,13 @@ test("the consumer matrix retains installed HostNull acceptance and reports", as
 	assert.equal(count(/LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1/gu), 2);
 	assert.equal(count(/tests\/php-host-null\.test\.mjs/gu), 2);
 	assert.equal(count(/tests\/php-wasm-host-null\.test\.mjs/gu), 2);
-	assert.equal(count(/build\/host-null\/php-native\.json/gu), 3);
-	assert.equal(count(/build\/host-null\/php-wasm\.json/gu), 3);
+	assert.equal(count(/build\/host-null\/php-native\.json/gu), 4);
+	assert.equal(count(/build\/host-null\/php-wasm\.json/gu), 4);
 	assert.equal(count(/LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=/gu), 4);
 	assert.equal(count(/scripts\/check-host-null-php-reports\.mjs/gu), 4);
 	assert.match(workflow, /build\/host-null\/packages\/php-native/u);
 	assert.match(workflow, /build\/host-null\/packages\/php-wasm/u);
+	assert.match(workflow, /name: host-null-php-native-\$\{\{ github\.sha \}\}/u);
+	assert.match(workflow, /name: host-null-php-wasm-\$\{\{ github\.sha \}\}/u);
 	assert.match(workflow, /matrix\.profile == 'values-graph'[^]*LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1/u);
 });

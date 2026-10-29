@@ -2422,6 +2422,17 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Upload native PHP HostNull evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-php-native-${{ github.sha }}
+          path: |
+            build/host-null/php-native.json
+            build/host-null/packages/php-native
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Build twice, install, and execute the native PHP transport
         id: consumer
         continue-on-error: true
@@ -2852,6 +2863,17 @@ jobs:
             build/variants/php-wasm-zend-faults.json
             build/collections/php-wasm.json
             build/collections/php-wasm-zend-faults.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Upload PHP-Wasm HostNull evidence
+        if: always() && matrix.profile == 'values-graph'
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-php-wasm-${{ github.sha }}
+          path: |
+            build/host-null/php-wasm.json
+            build/host-null/packages/php-wasm
           if-no-files-found: error
           overwrite: true
           retention-days: 30

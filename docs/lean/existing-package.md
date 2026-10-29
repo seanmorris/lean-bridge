@@ -46,7 +46,46 @@ Ordinary npm builds send source and module selection to the engine without host-
 
 Native CPAN uses the same [compiler report](../architecture/elaborated-export-metadata.md) with its native type projection. Its prepared package includes `metadata.json` with documentation, source locations, resolved native types and theorem references. The native receipt binds that report to the compiled library. Public `analyze` also uses the native type metadata when `ownedAggregates` is selected, and returns a schema-4 Binding IR for owned values and synchronous callbacks. This metadata profile describes compiler types; it does not select a binary architecture or package target.
 
-The npm builder accepts shared module/export selection, `arities`, `specializations`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. [Ordinary C/C++ builds](../publish/c.md#build-an-ordinary-lean-project) accept the shared configuration for pure copied primitive signatures and use `targets.c.name`/`version` and `targets.cpp.name`/`version`. C-only builds do not require CPAN settings or Perl tools. [PHP-Wasm](../publish/php.md#build-an-ordinary-php-wasm-package) separates `targets.php-wasm.npm.name`/`version` from `targets.php-wasm.composer.name`/`version`. Repeat `--target` to combine supported targets from one captured source tree, with one compilation per ABI. The [staged implementation](../architecture/cross-language-authoring.md) tracks the remaining type-family decisions. A reviewed Binding IR owns its export decisions; only `modules`, package metadata, generators and target settings can accompany it.
+The npm builder accepts shared module/export selection, `arities`, `specializations`, `hostProjections`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. [Ordinary C/C++ builds](../publish/c.md#build-an-ordinary-lean-project) accept the shared configuration for pure copied primitive signatures and use `targets.c.name`/`version` and `targets.cpp.name`/`version`. C-only builds do not require CPAN settings or Perl tools. [PHP-Wasm](../publish/php.md#build-an-ordinary-php-wasm-package) separates `targets.php-wasm.npm.name`/`version` from `targets.php-wasm.composer.name`/`version`. Repeat `--target` to combine supported targets from one captured source tree, with one compilation per ABI. The [staged implementation](../architecture/cross-language-authoring.md) tracks the remaining type-family decisions. A reviewed Binding IR owns its export decisions; only `modules`, exact `hostProjections`, package metadata, generators and target settings can accompany it.
+
+### Select an explicit host-null projection
+
+`hostProjections` authorizes an exact Lean wrapper and its two constructors; it
+does not infer nullability from a name or from `Option`. Each entry has `name`,
+`nullConstructor`, and `valueConstructor`, all fully qualified Lean names. The
+array contains at most 32 entries.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["NullableApi"],
+  "exports": ["NullableApi.echo"],
+  "hostProjections": [{
+    "name": "NullableApi.HostNull",
+    "nullConstructor": "NullableApi.HostNull.null",
+    "valueConstructor": "NullableApi.HostNull.value"
+  }],
+  "targets": {
+    "php-wasm": {
+      "npm": { "name": "nullable-api-wasm", "version": "1.0.0" },
+      "composer": { "name": "nullable-api/wasm", "version": "1.0.0" }
+    }
+  }
+}
+```
+
+The wrapper must be unary and generic. The null constructor takes no payload;
+the value constructor takes exactly the wrapper's type argument. Compiler-backed
+analysis authenticates those declarations and every selected use before any
+adapter is emitted. Source-only discovery rejects the selection because it
+cannot authenticate constructors.
+
+Keep this field when building an independently reviewed Binding IR. The review
+describes `host-null` in the public type graph, while the configuration supplies
+the exact Lean names that fresh compilation must reproduce. Do not copy the
+constructor names into ordinary Option metadata. See [Choose an export
+shape](export-decisions.md#select-an-explicit-host-null-wrapper) for semantics
+and the [PHP guide](../php.md#explicit-host-null) for its consumer values.
 
 ### Compile a reviewed contract
 

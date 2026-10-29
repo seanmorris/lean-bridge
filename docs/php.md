@@ -118,7 +118,7 @@ their public namespace:
 
 | Lean type | PHP value |
 | --- | --- |
-| `Option T` | `null` for none, `new Some($value)` for some |
+| `Option T` | `null` for none and `new Some($value)` for some; packages that expose an explicit host-null projection use `new None()` and `new Some($value)` instead |
 | `Except E T` | `new Ok($value)` or `new Err($error)` |
 | `A × B` | Exactly two consecutive-key array elements, `[$a, $b]` |
 
@@ -158,6 +158,51 @@ Recursive native and PHP-Wasm packages use the [bounded graph conversion](#recur
 described below. See the
 [native compound checks](evidence/php-native-compounds-20260920.md) and
 [PHP-Wasm compound checks](evidence/php-wasm-compounds-20260920.md).
+
+### Explicit host null
+
+A publisher may select one exact two-constructor Lean wrapper as a host-null
+projection. In that package only, the selected null constructor crosses as PHP
+`null`, while its value constructor crosses as the payload directly. Lean
+Bridge does not infer this behavior from a type name, an unsupported value, a
+proof, `Unit`, `Option.none`, an omitted argument or a default.
+
+The package uses generated `None` and `Some` classes for every Lean `Option` so
+host null and option absence cannot collapse into the same PHP value:
+
+| Lean value | PHP value |
+| --- | --- |
+| `HostNull.null : HostNull UInt32` | `null` |
+| `HostNull.value 42` | Native: `42`; PHP-Wasm: `BigInteger::of(42)` |
+| `HostNull.null : HostNull (Option UInt32)` | `null` |
+| `HostNull.value none` | `new None()` |
+| `HostNull.value (some 42)` | `new Some(42)` or, in PHP-Wasm, `new Some(BigInteger::of(42))` |
+| `none : Option (HostNull UInt32)` | `new None()` |
+| `some HostNull.null` | `new Some(null)` |
+
+For example, a generated package namespace `LeanNullable` can preserve all
+three states without a side channel:
+
+```php
+use LeanNullable\{None, Some};
+use function LeanNullable\{nullable_option, optional_nullable};
+
+$outerNull = nullable_option(null);          // HostNull.null
+$innerNone = nullable_option(new None());    // HostNull.value Option.none
+$presentNull = optional_nullable(new Some(null)); // Option.some HostNull.null
+```
+
+The same mapping applies to copied parameters, results, record fields,
+synchronous callback parameters and synchronous callback results in native PHP
+and PHP-Wasm packages. Invalid branch objects or payloads reject before Lean
+entry, and a later valid call still works. A selected HostNull payload must have
+a PHP representation distinct from `null`; for example, a publisher cannot
+project `HostNull Unit` through this direct representation.
+
+Publishers configure this projection with the exact Lean wrapper and constructor
+names in `hostProjections`; consumers do not configure it. The generated API,
+PHPDoc and package README show whether a prepared release uses the tagged Option
+representation.
 
 ### Named copied variants
 

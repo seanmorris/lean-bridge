@@ -25,6 +25,56 @@ Use the shared [export configuration](existing-package.md#configure-exports) to 
 
 These decisions define the full authoring work. A listed form becomes usable in a profile when its compiler, generated API, package, and installed checks support that mapping. The [implementation stages](../architecture/cross-language-authoring.md#stages) track the remaining work.
 
+### Select an explicit host-null wrapper
+
+Use a host-null projection only when the public API deliberately gives one Lean
+constructor the meaning “host null.” Keep it distinct from `Option`, `Unit`, an
+omitted argument, a default and an unsupported value. For example:
+
+```lean
+inductive HostNull (α : Type u) where
+  | null
+  | value (value : α)
+
+def echo (value : HostNull UInt32) : HostNull UInt32 := value
+```
+
+Authorize the exact generic wrapper and both constructors in
+`lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["NullableApi"],
+  "exports": ["NullableApi.echo"],
+  "hostProjections": [{
+    "name": "NullableApi.HostNull",
+    "nullConstructor": "NullableApi.HostNull.null",
+    "valueConstructor": "NullableApi.HostNull.value"
+  }],
+  "targets": {
+    "npm": { "name": "nullable-api", "version": "1.0.0" },
+    "php-native": { "name": "nullable-api/php", "version": "1.0.0" }
+  }
+}
+```
+
+Lean Bridge compiles fresh metadata and requires a unary generic wrapper with
+exactly the selected nullary and unary constructors. A matching name is not
+enough. The same selection accompanies an independently reviewed Binding IR;
+fresh Lean must reproduce the wrapper, constructors and every selected use.
+The private Binding IR records the `host-null` type constructor but does not
+turn constructor names into a host-authored ABI claim.
+
+The selected null constructor becomes the host language's null value and the
+value constructor becomes its payload. The payload must itself have a
+representation distinct from null. Nested `HostNull (Option T)` and
+`Option (HostNull T)` therefore retain three distinct states instead of
+collapsing either `Option.none` into null. JavaScript/TypeScript and the PHP
+profiles have installed package acceptance for copied parameters, results,
+fields and synchronous callback positions. Other targets require their own
+installed evidence; selecting a target never silently drops this distinction.
+
 Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. Ordinary-source npm packages accept [bounded integers inside containers, copied fields, aliases, recursive values, callbacks, and returned closures](existing-package.md#export-bounded-integers) and [checked top-level `Subtype` constructors](existing-package.md#export-a-checked-subtype) over primitive bases. PHP-Wasm copied-graph packages also retain selected constructors and `Fin` bounds through [finite recursive copied values](../evidence/recursive-subtype-php-wasm-20261015.md). Refined callback results must have a finite recovery value; bare `Fin 0` results are rejected at build time. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). Other checked-constructor positions, retained host callbacks and async adapters remain unfinished.
 
 For a reviewed `Subtype` API, select the checked constructor by public export

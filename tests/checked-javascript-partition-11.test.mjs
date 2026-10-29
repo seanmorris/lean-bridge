@@ -5,6 +5,7 @@
  */
 import "./helpers/host-null-javascript-source-history-tests.mjs";
 import "./helpers/host-null-php-report-tests.mjs";
+import "./host-null-documentation.test.mjs";
 import "./php-host-null-contract.test.mjs";
 import "./helpers/corpus-trap-build-checkout-repair-source-history-tests.mjs";
 import "./helpers/performance-reproducibility-checkout-source-history-tests.mjs";
