@@ -1,0 +1,127 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-proof-erasure-core-lint-repair-source-history.mjs",
+      "sha256": "cb12d2055364cda6b014d1c4c2db0911a88836c34b257432b8200a7bfcefb284"
+    },
+    {
+      "path": "tests/helpers/proof-erasure-core-lint-repair-source-history-tests.mjs",
+      "sha256": "12a4ee97c65080e6a94b822274516b9ad13b2b2d28ffc1226a1ee6283bafb074"
+    },
+    {
+      "path": "tests/helpers/proof-erasure-core-lint-repair-source-history.mjs",
+      "sha256": "7cf571467291f36fa7532ee8f692cb010196ff40841101205c04d4b3f2ad8bc7"
+    }
+  ],
+  "implementationCommit": "eb1abb2e29e7a614c61f7e592f8e32fb7599c683",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d7a2490bfc04264ea87a72c932bd4afb87b69c02ea2f249555c5e27bce87b78b",
+      "edits": [
+        {
+          "current": "import \"./helpers/proof-erasure-core-lint-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "0931572b173fd49ba48f57828a7cbbe0df3316a8ced0b2c2fdc5bde15e3a3056"
+    },
+    {
+      "currentSha256": "431633d8e92fe6e8b3548553e5e0471168620aab42a0787edb9470ca2090a043",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 886
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2591
+        },
+        {
+          "current": "\tassert.deepEqual(history.historyAdditions.map(item => item.path)\n\t\t, dependentSignatureProducerConcurrencyHistoryAdditions);\n\tfor(const addition of history.historyAdditions)\n\t{\n\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256);\n\t\tassert.equal(sha256(source), addition.sha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.deepEqual(history.historyAdditions.map(item => item.path)\n\t\t\t, dependentSignatureProducerConcurrencyHistoryAdditions);\n\t\tfor(const addition of history.historyAdditions)\n\t\t\tassert.equal(sha256(await readFile(addition.path)), addition.sha256\n\t\t\t\t, addition.path);\n",
+          "start": 4128
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-producer-concurrency-source-history-tests.mjs",
+      "previousSha256": "90c243ed44b4ea9051b736e75449b026b0a9c4508afe335e4d32ce460598c0e4"
+    },
+    {
+      "currentSha256": "35dee23920b826e26bd662853947a6e44af6eda3007cf1d3d94846d5787b68c6",
+      "edits": [
+        {
+          "current": "import { beforeProofErasureCoreLintRepairSource, proofErasureCoreLintRepairNormalizationPaths } from \"./proof-erasure-core-lint-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...proofErasureCoreLintRepairNormalizationPaths\n\t, ...dependentSignatureProducerConcurrencyNormalizationPaths\n",
+          "previous": "\t...dependentSignatureProducerConcurrencyNormalizationPaths\n",
+          "start": 220484
+        },
+        {
+          "current": "\tlet stage = beforeProofErasureCoreLintRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDependentSignatureProducerConcurrencySource(\n",
+          "previous": "\tlet stage = beforeDependentSignatureProducerConcurrencySource(\n",
+          "start": 276022
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2400663c9049d193089ad89be9f76673fc8cae9d0969945ad40815b5e3e7ec39"
+    }
+  ],
+  "milestone": "proof-erasure-core-lint-repair-source-v1",
+  "predecessorCommit": "7f206cdbf35d650c48917572e6344fdc0194aeb7",
+  "repairedLintErrors": 10,
+  "schemaVersion": 1,
+  "scope": "Restore the exact repository lint contract for the bounded direct proof-erasure workflow and receipt tests without changing workflow, receipt or type-surface semantics.",
+  "updates": [
+    {
+      "currentSha256": "b0d52f8df376597e9c0c144ac978da482cbcbd3a6ed8ba4e037ed96653199402",
+      "edits": [
+        {
+          "current": "}\n, {\n",
+          "previous": "}, {\n",
+          "start": 1282
+        },
+        {
+          "current": "}\n, {\n",
+          "previous": "}, {\n",
+          "start": 1631
+        },
+        {
+          "current": "}\n, {\n",
+          "previous": "}, {\n",
+          "start": 1913
+        },
+        {
+          "current": "}\n, {\n",
+          "previous": "}, {\n",
+          "start": 2397
+        },
+        {
+          "current": "/**\n * Assert the complete proof-erasure workflow contract.\n *\n * @param source - UTF-8 YAML whose audit and producer gates must remain exact.\n */\n",
+          "previous": "",
+          "start": 3278
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-ci-tests.mjs",
+      "previousSha256": "a77a4da5181bdd4f8f8f00e805b4f3f8215c76aec1c8a9522750cd717a47f8f9"
+    },
+    {
+      "currentSha256": "cf9f1955e57cf053f5e249df00321408bec4f11bbcfab1a99f0189cb7fc0a6af",
+      "edits": [
+        {
+          "current": "const records = () => {\n\tconst values = new Map();\n\tfor(const lane of directProofErasureMatrixLanes)\n\t\tfor(const route of directProofErasureMatrixRoutes)\n\t\t\tvalues.set(\n\t\t\t\tdirectProofErasureMatrixResultPath(lane, route, producerCommit)\n\t\t\t\t, Buffer.from(canonicalJson(result(lane, route)))\n\t\t\t);\n\treturn values;\n};\n",
+          "previous": "const records = () => new Map(directProofErasureMatrixLanes.flatMap(lane =>\n\tdirectProofErasureMatrixRoutes.map(route => [\n\t\tdirectProofErasureMatrixResultPath(lane, route, producerCommit)\n\t\t, Buffer.from(canonicalJson(result(lane, route)))\n\t])));\n",
+          "start": 1547
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-matrix-receipt-tests.mjs",
+      "previousSha256": "2484d5cd14c431a3d104d4d35f207458de5af0ffb94a7c71f30bb4a2663d0704"
+    }
+  ]
+}

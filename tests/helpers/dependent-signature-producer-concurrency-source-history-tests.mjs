@@ -20,6 +20,8 @@ import {
 	, dependentSignatureProducerConcurrencyPredecessor
 	, reverseDependentSignatureProducerConcurrencyUpdate
 } from "./dependent-signature-producer-concurrency-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -58,7 +60,8 @@ test("bounded dependent-signature producers reverse every source", async () => {
 		), update), true, update.path);
 	for(const update of history.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const previous = git(["show"
 			, `${dependentSignatureProducerConcurrencyImplementation}:${update.path}`]);
 		assert.equal(reverseDependentSignatureProducerConcurrencyUpdate(
@@ -93,11 +96,14 @@ test("bounded dependent-signature producer graph retains all lanes", async () =>
 test("bounded dependent-signature producers authenticate history controls"
 	, async () => {
 		const history = await record();
-		assert.deepEqual(history.historyAdditions.map(item => item.path)
-			, dependentSignatureProducerConcurrencyHistoryAdditions);
-		for(const addition of history.historyAdditions)
-			assert.equal(sha256(await readFile(addition.path)), addition.sha256
-				, addition.path);
+	assert.deepEqual(history.historyAdditions.map(item => item.path)
+		, dependentSignatureProducerConcurrencyHistoryAdditions);
+	for(const addition of history.historyAdditions)
+	{
+		const source = await sourceAtFinHistoryMilestone(
+			addition.path, addition.sha256);
+		assert.equal(sha256(source), addition.sha256, addition.path);
+	}
 	}
 );
 
