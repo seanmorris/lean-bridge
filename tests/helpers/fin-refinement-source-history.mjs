@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeHostNullTypeSurfaceLineageIntegrationSource, beforeHostNullTypeSurfaceLineageSource, hostNullTypeSurfaceLineageNormalizationPaths } from "./host-null-type-surface-lineage-source-history.mjs";
 import { beforeHostNullPartitionGapIntegrationSource, beforeHostNullPartitionGapSource, hostNullPartitionGapNormalizationPaths } from "./host-null-partition-gap-source-history.mjs";
 import { beforeNpmRuntimeDefaultValueCopyRepairSource, npmRuntimeDefaultValueCopyRepairNormalizationPaths } from "./npm-runtime-default-value-copy-repair-source-history.mjs";
 import { beforeHostNullJavaScriptSource, hostNullJavaScriptNormalizationPaths } from "./host-null-javascript-source-history.mjs";
@@ -2358,7 +2359,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostNullPartitionGapNormalizationPaths
+	...hostNullTypeSurfaceLineageNormalizationPaths
+	, ...hostNullPartitionGapNormalizationPaths
 	, ...npmRuntimeDefaultValueCopyRepairNormalizationPaths
 	, ...hostNullJavaScriptNormalizationPaths
 	, ...corpusTrapBuildCheckoutRepairNormalizationPaths
@@ -3455,11 +3457,20 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeHostNullPartitionGapIntegrationSource(path, text, expected);
+	let stage = beforeHostNullTypeSurfaceLineageIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullPartitionGapIntegrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
 	stage = beforeNpmRuntimeDefaultValueCopyRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	// The recovered combined-lineage type-surface pins follow the managed and npm repair commits.
+	stage = beforeHostNullTypeSurfaceLineageSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
