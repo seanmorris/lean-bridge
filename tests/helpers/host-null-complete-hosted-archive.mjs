@@ -4,11 +4,25 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
-import { isAbsolute, resolve } from "node:path";
+import { extname, isAbsolute, join, posix, resolve } from "node:path";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import {
+	verifyComponentPackageReceipt
+} from "../../src/release/component-package-receipt.mjs";
+import {
+	verifyPackageSetReceipt
+} from "../../src/release/package-set-receipt.mjs";
 import {
 	inspectCheckedRecordValueIndexHostedArtifact
 } from "./checked-record-value-index-hosted-archive.mjs";
+import {
+	checkHostNullJavaScriptHostedReport
+} from "./host-null-javascript-hosted-report.mjs";
+import { assertHostNullPhpReport } from "./host-null-php-report.mjs";
+import { hostNullPhpHostedPolicy } from "./host-null-php-hosted-policy.mjs";
+import { moduleSpecifiers } from "./module-closure.mjs";
 
 export const hostNullCompleteWorkflow
 	= ".github/workflows/consumer-matrix.yml";
@@ -136,4 +150,299 @@ export const inspectHostNullCompleteHostedArtifacts = async (
 		, runId: captures[0].hostedRun.runId
 		, captures: Object.freeze(captures), cells: hostNullCompleteCells
 	});
+};
+
+const repository = resolve(import.meta.dirname, "../..");
+const normalizedRoute = value => {
+	assert.ok(["ordinary", "ordinary-source", "reviewed", "reviewed-ir"]
+		.includes(value), value);
+	return value.startsWith("ordinary") ? "ordinary" : "reviewed";
+};
+const canonicalFile = async (root, path) => {
+	assert.match(path, /^(?:[A-Za-z0-9_@.+-]+\/)*[A-Za-z0-9_@.+-]+$/u);
+	assert.ok(path.split("/").every(part => part !== "." && part !== ".."));
+	const bytes = await readFile(join(root, path));
+	const value = JSON.parse(bytes);
+	assert.equal(bytes.toString(), canonicalJson(value), path);
+	return { bytes, value };
+};
+const packageSetRoute = async (root, route, sourceRoute, receiptPath) => {
+	const receipt = await canonicalFile(root, receiptPath);
+	await verifyPackageSetReceipt({ receiptPath: join(root, receiptPath) });
+	return Object.freeze({
+		route: normalizedRoute(route), sourceRoute, receiptPath
+		, receiptSha256: sha256(receipt.bytes)
+		, packages: Object.freeze(receipt.value.packages)
+	});
+};
+const checker = (script, args) => {
+	const output = execFileSync(process.execPath, [
+		join(repository, "scripts", script), ...args
+	], {
+		cwd: repository, encoding: "utf8", maxBuffer: 16 * 1024 ** 2
+	});
+	const value = JSON.parse(output);
+	assert.equal(output, canonicalJson(value), script);
+	return value;
+};
+const laneCells = (selectedLane, routes) => {
+	assert.deepEqual(routes.map(item => item.route), hostNullCompleteRoutes);
+	const cells = [];
+	for(const route of routes)
+		for(const profile of selectedLane.profiles)
+			for(const position of hostNullCompletePositions)
+				cells.push(Object.freeze({
+					lane: selectedLane.id, route: route.route, profile, position
+					, receiptSha256: route.receiptSha256
+				}));
+	assert.equal(cells.length, selectedLane.profiles.length * 10);
+	assert.equal(new Set(cells.map(cell =>
+		`${cell.route}:${cell.profile}:${cell.position}`)).size, cells.length);
+	return Object.freeze(cells);
+};
+
+const verifyJavaScriptLane = async root => {
+	const reportFile = await canonicalFile(root, "report.json");
+	const semantic = checkHostNullJavaScriptHostedReport(reportFile.value);
+	const routes = [];
+	for(const run of reportFile.value.runs)
+	{
+		const receiptPath = `${run.path}/component-package-receipt.json`;
+		const receipt = await canonicalFile(root, receiptPath);
+		assert.deepEqual(receipt.value, run.receipt);
+		const verified = await verifyComponentPackageReceipt({
+			receiptPath: join(root, receiptPath)
+		});
+		assert.equal(verified.verified, true);
+		routes.push(Object.freeze({
+			route: normalizedRoute(run.path), sourceRoute: run.path
+			, receiptPath, receiptSha256: sha256(receipt.bytes)
+			, packages: Object.freeze([run.receipt.package, run.receipt.runtime])
+		}));
+	}
+	return { semantic, routes: Object.freeze(routes) };
+};
+
+const verifyPhpLane = async (root, selectedLane) => {
+	const policy = hostNullPhpHostedPolicy(selectedLane.id);
+	const reportFile = await canonicalFile(root, policy.reportPath);
+	const semantic = await assertHostNullPhpReport(
+		reportFile.value, selectedLane.id, join(root, policy.packagesPath)
+	);
+	const routes = [];
+	for(const report of reportFile.value.reports)
+	{
+		const receiptPath = `${policy.packagesPath}/${report.path}/package-set-receipt.json`;
+		const route = await packageSetRoute(
+			root, report.path, report.path, receiptPath
+		);
+		assert.equal(route.receiptSha256, report.receiptSha256);
+		assert.deepEqual(route.packages, report.packages);
+		routes.push(route);
+	}
+	return { semantic, routes: Object.freeze(routes) };
+};
+
+const verifyManagedLane = async (root, selectedLane, producerCommit) => {
+	const semantic = checker("check-host-null-managed-ci.mjs", [
+		"--group", selectedLane.id, "--producer", producerCommit
+		, "--directory", root, "--tap", join(root, "run.tap")
+	]);
+	const summary = await canonicalFile(root, "summary.json");
+	const routes = [];
+	for(const report of summary.value.routes)
+	{
+		const route = await packageSetRoute(root, report.route, report.route
+			, `${report.route}/handoff/package-set-receipt.json`);
+		assert.equal(route.receiptSha256, report.receiptSha256);
+		assert.deepEqual(route.packages, report.packages);
+		routes.push(route);
+	}
+	return { semantic, routes: Object.freeze(routes) };
+};
+
+const verifyScriptingLane = async (root, producerCommit) => {
+	const semantic = checker("check-host-null-scripting-ci.mjs", [
+		"--producer", producerCommit, "--directory", root
+		, "--tap", join(root, "run.tap")
+	]);
+	const summary = await canonicalFile(root, "summary.json");
+	const routes = [];
+	for(const report of summary.value.routes)
+	{
+		const route = await packageSetRoute(root, report.route, report.route
+			, `packages/${report.route}/package-set-receipt.json`);
+		assert.equal(route.receiptSha256, report.receiptSha256);
+		assert.deepEqual(route.packages, report.packages);
+		routes.push(route);
+	}
+	return { semantic, routes: Object.freeze(routes) };
+};
+
+const verifySystemsLane = async (root, producerCommit) => {
+	const semantic = checker("check-host-null-systems-ci.mjs", [
+		"--producer", producerCommit, "--directory", root
+		, "--tap", join(root, "run.tap")
+	]);
+	const summary = await canonicalFile(root, "summary.json");
+	const routes = [];
+	for(const report of summary.value.routes)
+	{
+		const route = await packageSetRoute(root, report.route, report.route
+			, `${report.route}/handoff/package-set-receipt.json`);
+		assert.equal(route.receiptSha256, report.receiptSha256);
+		assert.deepEqual(route.packages, report.packages);
+		const dependency = await readFile(join(root, report.route
+			, "dependency-handoff", report.rustDependencies.archive));
+		assert.equal(sha256(dependency), report.rustDependencies.sha256);
+		routes.push(Object.freeze({
+			...route, rustDependenciesSha256: report.rustDependencies.sha256
+		}));
+	}
+	return { semantic, routes: Object.freeze(routes) };
+};
+
+/**
+ * Independently replay one extracted artifact and bind all of its cells to
+ * exact package receipts.
+ *
+ * @param selectedLane - Closed HostNull artifact lane.
+ * @param root - Extracted artifact root.
+ * @param producerCommit - Exact hosted producer revision.
+ */
+export const verifyHostNullCompleteExtractedLane = async (
+	selectedLane, root, producerCommit
+) => {
+	assert.ok(hostNullCompleteHostedLanes.includes(selectedLane));
+	assert.ok(isAbsolute(root) && resolve(root) === root);
+	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
+	let accepted;
+	if(selectedLane.id === "javascript-browser")
+		accepted = await verifyJavaScriptLane(root);
+	else if(["php-native", "php-wasm"].includes(selectedLane.id))
+		accepted = await verifyPhpLane(root, selectedLane);
+	else if(["dotnet", "jvm"].includes(selectedLane.id))
+		accepted = await verifyManagedLane(root, selectedLane, producerCommit);
+	else if(selectedLane.id === "scripting")
+		accepted = await verifyScriptingLane(root, producerCommit);
+	else
+		accepted = await verifySystemsLane(root, producerCommit);
+	const cells = laneCells(selectedLane, accepted.routes);
+	return Object.freeze({
+		lane: selectedLane.id, profiles: selectedLane.profiles
+		, producerCommit, semantic: accepted.semantic
+		, routes: accepted.routes, cells
+	});
+};
+
+const sourceCache = new Map();
+/**
+ * Read one immutable Git object.
+ *
+ * @param revision - Exact Git revision.
+ * @param path - Repository-relative source path.
+ */
+export const hostNullCompleteHostedOriginal = (revision, path) => {
+	assert.match(revision, /^[a-f0-9]{40}$/u);
+	assert.match(path, /^(?:[A-Za-z0-9_@.+-]+\/)*[A-Za-z0-9_@.+-]+$/u);
+	const key = `${revision}:${path}`;
+	if(!sourceCache.has(key)) sourceCache.set(key, execFileSync(
+		"git", ["show", key], {
+			cwd: repository, maxBuffer: 256 * 1024 ** 2
+		}
+	));
+	return sourceCache.get(key);
+};
+const moduleClosure = (revision, entries) => {
+	const paths = new Set();
+	const visit = path => {
+		if(paths.has(path)) return;
+		const bytes = hostNullCompleteHostedOriginal(revision, path);
+		paths.add(path);
+		if(!/\.[cm]?js$/u.test(path)) return;
+		for(const specifier of moduleSpecifiers(bytes.toString(), path))
+		{
+			const joined = posix.normalize(posix.join(
+				posix.dirname(path), specifier
+			));
+			visit(extname(joined) === "" ? `${joined}.mjs` : joined);
+		}
+	};
+	for(const entry of entries) visit(entry);
+	return [...paths].sort();
+};
+const sourceTree = (revision, prefix) => execFileSync("git", [
+	"ls-tree", "-r", "--name-only", revision, "--", prefix
+], {
+	cwd: repository, encoding: "utf8"
+}).trim().split("\n").filter(Boolean);
+const producerEntries = Object.freeze([
+	".github/workflows/consumer-matrix.yml"
+	, ".github/workflows/perl-consumer.yml"
+	, ".github/actions/bounded-apt/action.yml"
+	, "scripts/run-host-null-managed-ci.sh"
+	, "scripts/run-host-null-scripting-ci.sh"
+	, "scripts/run-host-null-systems-ci.sh"
+	, "scripts/check-host-null-managed-ci.mjs"
+	, "scripts/check-host-null-scripting-ci.mjs"
+	, "scripts/check-host-null-systems-ci.mjs"
+	, "scripts/check-host-null-php-reports.mjs"
+	, "tests/host-null-npm-installed.test.mjs"
+	, "tests/php-host-null.test.mjs"
+	, "tests/php-wasm-host-null.test.mjs"
+	, "tests/dotnet-host-null-contract.test.mjs"
+	, "tests/jvm-host-null-contract.test.mjs"
+	, "tests/scripting-host-null.test.mjs"
+	, "tests/systems-host-null.test.mjs"
+	, "scripts/bootstrap-toolchains.sh", "scripts/bootstrap-rust-ci.sh"
+	, "scripts/bootstrap-php-wasm-ci.sh", "scripts/install-playwright-browsers.sh"
+	, "scripts/env.sh", "lean-toolchain", "package.json", "package-lock.json"
+	, "flake.lock", "flake.nix", "nix/wasm-toolchain.nix"
+]);
+
+/**
+ * Select exact producer, checker and archiver sources for reproducible replay.
+ *
+ * @param revisions - Immutable Git revisions by evidence role.
+ */
+export const hostNullCompleteHostedSources = revisions => {
+	assert.deepEqual(Object.keys(revisions).sort(), [
+		"archiver", "checker", "producer"
+	]);
+	for(const revision of Object.values(revisions))
+		assert.match(revision, /^[a-f0-9]{40}$/u);
+	const checkerPaths = moduleClosure(revisions.checker, [
+		"tests/helpers/host-null-complete-hosted-archive.mjs"
+	]);
+	const archiverPaths = moduleClosure(revisions.archiver, [
+		"scripts/archive-host-null-complete-evidence.mjs"
+	]);
+	const roles = [
+		["producer", revisions.producer, [
+			...moduleClosure(revisions.producer, producerEntries)
+			, ...sourceTree(revisions.producer
+				, "tests/fixtures/onboarding/host-null")
+			, ...sourceTree(revisions.producer
+				, "tests/fixtures/host-null-consumers")
+		]]
+		, ["checker", revisions.checker, checkerPaths]
+		, ["archiver", revisions.archiver, archiverPaths]
+	];
+	const sources = [];
+	for(const [role, revision, paths] of roles)
+		for(const path of [...new Set(paths)].sort())
+			sources.push(Object.freeze({ role, revision, path }));
+	return sources;
+};
+
+/**
+ * Return one collision-free retained source path.
+ *
+ * @param source - Selected source identity.
+ */
+export const hostNullCompleteHostedSourcePath = source => {
+	assert.ok(source && ["producer", "checker", "archiver"]
+		.includes(source.role));
+	assert.match(source.revision, /^[a-f0-9]{40}$/u);
+	return `sources/${source.role}/${source.path}`;
 };
