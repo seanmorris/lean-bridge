@@ -1,0 +1,213 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-historical-self-authentication-repair-source-history.mjs",
+      "sha256": "b9c2e427ca6ccb499a5c56152c7049c17cd31a22783e301993aeb0f4a3ede1d9"
+    },
+    {
+      "path": "tests/helpers/historical-self-authentication-repair-source-history-tests.mjs",
+      "sha256": "c26c21b4a9b2aa900de9764a1cede995338029e2c3c8a465098558f18483b187"
+    },
+    {
+      "path": "tests/helpers/historical-self-authentication-repair-source-history.mjs",
+      "sha256": "6342815696510768992f5a9136710f4842f728beb381eed79c3f5fe9b372a4b8"
+    }
+  ],
+  "implementationAdditions": [],
+  "implementationCommit": "1d70513965d2bd7adf4ac4b8071a00baea7b836f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e0b77d0024d17433a3dab82b24eec8a344963e4d9ce5a32d3fc16a0a9dbc7520",
+      "edits": [
+        {
+          "current": "import \"./helpers/historical-self-authentication-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 229
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "dc5d80e492270c7b738d35be32f0451ab3b4c91a2d18022a487cd3ba1bf34c79"
+    }
+  ],
+  "milestone": "historical-self-authentication-repair-source-v1",
+  "predecessorCommit": "6160b1847fec87f84fd48c0a63eacf600578f12d",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Authenticate recorded history controls and additions from their exact retained milestone bytes rather than from subsequently edited live test files.",
+  "updates": [
+    {
+      "currentSha256": "1325fa3eaa4733794418100bc3fc5f85a1f2f6fdd23885b3a1f9c17f341c1964",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 4850
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-focused-ci-source-history-tests.mjs",
+      "previousSha256": "41e18ec52f5f158d6d462f7dbd970228e89daeabfe0ce0de9a5c9e1b27183173"
+    },
+    {
+      "currentSha256": "287682d254dfb316b12757669f34f3585efb23a921932771c7c39dab3fff86cc",
+      "edits": [
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst live = exists(directProofErasureFixtureImplementation, addition.path)\n\t\t\t? git([\"show\", `${directProofErasureFixtureImplementation}:${addition.path}`])\n\t\t\t: await readFile(addition.path);\n\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "start": 3428
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-fixture-source-history-tests.mjs",
+      "previousSha256": "0e2c9724a4c1acc3e3c2c1f6e9887912e537076d37374459ede12f70dc1c99b6"
+    },
+    {
+      "currentSha256": "a44b9a0d3313c32410c4f4d5519a169b532d1ed1591d39cd1b47f6499f655622",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeDependentSignatureFocusedCiSource }\n\tfrom \"./dependent-signature-focused-ci-source-history.mjs\";\n",
+          "start": 274
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256))\n",
+          "previous": "\t\tassert.equal(sha256(beforeDependentSignatureFocusedCiSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.sha256))\n",
+          "start": 4259
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-focused-ci-source-history-tests.mjs",
+      "previousSha256": "c0ba62a7c497a24d0e11a37c6206b8ade439fcbdff213792439634decaf4ff55"
+    },
+    {
+      "currentSha256": "cd1752073d55b49a677a15b70d189c3a22db843ed379ce1638c21d42fd249d27",
+      "edits": [
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst live = exists(directProofErasureLanguageImplementation, addition.path)\n\t\t\t? git([\"show\"\n\t\t\t\t, `${directProofErasureLanguageImplementation}:${addition.path}`])\n\t\t\t: await readFile(addition.path);\n\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "start": 3446
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-language-source-history-tests.mjs",
+      "previousSha256": "a24bfb738d33e6840db6c9627b3b7e1fd9fe7acffdd048286d9202d4c98c317e"
+    },
+    {
+      "currentSha256": "13f4f490d32f4f0f757da5982de2ee429f1d3c0a7e50d6956ba74c5dba0f03d6",
+      "edits": [
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst live = exists(directProofErasureManagedImplementation, addition.path)\n\t\t\t? git([\"show\"\n\t\t\t\t, `${directProofErasureManagedImplementation}:${addition.path}`])\n\t\t\t: await readFile(addition.path);\n\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "start": 3413
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-managed-source-history-tests.mjs",
+      "previousSha256": "7dc8b2d22dad845585920edcc7c3bdf1d6f77fd54766a9bf5aaed73186687177"
+    },
+    {
+      "currentSha256": "7465b60205f2a35724b7b94532c721e20b4b7b08abc6ea64aed14f25b996022d",
+      "edits": [
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst live = exists(directProofErasureNativeImplementation, addition.path)\n\t\t\t? git([\"show\", `${directProofErasureNativeImplementation}:${addition.path}`])\n\t\t\t: await readFile(addition.path);\n\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "start": 3390
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-native-source-history-tests.mjs",
+      "previousSha256": "02645fee83b319f40bc610bf676a724d5f2465f55f9c0f554ff5ec59e101fe61"
+    },
+    {
+      "currentSha256": "e113bf3b66cc8f617c3b5fb798f8a35dc8aa41fd679ae7ae0962922090d66712",
+      "edits": [
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst live = exists(directProofErasureNpmImplementation, addition.path)\n\t\t\t? git([\"show\", `${directProofErasureNpmImplementation}:${addition.path}`])\n\t\t\t: await readFile(addition.path);\n\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "start": 3311
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-npm-source-history-tests.mjs",
+      "previousSha256": "a52901ba985ef7ab712620d2f6326b0492e1a2d2c68d8f33b0edad7eef807a28"
+    },
+    {
+      "currentSha256": "5c44ae690cd23ef20db96d1a7282874883b7becb4c4130ba73c3fc1f1c258896",
+      "edits": [
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst live = exists(directProofErasurePackageImplementation, addition.path)\n\t\t\t? git([\"show\", `${directProofErasurePackageImplementation}:${addition.path}`])\n\t\t\t: await readFile(addition.path);\n\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "start": 3415
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-package-source-history-tests.mjs",
+      "previousSha256": "ea5fb155e55e73046bcef2523d70bf00c022d393b9569c0156c05dcc601ebf7c"
+    },
+    {
+      "currentSha256": "f6c7e15884d9af703cecb65f3934cd7bdb6ee7f70bfded8497e02140f4b06966",
+      "edits": [
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst live = exists(directProofErasurePhpImplementation, addition.path)\n\t\t\t? git([\"show\", `${directProofErasurePhpImplementation}:${addition.path}`])\n\t\t\t: await readFile(addition.path, \"utf8\");\n\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "start": 3307
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-php-source-history-tests.mjs",
+      "previousSha256": "1fa0b89d6930c3e539aa46335344a2b3d8ef0c447fc7e1c1efc1bb0d97171d09"
+    },
+    {
+      "currentSha256": "345a1d673b92e0ab7378a7b2825848d3e6661102dc17440832bff2923ec6a8e9",
+      "edits": [
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, await readFile(addition.path), addition.currentSha256\n\t\t);\n",
+          "start": 3243
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-source-history-tests.mjs",
+      "previousSha256": "aebe5fe946a312581ea94dcb1580db22e391be418511f31e4645ca2ffc40bcd7"
+    },
+    {
+      "currentSha256": "1370daa2bfbd1a7bb5d62867deb2087bc4168a1ce2de5b5f1e95fe9e1614818b",
+      "edits": [
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst live = exists(directProofErasureWitImplementation, addition.path)\n\t\t\t? git([\"show\"\n\t\t\t\t, `${directProofErasureWitImplementation}:${addition.path}`])\n\t\t\t: await readFile(addition.path);\n\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "start": 3292
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-wit-source-history-tests.mjs",
+      "previousSha256": "2e67efe591b688920cc0987d0eb31aa0579b61c48e18535f9208f6a65b80d440"
+    },
+    {
+      "currentSha256": "61c394b7a1ef86051ff6cbcb3bb7656eff2cde78089e1a577c88343788a6b9d7",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path, \"utf8\"))\n",
+          "start": 3475
+        }
+      ],
+      "path": "tests/helpers/host-null-focused-archive-input-source-history-tests.mjs",
+      "previousSha256": "830e8462c9d97de56261b64d03260f199104167abf6c65398ab9b822490549bf"
+    },
+    {
+      "currentSha256": "78cdec97258d4f49c3f15f6ba08f32ca4b4c667a78e3b232a26327f48075b087",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path, \"utf8\"))\n",
+          "start": 3912
+        }
+      ],
+      "path": "tests/helpers/host-null-focused-ci-source-history-tests.mjs",
+      "previousSha256": "cefc30d347c8b48a0f5f03d51ec60102ee847a444cacb78043789ae02574710e"
+    },
+    {
+      "currentSha256": "790be96f9024f897b3612aee43a1c2e1470ef5f89b25245f74978be7bd668b6b",
+      "edits": [
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\tconst live = proofErasureEvidenceAuditCommits.some(commit =>\n\t\t\tgit([\"ls-tree\", \"--name-only\", commit, \"--\", addition.path]).trim())\n\t\t\t? git([\"show\", `${proofErasureEvidenceAuditImplementation}:${addition.path}`])\n\t\t\t: await readFile(addition.path);\n\t\tconst source = beforeFinRefinementSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n",
+          "start": 3314
+        }
+      ],
+      "path": "tests/helpers/proof-erasure-evidence-audit-source-history-tests.mjs",
+      "previousSha256": "5d1ec5f3a7feb55566d062a2e1c4869821e7d4c2b7ae6c911c139b71679c8ec7"
+    }
+  ]
+}
