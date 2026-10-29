@@ -85,10 +85,20 @@ const renderDocuments = async document => {
 	};
 };
 const documents = await renderDocuments(semanticPromotion);
-const currentSourcePaths = dependentCheckedRecordPromotionCurrentSourcePaths(
-	original.document, Object.keys(documents));
-assert.ok(currentSourcePaths.length > 0
-	, "Optional-parameter publication must own changed live-source pins");
+const expectedCurrentSourcePaths = Object.freeze([
+	"docs/php.md", "docs/consume/dotnet.md", "docs/consume/java.md"
+	, "docs/consume/kotlin.md", "docs/consume/ruby.md"
+	, "docs/consume/perl.md", "docs/consume/python.md"
+	, "docs/consume/rust.md", "docs/consume/c.md", "docs/consume/cpp.md"
+	, "docs/consume/wit-wasi.md", "docs/lean/existing-package.md"
+	, "docs/lean/export-decisions.md"
+].sort());
+const currentSourcePaths = Object.freeze([
+	...dependentCheckedRecordPromotionCurrentSourcePaths(
+		original.document, Object.keys(documents))
+]);
+assert.deepEqual([...currentSourcePaths].sort(), expectedCurrentSourcePaths
+	, "Optional-parameter publication must own every changed live-source pin");
 const currentDigests = new Map(currentSourcePaths.map(documentPath => {
 	assert.ok(Object.hasOwn(documents, documentPath), documentPath);
 	return [documentPath, sha256(documents[documentPath])];

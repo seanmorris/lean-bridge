@@ -21,6 +21,8 @@ test("complete optional-parameter promotion is clean and transactional", () => {
 	assert.match(source, /renderOptionalParameterCompleteDocumentation\(/u);
 	assert.match(source
 		, /dependentCheckedRecordPromotionCurrentSourcePaths\(/u);
+	assert.match(source
+		, /must own every changed live-source pin/u);
 	assert.match(source, /reconcileDependentCheckedRecordSourcePins\(/u);
 	assert.match(source, /stagePromotionInventory\(/u);
 	assert.match(source, /stageEvidenceRefresh\(/u);
