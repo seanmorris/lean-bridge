@@ -88,8 +88,11 @@ test("promotion inventory retains only explicitly selected complete evidence", a
 	assert.equal(result.document.evidence[0].files.length, 1);
 	assert.deepEqual(result.document.evidence[1], value.evidence[1]);
 	for(const retainEvidence of [null, "second", ["missing"], ["second", "second"]
-		, [""], [1], Array.from({ length: 9 }, (_, index) => String(index))])
+		, [""], [1], Array.from({ length: 65 }, (_, index) => String(index))])
 		await assert.rejects(read(value, { retainEvidence }));
+	await assert.rejects(read(value
+		, { retainEvidence: ["second"], retainedSection: 1 })
+	, /Retained evidence budget exceeded/u);
 	value.evidence[1].files[1].sha256 = "invalid";
 	await assert.rejects(read(value, { retainEvidence: ["second"] }));
 });

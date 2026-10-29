@@ -61,12 +61,17 @@ async function* lines(input, identity, limit)
  * @param limits.section - Maximum bytes per evidence entry or semantic section.
  * @param limits.line - Maximum bytes per canonical JSON line.
  * @param limits.retainEvidence - Evidence IDs whose complete references are needed.
+ * @param limits.retainedSection - Maximum aggregate bytes retained for those entries.
  */
 export const readPromotionInventory = async (
-	input, contracts, { section = 32 * 1024 * 1024, line = 1024 * 1024, retainEvidence = [] } = {}
+	input, contracts, {
+		section = 32 * 1024 * 1024, line = 1024 * 1024
+		, retainedSection = 64 * 1024 * 1024, retainEvidence = []
+	} = {}
 ) => {
-	assert.ok(Array.isArray(retainEvidence) && retainEvidence.length <= 8);
+	assert.ok(Array.isArray(retainEvidence) && retainEvidence.length <= 64);
 	assert.ok(retainEvidence.every(id => typeof id === "string" && id.length > 0));
+	assert.ok(Number.isSafeInteger(retainedSection) && retainedSection > 0);
 	const retained = new Set(retainEvidence);
 	assert.equal(retained.size, retainEvidence.length, "Unique retained evidence IDs");
 	const identity = { digest: hash(), bytes: 0 };
@@ -74,6 +79,7 @@ export const readPromotionInventory = async (
 	let prefixBytes = 0, entryBytes = 0, suffixBytes = 0;
 	let skeleton, position = 0, appendAt, suffixAt, entryAt, entryComma = false;
 	const evidence = [], evidenceRanges = [];
+	let retainedBytes = 0;
 	for await(const text of lines(input, identity, line))
 	{
 		const bytes = Buffer.byteLength(text) + 1;
@@ -120,7 +126,14 @@ export const readPromotionInventory = async (
 					validateTypeSurface({ ...skeleton
 						, baseline: { ...skeleton.baseline, exclusions: [] }
 						, evidence: [value] }, contracts);
-					evidence.push(retained.has(value.id) ? value : { ...value
+					if(retained.has(value.id))
+					{
+						retainedBytes += entryBytes;
+						assert.ok(retainedBytes <= retainedSection
+							, "Retained evidence budget exceeded");
+						evidence.push(value);
+					}
+					else evidence.push({ ...value
 						, files: value.files.slice(0, 1)
 						, artifacts: value.artifacts.slice(0, 1) });
 					evidenceRanges.push({ id: value.id, at: entryAt

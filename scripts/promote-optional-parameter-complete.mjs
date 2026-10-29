@@ -54,8 +54,24 @@ const [irSchema, consumers] = await Promise.all([
 	readFile("schema/binding-ir.schema.json", "utf8").then(JSON.parse)
 	, readFile("docs/consumer-support.v1.json", "utf8").then(JSON.parse)
 ]);
+const currentSourcePaths = Object.freeze([
+	"docs/php.md", "docs/consume/dotnet.md", "docs/consume/java.md"
+	, "docs/consume/kotlin.md", "docs/consume/ruby.md"
+	, "docs/consume/perl.md", "docs/consume/python.md"
+	, "docs/consume/rust.md", "docs/consume/c.md", "docs/consume/cpp.md"
+	, "docs/consume/wit-wasi.md", "docs/lean/existing-package.md"
+	, "docs/lean/export-decisions.md"
+]);
+const currentSourceSet = new Set(currentSourcePaths);
+const fullOriginal = JSON.parse(await readFile(path, "utf8"));
+const retainedEvidenceIds = fullOriginal.evidence.filter(evidence =>
+	evidence.files.some(file => currentSourceSet.has(file.path)))
+	.map(evidence => evidence.id);
+assert.equal(retainedEvidenceIds.length, 35
+	, "Optional publication must retain exactly 35 live-pin evidence entries");
+const retain = { retainEvidence: retainedEvidenceIds };
 const original = await readPromotionInventory(createReadStream(path)
-	, { irSchema, consumers });
+	, { irSchema, consumers }, retain);
 const sources = {};
 for(const [name, documentPath] of Object.entries(
 	optionalParameterCompleteDocumentationPaths))
@@ -64,7 +80,7 @@ renderOptionalParameterCompleteDocumentation(sources);
 
 const reference = await optionalParameterCompleteReference();
 const semanticPromotion = promoteOptionalParameterComplete(
-	original.document, { irSchema, consumers }, reference);
+	fullOriginal, { irSchema, consumers }, reference);
 const renderDocuments = async document => {
 	const generated = await renderReferenceDocuments({
 		root, inventory: { document, irSchema, consumers }
@@ -84,14 +100,6 @@ const renderDocuments = async document => {
 	};
 };
 const documents = await renderDocuments(semanticPromotion);
-const currentSourcePaths = Object.freeze([
-	"docs/php.md", "docs/consume/dotnet.md", "docs/consume/java.md"
-	, "docs/consume/kotlin.md", "docs/consume/ruby.md"
-	, "docs/consume/perl.md", "docs/consume/python.md"
-	, "docs/consume/rust.md", "docs/consume/c.md", "docs/consume/cpp.md"
-	, "docs/consume/wit-wasi.md", "docs/lean/existing-package.md"
-	, "docs/lean/export-decisions.md"
-]);
 const currentDigests = new Map(currentSourcePaths.map(documentPath => {
 	assert.ok(Object.hasOwn(documents, documentPath)
 		, `Missing promoted documentation: ${documentPath}`);
@@ -119,14 +127,31 @@ const staging = await mkdtemp(join(root
 let installing = false, completed = false;
 try
 {
+	const priorEvidenceCount = fullOriginal.evidence.length;
+	const stagingPromotion = {
+		...semanticPromotion
+		, evidence: [
+			...original.document.evidence
+			, ...semanticPromotion.evidence.slice(priorEvidenceCount)
+		]
+	};
 	const semanticStaged = join(staging, "semantic-inventory.json");
 	await stagePromotionInventory(
-		path, semanticStaged, original, semanticPromotion);
+		path, semanticStaged, original, stagingPromotion);
 	const semanticOriginal = await readPromotionInventory(
-		createReadStream(semanticStaged), { irSchema, consumers });
+		createReadStream(semanticStaged), { irSchema, consumers }, retain);
+	const promotedById = new Map(promoted.evidence.map(evidence => [
+		evidence.id, evidence
+	]));
+	const refreshedProjection = {
+		...semanticOriginal.document
+		, evidence: semanticOriginal.document.evidence.map(evidence =>
+			retainedEvidenceIds.includes(evidence.id)
+				? promotedById.get(evidence.id) : evidence)
+	};
 	const staged = join(staging, "inventory.json");
 	const next = await stageEvidenceRefresh(
-		semanticStaged, staged, semanticOriginal, promoted);
+		semanticStaged, staged, semanticOriginal, refreshedProjection);
 	const files = [{ path, staged, previous: original.source, next }];
 	const documentEntries = Object.entries(documents).entries();
 	for(const [number, [documentPath, content]] of documentEntries)
@@ -149,7 +174,7 @@ try
 		mode: checkOnly ? "check" : "promote"
 		, cells: 34
 		, observations: promoted.observations.length
-			- original.document.observations.length
+			- fullOriginal.observations.length
 		, sourcePins: {
 			paths: currentSourcePaths, refreshed: refreshedPins
 		}
