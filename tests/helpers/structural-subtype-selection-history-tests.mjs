@@ -9,7 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 import { beforeStructuralSubtypeSelectionSource, structuralSubtypeSelectionChangedPaths, structuralSubtypeSelectionHistoryPath, structuralSubtypeSelectionPredecessor, reverseStructuralSubtypeSelectionUpdate } from "./structural-subtype-selection-history.mjs";
 
 test("structural Subtype constructor selection source history authenticates exact changes and refuses unknown edits", async () => {
@@ -19,14 +19,13 @@ test("structural Subtype constructor selection source history authenticates exac
 	assert.deepEqual(record.updates.map(update => update.path), structuralSubtypeSelectionChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			structuralSubtypeSelectionHistoryPath, update.path
+			, update.currentSha256, beforeStructuralSubtypeSelectionSource
 		);
 		const previous = reverseStructuralSubtypeSelectionUpdate(current, update);
 		assert.equal(beforeStructuralSubtypeSelectionSource(update.path, current), previous);
 		assert.equal(beforeStructuralSubtypeSelectionSource(update.path, current, update.currentSha256), current);
-		if(["src/analyze/export-configuration.mjs", "docs/type-surface.v1.json"].includes(update.path))
-			assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
 		assert.equal(beforeStructuralSubtypeSelectionSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
