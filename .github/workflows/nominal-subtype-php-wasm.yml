@@ -13,6 +13,11 @@ on:
         required: false
         type: boolean
         default: false
+      host_null:
+        description: Run complete explicit HostNull package acceptance.
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -174,6 +179,60 @@ jobs:
           retention-days: 30
       - name: Enforce PHP support
         if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Qualify HostNull in native PHP and PHP-Wasm packages
+        id: host_null
+        if: inputs.host_null
+        continue-on-error: true
+        timeout-minutes: 150
+        env:
+          LEAN_BRIDGE_PHP: /usr/bin/php
+          LEAN_BRIDGE_COMPOSER: /usr/bin/composer
+          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME="$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime"
+          test -d "$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME"
+          LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-native \
+          LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 \
+            node --test --test-concurrency=1 \
+              tests/php-host-null.test.mjs tests/php-host-null-contract.test.mjs
+          node scripts/check-host-null-php-reports.mjs \
+            --profile php-native --report build/host-null/php-native.json \
+            --packages build/host-null/packages/php-native
+          LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-wasm \
+          LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 \
+            node --test --test-concurrency=1 \
+              tests/php-wasm-host-null.test.mjs tests/php-host-null-contract.test.mjs
+          node scripts/check-host-null-php-reports.mjs \
+            --profile php-wasm --report build/host-null/php-wasm.json \
+            --packages build/host-null/packages/php-wasm
+      - name: Preserve native PHP HostNull evidence
+        if: always() && inputs.host_null
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-php-native-${{ github.sha }}
+          path: |
+            build/host-null/php-native.json
+            build/host-null/packages/php-native
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Preserve PHP-Wasm HostNull evidence
+        if: always() && inputs.host_null
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-php-wasm-${{ github.sha }}
+          path: |
+            build/host-null/php-wasm.json
+            build/host-null/packages/php-wasm
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce HostNull PHP support
+        if: always() && inputs.host_null && steps.host_null.outcome != 'success'
         run: exit 1
       - name: Enforce installed PHP-Wasm acceptance
         if: always() && steps.acceptance.outcome != 'success'

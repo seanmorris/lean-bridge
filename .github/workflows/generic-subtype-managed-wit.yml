@@ -13,6 +13,11 @@ on:
         required: false
         type: boolean
         default: false
+      host_null:
+        description: Run complete explicit HostNull package acceptance.
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -118,6 +123,24 @@ jobs:
       - name: Enforce managed consumer support
         if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
+      - name: Qualify HostNull in prepared .NET packages
+        id: host_null
+        if: inputs.host_null
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-host-null-managed-ci.sh dotnet
+      - name: Preserve HostNull .NET acceptance
+        if: always() && inputs.host_null
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-managed-dotnet-${{ github.sha }}
+          path: build/host-null-managed-ci/dotnet/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce HostNull .NET support
+        if: always() && inputs.host_null && steps.host_null.outcome != 'success'
+        run: exit 1
       - name: Enforce installed .NET acceptance
         if: always() && steps.acceptance.outcome != 'success'
         run: exit 1
@@ -220,6 +243,24 @@ jobs:
       - name: Enforce managed consumer support
         if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
+      - name: Qualify HostNull in prepared JVM packages
+        id: host_null
+        if: inputs.host_null
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-host-null-managed-ci.sh jvm
+      - name: Preserve HostNull JVM acceptance
+        if: always() && inputs.host_null
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-managed-jvm-${{ github.sha }}
+          path: build/host-null-managed-ci/jvm/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce HostNull JVM support
+        if: always() && inputs.host_null && steps.host_null.outcome != 'success'
+        run: exit 1
       - name: Enforce installed JVM acceptance
         if: always() && steps.acceptance.outcome != 'success'
         run: exit 1
@@ -309,6 +350,10 @@ jobs:
           mkdir -p build
           bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-wit-toolchain.log
           bash scripts/bootstrap-toolchains.sh --wasm-tools-only 2>&1 | tee -a build/generic-subtype-wit-toolchain.log
+      - name: Install the pinned Rust toolchain for systems HostNull acceptance
+        if: inputs.host_null
+        timeout-minutes: 20
+        run: bash scripts/bootstrap-rust-ci.sh
       - name: Build the pinned Wasmtime C API
         timeout-minutes: 30
         shell: bash
@@ -396,6 +441,27 @@ jobs:
           retention-days: 30
       - name: Enforce WIT and WASI support
         if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Qualify HostNull in prepared systems packages
+        id: host_null
+        if: inputs.host_null
+        continue-on-error: true
+        timeout-minutes: 150
+        env:
+          LEAN_BRIDGE_WASMTIME_C_API: ${{ github.workspace }}/build/wasmtime-c-api
+          LEAN_BRIDGE_WASM_TOOLS: ${{ github.workspace }}/.toolchains/wasm-tools/bin/wasm-tools
+        run: bash scripts/run-host-null-systems-ci.sh
+      - name: Preserve systems HostNull acceptance
+        if: always() && inputs.host_null
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-systems-${{ github.sha }}
+          path: build/host-null-systems-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce systems HostNull support
+        if: always() && inputs.host_null && steps.host_null.outcome != 'success'
         run: exit 1
       - name: Enforce installed WIT acceptance
         if: always() && steps.acceptance.outcome != 'success'

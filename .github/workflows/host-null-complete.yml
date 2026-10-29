@@ -40,6 +40,15 @@ on:
       - "tests/host-null-complete-*.test.mjs"
       - "tests/helpers/host-null-complete-*.mjs"
   workflow_dispatch:
+    inputs:
+      suite:
+        description: Bounded explicit HostNull suite to execute
+        required: true
+        default: audit
+        type: choice
+        options:
+          - audit
+          - produce
   # One low-cost lane in the bounded weekly default-branch acceptance sweep.
   schedule:
     - cron: "31 8 * * 6"
@@ -53,6 +62,7 @@ concurrency:
 
 jobs:
   audit:
+    if: inputs.suite != 'produce'
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
@@ -91,3 +101,91 @@ jobs:
           path: build/host-null-complete/
           if-no-files-found: error
           retention-days: 14
+
+  npm-browser:
+    name: Node and browser producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/generic-subtype-npm-browser.yml
+    with:
+      host_null: true
+
+  native-perl:
+    name: Scripting producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/generic-subtype-native-perl.yml
+    with:
+      host_null: true
+
+  managed-wit:
+    name: Managed and systems producers
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/generic-subtype-managed-wit.yml
+    with:
+      host_null: true
+
+  php:
+    name: PHP and PHP-Wasm producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/nominal-subtype-php-wasm.yml
+    with:
+      host_null: true
+
+  receipt:
+    name: Reconcile the exact same-run receipt
+    if: always() && inputs.suite == 'produce'
+    needs:
+      - npm-browser
+      - native-perl
+      - managed-wit
+      - php
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out the exact producer revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Download every same-run HostNull artifact
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@v5
+        with:
+          pattern: host-null-*-${{ github.sha }}
+          path: build/host-null-complete-matrix-input
+      - name: Reconcile all seventeen profiles, both author routes and five positions
+        id: reconciliation
+        if: always()
+        continue-on-error: true
+        run: |
+          node scripts/reconcile-host-null-complete-matrix.mjs \
+            --directory build/host-null-complete-matrix-input \
+            --output build/host-null-complete-matrix/receipt.json \
+            --producer "${{ github.sha }}" \
+            --repository "${{ github.repository }}" \
+            --workflow ".github/workflows/host-null-complete.yml" \
+            --run-id "${{ github.run_id }}" \
+            --run-attempt "${{ github.run_attempt }}"
+      - name: Preserve the complete HostNull receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-complete-matrix-${{ github.sha }}
+          path: build/host-null-complete-matrix/receipt.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce every producer and exact receipt reconciliation
+        if: >-
+          always() &&
+          (needs.npm-browser.result != 'success' ||
+           needs.native-perl.result != 'success' ||
+           needs.managed-wit.result != 'success' ||
+           needs.php.result != 'success' ||
+           steps.download.outcome != 'success' ||
+           steps.reconciliation.outcome != 'success')
+        run: exit 1

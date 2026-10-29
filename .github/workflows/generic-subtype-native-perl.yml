@@ -13,6 +13,11 @@ on:
         required: false
         type: boolean
         default: false
+      host_null:
+        description: Run complete explicit HostNull package acceptance.
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -221,6 +226,16 @@ jobs:
         with:
           node-version: "22"
           cache: npm
+      - name: Install Python for scripting HostNull acceptance
+        if: inputs.host_null
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11.16'
+      - name: Install Ruby for scripting HostNull acceptance
+        if: inputs.host_null
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
       - name: Bound apt network waits
         uses: ./.github/actions/bounded-apt
         timeout-minutes: 1
@@ -309,6 +324,30 @@ jobs:
           retention-days: 30
       - name: Enforce direct proof-erasure Perl support
         if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Qualify HostNull in prepared scripting packages
+        id: host_null
+        if: inputs.host_null
+        continue-on-error: true
+        timeout-minutes: 135
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/5.38.2-threaded/bin/perl"
+          test -x "$LEAN_BRIDGE_CORPUS_PERL"
+          bash scripts/run-host-null-scripting-ci.sh
+      - name: Preserve HostNull scripting acceptance
+        if: always() && inputs.host_null
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-scripting-${{ github.sha }}
+          path: build/host-null-scripting-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce scripting HostNull support
+        if: always() && inputs.host_null && steps.host_null.outcome != 'success'
         run: exit 1
       - name: Enforce installed Perl acceptance
         if: always() && steps.acceptance.outcome != 'success'

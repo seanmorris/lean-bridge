@@ -13,6 +13,11 @@ on:
         required: false
         type: boolean
         default: false
+      host_null:
+        description: Run complete explicit HostNull package acceptance.
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -176,6 +181,31 @@ jobs:
           retention-days: 30
       - name: Enforce Node support and the browser corpus
         if: always() && inputs.direct_proof_erasure && matrix.route == 'reviewed' && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Require explicit HostNull in Node, TypeScript and three browsers
+        id: host_null
+        if: inputs.host_null && matrix.route == 'reviewed'
+        continue-on-error: true
+        timeout-minutes: 120
+        env:
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/host-null-npm-installed.test.mjs
+          test -s build/host-null/npm/report.json
+      - name: Preserve explicit HostNull npm and browser observations
+        if: always() && inputs.host_null && matrix.route == 'reviewed'
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-node-browser-${{ github.sha }}
+          path: build/host-null/npm/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce explicit HostNull npm and browser acceptance
+        if: always() && inputs.host_null && matrix.route == 'reviewed' && steps.host_null.outcome != 'success'
         run: exit 1
       - name: Enforce generic Subtype acceptance
         if: always() && steps.acceptance.outcome != 'success'
