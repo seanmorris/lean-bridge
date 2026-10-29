@@ -7,6 +7,8 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { beforeDependentSignatureFocusedCiSource }
+	from "./dependent-signature-focused-ci-source-history.mjs";
 import {
 	beforeDirectProofErasureFocusedCiSource
 	, directProofErasureFocusedCiHistoryAdditions
@@ -40,7 +42,8 @@ test("focused proof-erasure CI records its exact implementation parent"
 	assert.equal(git(["rev-parse"
 		, `${directProofErasureFocusedCiImplementation}^`]).trim()
 		, directProofErasureFocusedCiPredecessor);
-});
+	}
+);
 
 test("focused proof-erasure CI reverses every implementation source"
 	, async () => {
@@ -55,8 +58,8 @@ test("focused proof-erasure CI reverses every implementation source"
 			, `${directProofErasureFocusedCiPredecessor}:${update.path}`]);
 		assert.equal(reverseDirectProofErasureFocusedCiUpdate(current, update)
 			, previous, update.path);
-	}
-});
+	}}
+);
 
 test("focused proof-erasure CI authenticates new receipt controls"
 	, async () => {
@@ -71,8 +74,8 @@ test("focused proof-erasure CI authenticates new receipt controls"
 		assert.equal(sha256(git(["show"
 			, `${directProofErasureFocusedCiImplementation}:${addition.path}`]))
 			, addition.sha256, addition.path);
-	}
-});
+	}}
+);
 
 test("focused proof-erasure CI registration is exactly reversible"
 	, async () => {
@@ -81,21 +84,22 @@ test("focused proof-erasure CI registration is exactly reversible"
 		, [...directProofErasureFocusedCiIntegrationPaths]);
 	for(const update of value.integrationUpdates)
 	{
-		const live = await readFile(update.path, "utf8");
+		const live = beforeDependentSignatureFocusedCiSource(
+			update.path, await readFile(update.path, "utf8"));
 		const implementation = git(["show"
 			, `${directProofErasureFocusedCiImplementation}:${update.path}`]);
 		assert.equal(reverseDirectProofErasureFocusedCiUpdate(live, update)
 			, implementation, update.path);
-	}
-});
+	}}
+);
 
 test("focused proof-erasure CI owns no promoted type-surface source pins"
 	, async () => {
 	const value = await record();
 	assert.equal(value.refreshedPins, 0);
 	assert.deepEqual(value.currentSourcePaths, []);
-	assert.deepEqual(value.currentSourceDigests, []);
-});
+		assert.deepEqual(value.currentSourceDigests, []);}
+);
 
 test("focused proof-erasure CI authenticates every history control"
 	, async () => {
@@ -107,7 +111,9 @@ test("focused proof-erasure CI authenticates every history control"
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${directProofErasureFocusedCiImplementation}:${addition.path}`]
 			, { stdio: "ignore" }).status, 0, addition.path);
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(beforeDependentSignatureFocusedCiSource(
+			addition.path, await readFile(addition.path, "utf8")
+			, addition.sha256))
 			, addition.sha256, addition.path);
 	}
 	for(const path of [
@@ -115,16 +121,18 @@ test("focused proof-erasure CI authenticates every history control"
 		, ...directProofErasureFocusedCiIntegrationPaths
 	]) assert.ok(directProofErasureFocusedCiNormalizationPaths.includes(path)
 		, path);
-});
+	}
+);
 
 test("focused proof-erasure CI normalizes current sources to its predecessor"
 	, async () => {
 	const value = await record();
 	for(const update of value.updates)
 	{
-		const live = await readFile(update.path, "utf8");
+		const live = beforeDependentSignatureFocusedCiSource(
+			update.path, await readFile(update.path, "utf8"));
 		const previous = beforeDirectProofErasureFocusedCiSource(
 			update.path, live, update.previousSha256);
 		assert.equal(sha256(previous), update.previousSha256, update.path);
-	}
-});
+	}}
+);
