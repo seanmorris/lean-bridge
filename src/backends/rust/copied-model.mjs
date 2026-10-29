@@ -25,12 +25,18 @@ export const validateOrdinaryCargoSettings = (settings = {}) => {
  * @param ir - Compiler-derived Binding IR.
  */
 export const compileCopiedRustModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), names = new Set(reserved);
-	if(surface.callbacks.size) names.add("LeanClosure");
 	const fail = (declaration, message) => {
 		const source = declaration.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration.id}: ${message}`), { code: "unsupported-rust-signature", details: { declaration: declaration.id, source: source ?? null } });
 	};
+	for(const declaration of ir.declarations)
+		for(const [index, parameter] of declaration.parameters.entries())
+			if(parameter.optional && declaration.parameters.slice(index + 1)
+				.some(item => !item.optional))
+				fail(declaration
+					, `Rust defaulted parameter ${parameter.name} precedes a required positional parameter`);
+	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), names = new Set(reserved);
+	if(surface.callbacks.size) names.add("LeanClosure");
 	for(const copy of surface.copies)
 	{
 		if(copy.record || copy.variant)

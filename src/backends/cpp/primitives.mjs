@@ -6,16 +6,20 @@
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 import { copiedCppType, cppCopiedNamespace, renderCppCopiedValues } from "./copied-values.mjs";
 import { cppCallable, cppCallableHelpers, cppCallablePublic, cppClosureReturn, cppResult, cppSite, cppUnit } from "./callables.mjs";
+import { renderCppDefault } from "./default-value.mjs";
 
 const wrapper = (surface, fn) => {
 	const p = surface.prefix, result = cppSite(surface, fn.declaration.result.type);
 	const unit = cppUnit(result), closure = cppCallable(result);
 	const parameters = fn.parameters.map((parameter, i) => ({ ...parameter, copy: cppSite(surface, fn.declaration.parameters[i].type), index: i }));
+	const first = fn.declaration.parameters.findIndex(parameter => parameter.optional);
+	if(first >= 0 && fn.declaration.parameters.slice(first).some(parameter => !parameter.optional))
+		throw new TypeError(`${fn.declaration.id} has a default before a required positional parameter`);
 	const callbacks = parameters.filter(({ copy }) => cppCallable(copy));
 	const lines = [];
 	if(callbacks.length) lines.push(`template<${callbacks.map(({ index }) => `class Function${index}`).join(", ")}>`
 		, `requires (${callbacks.map(({ copy, index }) => `detail::Accepts${copy.cppIndex}<Function${index}>`).join(" && ")})`);
-	lines.push(`inline ${cppResult(surface, result)} ${fn.field}(${parameters.map(({ name, copy, index }) => `${cppCallable(copy) ? `Function${index}&&` : `${copiedCppType(copy, cppCopiedNamespace(surface))}${copy.aggregate ? " const&" : ""}`} ${name}`).join(", ")}) {`
+	lines.push(`inline ${cppResult(surface, result)} ${fn.field}(${parameters.map(({ name, copy, index }) => `${cppCallable(copy) ? `Function${index}&&` : `${copiedCppType(copy, cppCopiedNamespace(surface))}${copy.aggregate ? " const&" : ""}`} ${name}${fn.declaration.parameters[index].optional ? ` = ${renderCppDefault(fn.declaration.parameters[index].default, fn.declaration.parameters[index].type, surface)}` : ""}`).join(", ")}) {`
 		, `  ${p}_error _lb_error{}; size_t _lb_budget = 16u * 1024u * 1024u; (void)_lb_budget;`);
 	if(callbacks.length) lines.push("  detail::CallbackState _lb_scope;");
 	for(const { name, copy } of parameters) if(!cppCallable(copy)) lines.push(`  detail::check${copy.index}(${name}, _lb_budget);`);

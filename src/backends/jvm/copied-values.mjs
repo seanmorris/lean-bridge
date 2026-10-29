@@ -11,6 +11,7 @@ import { copiedJvmAssets } from "./copied-assets.mjs";
 import { copiedJvmScope } from "./copied-conversions.mjs";
 import { jvmCopiedAliases, jvmAliasCatalogDocs, jvmAliasSiteDocs, jvmAliasReadme } from "./copied-aliases.mjs";
 import { jvmValue, jvmResult, jvmCallablePublic } from "./callables.mjs";
+import { renderJvmDefault } from "./default-value.mjs";
 import { renderCopiedJvmRuntime } from "./copied-runtime.mjs";
 import { nativeFinSummary, nativeFinContainerNote, nativeFinRefinements, nativeRefinementReadme } from "../native/fin-refinements.mjs";
 
@@ -39,8 +40,24 @@ ${checked.map(field => `        java.util.Objects.requireNonNull(${field.publicN
 ` : "";
 };
 
-const parameters = (model, fn) => fn.declaration.parameters.map((site, index) => `${model.publicType(jvmValue(model, site.type))} arg${index}`).join(", ");
+const parameters = (model, fn, count = fn.declaration.parameters.length) =>
+	fn.declaration.parameters.slice(0, count).map((site, index) =>
+		`${model.publicType(jvmValue(model, site.type))} arg${index}`).join(", ");
 const resultType = (model, fn) => jvmResult(model, jvmValue(model, fn.declaration.result.type));
+const defaultOverloads = (model, fn, index) => {
+	const sites = fn.declaration.parameters;
+	const first = sites.findIndex(site => site.optional);
+	if(first < 0) return [];
+	if(sites.slice(first).some(site => !site.optional))
+		throw new TypeError(`${fn.declaration.id} has a default before a required positional parameter`);
+	return sites.slice(first).map((_, offset) => {
+		const supplied = first + offset;
+		const prefix = sites.slice(0, supplied).map((site, n) => `arg${n}`);
+		const defaults = sites.slice(supplied).map(site =>
+			renderJvmDefault(site.default, site.type, model));
+		return `    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn, supplied)}) { ${fn.resultType === "void" ? "" : "return "}Runtime.call${index}(${[...prefix, ...defaults].join(", ")}); }`;
+	});
+};
 
 /**
  * Render public Java types, private conversions and binding evidence.
@@ -53,7 +70,8 @@ export const renderCopiedJvmPackage = (model, evidence = null) => {
 	const files = {
 		[`${prefix}/Unit.java`]: `package ${model.namespace};\npublic enum Unit { INSTANCE }\n`
 		, [`${prefix}/LeanBridgeException.java`]: `package ${model.namespace};\npublic final class LeanBridgeException extends RuntimeException {\n    private static final long serialVersionUID = 1L;\n    LeanBridgeException(String message, Throwable cause) { super(message, cause); }\n}\n`
-		, [`${prefix}/Api.java`]: `package ${model.namespace};\n${jvmAliasCatalogDocs(model)}public final class Api {\n    private Api() { }\n${model.surface.functions.map((fn, index) => `${withFinDocs(fn, jvmAliasSiteDocs(model, fn.declaration.parameters.map((site, n) => ({ name: `arg${n}`, type: site.type })), fn.declaration.result.type, fn.resultType === "void"), model.ir.types)}    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn)}) { ${fn.resultType === "void" ? "" : "return "}Runtime.call${index}(${fn.declaration.parameters.map((_, n) => `arg${n}`).join(", ")}); }`).join("\n")}\n}\n`
+		, [`${prefix}/Api.java`]: `package ${model.namespace};\n${jvmAliasCatalogDocs(model)}public final class Api {\n    private Api() { }\n${model.surface.functions.map((fn, index) => `${withFinDocs(fn, jvmAliasSiteDocs(model, fn.declaration.parameters.map((site, n) => ({ name: `arg${n}`, type: site.type })), fn.declaration.result.type, fn.resultType === "void"), model.ir.types)}    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn)}) { ${fn.resultType === "void" ? "" : "return "}Runtime.call${index}(${fn.declaration.parameters.map((_, n) => `arg${n}`).join(", ")}); }
+${defaultOverloads(model, fn, index).join("\n")}`).join("\n")}\n}\n`
 	};
 	for(const copy of model.surface.copies.filter(copy => copy.record))
 		files[`${prefix}/${copy.publicName}.java`] = `package ${model.namespace};\n${jvmAliasSiteDocs(model, copy.record.fields.map((field, index) => ({ name: copy.fields[index].publicName, type: field.type })))}public record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")}) {\n${nullBoundary(model, copy.publicName, copy.fields)}${valueEquality(copy.publicName, copy.fields.map(field => field.publicName))}\n}\n`;

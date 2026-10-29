@@ -1390,6 +1390,21 @@ jobs:
           path: build/direct-proof-erasure-npm-ci/
           if-no-files-found: error
           retention-days: 30
+      - name: Require optional parameters in Node, TypeScript and three browsers
+        id: optional_parameters_npm
+        timeout-minutes: 90
+        env:
+          LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+          LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
+        run: bash scripts/run-optional-parameter-npm-ci.sh
+      - name: Preserve optional-parameter npm and browser records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-node-browser-${{ github.sha }}
+          path: build/optional-parameter-npm-ci/
+          if-no-files-found: error
+          retention-days: 30
       - name: Check independently reviewed Subtype npm packages and strict TypeScript
         id: reviewed_subtype_npm
         timeout-minutes: 60
@@ -1693,10 +1708,10 @@ jobs:
         if: always()
         shell: bash
         run: |
-          test_result="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && steps.host_null_npm.outcome == 'success' && steps.reviewed_fin_npm.outcome == 'success' && steps.reviewed_subtype_npm.outcome == 'success' && steps.structural_subtype_npm.outcome == 'success' && steps.direct_proof_npm.outcome == 'success' && steps.dependent_fin_npm.outcome == 'success' && 'passed' || 'failed' }}"
-          executed="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && steps.host_null_npm.outcome == 'success' && steps.reviewed_fin_npm.outcome == 'success' && steps.reviewed_subtype_npm.outcome == 'success' && steps.structural_subtype_npm.outcome == 'success' && steps.direct_proof_npm.outcome == 'success' && steps.dependent_fin_npm.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs && LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs && bash scripts/run-reviewed-subtype-package-ci.sh npm && bash scripts/run-structural-subtype-ci.sh node-browser && bash scripts/run-direct-proof-erasure-npm-ci.sh && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_ROUTES=ordinary-source,reviewed-ir LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_REPORT=build/dependent-fin-javascript/{route}.json node --test --test-concurrency=1 tests/dependent-fin-javascript.test.mjs && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy node --test --test-concurrency=1 tests/host-null-npm-installed.test.mjs"
-          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs && LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs && bash scripts/run-reviewed-subtype-package-ci.sh npm && bash scripts/run-structural-subtype-ci.sh node-browser && bash scripts/run-direct-proof-erasure-npm-ci.sh && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_ROUTES=ordinary-source,reviewed-ir LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_REPORT=build/dependent-fin-javascript/{route}.json node --test --test-concurrency=1 tests/dependent-fin-javascript.test.mjs && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy node --test --test-concurrency=1 tests/host-null-npm-installed.test.mjs"
+          test_result="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && steps.host_null_npm.outcome == 'success' && steps.reviewed_fin_npm.outcome == 'success' && steps.reviewed_subtype_npm.outcome == 'success' && steps.structural_subtype_npm.outcome == 'success' && steps.direct_proof_npm.outcome == 'success' && steps.optional_parameters_npm.outcome == 'success' && steps.dependent_fin_npm.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && steps.host_null_npm.outcome == 'success' && steps.reviewed_fin_npm.outcome == 'success' && steps.reviewed_subtype_npm.outcome == 'success' && steps.structural_subtype_npm.outcome == 'success' && steps.direct_proof_npm.outcome == 'success' && steps.optional_parameters_npm.outcome == 'success' && steps.dependent_fin_npm.outcome == 'success' && 'true' || 'false' }}"
+          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs && LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs && bash scripts/run-reviewed-subtype-package-ci.sh npm && bash scripts/run-structural-subtype-ci.sh node-browser && bash scripts/run-direct-proof-erasure-npm-ci.sh && bash scripts/run-optional-parameter-npm-ci.sh && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_ROUTES=ordinary-source,reviewed-ir LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_REPORT=build/dependent-fin-javascript/{route}.json node --test --test-concurrency=1 tests/dependent-fin-javascript.test.mjs && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy node --test --test-concurrency=1 tests/host-null-npm-installed.test.mjs"
+          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-structured-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs && LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST=1 node --test --test-concurrency=1 --test-name-pattern='Fin runs in source-free installed npm packages' tests/generic-records.test.mjs && bash scripts/run-reviewed-subtype-package-ci.sh npm && bash scripts/run-structural-subtype-ci.sh node-browser && bash scripts/run-direct-proof-erasure-npm-ci.sh && bash scripts/run-optional-parameter-npm-ci.sh && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_ROUTES=ordinary-source,reviewed-ir LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_REPORT=build/dependent-fin-javascript/{route}.json node --test --test-concurrency=1 tests/dependent-fin-javascript.test.mjs && LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit LEAN_BRIDGE_LAKE_ENGINE=build/locked-lake-engine/bin/lean-bridge-component-engine LEAN_BRIDGE_LAKE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy node --test --test-concurrency=1 tests/host-null-npm-installed.test.mjs"
       - name: Upload Node observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -1707,7 +1722,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce Node support and the browser corpus
-        if: steps.consumer.outcome != 'success' || steps.type_corpus_npm.outcome != 'success' || steps.host_null_npm.outcome != 'success' || steps.reviewed_fin_npm.outcome != 'success' || steps.reviewed_subtype_npm.outcome != 'success' || steps.structural_subtype_npm.outcome != 'success' || steps.direct_proof_npm.outcome != 'success' || steps.dependent_fin_npm.outcome != 'success'
+        if: steps.consumer.outcome != 'success' || steps.type_corpus_npm.outcome != 'success' || steps.host_null_npm.outcome != 'success' || steps.reviewed_fin_npm.outcome != 'success' || steps.reviewed_subtype_npm.outcome != 'success' || steps.structural_subtype_npm.outcome != 'success' || steps.direct_proof_npm.outcome != 'success' || steps.optional_parameters_npm.outcome != 'success' || steps.dependent_fin_npm.outcome != 'success'
         run: exit 1
       - name: Preserve executable documentation observations
         if: always()
@@ -2552,6 +2567,18 @@ jobs:
             --output build/direct-proof-erasure-php-input/php-wasm-runtime
           export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME="$GITHUB_WORKSPACE/build/direct-proof-erasure-php-input/php-wasm-runtime"
           bash scripts/run-direct-proof-erasure-php-ci.sh
+      - name: Qualify optional parameters in native PHP and PHP-Wasm packages
+        id: optional_parameters_php
+        continue-on-error: true
+        env:
+          LEAN_BRIDGE_PHP: /usr/bin/php
+          LEAN_BRIDGE_COMPOSER: /usr/bin/composer
+          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm
+        run: |
+          source scripts/env.sh
+          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME="$GITHUB_WORKSPACE/build/direct-proof-erasure-php-input/php-wasm-runtime"
+          test -d "$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME"
+          bash scripts/run-optional-parameter-php-ci.sh
       - name: Execute owned PHP-Wasm values and installed CLI releases
         id: owned_php_wasm
         continue-on-error: true
@@ -2632,6 +2659,14 @@ jobs:
           path: build/direct-proof-erasure-php-ci/
           if-no-files-found: error
           retention-days: 30
+      - name: Upload optional-parameter PHP evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-php-${{ github.sha }}
+          path: build/optional-parameter-php-ci/
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload PHP-Wasm performance for combined observations
         if: always()
         uses: actions/upload-artifact@v7
@@ -2642,7 +2677,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce PHP support
-        if: always() && (steps.consumer.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.direct_proof_php.outcome != 'success' || steps.owned_php_wasm.outcome != 'success')
+        if: always() && (steps.consumer.outcome != 'success' || steps.copied_zend.outcome != 'success' || steps.ordinary_php_wasm.outcome != 'success' || steps.direct_proof_php.outcome != 'success' || steps.optional_parameters_php.outcome != 'success' || steps.owned_php_wasm.outcome != 'success')
         run: exit 1
 
   php-wasm-corpus:
@@ -3323,6 +3358,22 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Execute optional parameters through prepared C and C++ packages
+        id: optional_parameters_native
+        if: matrix.profile == 'c-family'
+        continue-on-error: true
+        run: |
+          source scripts/env.sh
+          bash scripts/run-optional-parameter-native-ci.sh
+      - name: Preserve optional-parameter C and C++ packages
+        if: always() && matrix.profile == 'c-family'
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-native-${{ github.sha }}
+          path: build/optional-parameter-native-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Install the TAP log verifier
         timeout-minutes: 20
         run: sudo apt-get install -y ripgrep
@@ -3939,6 +3990,21 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Qualify optional parameters in prepared language packages
+        if: matrix.profile == 'python' || matrix.profile == 'rust'
+        id: optional_parameters_language
+        continue-on-error: true
+        timeout-minutes: 100
+        run: bash scripts/run-optional-parameter-language-ci.sh "${{ matrix.profile }}"
+      - name: Preserve optional-parameter language acceptance
+        if: always() && (matrix.profile == 'python' || matrix.profile == 'rust')
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-language-${{ matrix.profile }}-${{ github.sha }}
+          path: build/optional-parameter-language-ci/${{ matrix.profile }}/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Record native consumer observations
         if: always() && matrix.profile == 'c-family'
         shell: bash
@@ -3964,7 +4030,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-package-ci.sh c-cpp && bash scripts/run-structural-subtype-ci.sh c-cpp"
               consumer_command="$consumer_command && LEAN_BRIDGE_CHECKED_RECORD_PROFILES=c,cpp node --test --test-concurrency=1 --test-name-pattern='C and C' tests/checked-records.test.mjs"
               consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-native-ci.sh"
-              if [ "${{ steps.ordinary_c.outcome }}" != success ] || [ "${{ steps.type_corpus_c_family.outcome }}" != success ] || [ "${{ steps.direct_proof_native.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-optional-parameter-native-ci.sh"
+              if [ "${{ steps.ordinary_c.outcome }}" != success ] || [ "${{ steps.type_corpus_c_family.outcome }}" != success ] || [ "${{ steps.direct_proof_native.outcome }}" != success ] || [ "${{ steps.optional_parameters_native.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
@@ -4011,8 +4078,8 @@ jobs:
               consumer_command="$consumer_command && npm run test:owned-python-transfers"
               consumer_command="$consumer_command && npm run test:owned-python-borrows"
               consumer_command="$consumer_command && npm run test:owned-python-receivers"
-              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh python"
-              if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh python && bash scripts/run-optional-parameter-language-ci.sh python"
+              if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ] || [ "${{ steps.optional_parameters_language.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
@@ -4045,8 +4112,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_NATIVE_TEST=1 node --test --test-name-pattern='ordinary and reviewed Lean graphs' tests/rust-copied-graph-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_TEST=1 LEAN_BRIDGE_RUST_GRAPH_PACKAGE_TEST=1 node --test tests/rust-graph-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs"
-              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh rust"
-              if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh rust && bash scripts/run-optional-parameter-language-ci.sh rust"
+              if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ] || [ "${{ steps.optional_parameters_language.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
@@ -4063,7 +4130,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce native consumer support
-        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.direct_proof_language.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success' || steps.direct_proof_language.outcome != 'success')))
+        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success' || steps.optional_parameters_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')))
         run: exit 1
 
   managed-consumers:
@@ -4825,6 +4892,36 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Qualify optional parameters in the prepared Ruby package
+        if: matrix.profile == 'ruby'
+        id: optional_parameters_language
+        continue-on-error: true
+        timeout-minutes: 100
+        run: bash scripts/run-optional-parameter-language-ci.sh ruby
+      - name: Preserve optional-parameter Ruby acceptance
+        if: always() && matrix.profile == 'ruby'
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-language-ruby-${{ github.sha }}
+          path: build/optional-parameter-language-ci/ruby/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Qualify optional parameters in prepared managed packages
+        if: matrix.profile == 'dotnet' || matrix.profile == 'jvm'
+        id: optional_parameters_managed
+        continue-on-error: true
+        timeout-minutes: 100
+        run: bash scripts/run-optional-parameter-managed-ci.sh "${{ matrix.profile }}"
+      - name: Preserve optional-parameter managed acceptance
+        if: always() && (matrix.profile == 'dotnet' || matrix.profile == 'jvm')
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-managed-${{ matrix.profile }}-${{ github.sha }}
+          path: build/optional-parameter-managed-ci/${{ matrix.profile }}/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Qualify direct proof erasure in prepared managed packages
         if: matrix.profile == 'dotnet' || matrix.profile == 'jvm'
         id: direct_proof_managed
@@ -4896,7 +4993,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
               consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh dotnet"
               consumer_command="$consumer_command && bash scripts/run-host-null-managed-ci.sh dotnet"
-              if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ] || [ "${{ steps.host_null_managed.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-optional-parameter-managed-ci.sh dotnet"
+              if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ] || [ "${{ steps.host_null_managed.outcome }}" != success ] || [ "${{ steps.optional_parameters_managed.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -4930,7 +5028,8 @@ jobs:
               consumer_command="$consumer_command && bash scripts/run-nominal-subtype-jvm-ci.sh \"$JAVA_HOME/bin/java\" \"$JAVA_HOME/bin/javac\" \"$PWD/build/kotlin-tools/kotlinc/bin/kotlinc\""
               consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh jvm"
               consumer_command="$consumer_command && bash scripts/run-host-null-managed-ci.sh jvm"
-              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ] || [ "${{ steps.host_null_managed.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-optional-parameter-managed-ci.sh jvm"
+              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ] || [ "${{ steps.host_null_managed.outcome }}" != success ] || [ "${{ steps.optional_parameters_managed.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -4961,8 +5060,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs"
-              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh ruby"
-              if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ]; then
+              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh ruby && bash scripts/run-optional-parameter-language-ci.sh ruby"
+              if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ] || [ "${{ steps.optional_parameters_language.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
               fi
@@ -4979,7 +5078,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce managed consumer support
-        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success' || steps.direct_proof_language.outcome != 'success')))
+        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.direct_proof_managed.outcome != 'success' || steps.optional_parameters_managed.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success' || steps.optional_parameters_managed.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')))
         run: exit 1
 
   owned-jvm-values:
@@ -5683,6 +5782,23 @@ jobs:
           if-no-files-found: error
           overwrite: false
           retention-days: 30
+      - name: Qualify optional parameters in the prepared WIT package
+        id: optional_parameters_wit
+        continue-on-error: true
+        timeout-minutes: 100
+        run: |
+          export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+          source scripts/env.sh
+          bash scripts/run-optional-parameter-wit-ci.sh
+      - name: Preserve optional-parameter WIT acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-wit-${{ github.sha }}
+          path: build/optional-parameter-wit-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Qualify direct proof erasure in the prepared WIT package
         id: direct_proof_wit
         continue-on-error: true
@@ -5704,9 +5820,9 @@ jobs:
         if: always()
         shell: bash
         run: |
-          test_result="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && 'passed' || 'failed' }}"
-          executed="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=wit-wasi node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=wit-wasi node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=wit-wasi LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-wit-wasi.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs wit-wasi build/native-fin-container-edges/edges-wit-wasi.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=wit-wasi node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-wit-ci.sh && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=wit-wasi node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/wit-wasi.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-wit-wasi.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs wit-wasi build/native-fin-record-zero/wit-wasi.json build/native-fin-record-zero/reviewed-wit-wasi.json && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh wit-wasi && bash scripts/run-checked-record-host-ci.sh wit-wasi && bash scripts/run-structural-subtype-ci.sh wit-wasi && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages && bash scripts/run-nominal-subtype-wit-ci.sh \"/usr/bin/cc\" \"$PWD/.toolchains/wasm-tools/bin/wasm-tools\" \"$PWD/build/wasmtime-c-api\" && bash scripts/run-direct-proof-erasure-wit-ci.sh"
+          test_result="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && steps.optional_parameters_wit.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && steps.optional_parameters_wit.outcome == 'success' && 'true' || 'false' }}"
+          node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=wit-wasi node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=wit-wasi node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=wit-wasi LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-wit-wasi.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs wit-wasi build/native-fin-container-edges/edges-wit-wasi.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=wit-wasi node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-wit-ci.sh && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=wit-wasi node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/wit-wasi.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-wit-wasi.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs wit-wasi build/native-fin-record-zero/wit-wasi.json build/native-fin-record-zero/reviewed-wit-wasi.json && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh wit-wasi && bash scripts/run-checked-record-host-ci.sh wit-wasi && bash scripts/run-structural-subtype-ci.sh wit-wasi && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages && bash scripts/run-nominal-subtype-wit-ci.sh \"/usr/bin/cc\" \"$PWD/.toolchains/wasm-tools/bin/wasm-tools\" \"$PWD/build/wasmtime-c-api\" && bash scripts/run-direct-proof-erasure-wit-ci.sh && bash scripts/run-optional-parameter-wit-ci.sh"
       - name: Upload WIT shared corpus evidence
         if: always()
         uses: actions/upload-artifact@v7
@@ -5790,7 +5906,7 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Enforce WIT and WASI support
-        if: always() && (steps.consumer.outcome != 'success' || steps.ordinary_wit.outcome != 'success' || steps.structured_wit.outcome != 'success' || steps.recursive_wit.outcome != 'success' || steps.type_corpus_wit.outcome != 'success' || steps.owned_wit_projection.outcome != 'success' || steps.owned_wit_native.outcome != 'success' || steps.owned_wit_session.outcome != 'success' || steps.owned_wit_package.outcome != 'success' || steps.owned_wit_callback_packages.outcome != 'success' || steps.owned_wit_transfers.outcome != 'success' || steps.owned_wit_borrows.outcome != 'success' || steps.nominal_wit.outcome != 'success' || steps.direct_proof_wit.outcome != 'success')
+        if: always() && (steps.consumer.outcome != 'success' || steps.ordinary_wit.outcome != 'success' || steps.structured_wit.outcome != 'success' || steps.recursive_wit.outcome != 'success' || steps.type_corpus_wit.outcome != 'success' || steps.owned_wit_projection.outcome != 'success' || steps.owned_wit_native.outcome != 'success' || steps.owned_wit_session.outcome != 'success' || steps.owned_wit_package.outcome != 'success' || steps.owned_wit_callback_packages.outcome != 'success' || steps.owned_wit_transfers.outcome != 'success' || steps.owned_wit_borrows.outcome != 'success' || steps.nominal_wit.outcome != 'success' || steps.direct_proof_wit.outcome != 'success' || steps.optional_parameters_wit.outcome != 'success')
         run: exit 1
 
   docker-engine:
@@ -5832,6 +5948,51 @@ jobs:
     name: Perl
     uses: ./.github/workflows/perl-consumer.yml
 
+  optional-parameter-matrix:
+    name: Reconcile optional-parameter package matrix
+    if: always()
+    needs:
+      - node-consumers
+      - php-wasm-consumers
+      - native-consumers
+      - managed-consumers
+      - perl-consumer
+      - wasi-consumer
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out the exact receipt verifier
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Download every same-run optional-parameter artifact
+        uses: actions/download-artifact@v5
+        with:
+          pattern: optional-parameter-*-${{ github.sha }}
+          path: build/optional-parameter-matrix-input
+      - name: Reconcile all seventeen profiles and both author routes
+        run: |
+          node scripts/reconcile-optional-parameter-matrix.mjs \
+            --directory build/optional-parameter-matrix-input \
+            --output build/optional-parameter-matrix/receipt.json \
+            --producer "${{ github.sha }}" \
+            --repository "${{ github.repository }}" \
+            --run-id "${{ github.run_id }}" \
+            --run-attempt "${{ github.run_attempt }}"
+      - name: Preserve the complete optional-parameter receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-matrix-${{ github.sha }}
+          path: build/optional-parameter-matrix/receipt.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+
   support-summary:
     name: Publish consumer support summary
     if: always()
@@ -5869,6 +6030,7 @@ jobs:
       - wasi-consumer
       - owned-wit-receivers
       - docker-engine
+      - optional-parameter-matrix
     runs-on: ubuntu-24.04
     steps:
       - name: Require both C and C++ acceptance jobs
@@ -5964,4 +6126,7 @@ jobs:
         run: exit 1
       - name: Enforce reviewed Fin Wasm entry acceptance
         if: needs.reviewed-fin-wasm-entry.result != 'success'
+        run: exit 1
+      - name: Enforce complete optional-parameter matrix reconciliation
+        if: needs.optional-parameter-matrix.result != 'success'
         run: exit 1

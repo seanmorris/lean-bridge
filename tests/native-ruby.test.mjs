@@ -18,6 +18,7 @@ import { rubyLiteral } from "../src/backends/ruby/copied-assets.mjs";
 import { packageOrdinaryRuby } from "../src/release/native-rubygems.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_NATIVE_RUBY_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -82,6 +83,93 @@ test("ordinary Ruby admission rejects reserved names and normalized gem versions
 	}
 	for(const settings of [{ name: "../escape" }, { name: "UPPER" }, { version: "1.0" }, { version: "1.0.0-rc.1" }, { version: ">= 1.0.0" }]) assert.throws(() => validateOrdinaryRubySettings(settings));
 	validateOrdinaryRubySettings({ name: "example-api", version: "2.0.0.rc.1" });
+});
+
+test("ordinary Ruby gems apply authenticated defaults only when arguments are omitted", async t => {
+	const option = { option: "uint32" };
+	const signatures = [
+		{ name: "Defaults.uint32", parameters: ["uint32"], result: "uint32" }
+		, { name: "Defaults.optionSome", parameters: [option], result: option }
+		, { name: "Defaults.optionNone", parameters: [option], result: option }
+		, { name: "Defaults.unit", parameters: ["unit"], result: "unit" }
+		, { name: "Defaults.boolean", parameters: ["bool"], result: "bool" }
+		, { name: "Defaults.text", parameters: ["string"], result: "string" }
+		, { name: "Defaults.character", parameters: ["char"], result: "char" }
+		, { name: "Defaults.natural", parameters: ["nat"], result: "nat" }
+		, { name: "Defaults.integer", parameters: ["int"], result: "int" }
+	];
+	const ir = corpusReviewedIr({ id: "defaults" }, signatures);
+	const defaults = [
+		{ kind: "integer", value: "7" }
+		, { kind: "option-some", value: { kind: "integer", value: "9" } }
+		, { kind: "option-none" }
+		, { kind: "unit" }
+		, { kind: "boolean", value: true }
+		, { kind: "string", value: "Lean\nBridge" }
+		, { kind: "char", value: "λ" }
+		, { kind: "integer", value: "184467440737095516160" }
+		, { kind: "integer", value: "-184467440737095516160" }
+	];
+	ir.declarations.forEach((declaration, index) => {
+		declaration.parameters[0].optional = true;
+		declaration.parameters[0].default = defaults[index];
+	});
+	const files = generateRubyBindingPackage(ir);
+	const source = files["lib/lean_bridge/defaults.rb"];
+	assert.match(source, /def uint32\(arg0 = 7\)/u);
+	assert.match(source, /def option_some\(arg0 = Some\.new\(9\)\)/u);
+	assert.match(source, /def option_none\(arg0 = nil\)/u);
+	assert.match(source, /def unit\(arg0 = UNIT\)/u);
+	assert.match(source, /def boolean\(arg0 = true\)/u);
+	assert.match(source, /def text\(arg0 = "Lean\\nBridge"\)/u);
+	assert.match(source, /def character\(arg0 = "λ"\)/u);
+
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-ruby-defaults-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	for(const [path, contents] of Object.entries(files))
+		if(path === "lib/lean_bridge/defaults.rb")
+			await saveLakeFile(root, path, contents);
+	await saveLakeFile(root, "lib/lean_bridge/defaults/native.rb", `module LeanBridge
+  module Defaults
+    module Native
+      extend self
+${signatures.map((_, index) => `      def call${index}(value) = value`).join("\n")}
+    end
+  end
+end
+`);
+	await saveLakeFile(root, "consumer.rb", `unless defined?(Data)
+  class Data
+    def self.define(*members) = Struct.new(*members)
+  end
+end
+require "lean_bridge/defaults"
+API = LeanBridge::Defaults
+raise unless API.uint32 == 7 && API.uint32(11) == 11
+raise unless API.uint32(nil).nil?
+raise unless API.option_some == API::Some.new(9)
+raise unless API.option_some(nil).nil?
+raise unless API.option_none.nil? && API.option_none(API::Some.new(5)) == API::Some.new(5)
+raise unless API.unit.equal?(API::UNIT) && API.unit(nil).nil?
+raise unless API.boolean == true && API.boolean(false) == false
+raise unless API.text == "Lean\\nBridge" && API.text("explicit") == "explicit"
+raise unless API.character == "λ" && API.character("x") == "x"
+raise unless API.natural == 184467440737095516160
+raise unless API.integer == -184467440737095516160
+`);
+	await run(ruby, ["-I", join(root, "lib"), "consumer.rb"], root)
+		.catch(error => assert.fail(error.details?.stderr ?? error.message));
+});
+
+test("ordinary Ruby gems reject a default before a required positional parameter", () => {
+	const ir = corpusReviewedIr({ id: "defaults" }, [{
+		name: "Defaults.mixed", parameters: ["uint32", "uint32"], result: "uint32"
+	}]);
+	ir.declarations[0].parameters[0].optional = true;
+	ir.declarations[0].parameters[0].default = { kind: "integer", value: "7" };
+	assert.throws(() => generateRubyBindingPackage(ir), error =>
+		error.code === "unsupported-ruby-signature"
+		&& /precedes a required positional parameter/u.test(error.message));
 });
 
 const consumerSource = (name, resultCopy) => `require "lean_bridge/${name.toLowerCase()}"

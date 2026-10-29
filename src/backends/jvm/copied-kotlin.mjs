@@ -9,6 +9,7 @@ import {
 import { renderCopiedJvmRuntime } from "./copied-runtime.mjs";
 import { jvmValue, jvmResult, jvmCallablePublic } from "./callables.mjs";
 import { generateCopiedJvmPackage } from "./copied-values.mjs";
+import { renderKotlinDefault } from "./kotlin-default-value.mjs";
 
 const quoted = name => name.split(".").map(part => `\`${part}\``).join(".");
 const scalarTypes = {
@@ -108,6 +109,15 @@ ${equality(quoted(simple), members)}
 `;
 };
 
+const kotlinParameters = (model, fn, inputs) => {
+	const sites = fn.declaration.parameters;
+	const first = sites.findIndex(site => site.optional);
+	if(first >= 0 && sites.slice(first).some(site => !site.optional))
+		throw new TypeError(`${fn.declaration.id} has a default before a required positional parameter`);
+	return inputs.map((value, index) => `arg${index}: ${model.kotlinType(value)}${sites[index].optional
+		? ` = ${renderKotlinDefault(sites[index].default, sites[index].type, model)}` : ""}`).join(", ");
+};
+
 /**
  * Render typed Kotlin values and private calls sharing the Java native asset loader.
  *
@@ -127,7 +137,7 @@ ${model.surface.functions.map((fn, index) => {
 		const output = jvmValue(model, fn.declaration.result.type), type = resultType(output);
 		const inputs = fn.declaration.parameters.map(site => jvmValue(model, site.type));
 		return `        @kotlin.jvm.JvmStatic @kotlin.Suppress("UNCHECKED_CAST")
-        fun ${quoted(fn.publicName)}(${inputs.map((value, n) => `arg${n}: ${model.kotlinType(value)}`).join(", ")}): ${type} {
+        fun ${quoted(fn.publicName)}(${kotlinParameters(model, fn, inputs)}): ${type} {
             ${output.scalarName === "unit" ? "" : "return "}${quoted(model.namespace)}.${model.helpers.calls}.call${index}(${inputs.map((_, n) => `arg${n}`).join(", ")})${output.scalarName === "unit" ? "" : ` as ${type}`}
         }`;
 }).join("\n")}

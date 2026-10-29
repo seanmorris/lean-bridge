@@ -9,6 +9,7 @@ import { compileCopiedDotnetModel } from "./copied-model.mjs";
 import { copiedConversions, copiedNativeTypes, copiedScope, copiedCompoundTypes } from "./copied-conversions.mjs";
 import { dotnetValue, dotnetResult, dotnetNativeCall, dotnetCallableTypes, dotnetCallableState, dotnetCallableSupport, dotnetCallableImports, dotnetClosurePublic } from "./callables.mjs";
 import { dotnetCopiedAliases, dotnetAliasCatalogDocs, dotnetAliasSiteDocs, dotnetAliasReadme } from "./copied-aliases.mjs";
+import { renderDotnetDefault } from "./default-value.mjs";
 import { nativeFinSummary, nativeFinContainerNote, nativeFinRefinements, nativeRefinementReadme } from "../native/fin-refinements.mjs";
 
 const finBounds = (fn, types) => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => parameter.name), types);
@@ -19,10 +20,28 @@ const finRemarks = (fn, types) => {
 	const bounds = finBounds(fn, types);
 	return bounds ? `    /// <remarks>Checked Lean Fin bounds: ${bounds.replaceAll("<", "&lt;")}.</remarks>\n` : "";
 };
-const parameters = (model, fn) => fn.declaration.parameters.map((site, index) => `${model.publicType(dotnetValue(model, site.type))} @${fn.parameters[index].name}`).join(", ");
-const args = fn => fn.parameters.map(parameter => `@${parameter.name}`).join(", ");
+const parameters = (model, fn, count = fn.declaration.parameters.length) =>
+	fn.declaration.parameters.slice(0, count).map((site, index) =>
+		`${model.publicType(dotnetValue(model, site.type))} @${fn.parameters[index].name}`).join(", ");
+const args = (fn, count = fn.parameters.length) =>
+	fn.parameters.slice(0, count).map(parameter => `@${parameter.name}`).join(", ");
 const returnsUnit = fn => fn.resultType === "void";
 const resultType = (model, fn) => dotnetResult(model, dotnetValue(model, fn.declaration.result.type));
+const defaultOverloads = (model, fn, index) => {
+	const sites = fn.declaration.parameters;
+	const first = sites.findIndex(site => site.optional);
+	if(first < 0) return [];
+	if(sites.slice(first).some(site => !site.optional))
+		throw new TypeError(`${fn.declaration.id} has a default before a required positional parameter`);
+	return sites.slice(first).map((_, offset) => {
+		const supplied = first + offset;
+		const defaults = sites.slice(supplied).map(site =>
+			renderDotnetDefault(site.default, site.type, model));
+		const prefix = args(fn, supplied);
+		const call = [...prefix ? [prefix] : [], ...defaults].join(", ");
+		return `    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn, supplied)}) => Interop.Runtime.Call${index}(${call});`;
+	});
+};
 const recordEquality = (name, fields) => `
 {
     public bool Equals(${name}? other) => other is not null${fields.map(field => `
@@ -123,7 +142,8 @@ ${model.surface.callbacks.size ? dotnetClosurePublic : ""}
 /// <summary>The functions selected by the Lean package author.</summary>
 ${dotnetAliasCatalogDocs(model)}public static class Api
 {
-${model.surface.functions.map((fn, index) => `${dotnetAliasSiteDocs(model, fn.declaration.parameters.map((site, index) => ({ name: fn.parameters[index].name, type: site.type })), fn.declaration.result.type, returnsUnit(fn)).replace(/^\/\/\//gm, "    ///")}${finRemarks(fn, model.ir.types)}    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn)}) => Interop.Runtime.Call${index}(${args(fn)});`).join("\n")}
+${model.surface.functions.map((fn, index) => `${dotnetAliasSiteDocs(model, fn.declaration.parameters.map((site, index) => ({ name: fn.parameters[index].name, type: site.type })), fn.declaration.result.type, returnsUnit(fn)).replace(/^\/\/\//gm, "    ///")}${finRemarks(fn, model.ir.types)}    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn)}) => Interop.Runtime.Call${index}(${args(fn)});
+${defaultOverloads(model, fn, index).join("\n")}`).join("\n")}
 }
 `
 		, [internalFiles[0]]: runtimeSource(model, evidence)

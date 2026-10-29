@@ -10,6 +10,7 @@ import { copiedPythonConversions, copiedPythonHelpers, copiedPythonTypes } from 
 import { pythonValue, pythonClosurePublic, pythonArgumentType, pythonNativeCall, pythonCallableTypes, pythonCallableSupport } from "./callables.mjs";
 import { pythonCompoundNames, pythonCompoundPublic } from "./compounds.mjs";
 import { pythonFinReadme, pythonFinSummary } from "./refinements.mjs";
+import { renderPythonDefault } from "./default-value.mjs";
 
 const names = model => ["LeanBridgeError", ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...pythonCompoundNames(model), ...model.surface.copies.filter(copy => copy.record || copy.variant).flatMap(copy => [copy.publicName, ...copy.variant ? copy.cases.map(branch => branch.publicName) : []]), ...model.surface.aliases.map(alias => alias.definition.name), ...model.surface.functions.map(fn => fn.field)];
 const publicType = (model, ref, input = false) => {
@@ -28,6 +29,10 @@ const finBounds = (fn, types) => pythonFinSummary(fn.declaration, fn.parameters.
 const finDocstring = (fn, types) => {
 	const bounds = finBounds(fn, types);
 	return bounds ? `    """Checked Lean Fin bounds: ${bounds}."""\n` : "";
+};
+const publicParameter = (model, fn, parameter, index) => {
+	const declaration = fn.declaration.parameters[index];
+	return `${parameter.name}: ${publicType(model, declaration.type, true)}${declaration.optional ? ` = ${renderPythonDefault(declaration.default)}` : ""}`;
 };
 const publicSource = (model, stub = false) => `from __future__ import annotations
 from dataclasses import dataclass as _dataclass
@@ -56,7 +61,7 @@ ${copy.publicName}: _TypeAlias = ${copy.cases.map(branch => branch.publicName).j
 class ${copy.publicName}:
 ${copy.fields.length ? copy.fields.map((field, index) => `    ${field.publicName}: ${publicType(model, copy.record.fields[index].type, true)}`).join("\n") : "    pass"}
 ` : ""}`).join("\n")}${publicAliases(model)}
-${model.surface.functions.map((fn, index) => `def ${fn.field}(${fn.parameters.map((parameter, i) => `${parameter.name}: ${publicType(model, fn.declaration.parameters[i].type, true)}`).join(", ")}) -> ${publicType(model, fn.declaration.result.type)}:
+${model.surface.functions.map((fn, index) => `def ${fn.field}(${fn.parameters.map((parameter, i) => publicParameter(model, fn, parameter, i)).join(", ")}) -> ${publicType(model, fn.declaration.result.type)}:
 ${finDocstring(fn, model.ir.types)}    ${stub ? "..." : `return _native._call${index}(${fn.parameters.map(parameter => parameter.name).join(", ")})`}
 `).join("\n")}
 ${stub ? "" : "from . import _native\n"}`;

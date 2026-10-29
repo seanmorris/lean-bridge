@@ -13,6 +13,7 @@ import {
 import { auditPythonPackage } from "./package-audit.mjs";
 import { compileCopiedPythonModel } from "./copied-model.mjs";
 import { renderCopiedPythonPackage } from "./copied-values.mjs";
+import { renderPythonDefault } from "./default-value.mjs";
 
 /**
  * Reports Python binding generation failures with stable machine-readable codes and structured diagnostic context.
@@ -76,6 +77,12 @@ const pythonType = (ir, ref) => {
 	if(resolved.constructor === "result") return `Ok[${args[0]}] | Err[${args[1]}]`;
 	return `tuple[${args.join(", ")}${args.length === 1 ? "," : ""}]`;
 };
+
+const defaultSuffix = site => site.optional
+	? ` = ${renderPythonDefault(site.default, { taggedOptions: false })}`
+	: "";
+const pythonParameter = (ir, site, type = pythonType(ir, site.type)) =>
+	`${snake(site.name)}: ${type}${defaultSuffix(site)}`;
 
 const substitute = (ref, parameter, replacement) => {
 	if(ref.kind === "parameter" && ref.id === parameter) return replacement;
@@ -164,6 +171,10 @@ const validateCoverage = ir => {
 		)) {
 			fail("unsupported-callback-identity", `${type.id} carries an identity-bearing value`, { type: type.id });
 		}
+		if(type.kind === "callback")
+			for(const [index, parameter] of type.callable.parameters.entries())
+				if(parameter.optional && type.callable.parameters.slice(index + 1).some(item => !item.optional))
+					fail("unsupported-nontrailing-optional-parameter", `${type.id}.${parameter.name} precedes a required positional argument`, { type: type.id, parameter: parameter.name });
 		if(type.kind === "resource" && type.resource.disposal === "runtime")
 		{
 			fail("unsupported-disposal-policy", `${type.id} has no host-visible disposal`, { type: type.id });
@@ -172,12 +183,13 @@ const validateCoverage = ir => {
 	const names = new Map();
 	for(const declaration of ir.declarations)
 	{
-		if(declaration.parameters.some(parameter => parameter.optional))
-		{
-			fail("unsupported-optional-parameter", `${declaration.id} has an optional parameter`, {
-				declaration: declaration.id
-			});
-		}
+		for(const [index, parameter] of declaration.parameters.entries())
+			if(parameter.optional && declaration.parameters.slice(index + 1).some(item => !item.optional))
+				fail("unsupported-nontrailing-optional-parameter", `${declaration.id}.${parameter.name} precedes a required positional argument`, { declaration: declaration.id, parameter: parameter.name });
+		if(declaration.kind === "property" && declaration.parameters.some(parameter => parameter.optional))
+			fail("unsupported-property-optional", `${declaration.id} cannot omit a property assignment`, { declaration: declaration.id });
+		if(declaration.typeParameters.length && declaration.parameters.some(parameter => parameter.optional))
+			fail("unsupported-generic-optional-parameter", `${declaration.id} has a defaulted generic parameter`, { declaration: declaration.id });
 		if(declaration.receiver && (
 			declaration.receiver.ownership !== "borrow"
       || declaration.receiver.lifetime?.scope !== "call"
@@ -454,7 +466,7 @@ const emitResource = (ir, type) => {
 	for(const declaration of declarations)
 	{
 		if(declaration.kind !== "constructor") continue;
-		const params = declaration.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`);
+		const params = declaration.parameters.map(site => pythonParameter(ir, site));
 		lines.push(`    def __init__(self, ${params.join(", ")}) -> None:`);
 		declaration.parameters.forEach(site => lines.push(`        ${validatorName(resolveAlias(ir, site.type))}(${snake(site.name)}, ${JSON.stringify(`${declaration.name}.${site.name}`)})`));
 		lines.push(
@@ -485,7 +497,7 @@ const emitResource = (ir, type) => {
 	}
 	for(const declaration of declarations.filter(item => item.kind === "method"))
 	{
-		const params = declaration.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`);
+		const params = declaration.parameters.map(site => pythonParameter(ir, site));
 		const asyncPrefix = declaration.resultMode === "promise" ? "async " : "";
 		lines.push(`    ${asyncPrefix}def ${snake(declaration.name)}(self${params.length ? ", " : ""}${params.join(", ")}) -> ${deliveredType(ir, declaration)}:`);
 		lines.push("        self._require_open()");
@@ -496,7 +508,7 @@ const emitResource = (ir, type) => {
 	}
 	for(const declaration of declarations.filter(item => item.kind === "static-method"))
 	{
-		const params = declaration.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`);
+		const params = declaration.parameters.map(site => pythonParameter(ir, site));
 		const asyncPrefix = declaration.resultMode === "promise" ? "async " : "";
 		lines.push(
 			"    @staticmethod",
@@ -562,7 +574,7 @@ const emitResource = (ir, type) => {
 
 const emitCallback = (ir, type) => {
 	const callable = type.callable;
-	const params = callable.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`);
+	const params = callable.parameters.map(site => pythonParameter(ir, site));
 	const args = callable.parameters.map(site => snake(site.name));
 	const asyncPrefix = callable.resultMode === "promise" ? "async " : "";
 	const resultExpression = `${callable.resultMode === "promise" ? "await " : ""}self._runtime.call_${snake(type.name)}(self._identity${args.length ? ", " : ""}${args.join(", ")})`;
@@ -627,14 +639,14 @@ const emitFunction = (ir, declaration) => {
 		return lines;
 	}
 	const params = declaration.parameters.map(site => {
-    const ref = resolveAlias(ir, site.type);
-    const type = ref.kind === "named" ? namedType(ir, ref.id) : null;
-    if(type?.kind === "callback")
-{
-      const callable = type.callable;
-      return `${snake(site.name)}: Callable[[${callable.parameters.map(item => pythonType(ir, item.type)).join(", ")}], ${callbackDeliveredType(ir, callable)}]`;
-}
-    return `${snake(site.name)}: ${pythonType(ir, site.type)}`;
+		const ref = resolveAlias(ir, site.type);
+		const type = ref.kind === "named" ? namedType(ir, ref.id) : null;
+		if(type?.kind === "callback")
+		{
+			const callable = type.callable;
+			return pythonParameter(ir, site, `Callable[[${callable.parameters.map(item => pythonType(ir, item.type)).join(", ")}], ${callbackDeliveredType(ir, callable)}]`);
+		}
+		return pythonParameter(ir, site);
 	});
 	const asyncPrefix = declaration.resultMode === "promise" ? "async " : "";
 	const lines = [
@@ -1012,17 +1024,17 @@ const emitStub = ir => {
 		const declarations = ir.declarations.filter(item => resourceFor(ir, item)?.id === type.id);
 		lines.push(`class ${type.name}:`);
 		const constructor = declarations.find(item => item.kind === "constructor");
-		lines.push(`    def __init__(self${constructor.parameters.length ? ", " : ""}${constructor.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`).join(", ")}) -> None: ...`);
+		lines.push(`    def __init__(self${constructor.parameters.length ? ", " : ""}${constructor.parameters.map(site => pythonParameter(ir, site)).join(", ")}) -> None: ...`);
 		lines.push("    @property", "    def closed(self) -> bool: ...");
 		for(const method of declarations.filter(item => item.kind === "method"))
 		{
 			const asyncPrefix = method.resultMode === "promise" ? "async " : "";
-			lines.push(`    ${asyncPrefix}def ${snake(method.name)}(self${method.parameters.length ? ", " : ""}${method.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`).join(", ")}) -> ${deliveredType(ir, method)}: ...`);
+			lines.push(`    ${asyncPrefix}def ${snake(method.name)}(self${method.parameters.length ? ", " : ""}${method.parameters.map(site => pythonParameter(ir, site)).join(", ")}) -> ${deliveredType(ir, method)}: ...`);
 		}
 		for(const method of declarations.filter(item => item.kind === "static-method"))
 		{
 			const asyncPrefix = method.resultMode === "promise" ? "async " : "";
-			lines.push("    @staticmethod", `    ${asyncPrefix}def ${snake(method.name)}(${method.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`).join(", ")}) -> ${deliveredType(ir, method)}: ...`);
+			lines.push("    @staticmethod", `    ${asyncPrefix}def ${snake(method.name)}(${method.parameters.map(site => pythonParameter(ir, site)).join(", ")}) -> ${deliveredType(ir, method)}: ...`);
 		}
 		const properties = new Map();
 		for(const property of declarations.filter(item => item.kind === "property"))
@@ -1040,7 +1052,7 @@ const emitStub = ir => {
 	}
 	for(const type of ir.types.filter(type => type.kind === "callback"))
 	{
-		lines.push(`class ${type.name}:`, `    ${type.callable.resultMode === "promise" ? "async " : ""}def __call__(self${type.callable.parameters.length ? ", " : ""}${type.callable.parameters.map(site => `${snake(site.name)}: ${pythonType(ir, site.type)}`).join(", ")}) -> ${pythonType(ir, type.callable.result.type)}: ...`, "    def close(self) -> None: ...", `    def __enter__(self) -> ${type.name}: ...`, "    def __exit__(self, exc_type: object, exc: object, traceback: object) -> None: ...", "");
+		lines.push(`class ${type.name}:`, `    ${type.callable.resultMode === "promise" ? "async " : ""}def __call__(self${type.callable.parameters.length ? ", " : ""}${type.callable.parameters.map(site => pythonParameter(ir, site)).join(", ")}) -> ${pythonType(ir, type.callable.result.type)}: ...`, "    def close(self) -> None: ...", `    def __enter__(self) -> ${type.name}: ...`, "    def __exit__(self, exc_type: object, exc: object, traceback: object) -> None: ...", "");
 	}
 	for(const declaration of ir.declarations.filter(item => item.kind === "function"))
 	{
@@ -1055,16 +1067,16 @@ const emitStub = ir => {
 			continue;
 		}
 		const callback = declaration.parameters.find(site => {
-      const ref = resolveAlias(ir, site.type);
-      return ref.kind === "named" && namedType(ir, ref.id).kind === "callback";
+			const ref = resolveAlias(ir, site.type);
+			return ref.kind === "named" && namedType(ir, ref.id).kind === "callback";
 		});
 		const params = declaration.parameters.map(site => {
-      if(site === callback)
-{
-        const type = namedType(ir, site.type.id).callable;
-        return `${snake(site.name)}: Callable[[${type.parameters.map(item => pythonType(ir, item.type)).join(", ")}], ${callbackDeliveredType(ir, type)}]`;
-}
-      return `${snake(site.name)}: ${pythonType(ir, site.type)}`;
+			if(site === callback)
+			{
+				const type = namedType(ir, site.type.id).callable;
+				return pythonParameter(ir, site, `Callable[[${type.parameters.map(item => pythonType(ir, item.type)).join(", ")}], ${callbackDeliveredType(ir, type)}]`);
+			}
+			return pythonParameter(ir, site);
 		});
 		lines.push(`${declaration.resultMode === "promise" ? "async " : ""}def ${snake(declaration.name)}(${params.join(", ")}) -> ${deliveredType(ir, declaration)}: ...`);
 	}

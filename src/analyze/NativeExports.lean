@@ -1203,6 +1203,59 @@ def expression (e : Expr) : MetaM String := do
   withOptions (fun opts => opts.setBool `pp.fullNames true |>.setBool `pp.universes true) do
     return (← ppExpr e).pretty
 
+/-- Serialize only closed defaults whose value and type have one exact,
+host-independent representation. `null` is never a default value: Binding IR
+reserves it for a required parameter, while Option.none has its own tag. -/
+partial def parameterDefault (type : Json) (value : Expr) (depth : Nat := 0) : MetaM Json := do
+  if depth > 32 then reject value "optional parameter default nesting exceeds 32"
+  let value ← instantiateMVars value
+  if value.hasFVar || value.hasLooseBVars || value.hasMVar then
+    reject value "optional parameter defaults must be closed"
+  let kind := (type.getObjValAs? String "kind").toOption.getD ""
+  if kind == "alias" then
+    return ← parameterDefault (← ofExcept <| type.getObjVal? "target") value depth
+  if kind == "option" then
+    let normalized ← whnf value
+    if normalized.isAppOfArity ``Option.none 1 then
+      return obj [("kind", str "option-none")]
+    if normalized.isAppOfArity ``Option.some 2 then
+      return obj [("kind", str "option-some"),
+        ("value", ← parameterDefault (← ofExcept <| type.getObjVal? "element") normalized.appArg! (depth + 1))]
+    reject value "Option defaults must be closed none or some literals"
+  unless kind == "primitive" do
+    reject value "optional parameter defaults currently require a primitive or Option literal"
+  let primitive ← ofExcept <| type.getObjValAs? String "name"
+  if primitive == "unit" then
+    unless ← isDefEq value (mkConst ``Unit.unit) do reject value "Unit defaults must be ()"
+    return obj [("kind", str "unit")]
+  if primitive == "bool" then
+    match ← whnf value with
+    | .const ``Bool.false [] => return obj [("kind", str "boolean"), ("value", toJson false)]
+    | .const ``Bool.true [] => return obj [("kind", str "boolean"), ("value", toJson true)]
+    | _ => reject value "Bool defaults must be true or false"
+  if primitive == "string" then
+    let some text := getStringValue? value.consumeMData
+      | reject value "String defaults must be closed literals"
+    return obj [("kind", str "string"), ("value", str text)]
+  if primitive == "char" then
+    let some character ← getCharValue? value
+      | reject value "Char defaults must be closed literals"
+    return obj [("kind", str "char"), ("value", str (String.singleton character))]
+  if primitive == "int" then
+    let some number ← getIntValue? value
+      | reject value "Int defaults must be closed literals"
+    return obj [("kind", str "integer"), ("value", str (toString number))]
+  if primitive == "nat" then
+    let some number ← getNatValue? value
+      | reject value "Nat defaults must be closed literals"
+    return obj [("kind", str "integer"), ("value", str (toString number))]
+  if let some (leanName, _) := primitives.find? fun (_, name) => name == primitive then
+    if ["uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "usize", "isize"].contains primitive then
+      let some (number, _) ← getOfNatValue? value leanName
+        | reject value "integer defaults must be closed nonnegative literals"
+      return obj [("kind", str "integer"), ("value", str (toString number))]
+  reject value s!"optional defaults for {primitive} are not yet representable"
+
 partial def signature (request : Request) (e : Expr) (limit : Nat)
     (parameterSites : Array (Option Json) := #[]) (resultSite : Option Json := none)
     (index : Nat := 0) (sourceIndex : Nat := 0)
@@ -1212,14 +1265,17 @@ partial def signature (request : Request) (e : Expr) (limit : Nat)
   if index < limit then
     if let .forallE name argument result binder := reduced then
       if binder != .default then reject e "dependent or implicit parameter"
-      return ← withLocalDecl name binder argument fun boundVariable => do
+      let default := argument.getOptParamDefault?
+      let parameterType := if default.isSome then argument.getAppArgs[0]! else argument
+      return ← withLocalDecl name binder parameterType fun boundVariable => do
         let result := result.instantiate1 boundVariable
-        if ← isProp argument then
-          unless ← isDefEq (← whnf argument) (mkConst ``True) do
-            reject argument "proof parameters currently require the closed proposition True"
+        if ← isProp parameterType then
+          if default.isSome then reject argument "proof parameters cannot be optional"
+          unless ← isDefEq (← whnf parameterType) (mkConst ``True) do
+            reject parameterType "proof parameters currently require the closed proposition True"
           let (rest, result, proofs) ← signature request result limit parameterSites resultSite
             index (sourceIndex + 1) parentAliases previous
-          let proposition ← expression argument
+          let proposition ← expression parameterType
           let proof := obj [
             ("sourceIndex", toJson sourceIndex),
             ("name", str name.toString),
@@ -1231,7 +1287,7 @@ partial def signature (request : Request) (e : Expr) (limit : Nat)
           let refinement ← (value.getObjVal? "refinement").toOption
           if refinement == str "reject" then none else some refinement
         let callable := site.bind fun value => (value.getObjVal? "callable").toOption
-        let reducedArgument ← whnf argument
+        let reducedArgument ← whnf parameterType
         let parameter ← if reducedArgument.isAppOfArity ``Fin 1 && reducedArgument.hasFVar then do
             let bound ← whnf reducedArgument.appArg!
             let some dependency := previous.findIdx? (fun item => item.1 == bound)
@@ -1246,12 +1302,16 @@ partial def signature (request : Request) (e : Expr) (limit : Nat)
                 ("parameter", toJson dependency)]),
               ("abi", ← abi reducedArgument)]
           else
-            shape request argument checked (callbackSite := some false)
+            shape request parameterType checked (callbackSite := some false)
               (parentAliases := parentAliases) (callableDecision := callable)
+        let default ← default.mapM (parameterDefault parameter)
         let (rest, result, proofs) ← signature request result limit parameterSites resultSite
           (index + 1) (sourceIndex + 1) parentAliases (previous.push (boundVariable, parameter))
-        return (#[obj [("name", str s!"arg{index}"), ("type", parameter),
-          ("sourceIndex", toJson sourceIndex)]] ++ rest, result, proofs)
+        let parameterFields := [("name", str s!"arg{index}"), ("type", parameter),
+          ("sourceIndex", toJson sourceIndex)] ++ match default with
+            | some value => [("optional", toJson true), ("default", value)]
+            | none => []
+        return (#[obj parameterFields] ++ rest, result, proofs)
   let checked := resultSite.bind fun value => do
     let refinement ← (value.getObjVal? "refinement").toOption
     if refinement == str "reject" then none else some refinement
@@ -1654,14 +1714,24 @@ def describeSignature (request : Request) (name : String) (type : Expr) (parentA
       (parentAliases := parentAliases)
     if !native && nativeParameters.size > 32 then throwError "components support at most 32 arguments"
     let nativeParameters ← if native then pure nativeParameters else nativeParameters.mapM fun (parameter : Json) => do
-      pure <| obj [("name", ← ofExcept <| parameter.getObjVal? "name"),
-        ("type", ← componentType (← ofExcept <| parameter.getObjVal? "type"))]
+      let optional := (parameter.getObjValAs? Bool "optional").toOption == some true
+      let default ← if optional then
+          pure (some (← ofExcept <| parameter.getObjVal? "default"))
+        else pure none
+      pure <| obj ([("name", ← ofExcept <| parameter.getObjVal? "name"),
+        ("type", ← componentType (← ofExcept <| parameter.getObjVal? "type"))] ++
+        match default with
+        | some value => [("optional", toJson true), ("default", value)]
+        | none => [])
     let result ← if native then pure result else componentType result
     let nativeParameters := nativeParameters.mapIdx fun index parameter =>
       let sourceIndex := (parameter.getObjValAs? Nat "sourceIndex").toOption.getD index
-      obj [("name", (parameters[sourceIndex]?.bind fun value =>
+      let optional := (parameter.getObjValAs? Bool "optional").toOption == some true
+      obj ([("name", (parameters[sourceIndex]?.bind fun value =>
           (value.getObjVal? "name").toOption).getD (str s!"arg{index}")),
-        ("type", (parameter.getObjVal? "type").toOption.getD Json.null)]
+        ("type", (parameter.getObjVal? "type").toOption.getD Json.null)] ++
+        if optional then [("optional", toJson true),
+          ("default", (parameter.getObjVal? "default").toOption.getD Json.null)] else [])
     return (parameters, resultText, obj ([
       ("status", str "supported"),
       ("bindingShape", str (if native then "native-function" else "pure-function")),

@@ -11,6 +11,7 @@ import { validatePerlVariants, perlVariantConversions, perlVariantClasses, perlV
 import { compileCopiedPerlGraphPackageModel, generateCopiedPerlGraphPackage } from "./copied-graph-package.mjs";
 import { compileCallablePerlGraphPackageModel } from "./callable-graph-model.mjs";
 import { generateCallablePerlGraphPackage } from "./callable-graph-package.mjs";
+import { renderPerlDefault } from "./default-value.mjs";
 import { perlStringLiteral } from "./naming.mjs";
 import { nativeFinBoundPaths } from "../native/fin-refinements.mjs";
 import { constructorRefinementLeaves } from "../../build/component-refinements.mjs";
@@ -335,6 +336,39 @@ const perlParameterNames = (model, item) => {
 	if(!declaration || declaration.parameters.length !== item.parameters.length)
 		throw new TypeError(`Missing reviewed Perl parameter contract for ${item.name}`);
 	return declaration.parameters.map(parameter => parameter.name);
+};
+const perlDeclaration = (model, item) => {
+	const declaration = model.bindingIr.declarations.find(value =>
+		value.id === `lean:${item.name}`);
+	if(!declaration || declaration.parameters.length !== item.parameters.length)
+		throw new TypeError(`Missing Perl parameter contract for ${item.name}`);
+	return declaration;
+};
+const perlDefaultWrappers = model => {
+	if(!model.bindingIr.declarations.some(declaration =>
+		declaration.parameters.some(parameter => parameter.optional))) return [];
+	return model.exports.flatMap(item => {
+		const declaration = perlDeclaration(model, item);
+		const first = declaration.parameters.findIndex(parameter => parameter.optional);
+		if(first < 0) return [];
+		if(declaration.parameters.slice(first).some(parameter => !parameter.optional))
+			throw new TypeError(`${declaration.id} has a default before a required positional parameter`);
+		const resolveNamed = id => model.bindingIr.types.find(type => type.id === id);
+		const fill = declaration.parameters.slice(first).map((parameter, offset) =>
+			`    push @args, ${renderPerlDefault(parameter.default, parameter.type
+				, resolveNamed, model.moduleName)} if @args == ${first + offset};`);
+		return [`do {
+  my $native = \\&${item.publicName};
+  no warnings 'redefine';
+  *${item.publicName} = sub {
+    die "${item.publicName} expects ${first} to ${declaration.parameters.length} arguments\\n"
+      if @_ < ${first} || @_ > ${declaration.parameters.length};
+    my @args = @_;
+${fill.join("\n")}
+    return $native->(@args);
+};
+};`];
+	});
 };
 const perlFinBounds = (model, item) => {
 	if(!item.refinements) return null;
@@ -711,6 +745,7 @@ _callback_${type.key}(...)
 		, `our $VERSION = '0.001';`
 		, `LeanBridge::Runtime::_load_component(__FILE__, ${perlStringLiteral(receipt.library)}, ${perlStringLiteral(receipt.nativeLibrary.sha256)}, ${perlStringLiteral(receipt.runtimeIdentity)}, { ${model.sourceIdentity.modules.map(item => `${perlStringLiteral(item.module)} => ${perlStringLiteral(item.source.sha256)}`).join(", ")} }, ${perlStringLiteral(model.component.id)});`
 		, `XSLoader::load(__PACKAGE__, $VERSION);`
+		, ...perlDefaultWrappers(model)
 		, "sub true () { !!1 }"
 		, "sub false () { !!0 }"
 		, "sub CLONE_SKIP { 1 }"

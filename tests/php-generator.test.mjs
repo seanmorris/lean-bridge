@@ -24,6 +24,7 @@ import {
 	PhpPackageAuditError,
 	auditPhpPackage,
 } from "../src/backends/php/package-audit.mjs";
+import { optionalParameterReview } from "./helpers/optional-parameter-fixture.mjs";
 
 const run = promisify(execFile);
 const clone = value => structuredClone(value);
@@ -186,11 +187,158 @@ test("every generated PHP source file and the public stub pass the PHP parser", 
 }
 });
 
+test("canonical optional defaults remain parseable across PHP value projections", async () => {
+	const cases = [
+		{
+			name: "uint64"
+			, type: { kind: "primitive", name: "uint64" }
+			, default: { kind: "integer", value: "7" }
+			, signature: /__construct\(\\Brick\\Math\\BigInteger\|null \$value = null\)/u
+			, lowering: /func_num_args\(\) <= 0[^\n]+BigInteger::of\('7'\)/u
+		}
+		, {
+			name: "option-some"
+			, type: { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] }
+			, default: { kind: "option-some", value: { kind: "integer", value: "9" } }
+			, signature: /__construct\(int\|null \$value = 9\)/u
+		}
+		, {
+			name: "option-none"
+			, type: { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] }
+			, default: { kind: "option-none" }
+			, signature: /__construct\(int\|null \$value = null\)/u
+		}
+		, {
+			name: "unit"
+			, type: { kind: "primitive", name: "unit" }
+			, default: { kind: "unit" }
+			, signature: /__construct\(null \$value = null\)/u
+		}
+	];
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-defaults-"));
+	try
+	{
+		for(const item of cases)
+		{
+			const ir = clone(alpha.bindingIr);
+			const constructor = ir.declarations.find(declaration => declaration.id === "lean:Alpha.box");
+			const read = ir.declarations.find(declaration => declaration.id === "lean:Alpha.Box.read");
+			constructor.parameters[0].type = item.type;
+			constructor.parameters[0].optional = true;
+			constructor.parameters[0].default = item.default;
+			read.result.type = item.type;
+			const files = generatePhpBindingPackage(ir);
+			assert.match(files["src/Box.php"], item.signature);
+			if(item.lowering) assert.match(files["src/Box.php"], item.lowering);
+			const root = join(directory, item.name);
+			await writePackage(root, files);
+			for(const path of await phpFiles(root)) await run("php", ["-l", path]);
+		}
+	}
+	finally
+	{ await rm(directory, { recursive: true, force: true }); }
+});
+
+test("generated PHP distinguishes an omitted Option.some default from explicit null", async () => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-option-default-"));
+	try
+	{
+		const ir = clone(alpha.bindingIr);
+		const constructor = ir.declarations.find(declaration => declaration.id === "lean:Alpha.box");
+		const read = ir.declarations.find(declaration => declaration.id === "lean:Alpha.Box.read");
+		const option = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] };
+		constructor.parameters[0].type = option;
+		constructor.parameters[0].optional = true;
+		constructor.parameters[0].default = { kind: "option-some", value: { kind: "integer", value: "9" } };
+		read.result.type = option;
+		const generated = generatePhpBindingPackage(ir);
+		assert.match(generated["src/Box.php"], /__construct\(int\|null \$value = 9\)/u);
+		await writePackage(directory, generated);
+		await run("composer", ["dump-autoload", "--quiet", "--no-interaction"], { cwd: directory });
+		await writeFile(join(directory, "FakeTransport.php"), `<?php
+declare(strict_types=1);
+namespace Test;
+
+use LeanAlpha\\Internal\\Identity;
+use LeanAlpha\\Internal\\Transport;
+use LeanAlpha\\Payload;
+
+final class FakeTransport implements Transport
+{
+    private int $next = 0;
+    public function initialize(): void {}
+    public function leanAlphaBox(?int $value): Identity { return new Identity('Box', 'box:' . ++$this->next, $value); }
+    public function leanAlphaBoxRead(Identity $self): ?int { return $self->value(); }
+    public function bridgeAlphaBoxIdentity(Identity $self): Identity { return $self; }
+    public function leanAlphaRoundTrip(Payload $payload): Payload { return $payload; }
+    public function leanAlphaWithCallback(int $value, callable $transform): int { return $transform($value); }
+    public function leanAlphaMakeAdder(int $base): Identity { return new Identity('Transform', 'transform:' . ++$this->next, $base); }
+    public function boxClose(Identity $self): void {}
+    public function transformCall(Identity $self, int $value): int { return (int) $self->value() + $value; }
+    public function transformClose(Identity $self): void {}
+}
+`);
+		await writeFile(join(directory, "consumer.php"), `<?php
+declare(strict_types=1);
+require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/FakeTransport.php';
+
+use LeanAlpha\\Box;
+use LeanAlpha\\Internal\\Runtime;
+use Test\\FakeTransport;
+
+Runtime::install(new FakeTransport());
+$omitted = new Box();
+$none = new Box(null);
+$some = new Box(11);
+echo json_encode([$omitted->read(), $none->read(), $some->read()], JSON_THROW_ON_ERROR);
+`);
+		const { stdout } = await run("php", ["consumer.php"], { cwd: directory });
+		assert.deepEqual(JSON.parse(stdout), [9, null, 11]);
+	}
+	finally
+	{
+		await rm(directory, { recursive: true, force: true });
+	}
+});
+
+test("copied PHP functions expose every authenticated optional default", async () => {
+	const files = generatePhpBindingPackage(optionalParameterReview());
+	const api = files["src/Api.php"];
+	assert.match(api, /function word\(mixed \$value0 = 7\): int/u);
+	assert.match(api, /function natural\(mixed \$value0 = null\)/u);
+	assert.match(api
+		, /if \(\\func_num_args\(\) <= 0\) \{ \$value0 = \\Brick\\Math\\BigInteger::of\('184467440737095516160'\); \}/u);
+	assert.match(api, /function text\(mixed \$value0 = 'Lean\nBridge'\)/u);
+	assert.match(api, /function character\(mixed \$value0 = 'λ'\)/u);
+	assert.match(api, /function maybe\(mixed \$value0 = null\)/u);
+	assert.match(api, /function present\(mixed \$value0 = null\)/u);
+	assert.match(api
+		, /if \(\\func_num_args\(\) <= 0\) \{ \$value0 = new Some\(9\); \}/u);
+	assert.match(api, /function unit_value\(mixed \$value0 = null\): null/u);
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-function-defaults-"));
+	try
+	{
+		const path = join(directory, "Api.php");
+		await writeFile(path, api);
+		const { stdout } = await run("php", ["-l", path]);
+		assert.match(stdout, /No syntax errors detected/u);
+	}
+	finally
+	{ await rm(directory, { recursive: true, force: true }); }
+});
+
 test("generated PHP executes through ordinary values, functions, resources, and callables", async () => {
   const directory = await mkdtemp(join(tmpdir(), "lean-bridge-php-run-"));
   try
 {
-    await writePackage(directory, generatePhpBindingPackage(alpha.bindingIr));
+	const ir = clone(alpha.bindingIr);
+	const boxValue = ir.declarations.find(declaration => declaration.id === "lean:Alpha.box").parameters[0];
+	boxValue.optional = true;
+	boxValue.default = { kind: "integer", value: "7" };
+	const generated = generatePhpBindingPackage(ir);
+	assert.match(generated["src/Box.php"], /function __construct\(int \$value = 7\)/u);
+	await writePackage(directory, generated);
     await run("composer", ["dump-autoload", "--quiet", "--no-interaction"], { cwd: directory });
     await writeFile(join(directory, "FakeTransport.php"), `<?php
 declare(strict_types=1);
@@ -246,11 +394,16 @@ use function LeanAlpha\\withCallback;
 $transport = new FakeTransport();
 Runtime::install($transport);
 $box = new Box(41);
+$defaultBox = new Box();
+$nullRejected = false;
+try { new Box(null); } catch (\\TypeError) { $nullRejected = true; }
 $same = $box->identity();
 $payload = roundTrip(new Payload(false, 8, 'typed', Bytes::fromString("\\x00\\x7f\\xff"), [1, 5, 13]));
 $adder = makeAdder(2);
 $trace = [
     'read' => $box->read(),
+    'default' => $defaultBox->read(),
+    'nullRejected' => $nullRejected,
     'identity' => $same === $box,
     'payload' => [
         'enabled' => $payload->enabled,
@@ -264,6 +417,7 @@ $trace = [
 ];
 $adder->close();
 $box->close();
+$defaultBox->close();
 try {
     $box->read();
     $trace['disposed'] = false;
@@ -280,12 +434,14 @@ echo json_encode($trace, JSON_THROW_ON_ERROR);
     const { stdout } = await run("php", ["consumer.php"], { cwd: directory });
     assert.deepEqual(JSON.parse(stdout), {
       read: 41
+      , default: 7
+      , nullRejected: true
       , identity: true
       , payload: { enabled: true, count: 9, label: "typed", bytes: "007fff", values: [1, 5, 13] }
       , callback: 42
       , closure: 42
       , disposed: true
-      , runtime: { initializations: 1, boxDisposals: 1, transformDisposals: 1 }
+      , runtime: { initializations: 1, boxDisposals: 2, transformDisposals: 1 }
     });
     await writeFile(join(directory, "poison.php"), `<?php
 declare(strict_types=1);

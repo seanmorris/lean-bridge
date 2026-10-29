@@ -25,13 +25,19 @@ export const validateOrdinaryPythonSettings = (settings = {}) => {
  * @param ir - Authoritative compiler-derived Binding IR.
  */
 export const compileCopiedPythonModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), packageDir = `lean_${surface.prefix}`;
-	const hostNull = surface.copies.some(copy => copy.compound === "host-null");
-	const taggedOptions = hostNull && surface.copies.some(copy => copy.compound === "option");
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-python-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
 	};
+	for(const declaration of ir.declarations)
+		for(const [index, parameter] of declaration.parameters.entries())
+			if(parameter.optional && declaration.parameters.slice(index + 1)
+				.some(item => !item.optional))
+				fail(declaration
+					, `Python defaulted parameter ${parameter.name} precedes a required positional parameter`);
+	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), packageDir = `lean_${surface.prefix}`;
+	const hostNull = surface.copies.some(copy => copy.compound === "host-null");
+	const taggedOptions = hostNull && surface.copies.some(copy => copy.compound === "option");
 	const names = new Set(reserved);
 	for(const copy of surface.copies)
 	{

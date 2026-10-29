@@ -48,10 +48,10 @@ void ${p}_wasmtime_close(${p}_wasmtime *session);
  * @param componentBytes - Validated compiled component bytes to embed.
  */
 export const renderWitHostSource = (model, componentBytes) => {
-	const { surface } = model, p = surface.prefix;
+	const { surface, functions } = model, p = surface.prefix;
 	if(surface.callbacks.size) return renderCallableHostSource(model, componentBytes);
-	const callbacks = surface.functions.map((fn, index) => {
-		const result = surface.copy(fn.declaration.result.type), unit = fn.resultType === "void";
+	const callbacks = functions.map((fn, index) => {
+		const result = fn.resultCopy, unit = fn.resultType === "void";
 		return `static wasmtime_error_t *lb_call_${index}(void *data, wasmtime_context_t *context,
     const wasmtime_component_func_type_t *type, wasmtime_component_val_t *args, size_t count,
     wasmtime_component_val_t *results, size_t result_count) {
@@ -99,7 +99,7 @@ wasmtime_error_t *${p}_wasmtime_link(wasmtime_component_linker_t *linker) {
   wasmtime_component_linker_instance_t *root = wasmtime_component_linker_root(linker), *host = NULL;
   wasmtime_error_t *error = wasmtime_component_linker_instance_add_instance(root, "${model.importName}", ${model.importName.length}, &host);
   if (!error) {
-${surface.functions.map((fn, i) => `    if (!error) error = wasmtime_component_linker_instance_add_func(host, "${fn.witName}", ${fn.witName.length}, lb_call_${i}, NULL, NULL);`).join("\n")}
+${functions.map((fn, i) => `    if (!error) error = wasmtime_component_linker_instance_add_func(host, "${fn.witName}", ${fn.witName.length}, lb_call_${i}, NULL, NULL);`).join("\n")}
     wasmtime_component_linker_instance_delete(host);
   }
   wasmtime_component_linker_instance_delete(root);
@@ -144,7 +144,7 @@ wasmtime_error_t *${p}_wasmtime_call(${p}_wasmtime *session, const char *name,
   lb_scope scope = {.remaining = 16u * 1024u * 1024u};
   (void)scope; /* A package may contain only zero-argument exports. */
   bool valid = false;
-${surface.functions.map(fn => `  if (strcmp(name, "${fn.witName}") == 0) valid = count == ${fn.parameters.length}${fn.parameters.map((parameter, i) => ` && lb_in_${parameter.copy.index}(&args[${i}], &scope, NULL)`).join("")};`).join("\n")}
+${functions.map(fn => `  if (strcmp(name, "${fn.witName}") == 0) valid = count == ${fn.parameters.length}${fn.parameters.map((parameter, i) => ` && lb_in_${parameter.copy.index}(&args[${i}], &scope, NULL)`).join("")};`).join("\n")}
   if (!valid) return wasmtime_error_new("Unknown export, invalid WIT input or 16 MiB conversion limit");
   wasmtime_context_t *context = wasmtime_store_context(session->store);
   wasmtime_component_export_index_t *api = wasmtime_component_instance_get_export_index(&session->instance, context, NULL, "${model.exportName}", ${model.exportName.length});

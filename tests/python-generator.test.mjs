@@ -19,6 +19,8 @@ import {
 	renderPythonPackageLayout,
 } from "../src/backends/python/generate.mjs";
 import { auditPythonPackage } from "../src/backends/python/package-audit.mjs";
+import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
+import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 
 const run = promisify(execFile);
 const clone = value => structuredClone(value);
@@ -229,6 +231,134 @@ else:
 {
     await rm(directory, { recursive: true, force: true });
 }
+});
+
+test("ordinary Python packages apply authenticated defaults without treating explicit None as omission", async () => {
+	const option = { option: "uint32" };
+	const signatures = [
+		{ name: "Defaults.uint32", parameters: ["uint32"], result: "uint32" }
+		, { name: "Defaults.optionSome", parameters: [option], result: option }
+		, { name: "Defaults.optionNone", parameters: [option], result: option }
+		, { name: "Defaults.unit", parameters: ["unit"], result: "unit" }
+		, { name: "Defaults.boolean", parameters: ["bool"], result: "bool" }
+		, { name: "Defaults.text", parameters: ["string"], result: "string" }
+		, { name: "Defaults.character", parameters: ["char"], result: "char" }
+	];
+	const ir = corpusReviewedIr({ id: "defaults" }, signatures);
+	const defaults = [
+		{ kind: "integer", value: "7" }
+		, { kind: "option-some", value: { kind: "integer", value: "9" } }
+		, { kind: "option-none" }
+		, { kind: "unit" }
+		, { kind: "boolean", value: true }
+		, { kind: "string", value: "Lean\nBridge" }
+		, { kind: "char", value: "λ" }
+	];
+	ir.declarations.forEach((declaration, index) => {
+		declaration.parameters[0].optional = true;
+		declaration.parameters[0].default = defaults[index];
+	});
+	assert.doesNotThrow(() => createComponentPrivateAbi(ir));
+
+	const files = generatePythonBindingPackage(ir);
+	const source = files["lean_defaults/__init__.py"];
+	const stub = files["lean_defaults/__init__.pyi"];
+	for(const generated of [source, stub])
+	{
+		assert.match(generated, /def uint32\(value0: int = 7\) -> int:/u);
+		assert.match(generated, /def option_some\(value0: Option\[int\] = Some\(9\)\) -> Option\[int\]:/u);
+		assert.match(generated, /def option_none\(value0: Option\[int\] = None\) -> Option\[int\]:/u);
+		assert.match(generated, /def unit\(value0: None = None\) -> None:/u);
+		assert.match(generated, /def boolean\(value0: bool = True\) -> bool:/u);
+		assert.match(generated, /def text\(value0: str = "Lean\\nBridge"\) -> str:/u);
+		assert.match(generated, /def character\(value0: str = "λ"\) -> str:/u);
+	}
+	assert.match(files["lean_defaults/_native.py"], /type\(value\) is not int/u);
+
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-python-defaults-"));
+	try
+	{
+		await writePackage(directory, files);
+		await writeFile(join(directory, "lean_defaults", "_native.py"), [0, 1, 2, 3, 4, 5, 6]
+			.map(index => `def _call${index}(value):\n    return value\n`).join("\n"));
+		await writeFile(join(directory, "consumer.py"), `
+from lean_defaults import Some, boolean, character, option_none, option_some, text, uint32, unit
+
+assert uint32() == 7
+assert uint32(11) == 11
+# Explicit None reaches the private full-arity call; it is not omission. The
+# real generated private adapter rejects it as an invalid UInt32.
+assert uint32(None) is None
+assert option_some() == Some(9)
+assert option_some(None) is None
+assert option_some(Some(4)) == Some(4)
+assert option_none() is None
+assert option_none(Some(5)) == Some(5)
+assert unit() is None
+assert unit(None) is None
+assert boolean() is True
+assert boolean(False) is False
+assert text() == "Lean\\nBridge"
+assert text("explicit") == "explicit"
+assert character() == "λ"
+assert character("x") == "x"
+`);
+		await run("python3", ["-B", "consumer.py"], { cwd: directory, env: { ...process.env, PYTHONPATH: directory } });
+		await run("python3", ["-m", "compileall", "-q", "lean_defaults"], { cwd: directory, env: { ...process.env, PYTHONPATH: directory } });
+	}
+	finally
+	{ await rm(directory, { recursive: true, force: true }); }
+});
+
+test("resource-backed Python wrappers apply defaults before validation and private dispatch", async () => {
+	const ir = clone(alpha.bindingIr);
+	const parameter = ir.declarations.find(declaration => declaration.id === "lean:Alpha.box").parameters[0];
+	parameter.optional = true;
+	parameter.default = { kind: "integer", value: "7" };
+	const files = generatePythonBindingPackage(ir);
+	assert.match(files["lean_alpha/__init__.py"], /def __init__\(self, value: int = 7\) -> None:/u);
+	assert.match(files["lean_alpha/__init__.pyi"], /def __init__\(self, value: int = 7\) -> None:/u);
+
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-python-resource-default-"));
+	try
+	{
+		await writePackage(directory, files);
+		await writeFile(join(directory, "consumer.py"), `
+from lean_alpha import Box
+from lean_alpha._runtime import install_runtime
+
+class Runtime:
+    def initialize(self): pass
+    def box_new(self, value): return value
+    def box_read(self, identity): return identity
+    def dispose_box(self, identity): pass
+
+install_runtime(Runtime())
+with Box() as value:
+    assert value.read() == 7
+with Box(11) as value:
+    assert value.read() == 11
+try:
+    Box(None)
+except ValueError:
+    pass
+else:
+    raise AssertionError("explicit None was incorrectly treated as omission")
+`);
+		await run("python3", ["-B", "consumer.py"], { cwd: directory, env: { ...process.env, PYTHONPATH: directory } });
+	}
+	finally
+	{ await rm(directory, { recursive: true, force: true }); }
+});
+
+test("ordinary Python packages reject a default before a required positional parameter", () => {
+	const ir = corpusReviewedIr({ id: "defaults" }, [{ name: "Defaults.mixed", parameters: ["uint32", "uint32"], result: "uint32" }]);
+	ir.declarations[0].parameters[0].optional = true;
+	ir.declarations[0].parameters[0].default = { kind: "integer", value: "7" };
+	assert.throws(
+		() => generatePythonBindingPackage(ir),
+		error => error.code === "unsupported-python-signature" && /precedes a required positional parameter/u.test(error.message),
+	);
 });
 
 const addProperty = ir => {

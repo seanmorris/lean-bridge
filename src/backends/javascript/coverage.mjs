@@ -175,6 +175,14 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 		for(const parameter of type.callable.parameters)
 		{
+			if(parameter.optional)
+			{
+				report(
+					"unsupported-callback-optional",
+					`${type.id}.${parameter.name} requires callback omission lowering`,
+					{ type: type.id, parameter: parameter.name },
+				);
+			}
 			if(parameter.ownership !== "copy")
 			{
 				report(
@@ -256,16 +264,20 @@ export const analyzeJavaScriptCoverage = ir => {
 				{ declaration: declaration.id, resultMode: declaration.resultMode },
 			);
 		}
-		for(const parameter of declaration.parameters)
+		for(const [parameterIndex, parameter] of declaration.parameters.entries())
 		{
-			if(parameter.optional || parameter.default !== null)
+			if(parameter.optional && declaration.parameters.slice(parameterIndex + 1).some(item => !item.optional))
 			{
 				report(
-					"unsupported-optional-parameter",
-					`${declaration.id}.${parameter.name} requires optional argument lowering`,
+					"unsupported-nontrailing-optional-parameter",
+					`${declaration.id}.${parameter.name} precedes a required positional argument`,
 					{ declaration: declaration.id, parameter: parameter.name },
 				);
 			}
+			if(parameter.optional && declaration.kind === "property")
+				report("unsupported-property-optional", `${declaration.id}.${parameter.name} cannot be omitted from property assignment`, {
+					declaration: declaration.id, parameter: parameter.name
+				});
 			const parameterType = typeMap.get(namedTypeId(parameter.type));
 			if(parameterType?.kind === "callback")
 			{

@@ -254,6 +254,70 @@ test("generated JavaScript executes through direct functions and classes", async
   );
 });
 
+test("generated wrappers distinguish omission from explicit JavaScript values", async () => {
+	const cases = [
+		{
+			name: "uint32"
+			, type: { kind: "primitive", name: "uint32" }
+			, default: { kind: "integer", value: "7" }
+			, omitted: 7
+			, accepted: [[9, 9]]
+			, rejected: [undefined, null]
+		}
+		, {
+			name: "option"
+			, type: { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] }
+			, default: { kind: "option-none" }
+			, omitted: { tag: "none" }
+			, accepted: [[{ tag: "none" }, { tag: "none" }], [{ tag: "some", value: 9 }, { tag: "some", value: 9 }]]
+			, rejected: [undefined, null]
+		}
+		, {
+			name: "option-some"
+			, type: { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] }
+			, default: { kind: "option-some", value: { kind: "integer", value: "7" } }
+			, omitted: { tag: "some", value: 7 }
+			, accepted: [[{ tag: "none" }, { tag: "none" }], [{ tag: "some", value: 9 }, { tag: "some", value: 9 }]]
+			, rejected: [undefined, null]
+		}
+		, {
+			name: "unit"
+			, type: { kind: "primitive", name: "unit" }
+			, default: { kind: "unit" }
+			, omitted: undefined
+			, accepted: [[undefined, undefined]]
+			, rejected: [null]
+		}
+	];
+	for(const item of cases)
+	{
+		const ir = clone(alpha.bindingIr);
+		const constructor = ir.declarations.find(declaration => declaration.id === "lean:Alpha.box");
+		const read = ir.declarations.find(declaration => declaration.id === "lean:Alpha.Box.read");
+		constructor.parameters[0].type = item.type;
+		constructor.parameters[0].optional = true;
+		constructor.parameters[0].default = item.default;
+		read.result.type = item.type;
+		const files = generateJavaScriptPackage(ir);
+		assert.match(files["index.mjs"], /if \(arguments\.length <= 0\) value = /u);
+		assert.match(files["index.d.ts"], /constructor\(value\?:/u);
+		await withGeneratedPackage({ ...files, "internal/runtime.mjs": runtimeStub }, async directory => {
+			const module = await import(`${pathToFileURL(join(directory, "index.mjs")).href}?test=optional-${item.name}`);
+			const omitted = new module.Box();
+			assert.deepEqual(omitted.read(), item.omitted);
+			omitted.dispose();
+			for(const [input, expected] of item.accepted)
+			{
+				const explicit = new module.Box(input);
+				assert.deepEqual(explicit.read(), expected);
+				explicit.dispose();
+			}
+			for(const invalid of item.rejected)
+				assert.throws(() => new module.Box(invalid), /box\.value must be/u);
+		});
+	}
+});
+
 test("Promise declarations generate an ordinary async function", async () => {
   const ir = clone(alpha.bindingIr);
   const declaration = ir.declarations.find(item => item.id === "lean:Alpha.roundTrip");

@@ -18,13 +18,20 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * @param ir - Compiler-authorized Binding IR.
  */
 export const compileCopiedRubyModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), componentName = pascal(surface.prefix);
-	const hostNull = surface.copies.some(copy => copy.compound === "host-null");
-	const taggedOptions = hostNull && surface.copies.some(copy => copy.compound === "option");
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-ruby-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
 	};
+	for(const declaration of ir.declarations)
+		declaration.parameters.forEach((parameter, index) => {
+			if(parameter.optional && declaration.parameters.slice(index + 1)
+				.some(item => !item.optional))
+				fail(declaration
+					, `${declaration.id}.${parameter.name} precedes a required positional parameter`);
+		});
+	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), componentName = pascal(surface.prefix);
+	const hostNull = surface.copies.some(copy => copy.compound === "host-null");
+	const taggedOptions = hostNull && surface.copies.some(copy => copy.compound === "option");
 	if(reserved.has(componentName)) fail(ir.declarations[0], "Ruby component name collides with a generated constant");
 	const compounds = [...surface.copies.some(copy => copy.compound === "option") ? [...taggedOptions ? ["None"] : [], "Some"] : []
 		, ...surface.copies.some(copy => copy.compound === "result") ? ["Ok", "Err"] : []];
@@ -93,9 +100,11 @@ export const compileCopiedRubyModel = ir => {
 	}
 	for(const [index, value] of [...surface.callbacks.values()].entries()) Object.assign(value, { index, ffi: "VOIDP", size: 8 });
 	for(const fn of surface.functions)
+	{
 		// Ruby permits qualified methods such as Enumerator#next. Keep keyword
 		// record fields rejected because their initializer uses local variables.
 		if(reserved.has(fn.field) && fn.field !== "next") fail(fn.declaration, `Ruby function name collides: ${fn.field}`);
+	}
 	return { ir, surface, componentName, namespace: `LeanBridge::${componentName}`
 		, requirePath: `lean_bridge/${surface.prefix}`, hostNull, taggedOptions };
 };

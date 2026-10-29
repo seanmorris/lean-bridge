@@ -287,9 +287,9 @@ const validateCoverage = ir => {
 		}
 		if(declaration.parameters.some(parameter => parameter.optional))
 		{
-			fail("unsupported-optional-parameter", `${declaration.id} has an optional parameter`, {
-				declaration: declaration.id
-			});
+			const first = declaration.parameters.findIndex(parameter => parameter.optional);
+			if(declaration.parameters.slice(first).some(parameter => !parameter.optional))
+				fail("nontrailing-optional-parameter", `${declaration.id} has a default before a required positional parameter`, { declaration: declaration.id });
 		}
 		if(declaration.kind === "static-method")
 		{
@@ -539,6 +539,112 @@ const publicParameters = (ir, variant) => {
 	return parts;
 };
 
+const publicParametersThrough = (ir, variant, supplied) => {
+	const declaration = variant.declaration;
+	const parts = [];
+	if(declaration.receiver) parts.push(siteInput(ir, declaration.receiver, "self"));
+	declaration.parameters.slice(0, supplied).forEach(site =>
+		parts.push(siteInput(ir, site, snake(site.name))));
+	const output = siteOutput(ir, declaration.result);
+	if(output) parts.push(output);
+	parts.push(`${prefix(ir)}_error *error`);
+	return parts;
+};
+
+const cIntegerDefault = (value, name) => {
+	const widths = { uint8: 8, uint16: 16, uint32: 32, uint64: 64, usize: 64
+		, int8: 8, int16: 16, int32: 32, int64: 64, isize: 64 };
+	const width = widths[name], number = BigInt(value);
+	if(!width) throw new TypeError(`Unsupported canonical C integer type: ${name}`);
+	if(name.startsWith("u")) return `UINT${width}_C(${number})`;
+	const maximum = (1n << BigInt(width - 1)) - 1n;
+	if(number === -maximum - 1n)
+		return `(-INT${width}_C(${maximum}) - INT${width}_C(1))`;
+	return number < 0n ? `(-INT${width}_C(${-number}))` : `INT${width}_C(${number})`;
+};
+
+const cZeroLocal = (type, name) => ["#ifdef __cplusplus", `${type} ${name}{};`
+	, "#else", `${type} ${name} = {0};`, "#endif"];
+
+const cDefaultLocal = (ir, value, ref, stem, state) => {
+	const resolved = resolveAlias(ir, ref), name = `${stem}_${state.index++}`;
+	const type = cType(ir, resolved), lines = [];
+	if(resolved.kind === "apply" && resolved.constructor === "option")
+	{
+		lines.push(...cZeroLocal(type, name));
+		if(value.kind === "option-some")
+		{
+			const child = cDefaultLocal(ir, value.value, resolved.arguments[0], stem, state);
+			lines.push(...child.lines, `${name}.has_value = 1;`, `${name}.value = ${child.name};`);
+		}
+		return { name, lines };
+	}
+	if(resolved.kind !== "primitive")
+		throw new TypeError("C defaults require primitive or Option values");
+	if(value.kind === "unit") lines.push(`const ${type} ${name} = (uint8_t)0;`);
+	else if(value.kind === "boolean") lines.push(`const ${type} ${name} = ${value.value ? "true" : "false"};`);
+	else if(value.kind === "integer" && ["nat", "int"].includes(resolved.name))
+	{
+		let number = BigInt(value.value), negative = number < 0n;
+		if(negative) number = -number;
+		const limbs = [];
+		while(number > 0n)
+		{
+			limbs.push(Number(number & 0xFFFFFFFFn));
+			number >>= 32n;
+		}
+		if(limbs.length) lines.push(`static const uint32_t ${name}_limbs[] = { ${limbs.map(limb => `UINT32_C(${limb})`).join(", ")} };`);
+		lines.push(...cZeroLocal(type, name));
+		if(limbs.length) lines.push(`${name}.data = ${name}_limbs;`, `${name}.length = ${limbs.length};`);
+		if(resolved.name === "int" && negative) lines.push(`${name}.negative = true;`);
+	} else if(value.kind === "integer")
+		lines.push(`const ${type} ${name} = ${cIntegerDefault(value.value, resolved.name)};`);
+	else if(value.kind === "string")
+	{
+		const bytes = [...new TextEncoder().encode(value.value)];
+		if(bytes.length) lines.push(`static const char ${name}_bytes[] = { ${bytes.map(byte => `(char)0x${byte.toString(16).padStart(2, "0")}`).join(", ")} };`);
+		lines.push(...cZeroLocal(type, name));
+		if(bytes.length) lines.push(`${name}.data = ${name}_bytes;`, `${name}.length = ${bytes.length};`);
+	} else if(value.kind === "char")
+		lines.push(`const ${type} ${name} = UINT32_C(0x${value.value.codePointAt(0).toString(16)});`);
+	else throw new TypeError(`Unsupported canonical C default kind: ${value.kind}`);
+	return { name, lines };
+};
+
+const cDefaultWrappers = (ir, variant) => {
+	const declaration = variant.declaration;
+	const first = declaration.parameters.findIndex(parameter => parameter.optional);
+	if(first < 0) return [];
+	if(declaration.parameters.slice(first).some(parameter => !parameter.optional))
+		fail("nontrailing-optional-parameter", `${declaration.id} has a default before a required positional parameter`);
+	const name = publicFunctionName(ir, variant), wrappers = [];
+	for(let supplied = first; supplied < declaration.parameters.length; supplied++)
+	{
+		const state = { index: 0 }, defaults = declaration.parameters.slice(supplied).map((parameter, index) =>
+			cDefaultLocal(ir, parameter.default, parameter.type, `${name}_default_${supplied}_${index}`, state));
+		const args = [];
+		if(declaration.receiver) args.push("self");
+		args.push(...declaration.parameters.slice(0, supplied).map(parameter => snake(parameter.name)));
+		args.push(...defaults.map((item, index) => isAggregate(ir, declaration.parameters[supplied + index].type) ? `&${item.name}` : item.name));
+		if(!isUnit(ir, declaration.result.type)) args.push("out");
+		args.push("error");
+		const helper = `${name}_default_${supplied}`;
+		wrappers.push({ helper
+			, source: [
+				`static inline ${prefix(ir)}_status ${helper}(${publicParametersThrough(ir, variant, supplied).join(", ")}) {`
+				, ...defaults.flatMap(item => item.lines.map(line => `  ${line}`))
+				, `  return ${name}(${args.join(", ")});`
+				, "}"
+			].join("\n") });
+	}
+	const maximum = publicParameters(ir, variant).length;
+	const select = `${upper(name)}_DEFAULT_SELECT`;
+	const candidates = [name, ...wrappers.slice().reverse().map(wrapper => wrapper.helper)];
+	return [...wrappers.map(wrapper => wrapper.source)
+		, `#define ${select}(${Array.from({ length: maximum }, (_, index) => `_${index + 1}`).join(", ")}, NAME, ...) NAME`
+		, `#define ${name}(...) ${select}(__VA_ARGS__, ${candidates.join(", ")})(__VA_ARGS__)`];
+};
+
 const runtimeParameters = (ir, variant) => {
 	const declaration = variant.declaration;
 	const parts = ["void *context"];
@@ -734,6 +840,10 @@ const emitPublicHeader = ir => {
 			lines.push(`${p}_status ${name}(${publicParameters(ir, variant).join(", ")});`);
 		}
 	}
+	const defaultWrappers = ir.declarations.flatMap(declaration =>
+		declarationVariants(declaration).flatMap(variant => cDefaultWrappers(ir, variant)));
+	if(defaultWrappers.length) lines.push("", `#ifndef ${macro}_DISABLE_DEFAULT_ARGUMENTS`
+		, ...defaultWrappers, `#endif /* ${macro}_DISABLE_DEFAULT_ARGUMENTS */`);
 	for(const type of ir.types.filter(type => type.kind === "resource"))
 	{
 		const name = cType(ir, { kind: "named", id: type.id });
@@ -821,7 +931,8 @@ const emitImplementation = ir => {
 	const p = prefix(ir);
 	const macro = upper(p);
 	const lines = [
-		`#include \"${p}.h\"`
+		`#define ${macro}_DISABLE_DEFAULT_ARGUMENTS 1`
+		, `#include \"${p}.h\"`
 		, `#include \"${p}_runtime.h\"`
 		, ""
 		, "#include <stdlib.h>"

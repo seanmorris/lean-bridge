@@ -200,7 +200,9 @@
                   },
                   "type": {
                     "$ref": "#/$defs/runtimeType"
-                  }
+                  },
+                  "optional": { "const": true },
+                  "default": { "$ref": "binding-ir.schema.json#/$defs/defaultValue" }
                 }
               }
             },
@@ -245,7 +247,9 @@
                   },
                   "type": {
                     "$ref": "native-metadata-type.schema.json"
-                  }
+                  },
+                  "optional": { "const": true },
+                  "default": { "$ref": "binding-ir.schema.json#/$defs/defaultValue" }
                 }
               }
             },

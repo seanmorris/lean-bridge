@@ -4,6 +4,8 @@
  * @file
  */
 
+import { defaultValueShapeProblem, defaultValueTypeProblem } from "./default-value.mjs";
+
 const ID = /^[a-z0-9][a-z0-9._/-]*:[A-Za-z0-9][A-Za-z0-9._/-]*$/;
 const PACKAGE_ID = /^[a-z0-9][a-z0-9._-]*(?:\/[a-z0-9][a-z0-9._-]*)*@[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/;
 const VERSION = /^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/;
@@ -343,6 +345,23 @@ const validateParameterShape = (parameter, path, typeParameters) => {
 			path
 		});
 	}
+	if(parameter.optional && parameter.default === null)
+	{
+		fail("missing-default", `${path} optional parameter requires its Lean-declared default`, {
+			path
+		});
+	}
+	if(parameter.optional)
+	{
+		const problem = defaultValueShapeProblem(parameter.default);
+		if(problem) fail("invalid-default", `${path} ${problem}`, { path, actual: parameter.default });
+	}
+};
+
+const validateParameterDefault = (parameter, path, typeMap) => {
+	if(!parameter.optional) return;
+	const problem = defaultValueTypeProblem(parameter.default, parameter.type, id => typeMap.get(id));
+	if(problem) fail("invalid-default", `${path} ${problem}`, { path, actual: parameter.default });
 };
 
 const validateCallableShape = (value, path, typeParameters, knownErrors) => {
@@ -881,34 +900,29 @@ const validateBindingIrContract = (ir, path, schemaVersions = SCHEMA_VERSIONS) =
 		{
 			const callablePath = `${type.id}.callable`;
 			type.callable.parameters.forEach((parameter, index) => {
-        const parameterPath = `${callablePath}.parameters[${index}]`;
-        checkOwnershipRepresentation(parameter, parameterPath, typeMap, typeParameters, ir.schemaVersion);
-        if(parameter.lifetime?.scope === "receiver")
-{
-          fail("borrow-anchor", `${parameterPath} callback parameter has no receiver anchor`, {
-            path: `${parameterPath}.lifetime.anchor`
-          });
-}
-        if(
-          parameter.lifetime?.scope === "parameter"
-          && !type.callable.parameters.some(item => item.name === parameter.lifetime.anchor)
-        ) {
-          fail(
-            "borrow-anchor",
-            `${parameterPath} names unknown callback parameter ${parameter.lifetime.anchor}`,
-            {
-              path: `${parameterPath}.lifetime.anchor`
-              , anchor: parameter.lifetime.anchor
-            },
-          );
-        }
+				const parameterPath = `${callablePath}.parameters[${index}]`;
+				checkOwnershipRepresentation(parameter, parameterPath, typeMap, typeParameters, ir.schemaVersion);
+				validateParameterDefault(parameter, parameterPath, typeMap);
+				if(parameter.lifetime?.scope === "receiver")
+				{
+					fail("borrow-anchor", `${parameterPath} callback parameter has no receiver anchor`, {
+						path: `${parameterPath}.lifetime.anchor`
+					});
+				}
+				if(parameter.lifetime?.scope === "parameter"
+					&& !type.callable.parameters.some(item => item.name === parameter.lifetime.anchor)) {
+					fail("borrow-anchor", `${parameterPath} names unknown callback parameter ${parameter.lifetime.anchor}`, {
+						path: `${parameterPath}.lifetime.anchor`
+						, anchor: parameter.lifetime.anchor
+					});
+					}
 			});
 			checkOwnershipRepresentation(
-				type.callable.result,
-				`${callablePath}.result`,
-				typeMap,
-				typeParameters,
-				ir.schemaVersion,
+				type.callable.result
+				, `${callablePath}.result`
+				, typeMap
+				, typeParameters
+				, ir.schemaVersion
 			);
 			if(type.callable.result.lifetime?.scope === "receiver")
 			{
@@ -916,19 +930,13 @@ const validateBindingIrContract = (ir, path, schemaVersions = SCHEMA_VERSIONS) =
 					path: `${callablePath}.result.lifetime.anchor`
 				});
 			}
-			if(
-				type.callable.result.lifetime?.scope === "parameter"
-          && !type.callable.parameters.some(parameter => parameter.name === type.callable.result.lifetime.anchor)
-			) {
-				fail(
-					"borrow-anchor",
-					`${callablePath}.result names unknown callback parameter ${type.callable.result.lifetime.anchor}`,
-					{
-						path: `${callablePath}.result.lifetime.anchor`
-						, anchor: type.callable.result.lifetime.anchor
-					},
-				);
-			}
+			if(type.callable.result.lifetime?.scope === "parameter"
+				&& !type.callable.parameters.some(parameter => parameter.name === type.callable.result.lifetime.anchor)) {
+				fail("borrow-anchor", `${callablePath}.result names unknown callback parameter ${type.callable.result.lifetime.anchor}`, {
+					path: `${callablePath}.result.lifetime.anchor`
+					, anchor: type.callable.result.lifetime.anchor
+				});
+				}
 			if(ir.schemaVersion >= 4) checkOwnedResultLifetime(type.callable, callablePath, typeMap, typeParameters);
 		}
 	}
@@ -1166,9 +1174,10 @@ const validateBindingIrContract = (ir, path, schemaVersions = SCHEMA_VERSIONS) =
 
     array(declaration.parameters, `${declarationPath}.parameters`).forEach(
       (parameter, parameterIndex) => {
-        const parameterPath = `${declarationPath}.parameters[${parameterIndex}]`;
-        validateParameterShape(parameter, parameterPath, parameterIds);
-        checkOwnershipRepresentation(parameter, parameterPath, typeMap, typeParameters, ir.schemaVersion);
+	        const parameterPath = `${declarationPath}.parameters[${parameterIndex}]`;
+	        validateParameterShape(parameter, parameterPath, parameterIds);
+	        checkOwnershipRepresentation(parameter, parameterPath, typeMap, typeParameters, ir.schemaVersion);
+	        validateParameterDefault(parameter, parameterPath, typeMap);
       },
     );
     unique(declaration.parameters, parameter => parameter.name, `${declarationPath}.parameters`);

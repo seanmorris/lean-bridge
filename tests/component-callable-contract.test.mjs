@@ -53,6 +53,13 @@ test("callable packages reject checked scalar inputs and release decoded closure
 test("callable admission rejects changed semantics and preserves the scalar-only ABI contract", () => {
 	const ir = source(), abi = createComponentPrivateAbi(ir);
 	assertComponentCallableBindings(abi, ir);
+	const defaulted = structuredClone(ir);
+	const defaultParameter = defaulted.declarations.find(item => item.id === "lean:Callables.makeUInt32").parameters[0];
+	defaultParameter.optional = true;
+	defaultParameter.default = { kind: "integer", value: "7" };
+	const defaultedAbi = createComponentPrivateAbi(defaulted);
+	assert.deepEqual(defaultedAbi, abi);
+	assertComponentCallableBindings(defaultedAbi, defaulted);
 	for(const mutate of [
 		value => { value.types[0].callable.resultMode = "promise"; }
 		, value => { value.types[0].callable.parameters[0].ownership = "borrow"; }

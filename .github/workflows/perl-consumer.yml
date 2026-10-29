@@ -268,6 +268,25 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Qualify optional parameters in the prepared Perl package
+        if: matrix.configuration == '5.38.2-threaded'
+        id: optional_parameters_language
+        continue-on-error: true
+        timeout-minutes: 100
+        env:
+          OPTIONAL_PARAMETER_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: |
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$OPTIONAL_PARAMETER_PERL_CONFIGURATION/bin/perl"
+          bash scripts/run-optional-parameter-language-ci.sh perl
+      - name: Preserve optional-parameter Perl acceptance
+        if: always() && matrix.configuration == '5.38.2-threaded'
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-language-perl-${{ github.sha }}
+          path: build/optional-parameter-language-ci/perl/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
       - name: Compare installed Perl corpus packages with fresh Lean results
         env:
           CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}
@@ -446,8 +465,8 @@ jobs:
             build/consumer-ci/perl/*/perl.json
           if-no-files-found: error
           overwrite: true
-      - name: Enforce direct proof-erasure Perl support
-        if: always() && matrix.configuration == '5.38.2-threaded' && steps.direct_proof_language.outcome != 'success'
+      - name: Enforce direct proof-erasure and optional-parameter Perl support
+        if: always() && matrix.configuration == '5.38.2-threaded' && (steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')
         run: exit 1
       - name: Enforce scripting HostNull support
         if: always() && matrix.configuration == '5.38.2-threaded' && steps.host_null_scripting.outcome != 'success'

@@ -18,6 +18,70 @@ import {
 	, nativeRefinementReadme
 } from "../native/fin-refinements.mjs";
 
+const phpString = value => `'${String(value)
+	.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}'`;
+
+const resolveDefaultType = (model, ref, seen = new Set()) => {
+	if(ref.kind !== "named") return ref;
+	if(seen.has(ref.id))
+		throw new TypeError(`PHP default type alias cycle at ${ref.id}`);
+	const type = model.ir.types.find(item => item.id === ref.id);
+	if(type?.kind !== "alias") return ref;
+	return resolveDefaultType(model, type.target, new Set([...seen, ref.id]));
+};
+
+const copiedPhpDefault = (model, value, ref) => {
+	const resolved = resolveDefaultType(model, ref);
+	if(resolved.kind === "apply" && resolved.constructor === "option")
+	{
+		if(value.kind === "option-none") return { signature: "null" };
+		if(value.kind !== "option-some")
+			throw new TypeError("PHP Option default requires none or some");
+		const child = copiedPhpDefault(model, value.value, resolved.arguments[0]);
+		return {
+			signature: "null"
+			, omitted: `new Some(${child.omitted ?? child.signature})`
+		};
+	}
+	if(resolved.kind !== "primitive")
+		throw new TypeError("PHP defaults require primitive or Option values");
+	if(value.kind === "unit") return { signature: "null" };
+	if(value.kind === "boolean")
+		return { signature: value.value ? "true" : "false" };
+	if(value.kind === "string" || value.kind === "char")
+		return { signature: phpString(value.value) };
+	if(value.kind === "integer")
+	{
+		const projected = phpValue(model, ref);
+		return projected.publicType === "\\Brick\\Math\\BigInteger"
+			? {
+				signature: "null"
+				, omitted: `\\Brick\\Math\\BigInteger::of(${phpString(value.value)})`
+			} : { signature: value.value };
+	}
+	throw new TypeError(`Unsupported canonical PHP default kind: ${value.kind}`);
+};
+
+const copiedParameterDefault = (model, declaration, index) => {
+	const parameter = declaration.parameters[index];
+	return parameter.optional
+		? copiedPhpDefault(model, parameter.default, parameter.type) : null;
+};
+
+const copiedParameterCode = (model, fn, parameter, index) => {
+	const value = copiedParameterDefault(model, fn.declaration, index);
+	return `mixed $${parameter.name}${value ? ` = ${value.signature}` : ""}`;
+};
+
+const copiedDefaultLines = (model, fn) => fn.parameters.flatMap(
+	(parameter, index) => {
+		const value = copiedParameterDefault(model, fn.declaration, index);
+		return value?.omitted
+			? [`    if (\\func_num_args() <= ${index}) { $${parameter.name} = ${value.omitted}; }`]
+			: [];
+	}
+);
+
 /**
  * Render the public value API shared by the FFI and Zend transports.
  *
@@ -60,13 +124,17 @@ ${phpValueMethods}
 
 require_once __DIR__ . '/Internal/Native.php';
 
-${model.surface.functions.map((fn, index) => `/**
+${model.surface.functions.map((fn, index) => {
+	const defaults = copiedDefaultLines(model, fn);
+	return `/**
 ${finDoc(fn, model.ir.types)}${fn.parameters.map((parameter, i) => ` * @param ${phpValue(model, fn.declaration.parameters[i].type).docType} $${parameter.name}${model.surface.aliases.length ? `\n * @lean-bridge-param ${phpAliasContract(model, fn.declaration.parameters[i].type)} $${parameter.name}` : ""}`).join("\n")}
  * @return ${phpValue(model, fn.declaration.result.type).type?.callable ? "LeanClosure" : phpValue(model, fn.declaration.result.type).docType}${model.surface.aliases.length ? `\n * @lean-bridge-return ${phpAliasContract(model, fn.declaration.result.type)}` : ""}
  */
-function ${fn.publicName}(${fn.parameters.map(parameter => `mixed $${parameter.name}`).join(", ")}): ${phpValue(model, fn.declaration.result.type).type?.callable ? "LeanClosure" : phpValue(model, fn.declaration.result.type).publicType} {
+function ${fn.publicName}(${fn.parameters.map((parameter, i) => copiedParameterCode(model, fn, parameter, i)).join(", ")}): ${phpValue(model, fn.declaration.result.type).type?.callable ? "LeanClosure" : phpValue(model, fn.declaration.result.type).publicType} {
+${defaults.join("\n")}${defaults.length ? "\n" : ""}
     return Internal\\Native::call${index}(${fn.parameters.map(parameter => `$${parameter.name}`).join(", ")});
-}`).join("\n\n")}
+}`;
+}).join("\n\n")}
 `;
 
 const finBounds = (fn, types) => nativeFinSummary(fn.declaration, fn.parameters.map(parameter => `$${parameter.name}`), types);

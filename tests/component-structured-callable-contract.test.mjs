@@ -33,6 +33,18 @@ const finCallback = (bound = "3") => {
 	return ir;
 };
 
+test("structured callable exports keep authenticated defaults outside the full-arity ABI", () => {
+	const ir = structuredCallableReviewedIr();
+	const abi = createComponentPrivateAbi(ir);
+	const defaulted = structuredClone(ir);
+	const parameter = defaulted.declarations.find(item => item.id === "lean:Structured.makeOption").parameters[0];
+	parameter.optional = true;
+	parameter.default = { kind: "option-none" };
+	const defaultedAbi = createComponentPrivateAbi(defaulted);
+	assert.deepEqual(defaultedAbi, abi);
+	assertComponentStructuredCallableBindings(defaultedAbi, defaulted);
+});
+
 test("Fin callback keys retain bounds and authenticate compiler and public metadata", async () => {
 	const ir = finCallback(), generated = plan(ir), abi = generated.plan.privateAbi;
 	assert.equal(abi.version, 9);

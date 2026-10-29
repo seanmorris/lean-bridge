@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOptionalParameterSource, optionalParameterNormalizationPaths } from "./optional-parameter-source-history.mjs";
 import { beforeHostNullSystemsTypeSurfaceIntegrationSource, beforeHostNullSystemsTypeSurfaceSource, hostNullSystemsTypeSurfaceNormalizationPaths } from "./host-null-systems-type-surface-lineage-source-history.mjs";
 import { beforeHostNullSystemsIntegrationSource, beforeHostNullSystemsSource, hostNullSystemsNormalizationPaths } from "./host-null-systems-source-history.mjs";
 import { beforeGeneratedOutputControlRepairTypeSurfaceIntegrationSource, beforeGeneratedOutputControlRepairTypeSurfaceSource, generatedOutputControlRepairTypeSurfaceNormalizationPaths } from "./generated-output-control-repair-type-surface-lineage-source-history.mjs";
@@ -2368,7 +2369,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostNullSystemsTypeSurfaceNormalizationPaths
+	...optionalParameterNormalizationPaths
+	, ...hostNullSystemsTypeSurfaceNormalizationPaths
 	, ...hostNullSystemsNormalizationPaths
 	, ...generatedOutputControlRepairTypeSurfaceNormalizationPaths
 	, ...generatedOutputControlRepairNormalizationPaths
@@ -3608,6 +3610,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	text = stage;
 	stage = beforeDirectProofErasureNativeEvidenceCorrectionSource(
 		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOptionalParameterSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
