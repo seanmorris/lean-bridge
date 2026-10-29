@@ -1,0 +1,1059 @@
+{
+  "additions": [
+    {
+      "currentSha256": "56c31cc1316a283d22d175024a8611e46d5d5cf229eda38ff15c3b54ed302dd5",
+      "path": "scripts/archive-host-null-javascript-browser-evidence.mjs"
+    },
+    {
+      "currentSha256": "eb4afcf5bef61da77bc2e9e4277bf2dceb6915f53ffb1bcbe96b645edc1f3c48",
+      "path": "scripts/archive-host-null-php-evidence.mjs"
+    },
+    {
+      "currentSha256": "6ac8da0b36d106e3c3f4146a54b67f7d6df47348692e56ac563b60ae16efff43",
+      "path": "scripts/check-host-null-php-reports.mjs"
+    },
+    {
+      "currentSha256": "a8316630cf60ab6acb7440b43bb7693f6bcd8b394543dc95090a30f600ee53f6",
+      "path": "scripts/promote-host-null-javascript.mjs"
+    },
+    {
+      "currentSha256": "d32917e9f9c34307cefe1827365dd2aca37c39a91647ef0e474e2e9b37111276",
+      "path": "scripts/promote-host-null-php.mjs"
+    },
+    {
+      "currentSha256": "f6d84cfebf39e59bddc81bafa10297b62aeb23fb426e488975b603b35b0b12ad",
+      "path": "tests/fixtures/host-null-consumers/php.php"
+    },
+    {
+      "currentSha256": "738d53b8045f0dd0733d84cb3d216d6bd25c8248c0e05a556cf76bec1fde5d16",
+      "path": "tests/helpers/host-null-javascript-browser-evidence.mjs"
+    },
+    {
+      "currentSha256": "46323e0d5ebb2e4731d1421220c08269ffa8d4295f17533511fafea6fd6061b1",
+      "path": "tests/helpers/host-null-javascript-hosted-evidence-sources.mjs"
+    },
+    {
+      "currentSha256": "1c3c9113859dd713cb7ba1218af73e479fc92baa6874c0ffcaac2e81acec7818",
+      "path": "tests/helpers/host-null-javascript-hosted-report.mjs"
+    },
+    {
+      "currentSha256": "1c1bf28e33cb790e22214168fcf5bdc80cc25c25119b936cae7bf7681ef01e1e",
+      "path": "tests/helpers/host-null-javascript-promotion-tests.mjs"
+    },
+    {
+      "currentSha256": "1aa663d29afb4aadad17480768233720905517d8d10f51b6ace61573c4690569",
+      "path": "tests/helpers/host-null-javascript-promotion.mjs"
+    },
+    {
+      "currentSha256": "39dee10d713fd86b5184208ffc20eb95c33dd784c100677cb91d53dd1ce73d48",
+      "path": "tests/helpers/host-null-php-evidence.mjs"
+    },
+    {
+      "currentSha256": "083c1ea0fabf14241abd8893812a4cbadafef2f57712f524790860d228650798",
+      "path": "tests/helpers/host-null-php-hosted-evidence-sources.mjs"
+    },
+    {
+      "currentSha256": "2008c9e889f065007e3d4df2ebdfe18029cf6a3dabb628f2bd1c18cc7225af04",
+      "path": "tests/helpers/host-null-php-hosted-policy.mjs"
+    },
+    {
+      "currentSha256": "28c2e387aa4de3f09ce436de4874ddb194819c330815743bb1e7e2a954889da4",
+      "path": "tests/helpers/host-null-php-promotion-tests.mjs"
+    },
+    {
+      "currentSha256": "d0d9436c837a84de717ba6046061a4061d8e7a089e3d0a68556c4d3a74c8c0da",
+      "path": "tests/helpers/host-null-php-promotion.mjs"
+    },
+    {
+      "currentSha256": "4cc6d2c76e2d566141205c4c591c41ceb5658f81a22d2e51cf8f5d996284d337",
+      "path": "tests/helpers/host-null-php-report-tests.mjs"
+    },
+    {
+      "currentSha256": "2a94cfbde6d88c0e96bb84b05a331c90d6c2df0ef0820db83863e32e3912c8fd",
+      "path": "tests/helpers/host-null-php-report.mjs"
+    },
+    {
+      "currentSha256": "928f2f1f7e897f790f6deda1923bfd9a4c0d26fcc3b46e86051126f9927a5d5f",
+      "path": "tests/helpers/php-host-null-fixture.mjs"
+    },
+    {
+      "currentSha256": "3b4f361e42614e721a8e1b64eff413b3f2275fb3a9614d5aeb689eddadc5eb5f",
+      "path": "tests/host-null-documentation.test.mjs"
+    },
+    {
+      "currentSha256": "94e0cfa7b42aec71e682dbf8c1849c327401d035f5189655fb4d75cbf5bd7896",
+      "path": "tests/host-null-javascript-hosted-report.test.mjs"
+    },
+    {
+      "currentSha256": "49087af0be9fec21883c141490d6cd68e52416328cbe48765f60bbc2d0b3fbaf",
+      "path": "tests/php-host-null-contract.test.mjs"
+    },
+    {
+      "currentSha256": "2dc0ed8dbb8da46dd7acde0087e1f9b8bcf5889de58476d34dfeed1d41b4f9ab",
+      "path": "tests/php-host-null.test.mjs"
+    },
+    {
+      "currentSha256": "b457723244e85bf68cf45dcf868f20ed7ad81c4090f5dc4c540f931bb4dc47ba",
+      "path": "tests/php-wasm-host-null.test.mjs"
+    },
+    {
+      "currentSha256": "480703720dfd7432282f18fb9838b08d3d547ea94f3fd28bfaa497560bd1fe43",
+      "path": "scripts/update-host-null-php-source-history.mjs"
+    },
+    {
+      "currentSha256": "32092fcdea0f5a7b205f10e931d4c1e6ebfef36685297a3682fe025580da26d0",
+      "path": "tests/helpers/host-null-php-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "88e7515a905efda82f6555d1e623e1ec044cd2216c65e07a2f056e13c0cbb3a4",
+      "path": "tests/helpers/host-null-php-source-history.mjs"
+    }
+  ],
+  "commits": [
+    {
+      "added": [
+        "tests/fixtures/host-null-consumers/php.php",
+        "tests/helpers/php-host-null-fixture.mjs",
+        "tests/php-host-null-contract.test.mjs",
+        "tests/php-host-null.test.mjs",
+        "tests/php-wasm-host-null.test.mjs"
+      ],
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "modified": [
+        ".github/workflows/consumer-matrix.yml",
+        "src/backends/c/generate.mjs",
+        "src/backends/c/native-copied-values.mjs",
+        "src/backends/c/primitive-surface.mjs",
+        "src/backends/php/copied-conversions.mjs",
+        "src/backends/php/copied-model.mjs",
+        "src/backends/php/copied-values.mjs",
+        "src/backends/php/copied-zend-conversions.mjs",
+        "src/backends/php/copied-zend.mjs",
+        "src/build/native-model.mjs",
+        "tests/checked-javascript-partition-11.test.mjs",
+        "tests/fixtures/host-null-consumers/npm.mjs",
+        "tests/fixtures/onboarding/host-null/HostNullDemo.lean",
+        "tests/helpers/host-null-fixture.mjs",
+        "tests/host-null-npm-installed.test.mjs"
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "subject": "Deliver HostNull through installed PHP packages [skip ci]"
+    },
+    {
+      "added": [
+        "scripts/check-host-null-php-reports.mjs",
+        "tests/helpers/host-null-php-report-tests.mjs",
+        "tests/helpers/host-null-php-report.mjs"
+      ],
+      "commit": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "modified": [
+        ".github/workflows/consumer-matrix.yml",
+        "tests/checked-javascript-partition-11.test.mjs",
+        "tests/php-host-null-contract.test.mjs",
+        "tests/php-host-null.test.mjs",
+        "tests/php-wasm-host-null.test.mjs"
+      ],
+      "parent": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "subject": "Retain and verify HostNull PHP evidence [skip ci]"
+    },
+    {
+      "added": [
+        "tests/host-null-documentation.test.mjs"
+      ],
+      "commit": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "modified": [
+        ".github/workflows/consumer-matrix.yml",
+        "docs/lean/existing-package.md",
+        "docs/lean/export-decisions.md",
+        "docs/php.md",
+        "tests/checked-javascript-partition-11.test.mjs",
+        "tests/php-host-null-contract.test.mjs"
+      ],
+      "parent": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "subject": "Document and isolate HostNull PHP evidence [skip ci]"
+    },
+    {
+      "added": [],
+      "commit": "e73fa98668aa0bbee1e9b3621263186dd50304a6",
+      "modified": [
+        "src/adoption/type-surface.mjs",
+        "tests/dependent-checked-record-promotion.test.mjs",
+        "tests/reviewed-host-null.test.mjs"
+      ],
+      "parent": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "subject": "Repair HostNull CI contract replay [skip ci]"
+    },
+    {
+      "added": [
+        "scripts/archive-host-null-javascript-browser-evidence.mjs",
+        "tests/helpers/host-null-javascript-hosted-evidence-sources.mjs",
+        "tests/helpers/host-null-javascript-hosted-report.mjs",
+        "tests/host-null-javascript-hosted-report.test.mjs"
+      ],
+      "commit": "acbedcb054c2afc41e821c9af0d7c16a88eebd8b",
+      "modified": [
+        "tests/checked-javascript-partition-11.test.mjs"
+      ],
+      "parent": "e73fa98668aa0bbee1e9b3621263186dd50304a6",
+      "subject": "Prepare HostNull hosted evidence archive"
+    },
+    {
+      "added": [
+        "tests/helpers/host-null-javascript-browser-evidence.mjs"
+      ],
+      "commit": "bc7032f1731dfbe63f85ad38bb5324328a0ac43b",
+      "modified": [
+        "tests/helpers/host-null-javascript-hosted-evidence-sources.mjs"
+      ],
+      "parent": "acbedcb054c2afc41e821c9af0d7c16a88eebd8b",
+      "subject": "Define HostNull hosted evidence replay"
+    },
+    {
+      "added": [
+        "scripts/promote-host-null-javascript.mjs",
+        "tests/helpers/host-null-javascript-promotion-tests.mjs",
+        "tests/helpers/host-null-javascript-promotion.mjs"
+      ],
+      "commit": "c890fa905a7aaf795134621597ce02b3a51bf61e",
+      "modified": [
+        "tests/checked-javascript-partition-11.test.mjs"
+      ],
+      "parent": "bc7032f1731dfbe63f85ad38bb5324328a0ac43b",
+      "subject": "Define exact HostNull JavaScript promotion"
+    },
+    {
+      "added": [
+        "tests/helpers/host-null-php-promotion-tests.mjs",
+        "tests/helpers/host-null-php-promotion.mjs"
+      ],
+      "commit": "806b4c3a3aeac87d8cf85c4cea3f6aac395d071c",
+      "modified": [
+        "tests/checked-javascript-partition-11.test.mjs"
+      ],
+      "parent": "c890fa905a7aaf795134621597ce02b3a51bf61e",
+      "subject": "Define exact HostNull PHP promotion [skip ci]"
+    },
+    {
+      "added": [
+        "scripts/archive-host-null-php-evidence.mjs",
+        "scripts/promote-host-null-php.mjs",
+        "tests/helpers/host-null-php-evidence.mjs",
+        "tests/helpers/host-null-php-hosted-evidence-sources.mjs",
+        "tests/helpers/host-null-php-hosted-policy.mjs"
+      ],
+      "commit": "e17f838f52a38c8d31dff55335a26a6b55148671",
+      "modified": [
+        "tests/helpers/host-null-php-promotion.mjs"
+      ],
+      "parent": "806b4c3a3aeac87d8cf85c4cea3f6aac395d071c",
+      "subject": "Prepare HostNull PHP hosted evidence [skip ci]"
+    },
+    {
+      "added": [],
+      "commit": "98275900c5a0796945611124152911c6fd83f9da",
+      "modified": [
+        "tests/helpers/host-null-javascript-hosted-evidence-sources.mjs",
+        "tests/helpers/host-null-php-hosted-evidence-sources.mjs"
+      ],
+      "parent": "e17f838f52a38c8d31dff55335a26a6b55148671",
+      "subject": "Close HostNull hosted source selections [skip ci]"
+    },
+    {
+      "added": [],
+      "commit": "e5827ccbdb36fbb940accb9c104090dc025f9e6b",
+      "modified": [
+        "tests/helpers/host-null-php-evidence.mjs"
+      ],
+      "parent": "98275900c5a0796945611124152911c6fd83f9da",
+      "subject": "Bind HostNull PHP evidence to hosted API records [skip ci]"
+    }
+  ],
+  "implementationCommit": "e5827ccbdb36fbb940accb9c104090dc025f9e6b",
+  "integrationParent": "6e5bf6f631564b163280798121661a64daeb7f44",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2724c7f6e2ed97ed02451b5dae1c6799418434166d6e72641973b6ed805ebfc1",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-php-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "5cb66109039f2ce3b443c7553c64f68ee000210ae85e8d33da839ca9dcbd578d"
+    },
+    {
+      "currentSha256": "b23d212aae8b6cf3a678d70d4c1c8025dd199cd1a0ae937de5df5190429a2372",
+      "edits": [
+        {
+          "current": "import { beforeHostNullPhpIntegrationSource, beforeHostNullPhpSource, hostNullPhpNormalizationPaths } from \"./host-null-php-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullPhpNormalizationPaths\n\t, ...hostNullTypeSurfaceLineageNormalizationPaths\n",
+          "previous": "\t...hostNullTypeSurfaceLineageNormalizationPaths\n",
+          "start": 215303
+        },
+        {
+          "current": "\tlet stage = beforeHostNullPhpIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullTypeSurfaceLineageIntegrationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullTypeSurfaceLineageIntegrationSource(path, text, expected);\n",
+          "start": 269274
+        },
+        {
+          "current": "\tstage = beforeHostNullPhpSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 270192
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7efc864dab22fecf58f21efeff01150fe295d911dd0f7dab564345fda8287176"
+    }
+  ],
+  "milestone": "host-null-php-source-v1",
+  "predecessorCommit": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+  "schemaVersion": 1,
+  "scope": "Lower explicit HostNull through native PHP and PHP-Wasm copied values, records, callbacks and returned closures while preserving the distinction between HostNull (Option T) and Option (HostNull T). Exercise source-free installed packages through ordinary and independently reviewed routes, retain exact reports, define hosted archive and promotion policy, and document the boundary without promoting support before independent hosted replay. The dedicated partition-gap ledger owns the six partition-11 transitions.",
+  "updates": [
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "75fc8123743fbede9d90d53308e6064b09b2aedda5910231db984b8d984c5513",
+      "edits": [
+        {
+          "current": "          LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-host-null.test.mjs tests/php-host-null-contract.test.mjs\n          test -s build/host-null/php-native.json\n",
+          "previous": "",
+          "start": 116703
+        },
+        {
+          "current": "            build/host-null/php-native.json\n",
+          "previous": "",
+          "start": 126622
+        },
+        {
+          "current": "          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result \"$native_result\" --package-installation \"$native_executed\" --real-lean-execution \"$native_executed\" --command \"npm run test:consumer:php-native && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-host-null.test.mjs tests/php-host-null-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=php-native node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-native LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-native node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=php-native LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-php-native.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs php-native build/native-fin-container-edges/edges-php-native.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=php-native node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh php-native && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=php-native node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=php-native node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/php-native.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-php-native.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs php-native build/native-fin-record-zero/php-native.json build/native-fin-record-zero/reviewed-php-native.json && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh php-native && bash scripts/run-checked-record-host-ci.sh php-native && bash scripts/run-structural-subtype-ci.sh php-native && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows && bash scripts/run-nominal-subtype-php-ci.sh \\\"/usr/bin/php\\\" \\\"/usr/bin/composer\\\"\"\n",
+          "previous": "          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result \"$native_result\" --package-installation \"$native_executed\" --real-lean-execution \"$native_executed\" --command \"npm run test:consumer:php-native && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=php-native node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-native LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-native node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=php-native LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-php-native.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs php-native build/native-fin-container-edges/edges-php-native.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=php-native node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh php-native && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=php-native node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=php-native node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/php-native.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-php-native.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs php-native build/native-fin-record-zero/php-native.json build/native-fin-record-zero/reviewed-php-native.json && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh php-native && bash scripts/run-checked-record-host-ci.sh php-native && bash scripts/run-structural-subtype-ci.sh php-native && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows && bash scripts/run-nominal-subtype-php-ci.sh \\\"/usr/bin/php\\\" \\\"/usr/bin/composer\\\"\"\n",
+          "start": 129208
+        },
+        {
+          "current": "          LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-wasm-host-null.test.mjs tests/php-host-null-contract.test.mjs\n          test -s build/host-null/php-wasm.json\n",
+          "previous": "",
+          "start": 151569
+        },
+        {
+          "current": "            build/host-null/php-wasm.json\n",
+          "previous": "",
+          "start": 157954
+        },
+        {
+          "current": "          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result \"$wasm_result\" --package-installation \"$wasm_executed\" --real-lean-execution \"$wasm_executed\" --command \"npm run test:consumer:php-wasm && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-wasm-host-null.test.mjs tests/php-host-null-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_TEST=1 LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-fin-direct-tests.mjs && node scripts/check-php-wasm-direct-fin-reports.mjs --directory build/php-wasm-fin-direct && LEAN_BRIDGE_PHP_WASM_SUBTYPE_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-subtype-tests.mjs && node scripts/check-php-wasm-subtype-reports.mjs --directory build/php-wasm-subtype && set -euo pipefail && mkdir -p build/php-wasm-subtype-entry && node scripts/prepare-php-wasm-subtype-entry-runtime.mjs --output build/php-wasm-subtype-entry-input/php-wasm-runtime 2>&1 | tee build/php-wasm-subtype-entry/runtime-prepare.log && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_OUTPUT=build/php-wasm-subtype-entry node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^(ordinary|reviewed) installed PHP-Wasm Subtype entry probes record constructor and source calls$' tests/helpers/php-wasm-subtype-entry-installed-tests.mjs 2>&1 | tee build/php-wasm-subtype-entry/run.tap && node scripts/check-php-wasm-subtype-entry-reports.mjs --directory build/php-wasm-subtype-entry --tap build/php-wasm-subtype-entry/run.tap && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime bash scripts/run-structural-subtype-ci.sh php-wasm && LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests/php-wasm-generic-records.test.mjs && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-wasm LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-wasm node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows\"\n",
+          "previous": "          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result \"$wasm_result\" --package-installation \"$wasm_executed\" --real-lean-execution \"$wasm_executed\" --command \"npm run test:consumer:php-wasm && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_TEST=1 LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-fin-direct-tests.mjs && node scripts/check-php-wasm-direct-fin-reports.mjs --directory build/php-wasm-fin-direct && LEAN_BRIDGE_PHP_WASM_SUBTYPE_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-subtype-tests.mjs && node scripts/check-php-wasm-subtype-reports.mjs --directory build/php-wasm-subtype && set -euo pipefail && mkdir -p build/php-wasm-subtype-entry && node scripts/prepare-php-wasm-subtype-entry-runtime.mjs --output build/php-wasm-subtype-entry-input/php-wasm-runtime 2>&1 | tee build/php-wasm-subtype-entry/runtime-prepare.log && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_OUTPUT=build/php-wasm-subtype-entry node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^(ordinary|reviewed) installed PHP-Wasm Subtype entry probes record constructor and source calls$' tests/helpers/php-wasm-subtype-entry-installed-tests.mjs 2>&1 | tee build/php-wasm-subtype-entry/run.tap && node scripts/check-php-wasm-subtype-entry-reports.mjs --directory build/php-wasm-subtype-entry --tap build/php-wasm-subtype-entry/run.tap && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime bash scripts/run-structural-subtype-ci.sh php-wasm && LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests/php-wasm-generic-records.test.mjs && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-wasm LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-wasm node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows\"\n",
+          "start": 161929
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "ba1c1388d120c202e5fb3a07bdaed825259674eaf2375dd1cfaf34e5c3396328"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "f3c306309e5fe38b846c02a34894232fe8bf3fe0f611af4556f5aa4936201330",
+      "edits": [
+        {
+          "current": "\treturn `${snake(ref.constructor)}_${ref.arguments.map(typeKey).join(\"_\")}`;\n",
+          "previous": "\treturn `${ref.constructor}_${ref.arguments.map(typeKey).join(\"_\")}`;\n",
+          "start": 5133
+        },
+        {
+          "current": "\t\t\tif(![\"array\", \"host-null\", \"list\", \"option\", \"result\", \"tuple\"].includes(resolved.constructor) || resolved.arguments.length !== ([\"array\", \"host-null\", \"list\", \"option\"].includes(resolved.constructor) ? 1 : 2))\n",
+          "previous": "\t\t\tif(![\"array\", \"list\", \"option\", \"result\", \"tuple\"].includes(resolved.constructor) || resolved.arguments.length !== ([\"array\", \"list\", \"option\"].includes(resolved.constructor) ? 1 : 2))\n",
+          "start": 9506
+        },
+        {
+          "current": "\t\t\t\tif(value.kind === \"apply\") return [\"array\", \"host-null\", \"list\", \"option\", \"result\", \"tuple\"].includes(value.constructor) && value.arguments.length === ([\"array\", \"host-null\", \"list\", \"option\"].includes(value.constructor) ? 1 : 2) && value.arguments.every(child => copied(child, seen));\n",
+          "previous": "\t\t\t\tif(value.kind === \"apply\") return [\"array\", \"list\", \"option\", \"result\", \"tuple\"].includes(value.constructor) && value.arguments.length === ([\"array\", \"list\", \"option\"].includes(value.constructor) ? 1 : 2) && value.arguments.every(child => copied(child, seen));\n",
+          "start": 10078
+        },
+        {
+          "current": "const compoundTypes = ir => uniqueBy(collectUsedTypes(ir).map(ref => resolveAlias(ir, ref)).filter(ref => ref.kind === \"apply\" && [\"host-null\", \"option\", \"result\", \"tuple\"].includes(ref.constructor)), ref => cType(ir, ref));\nconst compoundFields = ref => ref.arguments.map((type, i) => ({ name: { \"host-null\": [\"value\"], option: [\"value\"], result: [\"ok\", \"error\"], tuple: [\"fst\", \"snd\"] }[ref.constructor][i], type }));\nconst compoundFlag = kind => ({ \"host-null\": \"has_value\", option: \"has_value\", result: \"is_ok\" })[kind];\n",
+          "previous": "const compoundTypes = ir => uniqueBy(collectUsedTypes(ir).map(ref => resolveAlias(ir, ref)).filter(ref => ref.kind === \"apply\" && [\"option\", \"result\", \"tuple\"].includes(ref.constructor)), ref => cType(ir, ref));\nconst compoundFields = ref => ref.arguments.map((type, i) => ({ name: { option: [\"value\"], result: [\"ok\", \"error\"], tuple: [\"fst\", \"snd\"] }[ref.constructor][i], type }));\nconst compoundFlag = kind => ({ option: \"has_value\", result: \"is_ok\" })[kind];\n",
+          "start": 20776
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "src/backends/c/generate.mjs",
+      "previousSha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "8e38f892da1964fa98a2d4874a568be357e3d13d6eb5db7d7733fbfafc176b39",
+      "edits": [
+        {
+          "current": "\t\t: [\"array\", \"host-null\", \"list\", \"option\"].includes(type.kind) ? { kind: \"apply\", constructor: type.kind, arguments: [nativeCReference(type.element)] }\n",
+          "previous": "\t\t: [\"array\", \"list\", \"option\"].includes(type.kind) ? { kind: \"apply\", constructor: type.kind, arguments: [nativeCReference(type.element)] }\n",
+          "start": 853
+        },
+        {
+          "current": "\t\tconst flag = { \"host-null\": \"has_value\", option: \"has_value\", result: \"is_ok\" }[site.kind];\n",
+          "previous": "\t\tconst flag = { option: \"has_value\", result: \"is_ok\" }[site.kind];\n",
+          "start": 6413
+        },
+        {
+          "current": "\t\t\tconst suffix = [\"host-null\", \"option\"].includes(site.kind) ? \"?\" : site.kind === \"result\" ? `.${index ? \"error\" : \"ok\"}` : `.${index}`;\n",
+          "previous": "\t\t\tconst suffix = site.kind === \"option\" ? \"?\" : site.kind === \"result\" ? `.${index ? \"error\" : \"ok\"}` : `.${index}`;\n",
+          "start": 6592
+        },
+        {
+          "current": "\t\tif(![\"array\", \"host-null\", \"list\", \"option\", \"tuple\", \"result\"].includes(site.kind)) throw new TypeError(\"Unsupported constructor refinement transport\");\n",
+          "previous": "\t\tif(![\"array\", \"list\", \"option\", \"tuple\", \"result\"].includes(site.kind)) throw new TypeError(\"Unsupported constructor refinement transport\");\n",
+          "start": 9832
+        },
+        {
+          "current": "\t\tconst fields = copy(type).fields, flag = { \"host-null\": \"has_value\", option: \"has_value\", result: \"is_ok\" }[site.kind];\n",
+          "previous": "\t\tconst fields = copy(type).fields, flag = { option: \"has_value\", result: \"is_ok\" }[site.kind];\n",
+          "start": 10331
+        },
+        {
+          "current": "\t\t\tconst segment = [\"host-null\", \"option\"].includes(site.kind) ? \"?\" : site.kind === \"result\" ? `.${index ? \"error\" : \"ok\"}` : `.${index}`;\n",
+          "previous": "\t\t\tconst segment = site.kind === \"option\" ? \"?\" : site.kind === \"result\" ? `.${index ? \"error\" : \"ok\"}` : `.${index}`;\n",
+          "start": 10538
+        },
+        {
+          "current": "\t\t\tconst flag = { \"host-null\": \"has_value\", option: \"has_value\", result: \"is_ok\" }[type.kind];\n",
+          "previous": "\t\t\tconst flag = { option: \"has_value\", result: \"is_ok\" }[type.kind];\n",
+          "start": 18760
+        },
+        {
+          "current": "\t\t\tif(type.kind === \"host-null\") input.push(`return value->has_value ? ${helper}_value(${args[0]}) : ${helper}_null(lean_box(0));`);\n\t\t\telse if(type.kind === \"option\") input.push(`return value->has_value ? ${helper}_some(${args[0]}) : ${helper}_none(lean_box(0));`);\n",
+          "previous": "\t\t\tif(type.kind === \"option\") input.push(`return value->has_value ? ${helper}_some(${args[0]}) : ${helper}_none(lean_box(0));`);\n",
+          "start": 19358
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "src/backends/c/native-copied-values.mjs",
+      "previousSha256": "138f16980755beb0d4174ac5e2eb6fa574d152b14e8e0e5da52ad57ac712abbe"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "05113f73910912ec0454f4f8cb1e5c1e118ed3710e3a33ecb6698308d306c920",
+      "edits": [
+        {
+          "current": "\t\telse if(compounds && ref.kind === \"apply\" && [\"host-null\", \"option\", \"result\", \"tuple\"].includes(ref.constructor) && ref.arguments.length === ([\"host-null\", \"option\"].includes(ref.constructor) ? 1 : 2))\n",
+          "previous": "\t\telse if(compounds && ref.kind === \"apply\" && [\"option\", \"result\", \"tuple\"].includes(ref.constructor) && ref.arguments.length === (ref.constructor === \"option\" ? 1 : 2))\n",
+          "start": 4425
+        },
+        {
+          "current": "\t\t\tfields = ref.arguments.map((argument, i) => ({ name: { \"host-null\": [\"value\"], option: [\"value\"], result: [\"ok\", \"error\"], tuple: [\"fst\", \"snd\"] }[compound][i], type: visit(argument, declaration, depth + 1) }));\n",
+          "previous": "\t\t\tfields = ref.arguments.map((argument, i) => ({ name: { option: [\"value\"], result: [\"ok\", \"error\"], tuple: [\"fst\", \"snd\"] }[compound][i], type: visit(argument, declaration, depth + 1) }));\n",
+          "start": 4665
+        },
+        {
+          "current": "\t\t} else rejectPrimitiveSurface(declaration, `this native projection requires concrete copied primitives, arrays or acyclic records${compounds ? \", host-null values, options, results and binary products\" : \"; compound values are not implemented for this target\"}`);\n",
+          "previous": "\t\t} else rejectPrimitiveSurface(declaration, `this native projection requires concrete copied primitives, arrays or acyclic records${compounds ? \", options, results and binary products\" : \"; compound values are not implemented for this target\"}`);\n",
+          "start": 6793
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "src/backends/c/primitive-surface.mjs",
+      "previousSha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "5ff630ea98ef3899b0ad151d7096811a4a24e74534a3f84b4a787eabad58178d",
+      "edits": [
+        {
+          "current": "\t\t, ...surface.copies.filter(copy => copy.aggregate).map(copy => copy.variant ? phpVariantDefinition(copy) : `typedef struct { ${[\"host-null\", \"option\"].includes(copy.compound) ? \"uint8_t has_value; \" : copy.compound === \"result\" ? \"uint8_t is_ok; \" : \"\"}${copy.record || copy.compound ? copy.fields.length ? copy.fields.map(field => `${phpFfiType(field.type)} ${field.name};`).join(\" \") : \"uint8_t empty;\" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === \"int\" ? \" uint8_t negative;\" : \"\"}`} } ${copy.ctype};\\nvoid ${copy.name}_clear(${copy.ctype} *);`)\n",
+          "previous": "\t\t, ...surface.copies.filter(copy => copy.aggregate).map(copy => copy.variant ? phpVariantDefinition(copy) : `typedef struct { ${copy.compound === \"option\" ? \"uint8_t has_value; \" : copy.compound === \"result\" ? \"uint8_t is_ok; \" : \"\"}${copy.record || copy.compound ? copy.fields.length ? copy.fields.map(field => `${phpFfiType(field.type)} ${field.name};`).join(\" \") : \"uint8_t empty;\" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === \"int\" ? \" uint8_t negative;\" : \"\"}`} } ${copy.ctype};\\nvoid ${copy.name}_clear(${copy.ctype} *);`)\n",
+          "start": 591
+        },
+        {
+          "current": "\telse if(copy.compound === \"host-null\")\n",
+          "previous": "\telse if(copy.compound === \"option\" || copy.compound === \"result\")\n",
+          "start": 4967
+        },
+        {
+          "current": "\t\tlines.push(\"if ($value === null) return null;\"\n\t\t\t, `return self::check${copy.fields[0].type.index}($value, $budget);`);\n\t} else if(copy.compound === \"option\" || copy.compound === \"result\")\n\t{\n\t\tif(copy.compound === \"option\")\n\t\t{\n\t\t\tif(model.taggedOptions) lines.push(`if ($value instanceof \\\\${model.namespace}\\\\None) {`\n\t\t\t\t, \"    if (array_keys(get_object_vars($value)) !== []) throw new \\\\TypeError('None has no value fields');\"\n\t\t\t\t, `    return new \\\\${model.namespace}\\\\None();`, \"}\");\n\t\t\telse lines.push(\"if ($value === null) return null;\");\n\t\t}\n",
+          "previous": "\t\tif(copy.compound === \"option\") lines.push(\"if ($value === null) return null;\");\n",
+          "start": 5010
+        },
+        {
+          "current": "\t\t\tinput.push(`if (${model.taggedOptions ? `$value instanceof ${ns}Some` : \"$value !== null\"}) {`, \"    $out->has_value = 1;\", ...to(copy.fields[0], \"$value->value\").map(line => `    ${line}`), \"}\");\n",
+          "previous": "\t\t\tinput.push(\"if ($value !== null) {\", \"    $out->has_value = 1;\", ...to(copy.fields[0], \"$value->value\").map(line => `    ${line}`), \"}\");\n",
+          "start": 10674
+        },
+        {
+          "current": "\t\t\t\t, `return $value->has_value === 0 ? ${model.taggedOptions ? `new ${ns}None()` : \"null\"} : new ${ns}Some(${from(copy.fields[0])});`);\n\t\t} else if(copy.compound === \"host-null\")\n\t\t{\n\t\t\tinput.push(\"if ($value !== null) {\", \"    $out->has_value = 1;\", ...to(copy.fields[0], \"$value\").map(line => `    ${line}`), \"}\");\n\t\t\toutput.push(\"if ($value->has_value !== 0 && $value->has_value !== 1) throw new \\\\RuntimeException('Invalid native HostNull flag');\"\n\t\t\t\t, `return $value->has_value === 0 ? null : ${from(copy.fields[0])};`);\n",
+          "previous": "\t\t\t\t, `return $value->has_value === 0 ? null : new ${ns}Some(${from(copy.fields[0])});`);\n",
+          "start": 11007
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "src/backends/php/copied-conversions.mjs",
+      "previousSha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "1e16a76a8677eaca28f05e628cb802b2d285fdeb76f7fc0d82f2009a1b7b8302",
+      "edits": [
+        {
+          "current": "\tconst hostNull = surface.copies.some(copy => copy.compound === \"host-null\");\n\tconst taggedOptions = hostNull && surface.copies.some(copy => copy.compound === \"option\");\n\tconst branches = [...(surface.copies.some(copy => copy.compound === \"option\") ? taggedOptions ? [\"None\", \"Some\"] : [\"Some\"] : [])\n",
+          "previous": "\tconst branches = [...(surface.copies.some(copy => copy.compound === \"option\") ? [\"Some\"] : [])\n",
+          "start": 3194
+        },
+        {
+          "current": "\t\t\t? { \"host-null\": `${copy.fields[0].type.publicType}|null`, option: taggedOptions ? \"None|Some\" : \"Some|null\", result: \"Ok|Err\", tuple: \"array\" }[copy.compound]\n",
+          "previous": "\t\t\t? { option: \"Some|null\", result: \"Ok|Err\", tuple: \"array\" }[copy.compound]\n",
+          "start": 4291
+        },
+        {
+          "current": "\t\tcopy.docType = copy.compound === \"host-null\" ? `${copy.fields[0].type.docType}|null`\n\t\t\t: copy.compound === \"option\" ? `${taggedOptions ? \"None|\" : \"\"}Some<${copy.fields[0].type.docType}>${taggedOptions ? \"\" : \"|null\"}`\n\t\t\t\t: copy.compound === \"result\" ? `Ok<${copy.fields[0].type.docType}>|Err<${copy.fields[1].type.docType}>`\n\t\t\t\t\t: copy.compound === \"tuple\" ? `array{${copy.fields.map(field => field.type.docType).join(\", \")}}`\n\t\t\t\t\t\t: copy.element ? `list<${copy.element.docType}>` : copy.publicType;\n",
+          "previous": "\t\tcopy.docType = copy.compound === \"option\" ? `Some<${copy.fields[0].type.docType}>|null`\n\t\t\t: copy.compound === \"result\" ? `Ok<${copy.fields[0].type.docType}>|Err<${copy.fields[1].type.docType}>`\n\t\t\t\t: copy.compound === \"tuple\" ? `array{${copy.fields.map(field => field.type.docType).join(\", \")}}`\n\t\t\t\t\t: copy.element ? `list<${copy.element.docType}>` : copy.publicType;\n",
+          "start": 4617
+        },
+        {
+          "current": "\tfor(const copy of surface.copies.filter(copy => copy.compound === \"host-null\"))\n\t\tif(copy.fields[0].type.publicType.split(\"|\").includes(\"null\"))\n\t\t\tfail(ir.declarations[0], \"PHP HostNull payloads must retain a value distinct from null\");\n",
+          "previous": "",
+          "start": 5223
+        },
+        {
+          "current": "\treturn { ir, surface, namespace, branches, hostNull, taggedOptions };\n",
+          "previous": "\treturn { ir, surface, namespace, branches };\n",
+          "start": 6452
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "src/backends/php/copied-model.mjs",
+      "previousSha256": "eed0dc2bd9d087c487196b32da297ca4e40eb1b9af779800384556272709b7fb"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "9aa914bac39104ba987e2ef392960e840baf867598218e448c668e3987b81b18",
+      "edits": [
+        {
+          "current": "${model.branches.map(name => name === \"None\" ? `final readonly class None\n{\n    public function __construct() {\n        if (func_num_args() !== 0) throw new \\\\ArgumentCountError('None requires no payload');\n    }\n${phpValueMethods}\n}` : `/** @template T */\n",
+          "previous": "${model.branches.map(name => `/** @template T */\n",
+          "start": 1361
+        },
+        {
+          "current": "\t\tfiles[\"README.md\"] += `\\n## Options, results and products\\n\\n${model.taggedOptions ? \"Because this package exposes HostNull, Option is fully tagged: new None() for None or new Some($value) for Some. This keeps HostNull.value(Option.none) distinct from HostNull.null and keeps Option.none distinct from Option.some(HostNull.null).\" : \"Option uses null for None or new Some($value) for Some. Unit is null, so new Some(null) preserves a present Unit or an outer Some containing None, according to the declared type.\"} Except uses new Ok($value) or new Err($error); both expose a readonly value property. Branch classes are final readonly classes in this component's namespace. PHPDoc records the payload type; every call checks it recursively, including weak-mode callers. Domain errors return Err; bridge failures throw. Prod uses an exact two-element list, retaining nested binary products. These types compose with arrays and records. Returned values are independently copied. PHP === compares wrapper identity, while == follows PHP's property-comparison rules. Readonly wrappers do not make arbitrary constructor payloads deeply immutable; only values accepted by the declared copied type may cross a call. Compound callbacks, identity-bearing copied values and recursive copied schemas remain unsupported.\\n`;\n",
+          "previous": "\t\tfiles[\"README.md\"] += \"\\n## Options, results and products\\n\\nOption uses null for None or new Some($value) for Some. Unit is null, so new Some(null) preserves a present Unit or an outer Some containing None, according to the declared type. Except uses new Ok($value) or new Err($error); both expose a readonly value property. Branch classes are final readonly classes in this component's namespace and require one payload. PHPDoc records the payload type; every call checks it recursively, including weak-mode callers. Domain errors return Err; bridge failures throw. Prod uses an exact two-element list, retaining nested binary products. These types compose with arrays and records. Returned values are independently copied. PHP === compares wrapper identity, while == follows PHP's property-comparison rules. Readonly wrappers do not make arbitrary constructor payloads deeply immutable; only values accepted by the declared copied type may cross a call. Compound callbacks, identity-bearing copied values and recursive copied schemas remain unsupported.\\n\";\n",
+          "start": 7739
+        },
+        {
+          "current": "\tif(model.hostNull)\n\t\tfiles[\"README.md\"] += \"\\n## Explicit host null\\n\\nOnly the compiler-authenticated HostNull wrapper uses PHP null as its null branch. Its value branch is the declared PHP payload directly, without a wrapper. Option, omitted/default arguments, Unit, erased proofs and unsupported values do not acquire HostNull semantics. Payloads whose direct PHP representation would itself be null are rejected.\\n\";\n",
+          "previous": "",
+          "start": 9056
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "src/backends/php/copied-values.mjs",
+      "previousSha256": "e87ee032cb2dfab5659d7801c62fbfeb7ce9b8e920b8a19bfb2bb2fe0e6c277c"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "814bb32888c9c973b493925209050fdaa922d9313e80a49c4b944a87c3e5c7ba",
+      "edits": [
+        {
+          "current": "\t} else if(copy.compound === \"host-null\")\n",
+          "previous": "\t} else if(copy.compound === \"option\")\n",
+          "start": 5308
+        },
+        {
+          "current": "\t\t\t, \"out->has_value = 1;\"\n\t\t\t, `if (!lb_to${field.index}(value, &out->value, s)) return 0;`);\n\t\toutput.push('if (value->has_value > 1) return lb_fail(s, \"Invalid native HostNull flag\", 0);'\n\t\t\t, \"if (!value->has_value) { ZVAL_NULL(out); return 1; }\"\n\t\t\t, `return lb_from${field.index}(&value->value, out, s);`);\n\t} else if(copy.compound === \"option\")\n\t{\n\t\tconst field = copy.fields[0].type;\n\t\tif(model.taggedOptions) input.push('if (Z_TYPE_P(value) != IS_ARRAY || !zend_array_is_list(Z_ARRVAL_P(value)) || zend_hash_num_elements(Z_ARRVAL_P(value)) > 1) return lb_fail(s, \"Tagged Option wire requires zero or one payload\", 1);'\n\t\t\t, \"if (zend_hash_num_elements(Z_ARRVAL_P(value)) == 0) { out->has_value = 0; return 1; }\"\n\t\t\t, \"if (!lb_charge(s, 1, 32)) return 0;\", \"out->has_value = 1;\"\n\t\t\t, `if (!lb_to${field.index}(zend_hash_index_find(Z_ARRVAL_P(value), 0), &out->value, s)) return 0;`);\n\t\telse input.push(\"if (Z_TYPE_P(value) == IS_NULL) { out->has_value = 0; return 1; }\"\n",
+          "previous": "",
+          "start": 5471
+        },
+        {
+          "current": "\t\t\t, model.taggedOptions ? \"if (!value->has_value) { array_init(out); return 1; }\" : \"if (!value->has_value) { ZVAL_NULL(out); return 1; }\"\n",
+          "previous": "\t\t\t, \"if (!value->has_value) { ZVAL_NULL(out); return 1; }\"\n",
+          "start": 6912
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "src/backends/php/copied-zend-conversions.mjs",
+      "previousSha256": "eafc016a4ee7b872037203844a0df178a8922ecd3019b91ecc5228f6baa77a4f"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "55454378d81352fbe463e30a7f58ea58341c7120d8ad1c92289e77b380b5f63b",
+      "edits": [
+        {
+          "current": "\telse if(copy.compound === \"host-null\")\n",
+          "previous": "\telse if(copy.compound === \"option\")\n",
+          "start": 1526
+        },
+        {
+          "current": "\t\tinput = `$value === null ? null : self::to${copy.fields[0].type.index}($value)`;\n\t\toutput = `$value === null ? null : self::from${copy.fields[0].type.index}($value)`;\n\t} else if(copy.compound === \"option\")\n\t{\n\t\tinput = model.taggedOptions\n\t\t\t? `$value instanceof ${ns}None ? [] : [self::to${copy.fields[0].type.index}($value->value)]`\n\t\t\t: `$value === null ? null : [self::to${copy.fields[0].type.index}($value->value)]`;\n\t\toutput = model.taggedOptions\n\t\t\t? `$value === [] ? new ${ns}None() : new ${ns}Some(self::from${copy.fields[0].type.index}($value[0]))`\n\t\t\t: `$value === null ? null : new ${ns}Some(self::from${copy.fields[0].type.index}($value[0]))`;\n",
+          "previous": "\t\tinput = `$value === null ? null : [self::to${copy.fields[0].type.index}($value->value)]`;\n\t\toutput = `$value === null ? null : new ${ns}Some(self::from${copy.fields[0].type.index}($value[0]))`;\n",
+          "start": 1569
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "src/backends/php/copied-zend.mjs",
+      "previousSha256": "1296d8fc02dd00091eaaa2de467fb647b0ec59c8e6614dc3fd1fda089ecfd62e"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "935d2a6986dff864e901759fdc25d47e7d5415e13cb38e77c794938901dceb13",
+      "edits": [
+        {
+          "current": "const hostNullType = type => {\n\tconst nullType = type.nullConstructor.split(\".\").slice(0, -1).join(\".\");\n\tconst valueType = type.valueConstructor.split(\".\").slice(0, -1).join(\".\");\n\tif(!nullType || nullType !== valueType) fail(\"host-null constructors must belong to one exact wrapper\");\n\treturn nullType;\n};\n",
+          "previous": "",
+          "start": 1176
+        },
+        {
+          "current": "\tif(type.kind === \"host-null\") return `(_root_.${hostNullType(type)} ${nativeLeanType(type.element)})`;\n",
+          "previous": "",
+          "start": 1798
+        },
+        {
+          "current": "\tif(type.kind === \"host-null\") return `(_root_.${hostNullType(type)} ${inner(type.element)})`;\n",
+          "previous": "",
+          "start": 2751
+        },
+        {
+          "current": "\tif(type.kind === \"host-null\") return `lb_t${nativeTypeKey(type)}_null(lean_box(0))`;\n",
+          "previous": "",
+          "start": 5230
+        },
+        {
+          "current": "\tif(tree.kind === \"host-null\") return `(_root_.${hostNullType(type)} ${inner(type.element, 0)})`;\n",
+          "previous": "",
+          "start": 7269
+        },
+        {
+          "current": "\tif(type.kind === \"host-null\") return `_root_.${type.nullConstructor}`;\n",
+          "previous": "",
+          "start": 8182
+        },
+        {
+          "current": "\tif([\"array\", \"host-null\", \"list\", \"option\"].includes(type.kind)) return { ...type, element: nativeRepresentation(type.element) };\n",
+          "previous": "\tif([\"array\", \"list\", \"option\"].includes(type.kind)) return { ...type, element: nativeRepresentation(type.element) };\n",
+          "start": 9704
+        },
+        {
+          "current": "\tif(tree === null || [\"host-null\", \"option\", \"array\", \"list\"].includes(tree.kind)) return true;\n",
+          "previous": "\tif(tree === null || [\"option\", \"array\", \"list\"].includes(tree.kind)) return true;\n",
+          "start": 11581
+        },
+        {
+          "current": "\t\tif([\"array\", \"host-null\", \"list\", \"option\"].includes(type.kind))\n",
+          "previous": "\t\tif([\"array\", \"list\", \"option\"].includes(type.kind))\n",
+          "start": 15553
+        },
+        {
+          "current": "\t\tif([\"array\", \"host-null\", \"list\", \"option\"].includes(type.kind)) visit(type.element);\n",
+          "previous": "\t\tif([\"array\", \"list\", \"option\"].includes(type.kind)) visit(type.element);\n",
+          "start": 21339
+        },
+        {
+          "current": "\t\t\tif([\"array\", \"host-null\", \"list\", \"option\"].includes(argument.kind)) resolve(argument.element, owner);\n",
+          "previous": "\t\t\tif([\"array\", \"list\", \"option\"].includes(argument.kind)) resolve(argument.element, owner);\n",
+          "start": 22717
+        },
+        {
+          "current": "\tconst copied = type => type.kind === \"primitive\" || ([\"array\", \"host-null\", \"list\", \"option\"].includes(type.kind) && copied(type.element))\n",
+          "previous": "\tconst copied = type => type.kind === \"primitive\" || ([\"array\", \"list\", \"option\"].includes(type.kind) && copied(type.element))\n",
+          "start": 26996
+        },
+        {
+          "current": "\t\tthrow Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : \"\"}${unsupported.name}: PHP-Wasm compilation admits copied primitives, arrays, Lists, records, concrete variants, host-null values, options, results, binary products and synchronous copied-value callables`), { code: \"unsupported-php-wasm-signature\", details: { declaration: declaration.id, source: source ?? null } });\n",
+          "previous": "\t\tthrow Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : \"\"}${unsupported.name}: PHP-Wasm compilation admits copied primitives, arrays, Lists, records, concrete variants, options, results, binary products and synchronous copied-value callables`), { code: \"unsupported-php-wasm-signature\", details: { declaration: declaration.id, source: source ?? null } });\n",
+          "start": 27883
+        },
+        {
+          "current": "\t\tif(type.kind === \"host-null\")\n\t\t{\n\t\t\temit(`lb_t${type.key}_null`, [], type, `_root_.${type.nullConstructor}`);\n\t\t\temit(`lb_t${type.key}_value`, [{ name: \"value\", type: type.element }], type, `_root_.${type.valueConstructor} value`);\n\t\t\temit(`lb_t${type.key}_has`, [{ name: \"value\", type }], bool, `match value with | .${type.nullConstructor.split(\".\").at(-1)} => false | .${type.valueConstructor.split(\".\").at(-1)} _ => true`);\n\t\t\temit(`lb_t${type.key}_get0`, [{ name: \"value\", type }], type.element, `match value with | .${type.nullConstructor.split(\".\").at(-1)} => ${callbackLeanDefault(type.element, mirrors)} | .${type.valueConstructor.split(\".\").at(-1)} item => item`);\n\t\t}\n",
+          "previous": "",
+          "start": 37125
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "src/build/native-model.mjs",
+      "previousSha256": "9c4941864f5dad66ea9f604bff9edb7d9538e9a2e65b9911f18f9255848171b5"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "1c9cac1a126d29244c1a6f490531e22f51a631e3c8da5a7fdbd722f97ac5af70",
+      "edits": [
+        {
+          "current": "\t\tequal(api.echoPacket(packet), packet, \"HostNull record fields\");\n",
+          "previous": "\t\tequal(api.packet(packet), packet, \"HostNull record fields\");\n",
+          "start": 1476
+        },
+        {
+          "current": "\t\trejects(() => api.echoPacket(packet));\n",
+          "previous": "\t\trejects(() => api.packet(packet));\n",
+          "start": 2728
+        },
+        {
+          "current": "\trejects(() => api.echoPacket(accessor)); check(reads === 0, \"Accessor executed\");\n",
+          "previous": "\trejects(() => api.packet(accessor)); check(reads === 0, \"Accessor executed\");\n",
+          "start": 3222
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "tests/fixtures/host-null-consumers/npm.mjs",
+      "previousSha256": "b09bcaaa5afd55b742a1d015fa2b8f2d5560885531d87c563ea666fafcbb708e"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "9b94317d925cfa33cd7eacf457c0dd151af5bfda787a2e1c420e94c523fd1ff2",
+      "edits": [
+        {
+          "current": "def echoPacket (value : Packet) : Packet := value\n",
+          "previous": "def packet (value : Packet) : Packet := value\n",
+          "start": 494
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "tests/fixtures/onboarding/host-null/HostNullDemo.lean",
+      "previousSha256": "842e8402d18a305eda737ed28d13a5816c2122918c0bb013b532ccf0390a6497"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "96d919c251a02fda5e4297e1eddbe522aff7658b7554e22a8cede5cca0564469",
+      "edits": [
+        {
+          "current": "\t\t, functionDeclaration(\"echoPacket\", [named(\"Packet\")], named(\"Packet\"))\n",
+          "previous": "\t\t, functionDeclaration(\"packet\", [named(\"Packet\")], named(\"Packet\"))\n",
+          "start": 4471
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "tests/helpers/host-null-fixture.mjs",
+      "previousSha256": "14c9641f54499708801698ac579fd1868bde2732e5778a3e634d3d8d52def5d9"
+    },
+    {
+      "commit": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "currentSha256": "94e07dd2918baab5ae14f16c883dafe5121f22489124bff1a8652f1f108195db",
+      "edits": [
+        {
+          "current": "api.echoPacket(packet);\n",
+          "previous": "api.packet(packet);\n",
+          "start": 2129
+        }
+      ],
+      "parent": "1d13d30f174d0f4750061cd601a6aebde3f3d69b",
+      "path": "tests/host-null-npm-installed.test.mjs",
+      "previousSha256": "4a0488f34515b8ba488e0a183f4a6230785e3f15625dce7874695be28dae02e8"
+    },
+    {
+      "commit": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "currentSha256": "67e3886c5c3d1c5cbc83c3da249969bf7aa36681cbad1ae4e3aebbac9918f226",
+      "edits": [
+        {
+          "current": "          LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-native LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-host-null.test.mjs tests/php-host-null-contract.test.mjs\n          node scripts/check-host-null-php-reports.mjs --profile php-native --report build/host-null/php-native.json --packages build/host-null/packages/php-native\n",
+          "previous": "          LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-host-null.test.mjs tests/php-host-null-contract.test.mjs\n          test -s build/host-null/php-native.json\n",
+          "start": 116703
+        },
+        {
+          "current": "            build/host-null/packages/php-native\n",
+          "previous": "",
+          "start": 126850
+        },
+        {
+          "current": "          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result \"$native_result\" --package-installation \"$native_executed\" --real-lean-execution \"$native_executed\" --command \"npm run test:consumer:php-native && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-native LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-host-null.test.mjs tests/php-host-null-contract.test.mjs && node scripts/check-host-null-php-reports.mjs --profile php-native --report build/host-null/php-native.json --packages build/host-null/packages/php-native && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=php-native node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-native LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-native node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=php-native LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-php-native.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs php-native build/native-fin-container-edges/edges-php-native.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=php-native node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh php-native && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=php-native node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=php-native node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/php-native.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-php-native.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs php-native build/native-fin-record-zero/php-native.json build/native-fin-record-zero/reviewed-php-native.json && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh php-native && bash scripts/run-checked-record-host-ci.sh php-native && bash scripts/run-structural-subtype-ci.sh php-native && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows && bash scripts/run-nominal-subtype-php-ci.sh \\\"/usr/bin/php\\\" \\\"/usr/bin/composer\\\"\"\n",
+          "previous": "          node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result \"$native_result\" --package-installation \"$native_executed\" --real-lean-execution \"$native_executed\" --command \"npm run test:consumer:php-native && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-structured-callables.test.mjs tests/php-structured-callable-contract.test.mjs && npm run test:php-recursive-callables && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-host-null.test.mjs tests/php-host-null-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs && LEAN_BRIDGE_PHP_ALIAS_TEST=1 node --test tests/php-aliases.test.mjs tests/php-alias-contract.test.mjs && LEAN_BRIDGE_PHP_FIN_TEST=1 node --test tests/php-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=php-native node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=php-native node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=php-native node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-native LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-native node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=php-native node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=php-native LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-php-native.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs php-native build/native-fin-container-edges/edges-php-native.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=php-native node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-native-ci.sh php-native && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=php-native node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=php-native node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=php-native LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/php-native.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-php-native.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs php-native build/native-fin-record-zero/php-native.json build/native-fin-record-zero/reviewed-php-native.json && LEAN_BRIDGE_SUBTYPE_PROFILES=php-native node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh php-native && bash scripts/run-checked-record-host-ci.sh php-native && bash scripts/run-structural-subtype-ci.sh php-native && LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs && LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs && LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs && LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs && LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs tests/owned-php-documentation.test.mjs && npm run test:owned-php-transfers && npm run test:owned-php-borrows && bash scripts/run-nominal-subtype-php-ci.sh \\\"/usr/bin/php\\\" \\\"/usr/bin/composer\\\"\"\n",
+          "start": 129440
+        },
+        {
+          "current": "          LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-wasm LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-wasm-host-null.test.mjs tests/php-host-null-contract.test.mjs\n          node scripts/check-host-null-php-reports.mjs --profile php-wasm --report build/host-null/php-wasm.json --packages build/host-null/packages/php-wasm\n",
+          "previous": "          LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-wasm-host-null.test.mjs tests/php-host-null-contract.test.mjs\n          test -s build/host-null/php-wasm.json\n",
+          "start": 152028
+        },
+        {
+          "current": "            build/host-null/packages/php-wasm\n",
+          "previous": "",
+          "start": 158633
+        },
+        {
+          "current": "          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result \"$wasm_result\" --package-installation \"$wasm_executed\" --real-lean-execution \"$wasm_executed\" --command \"npm run test:consumer:php-wasm && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-wasm LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-wasm-host-null.test.mjs tests/php-host-null-contract.test.mjs && node scripts/check-host-null-php-reports.mjs --profile php-wasm --report build/host-null/php-wasm.json --packages build/host-null/packages/php-wasm && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_TEST=1 LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-fin-direct-tests.mjs && node scripts/check-php-wasm-direct-fin-reports.mjs --directory build/php-wasm-fin-direct && LEAN_BRIDGE_PHP_WASM_SUBTYPE_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-subtype-tests.mjs && node scripts/check-php-wasm-subtype-reports.mjs --directory build/php-wasm-subtype && set -euo pipefail && mkdir -p build/php-wasm-subtype-entry && node scripts/prepare-php-wasm-subtype-entry-runtime.mjs --output build/php-wasm-subtype-entry-input/php-wasm-runtime 2>&1 | tee build/php-wasm-subtype-entry/runtime-prepare.log && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_OUTPUT=build/php-wasm-subtype-entry node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^(ordinary|reviewed) installed PHP-Wasm Subtype entry probes record constructor and source calls$' tests/helpers/php-wasm-subtype-entry-installed-tests.mjs 2>&1 | tee build/php-wasm-subtype-entry/run.tap && node scripts/check-php-wasm-subtype-entry-reports.mjs --directory build/php-wasm-subtype-entry --tap build/php-wasm-subtype-entry/run.tap && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime bash scripts/run-structural-subtype-ci.sh php-wasm && LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests/php-wasm-generic-records.test.mjs && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-wasm LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-wasm node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows\"\n",
+          "previous": "          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result \"$wasm_result\" --package-installation \"$wasm_executed\" --real-lean-execution \"$wasm_executed\" --command \"npm run test:consumer:php-wasm && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-wasm-host-null.test.mjs tests/php-host-null-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_TEST=1 LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-fin-direct-tests.mjs && node scripts/check-php-wasm-direct-fin-reports.mjs --directory build/php-wasm-fin-direct && LEAN_BRIDGE_PHP_WASM_SUBTYPE_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-subtype-tests.mjs && node scripts/check-php-wasm-subtype-reports.mjs --directory build/php-wasm-subtype && set -euo pipefail && mkdir -p build/php-wasm-subtype-entry && node scripts/prepare-php-wasm-subtype-entry-runtime.mjs --output build/php-wasm-subtype-entry-input/php-wasm-runtime 2>&1 | tee build/php-wasm-subtype-entry/runtime-prepare.log && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_OUTPUT=build/php-wasm-subtype-entry node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^(ordinary|reviewed) installed PHP-Wasm Subtype entry probes record constructor and source calls$' tests/helpers/php-wasm-subtype-entry-installed-tests.mjs 2>&1 | tee build/php-wasm-subtype-entry/run.tap && node scripts/check-php-wasm-subtype-entry-reports.mjs --directory build/php-wasm-subtype-entry --tap build/php-wasm-subtype-entry/run.tap && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime bash scripts/run-structural-subtype-ci.sh php-wasm && LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests/php-wasm-generic-records.test.mjs && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-wasm LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-wasm node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows\"\n",
+          "start": 162612
+        }
+      ],
+      "parent": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "75fc8123743fbede9d90d53308e6064b09b2aedda5910231db984b8d984c5513"
+    },
+    {
+      "commit": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "currentSha256": "6a9e27107b6bfc4c432c8cb62c476708818ff938999e93ea1e7f8e32410c33a4",
+      "edits": [
+        {
+          "current": "\tassert.equal(count(/build\\/host-null\\/php-native\\.json/gu), 3);\n\tassert.equal(count(/build\\/host-null\\/php-wasm\\.json/gu), 3);\n\tassert.equal(count(/LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=/gu), 4);\n\tassert.equal(count(/scripts\\/check-host-null-php-reports\\.mjs/gu), 4);\n\tassert.match(workflow, /build\\/host-null\\/packages\\/php-native/u);\n\tassert.match(workflow, /build\\/host-null\\/packages\\/php-wasm/u);\n",
+          "previous": "\tassert.equal(count(/build\\/host-null\\/php-native\\.json/gu), 2);\n\tassert.equal(count(/build\\/host-null\\/php-wasm\\.json/gu), 2);\n",
+          "start": 8042
+        }
+      ],
+      "parent": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "path": "tests/php-host-null-contract.test.mjs",
+      "previousSha256": "c7afc6c334e95481cd9e530ca4fb9731838c0af949803e7e71f91f97fed2342f"
+    },
+    {
+      "commit": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "currentSha256": "2dc0ed8dbb8da46dd7acde0087e1f9b8bcf5889de58476d34dfeed1d41b4f9ab",
+      "edits": [
+        {
+          "current": "\t\tif(process.env.LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR)\n\t\t\tawait cp(handoff, join(resolve(process.env.LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR), path), { recursive: true });\n",
+          "previous": "",
+          "start": 4607
+        }
+      ],
+      "parent": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "path": "tests/php-host-null.test.mjs",
+      "previousSha256": "61ec9f3e707aaf88522bd47133ddf8afd5fc6e1c5e63bd0c5d433b539d1889bd"
+    },
+    {
+      "commit": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "currentSha256": "b457723244e85bf68cf45dcf868f20ed7ad81c4090f5dc4c540f931bb4dc47ba",
+      "edits": [
+        {
+          "current": "\t\tif(process.env.LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR)\n\t\t\tawait cp(handoff, join(resolve(process.env.LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR), path), { recursive: true });\n",
+          "previous": "",
+          "start": 4561
+        }
+      ],
+      "parent": "fbcaebecd909439a524a01f4860ae81e14e53492",
+      "path": "tests/php-wasm-host-null.test.mjs",
+      "previousSha256": "a547428a516767fe00a4becc676c171cc8e3a20c0f4575d0653e463cb9ba91cf"
+    },
+    {
+      "commit": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "currentSha256": "6a4001b3de1bb72e55faa6ade7e54e58b80dbe1ec01ba78dd0b7c18f073b9818",
+      "edits": [
+        {
+          "current": "      - name: Upload native PHP HostNull evidence\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-php-native-${{ github.sha }}\n          path: |\n            build/host-null/php-native.json\n            build/host-null/packages/php-native\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "previous": "",
+          "start": 128603
+        },
+        {
+          "current": "      - name: Upload PHP-Wasm HostNull evidence\n        if: always() && matrix.profile == 'values-graph'\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-php-wasm-${{ github.sha }}\n          path: |\n            build/host-null/php-wasm.json\n            build/host-null/packages/php-wasm\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "previous": "",
+          "start": 159524
+        }
+      ],
+      "parent": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "67e3886c5c3d1c5cbc83c3da249969bf7aa36681cbad1ae4e3aebbac9918f226"
+    },
+    {
+      "commit": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "currentSha256": "b2ac72def73a6aa348dcda2372f720e36c01ef0cac3c393b538640ebd9449402",
+      "edits": [
+        {
+          "current": "The npm builder accepts shared module/export selection, `arities`, `specializations`, `hostProjections`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. [Ordinary C/C++ builds](../publish/c.md#build-an-ordinary-lean-project) accept the shared configuration for pure copied primitive signatures and use `targets.c.name`/`version` and `targets.cpp.name`/`version`. C-only builds do not require CPAN settings or Perl tools. [PHP-Wasm](../publish/php.md#build-an-ordinary-php-wasm-package) separates `targets.php-wasm.npm.name`/`version` from `targets.php-wasm.composer.name`/`version`. Repeat `--target` to combine supported targets from one captured source tree, with one compilation per ABI. The [staged implementation](../architecture/cross-language-authoring.md) tracks the remaining type-family decisions. A reviewed Binding IR owns its export decisions; only `modules`, exact `hostProjections`, package metadata, generators and target settings can accompany it.\n\n### Select an explicit host-null projection\n\n`hostProjections` authorizes an exact Lean wrapper and its two constructors; it\ndoes not infer nullability from a name or from `Option`. Each entry has `name`,\n`nullConstructor`, and `valueConstructor`, all fully qualified Lean names. The\narray contains at most 32 entries.\n\n```json\n{\n  \"schemaVersion\": 1,\n  \"modules\": [\"NullableApi\"],\n  \"exports\": [\"NullableApi.echo\"],\n  \"hostProjections\": [{\n    \"name\": \"NullableApi.HostNull\",\n    \"nullConstructor\": \"NullableApi.HostNull.null\",\n    \"valueConstructor\": \"NullableApi.HostNull.value\"\n  }],\n  \"targets\": {\n    \"php-wasm\": {\n      \"npm\": { \"name\": \"nullable-api-wasm\", \"version\": \"1.0.0\" },\n      \"composer\": { \"name\": \"nullable-api/wasm\", \"version\": \"1.0.0\" }\n    }\n  }\n}\n```\n\nThe wrapper must be unary and generic. The null constructor takes no payload;\nthe value constructor takes exactly the wrapper's type argument. Compiler-backed\nanalysis authenticates those declarations and every selected use before any\nadapter is emitted. Source-only discovery rejects the selection because it\ncannot authenticate constructors.\n\nKeep this field when building an independently reviewed Binding IR. The review\ndescribes `host-null` in the public type graph, while the configuration supplies\nthe exact Lean names that fresh compilation must reproduce. Do not copy the\nconstructor names into ordinary Option metadata. See [Choose an export\nshape](export-decisions.md#select-an-explicit-host-null-wrapper) for semantics\nand the [PHP guide](../php.md#explicit-host-null) for its consumer values.\n",
+          "previous": "The npm builder accepts shared module/export selection, `arities`, `specializations`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. [Ordinary C/C++ builds](../publish/c.md#build-an-ordinary-lean-project) accept the shared configuration for pure copied primitive signatures and use `targets.c.name`/`version` and `targets.cpp.name`/`version`. C-only builds do not require CPAN settings or Perl tools. [PHP-Wasm](../publish/php.md#build-an-ordinary-php-wasm-package) separates `targets.php-wasm.npm.name`/`version` from `targets.php-wasm.composer.name`/`version`. Repeat `--target` to combine supported targets from one captured source tree, with one compilation per ABI. The [staged implementation](../architecture/cross-language-authoring.md) tracks the remaining type-family decisions. A reviewed Binding IR owns its export decisions; only `modules`, package metadata, generators and target settings can accompany it.\n",
+          "start": 5813
+        }
+      ],
+      "parent": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "0ec3b682b01707768f770b9afee0991fa0646ff7db537d1ebfda25fcd0d85bb3"
+    },
+    {
+      "commit": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "currentSha256": "eb69a63521eb9b5c081fb9d643a302339db991279f1f6efd9803b00680eb5be9",
+      "edits": [
+        {
+          "current": "### Select an explicit host-null wrapper\n\nUse a host-null projection only when the public API deliberately gives one Lean\nconstructor the meaning “host null.” Keep it distinct from `Option`, `Unit`, an\nomitted argument, a default and an unsupported value. For example:\n\n```lean\ninductive HostNull (α : Type u) where\n  | null\n  | value (value : α)\n\ndef echo (value : HostNull UInt32) : HostNull UInt32 := value\n```\n\nAuthorize the exact generic wrapper and both constructors in\n`lean-bridge.exports.json`:\n\n```json\n{\n  \"schemaVersion\": 1,\n  \"modules\": [\"NullableApi\"],\n  \"exports\": [\"NullableApi.echo\"],\n  \"hostProjections\": [{\n    \"name\": \"NullableApi.HostNull\",\n    \"nullConstructor\": \"NullableApi.HostNull.null\",\n    \"valueConstructor\": \"NullableApi.HostNull.value\"\n  }],\n  \"targets\": {\n    \"npm\": { \"name\": \"nullable-api\", \"version\": \"1.0.0\" },\n    \"php-native\": { \"name\": \"nullable-api/php\", \"version\": \"1.0.0\" }\n  }\n}\n```\n\nLean Bridge compiles fresh metadata and requires a unary generic wrapper with\nexactly the selected nullary and unary constructors. A matching name is not\nenough. The same selection accompanies an independently reviewed Binding IR;\nfresh Lean must reproduce the wrapper, constructors and every selected use.\nThe private Binding IR records the `host-null` type constructor but does not\nturn constructor names into a host-authored ABI claim.\n\nThe selected null constructor becomes the host language's null value and the\nvalue constructor becomes its payload. The payload must itself have a\nrepresentation distinct from null. Nested `HostNull (Option T)` and\n`Option (HostNull T)` therefore retain three distinct states instead of\ncollapsing either `Option.none` into null. JavaScript/TypeScript and the PHP\nprofiles have installed package acceptance for copied parameters, results,\nfields and synchronous callback positions. Other targets require their own\ninstalled evidence; selecting a target never silently drops this distinction.\n\n",
+          "previous": "",
+          "start": 2885
+        }
+      ],
+      "parent": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "d0fb1f12331a4b4668555fabc48a2d539e3f4175a4803bf06829db82fcbc1e0e"
+    },
+    {
+      "commit": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "currentSha256": "6d2101bf8e522aa03b4c455e84fa2b67694189ce4f5fa46df79a9400ec617e00",
+      "edits": [
+        {
+          "current": "| `Option T` | `null` for none and `new Some($value)` for some; packages that expose an explicit host-null projection use `new None()` and `new Some($value)` instead |\n",
+          "previous": "| `Option T` | `null` for none, `new Some($value)` for some |\n",
+          "start": 7822
+        },
+        {
+          "current": "### Explicit host null\n\nA publisher may select one exact two-constructor Lean wrapper as a host-null\nprojection. In that package only, the selected null constructor crosses as PHP\n`null`, while its value constructor crosses as the payload directly. Lean\nBridge does not infer this behavior from a type name, an unsupported value, a\nproof, `Unit`, `Option.none`, an omitted argument or a default.\n\nThe package uses generated `None` and `Some` classes for every Lean `Option` so\nhost null and option absence cannot collapse into the same PHP value:\n\n| Lean value | PHP value |\n| --- | --- |\n| `HostNull.null : HostNull UInt32` | `null` |\n| `HostNull.value 42` | Native: `42`; PHP-Wasm: `BigInteger::of(42)` |\n| `HostNull.null : HostNull (Option UInt32)` | `null` |\n| `HostNull.value none` | `new None()` |\n| `HostNull.value (some 42)` | `new Some(42)` or, in PHP-Wasm, `new Some(BigInteger::of(42))` |\n| `none : Option (HostNull UInt32)` | `new None()` |\n| `some HostNull.null` | `new Some(null)` |\n\nFor example, a generated package namespace `LeanNullable` can preserve all\nthree states without a side channel:\n\n```php\nuse LeanNullable\\{None, Some};\nuse function LeanNullable\\{nullable_option, optional_nullable};\n\n$outerNull = nullable_option(null);          // HostNull.null\n$innerNone = nullable_option(new None());    // HostNull.value Option.none\n$presentNull = optional_nullable(new Some(null)); // Option.some HostNull.null\n```\n\nThe same mapping applies to copied parameters, results, record fields,\nsynchronous callback parameters and synchronous callback results in native PHP\nand PHP-Wasm packages. Invalid branch objects or payloads reject before Lean\nentry, and a later valid call still works. A selected HostNull payload must have\na PHP representation distinct from `null`; for example, a publisher cannot\nproject `HostNull Unit` through this direct representation.\n\nPublishers configure this projection with the exact Lean wrapper and constructor\nnames in `hostProjections`; consumers do not configure it. The generated API,\nPHPDoc and package README show whether a prepared release uses the tagged Option\nrepresentation.\n\n",
+          "previous": "",
+          "start": 10070
+        }
+      ],
+      "parent": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "path": "docs/php.md",
+      "previousSha256": "944c44385c4117975418561951ea4c5a57c59c99d2c191468c01cc9da28573c0"
+    },
+    {
+      "commit": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "currentSha256": "49087af0be9fec21883c141490d6cd68e52416328cbe48765f60bbc2d0b3fbaf",
+      "edits": [
+        {
+          "current": "\tassert.equal(count(/build\\/host-null\\/php-native\\.json/gu), 4);\n\tassert.equal(count(/build\\/host-null\\/php-wasm\\.json/gu), 4);\n",
+          "previous": "\tassert.equal(count(/build\\/host-null\\/php-native\\.json/gu), 3);\n\tassert.equal(count(/build\\/host-null\\/php-wasm\\.json/gu), 3);\n",
+          "start": 8042
+        },
+        {
+          "current": "\tassert.match(workflow, /name: host-null-php-native-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tassert.match(workflow, /name: host-null-php-wasm-\\$\\{\\{ github\\.sha \\}\\}/u);\n",
+          "previous": "",
+          "start": 8441
+        }
+      ],
+      "parent": "d215a3700a02de89a139b7ef4243c2b191367c34",
+      "path": "tests/php-host-null-contract.test.mjs",
+      "previousSha256": "6a9e27107b6bfc4c432c8cb62c476708818ff938999e93ea1e7f8e32410c33a4"
+    },
+    {
+      "commit": "e73fa98668aa0bbee1e9b3621263186dd50304a6",
+      "currentSha256": "edbbbfaf4b537d9f0061b855b5976a45af96230db8b929fd64bf17b063e05204",
+      "edits": [
+        {
+          "current": "const sourceShapesFor = facets => facets.constructor.includes(\"host-null\")\n\t? sourceShapes : [...sourceShapes, \"host-null\"];\n",
+          "previous": "",
+          "start": 1181
+        },
+        {
+          "current": "\t// Before HostNull became a Binding IR constructor, the inventory tracked it\n\t// as an explicit source-only shape. Historical promotion replay supplies its\n\t// milestone schema, so retain that one versioned classification without\n\t// weakening the current schema's required constructor facet.\n\tconst required = [\n\t\t...facets.primitive, ...facets.constructor\n\t\t, ...facets.namedKind, ...sourceShapesFor(facets)\n\t];\n",
+          "previous": "\tconst required = [...facets.primitive, ...facets.constructor, ...facets.namedKind, ...sourceShapes];\n",
+          "start": 6631
+        }
+      ],
+      "parent": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "path": "src/adoption/type-surface.mjs",
+      "previousSha256": "176dcff874cb3a8569c548510b2768e3cfb204a309d8941284a47d70bfd963b2"
+    },
+    {
+      "commit": "e73fa98668aa0bbee1e9b3621263186dd50304a6",
+      "currentSha256": "4d1a46be23812493df7f48299832d27e3fcea92df9770609da1e0181622313ea",
+      "edits": [
+        {
+          "current": "",
+          "previous": "const readJson = async path => JSON.parse(await readFile(path, \"utf8\"));\n",
+          "start": 1135
+        },
+        {
+          "current": "const historicalJson = path => JSON.parse(execFileSync(\"git\", [\"show\"\n\t, `${dependentCheckedRecordPromotionPredecessor}:${path}`]\n, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 }));\n",
+          "previous": "",
+          "start": 1477
+        },
+        {
+          "current": "const irSchema = historicalJson(\"schema/binding-ir.schema.json\");\nconst consumers = historicalJson(\"docs/consumer-support.v1.json\");\nconst document = historicalJson(inventoryPath);\n",
+          "previous": "const [irSchema, consumers] = await Promise.all([\n\treadJson(\"schema/binding-ir.schema.json\")\n\t, readJson(\"docs/consumer-support.v1.json\")\n]);\nconst document = JSON.parse(execFileSync(\"git\", [\"show\"\n\t, `${dependentCheckedRecordPromotionPredecessor}:${inventoryPath}`]\n, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 }));\n",
+          "start": 3271
+        }
+      ],
+      "parent": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "path": "tests/dependent-checked-record-promotion.test.mjs",
+      "previousSha256": "ceebe1d6d4ebae2fc57951031c46fc955695ebbb7f10253c3ee7d82bb81bcadd"
+    },
+    {
+      "commit": "e73fa98668aa0bbee1e9b3621263186dd50304a6",
+      "currentSha256": "aed9fe3cf2949a1f665facdc8521f4c8029067326141e5a807fbed8698542e4f",
+      "edits": [
+        {
+          "current": "\t}]]) {\n",
+          "previous": "\t}]])\n\t{\n",
+          "start": 2608
+        }
+      ],
+      "parent": "68c4b2df7ad24c07b4c63e1a77159844f4af6a78",
+      "path": "tests/reviewed-host-null.test.mjs",
+      "previousSha256": "bd1ed61b6d8cca11e8a4758edd7542bf5c036a739315390f94be0f225a30512f"
+    },
+    {
+      "commit": "bc7032f1731dfbe63f85ad38bb5324328a0ac43b",
+      "currentSha256": "86e3f44dba67bec2c8da28305eebc6691253df4e45e48b6aadb97622a9edb08f",
+      "edits": [
+        {
+          "current": "\t\t\t\t\"tests/helpers/host-null-javascript-browser-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/host-null-javascript-hosted-report.mjs\"\n",
+          "previous": "\t\t\t\t\"tests/helpers/host-null-javascript-hosted-report.mjs\"\n",
+          "start": 2193
+        }
+      ],
+      "parent": "acbedcb054c2afc41e821c9af0d7c16a88eebd8b",
+      "path": "tests/helpers/host-null-javascript-hosted-evidence-sources.mjs",
+      "previousSha256": "e0baa146034adb90c81799d739d8e506fe70794e1fc158b880fcd094e514991a"
+    },
+    {
+      "commit": "e17f838f52a38c8d31dff55335a26a6b55148671",
+      "currentSha256": "d0d9436c837a84de717ba6046061a4061d8e7a089e3d0a68556c4d3a74c8c0da",
+      "edits": [
+        {
+          "current": "import { readFile } from \"node:fs/promises\";\nimport { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 198
+        },
+        {
+          "current": "import { checkHostNullPhpEvidence } from \"./host-null-php-evidence.mjs\";\nimport { hostNullPhpHostedPolicy } from \"./host-null-php-hosted-policy.mjs\";\n",
+          "previous": "",
+          "start": 368
+        },
+        {
+          "current": "const referencePaths = Object.freeze([\n\t\"scripts/archive-host-null-php-evidence.mjs\"\n\t, \"scripts/generate-type-docs.mjs\"\n\t, \"scripts/promote-host-null-php.mjs\"\n\t, \"tests/helpers/host-null-php-evidence.mjs\"\n\t, \"tests/helpers/host-null-php-hosted-evidence-sources.mjs\"\n\t, \"tests/helpers/host-null-php-hosted-policy.mjs\"\n\t, \"tests/helpers/host-null-php-promotion.mjs\"\n\t, \"tests/helpers/host-null-php-promotion-tests.mjs\"\n\t, \"tests/helpers/host-null-php-report.mjs\"\n]);\n\n/** Authenticate both hosted archives and describe their evidence entries. */\nexport const hostNullPhpPromotionReferences = async () => Promise.all(\n\thostNullPhpPromotionProfiles.map(async profile => {\n\t\tconst checked = await checkHostNullPhpEvidence(profile);\n\t\tconst policy = hostNullPhpHostedPolicy(profile);\n\t\tassert.equal(checked.hostedAcceptance, true);\n\t\tassert.equal(checked.supportPromoted, false);\n\t\treturn Object.freeze({\n\t\t\tid: evidenceId(profile), profile, revision: checked.producer\n\t\t\t, command: `LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/${profile} ${profile === \"php-native\" ? \"LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-host-null.test.mjs\" : \"LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-wasm-host-null.test.mjs\"}`\n\t\t\t, scope: `Hosted ${profile} installed-package acceptance verifies ordinary-source and independently reviewed HostNull packages through five value positions, both Option nestings, refusals and recovery across ${checked.accepted.executions} executions.`\n\t\t\t, files: [\n\t\t\t\t{\n\t\t\t\t\tpath: `${policy.evidence}/index.json`\n\t\t\t\t\t, sha256: sha256(await readFile(\n\t\t\t\t\t\t`${policy.evidence}/index.json`))\n\t\t\t\t}\n\t\t\t\t, ...await Promise.all(referencePaths.map(async path => ({\n\t\t\t\t\tpath, sha256: sha256(await readFile(path))\n\t\t\t\t})))\n\t\t\t]\n\t\t\t, artifacts: Object.freeze([{\n\t\t\t\tpath: `${checked.hostedRun.artifact.name}.zip`\n\t\t\t\t, sha256: checked.hostedRun.artifact.sha256\n\t\t\t}])\n\t\t\t, limitations: checked.limitations\n\t\t});\n\t})\n);\n\n",
+          "previous": "",
+          "start": 2973
+        }
+      ],
+      "parent": "806b4c3a3aeac87d8cf85c4cea3f6aac395d071c",
+      "path": "tests/helpers/host-null-php-promotion.mjs",
+      "previousSha256": "a1186ea0f31ac318c88a6b19ef85a24ec0be08ac5054394ededed0d8a9016c44"
+    },
+    {
+      "commit": "98275900c5a0796945611124152911c6fd83f9da",
+      "currentSha256": "46323e0d5ebb2e4731d1421220c08269ffa8d4295f17533511fafea6fd6061b1",
+      "edits": [
+        {
+          "current": "\t\t\t\t, ...fixture\n",
+          "previous": "\t\t\t\t, ...fixture, \"lean-bridge.exports.json\"\n",
+          "start": 1891
+        }
+      ],
+      "parent": "e17f838f52a38c8d31dff55335a26a6b55148671",
+      "path": "tests/helpers/host-null-javascript-hosted-evidence-sources.mjs",
+      "previousSha256": "86e3f44dba67bec2c8da28305eebc6691253df4e45e48b6aadb97622a9edb08f"
+    },
+    {
+      "commit": "98275900c5a0796945611124152911c6fd83f9da",
+      "currentSha256": "083c1ea0fabf14241abd8893812a4cbadafef2f57712f524790860d228650798",
+      "edits": [
+        {
+          "current": "\t\t\t\t, ...fixture\n",
+          "previous": "\t\t\t\t, ...fixture, \"lean-bridge.exports.json\"\n",
+          "start": 2063
+        }
+      ],
+      "parent": "e17f838f52a38c8d31dff55335a26a6b55148671",
+      "path": "tests/helpers/host-null-php-hosted-evidence-sources.mjs",
+      "previousSha256": "4e4f1d6ed210dc88292d43e24b77518946f4a7442cc6cfb69c57b48d894d8d2a"
+    },
+    {
+      "commit": "e5827ccbdb36fbb940accb9c104090dc025f9e6b",
+      "currentSha256": "39dee10d713fd86b5184208ffc20eb95c33dd784c100677cb91d53dd1ce73d48",
+      "edits": [
+        {
+          "current": "\t\tconst apiRecords = {};\n",
+          "previous": "",
+          "start": 4662
+        },
+        {
+          "current": "\t\t\tapiRecords[name] = {\n\t\t\t\tbytes: bytes.length, sha256: sha256(bytes)\n\t\t\t};\n",
+          "previous": "",
+          "start": 4849
+        },
+        {
+          "current": "\t\t\t\t, apiRecords[name]);\n",
+          "previous": "\t\t\t\t, { bytes: bytes.length, sha256: sha256(bytes) });\n",
+          "start": 4979
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(index.hostedRun, {\n\t\t\t\t...inspected.hostedRun, apiRecords\n\t\t\t\t, artifact: {\n\t\t\t\t\t...inspected.hostedRun.artifact\n\t\t\t\t\t, members: extracted.entries\n\t\t\t\t\t, parts: index.hostedRun.artifact.parts\n\t\t\t\t}\n\t\t\t});\n",
+          "previous": "",
+          "start": 6456
+        }
+      ],
+      "parent": "98275900c5a0796945611124152911c6fd83f9da",
+      "path": "tests/helpers/host-null-php-evidence.mjs",
+      "previousSha256": "3a68bddb3a9e9d69ba5252fe5c1746085c156adcf4746e07e32214fc1e779dde"
+    }
+  ]
+}
