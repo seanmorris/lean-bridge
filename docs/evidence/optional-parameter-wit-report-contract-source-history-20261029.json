@@ -1,0 +1,74 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-wit-report-contract-source-history.mjs",
+      "sha256": "16009ccb5df076a0f857253bb71049d078e7a6a0e6eb907dec31bf52eb98c5f0"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-wit-report-contract-source-history-tests.mjs",
+      "sha256": "165d7a8fce01ce0a353e48267c56dae4ae70fac8b6bfa1638b438059da32607b"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-wit-report-contract-source-history.mjs",
+      "sha256": "b7cb6ff9f95d033f430e694ab3ef07908dd40618b3628d3e20f6b71f9589f830"
+    }
+  ],
+  "implementationAdditions": [],
+  "implementationCommit": "57faade437b7068f27d82ddf7d15201494923e79",
+  "integrationUpdates": [
+    {
+      "currentSha256": "881914a2a9a1c6602da0024d5428cc6f4cd4d0453e0efe685996e91eef69f715",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-wit-report-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 229
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "5ad08826161fdb848c276519daff9da8799123c49552e4cfbdb06485c26856d3"
+    }
+  ],
+  "milestone": "optional-parameter-wit-report-contract-source-v1",
+  "predecessorCommit": "7e1a032e436380db27312d4ecdd848de68cfd9ea",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Make retained WIT report verification reuse the shared ordinary/reviewed binder contract instead of a private reviewed-only value0 pattern, and forbid reintroduction of that duplicate.",
+  "updates": [
+    {
+      "currentSha256": "29fc4deb50019a7139552d39a6e8f8da28a3f48f45026e782fb8c6d2a130acf8",
+      "edits": [
+        {
+          "current": "import { optionalParameterWitPatterns }\n\tfrom \"./optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 738
+        },
+        {
+          "current": "",
+          "previous": "const witPatterns = Object.freeze([\n\t/word: func\\(value0: u32\\) -> u32;/u\n\t, /word-default: func\\(\\) -> u32;/u\n\t, /natural-default: func\\(\\) -> bridge-value-/u\n\t, /text-default: func\\(\\) -> string;/u\n\t, /character-default: func\\(\\) -> char;/u\n\t, /maybe-default: func\\(\\) -> bridge-value-/u\n\t, /present-default: func\\(\\) -> bridge-value-/u\n\t, /unit-value-default: func\\(\\) -> bridge-value-/u\n]);\n\n",
+          "start": 998
+        },
+        {
+          "current": "\tconst witPatterns = optionalParameterWitPatterns(options.route);\n",
+          "previous": "",
+          "start": 4529
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-wit-report.mjs",
+      "previousSha256": "577b28500330c74cbef53f0f4901e279ce2cfb42b48502bd4c981d5cfa3833b3"
+    },
+    {
+      "currentSha256": "b81861cbd6d49e480afa427c9eaf7350e233cb11844f4c42743c0c5e2e79e1f0",
+      "edits": [
+        {
+          "current": "test(\"optional WIT report checks the exact route binder\", async () => {\n\tconst source = await readFile(\n\t\t\"tests/helpers/optional-parameter-wit-report.mjs\", \"utf8\");\n\tassert.match(source\n\t\t, /optionalParameterWitPatterns\\(options\\.route\\)/u);\n\tassert.doesNotMatch(source\n\t\t, /const witPatterns = Object\\.freeze/u);\n});\n\n",
+          "previous": "",
+          "start": 630
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-wit-tests.mjs",
+      "previousSha256": "7720033da26c1a9cccec3b63650a43b178e52502f1abb606bcf498d31d8c4b4b"
+    }
+  ]
+}
