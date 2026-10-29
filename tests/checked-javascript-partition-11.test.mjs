@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/optional-parameter-route-binder-repair-source-history-tests.mjs";
+import "./helpers/focused-producer-efficiency-source-history-tests.mjs";
 import "./helpers/optional-parameter-perl-unicode-default-repair-source-history-tests.mjs";
 import "./helpers/optional-parameter-installed-acceptance-repair-source-history-tests.mjs";
 import "./optional-parameter-installed-contract.test.mjs";
