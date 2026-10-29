@@ -112,56 +112,78 @@ jobs:
     name: JavaScript and browser producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-browser.yml
+    with:
+      shallow_checkout: true
 
   native:
     name: C and C++ producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-native.yml
+    with:
+      shallow_checkout: true
 
   perl:
     name: Perl producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-perl.yml
+    with:
+      shallow_checkout: true
 
   python:
     name: Python producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-python.yml
+    with:
+      shallow_checkout: true
 
   rust:
     name: Rust producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-rust.yml
+    with:
+      shallow_checkout: true
 
   dotnet:
     name: .NET producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-dotnet.yml
+    with:
+      shallow_checkout: true
 
   jvm:
     name: Java and Kotlin producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-jvm.yml
+    with:
+      shallow_checkout: true
 
   ruby:
     name: Ruby producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-ruby.yml
+    with:
+      shallow_checkout: true
 
   php-native:
     name: Native PHP producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-php.yml
+    with:
+      shallow_checkout: true
 
   php-wasm:
     name: PHP-Wasm producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-php-wasm.yml
+    with:
+      shallow_checkout: true
 
   wit:
     name: WIT and WASI producer
     if: inputs.suite == 'produce'
     uses: ./.github/workflows/dependent-checked-record-wit.yml
+    with:
+      shallow_checkout: true
 
   receipt:
     name: Reconcile the exact same-run receipt

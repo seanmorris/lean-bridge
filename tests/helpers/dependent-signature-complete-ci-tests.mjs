@@ -9,6 +9,20 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const workflowPath = ".github/workflows/dependent-signature-complete.yml";
+const producerWorkflows = Object.freeze([
+	["javascript", "browser"], ["native", "native"], ["perl", "perl"]
+	, ["python", "python"], ["rust", "rust"], ["dotnet", "dotnet"]
+	, ["jvm", "jvm"], ["ruby", "ruby"], ["php-native", "php"]
+	, ["php-wasm", "php-wasm"], ["wit", "wit"]
+]);
+const shallowCheckoutInput = `      shallow_checkout:
+        description: Use an exact depth-one checkout for focused package execution
+        required: false
+        default: false
+        type: boolean
+`;
+const focusedCheckoutDepth
+	= "fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}";
 const requiredInputs = Object.freeze([
 	workflowPath
 	, "docs/consume/**"
@@ -54,17 +68,12 @@ const assertDependentSignatureCompleteWorkflow = source => {
 	assert.match(source, /set -o pipefail\n {10}node --test --test-concurrency=1 \\\n {12}tests\/dependent-signature-complete-promotion\.test\.mjs \\\n {12}\| tee build\/dependent-signature-complete\/promotion\.tap/u);
 	assert.match(source, /if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
 	assert.equal((source.match(/if-no-files-found: error/gmu) ?? []).length, 2);
-	const producers = [
-		["javascript", "browser"], ["native", "native"], ["perl", "perl"]
-		, ["python", "python"], ["rust", "rust"], ["dotnet", "dotnet"]
-		, ["jvm", "jvm"], ["ruby", "ruby"], ["php-native", "php"]
-		, ["php-wasm", "php-wasm"], ["wit", "wit"]
-	];
-	for(const [job, workflow] of producers)
+	for(const [job, workflow] of producerWorkflows)
 	{
 		assert.match(source, new RegExp(
 			`  ${job}:\\n[\\s\\S]*?    if: inputs\\.suite == 'produce'\\n`
-			+ `    uses: \\.\\/\\.github\\/workflows\\/dependent-checked-record-${workflow}\\.yml`
+			+ `    uses: \\.\\/\\.github\\/workflows\\/dependent-checked-record-${workflow}\\.yml\\n`
+			+ "    with:\\n      shallow_checkout: true\\n"
 			, "u"));
 		const receipt = source.split("  receipt:\n")[1];
 		assert.ok(receipt.includes(`      - ${job}\n`), `${job} receipt need`);
@@ -83,6 +92,31 @@ const assertDependentSignatureCompleteWorkflow = source => {
 test("complete dependent-signature replay is one bounded recurring audit", async () => {
 	assertDependentSignatureCompleteWorkflow(await readFile(workflowPath, "utf8"));
 });
+
+test("focused producers use depth one while standalone runs retain full history"
+	, async () => {
+	for(const [, workflow] of producerWorkflows)
+	{
+		const path = `.github/workflows/dependent-checked-record-${workflow}.yml`;
+		const source = await readFile(path, "utf8");
+		const call = source.split("  workflow_call:\n")[1]
+			.split("  # One lane")[0];
+		assert.ok(call.includes("    inputs:\n"), path);
+		assert.ok(call.includes(shallowCheckoutInput), path);
+		assert.equal(source.split(focusedCheckoutDepth).length - 1, 1, path);
+		assert.ok(source.includes("- name: Check out the exact package revision\n")
+			, path);
+		assert.doesNotMatch(source, /^ {10}fetch-depth: [01]$/gmu, path);
+		const shellPath = `scripts/run-dependent-checked-record-${workflow}-ci.sh`;
+		const shell = await readFile(shellPath, "utf8");
+		const gitCommands = [...shell.matchAll(/\bgit\s+([a-z-]+)/gu)]
+			.map(match => match[1]);
+		assert.ok(gitCommands.length > 0, shellPath);
+		assert.ok(gitCommands.every(command => command === "rev-parse")
+			, `${shellPath} must consume only the checked-out commit`);
+		assert.match(shell, /git rev-parse HEAD/u, shellPath);
+	}}
+);
 
 test("complete dependent-signature replay rejects missing inputs and bypasses", async () => {
 	const source = await readFile(workflowPath, "utf8");
@@ -104,6 +138,7 @@ test("complete dependent-signature replay rejects missing inputs and bypasses", 
 		, source.replace("needs.wit.result != 'success' ||\n", "")
 		, source.replace("steps.reconciliation.outcome != 'success'", "false")
 		, source.replace("dependent-checked-record-*-", "dependent-checked-record-browser-")
+		, source.replace("      shallow_checkout: true\n", "")
 	].entries()) assert.throws(
 		() => assertDependentSignatureCompleteWorkflow(changed)
 		, undefined, `bypass control ${index}`);

@@ -35,7 +35,7 @@ export const assertDependentCheckedRecordWitWorkflow = source => {
 	assert.ok(source.includes("    timeout-minutes: 180\n"));
 	const names = [...source.matchAll(/^ {6}- name: (.+)$/gmu)].map(match => match[1]);
 	assert.deepEqual(names, [
-		"Check out the exact revision and original evidence history"
+		"Check out the exact package revision"
 		, "Install Node.js", "Bound apt network waits"
 		, "Install compiler and archive dependencies"
 		, "Install dependencies, the pinned Lean compiler and wasm-tools"
@@ -45,7 +45,7 @@ export const assertDependentCheckedRecordWitWorkflow = source => {
 		, "Enforce installed dependent checked-record checked-record WIT acceptance"
 	]);
 	const step = name => source.split("      - name: " + name + "\n")[1].split("      - name: ")[0];
-	assert.equal(step(names[0]), "        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n");
+	assert.equal(step(names[0]), "        uses: actions/checkout@v6\n        with:\n          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n          persist-credentials: false\n");
 	assert.equal(step(names[1]), '        uses: actions/setup-node@v6\n        with:\n          node-version: "22"\n          cache: npm\n');
 	assert.equal(step(names[2]), "        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n");
 	assert.equal(step(names[3]), "        timeout-minutes: 20\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd\n");

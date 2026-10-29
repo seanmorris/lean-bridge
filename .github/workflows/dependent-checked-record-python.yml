@@ -3,6 +3,12 @@ name: Installed dependent checked records in Python
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      shallow_checkout:
+        description: Use an exact depth-one checkout for focused package execution
+        required: false
+        default: false
+        type: boolean
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
     - cron: "17 0 * * 2"
@@ -23,10 +29,10 @@ jobs:
       LEAN_NUM_THREADS: "1"
       LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
     steps:
-      - name: Check out the exact revision and original evidence history
+      - name: Check out the exact package revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6

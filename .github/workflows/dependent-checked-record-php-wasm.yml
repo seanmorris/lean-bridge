@@ -3,6 +3,12 @@ name: Installed dependent checked records in PHP-Wasm
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      shallow_checkout:
+        description: Use an exact depth-one checkout for focused package execution
+        required: false
+        default: false
+        type: boolean
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
     - cron: "17 21 * * 1"
@@ -25,10 +31,10 @@ jobs:
       LEAN_WASM_RUNTIME_VARIANT: php-wasm-3.1.68
       LEAN_WASM_ARTIFACT_TARGET: php-wasm-emscripten-3.1.68
     steps:
-      - name: Check out the exact revision and original evidence history
+      - name: Check out the exact package revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6

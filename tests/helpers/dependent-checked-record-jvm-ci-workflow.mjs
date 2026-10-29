@@ -58,7 +58,7 @@ export const assertDependentCheckedRecordJvmWorkflow = source => {
 	const names = [...source.matchAll(/^ {6}- name: (.+)$/gmu)]
 		.map(match => match[1]);
 	assert.deepEqual(names, [
-		"Check out the exact revision and original evidence history"
+		"Check out the exact package revision"
 		, "Install Node.js", "Bound apt network waits"
 		, "Install compiler and archive dependencies"
 		, "Install dependencies and the pinned Lean compiler"
@@ -71,7 +71,7 @@ export const assertDependentCheckedRecordJvmWorkflow = source => {
 	const step = name => source.split("      - name: " + name + "\n")[1]
 		.split("      - name: ")[0];
 	assert.equal(step(names[0])
-		, "        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n");
+		, "        uses: actions/checkout@v6\n        with:\n          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n          persist-credentials: false\n");
 	assert.equal(step(names[1])
 		, '        uses: actions/setup-node@v6\n        with:\n          node-version: "22"\n          cache: npm\n');
 	assert.equal(step(names[2])

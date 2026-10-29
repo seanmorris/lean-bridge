@@ -15,7 +15,7 @@ test("dependent PHP-Wasm workflow requires pinned inputs and fatal all-route acc
 		["  workflow_dispatch:\n", "  push:\n  workflow_dispatch:\n"]
 		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
-		, ["fetch-depth: 0", "fetch-depth: 1"]
+		, ["fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]
 		, ['node-version: "22"', 'node-version: "latest"']
 		, ["npm ci --ignore-scripts", "npm install"]

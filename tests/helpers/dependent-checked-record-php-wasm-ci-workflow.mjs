@@ -20,7 +20,7 @@ export const assertDependentCheckedRecordPhpWasmWorkflow = source => {
 		, "cancel-in-progress: true"
 		, "runs-on: ubuntu-24.04"
 		, "timeout-minutes: 180"
-		, "fetch-depth: 0"
+		, "fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}"
 		, "persist-credentials: false"
 		, 'node-version: "22"'
 		, "npm ci --ignore-scripts"

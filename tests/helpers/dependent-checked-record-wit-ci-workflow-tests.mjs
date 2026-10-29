@@ -37,7 +37,7 @@ test("dependent checked-record checked-record WIT workflow rejects unpinned tool
 		, ["  workflow_dispatch:\n", "  pull_request:\n  workflow_dispatch:\n"]
 		, ["contents: read", "contents: write"]
 		, ["    runs-on: ubuntu-24.04", "    runs-on: ubuntu-latest"]
-		, ["fetch-depth: 0", "fetch-depth: 1"]
+		, ["fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]
 		, ['node-version: "22"', 'node-version: "latest"']
 		, ["npm ci --ignore-scripts", "npm install"]

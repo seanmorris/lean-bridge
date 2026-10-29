@@ -3,6 +3,12 @@ name: Installed dependent checked records in Ruby
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      shallow_checkout:
+        description: Use an exact depth-one checkout for focused package execution
+        required: false
+        default: false
+        type: boolean
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
     - cron: "47 1 * * 2"
@@ -22,10 +28,10 @@ jobs:
     env:
       LEAN_NUM_THREADS: "1"
     steps:
-      - name: Check out the exact revision and original evidence history
+      - name: Check out the exact package revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
