@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDependentSignatureShallowCheckoutSource, dependentSignatureShallowCheckoutNormalizationPaths } from "./dependent-signature-shallow-checkout-source-history.mjs";
 import { beforeOptionalParameterCompletePromotionSource, optionalParameterCompletePromotionNormalizationPaths } from "./optional-parameter-complete-promotion-source-history.mjs";
 import { beforeOptionalParameterReceiptSparseCheckoutSource, optionalParameterReceiptSparseCheckoutNormalizationPaths } from "./optional-parameter-receipt-sparse-checkout-source-history.mjs";
 import { beforeOptionalParameterRouteBinderRepairSource, optionalParameterRouteBinderRepairNormalizationPaths } from "./optional-parameter-route-binder-repair-source-history.mjs";
@@ -2385,7 +2386,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...optionalParameterCompletePromotionNormalizationPaths
+	...dependentSignatureShallowCheckoutNormalizationPaths
+	, ...optionalParameterCompletePromotionNormalizationPaths
 	, ...optionalParameterReceiptSparseCheckoutNormalizationPaths
 	, ...optionalParameterRouteBinderRepairNormalizationPaths
 	, ...optionalParameterPerlUnicodeDefaultRepairNormalizationPaths
@@ -3509,7 +3511,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOptionalParameterCompletePromotionSource(
+	let stage = beforeDependentSignatureShallowCheckoutSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOptionalParameterCompletePromotionSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

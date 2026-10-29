@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/optional-parameter-route-binder-repair-source-history-tests.mjs";
+import "./helpers/dependent-signature-shallow-checkout-source-history-tests.mjs";
 import "./helpers/optional-parameter-complete-promotion-source-history-tests.mjs";
 import "./helpers/optional-parameter-receipt-sparse-checkout-source-history-tests.mjs";
 import "./helpers/optional-parameter-perl-unicode-default-repair-source-history-tests.mjs";

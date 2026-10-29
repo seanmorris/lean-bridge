@@ -1,0 +1,491 @@
+{
+  "currentSourcePaths": [],
+  "fullHistoryAuditCount": 1,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-signature-shallow-checkout-source-history.mjs",
+      "sha256": "02a4f8b941bd50f842ef343caa6425027e0eccaaf193ce9760ca3d868235b6ba"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-shallow-checkout-source-history-tests.mjs",
+      "sha256": "c34796318051936395e05db3aa2b30eea0d101473d7bb5d3fe0aefc3a9795665"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-shallow-checkout-source-history.mjs",
+      "sha256": "c925cb22c2e65a75984cee5a4c18da3501dc7a0b6086b0eef797b6559ff04be6"
+    }
+  ],
+  "implementationCommit": "727b300519845d89dfa804010db4964256522133",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a19b92cb063f3a2cb516d046db13252a1318b47e20c5772c0d992430b1911326",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-signature-shallow-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "75621fe0426de4284eed82c90388325b039f768881365e02bd886461602b0eb6"
+    },
+    {
+      "currentSha256": "3bfc9e315092219e3c43d150694ca305b7c831bea92b6db8a497fe6cde3330e8",
+      "edits": [
+        {
+          "current": "import { beforeDependentSignatureShallowCheckoutSource, dependentSignatureShallowCheckoutNormalizationPaths } from \"./dependent-signature-shallow-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentSignatureShallowCheckoutNormalizationPaths\n\t, ...optionalParameterCompletePromotionNormalizationPaths\n",
+          "previous": "\t...optionalParameterCompletePromotionNormalizationPaths\n",
+          "start": 219951
+        },
+        {
+          "current": "\tlet stage = beforeDependentSignatureShallowCheckoutSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterCompletePromotionSource(\n",
+          "previous": "\tlet stage = beforeOptionalParameterCompletePromotionSource(\n",
+          "start": 275314
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5c308c5122ff40505b9c8b07460214d2d8deef296ed8aa686253d3d3361297e5"
+    },
+    {
+      "currentSha256": "a601acbc5e2ff4ce45bc379841fdb27a37e05aa5ca848281521dbde577df0a79",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeDependentSignatureShallowCheckoutSource\n} from \"./dependent-signature-shallow-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 463
+        },
+        {
+          "current": "\t\t\tconst current = beforeDependentSignatureShallowCheckoutSource(\n\t\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t\t\t, update.currentSha256);\n",
+          "previous": "\t\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3028
+        },
+        {
+          "current": "\t{\n\t\tconst source = beforeDependentSignatureShallowCheckoutSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.sha256);\n\t\tassert.equal(sha256(source), addition.sha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path)), addition.sha256\n\t\t\t, addition.path);\n",
+          "start": 3835
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-complete-promotion-source-history-tests.mjs",
+      "previousSha256": "4e9f250615213ef4c99dc0d9ccf61a73948de0799831b797284cff6a2ddc440b"
+    }
+  ],
+  "milestone": "dependent-signature-shallow-checkout-source-v1",
+  "predecessorCommit": "7452c0101a52cd9a0e9522aa4932b2f971b7910a",
+  "producerWorkflowCount": 11,
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Keep standalone, manual and scheduled dependent checked-record workflows on complete source history while using exact depth-one checkouts for the eleven focused dependent-signature package producers. Preserve one complete-history archive and promotion audit, exact producer identities, fail-closed same-run receipt reconciliation and every existing runtime contract.",
+  "updates": [
+    {
+      "currentSha256": "0417621e324d8eb80be7f642d7c009f69d6a7bfb6f886a37c63e1d2ab8948989",
+      "edits": [
+        {
+          "current": "    inputs:\n      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 95
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out the exact revision and source history\n",
+          "start": 876
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 975
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-browser.yml",
+      "previousSha256": "88381d81f9be70f21245d07f475c3ca7b361ff80e8dd3979d4b7b128a916bd72"
+    },
+    {
+      "currentSha256": "3cfa89514c71a609b627a5ef2edb97f95073e584c9a78a196de2b1ab3fa2b394",
+      "edits": [
+        {
+          "current": "      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 346
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out exact revision and full source history\n",
+          "start": 1111
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 1210
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-dotnet.yml",
+      "previousSha256": "e5ed59f7a3e6999678792b513dcbd7cefbe9899da8a9e40aa196a65f3fa5bc9d"
+    },
+    {
+      "currentSha256": "bfc944a54e6ebd8149c956c2a28c020b200afffd2c587c3d5dde1873506b23b2",
+      "edits": [
+        {
+          "current": "      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 352
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 1107
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 1206
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-jvm.yml",
+      "previousSha256": "801f748e84ea1ace5da7224e3d506e0f5c81e50b8b77f949aaf59ee5aab8ca23"
+    },
+    {
+      "currentSha256": "96d352cbdd3ba6d4ca7ac118faa28cf1bb78e8fbcb49c934ebff7e53a93deef9",
+      "edits": [
+        {
+          "current": "    inputs:\n      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 88
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out exact revision and full source history\n",
+          "start": 720
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 819
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-native.yml",
+      "previousSha256": "7180e3f78302682104eccce1460adc2869f40aaab1dd0ede940aadfe12b24c71"
+    },
+    {
+      "currentSha256": "0020b906f699d63fde13dd274b31f169888c2b038d6d8df5fc28c06212170825",
+      "edits": [
+        {
+          "current": "    inputs:\n      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 93
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 674
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 773
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-perl.yml",
+      "previousSha256": "07eef16547841c23ee121316d4d585275fe70c69d3a7dcd7a98c5edfd1e9e9ac"
+    },
+    {
+      "currentSha256": "88e2da1a837e8584f5ca7e78e4abbf46fae2213f806a12df7b6e4ae3e0cd19e0",
+      "edits": [
+        {
+          "current": "    inputs:\n      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 97
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 870
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 969
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-php-wasm.yml",
+      "previousSha256": "454450925ba4958aca441a15a45bedb2a915de6e3aae46f5f95f891dcf94efa0"
+    },
+    {
+      "currentSha256": "f04f051ee279704dffee2c972d66289c1e1772462dac50d1d90141437ab89037",
+      "edits": [
+        {
+          "current": "    inputs:\n      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 104
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 740
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 839
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-php.yml",
+      "previousSha256": "ab379f353e4baf3baf3bbf26f6ce416dc8d3f03b246fdd90083cd7c20464d0b7"
+    },
+    {
+      "currentSha256": "51698bbd63052ad8b7204b86ed7703d98221264dc3099f684277f5681ed9b819",
+      "edits": [
+        {
+          "current": "    inputs:\n      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 95
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 822
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 921
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-python.yml",
+      "previousSha256": "19491997246181f1427e0520c6a7f2b270e06b02bf18497c017acee8a91e11de"
+    },
+    {
+      "currentSha256": "99e9e0ed2d7a568576e94dd5a67d1ef655165b0c532b2cab24460acee28e8c87",
+      "edits": [
+        {
+          "current": "    inputs:\n      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 93
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 713
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 812
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-ruby.yml",
+      "previousSha256": "14320a04e0be766c51c7eae153f0f13af7b96f318122d23437bad36961fa6054"
+    },
+    {
+      "currentSha256": "e52c73a88567b77fa6d713f0b2b1a631742fb7a7a5234ec20a64161de67c3384",
+      "edits": [
+        {
+          "current": "    inputs:\n      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 93
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 713
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 812
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-rust.yml",
+      "previousSha256": "e9172f8b1d2712118e38b2b54030f0e2a186671b0a45fc97d54d232701a7766d"
+    },
+    {
+      "currentSha256": "b2f7f5046cfb5927b03a36268f509f241ab980f850cb6839b3fa2ba3d25a56a5",
+      "edits": [
+        {
+          "current": "    inputs:\n      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n",
+          "previous": "",
+          "start": 117
+        },
+        {
+          "current": "      - name: Check out the exact package revision\n",
+          "previous": "      - name: Check out the exact revision and original evidence history\n",
+          "start": 755
+        },
+        {
+          "current": "          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n",
+          "previous": "          fetch-depth: 0\n",
+          "start": 854
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-wit.yml",
+      "previousSha256": "f25b11db728df845e802cd19869d7f07a904eb8f41732e03f0d05a39aca53b90"
+    },
+    {
+      "currentSha256": "8497e0fc5c3635e58e3df3aa018568060ee66fc06604086e8c4c281172c05140",
+      "edits": [
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 3840
+        },
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 4019
+        },
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 4189
+        },
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 4365
+        },
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 4535
+        },
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 4709
+        },
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 4888
+        },
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 5058
+        },
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 5239
+        },
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 5421
+        },
+        {
+          "current": "    with:\n      shallow_checkout: true\n",
+          "previous": "",
+          "start": 5597
+        }
+      ],
+      "path": ".github/workflows/dependent-signature-complete.yml",
+      "previousSha256": "50dcd95e01af8302c25897e9164abf2d780a114ab925b7954f3560642ac02f37"
+    },
+    {
+      "currentSha256": "b921baab3b00139e562433b5385198d716dc4488454c1cfe40dd7bf4c58fecfe",
+      "edits": [
+        {
+          "current": "\t\t\"Check out the exact package revision\"\n",
+          "previous": "\t\t\"Check out the exact revision and original evidence history\"\n",
+          "start": 1961
+        },
+        {
+          "current": "\t\t, \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\\n          persist-credentials: false\\n\");\n",
+          "previous": "\t\t, \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 2553
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-workflow.mjs",
+      "previousSha256": "c2a2d662dd8e47369e53897604faf796a36adb1f6331b55149f1a44ae6d11485"
+    },
+    {
+      "currentSha256": "a80ff37135dfe453552f9ba3bb2af7b68a1f7338ac0ecfe3932be396b8c748eb",
+      "edits": [
+        {
+          "current": "\t\t, [\"fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\", \"fetch-depth: 1\"]\n",
+          "previous": "\t\t, [\"fetch-depth: 0\", \"fetch-depth: 1\"]\n",
+          "start": 796
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-php-wasm-ci-workflow-tests.mjs",
+      "previousSha256": "1a1920868134268686962994acb277571b6285fdc6dfb68a251c27739736caed"
+    },
+    {
+      "currentSha256": "5577b2bd31b145358b2060ac37c044864c6b3eac239103945d32c8e993826d6d",
+      "edits": [
+        {
+          "current": "\t\t, \"fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\"\n",
+          "previous": "\t\t, \"fetch-depth: 0\"\n",
+          "start": 707
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-php-wasm-ci-workflow.mjs",
+      "previousSha256": "f6b348b06db44dda9435fe3d7dfc4f9e6dabf552a518cc79b4b21a6fd7ef33bf"
+    },
+    {
+      "currentSha256": "fcecc66aba6c07f37e9f402a03477bbb912f76e7a99e2e6f561ef8ff0487785b",
+      "edits": [
+        {
+          "current": "\t\t, [\"fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\", \"fetch-depth: 1\"]\n",
+          "previous": "\t\t, [\"fetch-depth: 0\", \"fetch-depth: 1\"]\n",
+          "start": 2394
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "541026312bfb937e4cff9148a059ff2fb6579c12f987e2c216d62557bce43f18"
+    },
+    {
+      "currentSha256": "c147a54deeceb64686d2ca371b874de65202351a93c732e55c27921489def7f9",
+      "edits": [
+        {
+          "current": "\t\t\"Check out the exact package revision\"\n",
+          "previous": "\t\t\"Check out the exact revision and original evidence history\"\n",
+          "start": 2639
+        },
+        {
+          "current": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\\n          persist-credentials: false\\n\");\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n",
+          "start": 3183
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-ci-workflow.mjs",
+      "previousSha256": "513c6f983b9683f0d65214931c85b5145f88d8d7ee79d062afa9dc95953e6b9f"
+    },
+    {
+      "currentSha256": "35984025f9758b648be57c6f8af1203c93900a260be7b87546b29279ccb098c3",
+      "edits": [
+        {
+          "current": "const producerWorkflows = Object.freeze([\n\t[\"javascript\", \"browser\"], [\"native\", \"native\"], [\"perl\", \"perl\"]\n\t, [\"python\", \"python\"], [\"rust\", \"rust\"], [\"dotnet\", \"dotnet\"]\n\t, [\"jvm\", \"jvm\"], [\"ruby\", \"ruby\"], [\"php-native\", \"php\"]\n\t, [\"php-wasm\", \"php-wasm\"], [\"wit\", \"wit\"]\n]);\nconst shallowCheckoutInput = `      shallow_checkout:\n        description: Use an exact depth-one checkout for focused package execution\n        required: false\n        default: false\n        type: boolean\n`;\nconst focusedCheckoutDepth\n\t= \"fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\";\n",
+          "previous": "",
+          "start": 317
+        },
+        {
+          "current": "\tfor(const [job, workflow] of producerWorkflows)\n",
+          "previous": "\tconst producers = [\n\t\t[\"javascript\", \"browser\"], [\"native\", \"native\"], [\"perl\", \"perl\"]\n\t\t, [\"python\", \"python\"], [\"rust\", \"rust\"], [\"dotnet\", \"dotnet\"]\n\t\t, [\"jvm\", \"jvm\"], [\"ruby\", \"ruby\"], [\"php-native\", \"php\"]\n\t\t, [\"php-wasm\", \"php-wasm\"], [\"wit\", \"wit\"]\n\t];\n\tfor(const [job, workflow] of producers)\n",
+          "start": 3397
+        },
+        {
+          "current": "\t\t\t+ `    uses: \\\\.\\\\/\\\\.github\\\\/workflows\\\\/dependent-checked-record-${workflow}\\\\.yml\\\\n`\n\t\t\t+ \"    with:\\\\n      shallow_checkout: true\\\\n\"\n",
+          "previous": "\t\t\t+ `    uses: \\\\.\\\\/\\\\.github\\\\/workflows\\\\/dependent-checked-record-${workflow}\\\\.yml`\n",
+          "start": 3550
+        },
+        {
+          "current": "test(\"focused producers use depth one while standalone runs retain full history\"\n\t, async () => {\n\tfor(const [, workflow] of producerWorkflows)\n\t{\n\t\tconst path = `.github/workflows/dependent-checked-record-${workflow}.yml`;\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tconst call = source.split(\"  workflow_call:\\n\")[1]\n\t\t\t.split(\"  # One lane\")[0];\n\t\tassert.ok(call.includes(\"    inputs:\\n\"), path);\n\t\tassert.ok(call.includes(shallowCheckoutInput), path);\n\t\tassert.equal(source.split(focusedCheckoutDepth).length - 1, 1, path);\n\t\tassert.ok(source.includes(\"- name: Check out the exact package revision\\n\")\n\t\t\t, path);\n\t\tassert.doesNotMatch(source, /^ {10}fetch-depth: [01]$/gmu, path);\n\t\tconst shellPath = `scripts/run-dependent-checked-record-${workflow}-ci.sh`;\n\t\tconst shell = await readFile(shellPath, \"utf8\");\n\t\tconst gitCommands = [...shell.matchAll(/\\bgit\\s+([a-z-]+)/gu)]\n\t\t\t.map(match => match[1]);\n\t\tassert.ok(gitCommands.length > 0, shellPath);\n\t\tassert.ok(gitCommands.every(command => command === \"rev-parse\")\n\t\t\t, `${shellPath} must consume only the checked-out commit`);\n\t\tassert.match(shell, /git rev-parse HEAD/u, shellPath);\n\t}}\n);\n\n",
+          "previous": "",
+          "start": 4627
+        },
+        {
+          "current": "\t\t, source.replace(\"      shallow_checkout: true\\n\", \"\")\n",
+          "previous": "",
+          "start": 6903
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-complete-ci-tests.mjs",
+      "previousSha256": "f6e0fbc60048c7c24e3b62cf7857ef24f6f372db387ccbdffbc7090321944c1f"
+    }
+  ]
+}
