@@ -14,7 +14,7 @@ Use the shared [export configuration](existing-package.md#configure-exports) to 
 | `Char`, `String`, `ByteArray` | Separate Unicode scalar values, text, and binary data. Preserve embedded zero bytes. |
 | Arrays, lists, tuples, records, aliases, variants, recursive values | Choose copied values or explicit retained identity. Keep constructor tags and fields; enforce allocation and nesting limits. |
 | `Option`, `Except` | Preserve presence and branch payloads. `Some None` differs from `None`; `Except ε α` carries success `α` or error `ε`. |
-| Defaults, optional arguments, host null | Keep omitted input, declared defaults, host null, Unit, and Option.None distinct. |
+| Defaults, optional arguments, host null | Authenticate declared defaults and expose target-idiomatic omission without changing the full-arity ABI. Keep omitted input, an explicit default value, host null, Unit, and Option.None distinct. |
 | Generics, implicit arguments, instances | Select finite build-time specializations and resolve the required dictionaries. |
 | `Fin`, `Subtype`, dependent signatures | Preserve runtime constraints through checked constructors or validation. An erased proof does not authorize an unchecked input. |
 | Theorems and proof arguments | Let Lean determine runtime erasure. Retain theorem identities and assumptions in assurance metadata. |

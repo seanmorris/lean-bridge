@@ -141,7 +141,24 @@ All seventeen consumer profiles also compile reviewed synchronous callbacks and 
 
 Targets `c`, `cpp`, `cargo`, `pypi`, `rubygems`, `nuget`, `maven`, `cpan`, `php-native`, `php-wasm` and `wit-wasi` also compile structured callback and closure payloads: arrays, Lists, options, results, products, acyclic records, variants and transparent aliases. [C](../publish/c.md#export-callbacks-and-closures) uses typed views and cleanup functions; [C++](../publish/cpp.md#export-copied-callback-payloads) and [Rust](../publish/cargo.md#structured-callback-values) use owned value types and scoped cleanup. [Python](../publish/pypi.md#structured-callback-values) uses owned tuples and generated value classes, with precise callback and closure annotations. [Ruby](../publish/rubygems.md#structured-callback-values) uses copied Arrays and generated frozen value classes, with blocks or callable objects. [C#](../publish/nuget.md#structured-callback-values) uses typed arrays, records, `Option`/`Result` values and `Func` delegates. [Java and Kotlin](../publish/maven.md#structured-callback-values) use typed functional interfaces and their own copied value classes, with `AutoCloseable` returned closures. [Perl](../publish/cpan.md#export-structured-callbacks) uses CODE references, plain array references and generated constructor classes, with copied callback values and closable returned functions. Host callbacks remain call-scoped borrows and returned closures remain explicit leases. npm accepts those copied payloads and finite recursive values, with plain objects and arrays plus generated TypeScript types. Native PHP, PHP-Wasm and WIT/WASI also accept these acyclic copied payloads. All seventeen profiles also accept finite recursive callback values, including [WIT/WASI](../publish/wit-wasi.md#export-recursive-callbacks).
 
-Schema-3 reviewed builds reject resources and callbacks inside copied containers. Resource-containing values require a schema-4 contract and an ownership-aware target. Both versions reject defaults, optional arguments, asynchronous operations, author-supplied compiler evidence and assurance claims. Do not combine a review with `exports`, `resources`, `ownedAggregates`, `arities`, `specializations` or `contracts` in the configuration.
+Schema-3 reviewed builds reject resources and callbacks inside copied containers. Resource-containing values require a schema-4 contract and an ownership-aware target. Both versions accept compiler-authenticated optional copied parameters whose typed defaults reconcile with fresh Lean metadata. They reject asynchronous operations, author-supplied compiler evidence and assurance claims. Do not combine a review with `exports`, `resources`, `ownedAggregates`, `arities`, `specializations` or `contracts` in the configuration.
+
+### Export optional parameters
+
+Lean Bridge retains a Lean-declared default in Binding IR while keeping the
+compiled function ABI full-arity. Generated packages expose omission through
+the target's idiomatic public surface: a default argument or overload where the
+language supports one, otherwise a generated omission function or macro. An
+omitted argument selects the authenticated default. Supplying that same value
+explicitly remains an ordinary supplied value.
+
+Omission never means null, Unit or `Option.none`. Those values keep their own
+host representations and validation paths. The [complete hosted
+optional-parameter archive](../evidence/optional-parameter-hosted-20261029/index.json)
+replays ordinary-source and independently reviewed installed packages across
+all seventeen consumer profiles. It covers copied parameters only; optional
+results, fields, callbacks, resources and asynchronous operations remain
+separate contracts.
 
 Use the same source project for npm or PHP-Wasm, with the target coordinates from the [npm](../publish/npm.md) and [PHP](../publish/php.md) guides. For an API admitted by all three profiles:
 
