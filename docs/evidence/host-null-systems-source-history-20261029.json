@@ -1,0 +1,417 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0d61e9bfaff12b7fcc7384f8a265d68f1920cc1f8eefefaac8ed5700045b2faf",
+      "path": "scripts/check-host-null-systems-ci.mjs"
+    },
+    {
+      "currentSha256": "90cd9fab8e04d581a9b1f274af1f649a99a19c0282b8e95088fcccb1d229e762",
+      "path": "scripts/refresh-host-null-systems-pins.mjs"
+    },
+    {
+      "currentSha256": "ae283513ac3b1520377bf95e07e39880e8a56dbdc392f960f165aedfe871ce0e",
+      "path": "scripts/run-host-null-systems-ci.sh"
+    },
+    {
+      "currentSha256": "feccb60da9d585d35d45760f96e77be2d5b1e1b5feb59b5e96461e5f98d977f6",
+      "path": "tests/fixtures/host-null-consumers/c.c"
+    },
+    {
+      "currentSha256": "18fcf54dd8c944a5b60c819147c0f1fab6dfe9d1a9e08053841e1bdf61b01d59",
+      "path": "tests/fixtures/host-null-consumers/cpp.cpp"
+    },
+    {
+      "currentSha256": "bd35219a00bfd977bbf1dc7fef84aac73ed2a79f810064768979c4dd86f85419",
+      "path": "tests/fixtures/host-null-consumers/rust.rs"
+    },
+    {
+      "currentSha256": "a7788b5d0b9ba3300cd35932d9deaffdd5fd51c722243ade7757f8c88e3e868a",
+      "path": "tests/fixtures/host-null-consumers/wit-wasi.c"
+    },
+    {
+      "currentSha256": "fcd85a2ac5f71a582340913de6851d0c5a565fad551692835cd107a6ab9e8675",
+      "path": "tests/helpers/host-null-systems-installed.mjs"
+    },
+    {
+      "currentSha256": "c6fbdd59a27ecedf498417c6bdccb1edc5d53cad4bcdd9b0ef457a811b8c2b4c",
+      "path": "tests/systems-host-null-ci.test.mjs"
+    },
+    {
+      "currentSha256": "1e6b922bcb0851dcb3dd2f58c4719c7e5ddf7f92734a63651d8e7de3e56acedb",
+      "path": "tests/systems-host-null-contract.test.mjs"
+    },
+    {
+      "currentSha256": "1bc12d1418be1c622436f39a5ae40e08a7a1e06fae2748440d4f09dbd9cb3289",
+      "path": "tests/systems-host-null.test.mjs"
+    },
+    {
+      "currentSha256": "ec9bd21baa9850aeaea69e9ce9d2c89019dfa13f6e0371db2cb40fc9ea4e2c3b",
+      "path": "scripts/update-host-null-systems-source-history.mjs"
+    },
+    {
+      "currentSha256": "77a0a716544cac8c4942e92ac992b81d57e70dc180664341731cbf80bfeaaa6d",
+      "path": "tests/helpers/host-null-systems-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a453c8fc8aee1474b4ed181957d3897ec567fee2f9555869deaa903b0e421b6f",
+      "path": "tests/helpers/host-null-systems-source-history.mjs"
+    }
+  ],
+  "commits": [
+    {
+      "added": [
+        "tests/systems-host-null-contract.test.mjs"
+      ],
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "modified": [
+        "src/backends/c/gmp-values.mjs",
+        "src/backends/c/native-callables.mjs",
+        "src/backends/cpp/copied-values.mjs",
+        "src/backends/cpp/primitives.mjs",
+        "src/backends/rust/copied-conversions.mjs",
+        "src/backends/rust/copied-model.mjs",
+        "src/backends/rust/copied-values.mjs",
+        "src/backends/wit/callable-result-owners.mjs",
+        "src/backends/wit/canonical-borrow-drops.mjs",
+        "src/backends/wit/copied-component.mjs",
+        "src/backends/wit/copied-conversions.mjs",
+        "src/backends/wit/copied-model.mjs"
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "subject": "Project HostNull through systems packages"
+    },
+    {
+      "added": [
+        "scripts/check-host-null-systems-ci.mjs",
+        "scripts/run-host-null-systems-ci.sh",
+        "tests/fixtures/host-null-consumers/c.c",
+        "tests/fixtures/host-null-consumers/cpp.cpp",
+        "tests/fixtures/host-null-consumers/rust.rs",
+        "tests/fixtures/host-null-consumers/wit-wasi.c",
+        "tests/helpers/host-null-systems-installed.mjs",
+        "tests/systems-host-null-ci.test.mjs",
+        "tests/systems-host-null.test.mjs"
+      ],
+      "commit": "835bfa546a5e7823c6d1ad7269f00df36a067902",
+      "modified": [
+        ".github/workflows/consumer-matrix.yml",
+        "src/adoption/test-profiles.mjs",
+        "tests/test-profiles.test.mjs"
+      ],
+      "parent": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "subject": "Qualify HostNull systems packages"
+    },
+    {
+      "added": [
+        "scripts/refresh-host-null-systems-pins.mjs"
+      ],
+      "commit": "95b3dedcbceee518695c3901534300a9468fc36e",
+      "modified": [],
+      "parent": "835bfa546a5e7823c6d1ad7269f00df36a067902",
+      "subject": "Define exact systems HostNull pin refresh [skip ci]"
+    },
+    {
+      "added": [],
+      "commit": "1dc4c6c47def16c4cb5f98ce0ee23e12ed6a7d82",
+      "modified": [
+        "docs/type-surface.v1.json"
+      ],
+      "parent": "95b3dedcbceee518695c3901534300a9468fc36e",
+      "subject": "Refresh systems HostNull source pins [skip ci]"
+    }
+  ],
+  "implementationCommit": "1dc4c6c47def16c4cb5f98ce0ee23e12ed6a7d82",
+  "integrationParent": "1dc4c6c47def16c4cb5f98ce0ee23e12ed6a7d82",
+  "integrationUpdates": [
+    {
+      "currentSha256": "055d1fda56bf32f4d6c974487c1f3afc8ea0782cc0b5ee124029a5a9b8c2bd2c",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-systems-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "9a9bee35de67c3278c33a33e0dd9e7dd6764dea0211437a2305c2262522503ff"
+    },
+    {
+      "currentSha256": "2f8a97497709d74909da1518d76baea078cae7fc78080673301dd6219015bc04",
+      "edits": [
+        {
+          "current": "import { beforeHostNullSystemsIntegrationSource, beforeHostNullSystemsSource, hostNullSystemsNormalizationPaths } from \"./host-null-systems-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullSystemsNormalizationPaths\n\t, ...generatedOutputControlRepairTypeSurfaceNormalizationPaths\n",
+          "previous": "\t...generatedOutputControlRepairTypeSurfaceNormalizationPaths\n",
+          "start": 216672
+        },
+        {
+          "current": "\tlet stage = beforeHostNullSystemsIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullSystemsSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeGeneratedOutputControlRepairTypeSurfaceIntegrationSource(\n",
+          "previous": "\tlet stage = beforeGeneratedOutputControlRepairTypeSurfaceIntegrationSource(\n",
+          "start": 270978
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1e1796513b1509a90989e53015ecaf8e8023f7be485c90f358099471ecc3612f"
+    }
+  ],
+  "milestone": "host-null-systems-source-v1",
+  "predecessorCommit": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+  "schemaVersion": 1,
+  "scope": "Project compiler-authenticated HostNull through typed C, C++, Rust and WIT/WASI carriers. Preserve nested Option distinctions, fields, both callable directions, invalid-representation enforcement, explicit cleanup, source-free relocated execution and exact package identities across both author routes and all 40 acceptance cells.",
+  "updates": [
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "36c3f973f4d3ae6218637b8697170d54919e599bc9e84a25993ae322f1348881",
+      "edits": [
+        {
+          "current": "\t\t\tconst flag = { \"host-null\": \"has_value\", option: \"has_value\", result: \"is_ok\" }[copy.compound];\n",
+          "previous": "\t\t\tconst flag = { option: \"has_value\", result: \"is_ok\" }[copy.compound];\n",
+          "start": 6249
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/c/gmp-values.mjs",
+      "previousSha256": "aa7bc5a2819b2eeb37741ae22f3beafb0e3c5404277cdadcb9081441d46830b6"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "eecb9dfc363d5e96ee02ff91468de249f2a3d5c2b90960c1cf2059fa1daca183",
+      "edits": [
+        {
+          "current": "\t\t\tconst flag = { \"host-null\": \"has_value\", option: \"has_value\", result: \"is_ok\" }[copy.compound];\n",
+          "previous": "\t\t\tconst flag = { option: \"has_value\", result: \"is_ok\" }[copy.compound];\n",
+          "start": 2709
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/c/native-callables.mjs",
+      "previousSha256": "a047dde6a545ff1c73688742901998efeb371b6535ea3e48fa071ed735fdea75"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "5d6606ec06aeed5971cde7d68aebfae0e71cff91c22d2c4eaa6bb3923d3336ea",
+      "edits": [
+        {
+          "current": "\tif([\"host-null\", \"option\"].includes(copy.compound)) return `std::optional<${copiedCppType(copy.fields[0].type, qualifier)}>`;\n",
+          "previous": "\tif(copy.compound === \"option\") return `std::optional<${copiedCppType(copy.fields[0].type, qualifier)}>`;\n",
+          "start": 342
+        },
+        {
+          "current": "\t\t\tconst option = [\"host-null\", \"option\"].includes(copy.compound), flag = option ? \"has_value\" : \"is_ok\";\n",
+          "previous": "\t\t\tconst option = copy.compound === \"option\", flag = option ? \"has_value\" : \"is_ok\";\n",
+          "start": 5110
+        },
+        {
+          "current": "\t\t\tif(option) output.push('if (source.has_value > 1) invalid(\"Native nullable value has an invalid tag\");'\n\t\t\t\t, `if (!source.has_value) return std::nullopt;`, `return ${host}{std::in_place, from${fields[0].type.index}(source.value)};`);\n\t\t\telse output.push('if (source.is_ok > 1) invalid(\"Native Result has an invalid tag\");'\n\t\t\t\t, `if (source.is_ok) return ${host}{Ok<${type(fields[0].type)}>{from${fields[0].type.index}(source.ok)}};`\n",
+          "previous": "\t\t\tif(option) output.push(`if (!source.has_value) return std::nullopt;`, `return ${host}{std::in_place, from${fields[0].type.index}(source.value)};`);\n\t\t\telse output.push(`if (source.is_ok) return ${host}{Ok<${type(fields[0].type)}>{from${fields[0].type.index}(source.ok)}};`\n",
+          "start": 5981
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/cpp/copied-values.mjs",
+      "previousSha256": "ca8300d00227c4789b34ffbad22b33c64769a31856bc86b64e9d5d56c6ea331c"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "7819fa187060acfd2488a8a1e1da023f3c02eaca04b7a089c326f124967bf08e",
+      "edits": [
+        {
+          "current": "\t\t, \"README.md\": `# ${surface.ir.component.name} C++ API\\n\\nC++20 wrappers over the compiled C API. Returned copied values own their memory. Nat and Int use Boost.Multiprecision cpp_int; negative Nat inputs are rejected. Prepared archives include pinned Boost 1.90.0 standalone headers. Synchronous callbacks accept typed C++ functions; returned LeanClosure values are move-only and release automatically.${surface.copies.some(copy => copy.compound === \"host-null\") ? \" Only compiler-authenticated HostNull sites use std::optional as a nullable value; nested HostNull and Option wrappers remain nested std::optional values with every branch preserved.\" : \"\"}\\n` };\n",
+          "previous": "\t\t, \"README.md\": `# ${surface.ir.component.name} C++ API\\n\\nC++20 wrappers over the compiled C API. Returned copied values own their memory. Nat and Int use Boost.Multiprecision cpp_int; negative Nat inputs are rejected. Prepared archives include pinned Boost 1.90.0 standalone headers. Synchronous callbacks accept typed C++ functions; returned LeanClosure values are move-only and release automatically.\\n` };\n",
+          "start": 7498
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/cpp/primitives.mjs",
+      "previousSha256": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "7e721440e5398db4e1d28ca942e9fa981cb7fd607d66d1db728ac5f95f4b9cc8",
+      "edits": [
+        {
+          "current": "${copy.compound ? `${copy.compound === \"tuple\" ? \"\" : `    ${[\"host-null\", \"option\"].includes(copy.compound) ? \"has_value\" : \"is_ok\"}: u8,\\n`}${copy.fields.map(field => `    ${field.name}: ${field.type.ctype},`).join(\"\\n\")}`\n",
+          "previous": "${copy.compound ? `${copy.compound === \"tuple\" ? \"\" : `    ${copy.compound === \"option\" ? \"has_value\" : \"is_ok\"}: u8,\\n`}${copy.fields.map(field => `    ${field.name}: ${field.type.ctype},`).join(\"\\n\")}`\n",
+          "start": 4255
+        },
+        {
+          "current": "\t} else if([\"host-null\", \"option\"].includes(copy.compound))\n",
+          "previous": "\t} else if(copy.compound === \"option\")\n",
+          "start": 6977
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/rust/copied-conversions.mjs",
+      "previousSha256": "e57c24479cdda0a53486494d54498d6aa4a75ba73605113be67e082df6413d0f"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "411160210b0b87fe50082064497354fe549ee8c4b39983e1e2843a4f2a5827e4",
+      "edits": [
+        {
+          "current": "\t\tcopy.publicType = copy.record || copy.variant ? copy.publicName : [\"host-null\", \"option\"].includes(copy.compound) ? `Option<${children}>`\n",
+          "previous": "\t\tcopy.publicType = copy.record || copy.variant ? copy.publicName : copy.compound === \"option\" ? `Option<${children}>`\n",
+          "start": 4234
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/rust/copied-model.mjs",
+      "previousSha256": "9133f206341c29bd0b796cf6d9e7f11797a2b624ba6410b0ba2918141fd676c7"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "f42e58c14e9ec04ae4f08ae8b3d4cdeacda39eadd75354733f3d49b6e292152e",
+      "edits": [
+        {
+          "current": "\t\t: `${{ array: \"Vec\", \"host-null\": \"Option\", list: \"Vec\", option: \"Option\", result: \"Result\" }[ref.constructor]}<${children}>`;\n",
+          "previous": "\t\t: `${{ array: \"Vec\", list: \"Vec\", option: \"Option\", result: \"Result\" }[ref.constructor]}<${children}>`;\n",
+          "start": 2542
+        },
+        {
+          "current": "\tif(model.surface.copies.some(copy => copy.compound === \"host-null\"))\n\t\tfiles[\"README.md\"] += \"\\nOnly the compiler-authenticated HostNull wrapper projects through Rust Option as a nullable value. HostNull (Option T), Option (HostNull T), and directly nested HostNull remain nested Option values and retain None, Some(None), and Some(Some(value)) without collapsing their branches.\\n\";\n",
+          "previous": "",
+          "start": 12622
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/rust/copied-values.mjs",
+      "previousSha256": "2948995ed993de02fc572ba887aa310396b372576c0f3763d609a775e058b088"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "54a610a052381c233ae892faf0369c8cf5bd4bdb46022a0c391a56aaa8f64f8e",
+      "edits": [
+        {
+          "current": "\t\t\tconst flag = { \"host-null\": \"has_value\", option: \"has_value\", result: \"is_ok\" }[copy.compound];\n",
+          "previous": "\t\t\tconst flag = { option: \"has_value\", result: \"is_ok\" }[copy.compound];\n",
+          "start": 1915
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/wit/callable-result-owners.mjs",
+      "previousSha256": "928649d840b3a58e665090767546436f87586c93d78afd4f81145309e7fe72bd"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "0e2ba1fc7d99b3f487426c88cd183d0ca7bb7795dde75b3ddacab128b16865ca",
+      "edits": [
+        {
+          "current": "\t\t\t: [\"host-null\", \"option\"].includes(copy.compound) ? [{ tag: 1, type: copy.fields[0].type }]\n",
+          "previous": "\t\t\t: copy.compound === \"option\" ? [{ tag: 1, type: copy.fields[0].type }]\n",
+          "start": 955
+        },
+        {
+          "current": "\t\t\t\t\t: copy.variant || [\"host-null\", \"option\", \"result\"].includes(copy.compound)\n",
+          "previous": "\t\t\t\t\t: copy.variant || copy.compound === \"option\" || copy.compound === \"result\"\n",
+          "start": 1546
+        },
+        {
+          "current": "\t\telse if(copy.variant || [\"host-null\", \"option\", \"result\"].includes(copy.compound))\n",
+          "previous": "\t\telse if(copy.variant || copy.compound === \"option\" || copy.compound === \"result\")\n",
+          "start": 3556
+        },
+        {
+          "current": "\t\tif(copy.variant || [\"host-null\", \"option\", \"result\"].includes(copy.compound))\n",
+          "previous": "\t\tif(copy.variant || copy.compound === \"option\" || copy.compound === \"result\")\n",
+          "start": 4991
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/wit/canonical-borrow-drops.mjs",
+      "previousSha256": "26efea8b738b2114734671689c0f11b02a091689a21a23211424cd60ffab61e2"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "14f6940dc2a2fbb1c56ead281ca3c08f135bc794dc8b7660f065809584708453",
+      "edits": [
+        {
+          "current": "\tif(copy.variant || [\"host-null\", \"option\", \"result\"].includes(copy.compound))\n",
+          "previous": "\tif(copy.variant || copy.compound === \"option\" || copy.compound === \"result\")\n",
+          "start": 896
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/wit/copied-component.mjs",
+      "previousSha256": "91aabbb9a0bb18a0c64854873b6f7651a24ea48dc714d59e8cb4988b7214b701"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "0b2a231bb8b0fe674fed91357ea608fc80c6c1b833907a9b1817f4f098513a3b",
+      "edits": [
+        {
+          "current": "\t} else if([\"host-null\", \"option\"].includes(copy.compound))\n",
+          "previous": "\t} else if(copy.compound === \"option\")\n",
+          "start": 8430
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/wit/copied-conversions.mjs",
+      "previousSha256": "c9e56185eba0a61d8d5c4da006d2ce6a95fae28e932063dbfcb1b279b710f59d"
+    },
+    {
+      "commit": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "currentSha256": "65fdccbb88c6145feac8703cb48eb077d8e7c59b338ce1773d4e3cc43aab9ec2",
+      "edits": [
+        {
+          "current": "\t\tif([\"host-null\", \"option\"].includes(copy.compound)) return `type ${copy.witName} = option<${copy.fields[0].type.wit}>;`;\n",
+          "previous": "\t\tif(copy.compound === \"option\") return `type ${copy.witName} = option<${copy.fields[0].type.wit}>;`;\n",
+          "start": 8343
+        },
+        {
+          "current": "\t\tif([\"host-null\", \"option\"].includes(copy.compound)) return `(option ${copy.fields[0].type.wat})`;\n",
+          "previous": "\t\tif(copy.compound === \"option\") return `(option ${copy.fields[0].type.wat})`;\n",
+          "start": 9582
+        }
+      ],
+      "parent": "2a15b1f9c02131f5d59174aad68bbd9c57ff8647",
+      "path": "src/backends/wit/copied-model.mjs",
+      "previousSha256": "dc92f30786957549e77e8c313a728d369fcd0969701cfb934dcc6f0fdebdbc9a"
+    },
+    {
+      "commit": "835bfa546a5e7823c6d1ad7269f00df36a067902",
+      "currentSha256": "0d6bb32d3b4f511abd03c4d0abf2b1b28c7452ef51a4da273122e47b358a8bf4",
+      "edits": [
+        {
+          "current": "  host-null-systems:\n    name: Systems HostNull acceptance\n    runs-on: ubuntu-24.04\n    timeout-minutes: 150\n    steps:\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n          cache: npm\n      - name: Install Nix\n        uses: cachix/install-nix-action@v31\n      - name: Install dependencies without lifecycle scripts\n        run: npm ci --ignore-scripts\n      - name: Bound apt network waits\n        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n      - name: Install systems build dependencies\n        timeout-minutes: 20\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep libgmp-dev\n      - name: Prepare pinned systems toolchains\n        shell: bash\n        run: |\n          set -euo pipefail\n          bash scripts/bootstrap-toolchains.sh --lean-only\n          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\n          bash scripts/bootstrap-rust-ci.sh\n          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n      - name: Qualify HostNull in prepared systems packages\n        id: host_null_systems\n        continue-on-error: true\n        timeout-minutes: 120\n        env:\n          LEAN_BRIDGE_WASMTIME_C_API: ${{ github.workspace }}/build/wasmtime-c-api\n          LEAN_BRIDGE_WASM_TOOLS: ${{ github.workspace }}/.toolchains/wasm-tools/bin/wasm-tools\n        run: bash scripts/run-host-null-systems-ci.sh\n      - name: Preserve systems HostNull acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-systems-${{ github.sha }}\n          path: build/host-null-systems-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce systems HostNull support\n        if: steps.host_null_systems.outcome != 'success'\n        run: exit 1\n\n",
+          "previous": "",
+          "start": 332239
+        }
+      ],
+      "parent": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "af66360c0c4ac753fa71679dde877c87d5132402289e59212ad99c80b2e70064"
+    },
+    {
+      "commit": "835bfa546a5e7823c6d1ad7269f00df36a067902",
+      "currentSha256": "9d218717c4a5e1aa224aa2b34bd550dd0c6022d127df279440fb03b7c470db9b",
+      "edits": [
+        {
+          "current": "\t\t, \"systems-host-null-contract\"\n\t\t, \"systems-host-null-ci\"\n\t\t, \"systems-host-null\"\n",
+          "previous": "",
+          "start": 2537
+        }
+      ],
+      "parent": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "d12c57e9a6756769adc652cfe5d158f88f4e57e5e17357fc5f2c95d06b47dc50"
+    },
+    {
+      "commit": "835bfa546a5e7823c6d1ad7269f00df36a067902",
+      "currentSha256": "76cae0966e206623d09a6738b0870fc5c41ad35dbb154b54cf56a7728afc54d2",
+      "edits": [
+        {
+          "current": "\t\t, \"systems-host-null-contract\"\n\t\t, \"systems-host-null-ci\"\n\t\t, \"systems-host-null\"\n",
+          "previous": "",
+          "start": 3800
+        }
+      ],
+      "parent": "d524741ae435266c10679aaa1eb9309f881916ef",
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "00b339234fb891c5ba9dca7cdc212ae0112bb69a5daf2a023acb774baf4274a4"
+    }
+  ]
+}
