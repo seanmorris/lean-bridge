@@ -62,6 +62,7 @@ const retainFile = async (path, source) => {
 	await mkdir(dirname(target), { recursive: true });
 	await copyFile(source, target, constants.COPYFILE_FICLONE);
 	const digest = await digestFile(target);
+	assert.equal((await stat(target)).size, information.size, path);
 	assert.equal(await digestFile(source), digest, path);
 	descriptors.set(path, {
 		path, bytes: information.size, sha256: digest

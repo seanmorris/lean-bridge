@@ -17,6 +17,7 @@ import {
 import {
 	hostNullCompleteHostedLanes, hostNullCompleteWorkflow
 	, inspectHostNullCompleteHostedArtifacts
+	, readHostNullCompleteGitHubCollection
 } from "../tests/helpers/host-null-complete-hosted-archive.mjs";
 
 const usage = "Usage: download-host-null-complete-inputs.mjs --run-id <id> --producer <sha> --output /absolute/hosted-input";
@@ -102,13 +103,14 @@ try
 	assert.equal(run.head_repository?.full_name, "seanmorris/lean-bridge");
 	assert.equal(run.status, "completed");
 	assert.ok(["failure", "success"].includes(run.conclusion));
-	const jobs = object(api(
-		`${repository}/actions/runs/${runId}/jobs?per_page=100`
-	), "jobs API record").jobs;
-	const artifacts = object(api(
-		`${repository}/actions/runs/${runId}/artifacts?per_page=100`
-	), "artifacts API record").artifacts;
-	assert.ok(Array.isArray(jobs) && Array.isArray(artifacts));
+	const jobs = await readHostNullCompleteGitHubCollection("jobs", page =>
+		object(api(`${repository}/actions/runs/${runId}/jobs?per_page=100&page=${page}`)
+			, `jobs API page ${page}`));
+	const artifacts = await readHostNullCompleteGitHubCollection(
+		"artifacts", page => object(api(
+			`${repository}/actions/runs/${runId}/artifacts?per_page=100&page=${page}`
+		), `artifacts API page ${page}`)
+	);
 	for(const selectedLane of hostNullCompleteHostedLanes)
 	{
 		const matches = jobs.filter(job => job.name === selectedLane.jobName);

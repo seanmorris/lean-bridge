@@ -99,6 +99,45 @@ export const hostNullCompleteHostedInputs = (root, selectedLane) => {
 };
 
 /**
+ * Read one complete GitHub REST collection without silently truncating a
+ * workflow whose jobs or artifacts extend beyond the first 100 records.
+ *
+ * @param key - Collection property returned by GitHub.
+ * @param readPage - Fetch one-based pages of at most 100 records.
+ */
+export const readHostNullCompleteGitHubCollection = async (
+	key, readPage
+) => {
+	assert.ok(["artifacts", "jobs"].includes(key));
+	assert.equal(typeof readPage, "function");
+	const collected = [];
+	let total = null, page = 1;
+	while(true)
+	{
+		const record = await readPage(page);
+		assert.ok(record && typeof record === "object"
+			&& !Array.isArray(record));
+		assert.ok(Number.isSafeInteger(record.total_count)
+			&& record.total_count >= 0);
+		assert.ok(Array.isArray(record[key]) && record[key].length <= 100);
+		if(total === null) total = record.total_count;
+		else assert.equal(record.total_count, total
+			, `GitHub ${key} total changed during pagination`);
+		assert.ok(collected.length + record[key].length <= total);
+		collected.push(...record[key]);
+		if(collected.length === total) break;
+		assert.equal(record[key].length, 100
+			, `GitHub ${key} ended before total_count`);
+		page += 1;
+	}
+	assert.equal(new Set(collected.map(item => item?.id)).size
+		, collected.length, `GitHub ${key} identities must be unique`);
+	assert.ok(collected.every(item => Number.isSafeInteger(item.id)
+		&& item.id > 0));
+	return Object.freeze(collected);
+};
+
+/**
  * Bind all seven artifacts to one exact run and revision before any byte can
  * enter the aggregate evidence archive.
  *

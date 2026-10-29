@@ -157,7 +157,14 @@ export const checkHostNullCompleteHostedEvidence = async (
 						expectedPaths.push(part.path);
 						assert.equal(bytes.length, part.bytes);
 						assert.equal(sha256(bytes), part.sha256);
-						await output.write(bytes, 0, bytes.length, offset);
+						let written = 0;
+						while(written < bytes.length)
+						{
+							const result = await output.write(bytes, written
+								, bytes.length - written, offset + written);
+							assert.ok(result.bytesWritten > 0);
+							written += result.bytesWritten;
+						}
 						offset += bytes.length;
 					}
 				}
@@ -176,6 +183,18 @@ export const checkHostNullCompleteHostedEvidence = async (
 				const selectedLane = hostNullCompleteHostedLanes.find(
 					item => item.id === capture.lane
 				);
+				const selectedCapture = selected.captures.find(
+					item => item.lane === capture.lane
+				);
+				assert.ok(selectedCapture);
+				assert.deepEqual(capture.hostedRun, {
+					...selectedCapture.hostedRun
+					, artifact: {
+						...selectedCapture.hostedRun.artifact
+						, members: capture.hostedRun.artifact.members
+						, parts: capture.hostedRun.artifact.parts
+					}
+				});
 				const inputs = hostNullCompleteHostedInputs(root, selectedLane);
 				const extracted = await extractArtifact(inputs["artifact-zip"]);
 				try

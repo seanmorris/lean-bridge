@@ -18,6 +18,7 @@ import {
 	, hostNullCompleteProfiles, hostNullCompleteRoutes
 	, hostNullCompleteWorkflow, inspectHostNullCompleteHostedArtifacts
 	, parseHostNullCompleteHostedArchiveArgs
+	, readHostNullCompleteGitHubCollection
 } from "./host-null-complete-hosted-archive.mjs";
 
 const revision = "a".repeat(40);
@@ -98,6 +99,34 @@ test("complete HostNull input selection is explicit and canonical", () => {
 	for(const args of [[], ["--input-root", "relative"]
 		, ["--other", root], ["--input-root", `${root}/../other`]])
 		assert.throws(() => parseHostNullCompleteHostedArchiveArgs(args));
+});
+
+test("complete HostNull GitHub collections cannot truncate or drift", async () => {
+	const values = Array.from({ length: 137 }, (_, index) => ({ id: index + 1 }));
+	const pages = [];
+	const selected = await readHostNullCompleteGitHubCollection("jobs", page => {
+		pages.push(page);
+		return {
+			total_count: values.length
+			, jobs: values.slice((page - 1) * 100, page * 100)
+		};
+	});
+	assert.deepEqual(pages, [1, 2]);
+	assert.deepEqual(selected, values);
+	await assert.rejects(readHostNullCompleteGitHubCollection(
+		"jobs", page => ({ total_count: 101
+			, jobs: page === 1
+			? values.slice(0, 99) : values.slice(99, 101) }))
+	);
+	await assert.rejects(readHostNullCompleteGitHubCollection(
+		"artifacts", page => ({ total_count: 101
+			, artifacts: page === 1
+			? values.slice(0, 100) : [{ id: 100 }] }))
+	);
+	await assert.rejects(readHostNullCompleteGitHubCollection(
+		"jobs", page => ({ total_count: page === 1 ? 101 : 102
+			, jobs: page === 1 ? values.slice(0, 100) : values.slice(100, 101) }))
+	);
 });
 
 test("complete HostNull selection accepts seven successful jobs from one failed run", async t => {
