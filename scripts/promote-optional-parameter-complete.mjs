@@ -97,10 +97,17 @@ const currentDigests = new Map(currentSourcePaths.map(documentPath => {
 		, `Missing promoted documentation: ${documentPath}`);
 	return [documentPath, sha256(documents[documentPath])];
 }));
+const changedCurrentSourcePaths = currentSourcePaths.filter(documentPath =>
+	semanticPromotion.evidence.some(evidence => evidence.files.some(file =>
+		file.path === documentPath
+		&& file.sha256 !== currentDigests.get(documentPath))));
+assert.deepEqual(changedCurrentSourcePaths, currentSourcePaths
+	, "Every optional publication guide must require a live-pin refresh");
 const reconciled = reconcileDependentCheckedRecordSourcePins(
 	semanticPromotion, currentDigests);
-assert.ok(reconciled.refreshed > 0
-	, "Optional-parameter publication must refresh changed live-source pins");
+const refreshedPins = reconciled.refreshed;
+assert.equal(refreshedPins, 70
+	, "Optional-parameter publication must refresh exactly 70 live pins");
 const promoted = reconciled.inventory;
 assert.deepEqual(await renderDocuments(promoted), documents
 	, "Source-pin reconciliation must not change rendered documentation");
@@ -144,7 +151,7 @@ try
 		, observations: promoted.observations.length
 			- original.document.observations.length
 		, sourcePins: {
-			paths: currentSourcePaths, refreshed: reconciled.refreshed
+			paths: currentSourcePaths, refreshed: refreshedPins
 		}
 		, inventory: next, files: files.map(file => file.path), head
 	}, null, 2) + "\n");
