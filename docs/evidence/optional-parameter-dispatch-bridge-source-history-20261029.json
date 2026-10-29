@@ -1,0 +1,200 @@
+{
+  "currentSourceDigests": [],
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-dispatch-bridge-source-history.mjs",
+      "sha256": "4db32a414a19b29de01cfea5a51da0d5ab69caab2bf9470d23317259cdf9e713"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-dispatch-bridge-source-history-tests.mjs",
+      "sha256": "ced0e7ee21d7d1ffb3223875a3549884a2880606c46c0a2e61c4953364c89d34"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-dispatch-bridge-source-history.mjs",
+      "sha256": "3b3eee7cf21fc5a4b8b3a8da7510ab1b644ebed2df3bd93d7f2c8dfe3c240da4"
+    }
+  ],
+  "implementationCommit": "508900c0b79d586c4a364efe9020a51704ff7cde",
+  "implementationPaths": [
+    ".github/workflows/dependent-checked-record-matrix.yml",
+    ".github/workflows/optional-parameter-complete.yml",
+    "tests/helpers/dependent-checked-record-matrix-ci-tests.mjs",
+    "tests/helpers/optional-parameter-matrix-receipt-tests.mjs"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "83ffe854ff511d14723ff4b8068ddbceb38805eb5e67298b13dcedab97256be9",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-dispatch-bridge-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 172
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "770c12a8268e1cfdaf4c6975e01a3c392e39ef67f85e0be025290d9df9fb3660"
+    },
+    {
+      "currentSha256": "2e64ac4f016b2b8c65ea87708262ec1ebc071b5f7d832cf9816ae62f84e155d4",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterDispatchBridgeSource, optionalParameterDispatchBridgeNormalizationPaths } from \"./optional-parameter-dispatch-bridge-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterDispatchBridgeNormalizationPaths\n\t, ...optionalParameterFocusedCiNormalizationPaths\n",
+          "previous": "\t...optionalParameterFocusedCiNormalizationPaths\n",
+          "start": 217533
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterDispatchBridgeSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterFocusedCiSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOptionalParameterFocusedCiSource(path, text, expected);\n",
+          "start": 272103
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8ac68cdc04901251db4dcfce40a96356654e8508f15ef3486bf6f965f45ea01e"
+    },
+    {
+      "currentSha256": "1d1dbb724d0a5209cdfe83fe019a840feaca0b8d37a5f0cf9eaf91b219e35164",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterDispatchBridgeSource }\n\tfrom \"./optional-parameter-dispatch-bridge-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1013
+        },
+        {
+          "current": "\t\t\t, beforeOptionalParameterDispatchBridgeSource(update.path\n\t\t\t\t, await readFile(update.path, \"utf8\")));\n",
+          "previous": "\t\t\t, await readFile(update.path, \"utf8\"));\n",
+          "start": 3092
+        },
+        {
+          "current": "\t\t\t, beforeOptionalParameterDispatchBridgeSource(update.path\n\t\t\t\t, await readFile(update.path, \"utf8\")));\n",
+          "previous": "\t\t\t, await readFile(update.path, \"utf8\"));\n",
+          "start": 3859
+        },
+        {
+          "current": "\t\t\t, beforeOptionalParameterDispatchBridgeSource(item.path\n\t\t\t\t, await readFile(item.path, \"utf8\"), item.sha256), item.sha256);\n",
+          "previous": "\t\t\t, await readFile(item.path, \"utf8\"), item.sha256);\n",
+          "start": 4636
+        },
+        {
+          "current": "\t\t\t, beforeOptionalParameterDispatchBridgeSource(addition.path\n\t\t\t\t, await readFile(addition.path, \"utf8\")));\n",
+          "previous": "\t\t\t, await readFile(addition.path, \"utf8\"));\n",
+          "start": 5739
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-current-line-integration-source-history-tests.mjs",
+      "previousSha256": "2c20f390866822be7782a12d023f008afa43347a064aac6481d4dacc1b4df5c3"
+    },
+    {
+      "currentSha256": "42914861085e3df37094e5d02b2e31e716db10227966393d5ce3c491713b00ee",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterDispatchBridgeSource }\n\tfrom \"./optional-parameter-dispatch-bridge-source-history.mjs\";\n",
+          "previous": "",
+          "start": 797
+        },
+        {
+          "current": "\t\tconst live = beforeOptionalParameterDispatchBridgeSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"));\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 3230
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeOptionalParameterDispatchBridgeSource(item.path\n\t\t\t, await readFile(item.path, \"utf8\"), item.sha256))\n\t\t\t, item.sha256, item.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(item.path)), item.sha256, item.path);\n",
+          "start": 3859
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeOptionalParameterDispatchBridgeSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.sha256)), addition.sha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.sha256, addition.path);\n",
+          "start": 4863
+        },
+        {
+          "current": "\t\tconst live = beforeOptionalParameterDispatchBridgeSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"));\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 5416
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-focused-ci-source-history-tests.mjs",
+      "previousSha256": "47e976c92de9d5270fb566e716634f75ab88d0d62b773a4129922bc7f170a527"
+    }
+  ],
+  "milestone": "optional-parameter-dispatch-bridge-source-v1",
+  "predecessorCommit": "06a6b53ab1669724500896e23df2c6a963d76261",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Make the new focused optional-parameter workflow reusable and expose it through one already registered, manually selected matrix dispatcher without changing automatic triggers or the default dependent checked-record audit. Preserve the exact same-run 34-cell receipt contract, reject bridge bypasses, confirm that dispatch-only sources own no promoted type-surface pins, and make no support claim before hosted acceptance.",
+  "updates": [
+    {
+      "currentSha256": "7572950f0750e507f067877c0932ab44a11266856e93b9310c60ff9092af17bb",
+      "edits": [
+        {
+          "current": "    inputs:\n      suite:\n        description: \"Bounded matrix to execute\"\n        required: true\n        default: dependent-checked-record\n        type: choice\n        options:\n          - dependent-checked-record\n          - optional-parameter\n",
+          "previous": "",
+          "start": 1736
+        },
+        {
+          "current": "    if: inputs.suite != 'optional-parameter'\n",
+          "previous": "",
+          "start": 2166
+        },
+        {
+          "current": "\n  optional-parameter:\n    name: Complete optional-parameter matrix\n    if: inputs.suite == 'optional-parameter'\n    uses: ./.github/workflows/optional-parameter-complete.yml\n",
+          "previous": "",
+          "start": 3571
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-matrix.yml",
+      "previousSha256": "2e9c45834933a66ca3868251ffe24b6d3d89fed1f21ffbd69eb9ec37243fca58"
+    },
+    {
+      "currentSha256": "4a170e7604f5ea6cbad647acd021cbce8b48452b81736ce5de7d0588a0b10f08",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 46
+        }
+      ],
+      "path": ".github/workflows/optional-parameter-complete.yml",
+      "previousSha256": "fc85bdc73e6b4866c435eba583c42e32f68fd1e918784298e2ac5899f5739629"
+    },
+    {
+      "currentSha256": "1cfbe77587d7a80c389414af06f727b47e4adb8e284a185bacc3e2f85b38ed40",
+      "edits": [
+        {
+          "current": "const assertOptionalParameterDispatchBridge = workflow => {\n\tassert.match(workflow, /workflow_dispatch:\\n {4}inputs:\\n {6}suite:/u);\n\tassert.match(workflow, /default: dependent-checked-record/u);\n\tassert.match(workflow, /options:\\n {10}- dependent-checked-record\\n {10}- optional-parameter/u);\n\tassert.match(workflow, /^ {4}if: inputs\\.suite != 'optional-parameter'$/mu);\n\tassert.match(workflow, /^ {2}optional-parameter:\\n {4}name: Complete optional-parameter matrix\\n {4}if: inputs\\.suite == 'optional-parameter'\\n {4}uses: \\.\\/\\.github\\/workflows\\/optional-parameter-complete\\.yml$/mu);\n};\n",
+          "previous": "",
+          "start": 1276
+        },
+        {
+          "current": "\tassertOptionalParameterDispatchBridge(workflow);\n",
+          "previous": "",
+          "start": 3668
+        },
+        {
+          "current": "\ntest(\"registered matrix dispatches the complete optional-parameter caller\"\n\t, async () => {\n\tconst workflow = await readFile(workflowPath, \"utf8\");\n\tassertOptionalParameterDispatchBridge(workflow);\n\tfor(const changed of [\n\t\tworkflow.replace(\"          - optional-parameter\\n\", \"\")\n\t\t, workflow.replace(\"inputs.suite == 'optional-parameter'\", \"true\")\n\t\t, workflow.replace(\"inputs.suite != 'optional-parameter'\", \"false\")\n\t\t, workflow.replace(\"./.github/workflows/optional-parameter-complete.yml\"\n\t\t\t, \"./.github/workflows/quality.yml\")\n\t]) assert.throws(() => assertOptionalParameterDispatchBridge(changed));\n\t}\n);\n",
+          "previous": "",
+          "start": 4831
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-matrix-ci-tests.mjs",
+      "previousSha256": "fa4bc3165ca3972b2dfac280f08585b83de81a80bbe7a2b54f536993a7962f85"
+    },
+    {
+      "currentSha256": "fab27ce4f7e8e1ba5d902a7e7e63a4461d5c08142037a19528a28224484af85f",
+      "edits": [
+        {
+          "current": "\tassert.ok(source.includes(\"on:\\n  workflow_call:\\n\"));\n\tassert.ok(source.includes(\"  workflow_dispatch:\\n\"));\n",
+          "previous": "\tassert.ok(source.includes(\"on:\\n  workflow_dispatch:\\n\"));\n",
+          "start": 5361
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-matrix-receipt-tests.mjs",
+      "previousSha256": "7f0aefbd6a12b11b5a2afd29364a51721ee6ef44b15c65e0e2ea13a486d872c5"
+    }
+  ]
+}
