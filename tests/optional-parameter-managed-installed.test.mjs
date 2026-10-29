@@ -31,7 +31,8 @@ import {
 	optionalParameterManagedGroups
 } from "./helpers/optional-parameter-managed-report.mjs";
 import {
-	assertOptionalParameterBundle, prepareOptionalParameterProject
+	assertOptionalParameterNativeComponent, prepareOptionalParameterProject
+	, retainOptionalParameterNativeComponent
 } from "./helpers/optional-parameter-packages.mjs";
 import { retainPackageSetEvidence } from "./helpers/package-set.mjs";
 
@@ -95,8 +96,7 @@ for(const route of routes) test(
 				error.message += `: ${JSON.stringify(error.details)}`;
 				throw error;
 			});
-			const bundleRoot = join(outputRoot, "bundle");
-			const bundle = await assertOptionalParameterBundle(bundleRoot);
+			const component = await assertOptionalParameterNativeComponent(outputRoot);
 			await verifyPackageSetReceipt({
 				receiptPath: join(outputRoot, "package-set-receipt.json")
 			});
@@ -109,17 +109,11 @@ for(const route of routes) test(
 				.flatMap(pkg => pkg.artifacts.map(item => [item.path, item.sha256]))
 				.sort(([left], [right]) => left.localeCompare(right)));
 			const fact = {
-				...bundle, bindingIrSha256: built.bindingIrSha256
+				...component, bindingIrSha256: built.bindingIrSha256
 				, packageSetReceiptSha256: sha256(receiptBytes), archives
 			};
-			for(const [name, path] of [
-				["binding-ir.json", "binding/binding-ir.json"]
-				, ["compiler-adapters.json", "locks/compiler-adapters.json"]
-				, ["component-build-plan.json", "locks/component-build-plan.json"]
-				, ["LeanBridgeGenerated.lean", "generated/LeanBridgeGenerated.lean"]
-				, ["provenance.json", "metadata/provenance.json"]
-			]) await saveLakeFile(records, `build-${attempt}/${name}`
-				, await readFile(join(bundleRoot, path)));
+			await retainOptionalParameterNativeComponent(
+				records, attempt, outputRoot);
 			await saveLakeFile(records, `build-${attempt}/package-set-receipt.json`
 				, receiptBytes);
 			await saveLakeFile(records, `build-${attempt}/configuration.json`

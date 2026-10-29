@@ -51,8 +51,13 @@ export const optionalParameterReview = () => optionalParameterIr();
  * its compiler-authenticated default.
  *
  * @param document - Compiled or independently reviewed Binding IR.
+ * @param parameterNames - Exact admitted compiler and reviewed binder names.
  */
-export const assertOptionalParameterIr = document => {
+export const assertOptionalParameterIr = (
+	document, parameterNames = ["value0"]
+) => {
+	assert.ok(Array.isArray(parameterNames) && parameterNames.length
+		&& parameterNames.every(name => typeof name === "string"));
 	const expected = optionalParameterReview();
 	assert.equal(document.declarations.length, expected.declarations.length);
 	for(const expectedDeclaration of expected.declarations)
@@ -61,7 +66,7 @@ export const assertOptionalParameterIr = document => {
 			item.id === expectedDeclaration.id);
 		assert.ok(declaration, expectedDeclaration.id);
 		assert.equal(declaration.parameters.length, 1);
-		assert.equal(declaration.parameters[0].name, "value0");
+		assert.ok(parameterNames.includes(declaration.parameters[0].name));
 		assert.equal(declaration.parameters[0].optional, true);
 		assert.deepEqual(declaration.parameters[0].default
 			, expectedDeclaration.parameters[0].default);

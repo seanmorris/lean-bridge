@@ -6,15 +6,15 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { validateCompilerAdapterPlan } from "../../src/build/compiler-adapters.mjs";
-import { validateComponentBuildPlan } from "../../src/build/component-plan.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import {
-	assertOptionalParameterIr, optionalParameterExports, optionalParameterModule
+	optionalParameterExports, optionalParameterModule
 } from "./optional-parameter-fixture.mjs";
 import { optionalParameterMatrixCases } from "./optional-parameter-matrix.mjs";
 import {
-	optionalParameterTargetConfiguration
+	checkOptionalParameterNativeComponentRecords
+	, optionalParameterComponentFactKeys, optionalParameterNativeRecordNames
+	, optionalParameterTargetConfiguration
 } from "./optional-parameter-packages.mjs";
 
 export const optionalParameterLanguageProfiles = Object.freeze([
@@ -27,9 +27,8 @@ const extension = Object.freeze({
 	perl: "pl", python: "py", ruby: "rb", rust: "rs"
 });
 const factKeys = [
-	"archives", "authenticatedDefaults", "bindingIrFileSha256"
-	, "bindingIrSha256", "compilerAdaptersSha256", "declarations"
-	, "generatedLeanSha256", "packageSetReceiptSha256"
+	"archives", ...optionalParameterComponentFactKeys
+	, "packageSetReceiptSha256"
 ];
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const apiPatterns = Object.freeze({
@@ -173,30 +172,19 @@ export const checkOptionalParameterLanguageRecords = async (read, options) => {
 		assert.deepEqual(await json(prefix + "configuration.json")
 			, expectedConfiguration);
 		assert.deepEqual(await read(prefix + "Defaults.lean"), leanSource);
-		const irBytes = await read(prefix + "binding-ir.json");
-		const ir = JSON.parse(irBytes); assertOptionalParameterIr(ir);
-		const adaptersBytes = await read(prefix + "compiler-adapters.json");
-		const adapters = JSON.parse(adaptersBytes);
-		validateCompilerAdapterPlan(adapters);
-		assert.equal(adapters.exports.length, 7);
-		assert.ok(adapters.exports.every(item => item.parameters.length === 1));
-		validateComponentBuildPlan(await json(prefix + "component-build-plan.json"));
+		const component = await checkOptionalParameterNativeComponentRecords(
+			read, prefix);
 		const receiptBytes = await read(prefix + "package-set-receipt.json");
 		const receipt = JSON.parse(receiptBytes);
 		validatePackageSetReceipt(receipt);
-		const leanBytes = await read(prefix + "LeanBridgeGenerated.lean");
-		assert.doesNotMatch(leanBytes.toString()
-			, /(?:sorry|unsafeCast|\baxiom\b)/u);
 		const fact = report.builds[attempt];
-		assert.equal(fact.bindingIrFileSha256, sha256(irBytes));
-		assert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));
-		assert.equal(fact.generatedLeanSha256, sha256(leanBytes));
+		for(const key of optionalParameterComponentFactKeys)
+			assert.equal(fact[key], component[key], key);
 		assert.equal(fact.packageSetReceiptSha256, sha256(receiptBytes));
 		assert.deepEqual(receipt, report.receipt);
 	}
 	for(const name of [
-		"binding-ir.json", "compiler-adapters.json", "component-build-plan.json"
-		, "LeanBridgeGenerated.lean", "provenance.json"
+		...optionalParameterNativeRecordNames
 		, "package-set-receipt.json", "configuration.json", "Defaults.lean"
 	]) assert.deepEqual(await read(`build-0/${name}`)
 		, await read(`build-1/${name}`), name);
