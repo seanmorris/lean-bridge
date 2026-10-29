@@ -1,0 +1,74 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-publication-preparation-source-history.mjs",
+      "sha256": "b41d1c4ebbebdb4f160f23627e525199aca80a0101f9efc0ca8e445178f043fb"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-publication-preparation-source-history-tests.mjs",
+      "sha256": "94ed64dbfae42392ce05a647bfd806bac87109efb72d434e475d3aa0fa888495"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-publication-preparation-source-history.mjs",
+      "sha256": "311f93b30f356649af8ef82fe0d8fbbd88a490f186638197b18e97b159060e31"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "scripts/promote-optional-parameter-complete.mjs",
+      "sha256": "2853295f4619a91d5cffc872b78e9531b9936d427f814a93165ea77edc466f6d"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-complete-documentation-tests.mjs",
+      "sha256": "cc338c35989698066be819bc0d392c502266564eec4b6bf11fb48797a0622ad2"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-complete-documentation.mjs",
+      "sha256": "5d3b496289b3c87c84155bfd60c574dcac34651872df60349fc2292799f89a28"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-complete-promotion-transaction-tests.mjs",
+      "sha256": "81fba73b46a69075156f942a57c81859a500076ea0e432c02faf578148014246"
+    }
+  ],
+  "implementationCommit": "90e61aa60664488c8d13279b4bbc41a11d2e3586",
+  "integrationUpdates": [
+    {
+      "currentSha256": "74e1a825d1434f7c5deb9ec1c0da0021d4debb3c81504561880490e8e062a23e",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-publication-preparation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 229
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "6339e08c023830dc67d55c952d49077c21cbae04c2a6e4d2a99432168548899a"
+    }
+  ],
+  "milestone": "optional-parameter-publication-preparation-source-v1",
+  "predecessorCommit": "6ed7c38095945cf440c7255f8e831475286b78e5",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Prepare fail-closed atomic publication of exactly 34 optional-parameter signature cells and their evidence-gated author documentation without publishing support before hosted archive replay.",
+  "updates": [
+    {
+      "currentSha256": "9af7b8b635f24466953b98d202a78ae32817bcfb73d755b101f2bd6339e13ad5",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-complete-documentation-tests.mjs\";\n",
+          "previous": "",
+          "start": 1351
+        },
+        {
+          "current": "import \"./helpers/optional-parameter-complete-promotion-transaction-tests.mjs\";\n",
+          "previous": "",
+          "start": 1491
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "dd29eb3b00c0628b8073e207d23b86cb411f1071b36a11ab93a1de3aab65ab41"
+    }
+  ]
+}
