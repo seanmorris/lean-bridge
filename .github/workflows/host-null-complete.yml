@@ -1,0 +1,93 @@
+name: Complete HostNull acceptance
+
+on:
+  push:
+    paths:
+      - ".github/workflows/host-null-complete.yml"
+      - "docs/consume/**"
+      - "docs/evidence/host-null-complete-*/**"
+      - "docs/javascript-typescript.md"
+      - "docs/php.md"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*host-null-complete*.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/host-null-complete-*.test.mjs"
+      - "tests/helpers/host-null-complete-*.mjs"
+  pull_request:
+    paths:
+      - ".github/workflows/host-null-complete.yml"
+      - "docs/consume/**"
+      - "docs/evidence/host-null-complete-*/**"
+      - "docs/javascript-typescript.md"
+      - "docs/php.md"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*host-null-complete*.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/host-null-complete-*.test.mjs"
+      - "tests/helpers/host-null-complete-*.mjs"
+  workflow_dispatch:
+  # One low-cost lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "31 8 * * 6"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: host-null-complete-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out complete source history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Replay all seven immutable host archives
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/host-null-complete
+          node --test --test-concurrency=1 \
+            tests/host-null-complete-hosted-evidence.test.mjs \
+            | tee build/host-null-complete/evidence.tap
+      - name: Audit all 170 promoted cells and generated documentation
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test --test-concurrency=1 \
+            tests/host-null-complete-promotion.test.mjs \
+            | tee build/host-null-complete/promotion.tap
+      - name: Preserve the complete HostNull audit
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-complete-${{ github.run_id }}
+          path: build/host-null-complete/
+          if-no-files-found: error
+          retention-days: 14

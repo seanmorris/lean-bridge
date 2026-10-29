@@ -64,13 +64,15 @@ assert.deepEqual(hostNullCompletePromotionGroups.flatMap(item => item.profiles)
 	, hostNullCompletePromotionProfiles);
 
 const referencePaths = Object.freeze([
-	`${hostNullCompleteHostedEvidence}/index.json`
+	".github/workflows/host-null-complete.yml"
+	, `${hostNullCompleteHostedEvidence}/index.json`
 	, "scripts/archive-host-null-complete-evidence.mjs"
 	, "scripts/download-host-null-complete-inputs.mjs"
 	, "scripts/generate-type-docs.mjs"
 	, "scripts/promote-host-null-complete.mjs"
 	, "tests/helpers/host-null-complete-hosted-archive.mjs"
 	, "tests/helpers/host-null-complete-hosted-evidence.mjs"
+	, "tests/helpers/host-null-complete-ci-tests.mjs"
 	, "tests/helpers/host-null-complete-promotion.mjs"
 	, "tests/helpers/host-null-complete-promotion-tests.mjs"
 ]);

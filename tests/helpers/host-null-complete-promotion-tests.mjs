@@ -34,13 +34,15 @@ const load = async () => {
 };
 const revision = "1".repeat(40);
 const referencePaths = [
-	`${hostNullCompleteHostedEvidence}/index.json`
+	".github/workflows/host-null-complete.yml"
+	, `${hostNullCompleteHostedEvidence}/index.json`
 	, "scripts/archive-host-null-complete-evidence.mjs"
 	, "scripts/download-host-null-complete-inputs.mjs"
 	, "scripts/generate-type-docs.mjs"
 	, "scripts/promote-host-null-complete.mjs"
 	, "tests/helpers/host-null-complete-hosted-archive.mjs"
 	, "tests/helpers/host-null-complete-hosted-evidence.mjs"
+	, "tests/helpers/host-null-complete-ci-tests.mjs"
 	, "tests/helpers/host-null-complete-promotion.mjs"
 	, "tests/helpers/host-null-complete-promotion-tests.mjs"
 ];
@@ -53,7 +55,7 @@ const reference = Object.freeze({
 	, command: "hosted complete HostNull command"
 	, scope: "hosted complete HostNull scope"
 	, files: Object.freeze(referencePaths.map((path, index) => ({
-		path, sha256: `${index + 1}`.repeat(64)
+		path, sha256: ((index + 1) % 16).toString(16).repeat(64)
 	})))
 	, artifacts: Object.freeze(artifacts)
 	, limitations: Object.freeze(Array.from({ length: 6 }, (_, index) =>
