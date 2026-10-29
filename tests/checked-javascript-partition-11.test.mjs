@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/dependent-signature-focused-archive-source-history-tests.mjs";
 import "./helpers/optional-parameter-route-binder-repair-source-history-tests.mjs";
 import "./helpers/focused-acceptance-sparse-checkout-source-history-tests.mjs";
 import "./helpers/complete-acceptance-budget-source-history-tests.mjs";

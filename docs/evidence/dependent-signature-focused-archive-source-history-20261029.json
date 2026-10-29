@@ -1,0 +1,806 @@
+{
+  "cells": 34,
+  "commits": [
+    {
+      "commit": "346e91f05555f93cd75f212399739e91c2b06143",
+      "modified": [
+        ".github/workflows/dependent-signature-complete.yml",
+        "scripts/archive-dependent-signature-hosted.mjs",
+        "scripts/download-dependent-signature-hosted-inputs.mjs",
+        "tests/helpers/dependent-signature-complete-promotion-tests.mjs",
+        "tests/helpers/dependent-signature-complete-promotion.mjs",
+        "tests/helpers/dependent-signature-hosted-archive.mjs",
+        "tests/helpers/dependent-signature-hosted-evidence.mjs",
+        "tests/helpers/dependent-signature-hosted-tests.mjs"
+      ],
+      "parent": "b27603fed9401f5b614e532faa53b8188660a51c",
+      "subject": "Bind dependent signature archive to focused run [skip ci]"
+    },
+    {
+      "commit": "8163ddc41b7f1257ee89e96047ad6eef3224d6a5",
+      "modified": [
+        "scripts/download-dependent-signature-hosted-inputs.mjs"
+      ],
+      "parent": "346e91f05555f93cd75f212399739e91c2b06143",
+      "subject": "Select exact hosted run attempt [skip ci]"
+    }
+  ],
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-signature-focused-archive-source-history.mjs",
+      "sha256": "9088fab8a6d491c55441bb80d75894801040c9f27eac2d2aaf10ad6bf0bc9edb"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-focused-archive-source-history-tests.mjs",
+      "sha256": "8a77a1f02e26e2afa00b36e7ce26157585bfdeba8a775f9a57bd279f3ac2e34b"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-focused-archive-source-history.mjs",
+      "sha256": "c15d96c8fad9ed687b4cb73a2bf77ef097bad8c252b4500609728b526ce61b82"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "tests/dependent-signature-complete-hosted-evidence.test.mjs",
+      "sha256": "a57e6e6abfaf72442f129b249448c217f06770828d259331569040f9da32f7e9"
+    },
+    {
+      "path": "tests/dependent-signature-complete-promotion.test.mjs",
+      "sha256": "96d08bafdbb67b49dacecb2e0c29203bb35494e45f66aa25c874aa0835c21bda"
+    }
+  ],
+  "implementationCommit": "8163ddc41b7f1257ee89e96047ad6eef3224d6a5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "93d0be60a877e44871d9f6bec8350b7baab4b3f2c0fdc8cd3fd2b9ef83baca08",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-signature-focused-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "9354953630108b18cc40427ba8d24f466b29d09ca6917f34d59781be11d7c9ec"
+    },
+    {
+      "currentSha256": "33cb38d1cfcf4da9871533a2bc0dc6fb1a0a8d9aac4c579c130b563c9e226773",
+      "edits": [
+        {
+          "current": "import { beforeDependentSignatureFocusedArchiveSource, dependentSignatureFocusedArchiveNormalizationPaths } from \"./dependent-signature-focused-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentSignatureFocusedArchiveNormalizationPaths\n\t, ...focusedAcceptanceSparseCheckoutNormalizationPaths\n",
+          "previous": "\t...focusedAcceptanceSparseCheckoutNormalizationPaths\n",
+          "start": 221173
+        },
+        {
+          "current": "\tlet stage = beforeDependentSignatureFocusedArchiveSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeFocusedAcceptanceSparseCheckoutSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeFocusedAcceptanceSparseCheckoutSource(path, text, expected);\n",
+          "start": 276938
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "915aa7a49f2a267843eb12f72579bc29c53c40289d6692f1e2ddcdbe001b984c"
+    }
+  ],
+  "milestone": "dependent-signature-focused-archive-source-v1",
+  "predecessorCommit": "b27603fed9401f5b614e532faa53b8188660a51c",
+  "producerArtifacts": 11,
+  "profiles": 17,
+  "receiptArtifacts": 1,
+  "reports": 44,
+  "schemaVersion": 1,
+  "scope": "Replace the obsolete failed consumer-matrix binding with the exact focused dependent-signature run: eleven producer artifacts, one same-run receipt, forty-four canonical checker summaries, seventeen profiles and thirty-four promotable cells. Select only jobs from the exact successful run attempt and retain complete original ZIP, API, log and source identities.",
+  "updates": [
+    {
+      "commit": "346e91f05555f93cd75f212399739e91c2b06143",
+      "currentSha256": "72f441e93b8045ecee787bbf00053cbb652cfb9949ea84ae9fe1662aaaafebd9",
+      "edits": [
+        {
+          "current": "      - name: Replay all twelve immutable host archives\n",
+          "previous": "      - name: Replay all fourteen immutable host archives\n",
+          "start": 3316
+        }
+      ],
+      "parent": "b27603fed9401f5b614e532faa53b8188660a51c",
+      "path": ".github/workflows/dependent-signature-complete.yml",
+      "previousSha256": "7d38101e62faee63a80659ebbe35021b125dbbea2fbc44e393a12fba6231bb5b"
+    },
+    {
+      "commit": "346e91f05555f93cd75f212399739e91c2b06143",
+      "currentSha256": "2b454763fbe7ab2e3d421b97429309bf1770ff4fe9f6f1bb566154efc0fad63e",
+      "edits": [
+        {
+          "current": "\t, assertDependentSignatureHostedReceiptSteps\n",
+          "previous": "",
+          "start": 749
+        },
+        {
+          "current": "\t, dependentSignatureHostedReceipt\n\t, dependentSignatureHostedRunId\n",
+          "previous": "\t, dependentSignatureHostedRunConclusions\n",
+          "start": 1018
+        },
+        {
+          "current": "\t, inspectDependentSignatureHostedReceipt\n",
+          "previous": "",
+          "start": 1202
+        },
+        {
+          "current": "\t, validateDependentSignatureHostedReceipt\n",
+          "previous": "",
+          "start": 1288
+        },
+        {
+          "current": "\tbuildDependentSignatureMatrixReceipt\n\t, dependentSignatureMatrixResultPath\n\t, dependentSignatureMatrixRoutes\n} from \"../tests/helpers/dependent-signature-matrix-receipt.mjs\";\n",
+          "previous": "\tvalidateDependentSignatureHostedReports\n} from \"../tests/helpers/dependent-signature-hosted-evidence.mjs\";\n",
+          "start": 1406
+        },
+        {
+          "current": "const selections = [...dependentSignatureHostedLanes\n\t, dependentSignatureHostedReceipt];\n",
+          "previous": "",
+          "start": 1856
+        },
+        {
+          "current": "\t, selections.map(item => item.id).sort());\nfor(const item of selections)\n\tassert.deepEqual((await readdir(join(inputRoot, item.id))).sort(), [\n",
+          "previous": "\t, dependentSignatureHostedLanes.map(lane => lane.id).sort());\nfor(const lane of dependentSignatureHostedLanes)\n\tassert.deepEqual((await readdir(join(inputRoot, lane.id))).sort(), [\n",
+          "start": 1997
+        },
+        {
+          "current": "const retainedHosted = async (item, hosted, extracted, partsRoot) => {\n\tconst selected = dependentSignatureHostedInputs(inputRoot, item);\n\tawait putFile(`hosted/${item.id}/job.log`, selected[\"job-log\"]);\n\tfor(const [name, record] of Object.entries(hosted.api))\n\t\tputBytes(`hosted/api/${item.id}/${name}.json`, record.bytes);\n\tconst parts = await splitCheckedRecordValueIndexHostedArtifact(\n\t\tselected[\"artifact-zip\"], partsRoot);\n\tfor(const part of parts)\n\t\tawait putFile(`hosted/${item.id}/artifact.zip.parts/${part.name}`\n\t\t\t, part.path);\n\treturn {\n\t\t...hosted.hostedRun\n\t\t, apiRecords: Object.fromEntries(Object.entries(hosted.api).map(\n\t\t\t([name, record]) => [name, {\n\t\t\t\tbytes: record.bytes.length, sha256: record.sha256\n\t\t\t}]\n\t\t))\n\t\t, artifact: {\n\t\t\t...hosted.hostedRun.artifact, members: extracted.entries\n\t\t\t, parts: parts.map(part => ({\n\t\t\t\tpath: `hosted/${item.id}/artifact.zip.parts/${part.name}`\n\t\t\t\t, offset: part.offset, bytes: part.bytes, sha256: part.sha256\n\t\t\t}))\n\t\t}\n\t};\n};\n",
+          "previous": "",
+          "start": 3601
+        },
+        {
+          "current": "const lanes = [], summaries = new Map();\n",
+          "previous": "const lanes = [];\n",
+          "start": 4594
+        },
+        {
+          "current": "\t\t\tfor(const route of dependentSignatureMatrixRoutes)\n",
+          "previous": "\t\t\tconst reports = {};\n\t\t\tfor(const path of lane.reportPaths)\n",
+          "start": 5121
+        },
+        {
+          "current": "\t\t\t\tconst path = dependentSignatureMatrixResultPath(\n\t\t\t\t\tlane.matrixLane, route, dependentSignatureHostedProducer);\n\t\t\t\tconst relative = path.slice(path.indexOf(\"/\") + 1);\n\t\t\t\tconst bytes = await readFile(join(extracted.root, relative));\n\t\t\t\tconst value = JSON.parse(bytes);\n\t\t\t\tassert.equal(bytes.toString(), canonicalJson(value)\n\t\t\t\t\t, `${lane.id}:${route}`);\n\t\t\t\tassert.ok(!summaries.has(path), path);\n\t\t\t\tsummaries.set(path, bytes);\n\t\t\t\tputBytes(`hosted/output/${lane.id}/${route}.json`, bytes);\n",
+          "previous": "\t\t\t\treports[path] = await readFile(join(extracted.root, path));\n\t\t\t\tputBytes(`hosted/output/${lane.id}/${path}`, reports[path]);\n",
+          "start": 5180
+        },
+        {
+          "current": "",
+          "previous": "\t\t\tconst accepted = validateDependentSignatureHostedReports(\n\t\t\t\tlane, reports);\n\t\t\tawait putFile(`hosted/${lane.id}/job.log`, selected[\"job-log\"]);\n\t\t\tfor(const [name, item] of Object.entries(hosted.api))\n\t\t\t\tputBytes(`hosted/api/${lane.id}/${name}.json`, item.bytes);\n\t\t\tconst parts = await splitCheckedRecordValueIndexHostedArtifact(\n\t\t\t\tselected[\"artifact-zip\"], partsRoot);\n\t\t\tfor(const part of parts)\n\t\t\t\tawait putFile(\n\t\t\t\t\t`hosted/${lane.id}/artifact.zip.parts/${part.name}`\n\t\t\t\t\t, part.path);\n",
+          "start": 5686
+        },
+        {
+          "current": "\t\t\t\tid: lane.id, profiles: [...lane.profiles]\n\t\t\t\t, hostedRun: await retainedHosted(\n\t\t\t\t\tlane, hosted, extracted, partsRoot)\n",
+          "previous": "\t\t\t\tid: lane.id, profiles: [...lane.profiles], accepted\n\t\t\t\t, hostedRun: {\n\t\t\t\t\t...hosted.hostedRun\n\t\t\t\t\t, apiRecords: Object.fromEntries(Object.entries(hosted.api).map(\n\t\t\t\t\t\t([name, item]) => [name, {\n\t\t\t\t\t\t\tbytes: item.bytes.length, sha256: item.sha256\n\t\t\t\t\t\t}]\n\t\t\t\t\t))\n\t\t\t\t\t, artifact: {\n\t\t\t\t\t\t...hosted.hostedRun.artifact\n\t\t\t\t\t\t, members: extracted.entries\n\t\t\t\t\t\t, parts: parts.map(({\n\t\t\t\t\t\t\tname, offset, bytes, sha256: value\n\t\t\t\t\t\t}) => ({\n\t\t\t\t\t\t\tpath: `hosted/${lane.id}/artifact.zip.parts/${name}`\n\t\t\t\t\t\t\t, offset, bytes, sha256: value\n\t\t\t\t\t\t}))\n\t\t\t\t\t}\n\t\t\t\t}\n",
+          "start": 5702
+        },
+        {
+          "current": "\n\tconst receiptInputs = dependentSignatureHostedInputs(\n\t\tinputRoot, dependentSignatureHostedReceipt);\n\tconst receiptHosted = await inspectDependentSignatureHostedReceipt(\n\t\treceiptInputs);\n\tassertDependentSignatureHostedReceiptSteps(receiptHosted.api.job.bytes);\n\tconst receiptExtracted\n\t\t= await extractCheckedRecordValueIndexHostedArtifact(\n\t\t\treceiptInputs[\"artifact-zip\"]);\n\tconst receiptPartsRoot = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-dependent-signature-matrix-zip-\"));\n\tlet aggregate, receipt;\n\ttry\n\t{\n\t\tconst receiptBytes = await readFile(join(\n\t\t\treceiptExtracted.root, \"receipt.json\"));\n\t\treceipt = JSON.parse(receiptBytes);\n\t\tassert.equal(receiptBytes.toString(), canonicalJson(receipt));\n\t\tvalidateDependentSignatureHostedReceipt(receipt);\n\t\tconst replayed = await buildDependentSignatureMatrixReceipt(path => {\n\t\t\tassert.ok(summaries.has(path), path); return summaries.get(path);\n\t\t}, receipt.run);\n\t\tassert.deepEqual(replayed, receipt);\n\t\tputBytes(\"hosted/output/matrix/receipt.json\", receiptBytes);\n\t\taggregate = {\n\t\t\treceipt\n\t\t\t, hostedRun: await retainedHosted(\n\t\t\t\tdependentSignatureHostedReceipt, receiptHosted\n\t\t\t\t, receiptExtracted, receiptPartsRoot)\n\t\t};\n\t}\n\tfinally\n\t{\n\t\tawait rm(receiptExtracted.root, { recursive: true });\n\t\tawait rm(receiptPartsRoot, { recursive: true });\n\t}\n\tfor(const lane of lanes)\n\t\tlane.results = receipt.records.filter(record => record.lane === lane.id);\n\n",
+          "previous": "",
+          "start": 5955
+        },
+        {
+          "current": "\t\t, runId: dependentSignatureHostedRunId\n\t\t, matrix: receipt.matrix, lanes, aggregate, selectedSources, files\n",
+          "previous": "\t\t, runConclusions: dependentSignatureHostedRunConclusions\n\t\t, lanes, selectedSources, files\n",
+          "start": 7975
+        },
+        {
+          "current": "\t\t\t\"The eleven same-run producer artifacts establish all thirty-four direct dependent-signature cells: seventeen supported profiles across ordinary Lean source and independently reviewed Binding IR.\"\n",
+          "previous": "\t\t\t\"The retained runs establish all thirty-four direct dependent-signature cells: seventeen supported profiles across ordinary Lean source and independently reviewed Binding IR.\"\n",
+          "start": 8104
+        },
+        {
+          "current": "\t\t\t, \"The same-run receipt authenticates all forty-four independent checker summaries across eleven lanes, two author routes and full and result-only public APIs.\"\n\t\t\t, \"The native, managed, dynamic-language, browser, WIT/WASI and four-ABI Perl lanes use reproducible source-free package handoffs and public host APIs.\"\n\t\t\t, \"The archive retains all twelve complete original GitHub artifact ZIPs, API identities, job logs, canonical summaries and exact producer, checker and archiver source closures. External toolchains, runners, browsers and operating-system packages remain trusted recorded inputs.\"\n",
+          "previous": "\t\t\t, \"The JavaScript-family lane uses two independent author builds, source-free offline npm installation, strict TypeScript, and page, React and worker execution in Chromium, Firefox and WebKit.\"\n\t\t\t, \"The native, managed, dynamic-language, WIT/WASI and four Perl ABI lanes use reproducible source-free package handoffs and public host APIs. PHP-Wasm additionally covers twelve loading, packaging, realm and strictness arrangements.\"\n\t\t\t, \"The archive retains each complete original GitHub artifact ZIP, API identities, job log, selected reports and exact producer, checker and archiver source closures. External toolchains, runners, browsers and operating-system packages remain trusted recorded inputs.\"\n",
+          "start": 8522
+        },
+        {
+          "current": "\t\t, runId: dependentSignatureHostedRunId\n\t\t, artifacts: [...lanes.map(lane => lane.hostedRun.artifact)\n\t\t\t, aggregate.hostedRun.artifact]\n",
+          "previous": "\t\t, lanes: lanes.map(lane => ({\n\t\t\tid: lane.id, artifact: lane.hostedRun.artifact\n\t\t}))\n",
+          "start": 10083
+        }
+      ],
+      "parent": "b27603fed9401f5b614e532faa53b8188660a51c",
+      "path": "scripts/archive-dependent-signature-hosted.mjs",
+      "previousSha256": "3f6da548254acfc02611a309c73bd320f20977088aabab3c2d04eaab1bd50603"
+    },
+    {
+      "commit": "346e91f05555f93cd75f212399739e91c2b06143",
+      "currentSha256": "661c7a566672eea2fb318c1dcf8ee5bd1f80b325ce816df14b95f72f41156caa",
+      "edits": [
+        {
+          "current": "\tassertDependentSignatureHostedReceiptSteps\n\t, assertDependentSignatureHostedSteps\n",
+          "previous": "\tassertDependentSignatureHostedSteps\n\t, dependentSignatureConsumerRun\n",
+          "start": 537
+        },
+        {
+          "current": "\t, dependentSignatureHostedReceipt\n\t, dependentSignatureHostedRunId\n\t, inspectDependentSignatureHostedReceipt\n",
+          "previous": "\t, dependentSignatureHostedRunConclusions\n",
+          "start": 723
+        },
+        {
+          "current": "import {\n\tdependentSignatureFocusedWorkflow\n} from \"../tests/helpers/dependent-signature-matrix-receipt.mjs\";\n",
+          "previous": "",
+          "start": 942
+        },
+        {
+          "current": "\t\t\t`${repository}/actions/runs/${dependentSignatureHostedRunId}/${key}?per_page=100&page=${page}`\n",
+          "previous": "\t\t\t`${repository}/actions/runs/${dependentSignatureConsumerRun}/${key}?per_page=100&page=${page}`\n",
+          "start": 1942
+        },
+        {
+          "current": "\t`${repository}/actions/runs/${dependentSignatureHostedRunId}`);\nconst run = object(runBytes, `run ${dependentSignatureHostedRunId}`);\nassert.equal(run.id, dependentSignatureHostedRunId);\n",
+          "previous": "\t`${repository}/actions/runs/${dependentSignatureConsumerRun}`);\nconst run = object(runBytes, `run ${dependentSignatureConsumerRun}`);\nassert.equal(run.id, dependentSignatureConsumerRun);\n",
+          "start": 3644
+        },
+        {
+          "current": "assert.equal(run.conclusion, \"success\");\nassert.equal(run.path, dependentSignatureFocusedWorkflow);\n",
+          "previous": "assert.equal(run.conclusion\n\t, dependentSignatureHostedRunConclusions[String(run.id)]);\nassert.equal(run.path, \".github/workflows/consumer-matrix.yml\");\n",
+          "start": 3933
+        },
+        {
+          "current": "\tconst selected = [...dependentSignatureHostedLanes\n\t\t, dependentSignatureHostedReceipt];\n\tfor(const item of selected)\n",
+          "previous": "\tfor(const lane of dependentSignatureHostedLanes)\n",
+          "start": 4320
+        },
+        {
+          "current": "\t\tconst matchingJobs = jobs.filter(job => job.name === item.jobName);\n\t\tassert.equal(matchingJobs.length, 1, item.jobName);\n",
+          "previous": "\t\tconst matchingJobs = jobs.filter(job => job.name === lane.jobName);\n\t\tassert.equal(matchingJobs.length, 1, lane.jobName);\n",
+          "start": 4442
+        },
+        {
+          "current": "\t\tassert.equal(job.run_id, dependentSignatureHostedRunId);\n",
+          "previous": "\t\tassert.equal(job.run_id, dependentSignatureConsumerRun);\n",
+          "start": 4597
+        },
+        {
+          "current": "\t\t\t= `${item.artifactPrefix}-${dependentSignatureHostedProducer}`;\n",
+          "previous": "\t\t\t= `${lane.artifactPrefix}-${dependentSignatureHostedProducer}`;\n",
+          "start": 4825
+        },
+        {
+          "current": "\t\tassert.equal(artifact.workflow_run?.id, dependentSignatureHostedRunId);\n",
+          "previous": "\t\tassert.equal(artifact.workflow_run?.id, dependentSignatureConsumerRun);\n",
+          "start": 5118
+        },
+        {
+          "current": "\t\tconst root = join(output, item.id);\n",
+          "previous": "\t\tconst root = join(output, lane.id);\n",
+          "start": 5280
+        },
+        {
+          "current": "\t\tconst inputs = dependentSignatureHostedInputs(output, item);\n\t\tif(item === dependentSignatureHostedReceipt)\n\t\t{\n\t\t\tconst captured = await inspectDependentSignatureHostedReceipt(inputs);\n\t\t\tassertDependentSignatureHostedReceiptSteps(captured.api.job.bytes);\n\t\t}\n\t\telse\n\t\t{\n\t\t\tconst captured = await inspectDependentSignatureHostedArtifact(\n\t\t\t\tinputs, item);\n\t\t\tassertDependentSignatureHostedSteps(item, captured.api.job.bytes);\n\t\t}\n",
+          "previous": "\t\tconst captured = await inspectDependentSignatureHostedArtifact(\n\t\t\tdependentSignatureHostedInputs(output, lane), lane);\n\t\tassertDependentSignatureHostedSteps(lane, captured.api.job.bytes);\n",
+          "start": 6288
+        },
+        {
+          "current": "\t\t, runId: dependentSignatureHostedRunId\n",
+          "previous": "\t\t, runId: dependentSignatureConsumerRun\n",
+          "start": 6842
+        },
+        {
+          "current": "\t\t, reports: 44, artifacts: selected.length\n",
+          "previous": "",
+          "start": 6956
+        }
+      ],
+      "parent": "b27603fed9401f5b614e532faa53b8188660a51c",
+      "path": "scripts/download-dependent-signature-hosted-inputs.mjs",
+      "previousSha256": "35888e87a2a82cfc6c5ff7e1c3a48dbd1610f86108011d7628861160564194df"
+    },
+    {
+      "commit": "346e91f05555f93cd75f212399739e91c2b06143",
+      "currentSha256": "b72280abe0684ac2204caa2ac55caab8999852bf79f9e6420960bb2f0902e0d9",
+      "edits": [
+        {
+          "current": "\tdependentSignatureHostedLanes, dependentSignatureHostedReceipt\n",
+          "previous": "\tdependentSignatureHostedLanes\n",
+          "start": 732
+        },
+        {
+          "current": "\t, artifacts: Object.freeze([...dependentSignatureHostedLanes.map(\n",
+          "previous": "\t, artifacts: Object.freeze(dependentSignatureHostedLanes.map(\n",
+          "start": 1553
+        },
+        {
+          "current": "\t)\n\t, {\n\t\tpath: `${dependentSignatureHostedReceipt.artifactPrefix}-${revision}.zip`\n\t\t, sha256: \"1\".repeat(64)\n\t}])\n",
+          "previous": "\t))\n",
+          "start": 1753
+        }
+      ],
+      "parent": "b27603fed9401f5b614e532faa53b8188660a51c",
+      "path": "tests/helpers/dependent-signature-complete-promotion-tests.mjs",
+      "previousSha256": "6a389704fa6f4fbea0e1dd346c4e6abc34a8d3bc629394597e9eb42dc7f6e02a"
+    },
+    {
+      "commit": "346e91f05555f93cd75f212399739e91c2b06143",
+      "currentSha256": "f4b34ecf9159deada139d3899c6a6b7bc9590b9bc56b3015093b5f0906479743",
+      "edits": [
+        {
+          "current": "\t, dependentSignatureHostedLanes, dependentSignatureHostedReceipt\n",
+          "previous": "\t, dependentSignatureHostedLanes\n",
+          "start": 358
+        },
+        {
+          "current": "\t, \"tests/helpers/dependent-signature-hosted-tests.mjs\"\n\t, \"tests/dependent-signature-complete-hosted-evidence.test.mjs\"\n\t, \"tests/dependent-signature-complete-promotion.test.mjs\"\n",
+          "previous": "",
+          "start": 2418
+        },
+        {
+          "current": "\tassert.equal(checked.lanes.length, 11);\n",
+          "previous": "\tassert.equal(checked.lanes.length, 14);\n",
+          "start": 2982
+        },
+        {
+          "current": "\t\t, scope: \"Eleven same-run producer artifacts and their aggregate receipt close the exact direct `(bound : Nat) (value : Fin bound)` dependency across seventeen profiles, ordinary Lean source and independently reviewed Binding IR.\"\n",
+          "previous": "\t\t, scope: \"Fourteen same-revision hosted artifacts close the exact direct `(bound : Nat) (value : Fin bound)` dependency across seventeen profiles, ordinary Lean source and independently reviewed Binding IR.\"\n",
+          "start": 3345
+        },
+        {
+          "current": "\t\t, artifacts: Object.freeze([...checked.lanes.map(lane => ({\n",
+          "previous": "\t\t, artifacts: Object.freeze(checked.lanes.map(lane => ({\n",
+          "start": 3721
+        },
+        {
+          "current": "\t\t}))\n\t\t, {\n\t\t\tpath: `${checked.aggregate.hostedRun.artifact.name}.zip`\n\t\t\t, sha256: checked.aggregate.hostedRun.artifact.sha256\n\t\t}])\n",
+          "previous": "\t\t})))\n",
+          "start": 3874
+        },
+        {
+          "current": "\tassert.equal(reference.artifacts.length, 12);\n\tassert.equal(new Set(reference.artifacts.map(item => item.path)).size, 12);\n",
+          "previous": "\tassert.equal(reference.artifacts.length, 14);\n\tassert.equal(new Set(reference.artifacts.map(item => item.path)).size, 14);\n",
+          "start": 6155
+        },
+        {
+          "current": "\tassert.deepEqual(reference.artifacts.map(item => item.path).sort(), [\n\t\t...dependentSignatureHostedLanes.map(lane =>\n\t\t\t`${lane.artifactPrefix}-${reference.revision}.zip`)\n\t\t, `${dependentSignatureHostedReceipt.artifactPrefix}`\n\t\t\t+ `-${reference.revision}.zip`\n\t].sort());\n",
+          "previous": "\tassert.deepEqual(reference.artifacts.map(item => item.path).sort()\n\t\t, dependentSignatureHostedLanes.map(lane =>\n\t\t\t`${lane.artifactPrefix}-${reference.revision}.zip`).sort());\n",
+          "start": 6456
+        }
+      ],
+      "parent": "b27603fed9401f5b614e532faa53b8188660a51c",
+      "path": "tests/helpers/dependent-signature-complete-promotion.mjs",
+      "previousSha256": "a9a17d6665a4a468e5316f8c028883887b9861801bcb744c273924dd56025b2a"
+    },
+    {
+      "commit": "346e91f05555f93cd75f212399739e91c2b06143",
+      "currentSha256": "ac94d68bf4cb38e01e0e436d1cd3ee784827f91e7fe2d5a9d364f30425f49d05",
+      "edits": [
+        {
+          "current": "import {\n\tdependentSignatureFocusedWorkflow, dependentSignatureMatrixLanes\n\t, dependentSignatureMatrixRoutes\n\t, validateDependentSignatureMatrixReceipt\n} from \"./dependent-signature-matrix-receipt.mjs\";\n",
+          "previous": "",
+          "start": 414
+        },
+        {
+          "current": "\t= \"7f206cdbf35d650c48917572e6344fdc0194aeb7\";\nexport const dependentSignatureHostedRunId = 40927405318;\n",
+          "previous": "\t= \"52622818425c3fb69a81ef87b5af26ce429e3136\";\nexport const dependentSignatureConsumerRun = 40824858819;\nexport const dependentSignaturePerlRun = dependentSignatureConsumerRun;\n",
+          "start": 721
+        },
+        {
+          "current": "\t[String(dependentSignatureHostedRunId)]: \"success\"\n",
+          "previous": "\t[String(dependentSignatureConsumerRun)]: \"failure\"\n",
+          "start": 896
+        },
+        {
+          "current": "export const dependentSignatureHostedReceipt = Object.freeze({\n\tid: \"matrix\", artifactPrefix: \"dependent-signature-matrix\"\n\t, jobName: \"Reconcile the exact same-run receipt\"\n",
+          "previous": "\nconst consumerWorkflow = \".github/workflows/consumer-matrix.yml\";\nconst perlWorkflow = \".github/workflows/perl-consumer.yml\";\nconst native = ({\n\tid, profiles, jobName, artifactPrefix, reportStem, acceptanceStep, uploadStep\n}) => Object.freeze({\n\tid, profiles: Object.freeze(profiles), runId: dependentSignatureConsumerRun\n\t, workflow: consumerWorkflow, jobName, artifactPrefix\n\t, kind: \"managed\"\n\t, reportPaths: Object.freeze([\n\t\t`managed-dependent-fin/${reportStem}.json`\n\t\t, `managed-dependent-fin/reviewed-${reportStem}.json`\n\t])\n\t, acceptanceStep, uploadStep\n});\nconst perl = configuration => Object.freeze({\n\tid: `perl-${configuration}`, profiles: Object.freeze([\"perl\"])\n\t, runId: dependentSignaturePerlRun, workflow: consumerWorkflow\n\t, jobName: `Perl / Perl XS (${configuration})`\n\t, artifactPrefix: `type-corpus-perl-${configuration}`\n\t, kind: \"managed\"\n\t, reportPaths: Object.freeze([\n\t\t\"managed-dependent-fin/perl.json\"\n\t\t, \"managed-dependent-fin/reviewed-perl.json\"\n\t])\n\t, acceptanceStep: \"Compare installed Perl corpus packages with fresh Lean results\"\n\t, uploadStep: \"Upload this configuration's real-Lean corpus report\"\n",
+          "start": 1064
+        },
+        {
+          "current": "const contracts = Object.freeze({\n\tjavascript: Object.freeze({\n\t\tjobName: \"JavaScript and browser producer / Four dependent-record routes in Node and three browsers\"\n\t\t, acceptanceStep: \"Run all dependent checked-record author routes\"\n\t\t, uploadStep: \"Preserve original and partial installed records\"\n\t\t, enforceStep: \"Enforce dependent checked-record acceptance\"\n",
+          "previous": "export const dependentSignatureHostedLanes = Object.freeze([\n\tObject.freeze({\n\t\tid: \"javascript\"\n\t\t, profiles: Object.freeze([\n\t\t\t\"node-javascript\", \"node-typescript\", \"browser-javascript\"\n\t\t\t, \"browser-react\", \"browser-worker\"\n\t\t])\n\t\t, runId: dependentSignatureConsumerRun, workflow: consumerWorkflow\n\t\t, jobName: \"Node and browser npm consumers\"\n\t\t, artifactPrefix: \"dependent-fin-npm\", kind: \"javascript\"\n\t\t, reportPaths: Object.freeze([\"ordinary-source.json\", \"reviewed-ir.json\"])\n\t\t, acceptanceStep: \"Check ordinary and reviewed dependent Fin in Node, TypeScript and browsers\"\n\t\t, uploadStep: \"Preserve ordinary and reviewed dependent Fin npm observations\"\n",
+          "start": 1243
+        },
+        {
+          "current": "\t, \"c-family\": Object.freeze({\n\t\tjobName: \"C and C++ producer / Four dependent-record routes in C11/GMP and C++20/Boost\"\n\t\t, acceptanceStep: \"Require every dependent-record author route in C and C++\"\n\t\t, uploadStep: \"Preserve complete and partial installed records\"\n\t\t, enforceStep: \"Enforce dependent checked-record native acceptance\"\n",
+          "previous": "\t, native({\n\t\tid: \"c-family\", profiles: [\"c\", \"cpp\"]\n\t\t, jobName: \"Native consumer (c-family)\"\n\t\t, artifactPrefix: \"type-corpus-c-family\", reportStem: \"c-cpp\"\n\t\t, acceptanceStep: \"Compare relocated C and C++ corpus consumers with fresh Lean\"\n\t\t, uploadStep: \"Upload installed C and C++ corpus observations\"\n",
+          "start": 1611
+        },
+        {
+          "current": "\t, perl: Object.freeze({\n\t\tjobName: \"Perl producer / Four ABI dependent checked-record CPAN matrix\"\n\t\t, acceptanceStep: \"Require every source route and API mode across each Perl ABI\"\n\t\t, uploadStep: \"Preserve original and partial installed records\"\n\t\t, enforceStep: \"Enforce installed dependent checked-record Perl acceptance\"\n",
+          "previous": "\t, native({\n\t\tid: \"python\", profiles: [\"python\"], jobName: \"Native consumer (python)\"\n\t\t, artifactPrefix: \"type-corpus-python\", reportStem: \"python\"\n\t\t, acceptanceStep: \"Compare installed Python corpus packages with fresh Lean results\"\n\t\t, uploadStep: \"Upload installed Python corpus observations\"\n",
+          "start": 1951
+        },
+        {
+          "current": "\t, python: Object.freeze({\n\t\tjobName: \"Python producer / Four dependent checked-record selections on both Python floors\"\n\t\t, acceptanceStep: \"Require every source route and API mode on both Python floors\"\n\t\t, uploadStep: \"Preserve original and partial installed records\"\n\t\t, enforceStep: \"Enforce installed dependent checked-record Python acceptance\"\n",
+          "previous": "\t, native({\n\t\tid: \"rust\", profiles: [\"rust\"], jobName: \"Native consumer (rust)\"\n\t\t, artifactPrefix: \"type-corpus-rust\", reportStem: \"rust\"\n\t\t, acceptanceStep: \"Compare isolated Cargo corpus consumers with fresh Lean\"\n\t\t, uploadStep: \"Upload installed Rust corpus observations\"\n",
+          "start": 2282
+        },
+        {
+          "current": "\t, rust: Object.freeze({\n\t\tjobName: \"Rust producer / Four dependent checked-record selections in Rust\"\n\t\t, acceptanceStep: \"Require all four author and API routes in Rust\"\n\t\t, uploadStep: \"Preserve original and partial installed records\"\n\t\t, enforceStep: \"Enforce installed dependent checked-record Rust acceptance\"\n",
+          "previous": "\t, native({\n\t\tid: \"dotnet\", profiles: [\"dotnet\"], jobName: \"Managed consumer (dotnet)\"\n\t\t, artifactPrefix: \"type-corpus-dotnet\", reportStem: \"dotnet\"\n\t\t, acceptanceStep: \"Compare installed NuGet corpus packages with fresh Lean results\"\n\t\t, uploadStep: \"Upload installed .NET corpus observations\"\n",
+          "start": 2637
+        },
+        {
+          "current": "\t, dotnet: Object.freeze({\n\t\tjobName: \".NET producer / Four dependent checked-record checked-record routes in .NET\"\n\t\t, acceptanceStep: \"Require every source and API route\"\n\t\t, uploadStep: \"Preserve original and partial installed records\"\n\t\t, enforceStep: \"Enforce installed dependent checked-record .NET acceptance\"\n",
+          "previous": "\t, native({\n\t\tid: \"jvm\", profiles: [\"java\", \"kotlin\"], jobName: \"Managed consumer (jvm)\"\n\t\t, artifactPrefix: \"type-corpus-jvm\", reportStem: \"java-kotlin\"\n\t\t, acceptanceStep: \"Compare isolated Java and Kotlin corpus consumers with fresh Lean\"\n\t\t, uploadStep: \"Upload installed JVM corpus observations\"\n",
+          "start": 2957
+        },
+        {
+          "current": "\t, jvm: Object.freeze({\n\t\tjobName: \"Java and Kotlin producer / Four dependent checked-record routes in Java and Kotlin\"\n\t\t, acceptanceStep: \"Require every source and API route in Java and Kotlin\"\n\t\t, uploadStep: \"Preserve original and partial installed records\"\n\t\t, enforceStep: \"Enforce installed dependent checked-record Java and Kotlin acceptance\"\n",
+          "previous": "\t, native({\n\t\tid: \"ruby\", profiles: [\"ruby\"], jobName: \"Managed consumer (ruby)\"\n\t\t, artifactPrefix: \"type-corpus-ruby\", reportStem: \"ruby\"\n\t\t, acceptanceStep: \"Compare installed Ruby corpus packages with fresh Lean results\"\n\t\t, uploadStep: \"Upload installed Ruby corpus observations\"\n",
+          "start": 3278
+        },
+        {
+          "current": "\t, ruby: Object.freeze({\n\t\tjobName: \"Ruby producer / Four dependent checked-record selections in Ruby\"\n\t\t, acceptanceStep: \"Require every source route and API mode in Ruby\"\n\t\t, uploadStep: \"Preserve original and partial installed records\"\n\t\t, enforceStep: \"Enforce installed dependent checked-record Ruby acceptance\"\n",
+          "previous": "\t, native({\n\t\tid: \"php-native\", profiles: [\"php-native\"], jobName: \"Native PHP\"\n\t\t, artifactPrefix: \"type-corpus-php-native\", reportStem: \"php-native\"\n\t\t, acceptanceStep: \"Compare weak and strict installed Composer callers with fresh Lean\"\n\t\t, uploadStep: \"Upload installed PHP corpus observations\"\n",
+          "start": 3633
+        },
+        {
+          "current": "\t, \"php-native\": Object.freeze({\n\t\tjobName: \"Native PHP producer / Four dependent checked-record checked-record routes in native PHP\"\n\t\t, acceptanceStep: \"Require every source route and API mode in native PHP\"\n\t\t, uploadStep: \"Preserve original and partial installed records\"\n\t\t, enforceStep: \"Enforce installed dependent checked-record native PHP acceptance\"\n",
+          "previous": "\t, native({\n\t\tid: \"php-wasm\", profiles: [\"php-wasm\"]\n\t\t, jobName: \"PHP-Wasm corpus (refinements)\"\n\t\t, artifactPrefix: \"type-corpus-php-wasm-refinements\"\n\t\t, reportStem: \"php-wasm\"\n\t\t, acceptanceStep: \"Compare installed PHP-Wasm refinements with the shared Lean corpus\"\n\t\t, uploadStep: \"Upload PHP-Wasm refinement corpus evidence\"\n",
+          "start": 3954
+        },
+        {
+          "current": "\t, \"php-wasm\": Object.freeze({\n\t\tjobName: \"PHP-Wasm producer / Four dependent checked-record routes in PHP-Wasm\"\n\t\t, acceptanceStep: \"Require ordinary, reviewed, and both result-only installed packages\"\n\t\t, uploadStep: \"Preserve original and partial installed records\"\n\t\t, enforceStep: \"Enforce installed dependent PHP-Wasm acceptance\"\n",
+          "previous": "\t, native({\n\t\tid: \"wit-wasi\", profiles: [\"wit-wasi\"]\n\t\t, jobName: \"WIT and WASI Component Model\"\n\t\t, artifactPrefix: \"type-corpus-wit-wasi\", reportStem: \"wit-wasi\"\n\t\t, acceptanceStep: \"Compile ordinary Lean APIs and consume relocated WIT packages\"\n\t\t, uploadStep: \"Upload WIT shared corpus evidence\"\n",
+          "start": 4318
+        },
+        {
+          "current": "\t, \"wit-wasi\": Object.freeze({\n\t\tjobName: \"WIT and WASI producer / Four dependent checked-record checked-record routes through Wasmtime\"\n\t\t, acceptanceStep: \"Require both source routes and API modes through Wasmtime\"\n\t\t, uploadStep: \"Preserve original and partial installed records\"\n\t\t, enforceStep: \"Enforce installed dependent checked-record checked-record WIT acceptance\"\n\t})\n});\n\nexport const dependentSignatureHostedLanes = Object.freeze(\n\tdependentSignatureMatrixLanes.map(lane => Object.freeze({\n\t\t...lane\n\t\t, id: lane.key, matrixLane: lane\n\t\t, ...contracts[lane.key]\n\t\t, runId: dependentSignatureHostedRunId\n\t\t, workflow: dependentSignatureFocusedWorkflow\n\t\t, artifactPrefix: `dependent-checked-record-${lane.workflowStem}`\n\t}))\n);\n",
+          "previous": "\t, ...[\n\t\t\"5.36.3-threaded\", \"5.36.3-unthreaded\"\n\t\t, \"5.38.2-threaded\", \"5.38.2-unthreaded\"\n\t].map(perl)\n]);\n",
+          "start": 4658
+        },
+        {
+          "current": " * @param selected - Closed hosted lane or aggregate receipt.\n",
+          "previous": " * @param lane - Closed hosted lane.\n",
+          "start": 6085
+        },
+        {
+          "current": "export const dependentSignatureHostedInputs = (root, selected) => {\n\tassert.ok(dependentSignatureHostedLanes.includes(selected)\n\t\t|| selected === dependentSignatureHostedReceipt);\n\tconst prefix = `${root}/${selected.id}`;\n",
+          "previous": "export const dependentSignatureHostedInputs = (root, lane) => {\n\tassert.ok(dependentSignatureHostedLanes.includes(lane));\n\tconst prefix = `${root}/${lane.id}`;\n",
+          "start": 6151
+        },
+        {
+          "current": "",
+          "previous": "\tconst runConclusion\n\t\t= dependentSignatureHostedRunConclusions[String(lane.runId)];\n\tassert.ok([\"failure\", \"success\"].includes(runConclusion));\n",
+          "start": 6901
+        },
+        {
+          "current": "\t\t, conclusions: { run: \"success\", job: \"success\" }\n",
+          "previous": "\t\t, conclusions: { run: runConclusion, job: \"success\" }\n",
+          "start": 7069
+        },
+        {
+          "current": "/**\n * Bind the aggregate same-run receipt artifact to its successful job.\n *\n * @param selected - Exact ZIP, API and log paths.\n */\nexport const inspectDependentSignatureHostedReceipt = async selected => {\n\tconst hosted = await inspectCheckedRecordValueIndexHostedArtifact(selected, {\n\t\tworkflow: dependentSignatureFocusedWorkflow\n\t\t, jobName: dependentSignatureHostedReceipt.jobName\n\t\t, artifactPrefix: dependentSignatureHostedReceipt.artifactPrefix\n\t\t, conclusions: { run: \"success\", job: \"success\" }\n\t});\n\tassert.equal(hosted.hostedRun.runId, dependentSignatureHostedRunId);\n\tassert.equal(hosted.revision, dependentSignatureHostedProducer);\n\treturn hosted;\n};\n\n",
+          "previous": "",
+          "start": 7281
+        },
+        {
+          "current": "\tassert.equal(named(lane.enforceStep).conclusion, \"skipped\", lane.id);\n\treturn true;\n};\n\n/**\n * Require the exact receipt download, reconciliation and preservation path.\n *\n * @param jobBytes - Exact GitHub job API bytes.\n */\nexport const assertDependentSignatureHostedReceiptSteps = jobBytes => {\n\tconst job = JSON.parse(jobBytes), named = name => {\n\t\tconst matches = job.steps.filter(step => step.name === name);\n\t\tassert.equal(matches.length, 1, `receipt:${name}`); return matches[0];\n\t};\n\tconst download = named(\"Download every same-run dependent-signature artifact\");\n\tconst reconciliation = named(\"Reconcile every profile, author route, and API mode\");\n\tconst upload = named(\"Preserve the complete dependent-signature receipt\");\n\tassert.equal(download.conclusion, \"success\");\n\tassert.equal(reconciliation.conclusion, \"success\");\n\tassert.equal(upload.conclusion, \"success\");\n\tassert.ok(reconciliation.number > download.number);\n\tassert.ok(upload.number > reconciliation.number);\n\tassert.equal(named(\n\t\t\"Enforce every producer and exact receipt reconciliation\"\n\t).conclusion, \"skipped\");\n\treturn true;\n};\n\n/**\n * Validate the aggregate receipt against all retained canonical summaries.\n *\n * @param receipt - Same-run aggregate receipt.\n */\nexport const validateDependentSignatureHostedReceipt = receipt => {\n\tvalidateDependentSignatureMatrixReceipt(receipt);\n\tassert.equal(receipt.run.repository, \"seanmorris/lean-bridge\");\n\tassert.equal(receipt.run.workflow, dependentSignatureFocusedWorkflow);\n\tassert.equal(receipt.run.runId, dependentSignatureHostedRunId);\n\tassert.equal(receipt.run.producerCommit, dependentSignatureHostedProducer);\n\tassert.equal(receipt.records.length\n\t\t, dependentSignatureHostedLanes.length\n\t\t\t* dependentSignatureMatrixRoutes.length);\n\treturn receipt;\n",
+          "previous": "",
+          "start": 8681
+        },
+        {
+          "current": "const producerStems = Object.freeze(\n\tdependentSignatureMatrixLanes.map(lane => lane.workflowStem));\n",
+          "previous": "",
+          "start": 11421
+        },
+        {
+          "current": "\tdependentSignatureFocusedWorkflow\n\t, ...producerStems.map(stem =>\n\t\t`.github/workflows/dependent-checked-record-${stem}.yml`)\n\t, \"scripts/reconcile-dependent-signature-matrix.mjs\"\n\t, ...producerStems.map(stem =>\n\t\t`scripts/run-dependent-checked-record-${stem}-ci.sh`)\n\t, ...producerStems.map(stem =>\n\t\t`scripts/check-dependent-checked-record-${stem}-ci.mjs`)\n\t, \"scripts/check-dependent-checked-record-php-wasm-compiler-ci.mjs\"\n\t, \"scripts/select-nominal-subtype-php-ci-tools.mjs\"\n\t, \"scripts/select-nominal-subtype-wit-ci-tools.mjs\"\n\t, \"tests/helpers/dependent-checked-record-browser-installed-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-native-installed-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-perl-installed-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-python-installed-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-rust-installed-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-dotnet-installed-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-jvm-installed-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-ruby-installed-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-php-installed-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-php-wasm-lean-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-php-wasm-installed-tests.mjs\"\n\t, \"tests/helpers/dependent-checked-record-wit-installed-tests.mjs\"\n",
+          "previous": "\tconsumerWorkflow, perlWorkflow\n\t, \"tests/dependent-fin-javascript.test.mjs\"\n\t, \"tests/managed-dependent-fin.test.mjs\"\n",
+          "start": 11562
+        },
+        {
+          "current": "\tassert.equal(revisions.producer, dependentSignatureHostedProducer);\n",
+          "previous": "",
+          "start": 13647
+        },
+        {
+          "current": "\t\t\t\t, \"tests/fixtures/onboarding/dependent-checked-records\")\n\t\t\t, ...tree(revisions.producer\n\t\t\t\t, \"tests/fixtures/dependent-checked-record-browser\")\n",
+          "previous": "\t\t\t\t, \"tests/fixtures/onboarding/native-dependent-fin\")\n",
+          "start": 13853
+        },
+        {
+          "current": "\t\t\t\t, \"tests/fixtures/dependent-checked-record-consumers\")\n",
+          "previous": "\t\t\t\t, \"tests/fixtures/dependent-fin-consumers\")\n",
+          "start": 14035
+        }
+      ],
+      "parent": "b27603fed9401f5b614e532faa53b8188660a51c",
+      "path": "tests/helpers/dependent-signature-hosted-archive.mjs",
+      "previousSha256": "2ede8626b96741d4b2de0d5cdeff8f1cf7b2f136cf35a3277fa537611ce8e638"
+    },
+    {
+      "commit": "346e91f05555f93cd75f212399739e91c2b06143",
+      "currentSha256": "dfc410837322775f8c39faa6e56e0b40cad5c1d2b7a9c581d7b7f3f9b7a74f74",
+      "edits": [
+        {
+          "current": " * Authenticate and independently replay the complete dependent-signature archive.\n",
+          "previous": " * Independently validate and replay retained dependent-signature evidence.\n",
+          "start": 4
+        },
+        {
+          "current": "import {\n\tmkdir, mkdtemp, open, readFile, realpath, rm, stat, writeFile\n} from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, open, readFile, realpath, rm, stat } from \"node:fs/promises\";\n",
+          "start": 144
+        },
+        {
+          "current": "\tcheckedRecordValueIndexHostedDigest as digestFile\n\t, checkedRecordValueIndexHostedSafeZipPath as safePath\n\t, extractCheckedRecordValueIndexHostedArtifact as extractArtifact\n",
+          "previous": "\tvalidateComponentPackageReceipt\n} from \"../../src/release/component-package-receipt.mjs\";\nimport {\n\tcheckedRecordValueIndexHostedDigest\n\t, checkedRecordValueIndexHostedSafeZipPath\n\t, extractCheckedRecordValueIndexHostedArtifact\n",
+          "start": 464
+        },
+        {
+          "current": "\tassertDependentSignatureHostedReceiptSteps\n\t, assertDependentSignatureHostedSteps\n",
+          "previous": "\tassertDependentSignatureHostedSteps\n",
+          "start": 705
+        },
+        {
+          "current": "\t, dependentSignatureHostedInputs, dependentSignatureHostedLanes\n\t, dependentSignatureHostedOriginal, dependentSignatureHostedProducer\n\t, dependentSignatureHostedReceipt, dependentSignatureHostedRunId\n\t, dependentSignatureHostedSourcePath, dependentSignatureHostedSources\n",
+          "previous": "\t, dependentSignatureHostedLanes\n\t, dependentSignatureHostedOriginal\n\t, dependentSignatureHostedProducer\n\t, dependentSignatureHostedRunConclusions\n\t, dependentSignatureHostedSourcePath\n\t, dependentSignatureHostedSources\n",
+          "start": 833
+        },
+        {
+          "current": "\t, inspectDependentSignatureHostedReceipt\n\t, validateDependentSignatureHostedReceipt\n",
+          "previous": "",
+          "start": 1148
+        },
+        {
+          "current": "\tbuildDependentSignatureMatrixReceipt\n\t, dependentSignatureMatrixResultPath, dependentSignatureMatrixRoutes\n} from \"./dependent-signature-matrix-receipt.mjs\";\n",
+          "previous": "\tdependentFinExtensions, dependentFinRefinements, dependentFinTargets\n} from \"./managed-dependent-fin.mjs\";\nimport {\n\tdependentFinJavascriptExpected, dependentFinJavascriptProfiles\n} from \"./dependent-fin-javascript.mjs\";\n",
+          "start": 1293
+        },
+        {
+          "current": "",
+          "previous": "const digest = (value, label) => assert.match(value, /^[a-f0-9]{64}$/u\n\t, label);\nconst object = (value, label) => assert.ok(value && typeof value === \"object\"\n\t&& !Array.isArray(value), label);\nconst exactKeys = (value, expected, label) => {\n\tobject(value, label);\n\tassert.deepEqual(Object.keys(value).sort(), [...expected].sort(), label);\n};\nconst trueFlags = (value, names) => {\n\tfor(const name of names) assert.equal(value[name], true, name);\n};\n\nconst consumerSourceSha256 = profile => {\n\tconst fixtureProfile = profile === \"php-wasm\" ? \"php-native\" : profile;\n\tlet source = dependentSignatureHostedOriginal(\n\t\tdependentSignatureHostedProducer\n\t\t, `tests/fixtures/dependent-fin-consumers/${fixtureProfile}.${dependentFinExtensions[profile]}`\n\t).toString();\n\tif(profile === \"php-wasm\")\n\t\tsource = source.replace(\"require 'vendor/autoload.php';\", \"\");\n\treturn sha256(source);\n};\nconst validatePackages = (item, archives) => {\n\tassert.ok(Array.isArray(item.packages) && item.packages.length > 0);\n\tconst target = dependentFinTargets[item.profile][0];\n\tfor(const pkg of item.packages)\n\t{\n\t\tobject(pkg, `${item.profile}:package`);\n\t\tassert.equal(pkg.target, target, item.profile);\n\t\tassert.ok(Array.isArray(pkg.artifacts) && pkg.artifacts.length > 0);\n\t\tfor(const artifact of pkg.artifacts)\n\t\t{\n\t\t\tassert.ok(Number.isSafeInteger(artifact.bytes) && artifact.bytes > 0);\n\t\t\tdigest(artifact.sha256, artifact.path);\n\t\t\tassert.equal(archives[artifact.path], artifact.sha256, artifact.path);\n\t\t}\n\t}\n};\nconst validatePhpWasm = item => {\n\tassert.equal(typeof item.browserVersion, \"string\");\n\tassert.ok(item.browserVersion.length > 0);\n\tdigest(item.driverSha256, \"driverSha256\");\n\ttrueFlags(item, [\"unchangedDeployment\", \"handoffRemovedBeforeExecution\"]);\n\tobject(item.deployment, \"deployment\");\n\tassert.ok(Object.keys(item.deployment).length > 0);\n\tfor(const [path, file] of Object.entries(item.deployment))\n\t{\n\t\texactKeys(file, [\"bytes\", \"sha256\"], path);\n\t\tassert.ok(Number.isSafeInteger(file.bytes) && file.bytes > 0);\n\t\tdigest(file.sha256, path);\n\t}\n\tassert.equal(item.executions.length, 12);\n\tassert.deepEqual(item.executions.map(run => [\n\t\trun.realm, run.arrangement, run.loading, run.mode\n\t]), [\n\t\t...([\"embedded\", \"composer\"].flatMap(arrangement =>\n\t\t\t[\"startup\", \"lazy\"].flatMap(loading => [\"weak\", \"strict\"].map(\n\t\t\t\tmode => [\"node\", arrangement, loading, mode]))))\n\t\t, ...([\"startup\", \"lazy\"].flatMap(loading => [\"weak\", \"strict\"].map(\n\t\t\tmode => [\"chromium\", \"bundled\", loading, mode])))\n\t]);\n\tfor(const run of item.executions)\n\t{\n\t\tassert.equal(run.checks, item.checks);\n\t\tassert.equal(run.libraries, 2);\n\t\tassert.ok(Array.isArray(run.libraryNames)\n\t\t\t&& run.libraryNames.length === 2);\n\t\tassert.equal(new Set(run.libraryNames).size, 2);\n\t}\n};\n\n/**\n * Validate one ordinary or independently reviewed managed-host report.\n *\n * @param lane - Closed hosted lane.\n * @param reportBytes - Exact canonical report bytes.\n * @param route - Ordinary or independently reviewed author route.\n */\nexport const validateDependentSignatureManagedReport = (\n\tlane, reportBytes, route\n) => {\n\tassert.equal(lane.kind, \"managed\");\n\tassert.ok([\"ordinary-source\", \"reviewed-ir\"].includes(route));\n\tconst report = JSON.parse(reportBytes);\n\tassert.equal(reportBytes.toString(), canonicalJson(report));\n\texactKeys(report, [\"archives\", \"reports\", \"reproducible\", \"schemaVersion\"]\n\t\t, `${lane.id}:${route}`);\n\tassert.equal(report.schemaVersion, 1);\n\tassert.equal(report.reproducible, true);\n\tobject(report.archives, `${lane.id}:archives`);\n\tassert.ok(Object.keys(report.archives).length > 0);\n\tassert.deepEqual(report.reports.map(item => item.profile), lane.profiles);\n\tconst artifactPaths = new Set();\n\tfor(const item of report.reports)\n\t{\n\t\tconst extra = item.profile === \"php-wasm\" ? [\n\t\t\t\"browserVersion\", \"deployment\", \"driverSha256\", \"executions\"\n\t\t\t, \"handoffRemovedBeforeExecution\", \"unchangedDeployment\"\n\t\t] : [];\n\t\texactKeys(item, [\n\t\t\t\"bindingIrSha256\", \"checks\", \"compilerFreePath\"\n\t\t\t, \"consumerSha256\", \"dispatch\"\n\t\t\t, \"handoffRelocatedBeforeInstallation\", \"modelSha256\"\n\t\t\t, \"offlineInstall\", \"packages\", \"path\", \"profile\"\n\t\t\t, \"receiptSha256\", \"refinements\"\n\t\t\t, \"sourceRemovedBeforeInstallation\", \"sourceTreeSha256\"\n\t\t\t, ...route === \"reviewed-ir\" ? [\"reviewedSourceSha256\"] : []\n\t\t\t, ...extra\n\t\t], `${lane.id}:${route}:${item.profile}`);\n\t\tassert.ok(lane.profiles.includes(item.profile));\n\t\tassert.equal(item.path, route);\n\t\tassert.ok(Number.isSafeInteger(item.checks) && item.checks > 2000);\n\t\ttrueFlags(item, [\n\t\t\t\"compilerFreePath\", \"offlineInstall\"\n\t\t\t, \"sourceRemovedBeforeInstallation\"\n\t\t\t, \"handoffRelocatedBeforeInstallation\"\n\t\t]);\n\t\tfor(const field of [\n\t\t\t\"bindingIrSha256\", \"consumerSha256\", \"modelSha256\"\n\t\t\t, \"receiptSha256\", \"sourceTreeSha256\"\n\t\t\t, ...route === \"reviewed-ir\" ? [\"reviewedSourceSha256\"] : []\n\t\t]) digest(item[field], `${item.profile}:${field}`);\n\t\tassert.equal(item.consumerSha256, consumerSourceSha256(item.profile));\n\t\tassert.deepEqual(item.refinements, dependentFinRefinements);\n\t\tassert.deepEqual(item.dispatch, {\n\t\t\tobserved: false\n\t\t\t, reason: \"the dependent comparison runs in the bundled C adapter before Lean; its rejection text and recovery are observed through the public host API\"\n\t\t});\n\t\tvalidatePackages(item, report.archives);\n\t\tfor(const pkg of item.packages) for(const artifact of pkg.artifacts)\n\t\t\tartifactPaths.add(artifact.path);\n\t\tif(item.profile === \"php-wasm\") validatePhpWasm(item);\n\t}\n\tassert.deepEqual(Object.keys(report.archives).sort()\n\t\t, [...artifactPaths].sort());\n\tfor(const value of Object.values(report.archives)) digest(value, \"archive\");\n\treturn Object.freeze({\n\t\troute, profiles: [...lane.profiles], reportSha256: sha256(reportBytes)\n\t\t, checks: Object.fromEntries(report.reports.map(item => [\n\t\t\titem.profile, item.checks\n\t\t]))\n\t\t, archives: Object.keys(report.archives).length\n\t});\n};\n\nconst variantsFor = profile => profile === \"browser-react\"\n\t? [\"production\", \"strict\"] : [\"production\"];\nconst lifecycleFor = (profile, variant) => profile === \"browser-react\"\n\t? variant === \"strict\"\n\t\t? { effects: 6, cleanups: 5, ignored: 3, commits: 3 }\n\t\t: { effects: 3, cleanups: 2, ignored: 0, commits: 3 }\n\t: profile === \"browser-worker\"\n\t\t? { created: 2, terminated: 2, live: 0 }\n\t\t: { rerun: true };\nconst expectedJavascriptResult = route => ({\n\tmodule: \"dependentfin\", route, ...dependentFinJavascriptExpected\n});\nconst validateBrowserHarness = (entry, route) => {\n\tassert.ok(dependentFinJavascriptProfiles.includes(entry.profile));\n\tassert.ok(entry.profile.startsWith(\"browser-\"));\n\texactKeys(entry, [\"browser\", \"profile\"], entry.profile);\n\texactKeys(entry.browser, [\"browser\", \"observation\"], entry.profile);\n\tconst browser = entry.browser.browser;\n\texactKeys(browser, [\n\t\t\"deployments\", \"executions\", \"externalNetworkBlocked\", \"framework\"\n\t\t, \"installedAssets\", \"installedSourcesRemoved\", \"requestedEngines\"\n\t], entry.profile);\n\ttrueFlags(browser, [\"externalNetworkBlocked\", \"installedSourcesRemoved\"]);\n\tassert.deepEqual(browser.requestedEngines, [\"chromium\", \"firefox\", \"webkit\"]);\n\tassert.deepEqual(browser.framework.map(item => item.name)\n\t\t, entry.profile === \"browser-react\"\n\t\t\t? [\"react\", \"react-dom\", \"scheduler\"] : []);\n\tassert.equal(browser.installedAssets.length, 2);\n\tfor(const asset of browser.installedAssets)\n\t{\n\t\texactKeys(asset, [\"bytes\", \"path\", \"sha256\"], asset.path);\n\t\tassert.ok(Number.isSafeInteger(asset.bytes) && asset.bytes > 0);\n\t\tdigest(asset.sha256, asset.path);\n\t}\n\tconst variants = variantsFor(entry.profile);\n\tassert.deepEqual(browser.deployments.map(item => item.variant), variants);\n\tfor(const deployment of browser.deployments)\n\t{\n\t\texactKeys(deployment, [\n\t\t\t\"files\", \"modulePaths\", \"sha256\", \"variant\", \"viteVersion\"\n\t\t], `${entry.profile}:deployment`);\n\t\tassert.equal(deployment.sha256, sha256(canonicalJson(deployment.files)));\n\t\tassert.ok(deployment.modulePaths.includes(\n\t\t\t\"node_modules/dependentfin/index.mjs\"));\n\t\tassert.ok(deployment.modulePaths.includes(\n\t\t\t\"node_modules/@lean-bridge/runtime/index.mjs\"));\n\t}\n\tassert.deepEqual(browser.executions.map(({ engine, variant }) => ({\n\t\tengine, variant\n\t})), [\"chromium\", \"firefox\", \"webkit\"].flatMap(engine =>\n\t\tvariants.map(variant => ({ engine, variant }))));\n\tassert.deepEqual(entry.browser.observation\n\t\t, browser.executions[0].observation);\n\tfor(const execution of browser.executions)\n\t{\n\t\tassert.equal(execution.failedAssetRecovery, true);\n\t\tassert.deepEqual(execution.lifecycle\n\t\t\t, lifecycleFor(entry.profile, execution.variant));\n\t\tif(entry.profile === \"browser-react\")\n\t\t\tassert.equal(execution.pendingUnmount, true);\n\t\tassert.equal(typeof execution.observation.hostVersion, \"string\");\n\t\tassert.ok(execution.observation.hostVersion.length > 0);\n\t\tassert.deepEqual(execution.observation, {\n\t\t\tschemaVersion: 1, profile: entry.profile, module: \"dependentfin\"\n\t\t\t, realm: entry.profile === \"browser-worker\"\n\t\t\t\t? \"dedicated-worker\" : \"window\"\n\t\t\t, results: expectedJavascriptResult(route)\n\t\t\t, hostVersion: execution.observation.hostVersion\n\t\t});\n\t\tassert.ok(execution.assets.length >= 2);\n\t\tfor(const asset of execution.assets)\n\t\t{\n\t\t\texactKeys(asset, [\"bytes\", \"mime\", \"path\", \"sha256\", \"status\"]\n\t\t\t\t, asset.path);\n\t\t\tassert.equal(asset.status, 200);\n\t\t\tassert.match(asset.mime, /^application\\/wasm/u);\n\t\t\tdigest(asset.sha256, asset.path);\n\t\t}\n\t}\n};\n",
+          "start": 1562
+        },
+        {
+          "current": "const exactKeys = (value, keys, label) => assert.deepEqual(\n\tObject.keys(value).sort(), [...keys].sort(), label\n);\nconst apiRecords = api => Object.fromEntries(Object.entries(api).map(\n\t([name, record]) => [name, {\n\t\tbytes: record.bytes.length, sha256: record.sha256\n\t}]\n));\nconst canonical = (bytes, label) => {\n\tconst value = JSON.parse(bytes);\n\tassert.equal(bytes.toString(), canonicalJson(value), label);\n\treturn value;\n",
+          "previous": "/**\n * Validate one JavaScript-family author route.\n *\n * @param lane - Closed JavaScript lane.\n * @param reportBytes - Exact canonical report bytes.\n * @param route - Ordinary or independently reviewed author route.\n */\nexport const validateDependentSignatureJavascriptReport = (\n\tlane, reportBytes, route\n) => {\n\tassert.equal(lane.kind, \"javascript\");\n\tconst report = JSON.parse(reportBytes);\n\tassert.equal(reportBytes.toString(), canonicalJson(report));\n\texactKeys(report, [\n\t\t\"browsers\", \"compilerFreePath\", \"facts\", \"independentBuilds\"\n\t\t, \"kind\", \"node\", \"offlineInstall\", \"producerBuildsRemovedBeforeInstallation\"\n\t\t, \"producerCommit\", \"receipt\", \"reproducible\", \"route\"\n\t\t, \"schemaVersion\", \"sourceRemovedBeforeInstallation\"\n\t], `javascript:${route}`);\n\tassert.equal(report.schemaVersion, 1);\n\tassert.equal(report.kind, \"dependent-fin-javascript-installed-v1\");\n\tassert.equal(report.route, route);\n\tassert.equal(report.producerCommit, dependentSignatureHostedProducer);\n\tassert.equal(report.independentBuilds, 2);\n\ttrueFlags(report, [\n\t\t\"compilerFreePath\", \"offlineInstall\", \"reproducible\"\n\t\t, \"sourceRemovedBeforeInstallation\"\n\t\t, \"producerBuildsRemovedBeforeInstallation\"\n\t]);\n\texactKeys(report.facts, [\n\t\t\"adapterPlanSha256\", \"bindingIrSha256\", \"metadataSha256\"\n\t\t, ...route === \"reviewed-ir\" ? [\"reviewedSourceSha256\"] : []\n\t], `javascript:${route}:facts`);\n\tfor(const [name, value] of Object.entries(report.facts)) digest(value, name);\n\tvalidateComponentPackageReceipt(report.receipt);\n\tassert.equal(report.receipt.bindingIrSha256, report.facts.bindingIrSha256);\n\texactKeys(report.node, [\"executions\", \"typescript\"], \"javascript:node\");\n\tassert.deepEqual(report.node.executions.map(item => item.profile)\n\t\t, [\"node-javascript\", \"node-typescript\"]);\n\tfor(const execution of report.node.executions)\n\t{\n\t\tassert.equal(typeof execution.hostVersion, \"string\");\n\t\tassert.ok(execution.hostVersion.length > 0);\n\t\tassert.deepEqual(execution.result, expectedJavascriptResult(route));\n\t}\n\texactKeys(report.node.typescript, [\n\t\t\"compilerSha256\", \"declarationsSha256\", \"skipLibCheck\"\n\t\t, \"sourceSha256\", \"strict\"\n\t], \"javascript:typescript\");\n\tassert.equal(report.node.typescript.strict, true);\n\tassert.equal(report.node.typescript.skipLibCheck, false);\n\tfor(const name of [\"compilerSha256\", \"declarationsSha256\", \"sourceSha256\"])\n\t\tdigest(report.node.typescript[name], name);\n\tassert.deepEqual(report.browsers.map(item => item.profile), [\n\t\t\"browser-javascript\", \"browser-react\", \"browser-worker\"\n\t]);\n\tfor(const item of report.browsers) validateBrowserHarness(item, route);\n\treturn Object.freeze({\n\t\troute, profiles: [...lane.profiles], reportSha256: sha256(reportBytes)\n\t\t, nodeExecutions: report.node.executions.length\n\t\t, browserExecutions: report.browsers.reduce((sum, item) =>\n\t\t\tsum + item.browser.browser.executions.length, 0)\n\t});\n",
+          "start": 1563
+        },
+        {
+          "current": "",
+          "previous": "\n/**\n * Validate both report bytes selected from one hosted artifact.\n *\n * @param lane - Closed hosted lane.\n * @param reports - Exact reports keyed by archive member path.\n */\nexport const validateDependentSignatureHostedReports = (\n\tlane, reports\n) => {\n\tassert.deepEqual(Object.keys(reports).sort(), [...lane.reportPaths].sort());\n\tconst routes = [\"ordinary-source\", \"reviewed-ir\"];\n\tconst accepted = lane.reportPaths.map((path, index) => lane.kind === \"javascript\"\n\t\t? validateDependentSignatureJavascriptReport(lane, reports[path], routes[index])\n\t\t: validateDependentSignatureManagedReport(lane, reports[path], routes[index]));\n\tassert.deepEqual(accepted[1].profiles, accepted[0].profiles);\n\tassert.deepEqual(accepted[1].checks, accepted[0].checks);\n\treturn accepted;\n};\n\n",
+          "start": 1990
+        },
+        {
+          "current": "\tlet offset = 0;\n",
+          "previous": "",
+          "start": 2085
+        },
+        {
+          "current": "",
+          "previous": "\t\tlet offset = 0;\n",
+          "start": 2110
+        },
+        {
+          "current": "\t\t\texactKeys(part, [\"bytes\", \"offset\", \"path\", \"sha256\"]\n\t\t\t\t, \"artifact part\");\n",
+          "previous": "",
+          "start": 2141
+        },
+        {
+          "current": "\t\t\tlet written = 0;\n\t\t\twhile(written < bytes.length)\n\t\t\t{\n\t\t\t\tconst result = await output.write(bytes, written\n\t\t\t\t\t, bytes.length - written, offset + written);\n\t\t\t\tassert.ok(result.bytesWritten > 0);\n\t\t\t\twritten += result.bytesWritten;\n\t\t\t}\n",
+          "previous": "\t\t\tawait output.write(bytes, 0, bytes.length, offset);\n",
+          "start": 2404
+        },
+        {
+          "current": "",
+          "previous": "\t\treturn offset;\n",
+          "start": 2677
+        },
+        {
+          "current": "\treturn offset;\n};\nconst materializeHosted = async (root, temporary, item, archived) => {\n\tconst inputs = dependentSignatureHostedInputs(temporary, item);\n\tawait mkdir(join(temporary, item.id));\n\tfor(const name of [\"run\", \"job\", \"artifact\"])\n\t\tawait writeFile(inputs[`${name}-json`], await readFile(join(\n\t\t\troot, `hosted/api/${item.id}/${name}.json`\n\t\t)), { flag: \"wx\" });\n\tawait writeFile(inputs[\"job-log\"], await readFile(join(\n\t\troot, `hosted/${item.id}/job.log`\n\t)), { flag: \"wx\" });\n\tconst bytes = await reconstruct(\n\t\troot, archived.hostedRun.artifact.parts, inputs[\"artifact-zip\"]);\n\tassert.equal(bytes, archived.hostedRun.artifact.bytes);\n\tassert.equal(await digestFile(inputs[\"artifact-zip\"])\n\t\t, archived.hostedRun.artifact.sha256);\n\treturn inputs;\n",
+          "previous": "",
+          "start": 2716
+        },
+        {
+          "current": " * Verify every retained byte, rebuild all twelve ZIPs and replay the matrix.\n",
+          "previous": " * Validate every retained byte, rebuild every ZIP and replay all 14 lanes.\n",
+          "start": 3484
+        },
+        {
+          "current": "\tconst index = canonical(indexBytes, \"index.json\");\n",
+          "previous": "\tconst index = JSON.parse(indexBytes);\n\tassert.equal(indexBytes.toString(), canonicalJson(index));\n",
+          "start": 3860
+        },
+        {
+          "current": "\t\t\"aggregate\", \"archiveCommit\", \"checkerCommit\", \"files\", \"kind\"\n\t\t, \"lanes\", \"limitations\", \"matrix\", \"producerCommit\", \"runId\"\n\t\t, \"schemaVersion\", \"selectedSources\"\n",
+          "previous": "\t\t\"archiveCommit\", \"checkerCommit\", \"files\", \"kind\", \"lanes\"\n\t\t, \"limitations\", \"producerCommit\", \"runConclusions\", \"schemaVersion\"\n\t\t, \"selectedSources\"\n",
+          "start": 3932
+        },
+        {
+          "current": "\tassert.equal(index.runId, dependentSignatureHostedRunId);\n\tassert.deepEqual(index.matrix, {\n\t\tlanes: 11, profiles: 17, authorRoutes: 2, apiModes: 2\n\t\t, reports: 44, cells: 34\n\t});\n\tassert.equal(index.limitations.length, 5);\n",
+          "previous": "\tassert.deepEqual(index.runConclusions\n\t\t, dependentSignatureHostedRunConclusions);\n",
+          "start": 4295
+        },
+        {
+          "current": "\t\texactKeys(file, [\"bytes\", \"path\", \"sha256\"], file.path);\n\t\tassert.ok(safePath(file.path), file.path);\n",
+          "previous": "\t\tassert.ok(checkedRecordValueIndexHostedSafeZipPath(file.path), file.path);\n",
+          "start": 4981
+        },
+        {
+          "current": "\t\tassert.equal(await digestFile(path), file.sha256, file.path);\n",
+          "previous": "\t\tassert.equal(await checkedRecordValueIndexHostedDigest(path)\n\t\t\t, file.sha256, file.path);\n",
+          "start": 5212
+        },
+        {
+          "current": "\n",
+          "previous": "",
+          "start": 5697
+        },
+        {
+          "current": "\t\ttmpdir(), \"lean-dependent-signature-evidence-\"));\n\tconst summaries = new Map();\n",
+          "previous": "\t\ttmpdir(), \"lean-bridge-dependent-signature-evidence-\"));\n",
+          "start": 5737
+        },
+        {
+          "current": "\t\tfor(const archived of index.lanes)\n",
+          "previous": "\t\tfor(const retained of index.lanes)\n",
+          "start": 5827
+        },
+        {
+          "current": "\t\t\tconst lane = dependentSignatureHostedLanes.find(item =>\n\t\t\t\titem.id === archived.id);\n",
+          "previous": "\t\t\tconst lane = dependentSignatureHostedLanes.find(\n\t\t\t\titem => item.id === retained.id);\n",
+          "start": 5868
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(archived.profiles, lane.profiles);\n\t\t\tconst inputs = await materializeHosted(\n\t\t\t\troot, temporary, lane, archived);\n\t\t\tconst selected = await inspectDependentSignatureHostedArtifact(\n\t\t\t\tinputs, lane);\n\t\t\tassertDependentSignatureHostedSteps(\n\t\t\t\tlane, selected.api.job.bytes);\n\t\t\tassert.deepEqual(archived.hostedRun, {\n\t\t\t\t...selected.hostedRun, apiRecords: apiRecords(selected.api)\n",
+          "previous": "\t\t\tassert.deepEqual(retained.profiles, lane.profiles);\n\t\t\tconst zip = join(temporary, `${lane.id}.zip`);\n\t\t\tconst bytes = await reconstruct(\n\t\t\t\troot, retained.hostedRun.artifact.parts, zip);\n\t\t\tassert.equal(bytes, retained.hostedRun.artifact.bytes);\n\t\t\tassert.equal(await checkedRecordValueIndexHostedDigest(zip)\n\t\t\t\t, retained.hostedRun.artifact.sha256);\n\t\t\tconst apiRoot = join(root, `hosted/api/${lane.id}`);\n\t\t\tconst hosted = await inspectDependentSignatureHostedArtifact({\n\t\t\t\t\"artifact-zip\": zip, \"run-json\": join(apiRoot, \"run.json\")\n\t\t\t\t, \"job-json\": join(apiRoot, \"job.json\")\n\t\t\t\t, \"artifact-json\": join(apiRoot, \"artifact.json\")\n\t\t\t\t, \"job-log\": join(root, `hosted/${lane.id}/job.log`)\n\t\t\t}, lane);\n\t\t\tassertDependentSignatureHostedSteps(lane, hosted.api.job.bytes);\n\t\t\tconst expectedHosted = {\n\t\t\t\t...hosted.hostedRun\n\t\t\t\t, apiRecords: Object.fromEntries(Object.entries(hosted.api).map(\n\t\t\t\t\t([name, item]) => [name, {\n\t\t\t\t\t\tbytes: item.bytes.length, sha256: item.sha256\n\t\t\t\t\t}]\n\t\t\t\t))\n",
+          "start": 5977
+        },
+        {
+          "current": "\t\t\t\t\t...selected.hostedRun.artifact\n\t\t\t\t\t, members: archived.hostedRun.artifact.members\n\t\t\t\t\t, parts: archived.hostedRun.artifact.parts\n",
+          "previous": "\t\t\t\t\t...hosted.hostedRun.artifact\n\t\t\t\t\t, members: retained.hostedRun.artifact.members\n\t\t\t\t\t, parts: retained.hostedRun.artifact.parts\n",
+          "start": 6398
+        },
+        {
+          "current": "\t\t\t});\n\t\t\tconst extracted = await extractArtifact(inputs[\"artifact-zip\"]);\n",
+          "previous": "\t\t\t};\n\t\t\tassert.deepEqual(retained.hostedRun, expectedHosted);\n\t\t\tconst extracted = await extractCheckedRecordValueIndexHostedArtifact(zip);\n",
+          "start": 6540
+        },
+        {
+          "current": "\t\t\t\t\t, archived.hostedRun.artifact.members);\n\t\t\t\tfor(const route of dependentSignatureMatrixRoutes)\n",
+          "previous": "\t\t\t\t\t, retained.hostedRun.artifact.members);\n\t\t\t\tconst reports = {};\n\t\t\t\tfor(const path of lane.reportPaths)\n",
+          "start": 6666
+        },
+        {
+          "current": "\t\t\t\t\tconst path = dependentSignatureMatrixResultPath(\n\t\t\t\t\t\tlane.matrixLane, route, dependentSignatureHostedProducer);\n\t\t\t\t\tconst relative = path.slice(path.indexOf(\"/\") + 1);\n\t\t\t\t\tconst bytes = await readFile(join(extracted.root, relative));\n\t\t\t\t\tcanonical(bytes, `${lane.id}:${route}`);\n\t\t\t\t\tassert.deepEqual(bytes, await readFile(join(root\n\t\t\t\t\t\t, `hosted/output/${lane.id}/${route}.json`)));\n\t\t\t\t\tassert.ok(!summaries.has(path), path);\n\t\t\t\t\tsummaries.set(path, bytes);\n",
+          "previous": "\t\t\t\t\treports[path] = await readFile(join(extracted.root, path));\n\t\t\t\t\tassert.deepEqual(reports[path], await readFile(join(\n\t\t\t\t\t\troot, `hosted/output/${lane.id}/${path}`)));\n",
+          "start": 6772
+        },
+        {
+          "current": "",
+          "previous": "\t\t\t\tassert.deepEqual(validateDependentSignatureHostedReports(\n\t\t\t\t\tlane, reports), retained.accepted);\n",
+          "start": 7251
+        },
+        {
+          "current": "\t\t\tassert.ok((await readFile(inputs[\"job-log\"])).length > 0);\n\t\t}\n\n\t\tconst inputs = await materializeHosted(\n\t\t\troot, temporary, dependentSignatureHostedReceipt, index.aggregate);\n\t\tconst selected = await inspectDependentSignatureHostedReceipt(inputs);\n\t\tassertDependentSignatureHostedReceiptSteps(selected.api.job.bytes);\n\t\tassert.deepEqual(index.aggregate.hostedRun, {\n\t\t\t...selected.hostedRun, apiRecords: apiRecords(selected.api)\n\t\t\t, artifact: {\n\t\t\t\t...selected.hostedRun.artifact\n\t\t\t\t, members: index.aggregate.hostedRun.artifact.members\n\t\t\t\t, parts: index.aggregate.hostedRun.artifact.parts\n\t\t\t}\n\t\t});\n\t\tconst extracted = await extractArtifact(inputs[\"artifact-zip\"]);\n\t\tlet receipt;\n\t\ttry\n\t\t{\n\t\t\tassert.deepEqual(extracted.entries\n\t\t\t\t, index.aggregate.hostedRun.artifact.members);\n\t\t\tconst bytes = await readFile(join(extracted.root, \"receipt.json\"));\n\t\t\treceipt = canonical(bytes, \"receipt.json\");\n\t\t\tassert.deepEqual(bytes, await readFile(join(\n\t\t\t\troot, \"hosted/output/matrix/receipt.json\")));\n",
+          "previous": "\t\t\tassert.ok((await readFile(join(\n\t\t\t\troot, `hosted/${lane.id}/job.log`))).length > 0);\n",
+          "start": 7321
+        },
+        {
+          "current": "\t\tfinally\n\t\t{ await rm(extracted.root, { recursive: true }); }\n\t\tvalidateDependentSignatureHostedReceipt(receipt);\n\t\tassert.deepEqual(receipt, index.aggregate.receipt);\n\t\tconst replayed = await buildDependentSignatureMatrixReceipt(path => {\n\t\t\tassert.ok(summaries.has(path), path); return summaries.get(path);\n\t\t}, receipt.run);\n\t\tassert.deepEqual(replayed, receipt);\n\t\tassert.deepEqual(index.matrix, receipt.matrix);\n\t\tfor(const lane of index.lanes)\n\t\t\tassert.deepEqual(lane.results\n\t\t\t\t, receipt.records.filter(record => record.lane === lane.id));\n",
+          "previous": "",
+          "start": 8331
+        }
+      ],
+      "parent": "b27603fed9401f5b614e532faa53b8188660a51c",
+      "path": "tests/helpers/dependent-signature-hosted-evidence.mjs",
+      "previousSha256": "88f51d7be7c545ea0032632ac3ae463a252b33498426124ee7d129c074fea952"
+    },
+    {
+      "commit": "346e91f05555f93cd75f212399739e91c2b06143",
+      "currentSha256": "8b00bee7609f25b90c042a91e12ec9ce9b838bf00569ea553e8a38e61eb8bfa5",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "start": 340
+        },
+        {
+          "current": "\tdependentSignatureHostedLanes\n",
+          "previous": "\tdependentSignatureConsumerRun\n\t, dependentSignatureHostedRunConclusions\n\t, dependentSignatureHostedLanes\n\t, dependentSignatureHostedOriginal\n",
+          "start": 349
+        },
+        {
+          "current": "\t, dependentSignatureHostedReceipt\n\t, dependentSignatureHostedRunConclusions\n\t, dependentSignatureHostedRunId\n",
+          "previous": "",
+          "start": 416
+        },
+        {
+          "current": "",
+          "previous": "\t, dependentSignaturePerlRun\n",
+          "start": 561
+        },
+        {
+          "current": "\tdependentSignatureFocusedWorkflow\n\t, dependentSignatureMatrixArtifactName\n\t, dependentSignatureMatrixRoutes\n} from \"./dependent-signature-matrix-receipt.mjs\";\n",
+          "previous": "\tvalidateDependentSignatureManagedReport\n} from \"./dependent-signature-hosted-evidence.mjs\";\nimport {\n\tdependentFinRefinements\n} from \"./managed-dependent-fin.mjs\";\n",
+          "start": 665
+        },
+        {
+          "current": "test(\"the hosted plan closes one same-run 17-profile matrix\", () => {\n",
+          "previous": "const digest = value => sha256(value);\nconst pythonLane = dependentSignatureHostedLanes.find(\n\tlane => lane.id === \"python\");\nconst pythonConsumer = digest(dependentSignatureHostedOriginal(\n\tdependentSignatureHostedProducer\n\t, \"tests/fixtures/dependent-fin-consumers/python.py\"\n));\nconst managedReport = route => {\n\tconst artifact = {\n\t\tpath: \"dependentfin-1.0.0.whl\", bytes: 1234\n\t\t, sha256: digest(\"archive\")\n\t};\n\treturn {\n\t\tschemaVersion: 1, reproducible: true\n\t\t, archives: { [artifact.path]: artifact.sha256 }\n\t\t, reports: [{\n\t\t\tprofile: \"python\", path: route, checks: 2017\n\t\t\t, offlineInstall: true, compilerFreePath: true\n\t\t\t, consumerSha256: pythonConsumer\n\t\t\t, dispatch: {\n\t\t\t\tobserved: false\n\t\t\t\t, reason: \"the dependent comparison runs in the bundled C adapter before Lean; its rejection text and recovery are observed through the public host API\"\n\t\t\t}\n\t\t\t, packages: [{ target: \"pypi\", artifacts: [artifact] }]\n\t\t\t, refinements: dependentFinRefinements\n\t\t\t, bindingIrSha256: digest(`binding:${route}`)\n\t\t\t, sourceTreeSha256: digest(\"source\")\n\t\t\t, modelSha256: digest(`model:${route}`)\n\t\t\t, receiptSha256: digest(`receipt:${route}`)\n\t\t\t, ...route === \"reviewed-ir\"\n\t\t\t\t? { reviewedSourceSha256: digest(\"reviewed\") } : {}\n\t\t\t, sourceRemovedBeforeInstallation: true\n\t\t\t, handoffRelocatedBeforeInstallation: true\n\t\t}]\n\t};\n};\n\ntest(\"the hosted plan closes exactly 17 profiles across both author routes\", () => {\n",
+          "start": 826
+        },
+        {
+          "current": "\t\t[String(dependentSignatureHostedRunId)]: \"success\"\n",
+          "previous": "\t\t[String(dependentSignatureConsumerRun)]: \"failure\"\n",
+          "start": 956
+        },
+        {
+          "current": "\tassert.equal(dependentSignatureHostedLanes.length, 11);\n\tconst profiles = new Set();\n",
+          "previous": "\tassert.equal(dependentSignaturePerlRun, dependentSignatureConsumerRun);\n\tassert.equal(dependentSignatureHostedLanes.length, 14);\n\tconst ordinaryProfiles = new Set();\n",
+          "start": 1014
+        },
+        {
+          "current": "",
+          "previous": "\t\tassert.equal(lane.reportPaths.length, 2, lane.id);\n",
+          "start": 1153
+        },
+        {
+          "current": "\t\tlane.profiles.forEach(profile => profiles.add(profile));\n\t\tassert.equal(lane.runId, dependentSignatureHostedRunId);\n\t\tassert.equal(lane.workflow, dependentSignatureFocusedWorkflow);\n\t\tassert.equal(\n\t\t\tdependentSignatureMatrixArtifactName(\n\t\t\t\tlane.matrixLane, dependentSignatureHostedProducer)\n\t\t\t, `${lane.artifactPrefix}-${dependentSignatureHostedProducer}`\n\t\t);\n\t\tfor(const name of [\n\t\t\t\"jobName\", \"acceptanceStep\", \"uploadStep\", \"enforceStep\"\n\t\t]) assert.ok(lane[name].length > 0, `${lane.id}:${name}`);\n",
+          "previous": "\t\tfor(const profile of lane.profiles) ordinaryProfiles.add(profile);\n\t\tassert.equal(lane.runId, dependentSignatureConsumerRun);\n\t\tassert.equal(lane.workflow, \".github/workflows/consumer-matrix.yml\");\n\t\tif(lane.id.startsWith(\"perl-\"))\n\t\t{\n\t\t\tassert.match(lane.jobName, /^Perl \\/ Perl XS \\(.+\\)$/u);\n\t\t\tassert.equal(lane.acceptanceStep\n\t\t\t\t, \"Compare installed Perl corpus packages with fresh Lean results\");\n\t\t}\n",
+          "start": 1229
+        },
+        {
+          "current": "\tassert.deepEqual([...profiles].sort(), [\n",
+          "previous": "\tassert.deepEqual([...ordinaryProfiles].sort(), [\n",
+          "start": 1742
+        },
+        {
+          "current": "\tassert.equal(profiles.size * 2, 34);\n\tassert.equal(dependentSignatureMatrixRoutes.length, 4);\n\tassert.deepEqual(dependentSignatureHostedReceipt, {\n\t\tid: \"matrix\", artifactPrefix: \"dependent-signature-matrix\"\n\t\t, jobName: \"Reconcile the exact same-run receipt\"\n\t});\n",
+          "previous": "\tassert.equal(ordinaryProfiles.size * 2, 34);\n\tassert.equal(dependentSignatureHostedLanes.filter(\n\t\tlane => lane.id.startsWith(\"perl-\")).length, 4);\n",
+          "start": 2006
+        },
+        {
+          "current": "",
+          "previous": "test(\"managed reports bind the source, packages and live dependency graph\", () => {\n\tfor(const route of [\"ordinary-source\", \"reviewed-ir\"])\n\t{\n\t\tconst report = managedReport(route), bytes = Buffer.from(canonicalJson(report));\n\t\tconst accepted = validateDependentSignatureManagedReport(\n\t\t\tpythonLane, bytes, route);\n\t\tassert.deepEqual(accepted.profiles, [\"python\"]);\n\t\tassert.deepEqual(accepted.checks, { python: 2017 });\n\t\tfor(const mutate of [\n\t\t\tvalue => { value.reports[0].checks = 2000; }\n\t\t\t, value => { value.reports[0].consumerSha256 = \"0\".repeat(64); }\n\t\t\t, value => { value.reports[0].refinements[\"DependentFin.mirror\"].parameters[1].parameter = 1; }\n\t\t\t, value => { value.reports[0].packages[0].target = \"npm\"; }\n\t\t\t, value => { value.reports[0].offlineInstall = false; }\n\t\t\t, value => { delete value.archives[Object.keys(value.archives)[0]]; }\n\t\t]) {\n\t\t\tconst forged = structuredClone(report); mutate(forged);\n\t\t\tassert.throws(() => validateDependentSignatureManagedReport(\n\t\t\t\tpythonLane, Buffer.from(canonicalJson(forged)), route));\n\t\t}\n\t}\n});\n\n",
+          "start": 2785
+        },
+        {
+          "current": "test(\"source selection freezes all focused producers, checker and archiver\", {\n",
+          "previous": "test(\"source selection freezes producer fixtures plus checker and archiver\", {\n",
+          "start": 3009
+        },
+        {
+          "current": "\tconst sources = dependentSignatureHostedSources({\n",
+          "previous": "\tconst revisions = {\n",
+          "start": 3217
+        },
+        {
+          "current": "\t});\n\tfor(const path of [\n\t\t\".github/workflows/dependent-signature-complete.yml\"\n\t\t, \".github/workflows/dependent-checked-record-browser.yml\"\n\t\t, \".github/workflows/dependent-checked-record-perl.yml\"\n\t\t, \".github/workflows/dependent-checked-record-wit.yml\"\n\t\t, \"scripts/reconcile-dependent-signature-matrix.mjs\"\n\t\t, \"tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean\"\n\t\t, \"tests/fixtures/dependent-checked-record-consumers/perl.pl\"\n\t])\n\t\tassert.ok(sources.some(source => source.role === \"producer\"\n\t\t\t&& source.path === path), path);\n\tassert.ok(sources.some(source => source.role === \"archiver\"\n",
+          "previous": "\t};\n\tconst producer = dependentSignatureHostedSources(revisions);\n\tassert.ok(producer.some(source => source.role === \"producer\"\n\t\t&& source.path === \"tests/managed-dependent-fin.test.mjs\"));\n\tassert.ok(producer.some(source => source.role === \"producer\"\n\t\t&& source.path === \"tests/fixtures/dependent-fin-consumers/perl.pl\"));\n\tassert.ok(producer.some(source => source.role === \"producer\"\n\t\t&& source.path === \".github/workflows/perl-consumer.yml\"));\n\tassert.ok(producer.some(source => source.role === \"archiver\"\n",
+          "start": 3353
+        },
+        {
+          "current": "\tassert.equal(new Set(sources.map(source =>\n\t\t`${source.role}:${source.path}`)).size, sources.length);\n",
+          "previous": "\tassert.equal(new Set(producer.map(source =>\n\t\t`${source.role}:${source.path}`)).size, producer.length);\n",
+          "start": 4056
+        }
+      ],
+      "parent": "b27603fed9401f5b614e532faa53b8188660a51c",
+      "path": "tests/helpers/dependent-signature-hosted-tests.mjs",
+      "previousSha256": "0b3f59f4d56ecb0d7e9a7b8bc88e4df202b089516e38da9b6c405cbb0f4caa63"
+    },
+    {
+      "commit": "8163ddc41b7f1257ee89e96047ad6eef3224d6a5",
+      "currentSha256": "07968c80a715916fb01a791f743ac57d20ec30ecf0236de031defd32a57f86e1",
+      "edits": [
+        {
+          "current": "\t\tconst filter = key === \"jobs\" ? \"filter=all&\" : \"\";\n",
+          "previous": "",
+          "start": 1914
+        },
+        {
+          "current": "\t\t\t`${repository}/actions/runs/${dependentSignatureHostedRunId}/${key}`\n\t\t\t\t+ `?${filter}per_page=100&page=${page}`\n",
+          "previous": "\t\t\t`${repository}/actions/runs/${dependentSignatureHostedRunId}/${key}?per_page=100&page=${page}`\n",
+          "start": 1996
+        },
+        {
+          "current": "\t\tconst matchingJobs = jobs.filter(job => job.name === item.jobName\n\t\t\t&& job.run_attempt === run.run_attempt);\n",
+          "previous": "\t\tconst matchingJobs = jobs.filter(job => job.name === item.jobName);\n",
+          "start": 4514
+        }
+      ],
+      "parent": "346e91f05555f93cd75f212399739e91c2b06143",
+      "path": "scripts/download-dependent-signature-hosted-inputs.mjs",
+      "previousSha256": "661c7a566672eea2fb318c1dcf8ee5bd1f80b325ce816df14b95f72f41156caa"
+    }
+  ]
+}

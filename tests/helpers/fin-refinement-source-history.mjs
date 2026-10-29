@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDependentSignatureFocusedArchiveSource, dependentSignatureFocusedArchiveNormalizationPaths } from "./dependent-signature-focused-archive-source-history.mjs";
 import { beforeFocusedAcceptanceSparseCheckoutSource, focusedAcceptanceSparseCheckoutNormalizationPaths } from "./focused-acceptance-sparse-checkout-source-history.mjs";
 import { beforeCompleteAcceptanceBudgetSource, completeAcceptanceBudgetNormalizationPaths } from "./complete-acceptance-budget-source-history.mjs";
 import { beforeDependentSignatureProducerSparseCheckoutSource, dependentSignatureProducerSparseCheckoutNormalizationPaths } from "./dependent-signature-producer-sparse-checkout-source-history.mjs";
@@ -2392,7 +2393,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...focusedAcceptanceSparseCheckoutNormalizationPaths
+	...dependentSignatureFocusedArchiveNormalizationPaths
+	, ...focusedAcceptanceSparseCheckoutNormalizationPaths
 	, ...completeAcceptanceBudgetNormalizationPaths
 	, ...dependentSignatureProducerSparseCheckoutNormalizationPaths
 	, ...proofErasureCoreLintRepairNormalizationPaths
@@ -3523,7 +3525,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeFocusedAcceptanceSparseCheckoutSource(path, text, expected);
+	let stage = beforeDependentSignatureFocusedArchiveSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeFocusedAcceptanceSparseCheckoutSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
