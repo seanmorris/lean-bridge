@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import test from "node:test";
+import "./helpers/optional-parameter-promotion-contract-source-history-tests.mjs";
 import "./helpers/historical-self-authentication-repair-source-history-tests.mjs";
 import "./helpers/optional-parameter-route-acceptance-repair-source-history-tests.mjs";
 import "./helpers/historical-contract-replay-repair-source-history-tests.mjs";

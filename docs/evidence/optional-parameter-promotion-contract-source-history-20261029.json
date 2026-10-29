@@ -1,0 +1,61 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-promotion-contract-source-history.mjs",
+      "sha256": "aa2dbf9923abbfe6f44f7323207f3599626880f4e2283b41549db3e8e9d6716b"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-promotion-contract-source-history-tests.mjs",
+      "sha256": "c4c78c325b67b9d4101589409db1bbf6bd7eaefb4075adb07e0b0aefac984ccd"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-promotion-contract-source-history.mjs",
+      "sha256": "e1c50649bdf3e35d243ac24834f59b63fb56f52fef8bd97938fb927dbbc52f04"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "tests/helpers/optional-parameter-complete-promotion-tests.mjs",
+      "sha256": "4d62c6a56ff7e1aedcf933b3aec05428eb30cbf32ec163d461f7b80a38fc0bcc"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-complete-promotion.mjs",
+      "sha256": "1a8e31ceb22ca65b83115c5d7cc50d0cd222bc12e45f23b4e0b31e70254b0331"
+    }
+  ],
+  "implementationCommit": "d3e10a3b0a34a0e14f8d91c5aee2e38912addebe",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5ad08826161fdb848c276519daff9da8799123c49552e4cfbdb06485c26856d3",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-promotion-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 229
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "e0b77d0024d17433a3dab82b24eec8a344963e4d9ce5a32d3fc16a0a9dbc7520"
+    }
+  ],
+  "milestone": "optional-parameter-promotion-contract-source-v1",
+  "predecessorCommit": "d255e35c5e940af999cc4ce173cec1b1ec0af913",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Define a fail-closed 34-cell optional-parameter promotion that releases only overlapping legacy claims, preserves unrelated delivery shapes, and cannot run without eleven exact artifacts and a complete authenticated reference.",
+  "updates": [
+    {
+      "currentSha256": "dd29eb3b00c0628b8073e207d23b86cb411f1071b36a11ab93a1de3aab65ab41",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-complete-promotion-tests.mjs\";\n",
+          "previous": "",
+          "start": 1351
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "7d097ad2cecba7d33a0ee9d908b132190c90be2ae9dfdc3a260d1a17881e7285"
+    }
+  ]
+}
