@@ -206,6 +206,15 @@ const hasDependentCheckedRecordMatrixEvidence = document =>
 	dependentCheckedRecordMatrixEvidenceIds.every(id =>
 		document.evidence.some(item => item.id === id));
 const dependentCheckedRecordMatrixReference = "[Hosted dependent checked-record acceptance](../evidence/dependent-checked-record-promotion.md) covers top-level copied parameters and results in all seventeen consumer profiles through eleven independently retained host archives and all four ordinary/reviewed full/result-only routes. The proof-free host value carries `bound` and `below : Fin bound` as payload fields. Full packages rebuild host inputs through `DependentRecords.mkDependent`, reject `below >= bound` before Lean code runs, preserve rejected caller values and recover on a later valid call. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain separate work.";
+const hostNullCompleteEvidenceId = "hosted-host-null-complete-installed";
+const hostNullCompleteProfiles = new Set([
+	"node-javascript", "node-typescript", "browser-javascript"
+	, "browser-react", "browser-worker", "php-native", "php-wasm"
+	, "dotnet", "java", "kotlin", "perl", "python", "ruby", "c", "cpp"
+	, "rust", "wit-wasi"
+]);
+const hasHostNullCompleteEvidence = document =>
+	document.evidence.some(item => item.id === hostNullCompleteEvidenceId);
 export const phpWasmRefinementEntryBoundary = `PHP-Wasm refinement support is established by unmodified prepared packages.
 The separate entry-measurement probes instrument fixture packages only: their
 24 copied, owned and indexed routes count validator, constructor, adapter and
@@ -270,6 +279,16 @@ const dependentCheckedRecordMatrixGuide = (
 	const evidence = reference.replace(/reference\/types\.md$/u
 		, "evidence/dependent-checked-record-promotion.md");
 	return `[Hosted dependent checked-record acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The proof-free host value carries the tested runtime bound and bounded value. Full packages validate inputs with the selected dependent constructor before Lean execution; standalone result-only packages expose Lean-produced values without checked-input metadata. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain outside this evidence.`;
+};
+const hostNullCompleteGuide = (document, profiles, reference) => {
+	if(!hasHostNullCompleteEvidence(document)) return null;
+	const selected = profiles.filter(profile =>
+		hostNullCompleteProfiles.has(profile));
+	assert.equal(selected.length, profiles.length
+		, "Complete HostNull evidence must cover every rendered profile");
+	const evidence = reference.replace(/reference\/types\.md$/u
+		, "evidence/host-null-complete-20261029/index.json");
+	return `[Complete hosted HostNull acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} in installed ordinary-source and independently reviewed packages. \`HostNull.null\` uses the target's declared null carrier; \`HostNull.value x\` carries \`x\` directly. This rule applies only to explicit \`HostNull\`: \`Option.none\`, \`Unit\`, erased proofs, and omitted or default arguments retain separate representations. The retained matrix exercises parameters, results, record fields, and synchronous callback parameters and results. Owned or asynchronous values and generic or dependent HostNull combinations remain outside this evidence.`;
 };
 const nestedCheckedRecordPerlMarker = "[PHP-Wasm checked-record packages]";
 const zeroPayloadNativeMarker = "[Checked-record browser packages]";
@@ -397,6 +416,8 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		document, profiles, reference);
 	const dependentCheckedRecordMatrix = dependentCheckedRecordMatrixGuide(
 		document, profiles, reference);
+	const hostNullComplete = hostNullCompleteGuide(
+		document, profiles, reference);
 	return [
 		"### Type conversions"
 		, ""
@@ -408,6 +429,7 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 			? ["", dependentCheckedRecordMatrix] : [])
 		, ...(callbackSubtype ? ["", callbackSubtype] : [])
 		, ...(ownedSubtype ? ["", ownedSubtype] : [])
+		, ...(hostNullComplete ? ["", hostNullComplete] : [])
 		, ""
 		, table(["Lean type or source form", "Host representation", "Current evidence", "Conversion rules"], rows)
 		, ""

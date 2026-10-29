@@ -143,6 +143,15 @@ test("complete HostNull promotion renders every canonical consumer guide", async
 		}, profiles, "reference/types.md");
 		const row = generatedRow(source, "Explicit nullable host value");
 		assert.ok(row, guide);
+		assert.match(source
+			, /\[Complete hosted HostNull acceptance\]\(evidence\/host-null-complete-20261029\/index\.json\)/u
+			, guide);
+		assert.match(source
+			, /This rule applies only to explicit `HostNull`: `Option\.none`, `Unit`, erased proofs, and omitted or default arguments retain separate representations/u
+			, guide);
+		assert.match(source
+			, /parameters, results, record fields, and synchronous callback parameters and results/u
+			, guide);
 		assert.match(row
 			, /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed/u
 			, guide);
