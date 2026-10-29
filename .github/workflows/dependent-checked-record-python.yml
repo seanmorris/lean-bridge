@@ -34,6 +34,32 @@ jobs:
         with:
           fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}
           persist-credentials: false
+          # Producers require current package source, not the immutable hosted
+          # evidence corpus. Keep root files and every source/build directory,
+          # while materializing only the small top-level evidence records.
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:

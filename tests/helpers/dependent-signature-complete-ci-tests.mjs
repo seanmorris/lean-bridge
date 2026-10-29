@@ -28,6 +28,30 @@ const shallowCheckoutInput = `      shallow_checkout:
 `;
 const focusedCheckoutDepth
 	= "fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}";
+const producerSparseCheckout = `          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+          sparse-checkout-cone-mode: false
+`;
 const auditCheckout = `      - name: Check out complete history and the exact audit corpus
         uses: actions/checkout@v6
         with:
@@ -155,6 +179,7 @@ test("focused producers use depth one while standalone runs retain full history"
 		assert.ok(call.includes("    inputs:\n"), path);
 		assert.ok(call.includes(shallowCheckoutInput), path);
 		assert.equal(source.split(focusedCheckoutDepth).length - 1, 1, path);
+		assert.equal(source.split(producerSparseCheckout).length - 1, 1, path);
 		assert.ok(source.includes("- name: Check out the exact package revision\n")
 			, path);
 		assert.doesNotMatch(source, /^ {10}fetch-depth: [01]$/gmu, path);
@@ -166,6 +191,10 @@ test("focused producers use depth one while standalone runs retain full history"
 		assert.ok(gitCommands.every(command => command === "rev-parse")
 			, `${shellPath} must consume only the checked-out commit`);
 		assert.match(shell, /git rev-parse HEAD/u, shellPath);
+		assert.throws(() => {
+			assert.equal(source.replace("            !/docs/evidence/*\n", "")
+				.split(producerSparseCheckout).length - 1, 1, path);
+		}, undefined, `${path} must exclude immutable hosted evidence`);
 	}}
 );
 

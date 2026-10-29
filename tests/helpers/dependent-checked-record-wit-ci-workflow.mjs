@@ -45,7 +45,9 @@ export const assertDependentCheckedRecordWitWorkflow = source => {
 		, "Enforce installed dependent checked-record checked-record WIT acceptance"
 	]);
 	const step = name => source.split("      - name: " + name + "\n")[1].split("      - name: ")[0];
-	assert.equal(step(names[0]), "        uses: actions/checkout@v6\n        with:\n          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n          persist-credentials: false\n");
+	const checkout = step(names[0]);
+	assert.ok(checkout.startsWith("        uses: actions/checkout@v6\n        with:\n          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\n          persist-credentials: false\n"));
+	assert.match(checkout, /sparse-checkout: \|[\s\S]*!\/docs\/evidence\/\*[\s\S]*sparse-checkout-cone-mode: false/u);
 	assert.equal(step(names[1]), '        uses: actions/setup-node@v6\n        with:\n          node-version: "22"\n          cache: npm\n');
 	assert.equal(step(names[2]), "        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n");
 	assert.equal(step(names[3]), "        timeout-minutes: 20\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd\n");
