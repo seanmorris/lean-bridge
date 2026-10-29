@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	optionalParameterMatrixCases, optionalParameterMatrixLanes
-	, optionalParameterMatrixRoutes, optionalParameterMatrixWorkflow
+	, optionalParameterMatrixRoutes, optionalParameterMatrixWorkflows
 	, validateOptionalParameterMatrixResults
 } from "./optional-parameter-matrix.mjs";
 
@@ -80,14 +80,16 @@ const summary = results => Object.freeze({
 	, rejections: total(results, "rejections")
 });
 
-const identity = ({ repository, runId, runAttempt, producerCommit }) => {
+const identity = ({
+	repository, workflow, runId, runAttempt, producerCommit
+}) => {
 	assert.match(repository, /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/u);
+	assert.ok(optionalParameterMatrixWorkflows.includes(workflow));
 	for(const value of [runId, runAttempt])
 		assert.ok(Number.isSafeInteger(value) && value > 0);
 	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
 	return {
-		repository, workflow: optionalParameterMatrixWorkflow
-		, runId, runAttempt, producerCommit
+		repository, workflow, runId, runAttempt, producerCommit
 	};
 };
 

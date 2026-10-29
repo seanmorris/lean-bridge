@@ -1,6 +1,7 @@
 name: Installed nominal Subtypes in PHP-Wasm
 
 on:
+  workflow_call:
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -107,6 +108,33 @@ jobs:
             build/nominal-subtype-php-wasm-input/php-wasm-runtime/runtime.json
           if-no-files-found: error
           retention-days: 30
+      - name: Execute optional parameters through native PHP and PHP-Wasm packages
+        id: optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        env:
+          LEAN_BRIDGE_PHP: /usr/bin/php
+          LEAN_BRIDGE_COMPOSER: /usr/bin/composer
+          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME="$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime"
+          test -d "$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME"
+          bash scripts/run-optional-parameter-php-ci.sh
+      - name: Preserve optional-parameter PHP records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-php-${{ github.sha }}
+          path: build/optional-parameter-php-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter PHP acceptance
+        if: always() && steps.optional_parameters.outcome != 'success'
+        run: exit 1
       - name: Enforce installed PHP-Wasm acceptance
         if: always() && steps.acceptance.outcome != 'success'
         run: exit 1

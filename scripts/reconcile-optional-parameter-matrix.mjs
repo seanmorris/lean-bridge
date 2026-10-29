@@ -17,7 +17,7 @@ const values = Object.fromEntries(process.argv.slice(2).reduce(
 		if(index % 2 === 0)
 		{
 			assert.match(item
-				, /^--(?:directory|output|producer|repository|run-id|run-attempt)$/u);
+				, /^--(?:directory|output|producer|repository|workflow|run-id|run-attempt)$/u);
 			assert.ok(all[index + 1] && !all[index + 1].startsWith("--"));
 			items.push([item.slice(2), all[index + 1]]);
 		}
@@ -25,6 +25,7 @@ const values = Object.fromEntries(process.argv.slice(2).reduce(
 	}, []));
 assert.deepEqual(Object.keys(values).sort(), [
 	"directory", "output", "producer", "repository", "run-attempt", "run-id"
+	, "workflow"
 ]);
 const root = resolve(values.directory), output = resolve(values.output);
 const receipt = await buildOptionalParameterMatrixReceipt(path => {
@@ -33,7 +34,8 @@ const receipt = await buildOptionalParameterMatrixReceipt(path => {
 	assert.ok(path.split("/").every(part => part !== "." && part !== ".."));
 	return readFile(join(root, path));
 }, {
-	repository: values.repository, producerCommit: values.producer
+	repository: values.repository, workflow: values.workflow
+	, producerCommit: values.producer
 	, runId: Number(values["run-id"])
 	, runAttempt: Number(values["run-attempt"])
 });

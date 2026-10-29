@@ -8,6 +8,11 @@ import { optionalParameterProfiles } from "./optional-parameter-fixture.mjs";
 
 export const optionalParameterMatrixWorkflow
 	= ".github/workflows/consumer-matrix.yml";
+export const optionalParameterFocusedWorkflow
+	= ".github/workflows/optional-parameter-complete.yml";
+export const optionalParameterMatrixWorkflows = Object.freeze([
+	optionalParameterMatrixWorkflow, optionalParameterFocusedWorkflow
+]);
 export const optionalParameterMatrixRoutes = Object.freeze([
 	Object.freeze({ authorPath: "ordinary-source", reportRoute: "ordinary" })
 	, Object.freeze({ authorPath: "reviewed-ir", reportRoute: "reviewed" })

@@ -1,6 +1,7 @@
 name: Generic Subtypes in C, C++ and Perl
 
 on:
+  workflow_call:
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -139,6 +140,27 @@ jobs:
             build/generic-subtype-native-toolchain.log
           if-no-files-found: error
           retention-days: 30
+      - name: Execute optional parameters through prepared C and C++ packages
+        id: optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-optional-parameter-native-ci.sh
+      - name: Preserve optional-parameter C and C++ records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-native-${{ github.sha }}
+          path: build/optional-parameter-native-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter C and C++ acceptance
+        if: always() && steps.optional_parameters.outcome != 'success'
+        run: exit 1
       - name: Enforce installed native acceptance
         if: always() && steps.acceptance.outcome != 'success'
         run: exit 1
@@ -208,6 +230,27 @@ jobs:
             build/generic-subtype-perl-toolchain.log
           if-no-files-found: error
           retention-days: 30
+      - name: Execute optional parameters through the prepared Perl package
+        id: optional_parameters
+        continue-on-error: true
+        timeout-minutes: 135
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-optional-parameter-language-ci.sh perl
+      - name: Preserve optional-parameter Perl records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-language-perl-${{ github.sha }}
+          path: build/optional-parameter-language-ci/perl/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter Perl acceptance
+        if: always() && steps.optional_parameters.outcome != 'success'
+        run: exit 1
       - name: Enforce installed Perl acceptance
         if: always() && steps.acceptance.outcome != 'success'
         run: exit 1

@@ -1,6 +1,7 @@
 name: Generic Subtypes in npm and browsers
 
 on:
+  workflow_call:
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -121,6 +122,28 @@ jobs:
           path: build/signature-specializations/browser.json
           if-no-files-found: error
           retention-days: 30
+      - name: Execute the complete optional-parameter Node and browser matrix
+        id: optional_parameters
+        if: matrix.route == 'reviewed'
+        continue-on-error: true
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-optional-parameter-npm-ci.sh
+      - name: Preserve optional-parameter Node and browser records
+        if: always() && matrix.route == 'reviewed'
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-node-browser-${{ github.sha }}
+          path: build/optional-parameter-npm-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter Node and browser acceptance
+        if: always() && matrix.route == 'reviewed' && steps.optional_parameters.outcome != 'success'
+        run: exit 1
       - name: Enforce generic Subtype acceptance
         if: always() && steps.acceptance.outcome != 'success'
         run: exit 1

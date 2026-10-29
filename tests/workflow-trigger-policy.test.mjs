@@ -17,6 +17,9 @@ const approvedAutomaticEvents = new Map([
 	, ["consumer-matrix.yml", ["pull_request", "push"]]
 	, ["demos-pages.yml", ["pull_request", "push"]]
 	, ["dependent-checked-record-matrix.yml", ["pull_request", "push"]]
+	, ["dependent-signature-complete.yml", ["pull_request", "push"]]
+	, ["direct-proof-erasure-complete.yml", ["pull_request", "push"]]
+	, ["host-null-complete.yml", ["pull_request", "push"]]
 	, ["performance.yml", ["push"]]
 	, ["quality.yml", ["pull_request", "push"]]
 	, ["reproducible-release.yml", ["pull_request"]]
@@ -26,6 +29,9 @@ const approvedAutomaticEvents = new Map([
 const pathScopedAutomaticWorkflows = new Set([
 	"checked-record-value-index-matrix.yml"
 	, "dependent-checked-record-matrix.yml"
+	, "dependent-signature-complete.yml"
+	, "direct-proof-erasure-complete.yml"
+	, "host-null-complete.yml"
 	, "reviewed-fin-wasm-entry.yml"
 ]);
 
@@ -34,6 +40,10 @@ const nonSweepWorkflows = new Set([
 	, "consumer-matrix.yml"
 	, "demos-pages.yml"
 	, "dependent-checked-record-matrix.yml"
+	, "dependent-signature-complete.yml"
+	, "direct-proof-erasure-complete.yml"
+	, "host-null-complete.yml"
+	, "optional-parameter-complete.yml"
 	, "owned-checked-record-npm-browser.yml"
 	, "performance.yml"
 	, "perl-consumer.yml"
@@ -114,7 +124,7 @@ test("all workflows obey the reviewed automatic-trigger budget", async () => {
 	const names = (await readdir(workflowDirectory))
 		.filter(name => name.endsWith(".yml"))
 		.sort();
-	assert.equal(names.length, 123, "review every workflow added to the repository");
+	assert.equal(names.length, 127, "review every workflow added to the repository");
 	const sources = new Map();
 
 	for(const name of names)
@@ -130,9 +140,9 @@ test("all workflows obey the reviewed automatic-trigger budget", async () => {
 	assert.equal(new Set(crons).size, sweep.length
 		, "weekly sweep slots do not overlap");
 
-	assert.equal(approvedAutomaticEvents.size, 8);
-	assert.equal(pathScopedAutomaticWorkflows.size, 3);
-	assert.equal(nonSweepWorkflows.size, 11);
+	assert.equal(approvedAutomaticEvents.size, 11);
+	assert.equal(pathScopedAutomaticWorkflows.size, 6);
+	assert.equal(nonSweepWorkflows.size, 15);
 });
 
 test("the trigger policy fails closed on accidental dedicated-workflow fan-out", async () => {

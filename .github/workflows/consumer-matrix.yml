@@ -5981,6 +5981,7 @@ jobs:
             --output build/optional-parameter-matrix/receipt.json \
             --producer "${{ github.sha }}" \
             --repository "${{ github.repository }}" \
+            --workflow ".github/workflows/consumer-matrix.yml" \
             --run-id "${{ github.run_id }}" \
             --run-attempt "${{ github.run_attempt }}"
       - name: Preserve the complete optional-parameter receipt

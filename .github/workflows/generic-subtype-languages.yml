@@ -1,6 +1,7 @@
 name: Generic Subtypes in Python, Ruby and Rust
 
 on:
+  workflow_call:
   workflow_dispatch:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
@@ -82,6 +83,23 @@ jobs:
             build/generic-subtype-python-toolchain.log
           if-no-files-found: error
           retention-days: 30
+      - name: Execute optional parameters through the prepared Python package
+        id: optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-optional-parameter-language-ci.sh python
+      - name: Preserve optional-parameter Python records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-language-python-${{ github.sha }}
+          path: build/optional-parameter-language-ci/python/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter Python acceptance
+        if: always() && steps.optional_parameters.outcome != 'success'
+        run: exit 1
       - name: Enforce installed Python acceptance
         if: always() && steps.acceptance.outcome != 'success'
         run: exit 1
@@ -145,6 +163,23 @@ jobs:
             build/generic-subtype-ruby-toolchain.log
           if-no-files-found: error
           retention-days: 30
+      - name: Execute optional parameters through the prepared Ruby package
+        id: optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-optional-parameter-language-ci.sh ruby
+      - name: Preserve optional-parameter Ruby records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-language-ruby-${{ github.sha }}
+          path: build/optional-parameter-language-ci/ruby/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter Ruby acceptance
+        if: always() && steps.optional_parameters.outcome != 'success'
+        run: exit 1
       - name: Enforce installed Ruby acceptance
         if: always() && steps.acceptance.outcome != 'success'
         run: exit 1
@@ -205,6 +240,23 @@ jobs:
             build/generic-subtype-rust-toolchain.log
           if-no-files-found: error
           retention-days: 30
+      - name: Execute optional parameters through the prepared Rust package
+        id: optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-optional-parameter-language-ci.sh rust
+      - name: Preserve optional-parameter Rust records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-language-rust-${{ github.sha }}
+          path: build/optional-parameter-language-ci/rust/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter Rust acceptance
+        if: always() && steps.optional_parameters.outcome != 'success'
+        run: exit 1
       - name: Enforce installed Rust acceptance
         if: always() && steps.acceptance.outcome != 'success'
         run: exit 1
