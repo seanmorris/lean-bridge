@@ -35,7 +35,8 @@ const focusedProducers = Object.freeze([{
 	file: ".github/workflows/generic-subtype-npm-browser.yml"
 	, records: [["run-direct-proof-erasure-npm-ci.sh"
 		, "direct-proof-erasure-node-browser", "build/direct-proof-erasure-npm-ci/"]]
-}, {
+}
+, {
 	file: ".github/workflows/generic-subtype-native-perl.yml"
 	, records: [
 		["run-direct-proof-erasure-native-ci.sh"
@@ -44,14 +45,16 @@ const focusedProducers = Object.freeze([{
 			, "direct-proof-erasure-language-perl"
 			, "build/direct-proof-erasure-language-ci/perl/"]
 	]
-}, {
+}
+, {
 	file: ".github/workflows/generic-subtype-languages.yml"
 	, records: ["python", "ruby", "rust"].map(profile => [
 		`run-direct-proof-erasure-language-ci.sh ${profile}`
 		, `direct-proof-erasure-language-${profile}`
 		, `build/direct-proof-erasure-language-ci/${profile}/`
 	])
-}, {
+}
+, {
 	file: ".github/workflows/generic-subtype-managed-wit.yml"
 	, records: [
 		["run-direct-proof-erasure-managed-ci.sh dotnet"
@@ -63,7 +66,8 @@ const focusedProducers = Object.freeze([{
 		, ["run-direct-proof-erasure-wit-ci.sh"
 			, "direct-proof-erasure-wit", "build/direct-proof-erasure-wit-ci/"]
 	]
-}, {
+}
+, {
 	file: ".github/workflows/nominal-subtype-php-wasm.yml"
 	, records: [["run-direct-proof-erasure-php-ci.sh"
 		, "direct-proof-erasure-php", "build/direct-proof-erasure-php-ci/"]]
@@ -85,6 +89,11 @@ const assertFocusedProducer = (source, specification) => {
 	}
 };
 
+/**
+ * Assert the complete proof-erasure workflow contract.
+ *
+ * @param source - UTF-8 YAML whose audit and producer gates must remain exact.
+ */
 export const assertDirectProofErasureCompleteWorkflow = source => {
 	assert.equal(typeof source, "string");
 	const keys = [...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]

@@ -37,11 +37,16 @@ const result = (lane, route) => ({
 				: { profiles: [...lane.profiles] }
 	, route: route.reportRoute, producerCommit, ...metrics(lane)
 });
-const records = () => new Map(directProofErasureMatrixLanes.flatMap(lane =>
-	directProofErasureMatrixRoutes.map(route => [
-		directProofErasureMatrixResultPath(lane, route, producerCommit)
-		, Buffer.from(canonicalJson(result(lane, route)))
-	])));
+const records = () => {
+	const values = new Map();
+	for(const lane of directProofErasureMatrixLanes)
+		for(const route of directProofErasureMatrixRoutes)
+			values.set(
+				directProofErasureMatrixResultPath(lane, route, producerCommit)
+				, Buffer.from(canonicalJson(result(lane, route)))
+			);
+	return values;
+};
 const build = values => buildDirectProofErasureMatrixReceipt(path => {
 	assert.ok(values.has(path), path); return values.get(path);
 }, {
