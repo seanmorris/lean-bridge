@@ -1,0 +1,104 @@
+name: Installed dependent checked records in Rust
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      shallow_checkout:
+        description: Use an exact depth-one checkout for focused package execution
+        required: false
+        default: false
+        type: boolean
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "17 3 * * 2"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependent-checked-record-rust-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependent-checked-record-rust:
+    name: Four dependent checked-record selections in Rust
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      LEAN_NUM_THREADS: "1"
+    steps:
+      - name: Check out the exact package revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}
+          persist-credentials: false
+          # Producers require current package source, not the immutable hosted
+          # evidence corpus. Keep root files and every source/build directory,
+          # while materializing only the small top-level evidence records.
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+          sparse-checkout-cone-mode: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and pinned Lean and Rust compilers
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/dependent-checked-record-rust-toolchain.log
+          bash scripts/bootstrap-rust-ci.sh 2>&1 | tee -a build/dependent-checked-record-rust-toolchain.log
+      - name: Require all four author and API routes in Rust
+        id: acceptance
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-dependent-checked-record-rust-ci.sh "$PWD/.toolchains/rust-1.90.0/bin/rustc" "$PWD/.toolchains/rust-1.90.0/bin/cargo"
+      - name: Preserve original and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependent-checked-record-rust-${{ github.sha }}
+          path: |
+            build/dependent-checked-record-rust-ci/
+            build/dependent-checked-record-rust-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed dependent checked-record Rust acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

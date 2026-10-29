@@ -1,0 +1,73 @@
+{
+  "checks": 1026,
+  "executions": 4,
+  "floor": "2.38",
+  "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "receipt": {
+    "component": {
+      "id": "dependentrecords@1.0.0",
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 53816368,
+            "path": "archives/dependentrecords-1.0.0-c.tar.gz",
+            "sha256": "c95b8de7e3af9a5e6cc605d03a22c690095858bfffce322524c9f346904688cd"
+          }
+        ],
+        "ecosystem": "c",
+        "name": "dependentrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "c",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51748426,
+            "path": "archives/dependentrecords-1.0.0-cpp.tar.gz",
+            "sha256": "89f68c78bf125833fcefff1c2cde6b60b3dc2aaf588bb66fbe07965f80961b5c"
+          }
+        ],
+        "ecosystem": "cpp",
+        "name": "dependentrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpp",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "b7be4c014c16a17a7b1e960bf24f80bc9ef47b7c84d7732b4ea465186db3b29a",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "dfeb3dd6b30706ee8cc540080d0bba20addf14aa4e9c2a404579136eb007c966"
+    }
+  },
+  "reportSha256": "bff3fcf15004ad353e4f058f4e542080ad6acf12eb5a0ccb8017a35e7c8e6079",
+  "route": "result-only-ordinary-source",
+  "sourceIdentities": {
+    "checker": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+    "producer": "70652587f69c330ea0feebb7bc4c6da6b20f4f04"
+  }
+}

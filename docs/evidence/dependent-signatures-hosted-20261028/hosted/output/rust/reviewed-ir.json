@@ -1,0 +1,43 @@
+{
+  "counts": {
+    "calls": 1289,
+    "checks": 2068,
+    "recoveries": 258,
+    "rejections": 258,
+    "snapshots": 1289
+  },
+  "dispatchObserved": false,
+  "executions": 3,
+  "floor": "2.38",
+  "loadCeiling": 6,
+  "mode": "full",
+  "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+  "route": "reviewed-ir",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.39",
+    "platform": "linux"
+  },
+  "toolchain": {
+    "cargo": {
+      "bytes": 41437528,
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/bin/cargo",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "cargo 1.90.0 (840b83a10 2025-07-30)\n"
+      },
+      "sha256": "51de284e8bb0d03dcee595a0fb1cb3a952fe9e7e4b953a8b1467b7f71725b561"
+    },
+    "rustc": {
+      "bytes": 656496,
+      "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/bin/rustc",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "rustc 1.90.0 (1159e78c4 2025-09-14)\n"
+      },
+      "sha256": "e6abf55ab1859e7c990be77fd593f51661ea99fb2fde626ae9f4108aaa34e7fa"
+    }
+  }
+}

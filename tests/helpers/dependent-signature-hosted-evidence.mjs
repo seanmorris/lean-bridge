@@ -35,6 +35,12 @@ import {
 
 export const dependentSignatureHostedIndexPath
 	= `${dependentSignatureHostedEvidenceDirectory}/index.json`;
+export const dependentSignatureHostedEvidencePins = Object.freeze({
+	index: "adbfdf47685ddc792c95437dee77eba52eddfb7c54d980e31a6219239c71416d"
+	, producer: dependentSignatureHostedProducer
+	, archive: "9480a15350982686785358acb14f0bb9615dc881"
+	, runId: dependentSignatureHostedRunId
+});
 
 const exactKeys = (value, keys, label) => assert.deepEqual(
 	Object.keys(value).sort(), [...keys].sort(), label
@@ -104,7 +110,13 @@ export const checkDependentSignatureHostedEvidence = async (
 	evidenceRoot = dependentSignatureHostedEvidenceDirectory
 ) => {
 	const root = await realpath(evidenceRoot);
+	const pins = dependentSignatureHostedEvidencePins;
+	assert.match(pins.index, /^[a-f0-9]{64}$/u);
+	assert.match(pins.producer, /^[a-f0-9]{40}$/u);
+	assert.match(pins.archive, /^[a-f0-9]{40}$/u);
+	assert.ok(Number.isSafeInteger(pins.runId) && pins.runId > 0);
 	const indexBytes = await readFile(join(root, "index.json"));
+	assert.equal(sha256(indexBytes), pins.index, "index.json");
 	const index = canonical(indexBytes, "index.json");
 	exactKeys(index, [
 		"aggregate", "archiveCommit", "checkerCommit", "files", "kind"
@@ -113,8 +125,10 @@ export const checkDependentSignatureHostedEvidence = async (
 	], "index");
 	assert.equal(index.schemaVersion, 1);
 	assert.equal(index.kind, "dependent-signatures-hosted-installed-v1");
-	assert.equal(index.producerCommit, dependentSignatureHostedProducer);
-	assert.equal(index.runId, dependentSignatureHostedRunId);
+	assert.equal(index.producerCommit, pins.producer);
+	assert.equal(index.checkerCommit, pins.archive);
+	assert.equal(index.archiveCommit, pins.archive);
+	assert.equal(index.runId, pins.runId);
 	assert.deepEqual(index.matrix, {
 		lanes: 11, profiles: 17, authorRoutes: 2, apiModes: 2
 		, reports: 44, cells: 34
@@ -138,8 +152,7 @@ export const checkDependentSignatureHostedEvidence = async (
 		assert.equal(await digestFile(path), file.sha256, file.path);
 	}
 	const revisions = {
-		producer: index.producerCommit, checker: index.checkerCommit
-		, archiver: index.archiveCommit
+		producer: pins.producer, checker: pins.archive, archiver: pins.archive
 	};
 	assert.deepEqual(index.selectedSources
 		, dependentSignatureHostedSources(revisions));

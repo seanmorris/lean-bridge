@@ -1,0 +1,60 @@
+{
+  "browserExecutions": 12,
+  "browserReportSha256": "f889ed5ba6969c8ada89093d7efce0a07ad27d09ac2ab111bf7753f795c47298",
+  "browserVersions": {
+    "chromium": "151.0.7922.34",
+    "firefox": "153.0",
+    "webkit": "26.5"
+  },
+  "expected": {
+    "calls": 513,
+    "checks": 513,
+    "recoveries": 0,
+    "rejections": 0,
+    "snapshots": 513
+  },
+  "lifecycleObservations": 51,
+  "nodeExecutions": 2,
+  "npmReportSha256": "72e80a7cb0a5f0b47af86300f96ccddebc8c433a383d639dcf2ca321a8053323",
+  "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+  "receipt": {
+    "bindingIrSha256": "ca3e3adb325e9c8b0d5c56e55f6e03b83b4c5fbea9abfa4080831e0ea06041cb",
+    "component": {
+      "id": "dependentrecords@1.0.0",
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "3ee741e4d63f9339ae783563766234a9b6afe67359bece8d0c993aded860e232",
+    "componentBundleSha256": "640caf20f0401373c0f8b6876d4e8e84181bcde0ed74746bf448ba4d36ee6cc0",
+    "componentIdentitySha256": "0838b2ef7f9d5ef73ba8521de4003a9c58a11ced05c85553f898f0529318c2b8",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "dependentrecords-1.0.0.tgz",
+      "package": "dependentrecords@1.0.0",
+      "sha256": "a4d8a7dfb017f40d54acb2af2ce8935b8caf93077ddf03da6011d3ce06e02aba"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "407a1cc869deffc64df706d714aa816165a634f8a9bb54896c951b7ef9f9da93",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.01474a1e96edb41ca75fac0183d88d6e047cd060b0dd42bcb7c48402baf03471.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.01474a1e96edb41ca75fac0183d88d6e047cd060b0dd42bcb7c48402baf03471",
+      "sha256": "4ad022809902b44ce4a816e526dfef9393d6d20d4c1ce4841ab97bbcd70f3569"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "028b5147bff2b7acc80f41d69380115d5eb2e454231d9078b6e1c64d007051e5"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "route": "result-only-ordinary-source",
+  "sourceIdentities": {
+    "checker": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+    "producer": "70652587f69c330ea0feebb7bc4c6da6b20f4f04"
+  }
+}

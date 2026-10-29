@@ -1,0 +1,1200 @@
+﻿2026-10-29T22:11:02.4693513Z Current runner version: '2.338.0'
+2026-10-29T22:11:02.4719567Z ##[group]Runner Image Provisioner
+2026-10-29T22:11:02.4720633Z Hosted Compute Agent
+2026-10-29T22:11:02.4721317Z Version: 20261021.618
+2026-10-29T22:11:02.4722017Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-29T22:11:02.4722756Z Build Date: 2026-10-21T00:45:21Z
+2026-10-29T22:11:02.4723534Z Worker ID: {52ff8e2e-ea67-4d73-9381-47af762c2712}
+2026-10-29T22:11:02.4724250Z Region: westus2
+2026-10-29T22:11:02.4725172Z Cloud: Azure
+2026-10-29T22:11:02.4725773Z ##[endgroup]
+2026-10-29T22:11:02.4727283Z ##[group]Operating System
+2026-10-29T22:11:02.4728024Z Ubuntu
+2026-10-29T22:11:02.4728557Z 24.04.5
+2026-10-29T22:11:02.4729058Z LTS
+2026-10-29T22:11:02.4729686Z ##[endgroup]
+2026-10-29T22:11:02.4730251Z ##[group]Runner Image
+2026-10-29T22:11:02.4731318Z Image: ubuntu-24.04
+2026-10-29T22:11:02.4731936Z Version: 20261025.353.1
+2026-10-29T22:11:02.4733325Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-29T22:11:02.4735167Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+2026-10-29T22:11:02.4736282Z ##[endgroup]
+2026-10-29T22:11:02.4737417Z ##[group]GITHUB_TOKEN Permissions
+2026-10-29T22:11:02.4739802Z Contents: read
+2026-10-29T22:11:02.4740423Z Metadata: read
+2026-10-29T22:11:02.4740965Z ##[endgroup]
+2026-10-29T22:11:02.4743152Z Secret source: Actions
+2026-10-29T22:11:02.4744142Z Cache mode: write
+2026-10-29T22:11:02.4745339Z Prepare workflow directory
+2026-10-29T22:11:02.5209947Z Prepare all required actions
+2026-10-29T22:11:02.5258542Z Getting action download info
+2026-10-29T22:11:02.8489024Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-29T22:11:02.9567195Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-29T22:11:03.0409182Z Download action repository 'actions/upload-artifact@v7' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-10-29T22:11:03.2226490Z Uses: seanmorris/lean-bridge/.github/workflows/dependent-checked-record-rust.yml@refs/heads/codex/vo2168-current-shallow-checkout (70652587f69c330ea0feebb7bc4c6da6b20f4f04)
+2026-10-29T22:11:03.2231404Z ##[group] Inputs
+2026-10-29T22:11:03.2232309Z   shallow_checkout: true
+2026-10-29T22:11:03.2232827Z   suite: produce
+2026-10-29T22:11:03.2233312Z ##[endgroup]
+2026-10-29T22:11:03.2233996Z Complete job name: Rust producer / Four dependent checked-record selections in Rust
+2026-10-29T22:11:03.3158879Z ##[group]Run actions/checkout@v6
+2026-10-29T22:11:03.3159771Z with:
+2026-10-29T22:11:03.3160199Z   fetch-depth: 1
+2026-10-29T22:11:03.3160656Z   persist-credentials: false
+2026-10-29T22:11:03.3162157Z   sparse-checkout: /*
+!/*/
+/.github/
+/acceptance/
+/config/
+/containers/
+/demos/
+/nix/
+/notices/
+/patches/
+/poc/
+/schema/
+/scripts/
+/site/
+/src/
+/tests/
+/docs/
+!/docs/evidence/*
+/docs/evidence/*.json
+/docs/evidence/*.md
+/docs/evidence/*.xml
+
+2026-10-29T22:11:03.3163733Z   sparse-checkout-cone-mode: false
+2026-10-29T22:11:03.3164519Z   repository: seanmorris/lean-bridge
+2026-10-29T22:11:03.3168491Z   token: ***
+2026-10-29T22:11:03.3168937Z   ssh-strict: true
+2026-10-29T22:11:03.3169378Z   ssh-user: git
+2026-10-29T22:11:03.3169791Z   clean: true
+2026-10-29T22:11:03.3170199Z   fetch-tags: false
+2026-10-29T22:11:03.3170642Z   show-progress: true
+2026-10-29T22:11:03.3171085Z   lfs: false
+2026-10-29T22:11:03.3171548Z   submodules: false
+2026-10-29T22:11:03.3172022Z   set-safe-directory: true
+2026-10-29T22:11:03.3172531Z   allow-unsafe-pr-checkout: false
+2026-10-29T22:11:03.3173295Z env:
+2026-10-29T22:11:03.3173709Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:11:03.3174149Z ##[endgroup]
+2026-10-29T22:11:03.6946791Z Syncing repository: seanmorris/lean-bridge
+2026-10-29T22:11:03.6948738Z ##[group]Getting Git version info
+2026-10-29T22:11:03.6949500Z Working directory is '/home/runner/work/lean-bridge/lean-bridge'
+2026-10-29T22:11:03.6951299Z [command]/usr/bin/git version
+2026-10-29T22:11:03.7109265Z git version 2.56.0
+2026-10-29T22:11:03.7134234Z ##[endgroup]
+2026-10-29T22:11:03.7152733Z Temporarily overriding HOME='/home/runner/work/_temp/917cf734-2448-40c9-a6ea-1b644579fd00' before making global git config changes
+2026-10-29T22:11:03.7155620Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-29T22:11:03.7159109Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lean-bridge/lean-bridge
+2026-10-29T22:11:03.7235688Z Deleting the contents of '/home/runner/work/lean-bridge/lean-bridge'
+2026-10-29T22:11:03.7240778Z ##[group]Determining repository object format
+2026-10-29T22:11:03.7242749Z ##[endgroup]
+2026-10-29T22:11:03.7243978Z ##[group]Initializing the repository
+2026-10-29T22:11:03.7248515Z [command]/usr/bin/git init /home/runner/work/lean-bridge/lean-bridge
+2026-10-29T22:11:03.7428117Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-29T22:11:03.7430540Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-29T22:11:03.7432365Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-29T22:11:03.7433273Z hint: call:
+2026-10-29T22:11:03.7433738Z hint:
+2026-10-29T22:11:03.7434635Z hint: 	git config --global init.defaultBranch <name>
+2026-10-29T22:11:03.7435684Z hint:
+2026-10-29T22:11:03.7436315Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-29T22:11:03.7437281Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-29T22:11:03.7438025Z hint:
+2026-10-29T22:11:03.7438443Z hint: 	git branch -m <name>
+2026-10-29T22:11:03.7438933Z hint:
+2026-10-29T22:11:03.7439808Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-29T22:11:03.7446951Z Initialized empty Git repository in /home/runner/work/lean-bridge/lean-bridge/.git/
+2026-10-29T22:11:03.7459966Z [command]/usr/bin/git remote add origin https://github.com/seanmorris/lean-bridge
+2026-10-29T22:11:03.7516335Z ##[endgroup]
+2026-10-29T22:11:03.7518403Z ##[group]Disabling automatic garbage collection
+2026-10-29T22:11:03.7521070Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-29T22:11:03.7559570Z ##[endgroup]
+2026-10-29T22:11:03.7561626Z ##[group]Setting up auth
+2026-10-29T22:11:03.7562874Z Removing SSH command configuration
+2026-10-29T22:11:03.7568716Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T22:11:03.7627643Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-29T22:11:03.8122172Z Removing HTTP extra header
+2026-10-29T22:11:03.8130102Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T22:11:03.8177947Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-29T22:11:03.8416900Z Removing includeIf entries pointing to credentials config files
+2026-10-29T22:11:03.8424698Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T22:11:03.8470761Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-29T22:11:03.8734178Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-29T22:11:03.8796557Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path /home/runner/work/_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:11:03.8844223Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:11:03.8889192Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:11:03.8933979Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:11:03.8972166Z ##[endgroup]
+2026-10-29T22:11:03.8972969Z ##[group]Fetching the repository
+2026-10-29T22:11:03.8981319Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +70652587f69c330ea0feebb7bc4c6da6b20f4f04:refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:11:04.3443393Z From https://github.com/seanmorris/lean-bridge
+2026-10-29T22:11:04.3446340Z  * [new ref]         70652587f69c330ea0feebb7bc4c6da6b20f4f04 -> origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:11:04.3454841Z [command]/usr/bin/git branch --list --remote origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:11:04.3493511Z   origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:11:04.3502388Z [command]/usr/bin/git rev-parse refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:11:04.3535534Z 70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T22:11:04.3541853Z ##[endgroup]
+2026-10-29T22:11:04.3543826Z ##[group]Determining the checkout info
+2026-10-29T22:11:04.3545886Z ##[endgroup]
+2026-10-29T22:11:04.3547636Z ##[group]Setting up sparse checkout
+2026-10-29T22:11:04.3549053Z [command]/usr/bin/git config core.sparseCheckout true
+2026-10-29T22:11:04.3593913Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+2026-10-29T22:11:04.3626656Z .git/info/sparse-checkout
+2026-10-29T22:11:04.3635140Z ##[endgroup]
+2026-10-29T22:11:04.3636983Z ##[group]Checking out the ref
+2026-10-29T22:11:04.3640472Z [command]/usr/bin/git checkout --progress --force -B codex/vo2168-current-shallow-checkout refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-29T22:11:05.5402395Z Updating index flags:  33% (75186/226097)
+2026-10-29T22:11:05.5690684Z Updating index flags:  34% (76873/226097)
+2026-10-29T22:11:05.5973744Z Updating index flags:  35% (79134/226097)
+2026-10-29T22:11:05.6262107Z Updating index flags:  36% (81395/226097)
+2026-10-29T22:11:05.6543763Z Updating index flags:  37% (83656/226097)
+2026-10-29T22:11:05.6831015Z Updating index flags:  38% (85917/226097)
+2026-10-29T22:11:05.7116388Z Updating index flags:  39% (88178/226097)
+2026-10-29T22:11:05.7400511Z Updating index flags:  40% (90439/226097)
+2026-10-29T22:11:05.7686385Z Updating index flags:  41% (92700/226097)
+2026-10-29T22:11:05.7993929Z Updating index flags:  42% (94961/226097)
+2026-10-29T22:11:05.8283536Z Updating index flags:  43% (97222/226097)
+2026-10-29T22:11:05.8562273Z Updating index flags:  44% (99483/226097)
+2026-10-29T22:11:05.8847720Z Updating index flags:  45% (101744/226097)
+2026-10-29T22:11:05.9131414Z Updating index flags:  46% (104005/226097)
+2026-10-29T22:11:05.9415792Z Updating index flags:  47% (106266/226097)
+2026-10-29T22:11:05.9700563Z Updating index flags:  48% (108527/226097)
+2026-10-29T22:11:05.9995950Z Updating index flags:  49% (110788/226097)
+2026-10-29T22:11:06.0288861Z Updating index flags:  50% (113049/226097)
+2026-10-29T22:11:06.0593358Z Updating index flags:  51% (115310/226097)
+2026-10-29T22:11:06.0879445Z Updating index flags:  52% (117571/226097)
+2026-10-29T22:11:06.1169307Z Updating index flags:  53% (119832/226097)
+2026-10-29T22:11:06.1464732Z Updating index flags:  54% (122093/226097)
+2026-10-29T22:11:06.1737538Z Updating index flags:  55% (124354/226097)
+2026-10-29T22:11:06.2019341Z Updating index flags:  56% (126615/226097)
+2026-10-29T22:11:06.2312330Z Updating index flags:  57% (128876/226097)
+2026-10-29T22:11:06.2604937Z Updating index flags:  58% (131137/226097)
+2026-10-29T22:11:06.2898982Z Updating index flags:  59% (133398/226097)
+2026-10-29T22:11:06.3192239Z Updating index flags:  60% (135659/226097)
+2026-10-29T22:11:06.3481843Z Updating index flags:  61% (137920/226097)
+2026-10-29T22:11:06.3771041Z Updating index flags:  62% (140181/226097)
+2026-10-29T22:11:06.4062300Z Updating index flags:  63% (142442/226097)
+2026-10-29T22:11:06.4359571Z Updating index flags:  64% (144703/226097)
+2026-10-29T22:11:06.4647868Z Updating index flags:  65% (146964/226097)
+2026-10-29T22:11:06.4939169Z Updating index flags:  66% (149225/226097)
+2026-10-29T22:11:06.5179915Z Updating index flags:  67% (151485/226097)
+2026-10-29T22:11:06.5230130Z Updating index flags:  67% (153349/226097)
+2026-10-29T22:11:06.5523460Z Updating index flags:  68% (153746/226097)
+2026-10-29T22:11:06.5813680Z Updating index flags:  69% (156007/226097)
+2026-10-29T22:11:06.6142295Z Updating index flags:  70% (158268/226097)
+2026-10-29T22:11:06.6420886Z Updating index flags:  71% (160529/226097)
+2026-10-29T22:11:06.6712786Z Updating index flags:  72% (162790/226097)
+2026-10-29T22:11:06.7001635Z Updating index flags:  73% (165051/226097)
+2026-10-29T22:11:06.7285583Z Updating index flags:  74% (167312/226097)
+2026-10-29T22:11:06.7567342Z Updating index flags:  75% (169573/226097)
+2026-10-29T22:11:06.7847292Z Updating index flags:  76% (171834/226097)
+2026-10-29T22:11:06.8123167Z Updating index flags:  77% (174095/226097)
+2026-10-29T22:11:06.8409362Z Updating index flags:  78% (176356/226097)
+2026-10-29T22:11:06.8695080Z Updating index flags:  79% (178617/226097)
+2026-10-29T22:11:06.8972814Z Updating index flags:  80% (180878/226097)
+2026-10-29T22:11:06.9240999Z Updating index flags:  81% (183139/226097)
+2026-10-29T22:11:06.9593380Z Updating index flags:  82% (185400/226097)
+2026-10-29T22:11:06.9958825Z Updating index flags:  83% (187661/226097)
+2026-10-29T22:11:07.0219967Z Updating index flags:  84% (189922/226097)
+2026-10-29T22:11:07.0509568Z Updating index flags:  85% (192183/226097)
+2026-10-29T22:11:07.0798895Z Updating index flags:  86% (194444/226097)
+2026-10-29T22:11:07.1085493Z Updating index flags:  87% (196705/226097)
+2026-10-29T22:11:07.1376765Z Updating index flags:  88% (198966/226097)
+2026-10-29T22:11:07.1665168Z Updating index flags:  89% (201227/226097)
+2026-10-29T22:11:07.1954000Z Updating index flags:  90% (203488/226097)
+2026-10-29T22:11:07.2243433Z Updating index flags:  91% (205749/226097)
+2026-10-29T22:11:07.2632523Z Updating index flags:  92% (208010/226097)
+2026-10-29T22:11:07.2846032Z Updating index flags:  93% (210271/226097)
+2026-10-29T22:11:07.3134977Z Updating index flags:  94% (212532/226097)
+2026-10-29T22:11:07.3382087Z Updating index flags:  95% (214793/226097)
+2026-10-29T22:11:07.3629051Z Updating index flags:  96% (217054/226097)
+2026-10-29T22:11:07.3880296Z Updating index flags:  97% (219315/226097)
+2026-10-29T22:11:07.4128679Z Updating index flags:  98% (221576/226097)
+2026-10-29T22:11:07.4374893Z Updating index flags:  99% (223837/226097)
+2026-10-29T22:11:07.4375942Z Updating index flags: 100% (226097/226097)
+2026-10-29T22:11:07.4376514Z Updating index flags: 100% (226097/226097), done.
+2026-10-29T22:12:09.3369008Z Updating files:   0% (1/13607)
+2026-10-29T22:12:09.3727721Z Updating files:   1% (137/13607)
+2026-10-29T22:12:09.3942966Z Updating files:   2% (273/13607)
+2026-10-29T22:12:09.4129777Z Updating files:   3% (409/13607)
+2026-10-29T22:12:09.7021432Z Updating files:   4% (545/13607)
+2026-10-29T22:12:09.7310553Z Updating files:   4% (573/13607)
+2026-10-29T22:12:09.8122205Z Updating files:   5% (681/13607)
+2026-10-29T22:12:09.8605034Z Updating files:   6% (817/13607)
+2026-10-29T22:12:09.9405162Z Updating files:   7% (953/13607)
+2026-10-29T22:12:10.2669665Z Updating files:   8% (1089/13607)
+2026-10-29T22:12:10.3214066Z Updating files:   9% (1225/13607)
+2026-10-29T22:12:10.3684885Z Updating files:  10% (1361/13607)
+2026-10-29T22:12:10.6500789Z Updating files:  11% (1497/13607)
+2026-10-29T22:12:10.6599949Z Updating files:  11% (1615/13607)
+2026-10-29T22:12:11.0558854Z Updating files:  12% (1633/13607)
+2026-10-29T22:12:11.1879259Z Updating files:  13% (1769/13607)
+2026-10-29T22:12:11.2526820Z Updating files:  14% (1905/13607)
+2026-10-29T22:12:11.3240819Z Updating files:  15% (2042/13607)
+2026-10-29T22:12:11.6035161Z Updating files:  16% (2178/13607)
+2026-10-29T22:12:11.6509082Z Updating files:  16% (2216/13607)
+2026-10-29T22:12:11.6996768Z Updating files:  17% (2314/13607)
+2026-10-29T22:12:12.0905723Z Updating files:  18% (2450/13607)
+2026-10-29T22:12:12.3968202Z Updating files:  19% (2586/13607)
+2026-10-29T22:12:12.4043105Z Updating files:  20% (2722/13607)
+2026-10-29T22:12:12.4124232Z Updating files:  21% (2858/13607)
+2026-10-29T22:12:12.4186570Z Updating files:  22% (2994/13607)
+2026-10-29T22:12:12.4251937Z Updating files:  23% (3130/13607)
+2026-10-29T22:12:12.4313611Z Updating files:  24% (3266/13607)
+2026-10-29T22:12:12.4390266Z Updating files:  25% (3402/13607)
+2026-10-29T22:12:12.4437182Z Updating files:  26% (3538/13607)
+2026-10-29T22:12:12.4463781Z Updating files:  26% (3628/13607)
+2026-10-29T22:12:12.4532200Z Updating files:  27% (3674/13607)
+2026-10-29T22:12:12.4600768Z Updating files:  28% (3810/13607)
+2026-10-29T22:12:12.4666003Z Updating files:  29% (3947/13607)
+2026-10-29T22:12:12.4733751Z Updating files:  30% (4083/13607)
+2026-10-29T22:12:12.4796367Z Updating files:  31% (4219/13607)
+2026-10-29T22:12:12.4853471Z Updating files:  32% (4355/13607)
+2026-10-29T22:12:12.4919435Z Updating files:  33% (4491/13607)
+2026-10-29T22:12:12.5033614Z Updating files:  34% (4627/13607)
+2026-10-29T22:12:12.5155093Z Updating files:  35% (4763/13607)
+2026-10-29T22:12:12.5261419Z Updating files:  36% (4899/13607)
+2026-10-29T22:12:12.5365406Z Updating files:  37% (5035/13607)
+2026-10-29T22:12:12.5467055Z Updating files:  38% (5171/13607)
+2026-10-29T22:12:12.5560201Z Updating files:  39% (5307/13607)
+2026-10-29T22:12:12.5663345Z Updating files:  40% (5443/13607)
+2026-10-29T22:12:12.5753972Z Updating files:  41% (5579/13607)
+2026-10-29T22:12:12.5835334Z Updating files:  42% (5715/13607)
+2026-10-29T22:12:12.5901408Z Updating files:  43% (5852/13607)
+2026-10-29T22:12:12.5974198Z Updating files:  44% (5988/13607)
+2026-10-29T22:12:12.6055176Z Updating files:  45% (6124/13607)
+2026-10-29T22:12:12.6108459Z Updating files:  46% (6260/13607)
+2026-10-29T22:12:12.6162970Z Updating files:  47% (6396/13607)
+2026-10-29T22:12:12.6242227Z Updating files:  48% (6532/13607)
+2026-10-29T22:12:12.6330093Z Updating files:  49% (6668/13607)
+2026-10-29T22:12:12.6429884Z Updating files:  50% (6804/13607)
+2026-10-29T22:12:12.6510287Z Updating files:  51% (6940/13607)
+2026-10-29T22:12:12.6599776Z Updating files:  52% (7076/13607)
+2026-10-29T22:12:12.6682688Z Updating files:  53% (7212/13607)
+2026-10-29T22:12:12.6770600Z Updating files:  54% (7348/13607)
+2026-10-29T22:12:12.6858928Z Updating files:  55% (7484/13607)
+2026-10-29T22:12:12.6939616Z Updating files:  56% (7620/13607)
+2026-10-29T22:12:12.7023123Z Updating files:  57% (7756/13607)
+2026-10-29T22:12:12.7099055Z Updating files:  58% (7893/13607)
+2026-10-29T22:12:12.7176040Z Updating files:  59% (8029/13607)
+2026-10-29T22:12:12.7253893Z Updating files:  60% (8165/13607)
+2026-10-29T22:12:12.7348041Z Updating files:  61% (8301/13607)
+2026-10-29T22:12:12.7422322Z Updating files:  62% (8437/13607)
+2026-10-29T22:12:12.7510977Z Updating files:  63% (8573/13607)
+2026-10-29T22:12:12.7594066Z Updating files:  64% (8709/13607)
+2026-10-29T22:12:12.7672319Z Updating files:  65% (8845/13607)
+2026-10-29T22:12:12.7750962Z Updating files:  66% (8981/13607)
+2026-10-29T22:12:12.7837507Z Updating files:  67% (9117/13607)
+2026-10-29T22:12:12.7917107Z Updating files:  68% (9253/13607)
+2026-10-29T22:12:12.7996855Z Updating files:  69% (9389/13607)
+2026-10-29T22:12:12.8065969Z Updating files:  70% (9525/13607)
+2026-10-29T22:12:12.8155944Z Updating files:  71% (9661/13607)
+2026-10-29T22:12:12.8228130Z Updating files:  72% (9798/13607)
+2026-10-29T22:12:12.8309379Z Updating files:  73% (9934/13607)
+2026-10-29T22:12:12.8384081Z Updating files:  74% (10070/13607)
+2026-10-29T22:12:12.8456441Z Updating files:  75% (10206/13607)
+2026-10-29T22:12:12.8536948Z Updating files:  76% (10342/13607)
+2026-10-29T22:12:12.8630635Z Updating files:  77% (10478/13607)
+2026-10-29T22:12:12.8723049Z Updating files:  78% (10614/13607)
+2026-10-29T22:12:12.8809944Z Updating files:  79% (10750/13607)
+2026-10-29T22:12:12.8888561Z Updating files:  80% (10886/13607)
+2026-10-29T22:12:12.8966269Z Updating files:  81% (11022/13607)
+2026-10-29T22:12:12.9064058Z Updating files:  82% (11158/13607)
+2026-10-29T22:12:12.9148804Z Updating files:  83% (11294/13607)
+2026-10-29T22:12:12.9225362Z Updating files:  84% (11430/13607)
+2026-10-29T22:12:12.9296538Z Updating files:  85% (11566/13607)
+2026-10-29T22:12:12.9370486Z Updating files:  86% (11703/13607)
+2026-10-29T22:12:12.9446255Z Updating files:  87% (11839/13607)
+2026-10-29T22:12:12.9524588Z Updating files:  88% (11975/13607)
+2026-10-29T22:12:12.9605678Z Updating files:  89% (12111/13607)
+2026-10-29T22:12:12.9686380Z Updating files:  90% (12247/13607)
+2026-10-29T22:12:12.9757539Z Updating files:  91% (12383/13607)
+2026-10-29T22:12:12.9839507Z Updating files:  92% (12519/13607)
+2026-10-29T22:12:12.9940985Z Updating files:  93% (12655/13607)
+2026-10-29T22:12:13.0035247Z Updating files:  94% (12791/13607)
+2026-10-29T22:12:13.0124372Z Updating files:  95% (12927/13607)
+2026-10-29T22:12:13.0219778Z Updating files:  96% (13063/13607)
+2026-10-29T22:12:13.0306347Z Updating files:  97% (13199/13607)
+2026-10-29T22:12:13.0391432Z Updating files:  98% (13335/13607)
+2026-10-29T22:12:13.0480600Z Updating files:  99% (13471/13607)
+2026-10-29T22:12:13.0481038Z Updating files: 100% (13607/13607)
+2026-10-29T22:12:13.0481483Z Updating files: 100% (13607/13607), done.
+2026-10-29T22:12:13.2796740Z Switched to a new branch 'codex/vo2168-current-shallow-checkout'
+2026-10-29T22:12:13.2803994Z branch 'codex/vo2168-current-shallow-checkout' set up to track 'origin/codex/vo2168-current-shallow-checkout'.
+2026-10-29T22:12:13.2958116Z ##[endgroup]
+2026-10-29T22:12:13.3028393Z [command]/usr/bin/git log -1 --format=%H
+2026-10-29T22:12:13.3068372Z 70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T22:12:13.3081206Z ##[group]Removing auth
+2026-10-29T22:12:13.3081711Z Removing SSH command configuration
+2026-10-29T22:12:13.3091996Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T22:12:13.3138155Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-29T22:12:13.3802260Z Removing HTTP extra header
+2026-10-29T22:12:13.3810624Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T22:12:13.3865751Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-29T22:12:13.4515761Z Removing includeIf entries pointing to credentials config files
+2026-10-29T22:12:13.4521130Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T22:12:13.4566178Z includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path
+2026-10-29T22:12:13.4567088Z includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path
+2026-10-29T22:12:13.4567880Z includeif.gitdir:/github/workspace/.git.path
+2026-10-29T22:12:13.4568478Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-29T22:12:13.4577013Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path
+2026-10-29T22:12:13.4612713Z /home/runner/work/_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:12:13.4622794Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path /home/runner/work/_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:12:13.4667402Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path
+2026-10-29T22:12:13.4704543Z /home/runner/work/_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:12:13.4716294Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:12:13.4764671Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-29T22:12:13.4798947Z /github/runner_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:12:13.4808152Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:12:13.4863797Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-29T22:12:13.4895907Z /github/runner_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:12:13.4903740Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config
+2026-10-29T22:12:13.4949022Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-29T22:12:13.5591045Z Removing credentials config '/home/runner/work/_temp/git-credentials-4cffcacf-8718-4465-bfdb-f52fbf9191e9.config'
+2026-10-29T22:12:13.5601457Z ##[endgroup]
+2026-10-29T22:12:13.5874208Z ##[group]Run actions/setup-node@v6
+2026-10-29T22:12:13.5874847Z with:
+2026-10-29T22:12:13.5875062Z   node-version: 22
+2026-10-29T22:12:13.5875263Z   cache: npm
+2026-10-29T22:12:13.5875466Z   check-latest: false
+2026-10-29T22:12:13.5878228Z   token: ***
+2026-10-29T22:12:13.5878448Z   package-manager-cache: true
+2026-10-29T22:12:13.5878688Z env:
+2026-10-29T22:12:13.5878866Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:12:13.5879092Z ##[endgroup]
+2026-10-29T22:12:13.7477902Z Found in cache @ /opt/hostedtoolcache/node/22.23.4/x64
+2026-10-29T22:12:13.7482755Z ##[group]Environment details
+2026-10-29T22:12:14.2476059Z node: v22.23.4
+2026-10-29T22:12:14.2476356Z npm: 10.9.9
+2026-10-29T22:12:14.2476578Z yarn: 1.22.22
+2026-10-29T22:12:14.2477502Z ##[endgroup]
+2026-10-29T22:12:14.2499186Z [command]/opt/hostedtoolcache/node/22.23.4/x64/bin/npm config get cache
+2026-10-29T22:12:14.3742894Z /home/runner/.npm
+2026-10-29T22:12:14.6445850Z Cache hit for: node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e
+2026-10-29T22:12:15.9337472Z Received 12582912 of 55090959 (22.8%), 12.0 MBs/sec
+2026-10-29T22:12:16.2936888Z Received 55090959 of 55090959 (100.0%), 38.6 MBs/sec
+2026-10-29T22:12:16.2938061Z Cache Size: ~53 MB (55090959 B)
+2026-10-29T22:12:16.2971773Z [command]/usr/bin/tar -xf /home/runner/work/_temp/70851a50-3cb9-43bc-9919-3cf8df328bf8/cache.tzst -P -C /home/runner/work/lean-bridge/lean-bridge --use-compress-program unzstd
+2026-10-29T22:12:16.4576159Z Cache restored successfully
+2026-10-29T22:12:16.4611564Z Cache restored from key: node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e
+2026-10-29T22:12:16.4906758Z Prepare all required actions
+2026-10-29T22:12:16.4966463Z ##[group]Run ./.github/actions/bounded-apt
+2026-10-29T22:12:16.4966764Z env:
+2026-10-29T22:12:16.4966965Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:12:16.4967180Z ##[endgroup]
+2026-10-29T22:12:16.5023314Z ##[start-action display=Configure apt network limits;id=__self.__run]
+2026-10-29T22:12:16.5081517Z ##[group]Run sudo install -m 0644 "/home/runner/work/lean-bridge/lean-bridge/./.github/actions/bounded-apt/apt-network.conf" /etc/apt/apt.conf.d/99lean-bridge-network
+2026-10-29T22:12:16.5082782Z [36;1msudo install -m 0644 "/home/runner/work/lean-bridge/lean-bridge/./.github/actions/bounded-apt/apt-network.conf" /etc/apt/apt.conf.d/99lean-bridge-network[0m
+2026-10-29T22:12:16.5083515Z [36;1mapt-config dump[0m
+2026-10-29T22:12:16.5119866Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-29T22:12:16.5120218Z env:
+2026-10-29T22:12:16.5120416Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:12:16.5120630Z ##[endgroup]
+2026-10-29T22:12:16.5381991Z APT "";
+2026-10-29T22:12:16.5382485Z APT::Architecture "amd64";
+2026-10-29T22:12:16.5382832Z APT::Build-Essential "";
+2026-10-29T22:12:16.5383201Z APT::Build-Essential:: "build-essential";
+2026-10-29T22:12:16.5383552Z APT::Install-Recommends "1";
+2026-10-29T22:12:16.5383856Z APT::Install-Suggests "0";
+2026-10-29T22:12:16.5384111Z APT::Key "";
+2026-10-29T22:12:16.5385825Z APT::Key::Assert-Pubkey-Algo ">=rsa1024,ed25519,ed448,nistp256,nistp384,nistp512,brainpoolP256r1,brainpoolP320r1,brainpoolP384r1,brainpoolP512r1,secp256k1";
+2026-10-29T22:12:16.5387618Z APT::Key::Assert-Pubkey-Algo::Next ">=rsa2048,ed25519,ed448,nistp256,nistp384,nistp512";
+2026-10-29T22:12:16.5388274Z APT::Key::Assert-Pubkey-Algo::Future ">=rsa3072,ed25519,ed448";
+2026-10-29T22:12:16.5388654Z APT::Sandbox "";
+2026-10-29T22:12:16.5388939Z APT::Sandbox::User "_apt";
+2026-10-29T22:12:16.5389227Z APT::NeverAutoRemove "";
+2026-10-29T22:12:16.5389590Z APT::NeverAutoRemove:: "^firmware-linux.*";
+2026-10-29T22:12:16.5390010Z APT::NeverAutoRemove:: "^linux-firmware$";
+2026-10-29T22:12:16.5390415Z APT::NeverAutoRemove:: "^linux-image-[a-z0-9]*$";
+2026-10-29T22:12:16.5390892Z APT::NeverAutoRemove:: "^linux-image-[a-z0-9]*-[a-z0-9]*$";
+2026-10-29T22:12:16.5391323Z APT::NeverAutoRemove:: "^postgresql.*-16";
+2026-10-29T22:12:16.5391711Z APT::VersionedKernelPackages "";
+2026-10-29T22:12:16.5392080Z APT::VersionedKernelPackages:: "linux-.*";
+2026-10-29T22:12:16.5392513Z APT::VersionedKernelPackages:: "kfreebsd-.*";
+2026-10-29T22:12:16.5392914Z APT::VersionedKernelPackages:: "gnumach-.*";
+2026-10-29T22:12:16.5393291Z APT::VersionedKernelPackages:: ".*-modules";
+2026-10-29T22:12:16.5393661Z APT::VersionedKernelPackages:: ".*-kernel";
+2026-10-29T22:12:16.5394012Z APT::Never-MarkAuto-Sections "";
+2026-10-29T22:12:16.5394625Z APT::Never-MarkAuto-Sections:: "metapackages";
+2026-10-29T22:12:16.5395046Z APT::Never-MarkAuto-Sections:: "tasks";
+2026-10-29T22:12:16.5395395Z APT::Move-Autobit-Sections "";
+2026-10-29T22:12:16.5395732Z APT::Move-Autobit-Sections:: "oldlibs";
+2026-10-29T22:12:16.5396024Z APT::Get "";
+2026-10-29T22:12:16.5396285Z APT::Get::AutomaticRemove "0";
+2026-10-29T22:12:16.5396575Z APT::Get::HideAutoRemove "1";
+2026-10-29T22:12:16.5396853Z APT::Get::Assume-Yes "true";
+2026-10-29T22:12:16.5397200Z APT::Get::Always-Include-Phased-Updates "true";
+2026-10-29T22:12:16.5397532Z APT::Periodic "";
+2026-10-29T22:12:16.5397827Z APT::Periodic::Update-Package-Lists "1";
+2026-10-29T22:12:16.5398219Z APT::Periodic::Download-Upgradeable-Packages "0";
+2026-10-29T22:12:16.5398605Z APT::Periodic::AutocleanInterval "0";
+2026-10-29T22:12:16.5398873Z APT::Update "";
+2026-10-29T22:12:16.5399143Z APT::Update::Post-Invoke-Success "";
+2026-10-29T22:12:16.5399761Z APT::Update::Post-Invoke-Success:: "touch /var/lib/apt/periodic/update-success-stamp 2>/dev/null || true";
+2026-10-29T22:12:16.5402215Z APT::Update::Post-Invoke-Success:: "/usr/bin/test -e /usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service && /usr/bin/test -S /var/run/dbus/system_bus_socket && /usr/bin/gdbus call --system --dest org.freedesktop.PackageKit --object-path /org/freedesktop/PackageKit --timeout 4 --method org.freedesktop.PackageKit.StateHasChanged cache-update > /dev/null; /bin/echo > /dev/null";
+2026-10-29T22:12:16.5404640Z APT::Update::Post-Invoke-Success:: "if /usr/bin/test -w /var/cache/swcatalog -a -e /usr/bin/appstreamcli; then appstreamcli refresh --source=os > /dev/null || true; fi";
+2026-10-29T22:12:16.5405961Z APT::Update::Post-Invoke-Success:: "if /usr/bin/test -w /var/lib/command-not-found/ -a -e /usr/lib/cnf-update-db; then /usr/lib/cnf-update-db > /dev/null; fi";
+2026-10-29T22:12:16.5407005Z APT::Update::Post-Invoke-Success:: "/usr/lib/update-notifier/update-motd-updates-available 2>/dev/null || true";
+2026-10-29T22:12:16.5407565Z APT::Update::Pre-Invoke "";
+2026-10-29T22:12:16.5408579Z APT::Update::Pre-Invoke:: "[ ! -e /run/systemd/system ] || [ $(id -u) -ne 0 ] || systemctl start --no-block apt-news.service esm-cache.service >/dev/null 2>&1 || true";
+2026-10-29T22:12:16.5409329Z APT::Update::Error-Mode "any";
+2026-10-29T22:12:16.5409677Z APT::Archives "";
+2026-10-29T22:12:16.5409921Z APT::Archives::MaxAge "30";
+2026-10-29T22:12:16.5410187Z APT::Archives::MinAge "2";
+2026-10-29T22:12:16.5410458Z APT::Archives::MaxSize "500";
+2026-10-29T22:12:16.5410722Z APT::Architectures "";
+2026-10-29T22:12:16.5410969Z APT::Architectures:: "amd64";
+2026-10-29T22:12:16.5411234Z APT::Compressor "";
+2026-10-29T22:12:16.5411474Z APT::Compressor::. "";
+2026-10-29T22:12:16.5411725Z APT::Compressor::.::Name ".";
+2026-10-29T22:12:16.5412022Z APT::Compressor::.::Extension "";
+2026-10-29T22:12:16.5412337Z APT::Compressor::.::Binary "";
+2026-10-29T22:12:16.5412606Z APT::Compressor::.::Cost "0";
+2026-10-29T22:12:16.5412869Z APT::Compressor::zstd "";
+2026-10-29T22:12:16.5413177Z APT::Compressor::zstd::Name "zstd";
+2026-10-29T22:12:16.5413526Z APT::Compressor::zstd::Extension ".zst";
+2026-10-29T22:12:16.5413866Z APT::Compressor::zstd::Binary "zstd";
+2026-10-29T22:12:16.5414196Z APT::Compressor::zstd::Cost "60";
+2026-10-29T22:12:16.5414760Z APT::Compressor::zstd::CompressArg "";
+2026-10-29T22:12:16.5415119Z APT::Compressor::zstd::CompressArg:: "-19";
+2026-10-29T22:12:16.5415475Z APT::Compressor::zstd::UncompressArg "";
+2026-10-29T22:12:16.5415845Z APT::Compressor::zstd::UncompressArg:: "-d";
+2026-10-29T22:12:16.5416158Z APT::Compressor::lz4 "";
+2026-10-29T22:12:16.5416446Z APT::Compressor::lz4::Name "lz4";
+2026-10-29T22:12:16.5416775Z APT::Compressor::lz4::Extension ".lz4";
+2026-10-29T22:12:16.5417104Z APT::Compressor::lz4::Binary "lz4";
+2026-10-29T22:12:16.5417412Z APT::Compressor::lz4::Cost "50";
+2026-10-29T22:12:16.5417737Z APT::Compressor::lz4::CompressArg "";
+2026-10-29T22:12:16.5418075Z APT::Compressor::lz4::CompressArg:: "-1";
+2026-10-29T22:12:16.5418420Z APT::Compressor::lz4::UncompressArg "";
+2026-10-29T22:12:16.5418770Z APT::Compressor::lz4::UncompressArg:: "-d";
+2026-10-29T22:12:16.5419084Z APT::Compressor::gzip "";
+2026-10-29T22:12:16.5419371Z APT::Compressor::gzip::Name "gzip";
+2026-10-29T22:12:16.5419695Z APT::Compressor::gzip::Extension ".gz";
+2026-10-29T22:12:16.5420027Z APT::Compressor::gzip::Binary "gzip";
+2026-10-29T22:12:16.5420342Z APT::Compressor::gzip::Cost "100";
+2026-10-29T22:12:16.5420659Z APT::Compressor::gzip::CompressArg "";
+2026-10-29T22:12:16.5421004Z APT::Compressor::gzip::CompressArg:: "-6n";
+2026-10-29T22:12:16.5421354Z APT::Compressor::gzip::UncompressArg "";
+2026-10-29T22:12:16.5421714Z APT::Compressor::gzip::UncompressArg:: "-d";
+2026-10-29T22:12:16.5422026Z APT::Compressor::xz "";
+2026-10-29T22:12:16.5422301Z APT::Compressor::xz::Name "xz";
+2026-10-29T22:12:16.5422607Z APT::Compressor::xz::Extension ".xz";
+2026-10-29T22:12:16.5422926Z APT::Compressor::xz::Binary "xz";
+2026-10-29T22:12:16.5423234Z APT::Compressor::xz::Cost "200";
+2026-10-29T22:12:16.5423549Z APT::Compressor::xz::CompressArg "";
+2026-10-29T22:12:16.5423881Z APT::Compressor::xz::CompressArg:: "-6";
+2026-10-29T22:12:16.5424223Z APT::Compressor::xz::UncompressArg "";
+2026-10-29T22:12:16.5425088Z APT::Compressor::xz::UncompressArg:: "-d";
+2026-10-29T22:12:16.5425430Z APT::Compressor::bzip2 "";
+2026-10-29T22:12:16.5425745Z APT::Compressor::bzip2::Name "bzip2";
+2026-10-29T22:12:16.5426085Z APT::Compressor::bzip2::Extension ".bz2";
+2026-10-29T22:12:16.5426437Z APT::Compressor::bzip2::Binary "bzip2";
+2026-10-29T22:12:16.5426766Z APT::Compressor::bzip2::Cost "300";
+2026-10-29T22:12:16.5427105Z APT::Compressor::bzip2::CompressArg "";
+2026-10-29T22:12:16.5427455Z APT::Compressor::bzip2::CompressArg:: "-6";
+2026-10-29T22:12:16.5427811Z APT::Compressor::bzip2::UncompressArg "";
+2026-10-29T22:12:16.5428190Z APT::Compressor::bzip2::UncompressArg:: "-d";
+2026-10-29T22:12:16.5428512Z APT::Compressor::lzma "";
+2026-10-29T22:12:16.5450772Z APT::Compressor::lzma::Name "lzma";
+2026-10-29T22:12:16.5451292Z APT::Compressor::lzma::Extension ".lzma";
+2026-10-29T22:12:16.5451915Z APT::Compressor::lzma::Binary "xz";
+2026-10-29T22:12:16.5452279Z APT::Compressor::lzma::Cost "400";
+2026-10-29T22:12:16.5452637Z APT::Compressor::lzma::CompressArg "";
+2026-10-29T22:12:16.5453055Z APT::Compressor::lzma::CompressArg:: "--format=lzma";
+2026-10-29T22:12:16.5453466Z APT::Compressor::lzma::CompressArg:: "-6";
+2026-10-29T22:12:16.5453844Z APT::Compressor::lzma::UncompressArg "";
+2026-10-29T22:12:16.5454262Z APT::Compressor::lzma::UncompressArg:: "--format=lzma";
+2026-10-29T22:12:16.5455028Z APT::Compressor::lzma::UncompressArg:: "-d";
+2026-10-29T22:12:16.5455340Z Dir "/";
+2026-10-29T22:12:16.5455567Z Dir::State "var/lib/apt";
+2026-10-29T22:12:16.5455836Z Dir::State::lists "lists/";
+2026-10-29T22:12:16.5456147Z Dir::State::cdroms "cdroms.list";
+2026-10-29T22:12:16.5456505Z Dir::State::extended_states "extended_states";
+2026-10-29T22:12:16.5456890Z Dir::State::status "/var/lib/dpkg/status";
+2026-10-29T22:12:16.5457203Z Dir::Cache "var/cache/apt";
+2026-10-29T22:12:16.5457509Z Dir::Cache::archives "archives/";
+2026-10-29T22:12:16.5457845Z Dir::Cache::srcpkgcache "srcpkgcache.bin";
+2026-10-29T22:12:16.5458194Z Dir::Cache::pkgcache "pkgcache.bin";
+2026-10-29T22:12:16.5458489Z Dir::Etc "etc/apt";
+2026-10-29T22:12:16.5458765Z Dir::Etc::sourcelist "sources.list";
+2026-10-29T22:12:16.5459101Z Dir::Etc::sourceparts "sources.list.d";
+2026-10-29T22:12:16.5459407Z Dir::Etc::main "apt.conf";
+2026-10-29T22:12:16.5459669Z Dir::Etc::netrc "auth.conf";
+2026-10-29T22:12:16.5459974Z Dir::Etc::netrcparts "auth.conf.d";
+2026-10-29T22:12:16.5460271Z Dir::Etc::parts "apt.conf.d";
+2026-10-29T22:12:16.5460583Z Dir::Etc::preferences "preferences";
+2026-10-29T22:12:16.5460936Z Dir::Etc::preferencesparts "preferences.d";
+2026-10-29T22:12:16.5461284Z Dir::Etc::trusted "trusted.gpg";
+2026-10-29T22:12:16.5461617Z Dir::Etc::trustedparts "trusted.gpg.d";
+2026-10-29T22:12:16.5461890Z Dir::Bin "";
+2026-10-29T22:12:16.5462168Z Dir::Bin::methods "/usr/lib/apt/methods";
+2026-10-29T22:12:16.5462495Z Dir::Bin::solvers "";
+2026-10-29T22:12:16.5462805Z Dir::Bin::solvers:: "/usr/lib/apt/solvers";
+2026-10-29T22:12:16.5463109Z Dir::Bin::planners "";
+2026-10-29T22:12:16.5463429Z Dir::Bin::planners:: "/usr/lib/apt/planners";
+2026-10-29T22:12:16.5463770Z Dir::Bin::dpkg "/usr/bin/dpkg";
+2026-10-29T22:12:16.5464045Z Dir::Bin::gzip "/bin/gzip";
+2026-10-29T22:12:16.5464518Z Dir::Bin::bzip2 "/bin/bzip2";
+2026-10-29T22:12:16.5464855Z Dir::Bin::xz "/usr/bin/xz";
+2026-10-29T22:12:16.5465123Z Dir::Bin::lz4 "/usr/bin/lz4";
+2026-10-29T22:12:16.5465411Z Dir::Bin::zstd "/usr/bin/zstd";
+2026-10-29T22:12:16.5465684Z Dir::Bin::lzma "/usr/bin/xz";
+2026-10-29T22:12:16.5465914Z Dir::Media "";
+2026-10-29T22:12:16.5466180Z Dir::Media::MountPath "/media/apt";
+2026-10-29T22:12:16.5466464Z Dir::Log "var/log/apt";
+2026-10-29T22:12:16.5466746Z Dir::Log::Terminal "term.log";
+2026-10-29T22:12:16.5467053Z Dir::Log::History "history.log";
+2026-10-29T22:12:16.5467358Z Dir::Log::Planner "eipp.log.xz";
+2026-10-29T22:12:16.5467673Z Dir::Ignore-Files-Silently "";
+2026-10-29T22:12:16.5467983Z Dir::Ignore-Files-Silently:: "~$";
+2026-10-29T22:12:16.5468324Z Dir::Ignore-Files-Silently:: "\.disabled$";
+2026-10-29T22:12:16.5468851Z Dir::Ignore-Files-Silently:: "\.bak$";
+2026-10-29T22:12:16.5469227Z Dir::Ignore-Files-Silently:: "\.dpkg-[a-z]+$";
+2026-10-29T22:12:16.5469615Z Dir::Ignore-Files-Silently:: "\.ucf-[a-z]+$";
+2026-10-29T22:12:16.5469980Z Dir::Ignore-Files-Silently:: "\.save$";
+2026-10-29T22:12:16.5470315Z Dir::Ignore-Files-Silently:: "\.orig$";
+2026-10-29T22:12:16.5470674Z Dir::Ignore-Files-Silently:: "\.distUpgrade$";
+2026-10-29T22:12:16.5470962Z Acquire "";
+2026-10-29T22:12:16.5471234Z Acquire::AllowInsecureRepositories "0";
+2026-10-29T22:12:16.5471574Z Acquire::AllowWeakRepositories "0";
+2026-10-29T22:12:16.5471954Z Acquire::AllowDowngradeToInsecureRepositories "0";
+2026-10-29T22:12:16.5472292Z Acquire::cdrom "";
+2026-10-29T22:12:16.5472571Z Acquire::cdrom::mount "/media/cdrom/";
+2026-10-29T22:12:16.5472865Z Acquire::IndexTargets "";
+2026-10-29T22:12:16.5473308Z Acquire::IndexTargets::deb "";
+2026-10-29T22:12:16.5473631Z Acquire::IndexTargets::deb::Packages "";
+2026-10-29T22:12:16.5474213Z Acquire::IndexTargets::deb::Packages::MetaKey "$(COMPONENT)/binary-$(ARCHITECTURE)/Packages";
+2026-10-29T22:12:16.5475150Z Acquire::IndexTargets::deb::Packages::flatMetaKey "Packages";
+2026-10-29T22:12:16.5475680Z Acquire::IndexTargets::deb::Packages::ShortDescription "Packages";
+2026-10-29T22:12:16.5476375Z Acquire::IndexTargets::deb::Packages::Description "$(RELEASE)/$(COMPONENT) $(ARCHITECTURE) Packages";
+2026-10-29T22:12:16.5477066Z Acquire::IndexTargets::deb::Packages::flatDescription "$(RELEASE) Packages";
+2026-10-29T22:12:16.5477584Z Acquire::IndexTargets::deb::Packages::Optional "0";
+2026-10-29T22:12:16.5478006Z Acquire::IndexTargets::deb::Translations "";
+2026-10-29T22:12:16.5478601Z Acquire::IndexTargets::deb::Translations::MetaKey "$(COMPONENT)/i18n/Translation-$(LANGUAGE)";
+2026-10-29T22:12:16.5479246Z Acquire::IndexTargets::deb::Translations::flatMetaKey "$(LANGUAGE)";
+2026-10-29T22:12:16.5479885Z Acquire::IndexTargets::deb::Translations::ShortDescription "Translation-$(LANGUAGE)";
+2026-10-29T22:12:16.5480691Z Acquire::IndexTargets::deb::Translations::Description "$(RELEASE)/$(COMPONENT) Translation-$(LANGUAGE)";
+2026-10-29T22:12:16.5481475Z Acquire::IndexTargets::deb::Translations::flatDescription "$(RELEASE) Translation-$(LANGUAGE)";
+2026-10-29T22:12:16.5482018Z Acquire::IndexTargets::deb::DEP-11 "";
+2026-10-29T22:12:16.5482617Z Acquire::IndexTargets::deb::DEP-11::MetaKey "$(COMPONENT)/dep11/Components-$(NATIVE_ARCHITECTURE).yml";
+2026-10-29T22:12:16.5483358Z Acquire::IndexTargets::deb::DEP-11::ShortDescription "Components-$(NATIVE_ARCHITECTURE)";
+2026-10-29T22:12:16.5484149Z Acquire::IndexTargets::deb::DEP-11::Description "$(RELEASE)/$(COMPONENT) $(NATIVE_ARCHITECTURE) Components";
+2026-10-29T22:12:16.5485093Z Acquire::IndexTargets::deb::DEP-11::KeepCompressed "true";
+2026-10-29T22:12:16.5485579Z Acquire::IndexTargets::deb::DEP-11::KeepCompressedAs "gz";
+2026-10-29T22:12:16.5486068Z Acquire::IndexTargets::deb::DEP-11::DefaultEnabled "false";
+2026-10-29T22:12:16.5486513Z Acquire::IndexTargets::deb::DEP-11-icons-small "";
+2026-10-29T22:12:16.5487116Z Acquire::IndexTargets::deb::DEP-11-icons-small::MetaKey "$(COMPONENT)/dep11/icons-48x48.tar";
+2026-10-29T22:12:16.5487803Z Acquire::IndexTargets::deb::DEP-11-icons-small::ShortDescription "icons-48x48";
+2026-10-29T22:12:16.5488537Z Acquire::IndexTargets::deb::DEP-11-icons-small::Description "$(RELEASE)/$(COMPONENT) Icons (48x48)";
+2026-10-29T22:12:16.5489213Z Acquire::IndexTargets::deb::DEP-11-icons-small::KeepCompressed "true";
+2026-10-29T22:12:16.5489782Z Acquire::IndexTargets::deb::DEP-11-icons-small::KeepCompressedAs "gz";
+2026-10-29T22:12:16.5490343Z Acquire::IndexTargets::deb::DEP-11-icons-small::DefaultEnabled "false";
+2026-10-29T22:12:16.5490803Z Acquire::IndexTargets::deb::DEP-11-icons "";
+2026-10-29T22:12:16.5491346Z Acquire::IndexTargets::deb::DEP-11-icons::MetaKey "$(COMPONENT)/dep11/icons-64x64.tar";
+2026-10-29T22:12:16.5491975Z Acquire::IndexTargets::deb::DEP-11-icons::ShortDescription "icons-64x64";
+2026-10-29T22:12:16.5492806Z Acquire::IndexTargets::deb::DEP-11-icons::Description "$(RELEASE)/$(COMPONENT) Icons (64x64)";
+2026-10-29T22:12:16.5493439Z Acquire::IndexTargets::deb::DEP-11-icons::KeepCompressed "true";
+2026-10-29T22:12:16.5493951Z Acquire::IndexTargets::deb::DEP-11-icons::KeepCompressedAs "gz";
+2026-10-29T22:12:16.5494776Z Acquire::IndexTargets::deb::DEP-11-icons::DefaultEnabled "false";
+2026-10-29T22:12:16.5495270Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi "";
+2026-10-29T22:12:16.5495878Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::MetaKey "$(COMPONENT)/dep11/icons-64x64@2.tar";
+2026-10-29T22:12:16.5496561Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::ShortDescription "icons-64x64@2";
+2026-10-29T22:12:16.5497299Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::Description "$(RELEASE)/$(COMPONENT) Icons (64x64@2)";
+2026-10-29T22:12:16.5497965Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::KeepCompressed "true";
+2026-10-29T22:12:16.5498680Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::KeepCompressedAs "gz";
+2026-10-29T22:12:16.5499255Z Acquire::IndexTargets::deb::DEP-11-icons-hidpi::DefaultEnabled "false";
+2026-10-29T22:12:16.5499736Z Acquire::IndexTargets::deb::DEP-11-icons-large "";
+2026-10-29T22:12:16.5500328Z Acquire::IndexTargets::deb::DEP-11-icons-large::MetaKey "$(COMPONENT)/dep11/icons-128x128.tar";
+2026-10-29T22:12:16.5501018Z Acquire::IndexTargets::deb::DEP-11-icons-large::ShortDescription "icons-128x128";
+2026-10-29T22:12:16.5501743Z Acquire::IndexTargets::deb::DEP-11-icons-large::Description "$(RELEASE)/$(COMPONENT) Icons (128x128)";
+2026-10-29T22:12:16.5502402Z Acquire::IndexTargets::deb::DEP-11-icons-large::KeepCompressed "true";
+2026-10-29T22:12:16.5502965Z Acquire::IndexTargets::deb::DEP-11-icons-large::KeepCompressedAs "gz";
+2026-10-29T22:12:16.5503524Z Acquire::IndexTargets::deb::DEP-11-icons-large::DefaultEnabled "false";
+2026-10-29T22:12:16.5504040Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi "";
+2026-10-29T22:12:16.5505033Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::MetaKey "$(COMPONENT)/dep11/icons-128x128@2.tar";
+2026-10-29T22:12:16.5505801Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::ShortDescription "icons-128x128@2";
+2026-10-29T22:12:16.5506615Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::Description "$(RELEASE)/$(COMPONENT) Icons (128x128@2)";
+2026-10-29T22:12:16.5507345Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::KeepCompressed "true";
+2026-10-29T22:12:16.5507956Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::KeepCompressedAs "gz";
+2026-10-29T22:12:16.5508571Z Acquire::IndexTargets::deb::DEP-11-icons-large-hidpi::DefaultEnabled "false";
+2026-10-29T22:12:16.5509037Z Acquire::IndexTargets::deb::CNF "";
+2026-10-29T22:12:16.5509579Z Acquire::IndexTargets::deb::CNF::MetaKey "$(COMPONENT)/cnf/Commands-$(NATIVE_ARCHITECTURE)";
+2026-10-29T22:12:16.5510259Z Acquire::IndexTargets::deb::CNF::ShortDescription "Commands-$(NATIVE_ARCHITECTURE)";
+2026-10-29T22:12:16.5511036Z Acquire::IndexTargets::deb::CNF::Description "$(RELEASE)/$(COMPONENT) $(NATIVE_ARCHITECTURE) c-n-f Metadata";
+2026-10-29T22:12:16.5511595Z Acquire::IndexTargets::deb-src "";
+2026-10-29T22:12:16.5511942Z Acquire::IndexTargets::deb-src::Sources "";
+2026-10-29T22:12:16.5512457Z Acquire::IndexTargets::deb-src::Sources::MetaKey "$(COMPONENT)/source/Sources";
+2026-10-29T22:12:16.5513018Z Acquire::IndexTargets::deb-src::Sources::flatMetaKey "Sources";
+2026-10-29T22:12:16.5513545Z Acquire::IndexTargets::deb-src::Sources::ShortDescription "Sources";
+2026-10-29T22:12:16.5514177Z Acquire::IndexTargets::deb-src::Sources::Description "$(RELEASE)/$(COMPONENT) Sources";
+2026-10-29T22:12:16.5514981Z Acquire::IndexTargets::deb-src::Sources::flatDescription "$(RELEASE) Sources";
+2026-10-29T22:12:16.5515501Z Acquire::IndexTargets::deb-src::Sources::Optional "0";
+2026-10-29T22:12:16.5515850Z Acquire::Changelogs "";
+2026-10-29T22:12:16.5516111Z Acquire::Changelogs::URI "";
+2026-10-29T22:12:16.5516416Z Acquire::Changelogs::URI::Origin "";
+2026-10-29T22:12:16.5517251Z Acquire::Changelogs::URI::Origin::Debian "https://metadata.ftp-master.debian.org/changelogs/@CHANGEPATH@_changelog";
+2026-10-29T22:12:16.5518198Z Acquire::Changelogs::URI::Origin::Ubuntu "https://changelogs.ubuntu.com/changelogs/pool/@CHANGEPATH@/changelog";
+2026-10-29T22:12:16.5518802Z Acquire::Changelogs::AlwaysOnline "true";
+2026-10-29T22:12:16.5519171Z Acquire::Changelogs::AlwaysOnline::Origin "";
+2026-10-29T22:12:16.5519582Z Acquire::Changelogs::AlwaysOnline::Origin::Ubuntu "1";
+2026-10-29T22:12:16.5519918Z Acquire::Snapshots "";
+2026-10-29T22:12:16.5520165Z Acquire::Snapshots::URI "";
+2026-10-29T22:12:16.5520464Z Acquire::Snapshots::URI::Origin "";
+2026-10-29T22:12:16.5521048Z Acquire::Snapshots::URI::Origin::Debian "https://snapshot.debian.org/archive/debian/@SNAPSHOTID@/";
+2026-10-29T22:12:16.5521798Z Acquire::Snapshots::URI::Origin::Ubuntu "https://snapshot.ubuntu.com/ubuntu/@SNAPSHOTID@/";
+2026-10-29T22:12:16.5522507Z Acquire::Snapshots::URI::Override "";
+2026-10-29T22:12:16.5522873Z Acquire::Snapshots::URI::Override::Label "";
+2026-10-29T22:12:16.5523611Z Acquire::Snapshots::URI::Override::Label::Debian-Security "https://snapshot.debian.org/archive/debian-security/@SNAPSHOTID@/";
+2026-10-29T22:12:16.5524239Z Acquire::Snapshots::URI::Host "";
+2026-10-29T22:12:16.5524981Z Acquire::Snapshots::URI::Host::archive.ubuntu.com "https://snapshot.ubuntu.com/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:12:16.5525812Z Acquire::Snapshots::URI::Host::deb.debian.org "https://snapshot.debian.org/archive/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:12:16.5526623Z Acquire::Snapshots::URI::Host::.archive.ubuntu.com "https://snapshot.ubuntu.com/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:12:16.5527420Z Acquire::Snapshots::URI::Host::security.ubuntu.com "https://snapshot.ubuntu.com/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:12:16.5528321Z Acquire::Snapshots::URI::Host::ppa.launchpadcontent.net "https://snapshot.ppa.launchpadcontent.net/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:12:16.5529275Z Acquire::Snapshots::URI::Host::ppa.launchpad.net "https://snapshot.ppa.launchpadcontent.net/@PATH@/@SNAPSHOTID@/";
+2026-10-29T22:12:16.5529822Z Acquire::http "";
+2026-10-29T22:12:16.5530142Z Acquire::http::User-Agent-Non-Interactive "true";
+2026-10-29T22:12:16.5530481Z Acquire::http::Timeout "15";
+2026-10-29T22:12:16.5530791Z Acquire::http::Pipeline-Depth "0";
+2026-10-29T22:12:16.5531107Z Acquire::http::No-Cache "true";
+2026-10-29T22:12:16.5531381Z Acquire::Retries "1";
+2026-10-29T22:12:16.5531622Z Acquire::https "";
+2026-10-29T22:12:16.5531865Z Acquire::https::Timeout "15";
+2026-10-29T22:12:16.5532173Z Acquire::https::Pipeline-Depth "0";
+2026-10-29T22:12:16.5532491Z Acquire::https::No-Cache "true";
+2026-10-29T22:12:16.5532768Z Acquire::BrokenProxy "true";
+2026-10-29T22:12:16.5533021Z Acquire::Languages "";
+2026-10-29T22:12:16.5533268Z Acquire::Languages:: "en";
+2026-10-29T22:12:16.5533525Z Acquire::Languages:: "none";
+2026-10-29T22:12:16.5533800Z Acquire::CompressionTypes "";
+2026-10-29T22:12:16.5534101Z Acquire::CompressionTypes::xz "xz";
+2026-10-29T22:12:16.5534550Z Acquire::CompressionTypes::bz2 "bzip2";
+2026-10-29T22:12:16.5534903Z Acquire::CompressionTypes::lzma "lzma";
+2026-10-29T22:12:16.5535240Z Acquire::CompressionTypes::gz "gzip";
+2026-10-29T22:12:16.5535570Z Acquire::CompressionTypes::lz4 "lz4";
+2026-10-29T22:12:16.5535900Z Acquire::CompressionTypes::zst "zstd";
+2026-10-29T22:12:16.5536159Z DPkg "";
+2026-10-29T22:12:16.5536430Z DPkg::Path "/usr/sbin:/usr/bin:/sbin:/bin";
+2026-10-29T22:12:16.5536722Z DPkg::Options "";
+2026-10-29T22:12:16.5536988Z DPkg::Options:: "--force-confdef";
+2026-10-29T22:12:16.5537292Z DPkg::Options:: "--force-confold";
+2026-10-29T22:12:16.5537598Z DPkg::Options:: "--force-unsafe-io";
+2026-10-29T22:12:16.5537919Z DPkg::Options:: "--force-confdef";
+2026-10-29T22:12:16.5538227Z DPkg::Options:: "--force-confold";
+2026-10-29T22:12:16.5538497Z DPkg::Post-Invoke "";
+2026-10-29T22:12:16.5540656Z DPkg::Post-Invoke:: "/usr/bin/test -e /usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service && /usr/bin/test -S /var/run/dbus/system_bus_socket && /usr/bin/gdbus call --system --dest org.freedesktop.PackageKit --object-path /org/freedesktop/PackageKit --timeout 4 --method org.freedesktop.PackageKit.StateHasChanged cache-update > /dev/null; /bin/echo > /dev/null";
+2026-10-29T22:12:16.5542561Z DPkg::Post-Invoke:: "test -x /usr/lib/needrestart/apt-pinvoke && /usr/lib/needrestart/apt-pinvoke -m u || true";
+2026-10-29T22:12:16.5543830Z DPkg::Post-Invoke:: "if [ -d /var/lib/update-notifier ]; then touch /var/lib/update-notifier/dpkg-run-stamp; fi; /usr/lib/update-notifier/update-motd-updates-available 2>/dev/null || true";
+2026-10-29T22:12:16.5544782Z DPkg::Pre-Install-Pkgs "";
+2026-10-29T22:12:16.5545220Z DPkg::Pre-Install-Pkgs:: "/usr/sbin/dpkg-preconfigure --apt || true";
+2026-10-29T22:12:16.5545618Z binary "apt-config";
+2026-10-29T22:12:16.5545840Z binary::apt "";
+2026-10-29T22:12:16.5546072Z binary::apt::AptCli "";
+2026-10-29T22:12:16.5546490Z binary::apt::AptCli::Hooks "";
+2026-10-29T22:12:16.5546814Z binary::apt::AptCli::Hooks::Upgrade "";
+2026-10-29T22:12:16.5547898Z binary::apt::AptCli::Hooks::Upgrade:: "[ ! -f /usr/lib/ubuntu-advantage/apt-esm-json-hook ] || [ $(id -u) -ne 0 ] || /usr/lib/ubuntu-advantage/apt-esm-json-hook 2>> /var/log/ubuntu-advantage-apt-hook.log || true";
+2026-10-29T22:12:16.5548781Z binary::apt::AptCli::Hooks::Install "";
+2026-10-29T22:12:16.5549450Z binary::apt::AptCli::Hooks::Install:: "[ ! -f /usr/bin/snap ] || /usr/bin/snap advise-snap --from-apt 2>/dev/null || true";
+2026-10-29T22:12:16.5549981Z binary::apt::APT "";
+2026-10-29T22:12:16.5550227Z binary::apt::APT::Color "1";
+2026-10-29T22:12:16.5550500Z binary::apt::APT::Cache "";
+2026-10-29T22:12:16.5550792Z binary::apt::APT::Cache::Show "";
+2026-10-29T22:12:16.5551126Z binary::apt::APT::Cache::Show::Version "2";
+2026-10-29T22:12:16.5551489Z binary::apt::APT::Cache::AllVersions "0";
+2026-10-29T22:12:16.5551848Z binary::apt::APT::Cache::ShowVirtuals "1";
+2026-10-29T22:12:16.5552188Z binary::apt::APT::Cache::Search "";
+2026-10-29T22:12:16.5552544Z binary::apt::APT::Cache::Search::Version "2";
+2026-10-29T22:12:16.5552960Z binary::apt::APT::Cache::ShowDependencyType "1";
+2026-10-29T22:12:16.5553337Z binary::apt::APT::Cache::ShowVersion "1";
+2026-10-29T22:12:16.5553634Z binary::apt::APT::Get "";
+2026-10-29T22:12:16.5553967Z binary::apt::APT::Get::Upgrade-Allow-New "1";
+2026-10-29T22:12:16.5554603Z binary::apt::APT::Get::Update "";
+2026-10-29T22:12:16.5555284Z binary::apt::APT::Get::Update::InteractiveReleaseInfoChanges "1";
+2026-10-29T22:12:16.5555708Z binary::apt::APT::Cmd "";
+2026-10-29T22:12:16.5556232Z binary::apt::APT::Cmd::Show-Update-Stats "1";
+2026-10-29T22:12:16.5556794Z binary::apt::APT::Cmd::Pattern-Only "1";
+2026-10-29T22:12:16.5557200Z binary::apt::APT::Keep-Downloaded-Packages "0";
+2026-10-29T22:12:16.5557707Z binary::apt::DPkg "";
+2026-10-29T22:12:16.5558020Z binary::apt::DPkg::Progress-Fancy "1";
+2026-10-29T22:12:16.5558331Z binary::apt::DPkg::Lock "";
+2026-10-29T22:12:16.5558658Z binary::apt::DPkg::Lock::Timeout "120";
+2026-10-29T22:12:16.5558939Z CommandLine "";
+2026-10-29T22:12:16.5559224Z CommandLine::AsString "apt-config dump";
+2026-10-29T22:12:16.5573403Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=54]
+2026-10-29T22:12:16.5615774Z ##[group]Run sudo apt-get update
+2026-10-29T22:12:16.5616127Z [36;1msudo apt-get update[0m
+2026-10-29T22:12:16.5616662Z [36;1msudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd[0m
+2026-10-29T22:12:16.5638601Z shell: /usr/bin/bash -e {0}
+2026-10-29T22:12:16.5638864Z env:
+2026-10-29T22:12:16.5639066Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:12:16.5639285Z ##[endgroup]
+2026-10-29T22:12:16.6523184Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-29T22:12:16.6788319Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2026-10-29T22:12:16.6902921Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2026-10-29T22:12:16.6924606Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-10-29T22:12:16.6962815Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-10-29T22:12:16.6986964Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-10-29T22:12:16.7669443Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [617 kB]
+2026-10-29T22:12:16.7928904Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [682 kB]
+2026-10-29T22:12:16.9140220Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1406 kB]
+2026-10-29T22:12:16.9215818Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [310 kB]
+2026-10-29T22:12:16.9237250Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1707 kB]
+2026-10-29T22:12:16.9355622Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [343 kB]
+2026-10-29T22:12:16.9357758Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1809 kB]
+2026-10-29T22:12:16.9447675Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [411 kB]
+2026-10-29T22:12:16.9475838Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.3 kB]
+2026-10-29T22:12:17.0243917Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1146 kB]
+2026-10-29T22:12:17.0301150Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
+2026-10-29T22:12:17.0320375Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1223 kB]
+2026-10-29T22:12:17.0835321Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
+2026-10-29T22:12:20.2226507Z Fetched 10.5 MB in 1s (9507 kB/s)
+2026-10-29T22:12:21.3590429Z Reading package lists...
+2026-10-29T22:12:21.3991727Z Reading package lists...
+2026-10-29T22:12:21.6252847Z Building dependency tree...
+2026-10-29T22:12:21.6260517Z Reading state information...
+2026-10-29T22:12:21.7753761Z git is already the newest version (1:2.56.0-0ppa1~ubuntu24.04.2).
+2026-10-29T22:12:21.7754834Z git set to manually installed.
+2026-10-29T22:12:21.7755693Z jq is already the newest version (1.7.1-3ubuntu0.24.04.2).
+2026-10-29T22:12:21.7756718Z libgmp-dev is already the newest version (2:6.3.0+dfsg-2ubuntu6.1).
+2026-10-29T22:12:21.7757822Z m4 is already the newest version (1.4.19-4build1).
+2026-10-29T22:12:21.7758859Z pkg-config is already the newest version (1.8.1-2build1).
+2026-10-29T22:12:21.7760081Z xz-utils is already the newest version (5.6.1+really5.4.5-1ubuntu0.4).
+2026-10-29T22:12:21.7761240Z zstd is already the newest version (1.5.5+dfsg2-2build1.1).
+2026-10-29T22:12:21.7762028Z zstd set to manually installed.
+2026-10-29T22:12:21.7762826Z The following additional packages will be installed:
+2026-10-29T22:12:21.7764851Z   cmake-data libjsoncpp25 librhash0
+2026-10-29T22:12:21.7774604Z Suggested packages:
+2026-10-29T22:12:21.7775229Z   cmake-doc cmake-format elpa-cmake-mode ninja-build
+2026-10-29T22:12:21.7998152Z The following NEW packages will be installed:
+2026-10-29T22:12:21.8006717Z   build-essential cmake cmake-data libjsoncpp25 librhash0 libuv1-dev ripgrep
+2026-10-29T22:12:21.8209617Z 0 upgraded, 7 newly installed, 0 to remove and 6 not upgraded.
+2026-10-29T22:12:21.8210119Z Need to get 15.2 MB of archives.
+2026-10-29T22:12:21.8210723Z After this operation, 55.1 MB of additional disk space will be used.
+2026-10-29T22:12:21.8211751Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-29T22:12:21.9923930Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 build-essential amd64 12.10ubuntu1 [4928 B]
+2026-10-29T22:12:22.0676407Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libjsoncpp25 amd64 1.9.5-6build1 [82.8 kB]
+2026-10-29T22:12:22.3134342Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 librhash0 amd64 1.4.3-3build1 [129 kB]
+2026-10-29T22:12:22.4734885Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 cmake-data all 3.28.3-1build7 [2155 kB]
+2026-10-29T22:12:22.8296325Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 cmake amd64 3.28.3-1build7 [11.2 MB]
+2026-10-29T22:12:23.1855375Z Get:7 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libuv1-dev amd64 1.48.0-1.1build1 [136 kB]
+2026-10-29T22:12:23.2597372Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 ripgrep amd64 14.1.0-1 [1551 kB]
+2026-10-29T22:12:23.5821897Z Fetched 15.2 MB in 1s (10.3 MB/s)
+2026-10-29T22:12:23.6070841Z Selecting previously unselected package build-essential.
+2026-10-29T22:12:23.6433848Z (Reading database ... 
+2026-10-29T22:12:23.6435078Z (Reading database ... 5%
+2026-10-29T22:12:23.6435865Z (Reading database ... 10%
+2026-10-29T22:12:23.6436470Z (Reading database ... 15%
+2026-10-29T22:12:23.6437084Z (Reading database ... 20%
+2026-10-29T22:12:23.6437845Z (Reading database ... 25%
+2026-10-29T22:12:23.6438207Z (Reading database ... 30%
+2026-10-29T22:12:23.6438555Z (Reading database ... 35%
+2026-10-29T22:12:23.6438913Z (Reading database ... 40%
+2026-10-29T22:12:23.6439259Z (Reading database ... 45%
+2026-10-29T22:12:23.6439740Z (Reading database ... 50%
+2026-10-29T22:12:23.6493727Z (Reading database ... 55%
+2026-10-29T22:12:23.8382221Z (Reading database ... 60%
+2026-10-29T22:12:23.9936103Z (Reading database ... 65%
+2026-10-29T22:12:24.2331097Z (Reading database ... 70%
+2026-10-29T22:12:24.4080004Z (Reading database ... 75%
+2026-10-29T22:12:24.5816223Z (Reading database ... 80%
+2026-10-29T22:12:24.7389443Z (Reading database ... 85%
+2026-10-29T22:12:24.8795353Z (Reading database ... 90%
+2026-10-29T22:12:25.0551118Z (Reading database ... 95%
+2026-10-29T22:12:25.0551906Z (Reading database ... 100%
+2026-10-29T22:12:25.0553191Z (Reading database ... 215504 files and directories currently installed.)
+2026-10-29T22:12:25.0602438Z Preparing to unpack .../0-build-essential_12.10ubuntu1_amd64.deb ...
+2026-10-29T22:12:25.0629996Z Unpacking build-essential (12.10ubuntu1) ...
+2026-10-29T22:12:25.0907547Z Selecting previously unselected package libjsoncpp25:amd64.
+2026-10-29T22:12:25.1056102Z Preparing to unpack .../1-libjsoncpp25_1.9.5-6build1_amd64.deb ...
+2026-10-29T22:12:25.1079603Z Unpacking libjsoncpp25:amd64 (1.9.5-6build1) ...
+2026-10-29T22:12:25.1347791Z Selecting previously unselected package librhash0:amd64.
+2026-10-29T22:12:25.1495957Z Preparing to unpack .../2-librhash0_1.4.3-3build1_amd64.deb ...
+2026-10-29T22:12:25.1505759Z Unpacking librhash0:amd64 (1.4.3-3build1) ...
+2026-10-29T22:12:25.1769325Z Selecting previously unselected package cmake-data.
+2026-10-29T22:12:25.1916944Z Preparing to unpack .../3-cmake-data_3.28.3-1build7_all.deb ...
+2026-10-29T22:12:25.2001562Z Unpacking cmake-data (3.28.3-1build7) ...
+2026-10-29T22:12:25.6998574Z Selecting previously unselected package cmake.
+2026-10-29T22:12:25.7161009Z Preparing to unpack .../4-cmake_3.28.3-1build7_amd64.deb ...
+2026-10-29T22:12:25.7168869Z Unpacking cmake (3.28.3-1build7) ...
+2026-10-29T22:12:25.8910587Z Selecting previously unselected package libuv1-dev:amd64.
+2026-10-29T22:12:25.9059479Z Preparing to unpack .../5-libuv1-dev_1.48.0-1.1build1_amd64.deb ...
+2026-10-29T22:12:25.9068634Z Unpacking libuv1-dev:amd64 (1.48.0-1.1build1) ...
+2026-10-29T22:12:25.9369915Z Selecting previously unselected package ripgrep.
+2026-10-29T22:12:25.9522461Z Preparing to unpack .../6-ripgrep_14.1.0-1_amd64.deb ...
+2026-10-29T22:12:25.9531821Z Unpacking ripgrep (14.1.0-1) ...
+2026-10-29T22:12:26.0232887Z Setting up libuv1-dev:amd64 (1.48.0-1.1build1) ...
+2026-10-29T22:12:26.0261750Z Setting up libjsoncpp25:amd64 (1.9.5-6build1) ...
+2026-10-29T22:12:26.0283737Z Setting up ripgrep (14.1.0-1) ...
+2026-10-29T22:12:26.0315552Z Setting up librhash0:amd64 (1.4.3-3build1) ...
+2026-10-29T22:12:26.0339302Z Setting up build-essential (12.10ubuntu1) ...
+2026-10-29T22:12:26.0363735Z Setting up cmake-data (3.28.3-1build7) ...
+2026-10-29T22:12:26.0431307Z Setting up cmake (3.28.3-1build7) ...
+2026-10-29T22:12:26.0458018Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-10-29T22:12:26.0483347Z Not building database; man-db/auto-update is not 'true'.
+2026-10-29T22:12:26.0498165Z Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+2026-10-29T22:12:26.8546947Z 
+2026-10-29T22:12:26.8548047Z Running kernel seems to be up-to-date.
+2026-10-29T22:12:26.8548432Z 
+2026-10-29T22:12:26.8548650Z No services need to be restarted.
+2026-10-29T22:12:26.8548924Z 
+2026-10-29T22:12:26.8549136Z No containers need to be restarted.
+2026-10-29T22:12:26.8549417Z 
+2026-10-29T22:12:26.8549675Z No user sessions are running outdated binaries.
+2026-10-29T22:12:26.8549989Z 
+2026-10-29T22:12:26.8550411Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-10-29T22:12:27.8868006Z ##[group]Run set -euo pipefail
+2026-10-29T22:12:27.8868374Z [36;1mset -euo pipefail[0m
+2026-10-29T22:12:27.8868686Z [36;1mnpm ci --ignore-scripts --no-audit --no-fund[0m
+2026-10-29T22:12:27.8869214Z [36;1mmkdir -p build[0m
+2026-10-29T22:12:27.8869760Z [36;1mbash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/dependent-checked-record-rust-toolchain.log[0m
+2026-10-29T22:12:27.8870603Z [36;1mbash scripts/bootstrap-rust-ci.sh 2>&1 | tee -a build/dependent-checked-record-rust-toolchain.log[0m
+2026-10-29T22:12:27.8892049Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-29T22:12:27.8892420Z env:
+2026-10-29T22:12:27.8892611Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:12:27.8892834Z ##[endgroup]
+2026-10-29T22:12:32.4272041Z 
+2026-10-29T22:12:32.4272650Z added 422 packages in 4s
+2026-10-29T22:12:32.7634551Z /home/runner/work/lean-bridge/lean-bridge/.toolchains/downloads/elan-x86_64-unknown-linux-gnu.tar.gz: OK
+2026-10-29T22:12:32.8711389Z Installing leanprover/lean4:v4.32.2 (attempt 1 of 2)
+2026-10-29T22:12:32.8984010Z info: Version 4.2.4 of elan is available! Use `elan self update` to update.
+2026-10-29T22:12:33.0463416Z info: downloading https://releases.lean-lang.org/lean4/v4.32.2/lean-4.32.2-linux.tar.zst
+2026-10-29T22:12:36.8409475Z info: installing /home/runner/work/lean-bridge/lean-bridge/.toolchains/elan/toolchains/leanprover--lean4---v4.32.2
+2026-10-29T22:12:43.9983979Z 
+2026-10-29T22:12:44.0456764Z leanprover/lean4:v4.32.2 installed - Lean (version 4.32.2, x86_64-unknown-linux-gnu, commit f3b06c705e6c85f5314019d5d3baab0fec5b580c, Release)
+2026-10-29T22:12:44.0457974Z 
+2026-10-29T22:12:44.2435303Z info: default toolchain set to 'leanprover/lean4:v4.32.2'
+2026-10-29T22:12:58.9404543Z install: creating uninstall script at /home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/lib/rustlib/uninstall.sh
+2026-10-29T22:12:58.9431813Z install: installing component 'rustc'
+2026-10-29T22:13:00.0805523Z install: installing component 'cargo'
+2026-10-29T22:13:01.2747360Z install: installing component 'rust-std-x86_64-unknown-linux-gnu'
+2026-10-29T22:13:02.2278872Z 
+2026-10-29T22:13:02.2279392Z     rust installed.
+2026-10-29T22:13:02.2279778Z 
+2026-10-29T22:13:02.2360715Z rustc 1.90.0 (1159e78c4 2025-09-14)
+2026-10-29T22:13:02.3875834Z ##[group]Run set -euo pipefail
+2026-10-29T22:13:02.3876335Z [36;1mset -euo pipefail[0m
+2026-10-29T22:13:02.3876697Z [36;1msource scripts/env.sh[0m
+2026-10-29T22:13:02.3877522Z [36;1mbash scripts/run-dependent-checked-record-rust-ci.sh "$PWD/.toolchains/rust-1.90.0/bin/rustc" "$PWD/.toolchains/rust-1.90.0/bin/cargo"[0m
+2026-10-29T22:13:02.3899085Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-29T22:13:02.3899528Z env:
+2026-10-29T22:13:02.3899860Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:13:02.3900236Z ##[endgroup]
+2026-10-29T22:13:02.4520102Z TAP version 13
+2026-10-29T22:15:37.7657111Z # Subtest: installed dependent checked-record Rust packages reproduce and relocate ordinary-source
+2026-10-29T22:15:37.7664867Z ok 1 - installed dependent checked-record Rust packages reproduce and relocate ordinary-source
+2026-10-29T22:15:37.7666188Z   ---
+2026-10-29T22:15:37.7666620Z   duration_ms: 155003.204388
+2026-10-29T22:15:37.7667129Z   type: 'test'
+2026-10-29T22:15:37.7667601Z   ...
+2026-10-29T22:15:37.7668235Z # ordinary-source author 0: reproducible Rust crate
+2026-10-29T22:15:37.7674004Z # ordinary-source author 1: reproducible Rust crate
+2026-10-29T22:15:37.7920878Z 1..1
+2026-10-29T22:15:37.7921357Z # tests 1
+2026-10-29T22:15:37.7923177Z # suites 0
+2026-10-29T22:15:37.7924193Z # pass 1
+2026-10-29T22:15:37.7925249Z # fail 0
+2026-10-29T22:15:37.7927172Z # cancelled 0
+2026-10-29T22:15:37.7929560Z # skipped 0
+2026-10-29T22:15:37.7929959Z # todo 0
+2026-10-29T22:15:37.7931812Z # duration_ms 155354.304727
+2026-10-29T22:15:38.8755080Z {
+2026-10-29T22:15:38.8755525Z   "counts": {
+2026-10-29T22:15:38.8755931Z     "calls": 1289,
+2026-10-29T22:15:38.8756358Z     "checks": 2068,
+2026-10-29T22:15:38.8756753Z     "recoveries": 258,
+2026-10-29T22:15:38.8757168Z     "rejections": 258,
+2026-10-29T22:15:38.8757560Z     "snapshots": 1289
+2026-10-29T22:15:38.8757934Z   },
+2026-10-29T22:15:38.8758374Z   "dispatchObserved": false,
+2026-10-29T22:15:38.8759260Z   "executions": 3,
+2026-10-29T22:15:38.8759575Z   "floor": "2.38",
+2026-10-29T22:15:38.8759873Z   "loadCeiling": 6,
+2026-10-29T22:15:38.8760176Z   "mode": "full",
+2026-10-29T22:15:38.8760650Z   "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:15:38.8761177Z   "route": "ordinary-source",
+2026-10-29T22:15:38.8761524Z   "runtime": {
+2026-10-29T22:15:38.8761812Z     "arch": "x64",
+2026-10-29T22:15:38.8762103Z     "glibc": "2.39",
+2026-10-29T22:15:38.8762416Z     "platform": "linux"
+2026-10-29T22:15:38.8762732Z   },
+2026-10-29T22:15:38.8763003Z   "toolchain": {
+2026-10-29T22:15:38.8763295Z     "cargo": {
+2026-10-29T22:15:38.8763578Z       "bytes": 41437528,
+2026-10-29T22:15:38.8764171Z       "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/bin/cargo",
+2026-10-29T22:15:38.8765195Z       "run": {
+2026-10-29T22:15:38.8765456Z         "code": 0,
+2026-10-29T22:15:38.8765720Z         "stderr": "",
+2026-10-29T22:15:38.8766108Z         "stdout": "cargo 1.90.0 (840b83a10 2025-07-30)\n"
+2026-10-29T22:15:38.8766495Z       },
+2026-10-29T22:15:38.8766984Z       "sha256": "51de284e8bb0d03dcee595a0fb1cb3a952fe9e7e4b953a8b1467b7f71725b561"
+2026-10-29T22:15:38.8767520Z     },
+2026-10-29T22:15:38.8767754Z     "rustc": {
+2026-10-29T22:15:38.8768005Z       "bytes": 656496,
+2026-10-29T22:15:38.8768596Z       "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/bin/rustc",
+2026-10-29T22:15:38.8769160Z       "run": {
+2026-10-29T22:15:38.8769407Z         "code": 0,
+2026-10-29T22:15:38.8769664Z         "stderr": "",
+2026-10-29T22:15:38.8770026Z         "stdout": "rustc 1.90.0 (1159e78c4 2025-09-14)\n"
+2026-10-29T22:15:38.8770399Z       },
+2026-10-29T22:15:38.8770874Z       "sha256": "e6abf55ab1859e7c990be77fd593f51661ea99fb2fde626ae9f4108aaa34e7fa"
+2026-10-29T22:15:38.8771411Z     }
+2026-10-29T22:15:38.8771636Z   }
+2026-10-29T22:15:38.8771855Z }
+2026-10-29T22:15:38.9577548Z TAP version 13
+2026-10-29T22:18:12.9751109Z # Subtest: installed dependent checked-record Rust packages reproduce and relocate reviewed-ir
+2026-10-29T22:18:12.9758983Z ok 1 - installed dependent checked-record Rust packages reproduce and relocate reviewed-ir
+2026-10-29T22:18:12.9759931Z   ---
+2026-10-29T22:18:12.9760321Z   duration_ms: 153722.408702
+2026-10-29T22:18:12.9760794Z   type: 'test'
+2026-10-29T22:18:12.9761162Z   ...
+2026-10-29T22:18:12.9761866Z # reviewed-ir author 0: reproducible Rust crate
+2026-10-29T22:18:12.9763734Z # reviewed-ir author 1: reproducible Rust crate
+2026-10-29T22:18:13.0054811Z 1..1
+2026-10-29T22:18:13.0056482Z # tests 1
+2026-10-29T22:18:13.0057246Z # suites 0
+2026-10-29T22:18:13.0057634Z # pass 1
+2026-10-29T22:18:13.0058381Z # fail 0
+2026-10-29T22:18:13.0059833Z # cancelled 0
+2026-10-29T22:18:13.0060559Z # skipped 0
+2026-10-29T22:18:13.0061143Z # todo 0
+2026-10-29T22:18:13.0062064Z # duration_ms 154060.474238
+2026-10-29T22:18:14.0857220Z {
+2026-10-29T22:18:14.0857660Z   "counts": {
+2026-10-29T22:18:14.0858015Z     "calls": 1289,
+2026-10-29T22:18:14.0858417Z     "checks": 2068,
+2026-10-29T22:18:14.0858789Z     "recoveries": 258,
+2026-10-29T22:18:14.0859160Z     "rejections": 258,
+2026-10-29T22:18:14.0859521Z     "snapshots": 1289
+2026-10-29T22:18:14.0859860Z   },
+2026-10-29T22:18:14.0860193Z   "dispatchObserved": false,
+2026-10-29T22:18:14.0860610Z   "executions": 3,
+2026-10-29T22:18:14.0860989Z   "floor": "2.38",
+2026-10-29T22:18:14.0861390Z   "loadCeiling": 6,
+2026-10-29T22:18:14.0861741Z   "mode": "full",
+2026-10-29T22:18:14.0862290Z   "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:18:14.0862709Z   "route": "reviewed-ir",
+2026-10-29T22:18:14.0862945Z   "runtime": {
+2026-10-29T22:18:14.0863146Z     "arch": "x64",
+2026-10-29T22:18:14.0863347Z     "glibc": "2.39",
+2026-10-29T22:18:14.0863575Z     "platform": "linux"
+2026-10-29T22:18:14.0863802Z   },
+2026-10-29T22:18:14.0863987Z   "toolchain": {
+2026-10-29T22:18:14.0864188Z     "cargo": {
+2026-10-29T22:18:14.0864704Z       "bytes": 41437528,
+2026-10-29T22:18:14.0865576Z       "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/bin/cargo",
+2026-10-29T22:18:14.0866022Z       "run": {
+2026-10-29T22:18:14.0866228Z         "code": 0,
+2026-10-29T22:18:14.0866431Z         "stderr": "",
+2026-10-29T22:18:14.0866716Z         "stdout": "cargo 1.90.0 (840b83a10 2025-07-30)\n"
+2026-10-29T22:18:14.0867018Z       },
+2026-10-29T22:18:14.0867393Z       "sha256": "51de284e8bb0d03dcee595a0fb1cb3a952fe9e7e4b953a8b1467b7f71725b561"
+2026-10-29T22:18:14.0867799Z     },
+2026-10-29T22:18:14.0867993Z     "rustc": {
+2026-10-29T22:18:14.0868189Z       "bytes": 656496,
+2026-10-29T22:18:14.0868621Z       "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/bin/rustc",
+2026-10-29T22:18:14.0869069Z       "run": {
+2026-10-29T22:18:14.0869266Z         "code": 0,
+2026-10-29T22:18:14.0869469Z         "stderr": "",
+2026-10-29T22:18:14.0869753Z         "stdout": "rustc 1.90.0 (1159e78c4 2025-09-14)\n"
+2026-10-29T22:18:14.0870058Z       },
+2026-10-29T22:18:14.0870440Z       "sha256": "e6abf55ab1859e7c990be77fd593f51661ea99fb2fde626ae9f4108aaa34e7fa"
+2026-10-29T22:18:14.0870836Z     }
+2026-10-29T22:18:14.0871016Z   }
+2026-10-29T22:18:14.0871185Z }
+2026-10-29T22:18:14.1767798Z TAP version 13
+2026-10-29T22:20:49.8002783Z # Subtest: installed dependent checked-record Rust packages reproduce and relocate result-only-ordinary-source
+2026-10-29T22:20:49.8011414Z ok 1 - installed dependent checked-record Rust packages reproduce and relocate result-only-ordinary-source
+2026-10-29T22:20:49.8012756Z   ---
+2026-10-29T22:20:49.8013433Z   duration_ms: 155322.352941
+2026-10-29T22:20:49.8014061Z   type: 'test'
+2026-10-29T22:20:49.8014825Z   ...
+2026-10-29T22:20:49.8015674Z # result-only-ordinary-source author 0: reproducible Rust crate
+2026-10-29T22:20:49.8017761Z # result-only-ordinary-source author 1: reproducible Rust crate
+2026-10-29T22:20:49.8321356Z 1..1
+2026-10-29T22:20:49.8327199Z # tests 1
+2026-10-29T22:20:49.8327785Z # suites 0
+2026-10-29T22:20:49.8328337Z # pass 1
+2026-10-29T22:20:49.8328818Z # fail 0
+2026-10-29T22:20:49.8329699Z # cancelled 0
+2026-10-29T22:20:49.8330299Z # skipped 0
+2026-10-29T22:20:49.8330784Z # todo 0
+2026-10-29T22:20:49.8331336Z # duration_ms 155668.168345
+2026-10-29T22:20:50.9478277Z {
+2026-10-29T22:20:50.9478949Z   "counts": {
+2026-10-29T22:20:50.9479501Z     "calls": 513,
+2026-10-29T22:20:50.9479870Z     "checks": 516,
+2026-10-29T22:20:50.9480202Z     "recoveries": 0,
+2026-10-29T22:20:50.9480560Z     "rejections": 0,
+2026-10-29T22:20:50.9480912Z     "snapshots": 513
+2026-10-29T22:20:50.9481264Z   },
+2026-10-29T22:20:50.9481591Z   "dispatchObserved": false,
+2026-10-29T22:20:50.9482048Z   "executions": 3,
+2026-10-29T22:20:50.9482400Z   "floor": "2.38",
+2026-10-29T22:20:50.9482743Z   "loadCeiling": 6,
+2026-10-29T22:20:50.9483130Z   "mode": "result-only",
+2026-10-29T22:20:50.9483781Z   "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:20:50.9484786Z   "route": "result-only-ordinary-source",
+2026-10-29T22:20:50.9485365Z   "runtime": {
+2026-10-29T22:20:50.9485773Z     "arch": "x64",
+2026-10-29T22:20:50.9486208Z     "glibc": "2.39",
+2026-10-29T22:20:50.9486641Z     "platform": "linux"
+2026-10-29T22:20:50.9487074Z   },
+2026-10-29T22:20:50.9487454Z   "toolchain": {
+2026-10-29T22:20:50.9487862Z     "cargo": {
+2026-10-29T22:20:50.9488278Z       "bytes": 41437528,
+2026-10-29T22:20:50.9489229Z       "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/bin/cargo",
+2026-10-29T22:20:50.9490152Z       "run": {
+2026-10-29T22:20:50.9490558Z         "code": 0,
+2026-10-29T22:20:50.9490985Z         "stderr": "",
+2026-10-29T22:20:50.9491588Z         "stdout": "cargo 1.90.0 (840b83a10 2025-07-30)\n"
+2026-10-29T22:20:50.9492190Z       },
+2026-10-29T22:20:50.9492974Z       "sha256": "51de284e8bb0d03dcee595a0fb1cb3a952fe9e7e4b953a8b1467b7f71725b561"
+2026-10-29T22:20:50.9493819Z     },
+2026-10-29T22:20:50.9494192Z     "rustc": {
+2026-10-29T22:20:50.9494829Z       "bytes": 656496,
+2026-10-29T22:20:50.9495758Z       "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/bin/rustc",
+2026-10-29T22:20:50.9496851Z       "run": {
+2026-10-29T22:20:50.9497191Z         "code": 0,
+2026-10-29T22:20:50.9497553Z         "stderr": "",
+2026-10-29T22:20:50.9497866Z         "stdout": "rustc 1.90.0 (1159e78c4 2025-09-14)\n"
+2026-10-29T22:20:50.9498162Z       },
+2026-10-29T22:20:50.9498544Z       "sha256": "e6abf55ab1859e7c990be77fd593f51661ea99fb2fde626ae9f4108aaa34e7fa"
+2026-10-29T22:20:50.9498945Z     }
+2026-10-29T22:20:50.9499120Z   }
+2026-10-29T22:20:50.9499297Z }
+2026-10-29T22:20:51.0384709Z TAP version 13
+2026-10-29T22:23:25.3827259Z # Subtest: installed dependent checked-record Rust packages reproduce and relocate result-only-reviewed-ir
+2026-10-29T22:23:25.3835610Z ok 1 - installed dependent checked-record Rust packages reproduce and relocate result-only-reviewed-ir
+2026-10-29T22:23:25.3837286Z   ---
+2026-10-29T22:23:25.3837934Z   duration_ms: 154028.279936
+2026-10-29T22:23:25.3838643Z   type: 'test'
+2026-10-29T22:23:25.3839271Z   ...
+2026-10-29T22:23:25.3840208Z # result-only-reviewed-ir author 0: reproducible Rust crate
+2026-10-29T22:23:25.3846368Z # result-only-reviewed-ir author 1: reproducible Rust crate
+2026-10-29T22:23:25.4187187Z 1..1
+2026-10-29T22:23:25.4187840Z # tests 1
+2026-10-29T22:23:25.4195414Z # suites 0
+2026-10-29T22:23:25.4195840Z # pass 1
+2026-10-29T22:23:25.4196199Z # fail 0
+2026-10-29T22:23:25.4196565Z # cancelled 0
+2026-10-29T22:23:25.4196958Z # skipped 0
+2026-10-29T22:23:25.4197316Z # todo 0
+2026-10-29T22:23:25.4197740Z # duration_ms 154394.055811
+2026-10-29T22:23:26.5297763Z {
+2026-10-29T22:23:26.5298149Z   "counts": {
+2026-10-29T22:23:26.5298513Z     "calls": 513,
+2026-10-29T22:23:26.5298883Z     "checks": 516,
+2026-10-29T22:23:26.5299246Z     "recoveries": 0,
+2026-10-29T22:23:26.5299603Z     "rejections": 0,
+2026-10-29T22:23:26.5299958Z     "snapshots": 513
+2026-10-29T22:23:26.5300297Z   },
+2026-10-29T22:23:26.5300642Z   "dispatchObserved": false,
+2026-10-29T22:23:26.5301062Z   "executions": 3,
+2026-10-29T22:23:26.5301430Z   "floor": "2.38",
+2026-10-29T22:23:26.5302126Z   "loadCeiling": 6,
+2026-10-29T22:23:26.5302500Z   "mode": "result-only",
+2026-10-29T22:23:26.5303108Z   "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T22:23:26.5303770Z   "route": "result-only-reviewed-ir",
+2026-10-29T22:23:26.5304215Z   "runtime": {
+2026-10-29T22:23:26.5304755Z     "arch": "x64",
+2026-10-29T22:23:26.5305058Z     "glibc": "2.39",
+2026-10-29T22:23:26.5305414Z     "platform": "linux"
+2026-10-29T22:23:26.5305768Z   },
+2026-10-29T22:23:26.5306048Z   "toolchain": {
+2026-10-29T22:23:26.5306259Z     "cargo": {
+2026-10-29T22:23:26.5306472Z       "bytes": 41437528,
+2026-10-29T22:23:26.5307086Z       "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/bin/cargo",
+2026-10-29T22:23:26.5307687Z       "run": {
+2026-10-29T22:23:26.5307895Z         "code": 0,
+2026-10-29T22:23:26.5308119Z         "stderr": "",
+2026-10-29T22:23:26.5308426Z         "stdout": "cargo 1.90.0 (840b83a10 2025-07-30)\n"
+2026-10-29T22:23:26.5308737Z       },
+2026-10-29T22:23:26.5309124Z       "sha256": "51de284e8bb0d03dcee595a0fb1cb3a952fe9e7e4b953a8b1467b7f71725b561"
+2026-10-29T22:23:26.5309535Z     },
+2026-10-29T22:23:26.5309719Z     "rustc": {
+2026-10-29T22:23:26.5309925Z       "bytes": 656496,
+2026-10-29T22:23:26.5310367Z       "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/rust-1.90.0/bin/rustc",
+2026-10-29T22:23:26.5310819Z       "run": {
+2026-10-29T22:23:26.5311015Z         "code": 0,
+2026-10-29T22:23:26.5311294Z         "stderr": "",
+2026-10-29T22:23:26.5311758Z         "stdout": "rustc 1.90.0 (1159e78c4 2025-09-14)\n"
+2026-10-29T22:23:26.5312245Z       },
+2026-10-29T22:23:26.5312663Z       "sha256": "e6abf55ab1859e7c990be77fd593f51661ea99fb2fde626ae9f4108aaa34e7fa"
+2026-10-29T22:23:26.5313214Z     }
+2026-10-29T22:23:26.5313854Z   }
+2026-10-29T22:23:26.5315012Z }
+2026-10-29T22:23:26.5812514Z ##[group]Run actions/upload-artifact@v7
+2026-10-29T22:23:26.5812822Z with:
+2026-10-29T22:23:26.5813391Z   name: dependent-checked-record-rust-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T22:23:26.5814065Z   path: build/dependent-checked-record-rust-ci/
+build/dependent-checked-record-rust-toolchain.log
+
+2026-10-29T22:23:26.5814920Z   if-no-files-found: error
+2026-10-29T22:23:26.5815163Z   retention-days: 30
+2026-10-29T22:23:26.5815402Z   compression-level: 6
+2026-10-29T22:23:26.5815614Z   overwrite: false
+2026-10-29T22:23:26.5815829Z   include-hidden-files: false
+2026-10-29T22:23:26.5816064Z   archive: true
+2026-10-29T22:23:26.5816261Z env:
+2026-10-29T22:23:26.5816440Z   LEAN_NUM_THREADS: 1
+2026-10-29T22:23:26.5816644Z ##[endgroup]
+2026-10-29T22:23:26.8530202Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-29T22:23:26.8532255Z The least common ancestor is /home/runner/work/lean-bridge/lean-bridge/build. This will be the root directory of the artifact
+2026-10-29T22:23:26.8533563Z With the provided path, there will be 313 files uploaded
+2026-10-29T22:23:26.8534559Z Artifact name is valid!
+2026-10-29T22:23:26.8535014Z Root directory input is valid!
+2026-10-29T22:23:27.2288734Z Uploading artifact: dependent-checked-record-rust-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip
+2026-10-29T22:23:27.2329643Z Beginning upload of artifact content to blob storage
+2026-10-29T22:23:28.4723375Z Uploaded bytes 8388608
+2026-10-29T22:23:28.8122243Z Uploaded bytes 16777216
+2026-10-29T22:23:28.9529327Z Uploaded bytes 25165824
+2026-10-29T22:23:29.0211597Z Uploaded bytes 33554432
+2026-10-29T22:23:29.1532023Z Uploaded bytes 41943040
+2026-10-29T22:23:29.2556651Z Uploaded bytes 50331648
+2026-10-29T22:23:29.5227664Z Uploaded bytes 58720256
+2026-10-29T22:23:29.7455548Z Uploaded bytes 67108864
+2026-10-29T22:23:30.0641527Z Uploaded bytes 75497472
+2026-10-29T22:23:30.2394887Z Uploaded bytes 83886080
+2026-10-29T22:23:30.4516326Z Uploaded bytes 92274688
+2026-10-29T22:23:30.6773922Z Uploaded bytes 100663296
+2026-10-29T22:23:31.0065567Z Uploaded bytes 109051904
+2026-10-29T22:23:31.2296302Z Uploaded bytes 117440512
+2026-10-29T22:23:31.4572048Z Uploaded bytes 125829120
+2026-10-29T22:23:31.7381538Z Uploaded bytes 134217728
+2026-10-29T22:23:31.9244588Z Uploaded bytes 142606336
+2026-10-29T22:23:32.2283535Z Uploaded bytes 150994944
+2026-10-29T22:23:32.5562947Z Uploaded bytes 159383552
+2026-10-29T22:23:32.7426893Z Uploaded bytes 167772160
+2026-10-29T22:23:32.9403194Z Uploaded bytes 176160768
+2026-10-29T22:23:33.2279752Z Uploaded bytes 184549376
+2026-10-29T22:23:33.6963185Z Uploaded bytes 192937984
+2026-10-29T22:23:33.6993897Z Uploaded bytes 201326592
+2026-10-29T22:23:34.2852423Z Uploaded bytes 209715200
+2026-10-29T22:23:34.3751221Z Uploaded bytes 210759919
+2026-10-29T22:23:34.4504630Z Finished uploading artifact content to blob storage!
+2026-10-29T22:23:34.4508238Z SHA256 digest of uploaded artifact is dadff39203868d02acbaf80dde6620609a7576a0110e3c935073b3ed20e50c8e
+2026-10-29T22:23:34.4510640Z Finalizing artifact upload
+2026-10-29T22:23:35.0787726Z Artifact dependent-checked-record-rust-70652587f69c330ea0feebb7bc4c6da6b20f4f04 successfully finalized. Artifact ID 12937891581
+2026-10-29T22:23:35.0789787Z Artifact dependent-checked-record-rust-70652587f69c330ea0feebb7bc4c6da6b20f4f04 has been successfully uploaded! Final size is 210759919 bytes. Artifact ID is 12937891581
+2026-10-29T22:23:35.0793999Z Artifact download URL: https://github.com/seanmorris/lean-bridge/actions/runs/40961670189/artifacts/12937891581
+2026-10-29T22:23:35.1068914Z Post job cleanup.
+2026-10-29T22:23:35.2304633Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e, not saving cache.
+2026-10-29T22:23:35.2444679Z Post job cleanup.
+2026-10-29T22:23:35.3378427Z [command]/usr/bin/git version
+2026-10-29T22:23:35.3430746Z git version 2.56.0
+2026-10-29T22:23:35.3482237Z Temporarily overriding HOME='/home/runner/work/_temp/76cadb90-4803-4297-8071-9c59cfca46bf' before making global git config changes
+2026-10-29T22:23:35.3488823Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-29T22:23:35.3490709Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lean-bridge/lean-bridge
+2026-10-29T22:23:35.3531510Z Removing SSH command configuration
+2026-10-29T22:23:35.3539622Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T22:23:35.3582238Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-29T22:23:35.4336383Z Removing HTTP extra header
+2026-10-29T22:23:35.4337569Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T22:23:35.4396760Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-29T22:23:35.5097546Z Removing includeIf entries pointing to credentials config files
+2026-10-29T22:23:35.5105536Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T22:23:35.5156664Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-29T22:23:35.5999097Z Cleaning up orphan processes

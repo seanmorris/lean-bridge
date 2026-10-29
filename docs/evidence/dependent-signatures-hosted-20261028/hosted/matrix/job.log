@@ -1,0 +1,496 @@
+﻿2026-10-29T23:19:24.1506880Z Current runner version: '2.338.0'
+2026-10-29T23:19:24.1534579Z ##[group]Runner Image Provisioner
+2026-10-29T23:19:24.1535689Z Hosted Compute Agent
+2026-10-29T23:19:24.1536330Z Version: 20261021.618
+2026-10-29T23:19:24.1537151Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-29T23:19:24.1537958Z Build Date: 2026-10-21T00:45:21Z
+2026-10-29T23:19:24.1538762Z Worker ID: {3cbb0b8c-9665-432a-a4ba-ffca9b312a86}
+2026-10-29T23:19:24.1539612Z Region: eastus
+2026-10-29T23:19:24.1540631Z Cloud: Azure
+2026-10-29T23:19:24.1541348Z ##[endgroup]
+2026-10-29T23:19:24.1543040Z ##[group]Operating System
+2026-10-29T23:19:24.1543853Z Ubuntu
+2026-10-29T23:19:24.1544465Z 24.04.5
+2026-10-29T23:19:24.1545035Z LTS
+2026-10-29T23:19:24.1546123Z ##[endgroup]
+2026-10-29T23:19:24.1546756Z ##[group]Runner Image
+2026-10-29T23:19:24.1547397Z Image: ubuntu-24.04
+2026-10-29T23:19:24.1548099Z Version: 20261025.353.1
+2026-10-29T23:19:24.1549520Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-29T23:19:24.1551831Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+2026-10-29T23:19:24.1552934Z ##[endgroup]
+2026-10-29T23:19:24.1554233Z ##[group]GITHUB_TOKEN Permissions
+2026-10-29T23:19:24.1556413Z Contents: read
+2026-10-29T23:19:24.1557204Z Metadata: read
+2026-10-29T23:19:24.1557803Z ##[endgroup]
+2026-10-29T23:19:24.1560530Z Secret source: Actions
+2026-10-29T23:19:24.1561531Z Cache mode: write
+2026-10-29T23:19:24.1562651Z Prepare workflow directory
+2026-10-29T23:19:24.1910303Z Prepare all required actions
+2026-10-29T23:19:24.1962083Z Getting action download info
+2026-10-29T23:19:24.4176492Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-29T23:19:24.5478019Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-29T23:19:24.8326153Z Download action repository 'actions/download-artifact@v5' (SHA:634f93cb2916e3fdff6788551b99b062d0335ce0)
+2026-10-29T23:19:25.0029313Z Download action repository 'actions/upload-artifact@v7' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-10-29T23:19:25.1998413Z Complete job name: Reconcile the exact same-run receipt
+2026-10-29T23:19:25.2961380Z ##[group]Run actions/checkout@v6
+2026-10-29T23:19:25.2962391Z with:
+2026-10-29T23:19:25.2962845Z   fetch-depth: 1
+2026-10-29T23:19:25.2963338Z   persist-credentials: false
+2026-10-29T23:19:25.2965040Z   sparse-checkout: /*
+!/*/
+/.github/
+/acceptance/
+/config/
+/containers/
+/demos/
+/nix/
+/notices/
+/patches/
+/poc/
+/schema/
+/scripts/
+/site/
+/src/
+/tests/
+/docs/
+!/docs/evidence/*
+/docs/evidence/*.json
+/docs/evidence/*.md
+/docs/evidence/*.xml
+
+2026-10-29T23:19:25.2966815Z   sparse-checkout-cone-mode: false
+2026-10-29T23:19:25.2967411Z   repository: seanmorris/lean-bridge
+2026-10-29T23:19:25.2971912Z   token: ***
+2026-10-29T23:19:25.2972388Z   ssh-strict: true
+2026-10-29T23:19:25.2972854Z   ssh-user: git
+2026-10-29T23:19:25.2973302Z   clean: true
+2026-10-29T23:19:25.2973777Z   fetch-tags: false
+2026-10-29T23:19:25.2974258Z   show-progress: true
+2026-10-29T23:19:25.2974734Z   lfs: false
+2026-10-29T23:19:25.2975175Z   submodules: false
+2026-10-29T23:19:25.2975699Z   set-safe-directory: true
+2026-10-29T23:19:25.2976244Z   allow-unsafe-pr-checkout: false
+2026-10-29T23:19:25.2977077Z ##[endgroup]
+2026-10-29T23:19:25.5915925Z Syncing repository: seanmorris/lean-bridge
+2026-10-29T23:19:25.5919030Z ##[group]Getting Git version info
+2026-10-29T23:19:25.5920717Z Working directory is '/home/runner/work/lean-bridge/lean-bridge'
+2026-10-29T23:19:25.5922314Z [command]/usr/bin/git version
+2026-10-29T23:19:25.6024215Z git version 2.56.0
+2026-10-29T23:19:25.6052710Z ##[endgroup]
+2026-10-29T23:19:25.6071144Z Temporarily overriding HOME='/home/runner/work/_temp/56fa0a78-e353-4d36-92fe-d4ec88ef0498' before making global git config changes
+2026-10-29T23:19:25.6074236Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-29T23:19:25.6078071Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lean-bridge/lean-bridge
+2026-10-29T23:19:25.6144884Z Deleting the contents of '/home/runner/work/lean-bridge/lean-bridge'
+2026-10-29T23:19:25.6155784Z ##[group]Determining repository object format
+2026-10-29T23:19:25.6165106Z ##[endgroup]
+2026-10-29T23:19:25.6166604Z ##[group]Initializing the repository
+2026-10-29T23:19:25.6167982Z [command]/usr/bin/git init /home/runner/work/lean-bridge/lean-bridge
+2026-10-29T23:19:25.6302661Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-29T23:19:25.6307215Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-29T23:19:25.6309616Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-29T23:19:25.6311811Z hint: call:
+2026-10-29T23:19:25.6313008Z hint:
+2026-10-29T23:19:25.6314171Z hint: 	git config --global init.defaultBranch <name>
+2026-10-29T23:19:25.6315446Z hint:
+2026-10-29T23:19:25.6316739Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-29T23:19:25.6318743Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-29T23:19:25.6321388Z hint:
+2026-10-29T23:19:25.6322387Z hint: 	git branch -m <name>
+2026-10-29T23:19:25.6323379Z hint:
+2026-10-29T23:19:25.6324691Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-29T23:19:25.6327128Z Initialized empty Git repository in /home/runner/work/lean-bridge/lean-bridge/.git/
+2026-10-29T23:19:25.6333979Z [command]/usr/bin/git remote add origin https://github.com/seanmorris/lean-bridge
+2026-10-29T23:19:25.6395849Z ##[endgroup]
+2026-10-29T23:19:25.6397576Z ##[group]Disabling automatic garbage collection
+2026-10-29T23:19:25.6401752Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-29T23:19:25.6445593Z ##[endgroup]
+2026-10-29T23:19:25.6446880Z ##[group]Setting up auth
+2026-10-29T23:19:25.6447867Z Removing SSH command configuration
+2026-10-29T23:19:25.6454917Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T23:19:25.6501191Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-29T23:19:25.6961912Z Removing HTTP extra header
+2026-10-29T23:19:25.6969462Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T23:19:25.7016890Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-29T23:19:25.7271464Z Removing includeIf entries pointing to credentials config files
+2026-10-29T23:19:25.7279021Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T23:19:25.7327925Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-29T23:19:25.7591639Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-29T23:19:25.7645535Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path /home/runner/work/_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:19:25.7692396Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:19:25.7738338Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:19:25.7787893Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:19:25.7830610Z ##[endgroup]
+2026-10-29T23:19:25.7832229Z ##[group]Fetching the repository
+2026-10-29T23:19:25.7842932Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +70652587f69c330ea0feebb7bc4c6da6b20f4f04:refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-29T23:19:27.1791261Z From https://github.com/seanmorris/lean-bridge
+2026-10-29T23:19:27.1793709Z  * [new ref]         70652587f69c330ea0feebb7bc4c6da6b20f4f04 -> origin/codex/vo2168-current-shallow-checkout
+2026-10-29T23:19:27.1804628Z [command]/usr/bin/git branch --list --remote origin/codex/vo2168-current-shallow-checkout
+2026-10-29T23:19:27.1845374Z   origin/codex/vo2168-current-shallow-checkout
+2026-10-29T23:19:27.1855380Z [command]/usr/bin/git rev-parse refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-29T23:19:27.1891008Z 70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:19:27.1897484Z ##[endgroup]
+2026-10-29T23:19:27.1898555Z ##[group]Determining the checkout info
+2026-10-29T23:19:27.1899655Z ##[endgroup]
+2026-10-29T23:19:27.1900886Z ##[group]Setting up sparse checkout
+2026-10-29T23:19:27.1904423Z [command]/usr/bin/git config core.sparseCheckout true
+2026-10-29T23:19:27.1953783Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+2026-10-29T23:19:27.1988388Z .git/info/sparse-checkout
+2026-10-29T23:19:27.1997523Z ##[endgroup]
+2026-10-29T23:19:27.1998505Z ##[group]Checking out the ref
+2026-10-29T23:19:27.2003452Z [command]/usr/bin/git checkout --progress --force -B codex/vo2168-current-shallow-checkout refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-29T23:19:28.3636495Z Updating index flags:  32% (74135/226097)
+2026-10-29T23:19:28.3930191Z Updating index flags:  33% (74613/226097)
+2026-10-29T23:19:28.4217930Z Updating index flags:  34% (76873/226097)
+2026-10-29T23:19:28.4504183Z Updating index flags:  35% (79134/226097)
+2026-10-29T23:19:28.4794580Z Updating index flags:  36% (81395/226097)
+2026-10-29T23:19:28.5078972Z Updating index flags:  37% (83656/226097)
+2026-10-29T23:19:28.5366201Z Updating index flags:  38% (85917/226097)
+2026-10-29T23:19:28.5653695Z Updating index flags:  39% (88178/226097)
+2026-10-29T23:19:28.5943034Z Updating index flags:  40% (90439/226097)
+2026-10-29T23:19:28.6239990Z Updating index flags:  41% (92700/226097)
+2026-10-29T23:19:28.6527812Z Updating index flags:  42% (94961/226097)
+2026-10-29T23:19:28.6802777Z Updating index flags:  43% (97222/226097)
+2026-10-29T23:19:28.7076792Z Updating index flags:  44% (99483/226097)
+2026-10-29T23:19:28.7367033Z Updating index flags:  45% (101744/226097)
+2026-10-29T23:19:28.7651149Z Updating index flags:  46% (104005/226097)
+2026-10-29T23:19:28.7935218Z Updating index flags:  47% (106266/226097)
+2026-10-29T23:19:28.8220045Z Updating index flags:  48% (108527/226097)
+2026-10-29T23:19:28.8516289Z Updating index flags:  49% (110788/226097)
+2026-10-29T23:19:28.8814922Z Updating index flags:  50% (113049/226097)
+2026-10-29T23:19:28.9130987Z Updating index flags:  51% (115310/226097)
+2026-10-29T23:19:28.9442744Z Updating index flags:  52% (117571/226097)
+2026-10-29T23:19:28.9735962Z Updating index flags:  53% (119832/226097)
+2026-10-29T23:19:29.0020977Z Updating index flags:  54% (122093/226097)
+2026-10-29T23:19:29.0295771Z Updating index flags:  55% (124354/226097)
+2026-10-29T23:19:29.0580794Z Updating index flags:  56% (126615/226097)
+2026-10-29T23:19:29.0877739Z Updating index flags:  57% (128876/226097)
+2026-10-29T23:19:29.1172416Z Updating index flags:  58% (131137/226097)
+2026-10-29T23:19:29.1465891Z Updating index flags:  59% (133398/226097)
+2026-10-29T23:19:29.1760035Z Updating index flags:  60% (135659/226097)
+2026-10-29T23:19:29.2051119Z Updating index flags:  61% (137920/226097)
+2026-10-29T23:19:29.2344381Z Updating index flags:  62% (140181/226097)
+2026-10-29T23:19:29.2637510Z Updating index flags:  63% (142442/226097)
+2026-10-29T23:19:29.2939326Z Updating index flags:  64% (144703/226097)
+2026-10-29T23:19:29.3232508Z Updating index flags:  65% (146964/226097)
+2026-10-29T23:19:29.3544866Z Updating index flags:  66% (149225/226097)
+2026-10-29T23:19:29.3574668Z Updating index flags:  67% (151485/226097)
+2026-10-29T23:19:29.3840371Z Updating index flags:  67% (151711/226097)
+2026-10-29T23:19:29.4133593Z Updating index flags:  68% (153746/226097)
+2026-10-29T23:19:29.4427242Z Updating index flags:  69% (156007/226097)
+2026-10-29T23:19:29.4719402Z Updating index flags:  70% (158268/226097)
+2026-10-29T23:19:29.4979238Z Updating index flags:  71% (160529/226097)
+2026-10-29T23:19:29.5263041Z Updating index flags:  72% (162790/226097)
+2026-10-29T23:19:29.5546770Z Updating index flags:  73% (165051/226097)
+2026-10-29T23:19:29.5831700Z Updating index flags:  74% (167312/226097)
+2026-10-29T23:19:29.6115366Z Updating index flags:  75% (169573/226097)
+2026-10-29T23:19:29.6399926Z Updating index flags:  76% (171834/226097)
+2026-10-29T23:19:29.6678620Z Updating index flags:  77% (174095/226097)
+2026-10-29T23:19:29.6967944Z Updating index flags:  78% (176356/226097)
+2026-10-29T23:19:29.7256147Z Updating index flags:  79% (178617/226097)
+2026-10-29T23:19:29.7534546Z Updating index flags:  80% (180878/226097)
+2026-10-29T23:19:29.7804909Z Updating index flags:  81% (183139/226097)
+2026-10-29T23:19:29.8156181Z Updating index flags:  82% (185400/226097)
+2026-10-29T23:19:29.8520249Z Updating index flags:  83% (187661/226097)
+2026-10-29T23:19:29.8784968Z Updating index flags:  84% (189922/226097)
+2026-10-29T23:19:29.9076522Z Updating index flags:  85% (192183/226097)
+2026-10-29T23:19:29.9367458Z Updating index flags:  86% (194444/226097)
+2026-10-29T23:19:29.9654856Z Updating index flags:  87% (196705/226097)
+2026-10-29T23:19:29.9947292Z Updating index flags:  88% (198966/226097)
+2026-10-29T23:19:30.0236764Z Updating index flags:  89% (201227/226097)
+2026-10-29T23:19:30.0525640Z Updating index flags:  90% (203488/226097)
+2026-10-29T23:19:30.0816939Z Updating index flags:  91% (205749/226097)
+2026-10-29T23:19:30.1109265Z Updating index flags:  92% (208010/226097)
+2026-10-29T23:19:30.1399851Z Updating index flags:  93% (210271/226097)
+2026-10-29T23:19:30.1690909Z Updating index flags:  94% (212532/226097)
+2026-10-29T23:19:30.1941360Z Updating index flags:  95% (214793/226097)
+2026-10-29T23:19:30.2187906Z Updating index flags:  96% (217054/226097)
+2026-10-29T23:19:30.2440523Z Updating index flags:  97% (219315/226097)
+2026-10-29T23:19:30.2689241Z Updating index flags:  98% (221576/226097)
+2026-10-29T23:19:30.2935088Z Updating index flags:  99% (223837/226097)
+2026-10-29T23:19:30.2935758Z Updating index flags: 100% (226097/226097)
+2026-10-29T23:19:30.2936370Z Updating index flags: 100% (226097/226097), done.
+2026-10-29T23:20:36.4944511Z Updating files:   0% (1/13607)
+2026-10-29T23:20:36.5304319Z Updating files:   1% (137/13607)
+2026-10-29T23:20:36.5522021Z Updating files:   2% (273/13607)
+2026-10-29T23:20:36.5712384Z Updating files:   3% (409/13607)
+2026-10-29T23:20:36.8993118Z Updating files:   4% (545/13607)
+2026-10-29T23:20:36.9812531Z Updating files:   5% (681/13607)
+2026-10-29T23:20:37.0314525Z Updating files:   6% (817/13607)
+2026-10-29T23:20:37.1130159Z Updating files:   7% (953/13607)
+2026-10-29T23:20:37.4071991Z Updating files:   8% (1089/13607)
+2026-10-29T23:20:37.4445687Z Updating files:   8% (1184/13607)
+2026-10-29T23:20:37.4991146Z Updating files:   9% (1225/13607)
+2026-10-29T23:20:37.5466218Z Updating files:  10% (1361/13607)
+2026-10-29T23:20:37.8427937Z Updating files:  11% (1497/13607)
+2026-10-29T23:20:38.2483856Z Updating files:  12% (1633/13607)
+2026-10-29T23:20:38.3004792Z Updating files:  13% (1769/13607)
+2026-10-29T23:20:38.3840105Z Updating files:  13% (1794/13607)
+2026-10-29T23:20:38.4502630Z Updating files:  14% (1905/13607)
+2026-10-29T23:20:38.5222853Z Updating files:  15% (2042/13607)
+2026-10-29T23:20:38.8520402Z Updating files:  16% (2178/13607)
+2026-10-29T23:20:38.9009634Z Updating files:  17% (2314/13607)
+2026-10-29T23:20:39.2971493Z Updating files:  18% (2450/13607)
+2026-10-29T23:20:39.3028954Z Updating files:  19% (2586/13607)
+2026-10-29T23:20:39.6076488Z Updating files:  19% (2595/13607)
+2026-10-29T23:20:39.6151622Z Updating files:  20% (2722/13607)
+2026-10-29T23:20:39.6233029Z Updating files:  21% (2858/13607)
+2026-10-29T23:20:39.6298062Z Updating files:  22% (2994/13607)
+2026-10-29T23:20:39.6364520Z Updating files:  23% (3130/13607)
+2026-10-29T23:20:39.6428868Z Updating files:  24% (3266/13607)
+2026-10-29T23:20:39.6506597Z Updating files:  25% (3402/13607)
+2026-10-29T23:20:39.6581336Z Updating files:  26% (3538/13607)
+2026-10-29T23:20:39.6650470Z Updating files:  27% (3674/13607)
+2026-10-29T23:20:39.6720330Z Updating files:  28% (3810/13607)
+2026-10-29T23:20:39.6785706Z Updating files:  29% (3947/13607)
+2026-10-29T23:20:39.6853888Z Updating files:  30% (4083/13607)
+2026-10-29T23:20:39.6917130Z Updating files:  31% (4219/13607)
+2026-10-29T23:20:39.6975362Z Updating files:  32% (4355/13607)
+2026-10-29T23:20:39.7041056Z Updating files:  33% (4491/13607)
+2026-10-29T23:20:39.7158803Z Updating files:  34% (4627/13607)
+2026-10-29T23:20:39.7282987Z Updating files:  35% (4763/13607)
+2026-10-29T23:20:39.7390474Z Updating files:  36% (4899/13607)
+2026-10-29T23:20:39.7496179Z Updating files:  37% (5035/13607)
+2026-10-29T23:20:39.7599849Z Updating files:  38% (5171/13607)
+2026-10-29T23:20:39.7692032Z Updating files:  39% (5307/13607)
+2026-10-29T23:20:39.7795105Z Updating files:  40% (5443/13607)
+2026-10-29T23:20:39.7888429Z Updating files:  41% (5579/13607)
+2026-10-29T23:20:39.7970308Z Updating files:  42% (5715/13607)
+2026-10-29T23:20:39.8037623Z Updating files:  43% (5852/13607)
+2026-10-29T23:20:39.8110994Z Updating files:  44% (5988/13607)
+2026-10-29T23:20:39.8190971Z Updating files:  45% (6124/13607)
+2026-10-29T23:20:39.8244703Z Updating files:  46% (6260/13607)
+2026-10-29T23:20:39.8300944Z Updating files:  47% (6396/13607)
+2026-10-29T23:20:39.8379677Z Updating files:  48% (6532/13607)
+2026-10-29T23:20:39.8468155Z Updating files:  49% (6668/13607)
+2026-10-29T23:20:39.8563437Z Updating files:  50% (6804/13607)
+2026-10-29T23:20:39.8646621Z Updating files:  51% (6940/13607)
+2026-10-29T23:20:39.8738462Z Updating files:  52% (7076/13607)
+2026-10-29T23:20:39.8820851Z Updating files:  53% (7212/13607)
+2026-10-29T23:20:39.8909761Z Updating files:  54% (7348/13607)
+2026-10-29T23:20:39.8998733Z Updating files:  55% (7484/13607)
+2026-10-29T23:20:39.9080875Z Updating files:  56% (7620/13607)
+2026-10-29T23:20:39.9163410Z Updating files:  57% (7756/13607)
+2026-10-29T23:20:39.9240773Z Updating files:  58% (7893/13607)
+2026-10-29T23:20:39.9316909Z Updating files:  59% (8029/13607)
+2026-10-29T23:20:39.9395027Z Updating files:  60% (8165/13607)
+2026-10-29T23:20:39.9489401Z Updating files:  61% (8301/13607)
+2026-10-29T23:20:39.9565736Z Updating files:  62% (8437/13607)
+2026-10-29T23:20:39.9657348Z Updating files:  63% (8573/13607)
+2026-10-29T23:20:39.9742674Z Updating files:  64% (8709/13607)
+2026-10-29T23:20:39.9823127Z Updating files:  65% (8845/13607)
+2026-10-29T23:20:39.9904688Z Updating files:  66% (8981/13607)
+2026-10-29T23:20:39.9990903Z Updating files:  67% (9117/13607)
+2026-10-29T23:20:40.0072794Z Updating files:  68% (9253/13607)
+2026-10-29T23:20:40.0152521Z Updating files:  69% (9389/13607)
+2026-10-29T23:20:40.0222421Z Updating files:  70% (9525/13607)
+2026-10-29T23:20:40.0311511Z Updating files:  71% (9661/13607)
+2026-10-29T23:20:40.0382525Z Updating files:  72% (9798/13607)
+2026-10-29T23:20:40.0463586Z Updating files:  73% (9934/13607)
+2026-10-29T23:20:40.0540145Z Updating files:  74% (10070/13607)
+2026-10-29T23:20:40.0614346Z Updating files:  75% (10206/13607)
+2026-10-29T23:20:40.0697357Z Updating files:  76% (10342/13607)
+2026-10-29T23:20:40.0792927Z Updating files:  77% (10478/13607)
+2026-10-29T23:20:40.0888218Z Updating files:  78% (10614/13607)
+2026-10-29T23:20:40.0976527Z Updating files:  79% (10750/13607)
+2026-10-29T23:20:40.1057331Z Updating files:  80% (10886/13607)
+2026-10-29T23:20:40.1136350Z Updating files:  81% (11022/13607)
+2026-10-29T23:20:40.1237822Z Updating files:  82% (11158/13607)
+2026-10-29T23:20:40.1324062Z Updating files:  83% (11294/13607)
+2026-10-29T23:20:40.1402703Z Updating files:  84% (11430/13607)
+2026-10-29T23:20:40.1474977Z Updating files:  85% (11566/13607)
+2026-10-29T23:20:40.1551149Z Updating files:  86% (11703/13607)
+2026-10-29T23:20:40.1627388Z Updating files:  87% (11839/13607)
+2026-10-29T23:20:40.1707299Z Updating files:  88% (11975/13607)
+2026-10-29T23:20:40.1789032Z Updating files:  89% (12111/13607)
+2026-10-29T23:20:40.1870374Z Updating files:  90% (12247/13607)
+2026-10-29T23:20:40.1942158Z Updating files:  91% (12383/13607)
+2026-10-29T23:20:40.2025485Z Updating files:  92% (12519/13607)
+2026-10-29T23:20:40.2131241Z Updating files:  93% (12655/13607)
+2026-10-29T23:20:40.2227309Z Updating files:  94% (12791/13607)
+2026-10-29T23:20:40.2317129Z Updating files:  95% (12927/13607)
+2026-10-29T23:20:40.2416011Z Updating files:  96% (13063/13607)
+2026-10-29T23:20:40.2504535Z Updating files:  97% (13199/13607)
+2026-10-29T23:20:40.2593516Z Updating files:  98% (13335/13607)
+2026-10-29T23:20:40.2684214Z Updating files:  99% (13471/13607)
+2026-10-29T23:20:40.2684820Z Updating files: 100% (13607/13607)
+2026-10-29T23:20:40.2685409Z Updating files: 100% (13607/13607), done.
+2026-10-29T23:20:40.5077057Z Switched to a new branch 'codex/vo2168-current-shallow-checkout'
+2026-10-29T23:20:40.5078487Z branch 'codex/vo2168-current-shallow-checkout' set up to track 'origin/codex/vo2168-current-shallow-checkout'.
+2026-10-29T23:20:40.5239555Z ##[endgroup]
+2026-10-29T23:20:40.5305242Z [command]/usr/bin/git log -1 --format=%H
+2026-10-29T23:20:40.5347868Z 70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:40.5362156Z ##[group]Removing auth
+2026-10-29T23:20:40.5362899Z Removing SSH command configuration
+2026-10-29T23:20:40.5368974Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T23:20:40.5424039Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-29T23:20:40.6143869Z Removing HTTP extra header
+2026-10-29T23:20:40.6151098Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T23:20:40.6204309Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-29T23:20:40.6900709Z Removing includeIf entries pointing to credentials config files
+2026-10-29T23:20:40.6907137Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T23:20:40.6950897Z includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path
+2026-10-29T23:20:40.6952127Z includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path
+2026-10-29T23:20:40.6952900Z includeif.gitdir:/github/workspace/.git.path
+2026-10-29T23:20:40.6953499Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-29T23:20:40.6962694Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path
+2026-10-29T23:20:40.7007960Z /home/runner/work/_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:20:40.7019174Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path /home/runner/work/_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:20:40.7068520Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path
+2026-10-29T23:20:40.7107793Z /home/runner/work/_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:20:40.7118801Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:20:40.7177718Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-29T23:20:40.7215928Z /github/runner_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:20:40.7225792Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:20:40.7272217Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-29T23:20:40.7306753Z /github/runner_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:20:40.7316359Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config
+2026-10-29T23:20:40.7365258Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-29T23:20:40.8070366Z Removing credentials config '/home/runner/work/_temp/git-credentials-2d16c1db-377a-45ac-b293-37efcc2619a1.config'
+2026-10-29T23:20:40.8082427Z ##[endgroup]
+2026-10-29T23:20:40.8373404Z ##[group]Run actions/setup-node@v6
+2026-10-29T23:20:40.8373738Z with:
+2026-10-29T23:20:40.8373978Z   node-version: 22
+2026-10-29T23:20:40.8374218Z   check-latest: false
+2026-10-29T23:20:40.8377144Z   token: ***
+2026-10-29T23:20:40.8377395Z   package-manager-cache: true
+2026-10-29T23:20:40.8377677Z ##[endgroup]
+2026-10-29T23:20:41.0201321Z Found in cache @ /opt/hostedtoolcache/node/22.23.4/x64
+2026-10-29T23:20:41.0202665Z ##[group]Environment details
+2026-10-29T23:20:43.8097645Z node: v22.23.4
+2026-10-29T23:20:43.8098149Z npm: 10.9.9
+2026-10-29T23:20:43.8098584Z yarn: 1.22.22
+2026-10-29T23:20:43.8099453Z ##[endgroup]
+2026-10-29T23:20:43.8328394Z ##[group]Run actions/download-artifact@v5
+2026-10-29T23:20:43.8328733Z with:
+2026-10-29T23:20:43.8329098Z   pattern: dependent-checked-record-*-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:43.8329606Z   path: build/dependent-signature-matrix-input
+2026-10-29T23:20:43.8330303Z   merge-multiple: false
+2026-10-29T23:20:43.8330573Z   repository: seanmorris/lean-bridge
+2026-10-29T23:20:43.8330843Z   run-id: 40961670189
+2026-10-29T23:20:43.8331059Z ##[endgroup]
+2026-10-29T23:20:44.0281465Z (node:2467) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-29T23:20:44.0283660Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-29T23:20:44.1179030Z Found 11 artifact(s)
+2026-10-29T23:20:44.1181260Z Filtering artifacts by pattern 'dependent-checked-record-*-70652587f69c330ea0feebb7bc4c6da6b20f4f04'
+2026-10-29T23:20:44.1204816Z Preparing to download the following artifacts:
+2026-10-29T23:20:44.1207614Z - dependent-checked-record-php-wasm-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12941385582, Size: 7792806, Expected Digest: sha256:eca68e16e8d58c692b3a28fc9201d5a234aec6e45fbf6d9bacc82a5b7eb14f4a)
+2026-10-29T23:20:44.1211827Z - dependent-checked-record-jvm-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12940250879, Size: 205430780, Expected Digest: sha256:89ea12007863c668bfa15713c16e003248d8622c1f9e95872b7cbdb5f535358a)
+2026-10-29T23:20:44.1215806Z - dependent-checked-record-wit-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12939740414, Size: 237325590, Expected Digest: sha256:98911028486755595af72b138c311cddf9cf549bf5b38ed44f8f2995b0844fd2)
+2026-10-29T23:20:44.1219653Z - dependent-checked-record-dotnet-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12938570677, Size: 205154680, Expected Digest: sha256:adfe1a6d97d196b1d71c3d9f05ac65fad52a9642c554195735c0ded1b351ad42)
+2026-10-29T23:20:44.1223752Z - dependent-checked-record-python-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12938369648, Size: 206525440, Expected Digest: sha256:885b596ccec3681c33f42eeec909b7429341121ed2d7dd80ff325ada935c213c)
+2026-10-29T23:20:44.1227517Z - dependent-checked-record-ruby-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12938243749, Size: 200236722, Expected Digest: sha256:fe3a965ba9375693346526f6790d858525ed45ca700a4fd15eeab26a5c60bedb)
+2026-10-29T23:20:44.1245468Z - dependent-checked-record-php-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12938217320, Size: 205495012, Expected Digest: sha256:960f3de7a6623df96ae6dff838373adfa7cd0cefac084222cbe962a7ca49c025)
+2026-10-29T23:20:44.1248823Z - dependent-checked-record-browser-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12938141304, Size: 6976986, Expected Digest: sha256:fa7b8699f215570f773a22088e9b2b53ba6584c0428b90d3e840f606a9c10806)
+2026-10-29T23:20:44.1252358Z - dependent-checked-record-rust-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12937891581, Size: 210759919, Expected Digest: sha256:dadff39203868d02acbaf80dde6620609a7576a0110e3c935073b3ed20e50c8e)
+2026-10-29T23:20:44.1255570Z - dependent-checked-record-perl-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12937850438, Size: 206254015, Expected Digest: sha256:590599dfc152a41df409535b60f677b7e7d52cf04901ee627af0a317a4dbd948)
+2026-10-29T23:20:44.1259145Z - dependent-checked-record-native-70652587f69c330ea0feebb7bc4c6da6b20f4f04 (ID: 12937425711, Size: 421720127, Expected Digest: sha256:3ac60e106b4a51b57b89592d47ac615993568a2330c10572f8843d5ab5b6c938)
+2026-10-29T23:20:44.2548432Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-008b06a4-0281-5f7f-ad8d-0d71e669fd00/artifacts/5beff85f0c82ca728885df57921e8c0899b9e7585ec10958f5169e41009611a5.zip
+2026-10-29T23:20:44.2552694Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-php-wasm-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.2782410Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-5cfad3f8-eb57-5ad4-bde1-2b4dbd716439/artifacts/4aaf1a0aa26e400f69961d3c4ac4b52b1244dbd41d4657d08218fe0a32086afc.zip
+2026-10-29T23:20:44.2786374Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-dotnet-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.2871293Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-1327283f-a250-5103-9d60-06f9e7ce163a/artifacts/87799adb6647ff01642099e13aea0719d56d2eee8e8b2814b139c5c5906bfa62.zip
+2026-10-29T23:20:44.2875465Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-python-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.2887932Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-3613e0a2-e858-5cbf-9b01-ee2df864aa6b/artifacts/3ae4b464df850052037fd916c939bfe63674e25a56420e51a5f4127c9280d104.zip
+2026-10-29T23:20:44.2892072Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-jvm-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.2950797Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-56a46b78-ca17-58d6-98d5-a2598e1efd3f/artifacts/29dd9f1787f9e68dd37ab7e3b1c501d26f5b37182be8a03cf7903f236ae468c3.zip
+2026-10-29T23:20:44.2954975Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-wit-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.3012225Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-270d5fb7-6c20-5378-a19b-af65b2a58526/artifacts/6e4d653403971d821e28fc12d42bbca5fcf42643c981cea8911a752400e692ce.zip
+2026-10-29T23:20:44.3016699Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-perl-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.3046909Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-f753db5b-997e-554b-815a-9eeaacf952ed/artifacts/eb647e4b716b736f66e2db8077d0b1090b27d3d408b2930c28be28fcc40310a0.zip
+2026-10-29T23:20:44.3051815Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-rust-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.3119586Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-70696683-c06b-5dca-bc09-eaf8c782ed44/artifacts/f3fcedb3476520c13962b72ae29bb0c8d4d070354eff1d946203a2ca9f7e2637.zip
+2026-10-29T23:20:44.3123650Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-ruby-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.3173313Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-de1a7e56-d3b6-5698-91af-a4913a2c2e78/artifacts/cc81102f802a8fb9c1a6ad323e6306d2c0c8d6bd4de060c7ba6cd26b0f3a66fa.zip
+2026-10-29T23:20:44.3177216Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-browser-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.3190913Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-864189e4-48e7-51e5-84a3-920540591973/artifacts/f084f12564a6fa8a10ce48b24917a37d76d0c183ba6c5c8952c6eb50d91b9737.zip
+2026-10-29T23:20:44.3195379Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-native-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.3204033Z Redirecting to blob download url: https://productionresultssa4.blob.core.windows.net/actions-results/83715df4-cfd3-4df6-9eea-f1ccd2b75fc3/workflow-job-run-2432776f-a30e-5d23-a46d-bbe879b04eb6/artifacts/cfb9fab416d73bb8134fbb046b5952399b45b149253ae3bb35b519940aedcb87.zip
+2026-10-29T23:20:44.3207982Z Starting download of artifact to: /home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix-input/dependent-checked-record-php-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:20:44.3382585Z (node:2467) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-10-29T23:20:45.4125462Z SHA256 digest of downloaded artifact is fa7b8699f215570f773a22088e9b2b53ba6584c0428b90d3e840f606a9c10806
+2026-10-29T23:20:45.4126728Z Artifact download completed successfully.
+2026-10-29T23:20:45.4567597Z SHA256 digest of downloaded artifact is eca68e16e8d58c692b3a28fc9201d5a234aec6e45fbf6d9bacc82a5b7eb14f4a
+2026-10-29T23:20:45.4568953Z Artifact download completed successfully.
+2026-10-29T23:21:00.7301434Z SHA256 digest of downloaded artifact is fe3a965ba9375693346526f6790d858525ed45ca700a4fd15eeab26a5c60bedb
+2026-10-29T23:21:00.7302278Z Artifact download completed successfully.
+2026-10-29T23:21:01.0881637Z SHA256 digest of downloaded artifact is adfe1a6d97d196b1d71c3d9f05ac65fad52a9642c554195735c0ded1b351ad42
+2026-10-29T23:21:01.0882955Z Artifact download completed successfully.
+2026-10-29T23:21:01.1057318Z SHA256 digest of downloaded artifact is 960f3de7a6623df96ae6dff838373adfa7cd0cefac084222cbe962a7ca49c025
+2026-10-29T23:21:01.1058590Z Artifact download completed successfully.
+2026-10-29T23:21:01.1070380Z SHA256 digest of downloaded artifact is 89ea12007863c668bfa15713c16e003248d8622c1f9e95872b7cbdb5f535358a
+2026-10-29T23:21:01.1071707Z Artifact download completed successfully.
+2026-10-29T23:21:01.1114842Z SHA256 digest of downloaded artifact is 885b596ccec3681c33f42eeec909b7429341121ed2d7dd80ff325ada935c213c
+2026-10-29T23:21:01.1116048Z Artifact download completed successfully.
+2026-10-29T23:21:01.1405104Z SHA256 digest of downloaded artifact is 590599dfc152a41df409535b60f677b7e7d52cf04901ee627af0a317a4dbd948
+2026-10-29T23:21:01.1406300Z Artifact download completed successfully.
+2026-10-29T23:21:01.2393277Z SHA256 digest of downloaded artifact is dadff39203868d02acbaf80dde6620609a7576a0110e3c935073b3ed20e50c8e
+2026-10-29T23:21:01.2394224Z Artifact download completed successfully.
+2026-10-29T23:21:01.7548095Z SHA256 digest of downloaded artifact is 98911028486755595af72b138c311cddf9cf549bf5b38ed44f8f2995b0844fd2
+2026-10-29T23:21:01.7549513Z Artifact download completed successfully.
+2026-10-29T23:21:03.9900639Z SHA256 digest of downloaded artifact is 3ac60e106b4a51b57b89592d47ac615993568a2330c10572f8843d5ab5b6c938
+2026-10-29T23:21:03.9901511Z Artifact download completed successfully.
+2026-10-29T23:21:03.9901975Z Total of 11 artifact(s) downloaded
+2026-10-29T23:21:03.9909038Z Download artifact has finished successfully
+2026-10-29T23:21:04.0232944Z ##[group]Run node scripts/reconcile-dependent-signature-matrix.mjs \
+2026-10-29T23:21:04.0233746Z [36;1mnode scripts/reconcile-dependent-signature-matrix.mjs \[0m
+2026-10-29T23:21:04.0234426Z [36;1m  --directory build/dependent-signature-matrix-input \[0m
+2026-10-29T23:21:04.0235073Z [36;1m  --output build/dependent-signature-matrix/receipt.json \[0m
+2026-10-29T23:21:04.0235710Z [36;1m  --producer "70652587f69c330ea0feebb7bc4c6da6b20f4f04" \[0m
+2026-10-29T23:21:04.0236271Z [36;1m  --repository "seanmorris/lean-bridge" \[0m
+2026-10-29T23:21:04.0236887Z [36;1m  --workflow ".github/workflows/dependent-signature-complete.yml" \[0m
+2026-10-29T23:21:04.0237478Z [36;1m  --run-id "40961670189" \[0m
+2026-10-29T23:21:04.0237870Z [36;1m  --run-attempt "1"[0m
+2026-10-29T23:21:04.0268867Z shell: /usr/bin/bash -e {0}
+2026-10-29T23:21:04.0269266Z ##[endgroup]
+2026-10-29T23:21:04.1110334Z {
+2026-10-29T23:21:04.1110972Z   "apiModes": 2,
+2026-10-29T23:21:04.1111594Z   "authorRoutes": 2,
+2026-10-29T23:21:04.1111985Z   "cells": 34,
+2026-10-29T23:21:04.1112273Z   "lanes": 11,
+2026-10-29T23:21:04.1112956Z   "output": "/home/runner/work/lean-bridge/lean-bridge/build/dependent-signature-matrix/receipt.json",
+2026-10-29T23:21:04.1113718Z   "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+2026-10-29T23:21:04.1114177Z   "profiles": 17,
+2026-10-29T23:21:04.1114858Z   "reports": 44
+2026-10-29T23:21:04.1115306Z }
+2026-10-29T23:21:04.1232435Z ##[group]Run actions/upload-artifact@v7
+2026-10-29T23:21:04.1232856Z with:
+2026-10-29T23:21:04.1233327Z   name: dependent-signature-matrix-70652587f69c330ea0feebb7bc4c6da6b20f4f04
+2026-10-29T23:21:04.1233984Z   path: build/dependent-signature-matrix/receipt.json
+2026-10-29T23:21:04.1234438Z   if-no-files-found: error
+2026-10-29T23:21:04.1234767Z   overwrite: true
+2026-10-29T23:21:04.1235075Z   retention-days: 30
+2026-10-29T23:21:04.1235410Z   compression-level: 6
+2026-10-29T23:21:04.1235740Z   include-hidden-files: false
+2026-10-29T23:21:04.1236113Z   archive: true
+2026-10-29T23:21:04.1236427Z ##[endgroup]
+2026-10-29T23:21:04.2777673Z With the provided path, there will be 1 file uploaded
+2026-10-29T23:21:04.3576230Z Artifact name is valid!
+2026-10-29T23:21:04.3577683Z Root directory input is valid!
+2026-10-29T23:21:04.5304501Z Uploading artifact: dependent-signature-matrix-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip
+2026-10-29T23:21:04.5350434Z Beginning upload of artifact content to blob storage
+2026-10-29T23:21:04.6323391Z Uploaded bytes 30068
+2026-10-29T23:21:04.6566919Z Finished uploading artifact content to blob storage!
+2026-10-29T23:21:04.6568816Z SHA256 digest of uploaded artifact is 30aedce7f83175e9cb21c8a057ff0968e32997cda75bbe1a3c7b8254fb3e2a95
+2026-10-29T23:21:04.6570872Z Finalizing artifact upload
+2026-10-29T23:21:05.0791591Z Artifact dependent-signature-matrix-70652587f69c330ea0feebb7bc4c6da6b20f4f04 successfully finalized. Artifact ID 12941316061
+2026-10-29T23:21:05.0794233Z Artifact dependent-signature-matrix-70652587f69c330ea0feebb7bc4c6da6b20f4f04 has been successfully uploaded! Final size is 30068 bytes. Artifact ID is 12941316061
+2026-10-29T23:21:05.0797330Z Artifact download URL: https://github.com/seanmorris/lean-bridge/actions/runs/40961670189/artifacts/12941316061
+2026-10-29T23:21:05.1056453Z Post job cleanup.
+2026-10-29T23:21:05.2600473Z Post job cleanup.
+2026-10-29T23:21:05.3701167Z [command]/usr/bin/git version
+2026-10-29T23:21:05.3761244Z git version 2.56.0
+2026-10-29T23:21:05.3833893Z Temporarily overriding HOME='/home/runner/work/_temp/1dee7589-deed-4a3e-9c1f-8366b01cb839' before making global git config changes
+2026-10-29T23:21:05.3835812Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-29T23:21:05.3837464Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lean-bridge/lean-bridge
+2026-10-29T23:21:05.3866953Z Removing SSH command configuration
+2026-10-29T23:21:05.3877512Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-29T23:21:05.3944556Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-29T23:21:05.4819465Z Removing HTTP extra header
+2026-10-29T23:21:05.4837029Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-29T23:21:05.4856355Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-29T23:21:05.5612219Z Removing includeIf entries pointing to credentials config files
+2026-10-29T23:21:05.5622067Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-29T23:21:05.5676662Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-29T23:21:05.6543980Z Cleaning up orphan processes
+2026-10-29T23:21:05.7044383Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/download-artifact@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

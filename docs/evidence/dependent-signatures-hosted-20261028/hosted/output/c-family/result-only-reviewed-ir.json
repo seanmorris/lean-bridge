@@ -1,0 +1,73 @@
+{
+  "checks": 1026,
+  "executions": 4,
+  "floor": "2.38",
+  "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "receipt": {
+    "component": {
+      "id": "dependentrecords@1.0.0",
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 53816880,
+            "path": "archives/dependentrecords-1.0.0-c.tar.gz",
+            "sha256": "5e4ec3ea2dd97f3eddc8cf3c655a71f62d6c129c6504d161d8fb548d5aa70402"
+          }
+        ],
+        "ecosystem": "c",
+        "name": "dependentrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "c",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51749040,
+            "path": "archives/dependentrecords-1.0.0-cpp.tar.gz",
+            "sha256": "cc2ffd4db1b05798bf2d8b2a30b6d0b4c6b23da395ea8ceb5f7d28ae01abe6ba"
+          }
+        ],
+        "ecosystem": "cpp",
+        "name": "dependentrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpp",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "55e26170502fab9bee5c0770e3b06fec48b5fc03e05c967f538e6a8ad1a53eb1",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "5dd78a70da418337fde844ffd0221a2850d946285d2365bedf4ac9cb90db494e"
+    }
+  },
+  "reportSha256": "9ca219b3088c477f02e52b968c872600c696a7634ef4949f2c7aef614630680e",
+  "route": "result-only-reviewed-ir",
+  "sourceIdentities": {
+    "checker": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+    "producer": "70652587f69c330ea0feebb7bc4c6da6b20f4f04"
+  }
+}

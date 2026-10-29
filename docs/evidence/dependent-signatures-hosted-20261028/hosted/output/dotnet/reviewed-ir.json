@@ -1,0 +1,51 @@
+{
+  "consumerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+  "controls": {
+    "callerControls": 1,
+    "gitBindingControls": 1,
+    "observationControls": 1,
+    "packageControls": 1,
+    "runtimeControls": 1,
+    "semanticControls": 1,
+    "toolchainControls": 1
+  },
+  "dotnet": "8.0.424",
+  "glibc": "2.39",
+  "mode": "full",
+  "observations": [
+    {
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "stage": "installed"
+    },
+    {
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "stage": "relocated"
+    },
+    {
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "stage": "source-free"
+    }
+  ],
+  "packageSha256": "f3e80843136cb89be5fe4a7d6660f765cab5140e23e6504bec4b865694a4ffb0",
+  "producerCommit": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+  "route": "reviewed-ir",
+  "schemaVersion": 1
+}
