@@ -7,8 +7,6 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeDependentSignatureFocusedCiSource }
-	from "./dependent-signature-focused-ci-source-history.mjs";
 import {
 	beforeDirectProofErasureFocusedCiSource
 	, directProofErasureFocusedCiHistoryAdditions
@@ -113,9 +111,8 @@ test("focused proof-erasure CI authenticates every history control"
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${directProofErasureFocusedCiImplementation}:${addition.path}`]
 			, { stdio: "ignore" }).status, 0, addition.path);
-		assert.equal(sha256(beforeDependentSignatureFocusedCiSource(
-			addition.path, await readFile(addition.path, "utf8")
-			, addition.sha256))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.sha256))
 			, addition.sha256, addition.path);
 	}
 	for(const path of [

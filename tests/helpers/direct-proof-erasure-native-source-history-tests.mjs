@@ -77,12 +77,8 @@ test("direct proof erasure native acceptance reverses every source", async () =>
 test("direct proof erasure native additions retain exact identities", async () => {
 	for(const addition of (await record()).additions)
 	{
-		const live = exists(directProofErasureNativeImplementation, addition.path)
-			? git(["show", `${directProofErasureNativeImplementation}:${addition.path}`])
-			: await readFile(addition.path);
-		const source = beforeFinRefinementSource(
-			addition.path, live, addition.currentSha256
-		);
+		const source = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256);
 		assert.equal(sha256(source), addition.currentSha256, addition.path);
 		assert.equal(exists(directProofErasureNativePredecessor, addition.path)
 			, false, addition.path);

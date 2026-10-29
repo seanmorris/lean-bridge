@@ -80,12 +80,8 @@ test("direct proof erasure fixture reverses every recorded source", async () => 
 test("direct proof erasure fixture additions retain exact identities", async () => {
 	for(const addition of (await record()).additions)
 	{
-		const live = exists(directProofErasureFixtureImplementation, addition.path)
-			? git(["show", `${directProofErasureFixtureImplementation}:${addition.path}`])
-			: await readFile(addition.path);
-		const source = beforeFinRefinementSource(
-			addition.path, live, addition.currentSha256
-		);
+		const source = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256);
 		assert.equal(sha256(source), addition.currentSha256, addition.path);
 		assert.equal(exists(directProofErasureFixturePredecessor, addition.path)
 			, false, addition.path);

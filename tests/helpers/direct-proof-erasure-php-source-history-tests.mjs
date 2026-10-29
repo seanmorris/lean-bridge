@@ -77,12 +77,8 @@ test("direct proof erasure PHP acceptance reverses every source", async () => {
 test("direct proof erasure PHP additions retain exact identities", async () => {
 	for(const addition of (await record()).additions)
 	{
-		const live = exists(directProofErasurePhpImplementation, addition.path)
-			? git(["show", `${directProofErasurePhpImplementation}:${addition.path}`])
-			: await readFile(addition.path, "utf8");
-		const source = beforeFinRefinementSource(
-			addition.path, live, addition.currentSha256
-		);
+		const source = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256);
 		assert.equal(sha256(source), addition.currentSha256, addition.path);
 		assert.equal(exists(directProofErasurePhpPredecessor, addition.path)
 			, false, addition.path);

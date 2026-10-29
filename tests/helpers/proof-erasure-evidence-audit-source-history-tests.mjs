@@ -78,13 +78,8 @@ test("proof erasure evidence audit additions retain exact identities", async () 
 	{
 		assert.equal(git(["ls-tree", "--name-only"
 			, proofErasureEvidenceAuditPredecessor, "--", addition.path]).trim(), "");
-		const live = proofErasureEvidenceAuditCommits.some(commit =>
-			git(["ls-tree", "--name-only", commit, "--", addition.path]).trim())
-			? git(["show", `${proofErasureEvidenceAuditImplementation}:${addition.path}`])
-			: await readFile(addition.path);
-		const source = beforeFinRefinementSource(
-			addition.path, live, addition.currentSha256
-		);
+		const source = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256);
 		assert.equal(sha256(source), addition.currentSha256, addition.path);
 	}
 });

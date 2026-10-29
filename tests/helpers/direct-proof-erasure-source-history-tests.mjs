@@ -80,9 +80,8 @@ test("direct proof erasure history additions retain exact identities", async () 
 	{
 		assert.equal(git(["ls-tree", "--name-only"
 			, directProofErasureImplementation, "--", addition.path]).trim(), "");
-		const source = beforeFinRefinementSource(
-			addition.path, await readFile(addition.path), addition.currentSha256
-		);
+		const source = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256);
 		assert.equal(sha256(source)
 			, addition.currentSha256, addition.path);
 	}

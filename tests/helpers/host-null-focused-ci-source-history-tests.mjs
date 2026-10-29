@@ -101,7 +101,8 @@ test("focused HostNull CI authenticates every history control", async () => {
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${hostNullFocusedCiImplementation}:${addition.path}`]
 			, { stdio: "ignore" }).status, 0, addition.path);
-		assert.equal(sha256(await readFile(addition.path, "utf8"))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.sha256))
 			, addition.sha256, addition.path);
 	}
 	for(const path of [

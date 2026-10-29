@@ -123,7 +123,8 @@ test("focused dependent-signature CI authenticates every history control"
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${dependentSignatureFocusedCiImplementation}:${addition.path}`]
 			, { stdio: "ignore" }).status, 0, addition.path);
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.sha256))
 			, addition.sha256, addition.path);
 	}
 	for(const path of [

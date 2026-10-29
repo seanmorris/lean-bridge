@@ -82,13 +82,8 @@ test("managed direct proof acceptance reverses every source", async () => {
 test("managed direct proof additions retain exact identities", async () => {
 	for(const addition of (await record()).additions)
 	{
-		const live = exists(directProofErasureManagedImplementation, addition.path)
-			? git(["show"
-				, `${directProofErasureManagedImplementation}:${addition.path}`])
-			: await readFile(addition.path);
-		const source = beforeFinRefinementSource(
-			addition.path, live, addition.currentSha256
-		);
+		const source = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256);
 		assert.equal(sha256(source), addition.currentSha256, addition.path);
 		assert.equal(exists(directProofErasureManagedPredecessor, addition.path)
 			, false, addition.path);
