@@ -1,0 +1,154 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b9aed45c12187b87398d481ae18427d47e336e7e9fab7ff79d612a69cb043226",
+      "path": "scripts/update-generated-output-control-repair-type-surface-lineage-source-history.mjs"
+    },
+    {
+      "currentSha256": "b9cff404e899e51363af37819a3e1670446d6240f641019c58448971dcd1187f",
+      "path": "tests/helpers/generated-output-control-repair-type-surface-lineage-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "66a20b8f1bfb36909506f64d53a1775df02e24ffaabe8731cbc5583cf6902c6a",
+      "path": "tests/helpers/generated-output-control-repair-type-surface-lineage-source-history.mjs"
+    }
+  ],
+  "anchorSha256": "4a2f092fc89451b1692c3ea546910acb5d6ab793f1f45f928a688e83f8c32865",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9a9bee35de67c3278c33a33e0dd9e7dd6764dea0211437a2305c2262522503ff",
+      "edits": [
+        {
+          "current": "import \"./helpers/generated-output-control-repair-type-surface-lineage-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "851220b6f132be286d0f704dcf026dea1d5f68e7271c4fb809e23e4eee76fa3f"
+    },
+    {
+      "currentSha256": "1e1796513b1509a90989e53015ecaf8e8023f7be485c90f358099471ecc3612f",
+      "edits": [
+        {
+          "current": "import { beforeGeneratedOutputControlRepairTypeSurfaceIntegrationSource, beforeGeneratedOutputControlRepairTypeSurfaceSource, generatedOutputControlRepairTypeSurfaceNormalizationPaths } from \"./generated-output-control-repair-type-surface-lineage-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...generatedOutputControlRepairTypeSurfaceNormalizationPaths\n\t, ...generatedOutputControlRepairNormalizationPaths\n",
+          "previous": "\t...generatedOutputControlRepairNormalizationPaths\n",
+          "start": 216511
+        },
+        {
+          "current": "\tlet stage = beforeGeneratedOutputControlRepairTypeSurfaceIntegrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeGeneratedOutputControlRepairIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeGeneratedOutputControlRepairTypeSurfaceSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeGeneratedOutputControlRepairIntegrationSource(path, text, expected);\n",
+          "start": 270777
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "79552d1545bb1d261b14dadcb06a96b6f694b66a222c5e0fb2894eab62ac1e19"
+    }
+  ],
+  "milestone": "generated-output-control-repair-type-surface-lineage-source-v1",
+  "predecessorCommit": "bdf458af2e3a3ef22717940f72270cc2e6d6877c",
+  "schemaVersion": 1,
+  "scope": "Authenticate exactly 17 live type-surface pointer changes: 15 Perl generator references spanning the recorded scripting HostNull projection and whitespace correction, plus two JVM structured-regression reader references. Preserve every other inventory byte and register the streamed transition newest-first above the generated-output product-history layer.",
+  "targetSha256": "a2e6eb3bd5c2ad19cf1057e0cfdc84ea91ad927f50fb36f2788a0316ef88d57e",
+  "updates": [
+    {
+      "commit": "0b8d29a1936a39cef94ac6174c45860e69c5652e",
+      "currentSha256": "a2e6eb3bd5c2ad19cf1057e0cfdc84ea91ad927f50fb36f2788a0316ef88d57e",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 62772
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 268144
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 309758
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 409504
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 515222
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 570771
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 604431
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 659400
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 812089
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 828473
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 846644
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 980014
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 1029581
+        },
+        {
+          "current": "          \"sha256\": \"08bb46375533a9ce7a98230bbb94ed58a0bec34af64cbcbf4210cffba137f6ce\"\n",
+          "previous": "          \"sha256\": \"2ea54cb19621db1c27eef43330f110e65fb79568d0c42d3da0a10c323be21672\"\n",
+          "start": 1120935
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 1127512
+        },
+        {
+          "current": "          \"sha256\": \"810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719\"\n",
+          "previous": "          \"sha256\": \"7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b\"\n",
+          "start": 1297039
+        },
+        {
+          "current": "          \"sha256\": \"08bb46375533a9ce7a98230bbb94ed58a0bec34af64cbcbf4210cffba137f6ce\"\n",
+          "previous": "          \"sha256\": \"2ea54cb19621db1c27eef43330f110e65fb79568d0c42d3da0a10c323be21672\"\n",
+          "start": 1367192
+        }
+      ],
+      "parent": "b9c7b30a610dbf39d46a5346e8d655ea975a1dd9",
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4a2f092fc89451b1692c3ea546910acb5d6ab793f1f45f928a688e83f8c32865"
+    }
+  ]
+}

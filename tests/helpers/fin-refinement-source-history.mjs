@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeGeneratedOutputControlRepairTypeSurfaceIntegrationSource, beforeGeneratedOutputControlRepairTypeSurfaceSource, generatedOutputControlRepairTypeSurfaceNormalizationPaths } from "./generated-output-control-repair-type-surface-lineage-source-history.mjs";
 import { beforeGeneratedOutputControlRepairIntegrationSource, beforeGeneratedOutputControlRepairSource, generatedOutputControlRepairNormalizationPaths } from "./generated-output-control-repair-source-history.mjs";
 import { beforeHostNullScriptingTypeSurfaceIntegrationSource, beforeHostNullScriptingTypeSurfaceSource, hostNullScriptingTypeSurfaceNormalizationPaths } from "./host-null-scripting-type-surface-lineage-source-history.mjs";
 import { beforeHostNullScriptingIntegrationSource, beforeHostNullScriptingSource, hostNullScriptingNormalizationPaths } from "./host-null-scripting-source-history.mjs";
@@ -2365,7 +2366,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...generatedOutputControlRepairNormalizationPaths
+	...generatedOutputControlRepairTypeSurfaceNormalizationPaths
+	, ...generatedOutputControlRepairNormalizationPaths
 	, ...hostNullScriptingTypeSurfaceNormalizationPaths
 	, ...hostNullScriptingNormalizationPaths
 	, ...hostNullDownstreamNormalizationPaths
@@ -3469,7 +3471,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeGeneratedOutputControlRepairIntegrationSource(path, text, expected);
+	let stage = beforeGeneratedOutputControlRepairTypeSurfaceIntegrationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeGeneratedOutputControlRepairIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeGeneratedOutputControlRepairTypeSurfaceSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
