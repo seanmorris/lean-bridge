@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeHostNullSystemsTypeSurfaceIntegrationSource, beforeHostNullSystemsTypeSurfaceSource, hostNullSystemsTypeSurfaceNormalizationPaths } from "./host-null-systems-type-surface-lineage-source-history.mjs";
 import { beforeHostNullSystemsIntegrationSource, beforeHostNullSystemsSource, hostNullSystemsNormalizationPaths } from "./host-null-systems-source-history.mjs";
 import { beforeGeneratedOutputControlRepairTypeSurfaceIntegrationSource, beforeGeneratedOutputControlRepairTypeSurfaceSource, generatedOutputControlRepairTypeSurfaceNormalizationPaths } from "./generated-output-control-repair-type-surface-lineage-source-history.mjs";
 import { beforeGeneratedOutputControlRepairIntegrationSource, beforeGeneratedOutputControlRepairSource, generatedOutputControlRepairNormalizationPaths } from "./generated-output-control-repair-source-history.mjs";
@@ -2367,7 +2368,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostNullSystemsNormalizationPaths
+	...hostNullSystemsTypeSurfaceNormalizationPaths
+	, ...hostNullSystemsNormalizationPaths
 	, ...generatedOutputControlRepairTypeSurfaceNormalizationPaths
 	, ...generatedOutputControlRepairNormalizationPaths
 	, ...hostNullScriptingTypeSurfaceNormalizationPaths
@@ -3473,7 +3475,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeHostNullSystemsIntegrationSource(path, text, expected);
+	let stage = beforeHostNullSystemsTypeSurfaceIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullSystemsIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullSystemsTypeSurfaceSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
