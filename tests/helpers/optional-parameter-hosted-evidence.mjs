@@ -34,15 +34,20 @@ import {
 } from "./optional-parameter-complete-promotion.mjs";
 
 export const optionalParameterHostedEvidencePins = Object.freeze({
-	index: "PENDING_OPTIONAL_PARAMETER_INDEX"
+	index: "cee29c6cfb0acd30836221b2c3ae6aa6c494120565308fbffa9c6deec5165b46"
 	, producer: optionalParameterHostedProducer
-	, archive: "PENDING_OPTIONAL_PARAMETER_ARCHIVE"
+	, archive: "faf28c4216c0b68a742d4e5f6119432d78912e2f"
 	, runId: optionalParameterHostedRunId
 });
 
 const exactKeys = (value, keys, label) => assert.deepEqual(
 	Object.keys(value).sort(), [...keys].sort(), label
 );
+const apiRecords = api => Object.fromEntries(Object.entries(api).map(
+	([name, record]) => [name, {
+		bytes: record.bytes.length, sha256: record.sha256
+	}]
+));
 const safePath = path => typeof path === "string" && path.length > 0
 	&& !/[\0\r\n]/u.test(path) && !path.startsWith("/")
 	&& path.split("/").every(part => part && part !== "." && part !== ".."
@@ -189,7 +194,8 @@ export const checkOptionalParameterHostedEvidence = async (
 				const selected = await inspectOptionalParameterHostedArtifact(
 					inputs, lane);
 				assert.deepEqual(archived.hostedRun, {
-					...selected.hostedRun, artifact: {
+					...selected.hostedRun, apiRecords: apiRecords(selected.api)
+					, artifact: {
 						...selected.hostedRun.artifact
 						, members: archived.hostedRun.artifact.members
 						, parts: archived.hostedRun.artifact.parts
@@ -240,7 +246,8 @@ export const checkOptionalParameterHostedEvidence = async (
 				, index.aggregate.hostedRun.artifact.sha256);
 			const selected = await inspectOptionalParameterHostedReceipt(inputs);
 			assert.deepEqual(index.aggregate.hostedRun, {
-				...selected.hostedRun, artifact: {
+				...selected.hostedRun, apiRecords: apiRecords(selected.api)
+				, artifact: {
 					...selected.hostedRun.artifact
 					, members: index.aggregate.hostedRun.artifact.members
 					, parts: index.aggregate.hostedRun.artifact.parts
