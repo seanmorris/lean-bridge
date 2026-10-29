@@ -1,0 +1,224 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ec99cd799c452d39417c9af813bfeda132d10430b0633892d0327e5c9057a87a",
+      "path": "scripts/check-host-null-managed-ci.mjs"
+    },
+    {
+      "currentSha256": "6c587c370350a15a176c10c588fa21ab51c8aa1d1966738d271f8a47191b087a",
+      "path": "scripts/refresh-host-null-downstream-pins.mjs"
+    },
+    {
+      "currentSha256": "343566c0555a542fa870afe0952ef59bdfb1e69fdd3c9bc46c1fe89eabd1c012",
+      "path": "scripts/run-host-null-managed-ci.sh"
+    },
+    {
+      "currentSha256": "ef9b96bb9e411de930eb74a5e63250c85d903933de1edd7b4675af13ce0d11e0",
+      "path": "tests/fixtures/host-null-consumers/dotnet.cs"
+    },
+    {
+      "currentSha256": "cd651f2c6f88f504e454de6e50d6e854e1c43c6c651f2f0dd874aeaf786f8e01",
+      "path": "tests/fixtures/host-null-consumers/java.java"
+    },
+    {
+      "currentSha256": "fd4f890be8b4b0713d9c8b87d1705be3d67092753eed3afb68221a7e213a4c62",
+      "path": "tests/fixtures/host-null-consumers/kotlin.kt"
+    },
+    {
+      "currentSha256": "dbf37d65f4bc9282c5aa7f7d09fef199b8d23462468e367c5dae4bc27f09b690",
+      "path": "tests/helpers/host-null-managed-installed.mjs"
+    },
+    {
+      "currentSha256": "711a81b50c5c87212d35c0d83f46b71850bfb539e7173e2fc03686c735bca817",
+      "path": "scripts/update-host-null-downstream-source-history.mjs"
+    },
+    {
+      "currentSha256": "5621e46bd5f3c0fee788bcc230d39e655133db6c3c6c67130ca32f49a3ff0c3f",
+      "path": "tests/helpers/host-null-downstream-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "3ebb98d8c3916211d2f330f16dcf740beba0a7468f4addd80f424ff26d107ee7",
+      "path": "tests/helpers/host-null-downstream-source-history.mjs"
+    }
+  ],
+  "commits": [
+    {
+      "added": [
+        "scripts/check-host-null-managed-ci.mjs",
+        "scripts/run-host-null-managed-ci.sh",
+        "tests/fixtures/host-null-consumers/dotnet.cs",
+        "tests/fixtures/host-null-consumers/java.java",
+        "tests/fixtures/host-null-consumers/kotlin.kt",
+        "tests/helpers/host-null-managed-installed.mjs"
+      ],
+      "commit": "78c3ad61336ef7d4d4212e05d6825061b4641e5f",
+      "modified": [
+        ".github/workflows/consumer-matrix.yml",
+        "tests/dotnet-host-null-contract.test.mjs",
+        "tests/jvm-host-null-contract.test.mjs"
+      ],
+      "parent": "9a333bafef6b77c112d4f36c40d45a439dfae84e",
+      "subject": "Run HostNull through installed managed packages [skip ci]"
+    },
+    {
+      "added": [
+        "scripts/refresh-host-null-downstream-pins.mjs"
+      ],
+      "commit": "01bee93f2c2370f2f76e49ec9d2f621e7e24f4c2",
+      "modified": [],
+      "parent": "78c3ad61336ef7d4d4212e05d6825061b4641e5f",
+      "subject": "Define exact HostNull downstream pin refresh [skip ci]"
+    },
+    {
+      "added": [],
+      "commit": "6cdc7a5e956987f9acf0a9c81dcca740d39c5d65",
+      "modified": [
+        "docs/type-surface.v1.json"
+      ],
+      "parent": "01bee93f2c2370f2f76e49ec9d2f621e7e24f4c2",
+      "subject": "Refresh HostNull downstream source pins [skip ci]"
+    }
+  ],
+  "externalTypeSurfacePointers": 579,
+  "implementationCommit": "6cdc7a5e956987f9acf0a9c81dcca740d39c5d65",
+  "integrationParent": "20412c9d331526ef62a905042b046b9b1d00c0cf",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c0e98e7739d7a0805b92726321a757752e46cdb80497c54a0cc8f4b9eba188a5",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-downstream-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "2f76273bea6b2a71f439795972092cba59ec2ebc15fe6cb943bd75b053a2a538"
+    },
+    {
+      "currentSha256": "90eed5094345d6971c3ae4d3dc3b71e3157601381a60d9567c2aad766289d9ac",
+      "edits": [
+        {
+          "current": "import { beforeHostNullDownstreamIntegrationSource, beforeHostNullDownstreamSource, hostNullDownstreamNormalizationPaths } from \"./host-null-downstream-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullDownstreamNormalizationPaths\n\t, ...hostNullManagedNormalizationPaths\n",
+          "previous": "\t...hostNullManagedNormalizationPaths\n",
+          "start": 215637
+        },
+        {
+          "current": "\tlet stage = beforeHostNullDownstreamIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullManagedIntegrationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullManagedIntegrationSource(path, text, expected);\n",
+          "start": 269691
+        },
+        {
+          "current": "\tstage = beforeHostNullDownstreamSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 270510
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b436f1c4e420b2fadb3f008f59794acd7c7db54b4190b06e05be3e236017d57b"
+    }
+  ],
+  "milestone": "host-null-downstream-source-v1",
+  "predecessorCommit": "9a333bafef6b77c112d4f36c40d45a439dfae84e",
+  "schemaVersion": 1,
+  "scope": "Run source-free relocated NuGet and Maven HostNull packages through exact .NET, Java and Kotlin consumers for ordinary and independently reviewed author routes. Preserve 22 observations per language across direct values, nested option states, records, callbacks and returned closures. Register both managed groups in recurring Downstream CI. The combined HostNull type-surface lineage layer exclusively authenticates the exact 579-pointer reconciliation across PHP/native documentation, validation and workflow paths.",
+  "updates": [
+    {
+      "commit": "78c3ad61336ef7d4d4212e05d6825061b4641e5f",
+      "currentSha256": "af66360c0c4ac753fa71679dde877c87d5132402289e59212ad99c80b2e70064",
+      "edits": [
+        {
+          "current": "      - name: Qualify HostNull in prepared managed packages\n        if: matrix.profile == 'dotnet' || matrix.profile == 'jvm'\n        id: host_null_managed\n        continue-on-error: true\n        timeout-minutes: 100\n        run: bash scripts/run-host-null-managed-ci.sh \"${{ matrix.profile }}\"\n      - name: Preserve HostNull managed acceptance\n        if: always() && (matrix.profile == 'dotnet' || matrix.profile == 'jvm')\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-managed-${{ matrix.profile }}-${{ github.sha }}\n          path: build/host-null-managed-ci/${{ matrix.profile }}/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "previous": "",
+          "start": 300628
+        },
+        {
+          "current": "              consumer_command=\"$consumer_command && bash scripts/run-host-null-managed-ci.sh dotnet\"\n              if [ \"${{ steps.ordinary_dotnet.outcome }}\" != success ] || [ \"${{ steps.type_corpus_dotnet.outcome }}\" != success ] || [ \"${{ steps.direct_proof_managed.outcome }}\" != success ] || [ \"${{ steps.host_null_managed.outcome }}\" != success ]; then\n",
+          "previous": "              if [ \"${{ steps.ordinary_dotnet.outcome }}\" != success ] || [ \"${{ steps.type_corpus_dotnet.outcome }}\" != success ] || [ \"${{ steps.direct_proof_managed.outcome }}\" != success ]; then\n",
+          "start": 308502
+        },
+        {
+          "current": "              consumer_command=\"$consumer_command && bash scripts/run-host-null-managed-ci.sh jvm\"\n              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ] || [ \"${{ steps.nominal_jvm.outcome }}\" != success ] || [ \"${{ steps.direct_proof_managed.outcome }}\" != success ] || [ \"${{ steps.host_null_managed.outcome }}\" != success ]; then\n",
+          "previous": "              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ] || [ \"${{ steps.nominal_jvm.outcome }}\" != success ] || [ \"${{ steps.direct_proof_managed.outcome }}\" != success ]; then\n",
+          "start": 315110
+        }
+      ],
+      "parent": "9a333bafef6b77c112d4f36c40d45a439dfae84e",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "6a4001b3de1bb72e55faa6ade7e54e58b80dbe1ec01ba78dd0b7c18f073b9818"
+    },
+    {
+      "commit": "78c3ad61336ef7d4d4212e05d6825061b4641e5f",
+      "currentSha256": "f070ab4105bab2fdefca634b9c42811b04e9f0c720cd1b710296c1c7e7b3355d",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, rm } from \"node:fs/promises\";\n",
+          "start": 170
+        },
+        {
+          "current": "import { runHostNullManagedAcceptance } from \"./helpers/host-null-managed-installed.mjs\";\n",
+          "previous": "",
+          "start": 669
+        },
+        {
+          "current": "\tawait saveLakeFile(root, \"consumer/consumer.cs\", await readFile(\n\t\t\"tests/fixtures/host-null-consumers/dotnet.cs\"));\n\tawait saveLakeFile(root, \"consumer/Consumer.csproj\", `<Project Sdk=\"Microsoft.NET.Sdk\">\n  <PropertyGroup>\n    <OutputType>Exe</OutputType>\n    <TargetFramework>net8.0</TargetFramework>\n    <Nullable>enable</Nullable>\n    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>\n    <UseAppHost>false</UseAppHost>\n  </PropertyGroup>\n  <ItemGroup>\n    <ProjectReference Include=\"../src/LeanBridge.HostNullDemo/LeanBridge.HostNullDemo.csproj\" />\n  </ItemGroup>\n</Project>\n`);\n",
+          "previous": "\tawait saveLakeFile(root, \"src/LeanBridge.HostNullDemo/HostNullCompileProbe.cs\", `namespace LeanBridge.HostNullDemo;\ninternal static class HostNullCompileProbe\n{\n    internal static void Check()\n    {\n        uint? directNull = null;\n        Option<uint?> optionalNull = Option<uint?>.Some(null);\n        Option<uint?> optionalMissing = Option<uint?>.None;\n        Option<uint>? nullableOption = null;\n        var packet = new Packet(directNull, nullableOption, optionalNull);\n        global::System.Func<uint?, Option<uint>?> callback = value => value is null ? null : Option<uint>.Some(value.Value);\n        _ = (packet, optionalMissing, callback);\n    }\n}\n\t`);\n",
+          "start": 3285
+        },
+        {
+          "current": "\t\t, \"consumer/Consumer.csproj\"\n",
+          "previous": "\t\t, \"src/LeanBridge.HostNullDemo/LeanBridge.HostNullDemo.csproj\"\n",
+          "start": 3959
+        },
+        {
+          "current": "\ntest(\"managed HostNull CI retains both routes and gates .NET plus JVM observations\", async () => {\n\tconst runner = await readFile(\"scripts/run-host-null-managed-ci.sh\", \"utf8\");\n\tfor(const required of [\n\t\t\"<dotnet|jvm>\", \"LEAN_BRIDGE_HOST_NULL_MANAGED_OUTPUT\"\n\t\t, \"LEAN_BRIDGE_DOTNET_HOST_NULL_TEST=1\"\n\t\t, \"LEAN_BRIDGE_JVM_HOST_NULL_TEST=1\"\n\t\t, \"check-host-null-managed-ci.mjs\"\n\t]) assert.ok(runner.includes(required), required);\n\tconst workflow = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tfor(const required of [\n\t\t\"id: host_null_managed\"\n\t\t, \"bash scripts/run-host-null-managed-ci.sh \\\"${{ matrix.profile }}\\\"\"\n\t\t, \"name: host-null-managed-${{ matrix.profile }}-${{ github.sha }}\"\n\t\t, \"steps.host_null_managed.outcome\"\n\t]) assert.ok(workflow.includes(required), required);\n\tassert.equal(workflow.match(/bash scripts\\/run-host-null-managed-ci\\.sh/gu)?.length, 3);\n});\n\nconst installedFlag = process.env.LEAN_BRIDGE_DOTNET_HOST_NULL_TEST;\nassert.ok(installedFlag === undefined || [\"0\", \"1\"].includes(installedFlag)\n\t, \"Invalid LEAN_BRIDGE_DOTNET_HOST_NULL_TEST\");\ntest(\"installed NuGet HostNull preserves all absence states on both author routes\", {\n\tskip: installedFlag !== \"1\", timeout: 3_600_000\n}, t => runHostNullManagedAcceptance(t, \"dotnet\"));\n",
+          "previous": "",
+          "start": 4297
+        }
+      ],
+      "parent": "9a333bafef6b77c112d4f36c40d45a439dfae84e",
+      "path": "tests/dotnet-host-null-contract.test.mjs",
+      "previousSha256": "d97c801a99a113d445db20aef2a75141e9e88aec45f8a28c1f8bf418520e451f"
+    },
+    {
+      "commit": "78c3ad61336ef7d4d4212e05d6825061b4641e5f",
+      "currentSha256": "b77801cc7191ff93679c6ee7ec41cd8d138753edbcf9b67cccff88a6b9453420",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, rm } from \"node:fs/promises\";\n",
+          "start": 182
+        },
+        {
+          "current": "import { runHostNullManagedAcceptance } from \"./helpers/host-null-managed-installed.mjs\";\n",
+          "previous": "",
+          "start": 794
+        },
+        {
+          "current": "\tconst ir = hostNullReviewedIr(), files = generateCopiedJvmKotlinPackage(ir);\n",
+          "previous": "\tconst ir = hostNullReviewedIr(), model = compileCopiedKotlinModel(ir), files = generateCopiedJvmKotlinPackage(ir);\n",
+          "start": 5096
+        },
+        {
+          "current": "\tawait saveLakeFile(root, \"consumer.java\", await readFile(\n\t\t\"tests/fixtures/host-null-consumers/java.java\"));\n\tawait saveLakeFile(root, \"consumer.kt\", await readFile(\n\t\t\"tests/fixtures/host-null-consumers/kotlin.kt\"));\n\tconst javaSources = [...Object.keys(files).filter(path => path.endsWith(\".java\")), \"consumer.java\"];\n\tconst kotlinSources = [...Object.keys(files).filter(path => path.endsWith(\".kt\")), \"consumer.kt\"];\n",
+          "previous": "\tconst callback = [...model.surface.callbacks.values()][0].aliasName;\n\tawait saveLakeFile(root, \"JavaHostNullProbe.java\", `import org.leanbridge.host_null_demo.*;\nfinal class JavaHostNullProbe {\n    static void check() {\n        Long direct = null;\n        Option<Long> nullableOption = null;\n        Option<Long> missing = Option.none();\n        Option<Long> someNull = Option.some(null);\n        var packet = new Packet(direct, nullableOption, someNull);\n        ${callback} callback = value -> value == null ? null : Option.some(value);\n        Object keep = new Object[] { packet, missing, callback };\n        if (keep == null) throw new AssertionError();\n    }\n}\n`);\n\tawait saveLakeFile(root, \"KotlinHostNullProbe.kt\", `import org.leanbridge.host_null_demo.kotlin.*\nfun checkHostNull() {\n    val direct: Long? = null\n    val nullableOption: Option<Long>? = null\n    val missing: Option<Long?> = Option.none()\n    val someNull: Option<Long?> = Option.some(null)\n    val packet = Packet(direct, nullableOption, someNull)\n    val callback: ${callback} = ${callback} { value: Long? -> if (value == null) null else Option.some(value) }\n    check(listOf(packet, missing, callback).size == 3)\n}\n`);\n\tconst javaSources = [...Object.keys(files).filter(path => path.endsWith(\".java\")), \"JavaHostNullProbe.java\"];\n\tconst kotlinSources = [...Object.keys(files).filter(path => path.endsWith(\".kt\")), \"KotlinHostNullProbe.kt\"];\n",
+          "start": 5266
+        },
+        {
+          "current": "\nconst installedFlag = process.env.LEAN_BRIDGE_JVM_HOST_NULL_TEST;\nassert.ok(installedFlag === undefined || [\"0\", \"1\"].includes(installedFlag)\n\t, \"Invalid LEAN_BRIDGE_JVM_HOST_NULL_TEST\");\ntest(\"installed Maven HostNull preserves all absence states on both author routes\", {\n\tskip: installedFlag !== \"1\", timeout: 3_600_000\n}, t => runHostNullManagedAcceptance(t, \"jvm\"));\n",
+          "previous": "",
+          "start": 6567
+        }
+      ],
+      "parent": "9a333bafef6b77c112d4f36c40d45a439dfae84e",
+      "path": "tests/jvm-host-null-contract.test.mjs",
+      "previousSha256": "94d75491c3dd9e9dc80064d7173b5c0d5db88464b263db0bdd3b19333050840f"
+    }
+  ]
+}

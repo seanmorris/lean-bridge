@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeHostNullDownstreamIntegrationSource, beforeHostNullDownstreamSource, hostNullDownstreamNormalizationPaths } from "./host-null-downstream-source-history.mjs";
 import { beforeHostNullManagedIntegrationSource, beforeHostNullManagedSource, hostNullManagedNormalizationPaths } from "./host-null-managed-source-history.mjs";
 import { beforeHostNullPhpIntegrationSource, beforeHostNullPhpSource, hostNullPhpNormalizationPaths } from "./host-null-php-source-history.mjs";
 import { beforeHostNullTypeSurfaceLineageIntegrationSource, beforeHostNullTypeSurfaceLineageSource, hostNullTypeSurfaceLineageNormalizationPaths } from "./host-null-type-surface-lineage-source-history.mjs";
@@ -2361,7 +2362,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostNullManagedNormalizationPaths
+	...hostNullDownstreamNormalizationPaths
+	, ...hostNullManagedNormalizationPaths
 	, ...hostNullPhpNormalizationPaths
 	, ...hostNullTypeSurfaceLineageNormalizationPaths
 	, ...hostNullPartitionGapNormalizationPaths
@@ -3461,7 +3463,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeHostNullManagedIntegrationSource(path, text, expected);
+	let stage = beforeHostNullDownstreamIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullManagedIntegrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
@@ -3474,6 +3480,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		return stage;
 	text = stage;
 	stage = beforeHostNullPartitionGapIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullDownstreamSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
