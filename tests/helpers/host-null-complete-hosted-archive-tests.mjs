@@ -12,7 +12,9 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	hostNullCompleteCells, hostNullCompleteHostedInputs
+	, hostNullCompleteFocusedWorkflow
 	, hostNullCompleteHostedLanes, hostNullCompleteHostedOriginal
+	, hostNullCompleteLaneContract
 	, hostNullCompleteHostedSourcePath, hostNullCompleteHostedSources
 	, hostNullCompletePositions
 	, hostNullCompleteProfiles, hostNullCompleteRoutes
@@ -33,16 +35,25 @@ const run = Object.freeze({
 	, head_repository: { full_name: "seanmorris/lean-bridge" }
 });
 
-const makeInputs = async (mutate = () => {}) => {
+const makeInputs = async (
+	mutate = () => {}, workflow = hostNullCompleteWorkflow
+) => {
 	const root = await mkdtemp(join(tmpdir(), "lean-host-null-complete-"));
 	const records = hostNullCompleteHostedLanes.map((selectedLane, index) => {
 		const zip = Buffer.from(`host-null-${selectedLane.id}\n`);
+		const selectedRun = structuredClone(run);
+		selectedRun.path = workflow;
+		selectedRun.event = workflow === hostNullCompleteFocusedWorkflow
+			? "workflow_dispatch" : "push";
+		const contract = hostNullCompleteLaneContract(selectedLane, workflow);
 		return {
-			lane: selectedLane, zip, run: structuredClone(run)
+			lane: selectedLane, zip, run: selectedRun
 			, job: {
-				id: 100 + index, run_id: run.id, head_sha: revision
+				id: workflow === hostNullCompleteFocusedWorkflow
+					&& selectedLane.id === "php-wasm" ? 101 : 100 + index
+				, run_id: run.id, head_sha: revision
 				, status: "completed", conclusion: "success"
-				, name: selectedLane.jobName, labels: ["ubuntu-24.04"]
+				, name: contract.jobName, labels: ["ubuntu-24.04"]
 				, runner_name: "hosted", runner_group_name: "GitHub Actions"
 				, started_at: "2026-10-29T00:10:00Z"
 				, completed_at: "2026-10-29T00:20:00Z"
@@ -57,7 +68,8 @@ const makeInputs = async (mutate = () => {}) => {
 				, expires_at: "2026-11-28T00:21:00Z"
 			}
 		};
-	});
+	}
+	);
 	mutate(records);
 	for(const record of records)
 	{
@@ -139,6 +151,19 @@ test("complete HostNull selection accepts seven successful jobs from one failed 
 	assert.equal(selected.captures.length, 7);
 	assert.deepEqual(selected.cells, hostNullCompleteCells);
 });
+
+test("focused HostNull selection accepts seven artifacts from six exact jobs"
+	, async t => {
+	const root = await makeInputs(() => {}, hostNullCompleteFocusedWorkflow);
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const selected = await inspectHostNullCompleteHostedArtifacts(root, revision);
+	assert.equal(selected.captures.length, 7);
+	assert.equal(new Set(selected.captures.map(capture =>
+		capture.hostedRun.job.id)).size, 6);
+	assert.ok(selected.captures.every(capture =>
+		capture.hostedRun.workflow === hostNullCompleteFocusedWorkflow));
+	}
+);
 
 test("complete HostNull selection rejects malformed and mixed identities", async t => {
 	const mutations = [

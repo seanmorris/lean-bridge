@@ -26,6 +26,8 @@ import { moduleSpecifiers } from "./module-closure.mjs";
 
 export const hostNullCompleteWorkflow
 	= ".github/workflows/consumer-matrix.yml";
+export const hostNullCompleteFocusedWorkflow
+	= ".github/workflows/host-null-complete.yml";
 export const hostNullCompleteRoutes = Object.freeze([
 	"ordinary", "reviewed"
 ]);
@@ -33,28 +35,59 @@ export const hostNullCompletePositions = Object.freeze([
 	"parameter", "result", "field", "callback-parameter", "callback-result"
 ]);
 
-const lane = (id, profiles, jobName, artifactPrefix) => Object.freeze({
+const lane = (
+	id, profiles, jobName, focusedJobName, artifactPrefix
+) => Object.freeze({
 	id, profiles: Object.freeze(profiles), workflow: hostNullCompleteWorkflow
-	, jobName, artifactPrefix
+	, jobName, focusedJobName, artifactPrefix
 });
 
 export const hostNullCompleteHostedLanes = Object.freeze([
 	lane("javascript-browser", [
 		"node-javascript", "node-typescript", "browser-javascript"
 		, "browser-react", "browser-worker"
-	], "Node and browser npm consumers", "host-null-node-browser")
-	, lane("php-native", ["php-native"], "Native PHP", "host-null-php-native")
+	], "Node and browser npm consumers"
+	, "Complete HostNull acceptance / Node and browser producer / reviewed generic Subtypes in Node and browsers"
+	, "host-null-node-browser")
+	, lane("php-native", ["php-native"], "Native PHP"
+		, "Complete HostNull acceptance / PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm"
+		, "host-null-php-native")
 	, lane("php-wasm", ["php-wasm"], "PHP-Wasm corpus (values-graph)"
+		, "Complete HostNull acceptance / PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm"
 		, "host-null-php-wasm")
 	, lane("dotnet", ["dotnet"], "Managed consumer (dotnet)"
+		, "Complete HostNull acceptance / Managed and systems producers / Generic Subtypes in .NET"
 		, "host-null-managed-dotnet")
 	, lane("jvm", ["java", "kotlin"], "Managed consumer (jvm)"
+		, "Complete HostNull acceptance / Managed and systems producers / Generic Subtypes in Java and Kotlin"
 		, "host-null-managed-jvm")
 	, lane("scripting", ["perl", "python", "ruby"]
-		, "Perl / Perl XS (5.38.2-threaded)", "host-null-scripting")
+		, "Perl / Perl XS (5.38.2-threaded)"
+		, "Complete HostNull acceptance / Scripting producer / Ordinary and reviewed generic Subtypes across four Perl ABIs"
+		, "host-null-scripting")
 	, lane("systems", ["c", "cpp", "rust", "wit-wasi"]
-		, "Systems HostNull acceptance", "host-null-systems")
+		, "Systems HostNull acceptance"
+		, "Complete HostNull acceptance / Managed and systems producers / Generic Subtypes in WIT and WASI components"
+		, "host-null-systems")
 ]);
+
+/**
+ * Select the exact workflow/job identity for a legacy or focused producer run.
+ *
+ * @param selectedLane - Closed HostNull artifact lane.
+ * @param workflow - Exact GitHub Actions workflow path.
+ */
+export const hostNullCompleteLaneContract = (selectedLane, workflow) => {
+	assert.ok(hostNullCompleteHostedLanes.includes(selectedLane));
+	assert.ok([hostNullCompleteWorkflow, hostNullCompleteFocusedWorkflow]
+		.includes(workflow), workflow);
+	return Object.freeze({
+		workflow
+		, jobName: workflow === hostNullCompleteFocusedWorkflow
+			? selectedLane.focusedJobName : selectedLane.jobName
+		, artifactPrefix: selectedLane.artifactPrefix
+	});
+};
 
 export const hostNullCompleteProfiles = Object.freeze(
 	hostNullCompleteHostedLanes.flatMap(item => item.profiles)
@@ -157,10 +190,10 @@ export const inspectHostNullCompleteHostedArtifacts = async (
 		const selected = hostNullCompleteHostedInputs(root, selectedLane);
 		const run = JSON.parse(await readFile(selected["run-json"]));
 		assert.ok(["failure", "success"].includes(run.conclusion));
+		const contract = hostNullCompleteLaneContract(selectedLane, run.path);
 		const hosted = await inspectCheckedRecordValueIndexHostedArtifact(
 			selected, {
-				workflow: selectedLane.workflow, jobName: selectedLane.jobName
-				, artifactPrefix: selectedLane.artifactPrefix
+				...contract
 				, conclusions: { run: run.conclusion, job: "success" }
 			}
 		);
@@ -173,8 +206,28 @@ export const inspectHostNullCompleteHostedArtifacts = async (
 		, "Every HostNull artifact must use one producer revision");
 	assert.equal(new Set(captures.map(item => item.hostedRun.runId)).size, 1
 		, "Every HostNull artifact must come from one workflow run");
-	assert.equal(new Set(captures.map(item => item.hostedRun.job.id)).size
-		, captures.length, "HostNull lane jobs must be distinct");
+	const workflow = captures[0].hostedRun.workflow;
+	assert.ok(captures.every(item => item.hostedRun.workflow === workflow));
+	const uniqueJobs = new Set(captures.map(item => item.hostedRun.job.id));
+	if(workflow === hostNullCompleteWorkflow)
+		assert.equal(uniqueJobs.size, captures.length
+			, "Legacy HostNull lane jobs must be distinct");
+	else
+	{
+		assert.equal(workflow, hostNullCompleteFocusedWorkflow);
+		assert.equal(uniqueJobs.size, captures.length - 1
+			, "Focused HostNull lanes must use six producer jobs");
+		const php = captures.filter(item => ["php-native", "php-wasm"]
+			.includes(item.lane));
+		assert.equal(php.length, 2);
+		assert.equal(php[0].hostedRun.job.id, php[1].hostedRun.job.id
+			, "Focused PHP artifacts must share their exact producer job");
+		const otherJobs = captures.filter(item => !["php-native", "php-wasm"]
+			.includes(item.lane)).map(item => item.hostedRun.job.id);
+		assert.equal(new Set(otherJobs).size, otherJobs.length
+			, "Focused non-PHP lane jobs must be distinct");
+		assert.ok(!otherJobs.includes(php[0].hostedRun.job.id));
+	}
 	assert.equal(new Set(captures.map(item => item.hostedRun.artifact.id)).size
 		, captures.length, "HostNull lane artifacts must be distinct");
 	const producerCommit = captures[0].revision;
@@ -417,6 +470,11 @@ const sourceTree = (revision, prefix) => execFileSync("git", [
 }).trim().split("\n").filter(Boolean);
 const producerEntries = Object.freeze([
 	".github/workflows/consumer-matrix.yml"
+	, ".github/workflows/host-null-complete.yml"
+	, ".github/workflows/generic-subtype-npm-browser.yml"
+	, ".github/workflows/generic-subtype-native-perl.yml"
+	, ".github/workflows/generic-subtype-managed-wit.yml"
+	, ".github/workflows/nominal-subtype-php-wasm.yml"
 	, ".github/workflows/perl-consumer.yml"
 	, ".github/actions/bounded-apt/action.yml"
 	, "scripts/run-host-null-managed-ci.sh"
@@ -426,6 +484,8 @@ const producerEntries = Object.freeze([
 	, "scripts/check-host-null-scripting-ci.mjs"
 	, "scripts/check-host-null-systems-ci.mjs"
 	, "scripts/check-host-null-php-reports.mjs"
+	, "scripts/reconcile-host-null-complete-matrix.mjs"
+	, "tests/helpers/host-null-complete-matrix-receipt.mjs"
 	, "tests/host-null-npm-installed.test.mjs"
 	, "tests/php-host-null.test.mjs"
 	, "tests/php-wasm-host-null.test.mjs"

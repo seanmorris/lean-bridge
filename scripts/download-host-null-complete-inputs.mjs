@@ -15,7 +15,8 @@ import {
 	checkedRecordValueIndexHostedDigest as digestFile
 } from "../tests/helpers/checked-record-value-index-hosted-archive.mjs";
 import {
-	hostNullCompleteHostedLanes, hostNullCompleteWorkflow
+	hostNullCompleteFocusedWorkflow, hostNullCompleteHostedLanes
+	, hostNullCompleteLaneContract, hostNullCompleteWorkflow
 	, inspectHostNullCompleteHostedArtifacts
 	, readHostNullCompleteGitHubCollection
 } from "../tests/helpers/host-null-complete-hosted-archive.mjs";
@@ -98,7 +99,8 @@ try
 	const run = object(runBytes, "run API record");
 	assert.equal(run.id, runId);
 	assert.equal(run.head_sha, producer);
-	assert.equal(run.path, hostNullCompleteWorkflow);
+	assert.ok([hostNullCompleteWorkflow, hostNullCompleteFocusedWorkflow]
+		.includes(run.path));
 	assert.equal(run.repository?.full_name, "seanmorris/lean-bridge");
 	assert.equal(run.head_repository?.full_name, "seanmorris/lean-bridge");
 	assert.equal(run.status, "completed");
@@ -113,8 +115,9 @@ try
 	);
 	for(const selectedLane of hostNullCompleteHostedLanes)
 	{
-		const matches = jobs.filter(job => job.name === selectedLane.jobName);
-		assert.equal(matches.length, 1, selectedLane.jobName);
+		const contract = hostNullCompleteLaneContract(selectedLane, run.path);
+		const matches = jobs.filter(job => job.name === contract.jobName);
+		assert.equal(matches.length, 1, contract.jobName);
 		const job = matches[0];
 		assert.equal(job.run_id, runId);
 		assert.equal(job.head_sha, producer);
