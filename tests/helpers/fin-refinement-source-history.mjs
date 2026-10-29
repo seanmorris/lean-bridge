@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDependentSignatureReceiptSparseCheckoutSource, dependentSignatureReceiptSparseCheckoutNormalizationPaths } from "./dependent-signature-receipt-sparse-checkout-source-history.mjs";
 import { beforeHostNullArchiveDedupSource, hostNullArchiveDedupNormalizationPaths } from "./host-null-archive-dedup-source-history.mjs";
 import { beforeHostNullArchiveTransactionSource, hostNullArchiveTransactionNormalizationPaths } from "./host-null-archive-transaction-source-history.mjs";
 import { beforeDirectProofErasureSameRunRefusalSource, directProofErasureSameRunRefusalNormalizationPaths } from "./direct-proof-erasure-same-run-refusal-source-history.mjs";
@@ -2400,7 +2401,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostNullArchiveDedupNormalizationPaths
+	...dependentSignatureReceiptSparseCheckoutNormalizationPaths
+	, ...hostNullArchiveDedupNormalizationPaths
 	, ...hostNullArchiveTransactionNormalizationPaths
 	, ...directProofErasureSameRunRefusalNormalizationPaths
 	, ...optionalParameterPromotionIoPinRepairNormalizationPaths
@@ -3539,7 +3541,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeHostNullArchiveDedupSource(path, text, expected);
+	let stage = beforeDependentSignatureReceiptSparseCheckoutSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullArchiveDedupSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

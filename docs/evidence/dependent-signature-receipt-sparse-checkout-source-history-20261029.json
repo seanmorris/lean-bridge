@@ -1,0 +1,83 @@
+{
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-signature-receipt-sparse-checkout-source-history.mjs",
+      "sha256": "3ff3eb46711392855878c8bd6226350521d52fa0b0f362f5965a2dbb278a8f38"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-receipt-sparse-checkout-source-history-tests.mjs",
+      "sha256": "cd18645734f04bf1379747d06421ac80e251382419b34fbe2d8613a260b718a0"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-receipt-sparse-checkout-source-history.mjs",
+      "sha256": "531599815774991f470604509012187345ad0d51cc67f1db4b5142864c6d6515"
+    }
+  ],
+  "implementationCommit": "45e754da628c9e440719c8f6d1674032accb8d3a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "dc89106585e5d59cc00fd83d2f2bd56012e36c1ef72aeaff7dcb3a3859e97e8c",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-signature-receipt-sparse-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "53495e61c699f0c3a13b0e7f98f167178a98a36ceafbf3a77dcda84fdc881368"
+    },
+    {
+      "currentSha256": "5df4fbe67c25eecb10df421047c43b7faea363a0a07be8405c1fd39c7036d159",
+      "edits": [
+        {
+          "current": "import { beforeDependentSignatureReceiptSparseCheckoutSource, dependentSignatureReceiptSparseCheckoutNormalizationPaths } from \"./dependent-signature-receipt-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentSignatureReceiptSparseCheckoutNormalizationPaths\n\t, ...hostNullArchiveDedupNormalizationPaths\n",
+          "previous": "\t...hostNullArchiveDedupNormalizationPaths\n",
+          "start": 222520
+        },
+        {
+          "current": "\tlet stage = beforeDependentSignatureReceiptSparseCheckoutSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullArchiveDedupSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullArchiveDedupSource(path, text, expected);\n",
+          "start": 278727
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b4865d6ee9924905028470ab0ad430ddd1d7cd1d84fa42280a085226863814fe"
+    }
+  ],
+  "milestone": "dependent-signature-receipt-sparse-checkout-source-v1",
+  "predecessorCommit": "be5f1ca0ae2967ed42432c385abdda97578e29f1",
+  "schemaVersion": 1,
+  "scope": "Keep the exact same-run dependent-signature receipt checkout at depth one while excluding immutable evidence payloads. The receipt consumes current source and freshly downloaded same-run artifacts, not retained historical archives; a full 44 GB tree checkout adds no evidence and delays the terminal gate.",
+  "updates": [
+    {
+      "currentSha256": "d4d6f43b15f73c0659b1a8b20aae2192d973d3b2645bd6b29439eaa1dd7abe7a",
+      "edits": [
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 6994
+        }
+      ],
+      "path": ".github/workflows/dependent-signature-complete.yml",
+      "previousSha256": "72f441e93b8045ecee787bbf00053cbb652cfb9949ea84ae9fe1662aaaafebd9"
+    },
+    {
+      "currentSha256": "9a73239d9cc50d945992c29bf783bf6645edeca9a9af09780593ead56b59f3da",
+      "edits": [
+        {
+          "current": "\tconst receipt = source.split(\"  receipt:\\n\")[1];\n\tassert.equal(receipt.split(producerSparseCheckout).length - 1, 1\n\t\t, \"receipt must exclude immutable evidence payloads\");\n",
+          "previous": "",
+          "start": 6570
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-complete-ci-tests.mjs",
+      "previousSha256": "04dc4d31f1ccc2374fcad97fe417f929de23bfc78da8d18850e0cd82f6489eda"
+    }
+  ]
+}
