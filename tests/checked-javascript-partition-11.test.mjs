@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/direct-proof-erasure-focused-ci-source-history-tests.mjs";
 import "./helpers/optional-parameter-focused-ci-source-history-tests.mjs";
 import "./helpers/optional-parameter-dispatch-bridge-source-history-tests.mjs";
 import "./helpers/optional-parameter-current-line-integration-source-history-tests.mjs";

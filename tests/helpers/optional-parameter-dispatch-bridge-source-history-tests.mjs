@@ -18,6 +18,8 @@ import {
 	, optionalParameterDispatchBridgePredecessor
 	, reverseOptionalParameterDispatchBridgeUpdate
 } from "./optional-parameter-dispatch-bridge-source-history.mjs";
+import { beforeDirectProofErasureFocusedCiSource }
+	from "./direct-proof-erasure-focused-ci-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -66,7 +68,8 @@ test("optional dispatch bridge registration is exactly reversible"
 		, [...optionalParameterDispatchBridgeIntegrationPaths]);
 	for(const update of value.integrationUpdates)
 	{
-		const live = await readFile(update.path, "utf8");
+		const live = beforeDirectProofErasureFocusedCiSource(update.path
+			, await readFile(update.path, "utf8"));
 		const implementation = git(["show"
 			, `${optionalParameterDispatchBridgeImplementation}:${update.path}`]);
 		assert.equal(reverseOptionalParameterDispatchBridgeUpdate(live, update)
@@ -96,7 +99,9 @@ test("optional dispatch bridge authenticates every history control"
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${optionalParameterDispatchBridgeImplementation}:${addition.path}`]
 			, { stdio: "ignore" }).status, 0, addition.path);
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(beforeDirectProofErasureFocusedCiSource(
+			addition.path, await readFile(addition.path, "utf8")
+			, addition.sha256))
 			, addition.sha256, addition.path);
 	}
 	for(const path of [
@@ -112,7 +117,8 @@ test("optional dispatch bridge normalizes current sources to its predecessor"
 	const value = await record();
 	for(const update of value.updates)
 	{
-		const live = await readFile(update.path, "utf8");
+		const live = beforeDirectProofErasureFocusedCiSource(update.path
+			, await readFile(update.path, "utf8"));
 		const previous = beforeOptionalParameterDispatchBridgeSource(
 			update.path, live, update.previousSha256);
 		assert.equal(sha256(previous), update.previousSha256, update.path);

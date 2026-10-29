@@ -1,0 +1,691 @@
+{
+  "artifactCount": 10,
+  "calledWorkflowCount": 5,
+  "cellCount": 34,
+  "currentSourceDigests": [],
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-focused-ci-source-history.mjs",
+      "sha256": "9748538377ecf51d5bd4a8b59c85628d230f58a46ea7a58fd182d4eb8bc501fa"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-focused-ci-source-history-tests.mjs",
+      "sha256": "f62000645289adaf7edb7b5ae1091ab1423b96a231b1e6327618da55f20be651"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-focused-ci-source-history.mjs",
+      "sha256": "fda627fb9f1922ae89cdce6fc839c407a80d844614091521c13c3acd824741d0"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "scripts/reconcile-direct-proof-erasure-matrix.mjs",
+      "sha256": "86228276b07daf76af45fb3e1d6ac6aa1e3a074036671d988614d51a9067fea7"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-matrix-receipt-tests.mjs",
+      "sha256": "2484d5cd14c431a3d104d4d35f207458de5af0ffb94a7c71f30bb4a2663d0704"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-matrix-receipt.mjs",
+      "sha256": "6059388d4362afb60ae5960d4a16a3d362726b7f03fb2cb404dfba1d57755734"
+    }
+  ],
+  "implementationCommit": "0af32f5861db9f4d3621b2a69beef03b9352fcb5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "787abf9577540b9427ba958bd4f29329f899242f0a1643ff0496b430a10822c9",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-focused-ci-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "bef8941553211265de9ea64bf86451f2ff215a2e4416fefc90cf9b96a0ed2532"
+    },
+    {
+      "currentSha256": "ba418066fbd35137850eb8bcfad4658fe1f25ffd65db3373d2290c1f13cdaa26",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureFocusedCiSource, directProofErasureFocusedCiNormalizationPaths } from \"./direct-proof-erasure-focused-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureFocusedCiNormalizationPaths\n\t, ...optionalParameterDispatchBridgeNormalizationPaths\n",
+          "previous": "\t...optionalParameterDispatchBridgeNormalizationPaths\n",
+          "start": 217692
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureFocusedCiSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterDispatchBridgeSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeOptionalParameterDispatchBridgeSource(path, text, expected);\n",
+          "start": 272314
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2e64ac4f016b2b8c65ea87708262ec1ebc071b5f7d832cf9816ae62f84e155d4"
+    },
+    {
+      "currentSha256": "76fcb8ec97a3ee7b3a2cbc0f9f8e32eb81dc538a7f2953a9a13f1fc204051701",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureFocusedCiSource }\n\tfrom \"./direct-proof-erasure-focused-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 903
+        },
+        {
+          "current": "\t\tconst newest = beforeDirectProofErasureFocusedCiSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"));\n",
+          "previous": "",
+          "start": 3139
+        },
+        {
+          "current": "\t\t\t, beforeOptionalParameterDispatchBridgeSource(update.path, newest));\n",
+          "previous": "\t\t\t, beforeOptionalParameterDispatchBridgeSource(update.path\n\t\t\t\t, await readFile(update.path, \"utf8\")));\n",
+          "start": 3317
+        },
+        {
+          "current": "\t\tconst newest = beforeDirectProofErasureFocusedCiSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"));\n",
+          "previous": "",
+          "start": 3984
+        },
+        {
+          "current": "\t\t\t, beforeOptionalParameterDispatchBridgeSource(update.path, newest));\n",
+          "previous": "\t\t\t, beforeOptionalParameterDispatchBridgeSource(update.path\n\t\t\t\t, await readFile(update.path, \"utf8\")));\n",
+          "start": 4162
+        },
+        {
+          "current": "\t\tconst newest = beforeDirectProofErasureFocusedCiSource(item.path\n\t\t\t, await readFile(item.path, \"utf8\"), item.sha256);\n",
+          "previous": "",
+          "start": 4841
+        },
+        {
+          "current": "\t\t\t\t, newest, item.sha256), item.sha256);\n",
+          "previous": "\t\t\t\t, await readFile(item.path, \"utf8\"), item.sha256), item.sha256);\n",
+          "start": 5085
+        },
+        {
+          "current": "\t\tconst newest = beforeDirectProofErasureFocusedCiSource(addition.path\n\t\t\t, await readFile(addition.path, \"utf8\"), addition.sha256);\n",
+          "previous": "",
+          "start": 6034
+        },
+        {
+          "current": "\t\t\t\t, newest));\n",
+          "previous": "\t\t\t\t, await readFile(addition.path, \"utf8\")));\n",
+          "start": 6298
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-current-line-integration-source-history-tests.mjs",
+      "previousSha256": "1d1dbb724d0a5209cdfe83fe019a840feaca0b8d37a5f0cf9eaf91b219e35164"
+    },
+    {
+      "currentSha256": "23e4fec560f09cb919a99fd0d77512e63f2eb415a5cdf497d0013d2155a0e02f",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureFocusedCiSource }\n\tfrom \"./direct-proof-erasure-focused-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 786
+        },
+        {
+          "current": "\t\tconst live = beforeDirectProofErasureFocusedCiSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"));\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 2643
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeDirectProofErasureFocusedCiSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.sha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 3819
+        },
+        {
+          "current": "\t\tconst live = beforeDirectProofErasureFocusedCiSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"));\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 4396
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-dispatch-bridge-source-history-tests.mjs",
+      "previousSha256": "ced0e7ee21d7d1ffb3223875a3549884a2880606c46c0a2e61c4953364c89d34"
+    },
+    {
+      "currentSha256": "649205b7c2d92341faf0463f9bcd9659fbfb34cbc09b6b20c4083cf9c7a1059a",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureFocusedCiSource }\n\tfrom \"./direct-proof-erasure-focused-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 797
+        },
+        {
+          "current": "\t\tconst newest = beforeDirectProofErasureFocusedCiSource(update.path\n",
+          "previous": "\t\tconst live = beforeOptionalParameterDispatchBridgeSource(update.path\n",
+          "start": 3343
+        },
+        {
+          "current": "\t\tconst live = beforeOptionalParameterDispatchBridgeSource(update.path\n\t\t\t, newest);\n",
+          "previous": "",
+          "start": 3455
+        },
+        {
+          "current": "\t\t\t, beforeDirectProofErasureFocusedCiSource(item.path\n\t\t\t\t, await readFile(item.path, \"utf8\"), item.sha256), item.sha256))\n",
+          "previous": "\t\t\t, await readFile(item.path, \"utf8\"), item.sha256))\n",
+          "start": 4131
+        },
+        {
+          "current": "\t\t\taddition.path, beforeDirectProofErasureFocusedCiSource(\n\t\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t\t, addition.sha256)\n",
+          "previous": "\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n",
+          "start": 5196
+        },
+        {
+          "current": "\t\tconst newest = beforeDirectProofErasureFocusedCiSource(update.path\n",
+          "previous": "\t\tconst live = beforeOptionalParameterDispatchBridgeSource(update.path\n",
+          "start": 5765
+        },
+        {
+          "current": "\t\tconst live = beforeOptionalParameterDispatchBridgeSource(update.path\n\t\t\t, newest);\n",
+          "previous": "",
+          "start": 5877
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-focused-ci-source-history-tests.mjs",
+      "previousSha256": "42914861085e3df37094e5d02b2e31e716db10227966393d5ce3c491713b00ee"
+    }
+  ],
+  "milestone": "direct-proof-erasure-focused-ci-source-v1",
+  "predecessorCommit": "faa88f5d030d8a377dcc30c8807d0d62b60533be",
+  "producerJobCount": 13,
+  "profileCount": 17,
+  "receiptJobCount": 1,
+  "refreshedPins": 0,
+  "reportCount": 20,
+  "routeCount": 2,
+  "schemaVersion": 1,
+  "scope": "Separate optional-parameter and direct proof-erasure acceptance behind explicit reusable-workflow inputs, retain the existing weekly subtype lanes without unrelated matrix cost, and expose one already registered proof-erasure workflow as a bounded ten-lane producer. Reconcile twenty canonical ordinary/reviewed reports from seventeen profiles into one exact-run fail-closed receipt. Preserve the existing low-cost audit as the default, retain identical package checkers and artifact prefixes, select the checksummed Perl 5.38.2 threaded toolchain explicitly, and make no support promotion before hosted evidence is retained.",
+  "updates": [
+    {
+      "currentSha256": "e53599817ee2dbfb3143c8424433d86485adf6276507eabebea0dec85a8f70ad",
+      "edits": [
+        {
+          "current": "      - \"tests/helpers/direct-proof-erasure-matrix-receipt.mjs\"\n",
+          "previous": "",
+          "start": 828
+        },
+        {
+          "current": "      - \"tests/helpers/direct-proof-erasure-matrix-receipt.mjs\"\n",
+          "previous": "",
+          "start": 1676
+        },
+        {
+          "current": "    inputs:\n      suite:\n        description: Bounded direct proof-erasure suite to execute\n        required: true\n        default: audit\n        type: choice\n        options:\n          - audit\n          - produce\n",
+          "previous": "",
+          "start": 1761
+        },
+        {
+          "current": "    if: inputs.suite != 'produce'\n",
+          "previous": "",
+          "start": 2235
+        },
+        {
+          "current": "\n  npm-browser:\n    name: Node and browser producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/generic-subtype-npm-browser.yml\n    with:\n      direct_proof_erasure: true\n\n  native-perl:\n    name: Native and Perl producers\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/generic-subtype-native-perl.yml\n    with:\n      direct_proof_erasure: true\n\n  languages:\n    name: Python, Ruby and Rust producers\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/generic-subtype-languages.yml\n    with:\n      direct_proof_erasure: true\n\n  managed-wit:\n    name: Managed and WIT producers\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/generic-subtype-managed-wit.yml\n    with:\n      direct_proof_erasure: true\n\n  php:\n    name: PHP and PHP-Wasm producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/nominal-subtype-php-wasm.yml\n    with:\n      direct_proof_erasure: true\n\n  receipt:\n    name: Reconcile the exact same-run receipt\n    if: always() && inputs.suite == 'produce'\n    needs:\n      - npm-browser\n      - native-perl\n      - languages\n      - managed-wit\n      - php\n    runs-on: ubuntu-24.04\n    timeout-minutes: 20\n    steps:\n      - name: Check out the exact producer revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: \"22\"\n      - name: Download every same-run direct proof-erasure artifact\n        id: download\n        continue-on-error: true\n        uses: actions/download-artifact@v5\n        with:\n          pattern: direct-proof-erasure-*-${{ github.sha }}\n          path: build/direct-proof-erasure-matrix-input\n      - name: Reconcile all seventeen profiles and both author routes\n        id: reconciliation\n        if: always()\n        continue-on-error: true\n        run: |\n          node scripts/reconcile-direct-proof-erasure-matrix.mjs \\\n            --directory build/direct-proof-erasure-matrix-input \\\n            --output build/direct-proof-erasure-matrix/receipt.json \\\n            --producer \"${{ github.sha }}\" \\\n            --repository \"${{ github.repository }}\" \\\n            --workflow \".github/workflows/direct-proof-erasure-complete.yml\" \\\n            --run-id \"${{ github.run_id }}\" \\\n            --run-attempt \"${{ github.run_attempt }}\"\n      - name: Preserve the complete direct proof-erasure receipt\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-matrix-${{ github.sha }}\n          path: build/direct-proof-erasure-matrix/receipt.json\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce every producer and exact receipt reconciliation\n        if: >-\n          always() &&\n          (needs.npm-browser.result != 'success' ||\n           needs.native-perl.result != 'success' ||\n           needs.languages.result != 'success' ||\n           needs.managed-wit.result != 'success' ||\n           needs.php.result != 'success' ||\n           steps.download.outcome != 'success' ||\n           steps.reconciliation.outcome != 'success')\n        run: exit 1\n",
+          "previous": "",
+          "start": 3734
+        }
+      ],
+      "path": ".github/workflows/direct-proof-erasure-complete.yml",
+      "previousSha256": "7af3cecc2db95a85b904461a8a119af4caa39bc35dfcc3720c60b5fc20f1893a"
+    },
+    {
+      "currentSha256": "8719c9b5ebc49bec116bd03fce199a713c9dbb68fc33cccff7154e905d93e4dc",
+      "edits": [
+        {
+          "current": "    inputs:\n      optional_parameters:\n        description: Run the complete optional-parameter package matrix.\n        required: false\n        type: boolean\n        default: false\n      direct_proof_erasure:\n        description: Run direct proof-erasure package acceptance.\n        required: false\n        type: boolean\n        default: false\n",
+          "previous": "",
+          "start": 70
+        },
+        {
+          "current": "    timeout-minutes: 300\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 781
+        },
+        {
+          "current": "        if: inputs.optional_parameters\n",
+          "previous": "",
+          "start": 3255
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters\n",
+          "previous": "        if: always()\n",
+          "start": 3483
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n      - name: Qualify direct proof erasure in prepared language packages\n        id: direct_proof_erasure\n        if: inputs.direct_proof_erasure\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-direct-proof-erasure-language-ci.sh python\n      - name: Preserve direct proof-erasure language acceptance\n        if: always() && inputs.direct_proof_erasure\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-language-python-${{ github.sha }}\n          path: build/direct-proof-erasure-language-ci/python/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce native consumer support\n        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'\n",
+          "previous": "        if: always() && steps.optional_parameters.outcome != 'success'\n",
+          "start": 3868
+        },
+        {
+          "current": "    timeout-minutes: 300\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 5061
+        },
+        {
+          "current": "        if: inputs.optional_parameters\n",
+          "previous": "",
+          "start": 7207
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters\n",
+          "previous": "        if: always()\n",
+          "start": 7431
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n      - name: Qualify direct proof erasure in the prepared Ruby package\n        id: direct_proof_erasure\n        if: inputs.direct_proof_erasure\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-direct-proof-erasure-language-ci.sh ruby\n      - name: Preserve direct proof-erasure Ruby acceptance\n        if: always() && inputs.direct_proof_erasure\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-language-ruby-${{ github.sha }}\n          path: build/direct-proof-erasure-language-ci/ruby/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce managed consumer support\n        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'\n",
+          "previous": "        if: always() && steps.optional_parameters.outcome != 'success'\n",
+          "start": 7810
+        },
+        {
+          "current": "    timeout-minutes: 300\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 8992
+        },
+        {
+          "current": "        if: inputs.optional_parameters\n",
+          "previous": "",
+          "start": 11180
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters\n",
+          "previous": "        if: always()\n",
+          "start": 11404
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n      - name: Qualify direct proof erasure in prepared language packages\n        id: direct_proof_erasure\n        if: inputs.direct_proof_erasure\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-direct-proof-erasure-language-ci.sh rust\n      - name: Preserve direct proof-erasure language acceptance\n        if: always() && inputs.direct_proof_erasure\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-language-rust-${{ github.sha }}\n          path: build/direct-proof-erasure-language-ci/rust/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce native consumer support\n        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'\n",
+          "previous": "        if: always() && steps.optional_parameters.outcome != 'success'\n",
+          "start": 11783
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-languages.yml",
+      "previousSha256": "99992db5574eee63cf36531880c95477b6d1838b90af69c09c07a282ad2f1b72"
+    },
+    {
+      "currentSha256": "b78553b6c412ff7b078933e3328472f49be9d02e5c0399bf7cb95e8cafcf69e1",
+      "edits": [
+        {
+          "current": "    inputs:\n      optional_parameters:\n        description: Run the complete optional-parameter package matrix.\n        required: false\n        type: boolean\n        default: false\n      direct_proof_erasure:\n        description: Run direct proof-erasure package acceptance.\n        required: false\n        type: boolean\n        default: false\n",
+          "previous": "",
+          "start": 78
+        },
+        {
+          "current": "    timeout-minutes: 300\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 753
+        },
+        {
+          "current": "        if: inputs.optional_parameters\n",
+          "previous": "",
+          "start": 2847
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters\n",
+          "previous": "        if: always()\n",
+          "start": 3072
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n      - name: Qualify direct proof erasure in prepared managed packages\n        id: direct_proof_erasure\n        if: inputs.direct_proof_erasure\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-direct-proof-erasure-managed-ci.sh dotnet\n      - name: Preserve direct proof-erasure managed acceptance\n        if: always() && inputs.direct_proof_erasure\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-managed-dotnet-${{ github.sha }}\n          path: build/direct-proof-erasure-managed-ci/dotnet/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce managed consumer support\n        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'\n",
+          "previous": "        if: always() && steps.optional_parameters.outcome != 'success'\n",
+          "start": 3453
+        },
+        {
+          "current": "    timeout-minutes: 300\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 4624
+        },
+        {
+          "current": "        if: inputs.optional_parameters\n",
+          "previous": "",
+          "start": 7111
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters\n",
+          "previous": "        if: always()\n",
+          "start": 7332
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n      - name: Qualify direct proof erasure in prepared managed packages\n        id: direct_proof_erasure\n        if: inputs.direct_proof_erasure\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-direct-proof-erasure-managed-ci.sh jvm\n      - name: Preserve direct proof-erasure managed acceptance\n        if: always() && inputs.direct_proof_erasure\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-managed-jvm-${{ github.sha }}\n          path: build/direct-proof-erasure-managed-ci/jvm/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce managed consumer support\n        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'\n",
+          "previous": "        if: always() && steps.optional_parameters.outcome != 'success'\n",
+          "start": 7706
+        },
+        {
+          "current": "    timeout-minutes: 300\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 10843
+        },
+        {
+          "current": "        if: inputs.optional_parameters\n",
+          "previous": "",
+          "start": 14260
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters\n",
+          "previous": "        if: always()\n",
+          "start": 14637
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n      - name: Qualify direct proof erasure in the prepared WIT package\n        id: direct_proof_erasure\n        if: inputs.direct_proof_erasure\n        continue-on-error: true\n        timeout-minutes: 125\n        shell: bash\n        run: |\n          set -euo pipefail\n          export LEAN_BRIDGE_WASMTIME_C_API=\"$PWD/build/wasmtime-c-api\"\n          source scripts/env.sh\n          bash scripts/run-direct-proof-erasure-wit-ci.sh\n      - name: Preserve direct proof-erasure WIT acceptance\n        if: always() && inputs.direct_proof_erasure\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-wit-${{ github.sha }}\n          path: build/direct-proof-erasure-wit-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce WIT and WASI support\n        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'\n",
+          "previous": "        if: always() && steps.optional_parameters.outcome != 'success'\n",
+          "start": 14995
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-managed-wit.yml",
+      "previousSha256": "91bc96f8d08b310ca54b5930fd5dce99124f6d0044218d8ffe9366a4fa6bfe84"
+    },
+    {
+      "currentSha256": "4c975600a95e50e4007677089b290dde8357a7d78714ea99218c37b95a592cf5",
+      "edits": [
+        {
+          "current": "    inputs:\n      optional_parameters:\n        description: Run the complete optional-parameter package matrix.\n        required: false\n        type: boolean\n        default: false\n      direct_proof_erasure:\n        description: Run direct proof-erasure package acceptance.\n        required: false\n        type: boolean\n        default: false\n",
+          "previous": "",
+          "start": 64
+        },
+        {
+          "current": "    timeout-minutes: 300\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 3407
+        },
+        {
+          "current": "        if: inputs.optional_parameters\n",
+          "previous": "",
+          "start": 5446
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters\n",
+          "previous": "        if: always()\n",
+          "start": 5760
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n      - name: Execute direct proof erasure through prepared C and C++ packages\n        id: direct_proof_erasure\n        if: inputs.direct_proof_erasure\n        continue-on-error: true\n        timeout-minutes: 125\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          bash scripts/run-direct-proof-erasure-native-ci.sh\n      - name: Preserve direct proof-erasure C and C++ packages\n        if: always() && inputs.direct_proof_erasure\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-native-${{ github.sha }}\n          path: build/direct-proof-erasure-native-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce native consumer support\n        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'\n",
+          "previous": "        if: always() && steps.optional_parameters.outcome != 'success'\n",
+          "start": 6130
+        },
+        {
+          "current": "    timeout-minutes: 330\n",
+          "previous": "    timeout-minutes: 210\n",
+          "start": 7403
+        },
+        {
+          "current": "        if: inputs.optional_parameters\n",
+          "previous": "",
+          "start": 9939
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters\n",
+          "previous": "        if: always()\n",
+          "start": 10255
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n      - name: Qualify direct proof erasure in the prepared Perl package\n        id: direct_proof_erasure\n        if: inputs.direct_proof_erasure\n        continue-on-error: true\n        timeout-minutes: 135\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          export LEAN_BRIDGE_CORPUS_PERL=\"$PWD/.toolchains/perl/5.38.2-threaded/bin/perl\"\n          test -x \"$LEAN_BRIDGE_CORPUS_PERL\"\n          bash scripts/run-direct-proof-erasure-language-ci.sh perl\n      - name: Preserve direct proof-erasure Perl acceptance\n        if: always() && inputs.direct_proof_erasure\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-language-perl-${{ github.sha }}\n          path: build/direct-proof-erasure-language-ci/perl/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce direct proof-erasure Perl support\n        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'\n",
+          "previous": "        if: always() && steps.optional_parameters.outcome != 'success'\n",
+          "start": 10634
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-native-perl.yml",
+      "previousSha256": "215fdf1a40e03d9604b2389963afb1b413d542e7f126c0726cbadd3cd80f6138"
+    },
+    {
+      "currentSha256": "8cdaf8c82ffd19a5698014c7de4879adb7fc00cc70ce8686762c699a182ff756",
+      "edits": [
+        {
+          "current": "    inputs:\n      optional_parameters:\n        description: Run the complete optional-parameter package matrix.\n        required: false\n        type: boolean\n        default: false\n      direct_proof_erasure:\n        description: Run direct proof-erasure package acceptance.\n        required: false\n        type: boolean\n        default: false\n",
+          "previous": "",
+          "start": 65
+        },
+        {
+          "current": "        if: inputs.optional_parameters && matrix.route == 'reviewed'\n",
+          "previous": "        if: matrix.route == 'reviewed'\n",
+          "start": 5553
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && matrix.route == 'reviewed'\n",
+          "previous": "        if: always() && matrix.route == 'reviewed'\n",
+          "start": 5901
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && matrix.route == 'reviewed' && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n      - name: Require direct proof erasure in Node, TypeScript and three browsers\n        id: direct_proof_erasure\n        if: inputs.direct_proof_erasure && matrix.route == 'reviewed'\n        continue-on-error: true\n        timeout-minutes: 120\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          bash scripts/run-direct-proof-erasure-npm-ci.sh\n      - name: Preserve direct proof-erasure npm and browser records\n        if: always() && inputs.direct_proof_erasure && matrix.route == 'reviewed'\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-node-browser-${{ github.sha }}\n          path: build/direct-proof-erasure-npm-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce Node support and the browser corpus\n        if: always() && inputs.direct_proof_erasure && matrix.route == 'reviewed' && steps.direct_proof_erasure.outcome != 'success'\n",
+          "previous": "        if: always() && matrix.route == 'reviewed' && steps.optional_parameters.outcome != 'success'\n",
+          "start": 6311
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-npm-browser.yml",
+      "previousSha256": "5c1f9e4a5827d39a116cc40a9ff1b9200fae1bd12b6bad3ada2cb1687641f9f5"
+    },
+    {
+      "currentSha256": "e72d0c9394d36808a92948a8090d0c7bfb5ce11c3ea3e531ff83892b3fa07149",
+      "edits": [
+        {
+          "current": "    inputs:\n      optional_parameters:\n        description: Run the complete optional-parameter package matrix.\n        required: false\n        type: boolean\n        default: false\n      direct_proof_erasure:\n        description: Run direct proof-erasure package acceptance.\n        required: false\n        type: boolean\n        default: false\n",
+          "previous": "",
+          "start": 67
+        },
+        {
+          "current": "    timeout-minutes: 360\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 865
+        },
+        {
+          "current": "        if: inputs.optional_parameters\n",
+          "previous": "",
+          "start": 5392
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters\n",
+          "previous": "        if: always()\n",
+          "start": 6068
+        },
+        {
+          "current": "        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n      - name: Qualify direct proof erasure in native PHP and PHP-Wasm packages\n        id: direct_proof_erasure\n        if: inputs.direct_proof_erasure\n        continue-on-error: true\n        timeout-minutes: 125\n        env:\n          LEAN_BRIDGE_PHP: /usr/bin/php\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\"\n          test -d \"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\"\n          bash scripts/run-direct-proof-erasure-php-ci.sh\n      - name: Upload direct proof-erasure PHP evidence\n        if: always() && inputs.direct_proof_erasure\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-php-${{ github.sha }}\n          path: build/direct-proof-erasure-php-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce PHP support\n        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'\n",
+          "previous": "        if: always() && steps.optional_parameters.outcome != 'success'\n",
+          "start": 6426
+        }
+      ],
+      "path": ".github/workflows/nominal-subtype-php-wasm.yml",
+      "previousSha256": "6aca12d16d81b01a4a588bee5ef949788585e54290360eced65ea81535d1e1cd"
+    },
+    {
+      "currentSha256": "f1039010eac1f294e6e105cae49809f24386403ca6d59be29b2c4ab9c705d261",
+      "edits": [
+        {
+          "current": "    with:\n      optional_parameters: true\n",
+          "previous": "",
+          "start": 451
+        },
+        {
+          "current": "    with:\n      optional_parameters: true\n",
+          "previous": "",
+          "start": 607
+        },
+        {
+          "current": "    with:\n      optional_parameters: true\n",
+          "previous": "",
+          "start": 765
+        },
+        {
+          "current": "    with:\n      optional_parameters: true\n",
+          "previous": "",
+          "start": 921
+        },
+        {
+          "current": "    with:\n      optional_parameters: true\n",
+          "previous": "",
+          "start": 1066
+        }
+      ],
+      "path": ".github/workflows/optional-parameter-complete.yml",
+      "previousSha256": "4a170e7604f5ea6cbad647acd021cbce8b48452b81736ce5de7d0588a0b10f08"
+    },
+    {
+      "currentSha256": "bef8941553211265de9ea64bf86451f2ff215a2e4416fefc90cf9b96a0ed2532",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-matrix-receipt-tests.mjs\";\n",
+          "previous": "",
+          "start": 3177
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "83ffe854ff511d14723ff4b8068ddbceb38805eb5e67298b13dcedab97256be9"
+    },
+    {
+      "currentSha256": "a77a4da5181bdd4f8f8f00e805b4f3f8215c76aec1c8a9522750cd717a47f8f9",
+      "edits": [
+        {
+          "current": "\t, \"tests/helpers/direct-proof-erasure-matrix-receipt.mjs\"\n",
+          "previous": "",
+          "start": 987
+        },
+        {
+          "current": "const focusedProducers = Object.freeze([{\n\tfile: \".github/workflows/generic-subtype-npm-browser.yml\"\n\t, records: [[\"run-direct-proof-erasure-npm-ci.sh\"\n\t\t, \"direct-proof-erasure-node-browser\", \"build/direct-proof-erasure-npm-ci/\"]]\n}, {\n\tfile: \".github/workflows/generic-subtype-native-perl.yml\"\n\t, records: [\n\t\t[\"run-direct-proof-erasure-native-ci.sh\"\n\t\t\t, \"direct-proof-erasure-native\", \"build/direct-proof-erasure-native-ci/\"]\n\t\t, [\"run-direct-proof-erasure-language-ci.sh perl\"\n\t\t\t, \"direct-proof-erasure-language-perl\"\n\t\t\t, \"build/direct-proof-erasure-language-ci/perl/\"]\n\t]\n}, {\n\tfile: \".github/workflows/generic-subtype-languages.yml\"\n\t, records: [\"python\", \"ruby\", \"rust\"].map(profile => [\n\t\t`run-direct-proof-erasure-language-ci.sh ${profile}`\n\t\t, `direct-proof-erasure-language-${profile}`\n\t\t, `build/direct-proof-erasure-language-ci/${profile}/`\n\t])\n}, {\n\tfile: \".github/workflows/generic-subtype-managed-wit.yml\"\n\t, records: [\n\t\t[\"run-direct-proof-erasure-managed-ci.sh dotnet\"\n\t\t\t, \"direct-proof-erasure-managed-dotnet\"\n\t\t\t, \"build/direct-proof-erasure-managed-ci/dotnet/\"]\n\t\t, [\"run-direct-proof-erasure-managed-ci.sh jvm\"\n\t\t\t, \"direct-proof-erasure-managed-jvm\"\n\t\t\t, \"build/direct-proof-erasure-managed-ci/jvm/\"]\n\t\t, [\"run-direct-proof-erasure-wit-ci.sh\"\n\t\t\t, \"direct-proof-erasure-wit\", \"build/direct-proof-erasure-wit-ci/\"]\n\t]\n}, {\n\tfile: \".github/workflows/nominal-subtype-php-wasm.yml\"\n\t, records: [[\"run-direct-proof-erasure-php-ci.sh\"\n\t\t, \"direct-proof-erasure-php\", \"build/direct-proof-erasure-php-ci/\"]]\n}]);\n",
+          "previous": "",
+          "start": 1050
+        },
+        {
+          "current": "const assertFocusedProducer = (source, specification) => {\n\tassert.match(source\n\t\t, /^on:\\n {2}workflow_call:\\n {4}inputs:[\\s\\S]*?^ {6}direct_proof_erasure:/mu);\n\tassert.equal(source.match(/^ {8}id: direct_proof_erasure$/gmu)?.length\n\t\t, specification.records.length);\n\tassert.equal(source.match(/steps\\.direct_proof_erasure\\.outcome != 'success'/gu)?.length\n\t\t, specification.records.length);\n\tfor(const [script, artifact, path] of specification.records)\n\t{\n\t\tassert.equal(source.split(script).length - 1, 1, script);\n\t\tassert.equal(source.split(`name: ${artifact}-\\${{ github.sha }}`).length - 1\n\t\t\t, 1, artifact);\n\t\tassert.equal(source.split(`path: ${path}`).length - 1, 1, path);\n\t}\n};\n\nexport const assertDirectProofErasureCompleteWorkflow = source => {\n",
+          "previous": "const assertDirectProofErasureCompleteWorkflow = source => {\n",
+          "start": 2583
+        },
+        {
+          "current": "\t\t, [\"push\", \"pull_request\", \"workflow_dispatch\", \"schedule\", \"audit\"\n\t\t\t, \"npm-browser\", \"native-perl\", \"languages\", \"managed-wit\", \"php\"\n\t\t\t, \"receipt\"]);\n",
+          "previous": "\t\t, [\"push\", \"pull_request\", \"workflow_dispatch\", \"schedule\", \"audit\"]);\n",
+          "start": 3500
+        },
+        {
+          "current": "\tassert.match(source, /options:\\n {10}- audit\\n {10}- produce/u);\n",
+          "previous": "",
+          "start": 3877
+        },
+        {
+          "current": "\tconst audit = source.slice(source.indexOf(\"  audit:\\n\")\n\t\t, source.indexOf(\"  npm-browser:\\n\"));\n\tassert.match(audit, /^ {4}if: inputs\\.suite != 'produce'$/mu);\n\tassert.match(audit, /if: always\\(\\)\\n {8}uses: actions\\/upload-artifact@v7/u);\n\tassert.match(audit, /if-no-files-found: error/u);\n\tassert.doesNotMatch(audit, /continue-on-error|\\|\\| true/u);\n\tfor(const [job, workflow] of [\n\t\t[\"npm-browser\", \"generic-subtype-npm-browser\"]\n\t\t, [\"native-perl\", \"generic-subtype-native-perl\"]\n\t\t, [\"languages\", \"generic-subtype-languages\"]\n\t\t, [\"managed-wit\", \"generic-subtype-managed-wit\"]\n\t\t, [\"php\", \"nominal-subtype-php-wasm\"]\n\t]) {\n\t\tconst start = source.indexOf(`  ${job}:\\n`);\n\t\tassert.notEqual(start, -1, job);\n\t\tconst ends = keys.map(key => source.indexOf(`  ${key}:\\n`, start + 3))\n\t\t\t.filter(index => index > start);\n\t\tconst body = source.slice(start\n\t\t\t, ends.length === 0 ? undefined : Math.min(...ends));\n\t\tassert.match(body, /^ {4}if: inputs\\.suite == 'produce'$/mu);\n\t\tassert.ok(body.includes(`uses: ./.github/workflows/${workflow}.yml`));\n\t\tassert.ok(body.includes(\"direct_proof_erasure: true\"));\n\t}\n\tconst receipt = source.slice(source.indexOf(\"  receipt:\\n\"));\n\tassert.match(receipt\n\t\t, /^ {4}if: always\\(\\) && inputs\\.suite == 'produce'$/mu);\n\tassert.match(receipt\n\t\t, /pattern: direct-proof-erasure-\\*-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tassert.ok(receipt.includes(\"node scripts/reconcile-direct-proof-erasure-matrix.mjs\"));\n\tassert.ok(receipt.includes(\n\t\t'--workflow \".github/workflows/direct-proof-erasure-complete.yml\"'));\n\tassert.match(receipt\n\t\t, /name: direct-proof-erasure-matrix-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tassert.equal(receipt.match(/^ {8}continue-on-error: true$/gmu)?.length, 2);\n\tfor(const job of [\"npm-browser\", \"native-perl\", \"languages\", \"managed-wit\", \"php\"])\n\t\tassert.ok(receipt.includes(`needs.${job}.result != 'success'`));\n\tassert.ok(receipt.includes(\"steps.download.outcome != 'success'\"));\n\tassert.ok(receipt.includes(\"steps.reconciliation.outcome != 'success'\"));\n",
+          "previous": "\tassert.match(source, /if: always\\(\\)\\n {8}uses: actions\\/upload-artifact@v7/u);\n\tassert.match(source, /if-no-files-found: error/u);\n\tassert.doesNotMatch(source, /continue-on-error|\\|\\| true/u);\n",
+          "start": 4764
+        },
+        {
+          "current": "\t\t, source.replace(\"          - produce\\n\", \"\")\n\t\t, source.replace(\"direct_proof_erasure: true\", \"direct_proof_erasure: false\")\n\t\t, source.replace(\"steps.reconciliation.outcome != 'success'\", \"false\")\n",
+          "previous": "",
+          "start": 7719
+        },
+        {
+          "current": "\ntest(\"focused proof-erasure producers retain all ten fail-closed lanes\", async t => {\n\tfor(const specification of focusedProducers)\n\t{\n\t\tconst source = await readFile(specification.file, \"utf8\");\n\t\tassertFocusedProducer(source, specification);\n\t\tconst [script, artifact, path] = specification.records[0];\n\t\tfor(const changed of [\n\t\t\tsource.replace(script, \"disabled-script.sh\")\n\t\t\t, source.replace(artifact, \"disabled-artifact\")\n\t\t\t, source.replace(path, \"disabled/path/\")\n\t\t\t, source.replace(\n\t\t\t\t\"steps.direct_proof_erasure.outcome != 'success'\", \"false\")\n\t\t]) assert.throws(() => assertFocusedProducer(changed, specification)\n\t\t\t, assert.AssertionError, specification.file);\n\t}\n\tt.diagnostic(`${focusedProducers.length * 4} focused producer bypasses refused`);\n});\n",
+          "previous": "",
+          "start": 8110
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-ci-tests.mjs",
+      "previousSha256": "13290c0f7e9b9ffd675174cb54f3d5a1ecbb1a6e588a1b5b96584abc97449eb0"
+    },
+    {
+      "currentSha256": "1c6dc00d51436e86328445656229f48644eb3823df98fe61dd6d7ec2326a9d48",
+      "edits": [
+        {
+          "current": "\tassert.equal(workflow.match(/^ {8}continue-on-error: true$/gmu)?.length, 2);\n",
+          "previous": "\tassert.equal(workflow.match(/^ {8}continue-on-error: true$/gmu)?.length, 1);\n",
+          "start": 937
+        },
+        {
+          "current": "\t\t, /id: optional_parameters\\n {8}if: inputs\\.optional_parameters && matrix\\.route == 'reviewed'\\n {8}continue-on-error: true/u);\n\tassert.match(workflow\n\t\t, /id: direct_proof_erasure\\n {8}if: inputs\\.direct_proof_erasure && matrix\\.route == 'reviewed'\\n {8}continue-on-error: true/u);\n",
+          "previous": "\t\t, /id: optional_parameters\\n {8}if: matrix\\.route == 'reviewed'\\n {8}continue-on-error: true/u);\n",
+          "start": 1038
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-npm-browser-ci-tests.mjs",
+      "previousSha256": "e043954c454168e416cfac6cc9997ef135d230ef65567086000bc97c9f2ecc18"
+    },
+    {
+      "currentSha256": "40a46fc43718042ca4c0c2603b4d3e80b03545958b545a76b67093de2cecfc48",
+      "edits": [
+        {
+          "current": "\t\t, [\"timeout-minutes: 360\", \"timeout-minutes: 180\"]\n",
+          "previous": "\t\t, [\"timeout-minutes: 180\", \"timeout-minutes: 360\"]\n",
+          "start": 3328
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-wasm-ci-workflow-tests.mjs",
+      "previousSha256": "110a4d3e58e24782ae202c628ad1d4e2b19ef1890ff39004babe73cf7d5a3f34"
+    },
+    {
+      "currentSha256": "49edf6245cdf5f852f4693b9706d76ef2b9b632a870dc6a54a45d2e8194727ea",
+      "edits": [
+        {
+          "current": "\tassert.ok(source.includes(\"on:\\n  workflow_call:\\n    inputs:\\n\"));\n\tfor(const input of [\"optional_parameters\", \"direct_proof_erasure\"])\n\t\tassert.match(source, new RegExp(\n\t\t\t`^ {6}${input}:\\\\n {8}description: .+\\\\n {8}required: false\\\\n {8}type: boolean\\\\n {8}default: false$`, \"mu\"));\n\tassert.ok(source.includes(\"  workflow_dispatch:\\n\"));\n",
+          "previous": "\tassert.ok(source.includes(\"on:\\n  workflow_call:\\n  workflow_dispatch:\\n\"));\n",
+          "start": 561
+        },
+        {
+          "current": "\tassert.equal(source.match(/^ {8}continue-on-error: true$/gmu)?.length, 2);\n",
+          "previous": "\tassert.equal(source.match(/^ {8}continue-on-error: true$/gmu)?.length, 1);\n",
+          "start": 1362
+        },
+        {
+          "current": "\t\t, \"        if: inputs.optional_parameters\"\n\t\t, \"        if: always() && inputs.optional_parameters\"\n\t\t, \"        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'\"\n\t\t, \"        if: inputs.direct_proof_erasure\"\n\t\t, \"        if: always() && inputs.direct_proof_erasure\"\n\t\t, \"        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'\"\n",
+          "previous": "\t\t, \"        if: always()\"\n\t\t, \"        if: always() && steps.optional_parameters.outcome != 'success'\"\n",
+          "start": 1514
+        },
+        {
+          "current": "\tassert.equal((source.match(/^\\s+env:/gmu) ?? []).length, 4);\n",
+          "previous": "\tassert.equal((source.match(/^\\s+env:/gmu) ?? []).length, 3);\n",
+          "start": 2009
+        },
+        {
+          "current": "\tassert.ok(source.includes(\"    timeout-minutes: 360\\n\"));\n",
+          "previous": "\tassert.ok(source.includes(\"    timeout-minutes: 180\\n\"));\n",
+          "start": 2362
+        },
+        {
+          "current": "\t\t, \"Qualify direct proof erasure in native PHP and PHP-Wasm packages\"\n\t\t, \"Upload direct proof-erasure PHP evidence\"\n\t\t, \"Enforce PHP support\"\n",
+          "previous": "",
+          "start": 3216
+        },
+        {
+          "current": "\tassert.equal(step(names[12]), \"        id: optional_parameters\\n        if: inputs.optional_parameters\\n        continue-on-error: true\\n        timeout-minutes: 125\\n        env:\\n          LEAN_BRIDGE_PHP: /usr/bin/php\\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\\n        shell: bash\\n        run: |\\n          set -euo pipefail\\n          source scripts/env.sh\\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\\\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\\\"\\n          test -d \\\"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\\\"\\n          bash scripts/run-optional-parameter-php-ci.sh\\n\");\n\tassert.equal(step(names[13]), \"        if: always() && inputs.optional_parameters\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: optional-parameter-php-${{ github.sha }}\\n          path: build/optional-parameter-php-ci/\\n          if-no-files-found: error\\n          overwrite: true\\n          retention-days: 30\\n\");\n\tassert.match(step(names[15])\n\t\t, /^ {8}id: direct_proof_erasure\\n {8}if: inputs\\.direct_proof_erasure\\n {8}continue-on-error: true/mu);\n\tassert.ok(step(names[15]).includes(\n\t\t\"bash scripts/run-direct-proof-erasure-php-ci.sh\"));\n\tassert.ok(step(names[16]).includes(\n\t\t\"name: direct-proof-erasure-php-${{ github.sha }}\"));\n\tassert.ok(step(names[16]).includes(\n\t\t\"path: build/direct-proof-erasure-php-ci/\"));\n",
+          "previous": "\tassert.equal(step(names[12]), \"        id: optional_parameters\\n        continue-on-error: true\\n        timeout-minutes: 125\\n        env:\\n          LEAN_BRIDGE_PHP: /usr/bin/php\\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\\n        shell: bash\\n        run: |\\n          set -euo pipefail\\n          source scripts/env.sh\\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\\\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\\\"\\n          test -d \\\"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\\\"\\n          bash scripts/run-optional-parameter-php-ci.sh\\n\");\n\tassert.equal(step(names[13]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: optional-parameter-php-${{ github.sha }}\\n          path: build/optional-parameter-php-ci/\\n          if-no-files-found: error\\n          overwrite: true\\n          retention-days: 30\\n\");\n",
+          "start": 5138
+        },
+        {
+          "current": "\t\t, \"set -euo pipefail\\nsource scripts/env.sh\\nexport LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\\\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\\\"\\ntest -d \\\"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\\\"\\nbash scripts/run-direct-proof-erasure-php-ci.sh\"\n\t\t, \"exit 1\"\n",
+          "previous": "",
+          "start": 8866
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-wasm-ci-workflow.mjs",
+      "previousSha256": "43e83017b1d914f01b2f4e90f44b930811092941e4f4a2c5175057c5718b0ecf"
+    },
+    {
+      "currentSha256": "7fee42e1556dd9f65fc8e332fbda341dff59e463d94de57e041d3cccc35e87be",
+      "edits": [
+        {
+          "current": "\tassert.match(source\n\t\t, /^on:\\n {2}workflow_call:\\n {4}inputs:\\n {6}optional_parameters:/mu);\n\tassert.match(source, /^ {8}default: false$/mu);\n",
+          "previous": "\tassert.match(source, /^on:\\n {2}workflow_call:\\n/mu);\n",
+          "start": 3980
+        },
+        {
+          "current": "\t\tassert.match(run, /inputs\\.optional_parameters/u);\n",
+          "previous": "",
+          "start": 4659
+        },
+        {
+          "current": "\t\tassert.match(upload, /inputs\\.optional_parameters/u);\n",
+          "previous": "",
+          "start": 5044
+        },
+        {
+          "current": "\t\tassert.match(enforce, /inputs\\.optional_parameters/u);\n",
+          "previous": "",
+          "start": 5389
+        },
+        {
+          "current": "\tassert.equal(source.match(/^ {6}optional_parameters: true$/gmu)?.length, 5);\n",
+          "previous": "",
+          "start": 5915
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-matrix-receipt-tests.mjs",
+      "previousSha256": "fab27ce4f7e8e1ba5d902a7e7e63a4461d5c08142037a19528a28224484af85f"
+    }
+  ]
+}
