@@ -22,12 +22,14 @@ import {
 	optionalParameterPhpProfiles
 } from "./helpers/optional-parameter-php-report.mjs";
 import {
-	optionalParameterPhpPatterns
+	optionalParameterPhpProfilePatterns
 } from "./helpers/optional-parameter-installed-contract.mjs";
 import {
 	assertOptionalParameterPhpComponents, optionalParameterPhpComponentFact
 	, prepareOptionalParameterProject, retainOptionalParameterPhpComponents
 } from "./helpers/optional-parameter-packages.mjs";
+import { optionalParameterBinder }
+	from "./helpers/optional-parameter-fixture.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import {
 	copyPackageSetHandoff, retainPackageSetEvidence
@@ -49,11 +51,11 @@ const outputFor = route => resolve((
 const apiPath = (root, profile) => join(root, "vendor/example"
 	, `${profile === "php-wasm"
 		? "optionalparameters-php-wasm" : "optionalparameters"}/src/Api.php`);
-const phpInvalid = `$rejected = false;
-try { \\LeanDefaults\\word(value0: 7, extra: null); } catch (\\Error) { $rejected = true; }
+const phpInvalid = route => `$rejected = false;
+try { \\LeanDefaults\\word(${optionalParameterBinder(route)}: 7, extra: null); } catch (\\Error) { $rejected = true; }
 if (!$rejected) throw new \\RuntimeException('Unknown named input was accepted');`;
-const assertApi = (source, route) => {
-	for(const pattern of optionalParameterPhpPatterns(route))
+const assertApi = (source, route, profile) => {
+	for(const pattern of optionalParameterPhpProfilePatterns(route, profile))
 		assert.match(source, pattern);
 };
 
@@ -151,7 +153,7 @@ for(const route of routes) test(
 		});
 		const nativeRoot = join(consumer, "php-native");
 		const nativeApi = await readFile(apiPath(nativeRoot, "php-native"));
-		assertApi(nativeApi.toString(), route);
+		assertApi(nativeApi.toString(), route, "php-native");
 		const relocatedNative = join(consumer, "php-native-relocated");
 		await rename(nativeRoot, relocatedNative);
 		await assert.rejects(access(nativeRoot), { code: "ENOENT" });
@@ -186,14 +188,14 @@ for(const route of routes) test(
 			, environment
 			, fixture: {
 				source: () => source, success: "optional-parameter-php"
-				, phpInvalid, removeHandoff: true
+				, phpInvalid: phpInvalid(route), removeHandoff: true
 			}
 		});
 		await assert.rejects(access(handoff), { code: "ENOENT" });
 		const wasmRoot = join(consumer, "php-wasm");
 		const wasmSource = await readFile(join(wasmRoot, "weak.php"));
 		const wasmApi = await readFile(apiPath(wasmRoot, "php-wasm"));
-		assertApi(wasmApi.toString(), route);
+		assertApi(wasmApi.toString(), route, "php-wasm");
 		const driver = await readFile(join(wasmRoot, "driver.mjs"));
 		await saveLakeFile(records, "php-wasm/consumer.php", wasmSource);
 		await saveLakeFile(records, "php-wasm/Api.php", wasmApi);

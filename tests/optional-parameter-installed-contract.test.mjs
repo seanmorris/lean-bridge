@@ -4,7 +4,9 @@ import test from "node:test";
 import {
 	managedCompilationDiagnostic, managedDiagnosticCount, managedDiagnosticPattern
 	, optionalParameterCppPattern, optionalParameterPhpPatterns
+	, optionalParameterPhpProfilePatterns
 	, optionalParameterPythonPatterns, optionalParameterRubyPatterns
+	, optionalParameterTypescriptPatterns
 	, optionalParameterWitPatterns
 } from "./helpers/optional-parameter-installed-contract.mjs";
 import {
@@ -54,6 +56,33 @@ function word(mixed $arg0 = 7): int {}
 		assert.match(reviewed, pattern);
 	assert.throws(() => optionalParameterPhpPatterns("foreign"), /unknown/u);
 	assert.doesNotMatch(source, optionalParameterPhpPatterns("reviewed")[0]);
+	const wasm = source
+		.replace("= 7): int", "= null): \\Brick\\Math\\BigInteger")
+		.replace("$arg0 = new Some(9)"
+			, "$arg0 = new Some(\\Brick\\Math\\BigInteger::of('9'))")
+		+ "\\Brick\\Math\\BigInteger::of('7');\n";
+	for(const pattern of optionalParameterPhpProfilePatterns(
+		"ordinary", "php-wasm")) assert.match(wasm, pattern);
+	assert.throws(() => optionalParameterPhpProfilePatterns(
+		"ordinary", "foreign"), /unknown/u);
+});
+
+test("optional-parameter TypeScript contracts retain route-specific binders", () => {
+	const ordinaryDeclarations = [
+		"word(arg0?: number): number;"
+		, "natural(arg0?: bigint): bigint;"
+		, "present(arg0?: Readonly<{ tag: \"none\" }>): Readonly<unknown>;"
+		, "unitValue(arg0?: void): void;"
+	].join("\n");
+	for(const pattern of optionalParameterTypescriptPatterns("ordinary"))
+		assert.match(ordinaryDeclarations, pattern);
+	const reviewed = ordinaryDeclarations.replaceAll("arg0", "value0");
+	for(const pattern of optionalParameterTypescriptPatterns("reviewed"))
+		assert.match(reviewed, pattern);
+	assert.doesNotMatch(ordinaryDeclarations
+		, optionalParameterTypescriptPatterns("reviewed")[0]);
+	assert.throws(() => optionalParameterTypescriptPatterns("foreign")
+		, /unknown/u);
 });
 
 test("optional language contracts retain route-specific binders", () => {

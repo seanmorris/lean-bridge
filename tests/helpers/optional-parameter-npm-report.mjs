@@ -24,6 +24,8 @@ import {
 import {
 	optionalParameterTargetConfiguration
 } from "./optional-parameter-packages.mjs";
+import { optionalParameterTypescriptPatterns }
+	from "./optional-parameter-installed-contract.mjs";
 import {
 	optionalParameterMatrixCases
 } from "./optional-parameter-matrix.mjs";
@@ -203,11 +205,8 @@ console.log(JSON.stringify(checkOptionalParameters(api)));
 	assert.equal((await read("index.mjs")).toString(), expectedCaller);
 	assert.equal(report.callerSha256, sha256(await read("index.mjs")));
 	assert.equal(report.declarationsSha256, sha256(await read("index.d.ts")));
-	for(const signature of [
-		/word\(value0\?: number\): number;/u
-		, /natural\(value0\?: bigint\): bigint;/u
-		, /unitValue\(value0\?: void\): void;/u
-	]) assert.match((await read("index.d.ts")).toString(), signature);
+	for(const signature of optionalParameterTypescriptPatterns(options.route))
+		assert.match((await read("index.d.ts")).toString(), signature);
 	const handoff = await json("handoff/component-package-receipt.json");
 	assert.deepEqual(handoff, report.receipt);
 	for(const item of [handoff.runtime, handoff.package])

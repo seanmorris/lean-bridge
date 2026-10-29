@@ -24,6 +24,8 @@ import {
 import {
 	checkOptionalParameterBrowsers
 } from "./helpers/optional-parameter-browser.mjs";
+import { optionalParameterTypescriptPatterns }
+	from "./helpers/optional-parameter-installed-contract.mjs";
 import {
 	assertOptionalParameterBundle, prepareOptionalParameterProject
 } from "./helpers/optional-parameter-packages.mjs";
@@ -192,12 +194,8 @@ for(const route of routes) test(
 		};
 		const declarations = await readFile(
 			join(componentRoot, "index.d.ts"), "utf8");
-		for(const signature of [
-			/word\(value0\?: number\): number;/u
-			, /natural\(value0\?: bigint\): bigint;/u
-			, /present\(value0\?: Readonly</u
-			, /unitValue\(value0\?: void\): void;/u
-		]) assert.match(declarations, signature);
+		for(const signature of optionalParameterTypescriptPatterns(route))
+			assert.match(declarations, signature);
 		await saveLakeFile(records, "index.mjs", caller);
 		await saveLakeFile(records, "check.mjs", await readFile(
 			"tests/fixtures/optional-parameter-consumers/javascript.mjs"

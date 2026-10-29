@@ -56,6 +56,45 @@ export const optionalParameterPhpPatterns = route => {
 };
 
 /**
+ * Return exact public PHP signatures for one authoring route and runtime.
+ *
+ * @param route - Ordinary or independently reviewed authoring route.
+ * @param profile - Native PHP or PHP-Wasm package profile.
+ */
+export const optionalParameterPhpProfilePatterns = (route, profile) => {
+	const argument = routeBinder(route);
+	if(!["php-native", "php-wasm"].includes(profile))
+		throw new TypeError("unknown optional-parameter PHP profile");
+	if(profile === "php-native") return optionalParameterPhpPatterns(route);
+	return Object.freeze([
+		new RegExp(
+			`function word\\(mixed \\$${argument} = null\\): \\\\Brick\\\\Math\\\\BigInteger`, "u")
+		, /Brick\\Math\\BigInteger::of\('7'\)/u
+		, new RegExp(`function natural\\(mixed \\$${argument} = null\\)`, "u")
+		, new RegExp(`function present\\(mixed \\$${argument} = null\\)`, "u")
+		, new RegExp(
+			`\\$${argument} = new Some\\(\\\\Brick\\\\Math\\\\BigInteger::of\\('9'\\)\\)`, "u")
+		, new RegExp(
+			`function unit_value\\(mixed \\$${argument} = null\\): null`, "u")
+	]);
+};
+
+/**
+ * Return exact TypeScript declarations for one authoring route.
+ *
+ * @param route - Ordinary or independently reviewed authoring route.
+ */
+export const optionalParameterTypescriptPatterns = route => {
+	const argument = routeBinder(route);
+	return Object.freeze([
+		new RegExp(`word\\(${argument}\\?: number\\): number;`, "u")
+		, new RegExp(`natural\\(${argument}\\?: bigint\\): bigint;`, "u")
+		, new RegExp(`present\\(${argument}\\?: Readonly<`, "u")
+		, new RegExp(`unitValue\\(${argument}\\?: void\\): void;`, "u")
+	]);
+};
+
+/**
  * Return exact Python signatures for one authoring route.
  *
  * @param route - Ordinary or independently reviewed authoring route.

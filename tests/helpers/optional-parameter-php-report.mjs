@@ -11,6 +11,8 @@ import { validatePackageSetReceipt } from "../../src/release/package-set-receipt
 import {
 	optionalParameterExports, optionalParameterModule
 } from "./optional-parameter-fixture.mjs";
+import { optionalParameterPhpProfilePatterns }
+	from "./optional-parameter-installed-contract.mjs";
 import { optionalParameterMatrixCases } from "./optional-parameter-matrix.mjs";
 import {
 	checkOptionalParameterPhpComponentRecords
@@ -27,13 +29,6 @@ const factKeys = [
 	, "packageSetReceiptSha256"
 ].sort();
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
-const apiPatterns = [
-	/function word\(mixed \$value0 = 7\): int/u
-	, /function natural\(mixed \$value0 = null\)/u
-	, /function present\(mixed \$value0 = null\)/u
-	, /\$value0 = new Some\(9\)/u
-	, /function unit_value\(mixed \$value0 = null\): null/u
-];
 
 /**
  * Validate one ordinary or reviewed retained report.
@@ -176,7 +171,8 @@ export const checkOptionalParameterPhpRecords = async (read, options) => {
 	for(const item of report.observations)
 	{
 		const api = await read(`${item.profile}/Api.php`);
-		for(const pattern of apiPatterns) assert.match(api.toString(), pattern);
+		for(const pattern of optionalParameterPhpProfilePatterns(
+			options.route, item.profile)) assert.match(api.toString(), pattern);
 		assert.equal(item.apiSha256, sha256(api));
 		const pkg = report.receipt.packages.find(value =>
 			value.target === item.profile && value.ecosystem === "composer");
