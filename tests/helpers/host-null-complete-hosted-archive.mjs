@@ -413,6 +413,7 @@ export const hostNullCompleteHostedSources = revisions => {
 		assert.match(revision, /^[a-f0-9]{40}$/u);
 	const checkerPaths = moduleClosure(revisions.checker, [
 		"tests/helpers/host-null-complete-hosted-archive.mjs"
+		, "tests/helpers/host-null-complete-hosted-evidence.mjs"
 	]);
 	const archiverPaths = moduleClosure(revisions.archiver, [
 		"scripts/archive-host-null-complete-evidence.mjs"
