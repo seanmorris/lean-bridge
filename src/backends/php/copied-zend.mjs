@@ -25,10 +25,18 @@ const phpWire = model => model.surface.copies.map(copy => {
 	{ input = "(string) $value"; output = "\\Brick\\Math\\BigInteger::of($value)"; }
 	else if(name === "bytes")
 	{ input = "$value->toString()"; output = `${ns}Bytes::fromString($value)`; }
-	else if(copy.compound === "option")
+	else if(copy.compound === "host-null")
 	{
-		input = `$value === null ? null : [self::to${copy.fields[0].type.index}($value->value)]`;
-		output = `$value === null ? null : new ${ns}Some(self::from${copy.fields[0].type.index}($value[0]))`;
+		input = `$value === null ? null : self::to${copy.fields[0].type.index}($value)`;
+		output = `$value === null ? null : self::from${copy.fields[0].type.index}($value)`;
+	} else if(copy.compound === "option")
+	{
+		input = model.taggedOptions
+			? `$value instanceof ${ns}None ? [] : [self::to${copy.fields[0].type.index}($value->value)]`
+			: `$value === null ? null : [self::to${copy.fields[0].type.index}($value->value)]`;
+		output = model.taggedOptions
+			? `$value === [] ? new ${ns}None() : new ${ns}Some(self::from${copy.fields[0].type.index}($value[0]))`
+			: `$value === null ? null : new ${ns}Some(self::from${copy.fields[0].type.index}($value[0]))`;
 	} else if(copy.compound === "result")
 	{
 		input = `$value instanceof ${ns}Ok ? [true, self::to${copy.fields[0].type.index}($value->value)] : [false, self::to${copy.fields[1].type.index}($value->value)]`;

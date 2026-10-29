@@ -37,7 +37,7 @@ const direct: null | number = api.echo(null);
 const nullableOption = api.nullableOption({ tag: "some", value: 42 });
 const optionalNullable = api.optionalNullable({ tag: "some", value: null });
 const packet: api.Packet = { direct, nullableOption, optionalNullable };
-api.packet(packet);
+api.echoPacket(packet);
 api.callHost(null, value => value === null ? { tag: "none" } : { tag: "some", value });
 const closure = api.makeClosure(null);
 closure(42); closure[Symbol.dispose]();

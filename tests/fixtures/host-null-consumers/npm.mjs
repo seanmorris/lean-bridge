@@ -37,7 +37,7 @@ export const checkHostNull = api => {
 		, { direct: 9, nullableOption: { tag: "some", value: 11 }, optionalNullable: { tag: "some", value: 13 } }
 	];
 	for(const packet of packets)
-		equal(api.packet(packet), packet, "HostNull record fields");
+		equal(api.echoPacket(packet), packet, "HostNull record fields");
 
 	let calls = 0;
 	check(api.callHost(null, value => { calls++; check(value === null, "Callback null parameter"); return { tag: "none" }; }).tag === "none", "Callback tagged result");
@@ -54,7 +54,7 @@ export const checkHostNull = api => {
 	for(const value of [undefined, { tag: "some" }, { tag: "some", value: null }]) rejects(() => api.nullableOption(value));
 	for(const value of [null, undefined, { tag: "some" }]) rejects(() => api.optionalNullable(value));
 	for(const packet of [{ ...packets[0], direct: undefined }, { ...packets[0], nullableOption: undefined }, { ...packets[0], optionalNullable: null }])
-		rejects(() => api.packet(packet));
+		rejects(() => api.echoPacket(packet));
 	let invoked = 0;
 	rejects(() => api.callHost(undefined, () => { invoked++; return null; }));
 	check(invoked === 0, "Invalid callback input reached host");
@@ -63,7 +63,7 @@ export const checkHostNull = api => {
 	rejects(() => invalidClosure(undefined)); invalidClosure.dispose();
 	let reads = 0;
 	const accessor = Object.defineProperty({ ...packets[0] }, "direct", { get: () => { reads++; return null; } });
-	rejects(() => api.packet(accessor)); check(reads === 0, "Accessor executed");
+	rejects(() => api.echoPacket(accessor)); check(reads === 0, "Accessor executed");
 
 	return { checks, rejections, positions: 5, nestedOptionDistinct: true };
 };

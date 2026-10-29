@@ -14,7 +14,7 @@ import { phpVariantDefinition, phpVariantChecks, phpVariantConversions } from ".
 export const copiedPhpDefinitions = model => {
 	const { surface } = model;
 	return ["typedef struct { int code; void *message; size_t message_length; } BridgeError;"
-		, ...surface.copies.filter(copy => copy.aggregate).map(copy => copy.variant ? phpVariantDefinition(copy) : `typedef struct { ${copy.compound === "option" ? "uint8_t has_value; " : copy.compound === "result" ? "uint8_t is_ok; " : ""}${copy.record || copy.compound ? copy.fields.length ? copy.fields.map(field => `${phpFfiType(field.type)} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === "int" ? " uint8_t negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
+		, ...surface.copies.filter(copy => copy.aggregate).map(copy => copy.variant ? phpVariantDefinition(copy) : `typedef struct { ${["host-null", "option"].includes(copy.compound) ? "uint8_t has_value; " : copy.compound === "result" ? "uint8_t is_ok; " : ""}${copy.record || copy.compound ? copy.fields.length ? copy.fields.map(field => `${phpFfiType(field.type)} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === "int" ? " uint8_t negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
 		, ...surface.callbacks.size ? [phpCallableDefinitions(model)] : []
 		, ...surface.functions.map(fn => { const result = phpValue(model, fn.declaration.result.type); return `int ${fn.name}(${fn.declaration.parameters.map(site => { const copy = phpValue(model, site.type); return phpFfiType(copy) + (copy.aggregate || copy.type?.callable ? " *" : ""); }).concat(fn.resultType === "void" ? [] : [result.type?.callable ? `${result.ownedType} **` : `${phpFfiType(result)} *`]).concat("BridgeError *").join(", ")});`; })
 	].join("\n");
@@ -45,9 +45,19 @@ export const copiedPhpChecks = model => model.surface.copies.map(copy => {
 	else if(name === "char") lines.push("if (!is_string($value)) throw new \\TypeError('Char requires a string');", "if (strlen($value) < 1 || strlen($value) > 4 || preg_match('/\\\\A.\\\\z/us', $value) !== 1) throw new \\ValueError('Char requires one Unicode scalar');");
 	else if(name === "string") lines.push("if (!is_string($value)) throw new \\TypeError('Expected a UTF-8 string');", "$budget->charge(strlen($value));", "if (preg_match('//u', $value) !== 1) throw new \\ValueError('String requires valid UTF-8');");
 	else if(name === "bytes") lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected Bytes');`, "$budget->charge(strlen($value->toString()));");
-	else if(copy.compound === "option" || copy.compound === "result")
+	else if(copy.compound === "host-null")
 	{
-		if(copy.compound === "option") lines.push("if ($value === null) return null;");
+		lines.push("if ($value === null) return null;"
+			, `return self::check${copy.fields[0].type.index}($value, $budget);`);
+	} else if(copy.compound === "option" || copy.compound === "result")
+	{
+		if(copy.compound === "option")
+		{
+			if(model.taggedOptions) lines.push(`if ($value instanceof \\${model.namespace}\\None) {`
+				, "    if (array_keys(get_object_vars($value)) !== []) throw new \\TypeError('None has no value fields');"
+				, `    return new \\${model.namespace}\\None();`, "}");
+			else lines.push("if ($value === null) return null;");
+		}
 		const branches = copy.compound === "option" ? ["Some"] : ["Ok", "Err"];
 		branches.forEach((branch, i) => lines.push(`if ($value instanceof \\${model.namespace}\\${branch}) {`
 			, `    if (array_keys(get_object_vars($value)) !== ['value']) throw new \\TypeError('${branch} requires one initialized value field');`
@@ -111,9 +121,14 @@ export const copiedPhpConversions = model => model.surface.copies.map(copy => {
 		const from = field => `self::from${field.type.index}($value->${field.name}, $scope)`;
 		if(copy.compound === "option")
 		{
-			input.push("if ($value !== null) {", "    $out->has_value = 1;", ...to(copy.fields[0], "$value->value").map(line => `    ${line}`), "}");
+			input.push(`if (${model.taggedOptions ? `$value instanceof ${ns}Some` : "$value !== null"}) {`, "    $out->has_value = 1;", ...to(copy.fields[0], "$value->value").map(line => `    ${line}`), "}");
 			output.push("if ($value->has_value !== 0 && $value->has_value !== 1) throw new \\RuntimeException('Invalid native Option flag');"
-				, `return $value->has_value === 0 ? null : new ${ns}Some(${from(copy.fields[0])});`);
+				, `return $value->has_value === 0 ? ${model.taggedOptions ? `new ${ns}None()` : "null"} : new ${ns}Some(${from(copy.fields[0])});`);
+		} else if(copy.compound === "host-null")
+		{
+			input.push("if ($value !== null) {", "    $out->has_value = 1;", ...to(copy.fields[0], "$value").map(line => `    ${line}`), "}");
+			output.push("if ($value->has_value !== 0 && $value->has_value !== 1) throw new \\RuntimeException('Invalid native HostNull flag');"
+				, `return $value->has_value === 0 ? null : ${from(copy.fields[0])};`);
 		} else if(copy.compound === "result")
 		{
 			input.push(`if ($value instanceof ${ns}Ok) {`, "    $out->is_ok = 1;", ...to(copy.fields[0], "$value->value").map(line => `    ${line}`)

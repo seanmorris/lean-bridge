@@ -17,7 +17,7 @@ def nullableOption (value : HostNull (Option UInt32)) : HostNull (Option UInt32)
 
 def optionalNullable (value : Option (HostNull UInt32)) : Option (HostNull UInt32) := value
 
-def packet (value : Packet) : Packet := value
+def echoPacket (value : Packet) : Packet := value
 
 def callHost (value : HostNull UInt32)
     (callback : HostNull UInt32 → HostNull (Option UInt32)) : HostNull (Option UInt32) :=

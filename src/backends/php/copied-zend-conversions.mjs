@@ -56,15 +56,28 @@ export const copiedZendConversions = (model, { copyCallbackBuffers = false } = {
 		output.push("if (!lb_readable(s, value->data, value->length, 1, 1)) return 0;");
 		if(name === "string") output.push('if (!lb_utf8((const unsigned char *)value->data, value->length)) return lb_fail(s, "Native string is not valid UTF-8", 0);');
 		output.push('ZVAL_STRINGL(out, value->length ? (const char *)value->data : "", value->length);');
-	} else if(copy.compound === "option")
+	} else if(copy.compound === "host-null")
 	{
 		const field = copy.fields[0].type;
 		input.push("if (Z_TYPE_P(value) == IS_NULL) { out->has_value = 0; return 1; }"
+			, "out->has_value = 1;"
+			, `if (!lb_to${field.index}(value, &out->value, s)) return 0;`);
+		output.push('if (value->has_value > 1) return lb_fail(s, "Invalid native HostNull flag", 0);'
+			, "if (!value->has_value) { ZVAL_NULL(out); return 1; }"
+			, `return lb_from${field.index}(&value->value, out, s);`);
+	} else if(copy.compound === "option")
+	{
+		const field = copy.fields[0].type;
+		if(model.taggedOptions) input.push('if (Z_TYPE_P(value) != IS_ARRAY || !zend_array_is_list(Z_ARRVAL_P(value)) || zend_hash_num_elements(Z_ARRVAL_P(value)) > 1) return lb_fail(s, "Tagged Option wire requires zero or one payload", 1);'
+			, "if (zend_hash_num_elements(Z_ARRVAL_P(value)) == 0) { out->has_value = 0; return 1; }"
+			, "if (!lb_charge(s, 1, 32)) return 0;", "out->has_value = 1;"
+			, `if (!lb_to${field.index}(zend_hash_index_find(Z_ARRVAL_P(value), 0), &out->value, s)) return 0;`);
+		else input.push("if (Z_TYPE_P(value) == IS_NULL) { out->has_value = 0; return 1; }"
 			, 'if (Z_TYPE_P(value) != IS_ARRAY || !zend_array_is_list(Z_ARRVAL_P(value)) || zend_hash_num_elements(Z_ARRVAL_P(value)) != 1) return lb_fail(s, "Option wire requires null or one payload", 1);'
 			, "if (!lb_charge(s, 1, 32)) return 0;", "out->has_value = 1;"
 			, `if (!lb_to${field.index}(zend_hash_index_find(Z_ARRVAL_P(value), 0), &out->value, s)) return 0;`);
 		output.push('if (value->has_value > 1) return lb_fail(s, "Invalid native Option flag", 0);'
-			, "if (!value->has_value) { ZVAL_NULL(out); return 1; }"
+			, model.taggedOptions ? "if (!value->has_value) { array_init(out); return 1; }" : "if (!value->has_value) { ZVAL_NULL(out); return 1; }"
 			, "if (!lb_charge(s, 1, 32)) return 0;", "array_init_size(out, 1);", "zval item; ZVAL_NULL(&item);"
 			, `if (!lb_from${field.index}(&value->value, &item, s)) { zval_ptr_dtor(&item); return 0; }`, "add_next_index_zval(out, &item);");
 	} else if(copy.compound === "result")

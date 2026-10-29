@@ -42,7 +42,9 @@ export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integer
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-php-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
 	};
 	const names = new Set(reserved);
-	const branches = [...(surface.copies.some(copy => copy.compound === "option") ? ["Some"] : [])
+	const hostNull = surface.copies.some(copy => copy.compound === "host-null");
+	const taggedOptions = hostNull && surface.copies.some(copy => copy.compound === "option");
+	const branches = [...(surface.copies.some(copy => copy.compound === "option") ? taggedOptions ? ["None", "Some"] : ["Some"] : [])
 		, ...(surface.copies.some(copy => copy.compound === "result") ? ["Ok", "Err"] : [])];
 	branches.forEach(name => names.add(name.toLowerCase()));
 	for(const copy of surface.copies)
@@ -57,15 +59,19 @@ export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integer
 				field.publicName = phpFieldName(copy.record.fields[index].name, message => fail(ir.declarations[0], message));
 		}
 		copy.publicType = copy.record || copy.variant ? copy.publicName : copy.compound
-			? { option: "Some|null", result: "Ok|Err", tuple: "array" }[copy.compound]
+			? { "host-null": `${copy.fields[0].type.publicType}|null`, option: taggedOptions ? "None|Some" : "Some|null", result: "Ok|Err", tuple: "array" }[copy.compound]
 			: copy.element ? "array" : primitives[copy.scalarName];
 		if(integerBits === 32 && ["uint32", "int64"].includes(copy.scalarName)) copy.publicType = bigInteger;
-		copy.docType = copy.compound === "option" ? `Some<${copy.fields[0].type.docType}>|null`
-			: copy.compound === "result" ? `Ok<${copy.fields[0].type.docType}>|Err<${copy.fields[1].type.docType}>`
-				: copy.compound === "tuple" ? `array{${copy.fields.map(field => field.type.docType).join(", ")}}`
-					: copy.element ? `list<${copy.element.docType}>` : copy.publicType;
+		copy.docType = copy.compound === "host-null" ? `${copy.fields[0].type.docType}|null`
+			: copy.compound === "option" ? `${taggedOptions ? "None|" : ""}Some<${copy.fields[0].type.docType}>${taggedOptions ? "" : "|null"}`
+				: copy.compound === "result" ? `Ok<${copy.fields[0].type.docType}>|Err<${copy.fields[1].type.docType}>`
+					: copy.compound === "tuple" ? `array{${copy.fields.map(field => field.type.docType).join(", ")}}`
+						: copy.element ? `list<${copy.element.docType}>` : copy.publicType;
 		copy.ctype = copy.aggregate ? copy.name : copy.scalarName === "unit" ? "uint8_t" : copy.name;
 	}
+	for(const copy of surface.copies.filter(copy => copy.compound === "host-null"))
+		if(copy.fields[0].type.publicType.split("|").includes("null"))
+			fail(ir.declarations[0], "PHP HostNull payloads must retain a value distinct from null");
 	for(const fn of surface.functions)
 	{
 		// Keyword names gain one trailing underscore, as class names and graph functions do;
@@ -82,5 +88,5 @@ export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integer
 			, ownedType: `${surface.prefix}_owned_${callback.field}`
 			, docType: `callable(${callback.type.callable.parameters.map(site => doc(site.type)).join(", ")}): ${doc(callback.type.callable.result.type)}` });
 	}
-	return { ir, surface, namespace, branches };
+	return { ir, surface, namespace, branches, hostNull, taggedOptions };
 };

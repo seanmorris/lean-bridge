@@ -15,7 +15,7 @@ import { constructorRefinementLeaves } from "../../build/component-refinements.m
  */
 export const nativeCReference = type => type.kind === "primitive" ? { kind: "primitive", name: type.name }
 	: type.kind === "callback" ? { kind: "named", id: `bridge:Callback${sha256(canonicalJson({ parameters: type.parameters.map(nativeCReference), result: nativeCReference(type.result) })).slice(0, 20)}` }
-		: ["array", "list", "option"].includes(type.kind) ? { kind: "apply", constructor: type.kind, arguments: [nativeCReference(type.element)] }
+		: ["array", "host-null", "list", "option"].includes(type.kind) ? { kind: "apply", constructor: type.kind, arguments: [nativeCReference(type.element)] }
 			: ["result", "tuple"].includes(type.kind) ? { kind: "apply", constructor: type.kind, arguments: type.arguments.map(nativeCReference) }
 				: { kind: "named", id: `lean:${type.name}` };
 const dynamic = type => ["string", "bytes", "nat", "int"].includes(type.name);
@@ -106,10 +106,10 @@ export const finRefinementWalk = ({ refinement, type: root, value: argument, con
 				, ...children.flatMap((child, field) => child === null ? [] : check(child, type.cases[index].fields[field].type, `(&${value}->cases.${cases[index].name}.${cases[index].fields[field].name})`, `${indent}  `, [...path, `.${site.cases[index].name}.${site.cases[index].fields[field]}`]))
 				, `${indent}}`]);
 		}
-		const flag = { option: "has_value", result: "is_ok" }[site.kind];
+		const flag = { "host-null": "has_value", option: "has_value", result: "is_ok" }[site.kind];
 		return site.arguments.flatMap((child, index) => {
 			if(child === null) return [];
-			const suffix = site.kind === "option" ? "?" : site.kind === "result" ? `.${index ? "error" : "ok"}` : `.${index}`;
+			const suffix = ["host-null", "option"].includes(site.kind) ? "?" : site.kind === "result" ? `.${index ? "error" : "ok"}` : `.${index}`;
 			const inner = check(child, type.arguments ? type.arguments[index] : type.element, `(&${value}->${fields[index].name})`, flag ? `${indent}  ` : indent, [...path, suffix]);
 			return flag ? [`${indent}if (${index === 1 ? "!" : ""}${value}->${flag}) {`, ...inner, `${indent}}`] : inner;
 		});
@@ -167,7 +167,7 @@ export const constructorRefinementWalk = ({ refinement, type: root, value: argum
 				return inner.length ? [`${indent}if (${value}->kind == ${index}u) {`, ...inner, `${indent}}`] : [];
 			});
 		}
-		if(!["array", "list", "option", "tuple", "result"].includes(site.kind)) throw new TypeError("Unsupported constructor refinement transport");
+		if(!["array", "host-null", "list", "option", "tuple", "result"].includes(site.kind)) throw new TypeError("Unsupported constructor refinement transport");
 		if(["array", "list"].includes(site.kind))
 		{
 			const index = `k${indent.length}`;
@@ -175,10 +175,10 @@ export const constructorRefinementWalk = ({ refinement, type: root, value: argum
 				, ...check(site.arguments[0], type.element, `(&${value}->data[${index}])`, `${indent}  `, [...path, "[", { index }, "]"], `${suffix}_0`)
 				, `${indent}}`];
 		}
-		const fields = copy(type).fields, flag = { option: "has_value", result: "is_ok" }[site.kind];
+		const fields = copy(type).fields, flag = { "host-null": "has_value", option: "has_value", result: "is_ok" }[site.kind];
 		return site.arguments.flatMap((child, index) => {
 			if(child === null) return [];
-			const segment = site.kind === "option" ? "?" : site.kind === "result" ? `.${index ? "error" : "ok"}` : `.${index}`;
+			const segment = ["host-null", "option"].includes(site.kind) ? "?" : site.kind === "result" ? `.${index ? "error" : "ok"}` : `.${index}`;
 			const inner = check(child, type.arguments?.[index] ?? type.element, `(&${value}->${fields[index].name})`, flag ? `${indent}  ` : indent, [...path, segment], `${suffix}_${index}`);
 			return flag ? [`${indent}if (${index === 1 ? "!" : ""}${value}->${flag}) {`, ...inner, `${indent}}`] : inner;
 		});
@@ -297,13 +297,14 @@ export const generateCopiedNativeCalls = (model, surface) => {
 		} else
 		{
 			const fields = type.kind === "record" ? type.fields : (type.element ? [type.element] : type.arguments).map(type => ({ type }));
-			const flag = { option: "has_value", result: "is_ok" }[type.kind];
+			const flag = { "host-null": "has_value", option: "has_value", result: "is_ok" }[type.kind];
 			const condition = i => flag ? `${i === 1 ? "!" : ""}value->${flag}` : "1";
 			check.push(`if (!lb_charge(budget, 1, sizeof(${c.name}))) return 0;`);
 			if(flag) check.push(`if (value->${flag} > 1) return 0;`);
 			for(const [i, field] of fields.entries()) check.push(`if (${condition(i)} && !${id(field.type)}_check(&value->${c.fields[i].name}, budget)) return 0;`);
 			const args = fields.map((field, i) => `${id(field.type)}_in(&value->${c.fields[i].name})`), helper = `lb_t${nativeTypeKey(type)}`;
-			if(type.kind === "option") input.push(`return value->has_value ? ${helper}_some(${args[0]}) : ${helper}_none(lean_box(0));`);
+			if(type.kind === "host-null") input.push(`return value->has_value ? ${helper}_value(${args[0]}) : ${helper}_null(lean_box(0));`);
+			else if(type.kind === "option") input.push(`return value->has_value ? ${helper}_some(${args[0]}) : ${helper}_none(lean_box(0));`);
 			else if(type.kind === "result") input.push(`return value->is_ok ? ${helper}_ok(${args[0]}) : ${helper}_error(${args[1]});`);
 			else input.push(`return ${helper}_make(${args.join(", ") || "lean_box(0)"});`);
 			output.push(`if (!lb_charge(budget, 1, sizeof(${c.name}))) return 0;`, `*out = (${c.name}){0};`);

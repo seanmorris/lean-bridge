@@ -19,6 +19,12 @@ export const nativeAbiVersion = 1;
 export const nativeCopyLimit = 16 * 1024 * 1024;
 const identifier = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
 const fail = message => { throw new TypeError(`native-library-v1: ${message}`); };
+const hostNullType = type => {
+	const nullType = type.nullConstructor.split(".").slice(0, -1).join(".");
+	const valueType = type.valueConstructor.split(".").slice(0, -1).join(".");
+	if(!nullType || nullType !== valueType) fail("host-null constructors must belong to one exact wrapper");
+	return nullType;
+};
 
 /**
 	Render a validated native type as Lean source syntax.
@@ -28,6 +34,7 @@ const fail = message => { throw new TypeError(`native-library-v1: ${message}`); 
 export const nativeLeanType = type => {
 	if(type.kind === "refinement") return nativeLeanType(type.base);
 	if(type.kind === "array") return `(Array ${nativeLeanType(type.element)})`;
+	if(type.kind === "host-null") return `(_root_.${hostNullType(type)} ${nativeLeanType(type.element)})`;
 	if(type.kind === "list") return `(List ${nativeLeanType(type.element)})`;
 	if(type.kind === "option") return `(Option ${nativeLeanType(type.element)})`;
 	if(type.kind === "result") return `(Except ${nativeLeanType(type.arguments[1])} ${nativeLeanType(type.arguments[0])})`;
@@ -40,6 +47,7 @@ const absoluteLeanType = (type, mirrors = new Set()) => {
 	const inner = child => absoluteLeanType(child, mirrors);
 	if(type.kind === "refinement") return inner(type.base);
 	if(type.kind === "array") return `(_root_.Array ${inner(type.element)})`;
+	if(type.kind === "host-null") return `(_root_.${hostNullType(type)} ${inner(type.element)})`;
 	if(type.kind === "list") return `(_root_.List ${inner(type.element)})`;
 	if(type.kind === "option") return `(_root_.Option ${inner(type.element)})`;
 	if(type.kind === "result") return `(_root_.Except ${inner(type.arguments[1])} ${inner(type.arguments[0])})`;
@@ -92,6 +100,7 @@ export const nativeCallbackDefault = type => {
 	if(type.kind === "refinement") return nativeCallbackDefault(type.base);
 	if(type.kind === "alias") return nativeCallbackDefault(type.target);
 	if(type.kind === "array") return "lean_mk_empty_array()";
+	if(type.kind === "host-null") return `lb_t${nativeTypeKey(type)}_null(lean_box(0))`;
 	if(type.kind === "list") return `lb_t${nativeTypeKey(type)}_from_array(lean_mk_empty_array())`;
 	if(type.kind === "option") return `lb_t${nativeTypeKey(type)}_none(lean_box(0))`;
 	if(type.kind === "result") return `lb_t${nativeTypeKey(type)}_ok(${nativeCallbackDefault(type.arguments[0])})`;
@@ -123,6 +132,7 @@ const replyLeanType = (type, tree, mirrors) => {
 	if(tree === null) return absoluteLeanType(type, mirrors);
 	const inner = (child, index) => replyLeanType(child, tree.arguments[index], mirrors);
 	if(tree.kind === "fin") return `(_root_.Fin ${tree.bound})`;
+	if(tree.kind === "host-null") return `(_root_.${hostNullType(type)} ${inner(type.element, 0)})`;
 	if(["array", "list", "option"].includes(tree.kind)) return `(_root_.${{ array: "Array", list: "List", option: "Option" }[tree.kind]} ${inner(type.element, 0)})`;
 	if(tree.kind === "tuple") return `(_root_.Prod ${type.arguments.map(inner).join(" ")})`;
 	if(tree.kind === "result") return `(_root_.Except ${inner(type.arguments[1], 1)} ${inner(type.arguments[0], 0)})`;
@@ -135,6 +145,7 @@ const callbackLeanDefault = (type, mirrors = new Set()) => {
 	if(type.kind === "alias") return callbackLeanDefault(type.target, mirrors);
 	const inner = child => callbackLeanDefault(child, mirrors);
 	if(type.kind === "array") return "#[]";
+	if(type.kind === "host-null") return `_root_.${type.nullConstructor}`;
 	if(type.kind === "list") return "[]";
 	if(type.kind === "option") return "_root_.Option.none";
 	if(type.kind === "result") return `(_root_.Except.ok ${inner(type.arguments[0])})`;
@@ -155,7 +166,7 @@ const closed = (value, fields, label) => {
 const nativeRepresentation = type => {
 	if(type.kind === "refinement") return nativeRepresentation(type.base);
 	if(type.kind === "alias") return nativeRepresentation(type.target);
-	if(["array", "list", "option"].includes(type.kind)) return { ...type, element: nativeRepresentation(type.element) };
+	if(["array", "host-null", "list", "option"].includes(type.kind)) return { ...type, element: nativeRepresentation(type.element) };
 	if(["result", "tuple"].includes(type.kind)) return { ...type, arguments: type.arguments.map(nativeRepresentation) };
 	if(type.kind === "record") return { ...type, fields: type.fields.map(field => ({ ...field, type: nativeRepresentation(field.type) })) };
 	if(type.kind === "variant") return { ...type, cases: type.cases.map(branch => ({ ...branch, fields: branch.fields.map(field => ({ ...field, type: nativeRepresentation(field.type) })) })) };
@@ -183,7 +194,7 @@ const nativeRepresentation = type => {
  * @param tree - Refinement tree of the callback result, or null.
  */
 const containmentSafe = tree => {
-	if(tree === null || ["option", "array", "list"].includes(tree.kind)) return true;
+	if(tree === null || ["host-null", "option", "array", "list"].includes(tree.kind)) return true;
 	if(tree.kind === "result") return containmentSafe(tree.arguments[0]);
 	if(["tuple", "record"].includes(tree.kind)) return tree.arguments.every(containmentSafe);
 	if(tree.kind === "variant") return tree.cases[0].arguments.every(containmentSafe);
@@ -252,7 +263,7 @@ const nativeRefinements = (declaration, callbacks = false) => {
 					: { kind: type.predicate.kind, bound: type.predicate.bound };
 		}
 		if(type.kind === "alias") return tree(type.target, top, site, subtypeStructural, produced, allowFin);
-		if(["array", "list", "option"].includes(type.kind))
+		if(["array", "host-null", "list", "option"].includes(type.kind))
 		{
 			const element = tree(type.element, false, undefined, subtypeStructural, produced, allowFin);
 			return element === null ? null : { kind: type.kind, arguments: [element] };
@@ -342,7 +353,7 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		validateNativeRepresentation(shape);
 		const key = nativeTypeKey(type);
 		if(allTypes.has(key)) return;
-		if(["array", "list", "option"].includes(type.kind)) visit(type.element);
+		if(["array", "host-null", "list", "option"].includes(type.kind)) visit(type.element);
 		if(["result", "tuple"].includes(type.kind)) type.arguments.forEach(visit);
 		if(type.kind === "record") for(const field of type.fields) visit(field.type);
 		// Provenance arguments are not transport types; the Binding IR carries a definition that only an instantiation names.
@@ -362,7 +373,7 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 				if(!definition) fail(`${owner}: record provenance references an undefined nominal type ${argument.name}`);
 				if(canonicalJson(definition.abi) !== canonicalJson(argument.abi)) fail(`${owner}: record provenance reference disagrees with its definition's representation`);
 			}
-			if(["array", "list", "option"].includes(argument.kind)) resolve(argument.element, owner);
+			if(["array", "host-null", "list", "option"].includes(argument.kind)) resolve(argument.element, owner);
 			if(["result", "tuple"].includes(argument.kind)) argument.arguments.forEach(child => resolve(child, owner));
 		};
 		for(const type of allTypes.values()) if(type.kind === "record" && type.provenance) type.provenance.arguments.forEach(argument => resolve(argument, type.name));
@@ -431,7 +442,7 @@ export const createPhpWasmCopiedModel = options => {
 	const refined = model.exports.filter(item => item.refinements);
 	const callback = refined.length ? model.types.find(type => type.kind === "callback") : null;
 	if(callback) throw Object.assign(new TypeError(`${refined[0].name}: checked Fin refinements cannot share a PHP-Wasm package with callables`), { code: "native-refinements-unsupported", details: { declaration: refined[0].name } });
-	const copied = type => type.kind === "primitive" || (["array", "list", "option"].includes(type.kind) && copied(type.element))
+	const copied = type => type.kind === "primitive" || (["array", "host-null", "list", "option"].includes(type.kind) && copied(type.element))
 		|| (["result", "tuple"].includes(type.kind) && type.arguments.every(copied)) || (type.kind === "record" && type.fields.every(field => copied(field.type)))
 		|| (type.kind === "variant" && type.cases.every(branch => branch.fields.every(field => copied(field.type))));
 	const admitted = type => copied(type) || (type.kind === "callback" && type.parameters.every(copied) && copied(type.result));
@@ -440,7 +451,7 @@ export const createPhpWasmCopiedModel = options => {
 	{
 		const declaration = model.bindingIr.declarations.find(item => item.source.declaration === unsupported.name);
 		const source = declaration.source.extensions?.["lean-lang.org/source-position"];
-		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${unsupported.name}: PHP-Wasm compilation admits copied primitives, arrays, Lists, records, concrete variants, options, results, binary products and synchronous copied-value callables`), { code: "unsupported-php-wasm-signature", details: { declaration: declaration.id, source: source ?? null } });
+		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${unsupported.name}: PHP-Wasm compilation admits copied primitives, arrays, Lists, records, concrete variants, host-null values, options, results, binary products and synchronous copied-value callables`), { code: "unsupported-php-wasm-signature", details: { declaration: declaration.id, source: source ?? null } });
 	}
 	return model;
 };
@@ -575,6 +586,13 @@ export const generateNativeLeanAdapters = model => {
 			emit(`lb_t${type.key}_some`, [{ name: "value", type: type.element }], type, "_root_.Option.some value");
 			emit(`lb_t${type.key}_has`, [{ name: "value", type }], bool, "match value with | .none => false | .some _ => true");
 			emit(`lb_t${type.key}_get0`, [{ name: "value", type }], type.element, `match value with | .none => ${callbackLeanDefault(type.element, mirrors)} | .some item => item`);
+		}
+		if(type.kind === "host-null")
+		{
+			emit(`lb_t${type.key}_null`, [], type, `_root_.${type.nullConstructor}`);
+			emit(`lb_t${type.key}_value`, [{ name: "value", type: type.element }], type, `_root_.${type.valueConstructor} value`);
+			emit(`lb_t${type.key}_has`, [{ name: "value", type }], bool, `match value with | .${type.nullConstructor.split(".").at(-1)} => false | .${type.valueConstructor.split(".").at(-1)} _ => true`);
+			emit(`lb_t${type.key}_get0`, [{ name: "value", type }], type.element, `match value with | .${type.nullConstructor.split(".").at(-1)} => ${callbackLeanDefault(type.element, mirrors)} | .${type.valueConstructor.split(".").at(-1)} item => item`);
 		}
 		if(type.kind === "result")
 		{

@@ -100,7 +100,7 @@ export const hostNullReviewedIr = () => ({
 		functionDeclaration("echo", [nullable], nullable)
 		, functionDeclaration("nullableOption", [nullableOption], nullableOption)
 		, functionDeclaration("optionalNullable", [optionalNullable], optionalNullable)
-		, functionDeclaration("packet", [named("Packet")], named("Packet"))
+		, functionDeclaration("echoPacket", [named("Packet")], named("Packet"))
 		, functionDeclaration("callHost", [nullable, callback], nullableOption, true)
 		, functionDeclaration("makeClosure", [nullableOption], callback)
 	]

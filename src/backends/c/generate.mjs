@@ -120,7 +120,7 @@ const typeKey = ref => {
 	if(ref.kind === "primitive") return ref.name;
 	if(ref.kind === "named") return snake(ref.id.replace(":", "_"));
 	if(ref.kind === "parameter") return snake(ref.id);
-	return `${ref.constructor}_${ref.arguments.map(typeKey).join("_")}`;
+	return `${snake(ref.constructor)}_${ref.arguments.map(typeKey).join("_")}`;
 };
 
 const substitute = (ref, parameter, replacement) => {
@@ -259,7 +259,7 @@ const validateCoverage = ir => {
 		}
 		if(resolved.kind === "apply")
 		{
-			if(!["array", "list", "option", "result", "tuple"].includes(resolved.constructor) || resolved.arguments.length !== (["array", "list", "option"].includes(resolved.constructor) ? 1 : 2))
+			if(!["array", "host-null", "list", "option", "result", "tuple"].includes(resolved.constructor) || resolved.arguments.length !== (["array", "host-null", "list", "option"].includes(resolved.constructor) ? 1 : 2))
 			{
 				fail("unsupported-type-application", `C projection does not support ${resolved.constructor}`, {
 					constructor: resolved.constructor
@@ -268,7 +268,7 @@ const validateCoverage = ir => {
 			const copied = (ref, seen = new Set()) => {
 				const value = resolveAlias(ir, ref);
 				if(value.kind === "primitive") return primitiveCType(value.name) !== null || isDynamicPrimitive(value.name);
-				if(value.kind === "apply") return ["array", "list", "option", "result", "tuple"].includes(value.constructor) && value.arguments.length === (["array", "list", "option"].includes(value.constructor) ? 1 : 2) && value.arguments.every(child => copied(child, seen));
+				if(value.kind === "apply") return ["array", "host-null", "list", "option", "result", "tuple"].includes(value.constructor) && value.arguments.length === (["array", "host-null", "list", "option"].includes(value.constructor) ? 1 : 2) && value.arguments.every(child => copied(child, seen));
 				const type = value.kind === "named" && namedType(ir, value.id);
 				if(!type || !["record", "variant"].includes(type.kind) || seen.has(type.id)) return false;
 				return valueFields(type).every(field => copied(field.type, new Set([...seen, type.id])));
@@ -555,9 +555,9 @@ const dynamicTypes = ir => collectUsedTypes(ir).filter(ref => {
   return (resolved.kind === "primitive" && isDynamicPrimitive(resolved.name)) || (resolved.kind === "apply" && ["array", "list"].includes(resolved.constructor));
 });
 
-const compoundTypes = ir => uniqueBy(collectUsedTypes(ir).map(ref => resolveAlias(ir, ref)).filter(ref => ref.kind === "apply" && ["option", "result", "tuple"].includes(ref.constructor)), ref => cType(ir, ref));
-const compoundFields = ref => ref.arguments.map((type, i) => ({ name: { option: ["value"], result: ["ok", "error"], tuple: ["fst", "snd"] }[ref.constructor][i], type }));
-const compoundFlag = kind => ({ option: "has_value", result: "is_ok" })[kind];
+const compoundTypes = ir => uniqueBy(collectUsedTypes(ir).map(ref => resolveAlias(ir, ref)).filter(ref => ref.kind === "apply" && ["host-null", "option", "result", "tuple"].includes(ref.constructor)), ref => cType(ir, ref));
+const compoundFields = ref => ref.arguments.map((type, i) => ({ name: { "host-null": ["value"], option: ["value"], result: ["ok", "error"], tuple: ["fst", "snd"] }[ref.constructor][i], type }));
+const compoundFlag = kind => ({ "host-null": "has_value", option: "has_value", result: "is_ok" })[kind];
 
 const uniqueBy = (items, key) => {
 	const seen = new Set();

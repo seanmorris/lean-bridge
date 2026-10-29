@@ -61,10 +61,10 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 		let fields = [], element = null, record = null, compound = null, variant = null, cases = [];
 		if(ref.kind === "primitive" && componentScalarTypes.includes(ref.name)) { /* Closed copied leaf. */ }
 		else if(ref.kind === "apply" && (ref.constructor === "array" || lists && ref.constructor === "list") && ref.arguments.length === 1) element = visit(ref.arguments[0], declaration, depth + 1);
-		else if(compounds && ref.kind === "apply" && ["option", "result", "tuple"].includes(ref.constructor) && ref.arguments.length === (ref.constructor === "option" ? 1 : 2))
+		else if(compounds && ref.kind === "apply" && ["host-null", "option", "result", "tuple"].includes(ref.constructor) && ref.arguments.length === (["host-null", "option"].includes(ref.constructor) ? 1 : 2))
 		{
 			compound = ref.constructor;
-			fields = ref.arguments.map((argument, i) => ({ name: { option: ["value"], result: ["ok", "error"], tuple: ["fst", "snd"] }[compound][i], type: visit(argument, declaration, depth + 1) }));
+			fields = ref.arguments.map((argument, i) => ({ name: { "host-null": ["value"], option: ["value"], result: ["ok", "error"], tuple: ["fst", "snd"] }[compound][i], type: visit(argument, declaration, depth + 1) }));
 		}
 		else if(variants && ref.kind === "named" && (variant = ir.types.find(type => type.id === ref.id))?.kind === "variant" && !variant.typeParameters.length)
 		{
@@ -96,7 +96,7 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 				names.add(name);
 				return { name, type: visit(field.type, declaration, depth + 1) };
 			});
-		} else rejectPrimitiveSurface(declaration, `this native projection requires concrete copied primitives, arrays or acyclic records${compounds ? ", options, results and binary products" : "; compound values are not implemented for this target"}`);
+		} else rejectPrimitiveSurface(declaration, `this native projection requires concrete copied primitives, arrays or acyclic records${compounds ? ", host-null values, options, results and binary products" : "; compound values are not implemented for this target"}`);
 		visiting.delete(key);
 		if(variant?.kind !== "variant") variant = null;
 		const copy = { ref, scalarName: fixedPlatformInteger(ref.name, wordBits), ...describeCType(ir, ref), fields, element, record, compound, ...(variant ? { variant, cases } : {}), index: copies.size };
