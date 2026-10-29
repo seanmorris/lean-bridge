@@ -1,0 +1,268 @@
+{
+  "currentSourcePaths": [],
+  "excludedPattern": "!/docs/evidence/*",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-signature-producer-sparse-checkout-source-history.mjs",
+      "sha256": "d65405724c5a6749fc16252b3f5034607e82912b5ceb3cec18ea88b6814245d3"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-producer-sparse-checkout-source-history-tests.mjs",
+      "sha256": "8967a028dcda6fae6eadded2b1e0cb3f3f35d2b60eb146bc4b5abf84e6fd481b"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-producer-sparse-checkout-source-history.mjs",
+      "sha256": "23d751a4611c1510b9781d07eb09d45e397f75fa58e512868b66b4f53cfc853b"
+    }
+  ],
+  "implementationCommit": "299213044da2936cab0a611474399b1a5e54d9c1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "dd8423a49ca59fee67506c0181e4e1987db495a6c53d57354daa37779545f7a3",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-signature-producer-sparse-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "d7a2490bfc04264ea87a72c932bd4afb87b69c02ea2f249555c5e27bce87b78b"
+    },
+    {
+      "currentSha256": "521a881831ccfc4d8029e554d6382559beb217221f0a00e51b50b87c210ae1fd",
+      "edits": [
+        {
+          "current": "import { beforeDependentSignatureProducerSparseCheckoutSource, dependentSignatureProducerSparseCheckoutNormalizationPaths } from \"./dependent-signature-producer-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentSignatureProducerSparseCheckoutNormalizationPaths\n\t, ...proofErasureCoreLintRepairNormalizationPaths\n",
+          "previous": "\t...proofErasureCoreLintRepairNormalizationPaths\n",
+          "start": 220682
+        },
+        {
+          "current": "\tlet stage = beforeDependentSignatureProducerSparseCheckoutSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeProofErasureCoreLintRepairSource(\n",
+          "previous": "\tlet stage = beforeProofErasureCoreLintRepairSource(\n",
+          "start": 276285
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "35dee23920b826e26bd662853947a6e44af6eda3007cf1d3d94846d5787b68c6"
+    },
+    {
+      "currentSha256": "727e1b78957fa97c73e68e5e4fe053adc4f80842db5e3bed9d981ed4017ca603",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 768
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2225
+        },
+        {
+          "current": "\t{\n\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256);\n\t\tassert.equal(sha256(source), addition.sha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path)), addition.sha256\n\t\t\t, addition.path);\n",
+          "start": 3523
+        }
+      ],
+      "path": "tests/helpers/proof-erasure-core-lint-repair-source-history-tests.mjs",
+      "previousSha256": "12a4ee97c65080e6a94b822274516b9ad13b2b2d28ffc1226a1ee6283bafb074"
+    }
+  ],
+  "milestone": "dependent-signature-producer-sparse-checkout-source-v1",
+  "predecessorCommit": "35e2eaf33eb47b7bea9702f84da73da5100cfc22",
+  "producerWorkflowCount": 11,
+  "retainedEvidencePatterns": [
+    "/docs/evidence/*.json",
+    "/docs/evidence/*.md",
+    "/docs/evidence/*.xml"
+  ],
+  "schemaVersion": 1,
+  "scope": "Retain all eleven dependent-signature producer source and build inputs while excluding the immutable hosted evidence corpus from each package checkout. Preserve depth-one focused execution, full-history standalone semantics and every acceptance command.",
+  "sparseCheckoutConeMode": false,
+  "updates": [
+    {
+      "currentSha256": "082393b6831de693e0aa6bc46274549c980259557e7c165ee7ea764ce6eab34a",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 1076
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-browser.yml",
+      "previousSha256": "0417621e324d8eb80be7f642d7c009f69d6a7bfb6f886a37c63e1d2ab8948989"
+    },
+    {
+      "currentSha256": "854f8d18d7a139c63bcffecf5a63a7b4760b1f8b9219eaee3f1d734676e87663",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 1311
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-dotnet.yml",
+      "previousSha256": "3cfa89514c71a609b627a5ef2edb97f95073e584c9a78a196de2b1ab3fa2b394"
+    },
+    {
+      "currentSha256": "727167d048e482343ec81bac7b0bb37fa5e5a2993d5b7d848376a1e3ff2184f7",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 1307
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-jvm.yml",
+      "previousSha256": "bfc944a54e6ebd8149c956c2a28c020b200afffd2c587c3d5dde1873506b23b2"
+    },
+    {
+      "currentSha256": "612ad25cd640f71e48bb5ec61000f139701b44d1874f196c3aae57325a18874d",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 920
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-native.yml",
+      "previousSha256": "96d352cbdd3ba6d4ca7ac118faa28cf1bb78e8fbcb49c934ebff7e53a93deef9"
+    },
+    {
+      "currentSha256": "f2b3cd1f0189c53b0ec4f12b92c0890e77454a670f7e10a57742c9f2857ddebe",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 874
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-perl.yml",
+      "previousSha256": "0020b906f699d63fde13dd274b31f169888c2b038d6d8df5fc28c06212170825"
+    },
+    {
+      "currentSha256": "13dbe0981d40e92da4c2125a17257fc20909148878b726188e218dd5fbcf30d6",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 1070
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-php-wasm.yml",
+      "previousSha256": "88e2da1a837e8584f5ca7e78e4abbf46fae2213f806a12df7b6e4ae3e0cd19e0"
+    },
+    {
+      "currentSha256": "44d038548f7dcab49f6f651fc98e4455421b84389c6eec4559e4d655c9378847",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 940
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-php.yml",
+      "previousSha256": "f04f051ee279704dffee2c972d66289c1e1772462dac50d1d90141437ab89037"
+    },
+    {
+      "currentSha256": "eebc233674f3dae1f58c0e205e9c9afa9506d42b51f26acb43432bd2e7c9ec9a",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 1022
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-python.yml",
+      "previousSha256": "51698bbd63052ad8b7204b86ed7703d98221264dc3099f684277f5681ed9b819"
+    },
+    {
+      "currentSha256": "e3b2029f00e1be645341c07b5c7410d0731083e749f7ee220296f93cd180898f",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 913
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-ruby.yml",
+      "previousSha256": "99e9e0ed2d7a568576e94dd5a67d1ef655165b0c532b2cab24460acee28e8c87"
+    },
+    {
+      "currentSha256": "4bc5ecaa3b356ddda7afabdf26a5c9cd6b47f0a46a64f5b4255f705e46b2915b",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 913
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-rust.yml",
+      "previousSha256": "e52c73a88567b77fa6d713f0b2b1a631742fb7a7a5234ec20a64161de67c3384"
+    },
+    {
+      "currentSha256": "092cabc7d1d6b0de808df4f3e9480c2bbc26d38d1c5b0b2a5cccbd2d3da07cc6",
+      "edits": [
+        {
+          "current": "          # Producers require current package source, not the immutable hosted\n          # evidence corpus. Keep root files and every source/build directory,\n          # while materializing only the small top-level evidence records.\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 955
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-wit.yml",
+      "previousSha256": "b2f7f5046cfb5927b03a36268f509f241ab980f850cb6839b3fa2ba3d25a56a5"
+    },
+    {
+      "currentSha256": "405cff5fb0f37ff49c6ee05909c2918930a21269ec0961c8b6c12a0bcf1283b0",
+      "edits": [
+        {
+          "current": "\tconst checkout = step(names[0]);\n\tassert.ok(checkout.startsWith(\n\t\t\"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\\n          persist-credentials: false\\n\"));\n\tassert.match(checkout\n\t\t, /sparse-checkout: \\|[\\s\\S]*!\\/docs\\/evidence\\/\\*[\\s\\S]*sparse-checkout-cone-mode: false/u);\n",
+          "previous": "\tassert.equal(step(names[0])\n\t\t, \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\\n          persist-credentials: false\\n\");\n",
+          "start": 2524
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-workflow.mjs",
+      "previousSha256": "b921baab3b00139e562433b5385198d716dc4488454c1cfe40dd7bf4c58fecfe"
+    },
+    {
+      "currentSha256": "bc1cb38993aa6b4aa276bbbd129280c16b3f663d19eeedf9c6074532724cf025",
+      "edits": [
+        {
+          "current": "\tconst checkout = step(names[0]);\n\tassert.ok(checkout.startsWith(\"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\\n          persist-credentials: false\\n\"));\n\tassert.match(checkout, /sparse-checkout: \\|[\\s\\S]*!\\/docs\\/evidence\\/\\*[\\s\\S]*sparse-checkout-cone-mode: false/u);\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}\\n          persist-credentials: false\\n\");\n",
+          "start": 3183
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-ci-workflow.mjs",
+      "previousSha256": "c147a54deeceb64686d2ca371b874de65202351a93c732e55c27921489def7f9"
+    },
+    {
+      "currentSha256": "04dc4d31f1ccc2374fcad97fe417f929de23bfc78da8d18850e0cd82f6489eda",
+      "edits": [
+        {
+          "current": "const producerSparseCheckout = `          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n          sparse-checkout-cone-mode: false\n`;\n",
+          "previous": "",
+          "start": 1107
+        },
+        {
+          "current": "\t\tassert.equal(source.split(producerSparseCheckout).length - 1, 1, path);\n",
+          "previous": "",
+          "start": 7282
+        },
+        {
+          "current": "\t\tassert.throws(() => {\n\t\t\tassert.equal(source.replace(\"            !/docs/evidence/*\\n\", \"\")\n\t\t\t\t.split(producerSparseCheckout).length - 1, 1, path);\n\t\t}, undefined, `${path} must exclude immutable hosted evidence`);\n",
+          "previous": "",
+          "start": 7970
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-complete-ci-tests.mjs",
+      "previousSha256": "2168b7a7c70fd800d0fe80e955d85b092366412577fa5a802d4799d3f8ffc8a4"
+    }
+  ]
+}
