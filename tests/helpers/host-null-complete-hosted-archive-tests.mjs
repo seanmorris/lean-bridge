@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -34,6 +34,20 @@ const run = Object.freeze({
 	, repository: { full_name: "seanmorris/lean-bridge" }
 	, head_repository: { full_name: "seanmorris/lean-bridge" }
 });
+
+test("complete HostNull archive publishes one validated sibling transaction"
+	, async () => {
+		const source = await readFile(
+			"scripts/archive-host-null-complete-evidence.mjs", "utf8");
+		assert.match(source, /createTransactionalDirectory\(evidence\)/u);
+		assert.match(source, /const stagingRoot = transaction\.root/u);
+		assert.match(source, /join\(stagingRoot, descriptor\.path\)/u);
+		assert.match(source, /await digestFile\(target\), descriptor\.sha256/u);
+		assert.match(source, /await transaction\.publish\(\)/u);
+		assert.match(source, /finally[\s\S]*await transaction\.dispose\(\)/u);
+		assert.doesNotMatch(source, /await mkdir\(evidence\)/u);
+	}
+);
 
 const makeInputs = async (
 	mutate = () => {}, workflow = hostNullCompleteWorkflow

@@ -13,6 +13,9 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import {
+	createTransactionalDirectory
+} from "../src/capsule/transactional-directory.mjs";
+import {
 	checkedRecordValueIndexHostedDigest as digestFile
 	, extractCheckedRecordValueIndexHostedArtifact as extractArtifact
 	, splitCheckedRecordValueIndexHostedArtifact as splitArtifact
@@ -47,9 +50,11 @@ assert.equal(execFileSync("git", [
 ]).length, 0, "Hosted producer must be an ancestor of the archiver");
 
 const descriptors = new Map();
+const transaction = await createTransactionalDirectory(evidence);
+const stagingRoot = transaction.root;
 const retainBytes = async (path, value) => {
 	assert.ok(!descriptors.has(path), path);
-	const bytes = Buffer.from(value), target = join(evidence, path);
+	const bytes = Buffer.from(value), target = join(stagingRoot, path);
 	await mkdir(dirname(target), { recursive: true });
 	await writeFile(target, bytes, { flag: "wx" });
 	descriptors.set(path, { path, bytes: bytes.length, sha256: sha256(bytes) });
@@ -58,7 +63,7 @@ const retainFile = async (path, source) => {
 	assert.ok(!descriptors.has(path), path);
 	const information = await stat(source);
 	assert.ok(information.isFile() && information.size > 0, source);
-	const target = join(evidence, path);
+	const target = join(stagingRoot, path);
 	await mkdir(dirname(target), { recursive: true });
 	await copyFile(source, target, constants.COPYFILE_FICLONE);
 	const digest = await digestFile(target);
@@ -69,8 +74,6 @@ const retainFile = async (path, source) => {
 	});
 };
 
-let complete = false;
-await mkdir(evidence);
 try
 {
 	const captures = [];
@@ -152,8 +155,17 @@ try
 		]
 	};
 	const indexBytes = Buffer.from(canonicalJson(index));
-	await writeFile(join(evidence, "index.json"), indexBytes, { flag: "wx" });
-	complete = true;
+	for(const descriptor of descriptors.values())
+	{
+		const target = join(stagingRoot, descriptor.path);
+		assert.equal((await stat(target)).size, descriptor.bytes
+			, descriptor.path);
+		assert.equal(await digestFile(target), descriptor.sha256
+			, descriptor.path);
+	}
+	await writeFile(join(stagingRoot, "index.json"), indexBytes
+		, { flag: "wx" });
+	await transaction.publish();
 	process.stdout.write(canonicalJson({
 		destination: evidence, producerCommit: selected.producerCommit
 		, archiveCommit, runId: selected.runId, captures: captures.length
@@ -164,5 +176,5 @@ try
 }
 finally
 {
-	if(!complete) await rm(evidence, { recursive: true });
+	await transaction.dispose();
 }
