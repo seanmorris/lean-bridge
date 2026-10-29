@@ -5156,6 +5156,79 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  host-null-systems:
+    name: Systems HostNull acceptance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install systems build dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep libgmp-dev
+      - name: Prepare pinned systems toolchains
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/bootstrap-toolchains.sh --lean-only
+          bash scripts/bootstrap-toolchains.sh --wasm-tools-only
+          bash scripts/bootstrap-rust-ci.sh
+          (
+            set -euo pipefail
+            test "$(uname -sm)" = 'Linux x86_64'
+            mkdir -p build
+            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
+            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)
+            trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT
+            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \
+              --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \
+              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'
+            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
+            mkdir "$WASMTIME_CAPI_STAGING/unpacked"
+            tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a"
+            mv -T "$WASMTIME_CAPI_STAGING/unpacked" build/wasmtime-c-api
+          )
+      - name: Qualify HostNull in prepared systems packages
+        id: host_null_systems
+        continue-on-error: true
+        timeout-minutes: 120
+        env:
+          LEAN_BRIDGE_WASMTIME_C_API: ${{ github.workspace }}/build/wasmtime-c-api
+          LEAN_BRIDGE_WASM_TOOLS: ${{ github.workspace }}/.toolchains/wasm-tools/bin/wasm-tools
+        run: bash scripts/run-host-null-systems-ci.sh
+      - name: Preserve systems HostNull acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-systems-${{ github.sha }}
+          path: build/host-null-systems-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce systems HostNull support
+        if: steps.host_null_systems.outcome != 'success'
+        run: exit 1
+
   owned-wit-receivers:
     name: WIT receiver methods and properties
     runs-on: ubuntu-24.04
