@@ -7,6 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
+	renderTypeTable, typeGuideProfiles
+} from "../../scripts/generate-type-docs.mjs";
+import {
 	typeSurfaceCells, validateTypeSurface
 } from "../../src/adoption/type-surface.mjs";
 import {
@@ -56,6 +59,9 @@ const reference = Object.freeze({
 	, limitations: Object.freeze(Array.from({ length: 6 }, (_, index) =>
 		`complete hosted limitation ${index + 1}`))
 });
+
+const generatedRow = (source, lean) => source.split("\n").find(line =>
+	line.startsWith(`| \`${lean}\` |`));
 
 test("complete HostNull promotion owns exactly 170 closed cells", () => {
 	assert.equal(hostNullCompletePromotionCells.length, 170);
@@ -121,4 +127,38 @@ test("complete HostNull promotion refuses partial, forged and overlapping eviden
 	const proposed = promoteHostNullComplete(document, contracts, reference);
 	assert.throws(() => promoteHostNullComplete(
 		proposed, contracts, reference));
+});
+
+test("complete HostNull promotion renders every canonical consumer guide", async () => {
+	const { document, contracts } = await load();
+	const proposed = promoteHostNullComplete(document, contracts, reference);
+	const seenProfiles = new Set();
+	for(const [guide, profiles] of Object.entries(typeGuideProfiles))
+	{
+		profiles.forEach(profile => seenProfiles.add(profile));
+		const source = renderTypeTable({
+			document: proposed, ...contracts
+		}, profiles, "reference/types.md");
+		const row = generatedRow(source, "Explicit nullable host value");
+		assert.ok(row, guide);
+		assert.match(row
+			, /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed/u
+			, guide);
+		assert.match(row
+			, /Only the declared HostNull null constructor uses the nullable branch/u
+			, guide);
+		assert.match(row
+			, /Option, Unit, erased proofs and omitted\/default arguments retain their own representations/u
+			, guide);
+		for(const profile of profiles)
+		{
+			const selected = hostNullCompletePromotionGroups.find(group =>
+				group.profiles.includes(profile));
+			assert.ok(selected, `${guide}: ${profile}`);
+			assert.ok(row.includes(`\`${selected.hostType}\``)
+				, `${guide}: ${profile}: ${selected.hostType}`);
+		}
+	}
+	assert.deepEqual([...seenProfiles].sort()
+		, [...hostNullCompletePromotionProfiles].sort());
 });
