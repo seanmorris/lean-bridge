@@ -1,0 +1,175 @@
+{
+  "currentSourcePaths": [],
+  "failedJobs": [
+    123414068429,
+    123414068978,
+    123414069241
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-package-checker-repair-source-history.mjs",
+      "sha256": "1ae8c22cf789ebd71b4bc9b412d831695f1f430e1babcc00aa322011b956fbbe"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-package-checker-repair-source-history-tests.mjs",
+      "sha256": "1284209501b59fe49215951943df7785c32d6bf625533c8dd2e56595799821b0"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-package-checker-repair-source-history.mjs",
+      "sha256": "074dca2b5ec7554f3bf6c0916073f45c232d2239c564ecb213bdca57de588fa9"
+    }
+  ],
+  "hostedRun": 40864016726,
+  "implementationAdditions": [],
+  "implementationCommit": "3c3ff9f21aac1f317add78cb3ae18c786747490b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6a25551f84fc63da6720fd5238203058ffaf3e2553f9c8cdc66f41e4c9b61ab9",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-package-checker-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "33d50ebb6ced71ee7d8550fd0b09c86c6dedf12c265e352d38ece80174949a8e"
+    },
+    {
+      "currentSha256": "4dd22d49019a3baa3a819fbd7345382df5962487b37837c531b8eeca97810cb3",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterPackageCheckerRepairSource, optionalParameterPackageCheckerRepairNormalizationPaths } from \"./optional-parameter-package-checker-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterPackageCheckerRepairNormalizationPaths\n\t, ...optionalParameterWitIdentityRepairNormalizationPaths\n",
+          "previous": "\t...optionalParameterWitIdentityRepairNormalizationPaths\n",
+          "start": 219924
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterPackageCheckerRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterWitIdentityRepairSource(\n",
+          "previous": "\tlet stage = beforeOptionalParameterWitIdentityRepairSource(\n",
+          "start": 275278
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fd59336f648fdd08cfc3ef015d6e85604c229c7ccbf80908cbb41aa73720c7a0"
+    }
+  ],
+  "milestone": "optional-parameter-package-checker-repair-source-v1",
+  "predecessorCommit": "2446f6c1d7fc3acaf616d14b78bd8ff0bc3a1708",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Make retained Python, Ruby and C++ API checks follow the ordinary arg0 and independently reviewed value0 binders, and share the Kotlin compiler diagnostic contract that accepts both cannot and can not without weakening host-null rejection.",
+  "updates": [
+    {
+      "currentSha256": "91d849fbd8ba243d1d921dd39e8e3fe9d668bb78f9d6ff825bc0d3bffcedbe0a",
+      "edits": [
+        {
+          "current": "/**\n * Return exact Python signatures for one authoring route.\n *\n * @param route - Ordinary or independently reviewed authoring route.\n */\nexport const optionalParameterPythonPatterns = route => {\n\tconst argument = routeBinder(route);\n\treturn Object.freeze([\n\t\tnew RegExp(`def word\\\\(${argument}: int = 7\\\\) -> int:`, \"u\")\n\t\t, new RegExp(\n\t\t\t`def present\\\\(${argument}: Option\\\\[int\\\\] = Some\\\\(9\\\\)\\\\)`, \"u\")\n\t]);\n};\n\n/**\n * Return exact Ruby signatures for one authoring route.\n *\n * @param route - Ordinary or independently reviewed authoring route.\n */\nexport const optionalParameterRubyPatterns = route => {\n\tconst argument = routeBinder(route);\n\treturn Object.freeze([\n\t\tnew RegExp(`def word\\\\(${argument} = 7\\\\)`, \"u\")\n\t\t, new RegExp(`def present\\\\(${argument} = Some\\\\.new\\\\(9\\\\)\\\\)`, \"u\")\n\t\t, new RegExp(`def unit_value\\\\(${argument} = UNIT\\\\)`, \"u\")\n\t]);\n};\n\n/**\n * Return the exact C++ optional signature for one authoring route.\n *\n * @param route - Ordinary or independently reviewed authoring route.\n */\nexport const optionalParameterCppPattern = route => new RegExp(\n\t`inline std::optional<uint32_t> present\\\\(std::optional<uint32_t> const& ${routeBinder(route)} =`\n\t, \"u\"\n);\n\n",
+          "previous": "",
+          "start": 2075
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-installed-contract.mjs",
+      "previousSha256": "6bd85c73239b228632a8ed0050916b651c275cc7cf3a2bbdc127aa6d15d28ec5"
+    },
+    {
+      "currentSha256": "05f147fa505d0ee3143718131727e21e33839ef2cd87998336fe5068100186f9",
+      "edits": [
+        {
+          "current": "import {\n\toptionalParameterPythonPatterns, optionalParameterRubyPatterns\n} from \"./optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 736
+        },
+        {
+          "current": "",
+          "previous": "\t, python: [\n\t\t/def word\\(value0: int = 7\\) -> int:/u\n\t\t, /def present\\(value0: Option\\[int\\] = Some\\(9\\)\\)/u\n\t]\n\t, ruby: [\n\t\t/def word\\(arg0 = 7\\)/u\n\t\t, /def present\\(arg0 = Some\\.new\\(9\\)\\)/u\n\t\t, /def unit_value\\(arg0 = UNIT\\)/u\n\t]\n",
+          "start": 1907
+        },
+        {
+          "current": "\tconst patterns = options.profile === \"python\"\n\t\t? optionalParameterPythonPatterns(options.route)\n\t\t: options.profile === \"ruby\"\n\t\t\t? optionalParameterRubyPatterns(options.route)\n\t\t\t: apiPatterns[options.profile];\n\tfor(const pattern of patterns)\n",
+          "previous": "\tfor(const pattern of apiPatterns[options.profile])\n",
+          "start": 8196
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-language-report.mjs",
+      "previousSha256": "2da5f404727d533289e97924cf87a60cc115a91fee6dde468c4b6a3142c57b04"
+    },
+    {
+      "currentSha256": "aea6d8ca2e827a16d374961cefa53761c15560908b105ad38d27c14a431ac99d",
+      "edits": [
+        {
+          "current": "import {\n\tmanagedDiagnosticPattern\n} from \"./optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 735
+        },
+        {
+          "current": "",
+          "previous": "const diagnostics = Object.freeze({\n\tdotnet: /(?:CS1503|cannot convert from '<null>'|non-nullable value type)/iu\n\t, java: /(?:incompatible types|cannot be converted to (?:long|int))/iu\n\t, kotlin: /(?:null can not be a value of a non-null type|type mismatch)/iu\n});\n\n",
+          "start": 1230
+        },
+        {
+          "current": "\t\tassert.match(item.invalidCompile.diagnostic\n\t\t\t, managedDiagnosticPattern(item.profile));\n",
+          "previous": "\t\tassert.match(item.invalidCompile.diagnostic, diagnostics[item.profile]);\n",
+          "start": 3870
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-managed-report.mjs",
+      "previousSha256": "41926b17130c47a0ab5567ae08ec5bc4afe20af308b811fbef2da5954e6efba7"
+    },
+    {
+      "currentSha256": "4e78eec8d8557e7e34cf26ca7d4f687e3f11f077953498646894f5a586ddcaa6",
+      "edits": [
+        {
+          "current": "import {\n\toptionalParameterCppPattern\n} from \"./optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 736
+        },
+        {
+          "current": "\t\t\theader: optionalParameterCppPattern(options.route)\n",
+          "previous": "\t\t\theader: /inline std::optional<uint32_t> present\\(std::optional<uint32_t> const& value0 =/u\n",
+          "start": 6460
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-native-report.mjs",
+      "previousSha256": "f0d2eb5a151904754240f886011b08e29859c6ee65777f98ad1565313d84e069"
+    },
+    {
+      "currentSha256": "7e50eb24eccb044f770857bdc9a1c951f4f2bb02633e67ff03ea57a3d7f4b804",
+      "edits": [
+        {
+          "current": "\t, optionalParameterCppPattern, optionalParameterPhpPatterns\n\t, optionalParameterPythonPatterns, optionalParameterRubyPatterns\n\t, optionalParameterWitPatterns\n",
+          "previous": "\t, optionalParameterPhpPatterns, optionalParameterWitPatterns\n",
+          "start": 173
+        },
+        {
+          "current": "test(\"optional language contracts retain route-specific binders\", () => {\n\tconst python = \"def word(arg0: int = 7) -> int:\\n\"\n\t\t+ \"def present(arg0: Option[int] = Some(9)):\\n\";\n\tconst ruby = \"def word(arg0 = 7)\\n\"\n\t\t+ \"def present(arg0 = Some.new(9))\\n\"\n\t\t+ \"def unit_value(arg0 = UNIT)\\n\";\n\tfor(const pattern of optionalParameterPythonPatterns(\"ordinary\"))\n\t\tassert.match(python, pattern);\n\tfor(const pattern of optionalParameterPythonPatterns(\"reviewed\"))\n\t\tassert.match(python.replaceAll(\"arg0\", \"value0\"), pattern);\n\tfor(const pattern of optionalParameterRubyPatterns(\"ordinary\"))\n\t\tassert.match(ruby, pattern);\n\tfor(const pattern of optionalParameterRubyPatterns(\"reviewed\"))\n\t\tassert.match(ruby.replaceAll(\"arg0\", \"value0\"), pattern);\n\tconst cpp = \"inline std::optional<uint32_t> present(\"\n\t\t+ \"std::optional<uint32_t> const& arg0 = std::nullopt)\";\n\tassert.match(cpp, optionalParameterCppPattern(\"ordinary\"));\n\tassert.match(cpp.replace(\"arg0\", \"value0\")\n\t\t, optionalParameterCppPattern(\"reviewed\"));\n\tassert.throws(() => optionalParameterPythonPatterns(\"foreign\"), /unknown/u);\n\tassert.throws(() => optionalParameterRubyPatterns(\"foreign\"), /unknown/u);\n\tassert.throws(() => optionalParameterCppPattern(\"foreign\"), /unknown/u);\n});\n\n",
+          "previous": "",
+          "start": 2384
+        }
+      ],
+      "path": "tests/optional-parameter-installed-contract.test.mjs",
+      "previousSha256": "0f683a09e1bc562c8185b06a8a9828fe19a9eae68e8d9736bf6c2d5ff764daff"
+    },
+    {
+      "currentSha256": "36dcb54d8963ed5b02b9f46e4412d3e3a136315fa32aed0e437a045bdb378521",
+      "edits": [
+        {
+          "current": "import {\n\toptionalParameterCppPattern\n} from \"./helpers/optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 946
+        },
+        {
+          "current": "\t\t\t\t: optionalParameterCppPattern(route);\n",
+          "previous": "\t\t\t\t: /inline std::optional<uint32_t> present\\(std::optional<uint32_t> const& value0 =/u;\n",
+          "start": 6783
+        }
+      ],
+      "path": "tests/optional-parameter-native-installed.test.mjs",
+      "previousSha256": "7f6baa4e9fa6711ff83da2cd537e7e545a1207df3d2e4d7d807b0187429d9137"
+    }
+  ]
+}
