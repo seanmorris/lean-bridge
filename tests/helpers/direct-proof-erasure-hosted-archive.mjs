@@ -242,7 +242,7 @@ const tree = (revision, prefix) => execFileSync("git", [
 ], { encoding: "utf8" }).trim().split("\n").filter(Boolean);
 
 const producerEntries = Object.freeze([
-	directProofErasureMatrixWorkflow
+	directProofErasureMatrixWorkflow, ".github/workflows/perl-consumer.yml"
 	, ...Object.values(checker)
 	, ...["npm", "native", "php", "language", "managed", "wit"]
 		.map(name => `scripts/run-direct-proof-erasure-${name}-ci.sh`)

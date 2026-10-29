@@ -50,10 +50,13 @@ test("hosted proof-erasure producer sources contain every exact workflow step", 
 	const workflow = execFileSync("git", ["show"
 		, `${directProofErasureHostedProducer}:.github/workflows/consumer-matrix.yml`]
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	const perl = execFileSync("git", ["show"
+		, `${directProofErasureHostedProducer}:.github/workflows/perl-consumer.yml`]
+	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	for(const lane of directProofErasureHostedLanes)
 		for(const step of Object.values(lane.steps))
-			assert.ok(workflow.includes(`- name: ${step}`)
-				, `${lane.key}:${step}`);
+			assert.ok((lane.key === "language-perl" ? perl : workflow)
+				.includes(`- name: ${step}`), `${lane.key}:${step}`);
 });
 
 test("hosted proof-erasure source closure is closed at immutable revisions", () => {
