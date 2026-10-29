@@ -43,8 +43,10 @@ export const hostNullCompletePromotionGroups = Object.freeze([
 		, "null or T; Option remains generated None/Some")
 	, group("dotnet", ["dotnet"]
 		, "nullable T; Option<T> remains explicit None/Some")
-	, group("jvm", ["java", "kotlin"]
-		, "boxed @Nullable T or Kotlin T?; Option<T> remains explicit None/Some")
+	, group("java", ["java"]
+		, "boxed @Nullable T; Option<T> remains explicit None/Some")
+	, group("kotlin", ["kotlin"]
+		, "T?; Option<T> remains explicit None/Some")
 	, group("perl", ["perl"]
 		, "undef or T; Option remains generated None/Some")
 	, group("python", ["python"]

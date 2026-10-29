@@ -175,4 +175,14 @@ test("complete HostNull promotion renders every canonical consumer guide", async
 	}
 	assert.deepEqual([...seenProfiles].sort()
 		, [...hostNullCompletePromotionProfiles].sort());
+	const java = generatedRow(renderTypeTable({
+		document: proposed, ...contracts
+	}, ["java"], "reference/types.md"), "Explicit nullable host value");
+	const kotlin = generatedRow(renderTypeTable({
+		document: proposed, ...contracts
+	}, ["kotlin"], "reference/types.md"), "Explicit nullable host value");
+	assert.match(java, /`boxed @Nullable T; Option<T> remains explicit None\/Some`/u);
+	assert.doesNotMatch(java, /T\?/u);
+	assert.match(kotlin, /`T\?; Option<T> remains explicit None\/Some`/u);
+	assert.doesNotMatch(kotlin, /@Nullable/u);
 });
