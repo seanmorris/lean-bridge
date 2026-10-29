@@ -51,8 +51,10 @@ const collection = async key => {
 	let total = null, page = 1;
 	while(true)
 	{
+		const filter = key === "jobs" ? "filter=all&" : "";
 		const value = object(api(
-			`${repository}/actions/runs/${dependentSignatureHostedRunId}/${key}?per_page=100&page=${page}`
+			`${repository}/actions/runs/${dependentSignatureHostedRunId}/${key}`
+				+ `?${filter}per_page=100&page=${page}`
 		), `${key} API page ${page}`);
 		assert.ok(Number.isSafeInteger(value.total_count)
 			&& value.total_count >= 0);
@@ -125,7 +127,8 @@ try
 		, dependentSignatureHostedReceipt];
 	for(const item of selected)
 	{
-		const matchingJobs = jobs.filter(job => job.name === item.jobName);
+		const matchingJobs = jobs.filter(job => job.name === item.jobName
+			&& job.run_attempt === run.run_attempt);
 		assert.equal(matchingJobs.length, 1, item.jobName);
 		const job = matchingJobs[0];
 		assert.equal(job.run_id, dependentSignatureHostedRunId);
