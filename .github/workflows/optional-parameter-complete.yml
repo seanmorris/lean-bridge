@@ -159,8 +159,15 @@ jobs:
       - name: Check out the exact producer revision
         uses: actions/checkout@v6
         with:
+          # The receipt executes current reconciliation source and downloads
+          # hosted artifacts. The 43 GiB immutable evidence corpus is neither
+          # read nor trusted by this job, so never materialize it on a runner.
           fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:

@@ -164,6 +164,8 @@ const assertFocusedCaller = source => {
 	const receipt = source.slice(receiptStart);
 	assert.match(receipt, /^ {4}if: always\(\)$/mu);
 	assert.doesNotMatch(receipt, /^ {4}continue-on-error:/mu);
+	assert.match(receipt
+		, /fetch-depth: 1\n {10}persist-credentials: false\n {10}sparse-checkout: \|\n {12}\/\*\n {12}!\/docs\/evidence\/\n {10}sparse-checkout-cone-mode: false/u);
 	for(const job of ["npm-browser", "native-perl", "languages", "managed-wit", "php"])
 		assert.match(receipt, new RegExp(`^ {6}- ${job}$`, "mu"));
 	assert.match(receipt
@@ -261,6 +263,7 @@ test("focused recurring CI produces and reconciles the exact optional matrix", a
 		, caller.replace("optional-parameter-*-${{ github.sha }}"
 			, "optional-parameter-node-browser-${{ github.sha }}")
 		, caller.replace("  receipt:\n", "  receipt:\n    continue-on-error: true\n")
+		, caller.replace("            !/docs/evidence/\n", "")
 	];
 	for(const changed of callerMutations)
 		assert.throws(() => assertFocusedCaller(changed), assert.AssertionError);
