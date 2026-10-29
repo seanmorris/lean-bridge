@@ -18,9 +18,7 @@ import {
 	, focusedProducerEfficiencyPredecessor
 	, reverseFocusedProducerEfficiencyUpdate
 } from "./focused-producer-efficiency-source-history.mjs";
-import { beforeFinRefinementSource }
-	from "./fin-refinement-source-history.mjs";
-import { sourceAtFinHistoryMilestone }
+import { sourceAtFinHistoryRecordSource }
 	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
@@ -65,13 +63,14 @@ test("focused producer efficiency reverses implementation and registration"
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256);
+		const current = await sourceAtFinHistoryRecordSource(
+			focusedProducerEfficiencyHistoryPath, update.path
+			, update.currentSha256);
 		const previous = git(["show"
 			, `${focusedProducerEfficiencyImplementation}:${update.path}`]);
 		assert.equal(reverseFocusedProducerEfficiencyUpdate(current, update)
 			, previous, update.path);
-		assert.equal(beforeFinRefinementSource(
+		assert.equal(beforeFocusedProducerEfficiencySource(
 			update.path, current, update.previousSha256), previous, update.path);
 	}}
 );
@@ -86,8 +85,8 @@ test("focused producer efficiency authenticates additions and semantics"
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${focusedProducerEfficiencyImplementation}:${addition.path}`]
 		, { stdio: "ignore" }).status, 0);
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.sha256))
+		assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+			focusedProducerEfficiencyHistoryPath, addition.path, addition.sha256))
 			, addition.sha256, addition.path);
 	}
 	for(const path of [

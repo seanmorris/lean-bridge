@@ -18,9 +18,7 @@ import {
 	, optionalParameterPackageCheckerRepairPredecessor
 	, reverseOptionalParameterPackageCheckerRepairUpdate
 } from "./optional-parameter-package-checker-repair-source-history.mjs";
-import { beforeFinRefinementSource }
-	from "./fin-refinement-source-history.mjs";
-import { sourceAtFinHistoryMilestone }
+import { sourceAtFinHistoryRecordSource }
 	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
@@ -64,13 +62,14 @@ test("optional package checker repair reverses every source", async () => {
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256);
+		const current = await sourceAtFinHistoryRecordSource(
+			optionalParameterPackageCheckerRepairHistoryPath, update.path
+			, update.currentSha256);
 		const previous = git(["show"
 			, `${optionalParameterPackageCheckerRepairImplementation}:${update.path}`]);
 		assert.equal(reverseOptionalParameterPackageCheckerRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
+		assert.equal(beforeOptionalParameterPackageCheckerRepairSource(
 			update.path, current, update.previousSha256), previous, update.path);
 	}
 });
@@ -84,8 +83,9 @@ test("optional package checker repair retains exact contracts", async () => {
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${optionalParameterPackageCheckerRepairImplementation}:${addition.path}`]
 		, { stdio: "ignore" }).status, 0);
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.sha256)), addition.sha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+			optionalParameterPackageCheckerRepairHistoryPath, addition.path
+			, addition.sha256)), addition.sha256, addition.path);
 	}
 	for(const path of [
 		...optionalParameterPackageCheckerRepairImplementationPaths

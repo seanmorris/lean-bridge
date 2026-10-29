@@ -18,9 +18,7 @@ import {
 	, optionalParameterWitIdentityRepairPredecessor
 	, reverseOptionalParameterWitIdentityRepairUpdate
 } from "./optional-parameter-wit-identity-repair-source-history.mjs";
-import { beforeFinRefinementSource }
-	from "./fin-refinement-source-history.mjs";
-import { sourceAtFinHistoryMilestone }
+import { sourceAtFinHistoryRecordSource }
 	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
@@ -63,13 +61,14 @@ test("optional WIT identity repair reverses implementation and registration"
 		}
 		for(const update of value.integrationUpdates)
 		{
-			const current = await sourceAtFinHistoryMilestone(
-				update.path, update.currentSha256);
+			const current = await sourceAtFinHistoryRecordSource(
+				optionalParameterWitIdentityRepairHistoryPath, update.path
+				, update.currentSha256);
 			const previous = git(["show"
 				, `${optionalParameterWitIdentityRepairImplementation}:${update.path}`]);
 			assert.equal(reverseOptionalParameterWitIdentityRepairUpdate(
 				current, update), previous, update.path);
-			assert.equal(beforeFinRefinementSource(
+			assert.equal(beforeOptionalParameterWitIdentityRepairSource(
 				update.path, current, update.previousSha256), previous, update.path);
 		}
 	}
@@ -84,8 +83,9 @@ test("optional WIT identity repair authenticates identity semantics", async () =
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${optionalParameterWitIdentityRepairImplementation}:${addition.path}`]
 		, { stdio: "ignore" }).status, 0);
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.sha256)), addition.sha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+			optionalParameterWitIdentityRepairHistoryPath, addition.path
+			, addition.sha256)), addition.sha256, addition.path);
 	}
 	for(const path of [
 		...optionalParameterWitIdentityRepairImplementationPaths

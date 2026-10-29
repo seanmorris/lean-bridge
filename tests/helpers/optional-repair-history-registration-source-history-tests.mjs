@@ -18,9 +18,7 @@ import {
 	, optionalRepairHistoryRegistrationPredecessor
 	, reverseOptionalRepairHistoryRegistrationUpdate
 } from "./optional-repair-history-registration-source-history.mjs";
-import { beforeFinRefinementSource }
-	from "./fin-refinement-source-history.mjs";
-import { sourceAtFinHistoryMilestone }
+import { sourceAtFinHistoryRecordSource }
 	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
@@ -62,13 +60,14 @@ test("optional repair history registration reverses every source", async () => {
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256);
+		const current = await sourceAtFinHistoryRecordSource(
+			optionalRepairHistoryRegistrationHistoryPath, update.path
+			, update.currentSha256);
 		const previous = git(["show"
 			, `${optionalRepairHistoryRegistrationImplementation}:${update.path}`]);
 		assert.equal(reverseOptionalRepairHistoryRegistrationUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
+		assert.equal(beforeOptionalRepairHistoryRegistrationSource(
 			update.path, current, update.previousSha256), previous, update.path);
 	}
 });
@@ -82,8 +81,9 @@ test("optional repair history registration keeps suites reachable", async () => 
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${optionalRepairHistoryRegistrationImplementation}:${addition.path}`]
 		, { stdio: "ignore" }).status, 0);
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.sha256)), addition.sha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+			optionalRepairHistoryRegistrationHistoryPath, addition.path
+			, addition.sha256)), addition.sha256, addition.path);
 	}
 	for(const path of [
 		...optionalRepairHistoryRegistrationImplementationPaths
@@ -95,14 +95,27 @@ test("optional repair history registration keeps suites reachable", async () => 
 	assert.doesNotMatch(partition, /focused-producer-efficiency/u);
 	assert.doesNotMatch(partition, /optional-parameter-wit-identity-repair/u);
 	assert.doesNotMatch(partition, /optional-parameter-package-checker-repair/u);
-	const contract = await readFile(
-		"tests/optional-parameter-installed-contract.test.mjs", "utf8");
-	for(const name of [
+	const names = [
 		"focused-producer-efficiency"
 		, "optional-parameter-wit-identity-repair"
 		, "optional-parameter-package-checker-repair"
 		, "optional-repair-history-registration"
-	]) assert.match(contract, new RegExp(name, "u"));
+	];
+	const contractPath = "tests/optional-parameter-installed-contract.test.mjs";
+	const contractUpdate = value.integrationUpdates.find(
+		item => item.path === contractPath);
+	assert.ok(contractUpdate);
+	const milestoneContract = await sourceAtFinHistoryRecordSource(
+		optionalRepairHistoryRegistrationHistoryPath, contractPath
+		, contractUpdate.currentSha256);
+	for(const name of names) assert.match(
+		milestoneContract, new RegExp(name, "u"));
+	const contract = await readFile(contractPath, "utf8");
+	for(const name of names) assert.doesNotMatch(
+		contract, new RegExp(name, "u"));
+	const carrier = await readFile(
+		"tests/canonical-package-manifest.test.mjs", "utf8");
+	for(const name of names) assert.match(carrier, new RegExp(name, "u"));
 });
 
 test("optional repair history registration rejects forged history", async () => {
