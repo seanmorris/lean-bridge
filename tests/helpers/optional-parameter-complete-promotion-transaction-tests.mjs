@@ -19,7 +19,13 @@ test("complete optional-parameter promotion is clean and transactional", () => {
 	assert.match(source, /promoteOptionalParameterComplete\(/u);
 	assert.match(source, /renderReferenceDocuments\(/u);
 	assert.match(source, /renderOptionalParameterCompleteDocumentation\(/u);
+	assert.match(source
+		, /dependentCheckedRecordPromotionCurrentSourcePaths\(/u);
+	assert.match(source, /reconcileDependentCheckedRecordSourcePins\(/u);
 	assert.match(source, /stagePromotionInventory\(/u);
+	assert.match(source, /stageEvidenceRefresh\(/u);
+	assert.match(source
+		, /Source-pin reconciliation must not change rendered documentation/u);
 	assert.match(source
 		, /commitPromotionFiles\(\{ root, staging, files \}\)/u);
 	assert.match(source
@@ -38,4 +44,5 @@ test("complete optional-parameter promotion keeps all documentation together", (
 		, /files\.push\(\{ path: documentPath, staged, previous, next \}\)/u);
 	assert.match(source, /mode: checkOnly \? "check" : "promote"/u);
 	assert.match(source, /cells: 34/u);
+	assert.match(source, /sourcePins: \{/u);
 });

@@ -10,7 +10,12 @@ import { execFileSync } from "node:child_process";
 import { createReadStream } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { sha256 } from "../src/capsule/node.mjs";
 import { renderReferenceDocuments } from "./generate-reference-docs.mjs";
+import {
+	dependentCheckedRecordPromotionCurrentSourcePaths
+	, reconcileDependentCheckedRecordSourcePins
+} from "../tests/helpers/dependent-checked-record-promotion.mjs";
 import {
 	optionalParameterCompleteReference
 } from "../tests/helpers/optional-parameter-hosted-evidence.mjs";
@@ -22,7 +27,7 @@ import {
 	, renderOptionalParameterCompleteDocumentation
 } from "../tests/helpers/optional-parameter-complete-documentation.mjs";
 import {
-	readPromotionInventory, stagePromotionInventory
+	readPromotionInventory, stageEvidenceRefresh, stagePromotionInventory
 } from "../tests/helpers/type-surface-promotion-io.mjs";
 import {
 	commitPromotionFiles, promotionFileIdentity
@@ -59,23 +64,42 @@ for(const [name, documentPath] of Object.entries(
 renderOptionalParameterCompleteDocumentation(sources);
 
 const reference = await optionalParameterCompleteReference();
-const promoted = promoteOptionalParameterComplete(
+const semanticPromotion = promoteOptionalParameterComplete(
 	original.document, { irSchema, consumers }, reference);
-const generated = await renderReferenceDocuments({
-	root, inventory: { document: promoted, irSchema, consumers }
-});
-const documentationEntries = Object.entries(
-	optionalParameterCompleteDocumentationPaths).map(([name, documentPath]) => [
-	name, generated[documentPath] ?? sources[name]
-]);
-const documentation = renderOptionalParameterCompleteDocumentation(
-	Object.fromEntries(documentationEntries));
-const documents = {
-	...generated
-	, ...Object.fromEntries(Object.entries(
-		optionalParameterCompleteDocumentationPaths)
-		.map(([name, documentPath]) => [documentPath, documentation[name]]))
+const renderDocuments = async document => {
+	const generated = await renderReferenceDocuments({
+		root, inventory: { document, irSchema, consumers }
+	});
+	const documentationEntries = Object.entries(
+		optionalParameterCompleteDocumentationPaths).map(
+		([name, documentPath]) => [
+			name, generated[documentPath] ?? sources[name]
+		]);
+	const documentation = renderOptionalParameterCompleteDocumentation(
+		Object.fromEntries(documentationEntries));
+	return {
+		...generated
+		, ...Object.fromEntries(Object.entries(
+			optionalParameterCompleteDocumentationPaths).map(
+			([name, documentPath]) => [documentPath, documentation[name]]))
+	};
 };
+const documents = await renderDocuments(semanticPromotion);
+const currentSourcePaths = dependentCheckedRecordPromotionCurrentSourcePaths(
+	semanticPromotion, Object.keys(documents));
+assert.ok(currentSourcePaths.length > 0
+	, "Optional-parameter publication must own changed live-source pins");
+const currentDigests = new Map(currentSourcePaths.map(documentPath => {
+	assert.ok(Object.hasOwn(documents, documentPath), documentPath);
+	return [documentPath, sha256(documents[documentPath])];
+}));
+const reconciled = reconcileDependentCheckedRecordSourcePins(
+	semanticPromotion, currentDigests);
+assert.ok(reconciled.refreshed > 0
+	, "Optional-parameter publication must refresh changed live-source pins");
+const promoted = reconciled.inventory;
+assert.deepEqual(await renderDocuments(promoted), documents
+	, "Source-pin reconciliation must not change rendered documentation");
 
 clean();
 await mkdir(join(root, "build"), { recursive: true });
@@ -84,9 +108,14 @@ const staging = await mkdtemp(join(root
 let installing = false, completed = false;
 try
 {
+	const semanticStaged = join(staging, "semantic-inventory.json");
+	await stagePromotionInventory(
+		path, semanticStaged, original, semanticPromotion);
+	const semanticOriginal = await readPromotionInventory(
+		createReadStream(semanticStaged), { irSchema, consumers });
 	const staged = join(staging, "inventory.json");
-	const next = await stagePromotionInventory(
-		path, staged, original, promoted);
+	const next = await stageEvidenceRefresh(
+		semanticStaged, staged, semanticOriginal, promoted);
 	const files = [{ path, staged, previous: original.source, next }];
 	const documentEntries = Object.entries(documents).entries();
 	for(const [number, [documentPath, content]] of documentEntries)
@@ -110,6 +139,9 @@ try
 		, cells: 34
 		, observations: promoted.observations.length
 			- original.document.observations.length
+		, sourcePins: {
+			paths: currentSourcePaths, refreshed: reconciled.refreshed
+		}
 		, inventory: next, files: files.map(file => file.path), head
 	}, null, 2) + "\n");
 }
