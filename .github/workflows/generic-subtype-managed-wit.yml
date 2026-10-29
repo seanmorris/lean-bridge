@@ -36,10 +36,21 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     steps:
-      - name: Check out the exact revision
+      - name: Check out the focused package revision
+        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}
         uses: actions/checkout@v6
         with:
-          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Check out the exact revision
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6

@@ -85,6 +85,19 @@ const assertFocusedProducer = (source, specification) => {
 			, 1, artifact);
 		assert.ok(source.includes(path), path);
 	}
+	if(specification.file.endsWith("generic-subtype-managed-wit.yml"))
+	{
+		const dotnet = source.slice(source.indexOf("  dotnet:\n")
+			, source.indexOf("  jvm:\n"));
+		assert.match(dotnet
+			, /if: \$\{\{ inputs\.optional_parameters \|\| inputs\.direct_proof_erasure \|\| inputs\.host_null \}\}/u);
+		assert.match(dotnet, /fetch-depth: 1/u);
+		assert.match(dotnet, /sparse-checkout: \|\n {12}\/\*\n {12}!\/docs\/evidence\//u);
+		assert.match(dotnet, /sparse-checkout-cone-mode: false/u);
+		assert.match(dotnet
+			, /if: \$\{\{ !inputs\.optional_parameters && !inputs\.direct_proof_erasure && !inputs\.host_null \}\}/u);
+		assert.match(dotnet, /fetch-depth: 0/u);
+	}
 };
 
 const sparseCheckoutPatterns = source => {
@@ -209,6 +222,8 @@ test("focused HostNull producers retain all seven fail-closed lanes", async t =>
 			, source.replace(artifact, "disabled-artifact")
 			, source.replaceAll(path, "disabled/path/")
 			, source.replace("steps.host_null.outcome != 'success'", "false")
+			, ...(specification.file.endsWith("generic-subtype-managed-wit.yml")
+				? [source.replace("            !/docs/evidence/\n", "")] : [])
 		]) assert.throws(() => assertFocusedProducer(changed, specification)
 			, assert.AssertionError, specification.file);
 	}

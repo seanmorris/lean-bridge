@@ -99,6 +99,19 @@ const assertFocusedProducer = (source, specification) => {
 			, 1, artifact);
 		assert.equal(source.split(`path: ${path}`).length - 1, 1, path);
 	}
+	if(specification.file.endsWith("generic-subtype-managed-wit.yml"))
+	{
+		const dotnet = source.slice(source.indexOf("  dotnet:\n")
+			, source.indexOf("  jvm:\n"));
+		assert.match(dotnet
+			, /if: \$\{\{ inputs\.optional_parameters \|\| inputs\.direct_proof_erasure \|\| inputs\.host_null \}\}/u);
+		assert.match(dotnet, /fetch-depth: 1/u);
+		assert.match(dotnet, /sparse-checkout: \|\n {12}\/\*\n {12}!\/docs\/evidence\//u);
+		assert.match(dotnet, /sparse-checkout-cone-mode: false/u);
+		assert.match(dotnet
+			, /if: \$\{\{ !inputs\.optional_parameters && !inputs\.direct_proof_erasure && !inputs\.host_null \}\}/u);
+		assert.match(dotnet, /fetch-depth: 0/u);
+	}
 };
 
 const sparseCheckoutPatterns = source => {
@@ -251,6 +264,8 @@ test("focused proof-erasure producers retain all ten fail-closed lanes", async t
 			, source.replace(path, "disabled/path/")
 			, source.replace(
 				"steps.direct_proof_erasure.outcome != 'success'", "false")
+			, ...(specification.file.endsWith("generic-subtype-managed-wit.yml")
+				? [source.replace("            !/docs/evidence/\n", "")] : [])
 		]) assert.throws(() => assertFocusedProducer(changed, specification)
 			, assert.AssertionError, specification.file);
 	}
