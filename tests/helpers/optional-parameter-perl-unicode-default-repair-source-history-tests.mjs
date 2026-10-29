@@ -22,6 +22,8 @@ import {
 } from "./optional-parameter-perl-unicode-default-repair-source-history.mjs";
 import { beforeFinRefinementSource }
 	from "./fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -77,7 +79,8 @@ test("optional Perl Unicode defaults reverse every authenticated source"
 		}
 		for(const update of value.integrationUpdates)
 		{
-			const current = await readFile(update.path, "utf8");
+			const current = await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256);
 			const previous = git(["show"
 				, `${optionalParameterPerlUnicodeDefaultRepairImplementation}`
 					+ `:${update.path}`]);
@@ -111,7 +114,8 @@ test("optional Perl Unicode defaults authenticate additions and registration"
 			assert.notEqual(spawnSync("git", ["cat-file", "-e"
 				, `${optionalParameterPerlUnicodeDefaultRepairImplementation}`
 					+ `:${addition.path}`], { stdio: "ignore" }).status, 0);
-			assert.equal(sha256(await readFile(addition.path))
+			assert.equal(sha256(await sourceAtFinHistoryMilestone(
+				addition.path, addition.sha256))
 				, addition.sha256, addition.path);
 		}
 		for(const path of [

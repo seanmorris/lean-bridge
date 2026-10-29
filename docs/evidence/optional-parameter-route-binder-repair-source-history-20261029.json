@@ -1,0 +1,259 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-route-binder-repair-source-history.mjs",
+      "sha256": "9e0b6c2d89f260fec8dccc34164f4b70dc1e0fc3a06a3a589efe7ce12b7ec487"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-route-binder-repair-source-history-tests.mjs",
+      "sha256": "dd0e339bdbfe36efd3f12d90567daee31290a237b1a2ac180b0339ce71aea13a"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-route-binder-repair-source-history.mjs",
+      "sha256": "7ae2340450866e616f95801354c6f53722e3af49932424052b3fa533a73bc19c"
+    }
+  ],
+  "hostedRun": 40856632076,
+  "implementationAdditions": [],
+  "implementationCommit": "5cab42efefa5ceb4477bb4430ada2625114073c1",
+  "implementationCommits": [
+    "30e648fcba9587b00ca8b0824bcdfa371a5de062",
+    "5cab42efefa5ceb4477bb4430ada2625114073c1"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "7d097ad2cecba7d33a0ee9d908b132190c90be2ae9dfdc3a260d1a17881e7285",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-route-binder-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "1b769415a66001953a71057a4cc9ac7a290da12adfe4f29fb6069a2de13668fe"
+    },
+    {
+      "currentSha256": "53772fdfac610b8458feb463bfe9f094d04a603723adfddd1b0f301fa18fa109",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterRouteBinderRepairSource, optionalParameterRouteBinderRepairNormalizationPaths } from \"./optional-parameter-route-binder-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterRouteBinderRepairNormalizationPaths\n\t, ...optionalParameterPerlUnicodeDefaultRepairNormalizationPaths\n",
+          "previous": "\t...optionalParameterPerlUnicodeDefaultRepairNormalizationPaths\n",
+          "start": 219404
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterRouteBinderRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterPerlUnicodeDefaultRepairSource(\n",
+          "previous": "\tlet stage = beforeOptionalParameterPerlUnicodeDefaultRepairSource(\n",
+          "start": 274587
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6974cf7a65a5cc15561efa826eea5d61d81775c49929fc0b249cc7b614aeafb4"
+    },
+    {
+      "currentSha256": "8d62e310982737247be8b5fd5a55cb77be5f4138a65309c5dffc060381dccc77",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 1105
+        },
+        {
+          "current": "\t\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3562
+        },
+        {
+          "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.sha256))\n",
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 5090
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-perl-unicode-default-repair-source-history-tests.mjs",
+      "previousSha256": "f04edce962bb3523bed7b7198efe1ff71e273664ea8cf7597be88abad59652ab"
+    }
+  ],
+  "milestone": "optional-parameter-route-binder-repair-source-v1",
+  "predecessorCommit": "aa7dc7b4480562aa87d2115e62a16ea7568af136",
+  "refreshedPins": 0,
+  "repairedProfiles": [
+    "browser-javascript",
+    "browser-react",
+    "browser-worker",
+    "node-javascript",
+    "node-typescript",
+    "php-native",
+    "php-wasm"
+  ],
+  "schemaVersion": 1,
+  "scope": "Repair installed optional-parameter route verification after the first complete hosted wave. Ordinary source analysis owns binder arg0; independently reviewed Binding IR owns binder value0. Apply that distinction to PHP signatures, npm Binding IR, compiler adapters and retained npm reports without widening either route or changing generated package behavior.",
+  "updates": [
+    {
+      "currentSha256": "6fb7703bf0f3748723d43a3e92131fa3a42e097131caa252d8543b3032c003df",
+      "edits": [
+        {
+          "current": "/**\n * Return the compiler-owned binder for one authoring route.\n *\n * @param route - Ordinary source analysis or independent reviewed IR.\n */\nexport const optionalParameterBinder = route => {\n\tif(![\"ordinary\", \"reviewed\"].includes(route))\n\t\tthrow new TypeError(`Unknown optional-parameter route: ${route}`);\n\treturn route === \"ordinary\" ? \"arg0\" : \"value0\";\n};\n\n",
+          "previous": "",
+          "start": 2954
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-fixture.mjs",
+      "previousSha256": "c90b74f4d2ed41afe7f359096867b2fcdea75f2dd4b85739bec997f9a06ba27e"
+    },
+    {
+      "currentSha256": "6bd85c73239b228632a8ed0050916b651c275cc7cf3a2bbdc127aa6d15d28ec5",
+      "edits": [
+        {
+          "current": "const routeBinder = route => {\n\tif(![\"ordinary\", \"reviewed\"].includes(route))\n\t\tthrow new TypeError(\"unknown optional-parameter authoring route\");\n\treturn route === \"ordinary\" ? \"arg0\" : \"value0\";\n};\n",
+          "previous": "",
+          "start": 783
+        },
+        {
+          "current": "\tconst argument = routeBinder(route);\n",
+          "previous": "\tif(![\"ordinary\", \"reviewed\"].includes(route))\n\t\tthrow new TypeError(\"unknown optional-parameter authoring route\");\n\tconst argument = route === \"ordinary\" ? \"arg0\" : \"value0\";\n",
+          "start": 1183
+        },
+        {
+          "current": "/**\n * Return exact public PHP signatures for one authoring route.\n *\n * @param route - Ordinary or independently reviewed authoring route.\n */\nexport const optionalParameterPhpPatterns = route => {\n\tconst argument = routeBinder(route);\n\treturn Object.freeze([\n\t\tnew RegExp(`function word\\\\(mixed \\\\$${argument} = 7\\\\): int`, \"u\")\n\t\t, new RegExp(`function natural\\\\(mixed \\\\$${argument} = null\\\\)`, \"u\")\n\t\t, new RegExp(`function present\\\\(mixed \\\\$${argument} = null\\\\)`, \"u\")\n\t\t, new RegExp(`\\\\$${argument} = new Some\\\\(9\\\\)`, \"u\")\n\t\t, new RegExp(\n\t\t\t`function unit_value\\\\(mixed \\\\$${argument} = null\\\\): null`, \"u\")\n\t]);\n};\n\n",
+          "previous": "",
+          "start": 1447
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-installed-contract.mjs",
+      "previousSha256": "1b7f03f234ec51d30bd57fde94a0ec0696198e73b0323dbfc6961e46c0a69596"
+    },
+    {
+      "currentSha256": "521dd04346583d649b51e05e428c8368bcdd89d4c80e8c07a0c8bf1e602d55d5",
+      "edits": [
+        {
+          "current": "\t, optionalParameterBinder\n",
+          "previous": "",
+          "start": 686
+        },
+        {
+          "current": "\tconst binder = optionalParameterBinder(options.route);\n",
+          "previous": "",
+          "start": 5617
+        },
+        {
+          "current": "\t\tassertOptionalParameterIr(ir, [binder]);\n",
+          "previous": "\t\tassertOptionalParameterIr(ir);\n",
+          "start": 6372
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-npm-report.mjs",
+      "previousSha256": "b17630784a6c0dbb26e2b3bb47cd3a131481676b2be410a9fb6751da2889c916"
+    },
+    {
+      "currentSha256": "c54511f741c8889c078d89c9e2be2a0f541e52c4ba7ea2c6badc60daa5696e94",
+      "edits": [
+        {
+          "current": "\t, optionalParameterBinder\n",
+          "previous": "",
+          "start": 689
+        },
+        {
+          "current": " * @param route - Ordinary source analysis or independent reviewed IR.\n",
+          "previous": "",
+          "start": 3659
+        },
+        {
+          "current": "export const assertOptionalParameterBundle = async (bundleRoot, route) => {\n\tconst binder = optionalParameterBinder(route);\n",
+          "previous": "export const assertOptionalParameterBundle = async bundleRoot => {\n",
+          "start": 3734
+        },
+        {
+          "current": "\tconst declarations = assertOptionalParameterIr(ir, [binder]);\n",
+          "previous": "\tconst declarations = assertOptionalParameterIr(ir);\n",
+          "start": 3969
+        },
+        {
+          "current": "\t\tassert.equal(item.parameters[0].name, binder);\n",
+          "previous": "\t\tassert.equal(item.parameters[0].name, \"value0\");\n",
+          "start": 4504
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-packages.mjs",
+      "previousSha256": "d400188743636c11080af4dad84732154c9fe8b82e3cb6e632fd3a3cef7e4c63"
+    },
+    {
+      "currentSha256": "5848abc94fb99f8cdac13c5fffcea46113713218c5559332991d56fc969f4edb",
+      "edits": [
+        {
+          "current": "\t, optionalParameterBinder\n",
+          "previous": "",
+          "start": 378
+        },
+        {
+          "current": "test(\"optional-parameter authoring routes retain distinct compiler binders\", () => {\n\tassert.equal(optionalParameterBinder(\"ordinary\"), \"arg0\");\n\tassert.equal(optionalParameterBinder(\"reviewed\"), \"value0\");\n\tassert.throws(() => optionalParameterBinder(\"foreign\"), /Unknown/u);\n\tconst ordinary = structuredClone(optionalParameterReview());\n\tfor(const declaration of ordinary.declarations)\n\t\tdeclaration.parameters[0].name = \"arg0\";\n\tassert.equal(assertOptionalParameterIr(ordinary, [\n\t\toptionalParameterBinder(\"ordinary\")\n\t]).length, 7);\n});\n\n",
+          "previous": "",
+          "start": 2366
+        }
+      ],
+      "path": "tests/optional-parameter-foundation.test.mjs",
+      "previousSha256": "7b06709fad19b8b117b55f79eb4cbd87d1e5b7e93983f9a7bd7dcb14f0b0c276"
+    },
+    {
+      "currentSha256": "0f683a09e1bc562c8185b06a8a9828fe19a9eae68e8d9736bf6c2d5ff764daff",
+      "edits": [
+        {
+          "current": "\t, optionalParameterPhpPatterns, optionalParameterWitPatterns\n",
+          "previous": "\t, optionalParameterWitPatterns\n",
+          "start": 173
+        },
+        {
+          "current": "test(\"optional-parameter PHP contracts retain route-specific binders\", () => {\n\tconst source = `\nfunction natural(mixed $arg0 = null): \\\\Brick\\\\Math\\\\BigInteger {}\nfunction present(mixed $arg0 = null): Some|null {\n  if (\\\\func_num_args() <= 0) { $arg0 = new Some(9); }\n}\nfunction unit_value(mixed $arg0 = null): null {}\nfunction word(mixed $arg0 = 7): int {}\n`;\n\tfor(const pattern of optionalParameterPhpPatterns(\"ordinary\"))\n\t\tassert.match(source, pattern);\n\tconst reviewed = source.replaceAll(\"arg0\", \"value0\");\n\tfor(const pattern of optionalParameterPhpPatterns(\"reviewed\"))\n\t\tassert.match(reviewed, pattern);\n\tassert.throws(() => optionalParameterPhpPatterns(\"foreign\"), /unknown/u);\n\tassert.doesNotMatch(source, optionalParameterPhpPatterns(\"reviewed\")[0]);\n});\n\n",
+          "previous": "",
+          "start": 1519
+        }
+      ],
+      "path": "tests/optional-parameter-installed-contract.test.mjs",
+      "previousSha256": "dc663f53dd7151a9b895f3c1acbfbbb022648f033e0fd9bc0069499e5a2b0371"
+    },
+    {
+      "currentSha256": "e73c1b482419fdca365e0a1684e19b87e4595235e3d4dd3fa3ee69fc67acdfe1",
+      "edits": [
+        {
+          "current": "\t\t\tconst bundle = await assertOptionalParameterBundle(bundleRoot, route);\n",
+          "previous": "\t\t\tconst bundle = await assertOptionalParameterBundle(bundleRoot);\n",
+          "start": 3999
+        }
+      ],
+      "path": "tests/optional-parameter-npm-installed.test.mjs",
+      "previousSha256": "fdc3355cf722c7fbedd411a55a4b9b289aecc4fffbd9b4549fcc68944558637f"
+    },
+    {
+      "currentSha256": "4fafb8ddebf885547b811d693a61ae1165795cf9bf3df52167f6c1fceb2dd51b",
+      "edits": [
+        {
+          "current": "import {\n\toptionalParameterPhpPatterns\n} from \"./helpers/optional-parameter-installed-contract.mjs\";\n",
+          "previous": "",
+          "start": 841
+        },
+        {
+          "current": "const assertApi = (source, route) => {\n\tfor(const pattern of optionalParameterPhpPatterns(route))\n\t\tassert.match(source, pattern);\n",
+          "previous": "const assertApi = source => {\n\tassert.match(source, /function word\\(mixed \\$value0 = 7\\): int/u);\n\tassert.match(source, /function natural\\(mixed \\$value0 = null\\)/u);\n\tassert.match(source, /function present\\(mixed \\$value0 = null\\)/u);\n\tassert.match(source, /\\$value0 = new Some\\(9\\)/u);\n\tassert.match(source, /function unit_value\\(mixed \\$value0 = null\\): null/u);\n",
+          "start": 2332
+        },
+        {
+          "current": "\t\tassertApi(nativeApi.toString(), route);\n",
+          "previous": "\t\tassertApi(nativeApi.toString());\n",
+          "start": 6436
+        },
+        {
+          "current": "\t\tassertApi(wasmApi.toString(), route);\n",
+          "previous": "\t\tassertApi(wasmApi.toString());\n",
+          "start": 8222
+        }
+      ],
+      "path": "tests/optional-parameter-php-installed.test.mjs",
+      "previousSha256": "0d0082563d8cc021b16fe7e129d08ddd9070ce83820c4d523f854b82c5a74abe"
+    }
+  ]
+}
