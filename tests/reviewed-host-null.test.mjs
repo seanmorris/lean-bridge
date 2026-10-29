@@ -83,8 +83,7 @@ test("reviewed host-null contracts reconcile only with the authenticated project
 	for(const hostProjections of [undefined, [], [{
 		...projection
 		, nullConstructor: "Alpha.HostNull.missing"
-	}]])
-	{
+	}]]) {
 		assert.throws(
 			() => reconcileReviewedSource(
 				review,

@@ -29,12 +29,14 @@ import {
 	, renderDependentCheckedRecordPromotion
 } from "./helpers/dependent-checked-record-promotion.mjs";
 
-const readJson = async path => JSON.parse(await readFile(path, "utf8"));
 const inventoryPath = "docs/type-surface.v1.json";
 const resultOnly = route => route.startsWith("result-only-");
 const root = lane => `docs/evidence/dependent-checked-record-${lane}-20261021`;
 const verifier = lane => `tests/helpers/dependent-checked-record-${lane}-evidence.mjs`;
 const hex = (lane, length) => sha256(lane).slice(0, length);
+const historicalJson = path => JSON.parse(execFileSync("git", ["show"
+	, `${dependentCheckedRecordPromotionPredecessor}:${path}`]
+, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }));
 
 // Synthetic, test-only references in the exact shape a real replay derives.
 const synthetic = () => dependentCheckedRecordPromotionLanes.flatMap((definition, lane) =>
@@ -64,13 +66,9 @@ const synthetic = () => dependentCheckedRecordPromotionLanes.flatMap((definition
 	}))
 );
 
-const [irSchema, consumers] = await Promise.all([
-	readJson("schema/binding-ir.schema.json")
-	, readJson("docs/consumer-support.v1.json")
-]);
-const document = JSON.parse(execFileSync("git", ["show"
-	, `${dependentCheckedRecordPromotionPredecessor}:${inventoryPath}`]
-, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }));
+const irSchema = historicalJson("schema/binding-ir.schema.json");
+const consumers = historicalJson("docs/consumer-support.v1.json");
+const document = historicalJson(inventoryPath);
 const contracts = { irSchema, consumers };
 const target = new Set(dependentCheckedRecordPromotionProfiles.flatMap(profile =>
 	["ordinary-source", "reviewed-ir"].flatMap(path =>

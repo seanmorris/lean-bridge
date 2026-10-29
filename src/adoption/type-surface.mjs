@@ -41,6 +41,8 @@ const sourceShapes = [
 	, "iterator"
 	, "async-iterator"
 ];
+const sourceShapesFor = facets => facets.constructor.includes("host-null")
+	? sourceShapes : [...sourceShapes, "host-null"];
 const exactSet = (actual, expected, label) => {
 	assert.equal(new Set(actual).size, actual.length, `${label}: duplicate entries`);
 	assert.deepEqual([...actual].sort(), [...expected].sort(), `${label}: unclassified or missing entries`);
@@ -136,7 +138,14 @@ export function validateTypeSurface(document, { irSchema, consumers })
 		assert.equal(profile.language, language, `${profile.id}: wrong language projection`);
 	}
 	const shapes = uniqueIds(document.shapes, "shapes");
-	const required = [...facets.primitive, ...facets.constructor, ...facets.namedKind, ...sourceShapes];
+	// Before HostNull became a Binding IR constructor, the inventory tracked it
+	// as an explicit source-only shape. Historical promotion replay supplies its
+	// milestone schema, so retain that one versioned classification without
+	// weakening the current schema's required constructor facet.
+	const required = [
+		...facets.primitive, ...facets.constructor
+		, ...facets.namedKind, ...sourceShapesFor(facets)
+	];
 	exactSet([...shapes.keys()], required, "IR and source shapes");
 	for(const [family, entry] of Object.entries(document.families))
 	{
