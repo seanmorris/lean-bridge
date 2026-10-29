@@ -140,6 +140,8 @@ export const runHostNullSystemsAcceptance = async t => {
 			, handoff: dependencyHandoff, environment
 		});
 		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
+		await cp(handoff, join(retained, "handoff"), { recursive: true });
+		await cp(dependencyHandoff, join(retained, "dependency-handoff"), { recursive: true });
 		await saveLakeFile(retained, "configuration.json", canonicalJson(configuration));
 		await saveLakeFile(retained, "HostNullDemo.lean", await readFile(
 			join(projectRoot, "HostNullDemo.lean")));
@@ -232,6 +234,7 @@ export const runHostNullSystemsAcceptance = async t => {
 			, observations, sourceRemovedBeforeInstallation: true
 			, consumerSourceRemovedBeforeRelocatedExecution: true
 			, installationHandoffRemovedBeforeRelocatedExecution: true
+			, packageHandoffRetained: true, rustDependencyHandoffRetained: true
 			, offlineInstall: true, compilerFreePath: true, relocatedInstallation: true
 		};
 		await saveLakeFile(retained, "report.json", canonicalJson(report));

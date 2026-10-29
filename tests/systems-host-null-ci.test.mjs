@@ -22,5 +22,6 @@ test("hosted systems HostNull preserves the complete 40-cell acceptance", async 
 		"summary.cells.length, 40", "consumerSourceRemovedBeforeRelocatedExecution"
 		, "sourceFreeRelocatedExecution", "invalidRepresentationRejected"
 		, "packageFileSetSha256", "hostNullSystemsProfiles"
+		, "verifyPackageSetReceipt", "dependency-handoff"
 	]) assert.ok(checker.includes(required), required);
 });

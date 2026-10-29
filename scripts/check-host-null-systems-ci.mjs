@@ -9,6 +9,7 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import {
 	hostNullSystemsChecks, hostNullSystemsProfiles
 } from "../tests/helpers/host-null-systems-installed.mjs";
@@ -69,6 +70,7 @@ for(const report of summary.routes)
 		"sourceRemovedBeforeInstallation"
 		, "consumerSourceRemovedBeforeRelocatedExecution"
 		, "installationHandoffRemovedBeforeRelocatedExecution"
+		, "packageHandoffRetained", "rustDependencyHandoffRetained"
 		, "offlineInstall", "compilerFreePath", "relocatedInstallation"
 	]) assert.equal(report[key], true, key);
 	for(const key of [
@@ -76,6 +78,12 @@ for(const report of summary.routes)
 	]) digest(report[key]);
 	const retained = (await json(`${report.route}/report.json`)).value;
 	assert.deepEqual(retained, report);
+	const receiptPath = join(directory, report.route, "handoff", "package-set-receipt.json");
+	const receiptBytes = await readFile(receiptPath);
+	assert.equal(sha256(receiptBytes), report.receiptSha256);
+	const receipt = JSON.parse(receiptBytes);
+	assert.deepEqual(receipt.packages, report.packages);
+	await verifyPackageSetReceipt({ receiptPath });
 	const configuration = (await json(`${report.route}/configuration.json`)).value;
 	assert.equal(configuration.schemaVersion, 1);
 	assert.deepEqual(configuration.modules, ["HostNullDemo"]);
@@ -139,6 +147,10 @@ for(const report of summary.routes)
 	digest(report.rustDependencies.sha256);
 	digest(report.rustDependencies.lockSha256);
 	assert.ok(report.rustDependencies.packages.length > 0);
+	assert.match(report.rustDependencies.archive, /^[A-Za-z0-9_.+-]+$/u);
+	const dependencyBytes = await readFile(join(directory, report.route
+		, "dependency-handoff", report.rustDependencies.archive));
+	assert.equal(sha256(dependencyBytes), report.rustDependencies.sha256);
 }
 process.stdout.write(canonicalJson({
 	producerCommit: values.producer, routes: summary.routes.map(item => item.route)
