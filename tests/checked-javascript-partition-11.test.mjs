@@ -22,6 +22,7 @@ import "./helpers/optional-parameter-source-history-tests.mjs";
 import "./helpers/optional-parameter-complete-documentation-tests.mjs";
 import "./helpers/optional-parameter-complete-promotion-tests.mjs";
 import "./helpers/optional-parameter-complete-promotion-transaction-tests.mjs";
+import "./helpers/optional-parameter-hosted-archive-tests.mjs";
 import "./helpers/host-null-systems-type-surface-lineage-source-history-tests.mjs";
 import "./helpers/host-null-systems-source-history-tests.mjs";
 import "./helpers/generated-output-control-repair-type-surface-lineage-source-history-tests.mjs";

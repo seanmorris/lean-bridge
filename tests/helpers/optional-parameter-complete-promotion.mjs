@@ -77,6 +77,7 @@ export const optionalParameterCompleteReferencePaths = Object.freeze([
 	, "tests/helpers/optional-parameter-complete-promotion-tests.mjs"
 	, "tests/helpers/optional-parameter-complete-promotion-transaction-tests.mjs"
 	, "tests/helpers/optional-parameter-hosted-archive.mjs"
+	, "tests/helpers/optional-parameter-hosted-archive-tests.mjs"
 	, "tests/helpers/optional-parameter-hosted-evidence.mjs"
 	, "tests/helpers/promotion-file-transaction.mjs"
 	, "tests/helpers/type-surface-promotion-io.mjs"
