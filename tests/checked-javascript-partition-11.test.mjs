@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/host-null-javascript-source-history-tests.mjs";
+import "./host-null-javascript-hosted-report.test.mjs";
 import "./helpers/host-null-php-report-tests.mjs";
 import "./host-null-documentation.test.mjs";
 import "./php-host-null-contract.test.mjs";
