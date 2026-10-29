@@ -1,0 +1,97 @@
+name: Complete direct proof-erasure acceptance
+
+on:
+  push:
+    paths:
+      - ".github/workflows/direct-proof-erasure-complete.yml"
+      - "docs/consume/**"
+      - "docs/evidence/direct-proof-erasure-hosted-*/**"
+      - "docs/javascript-typescript.md"
+      - "docs/lean/**"
+      - "docs/php.md"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*direct-proof-erasure*.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/direct-proof-erasure-complete-*.test.mjs"
+      - "tests/helpers/direct-proof-erasure-complete-*.mjs"
+      - "tests/helpers/direct-proof-erasure-hosted-*.mjs"
+  pull_request:
+    paths:
+      - ".github/workflows/direct-proof-erasure-complete.yml"
+      - "docs/consume/**"
+      - "docs/evidence/direct-proof-erasure-hosted-*/**"
+      - "docs/javascript-typescript.md"
+      - "docs/lean/**"
+      - "docs/php.md"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*direct-proof-erasure*.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/direct-proof-erasure-complete-*.test.mjs"
+      - "tests/helpers/direct-proof-erasure-complete-*.mjs"
+      - "tests/helpers/direct-proof-erasure-hosted-*.mjs"
+  workflow_dispatch:
+  # One low-cost lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 8 * * 6"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: direct-proof-erasure-complete-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out complete source history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Replay all ten immutable host archives and fresh-Lean refusal
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/direct-proof-erasure-complete
+          node --test --test-concurrency=1 \
+            tests/direct-proof-erasure-complete-hosted-evidence.test.mjs \
+            | tee build/direct-proof-erasure-complete/evidence.tap
+      - name: Audit all 204 promoted cells and generated documentation
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test --test-concurrency=1 \
+            tests/direct-proof-erasure-complete-promotion.test.mjs \
+            | tee build/direct-proof-erasure-complete/promotion.tap
+      - name: Preserve the complete direct proof-erasure audit
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-complete-${{ github.run_id }}
+          path: build/direct-proof-erasure-complete/
+          if-no-files-found: error
+          retention-days: 14

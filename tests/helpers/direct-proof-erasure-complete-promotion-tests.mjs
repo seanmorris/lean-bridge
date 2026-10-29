@@ -128,9 +128,17 @@ test("complete proof-erasure promotion renders every consumer guide", async () =
 	for(const [guide, profiles] of Object.entries(typeGuideProfiles))
 	{
 		profiles.forEach(profile => seenProfiles.add(profile));
-		const row = generatedRow(renderTypeTable({
+		const source = renderTypeTable({
 			document: proposed, ...contracts
-		}, profiles, "reference/types.md"), "Prop / theorem / proof arguments");
+		}, profiles, "reference/types.md");
+		assert.match(source
+			, /\[Complete hosted direct proof-erasure acceptance\]\(evidence\/direct-proof-erasure-hosted-20261028\/index\.json\)/u
+			, guide);
+		assert.match(source
+			, /Proof-only parameters, fields, callback arguments and callback results occupy no host slot/u
+			, guide);
+		assert.match(source, /proof-valued export is refused/u, guide);
+		const row = generatedRow(source, "Prop / theorem / proof arguments");
 		assert.ok(row, guide);
 		assert.match(row
 			, /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed/u

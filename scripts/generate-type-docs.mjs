@@ -215,6 +215,37 @@ const hostNullCompleteProfiles = new Set([
 ]);
 const hasHostNullCompleteEvidence = document =>
 	document.evidence.some(item => item.id === hostNullCompleteEvidenceId);
+const directProofErasureCompleteEvidenceId
+	= "hosted-direct-proof-erasure-complete";
+const directProofErasureCompleteProfiles = new Set([
+	"node-javascript", "node-typescript", "browser-javascript"
+	, "browser-react", "browser-worker", "php-native", "php-wasm"
+	, "dotnet", "java", "kotlin", "perl", "python", "ruby", "c", "cpp"
+	, "rust", "wit-wasi"
+]);
+const directProofErasureCompletePositions = Object.freeze([
+	"parameter", "result", "field", "callback-parameter"
+	, "callback-result", "signature"
+]);
+const hasDirectProofErasureCompleteEvidence = document => {
+	const evidence = document.evidence.filter(item =>
+		item.id === directProofErasureCompleteEvidenceId);
+	if(evidence.length !== 1 || evidence[0].kind !== "installed") return false;
+	for(const profile of directProofErasureCompleteProfiles)
+		for(const path of ["ordinary-source", "reviewed-ir"])
+			for(const position of directProofErasureCompletePositions)
+			{
+				const observations = document.observations.filter(item =>
+					item.profiles.includes(profile) && item.path === path
+					&& item.shapes.includes("proof")
+					&& item.positions.includes(position));
+				if(observations.length !== 1 || !document.stages.every(stage =>
+					observations[0].stages[stage]?.state === "passed"
+					&& observations[0].stages[stage].evidence.includes(
+						directProofErasureCompleteEvidenceId))) return false;
+			}
+	return true;
+};
 export const phpWasmRefinementEntryBoundary = `PHP-Wasm refinement support is established by unmodified prepared packages.
 The separate entry-measurement probes instrument fixture packages only: their
 24 copied, owned and indexed routes count validator, constructor, adapter and
@@ -289,6 +320,18 @@ const hostNullCompleteGuide = (document, profiles, reference) => {
 	const evidence = reference.replace(/reference\/types\.md$/u
 		, "evidence/host-null-complete-20261029/index.json");
 	return `[Complete hosted HostNull acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} in installed ordinary-source and independently reviewed packages. \`HostNull.null\` uses the target's declared null carrier; \`HostNull.value x\` carries \`x\` directly. This rule applies only to explicit \`HostNull\`: \`Option.none\`, \`Unit\`, erased proofs, and omitted or default arguments retain separate representations. The retained matrix exercises parameters, results, record fields, and synchronous callback parameters and results. Owned or asynchronous values and generic or dependent HostNull combinations remain outside this evidence.`;
+};
+const directProofErasureCompleteGuide = (
+	document, profiles, reference
+) => {
+	if(!hasDirectProofErasureCompleteEvidence(document)) return null;
+	const selected = profiles.filter(profile =>
+		directProofErasureCompleteProfiles.has(profile));
+	assert.equal(selected.length, profiles.length
+		, "Complete proof-erasure evidence must cover every rendered profile");
+	const evidence = reference.replace(/reference\/types\.md$/u
+		, "evidence/direct-proof-erasure-hosted-20261028/index.json");
+	return `[Complete hosted direct proof-erasure acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.`;
 };
 const nestedCheckedRecordPerlMarker = "[PHP-Wasm checked-record packages]";
 const zeroPayloadNativeMarker = "[Checked-record browser packages]";
@@ -418,6 +461,8 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		document, profiles, reference);
 	const hostNullComplete = hostNullCompleteGuide(
 		document, profiles, reference);
+	const directProofErasureComplete = directProofErasureCompleteGuide(
+		document, profiles, reference);
 	return [
 		"### Type conversions"
 		, ""
@@ -430,6 +475,8 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		, ...(callbackSubtype ? ["", callbackSubtype] : [])
 		, ...(ownedSubtype ? ["", ownedSubtype] : [])
 		, ...(hostNullComplete ? ["", hostNullComplete] : [])
+		, ...(directProofErasureComplete
+			? ["", directProofErasureComplete] : [])
 		, ""
 		, table(["Lean type or source form", "Host representation", "Current evidence", "Conversion rules"], rows)
 		, ""
@@ -473,6 +520,9 @@ export async function renderTypeDocuments({ root, inventory = null })
 	const { document } = inventory;
 	const genericReference = genericSubtypeMatrixReference(document);
 	const ownedCheckedReference = ownedCheckedRecordMatrixReference(document);
+	const directProofReference = hasDirectProofErasureCompleteEvidence(document)
+		? "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261028/index.json) binds ten immutable installed-package archives and a fresh-Lean refusal to all 204 proof cells across seventeen profiles, both author routes and six direct positions. Proof-only parameters, fields and synchronous callback positions have no runtime slot; proof-free public signatures omit them. A proof-valued export is refused. The evidence does not erase runtime data, refinement checks or assumptions from assurance metadata, and it does not establish host-supplied proofs or arbitrary proof-bearing data structures."
+		: "";
 	const profileRows = document.profiles.map(profile => {
 		const guide = Object.entries(typeGuideProfiles).find(([, profiles]) => profiles.includes(profile.id))[0];
 		const relative = path.posix.relative("docs/reference", guide);
@@ -486,6 +536,7 @@ export async function renderTypeDocuments({ root, inventory = null })
 		documents
 		, reference: [
 			...(ownedCheckedReference ? [ownedCheckedReference, ""] : [])
+			, ...(directProofReference ? [directProofReference, ""] : [])
 			, `Inventory ${document.contractVersion} covers ${document.shapes.length} source forms and ${document.profiles.length} consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.`
 			, ""
 			, table(["Consumer table", "Runtime context", "Compiled Lean width"], profileRows)
