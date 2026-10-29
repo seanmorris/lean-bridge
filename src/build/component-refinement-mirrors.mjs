@@ -46,8 +46,9 @@ export const componentRefinementDefinitions = types => types.map(type => ({ ...t
  * @param exports - Compiler-selected exports with public per-use refinement trees.
  * @param leanType - Renderer for primitive and unrefined source types.
  * @param nominalRefinements - Compiler-owned shared Fin constraints in nominal layouts.
+ * @param hostProjection - Compiler-authenticated HostNull wrapper and constructors.
  */
-export const componentRefinementMirrors = (abi, exports, leanType, nominalRefinements = []) => {
+export const componentRefinementMirrors = (abi, exports, leanType, nominalRefinements = [], hostProjection = null) => {
 	assertComponentRecursiveAbi(abi);
 	const definitions = new Map(abi.types.map(type => [type.id, type]));
 	const publicTypes = componentRefinementDefinitions(abi.types), constraints = new Map();
@@ -213,6 +214,11 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 		}
 		const arguments_ = type.arguments.map(renderType);
 		if(type.constructor === "result") return `(_root_.Except ${arguments_[1]} ${arguments_[0]})`;
+		if(type.constructor === "host-null")
+		{
+			if(!hostProjection) throw new TypeError("HostNull mirror lacks its compiler-authenticated Lean projection");
+			return `(_root_.${hostProjection.name} ${arguments_[0]})`;
+		}
 		const constructor = { array: "Array", list: "List", option: "Option", tuple: "Prod" }[type.constructor];
 		return `(_root_.${constructor} ${arguments_.join(" ")})`;
 	};

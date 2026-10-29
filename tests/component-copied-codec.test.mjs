@@ -8,11 +8,13 @@ import test from "node:test";
 import { componentScalarTypes, scalarCopyLimit } from "../src/abi/component-scalars.mjs";
 import { componentArrayShape, componentCopiedTags, createComponentCopyBudget, snapshotComponentCopiedType } from "../src/abi/component-copied.mjs";
 import { compileComponentCopiedCodec } from "../src/release/component-copied-codec.mjs";
+import { compileComponentRecursiveCodec } from "../src/release/component-recursive-codec.mjs";
 
 const primitive = name => ({ kind: "primitive", name });
 const apply = (constructor, ...arguments_) => ({ kind: "apply", constructor, arguments: arguments_ });
 const array = type => apply("array", type);
 const option = type => apply("option", type);
+const hostNull = type => apply("host-null", type);
 const result = (ok, error) => apply("result", ok, error);
 const tuple = (...types) => apply("tuple", ...types);
 const none = () => ({ tag: "none" });
@@ -42,6 +44,15 @@ const roundTrip = (type, value, options) => {
 	{
 		codec.write(f.module, f.slot, value, f.allocate, budget);
 		return codec.read(f.module, f.slot, budget);
+	} finally
+	{ f.release(); assert.equal(f.live.size, 0); }
+};
+const recursiveRoundTrip = (type, value, options) => {
+	const f = fixture(options), codec = compileComponentRecursiveCodec({ schemaVersion: 1, root: type, types: [] });
+	try
+	{
+		codec.write(f.module, f.slot, value, f.allocate);
+		return codec.read(f.module, f.slot);
 	} finally
 	{ f.release(); assert.equal(f.live.size, 0); }
 };
@@ -114,6 +125,38 @@ test("Option distinguishes None, Some Unit and all nested Option branches", () =
 	assert.equal(Object.hasOwn(roundTrip(option(unit), some(undefined)), "value"), true);
 	for(const value of [null, undefined, {}, { tag: "none", value: undefined }, { tag: "some" }, { tag: "other" }])
 		assert.throws(() => roundTrip(option(unit), value));
+});
+
+test("HostNull uses null directly and remains distinct from every Option branch", () => {
+	for(const value of [null, 0, 0xffffffff]) assert.deepEqual(roundTrip(hostNull(u32), value), value);
+	for(const value of [null, none(), some(undefined)])
+		assert.deepEqual(roundTrip(hostNull(option(unit)), value), value);
+	for(const value of [none(), some(null), some(undefined)])
+		assert.deepEqual(roundTrip(option(hostNull(unit)), value), value);
+	for(const value of [undefined, none(), some(1), { value: 1 }])
+		assert.throws(() => roundTrip(hostNull(u32), value));
+	for(const value of [null, undefined, { tag: "some" }])
+		assert.throws(() => roundTrip(option(hostNull(unit)), value));
+	const f = fixture(), codec = compileComponentCopiedCodec(hostNull(u32));
+	try
+	{
+		codec.write(f.module, f.slot, null, f.allocate);
+		assert.deepEqual([...new Uint32Array(f.module.HEAP8.buffer, f.slot, 4)], [38, 0, 0, 0]);
+		codec.write(f.module, f.slot, 42, f.allocate);
+		assert.deepEqual([...new Uint32Array(f.module.HEAP8.buffer, f.slot, 4)], [38, 1, 256, 1]);
+	} finally
+	{ f.release(); }
+});
+
+test("recursive HostNull remains a direct nullable value distinct from nested Option", () => {
+	for(const value of [null, none(), some(undefined)])
+		assert.deepEqual(recursiveRoundTrip(hostNull(option(unit)), value), value);
+	for(const value of [none(), some(null), some(undefined)])
+		assert.deepEqual(recursiveRoundTrip(option(hostNull(unit)), value), value);
+	for(const value of [undefined, { value: undefined }, { tag: "some" }])
+		assert.throws(() => recursiveRoundTrip(hostNull(option(unit)), value));
+	for(const value of [null, undefined, { tag: "some" }])
+		assert.throws(() => recursiveRoundTrip(option(hostNull(unit)), value));
 });
 
 test("asymmetric Except branches use canonical success/error ordering and remain disjoint", () => {
@@ -229,6 +272,8 @@ test("malformed wire tags, flags, bounds and constructor counts fail before dere
 		, [tuple(u32, u32), [1, 2], (d, s) => d.setUint32(s + 12, 1, true)]
 		, [option(unit), none(), (d, s) => d.setUint32(s + 4, 2, true)]
 		, [option(unit), some(undefined), (d, s) => d.setUint32(s + 4, 0, true)]
+		, [hostNull(unit), null, (d, s) => d.setUint32(s + 4, 1, true)]
+		, [hostNull(unit), undefined, (d, s) => d.setUint32(s + 4, 0, true)]
 		, [result(u32, bool), { ok: 2 }, (d, s) => d.setUint32(s + 4, 1, true)]
 		, [result(u32, bool), { ok: 2 }, (d, s) => d.setUint32(s + 12, 0, true)]
 		, [array(bool), [true], (d, s) => d.setBigUint64(d.getUint32(s + 8, true) + 8, 2n, true)]
@@ -280,7 +325,7 @@ test("partial input failures leave every allocation with the caller's arena", ()
 });
 
 test("the independent slot layout keeps constructor tags private", () => {
-	assert.deepEqual(componentCopiedTags, { array: 32, list: 32, tuple: 33, option: 34, result: 35, record: 36, variant: 37 });
+	assert.deepEqual(componentCopiedTags, { array: 32, list: 32, tuple: 33, option: 34, result: 35, record: 36, variant: 37, "host-null": 38 });
 	const f = fixture(), codec = compileComponentCopiedCodec(option(u32));
 	try
 	{
@@ -310,4 +355,12 @@ test("independently populated native-owned slots decode without consulting the w
 	data.setUint32(260, 2, true); data.setUint32(264, 320, true); data.setUint32(268, 4, true);
 	f.module.HEAP8.set([0xef, 0xbb, 0xbf, 0], 320);
 	assert.deepEqual(compileComponentCopiedCodec(result(u32, primitive("string"))).read(f.module, 64), { error: "\uFEFF\0" });
+	// HostNull is its own nullable sum tag and its non-null payload is direct.
+	data.setUint32(64, 38, true); data.setUint32(68, 0, true);
+	data.setUint32(72, 0, true); data.setUint32(76, 0, true);
+	assert.equal(compileComponentCopiedCodec(hostNull(u32)).read(f.module, 64), null);
+	data.setUint32(68, 1, true); data.setUint32(72, 256, true); data.setUint32(76, 1, true);
+	data.setUint32(256, 4, true); data.setUint32(260, 0, true);
+	data.setUint32(264, 42, true); data.setUint32(268, 0, true);
+	assert.equal(compileComponentCopiedCodec(hostNull(u32)).read(f.module, 64), 42);
 });

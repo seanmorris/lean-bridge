@@ -27,20 +27,26 @@ const primitive = { unit: "Unit", bool: "Bool", char: "Char"
  * @param type - Concrete source type reference.
  * @param callbacks - Authenticated callable signatures for identity roots.
  * @param refinement - Optional scalar or structural Fin constraints.
+ * @param hostProjection - Compiler-authenticated HostNull wrapper and constructors.
  */
-export const componentStructuredLeanType = (type, callbacks = new Map(), refinement = null) => {
+export const componentStructuredLeanType = (type, callbacks = new Map(), refinement = null, hostProjection = null) => {
 	if(refinement?.kind === "fin") return `(_root_.Fin ${refinement.bound})`;
 	if(type.kind === "primitive") return `_root_.${primitive[type.name]}`;
 	if(type.kind === "named")
 	{
 		const signature = callbacks.get(type.id);
 		return signature ? `(${[...signature.parameters, signature.result].map((type, index) => componentStructuredLeanType(type, new Map(),
-			index < signature.parameters.length ? signature.refinements?.parameters[index] : signature.refinements?.result)).join(" → ")})`
+			index < signature.parameters.length ? signature.refinements?.parameters[index] : signature.refinements?.result, hostProjection)).join(" → ")})`
 			: `_root_.${type.id.slice(5)}`;
 	}
-	const children = type.arguments.map((type, index) => componentStructuredLeanType(type, new Map(), refinement?.arguments[index]));
+	const children = type.arguments.map((type, index) => componentStructuredLeanType(type, new Map(), refinement?.arguments[index], hostProjection));
 	if(type.constructor === "tuple") return `(${children.join(" × ")})`;
 	if(type.constructor === "result") return `(_root_.Except ${children[1]} ${children[0]})`;
+	if(type.constructor === "host-null")
+	{
+		if(!hostProjection) throw new TypeError("HostNull type lacks its compiler-authenticated Lean projection");
+		return `(_root_.${hostProjection.name} ${children[0]})`;
+	}
 	return `(_root_.${{ array: "Array", list: "List", option: "Option" }[type.constructor]} ${children[0]})`;
 };
 
@@ -144,8 +150,9 @@ export const componentStructuredCallablePrefix = (abi, signature) => `${abi.expo
  * @param sourceExports - Compiler-selected exports with public per-use refinement trees.
  * @param directions - Callback identity to host/closure/null direction.
  * @param nominalRefinements - Compiler-owned shared Fin constraints in nominal layouts.
+ * @param hostProjection - Compiler-authenticated HostNull wrapper and constructors.
  */
-export const componentStructuredCallableMirrors = (abi, sourceExports, directions, nominalRefinements = []) => {
+export const componentStructuredCallableMirrors = (abi, sourceExports, directions, nominalRefinements = [], hostProjection = null) => {
 	const callbacks = new Map(abi.callbacks.map(type => [type.id, type]));
 	const trees = value => value ? [...value.parameters, value.result] : [];
 	const needed = abi.types.some(type => type.kind === "record" && type.erased)
@@ -186,7 +193,8 @@ export const componentStructuredCallableMirrors = (abi, sourceExports, direction
 			, produced: { parameters: callback.parameters.map(() => host), result: !host }
 		});
 	}
-	const mirrors = componentRefinementMirrors({ ...componentStructuredCopiedView(abi), exports }, items, componentStructuredLeanType, nominalRefinements);
+	const leanType = (type, callbacks = new Map(), refinement = null) => componentStructuredLeanType(type, callbacks, refinement, hostProjection);
+	const mirrors = componentRefinementMirrors({ ...componentStructuredCopiedView(abi), exports }, items, leanType, nominalRefinements, hostProjection);
 	const empty = value => !value || [...value.parameters, value.result].every(tree => tree === null);
 	const sites = new Map(mirrors.sites.map(entry => [entry.bindingId, entry]));
 	return {
@@ -208,8 +216,9 @@ export const componentStructuredCallableMirrors = (abi, sourceExports, direction
  * @param abi - Authenticated copied-payload callable descriptor.
  * @param options - Backend-specific callback-role recovery controls.
  * @param options.finDirections - Recover Fin-only callback roles from exports.
+ * @param options.hostProjection - Compiler-authenticated HostNull wrapper and constructors.
  */
-export const componentStructuredClosureRefusals = (abi, { finDirections = false } = {}) => {
+export const componentStructuredClosureRefusals = (abi, { finDirections = false, hostProjection = null } = {}) => {
 	const closures = abi.callbacks.filter(signature => componentStructuredClosureRefuses(abi, signature, finDirections));
 	if(!closures.length) return null;
 	const callbacks = new Set(abi.callbacks.map(type => type.id));
@@ -229,7 +238,8 @@ export const componentStructuredClosureRefusals = (abi, { finDirections = false 
 		, produced: { parameters: signature.parameters.map(() => false), result: true }
 	}));
 	const view = { ...componentStructuredCopiedView(abi), exports };
-	const mirrors = componentRefinementMirrors(view, items, componentStructuredLeanType, abi.nominalRefinements ?? []);
+	const leanType = (type, callbacks = new Map(), refinement = null) => componentStructuredLeanType(type, callbacks, refinement, hostProjection);
+	const mirrors = componentRefinementMirrors(view, items, leanType, abi.nominalRefinements ?? [], hostProjection);
 	const sites = closures.map((signature, index) => ({
 		signature, bindingId: signature.id
 		, symbol: `${componentStructuredCallablePrefix(abi, signature)}_closure`
@@ -246,23 +256,25 @@ export const componentStructuredClosureRefusals = (abi, { finDirections = false 
  * @param sourceExports - Compiler-selected declarations, symbols and applications.
  * @param options - Backend-specific callback-role recovery controls.
  * @param options.finDirections - Recover Fin-only callback roles from exports.
+ * @param options.hostProjection - Compiler-authenticated HostNull wrapper and constructors.
  */
-export const componentStructuredCallableLeanSource = (abi, sourceExports, { finDirections = false } = {}) => {
+export const componentStructuredCallableLeanSource = (abi, sourceExports, { finDirections = false, hostProjection = null } = {}) => {
 	assertComponentStructuredCallableAbi(abi);
+	const structuredType = (type, callbacks = new Map(), refinement = null) => componentStructuredLeanType(type, callbacks, refinement, hostProjection);
 	const callbacks = new Map(abi.callbacks.map(type => [type.id, type]));
 	const nominalRefinements = abi.nominalRefinements ?? [];
 	const runtimeRefinements = componentStructuredRuntimeRefinements(abi);
 	const callbackDirections = new Map(abi.callbacks.map(type => [type.id
 		, componentStructuredCallbackDirection(abi, type, finDirections)]));
-	const refusals = componentStructuredClosureRefusals(abi, { finDirections });
+	const refusals = componentStructuredClosureRefusals(abi, { finDirections, hostProjection });
 	const definitions = new Map(abi.types.map(type => [type.id, type]));
-	const conversion = componentStructuredCallableMirrors(abi, sourceExports, callbackDirections, nominalRefinements);
+	const conversion = componentStructuredCallableMirrors(abi, sourceExports, callbackDirections, nominalRefinements, hostProjection);
 	const callbackRefinements = new Map(abi.callbacks.map(type => [type.id
 		, conversion ? conversion.refinementsFor(type.id) : runtimeRefinements(type, type.refinements)]));
 	for(const [id, value] of callbackRefinements) if(!conversion && callbackDirections.get(id) === null
 		&& value && [...value.parameters, value.result].some(hasComponentNominalRefinements))
 		throw new TypeError("Nominal Subtype selections cannot share a component with callbacks yet");
-	const source = (type, refinement = null) => componentStructuredLeanType(type, new Map(), refinement);
+	const source = (type, refinement = null) => structuredType(type, new Map(), refinement);
 	const sourceCallbackType = signature => {
 		const selected = callbackRefinements.get(signature.id);
 		return `(${[...signature.parameters.map((type, index) => source(type, selected?.parameters[index]))
@@ -271,7 +283,7 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 	// Wire types: a checked record crosses as its erased mirror wherever mirrors exist.
 	const wire = type => type.kind === "named" && callbacks.has(type.id)
 		? wireCallbackType(callbacks.get(type.id))
-		: conversion ? conversion.renderType(type) : componentStructuredLeanType(type, callbacks);
+		: conversion ? conversion.renderType(type) : structuredType(type, callbacks);
 	const wireCallbackType = signature => {
 		const direction = callbackDirections.get(signature.id);
 		if(direction === "host") return "_root_.USize";
@@ -286,10 +298,10 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 	const constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);
 	// Failure defaults are returned by a source-level callback, so construct them in
 	// source types. The invoke carriers themselves continue to use erased mirrors.
-	const defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements);
+	const defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements, new Set(), hostProjection);
 	const lines = [
-		...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], componentStructuredLeanType
-			, nominalRefinements, conversion ? { conversion, emitSites: false } : {})
+		...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], structuredType
+			, nominalRefinements, { ...(conversion ? { conversion, emitSites: false } : {}), hostProjection })
 		, ...defaults.declarations
 	];
 	const checked = (names, body) => ["carrierResult (do", ...names.map(name => `  let ${name} ← carrierValue ${name}`), `  pure (${body})`, ")"];
@@ -347,7 +359,7 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 		const invokeArguments = names.map((name, index) => `#[${refinements?.parameters[index] ? `wire_${name}` : name}]`).join(" ");
 		const projections = names.flatMap((name, index) => refinements?.parameters[index]
 			? [`    let wire_${name} := ${componentRefinementConversion(refinements.parameters[index], name, false)}`] : []);
-		const lambdaParameters = names.map((name, index) => refinements ? `(${name} : ${componentStructuredLeanType(signature.parameters[index], new Map(), refinements.parameters[index])})` : name);
+		const lambdaParameters = names.map((name, index) => refinements ? `(${name} : ${structuredType(signature.parameters[index], new Map(), refinements.parameters[index])})` : name);
 		const invocation = `carrierValue (invoke_${key} token ${invokeArguments})`;
 		const result = refinements?.result ? `(show _root_.Option ${source(signature.result, refinements.result)} from do let value : ${wire(signature.result)} ← ${invocation}; ${componentRefinementConversion(refinements.result, "value")})` : invocation;
 		const application = refinements ? ["carrierResult (do"

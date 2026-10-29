@@ -70,11 +70,11 @@ export const compileComponentCopiedCodec = descriptor => {
 				});
 				return;
 			}
-			if(active.has(value)) throw new TypeError("Cyclic copied value");
-			active.add(value);
+			const kind = ["record", "variant"].includes(type.kind) ? type.kind : type.constructor;
+			if(kind !== "host-null" && active.has(value)) throw new TypeError("Cyclic copied value");
+			if(kind !== "host-null") active.add(value);
 			try
 			{
-				const kind = ["record", "variant"].includes(type.kind) ? type.kind : type.constructor;
 				let count, branch = 0, childValue, childType;
 				if(kind === "variant")
 				{
@@ -115,6 +115,12 @@ export const compileComponentCopiedCodec = descriptor => {
 					childValue = () => values[1]; childType = () => type.arguments[0];
 					budget.charge(count * scalarSlotBytes);
 				}
+				else if(kind === "host-null")
+				{
+					count = branch = value === null ? 0 : 1;
+					childValue = () => value; childType = () => type.arguments[0];
+					budget.charge(count * scalarSlotBytes);
+				}
 				else
 				{
 					if(!value || typeof value !== "object") throw new TypeError("Expected a tagged result");
@@ -132,7 +138,7 @@ export const compileComponentCopiedCodec = descriptor => {
 				view(module).setUint32(slot + 12, count, true);
 				for(let index = 0; index < count; index++) visit(childType(index), pointer + index * scalarSlotBytes, childValue(index));
 			} finally
-			{ active.delete(value); }
+			{ if(kind !== "host-null") active.delete(value); }
 		};
 		budget.charge(scalarSlotBytes);
 		visit(type, slot, input);
@@ -151,13 +157,14 @@ export const compileComponentCopiedCodec = descriptor => {
 				if(data.getUint32(slot, true) !== componentCopiedTags[kind]) throw new TypeError("Component copied type mismatch");
 				const flags = data.getUint32(slot + 4, true), branch = flags & 1;
 				const pointer = data.getUint32(slot + 8, true), count = data.getUint32(slot + 12, true);
-				if(kind === "variant" ? (flags & 1) || (flags >>> 2) >= type.cases.length : flags & ~(kind === "option" || kind === "result" ? 3 : 2)) throw new TypeError("Invalid component copied flags");
+				if(kind === "variant" ? (flags & 1) || (flags >>> 2) >= type.cases.length : flags & ~(["host-null", "option", "result"].includes(kind) ? 3 : 2)) throw new TypeError("Invalid component copied flags");
 				if((kind === "record" && count !== type.fields.length) || (kind === "tuple" && count !== type.arguments.length)
 					|| (kind === "variant" && count !== type.cases[flags >>> 2].fields.length)
-					|| (kind === "option" && count !== branch) || (kind === "result" && count !== 1)
+					|| (["host-null", "option"].includes(kind) && count !== branch) || (kind === "result" && count !== 1)
 					|| (!count && (pointer || (flags & 2)))) throw new TypeError("Invalid component copied shape");
 				const bytes = count * scalarSlotBytes;
 				span(module, pointer, bytes); budget.charge(bytes);
+				if(kind === "host-null") return branch ? visit(type.arguments[0], pointer) : null;
 				if(kind === "option") return branch ? { tag: "some", value: visit(type.arguments[0], pointer) } : { tag: "none" };
 				if(kind === "result") return { [branch ? "error" : "ok"]: visit(type.arguments[branch], pointer) };
 				if(kind === "record") return Object.fromEntries(type.fields.map((field, index) => [field.name, visit(field.type, pointer + index * scalarSlotBytes)]));

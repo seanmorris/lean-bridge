@@ -109,6 +109,11 @@ const copiedValue = (root, input, path) => {
     while (type?.kind === "alias") { ${constraints.size ? "if (type.refinement) (frame.checks ??= []).push(type.refinement); " : ""}frame.type = type.target; type = copiedTypes[frame.type]; }
     if (Object.hasOwn(scalarValidators, frame.type)) { scalarValidators[frame.type](frame.value, frame.path); ${check}stack.pop(); continue; }
     if (!type) invalid(frame.path, "a declared copied type");
+    if (type.kind === "host-null") {
+      if (frame.value === null) { ${check}stack.pop(); continue; }
+      frame.type = type.arguments[0];
+      continue;
+    }
     const value = frame.value, sequence = ["array", "list", "tuple"].includes(type.kind);
     if (!value || typeof value !== "object") invalid(frame.path, "plain " + type.kind);
     if (active.has(value)) throw new TypeError("Cyclic copied value");

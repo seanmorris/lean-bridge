@@ -7,7 +7,7 @@ import { componentScalarTypes, scalarCopyLimit } from "./component-scalars.mjs";
 
 // Leave space for additional primitive tags without renumbering scalar ABI 2.
 // Lists retain their semantic constructor but share the ordered sequence wire layout.
-export const componentCopiedTags = Object.freeze({ array: 32, list: 32, tuple: 33, option: 34, result: 35, record: 36, variant: 37 });
+export const componentCopiedTags = Object.freeze({ array: 32, list: 32, tuple: 33, option: 34, result: 35, record: 36, variant: 37, "host-null": 38 });
 export const componentCopiedDepth = 32;
 export const componentCopiedAbi = 4;
 export const componentCopiedDispatch = "copied-array-frame-v1";

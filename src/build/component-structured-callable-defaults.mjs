@@ -20,8 +20,9 @@ const name = id => `callbackDefault_${sha256(id).slice(0, 20)}`;
  * @param types - Authenticated copied definitions, never callback identities.
  * @param nominalRefinements - Checked constraints on copied constructors.
  * @param mirrors - Identities that cross the wire as erased payload mirrors.
+ * @param hostProjection - Compiler-authenticated HostNull wrapper and constructors.
  */
-export const componentStructuredCallableDefaults = (types, nominalRefinements = [], mirrors = new Set()) => {
+export const componentStructuredCallableDefaults = (types, nominalRefinements = [], mirrors = new Set(), hostProjection = null) => {
 	const graph = snapshotComponentCopiedGraph({ schemaVersion: 1, root: { kind: "primitive", name: "unit" }, types });
 	// A checked record crosses the wire as its proof-free payload mirror, so its recovery
 	// value is a mirror too; only a site's constructor turns it into a source value.
@@ -39,6 +40,11 @@ export const componentStructuredCallableDefaults = (types, nominalRefinements = 
 		if(type.constructor === "array") return "#[]";
 		if(type.constructor === "list") return "[]";
 		if(type.constructor === "option") return "_root_.Option.none";
+		if(type.constructor === "host-null")
+		{
+			if(!hostProjection) throw new TypeError("HostNull recovery lacks its compiler-authenticated Lean projection");
+			return `_root_.${hostProjection.nullConstructor}`;
+		}
 		const left = expression(type.arguments[0], refinement?.arguments[0]);
 		if(type.constructor === "result")
 		{

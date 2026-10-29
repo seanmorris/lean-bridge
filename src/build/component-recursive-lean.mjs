@@ -88,7 +88,8 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 	const selected = exports.some(item => [...item.refinements?.parameters ?? [], item.refinements?.result ?? null].some(tree => hasComponentNominalRefinements(tree)));
 	// A structured callable component supplies the mirrors it derived from its callback
 	// sites and emits its own wrappers; the shared codecs then use the same mirror layouts.
-	const conversion = options.conversion ?? (selected ? componentRefinementMirrors(abi, exports, leanType, nominalRefinements) : null);
+	const hostProjection = options.hostProjection ?? null;
+	const conversion = options.conversion ?? (selected ? componentRefinementMirrors(abi, exports, leanType, nominalRefinements, hostProjection) : null);
 	// A checked record crosses as its payload mirror: carriers build and read only the mirror, and
 	// each site's constructor alone builds the source record from it.
 	const checkedRecords = new Map(abi.types.filter(type => type.kind === "record" && type.erased).map(type => [type.id, type]));
@@ -211,13 +212,17 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 			children.forEach((child, index) => field(`field${index}`, child, [`pure value.${index ? "snd" : "fst"}`]));
 			continue;
 		}
-		const option = type.constructor === "option", names = option ? ["none", "some"] : ["ok", "error"];
-		branch([`.${names[0]}${option ? "" : " _"}`, `.${names[1]} _`]);
-		if(option) make("none", [], ".none");
+		const option = type.constructor === "option", hostNull = type.constructor === "host-null", nullable = option || hostNull;
+		if(hostNull && !hostProjection) throw new TypeError("HostNull carrier lacks its compiler-authenticated Lean projection");
+		const names = option ? [".none", ".some"]
+			: hostNull ? [`_root_.${hostProjection.nullConstructor}`, `_root_.${hostProjection.valueConstructor}`]
+				: [".ok", ".error"];
+		branch([`${names[0]}${nullable ? "" : " _"}`, `${names[1]} _`]);
+		if(nullable) make("none", [], names[0]);
 		children.forEach((child, index) => {
-			const name = option ? "some" : names[index];
-			make(`make${index}`, [child], `.${name} a0`);
-			field(`field${index}`, child, ["match value with", `| .${name} child => pure child`, "| _ => .none"]);
+			const name = nullable ? names[1] : names[index];
+			make(`make${index}`, [child], `${name} a0`);
+			field(`field${index}`, child, ["match value with", `| ${name} child => pure child`, "| _ => .none"]);
 		});
 	}
 	for(const item of options.emitSites === false ? [] : sites)

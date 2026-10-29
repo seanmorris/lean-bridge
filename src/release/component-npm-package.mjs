@@ -130,12 +130,12 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 		, ["internal/component-runtime.mjs", runtimeSource]
 		, ["internal/component-scalars.mjs", scalarSource]
 		, ["internal/component-scalar-codec.mjs", codecSource]
-		, ["internal/component-callables.mjs", await readFile(new URL("../abi/component-callables.mjs", import.meta.url))]
+		, ["internal/component-callables.mjs", relocate(await readFile(new URL("../abi/component-callables.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-callable-runtime.mjs", relocate(await readFile(new URL("./component-callable-runtime.mjs", import.meta.url), "utf8"))]
-		, ["internal/component-structured-callables.mjs", await readFile(new URL("../abi/component-structured-callables.mjs", import.meta.url))]
+		, ["internal/component-structured-callables.mjs", relocate(await readFile(new URL("../abi/component-structured-callables.mjs", import.meta.url), "utf8"))]
 		, ["internal/refinements.mjs", await readFile(new URL("../abi/refinements.mjs", import.meta.url))]
 		, ["internal/component-structured-callable-runtime.mjs", relocate(await readFile(new URL("./component-structured-callable-runtime.mjs", import.meta.url), "utf8"))]
-		, ["internal/component-copied.mjs", await readFile(new URL("../abi/component-copied.mjs", import.meta.url))]
+		, ["internal/component-copied.mjs", relocate(await readFile(new URL("../abi/component-copied.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-records.mjs", await readFile(new URL("../abi/component-records.mjs", import.meta.url))]
 		, ["internal/component-copied-codec.mjs", relocate(await readFile(new URL("./component-copied-codec.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-copied-runtime.mjs", relocate(await readFile(new URL("./component-copied-runtime.mjs", import.meta.url), "utf8"))]
@@ -150,7 +150,7 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 		runtimeFiles.set(`internal/owned-wasm-${name}.mjs`, relocate(await readFile(new URL(`./owned-wasm-${name}.mjs`, import.meta.url), "utf8")));
 	for(const name of ["component-owned-wasm", "owned-wasm-control"])
 		runtimeFiles.set(`internal/${name}.mjs`, relocate(await readFile(new URL(`../abi/${name}.mjs`, import.meta.url), "utf8")));
-	for(const name of ["canonical", "contract", "sha256"])
+	for(const name of ["canonical", "contract", "default-value", "sha256"])
 		runtimeFiles.set(`internal/binding-ir/${name}.mjs`, await readFile(new URL(`../binding-ir/${name}.mjs`, import.meta.url)));
 	for(const name of (await readdir(noticeRoot)).sort()) runtimeFiles.set(`notices/${name}`, await readFile(new URL(name, noticeRoot)));
 	const runtimeMetadata = {
