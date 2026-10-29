@@ -14,6 +14,7 @@ const digestPattern = /^[0-9a-f]{64}$/u;
 const historyRecords = new Map();
 const historyRecordCommits = new Map();
 const historySources = new Map();
+const pathHistorySources = new Map();
 const readerIds = new WeakMap();
 const maxHistorySourceBytes = 64 * 1024 * 1024;
 let nextReaderId = 1;
@@ -42,6 +43,25 @@ const sourceAtRevision = (revision, path) => {
 	{
 		return undefined;
 	}
+};
+
+const sourceAtPathHistory = (path, expected) => {
+	const key = JSON.stringify([path, expected]);
+	if(pathHistorySources.has(key)) return pathHistorySources.get(key);
+	const revisions = execFileSync("git", [
+		"log", "--format=%H", "--", path
+	], { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 })
+		.trim().split("\n").filter(Boolean);
+	for(const revision of revisions)
+	{
+		const source = sourceAtRevision(revision, path);
+		if(source !== undefined && sha256(source) === expected)
+		{
+			pathHistorySources.set(key, source);
+			return source;
+		}
+	}
+	return undefined;
 };
 
 /**
@@ -111,6 +131,8 @@ export const sourceAtFinHistoryMilestone = async (
 	let source = beforeFinRefinementSource(
 		path, await readFile(path, "utf8"), expected
 	);
+	if(sha256(source) !== expected)
+		source = sourceAtPathHistory(path, expected) ?? source;
 	if(reader !== undefined)
 	{
 		assert.equal(typeof reader, "function");

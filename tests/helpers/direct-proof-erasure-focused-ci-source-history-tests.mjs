@@ -21,6 +21,8 @@ import {
 	, directProofErasureFocusedCiPredecessor
 	, reverseDirectProofErasureFocusedCiUpdate
 } from "./direct-proof-erasure-focused-ci-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -84,8 +86,8 @@ test("focused proof-erasure CI registration is exactly reversible"
 		, [...directProofErasureFocusedCiIntegrationPaths]);
 	for(const update of value.integrationUpdates)
 	{
-		const live = beforeDependentSignatureFocusedCiSource(
-			update.path, await readFile(update.path, "utf8"));
+		const live = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const implementation = git(["show"
 			, `${directProofErasureFocusedCiImplementation}:${update.path}`]);
 		assert.equal(reverseDirectProofErasureFocusedCiUpdate(live, update)
@@ -129,8 +131,8 @@ test("focused proof-erasure CI normalizes current sources to its predecessor"
 	const value = await record();
 	for(const update of value.updates)
 	{
-		const live = beforeDependentSignatureFocusedCiSource(
-			update.path, await readFile(update.path, "utf8"));
+		const live = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const previous = beforeDirectProofErasureFocusedCiSource(
 			update.path, live, update.previousSha256);
 		assert.equal(sha256(previous), update.previousSha256, update.path);

@@ -23,14 +23,26 @@ const [document, irSchema, consumers, source] = await Promise.all([
 const reference = Object.freeze({
 	id: "hosted-host-null-complete-installed", revision: "a".repeat(40)
 });
+const previousDocument = structuredClone(document);
+for(const id of hostNullPerlRequalifiedEvidenceIds)
+{
+	const entry = previousDocument.evidence.find(item => item.id === id);
+	assert.ok(entry, id);
+	const files = entry.files.filter(file =>
+		file.path === hostNullPerlSharedSource);
+	assert.equal(files.length, 1, id);
+	assert.equal(files[0].sha256, sha256(source), id);
+	files[0].sha256 = hostNullPerlPreviousSourceSha256;
+}
 
 test("HostNull refresh changes only five shared Perl source digests", () => {
-	const frozen = structuredClone(document);
+	const frozen = structuredClone(previousDocument);
 	const refreshed = refreshHostNullPerlEvidence(
-		document, reference, sha256(source));
-	assert.deepEqual(document, frozen);
+		previousDocument, reference, sha256(source));
+	assert.deepEqual(previousDocument, frozen);
 	assert.equal(validateTypeSurface(refreshed, { irSchema, consumers }), true);
-	const before = new Map(document.evidence.map(entry => [entry.id, entry]));
+	assert.deepEqual(refreshed, document);
+	const before = new Map(previousDocument.evidence.map(entry => [entry.id, entry]));
 	const changed = refreshed.evidence.filter(entry =>
 		JSON.stringify(entry) !== JSON.stringify(before.get(entry.id)));
 	assert.deepEqual(changed.map(entry => entry.id)
@@ -52,13 +64,13 @@ test("HostNull refresh changes only five shared Perl source digests", () => {
 
 test("HostNull Perl refresh rejects incomplete or forged inputs", () => {
 	const digest = sha256(source);
-	assert.throws(() => refreshHostNullPerlEvidence(document
+	assert.throws(() => refreshHostNullPerlEvidence(previousDocument
 		, { ...reference, id: "forged" }, digest));
-	assert.throws(() => refreshHostNullPerlEvidence(document
+	assert.throws(() => refreshHostNullPerlEvidence(previousDocument
 		, { ...reference, revision: "forged" }, digest));
-	assert.throws(() => refreshHostNullPerlEvidence(document, reference
+	assert.throws(() => refreshHostNullPerlEvidence(previousDocument, reference
 		, hostNullPerlPreviousSourceSha256));
-	const missing = structuredClone(document);
+	const missing = structuredClone(previousDocument);
 	missing.evidence = missing.evidence.filter(entry =>
 		entry.id !== hostNullPerlRequalifiedEvidenceIds[0]);
 	assert.throws(() => refreshHostNullPerlEvidence(

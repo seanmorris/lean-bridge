@@ -16,6 +16,8 @@ import {
 	, hostNullFocusedCiNormalizationPaths, hostNullFocusedCiPredecessor
 	, reverseHostNullFocusedCiUpdate
 } from "./host-null-focused-ci-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -72,7 +74,8 @@ test("focused HostNull CI registration is exactly reversible", async () => {
 		, [...hostNullFocusedCiIntegrationPaths]);
 	for(const update of value.integrationUpdates)
 	{
-		const live = await readFile(update.path, "utf8");
+		const live = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const implementation = git([
 			"show", `${hostNullFocusedCiImplementation}:${update.path}`
 		]);
@@ -113,7 +116,8 @@ test("focused HostNull CI normalizes current sources to its predecessor"
 	for(const update of value.updates)
 	{
 		const previous = beforeHostNullFocusedCiSource(
-			update.path, await readFile(update.path, "utf8")
+			update.path, await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256)
 			, update.previousSha256
 		);
 		assert.equal(sha256(previous), update.previousSha256, update.path);

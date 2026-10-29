@@ -18,6 +18,8 @@ import {
 	, hostNullFocusedArchiveInputPredecessor
 	, reverseHostNullFocusedArchiveInputUpdate
 } from "./host-null-focused-archive-input-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -66,7 +68,8 @@ test("focused HostNull archive registration is exactly reversible", async () => 
 			"show", `${hostNullFocusedArchiveInputImplementation}:${update.path}`
 		]);
 		assert.equal(reverseHostNullFocusedArchiveInputUpdate(
-			await readFile(update.path, "utf8"), update
+			await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256), update
 		), implementation, update.path);
 	}
 });
@@ -104,7 +107,8 @@ test("focused HostNull archive inputs normalize to their predecessor"
 	for(const update of value.updates)
 	{
 		const previous = beforeHostNullFocusedArchiveInputSource(
-			update.path, await readFile(update.path, "utf8")
+			update.path, await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256)
 			, update.previousSha256
 		);
 		assert.equal(sha256(previous), update.previousSha256, update.path);

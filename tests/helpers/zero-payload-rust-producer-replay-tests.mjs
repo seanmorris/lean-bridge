@@ -18,8 +18,19 @@ import {
 const root = "docs/evidence/zero-payload-checked-record-rust-20261021";
 const indexSha256 = "47a71983922b4b079c577de03ea31e5ba94b3a148d0331fe258f26b6682a6903";
 
+const retainedBytes = async path => {
+	try
+	{ return await readFile(`${root}/${path}`); }
+	catch(error)
+	{
+		if(error.code !== "ENOENT") throw error;
+		return execFileSync("git", ["show", `HEAD:${root}/${path}`]
+			, { maxBuffer: 1024 * 1024 });
+	}
+};
+
 const archive = async () => {
-	const bytes = await readFile(`${root}/index.json`);
+	const bytes = await retainedBytes("index.json");
 	assert.equal(sha256(bytes), indexSha256);
 	const index = JSON.parse(bytes);
 	assert.equal(index.producerCommit, "a6173cade3bbe158baa1a5695e3e93e1037359b0");
@@ -27,16 +38,7 @@ const archive = async () => {
 	const read = async path => {
 		const expected = files.get(path);
 		assert.ok(expected && expected.bytes < 1024 * 1024, path);
-		let retained;
-		try
-		{ retained = await readFile(`${root}/${path}`); }
-		catch(error)
-		{
-			if(error.code !== "ENOENT") throw error;
-			// Sparse worktrees retain these small, hash-pinned records in Git.
-			retained = execFileSync("git", ["show", `HEAD:${root}/${path}`]
-				, { maxBuffer: 1024 * 1024 });
-		}
+		const retained = await retainedBytes(path);
 		assert.equal(retained.length, expected.bytes, path);
 		assert.equal(sha256(retained), expected.sha256, path);
 		return retained;

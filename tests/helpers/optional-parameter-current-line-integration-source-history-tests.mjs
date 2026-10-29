@@ -19,12 +19,8 @@ import {
 	, optionalParameterCurrentLineIntegrationRegistrationPaths
 	, reverseOptionalParameterCurrentLineIntegrationUpdate
 } from "./optional-parameter-current-line-integration-source-history.mjs";
-import { beforeDirectProofErasureFocusedCiSource }
-	from "./direct-proof-erasure-focused-ci-source-history.mjs";
-import { beforeOptionalParameterFocusedCiSource }
-	from "./optional-parameter-focused-ci-source-history.mjs";
-import { beforeOptionalParameterDispatchBridgeSource }
-	from "./optional-parameter-dispatch-bridge-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -69,10 +65,8 @@ test("optional parameter integration can select the sealed optional parent", asy
 		, [...optionalParameterCurrentLineIntegrationPaths]);
 	for(const update of value.optionalParentUpdates)
 	{
-		const newest = beforeDirectProofErasureFocusedCiSource(update.path
-			, await readFile(update.path, "utf8"));
-		const live = beforeOptionalParameterFocusedCiSource(update.path
-			, beforeOptionalParameterDispatchBridgeSource(update.path, newest));
+		const live = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const optional = git(["show"
 			, `${optionalParameterCurrentLineIntegrationOptionalParent}:${update.path}`]);
 		assert.equal(beforeOptionalParameterCurrentLineIntegrationSource(
@@ -87,10 +81,8 @@ test("optional parameter integration registration is exactly reversible", async 
 			, ...optionalParameterCurrentLineIntegrationRegistrationPaths]);
 	for(const update of value.integrationUpdates)
 	{
-		const newest = beforeDirectProofErasureFocusedCiSource(update.path
-			, await readFile(update.path, "utf8"));
-		const live = beforeOptionalParameterFocusedCiSource(update.path
-			, beforeOptionalParameterDispatchBridgeSource(update.path, newest));
+		const live = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const merged = git(["show"
 			, `${optionalParameterCurrentLineIntegrationMerge}:${update.path}`]);
 		assert.equal(reverseOptionalParameterCurrentLineIntegrationUpdate(
@@ -106,11 +98,7 @@ test("optional parameter integration changes only current-source hashes", async 
 		, value.currentSourcePaths);
 	for(const item of value.currentSourceDigests)
 	{
-		const newest = beforeDirectProofErasureFocusedCiSource(item.path
-			, await readFile(item.path, "utf8"), item.sha256);
-		const live = beforeOptionalParameterFocusedCiSource(item.path
-			, beforeOptionalParameterDispatchBridgeSource(item.path
-				, newest, item.sha256), item.sha256);
+		const live = await sourceAtFinHistoryMilestone(item.path, item.sha256);
 		assert.equal(sha256(live), item.sha256, item.path);
 	}
 	const inventory = value.integrationUpdates.find(item =>
@@ -134,11 +122,8 @@ test("optional parameter integration authenticates every added control", async (
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${optionalParameterCurrentLineIntegrationMerge}:${addition.path}`]
 		, { stdio: "ignore" }).status, 0, addition.path);
-		const newest = beforeDirectProofErasureFocusedCiSource(addition.path
-			, await readFile(addition.path, "utf8"), addition.sha256);
-		const live = beforeOptionalParameterFocusedCiSource(addition.path
-			, beforeOptionalParameterDispatchBridgeSource(addition.path
-				, newest));
+		const live = await sourceAtFinHistoryMilestone(
+			addition.path, addition.sha256);
 		assert.equal(sha256(live)
 			, addition.sha256, addition.path);
 	}

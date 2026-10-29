@@ -19,6 +19,8 @@ import {
 	, dependentSignatureFocusedCiPredecessor
 	, reverseDependentSignatureFocusedCiUpdate
 } from "./dependent-signature-focused-ci-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -94,7 +96,8 @@ test("focused dependent-signature CI registration is exactly reversible"
 		, [...dependentSignatureFocusedCiIntegrationPaths]);
 	for(const update of value.integrationUpdates)
 	{
-		const live = await readFile(update.path, "utf8");
+		const live = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const implementation = git(["show"
 			, `${dependentSignatureFocusedCiImplementation}:${update.path}`]);
 		assert.equal(reverseDependentSignatureFocusedCiUpdate(live, update)
@@ -136,7 +139,8 @@ test("focused dependent-signature CI normalizes sources to its predecessor"
 	const value = await record();
 	for(const update of value.updates)
 	{
-		const live = await readFile(update.path, "utf8");
+		const live = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const previous = beforeDependentSignatureFocusedCiSource(
 			update.path, live, update.previousSha256);
 		assert.equal(sha256(previous), update.previousSha256, update.path);

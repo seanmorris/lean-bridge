@@ -112,6 +112,21 @@ test("optional route binders authenticate registration without additions"
 	}
 );
 
+test("history milestone fallback accepts only an exact Git source", async () => {
+	const value = await record();
+	const addition = value.historyAdditions.find(item =>
+		item.path.endsWith("route-binder-repair-source-history-tests.mjs"));
+	assert.ok(addition);
+	const live = await readFile(addition.path, "utf8");
+	assert.notEqual(sha256(live), addition.sha256);
+	assert.notEqual(sha256(beforeFinRefinementSource(
+		addition.path, live, addition.sha256)), addition.sha256);
+	assert.equal(sha256(await sourceAtFinHistoryMilestone(
+		addition.path, addition.sha256)), addition.sha256);
+	await assert.rejects(sourceAtFinHistoryMilestone(
+		addition.path, "0".repeat(64)), /route-binder/u);
+});
+
 test("optional route binders retain exact PHP and npm distinctions", () => {
 	const installed = git(["show"
 		, `${optionalParameterRouteBinderRepairImplementation}`

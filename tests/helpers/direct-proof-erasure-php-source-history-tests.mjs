@@ -21,6 +21,8 @@ import {
 import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -59,10 +61,8 @@ test("direct proof erasure PHP acceptance reverses every source", async () => {
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const live = await readFile(update.path, "utf8");
-		const current = beforeFinRefinementSource(
-			update.path, live, update.currentSha256
-		);
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = git(["show", `${directProofErasurePhpImplementation}:${update.path}`]);
 		assert.equal(reverseDirectProofErasurePhpUpdate(current, update)

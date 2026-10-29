@@ -72,8 +72,8 @@ test("WIT/lint local join reverses live integration to either parent", async () 
 	{
 		const integration = value.integrationUpdates.find(
 			update => update.path === path);
-		const live = beforeFinRefinementSource(
-			path, await readFile(path, "utf8"), integration.currentSha256);
+		const live = await sourceAtFinHistoryMilestone(
+			path, integration.currentSha256);
 		const merged = reverseProofErasureWitLintJoinUpdate(
 			live, integration
 		);
