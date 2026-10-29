@@ -11,7 +11,7 @@
  * @param qualifier - Optional public namespace for names used inside helpers.
  */
 export const copiedCppType = (copy, qualifier = "") => {
-	if(copy.compound === "option") return `std::optional<${copiedCppType(copy.fields[0].type, qualifier)}>`;
+	if(["host-null", "option"].includes(copy.compound)) return `std::optional<${copiedCppType(copy.fields[0].type, qualifier)}>`;
 	if(copy.compound) return `${copy.compound === "tuple" ? "std::pair" : `${qualifier}Result`}<${copy.fields.map(field => copiedCppType(field.type, qualifier)).join(", ")}>`;
 	if(copy.element) return `std::vector<${copiedCppType(copy.element, qualifier)}>`;
 	if(copy.variant) return qualifier + copy.variant.name;
@@ -76,7 +76,7 @@ export const renderCppCopiedValues = surface => {
 			output.push('default: invalid("Native variant has an invalid tag");', "}");
 		} else if(copy.compound && copy.compound !== "tuple")
 		{
-			const option = copy.compound === "option", flag = option ? "has_value" : "is_ok";
+			const option = ["host-null", "option"].includes(copy.compound), flag = option ? "has_value" : "is_ok";
 			check.push(`charge(budget, 1, sizeof(${name}));`);
 			if(!option) check.push('if (source.valueless_by_exception()) invalid("Result has no active branch");');
 			fields.forEach((field, i) => {
@@ -87,8 +87,10 @@ export const renderCppCopiedValues = surface => {
 				check.push(`if (${condition}) check${child.index}(${payload}, budget);`);
 			});
 			constructor.push(`value.${flag} = ${option ? "source.has_value()" : "source.index() == 0"};`);
-			if(option) output.push(`if (!source.has_value) return std::nullopt;`, `return ${host}{std::in_place, from${fields[0].type.index}(source.value)};`);
-			else output.push(`if (source.is_ok) return ${host}{Ok<${type(fields[0].type)}>{from${fields[0].type.index}(source.ok)}};`
+			if(option) output.push('if (source.has_value > 1) invalid("Native nullable value has an invalid tag");'
+				, `if (!source.has_value) return std::nullopt;`, `return ${host}{std::in_place, from${fields[0].type.index}(source.value)};`);
+			else output.push('if (source.is_ok > 1) invalid("Native Result has an invalid tag");'
+				, `if (source.is_ok) return ${host}{Ok<${type(fields[0].type)}>{from${fields[0].type.index}(source.ok)}};`
 				, `return ${host}{Err<${type(fields[1].type)}>{from${fields[1].type.index}(source.error)}};`);
 		} else if(record || copy.compound === "tuple")
 		{

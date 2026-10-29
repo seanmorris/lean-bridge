@@ -105,7 +105,7 @@ export const renderGmpValues = surface => {
 				, `  lb_gmp_reset${id}(value, kind); return ${surface.prefix.toUpperCase()}_GMP_STATUS_OK;`, "}");
 		} else if(copy.record || copy.compound)
 		{
-			const flag = { option: "has_value", result: "is_ok" }[copy.compound];
+			const flag = { "host-null": "has_value", option: "has_value", result: "is_ok" }[copy.compound];
 			declarations.push(`struct ${n} {\n${flag ? `  uint8_t ${flag};\n` : ""}${copy.fields.length ? copy.fields.map(field => `  ${gmpName(surface, field.type)} ${field.name};`).join("\n") : "  uint8_t empty;"}\n};`);
 			init.push("memset(value, 0, sizeof(*value));");
 			to.push(`if (!lb_gmp_charge(budget, 1, sizeof(${raw}))) return 0;`);

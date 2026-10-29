@@ -44,7 +44,7 @@ static inline void lb_shared_result_release(void *data) {
 			body.push("  default: break;", "  }");
 		} else for(const field of copy.fields)
 		{
-			const flag = { option: "has_value", result: "is_ok" }[copy.compound];
+			const flag = { "host-null": "has_value", option: "has_value", result: "is_ok" }[copy.compound];
 			if(flag) body.push(`  if (${field.name === "error" ? "!" : ""}value->${flag}) {`);
 			attach(field.type, `&value->${field.name}`);
 			if(flag) body.push("  }");

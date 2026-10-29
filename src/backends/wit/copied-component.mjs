@@ -23,7 +23,7 @@ const layout = (copy, cache) => {
 	if(copy.aliasTarget) return layout(copy.aliasTarget, cache);
 	if(copy.resource) return { flat: ["i32"], size: 4, alignment: 4 };
 	if(cache.has(copy)) return cache.get(copy);
-	if(copy.variant || copy.compound === "option" || copy.compound === "result")
+	if(copy.variant || ["host-null", "option", "result"].includes(copy.compound))
 	{
 		const cases = copy.variant ? copy.cases.map(branch => branch.fields.length
 			? layout({ payloadRecord: true, fields: branch.fields }, cache) : { flat: [], size: 0, alignment: 1 })

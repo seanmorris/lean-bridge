@@ -125,7 +125,7 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 		if(copy.aliasTarget) return `type ${copy.witName} = ${copy.aliasTarget.wit};`;
 		if(copy.variant) return `variant ${copy.witName} { ${copy.cases.map(branch => `${identifier(branch.witName)}${branch.payload ? `(${branch.payload.wit})` : ""}`).join(", ")} }`;
 		if(copy.payloadRecord) return `record ${copy.witName} { ${copy.fields.map(field => `${identifier(field.witName)}: ${field.type.wit}`).join(", ")} }`;
-		if(copy.compound === "option") return `type ${copy.witName} = option<${copy.fields[0].type.wit}>;`;
+		if(["host-null", "option"].includes(copy.compound)) return `type ${copy.witName} = option<${copy.fields[0].type.wit}>;`;
 		if(copy.compound === "result") return `type ${copy.witName} = result<${copy.fields.map(field => field.type.wit).join(", ")}>;`;
 		if(copy.compound === "tuple") return `type ${copy.witName} = tuple<${copy.fields.map(field => field.type.wit).join(", ")}>;`;
 		if(copy.element) return `type ${copy.witName} = list<${copy.element.wit}>;`;
@@ -137,7 +137,7 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false, ca
 	const watType = copy => {
 		if(copy.variant) return `(variant ${copy.cases.map(branch => `(case "${branch.witName}"${branch.payload ? ` ${branch.payload.wat}` : ""})`).join(" ")})`;
 		if(copy.payloadRecord) return `(record ${copy.fields.map(field => `(field "${field.witName}" ${field.type.wat})`).join(" ")})`;
-		if(copy.compound === "option") return `(option ${copy.fields[0].type.wat})`;
+		if(["host-null", "option"].includes(copy.compound)) return `(option ${copy.fields[0].type.wat})`;
 		if(copy.compound === "result") return `(result ${copy.fields[0].type.wat} (error ${copy.fields[1].type.wat}))`;
 		if(copy.compound === "tuple") return `(tuple ${copy.fields.map(field => field.type.wat).join(" ")})`;
 		if(copy.element) return `(list ${copy.element.wat})`;

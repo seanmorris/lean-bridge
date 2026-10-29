@@ -111,7 +111,7 @@ struct ${copy.ctype} { kind: u32, cases: V${copy.index} }
 ` : `#[repr(C)]
 #[derive(Clone, Copy, Default)]
 struct ${copy.ctype} {
-${copy.compound ? `${copy.compound === "tuple" ? "" : `    ${copy.compound === "option" ? "has_value" : "is_ok"}: u8,\n`}${copy.fields.map(field => `    ${field.name}: ${field.type.ctype},`).join("\n")}`
+${copy.compound ? `${copy.compound === "tuple" ? "" : `    ${["host-null", "option"].includes(copy.compound) ? "has_value" : "is_ok"}: u8,\n`}${copy.fields.map(field => `    ${field.name}: ${field.type.ctype},`).join("\n")}`
 	: copy.record ? copy.fields.length ? copy.fields.map(field => `    ${field.name}: ${field.type.ctype},`).join("\n") : "    empty: u8,"
 		: `    data: *const ${copy.element?.ctype ?? (copy.scalarName === "nat" || copy.scalarName === "int" ? "u32" : "u8")},
     length: usize,
@@ -144,7 +144,7 @@ export const copiedRustConversions = model => model.surface.copies.map(copy => {
 		output.push("scope.charge(value.length, 8)?;", "let digits = unsafe { checked_slice(value.data, value.length)? };", "if digits.last() == Some(&0) { return Err(Error::InvalidNative); }");
 		if(name === "int") output.push("if digits.is_empty() && value.negative { return Err(Error::InvalidNative); }");
 		output.push(name === "nat" ? "Ok(BigUint::from_slice(digits))" : "Ok(BigInt::from_slice(if value.negative { num_bigint::Sign::Minus } else { num_bigint::Sign::Plus }, digits))");
-	} else if(copy.compound === "option")
+	} else if(["host-null", "option"].includes(copy.compound))
 	{
 		const child = copy.fields[0].type;
 		input.push(`match value { None => Ok(${copy.ctype}::default()), Some(inner) => Ok(${copy.ctype} { has_value: 1, value: to${child.index}(inner, scope)? }) }`);

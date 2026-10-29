@@ -66,7 +66,7 @@ static inline void lb_borrow_clear(lb_borrow_owner *owners) {
 		}
 		else for(const [index, field] of copy.fields.entries())
 		{
-			const flag = { option: "has_value", result: "is_ok" }[copy.compound];
+			const flag = { "host-null": "has_value", option: "has_value", result: "is_ok" }[copy.compound];
 			if(flag) body.push(`  if (${index === 1 ? "!" : ""}value->${flag}) {`);
 			call(field.type, `&value->${field.name}`);
 			if(flag) body.push("  }");

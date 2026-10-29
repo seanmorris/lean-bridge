@@ -39,7 +39,7 @@ const publicType = (model, ref, input = false) => {
 	if(ref.kind !== "apply") return value.publicType;
 	const children = ref.arguments.map(argument => publicType(model, argument)).join(", ");
 	return ref.constructor === "tuple" ? `(${children})`
-		: `${{ array: "Vec", list: "Vec", option: "Option", result: "Result" }[ref.constructor]}<${children}>`;
+		: `${{ array: "Vec", "host-null": "Option", list: "Vec", option: "Option", result: "Result" }[ref.constructor]}<${children}>`;
 };
 const publicAliases = model => !model.surface.aliases.length ? "" : `\n${model.surface.aliases.map(alias => `pub type ${alias.definition.name} = ${publicType(model, alias.definition.target)};`).join("\n")}\n`;
 const publicSource = model => `//! Typed copied-value functions from ${model.ir.component.id}.
@@ -146,6 +146,8 @@ export const renderCopiedRustPackage = (model, evidence = null, settings = {}) =
 	const finFunctions = model.surface.functions.filter(fn => finBounds(fn, model.ir.types));
 	if(finFunctions.length) files["README.md"] += `\n${nativeRefinementReadme(finFunctions.map(fn => fn.declaration), `Lean Fin n parameters and results use BigUint values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs; an argument at or above its bound returns Err(Error::Native { code: 1, .. }) whose message names the parameter and bound. Negative values are unrepresentable in BigUint. Fin 0 has no values, so every call to a function taking one fails. Results are BigUint values below their declared bound. ${dependentFin(finFunctions, model.ir.types) ? "A bound listed below as an earlier parameter name, from a Lean signature such as (n : Nat) → Fin n → α, is that argument's value in the same call: both BigUint arguments are read first, and the Error::Native message names the value and its bound parameter, such as \"arg1 is not below its dependent Fin bound arg0\". " : ""}${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), "Rust crates", model.ir.types)}`, "Rust crates", model.ir.types)}\n\n${finFunctions.map(fn => `- ${name.replaceAll("-", "_")}::${fn.field}: ${finBounds(fn, model.ir.types)}`).join("\n")}\n`;
 	files["README.md"] += "\nLean Option uses Rust Option, Except E T uses Result<T, E>, and binary products use (A, B), preserving their nesting. None, Some(()) and Some(None) retain presence. Compound inputs are borrowed; returned contents are owned independent copies. An exported Except result has two Result layers: the outer Result reports bridge failures, while the inner Result preserves the Lean domain success or error. These copied types can nest with arrays and records; they cannot contain callbacks or resources.\n";
+	if(model.surface.copies.some(copy => copy.compound === "host-null"))
+		files["README.md"] += "\nOnly the compiler-authenticated HostNull wrapper projects through Rust Option as a nullable value. HostNull (Option T), Option (HostNull T), and directly nested HostNull remain nested Option values and retain None, Some(None), and Some(Some(value)) without collapsing their branches.\n";
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean List inputs borrow Rust slices and return owned Vec values, including nested copied values and record fields. Empty Lists, order and duplicates are preserved. List and Array retain distinct contract identities. List callback payloads remain unsupported.\n";
 	if(model.surface.aliases.length)

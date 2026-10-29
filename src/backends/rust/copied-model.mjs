@@ -59,7 +59,7 @@ export const compileCopiedRustModel = ir => {
 			}
 		}
 		const children = copy.fields?.map(field => field.type.publicType).join(", ");
-		copy.publicType = copy.record || copy.variant ? copy.publicName : copy.compound === "option" ? `Option<${children}>`
+		copy.publicType = copy.record || copy.variant ? copy.publicName : ["host-null", "option"].includes(copy.compound) ? `Option<${children}>`
 			: copy.compound === "result" ? `Result<${children}>` : copy.compound === "tuple" ? `(${children})`
 				: copy.element ? `Vec<${copy.element.publicType}>` : scalars[copy.scalarName];
 		copy.ctype = copy.aggregate ? `T${copy.index}` : copy.scalarName === "unit" ? "u8" : copy.scalarName === "char" ? "u32" : copy.publicType;

@@ -19,7 +19,7 @@ export const createCanonicalBorrowDrops = ({ layout, align }) => {
 		if(branches.has(copy)) return branches.get(copy);
 		const result = copy.variant ? copy.cases.map((branch, tag) => ({ tag
 			, type: branch.fields.length ? { payloadRecord: true, fields: branch.fields } : null }))
-			: copy.compound === "option" ? [{ tag: 1, type: copy.fields[0].type }]
+			: ["host-null", "option"].includes(copy.compound) ? [{ tag: 1, type: copy.fields[0].type }]
 				: copy.compound === "result" ? copy.fields.map((field, tag) => ({ tag, type: field.type })) : [];
 		branches.set(copy, result); return result;
 	};
@@ -30,7 +30,7 @@ export const createCanonicalBorrowDrops = ({ layout, align }) => {
 		const result = copy.aliasTarget ? hasBorrow(copy.aliasTarget)
 			: copy.resource ? copy.borrowed === true
 				: copy.element ? hasBorrow(copy.element)
-					: copy.variant || copy.compound === "option" || copy.compound === "result"
+					: copy.variant || ["host-null", "option", "result"].includes(copy.compound)
 						? payloads(copy).some(branch => branch.type && hasBorrow(branch.type))
 						: (copy.fields ?? []).some(field => hasBorrow(field.type));
 		active.delete(copy); borrowing.set(copy, result); return result;
@@ -63,7 +63,7 @@ export const createCanonicalBorrowDrops = ({ layout, align }) => {
 		let body;
 		if(copy.resource) body = `(call $drop${copy.resourceIndex} ${load("(local.get $p)")})`;
 		else if(copy.element) body = `(call ${listFunction(copy)} ${load("(local.get $p)")} ${load("(local.get $p)", 4)})`;
-		else if(copy.variant || copy.compound === "option" || copy.compound === "result")
+		else if(copy.variant || ["host-null", "option", "result"].includes(copy.compound))
 		{
 			const cases = payloads(copy), tagSize = !copy.variant || copy.cases.length <= 256 ? 1 : copy.cases.length <= 65536 ? 2 : 4;
 			const boundary = Math.max(1, ...cases.map(branch => branch.type ? layout(branch.type).alignment : 1));
@@ -88,7 +88,7 @@ export const createCanonicalBorrowDrops = ({ layout, align }) => {
 		if(!hasBorrow(copy)) return [];
 		if(copy.resource) return [`(call $drop${copy.resourceIndex} ${word(values[0])})`];
 		if(copy.element) return [`(call ${listFunction(copy)} ${word(values[0])} ${word(values[1])})`];
-		if(copy.variant || copy.compound === "option" || copy.compound === "result")
+		if(copy.variant || ["host-null", "option", "result"].includes(copy.compound))
 			return payloads(copy).filter(branch => branch.type && hasBorrow(branch.type)).map(branch =>
 				`(if (i32.eq ${word(values[0])} (i32.const ${branch.tag})) (then ${flat(branch.type, values.slice(1)).join(" ")}))`);
 		let index = 0;

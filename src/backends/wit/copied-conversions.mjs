@@ -122,7 +122,7 @@ export const renderWitConversions = ({ surface }) => surface.copies.map(copy => 
 		input.push("uint32_t *limbs = NULL; size_t length = 0;", "if (!lb_limbs_in(value, scope, out ? &limbs : NULL, &length)) return false;", `if (out) *out = (${copy.name}){.data = limbs, .length = length${name === "int" ? ", .negative = negative" : ""}};`);
 		if(name === "nat") output.push("return lb_limbs_out(value->data, value->length, scope, out);");
 		else output.push("bool negative; if (!lb_boolean(&value->negative, &negative) || (negative && !value->length)) return false;", "out->kind = WASMTIME_COMPONENT_RECORD; wasmtime_component_valrecord_new_uninit(&out->of.record, 2);", "memset(out->of.record.data, 0, 2 * sizeof(*out->of.record.data));", 'wasm_name_new(&out->of.record.data[0].name, 8, "negative"); wasm_name_new(&out->of.record.data[1].name, 5, "limbs");', "out->of.record.data[0].val = (wasmtime_component_val_t){.kind = WASMTIME_COMPONENT_BOOL, .of.boolean = negative};", "return lb_limbs_out(value->data, value->length, scope, &out->of.record.data[1].val);");
-	} else if(copy.compound === "option")
+	} else if(["host-null", "option"].includes(copy.compound))
 	{
 		const child = copy.fields[0].type;
 		input.push("if (value->kind != WASMTIME_COMPONENT_OPTION) return false;", "if (out) out->has_value = value->of.option != NULL;", `if (value->of.option && !lb_in_${child.index}(value->of.option, scope, out ? &out->value : NULL)) return false;`);

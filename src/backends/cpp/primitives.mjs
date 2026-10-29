@@ -146,7 +146,7 @@ ${surface.functions.map(fn => wrapper(surface, fn)).join("\n")}}
 `;
 	const files = { [`include/${p}.hpp`]: header
 		, [`src/${p}.cpp`]: `#include "${p}.hpp"\n`
-		, "README.md": `# ${surface.ir.component.name} C++ API\n\nC++20 wrappers over the compiled C API. Returned copied values own their memory. Nat and Int use Boost.Multiprecision cpp_int; negative Nat inputs are rejected. Prepared archives include pinned Boost 1.90.0 standalone headers. Synchronous callbacks accept typed C++ functions; returned LeanClosure values are move-only and release automatically.\n` };
+		, "README.md": `# ${surface.ir.component.name} C++ API\n\nC++20 wrappers over the compiled C API. Returned copied values own their memory. Nat and Int use Boost.Multiprecision cpp_int; negative Nat inputs are rejected. Prepared archives include pinned Boost 1.90.0 standalone headers. Synchronous callbacks accept typed C++ functions; returned LeanClosure values are move-only and release automatically.${surface.copies.some(copy => copy.compound === "host-null") ? " Only compiler-authenticated HostNull sites use std::optional as a nullable value; nested HostNull and Option wrappers remain nested std::optional values with every branch preserved." : ""}\n` };
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1
 		, component: surface.component, bindingIrSha256: surface.bindingIrSha256
 		, generator: { id: "lean-wasm/cpp", version: 3 }, languageStandard: "C++20"
