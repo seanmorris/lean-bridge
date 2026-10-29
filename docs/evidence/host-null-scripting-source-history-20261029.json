@@ -1,0 +1,461 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6bbf9471c9bf335b3c986c93bccc7e73a5bc185dd62a28ef31d0d10f748e5b07",
+      "path": "scripts/check-host-null-scripting-ci.mjs"
+    },
+    {
+      "currentSha256": "a0ff491b02b6fe87e67ba1e561711143002464b10374994d1262411fda16e131",
+      "path": "scripts/refresh-host-null-scripting-pins.mjs"
+    },
+    {
+      "currentSha256": "2d8a66e3d1630d05a933d75d8d045bbc280a451e26b92cf8e027afb0fe6fab80",
+      "path": "scripts/run-host-null-scripting-ci.sh"
+    },
+    {
+      "currentSha256": "29fbabeddb05857f436d4e79484ab58679fa08dfde997cf61ea4cb8d237da3d0",
+      "path": "tests/fixtures/host-null-consumers/perl.pl"
+    },
+    {
+      "currentSha256": "140cb9e325019d811bd4dbfca42805c81e9363742d22ddd211b5f1d762f4b96f",
+      "path": "tests/fixtures/host-null-consumers/python.py"
+    },
+    {
+      "currentSha256": "735479168abe67a55bc8dd631a16d5c5b51da45bbf285441e78b1d864d56d92e",
+      "path": "tests/fixtures/host-null-consumers/ruby.rb"
+    },
+    {
+      "currentSha256": "45588b34a6c9251aaffb1f0739882c5dbe7246ad59083c1565d56f823138917f",
+      "path": "tests/helpers/host-null-scripting-installed.mjs"
+    },
+    {
+      "currentSha256": "57aed1def997e0285e392e0cf8c3d1ce3198b494f1410c09265a094aa5d84a13",
+      "path": "tests/scripting-host-null-ci.test.mjs"
+    },
+    {
+      "currentSha256": "ffd4faa42857df2f9d5a181c739a92c2e7facb1383351ade38fd8664b8503074",
+      "path": "tests/scripting-host-null-contract.test.mjs"
+    },
+    {
+      "currentSha256": "31d40d61b7af5dbdcadf2a84e7f8379571f286c3e433d3cfd8cdd1ee0f9b53c4",
+      "path": "tests/scripting-host-null.test.mjs"
+    },
+    {
+      "currentSha256": "e9831377ee6d53f961c221d077c9afd333051c3ce8d2d0defb12af523490dc7c",
+      "path": "scripts/update-host-null-scripting-source-history.mjs"
+    },
+    {
+      "currentSha256": "ed3a8c4cb760536a9dd78483cb7d5d4705b93536fe340e31708b3da35b7ffb3b",
+      "path": "tests/helpers/host-null-scripting-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ca9f834d79fdb5e15fbe20f638e2ad2b74f8a88b1ab17b877aae043367dfddbf",
+      "path": "tests/helpers/host-null-scripting-source-history.mjs"
+    }
+  ],
+  "commits": [
+    {
+      "added": [
+        "tests/scripting-host-null-contract.test.mjs"
+      ],
+      "commit": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "modified": [
+        "src/backends/perl/copied-aliases.mjs",
+        "src/backends/perl/generate.mjs",
+        "src/backends/python/compounds.mjs",
+        "src/backends/python/copied-conversions.mjs",
+        "src/backends/python/copied-model.mjs",
+        "src/backends/python/copied-values.mjs",
+        "src/backends/ruby/copied-conversions.mjs",
+        "src/backends/ruby/copied-model.mjs",
+        "src/backends/ruby/copied-values.mjs"
+      ],
+      "parent": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+      "subject": "Project HostNull through scripting packages [skip ci]"
+    },
+    {
+      "added": [
+        "tests/fixtures/host-null-consumers/perl.pl",
+        "tests/fixtures/host-null-consumers/python.py",
+        "tests/fixtures/host-null-consumers/ruby.rb",
+        "tests/helpers/host-null-scripting-installed.mjs",
+        "tests/scripting-host-null.test.mjs"
+      ],
+      "commit": "eb0834607b2cb90abce537b9880f3e447a4185c9",
+      "modified": [],
+      "parent": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "subject": "Run HostNull through installed scripting packages [skip ci]"
+    },
+    {
+      "added": [
+        "scripts/check-host-null-scripting-ci.mjs",
+        "scripts/run-host-null-scripting-ci.sh",
+        "tests/scripting-host-null-ci.test.mjs"
+      ],
+      "commit": "9126e948b065a055285f01b4acb88b8159a40419",
+      "modified": [
+        ".github/workflows/perl-consumer.yml",
+        "src/adoption/test-profiles.mjs",
+        "tests/test-profiles.test.mjs"
+      ],
+      "parent": "eb0834607b2cb90abce537b9880f3e447a4185c9",
+      "subject": "Qualify HostNull across scripting package ecosystems [skip ci]"
+    },
+    {
+      "added": [
+        "scripts/refresh-host-null-scripting-pins.mjs"
+      ],
+      "commit": "93b58511f787ff41aef626c4a046907519022e36",
+      "modified": [],
+      "parent": "9126e948b065a055285f01b4acb88b8159a40419",
+      "subject": "Define exact scripting HostNull pin refresh [skip ci]"
+    },
+    {
+      "added": [],
+      "commit": "7075578b6fc2f3ff497a42d308872ef351004512",
+      "modified": [
+        "docs/type-surface.v1.json"
+      ],
+      "parent": "93b58511f787ff41aef626c4a046907519022e36",
+      "subject": "Refresh scripting HostNull source pins [skip ci]"
+    }
+  ],
+  "externalTypeSurfacePointers": 115,
+  "implementationCommit": "7075578b6fc2f3ff497a42d308872ef351004512",
+  "integrationParent": "7075578b6fc2f3ff497a42d308872ef351004512",
+  "integrationUpdates": [
+    {
+      "currentSha256": "ea0da47298f2900f371deebf3b1840fad68b14695171e099b8322636e418b51d",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-scripting-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c0e98e7739d7a0805b92726321a757752e46cdb80497c54a0cc8f4b9eba188a5"
+    },
+    {
+      "currentSha256": "af2c84ddaf4e8974fee4554f7f4c583bbf6eccf7ba0809a7c96d94f228aa7c00",
+      "edits": [
+        {
+          "current": "import { beforeHostNullScriptingIntegrationSource, beforeHostNullScriptingSource, hostNullScriptingNormalizationPaths } from \"./host-null-scripting-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullScriptingNormalizationPaths\n\t, ...hostNullDownstreamNormalizationPaths\n",
+          "previous": "\t...hostNullDownstreamNormalizationPaths\n",
+          "start": 215806
+        },
+        {
+          "current": "\tlet stage = beforeHostNullScriptingIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullDownstreamIntegrationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullDownstreamIntegrationSource(path, text, expected);\n",
+          "start": 269902
+        },
+        {
+          "current": "\tstage = beforeHostNullScriptingSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 270883
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "90eed5094345d6971c3ae4d3dc3b71e3157601381a60d9567c2aad766289d9ac"
+    }
+  ],
+  "milestone": "host-null-scripting-source-v1",
+  "predecessorCommit": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+  "schemaVersion": 1,
+  "scope": "Project explicit HostNull through Perl undef, Python None and Ruby nil without collapsing HostNull (Option T) into Option (HostNull T). Run ordinary and independently reviewed CPAN, PyPI and RubyGems packages after producer removal, offline installation, handoff removal and whole-installation relocation. Preserve 432 direct, nested, record, callback, closure, invalid-value and identity checks under an independent retained-report verifier and one recurring pinned scripting lane. The adjacent scripting type-surface lineage layer exclusively authenticates the exact 115-pointer inventory transition.",
+  "updates": [
+    {
+      "commit": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "currentSha256": "f439b22ea373f7e63ed9f83915750d86bc48605ce38936f797ab04026fbb0fa6",
+      "edits": [
+        {
+          "current": "\tif(ref.constructor === \"host-null\") return `undef | ${children[0]}`;\n\tif(ref.constructor === \"option\") return `${model.types.some(type => type.kind === \"host-null\") ? \"None\" : \"undef\"} | Some<${children[0]}>`;\n",
+          "previous": "\tif(ref.constructor === \"option\") return `undef | Some<${children[0]}>`;\n",
+          "start": 2121
+        }
+      ],
+      "parent": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+      "path": "src/backends/perl/copied-aliases.mjs",
+      "previousSha256": "3e77c70117d27939a323383a9ef772a6d713d4ed23483445a777d8e277bd0956"
+    },
+    {
+      "commit": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "currentSha256": "14ca6253264c2e50fb57a38644e879882c88fd5c2a0bc411dd4c569ec2059438",
+      "edits": [
+        {
+          "current": "\tif(type.kind === \"host-null\")\n\t{\n\t\tfrom = `\n      SvGETMAGIC(value); lbp_budget(scope, sizeof(void *));\n      if (!SvOK(value)) return ${keep(`lb_t${type.key}_null(lean_box(0))`)};\n      ${nativeCType(type.element)} item = ${read(type.element)}(aTHX_ scope, value);\n      ${retain(type.element, \"item\")}\n      return ${keep(`lb_t${type.key}_value(item)`)};`;\n\t\tto = `\n      lbp_budget(scope, sizeof(void *));\n      ${retain(type, \"value\")} uint8_t present = lb_t${type.key}_has(value);\n      if (!present) return lbp_mortal(newSV(0));\n      ${retain(type, \"value\")} ${nativeCType(type.element)} item = lb_t${type.key}_get0(value);\n      ${nativeObjectType(type.element) ? \"lbp_keep(scope, item);\" : \"\"}\n      return ${write(type.element)}(aTHX_ scope, item);`;\n\t}\n",
+          "previous": "",
+          "start": 9637
+        },
+        {
+          "current": "\t\tconst taggedOptions = optional && model.types.some(type => type.kind === \"host-null\");\n",
+          "previous": "",
+          "start": 10502
+        },
+        {
+          "current": "\t\t${optional ? taggedOptions ? `if (lbp_is_branch(value, ${q(`${model.moduleName}::None`)})) {\n        SV *item = lbp_branch_value(aTHX_ value, ${q(`${model.moduleName}::None`)});\n        if (SvOK(item)) croak(\"Option None must not contain a payload\");\n        return ${keep(`lb_t${type.key}_none(lean_box(0))`)};\n      }` : `if (!SvOK(value)) return ${keep(`lb_t${type.key}_none(lean_box(0))`)};` : \"\"}\n",
+          "previous": "      ${optional ? `if (!SvOK(value)) return ${keep(`lb_t${type.key}_none(lean_box(0))`)};` : \"\"}\n",
+          "start": 10799
+        },
+        {
+          "current": "\t\t${optional ? taggedOptions ? `if (!present) return lbp_branch(aTHX_ ${q(`${model.moduleName}::None`)}, lbp_mortal(newSV(0)));` : \"if (!present) return lbp_mortal(newSV(0));\" : \"\"}\n",
+          "previous": "      ${optional ? \"if (!present) return lbp_mortal(newSV(0));\" : \"\"}\n",
+          "start": 11850
+        },
+        {
+          "current": "\tconst hostNull = model.types.some(type => type.kind === \"host-null\");\n\tfor(const type of model.types.filter(type => type.kind === \"host-null\"))\n\t\tif(type.element.kind === \"primitive\" && type.element.name === \"unit\" || type.element.kind === \"host-null\")\n\t\t\tthrow new TypeError(\"Perl HostNull payloads must retain a value distinct from undef\");\n\tconst branches = [...(model.types.some(type => type.kind === \"option\") ? [...hostNull ? [\"None\"] : [], \"Some\"] : [])\n",
+          "previous": "\tconst branches = [...(model.types.some(type => type.kind === \"option\") ? [\"Some\"] : [])\n",
+          "start": 40653
+        },
+        {
+          "current": "\t\t\t[\"array\", \"host-null\", \"list\", \"option\", \"result\", \"tuple\", \"record\", \"variant\"].includes(value.kind)));\n",
+          "previous": "\t\t\t[\"array\", \"list\", \"option\", \"result\", \"tuple\", \"record\", \"variant\"].includes(value.kind)));\n",
+          "start": 42724
+        },
+        {
+          "current": "\t\tif(branch === \"None\")\n\t\t{\n\t\t\tpm.push(`package ${name};`, \"sub new {\"\n\t\t\t\t, `  die \"${name}->new expects no payload\\\\n\" unless @_ == 1 && $_[0] eq '${name}';`\n\t\t\t\t, `  return bless { value => undef }, '${name}';`, \"}\", \"\");\n\t\t\tcontinue;\n\t\t}\n",
+          "previous": "",
+          "start": 47621
+        },
+        {
+          "current": "\t\t, `${model.types.some(type => type.kind === \"host-null\") ? \"At nullable payload sites, only the compiler-authenticated HostNull wrapper uses undef. Option uses None->new() for None and Some->new($value) for Some; Some->new(undef) is a present HostNull null, while None->new() is Option.none. HostNull(Option T) uses undef for HostNull null and None->new() for its Option.none payload.\" : \"Option uses undef for None and Some->new($value) for Some, including Some->new(undef).\"} Unit uses undef only at Unit-typed sites. Except uses distinct Ok->new($value) and Err->new($value) objects; ->value returns the payload. Branch classes live under this component's namespace. Prod uses a plain two-element array reference; nested pairs stay nested.`\n",
+          "previous": "\t\t, \"Option uses undef for None and Some->new($value) for Some, including Some->new(undef). Unit uses undef. Except uses distinct Ok->new($value) and Err->new($value) objects; ->value returns the payload. Branch classes live under this component's namespace. Prod uses a plain two-element array reference; nested pairs stay nested.\"\n",
+          "start": 49871
+        }
+      ],
+      "parent": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+      "path": "src/backends/perl/generate.mjs",
+      "previousSha256": "7f028acaa4b57df42c5d2095b7a8c55779d6133d243b27dadba1263c69ffd68b"
+    },
+    {
+      "commit": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "currentSha256": "4836b0235151056ac6075e165a87e6f8709e81e3b231db34dd27c1b436f31cbf",
+      "edits": [
+        {
+          "current": "\t...model.surface.copies.some(copy => copy.compound === \"option\")\n\t\t? [...model.taggedOptions ? [\"None_\"] : [], \"Some\", \"Option\"] : []\n",
+          "previous": "\t...model.surface.copies.some(copy => copy.compound === \"option\") ? [\"Some\", \"Option\"] : []\n",
+          "start": 268
+        },
+        {
+          "current": "${names.includes(\"None_\") ? `@_dataclass(frozen=True, slots=True)\nclass None_:\n    pass\n\n` : \"\"}${[\"Some\", \"Ok\", \"Err\"].filter(name => names.includes(name)).map(name => `@_dataclass(frozen=True)\n",
+          "previous": "${[\"Some\", \"Ok\", \"Err\"].filter(name => names.includes(name)).map(name => `@_dataclass(frozen=True)\n",
+          "start": 905
+        },
+        {
+          "current": "${names.includes(\"Option\") ? names.includes(\"None_\")\n\t? \"Option = None_ | Some[_T]\\n\" : \"Option = Some[_T] | None\\n\" : \"\"}\n",
+          "previous": "${names.includes(\"Option\") ? \"Option = Some[_T] | None\\n\" : \"\"}\n",
+          "start": 1216
+        }
+      ],
+      "parent": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+      "path": "src/backends/python/compounds.mjs",
+      "previousSha256": "56d7dccee4c415e121f6f811c8e95a4fd72b038c0336def4ff54217e8d7b0f64"
+    },
+    {
+      "commit": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "currentSha256": "886a451cb8c7b8daf77e947af7fb4d4e5fb4789c0711bc28b89102bb9196187d",
+      "edits": [
+        {
+          "current": "\tconst fields = copy.compound ? [...copy.compound === \"tuple\" ? [] : [[copy.compound === \"result\" ? \"is_ok\" : \"has_value\", \"_c.c_uint8\"]], ...copy.fields.map(field => [field.name, field.type.ctype])]\n",
+          "previous": "\tconst fields = copy.compound ? [...copy.compound === \"tuple\" ? [] : [[copy.compound === \"option\" ? \"has_value\" : \"is_ok\", \"_c.c_uint8\"]], ...copy.fields.map(field => [field.name, field.type.ctype])]\n",
+          "start": 3055
+        },
+        {
+          "current": "\t} else if(copy.compound === \"host-null\")\n\t{\n\t\tconst child = copy.fields[0].type;\n\t\tinput.push(`if value is None: return ${copy.ctype}()`, `return ${copy.ctype}(1, _to${child.index}(value, scope))`);\n\t\toutput.push('if value.has_value > 1: raise LeanBridgeError(5, \"Invalid native HostNull flag\")', `return _from${child.index}(value.value, scope) if value.has_value else None`);\n",
+          "previous": "",
+          "start": 6348
+        },
+        {
+          "current": "\t\tinput.push(...model.taggedOptions\n\t\t\t? [`if type(value) is None_: return ${copy.ctype}()`, 'if type(value) is not Some: raise TypeError(\"Option requires None_() or Some(value)\")']\n\t\t\t: [`if value is None: return ${copy.ctype}()`, 'if type(value) is not Some: raise TypeError(\"Option requires None or Some(value)\")']\n\t\t\t, `return ${copy.ctype}(1, _to${child.index}(value.value, scope))`);\n\t\toutput.push('if value.has_value > 1: raise LeanBridgeError(5, \"Invalid native option flag\")'\n\t\t\t, `return Some(_from${child.index}(value.value, scope)) if value.has_value else ${model.taggedOptions ? \"None_()\" : \"None\"}`);\n",
+          "previous": "\t\tinput.push(`if value is None: return ${copy.ctype}()`, 'if type(value) is not Some: raise TypeError(\"Option requires None or Some(value)\")', `return ${copy.ctype}(1, _to${child.index}(value.value, scope))`);\n\t\toutput.push('if value.has_value > 1: raise LeanBridgeError(5, \"Invalid native option flag\")', `return Some(_from${child.index}(value.value, scope)) if value.has_value else None`);\n",
+          "start": 6805
+        }
+      ],
+      "parent": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+      "path": "src/backends/python/copied-conversions.mjs",
+      "previousSha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
+    },
+    {
+      "commit": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "currentSha256": "72c2897aa1eae3f3fba7885b1fd53d056723d9311afbb9b6d4aea162c4619eff",
+      "edits": [
+        {
+          "current": "const reserved = new Set(\"False None None_ True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate callable BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError LeanClosure Some Option Ok Err Result invoke dispatch handle token\".split(\" \"));\n",
+          "previous": "const reserved = new Set(\"False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate callable BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError LeanClosure Some Option Ok Err Result invoke dispatch handle token\".split(\" \"));\n",
+          "start": 167
+        },
+        {
+          "current": "\tconst hostNull = surface.copies.some(copy => copy.compound === \"host-null\");\n\tconst taggedOptions = hostNull && surface.copies.some(copy => copy.compound === \"option\");\n",
+          "previous": "",
+          "start": 2511
+        },
+        {
+          "current": "\t\tconst compoundType = field => copy.compound === \"host-null\" ? `${copy.fields[0].type[field]} | None`\n\t\t\t: copy.compound === \"option\" ? `Option[${copy.fields[0].type[field]}]`\n\t\t\t\t: `${copy.compound === \"result\" ? \"Result\" : \"tuple\"}[${copy.fields.map(child => child.type[field]).join(\", \")}]`;\n",
+          "previous": "\t\tconst compoundType = field => copy.compound === \"option\" ? `Option[${copy.fields[0].type[field]}]`\n\t\t\t: `${copy.compound === \"result\" ? \"Result\" : \"tuple\"}[${copy.fields.map(child => child.type[field]).join(\", \")}]`;\n",
+          "start": 4560
+        },
+        {
+          "current": "\t\tif(copy.compound === \"host-null\" && (copy.fields[0].type.scalarName === \"unit\"\n\t\t\t|| copy.fields[0].type.compound === \"host-null\"))\n\t\t\tfail(ir.declarations[0], \"Python HostNull payloads must retain a value distinct from None\");\n",
+          "previous": "",
+          "start": 6434
+        },
+        {
+          "current": "\treturn { ir, surface, packageDir, hostNull, taggedOptions\n\t\t, requiresTypeAliases: surface.copies.some(copy => copy.publicExpression || copy.inputTypeAlias) };\n",
+          "previous": "\treturn { ir, surface, packageDir, requiresTypeAliases: surface.copies.some(copy => copy.publicExpression || copy.inputTypeAlias) };\n",
+          "start": 7725
+        }
+      ],
+      "parent": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+      "path": "src/backends/python/copied-model.mjs",
+      "previousSha256": "4557b83311c0ece7cbcca6da0d9bd69fdd4e1544076975a265f838566dbe299b"
+    },
+    {
+      "commit": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "currentSha256": "c89f5b752008e404d8d08c3c1a821643d1d6020bd0f44ffbfe9b140ac9b4ac73",
+      "edits": [
+        {
+          "current": "from . import ${names(model).filter(name => [\"LeanBridgeError\", \"LeanClosure\", \"None_\", \"Some\", \"Ok\", \"Err\"].includes(name) || model.surface.copies.some(copy => copy.publicName === name || copy.variant && copy.cases.some(branch => branch.publicName === name))).join(\", \")}\n",
+          "previous": "from . import ${names(model).filter(name => [\"LeanBridgeError\", \"LeanClosure\", \"Some\", \"Ok\", \"Err\"].includes(name) || model.surface.copies.some(copy => copy.publicName === name || copy.variant && copy.cases.some(branch => branch.publicName === name))).join(\", \")}\n",
+          "start": 4634
+        },
+        {
+          "current": "\tfiles[\"README.md\"] += `\\n${model.hostNull ? \"At nullable payload sites, only the compiler-authenticated HostNull wrapper uses Python None; Unit remains None only at Unit-typed sites. \" : \"\"}Option[T] is ${model.taggedOptions ? \"None_()\" : \"None\"} or Some(value). ${model.taggedOptions ? \"Some(None) is a present HostNull.null, while None_() is Option.none. HostNull(Option T) uses None for HostNull.null and None_() for its Option.none payload. \" : \"Some(None) preserves a present Unit or absent inner Option; \"}nested options retain every layer. Result[T, E] is Ok(value) or Err(value), including when both payload types match. These generated wrappers are frozen dataclasses${model.taggedOptions ? \"; payload branches have a value field and None_ has none\" : \" with a value field\"}. Domain errors return Err, not exceptions. Binary products use exact two-element tuples and retain their nesting. Copies can contain these types, arrays and records; resources and callbacks cannot be hidden in them.\\n\\nSynchronous primitive host callbacks accept typed Python callables. Returned Lean closures are callable LeanClosure values: use a with block or close(), and invoke them on their creating thread. close() is idempotent and defers disposal during active reentry. Garbage collection is a fallback. Callback exceptions return as the original Python exception after native cleanup; later invocations in that call are suppressed. Callback values use the same checked copied-value conversions and share the call's copy budgets. Host callbacks are borrowed only for the exporting call. Async or retained host callbacks, callable containers, resources and other effects are not enabled by this adapter.\\n`;\n",
+          "previous": "\tfiles[\"README.md\"] += \"\\nOption[T] is None or Some(value). Some(None) preserves a present Unit or absent inner Option; nested options retain every layer. Result[T, E] is Ok(value) or Err(value), including when both payload types match. These generated wrappers are frozen dataclasses with a value field. Domain errors return Err, not exceptions. Binary products use exact two-element tuples and retain their nesting. Copies can contain these types, arrays and records; resources and callbacks cannot be hidden in them.\\n\\nSynchronous primitive host callbacks accept typed Python callables. Returned Lean closures are callable LeanClosure values: use a with block or close(), and invoke them on their creating thread. close() is idempotent and defers disposal during active reentry. Garbage collection is a fallback. Callback exceptions return as the original Python exception after native cleanup; later invocations in that call are suppressed. Callback values use the same checked primitive conversions and share the call's copy budgets. Host callbacks are borrowed only for the exporting call. Async or retained host callbacks, callable containers, resources and other effects are not enabled by this adapter.\\n\";\n",
+          "start": 8770
+        }
+      ],
+      "parent": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+      "path": "src/backends/python/copied-values.mjs",
+      "previousSha256": "8c0c6432d1bbccca1d6608757d56345ae5f50fa7746ee8e615c212cbf0799cc7"
+    },
+    {
+      "commit": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "currentSha256": "5f28806c74b5a573fde53105d69406d92bec844bd0cae8f0e612031e28a84e61",
+      "edits": [
+        {
+          "current": "\t\tif(copy.compound === \"host-null\")\n",
+          "previous": "\t\tif(copy.compound === \"option\")\n",
+          "start": 2227
+        },
+        {
+          "current": "\t\t\tinput = `result = scope.allocate(${copy.size})\n        unless same?(value, nil)\n          result[0, 1] = [1].pack(\"C\")\n          ${to(copy.fields[0], \"value\")}\n        end\n        result`;\n\t\t\toutput = `case value[0, 1].unpack1(\"C\")\n        when 0 then nil\n        when 1 then ${from(copy.fields[0])}\n        else raise RangeError, \"Invalid native HostNull flag\"\n        end`;\n\t\t} else if(copy.compound === \"option\")\n\t\t{\n\t\t\tinput = `raise TypeError, \"Option requires ${model.taggedOptions ? \"None.new or \" : \"nil or \"}Some.new(value)\" unless ${model.taggedOptions ? \"exact?(value, None)\" : \"same?(value, nil)\"} || exact?(value, Some)\n        present = exact?(value, Some)\n",
+          "previous": "\t\t\tinput = `raise TypeError, \"Option requires nil or Some(value)\" unless same?(value, nil) || exact?(value, Some)\n        present = !same?(value, nil)\n",
+          "start": 2267
+        },
+        {
+          "current": "        when 0 then ${model.taggedOptions ? \"None.new\" : \"nil\"}\n",
+          "previous": "        when 0 then nil\n",
+          "start": 3209
+        }
+      ],
+      "parent": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+      "path": "src/backends/ruby/copied-conversions.mjs",
+      "previousSha256": "01389e93915e1ba43a75d26573f6965e677d6ff6eb50e5c2cec8b7401c7ec390"
+    },
+    {
+      "commit": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "currentSha256": "f3fa0ffca8c61cd3258683bf3a43575b230de50a33752ce60b4992bdfdf1723e",
+      "edits": [
+        {
+          "current": "\tconst hostNull = surface.copies.some(copy => copy.compound === \"host-null\");\n\tconst taggedOptions = hostNull && surface.copies.some(copy => copy.compound === \"option\");\n",
+          "previous": "",
+          "start": 2100
+        },
+        {
+          "current": "\tconst compounds = [...surface.copies.some(copy => copy.compound === \"option\") ? [...taggedOptions ? [\"None\"] : [], \"Some\"] : []\n",
+          "previous": "\tconst compounds = [...surface.copies.some(copy => copy.compound === \"option\") ? [\"Some\"] : []\n",
+          "start": 2801
+        },
+        {
+          "current": "\t\tif(copy.compound === \"host-null\" && (copy.fields[0].type.scalarName === \"unit\"\n\t\t\t|| copy.fields[0].type.compound === \"host-null\"))\n\t\t\tfail(ir.declarations[0], \"Ruby HostNull payloads must retain a value distinct from nil\");\n",
+          "previous": "",
+          "start": 6209
+        },
+        {
+          "current": "\treturn { ir, surface, componentName, namespace: `LeanBridge::${componentName}`\n\t\t, requirePath: `lean_bridge/${surface.prefix}`, hostNull, taggedOptions };\n",
+          "previous": "\treturn { ir, surface, componentName, namespace: `LeanBridge::${componentName}`, requirePath: `lean_bridge/${surface.prefix}` };\n",
+          "start": 6871
+        }
+      ],
+      "parent": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+      "path": "src/backends/ruby/copied-model.mjs",
+      "previousSha256": "c89d89e8fd156589984115ecb46100fbfe24f3bea19738b08c05210bf4eccfb5"
+    },
+    {
+      "commit": "e38cacb01679d30bd0770daaabb66e4c565b2096",
+      "currentSha256": "25d981262960a5ade160e6ea32a71fe16200f1806f4f05a1992aaa92cccaf8b6",
+      "edits": [
+        {
+          "current": "${model.taggedOptions ? \"    None = ::Data.define\\n\" : \"\"}\\\n",
+          "previous": "",
+          "start": 3019
+        },
+        {
+          "current": "\tif(model.surface.copies.some(copy => copy.compound === \"option\")) files[\"README.md\"] += model.taggedOptions\n\t\t? \"\\nAt nullable payload sites, only the compiler-authenticated HostNull wrapper uses nil; Unit remains the generated UNIT object. Options use None.new or Some.new(value). Some.new(nil) is a present HostNull.null, while None.new is Option.none. HostNull(Option T) uses nil for HostNull.null and None.new for its Option.none payload.\\n\"\n\t\t: \"\\nOptions use nil or Some.new(value). Some.new(nil) is an outer Some containing an inner None; Some.new(UNIT) retains presence for Unit. Nil is admitted only at Option positions.\\n\";\n",
+          "previous": "\tif(model.surface.copies.some(copy => copy.compound === \"option\")) files[\"README.md\"] += \"\\nOptions use nil or Some.new(value). Some.new(nil) is an outer Some containing an inner None; Some.new(UNIT) retains presence for Unit. Nil is admitted only at Option positions.\\n\";\n",
+          "start": 10926
+        }
+      ],
+      "parent": "1de60dcd3dd0858b96d13f4476a405cf60fefcfd",
+      "path": "src/backends/ruby/copied-values.mjs",
+      "previousSha256": "c4620a93c794bb8f11d9bddf67b6fe00a0705dd14cc0cbf1f334b6b2628d1168"
+    },
+    {
+      "commit": "9126e948b065a055285f01b4acb88b8159a40419",
+      "currentSha256": "e6a3a4fe8b523650d411c5ab0484cde48ee58451fe9bbc1c0b526ae8bd9548da",
+      "edits": [
+        {
+          "current": "      - name: Install Python for scripting HostNull acceptance\n        if: matrix.configuration == '5.38.2-threaded'\n        uses: actions/setup-python@v6\n        with:\n          python-version: '3.11.16'\n      - name: Install Ruby for scripting HostNull acceptance\n        if: matrix.configuration == '5.38.2-threaded'\n        uses: ruby/setup-ruby@v1\n        with:\n          ruby-version: '3.3.12'\n",
+          "previous": "",
+          "start": 9348
+        },
+        {
+          "current": "      - name: Qualify HostNull in prepared scripting packages\n        if: matrix.configuration == '5.38.2-threaded'\n        id: host_null_scripting\n        continue-on-error: true\n        timeout-minutes: 100\n        env:\n          HOST_NULL_PERL_CONFIGURATION: ${{ matrix.configuration }}\n        run: |\n          export LEAN_BRIDGE_CORPUS_PERL=\"$PWD/.toolchains/perl/$HOST_NULL_PERL_CONFIGURATION/bin/perl\"\n          bash scripts/run-host-null-scripting-ci.sh\n      - name: Preserve HostNull scripting acceptance\n        if: always() && matrix.configuration == '5.38.2-threaded'\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-scripting-${{ github.sha }}\n          path: build/host-null-scripting-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "previous": "",
+          "start": 11084
+        },
+        {
+          "current": "      - name: Enforce scripting HostNull support\n        if: always() && matrix.configuration == '5.38.2-threaded' && steps.host_null_scripting.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 23581
+        }
+      ],
+      "parent": "eb0834607b2cb90abce537b9880f3e447a4185c9",
+      "path": ".github/workflows/perl-consumer.yml",
+      "previousSha256": "f4668a70ff2184c55ad4e5205ddabc33306caf57e4229a226c8a8dcc2da84d5a"
+    },
+    {
+      "commit": "9126e948b065a055285f01b4acb88b8159a40419",
+      "currentSha256": "d12c57e9a6756769adc652cfe5d158f88f4e57e5e17357fc5f2c95d06b47dc50",
+      "edits": [
+        {
+          "current": "\t\t, \"scripting-host-null-contract\"\n\t\t, \"scripting-host-null-ci\"\n\t\t, \"scripting-host-null\"\n",
+          "previous": "",
+          "start": 2447
+        }
+      ],
+      "parent": "eb0834607b2cb90abce537b9880f3e447a4185c9",
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "90b6874003ac3cae73b9111f276ad9f3d3557e79e058909eb3d7500243fff429"
+    },
+    {
+      "commit": "9126e948b065a055285f01b4acb88b8159a40419",
+      "currentSha256": "00b339234fb891c5ba9dca7cdc212ae0112bb69a5daf2a023acb774baf4274a4",
+      "edits": [
+        {
+          "current": "\t\t, \"scripting-host-null-contract\"\n\t\t, \"scripting-host-null-ci\"\n\t\t, \"scripting-host-null\"\n",
+          "previous": "",
+          "start": 3710
+        }
+      ],
+      "parent": "eb0834607b2cb90abce537b9880f3e447a4185c9",
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "960df974aeaa6be4af8254e3fe921fdc76f5fed367cecaa323695ef47f2ed529"
+    }
+  ]
+}

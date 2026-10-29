@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeHostNullScriptingIntegrationSource, beforeHostNullScriptingSource, hostNullScriptingNormalizationPaths } from "./host-null-scripting-source-history.mjs";
 import { beforeHostNullDownstreamIntegrationSource, beforeHostNullDownstreamSource, hostNullDownstreamNormalizationPaths } from "./host-null-downstream-source-history.mjs";
 import { beforeHostNullManagedIntegrationSource, beforeHostNullManagedSource, hostNullManagedNormalizationPaths } from "./host-null-managed-source-history.mjs";
 import { beforeHostNullPhpIntegrationSource, beforeHostNullPhpSource, hostNullPhpNormalizationPaths } from "./host-null-php-source-history.mjs";
@@ -2362,7 +2363,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostNullDownstreamNormalizationPaths
+	...hostNullScriptingNormalizationPaths
+	, ...hostNullDownstreamNormalizationPaths
 	, ...hostNullManagedNormalizationPaths
 	, ...hostNullPhpNormalizationPaths
 	, ...hostNullTypeSurfaceLineageNormalizationPaths
@@ -3463,7 +3465,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeHostNullDownstreamIntegrationSource(path, text, expected);
+	let stage = beforeHostNullScriptingIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullDownstreamIntegrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
@@ -3480,6 +3486,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		return stage;
 	text = stage;
 	stage = beforeHostNullPartitionGapIntegrationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullScriptingSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
