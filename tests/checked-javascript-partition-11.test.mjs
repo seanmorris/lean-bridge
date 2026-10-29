@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-entrypoints-source-history-tests.mjs";
 import "./helpers/dependent-signature-focused-archive-source-history-tests.mjs";
 import "./helpers/optional-parameter-route-binder-repair-source-history-tests.mjs";

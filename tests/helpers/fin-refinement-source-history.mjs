@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeHostNullCompleteEntrypointsSource, hostNullCompleteEntrypointsNormalizationPaths } from "./host-null-complete-entrypoints-source-history.mjs";
 import { beforeDirectProofErasureCompleteEntrypointsSource, directProofErasureCompleteEntrypointsNormalizationPaths } from "./direct-proof-erasure-complete-entrypoints-source-history.mjs";
 import { beforeDependentSignatureFocusedArchiveSource, dependentSignatureFocusedArchiveNormalizationPaths } from "./dependent-signature-focused-archive-source-history.mjs";
 import { beforeFocusedAcceptanceSparseCheckoutSource, focusedAcceptanceSparseCheckoutNormalizationPaths } from "./focused-acceptance-sparse-checkout-source-history.mjs";
@@ -2394,7 +2395,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasureCompleteEntrypointsNormalizationPaths
+	...hostNullCompleteEntrypointsNormalizationPaths
+	, ...directProofErasureCompleteEntrypointsNormalizationPaths
 	, ...dependentSignatureFocusedArchiveNormalizationPaths
 	, ...focusedAcceptanceSparseCheckoutNormalizationPaths
 	, ...completeAcceptanceBudgetNormalizationPaths
@@ -3527,7 +3529,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasureCompleteEntrypointsSource(
+	let stage = beforeHostNullCompleteEntrypointsSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasureCompleteEntrypointsSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

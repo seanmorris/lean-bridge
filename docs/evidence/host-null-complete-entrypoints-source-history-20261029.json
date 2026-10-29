@@ -1,0 +1,127 @@
+{
+  "auditEntrypoints": 2,
+  "cells": 170,
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-complete-entrypoints-source-history.mjs",
+      "sha256": "eb33a96fcdcf3303fd239d975713314b6367a27426d5838d3a2eb4baadb83d96"
+    },
+    {
+      "path": "tests/helpers/host-null-complete-entrypoints-source-history-tests.mjs",
+      "sha256": "9ea55ecc635de04209207748d47748ba2188027574d01bd56b78407a40931520"
+    },
+    {
+      "path": "tests/helpers/host-null-complete-entrypoints-source-history.mjs",
+      "sha256": "3d540a20e012e020f1e7259ed53d9438a86a672a7da4b2e577cf0f0e63af80b2"
+    }
+  ],
+  "hostedLanes": 7,
+  "implementationAdditions": [
+    {
+      "path": "tests/host-null-complete-hosted-evidence.test.mjs",
+      "sha256": "66081b67d5324a47c4fa436622b6d02e33143fcd1c33c78a3a7d0bdfd82094f3"
+    },
+    {
+      "path": "tests/host-null-complete-promotion.test.mjs",
+      "sha256": "7ae695574ac764f31f3746327d9e058cfc8e9499501db48ac2b3d62c235f7204"
+    }
+  ],
+  "implementationCommit": "2ae2d8b78facab66713faa26940d2612982b97f9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4e798da97ba5a670d24028407811d3b73e71c20ad5bbae37e0badb1c533ef141",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-complete-entrypoints-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "59479cc5d8c93064d6899672729d1c3ef1c2c114b8a8174ab64b1d4b1ae0d778"
+    },
+    {
+      "currentSha256": "1b9c10feedc3be55948367ade9758f736a904f7995ec1aab8379adae43d9ac7d",
+      "edits": [
+        {
+          "current": "import { beforeHostNullCompleteEntrypointsSource, hostNullCompleteEntrypointsNormalizationPaths } from \"./host-null-complete-entrypoints-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullCompleteEntrypointsNormalizationPaths\n\t, ...directProofErasureCompleteEntrypointsNormalizationPaths\n",
+          "previous": "\t...directProofErasureCompleteEntrypointsNormalizationPaths\n",
+          "start": 221520
+        },
+        {
+          "current": "\tlet stage = beforeHostNullCompleteEntrypointsSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureCompleteEntrypointsSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureCompleteEntrypointsSource(\n",
+          "start": 277399
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5ad37899f69e98126dc7228405509c70a6939fca02281b5a4ffa73f314e07252"
+    }
+  ],
+  "milestone": "host-null-complete-entrypoints-source-v1",
+  "predecessorCommit": "eba52f04ab0a6106b91e98b9577ed148195a9393",
+  "schemaVersion": 1,
+  "scope": "Add workflow-owned HostNull archive replay and 170-cell publication audits. Export one canonical promotion source list shared by production and tests, remove the duplicated test list, and make no support claim before hosted evidence exists.",
+  "updates": [
+    {
+      "currentSha256": "60cff76de3a73d4fad0c858205f2b9c814d8c8dc5b19b8a381cd83137ebb4478",
+      "edits": [
+        {
+          "current": "\t, hostNullCompletePromotionReferencePaths\n",
+          "previous": "",
+          "start": 597
+        },
+        {
+          "current": "",
+          "previous": "import {\n\thostNullCompleteHostedEvidence\n} from \"./host-null-complete-hosted-evidence.mjs\";\n",
+          "start": 712
+        },
+        {
+          "current": "",
+          "previous": "const referencePaths = [\n\t\".github/workflows/host-null-complete.yml\"\n\t, `${hostNullCompleteHostedEvidence}/index.json`\n\t, \"scripts/archive-host-null-complete-evidence.mjs\"\n\t, \"scripts/download-host-null-complete-inputs.mjs\"\n\t, \"scripts/generate-reference-docs.mjs\"\n\t, \"scripts/generate-type-docs.mjs\"\n\t, \"scripts/promote-host-null-complete.mjs\"\n\t, \"tests/helpers/host-null-complete-hosted-archive.mjs\"\n\t, \"tests/helpers/host-null-complete-hosted-evidence.mjs\"\n\t, \"tests/helpers/host-null-complete-ci-tests.mjs\"\n\t, \"tests/helpers/host-null-complete-documentation.mjs\"\n\t, \"tests/helpers/host-null-complete-documentation-tests.mjs\"\n\t, \"tests/helpers/host-null-complete-perl-evidence-refresh.mjs\"\n\t, \"tests/helpers/host-null-complete-perl-evidence-refresh-tests.mjs\"\n\t, \"tests/helpers/host-null-complete-promotion.mjs\"\n\t, \"tests/helpers/host-null-complete-promotion-tests.mjs\"\n\t, \"tests/helpers/host-null-complete-promotion-transaction-tests.mjs\"\n\t, \"tests/helpers/promotion-file-transaction.mjs\"\n\t, \"tests/helpers/type-surface-promotion-io.mjs\"\n];\n",
+          "start": 1147
+        },
+        {
+          "current": "\t, files: Object.freeze(hostNullCompletePromotionReferencePaths.map(\n\t\t(path, index) => ({\n\t\t\tpath, sha256: ((index + 1) % 16).toString(16).repeat(64)})\n\t))\n",
+          "previous": "\t, files: Object.freeze(referencePaths.map((path, index) => ({\n\t\tpath, sha256: ((index + 1) % 16).toString(16).repeat(64)\n\t})))\n",
+          "start": 1500
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-promotion-tests.mjs",
+      "previousSha256": "ddd4e2cdf03d6178f05ae9b8f24ee89a7e0755b8480700ed523ce1161ab662f8"
+    },
+    {
+      "currentSha256": "f4cf14c0de89c8bd63580884d383355abfbd31678ca8460e2e2409d2d67f7625",
+      "edits": [
+        {
+          "current": "export const hostNullCompletePromotionReferencePaths = Object.freeze([\n",
+          "previous": "const referencePaths = Object.freeze([\n",
+          "start": 2802
+        },
+        {
+          "current": "\t, \"tests/host-null-complete-hosted-evidence.test.mjs\"\n\t, \"tests/host-null-complete-promotion.test.mjs\"\n",
+          "previous": "",
+          "start": 3791
+        },
+        {
+          "current": "\t\t, files: await Promise.all(hostNullCompletePromotionReferencePaths\n\t\t\t.map(async path => ({\n\t\t\t\tpath, sha256: sha256(await readFile(path))}))\n\t\t)\n",
+          "previous": "\t\t, files: await Promise.all(referencePaths.map(async path => ({\n\t\t\tpath, sha256: sha256(await readFile(path))\n\t\t})))\n",
+          "start": 4862
+        },
+        {
+          "current": "\tassert.deepEqual(reference.files.map(item => item.path)\n\t\t, hostNullCompletePromotionReferencePaths);\n",
+          "previous": "\tassert.deepEqual(reference.files.map(item => item.path), referencePaths);\n",
+          "start": 6857
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-promotion.mjs",
+      "previousSha256": "5785194dadb1a10a8fce0281e978933c84cb9f77b089036d918d4229e5812cc6"
+    }
+  ]
+}
