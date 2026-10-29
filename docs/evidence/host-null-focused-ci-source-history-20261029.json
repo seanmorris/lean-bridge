@@ -1,0 +1,259 @@
+{
+  "calledWorkflowCount": 4,
+  "cellCount": 170,
+  "currentSourceDigests": [],
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-focused-ci-source-history.mjs",
+      "sha256": "29612bb468e266b70a3b1a24d1ea0ccfd095ddf19ff1b20413c1f3ed9ef620a3"
+    },
+    {
+      "path": "tests/helpers/host-null-focused-ci-source-history-tests.mjs",
+      "sha256": "26b64d378f8862e7ec40f7de1f851347a401e9034e70deef2a986f72e69e63ad"
+    },
+    {
+      "path": "tests/helpers/host-null-focused-ci-source-history.mjs",
+      "sha256": "d172ee254eb0ec0300bf6da9a24bf20fc3e825f2929a486c6e92aa8ec82140d9"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "scripts/reconcile-host-null-complete-matrix.mjs",
+      "sha256": "d85a500ae891a1ff2a62b3a8767c5aa97d2b84389b36399109f1a50dfb252dfd"
+    },
+    {
+      "path": "tests/helpers/host-null-complete-matrix-receipt-tests.mjs",
+      "sha256": "3d2a541f55a695d37d1680f3aca77341761c368d8410475d0007ebf1a56a038e"
+    },
+    {
+      "path": "tests/helpers/host-null-complete-matrix-receipt.mjs",
+      "sha256": "cd6465d0d12c5d72f6e8a8dc5c8eb5217d425d3e42b1dd70a38c82608495edc3"
+    }
+  ],
+  "implementationCommit": "65336239160d2c5a1836fece63b513c4022d925c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "1684f624a5171702b35e8878f8f1d193b6e3b8f1c12484d8c1159d176dcbcbda",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-focused-ci-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 255
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "9a55537619b7d04221b64ede64d802a1f6db1f14dc75175137affd72fb7a1ed0"
+    },
+    {
+      "currentSha256": "d1b976bcd313aae657a97d7e8af58754282b84b3bcaf29e7dffefcb71c940885",
+      "edits": [
+        {
+          "current": "import { beforeHostNullFocusedCiSource, hostNullFocusedCiNormalizationPaths } from \"./host-null-focused-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullFocusedCiNormalizationPaths\n\t, ...coreCurrentSourcePinRepairNormalizationPaths\n",
+          "previous": "\t...coreCurrentSourcePinRepairNormalizationPaths\n",
+          "start": 218308
+        },
+        {
+          "current": "\tlet stage = beforeHostNullFocusedCiSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreCurrentSourcePinRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreCurrentSourcePinRepairSource(path, text, expected);\n",
+          "start": 273132
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d895e236cda52d48da29296e5fc01bf59298d2863e9264687642fc2d8bd82ffb"
+    }
+  ],
+  "milestone": "host-null-focused-ci-source-v1",
+  "positionCount": 5,
+  "predecessorCommit": "8edce1b910b314c8c37712aac4d8e9b63b04be3f",
+  "producerArtifactCount": 7,
+  "profileCount": 17,
+  "receiptJobCount": 1,
+  "refreshedPins": 0,
+  "routeCount": 2,
+  "schemaVersion": 1,
+  "scope": "Expose the complete explicit HostNull matrix as a bounded focused producer without changing the low-cost recurring audit. Reuse four established workflow groups to emit seven independently checked artifacts across seventeen profiles, two author routes and five runtime positions. Reconcile all 170 exact package-receipt-bound cells into one same-run fail-closed receipt, preserve partial diagnostics without accepting them, and make no support promotion before hosted evidence is retained and independently replayed.",
+  "updates": [
+    {
+      "currentSha256": "be33452abe3094d7446d1dc7d15a24aa93d7d288ec239fda5a93c83234db826e",
+      "edits": [
+        {
+          "current": "      host_null:\n        description: Run complete explicit HostNull package acceptance.\n        required: false\n        type: boolean\n        default: false\n",
+          "previous": "",
+          "start": 422
+        },
+        {
+          "current": "      - name: Qualify HostNull in prepared .NET packages\n        id: host_null\n        if: inputs.host_null\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-host-null-managed-ci.sh dotnet\n      - name: Preserve HostNull .NET acceptance\n        if: always() && inputs.host_null\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-managed-dotnet-${{ github.sha }}\n          path: build/host-null-managed-ci/dotnet/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce HostNull .NET support\n        if: always() && inputs.host_null && steps.host_null.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 4572
+        },
+        {
+          "current": "      - name: Qualify HostNull in prepared JVM packages\n        id: host_null\n        if: inputs.host_null\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-host-null-managed-ci.sh jvm\n      - name: Preserve HostNull JVM acceptance\n        if: always() && inputs.host_null\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-managed-jvm-${{ github.sha }}\n          path: build/host-null-managed-ci/jvm/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce HostNull JVM support\n        if: always() && inputs.host_null && steps.host_null.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 9535
+        },
+        {
+          "current": "      - name: Install the pinned Rust toolchain for systems HostNull acceptance\n        if: inputs.host_null\n        timeout-minutes: 20\n        run: bash scripts/bootstrap-rust-ci.sh\n",
+          "previous": "",
+          "start": 13581
+        },
+        {
+          "current": "      - name: Qualify HostNull in prepared systems packages\n        id: host_null\n        if: inputs.host_null\n        continue-on-error: true\n        timeout-minutes: 150\n        env:\n          LEAN_BRIDGE_WASMTIME_C_API: ${{ github.workspace }}/build/wasmtime-c-api\n          LEAN_BRIDGE_WASM_TOOLS: ${{ github.workspace }}/.toolchains/wasm-tools/bin/wasm-tools\n        run: bash scripts/run-host-null-systems-ci.sh\n      - name: Preserve systems HostNull acceptance\n        if: always() && inputs.host_null\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-systems-${{ github.sha }}\n          path: build/host-null-systems-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce systems HostNull support\n        if: always() && inputs.host_null && steps.host_null.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 17846
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-managed-wit.yml",
+      "previousSha256": "b78553b6c412ff7b078933e3328472f49be9d02e5c0399bf7cb95e8cafcf69e1"
+    },
+    {
+      "currentSha256": "baf783fcdb22264c3da530a86a2813a1cdb27f29dbc4f9d733e85c264a11c616",
+      "edits": [
+        {
+          "current": "      host_null:\n        description: Run complete explicit HostNull package acceptance.\n        required: false\n        type: boolean\n        default: false\n",
+          "previous": "",
+          "start": 408
+        },
+        {
+          "current": "      - name: Install Python for scripting HostNull acceptance\n        if: inputs.host_null\n        uses: actions/setup-python@v6\n        with:\n          python-version: '3.11.16'\n      - name: Install Ruby for scripting HostNull acceptance\n        if: inputs.host_null\n        uses: ruby/setup-ruby@v1\n        with:\n          ruby-version: '3.3.12'\n",
+          "previous": "",
+          "start": 8151
+        },
+        {
+          "current": "      - name: Qualify HostNull in prepared scripting packages\n        id: host_null\n        if: inputs.host_null\n        continue-on-error: true\n        timeout-minutes: 135\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          export LEAN_BRIDGE_CORPUS_PERL=\"$PWD/.toolchains/perl/5.38.2-threaded/bin/perl\"\n          test -x \"$LEAN_BRIDGE_CORPUS_PERL\"\n          bash scripts/run-host-null-scripting-ci.sh\n      - name: Preserve HostNull scripting acceptance\n        if: always() && inputs.host_null\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-scripting-${{ github.sha }}\n          path: build/host-null-scripting-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce scripting HostNull support\n        if: always() && inputs.host_null && steps.host_null.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 12333
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-native-perl.yml",
+      "previousSha256": "4c975600a95e50e4007677089b290dde8357a7d78714ea99218c37b95a592cf5"
+    },
+    {
+      "currentSha256": "0c3e534d3c8e7092fbe9fe0ef9aa78b6636e2d4fd145a956b69ba2c873d410cb",
+      "edits": [
+        {
+          "current": "      host_null:\n        description: Run complete explicit HostNull package acceptance.\n        required: false\n        type: boolean\n        default: false\n",
+          "previous": "",
+          "start": 409
+        },
+        {
+          "current": "      - name: Require explicit HostNull in Node, TypeScript and three browsers\n        id: host_null\n        if: inputs.host_null && matrix.route == 'reviewed'\n        continue-on-error: true\n        timeout-minutes: 120\n        env:\n          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          node --test --test-concurrency=1 tests/host-null-npm-installed.test.mjs\n          test -s build/host-null/npm/report.json\n      - name: Preserve explicit HostNull npm and browser observations\n        if: always() && inputs.host_null && matrix.route == 'reviewed'\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-node-browser-${{ github.sha }}\n          path: build/host-null/npm/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce explicit HostNull npm and browser acceptance\n        if: always() && inputs.host_null && matrix.route == 'reviewed' && steps.host_null.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 7644
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-npm-browser.yml",
+      "previousSha256": "8cdaf8c82ffd19a5698014c7de4879adb7fc00cc70ce8686762c699a182ff756"
+    },
+    {
+      "currentSha256": "9cedb71dcfb24683b62a82812512bfa4bbf9ee6926f7666c2e9e2d57025b924c",
+      "edits": [
+        {
+          "current": "    inputs:\n      suite:\n        description: Bounded explicit HostNull suite to execute\n        required: true\n        default: audit\n        type: choice\n        options:\n          - audit\n          - produce\n",
+          "previous": "",
+          "start": 1371
+        },
+        {
+          "current": "    if: inputs.suite != 'produce'\n",
+          "previous": "",
+          "start": 1831
+        },
+        {
+          "current": "\n  npm-browser:\n    name: Node and browser producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/generic-subtype-npm-browser.yml\n    with:\n      host_null: true\n\n  native-perl:\n    name: Scripting producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/generic-subtype-native-perl.yml\n    with:\n      host_null: true\n\n  managed-wit:\n    name: Managed and systems producers\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/generic-subtype-managed-wit.yml\n    with:\n      host_null: true\n\n  php:\n    name: PHP and PHP-Wasm producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/nominal-subtype-php-wasm.yml\n    with:\n      host_null: true\n\n  receipt:\n    name: Reconcile the exact same-run receipt\n    if: always() && inputs.suite == 'produce'\n    needs:\n      - npm-browser\n      - native-perl\n      - managed-wit\n      - php\n    runs-on: ubuntu-24.04\n    timeout-minutes: 30\n    steps:\n      - name: Check out the exact producer revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: \"22\"\n      - name: Download every same-run HostNull artifact\n        id: download\n        continue-on-error: true\n        uses: actions/download-artifact@v5\n        with:\n          pattern: host-null-*-${{ github.sha }}\n          path: build/host-null-complete-matrix-input\n      - name: Reconcile all seventeen profiles, both author routes and five positions\n        id: reconciliation\n        if: always()\n        continue-on-error: true\n        run: |\n          node scripts/reconcile-host-null-complete-matrix.mjs \\\n            --directory build/host-null-complete-matrix-input \\\n            --output build/host-null-complete-matrix/receipt.json \\\n            --producer \"${{ github.sha }}\" \\\n            --repository \"${{ github.repository }}\" \\\n            --workflow \".github/workflows/host-null-complete.yml\" \\\n            --run-id \"${{ github.run_id }}\" \\\n            --run-attempt \"${{ github.run_attempt }}\"\n      - name: Preserve the complete HostNull receipt\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-complete-matrix-${{ github.sha }}\n          path: build/host-null-complete-matrix/receipt.json\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce every producer and exact receipt reconciliation\n        if: >-\n          always() &&\n          (needs.npm-browser.result != 'success' ||\n           needs.native-perl.result != 'success' ||\n           needs.managed-wit.result != 'success' ||\n           needs.php.result != 'success' ||\n           steps.download.outcome != 'success' ||\n           steps.reconciliation.outcome != 'success')\n        run: exit 1\n",
+          "previous": "",
+          "start": 3220
+        }
+      ],
+      "path": ".github/workflows/host-null-complete.yml",
+      "previousSha256": "ba636d4f4ad45567b92f1c28159e2247a953a38378460cf752a7a46c32952f46"
+    },
+    {
+      "currentSha256": "b0688e2c6c89252c70a53ef5a7f92f68628c39cbf37e9b693e75ad55a84ed19f",
+      "edits": [
+        {
+          "current": "      host_null:\n        description: Run complete explicit HostNull package acceptance.\n        required: false\n        type: boolean\n        default: false\n",
+          "previous": "",
+          "start": 411
+        },
+        {
+          "current": "      - name: Qualify HostNull in native PHP and PHP-Wasm packages\n        id: host_null\n        if: inputs.host_null\n        continue-on-error: true\n        timeout-minutes: 150\n        env:\n          LEAN_BRIDGE_PHP: /usr/bin/php\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\"\n          test -d \"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\"\n          LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-native \\\n          LEAN_BRIDGE_PHP_HOST_NULL_TEST=1 \\\n            node --test --test-concurrency=1 \\\n              tests/php-host-null.test.mjs tests/php-host-null-contract.test.mjs\n          node scripts/check-host-null-php-reports.mjs \\\n            --profile php-native --report build/host-null/php-native.json \\\n            --packages build/host-null/packages/php-native\n          LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-wasm \\\n          LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 \\\n            node --test --test-concurrency=1 \\\n              tests/php-wasm-host-null.test.mjs tests/php-host-null-contract.test.mjs\n          node scripts/check-host-null-php-reports.mjs \\\n            --profile php-wasm --report build/host-null/php-wasm.json \\\n            --packages build/host-null/packages/php-wasm\n      - name: Preserve native PHP HostNull evidence\n        if: always() && inputs.host_null\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-php-native-${{ github.sha }}\n          path: |\n            build/host-null/php-native.json\n            build/host-null/packages/php-native\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Preserve PHP-Wasm HostNull evidence\n        if: always() && inputs.host_null\n        uses: actions/upload-artifact@v7\n        with:\n          name: host-null-php-wasm-${{ github.sha }}\n          path: |\n            build/host-null/php-wasm.json\n            build/host-null/packages/php-wasm\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce HostNull PHP support\n        if: always() && inputs.host_null && steps.host_null.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 7961
+        }
+      ],
+      "path": ".github/workflows/nominal-subtype-php-wasm.yml",
+      "previousSha256": "e72d0c9394d36808a92948a8090d0c7bfb5ce11c3ea3e531ff83892b3fa07149"
+    },
+    {
+      "currentSha256": "9a55537619b7d04221b64ede64d802a1f6db1f14dc75175137affd72fb7a1ed0",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-complete-matrix-receipt-tests.mjs\";\n",
+          "previous": "",
+          "start": 1779
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "f2dae1061cb3dfc16d6c6f1155872edcf60a7fdef17f452233498e1f1fea9af7"
+    },
+    {
+      "currentSha256": "22854a90a4fb1597d834bcc5a51d8b436d76410888c1a236f0895e18f7e9e4c8",
+      "edits": [
+        {
+          "current": "\tassert.equal(workflow.match(/^ {8}continue-on-error: true$/gmu)?.length, 3);\n",
+          "previous": "\tassert.equal(workflow.match(/^ {8}continue-on-error: true$/gmu)?.length, 2);\n",
+          "start": 937
+        },
+        {
+          "current": "\tassert.match(workflow\n\t\t, /id: host_null\\n {8}if: inputs\\.host_null && matrix\\.route == 'reviewed'\\n {8}continue-on-error: true/u);\n",
+          "previous": "",
+          "start": 1323
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-npm-browser-ci-tests.mjs",
+      "previousSha256": "1c6dc00d51436e86328445656229f48644eb3823df98fe61dd6d7ec2326a9d48"
+    },
+    {
+      "currentSha256": "a71c199e4052a47e3c119954ff7c908646eaad87e9b5567d4bab166cf46fcaee",
+      "edits": [
+        {
+          "current": "const focusedProducers = Object.freeze([{\n\tfile: \".github/workflows/generic-subtype-npm-browser.yml\"\n\t, records: [[\"tests/host-null-npm-installed.test.mjs\"\n\t\t, \"host-null-node-browser\", \"build/host-null/npm/\"]]\n}\n, {\n\tfile: \".github/workflows/generic-subtype-native-perl.yml\"\n\t, records: [[\"run-host-null-scripting-ci.sh\"\n\t\t, \"host-null-scripting\", \"build/host-null-scripting-ci/\"]]\n}\n, {\n\tfile: \".github/workflows/generic-subtype-managed-wit.yml\"\n\t, records: [\n\t\t[\"run-host-null-managed-ci.sh dotnet\", \"host-null-managed-dotnet\"\n\t\t\t, \"build/host-null-managed-ci/dotnet/\"]\n\t\t, [\"run-host-null-managed-ci.sh jvm\", \"host-null-managed-jvm\"\n\t\t\t, \"build/host-null-managed-ci/jvm/\"]\n\t\t, [\"run-host-null-systems-ci.sh\", \"host-null-systems\"\n\t\t\t, \"build/host-null-systems-ci/\"]\n\t]\n}\n, {\n\tfile: \".github/workflows/nominal-subtype-php-wasm.yml\"\n\t, records: [\n\t\t[\"tests/php-host-null.test.mjs\", \"host-null-php-native\"\n\t\t\t, \"build/host-null/packages/php-native\"]\n\t\t, [\"tests/php-wasm-host-null.test.mjs\", \"host-null-php-wasm\"\n\t\t\t, \"build/host-null/packages/php-wasm\"]\n\t]\n}\n]);\n\nconst assertFocusedProducer = (source, specification) => {\n\tassert.match(source\n\t\t, /^on:\\n {2}workflow_call:\\n {4}inputs:[\\s\\S]*?^ {6}host_null:/mu);\n\tassert.equal(source.match(/^ {8}id: host_null$/gmu)?.length\n\t\t, specification.file.endsWith(\"managed-wit.yml\") ? 3 : 1);\n\tassert.equal(source.match(/steps\\.host_null\\.outcome != 'success'/gu)?.length\n\t\t, specification.file.endsWith(\"managed-wit.yml\") ? 3 : 1);\n\tfor(const [command, artifact, path] of specification.records)\n\t{\n\t\tassert.equal(source.split(command).length - 1, 1, command);\n\t\tassert.equal(source.split(`name: ${artifact}-\\${{ github.sha }}`).length - 1\n\t\t\t, 1, artifact);\n\t\tassert.ok(source.includes(path), path);\n\t}\n};\n",
+          "previous": "",
+          "start": 867
+        },
+        {
+          "current": "\t\t, [\"push\", \"pull_request\", \"workflow_dispatch\", \"schedule\", \"audit\"\n\t\t\t, \"npm-browser\", \"native-perl\", \"managed-wit\", \"php\", \"receipt\"]);\n",
+          "previous": "\t\t, [\"push\", \"pull_request\", \"workflow_dispatch\", \"schedule\", \"audit\"]);\n",
+          "start": 2829
+        },
+        {
+          "current": "\tassert.match(source, /options:\\n {10}- audit\\n {10}- produce/u);\n",
+          "previous": "",
+          "start": 3189
+        },
+        {
+          "current": "\tconst audit = source.slice(source.indexOf(\"  audit:\\n\")\n\t\t, source.indexOf(\"  npm-browser:\\n\"));\n\tassert.match(audit, /^ {4}if: inputs\\.suite != 'produce'$/mu);\n\tassert.match(audit, /if: always\\(\\)\\n {8}uses: actions\\/upload-artifact@v7/u);\n\tassert.match(audit, /if-no-files-found: error/u);\n\tassert.doesNotMatch(audit, /continue-on-error|\\|\\| true/u);\n\tfor(const [job, workflow] of [\n\t\t[\"npm-browser\", \"generic-subtype-npm-browser\"]\n\t\t, [\"native-perl\", \"generic-subtype-native-perl\"]\n\t\t, [\"managed-wit\", \"generic-subtype-managed-wit\"]\n\t\t, [\"php\", \"nominal-subtype-php-wasm\"]\n\t]) {\n\t\tconst start = source.indexOf(`  ${job}:\\n`);\n\t\tassert.notEqual(start, -1, job);\n\t\tconst ends = keys.map(key => source.indexOf(`  ${key}:\\n`, start + 3))\n\t\t\t.filter(index => index > start);\n\t\tconst body = source.slice(start\n\t\t\t, ends.length === 0 ? undefined : Math.min(...ends));\n\t\tassert.match(body, /^ {4}if: inputs\\.suite == 'produce'$/mu);\n\t\tassert.ok(body.includes(`uses: ./.github/workflows/${workflow}.yml`));\n\t\tassert.ok(body.includes(\"host_null: true\"));\n\t}\n\tconst receipt = source.slice(source.indexOf(\"  receipt:\\n\"));\n\tassert.match(receipt\n\t\t, /^ {4}if: always\\(\\) && inputs\\.suite == 'produce'$/mu);\n\tassert.match(receipt, /pattern: host-null-\\*-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tassert.ok(receipt.includes(\n\t\t\"node scripts/reconcile-host-null-complete-matrix.mjs\"));\n\tassert.ok(receipt.includes(\n\t\t'--workflow \".github/workflows/host-null-complete.yml\"'));\n\tassert.match(receipt\n\t\t, /name: host-null-complete-matrix-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tassert.equal(receipt.match(/^ {8}continue-on-error: true$/gmu)?.length, 2);\n\tfor(const job of [\"npm-browser\", \"native-perl\", \"managed-wit\", \"php\"])\n\t\tassert.ok(receipt.includes(`needs.${job}.result != 'success'`));\n\tassert.ok(receipt.includes(\"steps.download.outcome != 'success'\"));\n\tassert.ok(receipt.includes(\"steps.reconciliation.outcome != 'success'\"));\n",
+          "previous": "\tassert.match(source, /if: always\\(\\)\\n {8}uses: actions\\/upload-artifact@v7/u);\n\tassert.match(source, /if-no-files-found: error/u);\n\tassert.doesNotMatch(source, /continue-on-error|\\|\\| true/u);\n",
+          "start": 4010
+        },
+        {
+          "current": "\t\t, source.replace(\"          - produce\\n\", \"\")\n\t\t, source.replace(\"host_null: true\", \"host_null: false\")\n\t\t, source.replace(\"steps.reconciliation.outcome != 'success'\", \"false\")\n",
+          "previous": "",
+          "start": 6786
+        },
+        {
+          "current": "\ntest(\"focused HostNull producers retain all seven fail-closed lanes\", async t => {\n\tfor(const specification of focusedProducers)\n\t{\n\t\tconst source = await readFile(specification.file, \"utf8\");\n\t\tassertFocusedProducer(source, specification);\n\t\tconst [command, artifact, path] = specification.records[0];\n\t\tfor(const changed of [\n\t\t\tsource.replace(command, \"disabled-command\")\n\t\t\t, source.replace(artifact, \"disabled-artifact\")\n\t\t\t, source.replaceAll(path, \"disabled/path/\")\n\t\t\t, source.replace(\"steps.host_null.outcome != 'success'\", \"false\")\n\t\t]) assert.throws(() => assertFocusedProducer(changed, specification)\n\t\t\t, assert.AssertionError, specification.file);\n\t}\n\tt.diagnostic(\"seven focused HostNull producer bypasses refused\");\n});\n",
+          "previous": "",
+          "start": 7145
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-ci-tests.mjs",
+      "previousSha256": "e5806d318170ba0bfa34f8b2b1e50c2de4f8cc03a360af0612025ac01876b0f5"
+    }
+  ]
+}
