@@ -1,0 +1,124 @@
+{
+  "canonicalRoutes": 4,
+  "failedJobId": 123746156645,
+  "failedRoute": "ordinary-source",
+  "failedRunId": 40927405318,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-python-receipt-canonical-source-history.mjs",
+      "sha256": "a49cd6c27171768bcc8c587bc0276e29563b363010cbbc41166710289ff66b47"
+    },
+    {
+      "path": "tests/helpers/dependent-python-receipt-canonical-source-history-tests.mjs",
+      "sha256": "726840af6c3690638f361af23b1c641a26eefd1e06daf05ad79bb27eccb40e86"
+    },
+    {
+      "path": "tests/helpers/dependent-python-receipt-canonical-source-history.mjs",
+      "sha256": "a01cccbe2d564d3ba1302047f4a626ec1bd90296238d3b75fbbf50adc0deec85"
+    }
+  ],
+  "implementationCommit": "dcb4b292ce95a8596eaa7b4803c69cf35595a0a8",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4b925ce507b012daa1ea0d9d385f728490bae4929fc00c992008a3658cc2bf09",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-python-receipt-canonical-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1519
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "2e74297ba5213d1597c41d1492a27c5abef740070955f3ad5c96fbc49489773f"
+    },
+    {
+      "currentSha256": "c6ac0dece51007d4fcd106a480593ec9105c5c2503a6607f664e82b774765d11",
+      "edits": [
+        {
+          "current": "import { beforeDependentPythonReceiptCanonicalSource, dependentPythonReceiptCanonicalNormalizationPaths } from \"./dependent-python-receipt-canonical-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentPythonReceiptCanonicalNormalizationPaths\n\t, ...focusedManagedCheckoutNormalizationPaths\n",
+          "previous": "\t...focusedManagedCheckoutNormalizationPaths\n",
+          "start": 222832
+        },
+        {
+          "current": "\tlet stage = beforeDependentPythonReceiptCanonicalSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeFocusedManagedCheckoutSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeFocusedManagedCheckoutSource(path, text, expected);\n",
+          "start": 279142
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e0ff3e6b8fe3278152f912dc684f807e5d85076dc3fc65fe75d8bfb25893b7d2"
+    }
+  ],
+  "milestone": "dependent-python-receipt-canonical-source-v1",
+  "predecessorCommit": "23fd3a33fa1a8e3e19b33dea7a2b4b1f9b15c2b1",
+  "schemaVersion": 1,
+  "scope": "Repair the sole noncanonical producer in the complete dependent-signature matrix. Preserve the independently checked Python result object, but serialize all four route summaries through the shared recursive canonical JSON writer so the exact same-run receipt can authenticate their bytes without weakening its canonicality gate.",
+  "updates": [
+    {
+      "currentSha256": "f89015502e45453f7a9769e9670766181fa353f61f37379caca2e53d90cdd27d",
+      "edits": [
+        {
+          "current": "\t, renderDependentCheckedRecordPythonCiVerification\n",
+          "previous": "",
+          "start": 412
+        },
+        {
+          "current": "process.stdout.write(renderDependentCheckedRecordPythonCiVerification(result));\n",
+          "previous": "process.stdout.write(`${JSON.stringify(result, null, 2)}\\n`);\n",
+          "start": 1509
+        }
+      ],
+      "path": "scripts/check-dependent-checked-record-python-ci.mjs",
+      "previousSha256": "bf75e49689a310d4c7f557b409da7cf7309a8715700d0e490a1afa4abb2e60a1"
+    },
+    {
+      "currentSha256": "aa0e0ab39534c39894aee8dcddeb686b70e845fc811f389846b509f0fb848ffd",
+      "edits": [
+        {
+          "current": "\n/**\n * Render one independently checked route for exact same-run reconciliation.\n *\n * @param result - Closed checker result returned by this module.\n */\nexport const renderDependentCheckedRecordPythonCiVerification = result => {\n\tassert.ok(result && typeof result === \"object\" && !Array.isArray(result));\n\tassert.deepEqual(Object.keys(result).sort(), [\n\t\t\"archiveSha256\", \"executions\", \"floor\", \"producerCommit\", \"records\"\n\t\t, \"reportSha256\", \"route\", \"runtime\"\n\t]);\n\treturn canonicalJson(result);\n};\n",
+          "previous": "",
+          "start": 8991
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-python-ci-report.mjs",
+      "previousSha256": "4348a84dcab8f67e32ea60edf9e9d2f92abfe7e34b843c6dfcc40b5fa88529c8"
+    },
+    {
+      "currentSha256": "9d1de2b406f4c3b64b7cb6c57aa4bfa98552e02889719d760ae3072bb92b096c",
+      "edits": [
+        {
+          "current": "import { canonicalJson } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t, renderDependentCheckedRecordPythonCiVerification\n",
+          "previous": "",
+          "start": 845
+        },
+        {
+          "current": "\tconst verification = {\n\t\troute: options.route, producerCommit: options.producer\n\t\t, runtime: { platform: \"linux\", arch: \"x64\", glibc: \"2.39\" }\n\t\t, floor: options.glibc, records: 15, executions: 4\n\t\t, archiveSha256: \"b\".repeat(64), reportSha256: \"c\".repeat(64)\n\t};\n\tassert.equal(renderDependentCheckedRecordPythonCiVerification(verification)\n\t\t, canonicalJson(verification));\n\tassert.notEqual(renderDependentCheckedRecordPythonCiVerification(verification)\n\t\t, `${JSON.stringify(verification, null, 2)}\\n`);\n\tassert.throws(() => renderDependentCheckedRecordPythonCiVerification({\n\t\t...verification, unbound: true\n\t}));\n",
+          "previous": "",
+          "start": 8349
+        },
+        {
+          "current": "\tconst checker = await readFile(\n\t\t\"scripts/check-dependent-checked-record-python-ci.mjs\", \"utf8\");\n",
+          "previous": "",
+          "start": 9260
+        },
+        {
+          "current": "\tassert.match(checker\n\t\t, /process\\.stdout\\.write\\(renderDependentCheckedRecordPythonCiVerification\\(result\\)\\)/u);\n\tassert.doesNotMatch(checker, /JSON\\.stringify\\(result/u);\n",
+          "previous": "",
+          "start": 10350
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-python-tests.mjs",
+      "previousSha256": "91ce76e80b4e0de40dfafd9809e124a9e4b5dd1a16809dc559078e1353ad9583"
+    }
+  ]
+}

@@ -21,6 +21,7 @@ import "./helpers/dependent-signature-producer-sparse-checkout-source-history-te
 import "./helpers/proof-erasure-core-lint-repair-source-history-tests.mjs";
 import "./helpers/dependent-signature-producer-concurrency-source-history-tests.mjs";
 import "./helpers/dependent-signature-audit-sparse-checkout-source-history-tests.mjs";
+import "./helpers/dependent-python-receipt-canonical-source-history-tests.mjs";
 import "./helpers/focused-managed-checkout-source-history-tests.mjs";
 import "./helpers/dependent-signature-shallow-checkout-source-history-tests.mjs";
 import "./helpers/optional-parameter-complete-promotion-source-history-tests.mjs";
