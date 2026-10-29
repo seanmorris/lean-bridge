@@ -31,6 +31,9 @@ import {
 	optionalParameterManagedGroups
 } from "./helpers/optional-parameter-managed-report.mjs";
 import {
+	managedCompilationDiagnostic, managedDiagnosticCount, managedDiagnosticPattern
+} from "./helpers/optional-parameter-installed-contract.mjs";
+import {
 	assertOptionalParameterNativeComponent, prepareOptionalParameterProject
 	, retainOptionalParameterNativeComponent
 } from "./helpers/optional-parameter-packages.mjs";
@@ -58,17 +61,6 @@ const extension = profile => profile === "dotnet" ? "cs"
 	: profile === "java" ? "java" : "kt";
 const sourcePath = (profile, invalid = false) =>
 	`tests/fixtures/optional-parameter-consumers/${profile}${invalid ? "-invalid" : ""}.${extension(profile)}`;
-const diagnosticPattern = profile => profile === "dotnet"
-	? /(?:CS1503|cannot convert from '<null>'|non-nullable value type)/iu
-	: profile === "java"
-		? /(?:incompatible types|cannot be converted to (?:long|int))/iu
-		: /(?:null can not be a value of a non-null type|type mismatch)/iu;
-const diagnosticCount = (profile, diagnostic) => profile === "dotnet"
-	? (diagnostic.match(/CS1503/gu) ?? []).length
-	: profile === "java"
-		? (diagnostic.match(/incompatible types/gu) ?? []).length
-		: (diagnostic.match(/(?:null can not be a value of a non-null type|type mismatch)/giu) ?? []).length;
-
 for(const route of routes) test(
 	`installed optional-parameter managed packages reproduce and relocate ${group} ${route}`
 	, { skip: !enabled, timeout: 3_600_000 }, async t => {
@@ -188,9 +180,9 @@ for(const route of routes) test(
 					, archiveSha256: artifact.sha256, environment
 				});
 			await assert.rejects(negativeCompilation, error => {
-				diagnostic = error.details?.stderr ?? error.message;
-				assert.match(diagnostic, diagnosticPattern(profile));
-				assert.ok(diagnosticCount(profile, diagnostic) >= 2, diagnostic);
+				diagnostic = managedCompilationDiagnostic(error);
+				assert.match(diagnostic, managedDiagnosticPattern(profile));
+				assert.ok(managedDiagnosticCount(profile, diagnostic) >= 2, diagnostic);
 				return true;
 			});
 			await saveLakeFile(records, `${profile}/consumer.${extension(profile)}`

@@ -31,6 +31,21 @@ const factKeys = [
 	, "packageSetReceiptSha256"
 ];
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
+const closureKeys = Object.freeze({
+	perl: ["installedFilesSha256", "interpreterSha256", "receiptsSha256"]
+	, python: [
+		"baselineSha256", "environmentSha256", "interpreterSha256", "python"
+		, "receiptSha256"
+	]
+	, ruby: [
+		"environmentSha256", "gemspecSha256", "interpreterSha256"
+		, "packageFileSetSha256", "receiptSha256"
+	]
+	, rust: [
+		"cargoSha256", "compilerSha256", "executableSha256"
+		, "packageFileSetSha256", "receiptSha256"
+	]
+});
 const apiPatterns = Object.freeze({
 	perl: [
 		/\*word = sub/u, /push @args, 7 if @args == 0/u
@@ -50,6 +65,22 @@ const apiPatterns = Object.freeze({
 		, /macro_rules! present/u, /Some\(9\)/u
 	]
 });
+
+/**
+ * Validate the exact installed-package closure for one language profile.
+ *
+ * @param profile - Perl, Python, Ruby or Rust profile.
+ * @param closure - Retained closure observation.
+ */
+export const validateOptionalParameterLanguageClosure = (profile, closure) => {
+	assert.ok(optionalParameterLanguageProfiles.includes(profile));
+	assert.ok(closure && typeof closure === "object");
+	assert.deepEqual(Object.keys(closure).sort(), [...closureKeys[profile]].sort());
+	for(const key of closureKeys[profile].filter(key => key.endsWith("Sha256")))
+		digest(closure[key]);
+	if(profile === "python")
+		assert.match(closure.python, /^3\.(?:1[1-9]|[2-9][0-9])\.[0-9]+$/u);
+};
 
 /**
  * Validate one retained ordinary or reviewed report.
@@ -107,19 +138,7 @@ export const validateOptionalParameterLanguageReport = (report, {
 		, { checks: item.runtimeChecks, relocated: true }
 	]);
 	digest(item.consumerSha256); digest(item.apiSha256);
-	assert.ok(item.closure && typeof item.closure === "object");
-	for(const [key, value] of Object.entries(item.closure))
-	{
-		assert.match(key, /Sha256$/u); digest(value);
-	}
-	for(const key of profile === "perl"
-		? ["installedFilesSha256", "interpreterSha256", "receiptsSha256"]
-		: profile === "python"
-			? ["receiptSha256", "packageFileSetSha256", "environmentSha256", "interpreterSha256"]
-			: profile === "ruby"
-				? ["receiptSha256", "packageFileSetSha256", "environmentSha256", "interpreterSha256", "gemspecSha256"]
-				: ["receiptSha256", "packageFileSetSha256", "compilerSha256", "cargoSha256", "executableSha256"])
-		digest(item.closure[key]);
+	validateOptionalParameterLanguageClosure(profile, item.closure);
 	if(profile === "rust")
 	{
 		assert.equal(item.invalidCompile.rejected, true);

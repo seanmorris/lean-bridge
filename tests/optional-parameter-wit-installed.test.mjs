@@ -25,6 +25,9 @@ import {
 	assertOptionalParameterNativeComponent, prepareOptionalParameterProject
 	, retainOptionalParameterNativeComponent
 } from "./helpers/optional-parameter-packages.mjs";
+import {
+	optionalParameterWitPatterns
+} from "./helpers/optional-parameter-installed-contract.mjs";
 import { retainPackageSetEvidence } from "./helpers/package-set.mjs";
 
 const flag = process.env.LEAN_BRIDGE_OPTIONAL_PARAMETER_WIT_TEST;
@@ -41,21 +44,11 @@ const outputFor = route => resolve((
 		?? "build/optional-parameter-wit/{route}"
 ).replace("{route}", route));
 const sourcePath = "tests/fixtures/optional-parameter-consumers/wit-wasi.c";
-const witPatterns = Object.freeze([
-	/word: func\(value0: u32\) -> u32;/u
-	, /word-default: func\(\) -> u32;/u
-	, /natural-default: func\(\) -> bridge-value-/u
-	, /text-default: func\(\) -> string;/u
-	, /character-default: func\(\) -> char;/u
-	, /maybe-default: func\(\) -> bridge-value-/u
-	, /present-default: func\(\) -> bridge-value-/u
-	, /unit-value-default: func\(\) -> bridge-value-/u
-]);
-
 for(const route of routes) test(
 	`installed optional-parameter WIT package reproduces and relocates ${route}`
 	, { skip: !enabled, timeout: 3_600_000 }, async t => {
 		const records = outputFor(route);
+		const witPatterns = optionalParameterWitPatterns(route);
 		await assert.rejects(access(records), { code: "ENOENT" });
 		await mkdir(records, { recursive: true });
 		const suite = await mkdtemp(join(tmpdir(), "lean-bridge-optional-wit-"));

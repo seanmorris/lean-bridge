@@ -188,7 +188,10 @@ for(const route of routes) test(
 			const context = {
 				...installed.pythonEnvironment, venv: join(relocated, "venv")
 			};
-			closure = await verifyFinContainerEdgePythonEnvironment(context);
+				closure = {
+					...await verifyFinContainerEdgePythonEnvironment(context)
+					, receiptSha256: context.receiptSha256
+				};
 			rerun = await runFinContainerEdgePython(
 				context, ["consumer.py"], relocated, copiedCleanEnvironment
 			);
