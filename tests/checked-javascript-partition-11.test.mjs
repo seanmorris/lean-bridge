@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/generated-output-control-repair-source-history-tests.mjs";
 import "./helpers/host-null-scripting-type-surface-lineage-source-history-tests.mjs";
 import "./helpers/host-null-scripting-source-history-tests.mjs";
 import "./helpers/host-null-downstream-source-history-tests.mjs";

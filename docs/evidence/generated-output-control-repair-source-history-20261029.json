@@ -1,0 +1,239 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6fafeb05e124ce2d8da409a4cf0d536185b457a818e35e6c8c7408d03da821c4",
+      "path": "scripts/refresh-generated-output-control-repair-pins.mjs"
+    },
+    {
+      "currentSha256": "e4f7fabad16412f70bc9e5efcfdccd4f8858289d2e4aa78aec9221635bb6a81e",
+      "path": "tests/helpers/copied-native-local-namespace-history.mjs"
+    },
+    {
+      "currentSha256": "9dc955fca16d3d431856cf4f6fb5753c1f0e461728e8c15a5bc668a0080d2edf",
+      "path": "tests/helpers/managed-host-null-readme-history.mjs"
+    },
+    {
+      "currentSha256": "8ad3fcfa70714d31738008c92fab6818f1e424a028d68cc3b8d42c3d1db508e8",
+      "path": "scripts/update-generated-output-control-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "83e0b364eebeef50b0efb825b2d34599cdf52bf7a74be21b22fb940cd76fd483",
+      "path": "tests/helpers/generated-output-control-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "46b3728386715388ebe19696d4316fbea1768d9099a7e899d4f0124bf9545455",
+      "path": "tests/helpers/generated-output-control-repair-source-history.mjs"
+    }
+  ],
+  "commits": [
+    {
+      "added": [
+        "tests/helpers/copied-native-local-namespace-history.mjs",
+        "tests/helpers/managed-host-null-readme-history.mjs"
+      ],
+      "commit": "f8d95c2dec3509752a92f512b7556473d73c5f08",
+      "modified": [
+        "src/backends/perl/generate.mjs",
+        "tests/closure-thread-contract.test.mjs",
+        "tests/helpers/callable-error-code-history.mjs",
+        "tests/helpers/jvm-structured-callable-regression.mjs",
+        "tests/helpers/owned-dotnet-process-evidence.mjs",
+        "tests/helpers/owned-dotnet-process-history.mjs"
+      ],
+      "parent": "dab1fc037b5cff14c61178c1b7bc0d1c8f89ad56",
+      "subject": "Repair generated output controls [skip ci]"
+    },
+    {
+      "added": [
+        "scripts/refresh-generated-output-control-repair-pins.mjs"
+      ],
+      "commit": "b9c7b30a610dbf39d46a5346e8d655ea975a1dd9",
+      "modified": [],
+      "parent": "f8d95c2dec3509752a92f512b7556473d73c5f08",
+      "subject": "Define generated-output pin refresh [skip ci]"
+    },
+    {
+      "added": [],
+      "commit": "0b8d29a1936a39cef94ac6174c45860e69c5652e",
+      "modified": [
+        "docs/type-surface.v1.json"
+      ],
+      "parent": "b9c7b30a610dbf39d46a5346e8d655ea975a1dd9",
+      "subject": "Refresh generated-output source pins [skip ci]"
+    }
+  ],
+  "externalTypeSurfacePointers": 17,
+  "implementationCommit": "0b8d29a1936a39cef94ac6174c45860e69c5652e",
+  "integrationParent": "0b8d29a1936a39cef94ac6174c45860e69c5652e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "851220b6f132be286d0f704dcf026dea1d5f68e7271c4fb809e23e4eee76fa3f",
+      "edits": [
+        {
+          "current": "import \"./helpers/generated-output-control-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "37715f9364f17547a32a9ea10f59edf1e7ebccac3b68b70eee43f0935aacc9b8"
+    },
+    {
+      "currentSha256": "79552d1545bb1d261b14dadcb06a96b6f694b66a222c5e0fb2894eab62ac1e19",
+      "edits": [
+        {
+          "current": "import { beforeGeneratedOutputControlRepairIntegrationSource, beforeGeneratedOutputControlRepairSource, generatedOutputControlRepairNormalizationPaths } from \"./generated-output-control-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...generatedOutputControlRepairNormalizationPaths\n\t, ...hostNullScriptingTypeSurfaceNormalizationPaths\n",
+          "previous": "\t...hostNullScriptingTypeSurfaceNormalizationPaths\n",
+          "start": 216243
+        },
+        {
+          "current": "\tlet stage = beforeGeneratedOutputControlRepairIntegrationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeGeneratedOutputControlRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullScriptingTypeSurfaceIntegrationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullScriptingTypeSurfaceIntegrationSource(path, text, expected);\n",
+          "start": 270445
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e4a22690da1e834dd1fa3e411dcf0516fc2d93c29ec66debfcb6c31af751f18f"
+    }
+  ],
+  "milestone": "generated-output-control-repair-source-v1",
+  "predecessorCommit": "dab1fc037b5cff14c61178c1b7bc0d1c8f89ad56",
+  "schemaVersion": 1,
+  "scope": "Remove the stray Perl XS argument-read tab without weakening exact bound checks. Reconstruct the copied-native private local namespace only inside authenticated lb_call_* bodies before older closure evidence. Reconstruct only the .NET and JVM generated README HostNull prose while existing producer-pinned generators continue to authenticate carrier code. Refresh exactly 17 live source pointers. The adjacent streamed lineage layer exclusively authenticates the large inventory transition.",
+  "updates": [
+    {
+      "commit": "f8d95c2dec3509752a92f512b7556473d73c5f08",
+      "currentSha256": "810b8aa2c4e138a3415027969d4f462fedda3f4647641494f1529e42e1299719",
+      "edits": [
+        {
+          "current": "    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${refinements?.parameters?.[i]?.kind === \"callback\" ? `${read(type)}_recovered` : read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join(\"\\n    \")}\n",
+          "previous": "\t    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${refinements?.parameters?.[i]?.kind === \"callback\" ? `${read(type)}_recovered` : read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join(\"\\n    \")}\n",
+          "start": 38880
+        }
+      ],
+      "parent": "dab1fc037b5cff14c61178c1b7bc0d1c8f89ad56",
+      "path": "src/backends/perl/generate.mjs",
+      "previousSha256": "14ca6253264c2e50fb57a38644e879882c88fd5c2a0bc411dd4c569ec2059438"
+    },
+    {
+      "commit": "f8d95c2dec3509752a92f512b7556473d73c5f08",
+      "currentSha256": "003091a76916283b4841525d2a350b7bc2a6fe82d73cbff7349e47516c15d789",
+      "edits": [
+        {
+          "current": "\t\tconst callback = source.includes(\"typedef struct { uintptr_t token;\");\n\t\tconst historical = callback ? source : beforeCallableErrorCode(source);\n\t\tconst previous = beforeClosureThreadRegistry(historical), expected = row.files[\"native.c\"];\n",
+          "previous": "\t\tconst previous = beforeClosureThreadRegistry(source), expected = row.files[\"native.c\"];\n",
+          "start": 2274
+        },
+        {
+          "current": "\t\tif(callback)\n",
+          "previous": "\t\tif(source.includes(\"typedef struct { uintptr_t token;\"))\n",
+          "start": 2752
+        },
+        {
+          "current": "\t\telse\n\t\t{\n\t\t\tassert.equal(historical, previous);\n\t\t\tassert.notEqual(source, previous);\n\t\t}\n",
+          "previous": "\t\telse assert.equal(source, previous);\n",
+          "start": 2922
+        }
+      ],
+      "parent": "dab1fc037b5cff14c61178c1b7bc0d1c8f89ad56",
+      "path": "tests/closure-thread-contract.test.mjs",
+      "previousSha256": "4b3bc4ad55f9b15b0c8f1008cd96e786f5c80132f10ee9acf7e64c9ecbc0fe55"
+    },
+    {
+      "commit": "f8d95c2dec3509752a92f512b7556473d73c5f08",
+      "currentSha256": "8a67b15c6b1b74e47e27da062e3f1bfb535fb66a33aca6e2d173345f80876b9a",
+      "edits": [
+        {
+          "current": "import { beforeCopiedNativeLocalNamespace } from \"./copied-native-local-namespace-history.mjs\";\n",
+          "previous": "",
+          "start": 224
+        },
+        {
+          "current": "\tsource = beforeCopiedNativeLocalNamespace(source);\n",
+          "previous": "",
+          "start": 938
+        }
+      ],
+      "parent": "dab1fc037b5cff14c61178c1b7bc0d1c8f89ad56",
+      "path": "tests/helpers/callable-error-code-history.mjs",
+      "previousSha256": "00fd8d4920243c36a7a30bf22ca0e197f37761c6b0b93e924ce1b2ab39f70b20"
+    },
+    {
+      "commit": "f8d95c2dec3509752a92f512b7556473d73c5f08",
+      "currentSha256": "08bb46375533a9ce7a98230bbb94ed58a0bec34af64cbcbf4210cffba137f6ce",
+      "edits": [
+        {
+          "current": "import { generateCopiedJvmKotlinPackage as generateCurrentJvmPackage } from \"../../src/backends/jvm/copied-kotlin.mjs\";\nimport { beforeManagedHostNullReadme } from \"./managed-host-null-readme-history.mjs\";\n",
+          "previous": "",
+          "start": 741
+        },
+        {
+          "current": "\t\tconst current = generateCurrentJvmPackage(ir);\n\t\tassert.equal(beforeManagedHostNullReadme(\"README.md\", current[\"README.md\"])\n\t\t\t, files[\"README.md\"], fixture.name);\n",
+          "previous": "",
+          "start": 2089
+        }
+      ],
+      "parent": "dab1fc037b5cff14c61178c1b7bc0d1c8f89ad56",
+      "path": "tests/helpers/jvm-structured-callable-regression.mjs",
+      "previousSha256": "2ea54cb19621db1c27eef43330f110e65fb79568d0c42d3da0a10c323be21672"
+    },
+    {
+      "commit": "f8d95c2dec3509752a92f512b7556473d73c5f08",
+      "currentSha256": "402555d1b6f643a91a2504ac15901b94c9caa10882ad2541fcff9ce5999a1efd",
+      "edits": [
+        {
+          "current": "import { beforeManagedHostNullReadme } from \"./managed-host-null-readme-history.mjs\";\n",
+          "previous": "",
+          "start": 1467
+        },
+        {
+          "current": "\t\tfor(const [path, current] of Object.entries(generateOwnedDotnetPackage(model.bindingIr, evidence).files))\n",
+          "previous": "\t\tfor(const [path, source] of Object.entries(generateOwnedDotnetPackage(model.bindingIr, evidence).files))\n",
+          "start": 3329
+        },
+        {
+          "current": "\t\t\tconst source = beforeManagedHostNullReadme(path, current);\n",
+          "previous": "",
+          "start": 3441
+        },
+        {
+          "current": "\t\tfor(const [path, current] of Object.entries(generateCopiedDotnetPackage(dotnetStructuredRegressionFixtures[fixture.name]())))\n",
+          "previous": "\t\tfor(const [path, source] of Object.entries(generateCopiedDotnetPackage(dotnetStructuredRegressionFixtures[fixture.name]())))\n",
+          "start": 4881
+        },
+        {
+          "current": "\t\t\tconst source = beforeManagedHostNullReadme(path, current);\n",
+          "previous": "",
+          "start": 5013
+        }
+      ],
+      "parent": "dab1fc037b5cff14c61178c1b7bc0d1c8f89ad56",
+      "path": "tests/helpers/owned-dotnet-process-evidence.mjs",
+      "previousSha256": "994ed78a3e5d3625dfe9a55fc0c73343c21f2a2370f755e1b86836a97ab2159e"
+    },
+    {
+      "commit": "f8d95c2dec3509752a92f512b7556473d73c5f08",
+      "currentSha256": "84db8f7d6e319eb89f8b247ec46377adb168d94d2b19e462bc837215e5c06c74",
+      "edits": [
+        {
+          "current": "import { beforeManagedHostNullReadme } from \"./managed-host-null-readme-history.mjs\";\n",
+          "previous": "",
+          "start": 426
+        },
+        {
+          "current": "\tsource = beforeManagedHostNullReadme(path, source);\n",
+          "previous": "",
+          "start": 5051
+        }
+      ],
+      "parent": "dab1fc037b5cff14c61178c1b7bc0d1c8f89ad56",
+      "path": "tests/helpers/owned-dotnet-process-history.mjs",
+      "previousSha256": "b896acc3683d15c1e9d92eda915d91d1ed1ae2adc96c8ea02eeb1616fb143434"
+    }
+  ]
+}
