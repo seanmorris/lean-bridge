@@ -1,0 +1,118 @@
+{
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-archive-transaction-source-history.mjs",
+      "sha256": "4398f2b895a179707fb2eb52e413c9e9837a1dcece25b4d097f52610007ca1b1"
+    },
+    {
+      "path": "tests/helpers/host-null-archive-transaction-source-history-tests.mjs",
+      "sha256": "52d0a2eba4e8037114ac11311eddb0ba1e4f49661ecd36084724a909ab1f4486"
+    },
+    {
+      "path": "tests/helpers/host-null-archive-transaction-source-history.mjs",
+      "sha256": "cb67bb091529d11f5d54716fde758381b58ad2196b670edf7b2c4bd3a77f814a"
+    }
+  ],
+  "implementationCommit": "f3fbb035fe5cfa1ee1ac9196031a7ab8f33058ef",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c48bba5c874b0324b1a5fe5106d952a771e75fb66c83e77baab099a3e1c596e7",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-archive-transaction-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "0700e99f060e4c2f7cd5d69ff23641c088ea3d7055ed3d5b6075b6f9e6fd8d62"
+    },
+    {
+      "currentSha256": "6a11e155a87186e9c655d09ae830c5f61ca8a546b93013bb3beefbfa712ea658",
+      "edits": [
+        {
+          "current": "import { beforeHostNullArchiveTransactionSource, hostNullArchiveTransactionNormalizationPaths } from \"./host-null-archive-transaction-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullArchiveTransactionNormalizationPaths\n\t, ...directProofErasureSameRunRefusalNormalizationPaths\n",
+          "previous": "\t...directProofErasureSameRunRefusalNormalizationPaths\n",
+          "start": 222188
+        },
+        {
+          "current": "\tlet stage = beforeHostNullArchiveTransactionSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureSameRunRefusalSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureSameRunRefusalSource(\n",
+          "start": 278286
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1966a1c558605e4f60308546406e5af8744be95e3eb05a2c02b13ae49312986a"
+    }
+  ],
+  "milestone": "host-null-archive-transaction-source-v1",
+  "predecessorCommit": "d7ff55890b78ed542f87a6547fbd4f9fdf6d8e0a",
+  "schemaVersion": 1,
+  "scope": "Build the complete HostNull evidence tree in one sibling staging directory, verify every staged byte, and publish it with one atomic rename. Abort cleanup removes only unpublished staging state, so interruption cannot expose or erase a final archive.",
+  "updates": [
+    {
+      "currentSha256": "0dcbcb5209d87977f699f4b39353967571cfbad52fbefe6457f733a2663aee3e",
+      "edits": [
+        {
+          "current": "import {\n\tcreateTransactionalDirectory\n} from \"../src/capsule/transactional-directory.mjs\";\n",
+          "previous": "",
+          "start": 450
+        },
+        {
+          "current": "const transaction = await createTransactionalDirectory(evidence);\nconst stagingRoot = transaction.root;\n",
+          "previous": "",
+          "start": 2077
+        },
+        {
+          "current": "\tconst bytes = Buffer.from(value), target = join(stagingRoot, path);\n",
+          "previous": "\tconst bytes = Buffer.from(value), target = join(evidence, path);\n",
+          "start": 2268
+        },
+        {
+          "current": "\tconst target = join(stagingRoot, path);\n",
+          "previous": "\tconst target = join(evidence, path);\n",
+          "start": 2713
+        },
+        {
+          "current": "",
+          "previous": "let complete = false;\nawait mkdir(evidence);\n",
+          "start": 3112
+        },
+        {
+          "current": "\tfor(const descriptor of descriptors.values())\n\t{\n\t\tconst target = join(stagingRoot, descriptor.path);\n\t\tassert.equal((await stat(target)).size, descriptor.bytes\n\t\t\t, descriptor.path);\n\t\tassert.equal(await digestFile(target), descriptor.sha256\n\t\t\t, descriptor.path);\n\t}\n\tawait writeFile(join(stagingRoot, \"index.json\"), indexBytes\n\t\t, { flag: \"wx\" });\n\tawait transaction.publish();\n",
+          "previous": "\tawait writeFile(join(evidence, \"index.json\"), indexBytes, { flag: \"wx\" });\n\tcomplete = true;\n",
+          "start": 6646
+        },
+        {
+          "current": "\tawait transaction.dispose();\n",
+          "previous": "\tif(!complete) await rm(evidence, { recursive: true });\n",
+          "start": 7394
+        }
+      ],
+      "path": "scripts/archive-host-null-complete-evidence.mjs",
+      "previousSha256": "0d14f6f25b7e66a827a9ce2b2d71a9a556ea427690676ce4f2c6727dcace8be3"
+    },
+    {
+      "currentSha256": "a0fb39e873f796ac61c903f26156695a15a4e1dcad911a0d74fa868192ddd942",
+      "edits": [
+        {
+          "current": "import { mkdtemp, mkdir, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, mkdir, rm, writeFile } from \"node:fs/promises\";\n",
+          "start": 188
+        },
+        {
+          "current": "test(\"complete HostNull archive publishes one validated sibling transaction\"\n\t, async () => {\n\t\tconst source = await readFile(\n\t\t\t\"scripts/archive-host-null-complete-evidence.mjs\", \"utf8\");\n\t\tassert.match(source, /createTransactionalDirectory\\(evidence\\)/u);\n\t\tassert.match(source, /const stagingRoot = transaction\\.root/u);\n\t\tassert.match(source, /join\\(stagingRoot, descriptor\\.path\\)/u);\n\t\tassert.match(source, /await digestFile\\(target\\), descriptor\\.sha256/u);\n\t\tassert.match(source, /await transaction\\.publish\\(\\)/u);\n\t\tassert.match(source, /finally[\\s\\S]*await transaction\\.dispose\\(\\)/u);\n\t\tassert.doesNotMatch(source, /await mkdir\\(evidence\\)/u);\n\t}\n);\n\n",
+          "previous": "",
+          "start": 1460
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-hosted-archive-tests.mjs",
+      "previousSha256": "7174b4ee4d3d138d8bef7011241c1b46c0ad8df4d7979d705b3f75a00adb70d5"
+    }
+  ]
+}
