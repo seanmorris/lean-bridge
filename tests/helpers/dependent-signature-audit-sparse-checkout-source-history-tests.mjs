@@ -20,6 +20,8 @@ import {
 	, dependentSignatureAuditSparseCheckoutPredecessor
 	, reverseDependentSignatureAuditSparseCheckoutUpdate
 } from "./dependent-signature-audit-sparse-checkout-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -65,7 +67,8 @@ test("dependent-signature audit checkout reverses every authenticated source"
 			), update), true, update.path);
 		for(const update of history.integrationUpdates)
 		{
-			const current = await readFile(update.path, "utf8");
+			const current = await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256);
 			const previous = git(["show"
 				, `${dependentSignatureAuditSparseCheckoutImplementation}:${update.path}`]);
 			assert.equal(reverseDependentSignatureAuditSparseCheckoutUpdate(
@@ -99,8 +102,11 @@ test("dependent-signature audit checkout authenticates history controls"
 		assert.deepEqual(history.historyAdditions.map(item => item.path)
 			, dependentSignatureAuditSparseCheckoutHistoryAdditions);
 		for(const addition of history.historyAdditions)
-			assert.equal(sha256(await readFile(addition.path)), addition.sha256
-				, addition.path);
+		{
+			const source = await sourceAtFinHistoryMilestone(
+				addition.path, addition.sha256);
+			assert.equal(sha256(source), addition.sha256, addition.path);
+		}
 	}
 );
 

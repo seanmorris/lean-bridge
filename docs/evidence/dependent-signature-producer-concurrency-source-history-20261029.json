@@ -1,0 +1,155 @@
+{
+  "currentSourcePaths": [],
+  "dependencyCount": 8,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-signature-producer-concurrency-source-history.mjs",
+      "sha256": "4169acc47e451dbcae615262ee781b0b7cc5e2cd2ff6eaf6c0e652af977239fb"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-producer-concurrency-source-history-tests.mjs",
+      "sha256": "90c243ed44b4ea9051b736e75449b026b0a9c4508afe335e4d32ce460598c0e4"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-producer-concurrency-source-history.mjs",
+      "sha256": "775267c78dcd077cd8b3442951b0d0eefa6ed32aefa66439a63fa17258a069a9"
+    }
+  ],
+  "implementationCommit": "270c7202be12d692a498f92ff686643eef4af229",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0931572b173fd49ba48f57828a7cbbe0df3316a8ced0b2c2fdc5bde15e3a3056",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-signature-producer-concurrency-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "548719eb58874e92e2fb4f83d03df423ddf22ee18a004a763092df64c866b93c"
+    },
+    {
+      "currentSha256": "0c41ea86bdb75bbff6bfbf63d00e04283b53026fd6ea71249122477be4094f50",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 886
+        },
+        {
+          "current": "\t\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2901
+        },
+        {
+          "current": "\t\t{\n\t\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.sha256);\n\t\t\tassert.equal(sha256(source), addition.sha256, addition.path);\n\t\t}\n",
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path)), addition.sha256\n\t\t\t\t, addition.path);\n",
+          "start": 4349
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-audit-sparse-checkout-source-history-tests.mjs",
+      "previousSha256": "f4b8a0bc6e14e10a76f706a3647ed635208b1d14c5ff6c44193ce25cc0c1b7eb"
+    },
+    {
+      "currentSha256": "2400663c9049d193089ad89be9f76673fc8cae9d0969945ad40815b5e3e7ec39",
+      "edits": [
+        {
+          "current": "import { beforeDependentSignatureProducerConcurrencySource, dependentSignatureProducerConcurrencyNormalizationPaths } from \"./dependent-signature-producer-concurrency-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentSignatureProducerConcurrencyNormalizationPaths\n\t, ...dependentSignatureAuditSparseCheckoutNormalizationPaths\n",
+          "previous": "\t...dependentSignatureAuditSparseCheckoutNormalizationPaths\n",
+          "start": 220328
+        },
+        {
+          "current": "\tlet stage = beforeDependentSignatureProducerConcurrencySource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDependentSignatureAuditSparseCheckoutSource(\n",
+          "previous": "\tlet stage = beforeDependentSignatureAuditSparseCheckoutSource(\n",
+          "start": 275815
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "015c84d5d13bc74d5e4cbf19b4adfeeafc18f59f64331ade92aa50c6519cf8f0"
+    }
+  ],
+  "maximumProducerConcurrency": 3,
+  "milestone": "dependent-signature-producer-concurrency-source-v1",
+  "predecessorCommit": "84dbb45e8ecff4e2028ad1f8ce3cbb3231509ebf",
+  "producerCount": 11,
+  "rootProducerCount": 3,
+  "schemaVersion": 1,
+  "scope": "Bound eleven dependent-signature producers to three fail-independent chains. Admit at most three concurrent producer jobs while preserving every lane, exact shallow checkout, artifact, receipt dependency and failure observation.",
+  "updates": [
+    {
+      "currentSha256": "7d38101e62faee63a80659ebbe35021b125dbbea2fbc44e393a12fba6231bb5b",
+      "edits": [
+        {
+          "current": "    needs: javascript\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 4888
+        },
+        {
+          "current": "    needs: native\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 5094
+        },
+        {
+          "current": "    needs: perl\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 5296
+        },
+        {
+          "current": "    needs: python\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 5506
+        },
+        {
+          "current": "    needs: rust\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 5705
+        },
+        {
+          "current": "    needs: dotnet\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 5915
+        },
+        {
+          "current": "    needs: jvm\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 6122
+        },
+        {
+          "current": "    needs: ruby\n    if: always() && inputs.suite == 'produce'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 6330
+        }
+      ],
+      "path": ".github/workflows/dependent-signature-complete.yml",
+      "previousSha256": "74c64f6005e2b311c89dffd3176ad0c49b659dc5f6f2a8afa27a6f9a36bb0a7f"
+    },
+    {
+      "currentSha256": "2168b7a7c70fd800d0fe80e955d85b092366412577fa5a802d4799d3f8ffc8a4",
+      "edits": [
+        {
+          "current": "const producerDependencies = new Map([\n\t[\"python\", \"javascript\"], [\"rust\", \"native\"], [\"dotnet\", \"perl\"]\n\t, [\"jvm\", \"python\"], [\"ruby\", \"rust\"], [\"php-native\", \"dotnet\"]\n\t, [\"php-wasm\", \"jvm\"], [\"wit\", \"ruby\"]\n]);\n",
+          "previous": "",
+          "start": 597
+        },
+        {
+          "current": "\t\tconst start = source.indexOf(`  ${job}:\\n`);\n\t\tassert.notEqual(start, -1, job);\n\t\tconst ends = keys.map(key => source.indexOf(`  ${key}:\\n`, start + 3))\n\t\t\t.filter(index => index > start);\n\t\tconst body = source.slice(start\n\t\t\t, ends.length === 0 ? undefined : Math.min(...ends));\n\t\tconst dependency = producerDependencies.get(job);\n\t\tif(dependency === undefined)\n\t\t{\n\t\t\tassert.doesNotMatch(body, /^ {4}needs:/mu, job);\n\t\t\tassert.match(body, /^ {4}if: inputs\\.suite == 'produce'$/mu, job);\n\t\t}\n\t\telse\n\t\t{\n\t\t\tassert.match(body, new RegExp(`^    needs: ${dependency}$`, \"mu\"), job);\n\t\t\tassert.match(body\n\t\t\t\t, /^ {4}if: always\\(\\) && inputs\\.suite == 'produce'$/mu, job);\n\t\t}\n\t\tassert.ok(body.includes(\n\t\t\t`uses: ./.github/workflows/dependent-checked-record-${workflow}.yml`));\n\t\tassert.ok(body.includes(\"      shallow_checkout: true\\n\"));\n",
+          "previous": "\t\tassert.match(source, new RegExp(\n\t\t\t`  ${job}:\\\\n[\\\\s\\\\S]*?    if: inputs\\\\.suite == 'produce'\\\\n`\n\t\t\t+ `    uses: \\\\.\\\\/\\\\.github\\\\/workflows\\\\/dependent-checked-record-${workflow}\\\\.yml\\\\n`\n\t\t\t+ \"    with:\\\\n      shallow_checkout: true\\\\n\"\n\t\t\t, \"u\"));\n",
+          "start": 4409
+        },
+        {
+          "current": "\t\t, source.replace(\"    needs: javascript\\n\", \"\")\n\t\t, source.replace(\"    if: always() && inputs.suite == 'produce'\\n\"\n\t\t\t, \"    if: inputs.suite == 'produce'\\n\")\n",
+          "previous": "",
+          "start": 8721
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-complete-ci-tests.mjs",
+      "previousSha256": "5466d220efc72d00d944d511bdb78e719ea8a39219389e22860024836834092c"
+    }
+  ]
+}
