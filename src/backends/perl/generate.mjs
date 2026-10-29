@@ -158,13 +158,34 @@ const conversion = (model, type) => {
 	if(type.kind === "primitive")
 	{ from = fromPrimitive(type); to = toPrimitive(type); }
 	if(type.kind === "variant") ({ from, to } = perlVariantConversions(model, type));
+	if(type.kind === "host-null")
+	{
+		from = `
+      SvGETMAGIC(value); lbp_budget(scope, sizeof(void *));
+      if (!SvOK(value)) return ${keep(`lb_t${type.key}_null(lean_box(0))`)};
+      ${nativeCType(type.element)} item = ${read(type.element)}(aTHX_ scope, value);
+      ${retain(type.element, "item")}
+      return ${keep(`lb_t${type.key}_value(item)`)};`;
+		to = `
+      lbp_budget(scope, sizeof(void *));
+      ${retain(type, "value")} uint8_t present = lb_t${type.key}_has(value);
+      if (!present) return lbp_mortal(newSV(0));
+      ${retain(type, "value")} ${nativeCType(type.element)} item = lb_t${type.key}_get0(value);
+      ${nativeObjectType(type.element) ? "lbp_keep(scope, item);" : ""}
+      return ${write(type.element)}(aTHX_ scope, item);`;
+	}
 	if(type.kind === "option" || type.kind === "result")
 	{
 		const optional = type.kind === "option";
+		const taggedOptions = optional && model.types.some(type => type.kind === "host-null");
 		const branches = optional ? [["Some", type.element, "some"]] : [["Ok", type.arguments[0], "ok"], ["Err", type.arguments[1], "error"]];
 		from = `
       SvGETMAGIC(value); lbp_budget(scope, sizeof(void *));
-      ${optional ? `if (!SvOK(value)) return ${keep(`lb_t${type.key}_none(lean_box(0))`)};` : ""}
+		${optional ? taggedOptions ? `if (lbp_is_branch(value, ${q(`${model.moduleName}::None`)})) {
+        SV *item = lbp_branch_value(aTHX_ value, ${q(`${model.moduleName}::None`)});
+        if (SvOK(item)) croak("Option None must not contain a payload");
+        return ${keep(`lb_t${type.key}_none(lean_box(0))`)};
+      }` : `if (!SvOK(value)) return ${keep(`lb_t${type.key}_none(lean_box(0))`)};` : ""}
       ${branches.map(([branch, child, constructor]) => `if (lbp_is_branch(value, ${q(`${model.moduleName}::${branch}`)})) {
         ${nativeCType(child)} item = ${read(child)}(aTHX_ scope, lbp_branch_value(aTHX_ value, ${q(`${model.moduleName}::${branch}`)}));
         ${retain(child, "item")}
@@ -174,7 +195,7 @@ const conversion = (model, type) => {
 		to = `
       lbp_budget(scope, sizeof(void *));
       ${retain(type, "value")} uint8_t present = lb_t${type.key}_has(value);
-      ${optional ? "if (!present) return lbp_mortal(newSV(0));" : ""}
+		${optional ? taggedOptions ? `if (!present) return lbp_branch(aTHX_ ${q(`${model.moduleName}::None`)}, lbp_mortal(newSV(0)));` : "if (!present) return lbp_mortal(newSV(0));" : ""}
       ${branches.map(([branch, child], i) => `${optional ? "" : i === 0 ? "if (present)" : "else"} {
         ${retain(type, "value")} ${nativeCType(child)} item = lb_t${type.key}_get${i}(value);
         ${nativeObjectType(child) ? "lbp_keep(scope, item);" : ""}
@@ -578,7 +599,11 @@ export const validatePerlModel = model => {
 		validateNativeRepresentation(shape);
 		if(key !== nativeTypeKey(type)) throw new TypeError("native type identity changed");
 	});
-	const branches = [...(model.types.some(type => type.kind === "option") ? ["Some"] : [])
+	const hostNull = model.types.some(type => type.kind === "host-null");
+	for(const type of model.types.filter(type => type.kind === "host-null"))
+		if(type.element.kind === "primitive" && type.element.name === "unit" || type.element.kind === "host-null")
+			throw new TypeError("Perl HostNull payloads must retain a value distinct from undef");
+	const branches = [...(model.types.some(type => type.kind === "option") ? [...hostNull ? ["None"] : [], "Some"] : [])
 		, ...(model.types.some(type => type.kind === "result") ? ["Ok", "Err"] : [])];
 	const classes = new Set(branches.map(name => `${model.moduleName}::${name}`));
 	const reservedFields = new Set(["new", "DESTROY", "CLONE", "CLONE_SKIP", "can", "isa", "DOES", "VERSION", "import", "unimport", "AUTOLOAD", "BEGIN", "UNITCHECK", "CHECK", "INIT", "END"]);
@@ -607,7 +632,7 @@ export const generatePerlBindingPackage = (model, receipt) => {
 	const recoveredCallbacks = model.types.some(type => callbackNeedsRecovery(model, type));
 	const structuredCallables = model.types.some(type => type.kind === "callback"
 		&& [...type.parameters, type.result].some(value =>
-			["array", "list", "option", "result", "tuple", "record", "variant"].includes(value.kind)));
+			["array", "host-null", "list", "option", "result", "tuple", "record", "variant"].includes(value.kind)));
 	const lines = ['#include "runtime.h"', '#include "component.h"'
 		, `static void lbp_component_ready(pTHX) {
   if (!lean_bridge_native_component_ready(${q(`${model.component.id}:${receipt.nativeLibrary.sha256}`)})) croak("Lean runtime is not ready or has been retired");
@@ -694,6 +719,13 @@ _callback_${type.key}(...)
 	for(const branch of branches)
 	{
 		const name = `${model.moduleName}::${branch}`;
+		if(branch === "None")
+		{
+			pm.push(`package ${name};`, "sub new {"
+				, `  die "${name}->new expects no payload\\n" unless @_ == 1 && $_[0] eq '${name}';`
+				, `  return bless { value => undef }, '${name}';`, "}", "");
+			continue;
+		}
 		pm.push(`package ${name};`, "sub new {"
 			, `  die "${name}->new expects one payload\\n" unless @_ == 2 && $_[0] eq '${name}';`
 			, `  return bless { value => $_[1] }, '${name}';`, "}"
@@ -728,7 +760,7 @@ _callback_${type.key}(...)
 	if(aliases.length) pm.push(...perlAliasPod(model, aliases, structuredCallables));
 	pm.push(...perlVariantPod(model));
 	if(branches.length) pm.push("=head1 COPIED VALUES", ""
-		, "Option uses undef for None and Some->new($value) for Some, including Some->new(undef). Unit uses undef. Except uses distinct Ok->new($value) and Err->new($value) objects; ->value returns the payload. Branch classes live under this component's namespace. Prod uses a plain two-element array reference; nested pairs stay nested."
+		, `${model.types.some(type => type.kind === "host-null") ? "At nullable payload sites, only the compiler-authenticated HostNull wrapper uses undef. Option uses None->new() for None and Some->new($value) for Some; Some->new(undef) is a present HostNull null, while None->new() is Option.none. HostNull(Option T) uses undef for HostNull null and None->new() for its Option.none payload." : "Option uses undef for None and Some->new($value) for Some, including Some->new(undef)."} Unit uses undef only at Unit-typed sites. Except uses distinct Ok->new($value) and Err->new($value) objects; ->value returns the payload. Branch classes live under this component's namespace. Prod uses a plain two-element array reference; nested pairs stay nested.`
 		, "", "Branches are mutable one-field hashes. Calls check the exact class and field set, reject tied branches and products, and copy their contents. Returned arrays, records and payloads are independent of input values. Perl reference equality is not deep value equality. The shared per-call copied-value limit is 16 MiB; schema nesting is limited to 32 levels. " + (structuredCallables ? "Callbacks accept and return these copied values. Resources and callbacks inside copied values remain unsupported." : "Compound callbacks and resources inside copied values are unsupported."), "");
 	if(model.types.some(type => type.kind === "list")) pm.push("=head1 LISTS", ""
 		, "Lean List inputs, results and record fields use copied plain array references. Calls reject blessed, tied and sparse arrays. Empty Lists, order, duplicates and nesting are preserved. Slots are pinned before element conversion can invoke Perl code. Returned arrays and mutable payloads own independent storage. List and Array retain distinct IR/native identities. Typed Lean helpers perform List conversion without inspecting cons-cell layouts. The shared per-call copied-value limit is 16 MiB; " + (structuredCallables ? "List callback arguments and results use independent plain array references." : "List callback payloads remain unsupported."), "");

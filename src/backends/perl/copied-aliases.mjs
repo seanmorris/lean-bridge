@@ -38,7 +38,8 @@ const perlType = (model, ref, seen = new Set()) => {
 	}
 	const children = ref.arguments.map(argument => perlType(model, argument, seen));
 	if(["array", "list"].includes(ref.constructor)) return `array reference<${children[0]}>`;
-	if(ref.constructor === "option") return `undef | Some<${children[0]}>`;
+	if(ref.constructor === "host-null") return `undef | ${children[0]}`;
+	if(ref.constructor === "option") return `${model.types.some(type => type.kind === "host-null") ? "None" : "undef"} | Some<${children[0]}>`;
 	if(ref.constructor === "result") return `Ok<${children[0]}> | Err<${children[1]}>`;
 	if(ref.constructor === "tuple") return `[${children.join(", ")}]`;
 	throw new TypeError("unsupported Perl alias target");

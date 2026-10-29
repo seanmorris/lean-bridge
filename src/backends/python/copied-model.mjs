@@ -5,7 +5,7 @@
  */
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 
-const reserved = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate callable BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError LeanClosure Some Option Ok Err Result invoke dispatch handle token".split(" "));
+const reserved = new Set("False None None_ True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate callable BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError LeanClosure Some Option Ok Err Result invoke dispatch handle token".split(" "));
 const primitive = { char: ["str", "c_uint32"], unit: ["None", "c_uint8"], bool: ["bool", "c_bool"], uint8: ["int", "c_uint8"], uint16: ["int", "c_uint16"], uint32: ["int", "c_uint32"], uint64: ["int", "c_uint64"], int8: ["int", "c_int8"], int16: ["int", "c_int16"], int32: ["int", "c_int32"], int64: ["int", "c_int64"], float32: ["float", "c_float"], float64: ["float", "c_double"], nat: ["int"], int: ["int"], string: ["str"], bytes: ["bytes"] };
 
 /**
@@ -26,6 +26,8 @@ export const validateOrdinaryPythonSettings = (settings = {}) => {
  */
 export const compileCopiedPythonModel = ir => {
 	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), packageDir = `lean_${surface.prefix}`;
+	const hostNull = surface.copies.some(copy => copy.compound === "host-null");
+	const taggedOptions = hostNull && surface.copies.some(copy => copy.compound === "option");
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-python-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
@@ -63,8 +65,9 @@ export const compileCopiedPythonModel = ir => {
 				}
 			}
 		}
-		const compoundType = field => copy.compound === "option" ? `Option[${copy.fields[0].type[field]}]`
-			: `${copy.compound === "result" ? "Result" : "tuple"}[${copy.fields.map(child => child.type[field]).join(", ")}]`;
+		const compoundType = field => copy.compound === "host-null" ? `${copy.fields[0].type[field]} | None`
+			: copy.compound === "option" ? `Option[${copy.fields[0].type[field]}]`
+				: `${copy.compound === "result" ? "Result" : "tuple"}[${copy.fields.map(child => child.type[field]).join(", ")}]`;
 		copy.publicType = copy.record || copy.variant ? copy.publicName : copy.compound ? compoundType("publicType") : copy.element ? `tuple[${copy.element.publicType}, ...]` : primitive[copy.scalarName][0];
 		copy.publicTypeCost = copy.record ? 1 : copy.variant ? copy.cases.length + 1
 			: copy.compound ? 4 + copy.fields.reduce((sum, field) => sum + field.type.publicTypeCost, 0)
@@ -93,6 +96,9 @@ export const compileCopiedPythonModel = ir => {
 			copy.inputTypeCost = 1;
 			copy.inputTypeAlias = true;
 		}
+		if(copy.compound === "host-null" && (copy.fields[0].type.scalarName === "unit"
+			|| copy.fields[0].type.compound === "host-null"))
+			fail(ir.declarations[0], "Python HostNull payloads must retain a value distinct from None");
 	}
 	for(const [index, callback] of [...surface.callbacks.values()].entries())
 	{
@@ -113,5 +119,6 @@ export const compileCopiedPythonModel = ir => {
 		if(names.has(alias.definition.name)) fail(ir.declarations[0], `Python alias name collides: ${alias.definition.name}`);
 		names.add(alias.definition.name);
 	}
-	return { ir, surface, packageDir, requiresTypeAliases: surface.copies.some(copy => copy.publicExpression || copy.inputTypeAlias) };
+	return { ir, surface, packageDir, hostNull, taggedOptions
+		, requiresTypeAliases: surface.copies.some(copy => copy.publicExpression || copy.inputTypeAlias) };
 };

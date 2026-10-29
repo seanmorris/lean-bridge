@@ -41,10 +41,23 @@ ${copy.cases.map((branch, index) => `        when ${index} then ${branch.publicN
 	{
 		const to = (field, expression) => write(field.type, "result", field.offset, `to${field.type.index}(${expression}${field.type.aggregate ? ", scope" : ""})`);
 		const from = field => `from${field.type.index}(${read(field.type, "value", field.offset)})`;
-		if(copy.compound === "option")
+		if(copy.compound === "host-null")
 		{
-			input = `raise TypeError, "Option requires nil or Some(value)" unless same?(value, nil) || exact?(value, Some)
-        present = !same?(value, nil)
+			input = `result = scope.allocate(${copy.size})
+        unless same?(value, nil)
+          result[0, 1] = [1].pack("C")
+          ${to(copy.fields[0], "value")}
+        end
+        result`;
+			output = `case value[0, 1].unpack1("C")
+        when 0 then nil
+        when 1 then ${from(copy.fields[0])}
+        else raise RangeError, "Invalid native HostNull flag"
+        end`;
+		} else if(copy.compound === "option")
+		{
+			input = `raise TypeError, "Option requires ${model.taggedOptions ? "None.new or " : "nil or "}Some.new(value)" unless ${model.taggedOptions ? "exact?(value, None)" : "same?(value, nil)"} || exact?(value, Some)
+        present = exact?(value, Some)
         payload = data_payload(value) if present
         result = scope.allocate(${copy.size})
         if present
@@ -53,7 +66,7 @@ ${copy.cases.map((branch, index) => `        when ${index} then ${branch.publicN
         end
         result`;
 			output = `case value[0, 1].unpack1("C")
-        when 0 then nil
+        when 0 then ${model.taggedOptions ? "None.new" : "nil"}
         when 1 then Some.new(${from(copy.fields[0])})
         else raise RangeError, "Invalid native Option flag"
         end`;

@@ -10,7 +10,8 @@
  * @param model - Admitted Python projection.
  */
 export const pythonCompoundNames = model => [
-	...model.surface.copies.some(copy => copy.compound === "option") ? ["Some", "Option"] : []
+	...model.surface.copies.some(copy => copy.compound === "option")
+		? [...model.taggedOptions ? ["None_"] : [], "Some", "Option"] : []
 	, ...model.surface.copies.some(copy => copy.compound === "result") ? ["Ok", "Err", "Result"] : []
 ];
 
@@ -27,10 +28,15 @@ export const pythonCompoundPublic = model => {
 _T = _TypeVar("_T", covariant=True)
 _E = _TypeVar("_E", covariant=True)
 
-${["Some", "Ok", "Err"].filter(name => names.includes(name)).map(name => `@_dataclass(frozen=True)
+${names.includes("None_") ? `@_dataclass(frozen=True, slots=True)
+class None_:
+    pass
+
+` : ""}${["Some", "Ok", "Err"].filter(name => names.includes(name)).map(name => `@_dataclass(frozen=True)
 class ${name}(_Generic[${name === "Err" ? "_E" : "_T"}]):
     value: ${name === "Err" ? "_E" : "_T"}
 `).join("\n")}
-${names.includes("Option") ? "Option = Some[_T] | None\n" : ""}
+${names.includes("Option") ? names.includes("None_")
+	? "Option = None_ | Some[_T]\n" : "Option = Some[_T] | None\n" : ""}
 ${names.includes("Result") ? "Result = Ok[_T] | Err[_E]\n" : ""}`;
 };

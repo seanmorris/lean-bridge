@@ -76,7 +76,7 @@ class _V${copy.index}(_c.Union):
 class ${copy.ctype}(_c.Structure):
     _fields_ = [("kind", _c.c_uint32), ("cases", _V${copy.index})]
 `;
-	const fields = copy.compound ? [...copy.compound === "tuple" ? [] : [[copy.compound === "option" ? "has_value" : "is_ok", "_c.c_uint8"]], ...copy.fields.map(field => [field.name, field.type.ctype])]
+	const fields = copy.compound ? [...copy.compound === "tuple" ? [] : [[copy.compound === "result" ? "is_ok" : "has_value", "_c.c_uint8"]], ...copy.fields.map(field => [field.name, field.type.ctype])]
 		: copy.record ? copy.fields.length ? copy.fields.map(field => [field.publicName, field.type.ctype]) : [["empty", "_c.c_uint8"]]
 		: [["data", "_c.c_void_p"], ["length", "_c.c_size_t"], ["owner", "_c.c_void_p"], ["release", "_c.c_void_p"], ...(copy.scalarName === "int" ? [["negative", "_c.c_bool"]] : [])];
 	return `class ${copy.ctype}(_c.Structure):\n    _fields_ = [${fields.map(([name, type]) => `(${JSON.stringify(name)}, ${type})`).join(", ")}]\n`;
@@ -120,11 +120,20 @@ export const copiedPythonConversions = model => model.surface.copies.map(copy =>
 	{
 		input.push(`_integer(value, ${name === "nat" ? "0" : "None"}, None)`, "length = (value.bit_length() + 31) // 32", "scope.charge(length, 4)", 'data = abs(value).to_bytes(length * 4, "little")', `return ${copy.ctype}(_buffer(data, scope), length, None, None${name === "int" ? ", value < 0" : ""})`);
 		output.push('magnitude = int.from_bytes(_read(value.data, value.length * 4, scope, 2), "little")', `return ${name === "int" ? "-magnitude if value.negative else magnitude" : "magnitude"}`);
+	} else if(copy.compound === "host-null")
+	{
+		const child = copy.fields[0].type;
+		input.push(`if value is None: return ${copy.ctype}()`, `return ${copy.ctype}(1, _to${child.index}(value, scope))`);
+		output.push('if value.has_value > 1: raise LeanBridgeError(5, "Invalid native HostNull flag")', `return _from${child.index}(value.value, scope) if value.has_value else None`);
 	} else if(copy.compound === "option")
 	{
 		const child = copy.fields[0].type;
-		input.push(`if value is None: return ${copy.ctype}()`, 'if type(value) is not Some: raise TypeError("Option requires None or Some(value)")', `return ${copy.ctype}(1, _to${child.index}(value.value, scope))`);
-		output.push('if value.has_value > 1: raise LeanBridgeError(5, "Invalid native option flag")', `return Some(_from${child.index}(value.value, scope)) if value.has_value else None`);
+		input.push(...model.taggedOptions
+			? [`if type(value) is None_: return ${copy.ctype}()`, 'if type(value) is not Some: raise TypeError("Option requires None_() or Some(value)")']
+			: [`if value is None: return ${copy.ctype}()`, 'if type(value) is not Some: raise TypeError("Option requires None or Some(value)")']
+			, `return ${copy.ctype}(1, _to${child.index}(value.value, scope))`);
+		output.push('if value.has_value > 1: raise LeanBridgeError(5, "Invalid native option flag")'
+			, `return Some(_from${child.index}(value.value, scope)) if value.has_value else ${model.taggedOptions ? "None_()" : "None"}`);
 	} else if(copy.compound === "result")
 	{
 		const [ok, error] = copy.fields.map(field => field.type);
