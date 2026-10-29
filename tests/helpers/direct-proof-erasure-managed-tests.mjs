@@ -50,6 +50,9 @@ test("managed direct proof runner owns routes, groups and retained verification"
 	const source = await readFile(
 		"scripts/run-direct-proof-erasure-managed-ci.sh", "utf8"
 	);
+	const installed = await readFile(
+		"tests/direct-proof-erasure-managed-installed.test.mjs", "utf8"
+	);
 	for(const required of [
 		"<dotnet|jvm>", "LEAN_BRIDGE_DIRECT_PROOF_MANAGED_TEST=1"
 		, "LEAN_BRIDGE_DIRECT_PROOF_MANAGED_GROUP"
@@ -58,6 +61,9 @@ test("managed direct proof runner owns routes, groups and retained verification"
 		, "for route in ordinary reviewed"
 		, "check-direct-proof-erasure-managed-ci.mjs"
 	]) assert.ok(source.includes(required), required);
+	assert.match(installed
+		, /const target = \{ dotnet: "nuget", jvm: "maven" \}\[group\]/u);
+	assert.match(installed, /targets: \[target\], environment/u);
 	assert.doesNotMatch(source, /continue-on-error/u);
 	const workflow = await readFile(
 		".github/workflows/consumer-matrix.yml", "utf8"

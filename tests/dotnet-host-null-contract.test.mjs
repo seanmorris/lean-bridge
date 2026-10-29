@@ -87,6 +87,8 @@ test("generated .NET HostNull sources and all three absence states compile witho
 
 test("managed HostNull CI retains both routes and gates .NET plus JVM observations", async () => {
 	const runner = await readFile("scripts/run-host-null-managed-ci.sh", "utf8");
+	const installed = await readFile(
+		"tests/helpers/host-null-managed-installed.mjs", "utf8");
 	for(const required of [
 		"<dotnet|jvm>", "LEAN_BRIDGE_HOST_NULL_MANAGED_OUTPUT"
 		, "LEAN_BRIDGE_DOTNET_HOST_NULL_TEST=1"
@@ -101,6 +103,9 @@ test("managed HostNull CI retains both routes and gates .NET plus JVM observatio
 		, "steps.host_null_managed.outcome"
 	]) assert.ok(workflow.includes(required), required);
 	assert.equal(workflow.match(/bash scripts\/run-host-null-managed-ci\.sh/gu)?.length, 3);
+	assert.match(installed
+		, /const target = group === "dotnet" \? "nuget" : "maven";/u);
+	assert.match(installed, /targets: \[target\], environment/u);
 });
 
 const installedFlag = process.env.LEAN_BRIDGE_DOTNET_HOST_NULL_TEST;

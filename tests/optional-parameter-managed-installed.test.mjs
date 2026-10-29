@@ -43,6 +43,7 @@ const group = process.env.LEAN_BRIDGE_OPTIONAL_PARAMETER_MANAGED_GROUP
 	?? "dotnet";
 assert.ok(Object.hasOwn(optionalParameterManagedGroups, group));
 const profiles = optionalParameterManagedGroups[group];
+const target = { dotnet: "nuget", jvm: "maven" }[group];
 const routes = process.env.LEAN_BRIDGE_OPTIONAL_PARAMETER_MANAGED_ROUTES
 	?.split(",") ?? ["ordinary", "reviewed"];
 assert.ok(routes.length
@@ -89,7 +90,7 @@ for(const route of routes) test(
 			const outputRoot = join(prepared.directory, "release");
 			const built = await buildCanonicalProject({
 				projectRoot: prepared.projectRoot, outputRoot
-				, targets: profiles, environment
+				, targets: [target], environment
 			}).catch(error => {
 				error.message += `: ${JSON.stringify(error.details)}`;
 				throw error;

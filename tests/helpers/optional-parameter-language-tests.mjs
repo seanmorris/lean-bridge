@@ -10,11 +10,15 @@ import test from "node:test";
 test("optional language runner owns all profiles, routes and its checker", async () => {
 	const source = await readFile(
 		"scripts/run-optional-parameter-language-ci.sh", "utf8");
+	const installed = await readFile(
+		"tests/optional-parameter-language-installed.test.mjs", "utf8");
 	assert.match(source, /perl && \$1 != python && \$1 != ruby && \$1 != rust/u);
 	assert.match(source, /for route in ordinary reviewed/u);
 	assert.match(source, /optional-parameter-language-installed\.test\.mjs/u);
 	assert.match(source, /check-optional-parameter-language-ci\.mjs/u);
 	assert.match(source, /LEAN_BRIDGE_OPTIONAL_PARAMETER_LANGUAGE_TEST=1/u);
+	assert.match(installed
+		, /targets: \[target\[profile\]\], environment/u);
 });
 
 test("consumer workflows retain and enforce every optional language lane", async () => {

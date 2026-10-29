@@ -41,6 +41,24 @@ test("C/C++ source lowering shares C names and has no Alpha or Perl requirements
 	assert.match(generateNativePrimitiveC(model, { initializer: "initialize_LeanBridgeNative0123456789abcdef" }), new RegExp(model.exports[0].symbol));
 });
 
+test("native lowering retains compiler-owned optional parameter defaults", () => {
+	const input = nativeMetadataFixture();
+	const parameter = input.metadata.modules[0].declarations[0]
+		.projection.parameters[0];
+	parameter.optional = true;
+	parameter.default = { kind: "integer", value: "7" };
+	const model = createNativeModel({ ...input, component: {
+		id: "sample@1.0.0", name: "sample", version: "1.0.0"
+	} });
+	assert.deepEqual(model.exports[0].parameters[0], {
+		name: "value", type: model.exports[0].parameters[0].type
+		, optional: true, default: { kind: "integer", value: "7" }
+	});
+	assert.equal(model.bindingIr.declarations[0].parameters[0].optional, true);
+	assert.deepEqual(model.bindingIr.declarations[0].parameters[0].default
+		, { kind: "integer", value: "7" });
+});
+
 test("C/C++ admission rejects unsupported signatures and reserved names at the Lean source", () => {
 	for(const change of [
 		ir => { ir.declarations[0].parameters[0].type = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "uint32" }] }; }

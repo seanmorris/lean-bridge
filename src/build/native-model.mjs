@@ -392,7 +392,10 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 			? { checked: refinements.result.parameters } : {};
 		const declaration = { ...source, parameters, result: { ...nativeRepresentation(source.result), ...leased }, ...(refinements ? { refinements } : {}) };
 		if(!identifier.test(declaration.name) || !identifier.test(declaration.module)) fail("invalid declaration identity");
-		declaration.parameters.forEach(parameter => { closed(parameter, ["name", "type"], "native parameter"); visit(parameter.type); });
+		declaration.parameters.forEach(parameter => {
+			closed(parameter, ["name", "type", ...(parameter.optional ? ["optional", "default"] : [])], "native parameter");
+			visit(parameter.type);
+		});
 		visit(declaration.result);
 		return { ...declaration, symbol: `lb_${sha256(`${component.id}\0${declaration.name}`).slice(0, 24)}` };
 	});

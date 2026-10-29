@@ -96,7 +96,7 @@ for(const route of routes) test(
 			const outputRoot = join(prepared.directory, "release");
 			const built = await buildCanonicalProject({
 				projectRoot: prepared.projectRoot, outputRoot
-				, targets: [profile], environment
+				, targets: [target[profile]], environment
 			}).catch(error => {
 				error.message += `: ${JSON.stringify(error.details)}`;
 				throw error;

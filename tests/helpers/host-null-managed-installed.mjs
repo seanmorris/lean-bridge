@@ -66,6 +66,7 @@ const privateShape = ir => {
 export const runHostNullManagedAcceptance = async (t, group) => {
 	assert.ok(Object.hasOwn(hostNullManagedGroups, group));
 	const profiles = hostNullManagedGroups[group];
+	const target = group === "dotnet" ? "nuget" : "maven";
 	const outputRoot = resolve((process.env.LEAN_BRIDGE_HOST_NULL_MANAGED_OUTPUT
 		?? "build/host-null/managed/{group}").replace("{group}", group));
 	await assert.rejects(access(outputRoot), { code: "ENOENT" });
@@ -95,7 +96,7 @@ export const runHostNullManagedAcceptance = async (t, group) => {
 			, "reviewed.binding-ir.json", canonicalJson(hostNullReviewedIr()));
 		t.diagnostic(`${group}/${route}: compiling authenticated HostNull packages`);
 		const built = await buildCanonicalProject({
-			projectRoot, outputRoot: release, targets: profiles, environment
+			projectRoot, outputRoot: release, targets: [target], environment
 		}).catch(error => {
 			error.message += `: ${JSON.stringify(error.details)}`;
 			throw error;
@@ -121,7 +122,6 @@ export const runHostNullManagedAcceptance = async (t, group) => {
 		const installed = [];
 		for(const profile of profiles)
 		{
-			const target = profile === "dotnet" ? "nuget" : "maven";
 			const packages = receipt.packages.filter(item => item.target === target);
 			assert.equal(packages.filter(item => item.role === "component").length, 1);
 			const source = await readFile(
