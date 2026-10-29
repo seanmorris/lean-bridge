@@ -1,0 +1,576 @@
+{
+  "apiModeCount": 2,
+  "artifactCount": 11,
+  "authorRouteCount": 2,
+  "calledWorkflowCount": 11,
+  "cellCount": 34,
+  "currentSourceDigests": [],
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-signature-focused-ci-source-history.mjs",
+      "sha256": "6ba0dfd47650e1a8f155b2b7ca09b362bffa7c29c5b775b1eb3f86915857fe84"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-focused-ci-source-history-tests.mjs",
+      "sha256": "1d3c4ae5afc5bb4c969e30f212e8c4c33cfce633d31db153d3cd6c495dc10970"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-focused-ci-source-history.mjs",
+      "sha256": "9214017a7da4664ca4a25196b5ee86c6da551b4692ef643a0fa18cac0fb10f09"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "scripts/reconcile-dependent-signature-matrix.mjs",
+      "sha256": "1ecb288d836a5faef99c6a565fd2f698a0e327474c09b447e51fa1de1c727143"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-matrix-receipt-tests.mjs",
+      "sha256": "1bd214c47cd5863522ec9ff5d4627f5bfc09c253e10d7566527604deff1771a9"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-matrix-receipt.mjs",
+      "sha256": "994a1ac4840e1f0757c4ba24d82defec1485c6466a49887a7bfb95b88d86eb24"
+    }
+  ],
+  "implementationCommit": "5547500cf470a381ed323adc41f87f7b490da2d9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6c5fd7a546746b75d8bda289949b14507eb564f2f2de97397a8bd8b684dd2ad1",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-signature-focused-ci-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "787abf9577540b9427ba958bd4f29329f899242f0a1643ff0496b430a10822c9"
+    },
+    {
+      "currentSha256": "0388e02667cbc6137ec7abc38143702fbb33a807aba3b95666ea56c8fcb205d2",
+      "edits": [
+        {
+          "current": "import { beforeDependentSignatureFocusedCiSource }\n\tfrom \"./dependent-signature-focused-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 274
+        },
+        {
+          "current": "\t}\n);\n",
+          "previous": "});\n",
+          "start": 1740
+        },
+        {
+          "current": "\t}}\n);\n",
+          "previous": "\t}\n});\n",
+          "start": 2320
+        },
+        {
+          "current": "\t}}\n);\n",
+          "previous": "\t}\n});\n",
+          "start": 2950
+        },
+        {
+          "current": "\t\tconst live = beforeDependentSignatureFocusedCiSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"));\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 3248
+        },
+        {
+          "current": "\t}}\n);\n",
+          "previous": "\t}\n});\n",
+          "start": 3570
+        },
+        {
+          "current": "\t\tassert.deepEqual(value.currentSourceDigests, []);}\n);\n",
+          "previous": "\tassert.deepEqual(value.currentSourceDigests, []);\n});\n",
+          "start": 3788
+        },
+        {
+          "current": "\t\tassert.equal(sha256(beforeDependentSignatureFocusedCiSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.sha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 4306
+        },
+        {
+          "current": "\t}\n);\n",
+          "previous": "});\n",
+          "start": 4699
+        },
+        {
+          "current": "\t\tconst live = beforeDependentSignatureFocusedCiSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"));\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 4871
+        },
+        {
+          "current": "\t}}\n);\n",
+          "previous": "\t}\n});\n",
+          "start": 5157
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-focused-ci-source-history-tests.mjs",
+      "previousSha256": "f62000645289adaf7edb7b5ae1091ab1423b96a231b1e6327618da55f20be651"
+    },
+    {
+      "currentSha256": "83b37ff7265703440861de4bb14fecf7b14d5bda2b9d2fda4dbbfc6937d35fe7",
+      "edits": [
+        {
+          "current": "import { beforeDependentSignatureFocusedCiSource, dependentSignatureFocusedCiNormalizationPaths } from \"./dependent-signature-focused-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentSignatureFocusedCiNormalizationPaths\n\t, ...directProofErasureFocusedCiNormalizationPaths\n",
+          "previous": "\t...directProofErasureFocusedCiNormalizationPaths\n",
+          "start": 217850
+        },
+        {
+          "current": "\tlet stage = beforeDependentSignatureFocusedCiSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureFocusedCiSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDirectProofErasureFocusedCiSource(path, text, expected);\n",
+          "start": 272524
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ba418066fbd35137850eb8bcfad4658fe1f25ffd65db3373d2290c1f13cdaa26"
+    }
+  ],
+  "milestone": "dependent-signature-focused-ci-source-v1",
+  "predecessorCommit": "f09dbe71ef6eb660a4912af44da371cf42cb8d7b",
+  "producerJobCount": 11,
+  "profileCount": 17,
+  "receiptJobCount": 1,
+  "refreshedPins": 0,
+  "reportCount": 44,
+  "schemaVersion": 1,
+  "scope": "Expose the eleven existing installed dependent checked-record workflows as reusable same-revision producers, retain their independent package checkers and complete artifacts, and preserve their weekly manual operation. Execute seventeen profiles through ordinary and reviewed author routes in both full and result-only API modes. Reconcile forty-four canonical checker summaries into one exact-run fail-closed receipt representing thirty-four promoted cells. Preserve the low-cost immutable archive audit as the default and make no support promotion before the hosted run is retained and independently replayed.",
+  "updates": [
+    {
+      "currentSha256": "88381d81f9be70f21245d07f475c3ca7b361ff80e8dd3979d4b7b128a916bd72",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 78
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-browser.yml",
+      "previousSha256": "95f2a5269221ad32758794c2bb371a053946b28689ac0085e99f431be415d48e"
+    },
+    {
+      "currentSha256": "e5ed59f7a3e6999678792b513dcbd7cefbe9899da8a9e40aa196a65f3fa5bc9d",
+      "edits": [
+        {
+          "current": "  workflow_call:\n    inputs:\n      max-load:\n        description: Maximum admitted one-minute host load\n        required: false\n        default: \"6\"\n        type: string\n",
+          "previous": "",
+          "start": 317
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-dotnet.yml",
+      "previousSha256": "6b6446e5dda2726f51765b40af53357cb5c4fb1b83bb7504538cc60ab3f34054"
+    },
+    {
+      "currentSha256": "801f748e84ea1ace5da7224e3d506e0f5c81e50b8b77f949aaf59ee5aab8ca23",
+      "edits": [
+        {
+          "current": "  workflow_call:\n    inputs:\n      max-load:\n        description: Maximum admitted one-minute host load\n        required: false\n        default: \"6\"\n        type: string\n",
+          "previous": "",
+          "start": 323
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-jvm.yml",
+      "previousSha256": "49dd81aef46154e5f760255577dd69f12e1fa56c22aa462d9a18a6cb104312b6"
+    },
+    {
+      "currentSha256": "7180e3f78302682104eccce1460adc2869f40aaab1dd0ede940aadfe12b24c71",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 71
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-native.yml",
+      "previousSha256": "86b7bab9a68b2a40a00e702034f0cad355f754a6d15c7e0b4896b01491d0ba2b"
+    },
+    {
+      "currentSha256": "07eef16547841c23ee121316d4d585275fe70c69d3a7dcd7a98c5edfd1e9e9ac",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 76
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-perl.yml",
+      "previousSha256": "5c66da08800947e7a35faea3a483a2b4d43658f9c6d5725e76c2b07f2a7e43aa"
+    },
+    {
+      "currentSha256": "454450925ba4958aca441a15a45bedb2a915de6e3aae46f5f95f891dcf94efa0",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 80
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-php-wasm.yml",
+      "previousSha256": "aa3cc52a4e6c73d0a7ac5ea6f48a68cc9e867acbeb2207f9636395e5da619848"
+    },
+    {
+      "currentSha256": "ab379f353e4baf3baf3bbf26f6ce416dc8d3f03b246fdd90083cd7c20464d0b7",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 87
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-php.yml",
+      "previousSha256": "b3ded4ecd298a96e7bd75680b0bf0ea95088bf1872a938b8a2a7f29cfcb99e28"
+    },
+    {
+      "currentSha256": "19491997246181f1427e0520c6a7f2b270e06b02bf18497c017acee8a91e11de",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 78
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-python.yml",
+      "previousSha256": "007d1d1d1e4279e61ddc54fdf80421fd0774c3e7d5a5fd3c206de0c094b652cf"
+    },
+    {
+      "currentSha256": "14320a04e0be766c51c7eae153f0f13af7b96f318122d23437bad36961fa6054",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 76
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-ruby.yml",
+      "previousSha256": "935d7d809a1c393c6fda054f345f1d61ca4b55e8245c744a515b3746a2a98b32"
+    },
+    {
+      "currentSha256": "e9172f8b1d2712118e38b2b54030f0e2a186671b0a45fc97d54d232701a7766d",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 76
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-rust.yml",
+      "previousSha256": "e86af1178537c78ba3e43d7cece727d307c4c8c7b8f8a46aefbed59ca31b152d"
+    },
+    {
+      "currentSha256": "f25b11db728df845e802cd19869d7f07a904eb8f41732e03f0d05a39aca53b90",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 100
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-wit.yml",
+      "previousSha256": "2563fbbb3b48773c527601012aa87335d2f41bac8542b09b1869613c9b7a26d6"
+    },
+    {
+      "currentSha256": "50dcd95e01af8302c25897e9164abf2d780a114ab925b7954f3560642ac02f37",
+      "edits": [
+        {
+          "current": "      - \"tests/helpers/dependent-signature-matrix-*.mjs\"\n",
+          "previous": "",
+          "start": 822
+        },
+        {
+          "current": "      - \"tests/helpers/dependent-signature-matrix-*.mjs\"\n",
+          "previous": "",
+          "start": 1658
+        },
+        {
+          "current": "    inputs:\n      suite:\n        description: Bounded dependent-signature suite to execute\n        required: true\n        default: audit\n        type: choice\n        options:\n          - audit\n          - produce\n",
+          "previous": "",
+          "start": 1736
+        },
+        {
+          "current": "    if: inputs.suite != 'produce'\n",
+          "previous": "",
+          "start": 2210
+        },
+        {
+          "current": "\n  javascript:\n    name: JavaScript and browser producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-browser.yml\n\n  native:\n    name: C and C++ producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-native.yml\n\n  perl:\n    name: Perl producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-perl.yml\n\n  python:\n    name: Python producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-python.yml\n\n  rust:\n    name: Rust producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-rust.yml\n\n  dotnet:\n    name: .NET producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-dotnet.yml\n\n  jvm:\n    name: Java and Kotlin producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-jvm.yml\n\n  ruby:\n    name: Ruby producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-ruby.yml\n\n  php-native:\n    name: Native PHP producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-php.yml\n\n  php-wasm:\n    name: PHP-Wasm producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-php-wasm.yml\n\n  wit:\n    name: WIT and WASI producer\n    if: inputs.suite == 'produce'\n    uses: ./.github/workflows/dependent-checked-record-wit.yml\n\n  receipt:\n    name: Reconcile the exact same-run receipt\n    if: always() && inputs.suite == 'produce'\n    needs:\n      - javascript\n      - native\n      - perl\n      - python\n      - rust\n      - dotnet\n      - jvm\n      - ruby\n      - php-native\n      - php-wasm\n      - wit\n    runs-on: ubuntu-24.04\n    timeout-minutes: 20\n    steps:\n      - name: Check out the exact producer revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: \"22\"\n      - name: Download every same-run dependent-signature artifact\n        id: download\n        continue-on-error: true\n        uses: actions/download-artifact@v5\n        with:\n          pattern: dependent-checked-record-*-${{ github.sha }}\n          path: build/dependent-signature-matrix-input\n      - name: Reconcile every profile, author route, and API mode\n        id: reconciliation\n        if: always()\n        continue-on-error: true\n        run: |\n          node scripts/reconcile-dependent-signature-matrix.mjs \\\n            --directory build/dependent-signature-matrix-input \\\n            --output build/dependent-signature-matrix/receipt.json \\\n            --producer \"${{ github.sha }}\" \\\n            --repository \"${{ github.repository }}\" \\\n            --workflow \".github/workflows/dependent-signature-complete.yml\" \\\n            --run-id \"${{ github.run_id }}\" \\\n            --run-attempt \"${{ github.run_attempt }}\"\n      - name: Preserve the complete dependent-signature receipt\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: dependent-signature-matrix-${{ github.sha }}\n          path: build/dependent-signature-matrix/receipt.json\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce every producer and exact receipt reconciliation\n        if: >-\n          always() &&\n          (needs.javascript.result != 'success' ||\n           needs.native.result != 'success' ||\n           needs.perl.result != 'success' ||\n           needs.python.result != 'success' ||\n           needs.rust.result != 'success' ||\n           needs.dotnet.result != 'success' ||\n           needs.jvm.result != 'success' ||\n           needs.ruby.result != 'success' ||\n           needs.php-native.result != 'success' ||\n           needs.php-wasm.result != 'success' ||\n           needs.wit.result != 'success' ||\n           steps.download.outcome != 'success' ||\n           steps.reconciliation.outcome != 'success')\n        run: exit 1\n",
+          "previous": "",
+          "start": 3682
+        }
+      ],
+      "path": ".github/workflows/dependent-signature-complete.yml",
+      "previousSha256": "911048e15d6708e0132b6a538a57d9c48a54b0490888f5f56db23ab916322379"
+    },
+    {
+      "currentSha256": "adebb0246aba3c3338fbd5c80d5499dae1f387b1ba15fb511f0ba4789b5493e0",
+      "edits": [
+        {
+          "current": "mkdir \"$output/verification\"\n",
+          "previous": "",
+          "start": 245
+        },
+        {
+          "current": "    --tap \"$output/run.tap\" >\"$output/verification/$route.json\"\n",
+          "previous": "    --tap \"$output/run.tap\" >/dev/null\n",
+          "start": 1062
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-browser-ci.sh",
+      "previousSha256": "de761ab5927298ad9829a038b59ebd9b43dd0f8a84140d3bc49c96147549f8f2"
+    },
+    {
+      "currentSha256": "09a8afbc5e97178666707ca6b0fb85bb8387efabc683e2c466ed26812414a1fa",
+      "edits": [
+        {
+          "current": "mkdir \"$output_root/verification\"\n",
+          "previous": "",
+          "start": 1047
+        },
+        {
+          "current": "    | tee \"$output/verification.json\" \"$output_root/verification/$route.json\"\n",
+          "previous": "    | tee \"$output/verification.json\"\n",
+          "start": 2194
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-dotnet-ci.sh",
+      "previousSha256": "1ae19c69b476f74be6da1188291b89bf6e4f51693081520cac6d637b12bdbc2d"
+    },
+    {
+      "currentSha256": "ddfb05fecc24c77159e45f2d8d749e5513a680e9ec6dbaddfe43a4fe99c9a252",
+      "edits": [
+        {
+          "current": "mkdir \"$output_root/verification\"\n",
+          "previous": "",
+          "start": 1765
+        },
+        {
+          "current": "    --kotlinc \"$LEAN_BRIDGE_KOTLINC\" \\\n    | tee \"$output/verification.json\" \"$output_root/verification/$route.json\"\n",
+          "previous": "    --kotlinc \"$LEAN_BRIDGE_KOTLINC\" | tee \"$output/verification.json\"\n",
+          "start": 2905
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-jvm-ci.sh",
+      "previousSha256": "2556811bffc69faf27248b7a1bcd5b62a5bc238d729273c19f02c7fef51da69e"
+    },
+    {
+      "currentSha256": "99daa9c311ddc4675a2211474e85b1a24397c255830d345d87a3553e3f754892",
+      "edits": [
+        {
+          "current": "mkdir \"$output_root/verification\"\n",
+          "previous": "",
+          "start": 640
+        },
+        {
+          "current": "  node scripts/check-dependent-checked-record-native-ci.mjs \\\n    --route \"$route\" --producer \"$revision\" --checker \"$revision\" \\\n    --directory \"$records/$route\" --tap \"$output_root/$route.tap\" \\\n    --floor 2.38 >\"$output_root/verification/$route.json\"\n",
+          "previous": "",
+          "start": 1313
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-native-ci.sh",
+      "previousSha256": "1e61da6f391505d8ee9f23a42d1f798e03a276ceebf1330270feac29f8d311f2"
+    },
+    {
+      "currentSha256": "161dd228a4c1483c3e947076e933571adb30194f9e98ce317a539d4f2c85bad7",
+      "edits": [
+        {
+          "current": "mkdir \"$output_root/verification\"\n",
+          "previous": "",
+          "start": 790
+        },
+        {
+          "current": "    --glibc 2.38 --max-load 8 \\\n    | tee \"$output/verification.json\" \"$output_root/verification/$route.json\"\n",
+          "previous": "    --glibc 2.38 --max-load 8 | tee \"$output/verification.json\"\n",
+          "start": 1773
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-perl-ci.sh",
+      "previousSha256": "58fe2625c24a11e0b7b012ed0f6a26f07379d74063e84deae59e96a734790b39"
+    },
+    {
+      "currentSha256": "67d209e5bf9bf933e5dec7ba2e4f04ffff2855b3154db11c967474e8111ba3bc",
+      "edits": [
+        {
+          "current": "mkdir \"$output_root/verification\"\n",
+          "previous": "",
+          "start": 1219
+        },
+        {
+          "current": "    | tee \"$output/verification.json\" \"$output_root/verification/$route.json\"\n",
+          "previous": "    | tee \"$output/verification.json\"\n",
+          "start": 3102
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-php-ci.sh",
+      "previousSha256": "95a1641434591956832d92c83feddaa4293b9c7d86f40749e1fdcca52e8bb94a"
+    },
+    {
+      "currentSha256": "d7deace77fed18f8dbccb7cf60e1d66e6939d04070d89a99553cefbef56437da",
+      "edits": [
+        {
+          "current": "mkdir \"$output_root/verification\"\n",
+          "previous": "",
+          "start": 463
+        },
+        {
+          "current": "    --tap \"$output/run.tap\" 2>&1 \\\n    | tee \"$output/check.log\" \"$output_root/verification/$route.json\"\n",
+          "previous": "    --tap \"$output/run.tap\" 2>&1 | tee \"$output/check.log\"\n",
+          "start": 1645
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-php-wasm-ci.sh",
+      "previousSha256": "838830d8e5e60cfc6788be34c98dbdb6e3bc2355fd0c0b3b4e8644bd962a4481"
+    },
+    {
+      "currentSha256": "ae816ade9b6ad55c1cd163cf1ac1de4f31d94941460ca5d027777e2e2ead9045",
+      "edits": [
+        {
+          "current": "mkdir \"$output_root/verification\"\n",
+          "previous": "",
+          "start": 775
+        },
+        {
+          "current": "    --glibc 2.38 \\\n    | tee \"$output/verification.json\" \"$output_root/verification/$route.json\"\n",
+          "previous": "    --glibc 2.38 | tee \"$output/verification.json\"\n",
+          "start": 2030
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-python-ci.sh",
+      "previousSha256": "b3b2691885e55810f12f2a8d847c537cd1c00ea0cbfbb91e2465900a1293b567"
+    },
+    {
+      "currentSha256": "58c4bdd2279f45d07b3bf0d0bcd54d247b6e74321d2f48eb40a80e0c170046ea",
+      "edits": [
+        {
+          "current": "mkdir \"$output_root/verification\"\n",
+          "previous": "",
+          "start": 1004
+        },
+        {
+          "current": "    | tee \"$output/verification.json\" \"$output_root/verification/$route.json\"\n",
+          "previous": "    | tee \"$output/verification.json\"\n",
+          "start": 2126
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-ruby-ci.sh",
+      "previousSha256": "4eb9959ec51a35f038ba9bf23209b72168678f2e8e0e56e8d04d88cf0bf3c8e9"
+    },
+    {
+      "currentSha256": "628434ace5106f602079032228e3384216beab6ff8b8308f6907226f040b759c",
+      "edits": [
+        {
+          "current": "mkdir \"$output_root/verification\"\n",
+          "previous": "",
+          "start": 885
+        },
+        {
+          "current": "    --rustc \"$LEAN_BRIDGE_RUSTC\" --cargo \"$LEAN_BRIDGE_CARGO\" \\\n    | tee \"$output/verification.json\" \"$output_root/verification/$route.json\"\n",
+          "previous": "    --rustc \"$LEAN_BRIDGE_RUSTC\" --cargo \"$LEAN_BRIDGE_CARGO\" | tee \"$output/verification.json\"\n",
+          "start": 1996
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-rust-ci.sh",
+      "previousSha256": "034985ee2991447b59b33ad453f27bdae7f96f95d792ec34846140a9c86b6a1c"
+    },
+    {
+      "currentSha256": "62a477af0e14ddccc674570aba3a15b6e7f44cf31203a0b3fe2d387b2eafb427",
+      "edits": [
+        {
+          "current": "mkdir \"$output_root/verification\"\n",
+          "previous": "",
+          "start": 1294
+        },
+        {
+          "current": "    | tee \"$output/verification.json\" \"$output_root/verification/$route.json\"\n",
+          "previous": "    | tee \"$output/verification.json\"\n",
+          "start": 2679
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-wit-ci.sh",
+      "previousSha256": "2d74f17c700197012c21ba3705704eb6ca1f35166fd534d48b56113b703f1a82"
+    },
+    {
+      "currentSha256": "c2a2d662dd8e47369e53897604faf796a36adb1f6331b55149f1a44ae6d11485",
+      "edits": [
+        {
+          "current": "\t\t, [\"workflow_dispatch\", \"workflow_call\", \"schedule\"\n",
+          "previous": "\t\t, [\"workflow_dispatch\"\n\t\t\t, \"schedule\"\n",
+          "start": 1203
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-workflow.mjs",
+      "previousSha256": "8f83c62d559822e0fabd72e27e16d3860ff60885527224e62b7926f54aaae80d"
+    },
+    {
+      "currentSha256": "541026312bfb937e4cff9148a059ff2fb6579c12f987e2c216d62557bce43f18",
+      "edits": [
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 4);\n",
+          "previous": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "start": 1753
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "bb14f432595adcf7cfe8746c83c8c7b811f7e4040723ab5915aed754b9404677"
+    },
+    {
+      "currentSha256": "513c6f983b9683f0d65214931c85b5145f88d8d7ee79d062afa9dc95953e6b9f",
+      "edits": [
+        {
+          "current": "\tassert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\\n/gmu)].map(match => match[1]), [\"workflow_dispatch\", \"workflow_call\", \"schedule\", \"dependent-checked-record-wit\"]);\n",
+          "previous": "\tassert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\\n/gmu)].map(match => match[1]), [\"workflow_dispatch\", \"schedule\", \"dependent-checked-record-wit\"]);\n",
+          "start": 1687
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-ci-workflow.mjs",
+      "previousSha256": "7911e401f497a65c051a34cd89a769f1b3ddaaeb9e024203792cc7de839cdfda"
+    },
+    {
+      "currentSha256": "f6e0fbc60048c7c24e3b62cf7857ef24f6f372db387ccbdffbc7090321944c1f",
+      "edits": [
+        {
+          "current": "\t, \"tests/helpers/dependent-signature-matrix-*.mjs\"\n",
+          "previous": "",
+          "start": 971
+        },
+        {
+          "current": "\tassert.deepEqual(keys, [\n\t\t\"push\", \"pull_request\", \"workflow_dispatch\", \"schedule\", \"audit\"\n\t\t, \"javascript\", \"native\", \"perl\", \"python\", \"rust\", \"dotnet\"\n\t\t, \"jvm\", \"ruby\", \"php-native\", \"php-wasm\", \"wit\", \"receipt\"\n\t]);\n",
+          "previous": "\tassert.deepEqual(keys\n\t\t, [\"push\", \"pull_request\", \"workflow_dispatch\", \"schedule\", \"audit\"]);\n",
+          "start": 1224
+        },
+        {
+          "current": "\tassert.match(source, /workflow_dispatch:\\n {4}inputs:\\n {6}suite:[\\s\\S]* {10}- audit\\n {10}- produce/u);\n",
+          "previous": "",
+          "start": 1667
+        },
+        {
+          "current": "\tassert.match(source, / {2}audit:\\n {4}if: inputs\\.suite != 'produce'/u);\n",
+          "previous": "",
+          "start": 1909
+        },
+        {
+          "current": "\tassert.equal((source.match(/if-no-files-found: error/gmu) ?? []).length, 2);\n\tconst producers = [\n\t\t[\"javascript\", \"browser\"], [\"native\", \"native\"], [\"perl\", \"perl\"]\n\t\t, [\"python\", \"python\"], [\"rust\", \"rust\"], [\"dotnet\", \"dotnet\"]\n\t\t, [\"jvm\", \"jvm\"], [\"ruby\", \"ruby\"], [\"php-native\", \"php\"]\n\t\t, [\"php-wasm\", \"php-wasm\"], [\"wit\", \"wit\"]\n\t];\n\tfor(const [job, workflow] of producers)\n\t{\n\t\tassert.match(source, new RegExp(\n\t\t\t`  ${job}:\\\\n[\\\\s\\\\S]*?    if: inputs\\\\.suite == 'produce'\\\\n`\n\t\t\t+ `    uses: \\\\.\\\\/\\\\.github\\\\/workflows\\\\/dependent-checked-record-${workflow}\\\\.yml`\n\t\t\t, \"u\"));\n\t\tconst receipt = source.split(\"  receipt:\\n\")[1];\n\t\tassert.ok(receipt.includes(`      - ${job}\\n`), `${job} receipt need`);\n\t\tassert.ok(receipt.includes(`needs.${job}.result != 'success'`)\n\t\t\t, `${job} receipt result`);\n\t}\n\tassert.match(source, /pattern: dependent-checked-record-\\*-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tassert.match(source, /node scripts\\/reconcile-dependent-signature-matrix\\.mjs/u);\n\tassert.match(source, /name: dependent-signature-matrix-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tassert.ok(source.includes(\"steps.download.outcome != 'success'\"));\n\tassert.ok(source.includes(\"steps.reconciliation.outcome != 'success'\"));\n\tassert.equal((source.match(/continue-on-error: true/gmu) ?? []).length, 2);\n\tassert.doesNotMatch(source, /\\|\\| true/u);\n",
+          "previous": "\tassert.match(source, /if-no-files-found: error/u);\n\tassert.doesNotMatch(source, /continue-on-error|\\|\\| true/u);\n",
+          "start": 2743
+        },
+        {
+          "current": "\tfor(const [index, changed] of [\n",
+          "previous": "\tfor(const changed of [\n",
+          "start": 4583
+        },
+        {
+          "current": "\t\t, source.replace(\"needs.wit.result != 'success' ||\\n\", \"\")\n\t\t, source.replace(\"steps.reconciliation.outcome != 'success'\", \"false\")\n\t\t, source.replace(\"dependent-checked-record-*-\", \"dependent-checked-record-browser-\")\n\t].entries()) assert.throws(\n\t\t() => assertDependentSignatureCompleteWorkflow(changed)\n\t\t, undefined, `bypass control ${index}`);\n",
+          "previous": "\t]) assert.throws(() => assertDependentSignatureCompleteWorkflow(changed));\n",
+          "start": 5152
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-complete-ci-tests.mjs",
+      "previousSha256": "99bda2a5a9def51822429e176e3add14e66a884855d4dceebf4d9a24f97934d5"
+    }
+  ]
+}
