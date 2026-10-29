@@ -188,6 +188,7 @@ for(const route of routes) test(
 			, environment
 			, fixture: {
 				source: () => source, success: "optional-parameter-php"
+				, expectedChecks: 23
 				, phpInvalid: phpInvalid(route), removeHandoff: true
 			}
 		});

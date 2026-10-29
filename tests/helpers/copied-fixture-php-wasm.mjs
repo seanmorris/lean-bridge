@@ -169,7 +169,10 @@ try {globalThis.copiedResult=await checkPhp(PhpWeb,api,mode,loading,await(await 
 	}
 	finally
 	{ await browser?.close(); await server.close(); }
-	assert.ok(executions.every(item => item.checks === executions[0].checks && item.checks >= 1000));
+	const expectedChecks = fixture.expectedChecks ?? executions[0].checks;
+	assert.ok(Number.isSafeInteger(expectedChecks) && expectedChecks > 0);
+	assert.ok(executions.every(item => item.checks === expectedChecks));
+	if(fixture.expectedChecks === undefined) assert.ok(expectedChecks >= 1000);
 	if(deployment)
 	{
 		assert.deepEqual(await deploymentInventory(root, deployed), deployment);

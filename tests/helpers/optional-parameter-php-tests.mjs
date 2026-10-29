@@ -25,3 +25,17 @@ test("consumer matrix retains and enforces optional PHP evidence", async () => {
 	assert.match(source, /path: build\/optional-parameter-php-ci\//u);
 	assert.match(source, /steps\.optional_parameters_php\.outcome != 'success'/u);
 });
+
+test("optional PHP-Wasm uses an exact small-fixture check count", async () => {
+	const [installed, helper] = await Promise.all([
+		readFile("tests/optional-parameter-php-installed.test.mjs", "utf8")
+		, readFile("tests/helpers/copied-fixture-php-wasm.mjs", "utf8")
+	]);
+	assert.match(installed, /expectedChecks: 23/u);
+	assert.match(helper
+		, /const expectedChecks = fixture\.expectedChecks \?\? executions\[0\]\.checks/u);
+	assert.match(helper
+		, /executions\.every\(item => item\.checks === expectedChecks\)/u);
+	assert.match(helper
+		, /fixture\.expectedChecks === undefined\) assert\.ok\(expectedChecks >= 1000\)/u);
+});
