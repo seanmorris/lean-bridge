@@ -1,0 +1,225 @@
+{
+  "currentSourcePaths": [
+    "src/release/component-npm-package.mjs"
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-npm-runtime-module-graph-closure-source-history.mjs",
+      "sha256": "a01ae2cafde45cc66f4c8b146424ad206b35bfb427503d055d821b71108ebdf3"
+    },
+    {
+      "path": "tests/helpers/npm-runtime-module-graph-closure-source-history-tests.mjs",
+      "sha256": "c05c027a43bf1be219433f014655e1bc8337be134c1a6bf9f5d0386f19c28fd0"
+    },
+    {
+      "path": "tests/helpers/npm-runtime-module-graph-closure-source-history.mjs",
+      "sha256": "7c03252a2f531dea488cef4007d0ba1fe49e45f54e21472ca3c7a3754f606b5a"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "scripts/refresh-npm-runtime-module-graph-pins.mjs",
+      "sha256": "762de54c1f8f596d4f1d10b397406754b12e684a7d05fb01765c79d8787d55d0"
+    }
+  ],
+  "implementationCommit": "03bf4600410a064b4812c19ce0349a0fac8c14e6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6da8800bdd4716b6cf858d7366c3135588a45c3ff226606e2c8775ec35b449bf",
+      "edits": [
+        {
+          "current": "import \"./helpers/npm-runtime-module-graph-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 179
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "36bb6db055b1ba35fcf7007034e5107cae8f445b0b8805f1b1f1f8ae3aaac7dc"
+    },
+    {
+      "currentSha256": "cdb65ced1a8feb9ef5875abbb5684652502a2561d705328370e234a6f59d6b47",
+      "edits": [
+        {
+          "current": "import { beforeNpmRuntimeModuleGraphClosureSource, npmRuntimeModuleGraphClosureNormalizationPaths } from \"./npm-runtime-module-graph-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...npmRuntimeModuleGraphClosureNormalizationPaths\n\t, ...optionalParameterNativeEvidenceRepairNormalizationPaths\n",
+          "previous": "\t...optionalParameterNativeEvidenceRepairNormalizationPaths\n",
+          "start": 218818
+        },
+        {
+          "current": "\tlet stage = beforeNpmRuntimeModuleGraphClosureSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterNativeEvidenceRepairSource(\n",
+          "previous": "\tlet stage = beforeOptionalParameterNativeEvidenceRepairSource(\n",
+          "start": 273809
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7ddd099e2389a834bce0766b9b766d36e99475b40aeffb20ac816236ce8ee5ae"
+    },
+    {
+      "currentSha256": "3ad14b7ab5620b342047ab9d6237d4b61544619d4946b0d9635d923c52896a0a",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 839
+        },
+        {
+          "current": "\t\t\tawait sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256), update)\n",
+          "previous": "\t\t\tawait readFile(update.path, \"utf8\"), update)\n",
+          "start": 2649
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path, \"utf8\"))\n",
+          "start": 3603
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-native-evidence-repair-source-history-tests.mjs",
+      "previousSha256": "ba005f6e649145001c142e99cf6d98efd6010f8f34e7bd217873b535412f9d9c"
+    }
+  ],
+  "milestone": "npm-runtime-module-graph-closure-source-v1",
+  "predecessorCommit": "6d949d539d764295f82f2394c0eda0e28fd313d3",
+  "refreshedPins": 16,
+  "schemaVersion": 1,
+  "scope": "Close the shared npm runtime package after the optional-parameter branch reintroduced Binding IR default values and three shipped runtime modules began importing their validator. Restore internal/binding-ir/default-value.mjs, require the assembled runtime's complete relative ES-module graph to resolve, and restore the installed-package assertion. Refresh exactly the 16 live citations of component-npm-package.mjs. Preserve every support state, observation, retained artifact and public package contract.",
+  "sourceCommit": "6679d41ae685f936e627658886e9aee490e21455",
+  "updates": [
+    {
+      "currentSha256": "34594bea0af231f0119f5fc75a30564f4b4adb6ab61132706a16c34dafb48508",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 139635
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 468785
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 669174
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 677415
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 685100
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 692372
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 831456
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 991171
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 1053094
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 1142225
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 1492128
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 1714890
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 1720669
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 1725454
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 1729620
+        },
+        {
+          "current": "          \"sha256\": \"373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f\"\n",
+          "previous": "          \"sha256\": \"26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed\"\n",
+          "start": 1951188
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "0f69299c7686d5e80d9a5898bdc484210dfa0d2f9ddae0bdbd539b71acf455a2"
+    },
+    {
+      "currentSha256": "373f21629a6298157229aec4b212e981b006924f44c7d7d32f9fa02e511d827f",
+      "edits": [
+        {
+          "current": "\tfor(const name of [\"canonical\", \"contract\", \"default-value\", \"sha256\"])\n",
+          "previous": "\tfor(const name of [\"canonical\", \"contract\", \"sha256\"])\n",
+          "start": 10208
+        }
+      ],
+      "path": "src/release/component-npm-package.mjs",
+      "previousSha256": "26def937437f47e0d17a301834a218026f4085f1d4c644fea762fe1d5d10e8ed"
+    },
+    {
+      "currentSha256": "f9ba0e9160d3fed90afa77dfa40584106cb850c9b9e8e0a8183170a311f48415",
+      "edits": [
+        {
+          "current": "\t\tawait access(join(runtimeRoot, \"internal/binding-ir/default-value.mjs\"));\n\t\tfor(const name of [\"component-callables\", \"component-copied\", \"component-structured-callables\"])\n\t\t\tassert.match(await readFile(join(runtimeRoot, `internal/${name}.mjs`), \"utf8\"), /from \"\\.\\/binding-ir\\/default-value\\.mjs\"/u);\n",
+          "previous": "",
+          "start": 11206
+        }
+      ],
+      "path": "tests/component-npm-package.test.mjs",
+      "previousSha256": "bfe106b0d53af4ed3737ddf8f339805b8b1716ba15f4c94bee619b4d4cff277b"
+    },
+    {
+      "currentSha256": "8b0e9aadbcf5e88185a34abbdc7f0ed8b270bdf41937062ce9a8f1944ac14d6c",
+      "edits": [
+        {
+          "current": "import { posix } from \"node:path\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "const relativeImports = source => [\n\t...source.matchAll(/\\bfrom\\s+[\"'](\\.[^\"']+)[\"']/gu)\n\t, ...source.matchAll(/\\bimport\\s*(?:\\(\\s*)?[\"'](\\.[^\"']+)[\"']/gu)\n].map(match => match[1]);\n\nconst assertClosedRuntimeModules = runtime => {\n\tfor(const [path, bytes] of runtime.files)\n\t{\n\t\tif(!path.endsWith(\".mjs\")) continue;\n\t\tfor(const specifier of relativeImports(Buffer.from(bytes).toString(\"utf8\")))\n\t\t{\n\t\t\tconst dependency = posix.normalize(posix.join(posix.dirname(path), specifier));\n\t\t\tassert.ok(runtime.files.has(dependency), `${path} imports missing ${dependency}`);\n\t\t}\n\t}\n};\n\n",
+          "previous": "",
+          "start": 1047
+        },
+        {
+          "current": "\tassert.ok(ordinary.files.has(\"internal/binding-ir/default-value.mjs\"));\n\tassertClosedRuntimeModules(ordinary);\n",
+          "previous": "",
+          "start": 2666
+        }
+      ],
+      "path": "tests/component-runtime-package-identity.test.mjs",
+      "previousSha256": "a7deb38b6444c396cee193fbf2eece049953030f41702132b155747c7f546e06"
+    }
+  ]
+}

@@ -18,6 +18,8 @@ import {
 	, optionalParameterNativeEvidenceRepairPredecessor
 	, reverseOptionalParameterNativeEvidenceRepairUpdate
 } from "./optional-parameter-native-evidence-repair-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -58,7 +60,8 @@ test("optional native evidence repair reverses every source", async () => {
 		const implementation = git(["show"
 			, `${optionalParameterNativeEvidenceRepairImplementation}:${update.path}`]);
 		assert.equal(reverseOptionalParameterNativeEvidenceRepairUpdate(
-			await readFile(update.path, "utf8"), update)
+			await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256), update)
 			, implementation, update.path);
 	}
 });
@@ -81,7 +84,8 @@ test("optional native evidence repair authenticates its history controls"
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${optionalParameterNativeEvidenceRepairImplementation}:${addition.path}`]
 			, { stdio: "ignore" }).status, 0, addition.path);
-		assert.equal(sha256(await readFile(addition.path, "utf8"))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.sha256))
 			, addition.sha256, addition.path);
 	}
 	for(const path of [
