@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/focused-type-surface-producer-repair-source-history-tests.mjs";
+import "./helpers/core-current-source-pin-repair-source-history-tests.mjs";
 import "./helpers/dependent-signature-focused-ci-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-focused-ci-source-history-tests.mjs";
 import "./helpers/optional-parameter-focused-ci-source-history-tests.mjs";
