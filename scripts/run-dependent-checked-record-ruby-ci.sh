@@ -21,6 +21,7 @@ revision=$(git rev-parse HEAD)
 output_root=build/dependent-checked-record-ruby-ci
 mkdir -p build
 mkdir "$output_root"
+mkdir "$output_root/verification"
 export LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 CMAKE_BUILD_PARALLEL_LEVEL=1
 export LEAN_BRIDGE_RUBY="$1" LEAN_BRIDGE_GEM="$2"
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_RUBY_TEST=1 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.38
@@ -36,5 +37,5 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
   node scripts/check-dependent-checked-record-ruby-ci.mjs --route "$route" \
     --producer "$revision" --directory "$output/records/$route" \
     --tap "$output/records/$route/run.tap" --glibc 2.38 --ruby "$LEAN_BRIDGE_RUBY" \
-    | tee "$output/verification.json"
+    | tee "$output/verification.json" "$output_root/verification/$route.json"
 done

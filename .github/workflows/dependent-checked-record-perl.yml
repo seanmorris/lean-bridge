@@ -2,6 +2,7 @@ name: Installed dependent checked records in Perl
 
 on:
   workflow_dispatch:
+  workflow_call:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
     - cron: "47 19 * * 1"

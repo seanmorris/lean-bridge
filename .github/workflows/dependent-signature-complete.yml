@@ -22,6 +22,7 @@ on:
       - "tests/dependent-signature-complete-*.test.mjs"
       - "tests/helpers/dependent-signature-complete-*.mjs"
       - "tests/helpers/dependent-signature-hosted-*.mjs"
+      - "tests/helpers/dependent-signature-matrix-*.mjs"
   pull_request:
     paths:
       - ".github/workflows/dependent-signature-complete.yml"
@@ -43,7 +44,17 @@ on:
       - "tests/dependent-signature-complete-*.test.mjs"
       - "tests/helpers/dependent-signature-complete-*.mjs"
       - "tests/helpers/dependent-signature-hosted-*.mjs"
+      - "tests/helpers/dependent-signature-matrix-*.mjs"
   workflow_dispatch:
+    inputs:
+      suite:
+        description: Bounded dependent-signature suite to execute
+        required: true
+        default: audit
+        type: choice
+        options:
+          - audit
+          - produce
   # One low-cost replay in the bounded weekly default-branch acceptance sweep.
   schedule:
     - cron: "19 9 * * 0"
@@ -57,6 +68,7 @@ concurrency:
 
 jobs:
   audit:
+    if: inputs.suite != 'produce'
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
@@ -95,3 +107,132 @@ jobs:
           path: build/dependent-signature-complete/
           if-no-files-found: error
           retention-days: 14
+
+  javascript:
+    name: JavaScript and browser producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-browser.yml
+
+  native:
+    name: C and C++ producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-native.yml
+
+  perl:
+    name: Perl producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-perl.yml
+
+  python:
+    name: Python producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-python.yml
+
+  rust:
+    name: Rust producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-rust.yml
+
+  dotnet:
+    name: .NET producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-dotnet.yml
+
+  jvm:
+    name: Java and Kotlin producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-jvm.yml
+
+  ruby:
+    name: Ruby producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-ruby.yml
+
+  php-native:
+    name: Native PHP producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-php.yml
+
+  php-wasm:
+    name: PHP-Wasm producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-php-wasm.yml
+
+  wit:
+    name: WIT and WASI producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/dependent-checked-record-wit.yml
+
+  receipt:
+    name: Reconcile the exact same-run receipt
+    if: always() && inputs.suite == 'produce'
+    needs:
+      - javascript
+      - native
+      - perl
+      - python
+      - rust
+      - dotnet
+      - jvm
+      - ruby
+      - php-native
+      - php-wasm
+      - wit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out the exact producer revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Download every same-run dependent-signature artifact
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@v5
+        with:
+          pattern: dependent-checked-record-*-${{ github.sha }}
+          path: build/dependent-signature-matrix-input
+      - name: Reconcile every profile, author route, and API mode
+        id: reconciliation
+        if: always()
+        continue-on-error: true
+        run: |
+          node scripts/reconcile-dependent-signature-matrix.mjs \
+            --directory build/dependent-signature-matrix-input \
+            --output build/dependent-signature-matrix/receipt.json \
+            --producer "${{ github.sha }}" \
+            --repository "${{ github.repository }}" \
+            --workflow ".github/workflows/dependent-signature-complete.yml" \
+            --run-id "${{ github.run_id }}" \
+            --run-attempt "${{ github.run_attempt }}"
+      - name: Preserve the complete dependent-signature receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependent-signature-matrix-${{ github.sha }}
+          path: build/dependent-signature-matrix/receipt.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce every producer and exact receipt reconciliation
+        if: >-
+          always() &&
+          (needs.javascript.result != 'success' ||
+           needs.native.result != 'success' ||
+           needs.perl.result != 'success' ||
+           needs.python.result != 'success' ||
+           needs.rust.result != 'success' ||
+           needs.dotnet.result != 'success' ||
+           needs.jvm.result != 'success' ||
+           needs.ruby.result != 'success' ||
+           needs.php-native.result != 'success' ||
+           needs.php-wasm.result != 'success' ||
+           needs.wit.result != 'success' ||
+           steps.download.outcome != 'success' ||
+           steps.reconciliation.outcome != 'success')
+        run: exit 1

@@ -2,6 +2,7 @@ name: Dependent checked-record checked records in native PHP
 
 on:
   workflow_dispatch:
+  workflow_call:
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
     - cron: "47 22 * * 1"

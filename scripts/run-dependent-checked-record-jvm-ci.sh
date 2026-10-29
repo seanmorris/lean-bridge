@@ -40,6 +40,7 @@ revision=$(git rev-parse HEAD)
 output_root=build/dependent-checked-record-jvm-ci
 mkdir -p build
 mkdir "$output_root"
+mkdir "$output_root/verification"
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_JVM_TEST=1
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_JVM_MAX_LOAD="$max_load"
 export LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.38
@@ -59,5 +60,6 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
     --route "$route" --producer "$revision" --consumer "$revision" \
     --directory "$output/records/$route" --tap "$output/run.tap" \
     --glibc 2.38 --java "$LEAN_BRIDGE_JAVA" --javac "$LEAN_BRIDGE_JAVAC" \
-    --kotlinc "$LEAN_BRIDGE_KOTLINC" | tee "$output/verification.json"
+    --kotlinc "$LEAN_BRIDGE_KOTLINC" \
+    | tee "$output/verification.json" "$output_root/verification/$route.json"
 done

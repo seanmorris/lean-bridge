@@ -22,6 +22,7 @@ revision=$(git rev-parse HEAD)
 output_root=build/dependent-checked-record-rust-ci
 mkdir -p build
 mkdir "$output_root"
+mkdir "$output_root/verification"
 export LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 CMAKE_BUILD_PARALLEL_LEVEL=1 CARGO_BUILD_JOBS=1
 export LEAN_BRIDGE_RUSTC="$1"
 export LEAN_BRIDGE_CARGO="$2"
@@ -39,5 +40,6 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
   node scripts/check-dependent-checked-record-rust-ci.mjs --route "$route" \
     --producer "$revision" --directory "$output/records/$route" \
     --tap "$output/run.tap" --glibc 2.38 \
-    --rustc "$LEAN_BRIDGE_RUSTC" --cargo "$LEAN_BRIDGE_CARGO" | tee "$output/verification.json"
+    --rustc "$LEAN_BRIDGE_RUSTC" --cargo "$LEAN_BRIDGE_CARGO" \
+    | tee "$output/verification.json" "$output_root/verification/$route.json"
 done

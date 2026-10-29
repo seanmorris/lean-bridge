@@ -30,6 +30,7 @@ revision=$(git rev-parse HEAD)
 output_root=build/dependent-checked-record-dotnet-ci
 mkdir -p build
 mkdir "$output_root"
+mkdir "$output_root/verification"
 export LEAN_BRIDGE_DOTNET="$1"
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_DOTNET_TEST=1
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_DOTNET_MAX_LOAD="$max_load"
@@ -48,5 +49,5 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
     --route "$route" --producer "$revision" --consumer "$revision" \
     --directory "$output/records/$route" --tap "$output/run.tap" \
     --glibc 2.38 --dotnet "$LEAN_BRIDGE_DOTNET" \
-    | tee "$output/verification.json"
+    | tee "$output/verification.json" "$output_root/verification/$route.json"
 done

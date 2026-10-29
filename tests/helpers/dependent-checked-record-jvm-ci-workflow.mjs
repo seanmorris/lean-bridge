@@ -40,8 +40,7 @@ export const assertDependentCheckedRecordJvmWorkflow = source => {
 	assert.deepEqual(
 		[...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
 			.map(match => match[1])
-		, ["workflow_dispatch"
-			, "schedule"
+		, ["workflow_dispatch", "workflow_call", "schedule"
 			, "dependent-checked-record-jvm"]
 	);
 	assert.doesNotMatch(source

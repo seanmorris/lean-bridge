@@ -26,6 +26,7 @@ revision=$(git rev-parse HEAD)
 output_root=build/dependent-checked-record-php-ci
 mkdir -p build
 mkdir "$output_root"
+mkdir "$output_root/verification"
 node scripts/select-nominal-subtype-php-ci-tools.mjs "$LEAN_BRIDGE_PHP" "$LEAN_BRIDGE_COMPOSER" "$output_root" \
   | tee "$output_root/tools.json"
 LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_VERSION=$(node --input-type=module -e 'import {readFileSync} from "node:fs"; process.stdout.write(JSON.parse(readFileSync(process.argv[1])).selected.phpVersion);' "$output_root/tools.json")
@@ -47,5 +48,5 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
     --glibc 2.38 --php "$LEAN_BRIDGE_PHP" --composer "$LEAN_BRIDGE_COMPOSER" \
     --php-version "$LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_VERSION" \
     --composer-version "$LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_COMPOSER_VERSION" \
-    | tee "$output/verification.json"
+    | tee "$output/verification.json" "$output_root/verification/$route.json"
 done

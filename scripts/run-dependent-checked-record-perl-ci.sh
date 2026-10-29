@@ -21,6 +21,7 @@ revision=$(git rev-parse HEAD)
 output_root=build/dependent-checked-record-perl-ci
 mkdir -p build
 mkdir "$output_root"
+mkdir "$output_root/verification"
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_PERL_TEST=1
 export LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.38
 export LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 CMAKE_BUILD_PARALLEL_LEVEL=1
@@ -37,5 +38,6 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
   node scripts/check-dependent-checked-record-perl-ci.mjs \
     --route "$route" --producer "$revision" \
     --directory "$output/records/$route" --tap "$output/run.tap" \
-    --glibc 2.38 --max-load 8 | tee "$output/verification.json"
+    --glibc 2.38 --max-load 8 \
+    | tee "$output/verification.json" "$output_root/verification/$route.json"
 done

@@ -13,6 +13,13 @@ on:
           - "8"
           - "10"
           - "12"
+  workflow_call:
+    inputs:
+      max-load:
+        description: Maximum admitted one-minute host load
+        required: false
+        default: "6"
+        type: string
   # One lane in the bounded weekly default-branch acceptance sweep.
   schedule:
     - cron: "47 16 * * 1"

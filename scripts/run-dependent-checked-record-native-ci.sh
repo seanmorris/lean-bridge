@@ -17,6 +17,7 @@ output_root=build/dependent-checked-record-native-ci
 records="$output_root/records"
 mkdir -p build
 mkdir "$output_root"
+mkdir "$output_root/verification"
 export LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 CMAKE_BUILD_PARALLEL_LEVEL=1
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_NATIVE_TEST=1
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_NATIVE_OUTPUT="$records"
@@ -28,5 +29,9 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
     tests/helpers/dependent-checked-record-native-installed-tests.mjs \
     2>&1 | tee "$output_root/$route.tap"
   test -s "$records/$route/report.json"
+  node scripts/check-dependent-checked-record-native-ci.mjs \
+    --route "$route" --producer "$revision" --checker "$revision" \
+    --directory "$records/$route" --tap "$output_root/$route.tap" \
+    --floor 2.38 >"$output_root/verification/$route.json"
   test "$(git rev-parse HEAD)" = "$revision"
 done

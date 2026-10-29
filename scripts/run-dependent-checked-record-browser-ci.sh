@@ -7,6 +7,7 @@ routes="ordinary-source,reviewed-ir,result-only-ordinary-source,result-only-revi
 
 test ! -e "$output"
 mkdir -p "$output"
+mkdir "$output/verification"
 
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_NPM_TEST=1
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_BROWSER_TEST=1
@@ -27,5 +28,5 @@ for route in ${routes//,/ }; do
     --producer "$revision" \
     --checker "$revision" \
     --directory "$records/$route" \
-    --tap "$output/run.tap" >/dev/null
+    --tap "$output/run.tap" >"$output/verification/$route.json"
 done

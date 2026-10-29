@@ -30,6 +30,7 @@ output_root=build/dependent-checked-record-wit-ci
 # Never overwrite a prior complete or partial attempt.
 mkdir -p build
 mkdir "$output_root"
+mkdir "$output_root/verification"
 node scripts/select-nominal-subtype-wit-ci-tools.mjs "$CC" "$LEAN_BRIDGE_WASM_TOOLS" "$LEAN_BRIDGE_WASMTIME_C_API" "$output_root" \
   | tee "$output_root/tools.json"
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_WIT_TEST=1
@@ -51,5 +52,5 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
     --producer "$revision" --directory "$output/records/$route" \
     --tap "$output/run.tap" --glibc 2.38 --cc "$CC" \
     --wasm-tools "$LEAN_BRIDGE_WASM_TOOLS" --wasmtime-capi "$LEAN_BRIDGE_WASMTIME_C_API" \
-    | tee "$output/verification.json"
+    | tee "$output/verification.json" "$output_root/verification/$route.json"
 done

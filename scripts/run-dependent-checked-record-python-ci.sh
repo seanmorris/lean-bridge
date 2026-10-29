@@ -16,6 +16,7 @@ revision=$(git rev-parse HEAD)
 output_root=build/dependent-checked-record-python-ci
 mkdir -p build
 mkdir "$output_root"
+mkdir "$output_root/verification"
 export LEAN_NUM_THREADS=1 OMP_NUM_THREADS=1 MAKEFLAGS=-j1 CMAKE_BUILD_PARALLEL_LEVEL=1
 LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_PYTHONS=$(node -e 'process.stdout.write(JSON.stringify({"3.11":process.argv[1],"3.12":process.argv[2]}))' "$1" "$2")
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_PYTHONS
@@ -32,5 +33,6 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
   cp "$output/run.tap" "$output/records/$route/run.tap"
   node scripts/check-dependent-checked-record-python-ci.mjs --route "$route" \
     --producer "$revision" --directory "$output/records/$route" --tap "$output/records/$route/run.tap" \
-    --glibc 2.38 | tee "$output/verification.json"
+    --glibc 2.38 \
+    | tee "$output/verification.json" "$output_root/verification/$route.json"
 done

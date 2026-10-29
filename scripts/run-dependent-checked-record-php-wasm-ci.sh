@@ -13,6 +13,7 @@ mkdir -p build
 # Refuse stale retained records before starting any compiler or package producer.
 mkdir "$output_root"
 mkdir "$output_root/compiler"
+mkdir "$output_root/verification"
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_PHP_WASM_LEAN_TEST=1
 export LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_PHP_WASM_LEAN_OUTPUT="$output_root/compiler/records"
 node --test --test-concurrency=1 --test-reporter=tap \
@@ -32,5 +33,6 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
     | tee "$output/run.tap"
   node scripts/check-dependent-checked-record-php-wasm-ci.mjs \
     --route "$route" --producer "$revision" --directory "$output/records/$route" \
-    --tap "$output/run.tap" 2>&1 | tee "$output/check.log"
+    --tap "$output/run.tap" 2>&1 \
+    | tee "$output/check.log" "$output_root/verification/$route.json"
 done
