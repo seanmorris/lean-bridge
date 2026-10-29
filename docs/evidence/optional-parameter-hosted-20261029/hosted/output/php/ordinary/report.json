@@ -1,0 +1,324 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "profiles/native/archives/example-optionalparameters-1.0.0-linux-x86_64.zip": "8d6515d4ab4d4b7524f9e8becb68b58ae534a57ed6b278399b8386c9493e1d40",
+        "profiles/php-wasm/packages/php-wasm/archives/example-optionalparameters-php-wasm-1.0.0-php-wasm.zip": "09523af1b2c7b445bc47853b4f86dc36df7a609355cc44a3c522ec3e7747c44a",
+        "profiles/php-wasm/packages/php-wasm/archives/example-optionalparameters-php-wasm-1.0.0.tgz": "589a1ac6d199bae22a69677a38cf90ad4311aed0cf2db1110773dd04ac889cd7",
+        "profiles/php-wasm/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57.tgz": "e16f404599084d863e58d3ae7a1a02cd27e0d375da7acb000361aa68d041f823"
+      },
+      "authenticatedDefaults": 7,
+      "bindingIrSha256": "c47e8021efc648396237e8a17ead5730de88a4da4fa17b8958858bfee5d833de",
+      "declarations": 7,
+      "nativeArtifactsSha256": "1ab3616ca6d7a3ac7c28dba70cbccc27c951ba940258f39f2d9409feba359a6c",
+      "nativeBindingIrFileSha256": "09307bf8cdff61a7ea26c910d7e016f97398cf9c05b9acf9754eae6168be0b5d",
+      "nativeComponentReceiptSha256": "39be6ae35b5e075f66f371ac656740d75d5f667659e1c6a7638bcc5eb0c69671",
+      "nativeGeneratedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "nativeMetadataSha256": "1cef8d72b1cbd8831f157e7d5a8e7b322d05590a21714b95f6c4ef65a9f9f8db",
+      "nativeModelSha256": "3188db8587a4637cdf955a6c0f22af0b87e2015b300b2172e7590c86e8c1df6a",
+      "packageSetReceiptSha256": "c15055e039e30ba1d7f6dd493917744117964dd9f98d21e6a9df61c225c149a2",
+      "phpWasmArtifactsSha256": "312eca11e337783218b451dced585d6f4f33dd5e5f8150ddb9016c42ef8ac5b5",
+      "phpWasmBindingIrFileSha256": "09307bf8cdff61a7ea26c910d7e016f97398cf9c05b9acf9754eae6168be0b5d",
+      "phpWasmComponentReceiptSha256": "a0fc3e689a6c0783cd84c52c35de792424276a55a9532483102f0427e2d855a4",
+      "phpWasmGeneratedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "phpWasmMetadataSha256": "1cef8d72b1cbd8831f157e7d5a8e7b322d05590a21714b95f6c4ef65a9f9f8db",
+      "phpWasmModelSha256": "cc884a5ed5ad884df4e59ac62b04dcfc015f89065eca66ec3dbb9526d31638d7"
+    },
+    {
+      "archives": {
+        "profiles/native/archives/example-optionalparameters-1.0.0-linux-x86_64.zip": "8d6515d4ab4d4b7524f9e8becb68b58ae534a57ed6b278399b8386c9493e1d40",
+        "profiles/php-wasm/packages/php-wasm/archives/example-optionalparameters-php-wasm-1.0.0-php-wasm.zip": "09523af1b2c7b445bc47853b4f86dc36df7a609355cc44a3c522ec3e7747c44a",
+        "profiles/php-wasm/packages/php-wasm/archives/example-optionalparameters-php-wasm-1.0.0.tgz": "589a1ac6d199bae22a69677a38cf90ad4311aed0cf2db1110773dd04ac889cd7",
+        "profiles/php-wasm/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57.tgz": "e16f404599084d863e58d3ae7a1a02cd27e0d375da7acb000361aa68d041f823"
+      },
+      "authenticatedDefaults": 7,
+      "bindingIrSha256": "c47e8021efc648396237e8a17ead5730de88a4da4fa17b8958858bfee5d833de",
+      "declarations": 7,
+      "nativeArtifactsSha256": "1ab3616ca6d7a3ac7c28dba70cbccc27c951ba940258f39f2d9409feba359a6c",
+      "nativeBindingIrFileSha256": "09307bf8cdff61a7ea26c910d7e016f97398cf9c05b9acf9754eae6168be0b5d",
+      "nativeComponentReceiptSha256": "39be6ae35b5e075f66f371ac656740d75d5f667659e1c6a7638bcc5eb0c69671",
+      "nativeGeneratedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "nativeMetadataSha256": "1cef8d72b1cbd8831f157e7d5a8e7b322d05590a21714b95f6c4ef65a9f9f8db",
+      "nativeModelSha256": "3188db8587a4637cdf955a6c0f22af0b87e2015b300b2172e7590c86e8c1df6a",
+      "packageSetReceiptSha256": "c15055e039e30ba1d7f6dd493917744117964dd9f98d21e6a9df61c225c149a2",
+      "phpWasmArtifactsSha256": "312eca11e337783218b451dced585d6f4f33dd5e5f8150ddb9016c42ef8ac5b5",
+      "phpWasmBindingIrFileSha256": "09307bf8cdff61a7ea26c910d7e016f97398cf9c05b9acf9754eae6168be0b5d",
+      "phpWasmComponentReceiptSha256": "a0fc3e689a6c0783cd84c52c35de792424276a55a9532483102f0427e2d855a4",
+      "phpWasmGeneratedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "phpWasmMetadataSha256": "1cef8d72b1cbd8831f157e7d5a8e7b322d05590a21714b95f6c4ef65a9f9f8db",
+      "phpWasmModelSha256": "cc884a5ed5ad884df4e59ac62b04dcfc015f89065eca66ec3dbb9526d31638d7"
+    }
+  ],
+  "compilerFreePath": true,
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "apiSha256": "7473686f860e185b70f7d1fd181e9ca5ccd58d6213557116445a0cddef08b694",
+      "checks": 23,
+      "compilerFreePath": true,
+      "consumerSha256": "860865d35e2aec545f331723864b0de2507f38857d1a2f81455a52d138f8dc4f",
+      "executions": [
+        {
+          "checks": 23,
+          "mode": "strict",
+          "relocated": false
+        },
+        {
+          "checks": 23,
+          "mode": "weak",
+          "relocated": false
+        },
+        {
+          "checks": 23,
+          "mode": "weak",
+          "relocated": true
+        },
+        {
+          "checks": 23,
+          "mode": "strict",
+          "relocated": true
+        }
+      ],
+      "invalidHostValuesPerExecution": 2,
+      "offlineInstall": true,
+      "profile": "php-native"
+    },
+    {
+      "apiSha256": "09e8191f48b45ddf159f8a685f4d25be898acc62edc16baf0e67c692ec32a599",
+      "browserVersion": "151.0.7922.34",
+      "checks": 23,
+      "compilerFreePath": true,
+      "consumerSha256": "7ce530db2384f7056502ccb001764e3bb8f0c699ad487e7f4c12221f2e0fdb9c",
+      "driverSha256": "47a40bf53d8d9ed079d338f63ce3c6ad3c8f4cd0db8f24137b5c16713d551436",
+      "executions": [
+        {
+          "arrangement": "embedded",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 23,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "chromium"
+        }
+      ],
+      "invalidHostValuesPerExecution": 2,
+      "offlineInstall": true,
+      "preloadRejection": true,
+      "profile": "php-wasm"
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "496de9b6f22725da76e2fbe3aba9a2a1dd76ce06",
+  "profiles": [
+    "php-native",
+    "php-wasm"
+  ],
+  "receipt": {
+    "component": {
+      "id": "defaults@1.0.0",
+      "name": "defaults",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 76744,
+            "path": "profiles/php-wasm/packages/php-wasm/archives/example-optionalparameters-php-wasm-1.0.0-php-wasm.zip",
+            "sha256": "09523af1b2c7b445bc47853b4f86dc36df7a609355cc44a3c522ec3e7747c44a"
+          }
+        ],
+        "ecosystem": "composer",
+        "name": "example/optionalparameters-php-wasm",
+        "profile": "php-wasm-copied-v1",
+        "requires": [
+          {
+            "ecosystem": "npm",
+            "name": "@example/optionalparameters-php-wasm",
+            "version": "1.0.0"
+          },
+          {
+            "ecosystem": "npm",
+            "name": "@lean-bridge/php-wasm-copied-runtime",
+            "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+          }
+        ],
+        "role": "api",
+        "runtimeDelivery": "dependency",
+        "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+        "target": "php-wasm",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51350383,
+            "path": "profiles/native/archives/example-optionalparameters-1.0.0-linux-x86_64.zip",
+            "sha256": "8d6515d4ab4d4b7524f9e8becb68b58ae534a57ed6b278399b8386c9493e1d40"
+          }
+        ],
+        "ecosystem": "composer",
+        "name": "example/optionalparameters",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "php-native",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 120103,
+            "path": "profiles/php-wasm/packages/php-wasm/archives/example-optionalparameters-php-wasm-1.0.0.tgz",
+            "sha256": "589a1ac6d199bae22a69677a38cf90ad4311aed0cf2db1110773dd04ac889cd7"
+          }
+        ],
+        "ecosystem": "npm",
+        "name": "@example/optionalparameters-php-wasm",
+        "profile": "php-wasm-copied-v1",
+        "requires": [
+          {
+            "ecosystem": "npm",
+            "name": "@lean-bridge/php-wasm-copied-runtime",
+            "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+          }
+        ],
+        "role": "component",
+        "runtimeDelivery": "dependency",
+        "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+        "target": "php-wasm",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 1660981,
+            "path": "profiles/php-wasm/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57.tgz",
+            "sha256": "e16f404599084d863e58d3ae7a1a02cd27e0d375da7acb000361aa68d041f823"
+          }
+        ],
+        "ecosystem": "npm",
+        "name": "@lean-bridge/php-wasm-copied-runtime",
+        "profile": "php-wasm-copied-v1",
+        "requires": [],
+        "role": "runtime",
+        "runtimeDelivery": "provided",
+        "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+        "target": "php-wasm",
+        "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "c47e8021efc648396237e8a17ead5730de88a4da4fa17b8958858bfee5d833de",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      },
+      {
+        "bindingIrSha256": "c47e8021efc648396237e8a17ead5730de88a4da4fa17b8958858bfee5d833de",
+        "id": "php-wasm-copied-v1",
+        "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "e02352544d5462f447c8c7de057b7750a551f658d6b43fe1d03c920dc4a27446"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

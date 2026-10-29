@@ -1,0 +1,114 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/optionalparameters-1.0.0-py3-none-manylinux_2_38_x86_64.whl": "6190eba7f1d193d69af6536f397b70a95ce726842c774606a9dd71d2f4ae081b"
+      },
+      "artifactsSha256": "c11b444130c8f09bc73935d37afc894f80eed725763272534072137eedf1f36e",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "9a4e9e881eabe50266ef1fb9f66edaa189ee22d8753e2c62b736e69c4d2ed950",
+      "bindingIrSha256": "8063b99ae39ccbac84f04bece554c476c58b6d41915e2b016f06d3b0cbdb2d2a",
+      "componentReceiptSha256": "24f20c7c5776e67cd16676a449038115aad5a596a6337e510a6e5f3734328bca",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "19dc963b50ed9208a6f4783a774b02217ab34870b29bff3ea095a63647efcbea",
+      "modelSha256": "394d7e53ba8cfb8c8c26674bdefb5be014936763babf486ad6a170631294556a",
+      "packageSetReceiptSha256": "0888a9e97984472f1f1aae5a260c90fc44bbaf231bce0552297bf734fe55c665"
+    },
+    {
+      "archives": {
+        "archives/optionalparameters-1.0.0-py3-none-manylinux_2_38_x86_64.whl": "6190eba7f1d193d69af6536f397b70a95ce726842c774606a9dd71d2f4ae081b"
+      },
+      "artifactsSha256": "c11b444130c8f09bc73935d37afc894f80eed725763272534072137eedf1f36e",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "9a4e9e881eabe50266ef1fb9f66edaa189ee22d8753e2c62b736e69c4d2ed950",
+      "bindingIrSha256": "8063b99ae39ccbac84f04bece554c476c58b6d41915e2b016f06d3b0cbdb2d2a",
+      "componentReceiptSha256": "24f20c7c5776e67cd16676a449038115aad5a596a6337e510a6e5f3734328bca",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "19dc963b50ed9208a6f4783a774b02217ab34870b29bff3ea095a63647efcbea",
+      "modelSha256": "394d7e53ba8cfb8c8c26674bdefb5be014936763babf486ad6a170631294556a",
+      "packageSetReceiptSha256": "0888a9e97984472f1f1aae5a260c90fc44bbaf231bce0552297bf734fe55c665"
+    }
+  ],
+  "compilerFreePath": true,
+  "dependencies": null,
+  "independentBuilds": 2,
+  "observation": {
+    "apiSha256": "f319d16c73d585a53b3b7d0bbbb439dfd2977044cb13136c3db49b7bfe6dd8c9",
+    "checks": 23,
+    "closure": {
+      "baselineSha256": "5a404b6550ff6f13aca6e7695ccf8558f4faba8cdfbf0ff39212e80438f88bf8",
+      "environmentSha256": "ff0dfa4b786cd3594e7cc3f4cbd5486b90d3ffc81d663cb13555810a5094e635",
+      "interpreterSha256": "53dab24bf9e0e9c490088a53d71770b6f027b057678b313648e75f7fc87a675e",
+      "python": "3.12.15",
+      "receiptSha256": "58384270235e194326461dcbe533b75e18f83bf01bc4bfa3d29757d97f75adbe"
+    },
+    "compilerFreePath": true,
+    "consumerSha256": "a7276dc8064534f7ee3571543154e4d65408d12c5ef79c8e248f2fceabcdc26c",
+    "executions": [
+      {
+        "checks": 23,
+        "relocated": false
+      },
+      {
+        "checks": 23,
+        "relocated": true
+      }
+    ],
+    "explicitHostNull": true,
+    "invalidCompile": null,
+    "invalidHostValues": 2,
+    "offlineInstall": true,
+    "profile": "python",
+    "runtimeChecks": 23
+  },
+  "offlineInstall": true,
+  "producerCommit": "496de9b6f22725da76e2fbe3aba9a2a1dd76ce06",
+  "profile": "python",
+  "receipt": {
+    "component": {
+      "id": "defaults@1.0.0",
+      "name": "defaults",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51349817,
+            "path": "archives/optionalparameters-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+            "sha256": "6190eba7f1d193d69af6536f397b70a95ce726842c774606a9dd71d2f4ae081b"
+          }
+        ],
+        "ecosystem": "pypi",
+        "name": "optionalparameters",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "pypi",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "8063b99ae39ccbac84f04bece554c476c58b6d41915e2b016f06d3b0cbdb2d2a",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "1f9f33cb049266236adb2386f6964dc64df375f486661a2a77c639fe7ab35351"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

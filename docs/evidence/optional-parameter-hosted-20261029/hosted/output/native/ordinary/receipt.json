@@ -1,0 +1,57 @@
+{
+  "component": {
+    "id": "defaults@1.0.0",
+    "name": "defaults",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53824084,
+          "path": "archives/defaults-1.0.0-c.tar.gz",
+          "sha256": "edba2571a1a3dfd226c3cad6942fa99f682f975656e0d9dc7b334044e8c4e81b"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "defaults",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51752039,
+          "path": "archives/defaults-1.0.0-cpp.tar.gz",
+          "sha256": "2a05d4d5d2093bad7ec2377b0fc47c84cb8af1cc36a572b5bb649413f91fd958"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "defaults",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "e0d7bebd82bcc552c61b8f38b6b1b3fc70b82e94399b47094694975ae779ebfa",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "bb672472a5d9cf2d771fefc56cd2ec6ece944eb9709e7c0d2d33d6688edb27e3"
+  }
+}

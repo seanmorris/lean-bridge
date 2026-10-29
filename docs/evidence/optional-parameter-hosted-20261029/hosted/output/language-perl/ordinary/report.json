@@ -1,0 +1,138 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/LeanBridge-OptionalParameters-1.000.tar.gz": "4b50958920bcb4233c255521f8056d8a112661a3d44a064497249aa51a75f1a6",
+        "archives/LeanBridge-Runtime-0.0020753793141402206501849342175650182207904213807624981612640503683272146414959531.tar.gz": "3ff2923cf695e921d51149b4afe62ceb3a33463795d0083c76a348627bdcc450"
+      },
+      "artifactsSha256": "c4982282d126096a7d350740964a5394bdb6859d48d88b99b3fa76ba2b7b0166",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "c0c37c2f2209feff40ab9c8a2a0049613c289076682aec5b21a4479c5a6f129d",
+      "bindingIrSha256": "c34b964f67396470187de037949b55c51efd7db677b292fc328012f4447da71f",
+      "componentReceiptSha256": "b9882c4df6fe18de2ec2e741c44eeede936ecfecda36e27c9b50794934d38dac",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "19dc963b50ed9208a6f4783a774b02217ab34870b29bff3ea095a63647efcbea",
+      "modelSha256": "2995e774c2565e1059c75b76dd992ead9d18b9b80bed661507e0e6f02555f536",
+      "packageSetReceiptSha256": "1b21b01ab12185735720d120e1b73266b3c6d92cc0f45581d6bf1db18db55665"
+    },
+    {
+      "archives": {
+        "archives/LeanBridge-OptionalParameters-1.000.tar.gz": "4b50958920bcb4233c255521f8056d8a112661a3d44a064497249aa51a75f1a6",
+        "archives/LeanBridge-Runtime-0.0020753793141402206501849342175650182207904213807624981612640503683272146414959531.tar.gz": "3ff2923cf695e921d51149b4afe62ceb3a33463795d0083c76a348627bdcc450"
+      },
+      "artifactsSha256": "c4982282d126096a7d350740964a5394bdb6859d48d88b99b3fa76ba2b7b0166",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "c0c37c2f2209feff40ab9c8a2a0049613c289076682aec5b21a4479c5a6f129d",
+      "bindingIrSha256": "c34b964f67396470187de037949b55c51efd7db677b292fc328012f4447da71f",
+      "componentReceiptSha256": "b9882c4df6fe18de2ec2e741c44eeede936ecfecda36e27c9b50794934d38dac",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "19dc963b50ed9208a6f4783a774b02217ab34870b29bff3ea095a63647efcbea",
+      "modelSha256": "2995e774c2565e1059c75b76dd992ead9d18b9b80bed661507e0e6f02555f536",
+      "packageSetReceiptSha256": "1b21b01ab12185735720d120e1b73266b3c6d92cc0f45581d6bf1db18db55665"
+    }
+  ],
+  "compilerFreePath": true,
+  "dependencies": null,
+  "independentBuilds": 2,
+  "observation": {
+    "apiSha256": "fb20619e697a0bf0f71234bded9335d8ecda627e4857f3c73673ae0ee5fafb7d",
+    "checks": 23,
+    "closure": {
+      "installedFilesSha256": "45a5a304e2dd8c25683048d789d9c99508dcc46ac1eefca65ab8fa9475294b1e",
+      "interpreterSha256": "47bdc8a342556c1d140084417ef6cacd79a3362e4b6cc1e4754df55bdf1e3683",
+      "receiptsSha256": "8e4e8dcf771a7deacbdbc5346e84376c5107fbbfccfcdf93100a3c399812f558"
+    },
+    "compilerFreePath": true,
+    "consumerSha256": "2542833e2b90043508083a6d192009e741903aa29feef7628ef2a45f7d198354",
+    "executions": [
+      {
+        "checks": 23,
+        "relocated": false
+      },
+      {
+        "checks": 23,
+        "relocated": true
+      }
+    ],
+    "explicitHostNull": true,
+    "invalidCompile": null,
+    "invalidHostValues": 2,
+    "offlineInstall": true,
+    "profile": "perl",
+    "runtimeChecks": 23
+  },
+  "offlineInstall": true,
+  "producerCommit": "496de9b6f22725da76e2fbe3aba9a2a1dd76ce06",
+  "profile": "perl",
+  "receipt": {
+    "component": {
+      "id": "defaults@1.0.0",
+      "name": "defaults",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 61351,
+            "path": "archives/LeanBridge-OptionalParameters-1.000.tar.gz",
+            "sha256": "4b50958920bcb4233c255521f8056d8a112661a3d44a064497249aa51a75f1a6"
+          }
+        ],
+        "ecosystem": "cpan",
+        "name": "LeanBridge-OptionalParameters",
+        "profile": "native-library-v1",
+        "requires": [
+          {
+            "ecosystem": "cpan",
+            "name": "LeanBridge-Runtime",
+            "version": "0.0020753793141402206501849342175650182207904213807624981612640503683272146414959531"
+          }
+        ],
+        "role": "component",
+        "runtimeDelivery": "dependency",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpan",
+        "version": "1.000"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51362773,
+            "path": "archives/LeanBridge-Runtime-0.0020753793141402206501849342175650182207904213807624981612640503683272146414959531.tar.gz",
+            "sha256": "3ff2923cf695e921d51149b4afe62ceb3a33463795d0083c76a348627bdcc450"
+          }
+        ],
+        "ecosystem": "cpan",
+        "name": "LeanBridge-Runtime",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "runtime",
+        "runtimeDelivery": "provided",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpan",
+        "version": "0.0020753793141402206501849342175650182207904213807624981612640503683272146414959531"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "c34b964f67396470187de037949b55c51efd7db677b292fc328012f4447da71f",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "9ff7af31c4ecd4a7ee63bcf5db1455b8795d2b591862030293bf9fa00a698e7a"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

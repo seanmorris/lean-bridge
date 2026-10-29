@@ -1,0 +1,207 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/optionalparameters-1.0.0.crate": "0cd1f692e805042965d05754cc5d8facb15f35531475668d037f91aab7b09a5f"
+      },
+      "artifactsSha256": "ea285c15e5569dd27add58034b3a2bc368bb3c60603e23450259331a5d1de0d4",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "1dc899917d1d779596301115b2c1772fa53fbabb0580be28822500240d1d208c",
+      "bindingIrSha256": "9ec3e1457345035dde51350ac78982e5704ee12d7310201466544a3af32d4cb8",
+      "componentReceiptSha256": "3aeb0130d1ca6a31b994552d466a7ffd46693d9a5e010bba4923bc887979b3bd",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "370252b5cbf0393279f9cf1f068afdf15fb109c842ffb6554143ae36a330c87e",
+      "modelSha256": "51f782baa3f11950a4645839582c42d49ebd6ca6e68e3a719980aa339b5039d8",
+      "packageSetReceiptSha256": "f004f8e70a77cef6f658764bc6ec2c104b9ae493d425cf15c75751a198a56468"
+    },
+    {
+      "archives": {
+        "archives/optionalparameters-1.0.0.crate": "0cd1f692e805042965d05754cc5d8facb15f35531475668d037f91aab7b09a5f"
+      },
+      "artifactsSha256": "ea285c15e5569dd27add58034b3a2bc368bb3c60603e23450259331a5d1de0d4",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "1dc899917d1d779596301115b2c1772fa53fbabb0580be28822500240d1d208c",
+      "bindingIrSha256": "9ec3e1457345035dde51350ac78982e5704ee12d7310201466544a3af32d4cb8",
+      "componentReceiptSha256": "3aeb0130d1ca6a31b994552d466a7ffd46693d9a5e010bba4923bc887979b3bd",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "370252b5cbf0393279f9cf1f068afdf15fb109c842ffb6554143ae36a330c87e",
+      "modelSha256": "51f782baa3f11950a4645839582c42d49ebd6ca6e68e3a719980aa339b5039d8",
+      "packageSetReceiptSha256": "f004f8e70a77cef6f658764bc6ec2c104b9ae493d425cf15c75751a198a56468"
+    }
+  ],
+  "compilerFreePath": true,
+  "dependencies": {
+    "archive": "rust-dependencies.tar.gz",
+    "lockSha256": "d8fe525f57a43ab7ef907fb1c060eb41a82c93820af72bf8385c9b9688751ad0",
+    "packages": [
+      {
+        "checksum": "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53",
+        "directory": "autocfg-1.5.1",
+        "files": 22,
+        "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+      },
+      {
+        "checksum": "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71",
+        "directory": "block-buffer-0.10.4",
+        "files": 10,
+        "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+      },
+      {
+        "checksum": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801",
+        "directory": "cfg-if-1.0.4",
+        "files": 13,
+        "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+      },
+      {
+        "checksum": "59ed5838eebb26a2bb2e58f6d5b5316989ae9d08bab10e0e6d103e656d1b0280",
+        "directory": "cpufeatures-0.2.17",
+        "files": 16,
+        "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+      },
+      {
+        "checksum": "78c8292055d1c1df0cce5d180393dc8cce0abec0a7102adb6c7b1eef6016d60a",
+        "directory": "crypto-common-0.1.7",
+        "files": 9,
+        "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+      },
+      {
+        "checksum": "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292",
+        "directory": "digest-0.10.7",
+        "files": 21,
+        "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+      },
+      {
+        "checksum": "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a",
+        "directory": "generic-array-0.14.7",
+        "files": 16,
+        "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+      },
+      {
+        "checksum": "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2",
+        "directory": "libc-0.2.189",
+        "files": 403,
+        "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+      },
+      {
+        "checksum": "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9",
+        "directory": "num-bigint-0.4.6",
+        "files": 50,
+        "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+      },
+      {
+        "checksum": "7ce2d95d4b3734dc35aa2f45e1aa22cd416814592a4f9d9205e11affd5b8e10b",
+        "directory": "num-integer-0.1.47",
+        "files": 16,
+        "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+      },
+      {
+        "checksum": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+        "directory": "num-traits-0.2.19",
+        "files": 28,
+        "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+      },
+      {
+        "checksum": "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283",
+        "directory": "sha2-0.10.9",
+        "files": 31,
+        "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+      },
+      {
+        "checksum": "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20",
+        "directory": "typenum-1.20.1",
+        "files": 24,
+        "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+      },
+      {
+        "checksum": "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a",
+        "directory": "version_check-0.9.5",
+        "files": 12,
+        "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+      }
+    ],
+    "sha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd"
+  },
+  "independentBuilds": 2,
+  "observation": {
+    "apiSha256": "98f51c3340d620946897b894a134d218ca0d9d060c4824bcf1f72f8e5f02fcc9",
+    "checks": 23,
+    "closure": {
+      "cargoSha256": "51de284e8bb0d03dcee595a0fb1cb3a952fe9e7e4b953a8b1467b7f71725b561",
+      "compilerSha256": "e6abf55ab1859e7c990be77fd593f51661ea99fb2fde626ae9f4108aaa34e7fa",
+      "executableSha256": "0a847f4267b17ee8acf19335c76f8075350df6c4f42b5ad88635c446a362f098",
+      "packageFileSetSha256": "0e2d570d617a01e6b3e2acc6a637df1ff40f8056fe313ef2a4c586317bdcb76f",
+      "receiptSha256": "ef9b009d47e770b81c4dfead6d313226c4449a01c29bbeb4870ea4dc71243a0d"
+    },
+    "compilerFreePath": true,
+    "consumerSha256": "a0a8acb011d3a162942ede44530401ab6ff3b82e04f0c42ea874c40d3a1995ce",
+    "executions": [
+      {
+        "checks": 21,
+        "relocated": false
+      },
+      {
+        "checks": 21,
+        "relocated": true
+      }
+    ],
+    "explicitHostNull": true,
+    "invalidCompile": {
+      "diagnostic": "   Compiling version_check v0.9.5\n   Compiling autocfg v1.5.1\n    Checking typenum v1.20.1\n    Checking cfg-if v1.0.4\n    Checking cpufeatures v0.2.17\n   Compiling generic-array v0.14.7\n   Compiling num-traits v0.2.19\n    Checking num-integer v0.1.47\n    Checking num-bigint v0.4.6\n    Checking block-buffer v0.10.4\n    Checking crypto-common v0.1.7\n    Checking digest v0.10.7\n    Checking sha2 v0.10.9\n    Checking optionalparameters v1.0.0 (<suite>/consumers/rust-relocated/optionalparameters-1.0.0)\n    Checking consumer v0.0.0 (<suite>/consumers/rust-relocated)\nerror[E0308]: mismatched types\n  --> invalid.rs:2:38\n   |\n 2 |     let _ = optionalparameters::word(None);\n   |             ------------------------ ^^^^ expected `u32`, found `Option<_>`\n   |             |\n   |             arguments to this function are incorrect\n   |\n   = note: expected type `u32`\n              found enum `Option<_>`\nnote: function defined here\n  --> <suite>/consumers/rust-relocated/optionalparameters-1.0.0/src/lib.rs:63:8\n   |\n63 | pub fn word(value0: u32) -> Result<u32, Error> {\n   |        ^^^^\n\nerror[E0308]: mismatched types\n  --> invalid.rs:3:41\n   |\n 3 |     let _ = optionalparameters::natural(None);\n   |             --------------------------- ^^^^ expected `&BigUint`, found `Option<_>`\n   |             |\n   |             arguments to this function are incorrect\n   |\n   = note: expected reference `&BigUint`\n                   found enum `Option<_>`\nnote: function defined here\n  --> <suite>/consumers/rust-relocated/optionalparameters-1.0.0/src/lib.rs:43:8\n   |\n43 | pub fn natural(value0: &BigUint) -> Result<BigUint, Error> {\n   |        ^^^^^^^\n\nFor more information about this error, try `rustc --explain E0308`.\nerror: could not compile `consumer` (bin \"invalid\") due to 2 previous errors\n",
+      "rejected": true
+    },
+    "invalidHostValues": 2,
+    "offlineInstall": true,
+    "profile": "rust",
+    "runtimeChecks": 21
+  },
+  "offlineInstall": true,
+  "producerCommit": "496de9b6f22725da76e2fbe3aba9a2a1dd76ce06",
+  "profile": "rust",
+  "receipt": {
+    "component": {
+      "id": "defaults@1.0.0",
+      "name": "defaults",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51338096,
+            "path": "archives/optionalparameters-1.0.0.crate",
+            "sha256": "0cd1f692e805042965d05754cc5d8facb15f35531475668d037f91aab7b09a5f"
+          }
+        ],
+        "ecosystem": "cargo",
+        "name": "optionalparameters",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cargo",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "9ec3e1457345035dde51350ac78982e5704ee12d7310201466544a3af32d4cb8",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "49c4d355e76e294ed4fefc53be5eaf8227eb41e276b0ae8bd0da1d4db249c6a7"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

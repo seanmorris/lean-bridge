@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "defaults@1.0.0",
+    "name": "defaults",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59214593,
+          "path": "archives/optionalparameters-1.0.0-wit-wasi.tar.gz",
+          "sha256": "e1766570bdce433b98724d0666b87bf5e6b3227f39b86e5cf09725ad6efdd8cd"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "optionalparameters",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "23cebed0ecdb9d7601dd0eea0888319f0577f8155b0814cfba25950c05c0e6fc",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "6517788b2aaf24b03807a5576b246540a2f114149c2f4d49221294b8beaaf7dd"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "cases": {
+    "explicitDefault": true,
+    "explicitHostNull": true,
+    "explicitNondefault": true,
+    "invalidHostValue": true,
+    "omitted": true,
+    "optionNone": true,
+    "relocatedReplay": true,
+    "unit": true
+  },
+  "checks": 46,
+  "executions": 16,
+  "lane": "php",
+  "producerCommit": "496de9b6f22725da76e2fbe3aba9a2a1dd76ce06",
+  "profiles": [
+    "php-native",
+    "php-wasm"
+  ],
+  "rejections": 44,
+  "route": "ordinary"
+}

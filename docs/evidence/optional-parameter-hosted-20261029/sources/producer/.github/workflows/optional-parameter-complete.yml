@@ -1,0 +1,108 @@
+name: Complete optional-parameter matrix
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  # Reconcile one bounded exact-head receipt after the five recurring producers.
+  schedule:
+    - cron: "17 13 * * 3"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: optional-parameter-complete-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  npm-browser:
+    name: Node and browser producer
+    uses: ./.github/workflows/generic-subtype-npm-browser.yml
+    with:
+      optional_parameters: true
+
+  native-perl:
+    name: Native and Perl producers
+    uses: ./.github/workflows/generic-subtype-native-perl.yml
+    with:
+      optional_parameters: true
+
+  languages:
+    name: Python, Ruby and Rust producers
+    uses: ./.github/workflows/generic-subtype-languages.yml
+    with:
+      optional_parameters: true
+
+  managed-wit:
+    name: Managed and WIT producers
+    uses: ./.github/workflows/generic-subtype-managed-wit.yml
+    with:
+      optional_parameters: true
+
+  php:
+    name: PHP and PHP-Wasm producer
+    uses: ./.github/workflows/nominal-subtype-php-wasm.yml
+    with:
+      optional_parameters: true
+
+  receipt:
+    name: Reconcile the exact same-run receipt
+    if: always()
+    needs:
+      - npm-browser
+      - native-perl
+      - languages
+      - managed-wit
+      - php
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out the exact producer revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Download every same-run optional-parameter artifact
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@v5
+        with:
+          pattern: optional-parameter-*-${{ github.sha }}
+          path: build/optional-parameter-matrix-input
+      - name: Reconcile all seventeen profiles and both author routes
+        id: reconciliation
+        if: always()
+        continue-on-error: true
+        run: |
+          node scripts/reconcile-optional-parameter-matrix.mjs \
+            --directory build/optional-parameter-matrix-input \
+            --output build/optional-parameter-matrix/receipt.json \
+            --producer "${{ github.sha }}" \
+            --repository "${{ github.repository }}" \
+            --workflow ".github/workflows/optional-parameter-complete.yml" \
+            --run-id "${{ github.run_id }}" \
+            --run-attempt "${{ github.run_attempt }}"
+      - name: Preserve the complete optional-parameter receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-matrix-${{ github.sha }}
+          path: build/optional-parameter-matrix/receipt.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce every producer and exact receipt reconciliation
+        if: >-
+          always() &&
+          (needs.npm-browser.result != 'success' ||
+           needs.native-perl.result != 'success' ||
+           needs.languages.result != 'success' ||
+           needs.managed-wit.result != 'success' ||
+           needs.php.result != 'success' ||
+           steps.download.outcome != 'success' ||
+           steps.reconciliation.outcome != 'success')
+        run: exit 1

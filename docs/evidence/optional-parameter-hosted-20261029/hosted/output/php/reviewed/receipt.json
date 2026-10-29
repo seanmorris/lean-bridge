@@ -1,0 +1,115 @@
+{
+  "component": {
+    "id": "defaults@1.0.0",
+    "name": "defaults",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 77744,
+          "path": "profiles/php-wasm/packages/php-wasm/archives/example-optionalparameters-php-wasm-1.0.0-php-wasm.zip",
+          "sha256": "e09dd9112f0513f9c14274ecadaa954f87373f5c50cec892ba6bcf5ec4ddf780"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/optionalparameters-php-wasm",
+      "profile": "php-wasm-copied-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@example/optionalparameters-php-wasm",
+          "version": "1.0.0"
+        },
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+        }
+      ],
+      "role": "api",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+      "target": "php-wasm",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51353097,
+          "path": "profiles/native/archives/example-optionalparameters-1.0.0-linux-x86_64.zip",
+          "sha256": "2a86ea8aedd3d11af9808f23f1f8e61db85c192f7392b97606de0e78d23a098c"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/optionalparameters",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 121086,
+          "path": "profiles/php-wasm/packages/php-wasm/archives/example-optionalparameters-php-wasm-1.0.0.tgz",
+          "sha256": "d8bb3445df24aabf01ed71f47ba3513cc6779a758cdf365b18ca654d30da181a"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@example/optionalparameters-php-wasm",
+      "profile": "php-wasm-copied-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+      "target": "php-wasm",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1660981,
+          "path": "profiles/php-wasm/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57.tgz",
+          "sha256": "e16f404599084d863e58d3ae7a1a02cd27e0d375da7acb000361aa68d041f823"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/php-wasm-copied-runtime",
+      "profile": "php-wasm-copied-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+      "target": "php-wasm",
+      "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "d4630a005be3582329e251093be3098a1bee51fcac24e7ddace7ba3eef401eb6",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    {
+      "bindingIrSha256": "d4630a005be3582329e251093be3098a1bee51fcac24e7ddace7ba3eef401eb6",
+      "id": "php-wasm-copied-v1",
+      "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "cd4d64ed5f16c2e89f97ae54486a653f3d3a6b6c9c32ee7df570d3c82d489d37"
+  }
+}

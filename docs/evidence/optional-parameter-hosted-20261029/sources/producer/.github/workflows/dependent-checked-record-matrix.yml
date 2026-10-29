@@ -1,0 +1,109 @@
+name: Dependent checked-record matrix
+
+on:
+  push:
+    paths:
+      - ".github/workflows/dependent-checked-record-matrix.yml"
+      - "docs/consume/**"
+      - "docs/evidence/dependent-checked-record-*/**"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*dependent-checked-record*.mjs"
+      - "scripts/generate-reference-docs.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "site/reference/**"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/dependent-checked-record-matrix.test.mjs"
+      - "tests/dependent-checked-record-matrix-inventory.test.mjs"
+      - "tests/dependent-checked-record-promotion.test.mjs"
+      - "tests/helpers/dependent-checked-record-*.mjs"
+  pull_request:
+    paths:
+      - ".github/workflows/dependent-checked-record-matrix.yml"
+      - "docs/consume/**"
+      - "docs/evidence/dependent-checked-record-*/**"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*dependent-checked-record*.mjs"
+      - "scripts/generate-reference-docs.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "site/reference/**"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/dependent-checked-record-matrix.test.mjs"
+      - "tests/dependent-checked-record-matrix-inventory.test.mjs"
+      - "tests/dependent-checked-record-promotion.test.mjs"
+      - "tests/helpers/dependent-checked-record-*.mjs"
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: "Bounded matrix to execute"
+        required: true
+        default: dependent-checked-record
+        type: choice
+        options:
+          - dependent-checked-record
+          - optional-parameter
+  schedule:
+    - cron: "41 7 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependent-checked-record-matrix-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    if: inputs.suite != 'optional-parameter'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Replay all eleven immutable host archives
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/dependent-checked-record-matrix
+          node --test --test-concurrency=1 \
+            tests/dependent-checked-record-matrix.test.mjs \
+            | tee build/dependent-checked-record-matrix/evidence.tap
+      - name: Audit all 68 promoted inventory cells and generated documentation
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test --test-concurrency=1 \
+            tests/dependent-checked-record-matrix-inventory.test.mjs \
+            | tee build/dependent-checked-record-matrix/inventory.tap
+      - name: Preserve the complete matrix audit
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependent-checked-record-matrix-${{ github.run_id }}
+          path: build/dependent-checked-record-matrix/
+          if-no-files-found: error
+          retention-days: 14
+
+  optional-parameter:
+    name: Complete optional-parameter matrix
+    if: inputs.suite == 'optional-parameter'
+    uses: ./.github/workflows/optional-parameter-complete.yml

@@ -1,0 +1,123 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/OptionalParameters.Api.1.0.0.nupkg": "6ab7e353f4246c11b7b7b36f7eade7607af908ede8e6b596a7ac728ee7cc5e69"
+      },
+      "artifactsSha256": "e55644d0a77eff9ff7d5c03004bc75cc96b9f289ac114fbb60c632218bb5258e",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "c2a5dcbf0ab5eea0f065052c598575beeeb49b56056340a51423110fb973bb42",
+      "bindingIrSha256": "eb9f03be13f853df19d755a63215ebde91870f9bc4e2345f968f63e49d408366",
+      "componentReceiptSha256": "f11eb5796cced495ef994375d442b60e989fe2023c0e4b961bfa9cbaf9a94168",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "370252b5cbf0393279f9cf1f068afdf15fb109c842ffb6554143ae36a330c87e",
+      "modelSha256": "dc9d8e9f083193be039837b0d992f40bd16caf26d34786d87115b3a74d691081",
+      "packageSetReceiptSha256": "6907ec92a37a66cf77d7e8bb1d919aad2190c66e279c9bf161049b9bc56da6c1"
+    },
+    {
+      "archives": {
+        "archives/OptionalParameters.Api.1.0.0.nupkg": "6ab7e353f4246c11b7b7b36f7eade7607af908ede8e6b596a7ac728ee7cc5e69"
+      },
+      "artifactsSha256": "e55644d0a77eff9ff7d5c03004bc75cc96b9f289ac114fbb60c632218bb5258e",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "c2a5dcbf0ab5eea0f065052c598575beeeb49b56056340a51423110fb973bb42",
+      "bindingIrSha256": "eb9f03be13f853df19d755a63215ebde91870f9bc4e2345f968f63e49d408366",
+      "componentReceiptSha256": "f11eb5796cced495ef994375d442b60e989fe2023c0e4b961bfa9cbaf9a94168",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "370252b5cbf0393279f9cf1f068afdf15fb109c842ffb6554143ae36a330c87e",
+      "modelSha256": "dc9d8e9f083193be039837b0d992f40bd16caf26d34786d87115b3a74d691081",
+      "packageSetReceiptSha256": "6907ec92a37a66cf77d7e8bb1d919aad2190c66e279c9bf161049b9bc56da6c1"
+    }
+  ],
+  "compilerFreePath": true,
+  "group": "dotnet",
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "checks": 23,
+      "closure": {
+        "buildInputsSha256": "b64ae8faafca0922b0eb70847dc8b57192ad82f0d9b0a6290ebd330e1221754c",
+        "cacheFilesSha256": "b39146bde521f506b1720796cbd478a3e4bad7f870019221692df8d3ebc2ae8e",
+        "deployedFilesSha256": "ba372ad3123ab07ff97d0b5fe0236e872dccbd712d3e2aced64797f7bf32d2fd",
+        "interpreterSha256": "634efbf2414144d140d6f59d167342c8b3b53b4c34346ed786dd0470ddc9a3cb",
+        "packageFileSetSha256": "1b1a72a15bafc136e839ce9a87c9f718ac34e376af6d1f6a19f34ab45fd11e8c",
+        "receiptSha256": "bbe211875fede58677a7f545d3e5d68429f0afc0f32b74d666681a3968b4fb37"
+      },
+      "compilerFreePath": true,
+      "consumerSha256": "c78eebe43b5a62aa5a2960c330c04fc052b03b14b9e10fa855a4e84969159c14",
+      "executions": [
+        {
+          "checks": 21,
+          "relocated": false
+        },
+        {
+          "checks": 21,
+          "relocated": true
+        }
+      ],
+      "explicitHostNull": true,
+      "invalidCompile": {
+        "diagnostic": "<suite>/negative-dotnet/consumer.cs(7,22): error CS1503: Argument 1: cannot convert from '<null>' to 'uint' [<suite>/negative-dotnet/Consumer.csproj]\n<suite>/negative-dotnet/consumer.cs(8,25): error CS1503: Argument 1: cannot convert from '<null>' to 'System.Numerics.BigInteger' [<suite>/negative-dotnet/Consumer.csproj]\n\nBuild FAILED.\n\n<suite>/negative-dotnet/consumer.cs(7,22): error CS1503: Argument 1: cannot convert from '<null>' to 'uint' [<suite>/negative-dotnet/Consumer.csproj]\n<suite>/negative-dotnet/consumer.cs(8,25): error CS1503: Argument 1: cannot convert from '<null>' to 'System.Numerics.BigInteger' [<suite>/negative-dotnet/Consumer.csproj]\n    0 Warning(s)\n    2 Error(s)\n\nTime Elapsed 00:00:01.29\n",
+        "rejected": true,
+        "values": 2
+      },
+      "invalidConsumerSha256": "cbf2bf8c580ab755e0b43e6a47a15ba6d4e4e3f9f1fdadb27361de40e21c8104",
+      "invalidHostValues": 2,
+      "offlineInstall": true,
+      "profile": "dotnet",
+      "runtimeChecks": 21
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "496de9b6f22725da76e2fbe3aba9a2a1dd76ce06",
+  "profiles": [
+    "dotnet"
+  ],
+  "receipt": {
+    "component": {
+      "id": "defaults@1.0.0",
+      "name": "defaults",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51362450,
+            "path": "archives/OptionalParameters.Api.1.0.0.nupkg",
+            "sha256": "6ab7e353f4246c11b7b7b36f7eade7607af908ede8e6b596a7ac728ee7cc5e69"
+          }
+        ],
+        "ecosystem": "nuget",
+        "name": "OptionalParameters.Api",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "nuget",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "eb9f03be13f853df19d755a63215ebde91870f9bc4e2345f968f63e49d408366",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "e25e2922139bb710aac221c0269adf78c35fe2759086e077078b70c633644bd2"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

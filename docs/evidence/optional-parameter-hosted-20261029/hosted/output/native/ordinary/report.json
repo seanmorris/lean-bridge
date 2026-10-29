@@ -1,0 +1,161 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/defaults-1.0.0-c.tar.gz": "edba2571a1a3dfd226c3cad6942fa99f682f975656e0d9dc7b334044e8c4e81b",
+        "archives/defaults-1.0.0-cpp.tar.gz": "2a05d4d5d2093bad7ec2377b0fc47c84cb8af1cc36a572b5bb649413f91fd958"
+      },
+      "artifactsSha256": "6b3030f5dcbf488d3eb3b9f3b013fbf7092301c268832dd56989a67ceb9b3305",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "11620095404fab4d994d0a94b017bde7e75aae585e009e14558f4626cef00a33",
+      "bindingIrSha256": "e0d7bebd82bcc552c61b8f38b6b1b3fc70b82e94399b47094694975ae779ebfa",
+      "componentReceiptSha256": "5ac7c7a66f44e9ce3d03470b05ceb7647187c242cb79093a2fbe0e7884dc3b04",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "19dc963b50ed9208a6f4783a774b02217ab34870b29bff3ea095a63647efcbea",
+      "modelSha256": "eba23010b05edacb9f7659d76db696929d6a079b6bf574526a56091ef0b688f9",
+      "packageSetReceiptSha256": "3d67ed5361b5f44c361f779f56c1ca10c4d2bb040343947db199f2720de5db70"
+    },
+    {
+      "archives": {
+        "archives/defaults-1.0.0-c.tar.gz": "edba2571a1a3dfd226c3cad6942fa99f682f975656e0d9dc7b334044e8c4e81b",
+        "archives/defaults-1.0.0-cpp.tar.gz": "2a05d4d5d2093bad7ec2377b0fc47c84cb8af1cc36a572b5bb649413f91fd958"
+      },
+      "artifactsSha256": "6b3030f5dcbf488d3eb3b9f3b013fbf7092301c268832dd56989a67ceb9b3305",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "11620095404fab4d994d0a94b017bde7e75aae585e009e14558f4626cef00a33",
+      "bindingIrSha256": "e0d7bebd82bcc552c61b8f38b6b1b3fc70b82e94399b47094694975ae779ebfa",
+      "componentReceiptSha256": "5ac7c7a66f44e9ce3d03470b05ceb7647187c242cb79093a2fbe0e7884dc3b04",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "19dc963b50ed9208a6f4783a774b02217ab34870b29bff3ea095a63647efcbea",
+      "modelSha256": "eba23010b05edacb9f7659d76db696929d6a079b6bf574526a56091ef0b688f9",
+      "packageSetReceiptSha256": "3d67ed5361b5f44c361f779f56c1ca10c4d2bb040343947db199f2720de5db70"
+    }
+  ],
+  "compilerFreePath": true,
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "checks": 22,
+      "compilerFreePath": true,
+      "consumerSha256": "5c2f8b7bd70c4f14c7816afd0db93564874711efd06fab9d1326f58a5243fc2a",
+      "executableSha256": "8a8cbda64986f0148b1e54af42af73e5d76c211daef1807cd806589f34252f6a",
+      "executions": [
+        {
+          "checks": 22,
+          "relocated": false
+        },
+        {
+          "checks": 22,
+          "relocated": true
+        }
+      ],
+      "explicitHostNull": {
+        "mode": "runtime",
+        "rejected": true,
+        "status": "DEFAULTS_STATUS_INVALID_ARGUMENT"
+      },
+      "headerSha256": "19f31efc7a1f6124fe52a0ea5398a3887d15432361e77d3af130a95af8438d82",
+      "offlineInstall": true,
+      "packageFileSetSha256": "72205cc047076f49f75952a264e9c44ba5f24bbd25f3b13e7191718348858c52",
+      "profile": "c",
+      "receiptSha256": "fb41c0d78acee8af9bb95095db56295a649aaacea09cd523bb03e6c8b15da026"
+    },
+    {
+      "checks": 21,
+      "compilerFreePath": true,
+      "consumerSha256": "87c3947e37ea89f21cc90add533691b71e882f79305a8cb32cf1a6bedfb40a47",
+      "executableSha256": "7391bd50aaa8d070d5f40b574321ff9d1c6ade85036e7a0161ad18bd39681c7a",
+      "executions": [
+        {
+          "checks": 21,
+          "relocated": false
+        },
+        {
+          "checks": 21,
+          "relocated": true
+        }
+      ],
+      "explicitHostNull": {
+        "diagnostic": "explicit-null-negative.cpp: In function 'int main()':\nexplicit-null-negative.cpp:3:39: error: invalid initialization of reference of type 'const std::optional<unsigned int>&' from expression of type 'std::nullptr_t'\n    3 | int main() { return (int)api::present(nullptr).value_or(0); }\n      |                                       ^~~~~~~\nIn file included from explicit-null-negative.cpp:1:\n<consumer>/defaults-1.0.0-cpp/include/defaults.hpp:187:71: note: in passing argument 1 of 'std::optional<unsigned int> lean_bridge::defaults::present(const std::optional<unsigned int>&)'\n  187 | inline std::optional<uint32_t> present(std::optional<uint32_t> const& arg0 = std::optional<uint32_t>{static_cast<uint32_t>(UINT32_C(9))}) {\n      |                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n",
+        "mode": "compile",
+        "rejected": true
+      },
+      "headerSha256": "5bca8b5f3234d328d7c8d64b588a6b5638fe66bcd3fc286fa4fb5bd59718afc7",
+      "offlineInstall": true,
+      "packageFileSetSha256": "65929959195d235d3e8597fea4f8940bd73e9fc1f5a922badd27745345419e79",
+      "profile": "cpp",
+      "receiptSha256": "b2b3a20d0cc168dc86c130814888f6ea909e21af07c21789090f497eec822cea"
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "496de9b6f22725da76e2fbe3aba9a2a1dd76ce06",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "receipt": {
+    "component": {
+      "id": "defaults@1.0.0",
+      "name": "defaults",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 53824084,
+            "path": "archives/defaults-1.0.0-c.tar.gz",
+            "sha256": "edba2571a1a3dfd226c3cad6942fa99f682f975656e0d9dc7b334044e8c4e81b"
+          }
+        ],
+        "ecosystem": "c",
+        "name": "defaults",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "c",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51752039,
+            "path": "archives/defaults-1.0.0-cpp.tar.gz",
+            "sha256": "2a05d4d5d2093bad7ec2377b0fc47c84cb8af1cc36a572b5bb649413f91fd958"
+          }
+        ],
+        "ecosystem": "cpp",
+        "name": "defaults",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpp",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "e0d7bebd82bcc552c61b8f38b6b1b3fc70b82e94399b47094694975ae779ebfa",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "bb672472a5d9cf2d771fefc56cd2ec6ece944eb9709e7c0d2d33d6688edb27e3"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

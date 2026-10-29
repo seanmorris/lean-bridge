@@ -1,0 +1,114 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/optionalparameters-1.0.0-x86_64-linux.gem": "e547180f595498292037748306cebbb15024a9c7bdaad1d444a6c8eb818344f8"
+      },
+      "artifactsSha256": "833526ae5a9a755ead90ab4c796541c30b3fb3c5043c9d1349336175d8462475",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "d4519f20cb881637cf0001380bdcbf7f0055f55e52a8ea35bc23a8c20f95c0e2",
+      "bindingIrSha256": "79553d72d84e7bfc84d1604a48e9868d4e55f9982957e6e199766e25979e94ec",
+      "componentReceiptSha256": "3eb2886f191b3bb5822cdad46c247f2b8aae7290143e2e73ef2f939d130304dc",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "370252b5cbf0393279f9cf1f068afdf15fb109c842ffb6554143ae36a330c87e",
+      "modelSha256": "fd76e215930fcac872359295deda879382df0a2385221adbc4c5fca45686c9d3",
+      "packageSetReceiptSha256": "107c2a620bbff58e741351abd0aee049936439c49feee64feac85cd8194054b8"
+    },
+    {
+      "archives": {
+        "archives/optionalparameters-1.0.0-x86_64-linux.gem": "e547180f595498292037748306cebbb15024a9c7bdaad1d444a6c8eb818344f8"
+      },
+      "artifactsSha256": "833526ae5a9a755ead90ab4c796541c30b3fb3c5043c9d1349336175d8462475",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "d4519f20cb881637cf0001380bdcbf7f0055f55e52a8ea35bc23a8c20f95c0e2",
+      "bindingIrSha256": "79553d72d84e7bfc84d1604a48e9868d4e55f9982957e6e199766e25979e94ec",
+      "componentReceiptSha256": "3eb2886f191b3bb5822cdad46c247f2b8aae7290143e2e73ef2f939d130304dc",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "370252b5cbf0393279f9cf1f068afdf15fb109c842ffb6554143ae36a330c87e",
+      "modelSha256": "fd76e215930fcac872359295deda879382df0a2385221adbc4c5fca45686c9d3",
+      "packageSetReceiptSha256": "107c2a620bbff58e741351abd0aee049936439c49feee64feac85cd8194054b8"
+    }
+  ],
+  "compilerFreePath": true,
+  "dependencies": null,
+  "independentBuilds": 2,
+  "observation": {
+    "apiSha256": "90b0a4fc161a2077ce309240de18d68178770fa394fff52d4ebba8013a439414",
+    "checks": 23,
+    "closure": {
+      "environmentSha256": "50959b20c9031baa37904acf67f481c88ce700ff711b927a4b2480a33b548b4a",
+      "gemspecSha256": "9130052bd1514652cb88689f2e1eeeedaf2bfd1b973f495a7398be79a4a81950",
+      "interpreterSha256": "5705533003a8ca00e6359e2430ddf7a1737eb439983e1e1a4236d0396ec8771e",
+      "packageFileSetSha256": "6cfa273478d07c981fe901e6d2d078094e9f83ebd3fea660480434050b5df052",
+      "receiptSha256": "2fcff91ce47cb8e14f8ee3f14be9b79495319b0a935be3a7d6966b835229270e"
+    },
+    "compilerFreePath": true,
+    "consumerSha256": "a3c32a694642f87781fba865609ff7fd970a51a2ff597ed71de2a5894bf939ba",
+    "executions": [
+      {
+        "checks": 23,
+        "relocated": false
+      },
+      {
+        "checks": 23,
+        "relocated": true
+      }
+    ],
+    "explicitHostNull": true,
+    "invalidCompile": null,
+    "invalidHostValues": 2,
+    "offlineInstall": true,
+    "profile": "ruby",
+    "runtimeChecks": 23
+  },
+  "offlineInstall": true,
+  "producerCommit": "496de9b6f22725da76e2fbe3aba9a2a1dd76ce06",
+  "profile": "ruby",
+  "receipt": {
+    "component": {
+      "id": "defaults@1.0.0",
+      "name": "defaults",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 50081280,
+            "path": "archives/optionalparameters-1.0.0-x86_64-linux.gem",
+            "sha256": "e547180f595498292037748306cebbb15024a9c7bdaad1d444a6c8eb818344f8"
+          }
+        ],
+        "ecosystem": "rubygems",
+        "name": "optionalparameters",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "rubygems",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "79553d72d84e7bfc84d1604a48e9868d4e55f9982957e6e199766e25979e94ec",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "b1f1030ab546e25619f29b1ec7d11be26919526addaa5e9e4320608935f50f0b"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

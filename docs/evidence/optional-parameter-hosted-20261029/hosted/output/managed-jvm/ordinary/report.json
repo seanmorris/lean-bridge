@@ -1,0 +1,161 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/optionalparameters-1.0.0.jar": "1e682df712fb3fae5c6928b954259eae750dd8de7b2f6e227e43c14569ab05a2",
+        "archives/optionalparameters-1.0.0.pom": "ff0230f2427c7435419a8c8511fa50f8059b7c54057d993a40173384992e96ed"
+      },
+      "artifactsSha256": "015b56c27baf30d21b20154cd66eb11b6a6bdb157d38f3e9b2f1a6d587754e32",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "201abcc10dc03afbd9d6bd89af779cc45d71a8fccd003d9698792bcf9a55cd9b",
+      "bindingIrSha256": "ebdcb838eb4d1b6cafbd00a38d6da22bfa200f6268c9437664e015fc2ff66da0",
+      "componentReceiptSha256": "d2a9890745ccfbdcbb73d03688d68510ed25a53cad838680cdcd380a68e56bcf",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "19dc963b50ed9208a6f4783a774b02217ab34870b29bff3ea095a63647efcbea",
+      "modelSha256": "ac1b2d219374d768db5b385d7b8c32d4b2e82f6704e634ce65ede46624888a37",
+      "packageSetReceiptSha256": "273fded40213ffc16be5097647a609b95f65507f68116b94b3889d17c70ebca6"
+    },
+    {
+      "archives": {
+        "archives/optionalparameters-1.0.0.jar": "1e682df712fb3fae5c6928b954259eae750dd8de7b2f6e227e43c14569ab05a2",
+        "archives/optionalparameters-1.0.0.pom": "ff0230f2427c7435419a8c8511fa50f8059b7c54057d993a40173384992e96ed"
+      },
+      "artifactsSha256": "015b56c27baf30d21b20154cd66eb11b6a6bdb157d38f3e9b2f1a6d587754e32",
+      "authenticatedDefaults": 7,
+      "bindingIrFileSha256": "201abcc10dc03afbd9d6bd89af779cc45d71a8fccd003d9698792bcf9a55cd9b",
+      "bindingIrSha256": "ebdcb838eb4d1b6cafbd00a38d6da22bfa200f6268c9437664e015fc2ff66da0",
+      "componentReceiptSha256": "d2a9890745ccfbdcbb73d03688d68510ed25a53cad838680cdcd380a68e56bcf",
+      "declarations": 7,
+      "generatedLeanSha256": "ca52cdcaa44e4575105a759ad2846c387fd0a8aecfe468e9756e94a6a8da5544",
+      "metadataSha256": "19dc963b50ed9208a6f4783a774b02217ab34870b29bff3ea095a63647efcbea",
+      "modelSha256": "ac1b2d219374d768db5b385d7b8c32d4b2e82f6704e634ce65ede46624888a37",
+      "packageSetReceiptSha256": "273fded40213ffc16be5097647a609b95f65507f68116b94b3889d17c70ebca6"
+    }
+  ],
+  "compilerFreePath": true,
+  "group": "jvm",
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "checks": 23,
+      "closure": {
+        "classpathFilesSha256": "99955f0da4753e8e82166f7ead7db3e6aaf6cfaaf5ea0f8d156fa035f1ed3da7",
+        "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "packageFileSetSha256": "cb9328018dd3644ace3bf90a0fa7a5d917fc52ac0c5b4a266e157bf8c9e9a802",
+        "receiptSha256": "cf2ca9f7900815b52e9cbbb03942c4a32da8de31a2163c826f38e5ae362f7284"
+      },
+      "compilerFreePath": true,
+      "consumerSha256": "977f9e0e203520b65fb8ed3fd169a7b629a54d96eed7ac896ebf46cebbf91752",
+      "executions": [
+        {
+          "checks": 21,
+          "relocated": false
+        },
+        {
+          "checks": 21,
+          "relocated": true
+        }
+      ],
+      "explicitHostNull": true,
+      "invalidCompile": {
+        "diagnostic": "consumer.java:6: error: incompatible types: <null> cannot be converted to long\n        Api.word(null);\n                 ^\nconsumer.java:7: error: incompatible types: <null> cannot be converted to int\n        Api.character(null);\n                      ^\nNote: Some messages have been simplified; recompile with -Xdiags:verbose to get full output\n2 errors\n",
+        "rejected": true,
+        "values": 2
+      },
+      "invalidConsumerSha256": "207395caf810ad56c260d4c36096e6b6773aba340a3fe596ed6e7774f773d775",
+      "invalidHostValues": 2,
+      "offlineInstall": true,
+      "profile": "java",
+      "runtimeChecks": 21
+    },
+    {
+      "checks": 23,
+      "closure": {
+        "classpathFilesSha256": "860b0c1d5542e58723a4d2ea0d38cee48f4673767e99c3215ce20c6a58cf0a02",
+        "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "packageFileSetSha256": "cb9328018dd3644ace3bf90a0fa7a5d917fc52ac0c5b4a266e157bf8c9e9a802",
+        "receiptSha256": "cf2ca9f7900815b52e9cbbb03942c4a32da8de31a2163c826f38e5ae362f7284"
+      },
+      "compilerFreePath": true,
+      "consumerSha256": "d6c7f68548bbd5b58fc8675a5a34b13015fa38f4c542b52bd33a7be6c7209b66",
+      "executions": [
+        {
+          "checks": 21,
+          "relocated": false
+        },
+        {
+          "checks": 21,
+          "relocated": true
+        }
+      ],
+      "explicitHostNull": true,
+      "invalidCompile": {
+        "diagnostic": "consumer.kt:4:14: error: null cannot be a value of a non-null type 'Long'.\n    Api.word(null)\n             ^^^^\nconsumer.kt:5:17: error: null cannot be a value of a non-null type 'BigInteger'.\n    Api.natural(null)\n                ^^^^\n",
+        "rejected": true,
+        "values": 2
+      },
+      "invalidConsumerSha256": "f479c9aee1034ec0947660832a0c23d8bf1de183c16bbb9a11a3ae40df8e69be",
+      "invalidHostValues": 2,
+      "offlineInstall": true,
+      "profile": "kotlin",
+      "runtimeChecks": 21
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "496de9b6f22725da76e2fbe3aba9a2a1dd76ce06",
+  "profiles": [
+    "java",
+    "kotlin"
+  ],
+  "receipt": {
+    "component": {
+      "id": "defaults@1.0.0",
+      "name": "defaults",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51407393,
+            "path": "archives/optionalparameters-1.0.0.jar",
+            "sha256": "1e682df712fb3fae5c6928b954259eae750dd8de7b2f6e227e43c14569ab05a2"
+          },
+          {
+            "bytes": 628,
+            "path": "archives/optionalparameters-1.0.0.pom",
+            "sha256": "ff0230f2427c7435419a8c8511fa50f8059b7c54057d993a40173384992e96ed"
+          }
+        ],
+        "ecosystem": "maven",
+        "name": "org.leanbridge:optionalparameters",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "maven",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "ebdcb838eb4d1b6cafbd00a38d6da22bfa200f6268c9437664e015fc2ff66da0",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "79754c50a16482b08e829a93cdc2b63215c6f34e26815cec93e3fa1ad525b88a"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

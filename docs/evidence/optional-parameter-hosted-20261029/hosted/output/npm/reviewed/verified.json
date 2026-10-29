@@ -1,0 +1,26 @@
+{
+  "browserProfiles": 3,
+  "cases": {
+    "explicitDefault": true,
+    "explicitHostNull": true,
+    "explicitNondefault": true,
+    "invalidHostValue": true,
+    "omitted": true,
+    "optionNone": true,
+    "relocatedReplay": true,
+    "unit": true
+  },
+  "checks": 27,
+  "executions": 2,
+  "lane": "npm",
+  "producerCommit": "496de9b6f22725da76e2fbe3aba9a2a1dd76ce06",
+  "profiles": [
+    "node-javascript",
+    "node-typescript",
+    "browser-javascript",
+    "browser-react",
+    "browser-worker"
+  ],
+  "rejections": 7,
+  "route": "reviewed"
+}
