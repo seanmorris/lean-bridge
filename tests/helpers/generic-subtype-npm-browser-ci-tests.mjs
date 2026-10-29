@@ -11,7 +11,12 @@ test("CI installs each generic Subtype author route in Node and all browser real
 	const workflow = await readFile(".github/workflows/generic-subtype-npm-browser.yml", "utf8");
 	for(const text of [
 		"route: ${{ fromJSON((inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && '[\"reviewed\"]' || '[\"ordinary\",\"reviewed\"]') }}"
-		, "fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}"
+		, "- name: Check out the focused package revision"
+		, "if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}"
+		, "fetch-depth: 1"
+		, "!/docs/evidence/"
+		, "sparse-checkout-cone-mode: false"
+		, "- name: Check out the exact revision and evidence history"
 		, "if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}"
 		, "LEAN_BRIDGE_GENERIC_SUBTYPE_NPM_BROWSER_TEST: \"1\""
 		, "LEAN_BRIDGE_GENERIC_SUBTYPE_ROUTES: ${{ matrix.route }}"
@@ -21,6 +26,7 @@ test("CI installs each generic Subtype author route in Node and all browser real
 		, "if-no-files-found: error"
 		, "if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}"
 	]) assert.ok(workflow.includes(text), text);
+	assert.equal(workflow.match(/^ {10}fetch-depth: 0$/gmu)?.length, 1);
 	assert.equal(workflow.match(/^ {8}continue-on-error: true$/gmu)?.length, 3);
 	assert.match(workflow
 		, /id: optional_parameters\n {8}if: inputs\.optional_parameters && matrix\.route == 'reviewed'\n {8}continue-on-error: true/u);

@@ -42,10 +42,21 @@ jobs:
       LEAN_WASM_RUNTIME_VARIANT: php-wasm-3.1.68
       LEAN_WASM_ARTIFACT_TARGET: php-wasm-emscripten-3.1.68
     steps:
-      - name: Check out the exact revision and original evidence history
+      - name: Check out the focused package revision
+        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}
         uses: actions/checkout@v6
         with:
-          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Check out the exact revision and original evidence history
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6

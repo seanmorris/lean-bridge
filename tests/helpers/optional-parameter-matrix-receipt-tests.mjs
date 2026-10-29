@@ -115,7 +115,19 @@ const assertFocusedProducer = (source, specification) => {
 	const focused = specification.file.endsWith("generic-subtype-languages.yml")
 		? "inputs.optional_parameters || inputs.direct_proof_erasure"
 		: "inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null";
-	assert.ok(source.includes(`fetch-depth: \${{ (${focused}) && 1 || 0 }}`));
+	const focusedCheckout = `      - name: Check out the focused package revision
+        if: \${{ ${focused} }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+`;
+	assert.equal(source.split(focusedCheckout).length - 1
+		, specification.records.length);
 	assert.ok(source.includes(
 		`if: \${{ !${focused.replaceAll(" || ", " && !")} }}`));
 	if(specification.file.endsWith("generic-subtype-npm-browser.yml"))
@@ -276,8 +288,9 @@ test("focused recurring CI produces and reconciles the exact optional matrix", a
 			: "inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null";
 		for(const changed of [
 			source.replace("  workflow_call:\n", "")
-			, source.replaceAll(`fetch-depth: \${{ (${focused}) && 1 || 0 }}`
-				, "fetch-depth: 0")
+			, source.replace("          fetch-depth: 1\n"
+				, "          fetch-depth: 0\n")
+			, source.replace("            !/docs/evidence/\n", "")
 			, source.replaceAll(
 				`if: \${{ !${focused.replaceAll(" || ", " && !")} }}`
 				, "if: true")
@@ -288,5 +301,5 @@ test("focused recurring CI produces and reconciles the exact optional matrix", a
 		]) assert.throws(() => assertFocusedProducer(changed, item)
 			, assert.AssertionError, item.file);
 	}
-	t.diagnostic(`${callerMutations.length + focusedProducers.length * 7} focused-CI bypasses refused`);
+	t.diagnostic(`${callerMutations.length + focusedProducers.length * 8} focused-CI bypasses refused`);
 });

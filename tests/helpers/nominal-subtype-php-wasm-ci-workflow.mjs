@@ -26,7 +26,9 @@ export const assertNominalSubtypePhpWasmWorkflow = source => {
 	assert.doesNotMatch(source, /^ {4}(?:continue-on-error|needs|strategy|defaults):/gmu);
 	assert.equal(source.match(/^ {8}continue-on-error: true$/gmu)?.length, 3);
 	assert.deepEqual(source.match(/^\s+if:.*$/gmu), [
-		"        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}"
+		"        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}"
+		, "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}"
+		, "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}"
 		, "        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}"
 		, "        if: inputs.optional_parameters"
 		, "        if: always() && inputs.optional_parameters"
@@ -46,7 +48,8 @@ export const assertNominalSubtypePhpWasmWorkflow = source => {
 	assert.ok(source.includes("    timeout-minutes: 360\n"));
 	const names = [...source.matchAll(/^ {6}- name: (.+)$/gmu)].map(match => match[1]);
 	assert.deepEqual(names, [
-		"Check out the exact revision and original evidence history"
+		"Check out the focused package revision"
+		, "Check out the exact revision and original evidence history"
 		, "Install Node.js", "Install Nix"
 		, "Restore pinned PHP and compiler inputs"
 		, "Install dependencies without lifecycle scripts"
@@ -68,22 +71,23 @@ export const assertNominalSubtypePhpWasmWorkflow = source => {
 		, "Enforce installed PHP-Wasm acceptance"
 	]);
 	const step = name => source.split("      - name: " + name + "\n")[1].split("      - name: ")[0];
-	assert.equal(step(names[0]), "        uses: actions/checkout@v6\n        with:\n          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\n          persist-credentials: false\n");
-	assert.equal(step(names[1]), '        uses: actions/setup-node@v6\n        with:\n          node-version: "22"\n          cache: npm\n');
-	assert.equal(step(names[2]), "        uses: cachix/install-nix-action@v31\n");
-	assert.equal(step(names[3]), "        uses: actions/cache@v5\n        with:\n          path: |\n            .toolchains\n            build/php-wasm-sdk\n            build/php-wasm-host\n          key: nominal-subtype-php-wasm-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}\n");
-	assert.equal(step(names[5]), "        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n");
-	assert.ok(step(names[10]).startsWith("        id: acceptance\n        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n        timeout-minutes: 100\n        env:\n          LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME: build/nominal-subtype-php-wasm-input/php-wasm-runtime\n        shell: bash\n"));
-	assert.equal(step(names[11]), "        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n        uses: actions/upload-artifact@v7\n        with:\n          name: nominal-subtype-php-wasm-${{ github.sha }}\n          path: |\n            build/nominal-subtype-php-wasm-ci/\n            build/nominal-subtype-php-wasm-host.log\n            build/nominal-subtype-php-wasm-runtime.log\n            build/nominal-subtype-php-wasm-input/php-wasm-runtime/runtime.json\n          if-no-files-found: error\n          retention-days: 30\n");
-	assert.equal(step(names[12]), "        id: optional_parameters\n        if: inputs.optional_parameters\n        continue-on-error: true\n        timeout-minutes: 125\n        env:\n          LEAN_BRIDGE_PHP: /usr/bin/php\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\"\n          test -d \"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\"\n          bash scripts/run-optional-parameter-php-ci.sh\n");
-	assert.equal(step(names[13]), "        if: always() && inputs.optional_parameters\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-php-${{ github.sha }}\n          path: build/optional-parameter-php-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n");
-	assert.match(step(names[15])
+	assert.equal(step(names[0]), "        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n");
+	assert.equal(step(names[1]), "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n");
+	assert.equal(step(names[2]), '        uses: actions/setup-node@v6\n        with:\n          node-version: "22"\n          cache: npm\n');
+	assert.equal(step(names[3]), "        uses: cachix/install-nix-action@v31\n");
+	assert.equal(step(names[4]), "        uses: actions/cache@v5\n        with:\n          path: |\n            .toolchains\n            build/php-wasm-sdk\n            build/php-wasm-host\n          key: nominal-subtype-php-wasm-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}\n");
+	assert.equal(step(names[6]), "        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n");
+	assert.ok(step(names[11]).startsWith("        id: acceptance\n        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n        timeout-minutes: 100\n        env:\n          LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME: build/nominal-subtype-php-wasm-input/php-wasm-runtime\n        shell: bash\n"));
+	assert.equal(step(names[12]), "        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n        uses: actions/upload-artifact@v7\n        with:\n          name: nominal-subtype-php-wasm-${{ github.sha }}\n          path: |\n            build/nominal-subtype-php-wasm-ci/\n            build/nominal-subtype-php-wasm-host.log\n            build/nominal-subtype-php-wasm-runtime.log\n            build/nominal-subtype-php-wasm-input/php-wasm-runtime/runtime.json\n          if-no-files-found: error\n          retention-days: 30\n");
+	assert.equal(step(names[13]), "        id: optional_parameters\n        if: inputs.optional_parameters\n        continue-on-error: true\n        timeout-minutes: 125\n        env:\n          LEAN_BRIDGE_PHP: /usr/bin/php\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\"\n          test -d \"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\"\n          bash scripts/run-optional-parameter-php-ci.sh\n");
+	assert.equal(step(names[14]), "        if: always() && inputs.optional_parameters\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-php-${{ github.sha }}\n          path: build/optional-parameter-php-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n");
+	assert.match(step(names[16])
 		, /^ {8}id: direct_proof_erasure\n {8}if: inputs\.direct_proof_erasure\n {8}continue-on-error: true/mu);
-	assert.ok(step(names[15]).includes(
+	assert.ok(step(names[16]).includes(
 		"bash scripts/run-direct-proof-erasure-php-ci.sh"));
-	assert.ok(step(names[16]).includes(
+	assert.ok(step(names[17]).includes(
 		"name: direct-proof-erasure-php-${{ github.sha }}"));
-	assert.ok(step(names[16]).includes(
+	assert.ok(step(names[17]).includes(
 		"path: build/direct-proof-erasure-php-ci/"));
 	const commands = workflowRunScalars(source).map(run => run.source.trim());
 	assert.deepEqual(commands, [
