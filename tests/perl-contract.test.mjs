@@ -492,6 +492,56 @@ die 'explicit undef became omission' unless @$undef == 1 && !defined($undef->[0]
 	assert.equal(result, "");
 });
 
+test("Perl wrappers compile authenticated Unicode defaults as characters", async t => {
+	const model = structuredClone(fixture());
+	const parameter = model.exports[0].parameters[0];
+	Object.assign(parameter, {
+		kind: "primitive", name: "char", lean: "Char"
+		, abi: {
+			cType: "uint32_t", box: "lean_box_uint32"
+			, unbox: "lean_unbox_uint32", heap: false
+		}
+	});
+	const declaration = model.bindingIr.declarations[0];
+	declaration.parameters[0].type = { kind: "primitive", name: "char" };
+	declaration.parameters[0].optional = true;
+	declaration.parameters[0].default = { kind: "char", value: "λ" };
+	model.bindingIrSha256 = hashBindingIr(model.bindingIr);
+	const receipt = { library: "libcomponent_test.so"
+		, nativeLibrary: { sha256: "b".repeat(64) }
+		, runtimeIdentity: "c".repeat(64), initializer: "initialize_Sample" };
+	const files = generatePerlBindingPackage(model, receipt);
+	const source = files["lib/LeanBridge/Sample.pm"];
+	assert.match(source, /use warnings;\nuse utf8;\nuse Math::BigInt;/u);
+
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-perl-unicode-default-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await writeFile(join(root, "Sample.pm"), source);
+	await writeFile(join(root, "consumer.pl"), `BEGIN {
+  $INC{'LeanBridge/Runtime.pm'} = 1;
+  package LeanBridge::Runtime;
+  sub import {}
+  sub _load_component {}
+  $INC{'XSLoader.pm'} = 1;
+  package XSLoader;
+  sub import {}
+  sub load {
+    no strict 'refs';
+    *{'LeanBridge::Sample::increment'} = sub { return [@_] };
+  }
+}
+use lib '.';
+require 'Sample.pm';
+my $omitted = LeanBridge::Sample::increment();
+die 'Unicode default is not one scalar'
+  unless @$omitted == 1 && length($omitted->[0]) == 1
+    && ord($omitted->[0]) == 0x3bb;
+`);
+	assert.equal(execFileSync("/usr/bin/perl", ["consumer.pl"], {
+		cwd: root, encoding: "utf8"
+	}), "");
+});
+
 test("Perl wrappers reject a default before a required positional argument", () => {
 	const model = structuredClone(fixture());
 	const declaration = model.bindingIr.declarations[0];

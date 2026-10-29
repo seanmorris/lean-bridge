@@ -739,6 +739,7 @@ _callback_${type.key}(...)
 	const pm = [`package ${model.moduleName};`
 		, "use strict;"
 		, "use warnings;"
+		, "use utf8;"
 		, "use Math::BigInt;"
 		, "use LeanBridge::Runtime;"
 		, "use XSLoader;"
