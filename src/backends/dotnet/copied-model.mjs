@@ -62,8 +62,12 @@ export const compileCopiedDotnetModel = ir => {
 	}
 	const publicType = copy => copy.type?.callable ? copy.delegateType : copy.record || copy.variant ? copy.publicName
 		: copy.compound ? copy.compound === "tuple" ? `(${copy.fields.map(field => publicType(field.type)).join(", ")})`
-			: `${copy.compound === "option" ? "Option" : "Result"}<${copy.fields.map(field => publicType(field.type)).join(", ")}>`
+			: copy.compound === "host-null" ? `${publicType(copy.fields[0].type)}?`
+				: `${copy.compound === "option" ? "Option" : "Result"}<${copy.fields.map(field => publicType(field.type)).join(", ")}>`
 			: copy.element ? `${publicType(copy.element)}[]` : scalar[copy.scalarName];
+	for(const copy of surface.copies.filter(copy => copy.compound === "host-null"))
+		if(copy.fields[0].type.compound === "host-null")
+			fail(ir.declarations[0], "C# HostNull payloads must retain a value distinct from null");
 	const nativeType = copy => copy.type?.callable ? `B${copy.index}` : copy.aggregate ? `N${copy.index}` : ["unit", "bool"].includes(copy.scalarName) ? "byte" : copy.scalarName === "char" ? "uint" : scalar[copy.scalarName];
 	for(const [index, callback] of [...surface.callbacks.values()].entries())
 	{

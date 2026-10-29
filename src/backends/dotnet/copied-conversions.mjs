@@ -85,6 +85,11 @@ ${copy.cases.map((branch, index) => `            ${index} => new ${branch.public
 		{
 			input += `return value.IsSome ? new ${native} { Flag = 1, F0 = ${to(copy.fields[0], "value.Value")} } : default;`;
 			output = `return value.Flag switch { 0 => ${type}.None, 1 => ${type}.Some(${from(copy.fields[0], 0)}), _ => throw new InvalidOperationException("Invalid native Option flag") };`;
+		} else if(copy.compound === "host-null")
+		{
+			input += `if (value is not { } present) return default;
+        return new ${native} { Flag = 1, F0 = ${to(copy.fields[0], "present")} };`;
+			output = `return value.Flag switch { 0 => null, 1 => ${from(copy.fields[0], 0)}, _ => throw new InvalidOperationException("Invalid native HostNull flag") };`;
 		} else if(copy.compound === "result")
 		{
 			input += `if (value.IsOk) return new ${native} { Flag = 1, F0 = ${to(copy.fields[0], "value.Value")} };
