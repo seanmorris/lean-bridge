@@ -70,6 +70,7 @@ const referencePaths = Object.freeze([
 	, `${hostNullCompleteHostedEvidence}/index.json`
 	, "scripts/archive-host-null-complete-evidence.mjs"
 	, "scripts/download-host-null-complete-inputs.mjs"
+	, "scripts/generate-reference-docs.mjs"
 	, "scripts/generate-type-docs.mjs"
 	, "scripts/promote-host-null-complete.mjs"
 	, "tests/helpers/host-null-complete-hosted-archive.mjs"
@@ -80,6 +81,8 @@ const referencePaths = Object.freeze([
 	, "tests/helpers/host-null-complete-promotion.mjs"
 	, "tests/helpers/host-null-complete-promotion-tests.mjs"
 	, "tests/helpers/host-null-complete-promotion-transaction-tests.mjs"
+	, "tests/helpers/promotion-file-transaction.mjs"
+	, "tests/helpers/type-surface-promotion-io.mjs"
 ]);
 
 /** Authenticate the complete archive and describe its type-surface evidence. */

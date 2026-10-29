@@ -38,6 +38,7 @@ const referencePaths = [
 	, `${hostNullCompleteHostedEvidence}/index.json`
 	, "scripts/archive-host-null-complete-evidence.mjs"
 	, "scripts/download-host-null-complete-inputs.mjs"
+	, "scripts/generate-reference-docs.mjs"
 	, "scripts/generate-type-docs.mjs"
 	, "scripts/promote-host-null-complete.mjs"
 	, "tests/helpers/host-null-complete-hosted-archive.mjs"
@@ -48,6 +49,8 @@ const referencePaths = [
 	, "tests/helpers/host-null-complete-promotion.mjs"
 	, "tests/helpers/host-null-complete-promotion-tests.mjs"
 	, "tests/helpers/host-null-complete-promotion-transaction-tests.mjs"
+	, "tests/helpers/promotion-file-transaction.mjs"
+	, "tests/helpers/type-surface-promotion-io.mjs"
 ];
 const artifacts = hostNullCompleteHostedLanes.map((selectedLane, index) => ({
 	path: `${selectedLane.artifactPrefix}-${revision}.zip`
