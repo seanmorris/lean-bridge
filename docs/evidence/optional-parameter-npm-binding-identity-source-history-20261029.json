@@ -1,0 +1,79 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-npm-binding-identity-source-history.mjs",
+      "sha256": "c008896ee798c5744bb7ea9cb87e8e38b7593bab6cc558417cc91cca1c53347a"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-npm-binding-identity-source-history-tests.mjs",
+      "sha256": "8dc0bf1eae3229f1f1da5cb8b17bd2b2ed3cb1e6c5f2e067c4330b285e2da4e4"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-npm-binding-identity-source-history.mjs",
+      "sha256": "77201c5f0ca7591b184b4736ef668b0f32f06c180eb965e41e1f37624b1641e2"
+    }
+  ],
+  "implementationAdditions": [],
+  "implementationCommit": "561e6dc2de6a6a52ff7f0b61b1d1c2233e813b4f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2a86073f44a2520410b59949fe34f60c0d6ea3ac5e43bce44f063c49408bd6bf",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-npm-binding-identity-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 229
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "ce6ed940ea35ccafc924ed8833c766e6aaa5899c601371109916226fd3b4beb4"
+    }
+  ],
+  "milestone": "optional-parameter-npm-binding-identity-source-v1",
+  "predecessorCommit": "a4102128a4cd43e745491e9c0efe9d8aa05fa469",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Preserve the optional npm bundle's authenticated Binding IR identity in retained evidence, require the package receipt to agree with it, and prevent an undefined canonical-build return field from erasing the digest.",
+  "updates": [
+    {
+      "currentSha256": "5e2e41dc51d6006dac3ee34de045790af968224fc96bc7ccb11f5b6ecf352c47",
+      "edits": [
+        {
+          "current": "import { readFile } from \"node:fs/promises\";\n",
+          "previous": "",
+          "start": 54
+        },
+        {
+          "current": "\ntest(\"optional npm evidence keeps the authenticated bundle identity\", async () => {\n\tconst source = await readFile(\n\t\t\"tests/optional-parameter-npm-installed.test.mjs\", \"utf8\");\n\tassert.match(source, /assert\\.equal\\(release\\.report\\.bindingIrSha256\\s*, bundle\\.bindingIrSha256\\)/u);\n\tassert.doesNotMatch(source\n\t\t, /\\.\\.\\.bundle, bindingIrSha256: built\\.bindingIrSha256/u);\n});\n",
+          "previous": "",
+          "start": 6406
+        }
+      ],
+      "path": "tests/optional-parameter-installed-contract.test.mjs",
+      "previousSha256": "4b04db77f58540e14e32feee8aeabe50d4ec135bf92b6bda007e7fb7335fc346"
+    },
+    {
+      "currentSha256": "c69e3c5fd3935c844d940d6fe0bc30d18ef660c25a4093d1d070314960e30fc3",
+      "edits": [
+        {
+          "current": "\t\t\tawait buildCanonicalProject({\n",
+          "previous": "\t\t\tconst built = await buildCanonicalProject({\n",
+          "start": 3806
+        },
+        {
+          "current": "\t\t\tassert.equal(release.report.bindingIrSha256\n\t\t\t\t, bundle.bindingIrSha256);\n",
+          "previous": "",
+          "start": 4431
+        },
+        {
+          "current": "\t\t\t\t...bundle\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 4600
+        }
+      ],
+      "path": "tests/optional-parameter-npm-installed.test.mjs",
+      "previousSha256": "4bc515a01e182b5be02542f6d73a4b2a21efce4d1114ec1e3708a11160f73bb4"
+    }
+  ]
+}
