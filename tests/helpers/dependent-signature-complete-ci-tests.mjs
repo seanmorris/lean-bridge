@@ -15,6 +15,11 @@ const producerWorkflows = Object.freeze([
 	, ["jvm", "jvm"], ["ruby", "ruby"], ["php-native", "php"]
 	, ["php-wasm", "php-wasm"], ["wit", "wit"]
 ]);
+const producerDependencies = new Map([
+	["python", "javascript"], ["rust", "native"], ["dotnet", "perl"]
+	, ["jvm", "python"], ["ruby", "rust"], ["php-native", "dotnet"]
+	, ["php-wasm", "jvm"], ["wit", "ruby"]
+]);
 const shallowCheckoutInput = `      shallow_checkout:
         description: Use an exact depth-one checkout for focused package execution
         required: false
@@ -100,11 +105,27 @@ const assertDependentSignatureCompleteWorkflow = source => {
 	assert.equal((source.match(/if-no-files-found: error/gmu) ?? []).length, 2);
 	for(const [job, workflow] of producerWorkflows)
 	{
-		assert.match(source, new RegExp(
-			`  ${job}:\\n[\\s\\S]*?    if: inputs\\.suite == 'produce'\\n`
-			+ `    uses: \\.\\/\\.github\\/workflows\\/dependent-checked-record-${workflow}\\.yml\\n`
-			+ "    with:\\n      shallow_checkout: true\\n"
-			, "u"));
+		const start = source.indexOf(`  ${job}:\n`);
+		assert.notEqual(start, -1, job);
+		const ends = keys.map(key => source.indexOf(`  ${key}:\n`, start + 3))
+			.filter(index => index > start);
+		const body = source.slice(start
+			, ends.length === 0 ? undefined : Math.min(...ends));
+		const dependency = producerDependencies.get(job);
+		if(dependency === undefined)
+		{
+			assert.doesNotMatch(body, /^ {4}needs:/mu, job);
+			assert.match(body, /^ {4}if: inputs\.suite == 'produce'$/mu, job);
+		}
+		else
+		{
+			assert.match(body, new RegExp(`^    needs: ${dependency}$`, "mu"), job);
+			assert.match(body
+				, /^ {4}if: always\(\) && inputs\.suite == 'produce'$/mu, job);
+		}
+		assert.ok(body.includes(
+			`uses: ./.github/workflows/dependent-checked-record-${workflow}.yml`));
+		assert.ok(body.includes("      shallow_checkout: true\n"));
 		const receipt = source.split("  receipt:\n")[1];
 		assert.ok(receipt.includes(`      - ${job}\n`), `${job} receipt need`);
 		assert.ok(receipt.includes(`needs.${job}.result != 'success'`)
@@ -173,6 +194,9 @@ test("complete dependent-signature replay rejects missing inputs and bypasses", 
 		, source.replace(
 			"            /docs/evidence/dependent-signatures-hosted-*/\n", "")
 		, source.replace("          sparse-checkout-cone-mode: false\n", "")
+		, source.replace("    needs: javascript\n", "")
+		, source.replace("    if: always() && inputs.suite == 'produce'\n"
+			, "    if: inputs.suite == 'produce'\n")
 	].entries()) assert.throws(
 		() => assertDependentSignatureCompleteWorkflow(changed)
 		, undefined, `bypass control ${index}`);
