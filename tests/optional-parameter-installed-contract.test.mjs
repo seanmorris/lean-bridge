@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
 	managedCompilationDiagnostic, managedDiagnosticCount, managedDiagnosticPattern
-	, optionalParameterWitPatterns
+	, optionalParameterPhpPatterns, optionalParameterWitPatterns
 } from "./helpers/optional-parameter-installed-contract.mjs";
 import {
 	validateOptionalParameterLanguageClosure
@@ -34,6 +34,24 @@ test("optional-parameter WIT contracts retain route-specific binders", () => {
 		assert.match(reviewed, pattern);
 	assert.throws(() => optionalParameterWitPatterns("foreign"), /unknown/u);
 	assert.doesNotMatch(ordinary, optionalParameterWitPatterns("reviewed").at(-2));
+});
+
+test("optional-parameter PHP contracts retain route-specific binders", () => {
+	const source = `
+function natural(mixed $arg0 = null): \\Brick\\Math\\BigInteger {}
+function present(mixed $arg0 = null): Some|null {
+  if (\\func_num_args() <= 0) { $arg0 = new Some(9); }
+}
+function unit_value(mixed $arg0 = null): null {}
+function word(mixed $arg0 = 7): int {}
+`;
+	for(const pattern of optionalParameterPhpPatterns("ordinary"))
+		assert.match(source, pattern);
+	const reviewed = source.replaceAll("arg0", "value0");
+	for(const pattern of optionalParameterPhpPatterns("reviewed"))
+		assert.match(reviewed, pattern);
+	assert.throws(() => optionalParameterPhpPatterns("foreign"), /unknown/u);
+	assert.doesNotMatch(source, optionalParameterPhpPatterns("reviewed")[0]);
 });
 
 test("managed compiler diagnostics retain stdout and stderr", () => {

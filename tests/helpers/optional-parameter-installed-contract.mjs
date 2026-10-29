@@ -19,6 +19,11 @@ const managedPatterns = Object.freeze({
 	, java: /(?:incompatible types|cannot be converted to (?:long|int))/iu
 	, kotlin: /(?:null can(?:not| not) be a value of a non-null type|type mismatch)/iu
 });
+const routeBinder = route => {
+	if(!["ordinary", "reviewed"].includes(route))
+		throw new TypeError("unknown optional-parameter authoring route");
+	return route === "ordinary" ? "arg0" : "value0";
+};
 
 /**
  * Return exact public WIT signatures for one authoring route.
@@ -26,13 +31,28 @@ const managedPatterns = Object.freeze({
  * @param route - Ordinary or independently reviewed authoring route.
  */
 export const optionalParameterWitPatterns = route => {
-	if(!["ordinary", "reviewed"].includes(route))
-		throw new TypeError("unknown optional-parameter authoring route");
-	const argument = route === "ordinary" ? "arg0" : "value0";
+	const argument = routeBinder(route);
 	return Object.freeze(witDeclarations.flatMap(([name, input, output]) => [
 		new RegExp(`${name}: func\\(${argument}: ${input}\\) -> ${output};`, "u")
 		, new RegExp(`${name}-default: func\\(\\) -> ${output};`, "u")
 	]));
+};
+
+/**
+ * Return exact public PHP signatures for one authoring route.
+ *
+ * @param route - Ordinary or independently reviewed authoring route.
+ */
+export const optionalParameterPhpPatterns = route => {
+	const argument = routeBinder(route);
+	return Object.freeze([
+		new RegExp(`function word\\(mixed \\$${argument} = 7\\): int`, "u")
+		, new RegExp(`function natural\\(mixed \\$${argument} = null\\)`, "u")
+		, new RegExp(`function present\\(mixed \\$${argument} = null\\)`, "u")
+		, new RegExp(`\\$${argument} = new Some\\(9\\)`, "u")
+		, new RegExp(
+			`function unit_value\\(mixed \\$${argument} = null\\): null`, "u")
+	]);
 };
 
 /**

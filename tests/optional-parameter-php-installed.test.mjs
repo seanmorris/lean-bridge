@@ -22,6 +22,9 @@ import {
 	optionalParameterPhpProfiles
 } from "./helpers/optional-parameter-php-report.mjs";
 import {
+	optionalParameterPhpPatterns
+} from "./helpers/optional-parameter-installed-contract.mjs";
+import {
 	assertOptionalParameterPhpComponents, optionalParameterPhpComponentFact
 	, prepareOptionalParameterProject, retainOptionalParameterPhpComponents
 } from "./helpers/optional-parameter-packages.mjs";
@@ -49,12 +52,9 @@ const apiPath = (root, profile) => join(root, "vendor/example"
 const phpInvalid = `$rejected = false;
 try { \\LeanDefaults\\word(value0: 7, extra: null); } catch (\\Error) { $rejected = true; }
 if (!$rejected) throw new \\RuntimeException('Unknown named input was accepted');`;
-const assertApi = source => {
-	assert.match(source, /function word\(mixed \$value0 = 7\): int/u);
-	assert.match(source, /function natural\(mixed \$value0 = null\)/u);
-	assert.match(source, /function present\(mixed \$value0 = null\)/u);
-	assert.match(source, /\$value0 = new Some\(9\)/u);
-	assert.match(source, /function unit_value\(mixed \$value0 = null\): null/u);
+const assertApi = (source, route) => {
+	for(const pattern of optionalParameterPhpPatterns(route))
+		assert.match(source, pattern);
 };
 
 for(const route of routes) test(
@@ -151,7 +151,7 @@ for(const route of routes) test(
 		});
 		const nativeRoot = join(consumer, "php-native");
 		const nativeApi = await readFile(apiPath(nativeRoot, "php-native"));
-		assertApi(nativeApi.toString());
+		assertApi(nativeApi.toString(), route);
 		const relocatedNative = join(consumer, "php-native-relocated");
 		await rename(nativeRoot, relocatedNative);
 		await assert.rejects(access(nativeRoot), { code: "ENOENT" });
@@ -193,7 +193,7 @@ for(const route of routes) test(
 		const wasmRoot = join(consumer, "php-wasm");
 		const wasmSource = await readFile(join(wasmRoot, "weak.php"));
 		const wasmApi = await readFile(apiPath(wasmRoot, "php-wasm"));
-		assertApi(wasmApi.toString());
+		assertApi(wasmApi.toString(), route);
 		const driver = await readFile(join(wasmRoot, "driver.mjs"));
 		await saveLakeFile(records, "php-wasm/consumer.php", wasmSource);
 		await saveLakeFile(records, "php-wasm/Api.php", wasmApi);
