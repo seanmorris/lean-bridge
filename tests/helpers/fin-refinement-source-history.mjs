@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCorpusTrapBuildCheckoutRepairSource, corpusTrapBuildCheckoutRepairNormalizationPaths } from "./corpus-trap-build-checkout-repair-source-history.mjs";
 import { beforePerformanceReproducibilityCheckoutSource, performanceReproducibilityCheckoutNormalizationPaths } from "./performance-reproducibility-checkout-source-history.mjs";
 import { beforePhpWasmCorpusLaneSplitSource, phpWasmCorpusLaneSplitNormalizationPaths } from "./php-wasm-corpus-lane-split-source-history.mjs";
 import { beforeDownstreamDirectProofControlRepairSource, downstreamDirectProofControlRepairNormalizationPaths } from "./downstream-direct-proof-control-repair-source-history.mjs";
@@ -2354,7 +2355,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...performanceReproducibilityCheckoutNormalizationPaths
+	...corpusTrapBuildCheckoutRepairNormalizationPaths
+	, ...performanceReproducibilityCheckoutNormalizationPaths
 	, ...phpWasmCorpusLaneSplitNormalizationPaths
 	, ...downstreamDirectProofControlRepairNormalizationPaths
 	, ...directProofErasureDownstreamRepairNormalizationPaths
@@ -3447,7 +3449,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforePerformanceReproducibilityCheckoutSource(path, text, expected);
+	let stage = beforeCorpusTrapBuildCheckoutRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePerformanceReproducibilityCheckoutSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
