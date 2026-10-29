@@ -19,6 +19,7 @@ import { assertOwnedDotnetReports } from "./owned-dotnet-evidence.mjs";
 import { ownedDotnetHistoryPath, ownedDotnetExecutionPath } from "./owned-dotnet-source-history.mjs";
 import { ownedDotnetProcessBaseline, ownedDotnetProcessChangedPaths, ownedDotnetProcessAddedPaths, reverseOwnedDotnetProcess } from "./owned-dotnet-process-history.mjs";
 import { nativeForkRepairHistoricalBytes } from "./native-fork-repair-history.mjs";
+import { beforeManagedHostNullReadme } from "./managed-host-null-readme-history.mjs";
 
 export const ownedDotnetProcessCommands = {
 	admission: "node --test --test-name-pattern='unsupported native targets' tests/owned-c-packaging.test.mjs"
@@ -46,8 +47,9 @@ const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 export const ownedDotnetProcessGeneratedSources = async () => {
 	const result = new Map();
 	const append = (model, evidence, previous) => {
-		for(const [path, source] of Object.entries(generateOwnedDotnetPackage(model.bindingIr, evidence).files))
+		for(const [path, current] of Object.entries(generateOwnedDotnetPackage(model.bindingIr, evidence).files))
 		{
+			const source = beforeManagedHostNullReadme(path, current);
 			const currentSha256 = sha256(source), previousSha256 = previous[path];
 			if(currentSha256 === previousSha256) continue;
 			const key = `${path}:${currentSha256}:${previousSha256}`;
@@ -70,8 +72,9 @@ export const ownedDotnetProcessGeneratedSources = async () => {
 	const copied = await json("docs/evidence/dotnet-structured-codegen-regression-20260924.json");
 	for(const fixture of copied.fixtures)
 	{
-		for(const [path, source] of Object.entries(generateCopiedDotnetPackage(dotnetStructuredRegressionFixtures[fixture.name]())))
+		for(const [path, current] of Object.entries(generateCopiedDotnetPackage(dotnetStructuredRegressionFixtures[fixture.name]())))
 		{
+			const source = beforeManagedHostNullReadme(path, current);
 			const currentSha256 = sha256(source), previousSha256 = fixture.files[path].sha256;
 			if(currentSha256 !== previousSha256)
 				result.set(`${path}:${currentSha256}:${previousSha256}`, { path, source, currentSha256, previousSha256 });

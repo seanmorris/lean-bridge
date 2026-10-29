@@ -561,7 +561,7 @@ ${name}(...)
     lbp_check_interpreter(aTHX);
     lbp_component_ready(aTHX);
     LBP_ENTER();
-	    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${refinements?.parameters?.[i]?.kind === "callback" ? `${read(type)}_recovered` : read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join("\n    ")}
+    ${[...parameters.map((type, i) => `${nativeCType(type)} a${i} = ${refinements?.parameters?.[i]?.kind === "callback" ? `${read(type)}_recovered` : read(type)}(aTHX_ scope, ST(${i}));`), ...guards].join("\n    ")}
     ${parameters.map((type, i) => retain(type, `a${i}`)).join(" ")}
     ${call}
     ${nativeObjectType(result) ? "lbp_keep(scope, result);" : ""}

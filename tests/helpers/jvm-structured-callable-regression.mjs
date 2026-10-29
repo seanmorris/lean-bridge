@@ -13,6 +13,8 @@ import { listReviewedIr } from "./list-fixture.mjs";
 import { nativeAliasReviewedIr } from "./native-alias-fixture.mjs";
 import { nativeVariantReviewedIr } from "./native-variant-fixture.mjs";
 import { nominalSubtypeJvmGenerator } from "./nominal-subtype-jvm-generators.mjs";
+import { generateCopiedJvmKotlinPackage as generateCurrentJvmPackage } from "../../src/backends/jvm/copied-kotlin.mjs";
+import { beforeManagedHostNullReadme } from "./managed-host-null-readme-history.mjs";
 
 export const jvmStructuredRegressionFixtures = {
 	callables: () => callableReviewedIr(jvmCallableSignatures)
@@ -38,6 +40,9 @@ export const assertJvmStructuredCodegenRegression = async record => {
 		const ir = jvmStructuredRegressionFixtures[fixture.name]();
 		assert.equal(fixture.bindingIrSha256, sha256(canonicalJson(ir)));
 		const files = generateCopiedJvmKotlinPackage(ir);
+		const current = generateCurrentJvmPackage(ir);
+		assert.equal(beforeManagedHostNullReadme("README.md", current["README.md"])
+			, files["README.md"], fixture.name);
 		assert.deepEqual(fixture.files, Object.fromEntries(
 			Object.entries(files).map(([path, source]) => [path, {
 				bytes: Buffer.byteLength(source), sha256: sha256(source)

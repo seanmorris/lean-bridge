@@ -37,16 +37,22 @@ test("closure lifetime repair preserves every other byte in the recorded native 
 	for(const row of record.native)
 	{
 		const source = generateNativePrimitiveC(models[row.name], witStructuredNativeReceipt);
-		const previous = beforeClosureThreadRegistry(source), expected = row.files["native.c"];
+		const callback = source.includes("typedef struct { uintptr_t token;");
+		const historical = callback ? source : beforeCallableErrorCode(source);
+		const previous = beforeClosureThreadRegistry(historical), expected = row.files["native.c"];
 		assert.equal(Buffer.byteLength(previous), expected.bytes, row.name);
 		assert.equal(sha256(previous), expected.sha256, row.name);
 		assert.notEqual(sha256(beforeClosureThreadRegistry(source + "\n/* unrelated */\n")), expected.sha256);
-		if(source.includes("typedef struct { uintptr_t token;"))
+		if(callback)
 		{
 			assert.notEqual(source, previous);
 			assert.throws(() => beforeClosureThreadRegistry(source.replace("slot->thread == lb_lease_thread", "1")));
 		}
-		else assert.equal(source, previous);
+		else
+		{
+			assert.equal(historical, previous);
+			assert.notEqual(source, previous);
+		}
 	}
 });
 
