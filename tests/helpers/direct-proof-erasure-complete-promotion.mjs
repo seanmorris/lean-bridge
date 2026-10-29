@@ -54,6 +54,8 @@ export const directProofErasureCompleteReferencePaths = Object.freeze([
 	, "tests/helpers/direct-proof-erasure-complete-promotion-transaction-tests.mjs"
 	, "tests/helpers/direct-proof-erasure-hosted-archive.mjs"
 	, "tests/helpers/direct-proof-erasure-hosted-evidence.mjs"
+	, "tests/direct-proof-erasure-complete-hosted-evidence.test.mjs"
+	, "tests/direct-proof-erasure-complete-promotion.test.mjs"
 	, "tests/helpers/promotion-file-transaction.mjs"
 	, "tests/helpers/type-surface-promotion-io.mjs"
 ]);
