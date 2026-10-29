@@ -1,0 +1,74 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-ruby-verifier-contract-source-history.mjs",
+      "sha256": "7498967ec8b07aa34adb823bcf36440abc693819d2996d9917c4f90c38a9c885"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-ruby-verifier-contract-source-history-tests.mjs",
+      "sha256": "5cbac27670d91666ec31701b7cd89151cc838fa175656a19a6e35321dad99e51"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-ruby-verifier-contract-source-history.mjs",
+      "sha256": "87084279e371cfaad427f003ce7d5c0f3d8f832033c87ac7e5c20f3d9c9179ac"
+    }
+  ],
+  "implementationAdditions": [],
+  "implementationCommit": "42616f62e02dcb294d922ad58a7f33949ddd624e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6339e08c023830dc67d55c952d49077c21cbae04c2a6e4d2a99432168548899a",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-ruby-verifier-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 229
+        }
+      ],
+      "path": "tests/canonical-package-manifest.test.mjs",
+      "previousSha256": "881914a2a9a1c6602da0024d5428cc6f4cd4d0453e0efe685996e91eef69f715"
+    }
+  ],
+  "milestone": "optional-parameter-ruby-verifier-contract-source-v1",
+  "predecessorCommit": "ec9367ffc7b86cae8f62be93a23cbd537644508e",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Make retained Ruby package verification match the generated positional arg0 API for both authoring routes while keeping route validation fail closed.",
+  "updates": [
+    {
+      "currentSha256": "600557674b2d69496d0bce311fb1fbc86d5a5a07063eb3134f9587f75e22625d",
+      "edits": [
+        {
+          "current": "\t// Ruby exposes positional arguments under stable generated names.  The\n\t// reviewed route retains its source binder in the IR, but the generated gem\n\t// deliberately normalizes both routes to arg0.\n\trouteBinder(route);\n\tconst argument = \"arg0\";\n",
+          "previous": "\tconst argument = routeBinder(route);\n",
+          "start": 4256
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-installed-contract.mjs",
+      "previousSha256": "3e11fdfa3f547e5dbe6e20ebcc957bab0e157bb1c97cb406f2b7672e336856f1"
+    },
+    {
+      "currentSha256": "4b04db77f58540e14e32feee8aeabe50d4ec135bf92b6bda007e7fb7335fc346",
+      "edits": [
+        {
+          "current": "test(\"optional language contracts preserve Python binders and normalize Ruby positions\", () => {\n",
+          "previous": "test(\"optional language contracts retain route-specific binders\", () => {\n",
+          "start": 3688
+        },
+        {
+          "current": "\tfor(const route of [\"ordinary\", \"reviewed\"])\n\t\tfor(const pattern of optionalParameterRubyPatterns(route))\n\t\t\tassert.match(ruby, pattern);\n",
+          "previous": "\tfor(const pattern of optionalParameterRubyPatterns(\"ordinary\"))\n\t\tassert.match(ruby, pattern);\n",
+          "start": 4231
+        },
+        {
+          "current": "\t\tassert.doesNotMatch(ruby.replaceAll(\"arg0\", \"value0\"), pattern);\n",
+          "previous": "\t\tassert.match(ruby.replaceAll(\"arg0\", \"value0\"), pattern);\n",
+          "start": 4435
+        }
+      ],
+      "path": "tests/optional-parameter-installed-contract.test.mjs",
+      "previousSha256": "ea2e40c62fdd8a3251521eae124b4507f6899719f9ba8964e87574bba81b3d2f"
+    }
+  ]
+}
