@@ -18,8 +18,8 @@ import {
 import { moduleSpecifiers } from "./module-closure.mjs";
 
 export const dependentSignatureHostedProducer
-	= "7f206cdbf35d650c48917572e6344fdc0194aeb7";
-export const dependentSignatureHostedRunId = 40927405318;
+	= "70652587f69c330ea0feebb7bc4c6da6b20f4f04";
+export const dependentSignatureHostedRunId = 40961670189;
 export const dependentSignatureHostedRunConclusions = Object.freeze({
 	[String(dependentSignatureHostedRunId)]: "success"
 });
