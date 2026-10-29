@@ -14,6 +14,9 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import {
+	createTransactionalDirectory
+} from "../src/capsule/transactional-directory.mjs";
+import {
 	checkedRecordValueIndexHostedDigest
 	, extractCheckedRecordValueIndexHostedArtifact
 	, splitCheckedRecordValueIndexHostedArtifact
@@ -77,14 +80,16 @@ const revisions = {
 await assertDependentSignatureHostedLocalSources(revisions);
 
 const descriptors = new Map();
-const stagingRoot = await mkdtemp(join(
-	tmpdir(), "lean-bridge-dependent-signature-hosted-staging-"));
-const putBytes = (path, value) => {
+const transaction = await createTransactionalDirectory(
+	dependentSignatureHostedEvidenceDirectory);
+const stagingRoot = transaction.root;
+const putBytes = async (path, value) => {
 	assert.ok(!descriptors.has(path), path);
 	const bytes = Buffer.from(value);
-	descriptors.set(path, {
-		bytes: bytes.length, sha256: sha256(bytes), value: bytes
-	});
+	const staged = join(stagingRoot, path);
+	await mkdir(dirname(staged), { recursive: true });
+	await writeFile(staged, bytes, { flag: "wx" });
+	descriptors.set(path, { bytes: bytes.length, sha256: sha256(bytes) });
 };
 const putFile = async (path, source) => {
 	assert.ok(!descriptors.has(path), path);
@@ -96,14 +101,13 @@ const putFile = async (path, source) => {
 	descriptors.set(path, {
 		bytes: information.size
 		, sha256: await checkedRecordValueIndexHostedDigest(staged)
-		, source: staged
 	});
 };
 const retainedHosted = async (item, hosted, extracted, partsRoot) => {
 	const selected = dependentSignatureHostedInputs(inputRoot, item);
 	await putFile(`hosted/${item.id}/job.log`, selected["job-log"]);
 	for(const [name, record] of Object.entries(hosted.api))
-		putBytes(`hosted/api/${item.id}/${name}.json`, record.bytes);
+		await putBytes(`hosted/api/${item.id}/${name}.json`, record.bytes);
 	const parts = await splitCheckedRecordValueIndexHostedArtifact(
 		selected["artifact-zip"], partsRoot);
 	for(const part of parts)
@@ -152,7 +156,7 @@ try
 					, `${lane.id}:${route}`);
 				assert.ok(!summaries.has(path), path);
 				summaries.set(path, bytes);
-				putBytes(`hosted/output/${lane.id}/${route}.json`, bytes);
+				await putBytes(`hosted/output/${lane.id}/${route}.json`, bytes);
 			}
 			lanes.push({
 				id: lane.id, profiles: [...lane.profiles]
@@ -189,7 +193,7 @@ try
 			assert.ok(summaries.has(path), path); return summaries.get(path);
 		}, receipt.run);
 		assert.deepEqual(replayed, receipt);
-		putBytes("hosted/output/matrix/receipt.json", receiptBytes);
+		await putBytes("hosted/output/matrix/receipt.json", receiptBytes);
 		aggregate = {
 			receipt
 			, hostedRun: await retainedHosted(
@@ -207,7 +211,7 @@ try
 
 	const selectedSources = dependentSignatureHostedSources(revisions);
 	for(const source of selectedSources)
-		putBytes(dependentSignatureHostedSourcePath(source)
+		await putBytes(dependentSignatureHostedSourcePath(source)
 			, dependentSignatureHostedOriginal(source.revision, source.path));
 	const files = [...descriptors].sort(([left], [right]) =>
 		left.localeCompare(right)).map(([path, descriptor]) => ({
@@ -229,21 +233,16 @@ try
 		]
 	};
 
-	await mkdir(dependentSignatureHostedEvidenceDirectory);
 	for(const [path, descriptor] of descriptors)
 	{
-		const target = join(dependentSignatureHostedEvidenceDirectory, path);
-		await mkdir(dirname(target), { recursive: true });
-		if(descriptor.source) await copyFile(
-			descriptor.source, target, constants.COPYFILE_FICLONE);
-		else await writeFile(target, descriptor.value, { flag: "wx" });
+		const target = join(stagingRoot, path);
 		assert.equal((await stat(target)).size, descriptor.bytes, path);
 		assert.equal(await checkedRecordValueIndexHostedDigest(target)
 			, descriptor.sha256, path);
 	}
 	const indexBytes = Buffer.from(canonicalJson(index));
-	await writeFile(join(dependentSignatureHostedEvidenceDirectory
-		, "index.json"), indexBytes, { flag: "wx" });
+	await writeFile(join(stagingRoot, "index.json"), indexBytes, { flag: "wx" });
+	await transaction.publish();
 	process.stdout.write(canonicalJson({
 		destination: dependentSignatureHostedEvidenceDirectory
 		, files: files.length + 1
@@ -257,4 +256,4 @@ try
 	}));
 }
 finally
-{ await rm(stagingRoot, { recursive: true }); }
+{ await transaction.dispose(); }

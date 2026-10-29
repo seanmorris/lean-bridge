@@ -14,6 +14,9 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import {
+	createTransactionalDirectory
+} from "../src/capsule/transactional-directory.mjs";
+import {
 	checkedRecordValueIndexHostedDigest
 	, extractCheckedRecordValueIndexHostedArtifact
 	, splitCheckedRecordValueIndexHostedArtifact
@@ -73,14 +76,16 @@ const revisions = {
 await assertDirectProofErasureHostedLocalSources(revisions);
 
 const descriptors = new Map();
-const stagingRoot = await mkdtemp(join(
-	tmpdir(), "lean-bridge-direct-proof-hosted-staging-"));
-const putBytes = (path, value) => {
+const transaction = await createTransactionalDirectory(
+	directProofErasureHostedEvidenceDirectory);
+const stagingRoot = transaction.root;
+const putBytes = async (path, value) => {
 	assert.ok(!descriptors.has(path), path);
 	const bytes = Buffer.from(value);
-	descriptors.set(path, {
-		bytes: bytes.length, sha256: sha256(bytes), value: bytes
-	});
+	const staged = join(stagingRoot, path);
+	await mkdir(dirname(staged), { recursive: true });
+	await writeFile(staged, bytes, { flag: "wx" });
+	descriptors.set(path, { bytes: bytes.length, sha256: sha256(bytes) });
 };
 const putFile = async (path, source) => {
 	assert.ok(!descriptors.has(path), path);
@@ -92,7 +97,6 @@ const putFile = async (path, source) => {
 	descriptors.set(path, {
 		bytes: information.size
 		, sha256: await checkedRecordValueIndexHostedDigest(staged)
-		, source: staged
 	});
 };
 
@@ -131,18 +135,18 @@ try
 				const receipt = lane.checker === "npm"
 					? "handoff/component-package-receipt.json"
 					: "handoff/package-set-receipt.json";
-				putBytes(`hosted/output/${lane.key}/${route}/run.tap`, tap);
-				putBytes(`hosted/output/${lane.key}/${route}/verified.json`
+				await putBytes(`hosted/output/${lane.key}/${route}/run.tap`, tap);
+				await putBytes(`hosted/output/${lane.key}/${route}/verified.json`
 					, verified);
-				putBytes(`hosted/output/${lane.key}/${route}/report.json`
+				await putBytes(`hosted/output/${lane.key}/${route}/report.json`
 					, report);
-				putBytes(`hosted/output/${lane.key}/${route}/receipt.json`
+				await putBytes(`hosted/output/${lane.key}/${route}/receipt.json`
 					, await readFile(join(prefix, `records/${receipt}`)));
 				results.push(result); routeResults.push(result);
 			}
 			await putFile(`hosted/${lane.key}/job.log`, selected["job-log"]);
 			for(const [name, item] of Object.entries(hosted.api))
-				putBytes(`hosted/api/${lane.key}/${name}.json`, item.bytes);
+				await putBytes(`hosted/api/${lane.key}/${name}.json`, item.bytes);
 			const parts = await splitCheckedRecordValueIndexHostedArtifact(
 				selected["artifact-zip"], partsRoot);
 			for(const part of parts)
@@ -182,8 +186,8 @@ try
 		, "docs/evidence/proof-erasure-retained-audit-20261028.json"
 	);
 	const closure = closeDirectProofErasureMatrix(JSON.parse(auditBytes));
-	putBytes("closure/proof-erasure-retained-audit.json", auditBytes);
-	putBytes("closure/dispositions.json", canonicalJson({
+	await putBytes("closure/proof-erasure-retained-audit.json", auditBytes);
+	await putBytes("closure/dispositions.json", canonicalJson({
 		schemaVersion: 1, kind: "direct-proof-erasure-matrix-closure-v1"
 		, producerCommit: directProofErasureHostedProducer
 		, matrix, ...closure
@@ -214,12 +218,12 @@ try
 	assert.ok(refusalSource.includes(directProofErasureHostedRefusal.testName));
 	assert.ok(refusalSource.includes(directProofErasureHostedRefusal.diagnostic));
 	for(const [name, item] of Object.entries(refusal))
-		putBytes(`hosted/api/refusal/${name}.json`, item.bytes);
+		await putBytes(`hosted/api/refusal/${name}.json`, item.bytes);
 	await putFile("hosted/refusal/job.log", join(refusalRoot, "job.log"));
 
 	const selectedSources = directProofErasureHostedSources(revisions);
 	for(const source of selectedSources)
-		putBytes(directProofErasureHostedSourcePath(source)
+		await putBytes(directProofErasureHostedSourcePath(source)
 			, directProofErasureHostedOriginal(source.revision, source.path));
 	const files = [...descriptors].sort(([left], [right]) =>
 		left.localeCompare(right)).map(([path, descriptor]) => ({
@@ -246,21 +250,16 @@ try
 		]
 	};
 
-	await mkdir(directProofErasureHostedEvidenceDirectory);
 	for(const [path, descriptor] of descriptors)
 	{
-		const target = join(directProofErasureHostedEvidenceDirectory, path);
-		await mkdir(dirname(target), { recursive: true });
-		if(descriptor.source) await copyFile(
-			descriptor.source, target, constants.COPYFILE_FICLONE);
-		else await writeFile(target, descriptor.value, { flag: "wx" });
+		const target = join(stagingRoot, path);
 		assert.equal((await stat(target)).size, descriptor.bytes, path);
 		assert.equal(await checkedRecordValueIndexHostedDigest(target)
 			, descriptor.sha256, path);
 	}
 	const indexBytes = Buffer.from(canonicalJson(index));
-	await writeFile(join(directProofErasureHostedEvidenceDirectory
-		, "index.json"), indexBytes, { flag: "wx" });
+	await writeFile(join(stagingRoot, "index.json"), indexBytes, { flag: "wx" });
+	await transaction.publish();
 	process.stdout.write(canonicalJson({
 		destination: directProofErasureHostedEvidenceDirectory
 		, files: files.length + 1
@@ -274,4 +273,4 @@ try
 	}));
 }
 finally
-{ await rm(stagingRoot, { recursive: true }); }
+{ await transaction.dispose(); }
