@@ -13,6 +13,7 @@ import { inspectLeanProject } from "../src/analyze/lean-project.mjs";
 import { prepareLakeEntryIntent } from "../src/build/lake-entry-intent.mjs";
 import { resolveLakeBuildWorkspace } from "../src/build/lake-build-workspace.mjs";
 import { elaborateLakeEntryModules } from "../src/build/lake-entry-elaboration.mjs";
+import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { lakeWorkspaceFixture, lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -766,6 +767,19 @@ end Shop
 	assert.match(bad.projection.expression, /Shop\.BadNull/u);
 	assert.match(bad.projection.expression, /UInt32/u);
 	assert.doesNotMatch(canonicalJson(analysis.bindingIr.document), /(?:null|value)Constructor/u);
+	const componentPlan = { sha256: "0".repeat(64)
+		, document: { bindingIr: { semanticSha256: analysis.bindingIr.semanticSha256 } } };
+	const generated = generateCompilerAdapters({ analysis, componentPlan });
+	assert.equal(generated.plan.privateAbi.version, 9);
+	assert.match(generated.files["LeanBridgeGenerated.lean"], /_root_\.Shop\.HostNull \(_root_\.Option _root_\.UInt32\)/u);
+	assert.match(generated.files["LeanBridgeGenerated.lean"], /_root_\.Shop\.HostNull\.null/u);
+	assert.match(generated.files["LeanBridgeGenerated.lean"], /_root_\.Shop\.HostNull\.value/u);
+	assert.doesNotMatch(generated.files["LeanBridgeGenerated.lean"], /sorry|axiom|unsafeCast/u);
+	const ambiguous = structuredClone(analysis);
+	const ambiguousEcho = ambiguous.elaboration.metadata.modules[0].declarations.find(item => item.identity === "Shop.echo");
+	ambiguousEcho.projection.result.nullConstructor = "Shop.BadNull.null";
+	ambiguousEcho.projection.result.valueConstructor = "Shop.BadNull.value";
+	assert.throws(() => generateCompilerAdapters({ analysis: ambiguous, componentPlan }), { code: "compiler-host-null-ambiguity" });
 	const forged = structuredClone(analysis.elaboration.metadata);
 	forged.modules[0].declarations.find(item => item.identity === "Shop.echo")
 		.projection.parameters[0].type.nullConstructor = "Shop.HostNull.other";
@@ -779,6 +793,9 @@ end Shop
 		() => validateElaboratedMetadata(analysis.elaboration.metadata, missingSelection),
 		/Host-null metadata differs from the authorized projection/u,
 	);
+	const missingCompilerSelection = structuredClone(analysis);
+	delete missingCompilerSelection.elaboration.request.hostProjections;
+	assert.throws(() => generateCompilerAdapters({ analysis: missingCompilerSelection, componentPlan }), { code: "compiler-host-null-evidence" });
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 

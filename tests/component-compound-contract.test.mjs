@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { assertComponentStructuredCallableBindings } from "../src/abi/component-structured-callables.mjs";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
+import { canonicalizeJsonValue } from "../src/binding-ir/canonical.mjs";
 import { assertComponentRecordAbi, assertComponentRecordBindings, resolveComponentRecordType } from "../src/abi/component-records.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
@@ -131,6 +132,41 @@ test("generated compound validators preserve tags and reject accessors before tr
 		assert.throws(() => validators.assertPacket({ ...good, choice }, "packet"));
 	assert.throws(() => validators.assertPacket({ ...good, products: [1, "x", [true, "🌱"]] }, "packet"));
 	assert.equal(reads, 0);
+});
+
+test("JavaScript host-null values use null without collapsing nested Option tags", async () => {
+	const ir = compoundReviewedIr();
+	const direct = ir.declarations.find(item => item.name === "option_uint32");
+	const hostNull = argument => ({
+		kind: "apply", constructor: "host-null", arguments: [argument]
+	});
+	const option = argument => ({
+		kind: "apply", constructor: "option", arguments: [argument]
+	});
+	direct.parameters[0].type = hostNull({ kind: "primitive", name: "uint32" });
+	direct.result.type = direct.parameters[0].type;
+	const outerNull = ir.declarations.find(item => item.name === "classify");
+	outerNull.parameters[0].type = hostNull(option({ kind: "primitive", name: "unit" }));
+	const outerOption = ir.declarations.find(item => item.name === "next");
+	outerOption.parameters[0].type = option(hostNull({ kind: "primitive", name: "unit" }));
+	outerOption.result.type = outerOption.parameters[0].type;
+	const files = generateJavaScriptPackage(ir);
+	assert.match(files["index.d.ts"], /option_uint32\(value0: \(null \| number\)\): \(null \| number\);/u);
+	assert.match(files["index.d.ts"], /classify\(value0: \(null \| Readonly<\{ tag: "none" \}> \| Readonly<\{ tag: "some"; value: void \}>\)\): number;/u);
+	assert.match(files["index.d.ts"], /next\(value0: Readonly<\{ tag: "none" \}> \| Readonly<\{ tag: "some"; value: \(null \| void\) \}>\)/u);
+	const validators = await import(`data:text/javascript,${encodeURIComponent(files["internal/validators.mjs"])}`);
+	const name = type => `assertApplied$${sha256(canonicalizeJsonValue(type, "validator")).slice(0, 20)}`;
+	const directValidator = validators[name(direct.parameters[0].type)];
+	for(const value of [null, 0, 0xffffffff]) assert.doesNotThrow(() => directValidator(value, "value"));
+	for(const value of [undefined, -1, { tag: "none" }]) assert.throws(() => directValidator(value, "value"));
+	const nullOption = validators[name(outerNull.parameters[0].type)];
+	for(const value of [null, { tag: "none" }, { tag: "some", value: undefined }])
+		assert.doesNotThrow(() => nullOption(value, "value"));
+	assert.throws(() => nullOption(undefined, "value"));
+	const optionNull = validators[name(outerOption.parameters[0].type)];
+	for(const value of [{ tag: "none" }, { tag: "some", value: null }, { tag: "some", value: undefined }])
+		assert.doesNotThrow(() => optionNull(value, "value"));
+	assert.throws(() => optionNull(null, "value"));
 });
 
 const fixture = (failAllocation = Infinity) => {

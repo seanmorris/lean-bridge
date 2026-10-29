@@ -11,6 +11,40 @@ import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixt
 import { descriptor, sourceExports } from "./helpers/npm-structured-callable-fixture.mjs";
 import { componentStructuredCopiedView, componentStructuredCallableLeanSource } from "../src/build/component-structured-callable-lean.mjs";
 
+const hostProjection = {
+	name: "Structured.HostNull"
+	, nullConstructor: "Structured.HostNull.null"
+	, valueConstructor: "Structured.HostNull.value"
+};
+const hostNullIr = () => {
+	const ir = structuredClone(structuredCallableReviewedIr());
+	const replace = type => {
+		if(type.kind !== "apply") return type;
+		const arguments_ = type.arguments.map(replace);
+		return type.constructor === "option" && arguments_[0]?.kind === "apply"
+      && arguments_[0].constructor === "option" && arguments_[0].arguments[0]?.name === "unit"
+			? { kind: "apply", constructor: "host-null", arguments: [arguments_[0]] }
+			: { ...type, arguments: arguments_ };
+	};
+	for(const type of ir.types)
+	{
+		if(type.kind === "alias") type.target = replace(type.target);
+		if(type.kind === "record") type.fields.forEach(field => { field.type = replace(field.type); });
+		if(type.kind === "variant") type.cases.forEach(branch => branch.fields.forEach(field => { field.type = replace(field.type); }));
+		if(type.kind === "callback")
+		{
+			type.callable.parameters.forEach(parameter => { parameter.type = replace(parameter.type); });
+			type.callable.result.type = replace(type.callable.result.type);
+		}
+	}
+	for(const item of ir.declarations)
+	{
+		item.parameters.forEach(parameter => { parameter.type = replace(parameter.type); });
+		item.result.type = replace(item.result.type);
+	}
+	return ir;
+};
+
 test("copied root catalogs include callable payloads while excluding identity carriers", () => {
   const abi = descriptor(structuredCallableReviewedIr({ recursive: true }));
   const view = componentStructuredCopiedView(abi);
@@ -46,4 +80,15 @@ test("all callback, closure and exported arguments use typed one-element Array c
     const changed = structuredClone(exports); changed[1] = changed[0];
     assert.throws(() => componentStructuredCallableLeanSource(abi, changed), /identity mismatch/);
 }
+});
+
+test("structured callbacks use the exact compiler-authenticated HostNull wrapper and constructors", () => {
+  const ir = hostNullIr(), abi = descriptor(ir), exports = sourceExports(ir, abi);
+  assert.throws(() => componentStructuredCallableLeanSource(abi, exports), /HostNull.*projection/);
+  const source = componentStructuredCallableLeanSource(abi, exports, { hostProjection }).join("\n");
+  assert.match(source, /_root_\.Structured\.HostNull \(_root_\.Option _root_\.Unit\)/);
+  assert.match(source, /_root_\.Structured\.HostNull\.null/);
+  assert.match(source, /_root_\.Structured\.HostNull\.value/);
+  assert.doesNotMatch(source, /unsafeCast|sorry|axiom/);
+  assert.deepEqual(componentStructuredCallableLeanSource(abi, exports, { hostProjection }).join("\n"), source);
 });

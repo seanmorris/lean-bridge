@@ -69,7 +69,7 @@ const exactKeys = (value, expected, label) => {
 	if(JSON.stringify(actual) !== JSON.stringify(wanted)) fail("invalid-compiler-adapter-plan", `${label} fields must be closed`, { actual, expected: wanted });
 };
 
-const leanType = (type, callbacks = new Map()) => {
+const leanType = (type, callbacks = new Map(), hostProjection = null) => {
 	if(type.kind === "primitive")
 	{
 		const result = primitiveLeanTypes.get(type.name);
@@ -79,22 +79,93 @@ const leanType = (type, callbacks = new Map()) => {
 	if(type.kind === "named")
 	{
 		const callback = callbacks.get(type.id);
-		if(callback?.refinements) return componentStructuredLeanType(type, callbacks);
-		if(callback) return `(${[...callback.parameters, callback.result].map(type => leanType(type)).join(" → ")})`;
+		if(callback?.refinements) return componentStructuredLeanType(type, callbacks, null, hostProjection);
+		if(callback) return `(${[...callback.parameters, callback.result].map(type => leanType(type, new Map(), hostProjection)).join(" → ")})`;
 		const separator = type.id.indexOf(":");
 		if(separator === -1 || type.id.slice(0, separator) !== "lean") fail("unsupported-compiler-type", `Named compiler type must come from Lean: ${type.id}`);
 		return type.id.slice(separator + 1);
 	}
 	if(type.kind === "apply")
 	{
-		const arguments_ = type.arguments.map(type => leanType(type, callbacks));
+		const arguments_ = type.arguments.map(type => leanType(type, callbacks, hostProjection));
 		if(type.constructor === "array" && arguments_.length === 1) return `(_root_.Array ${arguments_[0]})`;
 		if(type.constructor === "list" && arguments_.length === 1) return `(_root_.List ${arguments_[0]})`;
+		if(type.constructor === "host-null" && arguments_.length === 1 && hostProjection) return `(_root_.${hostProjection.name} ${arguments_[0]})`;
 		if(type.constructor === "option" && arguments_.length === 1) return `(_root_.Option ${arguments_[0]})`;
 		if(type.constructor === "result" && arguments_.length === 2) return `(_root_.Except ${arguments_[1]} ${arguments_[0]})`;
 		if(type.constructor === "tuple" && arguments_.length >= 2) return `(${arguments_.join(" × ")})`;
 	}
 	fail("unsupported-compiler-type", `Compiler adapters cannot project ${JSON.stringify(type)}`);
+};
+
+const compilerHostProjection = (analysis, document) => {
+	const contains = (value, predicate) => value && typeof value === "object"
+		&& (predicate(value) || Object.values(value).some(child => Array.isArray(child)
+			? child.some(item => contains(item, predicate)) : contains(child, predicate)));
+	const publicHostNull = value => contains(value, item => item.kind === "apply" && item.constructor === "host-null");
+	const metadataHostNull = value => contains(value, item => item.kind === "host-null");
+	const required = publicHostNull({ types: document.types, declarations: document.declarations });
+	const metadata = analysis.elaboration?.metadata;
+	const selected = metadata?.modules.flatMap(module => module.declarations)
+		.filter(item => item.selected && item.projection.status === "supported") ?? [];
+	if(!required)
+	{
+		if(metadataHostNull(selected)) fail("compiler-host-null-drift", "Selected compiler metadata contains HostNull absent from the public contract");
+		return null;
+	}
+	if(analysis.bindingIr.origin !== "lean-elaborated" || !metadata)
+		fail("compiler-host-null-origin", "HostNull compiler adapters require fresh Lean elaboration");
+	const found = new Map();
+	const visit = (type, references = new Map(), seen = new Set()) => {
+		if(!type || typeof type !== "object") return;
+		if(["graph", "owned-graph"].includes(type.kind))
+		{
+			const graph = new Map(references);
+			for(const definition of type.types) graph.set(definition.name, definition);
+			visit(type.root, graph, new Set()); return;
+		}
+		if(type.kind === "reference")
+		{
+			if(seen.has(type.name)) return;
+			const target = references.get(type.name);
+			if(!target) fail("compiler-host-null-evidence", `HostNull metadata reference is missing: ${type.name}`);
+			visit(target, references, new Set([...seen, type.name])); return;
+		}
+		if(type.kind === "refinement")
+		{ visit(type.base, references, seen); return; }
+		if(type.kind === "host-null")
+		{
+			const key = `${type.nullConstructor}\0${type.valueConstructor}`;
+			found.set(key, { nullConstructor: type.nullConstructor, valueConstructor: type.valueConstructor });
+			visit(type.element, references, seen); return;
+		}
+		if(["array", "list", "option"].includes(type.kind))
+		{ visit(type.element, references, seen); return; }
+		if(["result", "tuple"].includes(type.kind))
+		{ type.arguments.forEach(child => visit(child, references, seen)); return; }
+		if(type.kind === "alias")
+		{ visit(type.target, references, seen); return; }
+		if(type.kind === "record")
+		{ type.fields.forEach(field => visit(field.type, references, seen)); return; }
+		if(type.kind === "variant")
+		{ type.cases.forEach(branch => branch.fields.forEach(field => visit(field.type, references, seen))); return; }
+		if(type.kind === "callback")
+		{ type.parameters.forEach(child => visit(child, references, seen)); visit(type.result, references, seen); }
+	};
+	for(const item of selected)
+	{
+		item.projection.parameters.forEach(parameter => visit(parameter.type));
+		visit(item.projection.result);
+	}
+	if(found.size !== 1)
+		fail("compiler-host-null-ambiguity", found.size
+			? "Distinct Lean HostNull wrappers collapse to one public host-null type"
+			: "Public HostNull lacks its compiler-authenticated Lean wrapper");
+	const [fact] = found.values();
+	const projection = analysis.elaboration.request.hostProjections?.find(item =>
+		item.nullConstructor === fact.nullConstructor && item.valueConstructor === fact.valueConstructor);
+	if(!projection) fail("compiler-host-null-evidence", "HostNull constructors differ from the authenticated request");
+	return Object.freeze(structuredClone(projection));
 };
 
 const sourceModule = path => path.replace(/\.lean$/, "").replaceAll("/", ".");
@@ -324,7 +395,8 @@ export const validateCompilerAdapterPlan = plan => {
 	return true;
 };
 
-const renderLeanSource = ({ imports, exports, module, privateAbi, nominalRefinements }) => {
+const renderLeanSource = ({ imports, exports, module, privateAbi, nominalRefinements, hostProjection }) => {
+	const renderType = (type, callbacks = new Map()) => leanType(type, callbacks, hostProjection);
 	const lines = [
 		...imports.map(module => `import ${module}`)
 		, ""
@@ -333,16 +405,16 @@ const renderLeanSource = ({ imports, exports, module, privateAbi, nominalRefinem
 	];
 	if(privateAbi.version === componentStructuredCallableAbi)
 	{
-		lines.push(...componentStructuredCallableLeanSource(privateAbi, exports), `end ${module}`, "");
+		lines.push(...componentStructuredCallableLeanSource(privateAbi, exports, { hostProjection }), `end ${module}`, "");
 		return lines.join("\n");
 	}
 	if([componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(privateAbi.version))
 	{
 		const generate = privateAbi.version === componentRecursiveAbi ? componentRecursiveLeanSource : componentRecordLeanSource;
-		lines.push(...generate(privateAbi, exports, leanType, nominalRefinements), `end ${module}`, "");
+		lines.push(...generate(privateAbi, exports, renderType, nominalRefinements, { hostProjection }), `end ${module}`, "");
 		return lines.join("\n");
 	}
-	if(privateAbi.version === 3) lines.push(...componentCallableLeanPrelude(privateAbi, leanType));
+	if(privateAbi.version === 3) lines.push(...componentCallableLeanPrelude(privateAbi, renderType));
 	for(const item of exports)
 	{
 		const signature = privateAbi.exports.find(signature => signature.bindingId === item.bindingId);
@@ -381,6 +453,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 	if(componentPlan?.document?.bindingIr?.semanticSha256 !== analysis.bindingIr.semanticSha256) fail("compiler-adapter-plan-drift", "Component plan and Binding IR identities differ");
 	const candidates = new Map(analysis.exportCandidates.map(item => [item.declaration, item]));
 	const document = analysis.bindingIr.document;
+	const hostProjection = compilerHostProjection(analysis, document);
 	const privateAbi = createComponentPrivateAbi(document), callbacks = privateAbi.callbacks ?? [];
 	const nominalRefinements = nominalRefinementEntries(document.types);
 	const subtypeRefinements = document.declarations.flatMap(declaration => {
@@ -420,8 +493,8 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
       , sourceModule: candidate.sourceModule ?? sourceModule(candidate.path)
       , wrapper: wrapperIdentifier(declaration.id)
       , symbol: exportSymbol(analysis.bindingIr.document.component.id, declaration.id)
-      , parameters: Object.freeze(declaration.parameters.map(parameter => Object.freeze({ name: parameter.name, leanType: leanType(parameter.type, callbackTypes) })))
-      , leanResultType: leanType(declaration.result.type, callbackTypes)
+      , parameters: Object.freeze(declaration.parameters.map(parameter => Object.freeze({ name: parameter.name, leanType: leanType(parameter.type, callbackTypes, hostProjection) })))
+      , leanResultType: leanType(declaration.result.type, callbackTypes, hostProjection)
       , ...(refinements === undefined ? {} : { refinements: structuredClone(refinements) })
       , ...(erasedProofs === undefined ? {} : { erasedProofs: structuredClone(erasedProofs) })
       , resultMode: declaration.resultMode
@@ -431,7 +504,7 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 	});
 	const imports = Object.freeze([...new Set(exports.map(item => item.sourceModule))].sort());
 	const module = `LeanBridgeGenerated${sha256(analysis.bindingIr.document.component.id).slice(0, 16)}`;
-	const leanSource = renderLeanSource({ imports, exports, module, privateAbi, nominalRefinements });
+	const leanSource = renderLeanSource({ imports, exports, module, privateAbi, nominalRefinements, hostProjection });
 	const plan = Object.freeze({
 		schemaVersion: 1
 		, component: analysis.bindingIr.document.component.id

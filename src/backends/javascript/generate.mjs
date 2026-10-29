@@ -90,6 +90,10 @@ const typeScriptType = (typeRef, typeMap) => {
 	{
 		return `ReadonlyArray<${typeScriptType(typeRef.arguments[0], typeMap)}>`;
 	}
+	if(typeRef.constructor === "host-null")
+	{
+		return `(null | ${typeScriptType(typeRef.arguments[0], typeMap)})`;
+	}
 	if(typeRef.constructor === "option")
 	{
 		return `Readonly<{ tag: "none" }> | Readonly<{ tag: "some"; value: ${typeScriptType(typeRef.arguments[0], typeMap)} }>`;
@@ -654,7 +658,7 @@ const validatorName = (typeRef, typeMap) => {
 	{
 		return `assertArrayOf${validatorName(typeRef.arguments[0], typeMap).slice("assert".length)}`;
 	}
-	if(typeRef.kind === "apply" && ["list", "option", "result", "tuple"].includes(typeRef.constructor))
+	if(typeRef.kind === "apply" && ["host-null", "list", "option", "result", "tuple"].includes(typeRef.constructor))
 		return `assertApplied$${sha256(canonicalizeJsonValue(typeRef, "validator")).slice(0, 20)}`;
 	fail("unsupported-validator", "The JavaScript POC cannot emit this validator", { typeRef });
 };
@@ -722,6 +726,7 @@ const emitValidators = (ir, typeMap) => {
 				] : []
 				, "  const child = (index, value, suffix) => assertNestedFin(value, refinement.arguments[index], path + suffix);"
 				, "  if (refinement.kind === 'array' || refinement.kind === 'list') { value.forEach((item, index) => child(0, item, '[' + index + ']')); return; }"
+				, "  if (refinement.kind === 'host-null') { if (value !== null) child(0, value, ''); return; }"
 				, "  if (refinement.kind === 'option') { if (value.tag === 'some') child(0, value.value, '.value'); return; }"
 				, "  if (refinement.kind === 'tuple') { child(0, value[0], '[0]'); child(1, value[1], '[1]'); return; }"
 				, "  if (Object.hasOwn(value, 'ok')) child(0, value.ok, '.ok'); else child(1, value.error, '.error');"

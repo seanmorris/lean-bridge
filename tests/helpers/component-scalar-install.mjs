@@ -139,13 +139,23 @@ export const checkInstalledScalars = async (t, fixture) => {
 	if(fixture.extension) await writeFile(join(source, `${fixture.module}.lean`), `${await readFile(join(source, `${fixture.module}.lean`), "utf8")}\n${await readFile(join(repository, fixture.extension), "utf8")}`);
 	const sourceSha256 = sha256(await readFile(join(source, `${fixture.module}.lean`)));
 	const save = (name, value) => writeFile(join(source, name), canonicalJson(value));
-	await save("lean-bridge.exports.json", { schemaVersion: 1, modules: [fixture.module], exports: fixture.signatures.map(item => item.name), ...(fixture.arities ? { arities: fixture.arities } : {}) });
+	await save("lean-bridge.exports.json", {
+		schemaVersion: 1
+		, modules: [fixture.module]
+		, exports: fixture.signatures.map(item => item.name)
+		, ...(fixture.arities ? { arities: fixture.arities } : {})
+		, ...(fixture.hostProjections ? { hostProjections: fixture.hostProjections } : {})
+		, ...(fixture.npmSettings ? { targets: { npm: fixture.npmSettings } } : {}) });
 	const builds = [];
 	for(const path of ["ordinary-source", "reviewed-ir"])
 	{
 		if(path === "reviewed-ir")
 		{
-			await save("lean-bridge.exports.json", { schemaVersion: 1, modules: [fixture.module] });
+			await save("lean-bridge.exports.json", {
+				schemaVersion: 1
+				, modules: [fixture.module]
+				, ...(fixture.hostProjections ? { hostProjections: fixture.hostProjections } : {})
+				, ...(fixture.npmSettings ? { targets: { npm: fixture.npmSettings } } : {}) });
 			await save("reviewed.binding-ir.json", fixture.reviewedIr());
 		}
 		t.diagnostic(`Compiling ${path} ${fixture.module} release`);

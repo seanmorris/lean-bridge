@@ -79,6 +79,7 @@ const typeText = (reference, direction, definitions) => {
 	const values = reference.arguments.map(child => typeText(child, direction, definitions));
 	if(["array", "list"].includes(reference.constructor)) return `ReadonlyArray<${values[0]}>`;
 	if(reference.constructor === "tuple") return `readonly [${values.join(", ")}]`;
+	if(reference.constructor === "host-null") return `(null | ${values[0]})`;
 	if(reference.constructor === "option") return `(Readonly<{ tag: "none" }> | Readonly<{ tag: "some"; value: ${values[0]} }>)`;
 	return `(Readonly<{ ok: ${values[0]} }> | Readonly<{ error: ${values[1]} }>)`;
 };

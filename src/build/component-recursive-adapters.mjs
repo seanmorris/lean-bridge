@@ -91,10 +91,10 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 				item.fields.forEach((_, index) => field(`case${branch}_field${index}`));
 			});
 		}
-		else if(["option", "result"].includes(type.constructor))
+		else if(["host-null", "option", "result"].includes(type.constructor))
 		{
 			lines.push(`extern uint32_t ${symbol}_branch(lean_object *);`);
-			if(type.constructor === "option") make("none", 0);
+			if(["host-null", "option"].includes(type.constructor)) make("none", 0);
 			type.arguments.forEach((_, index) => { make(`make${index}`, 1); field(`field${index}`); });
 		}
 		else if(["array", "list"].includes(type.constructor))
@@ -143,10 +143,10 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 			continue;
 		}
 		const variant = definition.kind === "variant", array = ["array", "list"].includes(type.constructor);
-		const option = type.constructor === "option", sum = option || type.constructor === "result";
+		const option = type.constructor === "option", hostNull = type.constructor === "host-null", nullable = option || hostNull, sum = nullable || type.constructor === "result";
 		const children = definition.kind === "record" ? definition.fields.map(field => field.type) : type.arguments;
-		const tag = variant ? 37 : definition.kind === "record" ? 36 : ({ array: 32, list: 32, option: 34, result: 35, tuple: 33 })[type.constructor];
-		const count = variant || array || option ? "UINT32_MAX" : sum ? "1" : String(children.length);
+		const tag = variant ? 37 : definition.kind === "record" ? 36 : ({ array: 32, list: 32, option: 34, result: 35, tuple: 33, "host-null": 38 })[type.constructor];
+		const count = variant || array || nullable ? "UINT32_MAX" : sum ? "1" : String(children.length);
 		lines.push(`static uint32_t ${id}_validate(bridge_scalar_slot const *slot, uint32_t depth, recursive_budget *budget) {`
 			, "  uint32_t status = recursive_enter(slot, depth, budget);", "  if (status) return status;"
 			, `  status = bridge_nominal_children_validate(slot, ${tag}, ${count}, &budget->bytes);`, "  if (status) return status;"
@@ -163,7 +163,7 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 			lines.push("  default: return 3;", "  }");
 		}
 		else if(array) lines.push(`  for (uint32_t i = 0; i < count; ++i) { ${validateChild(children[0], "children + i")} }`);
-		else if(sum) children.forEach((child, index) => lines.push(`  if ((slot->flags & 1u) == ${option ? 1 : index}) { ${validateChild(child, "children")} }`));
+		else if(sum) children.forEach((child, index) => lines.push(`  if ((slot->flags & 1u) == ${nullable ? 1 : index}) { ${validateChild(child, "children")} }`));
 		else children.forEach((child, index) => lines.push(`  ${validateChild(child, `children + ${index}`)}`));
 		lines.push("  return 0;", "}", `static lean_object *${id}_decode(bridge_scalar_slot const *slot) {`
 			, "  bridge_scalar_slot const *children = (bridge_scalar_slot const *)(uintptr_t)(uint32_t)slot->bits;");
@@ -184,8 +184,8 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 			, `  return ${symbol}_make(items);`);
 		else if(sum)
 		{
-			if(option) lines.push(`  if (!(slot->flags & 1u)) return ${symbol}_none(lean_box(0));`);
-			children.forEach((child, index) => lines.push(`  if ((slot->flags & 1u) == ${option ? 1 : index}) return ${symbol}_make${index}(${walker(child)}_decode(children));`));
+			if(nullable) lines.push(`  if (!(slot->flags & 1u)) return ${symbol}_none(lean_box(0));`);
+			children.forEach((child, index) => lines.push(`  if ((slot->flags & 1u) == ${nullable ? 1 : index}) return ${symbol}_make${index}(${walker(child)}_decode(children));`));
 			lines.push("  return lean_alloc_array(0, 0); /* unreachable after validation */");
 		}
 		else decode(children, "make");
@@ -210,13 +210,13 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 		else
 		{
 			if(array) lines.push(`  value = ${symbol}_items(value);`);
-			lines.push(`  size_t count = ${array ? "lean_array_size(value)" : option ? "branch" : sum ? "1" : children.length};`
+			lines.push(`  size_t count = ${array ? "lean_array_size(value)" : nullable ? "branch" : sum ? "1" : children.length};`
 				, "  if (count > budget->nodes) { lean_dec(value); return 4; }"
 				, `  uint32_t status = bridge_recursive_children_allocate(budget->owner, slot, ${tag}, (uint32_t)count, ${sum ? "branch" : "0"}, &budget->bytes);`
 				, "  if (status) { lean_dec(value); return status; }", "  bridge_scalar_slot *children = (bridge_scalar_slot *)(uintptr_t)(uint32_t)slot->bits;");
 			if(array) lines.push("  for (uint32_t i = 0; i < count; ++i) {", "    lean_object *child = lean_array_get_core(value, i); lean_inc(child);"
 				, `    status = ${walker(children[0])}_encode(children + i, child, depth + 1, budget);`, "    if (status) break;", "  }");
-			else if(sum) children.forEach((child, index) => lines.push(`  if (branch == ${option ? 1 : index}) {`, ...encodeField(child, `${symbol}_field${index}`, "children"), "  }"));
+			else if(sum) children.forEach((child, index) => lines.push(`  if (branch == ${nullable ? 1 : index}) {`, ...encodeField(child, `${symbol}_field${index}`, "children"), "  }"));
 			else children.forEach((child, index) => lines.push(...encodeField(child, `${symbol}_field${index}`, `children + ${index}`)));
 		}
 		lines.push("  lean_dec(value);", "  return status;", "}");

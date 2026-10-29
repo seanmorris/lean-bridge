@@ -52,6 +52,7 @@ const layout = (type, kind, branch) => {
 	if(fields) return { count: fields.length, key: index => fields[index].name, type: index => fields[index].type };
 	if(kind === "array" || kind === "list") return { count: null, key: index => index, type: () => type.arguments[0] };
 	if(kind === "tuple") return { count: type.arguments.length, key: index => index, type: index => type.arguments[index] };
+	if(kind === "host-null") return { count: branch, key: () => null, type: () => type.arguments[0] };
 	if(kind === "option") return { count: branch, key: () => "value", type: () => type.arguments[0] };
 	return { count: 1, key: () => branch ? "error" : "ok", type: () => type.arguments[branch] };
 };
@@ -88,9 +89,9 @@ export const compileComponentRecursiveCodec = descriptor => {
 					});
 					stack.pop(); continue;
 				}
-				if(!value || typeof value !== "object") throw new TypeError("Expected a recursive copied value");
-				if(active.has(value)) throw new TypeError("Cyclic copied value");
 				const kind = kindOf(type);
+				if(kind !== "host-null" && (!value || typeof value !== "object")) throw new TypeError("Expected a recursive copied value");
+				if(kind !== "host-null" && active.has(value)) throw new TypeError("Cyclic copied value");
 				let branch = 0;
 				if(kind === "variant")
 				{
@@ -104,6 +105,7 @@ export const compileComponentRecursiveCodec = descriptor => {
 					if(tag !== "none" && tag !== "some") throw new TypeError("Invalid Option tag");
 					branch = tag === "some" ? 1 : 0;
 				}
+				else if(kind === "host-null") branch = value === null ? 0 : 1;
 				else if(kind === "result") branch = Object.hasOwn(value, "error") ? 1 : 0;
 				const children = layout(type, kind, branch);
 				if(sequence(kind) && !Array.isArray(value)) throw new TypeError("Expected a copied array or tuple");
@@ -114,7 +116,7 @@ export const compileComponentRecursiveCodec = descriptor => {
 					if(value.length !== count) throw new TypeError("Tuple length mismatch");
 					if(Reflect.ownKeys(value).length !== count + 1) throw new TypeError("Copied arrays must be dense and have no extra fields");
 				}
-				else record(value, [...(kind === "variant" ? ["kind"] : kind === "option" ? ["tag"] : []), ...Array.from({ length: count }, (_, index) => children.key(index))]);
+				else if(kind !== "host-null") record(value, [...(kind === "variant" ? ["kind"] : kind === "option" ? ["tag"] : []), ...Array.from({ length: count }, (_, index) => children.key(index))]);
 				const pointer = count ? allocate(count * scalarSlotBytes) : 0;
 				span(module, pointer, count * scalarSlotBytes);
 				// The allocator may grow memory. Take a fresh view after every allocation.
@@ -122,15 +124,16 @@ export const compileComponentRecursiveCodec = descriptor => {
 				data.setUint32(frame.slot, componentCopiedTags[kind], true);
 				data.setUint32(frame.slot + 4, kind === "variant" ? branch * 4 : branch, true);
 				data.setUint32(frame.slot + 8, pointer, true); data.setUint32(frame.slot + 12, count, true);
-				Object.assign(frame, { children, pointer, count, index: 0 }); active.add(value);
+				Object.assign(frame, { children, pointer, count, index: 0, direct: kind === "host-null" });
+				if(kind !== "host-null") active.add(value);
 			}
 			if(frame.index === frame.count)
-			{ active.delete(frame.value); stack.pop(); continue; }
+			{ if(!frame.direct) active.delete(frame.value); stack.pop(); continue; }
 			const index = frame.index++;
 			stack.push({
 				type: frame.children.type(index)
 				, slot: frame.pointer + index * scalarSlotBytes
-				, value: dataField(frame.value, frame.children.key(index))
+				, value: frame.direct ? frame.value : dataField(frame.value, frame.children.key(index))
 				, depth: frame.depth + 1 });
 		}
 	};
@@ -160,7 +163,7 @@ export const compileComponentRecursiveCodec = descriptor => {
 				const kind = kindOf(type), data = view(module);
 				if(data.getUint32(frame.slot, true) !== componentCopiedTags[kind]) throw new TypeError("Component copied type mismatch");
 				const flags = data.getUint32(frame.slot + 4, true), branch = kind === "variant" ? flags >>> 2 : flags & 1;
-				if(kind === "variant" ? (flags & 1) || branch >= type.cases.length : flags & ~(["option", "result"].includes(kind) ? 3 : 2)) throw new TypeError("Invalid component copied flags");
+				if(kind === "variant" ? (flags & 1) || branch >= type.cases.length : flags & ~(["host-null", "option", "result"].includes(kind) ? 3 : 2)) throw new TypeError("Invalid component copied flags");
 				const pointer = data.getUint32(frame.slot + 8, true), count = data.getUint32(frame.slot + 12, true), children = layout(type, kind, branch);
 				if(children.count !== null && count !== children.count || !count && (pointer || flags & 2)) throw new TypeError("Invalid component copied shape");
 				span(module, pointer, count * scalarSlotBytes);
@@ -171,10 +174,12 @@ export const compileComponentRecursiveCodec = descriptor => {
 				}
 				budget.reserve(count); budget.charge(count * scalarSlotBytes);
 				// Reserve all immediate children before allocating their host container.
+				if(kind === "host-null" && !branch)
+				{ frame.owner[frame.key] = null; stack.pop(); continue; }
 				const value = sequence(kind) ? new Array(count) : kind === "option" ? { tag: branch ? "some" : "none" }
 					: kind === "variant" ? { kind: type.cases[branch].name } : {};
-				frame.owner[frame.key] = value;
-				Object.assign(frame, { children, pointer, count, value, index: 0 }); active.add(frame.slot);
+				if(kind !== "host-null") frame.owner[frame.key] = value;
+				Object.assign(frame, { children, pointer, count, value, index: 0, direct: kind === "host-null" }); active.add(frame.slot);
 			}
 			if(frame.index === frame.count)
 			{ active.delete(frame.slot); stack.pop(); continue; }
@@ -183,8 +188,8 @@ export const compileComponentRecursiveCodec = descriptor => {
 				type: frame.children.type(index)
 				, slot: frame.pointer + index * scalarSlotBytes
 				, depth: frame.depth + 1
-				, owner: frame.value
-				, key: frame.children.key(index) });
+				, owner: frame.direct ? frame.owner : frame.value
+				, key: frame.direct ? frame.key : frame.children.key(index) });
 		}
 		return result.value;
 	};
