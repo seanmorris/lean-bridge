@@ -162,6 +162,9 @@ const assertDependentSignatureCompleteWorkflow = source => {
 	assert.ok(source.includes("steps.reconciliation.outcome != 'success'"));
 	assert.equal((source.match(/continue-on-error: true/gmu) ?? []).length, 2);
 	assert.doesNotMatch(source, /\|\| true/u);
+	const receipt = source.split("  receipt:\n")[1];
+	assert.equal(receipt.split(producerSparseCheckout).length - 1, 1
+		, "receipt must exclude immutable evidence payloads");
 };
 
 test("complete dependent-signature replay is one bounded recurring audit", async () => {
