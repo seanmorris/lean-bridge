@@ -1,6 +1,7 @@
 /** @file */
 import assert from "node:assert/strict";
 import test from "node:test";
+import "./helpers/optional-repair-history-registration-source-history-tests.mjs";
 import "./helpers/optional-parameter-package-checker-repair-source-history-tests.mjs";
 import "./helpers/optional-parameter-wit-identity-repair-source-history-tests.mjs";
 import "./helpers/focused-producer-efficiency-source-history-tests.mjs";

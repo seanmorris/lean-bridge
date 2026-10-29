@@ -1,0 +1,86 @@
+{
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-repair-history-registration-source-history.mjs",
+      "sha256": "9af12015c576643789369d02a9e44701b0543ce645f4d397e1b84093857f64e6"
+    },
+    {
+      "path": "tests/helpers/optional-repair-history-registration-source-history-tests.mjs",
+      "sha256": "72c9832e99e27335e8da1dcdae350fb63b51e1a0d3dadf9547a19b77d730417a"
+    },
+    {
+      "path": "tests/helpers/optional-repair-history-registration-source-history.mjs",
+      "sha256": "5601a4fca71dc88255c15c319fbaf4418571da154119648e4feca5a2b32e73db"
+    }
+  ],
+  "implementationAdditions": [],
+  "implementationCommit": "830c9664e5f33c11b42e8afe6ca51602236f56f3",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5a1ec1bc47b9253fdef5afe5fc0e4877c82a14b429752624a9b1e2de5ae7b94d",
+      "edits": [
+        {
+          "current": "import { beforeOptionalRepairHistoryRegistrationSource, optionalRepairHistoryRegistrationNormalizationPaths } from \"./optional-repair-history-registration-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalRepairHistoryRegistrationNormalizationPaths\n\t, ...optionalParameterPackageCheckerRepairNormalizationPaths\n",
+          "previous": "\t...optionalParameterPackageCheckerRepairNormalizationPaths\n",
+          "start": 220100
+        },
+        {
+          "current": "\tlet stage = beforeOptionalRepairHistoryRegistrationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterPackageCheckerRepairSource(\n",
+          "previous": "\tlet stage = beforeOptionalParameterPackageCheckerRepairSource(\n",
+          "start": 275512
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4dd22d49019a3baa3a819fbd7345382df5962487b37837c531b8eeca97810cb3"
+    },
+    {
+      "currentSha256": "c4923c45cc48faa64587c01740dc738b028d52d0648fabecb9aecaab5b519974",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-repair-history-registration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 84
+        }
+      ],
+      "path": "tests/optional-parameter-installed-contract.test.mjs",
+      "previousSha256": "d87df1e00a73fcfa7f29a30a30768c621fbb87162c5a9a06bf4697b2dad21b42"
+    }
+  ],
+  "milestone": "optional-repair-history-registration-source-v1",
+  "predecessorCommit": "0d2db2671115590cd15efb2f089ad2263a5be223",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Keep the focused-producer, WIT-identity and package-checker history suites registered through the existing optional installed-contract test while restoring partition 11 to its exact pre-optimization bytes. This prevents current repairs from invalidating older partition milestones without dropping any test.",
+  "updates": [
+    {
+      "currentSha256": "7d097ad2cecba7d33a0ee9d908b132190c90be2ae9dfdc3a260d1a17881e7285",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./helpers/optional-parameter-package-checker-repair-source-history-tests.mjs\";\nimport \"./helpers/optional-parameter-wit-identity-repair-source-history-tests.mjs\";\nimport \"./helpers/focused-producer-efficiency-source-history-tests.mjs\";\n",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "6a25551f84fc63da6720fd5238203058ffaf3e2553f9c8cdc66f41e4c9b61ab9"
+    },
+    {
+      "currentSha256": "d87df1e00a73fcfa7f29a30a30768c621fbb87162c5a9a06bf4697b2dad21b42",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-package-checker-repair-source-history-tests.mjs\";\nimport \"./helpers/optional-parameter-wit-identity-repair-source-history-tests.mjs\";\nimport \"./helpers/focused-producer-efficiency-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 84
+        }
+      ],
+      "path": "tests/optional-parameter-installed-contract.test.mjs",
+      "previousSha256": "7e50eb24eccb044f770857bdc9a1c951f4f2bb02633e67ff03ea57a3d7f4b804"
+    }
+  ]
+}
