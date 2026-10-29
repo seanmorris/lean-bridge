@@ -150,7 +150,7 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 		runtimeFiles.set(`internal/owned-wasm-${name}.mjs`, relocate(await readFile(new URL(`./owned-wasm-${name}.mjs`, import.meta.url), "utf8")));
 	for(const name of ["component-owned-wasm", "owned-wasm-control"])
 		runtimeFiles.set(`internal/${name}.mjs`, relocate(await readFile(new URL(`../abi/${name}.mjs`, import.meta.url), "utf8")));
-	for(const name of ["canonical", "contract", "default-value", "sha256"])
+	for(const name of ["canonical", "contract", "sha256"])
 		runtimeFiles.set(`internal/binding-ir/${name}.mjs`, await readFile(new URL(`../binding-ir/${name}.mjs`, import.meta.url)));
 	for(const name of (await readdir(noticeRoot)).sort()) runtimeFiles.set(`notices/${name}`, await readFile(new URL(name, noticeRoot)));
 	const runtimeMetadata = {

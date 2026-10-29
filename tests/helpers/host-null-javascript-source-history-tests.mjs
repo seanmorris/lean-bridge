@@ -6,10 +6,10 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { createReadStream } from "node:fs";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { Readable } from "node:stream";
 import test from "node:test";
 import {
 	beforeHostNullJavaScriptSource
@@ -37,6 +37,7 @@ import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 512 * 1024 * 1024
@@ -114,7 +115,7 @@ test("HostNull JavaScript additions and newest-first registration are exact", as
 			, hostNullJavaScriptPredecessor, "--", addition.path]).trim(), "");
 		const source = hostNullJavaScriptImplementationAddedPaths.includes(addition.path)
 			? sourceAt(hostNullJavaScriptPinRefresh, addition.path)
-			: await readFile(addition.path);
+			: await sourceAtFinHistoryMilestone(addition.path, addition.currentSha256);
 		assert.equal(sha256(source), addition.currentSha256, addition.path);
 	}
 	assert.deepEqual(hostNullJavaScriptHistoryAddedPaths
@@ -124,9 +125,9 @@ test("HostNull JavaScript additions and newest-first registration are exact", as
 		, hostNullJavaScriptIntegrationPaths);
 	for(const update of value.integrationUpdates)
 	{
+		const current = await sourceAtFinHistoryMilestone(update.path, update.currentSha256);
 		assert.equal(await authenticateSourceHistoryReverse(
-			createReadStream(update.path), update), true);
-		const current = await readFile(update.path, "utf8");
+			Readable.from([Buffer.from(current)]), update), true);
 		const previous = sourceAt(hostNullJavaScriptPinRefresh, update.path);
 		assert.equal(reverseHostNullJavaScriptUpdate(current, update), previous);
 		assert.equal(beforeFinRefinementSource(

@@ -169,9 +169,6 @@ test("an external Lean component installs as native callables over one shared ru
     const runtimeManifest = JSON.parse(await readFile(join(runtimeRoot, "package.json"), "utf8"));
     assert.equal(componentManifest.exports["."].browser, "./index.mjs");
     assert.equal(runtimeManifest.exports["."].browser, "./index.mjs");
-		await access(join(runtimeRoot, "internal/binding-ir/default-value.mjs"));
-		for(const name of ["component-callables", "component-copied", "component-structured-callables"])
-			assert.match(await readFile(join(runtimeRoot, `internal/${name}.mjs`), "utf8"), /from "\.\/binding-ir\/default-value\.mjs"/u);
 		const collisionProject = join(scratch, "collision-source");
 		await cp("tests/fixtures/onboarding/small", collisionProject, { recursive: true });
 		await writeFile(join(collisionProject, "lean-bridge.exports.json"), JSON.stringify({
