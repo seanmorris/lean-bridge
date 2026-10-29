@@ -1,0 +1,205 @@
+{
+  "currentSourcePaths": [
+    "src/backends/perl/generate.mjs"
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-perl-unicode-default-repair-source-history.mjs",
+      "sha256": "ce57ce841cad7225068de2dad515e2384c82e9c2f31889e82015db243e4fb2cf"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-perl-unicode-default-repair-source-history-tests.mjs",
+      "sha256": "f04edce962bb3523bed7b7198efe1ff71e273664ea8cf7597be88abad59652ab"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-perl-unicode-default-repair-source-history.mjs",
+      "sha256": "4d92c8fd574ff1d8eb45ea1916d9fee45241b3aa666c988e32773eddecc55244"
+    }
+  ],
+  "hostedRun": 40856632076,
+  "implementationAdditions": [
+    {
+      "path": "scripts/refresh-optional-parameter-perl-unicode-default-pins.mjs",
+      "sha256": "c6371446b396d04f30b5cd2ddf5e182a4284ef8c4de0d42f0813df6803ff6940"
+    }
+  ],
+  "implementationCommit": "3a10d60f4c3ec6161d9bf4a9265ca8521b41c22f",
+  "implementationCommits": [
+    "b4c6a498d2338d91b9fe9b616ccd017c08fc168e",
+    "3a10d60f4c3ec6161d9bf4a9265ca8521b41c22f"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "1b769415a66001953a71057a4cc9ac7a290da12adfe4f29fb6069a2de13668fe",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-perl-unicode-default-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "ecd237922c2414272b7caf841f39fb7c21a00cb84b99ea53ddb2cd037c3d3d55"
+    },
+    {
+      "currentSha256": "6974cf7a65a5cc15561efa826eea5d61d81775c49929fc0b249cc7b614aeafb4",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterPerlUnicodeDefaultRepairSource, optionalParameterPerlUnicodeDefaultRepairNormalizationPaths } from \"./optional-parameter-perl-unicode-default-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterPerlUnicodeDefaultRepairNormalizationPaths\n\t, ...optionalParameterInstalledAcceptanceRepairNormalizationPaths\n",
+          "previous": "\t...optionalParameterInstalledAcceptanceRepairNormalizationPaths\n",
+          "start": 219224
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterPerlUnicodeDefaultRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterInstalledAcceptanceRepairSource(\n",
+          "previous": "\tlet stage = beforeOptionalParameterInstalledAcceptanceRepairSource(\n",
+          "start": 274348
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2b3f1b4627bebb94a3e50cf9aa6dc58d6194a03f915d5f7262b9bd49cb23a7db"
+    },
+    {
+      "currentSha256": "ef5f996b9afd513a0990125499f2787bf6c004b49f080b058b37a3c44d2d15fe",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 1116
+        },
+        {
+          "current": "\t\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3586
+        },
+        {
+          "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.sha256))\n",
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 5121
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-installed-acceptance-repair-source-history-tests.mjs",
+      "previousSha256": "aab11474c286cfc65d19dade1ed5798892d899918da2d3aa100b61af64594dbe"
+    }
+  ],
+  "milestone": "optional-parameter-perl-unicode-default-repair-source-v1",
+  "predecessorCommit": "f4704b4ad1f6dd657d691aebc51762757ce93847",
+  "refreshedPins": 15,
+  "repairedProfiles": [
+    "perl"
+  ],
+  "schemaVersion": 1,
+  "scope": "Repair installed Perl optional-parameter defaults after the first complete hosted wave. Generated public modules enable UTF-8 source semantics before embedding compiler-authenticated String or Char defaults, so a non-ASCII default such as lambda remains one Unicode scalar rather than two Latin-1 bytes. Preserve omission-only default insertion, explicit supplied values, the native ABI and every other package behavior.",
+  "updates": [
+    {
+      "currentSha256": "fbfc40d4b7dea93a2cfc0f779801d7bc745f411e4c4a67ab770dc32e45d99782",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 62772
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 268144
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 309758
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 409504
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 515222
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 570771
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 604431
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 659400
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 812089
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 828473
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 846644
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 980014
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 1029581
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 1127512
+        },
+        {
+          "current": "          \"sha256\": \"58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1\"\n",
+          "previous": "          \"sha256\": \"8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114\"\n",
+          "start": 1297039
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "d181795c0c76abbcdd3a39aaed7c774efe8d41222c9fc4d6512ac1abd542e39f"
+    },
+    {
+      "currentSha256": "58f8046ef4c6aa19133f8a96a92f3c8a057faed25b834639523b43979b5e68a1",
+      "edits": [
+        {
+          "current": "\t\t, \"use utf8;\"\n",
+          "previous": "",
+          "start": 48453
+        }
+      ],
+      "path": "src/backends/perl/generate.mjs",
+      "previousSha256": "8f47c52e1fbf1a3719584b33e21b0491d84f7ab5c0ad3957b4272a573d4ff114"
+    },
+    {
+      "currentSha256": "8488f4600794313cf977d7da254ee34f5b244e2a969dda8913d1c224aa06ebfc",
+      "edits": [
+        {
+          "current": "test(\"Perl wrappers compile authenticated Unicode defaults as characters\", async t => {\n\tconst model = structuredClone(fixture());\n\tconst parameter = model.exports[0].parameters[0];\n\tObject.assign(parameter, {\n\t\tkind: \"primitive\", name: \"char\", lean: \"Char\"\n\t\t, abi: {\n\t\t\tcType: \"uint32_t\", box: \"lean_box_uint32\"\n\t\t\t, unbox: \"lean_unbox_uint32\", heap: false\n\t\t}\n\t});\n\tconst declaration = model.bindingIr.declarations[0];\n\tdeclaration.parameters[0].type = { kind: \"primitive\", name: \"char\" };\n\tdeclaration.parameters[0].optional = true;\n\tdeclaration.parameters[0].default = { kind: \"char\", value: \"λ\" };\n\tmodel.bindingIrSha256 = hashBindingIr(model.bindingIr);\n\tconst receipt = { library: \"libcomponent_test.so\"\n\t\t, nativeLibrary: { sha256: \"b\".repeat(64) }\n\t\t, runtimeIdentity: \"c\".repeat(64), initializer: \"initialize_Sample\" };\n\tconst files = generatePerlBindingPackage(model, receipt);\n\tconst source = files[\"lib/LeanBridge/Sample.pm\"];\n\tassert.match(source, /use warnings;\\nuse utf8;\\nuse Math::BigInt;/u);\n\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-perl-unicode-default-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tawait writeFile(join(root, \"Sample.pm\"), source);\n\tawait writeFile(join(root, \"consumer.pl\"), `BEGIN {\n  $INC{'LeanBridge/Runtime.pm'} = 1;\n  package LeanBridge::Runtime;\n  sub import {}\n  sub _load_component {}\n  $INC{'XSLoader.pm'} = 1;\n  package XSLoader;\n  sub import {}\n  sub load {\n    no strict 'refs';\n    *{'LeanBridge::Sample::increment'} = sub { return [@_] };\n  }\n}\nuse lib '.';\nrequire 'Sample.pm';\nmy $omitted = LeanBridge::Sample::increment();\ndie 'Unicode default is not one scalar'\n  unless @$omitted == 1 && length($omitted->[0]) == 1\n    && ord($omitted->[0]) == 0x3bb;\n`);\n\tassert.equal(execFileSync(\"/usr/bin/perl\", [\"consumer.pl\"], {\n\t\tcwd: root, encoding: \"utf8\"\n\t}), \"\");\n});\n\n",
+          "previous": "",
+          "start": 30451
+        }
+      ],
+      "path": "tests/perl-contract.test.mjs",
+      "previousSha256": "afadb2c6c3a3f7fa002169855fd375e5dce4c96c0c8f49ec34c10191f571c7fd"
+    }
+  ]
+}
