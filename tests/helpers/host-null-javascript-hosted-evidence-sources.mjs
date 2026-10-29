@@ -54,7 +54,7 @@ export const hostNullJavaScriptHostedEvidenceSources = value => {
 				...closure(value.producer, [
 					"tests/host-null-npm-installed.test.mjs"
 				])
-				, ...fixture, "lean-bridge.exports.json"
+				, ...fixture
 				, ".github/workflows/consumer-matrix.yml"
 			]
 		}

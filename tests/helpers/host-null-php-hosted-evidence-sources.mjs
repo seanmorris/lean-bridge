@@ -60,7 +60,7 @@ export const hostNullPhpHostedEvidenceSources = (
 			role: "producer", revision: revisions.producer
 			, paths: [
 				...closure(revisions.producer, [test])
-				, ...fixture, "lean-bridge.exports.json"
+				, ...fixture
 				, ".github/workflows/consumer-matrix.yml"
 			]
 		}
