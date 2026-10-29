@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOptionalParameterFocusedCiSource, optionalParameterFocusedCiNormalizationPaths } from "./optional-parameter-focused-ci-source-history.mjs";
 import { beforeOptionalParameterCurrentLineIntegrationSource, optionalParameterCurrentLineIntegrationNormalizationPaths } from "./optional-parameter-current-line-integration-source-history.mjs";
 import { beforeOptionalParameterSource, optionalParameterNormalizationPaths } from "./optional-parameter-source-history.mjs";
 import { beforeHostNullSystemsTypeSurfaceIntegrationSource, beforeHostNullSystemsTypeSurfaceSource, hostNullSystemsTypeSurfaceNormalizationPaths } from "./host-null-systems-type-surface-lineage-source-history.mjs";
@@ -2370,7 +2371,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...optionalParameterCurrentLineIntegrationNormalizationPaths
+	...optionalParameterFocusedCiNormalizationPaths
+	, ...optionalParameterCurrentLineIntegrationNormalizationPaths
 	, ...optionalParameterNormalizationPaths
 	, ...hostNullSystemsTypeSurfaceNormalizationPaths
 	, ...hostNullSystemsNormalizationPaths
@@ -3479,7 +3481,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOptionalParameterCurrentLineIntegrationSource(
+	let stage = beforeOptionalParameterFocusedCiSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOptionalParameterCurrentLineIntegrationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

@@ -1,0 +1,986 @@
+{
+  "artifactCount": 10,
+  "calledWorkflowCount": 5,
+  "cellCount": 34,
+  "currentSourceDigests": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "sha256": "b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0"
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "sha256": "08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1"
+    }
+  ],
+  "currentSourcePaths": [
+    ".github/workflows/consumer-matrix.yml",
+    "config/checked-javascript.json"
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-focused-ci-source-history.mjs",
+      "sha256": "8206fbe4cd99facc1f572755bb88346782c2b2480c7b149ccb905804b889a398"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-focused-ci-source-history-tests.mjs",
+      "sha256": "47e976c92de9d5270fb566e716634f75ab88d0d62b773a4129922bc7f170a527"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-focused-ci-source-history.mjs",
+      "sha256": "0ba3e2f57cc6f8686c02ceb069a91e70ea2970232d662a8e6bdccc8759eb2e81"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": ".github/workflows/optional-parameter-complete.yml",
+      "sha256": "fc85bdc73e6b4866c435eba583c42e32f68fd1e918784298e2ac5899f5739629"
+    }
+  ],
+  "implementationCommit": "f2fdf5bfcd51ebebaf522bf2fc10f1051735ffbe",
+  "integrationUpdates": [
+    {
+      "currentSha256": "08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1",
+      "edits": [
+        {
+          "current": "\t\t},\n\t\t{\n\t\t\t\"path\": \"src/backends/cpp/default-value.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"src/backends/dotnet/default-value.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"src/backends/javascript/default-value.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"src/backends/jvm/default-value.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"src/backends/jvm/kotlin-default-value.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"src/backends/perl/default-value.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"src/backends/python/default-value.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"src/backends/ruby/default-value.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"src/backends/rust/default-value.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n\t\t{\n\t\t\t\"path\": \"src/binding-ir/default-value.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n",
+          "previous": "",
+          "start": 62655
+        }
+      ],
+      "path": "config/checked-javascript.json",
+      "previousSha256": "92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db"
+    },
+    {
+      "currentSha256": "9dbc6948b6a057afd9f6f9329cbd953bced16b593a08bda10a27f83bf1991cb6",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 55653
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 78051
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 78211
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 95246
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 95406
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 111547
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 111707
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 126315
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 135597
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 145222
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 168606
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 181575
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 196470
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 209254
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 222474
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 231007
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 239437
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 248454
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 256828
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 276108
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 285947
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 298082
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 316680
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 325976
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 338659
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 347914
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 357197
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 366330
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 375189
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 382576
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 390500
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 401146
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 415252
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 422350
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 432579
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 432739
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 440323
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 446697
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 452860
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 458957
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 465478
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 473144
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 482438
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 493660
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 503357
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 524492
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 533057
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 544065
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 575950
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 582579
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 592838
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 613711
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 622234
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 633184
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 664702
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 673921
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 681261
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 693544
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 700404
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 709432
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 723458
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 734500
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 748548
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 759294
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 771365
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 782653
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 791236
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 797694
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 806080
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 823670
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 844666
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 900007
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1012069
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1012229
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1072310
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1079704
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1086302
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1093404
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1100904
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1107954
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1115564
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1137538
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1137861
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1149425
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1157296
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1167261
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1167421
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1177375
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1177535
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1189136
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1189296
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1221697
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1221857
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1251976
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1252136
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1284962
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1285287
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1324763
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1325088
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1351339
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1351658
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1373876
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1374036
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1393543
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1393703
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1416931
+        },
+        {
+          "current": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "previous": "          \"sha256\": \"92f4c1a29bd74400d8360833f572eba58f092d4389c9783586f67ec9655839db\"\n",
+          "start": 1417091
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1428559
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1451705
+        },
+        {
+          "current": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "previous": "          \"sha256\": \"008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102\"\n",
+          "start": 1951842
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "0e82e6b0f197839296d797695fe6ee2c3b15309fc9ea7412c5625803c5591bb1"
+    },
+    {
+      "currentSha256": "770c12a8268e1cfdaf4c6975e01a3c392e39ef67f85e0be025290d9df9fb3660",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-focused-ci-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "736261c2e876ad364a2150caeff6e7d8eaf2461a99c6c096a91d5a3e4fbd52e4"
+    },
+    {
+      "currentSha256": "8ac68cdc04901251db4dcfce40a96356654e8508f15ef3486bf6f965f45ea01e",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterFocusedCiSource, optionalParameterFocusedCiNormalizationPaths } from \"./optional-parameter-focused-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterFocusedCiNormalizationPaths\n\t, ...optionalParameterCurrentLineIntegrationNormalizationPaths\n",
+          "previous": "\t...optionalParameterCurrentLineIntegrationNormalizationPaths\n",
+          "start": 217363
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterFocusedCiSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterCurrentLineIntegrationSource(\n",
+          "previous": "\tlet stage = beforeOptionalParameterCurrentLineIntegrationSource(\n",
+          "start": 271877
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "81965d3abfeae17666110cba7d085c6f3023dcf637cf4a076a050379b5e97fbe"
+    },
+    {
+      "currentSha256": "2c20f390866822be7782a12d023f008afa43347a064aac6481d4dacc1b4df5c3",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterFocusedCiSource }\n\tfrom \"./optional-parameter-focused-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 903
+        },
+        {
+          "current": "\t\tconst live = beforeOptionalParameterFocusedCiSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"));\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 2906
+        },
+        {
+          "current": "\t\tconst live = beforeOptionalParameterFocusedCiSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"));\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 3610
+        },
+        {
+          "current": "\t{\n\t\tconst live = beforeOptionalParameterFocusedCiSource(item.path\n\t\t\t, await readFile(item.path, \"utf8\"), item.sha256);\n\t\tassert.equal(sha256(live), item.sha256, item.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(item.path)), item.sha256, item.path);\n",
+          "start": 4323
+        },
+        {
+          "current": "\t\tconst live = beforeOptionalParameterFocusedCiSource(addition.path\n\t\t\t, await readFile(addition.path, \"utf8\"));\n\t\tassert.equal(sha256(live)\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 5351
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-current-line-integration-source-history-tests.mjs",
+      "previousSha256": "8225e165aa60e2a1c64eb52ee32d02c6ee7891149fb383f083ceacf1a8996399"
+    }
+  ],
+  "milestone": "optional-parameter-focused-ci-source-v1",
+  "predecessorCommit": "05cc74823170285e65cb75ad053bd623189f1a6d",
+  "producerJobCount": 13,
+  "profileCount": 17,
+  "receiptJobCount": 1,
+  "recoveredTriggerPolicyWorkflows": 3,
+  "refreshedPins": 110,
+  "reportCount": 20,
+  "routeCount": 2,
+  "schemaVersion": 1,
+  "scope": "Reuse five pinned recurring producers to execute all ten optional-parameter lanes and reconcile twenty canonical reports into one fail-closed 34-cell exact-head receipt. Bind receipt identity to the actual broad or focused workflow, preserve the broad path, restore trigger-policy coverage for three prior complete gates, add one manual and weekly focused caller, register all ten new default-value modules in the honest strict-migration backlog, and refresh only affected live-source identities without changing a support claim or hosted observation.",
+  "updates": [
+    {
+      "currentSha256": "b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0",
+      "edits": [
+        {
+          "current": "            --workflow \".github/workflows/consumer-matrix.yml\" \\\n",
+          "previous": "",
+          "start": 382803
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "008b387e9031c42498514f5dffd12a34d3603579ba26e7369de763a8cca93102"
+    },
+    {
+      "currentSha256": "99992db5574eee63cf36531880c95477b6d1838b90af69c09c07a282ad2f1b72",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 53
+        },
+        {
+          "current": "      - name: Execute optional parameters through the prepared Python package\n        id: optional_parameters\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-optional-parameter-language-ci.sh python\n      - name: Preserve optional-parameter Python records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-language-python-${{ github.sha }}\n          path: build/optional-parameter-language-ci/python/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce optional-parameter Python acceptance\n        if: always() && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 2801
+        },
+        {
+          "current": "      - name: Execute optional parameters through the prepared Ruby package\n        id: optional_parameters\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-optional-parameter-language-ci.sh ruby\n      - name: Preserve optional-parameter Ruby records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-language-ruby-${{ github.sha }}\n          path: build/optional-parameter-language-ci/ruby/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce optional-parameter Ruby acceptance\n        if: always() && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 5812
+        },
+        {
+          "current": "      - name: Execute optional parameters through the prepared Rust package\n        id: optional_parameters\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-optional-parameter-language-ci.sh rust\n      - name: Preserve optional-parameter Rust records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-language-rust-${{ github.sha }}\n          path: build/optional-parameter-language-ci/rust/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce optional-parameter Rust acceptance\n        if: always() && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 8852
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-languages.yml",
+      "previousSha256": "9d88837df57246e3de623fe9dfa6325662b9fd9bc203f495fd5e7ac442fbef8f"
+    },
+    {
+      "currentSha256": "91bc96f8d08b310ca54b5930fd5dce99124f6d0044218d8ffe9366a4fa6bfe84",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 61
+        },
+        {
+          "current": "      - name: Execute optional parameters through the prepared .NET package\n        id: optional_parameters\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-optional-parameter-managed-ci.sh dotnet\n      - name: Preserve optional-parameter .NET records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-managed-dotnet-${{ github.sha }}\n          path: build/optional-parameter-managed-ci/dotnet/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce optional-parameter .NET acceptance\n        if: always() && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 2395
+        },
+        {
+          "current": "      - name: Execute optional parameters through prepared Java and Kotlin packages\n        id: optional_parameters\n        continue-on-error: true\n        timeout-minutes: 125\n        run: bash scripts/run-optional-parameter-managed-ci.sh jvm\n      - name: Preserve optional-parameter JVM records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-managed-jvm-${{ github.sha }}\n          path: build/optional-parameter-managed-ci/jvm/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce optional-parameter JVM acceptance\n        if: always() && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 5712
+        },
+        {
+          "current": "      - name: Execute optional parameters through the prepared WIT package\n        id: optional_parameters\n        continue-on-error: true\n        timeout-minutes: 125\n        shell: bash\n        run: |\n          set -euo pipefail\n          export LEAN_BRIDGE_WASMTIME_C_API=\"$PWD/build/wasmtime-c-api\"\n          source scripts/env.sh\n          bash scripts/run-optional-parameter-wit-ci.sh\n      - name: Preserve optional-parameter WIT records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-wit-${{ github.sha }}\n          path: build/optional-parameter-wit-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce optional-parameter WIT acceptance\n        if: always() && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 11940
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-managed-wit.yml",
+      "previousSha256": "ffbd9c44820112fbe486f75e52bfe8a58bc7a948bef2c4ed2594ee2c2206250c"
+    },
+    {
+      "currentSha256": "215fdf1a40e03d9604b2389963afb1b413d542e7f126c0726cbadd3cd80f6138",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 47
+        },
+        {
+          "current": "      - name: Execute optional parameters through prepared C and C++ packages\n        id: optional_parameters\n        continue-on-error: true\n        timeout-minutes: 125\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          bash scripts/run-optional-parameter-native-ci.sh\n      - name: Preserve optional-parameter C and C++ records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-native-${{ github.sha }}\n          path: build/optional-parameter-native-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce optional-parameter C and C++ acceptance\n        if: always() && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 4992
+        },
+        {
+          "current": "      - name: Execute optional parameters through the prepared Perl package\n        id: optional_parameters\n        continue-on-error: true\n        timeout-minutes: 135\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          bash scripts/run-optional-parameter-language-ci.sh perl\n      - name: Preserve optional-parameter Perl records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-language-perl-${{ github.sha }}\n          path: build/optional-parameter-language-ci/perl/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce optional-parameter Perl acceptance\n        if: always() && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 8474
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-native-perl.yml",
+      "previousSha256": "efe183a82967037f9d00850d77e3363aa5f37be288a387d08de5dc49e0da55c4"
+    },
+    {
+      "currentSha256": "5c1f9e4a5827d39a116cc40a9ff1b9200fae1bd12b6bad3ada2cb1687641f9f5",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 48
+        },
+        {
+          "current": "      - name: Execute the complete optional-parameter Node and browser matrix\n        id: optional_parameters\n        if: matrix.route == 'reviewed'\n        continue-on-error: true\n        timeout-minutes: 120\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          bash scripts/run-optional-parameter-npm-ci.sh\n      - name: Preserve optional-parameter Node and browser records\n        if: always() && matrix.route == 'reviewed'\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-node-browser-${{ github.sha }}\n          path: build/optional-parameter-npm-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce optional-parameter Node and browser acceptance\n        if: always() && matrix.route == 'reviewed' && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 5099
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-npm-browser.yml",
+      "previousSha256": "fbb243c0aae6b50c25de8bbeefd126c9e6649e0b832c2708dba540d15ba373ee"
+    },
+    {
+      "currentSha256": "6aca12d16d81b01a4a588bee5ef949788585e54290360eced65ea81535d1e1cd",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 50
+        },
+        {
+          "current": "      - name: Execute optional parameters through native PHP and PHP-Wasm packages\n        id: optional_parameters\n        continue-on-error: true\n        timeout-minutes: 125\n        env:\n          LEAN_BRIDGE_PHP: /usr/bin/php\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\"\n          test -d \"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\"\n          bash scripts/run-optional-parameter-php-ci.sh\n      - name: Preserve optional-parameter PHP records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-php-${{ github.sha }}\n          path: build/optional-parameter-php-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce optional-parameter PHP acceptance\n        if: always() && steps.optional_parameters.outcome != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 4933
+        }
+      ],
+      "path": ".github/workflows/nominal-subtype-php-wasm.yml",
+      "previousSha256": "8d393a07f7bb57d2a095699437fcd84d172ba066b6040898d070f53e7bc57529"
+    },
+    {
+      "currentSha256": "b7b669c7ea013581e90d8175ae276174c3a9b7aa30b3649bdf5a0c475f769144",
+      "edits": [
+        {
+          "current": "\t\t\t\t, /^--(?:directory|output|producer|repository|workflow|run-id|run-attempt)$/u);\n",
+          "previous": "\t\t\t\t, /^--(?:directory|output|producer|repository|run-id|run-attempt)$/u);\n",
+          "start": 616
+        },
+        {
+          "current": "\t, \"workflow\"\n",
+          "previous": "",
+          "start": 965
+        },
+        {
+          "current": "\trepository: values.repository, workflow: values.workflow\n\t, producerCommit: values.producer\n",
+          "previous": "\trepository: values.repository, producerCommit: values.producer\n",
+          "start": 1311
+        }
+      ],
+      "path": "scripts/reconcile-optional-parameter-matrix.mjs",
+      "previousSha256": "1eff8140c7b967fa10108c7e5f28ea1a4c1dc9975f01ed9944c83f8f3b32b51e"
+    },
+    {
+      "currentSha256": "e043954c454168e416cfac6cc9997ef135d230ef65567086000bc97c9f2ecc18",
+      "edits": [
+        {
+          "current": "\tassert.equal(workflow.match(/^ {8}continue-on-error: true$/gmu)?.length, 1);\n\tassert.match(workflow\n\t\t, /id: optional_parameters\\n {8}if: matrix\\.route == 'reviewed'\\n {8}continue-on-error: true/u);\n",
+          "previous": "\tassert.doesNotMatch(workflow, /continue-on-error/u);\n",
+          "start": 937
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-npm-browser-ci-tests.mjs",
+      "previousSha256": "40e65cd37345efa3b20904637a30dafd490571e4108999ef1690f26fba554815"
+    },
+    {
+      "currentSha256": "43e83017b1d914f01b2f4e90f44b930811092941e4f4a2c5175057c5718b0ecf",
+      "edits": [
+        {
+          "current": "\tassert.ok(source.includes(\"on:\\n  workflow_call:\\n  workflow_dispatch:\\n\"));\n",
+          "previous": "\tassert.ok(source.includes(\"on:\\n  workflow_dispatch:\\n\"));\n",
+          "start": 561
+        },
+        {
+          "current": "\tassert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\\n/gmu)].map(match => match[1]), [\"workflow_call\", \"workflow_dispatch\", \"schedule\", \"nominal-subtype-php-wasm\"]);\n\tassert.doesNotMatch(source, /^ {4}(?:continue-on-error|needs|strategy|defaults):/gmu);\n\tassert.equal(source.match(/^ {8}continue-on-error: true$/gmu)?.length, 1);\n\tassert.deepEqual(source.match(/^\\s+if:.*$/gmu), [\n\t\t\"        if: always()\"\n\t\t, \"        if: always()\"\n\t\t, \"        if: always() && steps.optional_parameters.outcome != 'success'\"\n\t\t, \"        if: always() && steps.acceptance.outcome != 'success'\"\n\t]);\n\tassert.equal((source.match(/^\\s+env:/gmu) ?? []).length, 3);\n",
+          "previous": "\tassert.deepEqual([...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\\n/gmu)].map(match => match[1]), [\"workflow_dispatch\", \"schedule\", \"nominal-subtype-php-wasm\"]);\n\tassert.doesNotMatch(source, /continue-on-error:|needs:|strategy:|defaults:/u);\n\tassert.deepEqual(source.match(/^\\s+if:.*$/gmu), [\"        if: always()\", \"        if: always() && steps.acceptance.outcome != 'success'\"]);\n\tassert.equal((source.match(/^\\s+env:/gmu) ?? []).length, 2);\n",
+          "start": 832
+        },
+        {
+          "current": "\t\t, \"Execute optional parameters through native PHP and PHP-Wasm packages\"\n\t\t, \"Preserve optional-parameter PHP records\"\n\t\t, \"Enforce optional-parameter PHP acceptance\"\n",
+          "previous": "",
+          "start": 2464
+        },
+        {
+          "current": "\tassert.equal(step(names[12]), \"        id: optional_parameters\\n        continue-on-error: true\\n        timeout-minutes: 125\\n        env:\\n          LEAN_BRIDGE_PHP: /usr/bin/php\\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\\n        shell: bash\\n        run: |\\n          set -euo pipefail\\n          source scripts/env.sh\\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\\\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\\\"\\n          test -d \\\"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\\\"\\n          bash scripts/run-optional-parameter-php-ci.sh\\n\");\n\tassert.equal(step(names[13]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: optional-parameter-php-${{ github.sha }}\\n          path: build/optional-parameter-php-ci/\\n          if-no-files-found: error\\n          overwrite: true\\n          retention-days: 30\\n\");\n",
+          "previous": "",
+          "start": 4411
+        },
+        {
+          "current": "\t\t, \"set -euo pipefail\\nsource scripts/env.sh\\nexport LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\\\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\\\"\\ntest -d \\\"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\\\"\\nbash scripts/run-optional-parameter-php-ci.sh\"\n\t\t, \"exit 1\"\n",
+          "previous": "",
+          "start": 7385
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-wasm-ci-workflow.mjs",
+      "previousSha256": "a6ecab6d451956fa2b5bc9ed01b69dff79e2ccf1f603521e03c4236744a4a96d"
+    },
+    {
+      "currentSha256": "7f0aefbd6a12b11b5a2afd29364a51721ee6ef44b15c65e0e2ea13a486d872c5",
+      "edits": [
+        {
+          "current": "\toptionalParameterFocusedWorkflow, optionalParameterMatrixCases\n\t, optionalParameterMatrixLanes\n\t, optionalParameterMatrixRoutes, optionalParameterMatrixWorkflow\n",
+          "previous": "\toptionalParameterMatrixCases, optionalParameterMatrixLanes\n\t, optionalParameterMatrixRoutes\n",
+          "start": 272
+        },
+        {
+          "current": "const build = (values, workflow = optionalParameterMatrixWorkflow) =>\n\tbuildOptionalParameterMatrixReceipt(path => {\n\t\tassert.ok(values.has(path), path); return values.get(path);\n\t}, {\n\t\trepository: \"seanmorris/lean-bridge\"\n\t\t, workflow, producerCommit\n\t\t, runId: 40700000001, runAttempt: 2\n\t});\n\nconst focusedProducers = [{\n\tfile: \".github/workflows/generic-subtype-npm-browser.yml\"\n\t, records: [{\n\t\tname: \"Node and browser\", script: \"run-optional-parameter-npm-ci.sh\"\n\t\t, artifact: \"optional-parameter-node-browser\"\n\t\t, path: \"build/optional-parameter-npm-ci/\"\n\t}]\n}\n, {\n\tfile: \".github/workflows/generic-subtype-native-perl.yml\"\n\t, records: [{\n\t\tname: \"C and C++\", script: \"run-optional-parameter-native-ci.sh\"\n\t\t, artifact: \"optional-parameter-native\"\n\t\t, path: \"build/optional-parameter-native-ci/\"\n\t}\n\t, {\n\t\tname: \"Perl\", script: \"run-optional-parameter-language-ci.sh perl\"\n\t\t, artifact: \"optional-parameter-language-perl\"\n\t\t, path: \"build/optional-parameter-language-ci/perl/\"\n\t}]\n}\n, {\n\tfile: \".github/workflows/generic-subtype-languages.yml\"\n\t, records: [\"python\", \"ruby\", \"rust\"].map(profile => ({\n\t\tname: profile[0].toUpperCase() + profile.slice(1)\n\t\t, script: `run-optional-parameter-language-ci.sh ${profile}`\n\t\t, artifact: `optional-parameter-language-${profile}`\n\t\t, path: `build/optional-parameter-language-ci/${profile}/`\n\t}))\n}\n, {\n\tfile: \".github/workflows/generic-subtype-managed-wit.yml\"\n\t, records: [{\n\t\tname: \".NET\", script: \"run-optional-parameter-managed-ci.sh dotnet\"\n\t\t, artifact: \"optional-parameter-managed-dotnet\"\n\t\t, path: \"build/optional-parameter-managed-ci/dotnet/\"\n\t}\n\t, {\n\t\tname: \"JVM\", script: \"run-optional-parameter-managed-ci.sh jvm\"\n\t\t, artifact: \"optional-parameter-managed-jvm\"\n\t\t, path: \"build/optional-parameter-managed-ci/jvm/\"\n\t}\n\t, {\n\t\tname: \"WIT\", script: \"run-optional-parameter-wit-ci.sh\"\n\t\t, artifact: \"optional-parameter-wit\"\n\t\t, path: \"build/optional-parameter-wit-ci/\"\n\t}]\n}\n, {\n\tfile: \".github/workflows/nominal-subtype-php-wasm.yml\"\n\t, records: [{\n\t\tname: \"PHP\", script: \"run-optional-parameter-php-ci.sh\"\n\t\t, artifact: \"optional-parameter-php\"\n\t\t, path: \"build/optional-parameter-php-ci/\"\n\t}]\n}];\nconst step = (source, name) => {\n\tconst marker = `      - name: ${name}\\n`, start = source.indexOf(marker);\n\tassert.notEqual(start, -1, name);\n\tconst next = source.indexOf(\"\\n      - name: \", start + marker.length);\n\treturn source.slice(start, next === -1 ? undefined : next);\n};\nconst assertFocusedProducer = (source, specification) => {\n\tassert.match(source, /^on:\\n {2}workflow_call:\\n/mu);\n\tfor(const record of specification.records)\n\t{\n\t\tconst runName = record.name === \"Node and browser\"\n\t\t\t? \"Execute the complete optional-parameter Node and browser matrix\"\n\t\t\t: `Execute optional parameters through ${record.name === \"PHP\" ? \"native PHP and PHP-Wasm packages\" : record.name.startsWith(\"C \") ? \"prepared C and C++ packages\" : record.name === \"JVM\" ? \"prepared Java and Kotlin packages\" : `the prepared ${record.name} package`}`;\n\t\tconst run = step(source, runName);\n\t\tassert.match(run, /^ {8}id: optional_parameters$/mu);\n\t\tassert.match(run, /^ {8}continue-on-error: true$/mu);\n\t\tassert.ok(run.includes(`bash scripts/${record.script}`));\n\t\tconst upload = step(source, `Preserve optional-parameter ${record.name} records`);\n\t\tassert.ok(upload.includes(`name: ${record.artifact}-\\${{ github.sha }}`));\n\t\tassert.ok(upload.includes(`path: ${record.path}`));\n\t\tassert.match(upload, /^ {10}if-no-files-found: error$/mu);\n\t\tassert.doesNotMatch(upload, /continue-on-error:/u);\n\t\tconst enforce = step(source\n\t\t\t, `Enforce optional-parameter ${record.name} acceptance`);\n\t\tassert.match(enforce\n\t\t\t, /steps\\.optional_parameters\\.outcome != 'success'/u);\n\t\tassert.doesNotMatch(enforce, /continue-on-error:/u);\n\t}\n};\nconst focusedCalls = focusedProducers.map(item => `./${item.file}`);\nconst assertFocusedCaller = source => {\n\tassert.ok(source.includes(\"on:\\n  workflow_dispatch:\\n\"));\n\tassert.ok(source.includes(\"  schedule:\\n\"));\n\tassert.deepEqual([...source.matchAll(/^ {4}uses: (\\.\\/\\.github\\/workflows\\/[a-z0-9-]+\\.yml)$/gmu)]\n\t\t.map(match => match[1]), focusedCalls);\n\tconst receiptStart = source.indexOf(\"  receipt:\\n\");\n\tassert.notEqual(receiptStart, -1);\n\tconst receipt = source.slice(receiptStart);\n\tassert.match(receipt, /^ {4}if: always\\(\\)$/mu);\n\tassert.doesNotMatch(receipt, /^ {4}continue-on-error:/mu);\n\tfor(const job of [\"npm-browser\", \"native-perl\", \"languages\", \"managed-wit\", \"php\"])\n\t\tassert.match(receipt, new RegExp(`^ {6}- ${job}$`, \"mu\"));\n\tassert.match(receipt\n\t\t, /pattern: optional-parameter-\\*-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tassert.match(receipt\n\t\t, /node scripts\\/reconcile-optional-parameter-matrix\\.mjs \\\\\\n/u);\n\tassert.ok(receipt.includes(\n\t\t'--workflow \".github/workflows/optional-parameter-complete.yml\"'));\n\tassert.match(receipt\n\t\t, /name: optional-parameter-matrix-\\$\\{\\{ github\\.sha \\}\\}/u);\n\tassert.match(receipt, /^ {10}if-no-files-found: error$/mu);\n\tassert.doesNotMatch(step(receipt\n\t\t, \"Preserve the complete optional-parameter receipt\")\n\t, /continue-on-error:/u);\n\tassert.doesNotMatch(receipt, /npm (?:ci|install)/u);\n\tassert.match(receipt\n\t\t, /steps\\.download\\.outcome != 'success'/u);\n\tassert.match(receipt\n\t\t, /steps\\.reconciliation\\.outcome != 'success'/u);\n\tfor(const job of [\"npm-browser\", \"native-perl\", \"languages\", \"managed-wit\", \"php\"])\n\t\tassert.ok(receipt.includes(`needs.${job}.result != 'success'`));\n};\n",
+          "previous": "const build = values => buildOptionalParameterMatrixReceipt(path => {\n\tassert.ok(values.has(path), path); return values.get(path);\n}, {\n\trepository: \"seanmorris/lean-bridge\", producerCommit\n\t, runId: 40700000001, runAttempt: 2\n});\n",
+          "start": 1485
+        },
+        {
+          "current": "\tconst focused = await build(records(), optionalParameterFocusedWorkflow);\n\tassert.equal(focused.run.workflow, optionalParameterFocusedWorkflow);\n\tassert.equal(validateOptionalParameterMatrixReceipt(focused), focused);\n",
+          "previous": "",
+          "start": 7437
+        },
+        {
+          "current": "\t\t, value => { value.run.workflow = \".github/workflows/quality.yml\"; }\n",
+          "previous": "",
+          "start": 8696
+        },
+        {
+          "current": "\tassert.ok(workflow.includes(\n\t\t'--workflow \".github/workflows/consumer-matrix.yml\"'));\n",
+          "previous": "",
+          "start": 9331
+        },
+        {
+          "current": "\ntest(\"focused recurring CI produces and reconciles the exact optional matrix\", async t => {\n\tconst sources = new Map(await Promise.all(focusedProducers.map(async item => [\n\t\titem.file, await readFile(item.file, \"utf8\")\n\t]))), callerPath = \".github/workflows/optional-parameter-complete.yml\";\n\tconst caller = await readFile(callerPath, \"utf8\");\n\tfor(const item of focusedProducers)\n\t\tassertFocusedProducer(sources.get(item.file), item);\n\tassertFocusedCaller(caller);\n\tconst callerMutations = [\n\t\tcaller.replace(focusedCalls[0], \"./.github/workflows/quality.yml\")\n\t\t, caller.replace(\"      - npm-browser\\n\", \"\")\n\t\t, caller.replace(\"if-no-files-found: error\", \"if-no-files-found: ignore\")\n\t\t, caller.replace(\"steps.download.outcome != 'success'\", \"false\")\n\t\t, caller.replace(\"optional-parameter-*-${{ github.sha }}\"\n\t\t\t, \"optional-parameter-node-browser-${{ github.sha }}\")\n\t\t, caller.replace(\"  receipt:\\n\", \"  receipt:\\n    continue-on-error: true\\n\")\n\t];\n\tfor(const changed of callerMutations)\n\t\tassert.throws(() => assertFocusedCaller(changed), assert.AssertionError);\n\tfor(const item of focusedProducers)\n\t{\n\t\tconst source = sources.get(item.file), first = item.records[0];\n\t\tfor(const changed of [\n\t\t\tsource.replace(\"  workflow_call:\\n\", \"\")\n\t\t\t, source.replace(first.script, `disabled-${first.script}`)\n\t\t\t, source.replace(first.artifact, `disabled-${first.artifact}`)\n\t\t\t, source.replace(first.path, `disabled/${first.path}`)\n\t\t\t, source.replace(\"steps.optional_parameters.outcome != 'success'\", \"false\")\n\t\t]) assert.throws(() => assertFocusedProducer(changed, item)\n\t\t\t, assert.AssertionError, item.file);\n\t}\n\tt.diagnostic(`${callerMutations.length + focusedProducers.length * 5} focused-CI bypasses refused`);\n});\n",
+          "previous": "",
+          "start": 9601
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-matrix-receipt-tests.mjs",
+      "previousSha256": "2b6e9df3bd980380550bb988776fd6622008c88919b408c97a70e5844d3241c8"
+    },
+    {
+      "currentSha256": "f73b431458575712f4a9f21793717e87e85ca2b3bf2529020b6a497a9712e91a",
+      "edits": [
+        {
+          "current": "\t, optionalParameterMatrixRoutes, optionalParameterMatrixWorkflows\n",
+          "previous": "\t, optionalParameterMatrixRoutes, optionalParameterMatrixWorkflow\n",
+          "start": 309
+        },
+        {
+          "current": "const identity = ({\n\trepository, workflow, runId, runAttempt, producerCommit\n}) => {\n",
+          "previous": "const identity = ({ repository, runId, runAttempt, producerCommit }) => {\n",
+          "start": 2815
+        },
+        {
+          "current": "\tassert.ok(optionalParameterMatrixWorkflows.includes(workflow));\n",
+          "previous": "",
+          "start": 2966
+        },
+        {
+          "current": "\t\trepository, workflow, runId, runAttempt, producerCommit\n",
+          "previous": "\t\trepository, workflow: optionalParameterMatrixWorkflow\n\t\t, runId, runAttempt, producerCommit\n",
+          "start": 3187
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-matrix-receipt.mjs",
+      "previousSha256": "cfbccfa9683291c09fb818c206bda9b6ccfaa62411378563cf32ee8bfe0c57d1"
+    },
+    {
+      "currentSha256": "17b1ce9f7fd450526e2dc5ebd779de3e037ccdb7fec3820ffd5c9c1f6f741015",
+      "edits": [
+        {
+          "current": "export const optionalParameterFocusedWorkflow\n\t= \".github/workflows/optional-parameter-complete.yml\";\nexport const optionalParameterMatrixWorkflows = Object.freeze([\n\toptionalParameterMatrixWorkflow, optionalParameterFocusedWorkflow\n]);\n",
+          "previous": "",
+          "start": 292
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-matrix.mjs",
+      "previousSha256": "258df1b95e69e49bd9b20d31b560d51f4cf5741831f56b8229d2ea18d802f452"
+    },
+    {
+      "currentSha256": "ec482d95c4b5bffe7d935d7ad415fca65cda1f4d5a2ceae36b67a5b253dcbf43",
+      "edits": [
+        {
+          "current": "\t, [\"dependent-signature-complete.yml\", [\"pull_request\", \"push\"]]\n\t, [\"direct-proof-erasure-complete.yml\", [\"pull_request\", \"push\"]]\n\t, [\"host-null-complete.yml\", [\"pull_request\", \"push\"]]\n",
+          "previous": "",
+          "start": 675
+        },
+        {
+          "current": "\t, \"dependent-signature-complete.yml\"\n\t, \"direct-proof-erasure-complete.yml\"\n\t, \"host-null-complete.yml\"\n",
+          "previous": "",
+          "start": 1171
+        },
+        {
+          "current": "\t, \"dependent-signature-complete.yml\"\n\t, \"direct-proof-erasure-complete.yml\"\n\t, \"host-null-complete.yml\"\n\t, \"optional-parameter-complete.yml\"\n",
+          "previous": "",
+          "start": 1478
+        },
+        {
+          "current": "\tassert.equal(names.length, 127, \"review every workflow added to the repository\");\n",
+          "previous": "\tassert.equal(names.length, 123, \"review every workflow added to the repository\");\n",
+          "start": 4612
+        },
+        {
+          "current": "\tassert.equal(approvedAutomaticEvents.size, 11);\n\tassert.equal(pathScopedAutomaticWorkflows.size, 6);\n\tassert.equal(nonSweepWorkflows.size, 15);\n",
+          "previous": "\tassert.equal(approvedAutomaticEvents.size, 8);\n\tassert.equal(pathScopedAutomaticWorkflows.size, 3);\n\tassert.equal(nonSweepWorkflows.size, 11);\n",
+          "start": 5189
+        }
+      ],
+      "path": "tests/workflow-trigger-policy.test.mjs",
+      "previousSha256": "ce114b5cfae552a42c0b16841b6f6c5a50878c95208d4c2c82542e16f2ced6b2"
+    }
+  ]
+}

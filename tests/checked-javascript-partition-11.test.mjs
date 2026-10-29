@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/optional-parameter-focused-ci-source-history-tests.mjs";
 import "./helpers/optional-parameter-current-line-integration-source-history-tests.mjs";
 import "./helpers/optional-parameter-source-history-tests.mjs";
 import "./helpers/host-null-systems-type-surface-lineage-source-history-tests.mjs";
