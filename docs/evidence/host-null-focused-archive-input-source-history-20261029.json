@@ -1,0 +1,222 @@
+{
+  "cellCount": 170,
+  "currentSourcePaths": [],
+  "focusedArtifactCount": 7,
+  "focusedProducerJobCount": 6,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-focused-archive-input-source-history.mjs",
+      "sha256": "efd4dd767d29a2c9a9e15897ddb0102864e1035e72f92eb599c26623a6c898a0"
+    },
+    {
+      "path": "tests/helpers/host-null-focused-archive-input-source-history-tests.mjs",
+      "sha256": "236282d72054a814e4114b110250300d71f43da4c91095947296a78f408ea8c3"
+    },
+    {
+      "path": "tests/helpers/host-null-focused-archive-input-source-history.mjs",
+      "sha256": "fb614c896749ff119cafa1ace45e5ee847a1cd588f1e1129c43c8fddc0bf4163"
+    }
+  ],
+  "implementationCommit": "7f6f130f7d7b2859d527f90c2c22956537f6b6a5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6e9e37460b72ebd9211959a0b756a587d90516f9f1713f2c0d70769a64b9fcdd",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-focused-archive-input-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 321
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "1684f624a5171702b35e8878f8f1d193b6e3b8f1c12484d8c1159d176dcbcbda"
+    },
+    {
+      "currentSha256": "8781b90fcf37e9864223cfbdc01efdb7e4419fa7e512b211dc134261b79c7ca9",
+      "edits": [
+        {
+          "current": "import { beforeHostNullFocusedArchiveInputSource, hostNullFocusedArchiveInputNormalizationPaths } from \"./host-null-focused-archive-input-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullFocusedArchiveInputNormalizationPaths\n\t, ...hostNullFocusedCiNormalizationPaths\n",
+          "previous": "\t...hostNullFocusedCiNormalizationPaths\n",
+          "start": 218467
+        },
+        {
+          "current": "\tlet stage = beforeHostNullFocusedArchiveInputSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullFocusedCiSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullFocusedCiSource(path, text, expected);\n",
+          "start": 273343
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d1b976bcd313aae657a97d7e8af58754282b84b3bcaf29e7dffefcb71c940885"
+    }
+  ],
+  "legacyArtifactCount": 7,
+  "milestone": "host-null-focused-archive-input-source-v1",
+  "predecessorCommit": "8777a819eff57bf63455e6f26cdb3e81fab1955a",
+  "profileCount": 17,
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Extend complete HostNull acquisition from the legacy broad consumer workflow to the bounded focused producer without weakening either identity contract. Require exact focused nested job names, seven exact artifacts from six producer jobs, one intentionally shared native PHP/PHP-Wasm job, distinct identities for every other lane, and the expanded producer source closure before any hosted bytes can enter the immutable archive.",
+  "updates": [
+    {
+      "currentSha256": "5d46c95639080f8296624b4c3cf55f9081814549e4d2cb206332d57cc810e4b8",
+      "edits": [
+        {
+          "current": "\thostNullCompleteFocusedWorkflow, hostNullCompleteHostedLanes\n\t, hostNullCompleteLaneContract, hostNullCompleteWorkflow\n",
+          "previous": "\thostNullCompleteHostedLanes, hostNullCompleteWorkflow\n",
+          "start": 539
+        },
+        {
+          "current": "\tassert.ok([hostNullCompleteWorkflow, hostNullCompleteFocusedWorkflow]\n\t\t.includes(run.path));\n",
+          "previous": "\tassert.equal(run.path, hostNullCompleteWorkflow);\n",
+          "start": 3506
+        },
+        {
+          "current": "\t\tconst contract = hostNullCompleteLaneContract(selectedLane, run.path);\n\t\tconst matches = jobs.filter(job => job.name === contract.jobName);\n\t\tassert.equal(matches.length, 1, contract.jobName);\n",
+          "previous": "\t\tconst matches = jobs.filter(job => job.name === selectedLane.jobName);\n\t\tassert.equal(matches.length, 1, selectedLane.jobName);\n",
+          "start": 4304
+        }
+      ],
+      "path": "scripts/download-host-null-complete-inputs.mjs",
+      "previousSha256": "eaef6afb1b8332f9e9d91e732f20a7429e4f717070dc0163aa3df10a0c0a1f0b"
+    },
+    {
+      "currentSha256": "7174b4ee4d3d138d8bef7011241c1b46c0ad8df4d7979d705b3f75a00adb70d5",
+      "edits": [
+        {
+          "current": "\t, hostNullCompleteFocusedWorkflow\n",
+          "previous": "",
+          "start": 482
+        },
+        {
+          "current": "\t, hostNullCompleteLaneContract\n",
+          "previous": "",
+          "start": 580
+        },
+        {
+          "current": "const makeInputs = async (\n\tmutate = () => {}, workflow = hostNullCompleteWorkflow\n) => {\n",
+          "previous": "const makeInputs = async (mutate = () => {}) => {\n",
+          "start": 1450
+        },
+        {
+          "current": "\t\tconst selectedRun = structuredClone(run);\n\t\tselectedRun.path = workflow;\n\t\tselectedRun.event = workflow === hostNullCompleteFocusedWorkflow\n\t\t\t? \"workflow_dispatch\" : \"push\";\n\t\tconst contract = hostNullCompleteLaneContract(selectedLane, workflow);\n",
+          "previous": "",
+          "start": 1750
+        },
+        {
+          "current": "\t\t\tlane: selectedLane, zip, run: selectedRun\n",
+          "previous": "\t\t\tlane: selectedLane, zip, run: structuredClone(run)\n",
+          "start": 2011
+        },
+        {
+          "current": "\t\t\t\tid: workflow === hostNullCompleteFocusedWorkflow\n\t\t\t\t\t&& selectedLane.id === \"php-wasm\" ? 101 : 100 + index\n\t\t\t\t, run_id: run.id, head_sha: revision\n",
+          "previous": "\t\t\t\tid: 100 + index, run_id: run.id, head_sha: revision\n",
+          "start": 2068
+        },
+        {
+          "current": "\t\t\t\t, name: contract.jobName, labels: [\"ubuntu-24.04\"]\n",
+          "previous": "\t\t\t\t, name: selectedLane.jobName, labels: [\"ubuntu-24.04\"]\n",
+          "start": 2270
+        },
+        {
+          "current": "\t}\n\t);\n",
+          "previous": "\t});\n",
+          "start": 2806
+        },
+        {
+          "current": "test(\"focused HostNull selection accepts seven artifacts from six exact jobs\"\n\t, async t => {\n\tconst root = await makeInputs(() => {}, hostNullCompleteFocusedWorkflow);\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst selected = await inspectHostNullCompleteHostedArtifacts(root, revision);\n\tassert.equal(selected.captures.length, 7);\n\tassert.equal(new Set(selected.captures.map(capture =>\n\t\tcapture.hostedRun.job.id)).size, 6);\n\tassert.ok(selected.captures.every(capture =>\n\t\tcapture.hostedRun.workflow === hostNullCompleteFocusedWorkflow));\n\t}\n);\n\n",
+          "previous": "",
+          "start": 6114
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-hosted-archive-tests.mjs",
+      "previousSha256": "b0b9e237c4d07210fe1e8b34d41e6f614b0d32868f02f3fcdaf422397f746ce7"
+    },
+    {
+      "currentSha256": "224bd1749cf93cb662094f50822f533b1ff0feeff1006efb7482f56a7d2692d7",
+      "edits": [
+        {
+          "current": "export const hostNullCompleteFocusedWorkflow\n\t= \".github/workflows/host-null-complete.yml\";\n",
+          "previous": "",
+          "start": 1047
+        },
+        {
+          "current": "const lane = (\n\tid, profiles, jobName, focusedJobName, artifactPrefix\n) => Object.freeze({\n",
+          "previous": "const lane = (id, profiles, jobName, artifactPrefix) => Object.freeze({\n",
+          "start": 1356
+        },
+        {
+          "current": "\t, jobName, focusedJobName, artifactPrefix\n",
+          "previous": "\t, jobName, artifactPrefix\n",
+          "start": 1522
+        },
+        {
+          "current": "\t], \"Node and browser npm consumers\"\n\t, \"Complete HostNull acceptance / Node and browser producer / reviewed generic Subtypes in Node and browsers\"\n\t, \"host-null-node-browser\")\n\t, lane(\"php-native\", [\"php-native\"], \"Native PHP\"\n\t\t, \"Complete HostNull acceptance / PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm\"\n\t\t, \"host-null-php-native\")\n",
+          "previous": "\t], \"Node and browser npm consumers\", \"host-null-node-browser\")\n\t, lane(\"php-native\", [\"php-native\"], \"Native PHP\", \"host-null-php-native\")\n",
+          "start": 1758
+        },
+        {
+          "current": "\t\t, \"Complete HostNull acceptance / PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm\"\n",
+          "previous": "",
+          "start": 2190
+        },
+        {
+          "current": "\t\t, \"Complete HostNull acceptance / Managed and systems producers / Generic Subtypes in .NET\"\n",
+          "previous": "",
+          "start": 2383
+        },
+        {
+          "current": "\t\t, \"Complete HostNull acceptance / Managed and systems producers / Generic Subtypes in Java and Kotlin\"\n",
+          "previous": "",
+          "start": 2569
+        },
+        {
+          "current": "\t\t, \"Perl / Perl XS (5.38.2-threaded)\"\n\t\t, \"Complete HostNull acceptance / Scripting producer / Ordinary and reviewed generic Subtypes across four Perl ABIs\"\n\t\t, \"host-null-scripting\")\n",
+          "previous": "\t\t, \"Perl / Perl XS (5.38.2-threaded)\", \"host-null-scripting\")\n",
+          "start": 2751
+        },
+        {
+          "current": "\t\t, \"Systems HostNull acceptance\"\n\t\t, \"Complete HostNull acceptance / Managed and systems producers / Generic Subtypes in WIT and WASI components\"\n\t\t, \"host-null-systems\")\n",
+          "previous": "\t\t, \"Systems HostNull acceptance\", \"host-null-systems\")\n",
+          "start": 2988
+        },
+        {
+          "current": "/**\n * Select the exact workflow/job identity for a legacy or focused producer run.\n *\n * @param selectedLane - Closed HostNull artifact lane.\n * @param workflow - Exact GitHub Actions workflow path.\n */\nexport const hostNullCompleteLaneContract = (selectedLane, workflow) => {\n\tassert.ok(hostNullCompleteHostedLanes.includes(selectedLane));\n\tassert.ok([hostNullCompleteWorkflow, hostNullCompleteFocusedWorkflow]\n\t\t.includes(workflow), workflow);\n\treturn Object.freeze({\n\t\tworkflow\n\t\t, jobName: workflow === hostNullCompleteFocusedWorkflow\n\t\t\t? selectedLane.focusedJobName : selectedLane.jobName\n\t\t, artifactPrefix: selectedLane.artifactPrefix\n\t});\n};\n\n",
+          "previous": "",
+          "start": 3165
+        },
+        {
+          "current": "\t\tconst contract = hostNullCompleteLaneContract(selectedLane, run.path);\n",
+          "previous": "",
+          "start": 7588
+        },
+        {
+          "current": "\t\t\t\t...contract\n",
+          "previous": "\t\t\t\tworkflow: selectedLane.workflow, jobName: selectedLane.jobName\n\t\t\t\t, artifactPrefix: selectedLane.artifactPrefix\n",
+          "start": 7745
+        },
+        {
+          "current": "\tconst workflow = captures[0].hostedRun.workflow;\n\tassert.ok(captures.every(item => item.hostedRun.workflow === workflow));\n\tconst uniqueJobs = new Set(captures.map(item => item.hostedRun.job.id));\n\tif(workflow === hostNullCompleteWorkflow)\n\t\tassert.equal(uniqueJobs.size, captures.length\n\t\t\t, \"Legacy HostNull lane jobs must be distinct\");\n\telse\n\t{\n\t\tassert.equal(workflow, hostNullCompleteFocusedWorkflow);\n\t\tassert.equal(uniqueJobs.size, captures.length - 1\n\t\t\t, \"Focused HostNull lanes must use six producer jobs\");\n\t\tconst php = captures.filter(item => [\"php-native\", \"php-wasm\"]\n\t\t\t.includes(item.lane));\n\t\tassert.equal(php.length, 2);\n\t\tassert.equal(php[0].hostedRun.job.id, php[1].hostedRun.job.id\n\t\t\t, \"Focused PHP artifacts must share their exact producer job\");\n\t\tconst otherJobs = captures.filter(item => ![\"php-native\", \"php-wasm\"]\n\t\t\t.includes(item.lane)).map(item => item.hostedRun.job.id);\n\t\tassert.equal(new Set(otherJobs).size, otherJobs.length\n\t\t\t, \"Focused non-PHP lane jobs must be distinct\");\n\t\tassert.ok(!otherJobs.includes(php[0].hostedRun.job.id));\n\t}\n",
+          "previous": "\tassert.equal(new Set(captures.map(item => item.hostedRun.job.id)).size\n\t\t, captures.length, \"HostNull lane jobs must be distinct\");\n",
+          "start": 8258
+        },
+        {
+          "current": "\t, \".github/workflows/host-null-complete.yml\"\n\t, \".github/workflows/generic-subtype-npm-browser.yml\"\n\t, \".github/workflows/generic-subtype-native-perl.yml\"\n\t, \".github/workflows/generic-subtype-managed-wit.yml\"\n\t, \".github/workflows/nominal-subtype-php-wasm.yml\"\n",
+          "previous": "",
+          "start": 18593
+        },
+        {
+          "current": "\t, \"scripts/reconcile-host-null-complete-matrix.mjs\"\n\t, \"tests/helpers/host-null-complete-matrix-receipt.mjs\"\n",
+          "previous": "",
+          "start": 19245
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-hosted-archive.mjs",
+      "previousSha256": "9d8a9825325284ec0d13d426a4799e756d88743b7076822f51724981cfb5c29a"
+    }
+  ]
+}
