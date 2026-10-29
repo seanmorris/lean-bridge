@@ -222,7 +222,35 @@ Each entry needs a new fully qualified `name`, an existing public `declaration` 
 
 The file accepts at most 128 specializations. Names cannot duplicate each other, shadow existing declarations, or refer to another specialization. When `exports` is present, include every configured specialization name. Without `exports`, discovery includes the concrete names and omits their unspecialized source functions; other public functions still need supported signatures.
 
-Missing instances, unresolved types, dependent runtime inputs, effects and admitted implementations stop the build. Analysis loads Lean's built-in class and instance indexes without executing package initializers. The metadata retains the exact compiler application, original declaration, documentation and theorem references. Target compilation must reproduce that metadata before linking. Public `analyze` continues to use the scalar profile; use the CPAN build to check native-only signatures. Specialization emits separately named concrete functions, without generic host-language overload dispatch.
+Missing instances, unresolved types, unsupported dependent runtime inputs, effects and admitted implementations stop the build. Analysis loads Lean's built-in class and instance indexes without executing package initializers. The metadata retains the exact compiler application, original declaration, documentation and theorem references. Target compilation must reproduce that metadata before linking. Public `analyze` continues to use the scalar profile; use the CPAN build to check native-only signatures. Specialization emits separately named concrete functions, without generic host-language overload dispatch.
+
+### Export a direct value-dependent Fin parameter
+
+Lean Bridge supports the direct copied form where an explicit `Fin` parameter
+is indexed by an earlier explicit `Nat` parameter:
+
+```lean
+def mirror (bound : Nat) (value : Fin bound) : Nat :=
+  bound - 1 - value.val
+```
+
+Export the declaration normally. The host API takes two values in that
+profile's ordinary `Nat` representation; callers do not supply a proof. The
+generated adapter decodes both live arguments and rejects `value >= bound`
+before constructing `Fin bound` or entering `mirror`. A changing bound is
+therefore checked on every call rather than frozen into package metadata.
+
+An independently reviewed Binding IR records the second parameter as a
+`fin-parameter` dependency on the first. Fresh Lean metadata must reproduce
+that exact relation. A missing, later, non-`Nat`, forged or otherwise altered
+dependency stops analysis or reconciliation.
+
+The [complete hosted dependent-signature archive](../evidence/dependent-signatures-hosted-20261028/index.json)
+replays this form across all seventeen consumer profiles and both author
+routes, including zero, endpoint, changing and huge bounds, rejection without
+caller mutation, and recovery. This contract does not admit dependent results,
+fields, callbacks, owned values, arbitrary index expressions or open dependent
+structures.
 
 ### Name instantiations of generic structures
 

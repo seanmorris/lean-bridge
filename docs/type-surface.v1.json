@@ -1496047,6 +1496047,145 @@
           "sha256": "8c3a40e0c89590ed4b68db3b9ffbc7182163c6eb7fb82713b899bcb407bfb655"
         }
       ]
+    },
+    {
+      "id": "hosted-dependent-signature-complete",
+      "kind": "installed",
+      "revision": "70652587f69c330ea0feebb7bc4c6da6b20f4f04",
+      "command": "node --test --test-concurrency=1 tests/dependent-signature-complete-hosted-evidence.test.mjs",
+      "scope": "Eleven same-run producer artifacts and their aggregate receipt close the exact direct `(bound : Nat) (value : Fin bound)` dependency across seventeen profiles, ordinary Lean source and independently reviewed Binding IR.",
+      "files": [
+        {
+          "path": ".github/workflows/dependent-signature-complete.yml",
+          "sha256": "d4d6f43b15f73c0659b1a8b20aae2192d973d3b2645bd6b29439eaa1dd7abe7a"
+        },
+        {
+          "path": "docs/evidence/dependent-signatures-hosted-20261028/index.json",
+          "sha256": "adbfdf47685ddc792c95437dee77eba52eddfb7c54d980e31a6219239c71416d"
+        },
+        {
+          "path": "scripts/archive-dependent-signature-hosted.mjs",
+          "sha256": "93fbb19673da98691eabcefadeb9702034f6da56b510f9a0f44c12edec807a18"
+        },
+        {
+          "path": "scripts/download-dependent-signature-hosted-inputs.mjs",
+          "sha256": "07968c80a715916fb01a791f743ac57d20ec30ecf0236de031defd32a57f86e1"
+        },
+        {
+          "path": "scripts/generate-reference-docs.mjs",
+          "sha256": "b690854ece6e2042f890a6aa80b94a63830dc2ee0c6aba9b8f3fdd5659412a83"
+        },
+        {
+          "path": "scripts/generate-type-docs.mjs",
+          "sha256": "a63a20974d519554c073ab4b13653d8c887398de23de5bc31c4a691ca080f61f"
+        },
+        {
+          "path": "scripts/promote-dependent-signature-complete.mjs",
+          "sha256": "18b7f0e56251cef0a77b7b266b2bc87698e59b91bf0262943fb2f3daf72f8db9"
+        },
+        {
+          "path": "tests/helpers/dependent-signature-complete-ci-tests.mjs",
+          "sha256": "9a73239d9cc50d945992c29bf783bf6645edeca9a9af09780593ead56b59f3da"
+        },
+        {
+          "path": "tests/helpers/dependent-signature-complete-documentation.mjs",
+          "sha256": "91db88c16e525a8cd388314c7b1c27c862aaf6a96a48c200d0d5d462ebfee343"
+        },
+        {
+          "path": "tests/helpers/dependent-signature-complete-documentation-tests.mjs",
+          "sha256": "ce9a1bf02762a282ad310555390e63c1aa07a036663d51f67dd0f5dadc333f30"
+        },
+        {
+          "path": "tests/helpers/dependent-signature-complete-promotion.mjs",
+          "sha256": "f4b34ecf9159deada139d3899c6a6b7bc9590b9bc56b3015093b5f0906479743"
+        },
+        {
+          "path": "tests/helpers/dependent-signature-complete-promotion-tests.mjs",
+          "sha256": "b72280abe0684ac2204caa2ac55caab8999852bf79f9e6420960bb2f0902e0d9"
+        },
+        {
+          "path": "tests/helpers/dependent-signature-complete-promotion-transaction-tests.mjs",
+          "sha256": "46008058f44432683c85e92b46a5a951c41170dd13fc762a2f43a06165c49174"
+        },
+        {
+          "path": "tests/helpers/dependent-signature-hosted-archive.mjs",
+          "sha256": "cbf838d0fa622c9827f0c74cb0d6e257e360a8f6a888815b7fa857453fcad0ac"
+        },
+        {
+          "path": "tests/helpers/dependent-signature-hosted-evidence.mjs",
+          "sha256": "757e36ca3527eda6eb727e5a11f8484ca159e72bb7164418c5a6ce6fcc02d05e"
+        },
+        {
+          "path": "tests/helpers/dependent-signature-hosted-tests.mjs",
+          "sha256": "8b00bee7609f25b90c042a91e12ec9ce9b838bf00569ea553e8a38e61eb8bfa5"
+        },
+        {
+          "path": "tests/dependent-signature-complete-hosted-evidence.test.mjs",
+          "sha256": "a57e6e6abfaf72442f129b249448c217f06770828d259331569040f9da32f7e9"
+        },
+        {
+          "path": "tests/dependent-signature-complete-promotion.test.mjs",
+          "sha256": "96d08bafdbb67b49dacecb2e0c29203bb35494e45f66aa25c874aa0835c21bda"
+        },
+        {
+          "path": "tests/helpers/promotion-file-transaction.mjs",
+          "sha256": "00181a5537d811a32ed39ff61093356b7f9af72a774026c3860e70b551a2df72"
+        },
+        {
+          "path": "tests/helpers/type-surface-promotion-io.mjs",
+          "sha256": "9bae6b22f1a875e1771887e8fc127a8631d9e477462d391b2db73c750e7c2d1a"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-browser-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "fa7b8699f215570f773a22088e9b2b53ba6584c0428b90d3e840f606a9c10806"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-native-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "3ac60e106b4a51b57b89592d47ac615993568a2330c10572f8843d5ab5b6c938"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-perl-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "590599dfc152a41df409535b60f677b7e7d52cf04901ee627af0a317a4dbd948"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-python-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "885b596ccec3681c33f42eeec909b7429341121ed2d7dd80ff325ada935c213c"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-rust-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "dadff39203868d02acbaf80dde6620609a7576a0110e3c935073b3ed20e50c8e"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-dotnet-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "adfe1a6d97d196b1d71c3d9f05ac65fad52a9642c554195735c0ded1b351ad42"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-jvm-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "89ea12007863c668bfa15713c16e003248d8622c1f9e95872b7cbdb5f535358a"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-ruby-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "fe3a965ba9375693346526f6790d858525ed45ca700a4fd15eeab26a5c60bedb"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-php-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "960f3de7a6623df96ae6dff838373adfa7cd0cefac084222cbe962a7ca49c025"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-php-wasm-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "eca68e16e8d58c692b3a28fc9201d5a234aec6e45fbf6d9bacc82a5b7eb14f4a"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-checked-record-wit-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "98911028486755595af72b138c311cddf9cf549bf5b38ed44f8f2995b0844fd2"
+        },
+        {
+          "path": "hosted-dependent-signature-complete/dependent-signature-matrix-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip",
+          "sha256": "30aedce7f83175e9cb21c8a057ff0968e32997cda75bbe1a3c7b8254fb3e2a95"
+        }
+      ]
     }
   ],
   "observations": [
@@ -1556080,6 +1556219,172 @@
       ],
       "conversionNotes": {
         "optional-parameter": "Omit the argument to select the authenticated Lean default. Supplying the default explicitly remains a supplied value; Option.none, Unit and explicit host null keep their own representations and validation."
+      }
+    },
+    {
+      "id": "dependent-signature-complete-ordinary-source-hosted-installed",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker",
+        "c",
+        "cpp",
+        "perl",
+        "python",
+        "rust",
+        "dotnet",
+        "java",
+        "kotlin",
+        "ruby",
+        "php-native",
+        "php-wasm",
+        "wit-wasi"
+      ],
+      "shapes": [
+        "dependent"
+      ],
+      "positions": [
+        "signature"
+      ],
+      "path": "ordinary-source",
+      "scope": "Compiler-authenticated Lean source packages preserve an explicit Fin payload's dependency on an earlier explicit Nat parameter.",
+      "hostTypes": {
+        "dependent": {
+          "signature": "the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-dependent-signature-complete"
+          ],
+          "note": "Fresh Lean metadata authenticates Fin over an exact earlier explicit Nat parameter; independently reviewed Binding IR must reproduce the same parameter dependency."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-dependent-signature-complete"
+          ],
+          "note": "Generated public APIs expose the bound and payload through the profile's ordinary Nat representation and retain the live earlier-parameter relation."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-dependent-signature-complete"
+          ],
+          "note": "The copied adapter compares the decoded payload with the decoded earlier bound before constructing Fin or entering the exported Lean declaration."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-dependent-signature-complete"
+          ],
+          "note": "Both author routes produce reproducible source-free packages that install offline, relocate, and preserve the exact dependency metadata."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-dependent-signature-complete"
+          ],
+          "note": "Installed consumers exercise zero, exact endpoints, changing and huge bounds, rejection without caller mutation, and recovery through public host APIs."
+        }
+      },
+      "limitations": [
+        "The eleven same-run producer artifacts establish all thirty-four direct dependent-signature cells: seventeen supported profiles across ordinary Lean source and independently reviewed Binding IR.",
+        "Every installed package checks a concrete Fin value against the live earlier Nat argument before entering Lean, exercises rejected endpoints and huge values, preserves caller data, and recovers for later calls.",
+        "The same-run receipt authenticates all forty-four independent checker summaries across eleven lanes, two author routes and full and result-only public APIs.",
+        "The native, managed, dynamic-language, browser, WIT/WASI and four-ABI Perl lanes use reproducible source-free package handoffs and public host APIs.",
+        "The archive retains all twelve complete original GitHub artifact ZIPs, API identities, job logs, canonical summaries and exact producer, checker and archiver source closures. External toolchains, runners, browsers and operating-system packages remain trusted recorded inputs.",
+        "Promotion is limited to a direct copied Fin parameter whose index is an exact earlier explicit Nat parameter. Dependent results, fields, callbacks, owned values, arbitrary index expressions, later parameters and non-Nat bounds remain outside this evidence."
+      ],
+      "conversionNotes": {
+        "dependent": "Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary."
+      }
+    },
+    {
+      "id": "dependent-signature-complete-reviewed-ir-hosted-installed",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker",
+        "c",
+        "cpp",
+        "perl",
+        "python",
+        "rust",
+        "dotnet",
+        "java",
+        "kotlin",
+        "ruby",
+        "php-native",
+        "php-wasm",
+        "wit-wasi"
+      ],
+      "shapes": [
+        "dependent"
+      ],
+      "positions": [
+        "signature"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Independently reviewed Binding IR packages preserve an explicit Fin payload's dependency on an earlier explicit Nat parameter.",
+      "hostTypes": {
+        "dependent": {
+          "signature": "the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-dependent-signature-complete"
+          ],
+          "note": "Fresh Lean metadata authenticates Fin over an exact earlier explicit Nat parameter; independently reviewed Binding IR must reproduce the same parameter dependency."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-dependent-signature-complete"
+          ],
+          "note": "Generated public APIs expose the bound and payload through the profile's ordinary Nat representation and retain the live earlier-parameter relation."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-dependent-signature-complete"
+          ],
+          "note": "The copied adapter compares the decoded payload with the decoded earlier bound before constructing Fin or entering the exported Lean declaration."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-dependent-signature-complete"
+          ],
+          "note": "Both author routes produce reproducible source-free packages that install offline, relocate, and preserve the exact dependency metadata."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-dependent-signature-complete"
+          ],
+          "note": "Installed consumers exercise zero, exact endpoints, changing and huge bounds, rejection without caller mutation, and recovery through public host APIs."
+        }
+      },
+      "limitations": [
+        "The eleven same-run producer artifacts establish all thirty-four direct dependent-signature cells: seventeen supported profiles across ordinary Lean source and independently reviewed Binding IR.",
+        "Every installed package checks a concrete Fin value against the live earlier Nat argument before entering Lean, exercises rejected endpoints and huge values, preserves caller data, and recovers for later calls.",
+        "The same-run receipt authenticates all forty-four independent checker summaries across eleven lanes, two author routes and full and result-only public APIs.",
+        "The native, managed, dynamic-language, browser, WIT/WASI and four-ABI Perl lanes use reproducible source-free package handoffs and public host APIs.",
+        "The archive retains all twelve complete original GitHub artifact ZIPs, API identities, job logs, canonical summaries and exact producer, checker and archiver source closures. External toolchains, runners, browsers and operating-system packages remain trusted recorded inputs.",
+        "Promotion is limited to a direct copied Fin parameter whose index is an exact earlier explicit Nat parameter. Dependent results, fields, callbacks, owned values, arbitrary index expressions, later parameters and non-Nat bounds remain outside this evidence."
+      ],
+      "conversionNotes": {
+        "dependent": "Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary."
       }
     }
   ]
