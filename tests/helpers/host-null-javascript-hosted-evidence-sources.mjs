@@ -65,7 +65,8 @@ export const hostNullJavaScriptHostedEvidenceSources = value => {
 		, {
 			role: "checker", revision: value.checker
 			, paths: closure(value.checker, [
-				"tests/helpers/host-null-javascript-hosted-report.mjs"
+				"tests/helpers/host-null-javascript-browser-evidence.mjs"
+				, "tests/helpers/host-null-javascript-hosted-report.mjs"
 				, "tests/host-null-javascript-hosted-report.test.mjs"
 			])
 		}
