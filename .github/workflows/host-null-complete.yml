@@ -71,6 +71,30 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+            /docs/evidence/host-null-complete-*/
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -111,21 +135,24 @@ jobs:
 
   native-perl:
     name: Scripting producer
-    if: inputs.suite == 'produce'
+    needs: npm-browser
+    if: always() && inputs.suite == 'produce'
     uses: ./.github/workflows/generic-subtype-native-perl.yml
     with:
       host_null: true
 
   managed-wit:
     name: Managed and systems producers
-    if: inputs.suite == 'produce'
+    needs: native-perl
+    if: always() && inputs.suite == 'produce'
     uses: ./.github/workflows/generic-subtype-managed-wit.yml
     with:
       host_null: true
 
   php:
     name: PHP and PHP-Wasm producer
-    if: inputs.suite == 'produce'
+    needs: managed-wit
+    if: always() && inputs.suite == 'produce'
     uses: ./.github/workflows/nominal-subtype-php-wasm.yml
     with:
       host_null: true
@@ -146,6 +173,29 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:

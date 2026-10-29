@@ -9,6 +9,17 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const workflowPath = ".github/workflows/direct-proof-erasure-complete.yml";
+const producerDependencies = new Map([
+	["native-perl", "npm-browser"], ["languages", "native-perl"]
+	, ["managed-wit", "languages"], ["php", "managed-wit"]
+]);
+const sparseSourcePatterns = Object.freeze([
+	"/*", "!/*/", "/.github/", "/acceptance/", "/config/", "/containers/"
+	, "/demos/", "/nix/", "/notices/", "/patches/", "/poc/", "/schema/"
+	, "/scripts/", "/site/", "/src/", "/tests/", "/docs/"
+	, "!/docs/evidence/*", "/docs/evidence/*.json"
+	, "/docs/evidence/*.md", "/docs/evidence/*.xml"
+]);
 const requiredInputs = Object.freeze([
 	workflowPath
 	, "docs/consume/**"
@@ -89,6 +100,14 @@ const assertFocusedProducer = (source, specification) => {
 	}
 };
 
+const sparseCheckoutPatterns = source => {
+	assert.equal(source.split("          sparse-checkout: |\n").length - 1, 1);
+	assert.match(source, /sparse-checkout-cone-mode: false/u);
+	return source.split("          sparse-checkout: |\n")[1]
+		.split("          sparse-checkout-cone-mode: false\n")[0]
+		.trim().split("\n").map(line => line.trim());
+};
+
 /**
  * Assert the complete proof-erasure workflow contract.
  *
@@ -114,6 +133,9 @@ export const assertDirectProofErasureCompleteWorkflow = source => {
 	assert.match(source, /set -o pipefail\n {10}node --test --test-concurrency=1 \\\n {12}tests\/direct-proof-erasure-complete-promotion\.test\.mjs \\\n {12}\| tee build\/direct-proof-erasure-complete\/promotion\.tap/u);
 	const audit = source.slice(source.indexOf("  audit:\n")
 		, source.indexOf("  npm-browser:\n"));
+	assert.deepEqual(sparseCheckoutPatterns(audit), [
+		...sparseSourcePatterns, "/docs/evidence/direct-proof-erasure-hosted-*/"
+	]);
 	assert.match(audit, /^ {4}if: inputs\.suite != 'produce'$/mu);
 	assert.match(audit, /if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
 	assert.match(audit, /if-no-files-found: error/u);
@@ -131,11 +153,23 @@ export const assertDirectProofErasureCompleteWorkflow = source => {
 			.filter(index => index > start);
 		const body = source.slice(start
 			, ends.length === 0 ? undefined : Math.min(...ends));
-		assert.match(body, /^ {4}if: inputs\.suite == 'produce'$/mu);
+		const dependency = producerDependencies.get(job);
+		if(dependency === undefined)
+		{
+			assert.doesNotMatch(body, /^ {4}needs:/mu, job);
+			assert.match(body, /^ {4}if: inputs\.suite == 'produce'$/mu, job);
+		}
+		else
+		{
+			assert.match(body, new RegExp(`^    needs: ${dependency}$`, "mu"), job);
+			assert.match(body
+				, /^ {4}if: always\(\) && inputs\.suite == 'produce'$/mu, job);
+		}
 		assert.ok(body.includes(`uses: ./.github/workflows/${workflow}.yml`));
 		assert.ok(body.includes("direct_proof_erasure: true"));
 	}
 	const receipt = source.slice(source.indexOf("  receipt:\n"));
+	assert.deepEqual(sparseCheckoutPatterns(receipt), sparseSourcePatterns);
 	assert.match(receipt
 		, /^ {4}if: always\(\) && inputs\.suite == 'produce'$/mu);
 	assert.match(receipt
@@ -175,6 +209,12 @@ test("complete proof-erasure replay rejects missing inputs and bypasses", async 
 		, source.replace("if-no-files-found: error", "if-no-files-found: ignore")
 		, source.replace("          - produce\n", "")
 		, source.replace("direct_proof_erasure: true", "direct_proof_erasure: false")
+		, source.replace("            !/docs/evidence/*\n", "")
+		, source.replace(
+			"            /docs/evidence/direct-proof-erasure-hosted-*/\n", "")
+		, source.replace("    needs: npm-browser\n", "")
+		, source.replace("    if: always() && inputs.suite == 'produce'\n"
+			, "    if: inputs.suite == 'produce'\n")
 		, source.replace("steps.reconciliation.outcome != 'success'", "false")
 		, source.replace("    timeout-minutes: 90\n"
 			, "    continue-on-error: true\n    timeout-minutes: 90\n")

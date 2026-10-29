@@ -9,6 +9,17 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const workflowPath = ".github/workflows/host-null-complete.yml";
+const producerDependencies = new Map([
+	["native-perl", "npm-browser"], ["managed-wit", "native-perl"]
+	, ["php", "managed-wit"]
+]);
+const sparseSourcePatterns = Object.freeze([
+	"/*", "!/*/", "/.github/", "/acceptance/", "/config/", "/containers/"
+	, "/demos/", "/nix/", "/notices/", "/patches/", "/poc/", "/schema/"
+	, "/scripts/", "/site/", "/src/", "/tests/", "/docs/"
+	, "!/docs/evidence/*", "/docs/evidence/*.json"
+	, "/docs/evidence/*.md", "/docs/evidence/*.xml"
+]);
 const requiredInputs = Object.freeze([
 	workflowPath
 	, "docs/consume/**"
@@ -76,6 +87,14 @@ const assertFocusedProducer = (source, specification) => {
 	}
 };
 
+const sparseCheckoutPatterns = source => {
+	assert.equal(source.split("          sparse-checkout: |\n").length - 1, 1);
+	assert.match(source, /sparse-checkout-cone-mode: false/u);
+	return source.split("          sparse-checkout: |\n")[1]
+		.split("          sparse-checkout-cone-mode: false\n")[0]
+		.trim().split("\n").map(line => line.trim());
+};
+
 const assertHostNullCompleteWorkflow = source => {
 	assert.equal(typeof source, "string");
 	const keys = [...source.matchAll(/^ {2}([a-z][a-z0-9_-]*):\n/gmu)]
@@ -95,6 +114,9 @@ const assertHostNullCompleteWorkflow = source => {
 	assert.match(source, /set -o pipefail\n {10}node --test --test-concurrency=1 \\\n {12}tests\/host-null-complete-promotion\.test\.mjs \\\n {12}\| tee build\/host-null-complete\/promotion\.tap/u);
 	const audit = source.slice(source.indexOf("  audit:\n")
 		, source.indexOf("  npm-browser:\n"));
+	assert.deepEqual(sparseCheckoutPatterns(audit), [
+		...sparseSourcePatterns, "/docs/evidence/host-null-complete-*/"
+	]);
 	assert.match(audit, /^ {4}if: inputs\.suite != 'produce'$/mu);
 	assert.match(audit, /if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
 	assert.match(audit, /if-no-files-found: error/u);
@@ -111,11 +133,23 @@ const assertHostNullCompleteWorkflow = source => {
 			.filter(index => index > start);
 		const body = source.slice(start
 			, ends.length === 0 ? undefined : Math.min(...ends));
-		assert.match(body, /^ {4}if: inputs\.suite == 'produce'$/mu);
+		const dependency = producerDependencies.get(job);
+		if(dependency === undefined)
+		{
+			assert.doesNotMatch(body, /^ {4}needs:/mu, job);
+			assert.match(body, /^ {4}if: inputs\.suite == 'produce'$/mu, job);
+		}
+		else
+		{
+			assert.match(body, new RegExp(`^    needs: ${dependency}$`, "mu"), job);
+			assert.match(body
+				, /^ {4}if: always\(\) && inputs\.suite == 'produce'$/mu, job);
+		}
 		assert.ok(body.includes(`uses: ./.github/workflows/${workflow}.yml`));
 		assert.ok(body.includes("host_null: true"));
 	}
 	const receipt = source.slice(source.indexOf("  receipt:\n"));
+	assert.deepEqual(sparseCheckoutPatterns(receipt), sparseSourcePatterns);
 	assert.match(receipt
 		, /^ {4}if: always\(\) && inputs\.suite == 'produce'$/mu);
 	assert.match(receipt, /pattern: host-null-\*-\$\{\{ github\.sha \}\}/u);
@@ -153,6 +187,11 @@ test("complete HostNull replay rejects missing inputs and bypasses", async () =>
 		, source.replace("if-no-files-found: error", "if-no-files-found: ignore")
 		, source.replace("          - produce\n", "")
 		, source.replace("host_null: true", "host_null: false")
+		, source.replace("            !/docs/evidence/*\n", "")
+		, source.replace("            /docs/evidence/host-null-complete-*/\n", "")
+		, source.replace("    needs: npm-browser\n", "")
+		, source.replace("    if: always() && inputs.suite == 'produce'\n"
+			, "    if: inputs.suite == 'produce'\n")
 		, source.replace("steps.reconciliation.outcome != 'success'", "false")
 		, source.replace("    timeout-minutes: 90\n"
 			, "    continue-on-error: true\n    timeout-minutes: 90\n")
