@@ -19,6 +19,8 @@ import {
 	, optionalParameterFocusedCiPredecessor
 	, reverseOptionalParameterFocusedCiUpdate
 } from "./optional-parameter-focused-ci-source-history.mjs";
+import { beforeOptionalParameterDispatchBridgeSource }
+	from "./optional-parameter-dispatch-bridge-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -76,7 +78,8 @@ test("focused optional CI registration is exactly reversible", async () => {
 		, [...optionalParameterFocusedCiIntegrationPaths]);
 	for(const update of value.integrationUpdates)
 	{
-		const live = await readFile(update.path, "utf8");
+		const live = beforeOptionalParameterDispatchBridgeSource(update.path
+			, await readFile(update.path, "utf8"));
 		const implementation = git(["show"
 			, `${optionalParameterFocusedCiImplementation}:${update.path}`]);
 		assert.equal(reverseOptionalParameterFocusedCiUpdate(live, update)
@@ -90,7 +93,9 @@ test("focused optional CI changes only existing live-source hashes", async () =>
 	assert.deepEqual(value.currentSourceDigests.map(item => item.path)
 		, value.currentSourcePaths);
 	for(const item of value.currentSourceDigests)
-		assert.equal(sha256(await readFile(item.path)), item.sha256, item.path);
+		assert.equal(sha256(beforeOptionalParameterDispatchBridgeSource(item.path
+			, await readFile(item.path, "utf8"), item.sha256))
+			, item.sha256, item.path);
 	const inventory = value.integrationUpdates.find(item =>
 		item.path === "docs/type-surface.v1.json");
 	let pins = 0;
@@ -112,8 +117,9 @@ test("focused optional CI authenticates every history control", async () => {
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${optionalParameterFocusedCiImplementation}:${addition.path}`]
 		, { stdio: "ignore" }).status, 0, addition.path);
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.sha256, addition.path);
+		assert.equal(sha256(beforeOptionalParameterDispatchBridgeSource(
+			addition.path, await readFile(addition.path, "utf8")
+			, addition.sha256)), addition.sha256, addition.path);
 	}
 	for(const path of [
 		...optionalParameterFocusedCiImplementationPaths
@@ -126,7 +132,8 @@ test("focused optional CI normalizes current sources to the predecessor", async 
 	const value = await record();
 	for(const update of value.updates)
 	{
-		const live = await readFile(update.path, "utf8");
+		const live = beforeOptionalParameterDispatchBridgeSource(update.path
+			, await readFile(update.path, "utf8"));
 		const previous = beforeOptionalParameterFocusedCiSource(
 			update.path, live, update.previousSha256);
 		assert.equal(sha256(previous), update.previousSha256, update.path);
