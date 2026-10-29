@@ -416,6 +416,7 @@ export const hostNullCompleteHostedSources = revisions => {
 	]);
 	const archiverPaths = moduleClosure(revisions.archiver, [
 		"scripts/archive-host-null-complete-evidence.mjs"
+		, "scripts/download-host-null-complete-inputs.mjs"
 	]);
 	const roles = [
 		["producer", revisions.producer, [
