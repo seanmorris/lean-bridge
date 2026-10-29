@@ -66,6 +66,8 @@ test("installed native PHP HostNull preserves all five positions on both author 
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff), pkg = receipt.packages.find(item => item.role === "component");
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
+		if(process.env.LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR)
+			await cp(handoff, join(resolve(process.env.LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR), path), { recursive: true });
 		await rm(author, { recursive: true, force: true });
 		t.diagnostic(`${path}: installing offline, deleting handoff, relocating, and repeating weak/strict callers`);
 		const installed = await installedPhpCorpus({ library: { phpModule: "LeanHostNullDemo" }

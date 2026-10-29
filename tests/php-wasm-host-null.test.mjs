@@ -66,6 +66,8 @@ test("installed PHP-Wasm HostNull preserves all five positions in Node and Chrom
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
+		if(process.env.LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR)
+			await cp(handoff, join(resolve(process.env.LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR), path), { recursive: true });
 		const packageSet = JSON.parse(await readFile(join(outputRoot, "packages/php-wasm/php-wasm-package-set.json")));
 		await rm(author, { recursive: true, force: true });
 		t.diagnostic(`${path}: installing offline npm/Composer packages, deleting handoff, relocating, and repeating Node/Chromium callers`);
