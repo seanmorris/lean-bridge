@@ -213,6 +213,16 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd
       - name: Install only the pinned Lean compiler
         run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Install Python for scripting HostNull acceptance
+        if: matrix.configuration == '5.38.2-threaded'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11.16'
+      - name: Install Ruby for scripting HostNull acceptance
+        if: matrix.configuration == '5.38.2-threaded'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
       - name: Restore this checksummed Perl toolchain
         uses: actions/cache@v4
         with:
@@ -236,6 +246,25 @@ jobs:
         with:
           name: direct-proof-erasure-language-perl-${{ github.sha }}
           path: build/direct-proof-erasure-language-ci/perl/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Qualify HostNull in prepared scripting packages
+        if: matrix.configuration == '5.38.2-threaded'
+        id: host_null_scripting
+        continue-on-error: true
+        timeout-minutes: 100
+        env:
+          HOST_NULL_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: |
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$HOST_NULL_PERL_CONFIGURATION/bin/perl"
+          bash scripts/run-host-null-scripting-ci.sh
+      - name: Preserve HostNull scripting acceptance
+        if: always() && matrix.configuration == '5.38.2-threaded'
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-scripting-${{ github.sha }}
+          path: build/host-null-scripting-ci/
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -419,6 +448,9 @@ jobs:
           overwrite: true
       - name: Enforce direct proof-erasure Perl support
         if: always() && matrix.configuration == '5.38.2-threaded' && steps.direct_proof_language.outcome != 'success'
+        run: exit 1
+      - name: Enforce scripting HostNull support
+        if: always() && matrix.configuration == '5.38.2-threaded' && steps.host_null_scripting.outcome != 'success'
         run: exit 1
 
   perl-receivers:
