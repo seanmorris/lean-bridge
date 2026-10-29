@@ -16,23 +16,14 @@ import {
 	, optionalParameterComponentFactKeys, optionalParameterNativeRecordNames
 	, optionalParameterTargetConfiguration
 } from "./optional-parameter-packages.mjs";
+import { optionalParameterWitPatterns }
+	from "./optional-parameter-installed-contract.mjs";
 
 const factKeys = [
 	"archives", ...optionalParameterComponentFactKeys
 	, "packageSetReceiptSha256"
 ];
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
-const witPatterns = Object.freeze([
-	/word: func\(value0: u32\) -> u32;/u
-	, /word-default: func\(\) -> u32;/u
-	, /natural-default: func\(\) -> bridge-value-/u
-	, /text-default: func\(\) -> string;/u
-	, /character-default: func\(\) -> char;/u
-	, /maybe-default: func\(\) -> bridge-value-/u
-	, /present-default: func\(\) -> bridge-value-/u
-	, /unit-value-default: func\(\) -> bridge-value-/u
-]);
-
 /**
  * Validate one complete ordinary or reviewed WIT report.
  *
@@ -125,6 +116,7 @@ export const checkOptionalParameterWitRecords = async (read, options) => {
 	};
 	const report = await json("report.json");
 	const result = validateOptionalParameterWitReport(report, options);
+	const witPatterns = optionalParameterWitPatterns(options.route);
 	const expectedConfiguration = {
 		schemaVersion: 1, modules: [optionalParameterModule]
 		, ...options.route === "ordinary"

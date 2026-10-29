@@ -16,6 +16,15 @@ test("optional WIT runner owns both routes and its checker", async () => {
 	assert.match(source, /LEAN_BRIDGE_OPTIONAL_PARAMETER_WIT_TEST=1/u);
 });
 
+test("optional WIT report checks the exact route binder", async () => {
+	const source = await readFile(
+		"tests/helpers/optional-parameter-wit-report.mjs", "utf8");
+	assert.match(source
+		, /optionalParameterWitPatterns\(options\.route\)/u);
+	assert.doesNotMatch(source
+		, /const witPatterns = Object\.freeze/u);
+});
+
 test("consumer workflow retains and enforces optional WIT evidence", async () => {
 	const source = await readFile(
 		".github/workflows/consumer-matrix.yml", "utf8");
