@@ -88,7 +88,7 @@ for(const route of routes) test(
 			});
 			const before = await lakeInputState(prepared.projectRoot);
 			const outputRoot = join(prepared.directory, "release");
-			const built = await buildCanonicalProject({
+			await buildCanonicalProject({
 				projectRoot: prepared.projectRoot, outputRoot
 				, targets: optionalParameterPhpProfiles, environment
 			}).catch(error => {
@@ -109,7 +109,6 @@ for(const route of routes) test(
 				.sort(([left], [right]) => left.localeCompare(right)));
 			const fact = {
 				...optionalParameterPhpComponentFact(components)
-				, bindingIrSha256: built.bindingIrSha256
 				, packageSetReceiptSha256: sha256(receiptBytes), archives
 			};
 			await retainOptionalParameterPhpComponents(

@@ -39,3 +39,14 @@ test("optional PHP-Wasm uses an exact small-fixture check count", async () => {
 	assert.match(helper
 		, /fixture\.expectedChecks === undefined\) assert\.ok\(expectedChecks >= 1000\)/u);
 });
+
+test("optional PHP evidence keeps the authenticated component identity"
+	, async () => {
+		const source = await readFile(
+			"tests/optional-parameter-php-installed.test.mjs", "utf8");
+		assert.match(source
+			, /\.\.\.optionalParameterPhpComponentFact\(components\)/u);
+		assert.doesNotMatch(source
+			, /bindingIrSha256: built\.bindingIrSha256/u);
+	}
+);
