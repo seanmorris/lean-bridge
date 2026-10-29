@@ -1,0 +1,98 @@
+{
+  "currentSourcePaths": [],
+  "failedJob": 123414069215,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-wit-identity-repair-source-history.mjs",
+      "sha256": "63e38aab953d2949c691701d73805f9c125ed02e261c7158c9be162ea54d75fa"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-wit-identity-repair-source-history-tests.mjs",
+      "sha256": "85af6743bc5c046dc187eb9d19794e07cfbfb56545de956d8b1bd1443eb0ef02"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-wit-identity-repair-source-history.mjs",
+      "sha256": "83f819edc4f6a7b41fed4778ecc45a5005cf4a26797a49907f1f06eae217cac7"
+    }
+  ],
+  "hostedRun": 40864016726,
+  "implementationAdditions": [],
+  "implementationCommit": "a1043f127a6f3dd9d6d5443e36398c8bb4e4424a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "33d50ebb6ced71ee7d8550fd0b09c86c6dedf12c265e352d38ece80174949a8e",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-wit-identity-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "857087a3a5b932c35abf7414ba953261d917727f7a8dec569f93e45b6a93f23a"
+    },
+    {
+      "currentSha256": "fd59336f648fdd08cfc3ef015d6e85604c229c7ccbf80908cbb41aa73720c7a0",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterWitIdentityRepairSource, optionalParameterWitIdentityRepairNormalizationPaths } from \"./optional-parameter-wit-identity-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterWitIdentityRepairNormalizationPaths\n\t, ...focusedProducerEfficiencyNormalizationPaths\n",
+          "previous": "\t...focusedProducerEfficiencyNormalizationPaths\n",
+          "start": 219735
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterWitIdentityRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeFocusedProducerEfficiencySource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeFocusedProducerEfficiencySource(path, text, expected);\n",
+          "start": 275027
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e265cc3c0a102700ba1661dddbe5e92bc04c7d7a597a2522632d3d47fd5b602d"
+    },
+    {
+      "currentSha256": "4888846b0d93622fbfce8230a6c5fea68104ef6f034859ca84ffe7d1407e1212",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 789
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2730
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.sha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 3590
+        }
+      ],
+      "path": "tests/helpers/focused-producer-efficiency-source-history-tests.mjs",
+      "previousSha256": "b14b8073574ddf5f813e83d18951d87ed624ac21d3012963eb8bbd733f33b1d9"
+    }
+  ],
+  "milestone": "optional-parameter-wit-identity-repair-source-v1",
+  "predecessorCommit": "d73a83612d4ecd0f1f0f0ead15b343f45d4e9e5f",
+  "refreshedPins": 0,
+  "schemaVersion": 1,
+  "scope": "Read retained WIT evidence from the authenticated published package identity while preserving the distinct Lean module prefix used by generated Wasmtime headers. The package remains closed against its archive receipt and relocation is still exercised before evidence retention.",
+  "updates": [
+    {
+      "currentSha256": "a366d84587f8113dcdc92d09df1080603a405f92f2e18fda3ada97afe1bebfc1",
+      "edits": [
+        {
+          "current": "\t\tconst wit = await readFile(\n\t\t\tjoin(installedRoot, `wit/${pkg.name}.wit`));\n",
+          "previous": "\t\tconst wit = await readFile(join(installedRoot, \"wit/defaults.wit\"));\n",
+          "start": 6670
+        }
+      ],
+      "path": "tests/optional-parameter-wit-installed.test.mjs",
+      "previousSha256": "8a0235566cb0ecd1ef46f0fd0039418633eb83725d265f3fd0aca32e1026b3ba"
+    }
+  ]
+}

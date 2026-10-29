@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOptionalParameterWitIdentityRepairSource, optionalParameterWitIdentityRepairNormalizationPaths } from "./optional-parameter-wit-identity-repair-source-history.mjs";
 import { beforeFocusedProducerEfficiencySource, focusedProducerEfficiencyNormalizationPaths } from "./focused-producer-efficiency-source-history.mjs";
 import { beforeOptionalParameterRouteBinderRepairSource, optionalParameterRouteBinderRepairNormalizationPaths } from "./optional-parameter-route-binder-repair-source-history.mjs";
 import { beforeOptionalParameterPerlUnicodeDefaultRepairSource, optionalParameterPerlUnicodeDefaultRepairNormalizationPaths } from "./optional-parameter-perl-unicode-default-repair-source-history.mjs";
@@ -2384,7 +2385,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...focusedProducerEfficiencyNormalizationPaths
+	...optionalParameterWitIdentityRepairNormalizationPaths
+	, ...focusedProducerEfficiencyNormalizationPaths
 	, ...optionalParameterRouteBinderRepairNormalizationPaths
 	, ...optionalParameterPerlUnicodeDefaultRepairNormalizationPaths
 	, ...optionalParameterInstalledAcceptanceRepairNormalizationPaths
@@ -3507,7 +3509,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeFocusedProducerEfficiencySource(path, text, expected);
+	let stage = beforeOptionalParameterWitIdentityRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeFocusedProducerEfficiencySource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

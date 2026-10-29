@@ -20,6 +20,8 @@ import {
 } from "./focused-producer-efficiency-source-history.mjs";
 import { beforeFinRefinementSource }
 	from "./fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -63,7 +65,8 @@ test("focused producer efficiency reverses implementation and registration"
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		const previous = git(["show"
 			, `${focusedProducerEfficiencyImplementation}:${update.path}`]);
 		assert.equal(reverseFocusedProducerEfficiencyUpdate(current, update)
@@ -83,7 +86,8 @@ test("focused producer efficiency authenticates additions and semantics"
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${focusedProducerEfficiencyImplementation}:${addition.path}`]
 		, { stdio: "ignore" }).status, 0);
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.sha256))
 			, addition.sha256, addition.path);
 	}
 	for(const path of [
