@@ -114,7 +114,11 @@ export const optionalParameterPythonPatterns = route => {
  * @param route - Ordinary or independently reviewed authoring route.
  */
 export const optionalParameterRubyPatterns = route => {
-	const argument = routeBinder(route);
+	// Ruby exposes positional arguments under stable generated names.  The
+	// reviewed route retains its source binder in the IR, but the generated gem
+	// deliberately normalizes both routes to arg0.
+	routeBinder(route);
+	const argument = "arg0";
 	return Object.freeze([
 		new RegExp(`def word\\(${argument} = 7\\)`, "u")
 		, new RegExp(`def present\\(${argument} = Some\\.new\\(9\\)\\)`, "u")

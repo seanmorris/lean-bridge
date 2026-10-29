@@ -85,7 +85,7 @@ test("optional-parameter TypeScript contracts retain route-specific binders", ()
 		, /unknown/u);
 });
 
-test("optional language contracts retain route-specific binders", () => {
+test("optional language contracts preserve Python binders and normalize Ruby positions", () => {
 	const python = "def word(arg0: int = 7) -> int:\n"
 		+ "def present(arg0: Option[int] = Some(9)):\n";
 	const ruby = "def word(arg0 = 7)\n"
@@ -95,10 +95,11 @@ test("optional language contracts retain route-specific binders", () => {
 		assert.match(python, pattern);
 	for(const pattern of optionalParameterPythonPatterns("reviewed"))
 		assert.match(python.replaceAll("arg0", "value0"), pattern);
-	for(const pattern of optionalParameterRubyPatterns("ordinary"))
-		assert.match(ruby, pattern);
+	for(const route of ["ordinary", "reviewed"])
+		for(const pattern of optionalParameterRubyPatterns(route))
+			assert.match(ruby, pattern);
 	for(const pattern of optionalParameterRubyPatterns("reviewed"))
-		assert.match(ruby.replaceAll("arg0", "value0"), pattern);
+		assert.doesNotMatch(ruby.replaceAll("arg0", "value0"), pattern);
 	const cpp = "inline std::optional<uint32_t> present("
 		+ "std::optional<uint32_t> const& arg0 = std::nullopt)";
 	assert.match(cpp, optionalParameterCppPattern("ordinary"));
