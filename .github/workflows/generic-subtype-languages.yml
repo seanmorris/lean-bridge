@@ -41,7 +41,7 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure) && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -76,6 +76,7 @@ jobs:
           bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-python-toolchain.log
       - name: Execute installed Python acceptance
         id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}
         timeout-minutes: 125
         env:
           PYTHON311: ${{ steps.python311.outputs.python-path }}
@@ -85,7 +86,7 @@ jobs:
           source scripts/env.sh
           bash scripts/run-generic-subtype-python-ci.sh "$PYTHON311" "$PYTHON312"
       - name: Preserve complete and partial Python records
-        if: always()
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure }}
         uses: actions/upload-artifact@v7
         with:
           name: generic-subtype-python-${{ github.sha }}
@@ -131,7 +132,7 @@ jobs:
         if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed Python acceptance
-        if: always() && steps.acceptance.outcome != 'success'
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && steps.acceptance.outcome != 'success' }}
         run: exit 1
 
   ruby:
@@ -149,7 +150,7 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure) && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -178,13 +179,14 @@ jobs:
           bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-ruby-toolchain.log
       - name: Execute installed Ruby acceptance
         id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}
         timeout-minutes: 125
         run: |
           set -euo pipefail
           source scripts/env.sh
           bash scripts/run-generic-subtype-ruby-ci.sh "$(command -v ruby)" "$(command -v gem)"
       - name: Preserve complete and partial Ruby records
-        if: always()
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure }}
         uses: actions/upload-artifact@v7
         with:
           name: generic-subtype-ruby-${{ github.sha }}
@@ -230,7 +232,7 @@ jobs:
         if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed Ruby acceptance
-        if: always() && steps.acceptance.outcome != 'success'
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && steps.acceptance.outcome != 'success' }}
         run: exit 1
 
   rust:
@@ -248,7 +250,7 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure) && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -274,13 +276,14 @@ jobs:
           bash scripts/bootstrap-rust-ci.sh 2>&1 | tee -a build/generic-subtype-rust-toolchain.log
       - name: Execute source-free Rust acceptance
         id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}
         timeout-minutes: 125
         run: |
           set -euo pipefail
           source scripts/env.sh
           bash scripts/run-generic-subtype-rust-ci.sh "$PWD/.toolchains/rust-1.90.0/bin/rustc" "$PWD/.toolchains/rust-1.90.0/bin/cargo"
       - name: Preserve complete and partial Rust records
-        if: always()
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure }}
         uses: actions/upload-artifact@v7
         with:
           name: generic-subtype-rust-${{ github.sha }}
@@ -326,5 +329,5 @@ jobs:
         if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed Rust acceptance
-        if: always() && steps.acceptance.outcome != 'success'
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && steps.acceptance.outcome != 'success' }}
         run: exit 1

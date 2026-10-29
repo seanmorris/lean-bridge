@@ -33,6 +33,7 @@ concurrency:
 jobs:
   dependent-foundation:
     name: Dependent generic checked Subtype compiler and review contract
+    if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
     runs-on: ubuntu-24.04
     timeout-minutes: 50
     steps:
@@ -102,6 +103,7 @@ jobs:
 
   native:
     name: Ordinary and reviewed generic Subtypes in C and C++
+    if: ${{ !inputs.host_null || inputs.optional_parameters || inputs.direct_proof_erasure }}
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     steps:
@@ -115,7 +117,7 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -140,6 +142,7 @@ jobs:
           bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-native-toolchain.log
       - name: Execute source-free C and C++ acceptance
         id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         timeout-minutes: 125
         shell: bash
         run: |
@@ -147,7 +150,7 @@ jobs:
           source scripts/env.sh
           bash scripts/run-generic-subtype-native-ci.sh
       - name: Preserve complete and partial native records
-        if: always()
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         uses: actions/upload-artifact@v7
         with:
           name: generic-subtype-native-${{ github.sha }}
@@ -201,7 +204,7 @@ jobs:
         if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
         run: exit 1
       - name: Enforce installed native acceptance
-        if: always() && steps.acceptance.outcome != 'success'
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}
         run: exit 1
 
   perl:
@@ -219,7 +222,7 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -263,6 +266,7 @@ jobs:
           node scripts/build-perl-toolchains.mjs 5.38.2 unthreaded
       - name: Execute source-free CPAN acceptance
         id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         timeout-minutes: 135
         shell: bash
         run: |
@@ -270,7 +274,7 @@ jobs:
           source scripts/env.sh
           bash scripts/run-generic-subtype-perl-ci.sh
       - name: Preserve complete and partial Perl records
-        if: always()
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         uses: actions/upload-artifact@v7
         with:
           name: generic-subtype-perl-${{ github.sha }}
@@ -350,5 +354,5 @@ jobs:
         if: always() && inputs.host_null && steps.host_null.outcome != 'success'
         run: exit 1
       - name: Enforce installed Perl acceptance
-        if: always() && steps.acceptance.outcome != 'success'
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}
         run: exit 1

@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        route: [ordinary, reviewed]
+        route: ${{ fromJSON((inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && '["reviewed"]' || '["ordinary","reviewed"]') }}
     env:
       EMCC_CORES: "2"
       LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
@@ -54,7 +54,7 @@ jobs:
       - name: Check out the exact revision and evidence history
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -96,6 +96,7 @@ jobs:
           test -s build/lean-link-spike/lazy/main.wasm
       - name: Install and exercise the selected generic Subtype route
         id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         timeout-minutes: 90
         env:
           LEAN_BRIDGE_GENERIC_SUBTYPE_NPM_BROWSER_TEST: "1"
@@ -107,7 +108,7 @@ jobs:
           node --test --test-concurrency=1 tests/generic-subtype-npm-browser.test.mjs
           test -s build/generic-subtype-npm-browser/${{ matrix.route }}.json
       - name: Preserve complete and partial acceptance records
-        if: always()
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         uses: actions/upload-artifact@v7
         with:
           name: generic-subtype-npm-browser-${{ matrix.route }}-${{ github.sha }}
@@ -118,7 +119,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Exercise ordinary and reviewed finite specializations in every browser realm
-        if: matrix.route == 'reviewed'
+        if: ${{ matrix.route == 'reviewed' && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         timeout-minutes: 120
         env:
           LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_TEST: "1"
@@ -131,7 +132,7 @@ jobs:
             tests/reviewed-specializations.test.mjs
           test -s build/signature-specializations/browser.json
       - name: Preserve finite-specialization browser observations
-        if: always() && matrix.route == 'reviewed'
+        if: ${{ always() && matrix.route == 'reviewed' && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         uses: actions/upload-artifact@v7
         with:
           name: signature-specializations-browser-${{ github.sha }}
@@ -208,5 +209,5 @@ jobs:
         if: always() && inputs.host_null && matrix.route == 'reviewed' && steps.host_null.outcome != 'success'
         run: exit 1
       - name: Enforce generic Subtype acceptance
-        if: always() && steps.acceptance.outcome != 'success'
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}
         run: exit 1

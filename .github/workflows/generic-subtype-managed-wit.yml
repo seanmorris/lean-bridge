@@ -39,7 +39,7 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -71,6 +71,7 @@ jobs:
           dotnet-version: '8.0.424'
       - name: Execute installed .NET acceptance
         id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         timeout-minutes: 125
         shell: bash
         run: |
@@ -78,7 +79,7 @@ jobs:
           source scripts/env.sh
           bash scripts/run-generic-subtype-dotnet-ci.sh "$RUNNER_TEMP/lean-bridge-generic-subtype-dotnet-8.0.424/dotnet"
       - name: Preserve complete and partial .NET records
-        if: always()
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         uses: actions/upload-artifact@v7
         with:
           name: generic-subtype-dotnet-${{ github.sha }}
@@ -142,7 +143,7 @@ jobs:
         if: always() && inputs.host_null && steps.host_null.outcome != 'success'
         run: exit 1
       - name: Enforce installed .NET acceptance
-        if: always() && steps.acceptance.outcome != 'success'
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}
         run: exit 1
 
   jvm:
@@ -153,7 +154,7 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -191,6 +192,7 @@ jobs:
           unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
       - name: Execute installed JVM acceptance
         id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         timeout-minutes: 125
         shell: bash
         run: |
@@ -198,7 +200,7 @@ jobs:
           source scripts/env.sh
           bash scripts/run-generic-subtype-jvm-ci.sh "$JAVA_HOME/bin/java" "$JAVA_HOME/bin/javac" "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
       - name: Preserve complete and partial JVM records
-        if: always()
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         uses: actions/upload-artifact@v7
         with:
           name: generic-subtype-jvm-${{ github.sha }}
@@ -262,18 +264,19 @@ jobs:
         if: always() && inputs.host_null && steps.host_null.outcome != 'success'
         run: exit 1
       - name: Enforce installed JVM acceptance
-        if: always() && steps.acceptance.outcome != 'success'
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}
         run: exit 1
 
   php:
     name: Generic Subtypes in native PHP
+    if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -326,7 +329,7 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -380,6 +383,7 @@ jobs:
           )
       - name: Execute installed WIT acceptance
         id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         timeout-minutes: 125
         shell: bash
         run: |
@@ -387,7 +391,7 @@ jobs:
           source scripts/env.sh
           bash scripts/run-generic-subtype-wit-ci.sh "/usr/bin/cc" "$PWD/.toolchains/wasm-tools/bin/wasm-tools" "$PWD/build/wasmtime-c-api"
       - name: Preserve complete and partial WIT records
-        if: always()
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
         uses: actions/upload-artifact@v7
         with:
           name: generic-subtype-wit-${{ github.sha }}
@@ -464,5 +468,5 @@ jobs:
         if: always() && inputs.host_null && steps.host_null.outcome != 'success'
         run: exit 1
       - name: Enforce installed WIT acceptance
-        if: always() && steps.acceptance.outcome != 'success'
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}
         run: exit 1

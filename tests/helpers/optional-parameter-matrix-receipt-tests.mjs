@@ -112,6 +112,21 @@ const assertFocusedProducer = (source, specification) => {
 	assert.match(source
 		, /^on:\n {2}workflow_call:\n {4}inputs:\n {6}optional_parameters:/mu);
 	assert.match(source, /^ {8}default: false$/mu);
+	const focused = specification.file.endsWith("generic-subtype-languages.yml")
+		? "inputs.optional_parameters || inputs.direct_proof_erasure"
+		: "inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null";
+	assert.ok(source.includes(`fetch-depth: \${{ (${focused}) && 1 || 0 }}`));
+	assert.ok(source.includes(
+		`if: \${{ !${focused.replaceAll(" || ", " && !")} }}`));
+	if(specification.file.endsWith("generic-subtype-npm-browser.yml"))
+		assert.ok(source.includes(
+			`route: \${{ fromJSON((${focused}) && '["reviewed"]' || '["ordinary","reviewed"]') }}`));
+	if(specification.file.endsWith("generic-subtype-native-perl.yml"))
+		assert.match(source
+			, /^ {2}dependent-foundation:\n {4}name: .+\n {4}if: \$\{\{ !inputs\.optional_parameters && !inputs\.direct_proof_erasure && !inputs\.host_null \}\}$/mu);
+	if(specification.file.endsWith("generic-subtype-managed-wit.yml"))
+		assert.match(source
+			, /^ {2}php:\n {4}name: .+\n {4}if: \$\{\{ !inputs\.optional_parameters && !inputs\.direct_proof_erasure && !inputs\.host_null \}\}$/mu);
 	for(const record of specification.records)
 	{
 		const runName = record.name === "Node and browser"
@@ -252,8 +267,16 @@ test("focused recurring CI produces and reconciles the exact optional matrix", a
 	for(const item of focusedProducers)
 	{
 		const source = sources.get(item.file), first = item.records[0];
+		const focused = item.file.endsWith("generic-subtype-languages.yml")
+			? "inputs.optional_parameters || inputs.direct_proof_erasure"
+			: "inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null";
 		for(const changed of [
 			source.replace("  workflow_call:\n", "")
+			, source.replaceAll(`fetch-depth: \${{ (${focused}) && 1 || 0 }}`
+				, "fetch-depth: 0")
+			, source.replaceAll(
+				`if: \${{ !${focused.replaceAll(" || ", " && !")} }}`
+				, "if: true")
 			, source.replace(first.script, `disabled-${first.script}`)
 			, source.replace(first.artifact, `disabled-${first.artifact}`)
 			, source.replace(first.path, `disabled/${first.path}`)
@@ -261,5 +284,5 @@ test("focused recurring CI produces and reconciles the exact optional matrix", a
 		]) assert.throws(() => assertFocusedProducer(changed, item)
 			, assert.AssertionError, item.file);
 	}
-	t.diagnostic(`${callerMutations.length + focusedProducers.length * 5} focused-CI bypasses refused`);
+	t.diagnostic(`${callerMutations.length + focusedProducers.length * 7} focused-CI bypasses refused`);
 });
