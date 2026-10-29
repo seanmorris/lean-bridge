@@ -1,0 +1,95 @@
+{
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-archive-dedup-source-history.mjs",
+      "sha256": "af0ee8e6c8e88555a14a019266cf120e178c5e23aefa4a87f701bf354ea8608d"
+    },
+    {
+      "path": "tests/helpers/host-null-archive-dedup-source-history-tests.mjs",
+      "sha256": "d94a7dda8d8c17c5c1595b3a88d1968b5ef4f70144eb3b63f3f2d667cee0edde"
+    },
+    {
+      "path": "tests/helpers/host-null-archive-dedup-source-history.mjs",
+      "sha256": "b864795f199130b974f1c5daeb42c416c294ec8f3c3e49562fe8d16b3f9de879"
+    }
+  ],
+  "implementationCommit": "22eebb37f00498a8f40d0346270240ecbddf9890",
+  "integrationUpdates": [
+    {
+      "currentSha256": "53495e61c699f0c3a13b0e7f98f167178a98a36ceafbf3a77dcda84fdc881368",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-archive-dedup-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c48bba5c874b0324b1a5fe5106d952a771e75fb66c83e77baab099a3e1c596e7"
+    },
+    {
+      "currentSha256": "b4865d6ee9924905028470ab0ad430ddd1d7cd1d84fa42280a085226863814fe",
+      "edits": [
+        {
+          "current": "import { beforeHostNullArchiveDedupSource, hostNullArchiveDedupNormalizationPaths } from \"./host-null-archive-dedup-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullArchiveDedupNormalizationPaths\n\t, ...hostNullArchiveTransactionNormalizationPaths\n",
+          "previous": "\t...hostNullArchiveTransactionNormalizationPaths\n",
+          "start": 222325
+        },
+        {
+          "current": "\tlet stage = beforeHostNullArchiveDedupSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullArchiveTransactionSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullArchiveTransactionSource(path, text, expected);\n",
+          "start": 278468
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6a11e155a87186e9c655d09ae830c5f61ca8a546b93013bb3beefbfa712ea658"
+    }
+  ],
+  "milestone": "host-null-archive-dedup-source-v1",
+  "predecessorCommit": "38c32dd5bb1c957fad323fea5ecac95463adc4c7",
+  "schemaVersion": 1,
+  "scope": "Retain each original HostNull hosted artifact ZIP exactly once. Replay reconstructs and authenticates those ZIP bytes, safely extracts them, and reruns every installed checker; separately copied extracted members were derived duplicates and supplied no independent provenance.",
+  "updates": [
+    {
+      "currentSha256": "a14f8ba3d2820e4fa91918042839e527d446c4052b1469228ebf910b8d59866c",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t\t\tfor(const path of extracted.entries.filter(path => !path.endsWith(\"/\")))\n\t\t\t\tawait retainFile(`artifacts/${selectedLane.id}/${path}`\n\t\t\t\t\t, join(extracted.root, path));\n",
+          "start": 3575
+        }
+      ],
+      "path": "scripts/archive-host-null-complete-evidence.mjs",
+      "previousSha256": "0dcbcb5209d87977f699f4b39353967571cfbad52fbefe6457f733a2663aee3e"
+    },
+    {
+      "currentSha256": "e5045001384ebd795c9dc0e28ee10bcbf29fc194d8c5e95cedcf3f83af759975",
+      "edits": [
+        {
+          "current": "\t\tassert.doesNotMatch(source, /`artifacts\\/\\$\\{selectedLane\\.id\\}/u);\n\t\tconst replay = await readFile(\n\t\t\t\"tests/helpers/host-null-complete-hosted-evidence.mjs\", \"utf8\");\n\t\tassert.match(replay, /extractArtifact\\(inputs\\[\"artifact-zip\"\\]\\)/u);\n\t\tassert.match(replay, /verifyHostNullCompleteExtractedLane\\(/u);\n\t\tassert.doesNotMatch(replay, /`artifacts\\/\\$\\{selectedLane\\.id\\}/u);\n",
+          "previous": "",
+          "start": 2117
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-hosted-archive-tests.mjs",
+      "previousSha256": "a0fb39e873f796ac61c903f26156695a15a4e1dcad911a0d74fa868192ddd942"
+    },
+    {
+      "currentSha256": "8b4d948b6b48179ea163b8598a2174531ebf734a0c2ffd3aa8f86085c9ede0a8",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t\t\t\t\tconst artifactFiles = extracted.entries.filter(\n\t\t\t\t\t\titem => !item.endsWith(\"/\"));\n\t\t\t\t\tfor(const path of artifactFiles)\n\t\t\t\t\t{\n\t\t\t\t\t\tconst evidencePath = `artifacts/${selectedLane.id}/${path}`;\n\t\t\t\t\t\texpectedPaths.push(evidencePath);\n\t\t\t\t\t\tassert.deepEqual(await readFile(join(extracted.root, path))\n\t\t\t\t\t\t\t, get(evidencePath), evidencePath);\n\t\t\t\t\t}\n",
+          "start": 7590
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-hosted-evidence.mjs",
+      "previousSha256": "1798a1d1e1c9d3ecab6a6fb5f85e579e8a7457247e1274f6f4db228c2f6ebedd"
+    }
+  ]
+}
