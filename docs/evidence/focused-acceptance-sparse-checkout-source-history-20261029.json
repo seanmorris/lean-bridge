@@ -1,0 +1,351 @@
+{
+  "currentSourcePaths": [],
+  "excludedPattern": "!/docs/evidence/",
+  "focusedFetchDepth": 1,
+  "focusedProducerCount": 10,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-focused-acceptance-sparse-checkout-source-history.mjs",
+      "sha256": "dffd85556e72d74f0df9fff6ab98e5cbbcbf3f8e5b25f65133e1539b1dc9f951"
+    },
+    {
+      "path": "tests/helpers/focused-acceptance-sparse-checkout-source-history-tests.mjs",
+      "sha256": "45f3a060e798d4fdaa76f6e0474edafe5344381ac7fa825ebf88dc427e4e995c"
+    },
+    {
+      "path": "tests/helpers/focused-acceptance-sparse-checkout-source-history.mjs",
+      "sha256": "395809cbc1853a8113c75042a52a8aa66feed397a2ff14f4ad8b9b5c97be4dec"
+    }
+  ],
+  "implementationCommit": "49cd742e9b762dde79217a8492c46e63c50fd3a3",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9354953630108b18cc40427ba8d24f466b29d09ca6917f34d59781be11d7c9ec",
+      "edits": [
+        {
+          "current": "import \"./helpers/focused-acceptance-sparse-checkout-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 181
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "063473efe669bf64feac786d6bc602c29d51e6952513148063ffd1ebede31651"
+    },
+    {
+      "currentSha256": "915aa7a49f2a267843eb12f72579bc29c53c40289d6692f1e2ddcdbe001b984c",
+      "edits": [
+        {
+          "current": "import { beforeFocusedAcceptanceSparseCheckoutSource, focusedAcceptanceSparseCheckoutNormalizationPaths } from \"./focused-acceptance-sparse-checkout-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...focusedAcceptanceSparseCheckoutNormalizationPaths\n\t, ...completeAcceptanceBudgetNormalizationPaths\n",
+          "previous": "\t...completeAcceptanceBudgetNormalizationPaths\n",
+          "start": 221000
+        },
+        {
+          "current": "\tlet stage = beforeFocusedAcceptanceSparseCheckoutSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCompleteAcceptanceBudgetSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCompleteAcceptanceBudgetSource(path, text, expected);\n",
+          "start": 276708
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b03ed833e136560a3c09ca1b76865c08f2089529248ecb56431e981586f4ff8c"
+    },
+    {
+      "currentSha256": "6be3d5d3a8143b782affd6a10d22bc9301bf8e81d544f137f53ea23f3eaf2901",
+      "edits": [
+        {
+          "current": "\t\t, /optional-parameter-receipt-sparse-checkout-source-history-20261029\\.json|6e903f1656b58494e171ccef0586e5fd8ff06b91/u);\n",
+          "previous": "\t\t, /optional-parameter-receipt-sparse-checkout-source-history-20261029\\.json/u);\n",
+          "start": 5921
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-receipt-sparse-checkout-source-history-tests.mjs",
+      "previousSha256": "6e4060e84893802190bf189a7bbaaf4ee81eb7f17d0e206f2960424c40e32788"
+    }
+  ],
+  "milestone": "focused-acceptance-sparse-checkout-source-v1",
+  "predecessorCommit": "4c448dae17ac965e4e5f25d409b3dfaccca7d21e",
+  "schemaVersion": 1,
+  "scope": "Exclude the retained hosted-evidence corpus from ten focused optional-parameter, proof-erasure and HostNull producer checkouts. Preserve full source and evidence history for every standalone scheduled workflow.",
+  "sparseCheckoutConeMode": false,
+  "standaloneFetchDepth": 0,
+  "updates": [
+    {
+      "currentSha256": "a4d13523ba9b3c0efc67289ce120df4a31e44df8b10f221302e8f8ca1a0f0b85",
+      "edits": [
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 1088
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}\n",
+          "previous": "",
+          "start": 1487
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure) && 1 || 0 }}\n",
+          "start": 1614
+        },
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 6022
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}\n",
+          "previous": "",
+          "start": 6421
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure) && 1 || 0 }}\n",
+          "start": 6548
+        },
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 10607
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}\n",
+          "previous": "",
+          "start": 11006
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure) && 1 || 0 }}\n",
+          "start": 11133
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-languages.yml",
+      "previousSha256": "c7e6836b5e1245557f630dac4e3405c7c1313620d5ee0c1233f710771c054d5d"
+    },
+    {
+      "currentSha256": "edff2ebda010632c3f3d4a330f276003fdb40df55fc7b63346e6ce7a08f6f6a1",
+      "edits": [
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 5914
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n",
+          "previous": "",
+          "start": 6333
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\n",
+          "start": 6481
+        },
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 11713
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n",
+          "previous": "",
+          "start": 12132
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\n",
+          "start": 12280
+        },
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 14170
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n",
+          "previous": "",
+          "start": 14589
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\n",
+          "start": 14737
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-managed-wit.yml",
+      "previousSha256": "248a1c1abc65d2f447a34661a5e0098bf2783c284c2fc9d2fff1a6d2b2dbfce5"
+    },
+    {
+      "currentSha256": "79a1cecba9bbc18daffef82d05941e07a435b90989bedc65f99706833997706f",
+      "edits": [
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 4062
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n",
+          "previous": "",
+          "start": 4481
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\n",
+          "start": 4629
+        },
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 8816
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n",
+          "previous": "",
+          "start": 9235
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\n",
+          "start": 9383
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-native-perl.yml",
+      "previousSha256": "b7d27407c6092609fd396a6a29cbc91e63a5a85d85cfc96a8f689158900ea53d"
+    },
+    {
+      "currentSha256": "addf4383caba5e897940f85eb12dc4829c6fd3dcb422eaebd333088810e91445",
+      "edits": [
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 1636
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n",
+          "previous": "",
+          "start": 2076
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\n",
+          "start": 2224
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-npm-browser.yml",
+      "previousSha256": "67193f372d160ac29bc5201ef5574dc32d14ac7cb8ab1505d61a49547e8cb816"
+    },
+    {
+      "currentSha256": "31d80e9fb3eb1e660fb5f2a5b205778400039f365563aae6703cf25c5ae8fc95",
+      "edits": [
+        {
+          "current": "      - name: Check out the focused package revision\n        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 1240
+        },
+        {
+          "current": "        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\n",
+          "previous": "",
+          "start": 1689
+        },
+        {
+          "current": "          fetch-depth: 0\n",
+          "previous": "          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\n",
+          "start": 1837
+        }
+      ],
+      "path": ".github/workflows/nominal-subtype-php-wasm.yml",
+      "previousSha256": "85b2543a1927141859e70ed54771c340ab0079146c29c0914db0c279bbc2dc8e"
+    },
+    {
+      "currentSha256": "f22dc29701e4d0ba876661e90e5c70b1f7bd9514e8a0775bf3b7bcd3e733f79c",
+      "edits": [
+        {
+          "current": "\t\t, \"- name: Check out the focused package revision\"\n\t\t, \"if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\"\n\t\t, \"fetch-depth: 1\"\n\t\t, \"!/docs/evidence/\"\n\t\t, \"sparse-checkout-cone-mode: false\"\n\t\t, \"- name: Check out the exact revision and evidence history\"\n",
+          "previous": "\t\t, \"fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\"\n",
+          "start": 590
+        },
+        {
+          "current": "\tassert.equal(workflow.match(/^ {10}fetch-depth: 0$/gmu)?.length, 1);\n",
+          "previous": "",
+          "start": 1550
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-npm-browser-ci-tests.mjs",
+      "previousSha256": "8686e6afd26066a0ded484c998168407222326a4f36d6014d356f35e2428af62"
+    },
+    {
+      "currentSha256": "9a930ced96ac2788882a357e1ac2482e12b90b3b43a4b71b6a1f6d870d4eb24d",
+      "edits": [
+        {
+          "current": "\t\t, [\"          fetch-depth: 1\\n\", \"          fetch-depth: 0\\n\"]\n\t\t, [\"            !/docs/evidence/\\n\", \"\"]\n",
+          "previous": "\t\t, [\"fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\", \"fetch-depth: 0\"]\n",
+          "start": 1648
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-wasm-ci-workflow-tests.mjs",
+      "previousSha256": "dfeafbf071a386ff8f32bc58ee7546bf5553eb8eacf2352411b87e5c08b60004"
+    },
+    {
+      "currentSha256": "c2b5c3ad396ffcf54c6fa8dac4ad0f5fb9391c8e3c707fd0e17991fcf854567f",
+      "edits": [
+        {
+          "current": "\t\t\"        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\"\n\t\t, \"        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\"\n\t\t, \"        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\"\n",
+          "previous": "\t\t\"        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\"\n",
+          "start": 1507
+        },
+        {
+          "current": "\t\t\"Check out the focused package revision\"\n\t\t, \"Check out the exact revision and original evidence history\"\n",
+          "previous": "\t\t\"Check out the exact revision and original evidence history\"\n",
+          "start": 3264
+        },
+        {
+          "current": "\tassert.equal(step(names[0]), \"        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}\\n        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 1\\n          persist-credentials: false\\n          sparse-checkout: |\\n            /*\\n            !/docs/evidence/\\n          sparse-checkout-cone-mode: false\\n\");\n\tassert.equal(step(names[1]), \"        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\\n        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\");\n\tassert.equal(step(names[2]), '        uses: actions/setup-node@v6\\n        with:\\n          node-version: \"22\"\\n          cache: npm\\n');\n\tassert.equal(step(names[3]), \"        uses: cachix/install-nix-action@v31\\n\");\n\tassert.equal(step(names[4]), \"        uses: actions/cache@v5\\n        with:\\n          path: |\\n            .toolchains\\n            build/php-wasm-sdk\\n            build/php-wasm-host\\n          key: nominal-subtype-php-wasm-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}\\n\");\n\tassert.equal(step(names[6]), \"        uses: ./.github/actions/bounded-apt\\n        timeout-minutes: 1\\n\");\n\tassert.ok(step(names[11]).startsWith(\"        id: acceptance\\n        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\\n        timeout-minutes: 100\\n        env:\\n          LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME: build/nominal-subtype-php-wasm-input/php-wasm-runtime\\n        shell: bash\\n\"));\n\tassert.equal(step(names[12]), \"        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: nominal-subtype-php-wasm-${{ github.sha }}\\n          path: |\\n            build/nominal-subtype-php-wasm-ci/\\n            build/nominal-subtype-php-wasm-host.log\\n            build/nominal-subtype-php-wasm-runtime.log\\n            build/nominal-subtype-php-wasm-input/php-wasm-runtime/runtime.json\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[13]), \"        id: optional_parameters\\n        if: inputs.optional_parameters\\n        continue-on-error: true\\n        timeout-minutes: 125\\n        env:\\n          LEAN_BRIDGE_PHP: /usr/bin/php\\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\\n        shell: bash\\n        run: |\\n          set -euo pipefail\\n          source scripts/env.sh\\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\\\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\\\"\\n          test -d \\\"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\\\"\\n          bash scripts/run-optional-parameter-php-ci.sh\\n\");\n\tassert.equal(step(names[14]), \"        if: always() && inputs.optional_parameters\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: optional-parameter-php-${{ github.sha }}\\n          path: build/optional-parameter-php-ci/\\n          if-no-files-found: error\\n          overwrite: true\\n          retention-days: 30\\n\");\n\tassert.match(step(names[16])\n",
+          "previous": "\tassert.equal(step(names[0]), \"        uses: actions/checkout@v6\\n        with:\\n          fetch-depth: ${{ (inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && 1 || 0 }}\\n          persist-credentials: false\\n\");\n\tassert.equal(step(names[1]), '        uses: actions/setup-node@v6\\n        with:\\n          node-version: \"22\"\\n          cache: npm\\n');\n\tassert.equal(step(names[2]), \"        uses: cachix/install-nix-action@v31\\n\");\n\tassert.equal(step(names[3]), \"        uses: actions/cache@v5\\n        with:\\n          path: |\\n            .toolchains\\n            build/php-wasm-sdk\\n            build/php-wasm-host\\n          key: nominal-subtype-php-wasm-${{ runner.os }}-${{ hashFiles('flake.lock', 'lean-toolchain', 'scripts/bootstrap-toolchains.sh', 'scripts/bootstrap-php-wasm-ci.sh', 'poc/lean-link-spike/bindings/php-wasm.package.json') }}\\n\");\n\tassert.equal(step(names[5]), \"        uses: ./.github/actions/bounded-apt\\n        timeout-minutes: 1\\n\");\n\tassert.ok(step(names[10]).startsWith(\"        id: acceptance\\n        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\\n        timeout-minutes: 100\\n        env:\\n          LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME: build/nominal-subtype-php-wasm-input/php-wasm-runtime\\n        shell: bash\\n\"));\n\tassert.equal(step(names[11]), \"        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: nominal-subtype-php-wasm-${{ github.sha }}\\n          path: |\\n            build/nominal-subtype-php-wasm-ci/\\n            build/nominal-subtype-php-wasm-host.log\\n            build/nominal-subtype-php-wasm-runtime.log\\n            build/nominal-subtype-php-wasm-input/php-wasm-runtime/runtime.json\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n\tassert.equal(step(names[12]), \"        id: optional_parameters\\n        if: inputs.optional_parameters\\n        continue-on-error: true\\n        timeout-minutes: 125\\n        env:\\n          LEAN_BRIDGE_PHP: /usr/bin/php\\n          LEAN_BRIDGE_COMPOSER: /usr/bin/composer\\n          LEAN_BRIDGE_PHP_EMSDK: ${{ github.workspace }}/.toolchains/emsdk-php-wasm\\n        shell: bash\\n        run: |\\n          set -euo pipefail\\n          source scripts/env.sh\\n          export LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=\\\"$GITHUB_WORKSPACE/build/nominal-subtype-php-wasm-input/php-wasm-runtime\\\"\\n          test -d \\\"$LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME\\\"\\n          bash scripts/run-optional-parameter-php-ci.sh\\n\");\n\tassert.equal(step(names[13]), \"        if: always() && inputs.optional_parameters\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: optional-parameter-php-${{ github.sha }}\\n          path: build/optional-parameter-php-ci/\\n          if-no-files-found: error\\n          overwrite: true\\n          retention-days: 30\\n\");\n\tassert.match(step(names[15])\n",
+          "start": 4463
+        },
+        {
+          "current": "",
+          "previous": "\tassert.ok(step(names[15]).includes(\n\t\t\"bash scripts/run-direct-proof-erasure-php-ci.sh\"));\n",
+          "start": 7946
+        },
+        {
+          "current": "\t\t\"bash scripts/run-direct-proof-erasure-php-ci.sh\"));\n\tassert.ok(step(names[17]).includes(\n",
+          "previous": "",
+          "start": 7983
+        },
+        {
+          "current": "\tassert.ok(step(names[17]).includes(\n",
+          "previous": "\tassert.ok(step(names[16]).includes(\n",
+          "start": 8131
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-wasm-ci-workflow.mjs",
+      "previousSha256": "574343e9633a1c18a9c326e4ae6ec44bb139a9b5efb146221e36ec7fe9804bd2"
+    },
+    {
+      "currentSha256": "c0f6b23d2f5057b7517838e06a9c18b3ee451e1fe4e2fdfdc21a030f7a547e0d",
+      "edits": [
+        {
+          "current": "\tconst focusedCheckout = `      - name: Check out the focused package revision\n        if: \\${{ ${focused} }}\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n`;\n\tassert.equal(source.split(focusedCheckout).length - 1\n\t\t, specification.records.length);\n",
+          "previous": "\tassert.ok(source.includes(`fetch-depth: \\${{ (${focused}) && 1 || 0 }}`));\n",
+          "start": 4351
+        },
+        {
+          "current": "\t\t\t, source.replace(\"          fetch-depth: 1\\n\"\n\t\t\t\t, \"          fetch-depth: 0\\n\")\n\t\t\t, source.replace(\"            !/docs/evidence/\\n\", \"\")\n",
+          "previous": "\t\t\t, source.replaceAll(`fetch-depth: \\${{ (${focused}) && 1 || 0 }}`\n\t\t\t\t, \"fetch-depth: 0\")\n",
+          "start": 13132
+        },
+        {
+          "current": "\tt.diagnostic(`${callerMutations.length + focusedProducers.length * 8} focused-CI bypasses refused`);\n",
+          "previous": "\tt.diagnostic(`${callerMutations.length + focusedProducers.length * 7} focused-CI bypasses refused`);\n",
+          "start": 13745
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-matrix-receipt-tests.mjs",
+      "previousSha256": "5a12578f7d65dc25cfa12684d1d83b4fd01e10662302667b04f2639031f8372a"
+    }
+  ],
+  "workflowCount": 5
+}

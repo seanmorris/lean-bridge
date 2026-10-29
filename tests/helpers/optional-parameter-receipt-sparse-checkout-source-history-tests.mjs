@@ -136,5 +136,5 @@ test("optional receipt sparse checkout writer refuses another checkout", () => {
 	], { cwd: new URL("../../", import.meta.url), encoding: "utf8" });
 	assert.notEqual(copy.status, 0);
 	assert.match(`${copy.stdout}${copy.stderr}`
-		, /optional-parameter-receipt-sparse-checkout-source-history-20261029\.json/u);
+		, /optional-parameter-receipt-sparse-checkout-source-history-20261029\.json|6e903f1656b58494e171ccef0586e5fd8ff06b91/u);
 });

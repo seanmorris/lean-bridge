@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/optional-parameter-route-binder-repair-source-history-tests.mjs";
+import "./helpers/focused-acceptance-sparse-checkout-source-history-tests.mjs";
 import "./helpers/complete-acceptance-budget-source-history-tests.mjs";
 import "./helpers/dependent-signature-producer-sparse-checkout-source-history-tests.mjs";
 import "./helpers/proof-erasure-core-lint-repair-source-history-tests.mjs";
