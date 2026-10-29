@@ -20,6 +20,7 @@ import "./helpers/optional-parameter-dispatch-bridge-source-history-tests.mjs";
 import "./helpers/optional-parameter-current-line-integration-source-history-tests.mjs";
 import "./helpers/optional-parameter-source-history-tests.mjs";
 import "./helpers/optional-parameter-complete-documentation-tests.mjs";
+import "./helpers/optional-parameter-complete-ci-tests.mjs";
 import "./helpers/optional-parameter-complete-promotion-tests.mjs";
 import "./helpers/optional-parameter-complete-promotion-transaction-tests.mjs";
 import "./helpers/optional-parameter-hosted-archive-tests.mjs";

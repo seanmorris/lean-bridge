@@ -1,11 +1,64 @@
 name: Complete optional-parameter matrix
 
 on:
+  push:
+    paths:
+      - ".github/workflows/optional-parameter-complete.yml"
+      - "docs/evidence/optional-parameter-hosted-*/**"
+      - "docs/lean/**"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*optional-parameter*.mjs"
+      - "scripts/generate-reference-docs.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/optional-parameter-complete-*.test.mjs"
+      - "tests/helpers/optional-parameter-complete-*.mjs"
+      - "tests/helpers/optional-parameter-hosted-*.mjs"
+  pull_request:
+    paths:
+      - ".github/workflows/optional-parameter-complete.yml"
+      - "docs/evidence/optional-parameter-hosted-*/**"
+      - "docs/lean/**"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*optional-parameter*.mjs"
+      - "scripts/generate-reference-docs.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/optional-parameter-complete-*.test.mjs"
+      - "tests/helpers/optional-parameter-complete-*.mjs"
+      - "tests/helpers/optional-parameter-hosted-*.mjs"
   workflow_call:
+    inputs:
+      suite:
+        description: Bounded optional-parameter suite to execute
+        required: false
+        default: produce
+        type: string
   workflow_dispatch:
-  # Reconcile one bounded exact-head receipt after the five recurring producers.
+    inputs:
+      suite:
+        description: Bounded optional-parameter suite to execute
+        required: true
+        default: audit
+        type: choice
+        options:
+          - audit
+          - produce
+  # One low-cost replay in the bounded weekly default-branch acceptance sweep.
   schedule:
-    - cron: "17 13 * * 3"
+    - cron: "43 10 * * 0"
 
 permissions:
   contents: read
@@ -15,39 +68,85 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  audit:
+    if: inputs.suite != 'produce'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out complete source history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Replay the immutable optional-parameter matrix
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/optional-parameter-complete
+          node --test --test-concurrency=1 \
+            tests/optional-parameter-complete-hosted-evidence.test.mjs \
+            | tee build/optional-parameter-complete/evidence.tap
+      - name: Audit all 34 promoted cells and documentation
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test --test-concurrency=1 \
+            tests/optional-parameter-complete-promotion.test.mjs \
+            | tee build/optional-parameter-complete/promotion.tap
+      - name: Preserve the complete optional-parameter audit
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-complete-${{ github.run_id }}
+          path: build/optional-parameter-complete/
+          if-no-files-found: error
+          retention-days: 14
+
   npm-browser:
     name: Node and browser producer
+    if: inputs.suite == 'produce'
     uses: ./.github/workflows/generic-subtype-npm-browser.yml
     with:
       optional_parameters: true
 
   native-perl:
     name: Native and Perl producers
+    if: inputs.suite == 'produce'
     uses: ./.github/workflows/generic-subtype-native-perl.yml
     with:
       optional_parameters: true
 
   languages:
     name: Python, Ruby and Rust producers
+    if: inputs.suite == 'produce'
     uses: ./.github/workflows/generic-subtype-languages.yml
     with:
       optional_parameters: true
 
   managed-wit:
     name: Managed and WIT producers
+    if: inputs.suite == 'produce'
     uses: ./.github/workflows/generic-subtype-managed-wit.yml
     with:
       optional_parameters: true
 
   php:
     name: PHP and PHP-Wasm producer
+    if: inputs.suite == 'produce'
     uses: ./.github/workflows/nominal-subtype-php-wasm.yml
     with:
       optional_parameters: true
 
   receipt:
     name: Reconcile the exact same-run receipt
-    if: always()
+    if: always() && inputs.suite == 'produce'
     needs:
       - npm-browser
       - native-perl
