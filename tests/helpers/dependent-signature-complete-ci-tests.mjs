@@ -23,6 +23,36 @@ const shallowCheckoutInput = `      shallow_checkout:
 `;
 const focusedCheckoutDepth
 	= "fetch-depth: ${{ inputs.shallow_checkout && 1 || 0 }}";
+const auditCheckout = `      - name: Check out complete history and the exact audit corpus
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+            /docs/evidence/dependent-signatures-hosted-*/
+          sparse-checkout-cone-mode: false
+`;
 const requiredInputs = Object.freeze([
 	workflowPath
 	, "docs/consume/**"
@@ -62,7 +92,7 @@ const assertDependentSignatureCompleteWorkflow = source => {
 	assert.match(source, /workflow_dispatch:\n {4}inputs:\n {6}suite:[\s\S]* {10}- audit\n {10}- produce/u);
 	assert.match(source, /concurrency:\n {2}group: dependent-signature-complete-\$\{\{ github\.ref \}\}\n {2}cancel-in-progress: false/u);
 	assert.match(source, / {2}audit:\n {4}if: inputs\.suite != 'produce'/u);
-	assert.match(source, /uses: actions\/checkout@v6\n {8}with:\n {10}fetch-depth: 0\n {10}persist-credentials: false/u);
+	assert.equal(source.split(auditCheckout).length - 1, 1);
 	assert.match(source, /npm ci --ignore-scripts --no-audit --no-fund/u);
 	assert.match(source, /set -o pipefail\n {10}mkdir -p build\/dependent-signature-complete\n {10}node --test --test-concurrency=1 \\\n {12}tests\/dependent-signature-complete-hosted-evidence\.test\.mjs \\\n {12}\| tee build\/dependent-signature-complete\/evidence\.tap/u);
 	assert.match(source, /set -o pipefail\n {10}node --test --test-concurrency=1 \\\n {12}tests\/dependent-signature-complete-promotion\.test\.mjs \\\n {12}\| tee build\/dependent-signature-complete\/promotion\.tap/u);
@@ -139,6 +169,10 @@ test("complete dependent-signature replay rejects missing inputs and bypasses", 
 		, source.replace("steps.reconciliation.outcome != 'success'", "false")
 		, source.replace("dependent-checked-record-*-", "dependent-checked-record-browser-")
 		, source.replace("      shallow_checkout: true\n", "")
+		, source.replace("            !/docs/evidence/*\n", "")
+		, source.replace(
+			"            /docs/evidence/dependent-signatures-hosted-*/\n", "")
+		, source.replace("          sparse-checkout-cone-mode: false\n", "")
 	].entries()) assert.throws(
 		() => assertDependentSignatureCompleteWorkflow(changed)
 		, undefined, `bypass control ${index}`);
