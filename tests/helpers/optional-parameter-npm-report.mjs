@@ -17,6 +17,7 @@ import {
 } from "./optional-parameter-browser.mjs";
 import {
 	assertOptionalParameterIr
+	, optionalParameterBinder
 	, optionalParameterExports
 	, optionalParameterModule
 } from "./optional-parameter-fixture.mjs";
@@ -148,6 +149,7 @@ export const checkOptionalParameterNpmRecords = async (read, options) => {
 	};
 	const report = await json("report.json");
 	const result = validateOptionalParameterNpmReport(report, options);
+	const binder = optionalParameterBinder(options.route);
 	const expectedConfiguration = {
 		schemaVersion: 1, modules: [optionalParameterModule]
 		, ...options.route === "ordinary"
@@ -164,7 +166,7 @@ export const checkOptionalParameterNpmRecords = async (read, options) => {
 		assert.deepEqual(await read(prefix + "Defaults.lean"), source);
 		const irBytes = await read(prefix + "binding-ir.json");
 		const ir = JSON.parse(irBytes);
-		assertOptionalParameterIr(ir);
+		assertOptionalParameterIr(ir, [binder]);
 		const adaptersBytes = await read(prefix + "compiler-adapters.json");
 		const adapters = JSON.parse(adaptersBytes);
 		validateCompilerAdapterPlan(adapters);

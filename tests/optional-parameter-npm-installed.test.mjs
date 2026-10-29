@@ -99,7 +99,7 @@ for(const route of routes) test(
 				throw error;
 			});
 			const bundleRoot = join(outputRoot, "bundle");
-			const bundle = await assertOptionalParameterBundle(bundleRoot);
+			const bundle = await assertOptionalParameterBundle(bundleRoot, route);
 			const release = await buildComponentNpmPackages({
 				bundleRoot, runtimeRoot
 				, outputRoot: join(prepared.directory, "npm")

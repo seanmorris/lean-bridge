@@ -47,6 +47,17 @@ export const optionalParameterTargets = Object.freeze({
 export const optionalParameterReview = () => optionalParameterIr();
 
 /**
+ * Return the compiler-owned binder for one authoring route.
+ *
+ * @param route - Ordinary source analysis or independent reviewed IR.
+ */
+export const optionalParameterBinder = route => {
+	if(!["ordinary", "reviewed"].includes(route))
+		throw new TypeError(`Unknown optional-parameter route: ${route}`);
+	return route === "ordinary" ? "arg0" : "value0";
+};
+
+/**
  * Require every selected function to retain one typed optional parameter and
  * its compiler-authenticated default.
  *

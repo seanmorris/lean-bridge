@@ -17,6 +17,7 @@ import {
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	assertOptionalParameterIr
+	, optionalParameterBinder
 	, optionalParameterExports
 	, optionalParameterFixture
 	, optionalParameterModule
@@ -89,11 +90,13 @@ export const prepareOptionalParameterProject = async (t, { route, profiles }) =>
  * keeping the compiler ABI full arity.
  *
  * @param bundleRoot - Canonical bundle directory.
+ * @param route - Ordinary source analysis or independent reviewed IR.
  */
-export const assertOptionalParameterBundle = async bundleRoot => {
+export const assertOptionalParameterBundle = async (bundleRoot, route) => {
+	const binder = optionalParameterBinder(route);
 	const irBytes = await readFile(join(bundleRoot, "binding/binding-ir.json"));
 	const ir = JSON.parse(irBytes);
-	const declarations = assertOptionalParameterIr(ir);
+	const declarations = assertOptionalParameterIr(ir, [binder]);
 	const adapterBytes = await readFile(join(bundleRoot, "locks/compiler-adapters.json"));
 	const adapters = JSON.parse(adapterBytes);
 	assert.equal(adapters.exports.length, declarations.length);
@@ -104,7 +107,7 @@ export const assertOptionalParameterBundle = async bundleRoot => {
 			entry.bindingId === declaration.id);
 		assert.ok(item, declaration.id);
 		assert.equal(item.parameters.length, 1);
-		assert.equal(item.parameters[0].name, "value0");
+		assert.equal(item.parameters[0].name, binder);
 		const privateExport = adapters.privateAbi.exports.find(entry =>
 			entry.bindingId === declaration.id);
 		assert.ok(privateExport, declaration.id);

@@ -10,6 +10,7 @@ import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import {
 	assertOptionalParameterIr
+	, optionalParameterBinder
 	, optionalParameterExports
 	, optionalParameterFixture
 	, optionalParameterProfiles
@@ -52,6 +53,18 @@ test("the independent review carries seven typed compiler-authenticated defaults
 		, { kind: "option-some", value: { kind: "integer", value: "9" } }
 		, { kind: "unit" }
 	]);
+});
+
+test("optional-parameter authoring routes retain distinct compiler binders", () => {
+	assert.equal(optionalParameterBinder("ordinary"), "arg0");
+	assert.equal(optionalParameterBinder("reviewed"), "value0");
+	assert.throws(() => optionalParameterBinder("foreign"), /Unknown/u);
+	const ordinary = structuredClone(optionalParameterReview());
+	for(const declaration of ordinary.declarations)
+		declaration.parameters[0].name = "arg0";
+	assert.equal(assertOptionalParameterIr(ordinary, [
+		optionalParameterBinder("ordinary")
+	]).length, 7);
 });
 
 test("ordinary and reviewed author roots retain distinct authenticated inputs", async t => {
