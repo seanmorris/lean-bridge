@@ -1,0 +1,268 @@
+{
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-same-run-refusal-source-history.mjs",
+      "sha256": "aaf2f1965ebcad3cea20c3f8bfdd63256728ef4f47878880b1a5f1f264f30a11"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-same-run-refusal-source-history-tests.mjs",
+      "sha256": "f09d4042273109cc82f9e89a0ee8b964ec28bdffaa837a06822ed4c9c05dfed8"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-same-run-refusal-source-history.mjs",
+      "sha256": "1e1e9c1fc76839f549b203093fd94bc34e2632773f18ad353520d80518a59c9f"
+    }
+  ],
+  "implementationCommit": "0555265d6b4362b6aa67862faa43606dcfd50505",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0700e99f060e4c2f7cd5d69ff23641c088ea3d7055ed3d5b6075b6f9e6fd8d62",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-same-run-refusal-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "130e0256dcb8f9361c5e75aeb6cfcb463fd09c4b97cbc5aa874308cc4dac6943"
+    },
+    {
+      "currentSha256": "1966a1c558605e4f60308546406e5af8744be95e3eb05a2c02b13ae49312986a",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureSameRunRefusalSource, directProofErasureSameRunRefusalNormalizationPaths } from \"./direct-proof-erasure-same-run-refusal-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureSameRunRefusalNormalizationPaths\n\t, ...optionalParameterPromotionIoPinRepairNormalizationPaths\n",
+          "previous": "\t...optionalParameterPromotionIoPinRepairNormalizationPaths\n",
+          "start": 222033
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureSameRunRefusalSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOptionalParameterPromotionIoPinRepairSource(\n",
+          "previous": "\tlet stage = beforeOptionalParameterPromotionIoPinRepairSource(\n",
+          "start": 278080
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7ab02b0821335cb287b9cd77c6b21331465c4ef2f9b8a8c53c143cee56e1fd8b"
+    }
+  ],
+  "milestone": "direct-proof-erasure-same-run-refusal-source-v1",
+  "predecessorCommit": "f2b00d4e54d547054b412580a0ce2c759abc2b4b",
+  "schemaVersion": 1,
+  "scope": "Run the exact fresh-Lean proof refusal before the bounded direct proof-erasure producer, retain it under the same producer revision and hosted run identity, and make the same-run receipt fail closed on its result. Remove the second full Core run previously needed only to source this refusal.",
+  "updates": [
+    {
+      "currentSha256": "fc564b08a166d221a3f55beaeeeab4ad388de4708a136be60fa76ef9096def97",
+      "edits": [
+        {
+          "current": "  proof-refusal:\n    name: Fresh Lean proof refusal\n    if: inputs.suite == 'produce'\n    runs-on: ubuntu-24.04\n    timeout-minutes: 20\n    steps:\n      - name: Check out the exact producer revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: |\n            schema\n            scripts\n            src\n            tests\n          sparse-checkout-cone-mode: true\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: \"22\"\n          cache: npm\n      - name: Restore the pinned Lean toolchain\n        uses: actions/cache@v5\n        with:\n          path: |\n            .toolchains/elan\n            .toolchains/elan-installer\n          key: proof-erasure-lean-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'scripts/bootstrap-toolchains.sh') }}\n      - name: Install locked dependencies\n        run: npm ci --ignore-scripts --no-audit --no-fund\n      - name: Install pinned Lean\n        run: bash scripts/bootstrap-toolchains.sh --lean-only\n      - name: Prove fresh Lean erases closed proofs and refuses proof-valued APIs\n        shell: bash\n        run: |\n          set -o pipefail\n          mkdir -p build/direct-proof-erasure-refusal\n          source scripts/env.sh\n          LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-concurrency=1 \\\n            --test-name-pattern \"fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs\" \\\n            tests/elaborated-metadata.test.mjs \\\n            | tee build/direct-proof-erasure-refusal/run.tap\n\n",
+          "previous": "",
+          "start": 4338
+        },
+        {
+          "current": "    needs: proof-refusal\n    if: inputs.suite == 'produce' && needs.proof-refusal.result == 'success'\n",
+          "previous": "    if: inputs.suite == 'produce'\n",
+          "start": 6013
+        },
+        {
+          "current": "      - proof-refusal\n",
+          "previous": "",
+          "start": 7229
+        },
+        {
+          "current": "          (needs.proof-refusal.result != 'success' ||\n           needs.npm-browser.result != 'success' ||\n",
+          "previous": "          (needs.npm-browser.result != 'success' ||\n",
+          "start": 9621
+        }
+      ],
+      "path": ".github/workflows/direct-proof-erasure-complete.yml",
+      "previousSha256": "61f858359bec8fec4f20972ad75e836a7690a67caca93fa907bb3fa36d4e0ffc"
+    },
+    {
+      "currentSha256": "47e404d98e211c1ddcbdeeb19b0342dcbd92787a0432462f2b47df815c6083a9",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t, directProofErasureHostedCoreRunId\n",
+          "start": 881
+        },
+        {
+          "current": "\t, directProofErasureHostedRunId\n",
+          "previous": "",
+          "start": 1100
+        },
+        {
+          "current": "\tassert.equal(refusal.run.value.id, directProofErasureHostedRunId);\n",
+          "previous": "\tassert.equal(refusal.run.value.id, directProofErasureHostedCoreRunId);\n",
+          "start": 7809
+        },
+        {
+          "current": "\tassert.equal(refusal.job.value.run_id, directProofErasureHostedRunId);\n",
+          "previous": "\tassert.equal(refusal.job.value.run_id, directProofErasureHostedCoreRunId);\n",
+          "start": 8145
+        },
+        {
+          "current": "\t\t\trunId: directProofErasureHostedRunId\n",
+          "previous": "\t\t\trunId: directProofErasureHostedCoreRunId\n",
+          "start": 9823
+        }
+      ],
+      "path": "scripts/archive-direct-proof-erasure-hosted.mjs",
+      "previousSha256": "49b74681b697684d5a1ea4702ccb87bc57dbd438d6b6c404f4b5eb063351ddda"
+    },
+    {
+      "currentSha256": "8b2e58c84750b67a3ecf70be73131065763f7048afae0a96c44b624fb2536f19",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t, directProofErasureHostedCoreRunId\n",
+          "start": 578
+        },
+        {
+          "current": "\tassert.equal(hostedRun.value.path, directProofErasureHostedRefusal.workflow);\n\tconst refusalJobs = jobs.filter(job =>\n",
+          "previous": "\tconst coreRun = readRun(directProofErasureHostedCoreRunId);\n\tassert.equal(coreRun.value.path, directProofErasureHostedRefusal.workflow);\n\tconst coreJobs = await collection(directProofErasureHostedCoreRunId, \"jobs\");\n\tconst refusalJobs = coreJobs.filter(job =>\n",
+          "start": 6326
+        },
+        {
+          "current": "\tawait writeFile(join(refusal, \"run.json\"), hostedRun.bytes, { flag: \"wx\" });\n",
+          "previous": "\tawait writeFile(join(refusal, \"run.json\"), coreRun.bytes, { flag: \"wx\" });\n",
+          "start": 6803
+        },
+        {
+          "current": "",
+          "previous": "\t\t, coreRunId: directProofErasureHostedCoreRunId\n",
+          "start": 7251
+        }
+      ],
+      "path": "scripts/download-direct-proof-erasure-hosted-inputs.mjs",
+      "previousSha256": "3917b19e5a4718a5e5627c8ae029a971fbd98dd4f6e534bbf667c0e256c046ad"
+    },
+    {
+      "currentSha256": "9b954b406f872d105f1ddbeb872f0a9e2c1a2f77427e0b516e4677ee40050b8e",
+      "edits": [
+        {
+          "current": "\t[\"npm-browser\", \"proof-refusal\"], [\"native-perl\", \"npm-browser\"]\n\t, [\"languages\", \"native-perl\"]\n",
+          "previous": "\t[\"native-perl\", \"npm-browser\"], [\"languages\", \"native-perl\"]\n",
+          "start": 368
+        },
+        {
+          "current": "\t\t\t, \"proof-refusal\", \"npm-browser\", \"native-perl\", \"languages\"\n\t\t\t, \"managed-wit\", \"php\"\n",
+          "previous": "\t\t\t, \"npm-browser\", \"native-perl\", \"languages\", \"managed-wit\", \"php\"\n",
+          "start": 4609
+        },
+        {
+          "current": "\t\t, source.indexOf(\"  proof-refusal:\\n\"));\n",
+          "previous": "\t\t, source.indexOf(\"  npm-browser:\\n\"));\n",
+          "start": 5881
+        },
+        {
+          "current": "\tconst refusal = source.slice(source.indexOf(\"  proof-refusal:\\n\")\n\t\t, source.indexOf(\"  npm-browser:\\n\"));\n\tassert.match(refusal, /^ {4}name: Fresh Lean proof refusal$/mu);\n\tassert.match(refusal, /^ {4}if: inputs\\.suite == 'produce'$/mu);\n\tassert.match(refusal, /^ {4}runs-on: ubuntu-24\\.04$/mu);\n\tassert.match(refusal, /fetch-depth: 1/u);\n\tassert.match(refusal, /sparse-checkout-cone-mode: true/u);\n\tassert.match(refusal, /bash scripts\\/bootstrap-toolchains\\.sh --lean-only/u);\n\tassert.match(refusal, /LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-concurrency=1/u);\n\tassert.match(refusal, /--test-name-pattern \"fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs\"/u);\n\tassert.match(refusal, /tests\\/elaborated-metadata\\.test\\.mjs/u);\n\tassert.match(refusal, /\\| tee build\\/direct-proof-erasure-refusal\\/run\\.tap/u);\n\tassert.doesNotMatch(refusal, /continue-on-error|\\|\\| true/u);\n",
+          "previous": "",
+          "start": 6311
+        },
+        {
+          "current": "\t\tif(dependency !== undefined)\n",
+          "previous": "\t\tif(dependency === undefined)\n\t\t{\n\t\t\tassert.doesNotMatch(body, /^ {4}needs:/mu, job);\n\t\t\tassert.match(body, /^ {4}if: inputs\\.suite == 'produce'$/mu, job);\n\t\t}\n\t\telse\n",
+          "start": 7846
+        },
+        {
+          "current": "\t\t\tif(job === \"npm-browser\") assert.match(body\n\t\t\t\t, /^ {4}if: inputs\\.suite == 'produce' && needs\\.proof-refusal\\.result == 'success'$/mu, job);\n\t\t\telse assert.match(body\n",
+          "previous": "\t\t\tassert.match(body\n",
+          "start": 7957
+        },
+        {
+          "current": "\tfor(const job of [\"proof-refusal\", \"npm-browser\", \"native-perl\", \"languages\"\n\t\t, \"managed-wit\", \"php\"])\n",
+          "previous": "\tfor(const job of [\"npm-browser\", \"native-perl\", \"languages\", \"managed-wit\", \"php\"])\n",
+          "start": 8998
+        },
+        {
+          "current": "\t\t, source.replace(\"  proof-refusal:\\n\", \"  disabled-refusal:\\n\")\n\t\t, source.replace(\"bash scripts/bootstrap-toolchains.sh --lean-only\"\n\t\t\t, \"true\")\n\t\t, source.replace(\"LEAN_BRIDGE_ELABORATED_METADATA_TEST=1\", \"\")\n\t\t, source.replace(\"needs.proof-refusal.result != 'success'\", \"false\")\n",
+          "previous": "",
+          "start": 10402
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-ci-tests.mjs",
+      "previousSha256": "41339e32cfe39dc4bf60fef05a9e8e9bbff1b481a8c81eff6491867a130026ad"
+    },
+    {
+      "currentSha256": "732f1faa22ff32984ca8af7ea59417e9f2d5e80bbeb14fcde8feb57f02eeead7",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t, directProofErasureHostedCoreRunId\n",
+          "start": 257
+        },
+        {
+          "current": "",
+          "previous": "\tassert.ok(Number.isSafeInteger(directProofErasureHostedCoreRunId));\n",
+          "start": 744
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-hosted-archive-tests.mjs",
+      "previousSha256": "265fb659a880a05f881d5a82bead78e5eaaffca41aa015cf83c7fa09b8b9a252"
+    },
+    {
+      "currentSha256": "0b124c71ad9256f8fa04dc657275ef27ccd42cf0903f03c7937e28161bfcc1e0",
+      "edits": [
+        {
+          "current": "",
+          "previous": "export const directProofErasureHostedCoreRunId = 40824858718;\n",
+          "start": 838
+        },
+        {
+          "current": "\tid: \"refusal\", workflow: directProofErasureMatrixWorkflow\n\t, jobName: \"Fresh Lean proof refusal\"\n",
+          "previous": "\tid: \"refusal\", workflow: \".github/workflows/quality.yml\"\n\t, jobName: \"Static quality contract\"\n",
+          "start": 1013
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-hosted-archive.mjs",
+      "previousSha256": "34235bf74ed2793fa81447b45f95790a368109b40494b3fcd5862daf2dd7c10f"
+    },
+    {
+      "currentSha256": "43de86229cd47a97470edc4556038baf46eb6a158e670501698d62d14325f0cc",
+      "edits": [
+        {
+          "current": "\tdirectProofErasureHostedEvidenceDirectory\n",
+          "previous": "\tdirectProofErasureHostedCoreRunId\n\t, directProofErasureHostedEvidenceDirectory\n",
+          "start": 551
+        },
+        {
+          "current": "",
+          "previous": "\t, coreRunId: directProofErasureHostedCoreRunId\n",
+          "start": 1418
+        },
+        {
+          "current": "",
+          "previous": "\t\tassert.ok(Number.isSafeInteger(pins.coreRunId) && pins.coreRunId > 0);\n",
+          "start": 2546
+        },
+        {
+          "current": "\t\tassert.equal(index.refusal.runId, pins.runId);\n",
+          "previous": "\t\tassert.equal(index.refusal.runId, pins.coreRunId);\n",
+          "start": 9242
+        },
+        {
+          "current": "\t\tassert.equal(refusal.run.id, pins.runId);\n",
+          "previous": "\t\tassert.equal(refusal.run.id, pins.coreRunId);\n",
+          "start": 9865
+        },
+        {
+          "current": "\t\tassert.equal(refusal.job.run_id, pins.runId);\n",
+          "previous": "\t\tassert.equal(refusal.job.run_id, pins.coreRunId);\n",
+          "start": 10138
+        },
+        {
+          "current": "\t\t\t, runId: pins.runId\n",
+          "previous": "\t\t\t, runId: pins.runId, coreRunId: pins.coreRunId\n",
+          "start": 10660
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-hosted-evidence.mjs",
+      "previousSha256": "ff2a03e58c48a1999a556713652cdbb2c7ddf1383c9615e99ad13de72f0abfb5"
+    }
+  ]
+}

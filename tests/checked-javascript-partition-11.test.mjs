@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
+import "./helpers/direct-proof-erasure-same-run-refusal-source-history-tests.mjs";
 import "./helpers/large-evidence-transaction-source-history-tests.mjs";
 import "./helpers/optional-parameter-promotion-io-pin-repair-source-history-tests.mjs";
 import "./helpers/optional-parameter-promotion-io-pin-repair-tests.mjs";
