@@ -1,0 +1,87 @@
+{
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-pin-test-milestone-source-history.mjs",
+      "sha256": "9c029e943eed4c2dd22123f7f8be75ec206efd0df97fcb020616a82a0ccc713d"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-pin-test-milestone-source-history-tests.mjs",
+      "sha256": "ee0cef3859c6cc06497620aa007c2fbb238d1264633e66406ac773fa91b2991b"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-pin-test-milestone-source-history.mjs",
+      "sha256": "9668ec5de103468ff4516d92410c2a1f55cca178afdc50cb8fa149e6bac16736"
+    }
+  ],
+  "implementationCommit": "f0860bc1afe7aba6eed6d45c1f0999a0e624e129",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4b8ebf4e8c15de746f22f9368a4023262c744f1a693eded8b8287764efe170c4",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-pin-test-milestone-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "199aca3afa247ff52cb700ae3f679e98ae1925f074532a27697190d613e4813e"
+    },
+    {
+      "currentSha256": "1028fb27a3c0c0d7649b3329c2aa0da03a45566db8a5eedeb5c12786635f7cce",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterPinTestMilestoneSource, optionalParameterPinTestMilestoneNormalizationPaths } from \"./optional-parameter-pin-test-milestone-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...optionalParameterPinTestMilestoneNormalizationPaths\n\t, ...directProofErasurePhpProfileRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasurePhpProfileRepairNormalizationPaths\n",
+          "start": 223945
+        },
+        {
+          "current": "\tlet stage = beforeOptionalParameterPinTestMilestoneSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasurePhpProfileRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasurePhpProfileRepairSource(\n",
+          "start": 280619
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e20aa8b6859a534980b9ad7b018213b2200710b29a16065bbc280b4f8aee71e9"
+    }
+  ],
+  "milestone": "optional-parameter-pin-test-milestone-source-v1",
+  "observedTest": "tests/checked-javascript-partition-11.test.mjs",
+  "predecessorCommit": "c3b934d06c41a91dc7b28c519c90e9983aa4a1fe",
+  "schemaVersion": 1,
+  "scope": "Bind the optional promotion-reader pin assertion to the immutable repair milestone so later type-surface promotions remain valid.",
+  "updates": [
+    {
+      "currentSha256": "9280ddc810e30d0ca088ad145609f8bc0a4e80f8a9cf67f82af2c96e80a0843e",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 182
+        },
+        {
+          "current": "import {\n\toptionalParameterPromotionIoPinRepairImplementation\n} from \"./optional-parameter-promotion-io-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 556
+        },
+        {
+          "current": "test(\"optional promotion reader repair changes exactly 33 milestone pins\", () => {\n",
+          "previous": "test(\"optional promotion reader repair changes exactly 33 live pins\", async () => {\n",
+          "start": 806
+        },
+        {
+          "current": "\tconst after = JSON.parse(git([\"show\"\n\t\t, `${optionalParameterPromotionIoPinRepairImplementation}:docs/type-surface.v1.json`]));\n\tconst sourceSha256 = sha256(git([\"show\"\n\t\t, `${optionalParameterPromotionIoPinRepairImplementation}:${optionalParameterPromotionIoPath}`]));\n",
+          "previous": "\tconst after = JSON.parse(await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst sourceSha256 = sha256(await readFile(optionalParameterPromotionIoPath));\n",
+          "start": 1013
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-promotion-io-pin-repair-tests.mjs",
+      "previousSha256": "82a7066d92accba0ed1e4577d12988c5a2ff63d3594a0ac05a137bd30472e146"
+    }
+  ]
+}

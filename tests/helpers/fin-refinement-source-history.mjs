@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOptionalParameterPinTestMilestoneSource, optionalParameterPinTestMilestoneNormalizationPaths } from "./optional-parameter-pin-test-milestone-source-history.mjs";
 import { beforeDirectProofErasurePhpProfileRepairSource, directProofErasurePhpProfileRepairNormalizationPaths } from "./direct-proof-erasure-php-profile-repair-source-history.mjs";
 import { beforeDirectProofErasureManagedWitRepairSource, directProofErasureManagedWitRepairNormalizationPaths } from "./direct-proof-erasure-managed-wit-repair-source-history.mjs";
 import { beforeDirectProofErasureLanguageClosureRepairSource, directProofErasureLanguageClosureRepairNormalizationPaths } from "./direct-proof-erasure-language-closure-repair-source-history.mjs";
@@ -2408,7 +2409,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasurePhpProfileRepairNormalizationPaths
+	...optionalParameterPinTestMilestoneNormalizationPaths
+	, ...directProofErasurePhpProfileRepairNormalizationPaths
 	, ...directProofErasureManagedWitRepairNormalizationPaths
 	, ...directProofErasureLanguageClosureRepairNormalizationPaths
 	, ...directProofErasureComponentBinderRepairNormalizationPaths
@@ -3555,7 +3557,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasurePhpProfileRepairSource(
+	let stage = beforeOptionalParameterPinTestMilestoneSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasurePhpProfileRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
