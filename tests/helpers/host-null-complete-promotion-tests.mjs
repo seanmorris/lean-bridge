@@ -28,6 +28,15 @@ const load = async () => {
 		"docs/type-surface.v1.json", "schema/binding-ir.schema.json"
 		, "docs/consumer-support.v1.json"
 	].map(async path => JSON.parse(await readFile(path, "utf8"))));
+	const evidence = document.evidence.filter(entry =>
+		entry.id !== hostNullCompletePromotionEvidenceId);
+	if(evidence.length !== document.evidence.length)
+	{
+		assert.equal(document.evidence.length - evidence.length, 1);
+		document.evidence = evidence;
+		document.observations = document.observations.filter(observation =>
+			!observation.id.startsWith("host-null-complete-"));
+	}
 	return { document, contracts: { irSchema, consumers } };
 };
 const revision = "1".repeat(40);

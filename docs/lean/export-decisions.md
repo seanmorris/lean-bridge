@@ -70,10 +70,13 @@ The selected null constructor becomes the host language's null value and the
 value constructor becomes its payload. The payload must itself have a
 representation distinct from null. Nested `HostNull (Option T)` and
 `Option (HostNull T)` therefore retain three distinct states instead of
-collapsing either `Option.none` into null. JavaScript/TypeScript and the PHP
-profiles have installed package acceptance for copied parameters, results,
-fields and synchronous callback positions. Other targets require their own
-installed evidence; selecting a target never silently drops this distinction.
+collapsing either `Option.none` into null. The [complete hosted HostNull
+matrix](../evidence/host-null-complete-20261029/index.json) establishes copied
+parameters, results, fields and synchronous callback positions in installed
+ordinary-source and independently reviewed packages across all seventeen
+consumer profiles. Owned or asynchronous values and generic or dependent
+HostNull combinations remain separate work; selecting a target never silently
+drops this distinction.
 
 Declare supported ownership, lifetime, refinement policy and boundary-effect requirements through [export contracts](existing-package.md#declare-export-contracts). The compiler checks them after resolving the signature; unsupported choices fail before linking. Contracts enforce copied values, native call-scoped resource/callback borrowing, explicit returned leases, and synchronous callback effects. Ordinary-source npm packages accept [bounded integers inside containers, copied fields, aliases, recursive values, callbacks, and returned closures](existing-package.md#export-bounded-integers) and [checked top-level `Subtype` constructors](existing-package.md#export-a-checked-subtype) over primitive bases. PHP-Wasm copied-graph packages also retain selected constructors and `Fin` bounds through [finite recursive copied values](../evidence/recursive-subtype-php-wasm-20261015.md). Refined callback results must have a finite recovery value; bare `Fin 0` results are rejected at build time. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [explicit input transfers](../publish/c.md#transfer-input-ownership). Other checked-constructor positions, retained host callbacks and async adapters remain unfinished.
 

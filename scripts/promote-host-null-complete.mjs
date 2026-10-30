@@ -20,6 +20,10 @@ import {
 	, renderHostNullCompleteDocumentation
 } from "../tests/helpers/host-null-complete-documentation.mjs";
 import {
+	hostNullCompleteDocumentationPinTransitions
+	, reconcileHostNullCompleteDocumentationPins
+} from "../tests/helpers/host-null-complete-documentation-pin-reconciliation.mjs";
+import {
 	hostNullPerlSharedSource
 } from "../tests/helpers/host-null-complete-perl-evidence-refresh.mjs";
 import {
@@ -59,11 +63,16 @@ const [irSchema, consumers] = await Promise.all([
 	, readFile("docs/consumer-support.v1.json", "utf8").then(JSON.parse)
 ]);
 const fullOriginal = JSON.parse(await readFile(path, "utf8"));
-const retain = {
-	retainEvidence: hostNullCompleteSourcePinEvidenceIds(fullOriginal)
-};
+const retainedEvidenceIds = hostNullCompleteSourcePinEvidenceIds(fullOriginal);
+const retainedEvidence = new Set(retainedEvidenceIds);
 const original = await readPromotionInventory(createReadStream(path)
-	, { irSchema, consumers }, retain);
+	, { irSchema, consumers });
+assert.deepEqual(original.document.evidence.map(entry => entry.id)
+	, fullOriginal.evidence.map(entry => entry.id));
+original.document.evidence = original.document.evidence.map((entry, index) =>
+	retainedEvidence.has(entry.id) ? fullOriginal.evidence[index] : entry);
+assert.equal(original.document.evidence.filter(entry =>
+	retainedEvidence.has(entry.id)).length, retainedEvidenceIds.length);
 const sources = {};
 for(const [name, documentPath] of Object.entries(
 	hostNullCompleteDocumentationPaths))
@@ -84,22 +93,46 @@ const currentSources = Object.fromEntries(await Promise.all([
 const reconciliation = reconcileHostNullCompleteSourcePins(
 	original.document, reference, currentSources);
 const refreshedDocument = reconciliation.inventory;
-const promoted = promoteHostNullComplete(
+let promoted = promoteHostNullComplete(
 	refreshedDocument, { irSchema, consumers }, reference);
-const generated = await renderReferenceDocuments({
+let generated = await renderReferenceDocuments({
 	root, inventory: { document: promoted, irSchema, consumers }
 });
-const documentationEntries = Object.entries(
+let documentationEntries = Object.entries(
 	hostNullCompleteDocumentationPaths).map(([name, documentPath]) => [
 	name, generated[documentPath] ?? sources[name]
 	]);
-const documentation = renderHostNullCompleteDocumentation(Object.fromEntries(
+let documentation = renderHostNullCompleteDocumentation(Object.fromEntries(
 	documentationEntries));
-const documents = {
+let documents = {
 	...generated
 	, ...Object.fromEntries(Object.entries(hostNullCompleteDocumentationPaths)
 		.map(([name, documentPath]) => [documentPath, documentation[name]]))
 };
+const documentationReconciliation = reconcileHostNullCompleteDocumentationPins(
+	promoted, new Map(hostNullCompleteDocumentationPinTransitions.map(item => [
+		item.path, documents[item.path]
+	]
+	))
+);
+promoted = documentationReconciliation.inventory;
+generated = await renderReferenceDocuments({
+	root, inventory: { document: promoted, irSchema, consumers }
+});
+documentationEntries = Object.entries(
+	hostNullCompleteDocumentationPaths).map(([name, documentPath]) => [
+	name, generated[documentPath] ?? sources[name]
+	]);
+documentation = renderHostNullCompleteDocumentation(Object.fromEntries(
+	documentationEntries));
+const finalDocuments = {
+	...generated
+	, ...Object.fromEntries(Object.entries(hostNullCompleteDocumentationPaths)
+		.map(([name, documentPath]) => [documentPath, documentation[name]]))
+};
+assert.deepEqual(finalDocuments, documents
+	, "Documentation source-pin reconciliation must not change rendered prose");
+documents = finalDocuments;
 
 clean();
 await mkdir(join(root, "build"), { recursive: true });
@@ -108,12 +141,17 @@ let installing = false, completed = false;
 try
 {
 	const refreshedPath = join(staging, "refreshed-inventory.json");
+	const refreshedWithDocumentationPins = {
+		...refreshedDocument
+		, evidence: promoted.evidence.slice(0, original.document.evidence.length)
+	};
 	const refreshedIdentity = await stageEvidenceRefresh(
-		path, refreshedPath, original, refreshedDocument);
+		path, refreshedPath, original, refreshedWithDocumentationPins);
 	assert.equal(refreshedIdentity.bytes, original.source.bytes
 		, "Digest-only Perl refresh must preserve inventory size");
 	const refreshed = {
-		...original, document: refreshedDocument, source: refreshedIdentity
+		...original, document: refreshedWithDocumentationPins
+		, source: refreshedIdentity
 	};
 	const staged = join(staging, "inventory.json");
 	const next = await stagePromotionInventory(
@@ -142,7 +180,9 @@ try
 		, observations: promoted.observations.length
 			- original.document.observations.length
 		, refreshedEvidence: reconciliation.refreshedEvidence
+			+ documentationReconciliation.refreshedEvidence
 		, refreshedPins: reconciliation.refreshedPins
+			+ documentationReconciliation.refreshedPins
 		, inventory: next, files: files.map(file => file.path), head
 	}, null, 2) + "\n");
 }

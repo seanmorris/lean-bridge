@@ -87,6 +87,7 @@ import "./host-null-javascript-hosted-report.test.mjs";
 import "./helpers/host-null-complete-ci-tests.mjs";
 import "./helpers/host-null-complete-matrix-receipt-tests.mjs";
 import "./helpers/host-null-complete-documentation-tests.mjs";
+import "./helpers/host-null-complete-documentation-pin-reconciliation-tests.mjs";
 import "./helpers/host-null-complete-perl-evidence-refresh-tests.mjs";
 import "./helpers/host-null-complete-source-pin-reconciliation-tests.mjs";
 import "./helpers/host-null-complete-promotion-transaction-tests.mjs";

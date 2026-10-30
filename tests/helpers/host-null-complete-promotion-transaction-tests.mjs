@@ -15,6 +15,7 @@ test("complete HostNull promotion is clean, checkable and transactional", () => 
 	assert.match(source, /readPromotionInventory\(createReadStream\(path\)/u);
 	assert.match(source, /hostNullCompletePromotionReference\(\)/u);
 	assert.match(source, /reconcileHostNullCompleteSourcePins\(/u);
+	assert.match(source, /reconcileHostNullCompleteDocumentationPins\(/u);
 	assert.match(source, /promoteHostNullComplete\(/u);
 	assert.match(source, /renderReferenceDocuments\(/u);
 	assert.match(source, /renderHostNullCompleteDocumentation\(/u);
@@ -37,6 +38,10 @@ test("complete HostNull promotion keeps generated and manual docs together", () 
 		, /files\.push\(\{ path: documentPath, staged, previous, next \}\)/u);
 	assert.match(source, /mode: checkOnly \? "check" : "promote"/u);
 	assert.match(source, /cells: 170/u);
-	assert.match(source, /refreshedEvidence: reconciliation\.refreshedEvidence/u);
-	assert.match(source, /refreshedPins: reconciliation\.refreshedPins/u);
+	assert.match(source
+		, /documentationReconciliation\.refreshedEvidence/u);
+	assert.match(source, /documentationReconciliation\.refreshedPins/u);
+	assert.match(source
+		, /Documentation source-pin reconciliation must not change rendered prose/u);
+	assert.match(source, /retainedEvidenceIds/u);
 });

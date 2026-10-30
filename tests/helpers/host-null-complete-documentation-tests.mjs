@@ -31,12 +31,16 @@ test("complete HostNull author docs name the exact installed boundary", () => {
 	assert.match(rendered.existingPackage, /nested-null consumer example/u);
 });
 
-test("complete HostNull author docs reject missing and repeated markers", () => {
+test("complete HostNull author docs stay stable and reject malformed markers", () => {
 	const rendered = renderHostNullCompleteDocumentation(sources);
-	assert.throws(() => renderHostNullCompleteDocumentation(rendered)
-		, /Expected one HostNull documentation marker/u);
+	assert.deepEqual(renderHostNullCompleteDocumentation(rendered), rendered);
 	for(const name of Object.keys(sources))
+	{
 		assert.throws(() => renderHostNullCompleteDocumentation({
 			...sources, [name]: "missing marker\n"
 		}), /Expected one HostNull documentation marker/u);
+		assert.throws(() => renderHostNullCompleteDocumentation({
+			...rendered, [name]: `${rendered[name]}\n${rendered[name]}`
+		}), /Expected one HostNull documentation marker/u);
+	}
 });

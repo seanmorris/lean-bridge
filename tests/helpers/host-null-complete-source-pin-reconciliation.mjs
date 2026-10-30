@@ -18,6 +18,22 @@ export const hostNullTypeDocsPreviousSourceSha256
 	= "a63a20974d519554c073ab4b13653d8c887398de23de5bc31c4a691ca080f61f";
 export const hostNullTypeDocsEvidenceCount = 132;
 export const hostNullTypeDocsStalePinCount = 131;
+export const hostNullPublishedTypeDocsEvidenceCount = 133;
+export const hostNullPublishedSourcePinEvidenceCount = 136;
+
+const publicationState = inventory => {
+	const published = inventory.evidence.some(entry =>
+		entry.id === "hosted-host-null-complete-installed");
+	return Object.freeze({
+		published
+		, typeDocsEvidenceCount: published
+			? hostNullPublishedTypeDocsEvidenceCount
+			: hostNullTypeDocsEvidenceCount
+		, sourcePinEvidenceCount: published
+			? hostNullPublishedSourcePinEvidenceCount : 135
+		, staleTypeDocsPinCount: published ? 0 : hostNullTypeDocsStalePinCount
+	});
+};
 
 const exactReference = reference => {
 	assert.equal(reference.id, "hosted-host-null-complete-installed");
@@ -31,17 +47,18 @@ const exactReference = reference => {
  */
 export const hostNullCompleteSourcePinEvidenceIds = inventory => {
 	assert.ok(Array.isArray(inventory?.evidence));
+	const state = publicationState(inventory);
 	const perl = new Set(hostNullPerlRequalifiedEvidenceIds);
 	const selected = inventory.evidence.filter(entry =>
 		perl.has(entry.id) || entry.files.some(file =>
 			file.path === hostNullTypeDocsSharedSource));
 	assert.equal(selected.filter(entry => entry.files.some(file =>
 		file.path === hostNullTypeDocsSharedSource)).length
-	, hostNullTypeDocsEvidenceCount);
+	, state.typeDocsEvidenceCount);
 	for(const id of perl)
 		assert.equal(selected.filter(entry => entry.id === id).length, 1, id);
 	assert.equal(new Set(selected.map(entry => entry.id)).size, selected.length);
-	assert.equal(selected.length, 135);
+	assert.equal(selected.length, state.sourcePinEvidenceCount);
 	return Object.freeze(selected.map(entry => entry.id));
 };
 
@@ -64,6 +81,7 @@ export const reconcileHostNullCompleteSourcePins = (
 		assert.match(digest, /^[a-f0-9]{64}$/u);
 	assert.notEqual(current.perl, hostNullPerlPreviousSourceSha256);
 	assert.notEqual(current.typeDocs, hostNullTypeDocsPreviousSourceSha256);
+	const state = publicationState(inventory);
 	const retainedEvidenceIds = hostNullCompleteSourcePinEvidenceIds(inventory);
 	const retained = new Set(retainedEvidenceIds);
 	const refreshed = structuredClone(inventory);
@@ -102,9 +120,9 @@ export const reconcileHostNullCompleteSourcePins = (
 			refreshedEvidence.add(entry.id);
 		}
 	}
-	assert.equal(typeDocsPins, hostNullTypeDocsEvidenceCount);
-	assert.equal(staleTypeDocsPins, hostNullTypeDocsStalePinCount);
-	assert.ok(refreshedPins >= hostNullTypeDocsStalePinCount);
+	assert.equal(typeDocsPins, state.typeDocsEvidenceCount);
+	assert.equal(staleTypeDocsPins, state.staleTypeDocsPinCount);
+	assert.ok(refreshedPins >= state.staleTypeDocsPinCount);
 	return Object.freeze({
 		inventory: refreshed, retainedEvidenceIds
 		, refreshedEvidence: refreshedEvidence.size, refreshedPins

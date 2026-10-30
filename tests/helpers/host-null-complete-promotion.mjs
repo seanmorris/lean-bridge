@@ -78,6 +78,8 @@ export const hostNullCompletePromotionReferencePaths = Object.freeze([
 	, "tests/helpers/host-null-complete-ci-tests.mjs"
 	, "tests/helpers/host-null-complete-documentation.mjs"
 	, "tests/helpers/host-null-complete-documentation-tests.mjs"
+	, "tests/helpers/host-null-complete-documentation-pin-reconciliation.mjs"
+	, "tests/helpers/host-null-complete-documentation-pin-reconciliation-tests.mjs"
 	, "tests/helpers/host-null-complete-perl-evidence-refresh.mjs"
 	, "tests/helpers/host-null-complete-perl-evidence-refresh-tests.mjs"
 	, "tests/helpers/host-null-complete-source-pin-reconciliation.mjs"

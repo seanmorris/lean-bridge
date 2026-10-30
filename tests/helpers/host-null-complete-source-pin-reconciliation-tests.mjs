@@ -14,8 +14,10 @@ import {
 } from "./host-null-complete-perl-evidence-refresh.mjs";
 import {
 	hostNullCompleteSourcePinEvidenceIds
-	, hostNullTypeDocsEvidenceCount, hostNullTypeDocsPreviousSourceSha256
-	, hostNullTypeDocsSharedSource, hostNullTypeDocsStalePinCount
+	, hostNullPublishedSourcePinEvidenceCount
+	, hostNullPublishedTypeDocsEvidenceCount
+	, hostNullTypeDocsPreviousSourceSha256
+	, hostNullTypeDocsSharedSource
 	, reconcileHostNullCompleteSourcePins
 } from "./host-null-complete-source-pin-reconciliation.mjs";
 
@@ -34,17 +36,17 @@ const current = Object.freeze({
 test("HostNull publication reconciles the one remaining current-source split", () => {
 	const frozen = structuredClone(document);
 	const selected = hostNullCompleteSourcePinEvidenceIds(document);
-	assert.equal(selected.length, 135);
+	assert.equal(selected.length, hostNullPublishedSourcePinEvidenceCount);
 	const result = reconcileHostNullCompleteSourcePins(
 		document, reference, current);
 	assert.deepEqual(document, frozen);
 	assert.deepEqual(result.retainedEvidenceIds, selected);
-	assert.equal(result.refreshedPins, hostNullTypeDocsStalePinCount);
-	assert.equal(result.refreshedEvidence, hostNullTypeDocsStalePinCount);
+	assert.equal(result.refreshedPins, 0);
+	assert.equal(result.refreshedEvidence, 0);
 	assert.deepEqual(result.inventory.observations, document.observations);
 	const typeDocs = result.inventory.evidence.flatMap(entry =>
 		entry.files.filter(file => file.path === hostNullTypeDocsSharedSource));
-	assert.equal(typeDocs.length, hostNullTypeDocsEvidenceCount);
+	assert.equal(typeDocs.length, hostNullPublishedTypeDocsEvidenceCount);
 	assert.deepEqual(new Set(typeDocs.map(file => file.sha256))
 		, new Set([current.typeDocs]));
 	for(const id of hostNullPerlRequalifiedEvidenceIds)
@@ -65,11 +67,9 @@ test("HostNull publication accepts the exact older Perl pins and rejects unknown
 	}
 	const result = reconcileHostNullCompleteSourcePins(
 		previous, reference, current);
-	assert.equal(result.refreshedPins
-		, hostNullTypeDocsStalePinCount + hostNullPerlRequalifiedEvidenceIds.length);
+	assert.equal(result.refreshedPins, hostNullPerlRequalifiedEvidenceIds.length);
 	assert.equal(result.refreshedEvidence
-		, hostNullTypeDocsStalePinCount
-			+ hostNullPerlRequalifiedEvidenceIds.length - 2);
+		, hostNullPerlRequalifiedEvidenceIds.length);
 	const forged = structuredClone(document);
 	forged.evidence.find(entry => entry.id === hostNullPerlRequalifiedEvidenceIds[0])
 		.files.find(item => item.path === hostNullPerlSharedSource)

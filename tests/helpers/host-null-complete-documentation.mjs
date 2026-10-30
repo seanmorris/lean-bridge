@@ -11,10 +11,12 @@ export const hostNullCompleteDocumentationPaths = Object.freeze({
 	, exportDecisions: "docs/lean/export-decisions.md"
 });
 
-const replaceOnce = (source, previous, next, label) => {
-	assert.equal(source.split(previous).length, 2
+const advanceOnce = (source, previous, next, label) => {
+	const previousCount = source.split(previous).length - 1;
+	const currentCount = source.split(next).length - 1;
+	assert.equal(previousCount + currentCount, 1
 		, `Expected one HostNull documentation marker: ${label}`);
-	return source.replace(previous, next);
+	return previousCount === 1 ? source.replace(previous, next) : source;
 };
 
 /**
@@ -26,7 +28,7 @@ export const renderHostNullCompleteDocumentation = sources => {
 	assert.deepEqual(Object.keys(sources).sort()
 		, Object.keys(hostNullCompleteDocumentationPaths).sort());
 	const output = { ...sources };
-	output.exportDecisions = replaceOnce(output.exportDecisions
+	output.exportDecisions = advanceOnce(output.exportDecisions
 		, `collapsing either \`Option.none\` into null. JavaScript/TypeScript and the PHP
 profiles have installed package acceptance for copied parameters, results,
 fields and synchronous callback positions. Other targets require their own
@@ -39,7 +41,7 @@ consumer profiles. Owned or asynchronous values and generic or dependent
 HostNull combinations remain separate work; selecting a target never silently
 drops this distinction.`
 		, "Lean export decision boundary");
-	output.existingPackage = replaceOnce(output.existingPackage
+	output.existingPackage = advanceOnce(output.existingPackage
 		, `See [Choose an export
 shape](export-decisions.md#select-an-explicit-host-null-wrapper) for semantics
 and the [PHP guide](../php.md#explicit-host-null) for its consumer values.`

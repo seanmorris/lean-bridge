@@ -100,8 +100,10 @@ Keep this field when building an independently reviewed Binding IR. The review
 describes `host-null` in the public type graph, while the configuration supplies
 the exact Lean names that fresh compilation must reproduce. Do not copy the
 constructor names into ordinary Option metadata. See [Choose an export
-shape](export-decisions.md#select-an-explicit-host-null-wrapper) for semantics
-and the [PHP guide](../php.md#explicit-host-null) for its consumer values.
+shape](export-decisions.md#select-an-explicit-host-null-wrapper) for semantics,
+the [profile conversion tables](../reference/types.md#full-type-surface) for
+every generated carrier, and the [PHP guide](../php.md#explicit-host-null) for
+its nested-null consumer example.
 
 ### Compile a reviewed contract
 
