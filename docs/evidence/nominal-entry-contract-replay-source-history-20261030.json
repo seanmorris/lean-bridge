@@ -1,0 +1,147 @@
+{
+  "detectedDuringNodeReadback": true,
+  "diagnosticCoreRun": 41117023757,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-nominal-entry-contract-replay-source-history.mjs",
+      "sha256": "9b83f9ecf7ff25f0ef0bf324e6e67d9f0ee3e8331f1f1e385315a1aaa4095470"
+    },
+    {
+      "path": "tests/helpers/nominal-entry-contract-replay-source-history-tests.mjs",
+      "sha256": "8217bcb4335caaa3844405620edfcccd0b565fd7cc3550f2785d39408662f472"
+    },
+    {
+      "path": "tests/helpers/nominal-entry-contract-replay-source-history.mjs",
+      "sha256": "5ed42970db6e78cb1bf84e06cb225e703a7099c88dd21fac2fdd1865d9e5bb9e"
+    }
+  ],
+  "implementationCommit": "0bdda9fe2a0cc2af0114fac77fdf9621d1ef31fa",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9fe41c9bf1cde952c9066b34d5d9bb25b5d3425fb76c638ace91e8cf80355c21",
+      "edits": [
+        {
+          "current": "import \"./helpers/nominal-entry-contract-replay-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 324
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "18dcd5373d7a51e5d29e020715e0f88b55aa402d03d8581c6a03d5c0e9e8694c"
+    },
+    {
+      "currentSha256": "277f8d08567a4a2f621c80117fa6580b00235bbba4b30cee13415040c21e944f",
+      "edits": [
+        {
+          "current": "import { beforeNominalEntryContractReplaySource, nominalEntryContractReplayNormalizationPaths } from \"./nominal-entry-contract-replay-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...nominalEntryContractReplayNormalizationPaths\n\t, ...coreHostNullReconciliationNormalizationPaths\n",
+          "previous": "\t...coreHostNullReconciliationNormalizationPaths\n",
+          "start": 229222
+        },
+        {
+          "current": "\tlet stage = beforeNominalEntryContractReplaySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreHostNullReconciliationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreHostNullReconciliationSource(path, text, expected);\n",
+          "start": 287620
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "24442788cfbb79c6956d8a827ed979db3945ddfbd7da54ccfa22947e1f2a9ea1"
+    }
+  ],
+  "milestone": "nominal-entry-contract-replay-source-v1",
+  "predecessorCommit": "85fbdbbd1f362de8fe2f06d2fa19e9e845c19818",
+  "repairs": [
+    "historical-binding-ir-and-consumer-contract",
+    "exact-source-history-milestone",
+    "publication-time-addition-identity"
+  ],
+  "schemaVersion": 1,
+  "scope": "Replay nominal-entry measurement and publication history against the exact Binding IR schema, consumer contract, source milestone, and publication identity that each immutable record names. Preserve all support observations and immutable evidence. Missing local archive payloads remain a sparse-checkout condition handled by Core shard materialization rather than a passing test rewrite.",
+  "updates": [
+    {
+      "currentSha256": "e09708fdebd1c81b81b32698ee06b9089bc0545096a70b03fb9c715bd4a27e36",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "start": 544
+        },
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 598
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n",
+          "previous": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, latest, update.currentSha256\n",
+          "start": 1877
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n",
+          "previous": "\t\tconst current = beforeFinRefinementSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.currentSha256\n",
+          "start": 2585
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tpin.containerPath, pin.containerCurrentSha256\n",
+          "previous": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tpin.containerPath, await readFile(pin.containerPath, \"utf8\")\n\t\t\t, pin.containerCurrentSha256\n",
+          "start": 2799
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-measurement-source-history-tests.mjs",
+      "previousSha256": "bf8d88cc47d4d1a6c57218d996b5416f7654bdc1aee985a87e1f3d4ce7a78603"
+    },
+    {
+      "currentSha256": "974cb017fd176e3b8f02d205d1cfc264df9d25744648bce9c5ba45a1ad9968cc",
+      "edits": [
+        {
+          "current": "const gitJson = async (revision, path) => {\n\tconst chunks = [];\n\tfor await(const chunk of gitSourceBytes(revision, path)) chunks.push(chunk);\n\treturn JSON.parse(Buffer.concat(chunks).toString(\"utf8\"));\n};\n\n",
+          "previous": "",
+          "start": 1443
+        },
+        {
+          "current": "\t\tgitJson(implementation, \"schema/binding-ir.schema.json\")\n\t\t, gitJson(implementation, \"docs/consumer-support.v1.json\")\n",
+          "previous": "\t\treadFile(\"schema/binding-ir.schema.json\", \"utf8\").then(JSON.parse)\n\t\t, readFile(\"docs/consumer-support.v1.json\", \"utf8\").then(JSON.parse)\n",
+          "start": 1784
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-promotion-tests.mjs",
+      "previousSha256": "e07b8a2072b8c945cf9017f6a4ddab9c206a2d4f872c0a39af9b62ac9bde88bd"
+    },
+    {
+      "currentSha256": "2a4ddb1ed19935d63f75cd60e19efcd972f7738db2914b6ad7317ba8a897ae00",
+      "edits": [
+        {
+          "current": "const gitJson = async (revision, path) => {\n\tconst chunks = [];\n\tfor await(const chunk of gitSourceBytes(revision, path)) chunks.push(chunk);\n\treturn JSON.parse(Buffer.concat(chunks).toString(\"utf8\"));\n};\n",
+          "previous": "",
+          "start": 1826
+        },
+        {
+          "current": "\t\tconst beforeCommit = nominalSubtypeEntryPublicationCommits.at(-2);\n\t\tconst afterCommit = nominalSubtypeEntryPublicationCommits.at(-1);\n\t\tconst [beforeIrSchema, beforeConsumers, afterIrSchema, afterConsumers]\n\t\t\t= await Promise.all([\n\t\t\t\tgitJson(beforeCommit, \"schema/binding-ir.schema.json\")\n\t\t\t\t, gitJson(beforeCommit, \"docs/consumer-support.v1.json\")\n\t\t\t\t, gitJson(afterCommit, \"schema/binding-ir.schema.json\")\n\t\t\t\t, gitJson(afterCommit, \"docs/consumer-support.v1.json\")\n\t\t\t]);\n",
+          "previous": "\t\tconst [irSchema, consumers] = await Promise.all([\n\t\t\treadFile(\"schema/binding-ir.schema.json\", \"utf8\").then(JSON.parse)\n\t\t\t, readFile(\"docs/consumer-support.v1.json\", \"utf8\").then(JSON.parse)\n\t\t]);\n\t\tconst contracts = { irSchema, consumers };\n",
+          "start": 5715
+        },
+        {
+          "current": "\t\t\tbeforeCommit, inventoryPath)\n\t\t, { irSchema: beforeIrSchema, consumers: beforeConsumers });\n",
+          "previous": "\t\t\tnominalSubtypeEntryPublicationCommits.at(-2), inventoryPath), contracts);\n",
+          "start": 6259
+        },
+        {
+          "current": "\t\t\tafterCommit, inventoryPath)\n\t\t, { irSchema: afterIrSchema, consumers: afterConsumers });\n",
+          "previous": "\t\t\tnominalSubtypeEntryPublicationCommits.at(-1), inventoryPath), contracts);\n",
+          "start": 6497
+        },
+        {
+          "current": "\t\t\tassert.equal(sha256(git([\"show\"\n\t\t\t\t, `${nominalSubtypeEntryPublicationCommit}:${addition.path}`]))\n",
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 7517
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-publication-source-history-tests.mjs",
+      "previousSha256": "058aae96341f8de7cd13d082bc90b17c7d71884b69f6993720fb580e4a5a678c"
+    }
+  ]
+}
