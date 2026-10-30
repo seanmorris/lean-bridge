@@ -19,7 +19,10 @@ import {
 	, runCopied
 } from "./helpers/copied-fixture-install.mjs";
 import {
-	assertDirectProofErasureBundle, prepareDirectProofErasureProject
+	assertDirectProofErasurePhpComponents
+	, directProofErasurePhpComponentFact
+	, prepareDirectProofErasureProject
+	, retainDirectProofErasurePhpComponents
 } from "./helpers/direct-proof-erasure-packages.mjs";
 import {
 	directProofErasurePhpProfiles
@@ -84,15 +87,15 @@ for(const route of routes) test(
 			});
 			const before = await lakeInputState(prepared.projectRoot);
 			const outputRoot = join(prepared.directory, "release");
-			const built = await buildCanonicalProject({
+			await buildCanonicalProject({
 				projectRoot: prepared.projectRoot, outputRoot
 				, targets: directProofErasurePhpProfiles, environment
 			}).catch(error => {
 				error.message += `: ${JSON.stringify(error.details)}`;
 				throw error;
 			});
-			const bundleRoot = join(outputRoot, "bundle");
-			const bundle = await assertDirectProofErasureBundle(bundleRoot);
+			const components = await assertDirectProofErasurePhpComponents(
+				outputRoot);
 			await verifyPackageSetReceipt({
 				receiptPath: join(outputRoot, "package-set-receipt.json")
 			});
@@ -105,17 +108,11 @@ for(const route of routes) test(
 				.flatMap(pkg => pkg.artifacts.map(item => [item.path, item.sha256]))
 				.sort(([left], [right]) => left.localeCompare(right)));
 			const fact = {
-				...bundle, bindingIrSha256: built.bindingIrSha256
+				...directProofErasurePhpComponentFact(components)
 				, packageSetReceiptSha256: sha256(receiptBytes), archives
 			};
-			for(const [name, path] of [
-				["binding-ir.json", "binding/binding-ir.json"]
-				, ["compiler-adapters.json", "locks/compiler-adapters.json"]
-				, ["component-build-plan.json", "locks/component-build-plan.json"]
-				, ["LeanBridgeGenerated.lean", "generated/LeanBridgeGenerated.lean"]
-				, ["provenance.json", "metadata/provenance.json"]
-			]) await saveLakeFile(records, `build-${attempt}/${name}`
-				, await readFile(join(bundleRoot, path)));
+			await retainDirectProofErasurePhpComponents(records, attempt
+				, outputRoot);
 			await saveLakeFile(records, `build-${attempt}/package-set-receipt.json`
 				, receiptBytes);
 			await saveLakeFile(records, `build-${attempt}/configuration.json`
