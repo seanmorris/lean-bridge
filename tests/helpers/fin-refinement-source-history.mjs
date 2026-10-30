@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreNativeExportsPinRepairSource, coreNativeExportsPinRepairNormalizationPaths } from "./core-native-exports-pin-repair-source-history.mjs";
 import { beforeHostNullCompleteStaticRepairSource, hostNullCompleteStaticRepairNormalizationPaths } from "./host-null-complete-static-repair-source-history.mjs";
 import { beforeVo1220LiveZeroGapSource, vo1220LiveZeroGapNormalizationPaths } from "./vo1220-live-zero-gap-source-history.mjs";
 import { beforeHostNullCompletePromotionSource, hostNullCompletePromotionNormalizationPaths } from "./host-null-complete-promotion-source-history.mjs";
@@ -2431,7 +2432,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostNullCompleteStaticRepairNormalizationPaths
+	...coreNativeExportsPinRepairNormalizationPaths
+	, ...hostNullCompleteStaticRepairNormalizationPaths
 	, ...vo1220LiveZeroGapNormalizationPaths
 	, ...hostNullCompletePromotionNormalizationPaths
 	, ...vo1220ZeroGapAuditNormalizationPaths
@@ -3601,7 +3603,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeHostNullCompleteStaticRepairSource(path, text, expected);
+	let stage = beforeCoreNativeExportsPinRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullCompleteStaticRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
