@@ -1719,7 +1719,8 @@ def describeSignature (request : Request) (name : String) (type : Expr) (parentA
           pure (some (← ofExcept <| parameter.getObjVal? "default"))
         else pure none
       pure <| obj ([("name", ← ofExcept <| parameter.getObjVal? "name"),
-        ("type", ← componentType (← ofExcept <| parameter.getObjVal? "type"))] ++
+        ("type", ← componentType (← ofExcept <| parameter.getObjVal? "type")),
+        ("sourceIndex", ← ofExcept <| parameter.getObjVal? "sourceIndex")] ++
         match default with
         | some value => [("optional", toJson true), ("default", value)]
         | none => [])

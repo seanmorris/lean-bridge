@@ -55,6 +55,18 @@ test("the shared Lean fixture names both closed proofs and explicit refusals", a
 	assert.match(source, /def proofValue : True := True\.intro/u);
 });
 
+test("component conversion retains each runtime binder's Lean source index", async () => {
+	const source = await readFile("src/analyze/NativeExports.lean", "utf8");
+	const conversion = source.split(
+		"let nativeParameters ← if native then pure nativeParameters else nativeParameters.mapM"
+	)[1]?.split("let result ← if native then pure result else componentType result")[0];
+	assert.ok(conversion, "component parameter conversion");
+	assert.match(conversion
+		, /\("sourceIndex", ← ofExcept <\| parameter\.getObjVal\? "sourceIndex"\)/u);
+	assert.match(source
+		, /let sourceIndex := \(parameter\.getObjValAs\? Nat "sourceIndex"\)/u);
+});
+
 test("the independent review exposes one runtime word and two exact erased proofs", () => {
 	const document = directProofErasureReview();
 	const review = capture(document);
