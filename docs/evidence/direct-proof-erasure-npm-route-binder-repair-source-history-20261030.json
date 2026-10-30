@@ -1,0 +1,84 @@
+{
+  "failedJobId": 123838738073,
+  "failureCode": "ERR_ASSERTION",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-npm-route-binder-repair-source-history.mjs",
+      "sha256": "9775c9a9842e7ab9d51a6a2cbc7374d179d8fb983b7a8967f19ad19b787ad7b0"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-route-binder-repair-source-history-tests.mjs",
+      "sha256": "9828274d2a8113fbb1a42c6513aabfed1a4d9748b18536cf40b04aeddf6fba1d"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-route-binder-repair-source-history.mjs",
+      "sha256": "6c17066ee7fb18c334f354ee5a27b0f013002c3e9b2829253269bd5936a4f501"
+    }
+  ],
+  "hostedRunId": 40986444238,
+  "implementationCommit": "1f9651a332c9e1837acbff3e9f3af23d0b7cb5c6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "035d1a5933056c9dec3bee4d802f0447b401b48de5567f842fb3778b0197fdf8",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-npm-route-binder-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 256
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "4b8ebf4e8c15de746f22f9368a4023262c744f1a693eded8b8287764efe170c4"
+    },
+    {
+      "currentSha256": "e4845880c17a4283db1a3862be71b95ec1c7e654ec88d1fa69172445651e6bd0",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureNpmRouteBinderRepairSource, directProofErasureNpmRouteBinderRepairNormalizationPaths } from \"./direct-proof-erasure-npm-route-binder-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 827
+        },
+        {
+          "current": "\t, ...directProofErasureNpmRouteBinderRepairNormalizationPaths\n",
+          "previous": "",
+          "start": 224195
+        },
+        {
+          "current": "\tstage = beforeDirectProofErasureNpmRouteBinderRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 281050
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1028fb27a3c0c0d7649b3329c2aa0da03a45566db8a5eedeb5c12786635f7cce"
+    }
+  ],
+  "milestone": "direct-proof-erasure-npm-route-binder-repair-source-v1",
+  "predecessorCommit": "8eee10b334e93181814be61eb34e6e041946b8f0",
+  "schemaVersion": 1,
+  "scope": "Verify the ordinary npm route with its canonical arg0 binder and the independently reviewed route with its authored value binder, while requiring Binding IR, compiler adapters and generated Lean to agree exactly.",
+  "updates": [
+    {
+      "currentSha256": "44a94be4efd6366605622b88115c4bfdc558acbb34d21ae2b4633fa6cc004d41",
+      "edits": [
+        {
+          "current": "\tconst declaration = assertDirectProofErasureIr(\n\t\tir, directProofErasureModule, [\"arg0\", \"value\"]\n\t);\n\tconst parameterName = declaration.parameters[0].name;\n",
+          "previous": "\tassertDirectProofErasureIr(ir);\n",
+          "start": 3870
+        },
+        {
+          "current": "\tassert.deepEqual(item.parameters, [{ name: parameterName, leanType: \"_root_.UInt32\" }]);\n",
+          "previous": "\tassert.deepEqual(item.parameters, [{ name: \"value\", leanType: \"_root_.UInt32\" }]);\n",
+          "start": 4370
+        },
+        {
+          "current": "\tassert.match(lean, new RegExp(`def ${escapedWrapper} \\\\(${parameterName} : _root_\\\\.UInt32\\\\) : _root_\\\\.UInt32 :=`, \"u\"));\n\tassert.match(lean, new RegExp(`_root_\\\\.DirectProofErasure\\\\.keep _root_\\\\.True\\\\.intro ${parameterName} _root_\\\\.True\\\\.intro`, \"u\"));\n",
+          "previous": "\tassert.match(lean, new RegExp(`def ${escapedWrapper} \\\\(value : _root_\\\\.UInt32\\\\) : _root_\\\\.UInt32 :=`, \"u\"));\n\tassert.match(lean, /_root_\\.DirectProofErasure\\.keep _root_\\.True\\.intro value _root_\\.True\\.intro/u);\n",
+          "start": 4910
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-packages.mjs",
+      "previousSha256": "96c3c5fc5227700d8560dcb8bd23e5c9a13d9c8dac9783f7d10eaae9b4732ea6"
+    }
+  ]
+}

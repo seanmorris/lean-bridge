@@ -5,6 +5,7 @@
  */
 import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
 import "./helpers/optional-parameter-pin-test-milestone-source-history-tests.mjs";
+import "./helpers/direct-proof-erasure-npm-route-binder-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-php-profile-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-managed-wit-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-language-closure-repair-source-history-tests.mjs";
