@@ -5,6 +5,7 @@
  */
 import "./helpers/host-null-final-gate-repair-source-history-tests.mjs";
 import "./helpers/core-host-null-reconciliation-source-history-tests.mjs";
+import "./helpers/optional-parameter-trigger-policy-source-history-tests.mjs";
 import "./helpers/core-final-test-registration-source-history-tests.mjs";
 import "./helpers/core-archived-source-pin-restoration-source-history-tests.mjs";
 import "./helpers/core-current-source-closure-repair-source-history-tests.mjs";

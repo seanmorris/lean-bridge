@@ -1,0 +1,90 @@
+{
+  "approvedAutomaticWorkflowCount": 12,
+  "detectedBeforeContractShards": true,
+  "events": [
+    "pull_request",
+    "push"
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-optional-parameter-trigger-policy-source-history.mjs",
+      "sha256": "1e38c4047977fce2e01150c2cb1afee176426d1701bd572a76cb46aa2ce237ea"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-trigger-policy-source-history-tests.mjs",
+      "sha256": "c4488c26424349ff29def2626d7d1873f3c8c130f15981b70c3de90276d340e5"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-trigger-policy-source-history.mjs",
+      "sha256": "8d26b1b14ab28a356bebc2bc6109379aac9b5516b755b801b95937e476a3c7c5"
+    }
+  ],
+  "implementationCommit": "808da43df689b7490e102f1560e93f2bb0826c7a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "18dcd5373d7a51e5d29e020715e0f88b55aa402d03d8581c6a03d5c0e9e8694c",
+      "edits": [
+        {
+          "current": "import \"./helpers/optional-parameter-trigger-policy-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 245
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "dcd8e96b463018d28d4c341b5b98f73f133161c585d375baa7d98e4686b5e33a"
+    },
+    {
+      "currentSha256": "24442788cfbb79c6956d8a827ed979db3945ddfbd7da54ccfa22947e1f2a9ea1",
+      "edits": [
+        {
+          "current": "import { beforeOptionalParameterTriggerPolicySource, optionalParameterTriggerPolicyNormalizationPaths } from \"./optional-parameter-trigger-policy-source-history.mjs\";\n",
+          "previous": "",
+          "start": 805
+        },
+        {
+          "current": "\t, ...optionalParameterTriggerPolicyNormalizationPaths\n",
+          "previous": "",
+          "start": 229116
+        },
+        {
+          "current": "\tstage = beforeOptionalParameterTriggerPolicySource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 287578
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "22c555e57cd410864e1cc6139e32edfe6e35732d92a61ad3969b63f6228c60d5"
+    }
+  ],
+  "milestone": "optional-parameter-trigger-policy-source-v1",
+  "pathScopedAutomaticWorkflowCount": 7,
+  "predecessorCommit": "47929f346549405507018f6311b8bef9aa6e7640",
+  "schemaVersion": 1,
+  "scope": "Classify the complete optional-parameter workflow as the twelfth reviewed automatic workflow and seventh path-scoped workflow. Preserve its explicit narrow path filters, weekly audit, manual audit/producer modes, and the 112-lane bounded recurring sweep. Retain the superseded exact-head Core run that would otherwise reject the unclassified workflow before shard selection.",
+  "supersededRun": 41114133104,
+  "updates": [
+    {
+      "currentSha256": "04b7f1016b07abfdd8b79085833288b708f317108371ca7cfd10c114d1265d88",
+      "edits": [
+        {
+          "current": "\t, [\"optional-parameter-complete.yml\", [\"pull_request\", \"push\"]]\n",
+          "previous": "",
+          "start": 864
+        },
+        {
+          "current": "\t, \"optional-parameter-complete.yml\"\n",
+          "previous": "",
+          "start": 1341
+        },
+        {
+          "current": "\tassert.equal(approvedAutomaticEvents.size, 12);\n\tassert.equal(pathScopedAutomaticWorkflows.size, 7);\n",
+          "previous": "\tassert.equal(approvedAutomaticEvents.size, 11);\n\tassert.equal(pathScopedAutomaticWorkflows.size, 6);\n",
+          "start": 5291
+        }
+      ],
+      "path": "tests/workflow-trigger-policy.test.mjs",
+      "previousSha256": "ec482d95c4b5bffe7d935d7ad415fca65cda1f4d5a2ceae36b67a5b253dcbf43"
+    }
+  ],
+  "workflow": "optional-parameter-complete.yml"
+}
