@@ -1,0 +1,114 @@
+{
+  "artifactId": 12956701954,
+  "failedJobId": 123902408087,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-npm-ir-route-repair-source-history.mjs",
+      "sha256": "a8299f2c14f20188fa5cf336becdc04699a8d8162c2c8d308354e3b1e137dd95"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-ir-route-repair-source-history-tests.mjs",
+      "sha256": "229409c587a70a0942a1eec00db51a13dcea3ad2b8c460dfb27a2628e73921fc"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-ir-route-repair-source-history.mjs",
+      "sha256": "240f002d778398242044ae1f4d1f47d3ee4513105f9c1b33d3202585157457b2"
+    }
+  ],
+  "hostedRunId": 41006389958,
+  "implementationCommit": "dcb6f6635f4a6b2f3e03b7682afecefe22bb1139",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9913b99090b241fcb4ea88296ee0162aac091364bf742104dfbdcd733debc157",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-npm-ir-route-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "3814ab2410ccbfa8fdeb7c7d35a4976e05c5b618aa07f4e9a97f6865c42f4d3f"
+    },
+    {
+      "currentSha256": "2d99a390876060d4aed607cc7eadece103b6f7d5db2c747cc4bc4cfca335d13a",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureNpmIrRouteRepairSource, directProofErasureNpmIrRouteRepairNormalizationPaths } from \"./direct-proof-erasure-npm-ir-route-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureNpmIrRouteRepairNormalizationPaths\n\t, ...directProofErasureNpmSemanticIrRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureNpmSemanticIrRepairNormalizationPaths\n",
+          "start": 225707
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureNpmIrRouteRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureNpmSemanticIrRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureNpmSemanticIrRepairSource(\n",
+          "start": 282954
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "efd2fa41e13227308103b2b6f383dfe27c618d8bca1b456ec8ea34d1abd4efad"
+    }
+  ],
+  "milestone": "direct-proof-erasure-npm-ir-route-repair-source-v1",
+  "ordinaryParameter": "arg0",
+  "predecessorCommit": "e3275c797d760957412254fb6be544dd55814c2d",
+  "replayedArtifact": true,
+  "reviewedParameter": "value",
+  "schemaVersion": 1,
+  "scope": "Use one exact ordinary/reviewed author-route mapping for retained Binding IR, generated Lean and TypeScript declarations, then replay the original hosted ordinary package and three-browser evidence through the repaired checker.",
+  "updates": [
+    {
+      "currentSha256": "92108dfb29d1f6252ab9936435a224232a77a54f683cc82dd878e53d20e087ab",
+      "edits": [
+        {
+          "current": "\t, directProofErasureNpmParameterName\n",
+          "previous": "",
+          "start": 265
+        },
+        {
+          "current": "\tassert.equal(directProofErasureNpmParameterName(\"ordinary\"), \"arg0\");\n\tassert.equal(directProofErasureNpmParameterName(\"reviewed\"), \"value\");\n\tassert.throws(() => directProofErasureNpmParameterName(\"unknown\"));\n",
+          "previous": "",
+          "start": 1493
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-npm-report-tests.mjs",
+      "previousSha256": "46ded406db4cb0aa16ba503d41eb9e6e8493dff95ffaa2702049e5ccf7e40965"
+    },
+    {
+      "currentSha256": "8364ca06d71b72321f4f0316d63bad5e71078c945738baec2495356b595f65be",
+      "edits": [
+        {
+          "current": "/**\n * Return the exact retained runtime parameter name for one author route.\n *\n * @param route - Ordinary Lean source or independently reviewed Binding IR.\n */\nexport const directProofErasureNpmParameterName = route => {\n\tassert.ok([\"ordinary\", \"reviewed\"].includes(route));\n\treturn route === \"ordinary\" ? \"arg0\" : \"value\";\n};\n\n",
+          "previous": "",
+          "start": 1954
+        },
+        {
+          "current": "\tconst parameter = directProofErasureNpmParameterName(options.route);\n",
+          "previous": "",
+          "start": 7883
+        },
+        {
+          "current": "\t\tconst ir = JSON.parse(irBytes); assertDirectProofErasureIr(\n\t\t\tir, directProofErasureModule\n\t\t\t, [directProofErasureNpmParameterName(options.route)]\n\t\t);\n",
+          "previous": "\t\tconst ir = JSON.parse(irBytes); assertDirectProofErasureIr(ir);\n",
+          "start": 8398
+        },
+        {
+          "current": "\t\tassert.ok(lean.includes(\n\t\t\t`keep _root_.True.intro ${parameter} _root_.True.intro`));\n",
+          "previous": "\t\tassert.match(lean\n\t\t\t, /keep _root_\\.True\\.intro value _root_\\.True\\.intro/u);\n",
+          "start": 9240
+        },
+        {
+          "current": "\t\tdeclarations.toString(), parameter\n",
+          "previous": "\t\tdeclarations.toString(), options.route === \"ordinary\" ? \"arg0\" : \"value\"\n",
+          "start": 10599
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-npm-report.mjs",
+      "previousSha256": "97683dee0758b02458ac86cb2b525484ebd7a82ab4bf82675ace350f6680c944"
+    }
+  ]
+}
