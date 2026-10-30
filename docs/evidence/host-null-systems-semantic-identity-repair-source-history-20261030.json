@@ -1,0 +1,129 @@
+{
+  "diagnosticArtifactId": 12974567214,
+  "failedJobId": 124043563884,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-systems-semantic-identity-repair-source-history.mjs",
+      "sha256": "2b99309327eae734f658fb1695b29b08eada1a1cc2db7cd0fca1c999219f293f"
+    },
+    {
+      "path": "tests/helpers/host-null-systems-semantic-identity-repair-source-history-tests.mjs",
+      "sha256": "fded36a59ee4be938307ae46771ccbba49fd176b6060ef46b0a9d97c9731fee9"
+    },
+    {
+      "path": "tests/helpers/host-null-systems-semantic-identity-repair-source-history.mjs",
+      "sha256": "e27aa05d86f1aaa597b51ccf1979ca8de3a3994c5a3aeeca5e85875274ade1bc"
+    }
+  ],
+  "hostedRunId": 41046161910,
+  "implementationCommit": "08d015ac9ddf8be038fed9618cd608e0cf1d0602",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7296cfe896b921cb3c5999751254e56fe70f686a354af149c4fe8334d2014b22",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-systems-semantic-identity-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "f7c855dce56d86ec8b684fa9e86d4e349aff2da211580ddbd7c6ee76de3024ba"
+    },
+    {
+      "currentSha256": "e743d811f790887551535d5d6668145169bafd23f1909ad95f36eac8de1fb9e1",
+      "edits": [
+        {
+          "current": "import { beforeHostNullSystemsSemanticIdentityRepairSource, hostNullSystemsSemanticIdentityRepairNormalizationPaths } from \"./host-null-systems-semantic-identity-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullSystemsSemanticIdentityRepairNormalizationPaths\n\t, ...hostNullPromotionPinReconciliationNormalizationPaths\n",
+          "previous": "\t...hostNullPromotionPinReconciliationNormalizationPaths\n",
+          "start": 227332
+        },
+        {
+          "current": "\tlet stage = beforeHostNullSystemsSemanticIdentityRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullPromotionPinReconciliationSource(\n",
+          "previous": "\tlet stage = beforeHostNullPromotionPinReconciliationSource(\n",
+          "start": 285110
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e457f61f1acfc317ce03175c879299fb74a2e82428bf903bc1e0d71aa0765d67"
+    }
+  ],
+  "milestone": "host-null-systems-semantic-identity-repair-source-v1",
+  "predecessorCommit": "4c53b15a1269685bbf550136775b17e9068f5651",
+  "rawRouteIdentities": 2,
+  "replayedCells": 40,
+  "replayedChecks": 500,
+  "replayedExecutions": 16,
+  "schemaVersion": 1,
+  "scope": "Repair the exact systems HostNull assertion exposed by complete run 41046161910. Ordinary and reviewed author routes retain distinct complete Binding IR identities while independently derived private ABI projections must share one semantic identity. No runtime behavior, public contract or support claim changes.",
+  "semanticRouteIdentities": 1,
+  "supportClaimsChanged": false,
+  "updates": [
+    {
+      "currentSha256": "efda7914b5fba77cdc68d5883df5478ceda7775e6721587354903ba0cc6324b1",
+      "edits": [
+        {
+          "current": "import { createComponentPrivateAbi } from \"../src/build/component-callable-adapters.mjs\";\n",
+          "previous": "",
+          "start": 300
+        },
+        {
+          "current": "import { hostNullReviewedIr } from \"../tests/helpers/host-null-fixture.mjs\";\n",
+          "previous": "",
+          "start": 537
+        },
+        {
+          "current": "const privateShape = ir => {\n\tconst abi = createComponentPrivateAbi(ir);\n\treturn {\n\t\t...abi\n\t\t, types: abi.types.toSorted((left, right) => left.id.localeCompare(right.id))\n\t\t, callbacks: abi.callbacks.toSorted((left, right) => left.id.localeCompare(right.id))\n\t\t, exports: abi.exports.toSorted((left, right) => left.bindingId.localeCompare(right.bindingId))\n\t};\n};\nconst expectedBindingIrSemanticSha256 = sha256(canonicalJson(\n\tprivateShape(hostNullReviewedIr())\n));\n",
+          "previous": "",
+          "start": 1804
+        },
+        {
+          "current": "assert.equal(new Set(summary.routes.map(route => route.bindingIrSha256)).size\n\t, summary.routes.length);\nassert.equal(new Set(summary.routes.map(route => route.bindingIrSemanticSha256)).size, 1);\nassert.ok(summary.routes.every(route => route.bindingIrSemanticSha256\n\t=== expectedBindingIrSemanticSha256));\n",
+          "previous": "assert.equal(new Set(summary.routes.map(route => route.bindingIrSha256)).size, 1);\n",
+          "start": 2908
+        },
+        {
+          "current": "\t\t\"receiptSha256\", \"bindingIrSha256\", \"bindingIrSemanticSha256\"\n\t\t, \"sourceTreeSha256\", \"modelSha256\"\n",
+          "previous": "\t\t\"receiptSha256\", \"bindingIrSha256\", \"sourceTreeSha256\", \"modelSha256\"\n",
+          "start": 4168
+        }
+      ],
+      "path": "scripts/check-host-null-systems-ci.mjs",
+      "previousSha256": "a01fd8177866344b4330569acf0569ea1aaa49d91333cf65a9e70f532a3626f0"
+    },
+    {
+      "currentSha256": "920f91172a09275eff81785d6ef90ea714118477c4c2099a504fd05175996d22",
+      "edits": [
+        {
+          "current": "\t\t\t, bindingIrSemanticSha256: sha256(canonicalJson(privateShape(model.bindingIr)))\n",
+          "previous": "",
+          "start": 11114
+        },
+        {
+          "current": "\tassert.equal(new Set(routes.map(route => route.bindingIrSha256)).size\n\t\t, selectedRoutes.length);\n\tassert.equal(new Set(routes.map(route => route.bindingIrSemanticSha256)).size, 1);\n",
+          "previous": "\tassert.equal(new Set(routes.map(route => route.bindingIrSha256)).size, 1);\n",
+          "start": 12139
+        }
+      ],
+      "path": "tests/helpers/host-null-systems-installed.mjs",
+      "previousSha256": "0b72e58787f4937db5bfd741577d18c2d6e39d4ebfb546238cd419a645e2de94"
+    },
+    {
+      "currentSha256": "1f6a03806fe7aaef9910c5cc180f8fe2004a4c77946f58e302cfabf9d9919d41",
+      "edits": [
+        {
+          "current": "\t\t, \"bindingIrSemanticSha256\"\n\t\t, \"summary.routes.map(route => route.bindingIrSha256)).size\\n\\t, summary.routes.length\"\n\t\t, \"summary.routes.map(route => route.bindingIrSemanticSha256)).size, 1\"\n\t\t, \"expectedBindingIrSemanticSha256\"\n",
+          "previous": "",
+          "start": 1833
+        }
+      ],
+      "path": "tests/systems-host-null-ci.test.mjs",
+      "previousSha256": "d6a91d4d181c83db73f993ebe0fd4693937f61cde95eb7f153e89a2548faa081"
+    }
+  ]
+}

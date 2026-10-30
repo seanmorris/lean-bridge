@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/host-null-final-gate-repair-source-history-tests.mjs";
+import "./helpers/host-null-systems-semantic-identity-repair-source-history-tests.mjs";
 import "./helpers/host-null-kotlin-compound-contract-repair-source-history-tests.mjs";
 import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-promotion-source-history-tests.mjs";
