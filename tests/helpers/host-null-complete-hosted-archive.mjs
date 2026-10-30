@@ -47,27 +47,27 @@ export const hostNullCompleteHostedLanes = Object.freeze([
 		"node-javascript", "node-typescript", "browser-javascript"
 		, "browser-react", "browser-worker"
 	], "Node and browser npm consumers"
-	, "Complete HostNull acceptance / Node and browser producer / reviewed generic Subtypes in Node and browsers"
+	, "Node and browser producer / reviewed generic Subtypes in Node and browsers"
 	, "host-null-node-browser")
 	, lane("php-native", ["php-native"], "Native PHP"
-		, "Complete HostNull acceptance / PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm"
+		, "PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm"
 		, "host-null-php-native")
 	, lane("php-wasm", ["php-wasm"], "PHP-Wasm corpus (values-graph)"
-		, "Complete HostNull acceptance / PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm"
+		, "PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm"
 		, "host-null-php-wasm")
 	, lane("dotnet", ["dotnet"], "Managed consumer (dotnet)"
-		, "Complete HostNull acceptance / Managed and systems producers / Generic Subtypes in .NET"
+		, "Managed and systems producers / Generic Subtypes in .NET"
 		, "host-null-managed-dotnet")
 	, lane("jvm", ["java", "kotlin"], "Managed consumer (jvm)"
-		, "Complete HostNull acceptance / Managed and systems producers / Generic Subtypes in Java and Kotlin"
+		, "Managed and systems producers / Generic Subtypes in Java and Kotlin"
 		, "host-null-managed-jvm")
 	, lane("scripting", ["perl", "python", "ruby"]
 		, "Perl / Perl XS (5.38.2-threaded)"
-		, "Complete HostNull acceptance / Scripting producer / Ordinary and reviewed generic Subtypes across four Perl ABIs"
+		, "Scripting producer / Ordinary and reviewed generic Subtypes across four Perl ABIs"
 		, "host-null-scripting")
 	, lane("systems", ["c", "cpp", "rust", "wit-wasi"]
 		, "Systems HostNull acceptance"
-		, "Complete HostNull acceptance / Managed and systems producers / Generic Subtypes in WIT and WASI components"
+		, "Managed and systems producers / Generic Subtypes in WIT and WASI components"
 		, "host-null-systems")
 ]);
 

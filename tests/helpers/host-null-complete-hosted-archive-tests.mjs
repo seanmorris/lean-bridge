@@ -109,6 +109,15 @@ test("complete HostNull policy partitions exactly 170 cells", () => {
 		"parameter", "result", "field", "callback-parameter", "callback-result"
 	]);
 	assert.equal(hostNullCompleteHostedLanes.length, 7);
+	assert.deepEqual(hostNullCompleteHostedLanes.map(lane => lane.focusedJobName), [
+		"Node and browser producer / reviewed generic Subtypes in Node and browsers"
+		, "PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm"
+		, "PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm"
+		, "Managed and systems producers / Generic Subtypes in .NET"
+		, "Managed and systems producers / Generic Subtypes in Java and Kotlin"
+		, "Scripting producer / Ordinary and reviewed generic Subtypes across four Perl ABIs"
+		, "Managed and systems producers / Generic Subtypes in WIT and WASI components"
+	]);
 	assert.equal(hostNullCompleteProfiles.length, 17);
 	assert.equal(new Set(hostNullCompleteProfiles).size, 17);
 	assert.equal(hostNullCompleteCells.length, 170);
