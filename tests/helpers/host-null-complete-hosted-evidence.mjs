@@ -122,7 +122,7 @@ export const checkHostNullCompleteHostedEvidence = async (
 			assert.equal(lane.length > 0, true);
 			assert.match(receiptSha256, /^[a-f0-9]{64}$/u);
 			return cell;
-		});
+			});
 		const key = cell => `${cell.route}:${cell.profile}:${cell.position}`;
 		const acceptedCells = new Map(flattened.map(cell => [key(cell), cell]));
 		assert.equal(acceptedCells.size, flattened.length
