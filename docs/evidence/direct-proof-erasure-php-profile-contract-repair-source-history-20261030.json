@@ -1,0 +1,198 @@
+{
+  "failedJobId": 123872388659,
+  "failureCode": "ERR_ASSERTION",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-php-profile-contract-repair-source-history.mjs",
+      "sha256": "154dfc77680440ecd04108076f17b2ebd3cdf651f7d741a8bca34ccf71838727"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-php-profile-contract-repair-source-history-tests.mjs",
+      "sha256": "8200316bce2e4a9bc40766d1aa53e31a878186789c2dfed2aa60ab3e99e9d904"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-php-profile-contract-repair-source-history.mjs",
+      "sha256": "4c3643bc9a49f742e975a3e544ac87a60808757866ad455a9f58317a92cda4e0"
+    }
+  ],
+  "hostedRunId": 40992970885,
+  "implementationCommit": "765beb22af6dae649ec5688c7eb547ed50015a39",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d09540577754dc3ba6008ddf1616ecca803a19c18415046eac533dbafd74160f",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-php-profile-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "bf58f88487aaf59f9c6621b09c1be125a6966e58abd8a74f6de0efcf050dda60"
+    },
+    {
+      "currentSha256": "7293f94f73d7b47548da3c6fec620b1c880b2f248d8d1147918d038e1ecfe8e0",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasurePhpProfileContractRepairSource, directProofErasurePhpProfileContractRepairNormalizationPaths } from \"./direct-proof-erasure-php-profile-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasurePhpProfileContractRepairNormalizationPaths\n\t, ...directProofErasureNpmDeclarationRouteRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureNpmDeclarationRouteRepairNormalizationPaths\n",
+          "start": 224934
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasurePhpProfileContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureNpmDeclarationRouteRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureNpmDeclarationRouteRepairSource(\n",
+          "start": 281930
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "05d433c2f4ee9e89be30705adf607729c72d99f3d4721366b4a1890d2aba017a"
+    }
+  ],
+  "milestone": "direct-proof-erasure-php-profile-contract-repair-source-v1",
+  "predecessorCommit": "492b3052fbf699a98623569c08e552a8259bfdf9",
+  "schemaVersion": 1,
+  "scope": "Validate each direct proof-erasure PHP package against its exact public parameter name and Nat representation: native PHP int and PHP-Wasm Brick Math BigInteger.",
+  "updates": [
+    {
+      "currentSha256": "1bfecd544d844dc8d83bd278d9fbd78ef531a9f11ff3c209d47d8609ec886365",
+      "edits": [
+        {
+          "current": "\tdirectProofErasurePhpConsumerSource, directProofErasurePhpParameter\n\t, directProofErasurePhpProfiles, directProofErasurePhpReturnType\n",
+          "previous": "\tdirectProofErasurePhpProfiles\n",
+          "start": 975
+        },
+        {
+          "current": "const phpInvalid = (route, profile) => `try {\n    \\\\LeanDirectprooferasure\\\\keep(_before: true, ${directProofErasurePhpParameter(route)}: ${profile === \"php-native\" ? \"0\" : \"\\\\Brick\\\\Math\\\\BigInteger::of(0)\"}, _after: true);\n",
+          "previous": "const phpInvalid = `try {\n    \\\\LeanDirectprooferasure\\\\keep(_before: true, value: 0, _after: true);\n",
+          "start": 2110
+        },
+        {
+          "current": "const assertApi = (source, route, profile) => {\n\tassert.ok(source.includes(\n\t\t`function keep(mixed $${directProofErasurePhpParameter(route)}): ${directProofErasurePhpReturnType(profile)}`\n\t));\n",
+          "previous": "const assertApi = source => {\n\tassert.match(source, /function keep\\(mixed \\$value\\): int/u);\n",
+          "start": 2528
+        },
+        {
+          "current": "\t\tconst fixtureSource = await readFile(\n",
+          "previous": "\t\tconst source = await readFile(\n",
+          "start": 6115
+        },
+        {
+          "current": "\t\tconst nativeSource = directProofErasurePhpConsumerSource(fixtureSource, {\n\t\t\troute, profile: \"php-native\"\n\t\t});\n\t\tconst wasmFixtureSource = directProofErasurePhpConsumerSource(fixtureSource, {\n\t\t\troute, profile: \"php-wasm\"\n\t\t});\n",
+          "previous": "",
+          "start": 6227
+        },
+        {
+          "current": "\t\t\t\tsource: () => nativeSource, success: \"direct-proof-php\"\n",
+          "previous": "\t\t\t\tsource: () => source, success: \"direct-proof-php\"\n",
+          "start": 6772
+        },
+        {
+          "current": "\t\tassertApi(nativeApi.toString(), route, \"php-native\");\n",
+          "previous": "\t\tassertApi(nativeApi.toString());\n",
+          "start": 6992
+        },
+        {
+          "current": "\t\tawait saveLakeFile(records, \"php-native/consumer.php\", nativeSource);\n",
+          "previous": "\t\tawait saveLakeFile(records, \"php-native/consumer.php\", source);\n",
+          "start": 7781
+        },
+        {
+          "current": "\t\t\t, consumerSha256: sha256(nativeSource), apiSha256: sha256(nativeApi)\n",
+          "previous": "\t\t\t, consumerSha256: sha256(source), apiSha256: sha256(nativeApi)\n",
+          "start": 8118
+        },
+        {
+          "current": "\t\t\t\trejected: true\n\t\t\t\t, namedArguments: `_before,${directProofErasurePhpParameter(route)},_after`\n\t\t\t\t, attempts: 4\n",
+          "previous": "\t\t\t\trejected: true, namedArguments: \"_before,value,_after\", attempts: 4\n",
+          "start": 8254
+        },
+        {
+          "current": "\t\t\t\tsource: () => wasmFixtureSource, success: \"direct-proof-php\"\n\t\t\t\t, phpInvalid: phpInvalid(route, \"php-wasm\"), removeHandoff: true\n",
+          "previous": "\t\t\t\tsource: () => source, success: \"direct-proof-php\"\n\t\t\t\t, phpInvalid, removeHandoff: true\n",
+          "start": 8622
+        },
+        {
+          "current": "\t\tassertApi(wasmApi.toString(), route, \"php-wasm\");\n",
+          "previous": "\t\tassertApi(wasmApi.toString());\n",
+          "start": 9005
+        },
+        {
+          "current": "\t\t\t\trejected: true\n\t\t\t\t, namedArguments: `_before,${directProofErasurePhpParameter(route)},_after`\n\t\t\t\t, attempts: 24\n",
+          "previous": "\t\t\t\trejected: true, namedArguments: \"_before,value,_after\", attempts: 24\n",
+          "start": 9708
+        }
+      ],
+      "path": "tests/direct-proof-erasure-php-installed.test.mjs",
+      "previousSha256": "4a80199656d52d1772d93ad48a0fc72393702d6622dbd20fa59b1eb4f103998e"
+    },
+    {
+      "currentSha256": "68e4e93891f71867b829e99309eab817554dc5fce7132ac864f912ff3d4b4d27",
+      "edits": [
+        {
+          "current": "",
+          "previous": "const apiPattern = /function keep\\(mixed \\$value\\): int/u;\n",
+          "start": 1025
+        },
+        {
+          "current": "/**\n * Select the exact public parameter name owned by one author route.\n *\n * @param route - Ordinary compiler extraction or reviewed source.\n */\nexport const directProofErasurePhpParameter = route => {\n\tassert.ok([\"ordinary\", \"reviewed\"].includes(route));\n\treturn route === \"ordinary\" ? \"arg0\" : \"value\";\n};\n\n/**\n * Select the exact public Nat representation owned by one PHP profile.\n *\n * @param profile - Native PHP or PHP-Wasm.\n */\nexport const directProofErasurePhpReturnType = profile => {\n\tassert.ok(directProofErasurePhpProfiles.includes(profile));\n\treturn profile === \"php-native\" ? \"int\" : \"\\\\Brick\\\\Math\\\\BigInteger\";\n};\n\n/**\n * Bind the independent PHP caller to one route's public parameter name.\n *\n * @param source - Canonical reviewed-name caller fixture.\n * @param options - Exact author route and PHP runtime profile.\n * @param options.route - Ordinary compiler extraction or reviewed source.\n * @param options.profile - Native PHP or PHP-Wasm.\n */\nexport const directProofErasurePhpConsumerSource = (source, {\n\troute, profile\n}) => {\n\tassert.equal(typeof source, \"string\");\n\tconst parameter = directProofErasurePhpParameter(route);\n\tconst reflection = \"getName() === 'value'\";\n\tconst negative = \"keep(_before: true, value: 0, _after: true);\";\n\tassert.equal(source.split(reflection).length, 2);\n\tassert.equal(source.split(negative).length, 2);\n\tlet caller = source.replace(reflection, `getName() === '${parameter}'`)\n\t\t.replace(negative\n\t\t\t, `keep(_before: true, ${parameter}: 0, _after: true);`);\n\tif(profile === \"php-native\") return caller;\n\tdirectProofErasurePhpReturnType(profile);\n\tconst importLine = \"use function LeanDirectprooferasure\\\\keep;\";\n\tconst loop = `for ($value = 0; $value < 1000; ++$value) {\n    check(keep($value) === $value);\n}`;\n\tassert.equal(caller.split(importLine).length, 2);\n\tassert.equal(caller.split(loop).length, 2);\n\tcaller = caller.replace(importLine\n\t\t, `use Brick\\\\Math\\\\BigInteger;\\n${importLine}`)\n\t\t.replace(\"getName() === 'int'\", \"getName() === BigInteger::class\")\n\t\t.replace(`${parameter}: 0`, `${parameter}: BigInteger::of(0)`)\n\t\t.replace(loop, `for ($value = 0; $value < 1000; ++$value) {\n    $input = BigInteger::of($value);\n    check(keep($input)->isEqualTo($input));\n}`);\n\treturn caller;\n};\n\n",
+          "previous": "",
+          "start": 1092
+        },
+        {
+          "current": "\t\t\t, `_before,${directProofErasurePhpParameter(route)},_after`);\n",
+          "previous": "\t\t\t, \"_before,value,_after\");\n",
+          "start": 5702
+        },
+        {
+          "current": "\tconst expectedConsumer = directProofErasurePhpConsumerSource(fixture(\n",
+          "previous": "\tassert.deepEqual(nativeConsumer, fixture(\n",
+          "start": 9378
+        },
+        {
+          "current": "\t).toString(), { route: options.route, profile: \"php-native\" });\n\tassert.equal(nativeConsumer.toString(), expectedConsumer);\n\tassert.match(nativeConsumer.toString(), new RegExp(\n\t\t`keep\\\\(_before: true, ${directProofErasurePhpParameter(options.route)}: 0, _after: true\\\\)`, \"u\"\n",
+          "previous": "",
+          "start": 9507
+        },
+        {
+          "current": "",
+          "previous": "\tassert.match(nativeConsumer.toString()\n\t\t, /keep\\(_before: true, value: 0, _after: true\\)/u);\n",
+          "start": 9790
+        },
+        {
+          "current": "\tconst expectedWasmConsumer = directProofErasurePhpConsumerSource(fixture(\n\t\t\"tests/fixtures/direct-proof-erasure-consumers/php.php\"\n\t).toString(), { route: options.route, profile: \"php-wasm\" })\n\t\t.replace(\"require 'vendor/autoload.php';\", \"\");\n\tassert.equal(wasmConsumer.toString(), expectedWasmConsumer);\n",
+          "previous": "\tassert.equal(wasmConsumer.toString(), nativeConsumer.toString()\n\t\t.replace(\"require 'vendor/autoload.php';\", \"\"));\n",
+          "start": 9927
+        },
+        {
+          "current": "\t\tassert.ok(api.toString().includes(\n\t\t\t`function keep(mixed $${directProofErasurePhpParameter(options.route)}): ${directProofErasurePhpReturnType(item.profile)}`\n\t\t));\n",
+          "previous": "\t\tassert.match(api.toString(), apiPattern);\n",
+          "start": 10406
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-php-report.mjs",
+      "previousSha256": "ce28a5bc8c4132e294dad7f1b8d15f9e29ad2c840b42256065aeb88f1fdf605c"
+    },
+    {
+      "currentSha256": "4633369440b73bbce1f28e6a19ceb339f0bd82552a33cb73db67b7c63616813c",
+      "edits": [
+        {
+          "current": "import {\n\tdirectProofErasurePhpConsumerSource, directProofErasurePhpParameter\n\t, directProofErasurePhpReturnType\n} from \"./direct-proof-erasure-php-report.mjs\";\n",
+          "previous": "",
+          "start": 665
+        },
+        {
+          "current": "test(\"PHP direct proof callers retain each author route's exact binder\", async () => {\n\tconst fixture = await readFile(\n\t\t\"tests/fixtures/direct-proof-erasure-consumers/php.php\", \"utf8\"\n\t);\n\tfor(const [route, parameter] of [\n\t\t[\"ordinary\", \"arg0\"], [\"reviewed\", \"value\"]\n\t]) {\n\t\tassert.equal(directProofErasurePhpParameter(route), parameter);\n\t\tconst native = directProofErasurePhpConsumerSource(fixture, {\n\t\t\troute, profile: \"php-native\"\n\t\t});\n\t\tassert.match(native, new RegExp(`getName\\\\(\\\\) === '${parameter}'`, \"u\"));\n\t\tassert.match(native, new RegExp(\n\t\t\t`keep\\\\(_before: true, ${parameter}: 0, _after: true\\\\)`, \"u\"\n\t\t));\n\t\tassert.equal(directProofErasurePhpReturnType(\"php-native\"), \"int\");\n\t\tconst wasm = directProofErasurePhpConsumerSource(fixture, {\n\t\t\troute, profile: \"php-wasm\"\n\t\t});\n\t\tassert.match(wasm, /use Brick\\\\Math\\\\BigInteger;/u);\n\t\tassert.match(wasm, /getName\\(\\) === BigInteger::class/u);\n\t\tassert.match(wasm, new RegExp(\n\t\t\t`keep\\\\(_before: true, ${parameter}: BigInteger::of\\\\(0\\\\), _after: true\\\\)`, \"u\"\n\t\t));\n\t\tassert.match(wasm, /keep\\(\\$input\\)->isEqualTo\\(\\$input\\)/u);\n\t\tassert.equal(directProofErasurePhpReturnType(\"php-wasm\")\n\t\t\t, \"\\\\Brick\\\\Math\\\\BigInteger\");\n\t}\n\tassert.throws(() => directProofErasurePhpParameter(\"unknown\"));\n\tassert.throws(() => directProofErasurePhpReturnType(\"unknown\"));\n});\n\n",
+          "previous": "",
+          "start": 1724
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-php-tests.mjs",
+      "previousSha256": "4071d34083e1b683bb5d4d5a2437b14dcf9bcf64fa621e7500ec5d72735e62c8"
+    }
+  ]
+}
