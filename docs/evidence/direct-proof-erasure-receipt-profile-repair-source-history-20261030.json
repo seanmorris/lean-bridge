@@ -1,0 +1,91 @@
+{
+  "failedJobId": 123944202063,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-receipt-profile-repair-source-history.mjs",
+      "sha256": "42d6fd346d1ff9c3a665eb9fcc79192a112c9e8f821239fa43ac3f8c2b5d6937"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-receipt-profile-repair-source-history-tests.mjs",
+      "sha256": "3058418697cfcf36f3c64f9d0c47cf40e02b806c63e469a96dc051b3b0f9475b"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-receipt-profile-repair-source-history.mjs",
+      "sha256": "232bbd245842efac9d00606863ce11c745e3ac16043a45d1292093cb48cd1775"
+    }
+  ],
+  "hostedRunId": 41011134514,
+  "implementationCommit": "447808063fc48cc6a41b6b4a763f95fa59f9cc10",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3b0675c92dfc3f9dcc428354860e9688c78f76dac599af404ca8e34b132675dc",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-receipt-profile-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "9913b99090b241fcb4ea88296ee0162aac091364bf742104dfbdcd733debc157"
+    },
+    {
+      "currentSha256": "00a1cec98fc5b9a4b6167e11c4e786bf3cc4df57cd8130d5aed9d6515125f4e5",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureReceiptProfileRepairSource, directProofErasureReceiptProfileRepairNormalizationPaths } from \"./direct-proof-erasure-receipt-profile-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureReceiptProfileRepairNormalizationPaths\n\t, ...directProofErasureNpmIrRouteRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureNpmIrRouteRepairNormalizationPaths\n",
+          "start": 225900
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureReceiptProfileRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureNpmIrRouteRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureNpmIrRouteRepairSource(\n",
+          "start": 283210
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2d99a390876060d4aed607cc7eadece103b6f7d5db2c747cc4bc4cfca335d13a"
+    }
+  ],
+  "managedProfilesAuthenticated": true,
+  "milestone": "direct-proof-erasure-receipt-profile-repair-source-v1",
+  "predecessorCommit": "9f37284de4e3b576ebfeff5ee463aea77c7b8da3",
+  "schemaVersion": 1,
+  "scope": "Authenticate the exact closed profile list already emitted beside each managed proof-erasure receipt group, and reject omitted or narrowed managed coverage before same-run aggregation.",
+  "updates": [
+    {
+      "currentSha256": "5a16f8a8a743552d832912f48cdba99ccb3e15ba191b6f75368b42e1b469898c",
+      "edits": [
+        {
+          "current": "\t\t: lane.checker === \"managed\" ? {\n\t\t\tgroup: lane.group, profiles: [...lane.profiles]\n\t\t}\n",
+          "previous": "\t\t: lane.checker === \"managed\" ? { group: lane.group }\n",
+          "start": 1333
+        },
+        {
+          "current": "\tfor(const mutate of [\n\t\tvalue => { value.profiles.pop(); }\n\t\t, value => { delete value.profiles; }\n\t]) {\n\t\tconst substituted = records();\n\t\tconst lane = directProofErasureMatrixLanes.find(item =>\n\t\t\titem.checker === \"managed\");\n\t\tconst route = directProofErasureMatrixRoutes[0];\n\t\tconst managedPath = directProofErasureMatrixResultPath(\n\t\t\tlane, route, producerCommit\n\t\t);\n\t\tconst managed = JSON.parse(substituted.get(managedPath));\n\t\tmutate(managed);\n\t\tsubstituted.set(managedPath, Buffer.from(canonicalJson(managed)));\n\t\tawait assert.rejects(build(substituted));\n\t}\n",
+          "previous": "",
+          "start": 3285
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-matrix-receipt-tests.mjs",
+      "previousSha256": "cf9f1955e57cf053f5e249df00321408bec4f11bbcfab1a99f0189cb7fc0a6af"
+    },
+    {
+      "currentSha256": "de320d75459e41e805062ec764da24b10c288408c7f3479291626f0eccb75466",
+      "edits": [
+        {
+          "current": "\t\t: lane.checker === \"managed\" ? {\n\t\t\tgroup: lane.group, profiles: [...lane.profiles]\n\t\t}\n",
+          "previous": "\t\t: lane.checker === \"managed\" ? { group: lane.group }\n",
+          "start": 2257
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-matrix-receipt.mjs",
+      "previousSha256": "6059388d4362afb60ae5960d4a16a3d362726b7f03fb2cb404dfba1d57755734"
+    }
+  ]
+}
