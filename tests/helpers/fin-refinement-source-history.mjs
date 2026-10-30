@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDirectProofErasureNpmDeclarationSyntaxRepairSource, directProofErasureNpmDeclarationSyntaxRepairNormalizationPaths } from "./direct-proof-erasure-npm-declaration-syntax-repair-source-history.mjs";
 import { beforeDirectProofErasurePhpProfileContractRepairSource, directProofErasurePhpProfileContractRepairNormalizationPaths } from "./direct-proof-erasure-php-profile-contract-repair-source-history.mjs";
 import { beforeDirectProofErasureNpmDeclarationRouteRepairSource, directProofErasureNpmDeclarationRouteRepairNormalizationPaths } from "./direct-proof-erasure-npm-declaration-route-repair-source-history.mjs";
 import { beforeDirectProofErasurePhpReceiptIdentityRepairSource, directProofErasurePhpReceiptIdentityRepairNormalizationPaths } from "./direct-proof-erasure-php-receipt-identity-repair-source-history.mjs";
@@ -2414,7 +2415,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasurePhpProfileContractRepairNormalizationPaths
+	...directProofErasureNpmDeclarationSyntaxRepairNormalizationPaths
+	, ...directProofErasurePhpProfileContractRepairNormalizationPaths
 	, ...directProofErasureNpmDeclarationRouteRepairNormalizationPaths
 	, ...directProofErasurePhpReceiptIdentityRepairNormalizationPaths
 	, ...proofErasurePartitionAuditRepairNormalizationPaths
@@ -3567,7 +3569,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasurePhpProfileContractRepairSource(
+	let stage = beforeDirectProofErasureNpmDeclarationSyntaxRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasurePhpProfileContractRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

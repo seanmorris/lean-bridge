@@ -1,0 +1,112 @@
+{
+  "failedJobId": 123884392892,
+  "failureCode": "ERR_ASSERTION",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-npm-declaration-syntax-repair-source-history.mjs",
+      "sha256": "b37ed22c3823f70e63e3ecddf43a7533e5a96ed5107347033a640a77f5eaa137"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-declaration-syntax-repair-source-history-tests.mjs",
+      "sha256": "5de68faafbf79c07d9e09b4d06ce887627b50f9fb86f2ff87e2d48521858eb36"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-declaration-syntax-repair-source-history.mjs",
+      "sha256": "eaeca766c2780256a38464c74e47a83b99dd0496b12ed8a90df296fcb2c4536f"
+    }
+  ],
+  "hostedRunId": 41000680672,
+  "implementationAdditions": [
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-report-tests.mjs",
+      "sha256": "cc7011c85c82d8d11b8c1adecb7f5c9afa643d2f7c4acf5577c83cdc70cd7af9"
+    }
+  ],
+  "implementationCommit": "82f5201f3f0f3a19886328a1667717890e8cd098",
+  "integrationUpdates": [
+    {
+      "currentSha256": "540bed821fc5e5c5472efa47da4b5b38dbf584539d9eabf5147731c1b0adca03",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-npm-declaration-syntax-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        },
+        {
+          "current": "import \"./helpers/direct-proof-erasure-npm-report-tests.mjs\";\n",
+          "previous": "",
+          "start": 7323
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "d09540577754dc3ba6008ddf1616ecca803a19c18415046eac533dbafd74160f"
+    },
+    {
+      "currentSha256": "b49802080e3e46830d97f96cea0ac1c8ebe968658a9c7bd34bebadb0793830b9",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureNpmDeclarationSyntaxRepairSource, directProofErasureNpmDeclarationSyntaxRepairNormalizationPaths } from \"./direct-proof-erasure-npm-declaration-syntax-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureNpmDeclarationSyntaxRepairNormalizationPaths\n\t, ...directProofErasurePhpProfileContractRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasurePhpProfileContractRepairNormalizationPaths\n",
+          "start": 225146
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureNpmDeclarationSyntaxRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasurePhpProfileContractRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasurePhpProfileContractRepairSource(\n",
+          "start": 282211
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7293f94f73d7b47548da3c6fec620b1c880b2f248d8d1147918d038e1ecfe8e0"
+    }
+  ],
+  "milestone": "direct-proof-erasure-npm-declaration-syntax-repair-source-v1",
+  "predecessorCommit": "16663000d2e325b75c0f68c7b7049e188c78a101",
+  "schemaVersion": 1,
+  "scope": "Validate the generated proof-erased npm declaration as TypeScript syntax. Require one proof-free numeric keep parameter and result for the exact author route while allowing truthful explanatory comments.",
+  "updates": [
+    {
+      "currentSha256": "46c085af9d1b88462d70cb7057aef0fc22edab8b2ed45ce4095786c81c36f3ac",
+      "edits": [
+        {
+          "current": "import {\n\tassertDirectProofErasureNpmDeclarationSurface\n} from \"./helpers/direct-proof-erasure-npm-report.mjs\";\n",
+          "previous": "",
+          "start": 1095
+        },
+        {
+          "current": "\t\tassertDirectProofErasureNpmDeclarationSurface(declarations, parameter);\n",
+          "previous": "\t\tassert.match(declarations, new RegExp(\n\t\t\t`export declare function keep\\\\(${parameter}: number\\\\): number;`, \"u\"\n\t\t));\n\t\tassert.doesNotMatch(declarations, /True|proof|_before|_after/u);\n",
+          "start": 8210
+        }
+      ],
+      "path": "tests/direct-proof-erasure-npm-installed.test.mjs",
+      "previousSha256": "00d9c1b460bd949b0c7358543ec38b8649c895039f184a30b78bc3afb59607ae"
+    },
+    {
+      "currentSha256": "5cf7a0221a3a58171c391d1a534397954f4510fd7a00bc9ae7a9d50217c2d9fb",
+      "edits": [
+        {
+          "current": "import ts from \"typescript\";\n",
+          "previous": "",
+          "start": 192
+        },
+        {
+          "current": "/**\n * Require the exact proof-free declaration syntax while allowing documentation\n * to explain why proof parameters are absent.\n *\n * @param source - Complete generated TypeScript declaration source.\n * @param parameter - Exact public runtime parameter name for this author route.\n */\nexport const assertDirectProofErasureNpmDeclarationSurface = (\n\tsource, parameter\n) => {\n\tassert.equal(typeof source, \"string\");\n\tassert.ok([\"arg0\", \"value\"].includes(parameter));\n\tconst file = ts.createSourceFile(\n\t\t\"index.d.ts\", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS\n\t);\n\tassert.deepEqual(file.parseDiagnostics, []);\n\tconst declarations = file.statements.filter(statement =>\n\t\tts.isFunctionDeclaration(statement)\n\t\t\t&& statement.name?.text === \"keep\");\n\tassert.equal(declarations.length, 1);\n\tconst [keep] = declarations;\n\tassert.equal(keep.parameters.length, 1);\n\tassert.ok(ts.isIdentifier(keep.parameters[0].name));\n\tassert.equal(keep.parameters[0].name.text, parameter);\n\tassert.equal(keep.parameters[0].type?.kind, ts.SyntaxKind.NumberKeyword);\n\tassert.equal(keep.type?.kind, ts.SyntaxKind.NumberKeyword);\n\tconst forbidden = [];\n\tconst visit = node => {\n\t\tif(ts.isIdentifier(node)\n\t\t\t&& /True|proof|_before|_after/u.test(node.text))\n\t\t\tforbidden.push(node.text);\n\t\tts.forEachChild(node, visit);\n\t};\n\tvisit(file);\n\tassert.deepEqual(forbidden, []);\n\treturn true;\n};\n\n",
+          "previous": "",
+          "start": 1325
+        },
+        {
+          "current": "\tconst declarations = await read(\"index.d.ts\");\n\tassert.equal(report.declarationsSha256, sha256(declarations));\n\tassertDirectProofErasureNpmDeclarationSurface(\n\t\tdeclarations.toString(), options.route === \"ordinary\" ? \"arg0\" : \"value\"\n\t);\n",
+          "previous": "\tassert.equal(report.declarationsSha256, sha256(await read(\"index.d.ts\")));\n\tassert.doesNotMatch((await read(\"index.d.ts\")).toString()\n\t\t, /True|proof|_before|_after/u);\n",
+          "start": 9439
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-npm-report.mjs",
+      "previousSha256": "f6d58f46a33a12ca080514752a115194e7c79e25efc59f5b3a28354890a08c1f"
+    }
+  ]
+}

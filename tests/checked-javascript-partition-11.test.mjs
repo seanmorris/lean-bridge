@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
+import "./helpers/direct-proof-erasure-npm-declaration-syntax-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-php-profile-contract-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-npm-declaration-route-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-php-receipt-identity-repair-source-history-tests.mjs";
@@ -97,6 +98,7 @@ import "./helpers/direct-proof-erasure-matrix-tests.mjs";
 import "./helpers/direct-proof-erasure-hosted-archive-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-ci-tests.mjs";
 import "./helpers/direct-proof-erasure-matrix-receipt-tests.mjs";
+import "./helpers/direct-proof-erasure-npm-report-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-documentation-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-promotion-tests.mjs";
 import "./helpers/direct-proof-erasure-complete-promotion-transaction-tests.mjs";
