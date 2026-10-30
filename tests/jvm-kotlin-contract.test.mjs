@@ -149,10 +149,15 @@ for(const [name, fixture] of Object.entries({
 		if(name === "compounds")
 		{
 			const root = "src/main/kotlin/org/leanbridge/compounds/kotlin/";
-			assert.match(output.files[`${root}Option.kt`], /sealed interface Option<out T : kotlin.Any>/);
-			assert.match(output.files[`${root}Result.kt`], /sealed interface Result<out T : kotlin.Any, out E : kotlin.Any>/);
-			assert.match(output.files[`${root}Pair.kt`], /class Pair<out A : kotlin.Any, out B : kotlin.Any>/);
-			for(const file of ["Option.kt", "Result.kt", "Pair.kt"]) assert.doesNotMatch(output.files[root + file], /\bvar\b/);
+			assert.match(output.files[`${root}Option.kt`], /sealed interface Option<out T>/);
+			assert.match(output.files[`${root}Result.kt`], /sealed interface Result<out T, out E>/);
+			assert.match(output.files[`${root}Pair.kt`], /class Pair<out A, out B>/);
+			for(const file of ["Option.kt", "Result.kt", "Pair.kt"])
+			{
+				assert.doesNotMatch(output.files[root + file], /\bvar\b/);
+				assert.doesNotMatch(output.files[root + file]
+					, /\b(?:out\s+)?[A-Z]\s*:\s*kotlin\.Any\b|requireNonNull/u);
+			}
 			assert.match(source, /org\.leanbridge\.compounds\.kotlin\.Option\.some\(/);
 			assert.match(source, /org\.leanbridge\.compounds\.kotlin\.Result\.err\(/);
 			assert.match(source, /new org\.leanbridge\.compounds\.kotlin\.Pair<>/);
