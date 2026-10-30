@@ -93,7 +93,8 @@ export const compileJvmSources = async ({ root, files, environment, signal }) =>
 			, "jvm-owned-values-v5"].includes(metadata.generator);
 		const options = kotlinOptions(module, copiedGraph || ownedValues);
 		await run(java, [...launch, ...options, "-jdk-home", jdk, "-classpath", `${join(lib, "kotlin-stdlib.jar")}${delimiter}${join(lib, "annotations-13.0.jar")}`, "-d", "classes", ...kotlinSources, ...javaSources]);
-		classpath = `classes${delimiter}${join(lib, "kotlin-stdlib.jar")}`;
+		classpath = ["classes", join(lib, "kotlin-stdlib.jar")
+			, join(lib, "annotations-13.0.jar")].join(delimiter);
 		kotlin = { version, module, options, compilerFiles, namespace: metadata.kotlin.namespace, standardLibraryVersion: "2.2.0" };
 		validateKotlinCompilation(kotlin, metadata.namespace, { copiedGraph, ownedValues });
 	}

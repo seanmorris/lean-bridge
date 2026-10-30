@@ -35,6 +35,11 @@ export const hostNullManagedGroups = Object.freeze({
 	dotnet: Object.freeze(["dotnet"])
 	, jvm: Object.freeze(["java", "kotlin"])
 });
+export const hostNullManagedFixturePaths = Object.freeze({
+	dotnet: "tests/fixtures/host-null-consumers/dotnet.cs"
+	, java: "tests/fixtures/host-null-consumers/java.java"
+	, kotlin: "tests/fixtures/host-null-consumers/kotlin.kt"
+});
 export const hostNullManagedChecks = 22;
 const settings = Object.freeze({
 	dotnet: Object.freeze({
@@ -124,8 +129,7 @@ export const runHostNullManagedAcceptance = async (t, group) => {
 		{
 			const packages = receipt.packages.filter(item => item.target === target);
 			assert.equal(packages.filter(item => item.role === "component").length, 1);
-			const source = await readFile(
-				`tests/fixtures/host-null-consumers/${extensions[profile]}`, "utf8");
+			const source = await readFile(hostNullManagedFixturePaths[profile], "utf8");
 			const fixture = {
 				source: () => source
 				, success: `host-null-${profile}`

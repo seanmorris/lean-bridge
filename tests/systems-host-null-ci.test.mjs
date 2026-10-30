@@ -18,6 +18,8 @@ test("hosted systems HostNull preserves the complete 40-cell acceptance", async 
 	assert.match(runner, /LEAN_BRIDGE_SYSTEMS_HOST_NULL_ROUTES=ordinary,reviewed/u);
 	assert.match(runner, /--test-name-pattern='\^installed systems HostNull preserves all five positions on both author routes\$'/u);
 	assert.match(runner, /node scripts\/check-host-null-systems-ci\.mjs/u);
+	assert.match(runner, /mkdir -p build/u);
+	assert.doesNotMatch(runner, /mkdir -p "\$output"/u);
 	for(const required of [
 		"summary.cells.length, 40", "consumerSourceRemovedBeforeRelocatedExecution"
 		, "sourceFreeRelocatedExecution", "invalidRepresentationRejected"

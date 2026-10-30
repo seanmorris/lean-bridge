@@ -13,7 +13,9 @@ import { compileCopiedDotnetModel } from "../src/backends/dotnet/copied-model.mj
 import { generateCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { hostNullReviewedIr } from "./helpers/host-null-fixture.mjs";
-import { runHostNullManagedAcceptance } from "./helpers/host-null-managed-installed.mjs";
+import {
+	hostNullManagedFixturePaths, runHostNullManagedAcceptance
+} from "./helpers/host-null-managed-installed.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 test(".NET HostNull keeps null, Option absence, records and callback directions distinct", () => {
@@ -106,6 +108,13 @@ test("managed HostNull CI retains both routes and gates .NET plus JVM observatio
 	assert.match(installed
 		, /const target = group === "dotnet" \? "nuget" : "maven";/u);
 	assert.match(installed, /targets: \[target\], environment/u);
+	assert.deepEqual(hostNullManagedFixturePaths, {
+		dotnet: "tests/fixtures/host-null-consumers/dotnet.cs"
+		, java: "tests/fixtures/host-null-consumers/java.java"
+		, kotlin: "tests/fixtures/host-null-consumers/kotlin.kt"
+	});
+	for(const path of Object.values(hostNullManagedFixturePaths))
+		assert.ok((await readFile(path)).length > 0, path);
 });
 
 const installedFlag = process.env.LEAN_BRIDGE_DOTNET_HOST_NULL_TEST;

@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFile } from "node:fs/promises";
 import { compileCopiedKotlinModel, renderCopiedKotlinPackage, generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
@@ -42,6 +43,11 @@ test("Maven packaging rejects missing or altered Kotlin compiler metadata", () =
 		const invalid = structuredClone(evidence); change(invalid);
 		assert.throws(() => validate(invalid), /compiler contract/);
 	}
+});
+
+test("the Java pass retains Kotlin annotations on its closed classpath", async () => {
+	const source = await readFile("src/build/compile-jvm-sources.mjs", "utf8");
+	assert.match(source, /classpath = \["classes", join\(lib, "kotlin-stdlib\.jar"\)[\s\S]*join\(lib, "annotations-13\.0\.jar"\)\]\.join\(delimiter\);/u);
 });
 
 test("Kotlin collections retain every primitive and all 24 explicitly typed array levels", () => {
