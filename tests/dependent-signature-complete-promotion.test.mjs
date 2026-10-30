@@ -13,6 +13,8 @@ import {
 	dependentSignatureCompleteCells, dependentSignatureCompleteEvidenceId
 	, dependentSignatureCompleteReferencePaths
 } from "./helpers/dependent-signature-complete-promotion.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./helpers/source-at-fin-history-milestone.mjs";
 
 test("complete dependent-signature publication owns exactly 34 passed cells"
 	, async () => {
@@ -28,7 +30,8 @@ test("complete dependent-signature publication owns exactly 34 passed cells"
 		assert.deepEqual(evidence[0].files.map(item => item.path)
 			, dependentSignatureCompleteReferencePaths);
 		for(const file of evidence[0].files)
-			assert.equal(file.sha256, sha256(await readFile(file.path)), file.path);
+			assert.equal(file.sha256, sha256(await sourceAtFinHistoryMilestone(
+				file.path, file.sha256)), file.path);
 		assert.equal(evidence[0].artifacts.length, 12);
 
 		const cells = new Map(typeSurfaceCells(inventory, contracts).map(cell =>

@@ -26,6 +26,8 @@ import {
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { gitSourceBytes } from "./source-history-stream.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
@@ -85,18 +87,22 @@ test("proof/Core local join reverses live integration to either parent", async (
 	const record = await readRecord();
 	for(const path of proofCoreLocalJoinChangedPaths)
 	{
-		const live = await readFile(path, "utf8");
+		const mergeUpdate = record.leftUpdates.find(
+			update => update.path === path);
+		const merged = await sourceAtFinHistoryMilestone(
+			path, mergeUpdate.currentSha256);
 		const integration = record.integrationUpdates.find(
 			update => update.path === path);
-		const integrated = integration === undefined ? live
-			: beforeFinRefinementSource(
-				path, live, integration.currentSha256
-			);
-		const merged = integration === undefined ? integrated
-			: reverseProofCoreLocalJoinUpdate(integrated, integration);
+		let integrated = merged;
+		if(integration !== undefined)
+		{
+			integrated = await sourceAtFinHistoryMilestone(
+				path, integration.currentSha256);
+			assert.equal(reverseProofCoreLocalJoinUpdate(
+				integrated, integration), merged, path);
+		}
 		assert.equal(sha256(merged)
-			, record.leftUpdates.find(update => update.path === path)
-				.currentSha256, path);
+			, mergeUpdate.currentSha256, path);
 		const left = reverseProofCoreLocalJoinUpdate(merged
 			, record.leftUpdates.find(update => update.path === path));
 		const right = reverseProofCoreLocalJoinUpdate(merged

@@ -6,7 +6,6 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { createReadStream } from "node:fs";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -31,6 +30,8 @@ import {
 import {
 	authenticateSourceHistoryReverse, gitSourceBytes
 } from "./source-history-stream.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -111,7 +112,8 @@ test("dependent signature completion additions have exact immutable identities"
 			.includes(addition.path)
 			? git(["show"
 				, `${dependentSignatureCompletionImplementation}:${addition.path}`])
-			: await readFile(addition.path);
+			: await sourceAtFinHistoryMilestone(
+				addition.path, addition.currentSha256);
 		assert.equal(sha256(source), addition.currentSha256, addition.path);
 	}
 	assert.deepEqual(
@@ -135,11 +137,12 @@ test("dependent signature history integration is newest-first and reversible"
 			previousDigest.update(chunk);
 		assert.equal(previousDigest.digest("hex")
 			, update.previousSha256, update.path);
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
 		await authenticateSourceHistoryReverse(
-			createReadStream(update.path), update);
+			[Buffer.from(current)], update);
 		if(update.path !== "docs/type-surface.v1.json")
 		{
-			const current = await readFile(update.path, "utf8");
 			const previous = git(["show"
 				, `${dependentSignatureCompletionImplementation}:${update.path}`]);
 			assert.equal(reverseDependentSignatureCompletionUpdate(
@@ -157,23 +160,25 @@ test("dependent signature history integration is newest-first and reversible"
 test("dependent signature integration refreshes only current-source pins"
 	, async () => {
 	const record = await readRecord();
-	const diff = git(["diff", "--no-ext-diff", "--no-color", "--unified=0"
-		, dependentSignatureCompletionImplementation, "--"
-		, "docs/type-surface.v1.json"]);
-	const previous = [...diff.matchAll(
-		/^-\s*"sha256": "([a-f0-9]{64})"[,]?$/gmu
-	)].map(match => match[1]);
-	const current = [...diff.matchAll(
-		/^\+\s*"sha256": "([a-f0-9]{64})"[,]?$/gmu
-	)].map(match => match[1]);
-	assert.equal(previous.length, record.reconciledTypeSurfacePointers);
-	assert.equal(current.length, record.reconciledTypeSurfacePointers);
-	assert.ok(current.length > 0);
-	assert.ok(previous.every((digest, index) => digest !== current[index]));
-	assert.deepEqual(diff.split("\n").filter(line =>
-		/^[+-]/u.test(line) && !/^(?:---|\+\+\+)/u.test(line)
-		&& !/^[+-]\s*"sha256": "[a-f0-9]{64}"[,]?$/u.test(line)), []
-		, "The source-history seal must not promote support");}
+	const path = "docs/type-surface.v1.json";
+	const update = record.integrationUpdates.find(item => item.path === path);
+	assert.ok(update);
+	assert.equal(update.edits.length, record.reconciledTypeSurfacePointers);
+	assert.ok(update.edits.length > 0);
+	const pin = /^\s*"sha256": "[a-f0-9]{64}"[,]?\n$/u;
+	for(const edit of update.edits)
+	{
+		assert.match(edit.previous, pin);
+		assert.match(edit.current, pin);
+		assert.notEqual(edit.previous, edit.current);
+	}
+	const current = await sourceAtFinHistoryMilestone(
+		path, update.currentSha256);
+	const previous = git(["show"
+		, `${dependentSignatureCompletionImplementation}:${path}`]);
+	assert.equal(reverseDependentSignatureCompletionUpdate(current, update)
+		, previous);
+	}
 );
 
 test("dependent signature completion rejects altered transitions", async () => {

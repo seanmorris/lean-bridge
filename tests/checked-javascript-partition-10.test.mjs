@@ -6,6 +6,7 @@
 import "./helpers/wit-frozen-closure-hub-hook-source-history-tests.mjs";
 import "./helpers/proof-core-local-join-source-history-tests.mjs";
 import "./helpers/dependent-signature-completion-source-history-tests.mjs";
+import "./helpers/dependent-signature-complete-promotion-source-history-tests.mjs";
 import "./helpers/dependent-signature-hosted-tests.mjs";
 import "./helpers/dependent-signature-complete-ci-tests.mjs";
 import "./helpers/dependent-signature-complete-documentation-tests.mjs";

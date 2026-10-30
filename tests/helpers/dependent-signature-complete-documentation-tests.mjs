@@ -4,16 +4,22 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import test from "node:test";
 import {
 	dependentSignatureCompleteDocumentationPaths
 	, renderDependentSignatureCompleteDocumentation
 } from "./dependent-signature-complete-documentation.mjs";
+import {
+	dependentSignatureCompletePromotionPredecessor
+} from "./dependent-signature-complete-promotion-source-history.mjs";
 
-const readSource = async ([name, path]) => [name, await readFile(path, "utf8")];
-const sources = Object.fromEntries(await Promise.all(Object.entries(
-	dependentSignatureCompleteDocumentationPaths).map(readSource)));
+const readSource = ([name, path]) => [name
+	, execFileSync("git", ["show"
+		, `${dependentSignatureCompletePromotionPredecessor}:${path}`]
+	, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 })];
+const sources = Object.fromEntries(Object.entries(
+	dependentSignatureCompleteDocumentationPaths).map(readSource));
 
 test("complete dependent-signature docs state the exact live-bound contract", () => {
 	const rendered = renderDependentSignatureCompleteDocumentation(sources);

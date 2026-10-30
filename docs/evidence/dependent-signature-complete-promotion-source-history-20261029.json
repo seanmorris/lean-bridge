@@ -1,0 +1,456 @@
+{
+  "cells": 34,
+  "guidePaths": [
+    "docs/consume/c.md",
+    "docs/consume/cpp.md",
+    "docs/consume/dotnet.md",
+    "docs/consume/java.md",
+    "docs/consume/kotlin.md",
+    "docs/consume/perl.md",
+    "docs/consume/python.md",
+    "docs/consume/ruby.md",
+    "docs/consume/rust.md",
+    "docs/consume/wit-wasi.md",
+    "docs/javascript-typescript.md",
+    "docs/lean/existing-package.md",
+    "docs/lean/export-decisions.md",
+    "docs/php.md"
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-signature-complete-promotion-source-history.mjs",
+      "sha256": "a59a6668b8e030306966657a3487fb20b86dfa3bbe2510885f47fee1f12b01c1"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-complete-promotion-source-history-tests.mjs",
+      "sha256": "029b20e88353af66fd130031a0e434422bfb3bf20abda228aa7f0435925ec2f8"
+    },
+    {
+      "path": "tests/helpers/dependent-signature-complete-promotion-source-history.mjs",
+      "sha256": "ae32127a265afa8dcf11c149a08a8c453c792d3baa3035bd9ddbbf63d6e2b480"
+    }
+  ],
+  "implementationCommit": "3eafd36b791cb640f2c1348c949cbbde8cab0670",
+  "implementationCommits": [
+    "3eafd36b791cb640f2c1348c949cbbde8cab0670"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "2af9b42437639684bb5f59ba5011b6cb3ca7020ef6c362adb4652641ce880d53",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-signature-complete-promotion-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 313
+        }
+      ],
+      "path": "tests/checked-javascript-partition-10.test.mjs",
+      "previousSha256": "8db16acf5ae3fc0b979ed4fbb227b9648e14ceabb26ef56ade5ec45b01003c9a"
+    },
+    {
+      "currentSha256": "1102336034cbc0cc35edb3aedd5f69d3921e09e75e69abd81eec0561607a3e1a",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 538
+        },
+        {
+          "current": "\t\t\tassert.equal(file.sha256, sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\tfile.path, file.sha256)), file.path);\n",
+          "previous": "\t\t\tassert.equal(file.sha256, sha256(await readFile(file.path)), file.path);\n",
+          "start": 1357
+        }
+      ],
+      "path": "tests/dependent-signature-complete-promotion.test.mjs",
+      "previousSha256": "96d08bafdbb67b49dacecb2e0c29203bb35494e45f66aa25c874aa0835c21bda"
+    },
+    {
+      "currentSha256": "6502fe8d42cc5af553cdb5d6674b74333a384e6f4e522f37d0874a0f0635f849",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 138
+        },
+        {
+          "current": "import {\n\tdependentSignatureCompletePromotionPredecessor\n} from \"./dependent-signature-complete-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 382
+        },
+        {
+          "current": "const readSource = ([name, path]) => [name\n\t, execFileSync(\"git\", [\"show\"\n\t\t, `${dependentSignatureCompletePromotionPredecessor}:${path}`]\n\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 })];\nconst sources = Object.fromEntries(Object.entries(\n\tdependentSignatureCompleteDocumentationPaths).map(readSource));\n",
+          "previous": "const readSource = async ([name, path]) => [name, await readFile(path, \"utf8\")];\nconst sources = Object.fromEntries(await Promise.all(Object.entries(\n\tdependentSignatureCompleteDocumentationPaths).map(readSource)));\n",
+          "start": 510
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-complete-documentation-tests.mjs",
+      "previousSha256": "ce9a1bf02762a282ad310555390e63c1aa07a036663d51f67dd0f5dadc333f30"
+    },
+    {
+      "currentSha256": "46ffa655644c49691a1274945af9ea47adf9040a971bd410bc8f5eb8c278fb80",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 136
+        },
+        {
+          "current": "import {\n\tdependentSignatureCompletePromotionPredecessor\n} from \"./dependent-signature-complete-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 898
+        },
+        {
+          "current": "\tconst document = JSON.parse(execFileSync(\"git\", [\"show\"\n\t\t, `${dependentSignatureCompletePromotionPredecessor}:docs/type-surface.v1.json`]\n\t, { encoding: \"utf8\", maxBuffer: 128 * 1024 * 1024 }));\n\tconst [irSchema, consumers] = await Promise.all([\n\t\t\"schema/binding-ir.schema.json\", \"docs/consumer-support.v1.json\"\n",
+          "previous": "\tconst [document, irSchema, consumers] = await Promise.all([\n\t\t\"docs/type-surface.v1.json\", \"schema/binding-ir.schema.json\"\n\t\t, \"docs/consumer-support.v1.json\"\n",
+          "start": 1053
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-complete-promotion-tests.mjs",
+      "previousSha256": "b72280abe0684ac2204caa2ac55caab8999852bf79f9e6420960bb2f0902e0d9"
+    },
+    {
+      "currentSha256": "ff516fa14bad74029b03fb5017209d75e62fc48658e9a7b5dc9902af64003051",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { createReadStream } from \"node:fs\";\n",
+          "start": 245
+        },
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 1249
+        },
+        {
+          "current": "\t\t\t: await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.currentSha256);\n",
+          "previous": "\t\t\t: await readFile(addition.path);\n",
+          "start": 4763
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "",
+          "start": 5700
+        },
+        {
+          "current": "\t\t\t[Buffer.from(current)], update);\n",
+          "previous": "\t\t\tcreateReadStream(update.path), update);\n",
+          "start": 5834
+        },
+        {
+          "current": "",
+          "previous": "\t\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 5924
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tconst update = record.integrationUpdates.find(item => item.path === path);\n\tassert.ok(update);\n\tassert.equal(update.edits.length, record.reconciledTypeSurfacePointers);\n\tassert.ok(update.edits.length > 0);\n\tconst pin = /^\\s*\"sha256\": \"[a-f0-9]{64}\"[,]?\\n$/u;\n\tfor(const edit of update.edits)\n\t{\n\t\tassert.match(edit.previous, pin);\n\t\tassert.match(edit.current, pin);\n\t\tassert.notEqual(edit.previous, edit.current);\n\t}\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tpath, update.currentSha256);\n\tconst previous = git([\"show\"\n\t\t, `${dependentSignatureCompletionImplementation}:${path}`]);\n\tassert.equal(reverseDependentSignatureCompletionUpdate(current, update)\n\t\t, previous);\n\t}\n",
+          "previous": "\tconst diff = git([\"diff\", \"--no-ext-diff\", \"--no-color\", \"--unified=0\"\n\t\t, dependentSignatureCompletionImplementation, \"--\"\n\t\t, \"docs/type-surface.v1.json\"]);\n\tconst previous = [...diff.matchAll(\n\t\t/^-\\s*\"sha256\": \"([a-f0-9]{64})\"[,]?$/gmu\n\t)].map(match => match[1]);\n\tconst current = [...diff.matchAll(\n\t\t/^\\+\\s*\"sha256\": \"([a-f0-9]{64})\"[,]?$/gmu\n\t)].map(match => match[1]);\n\tassert.equal(previous.length, record.reconciledTypeSurfacePointers);\n\tassert.equal(current.length, record.reconciledTypeSurfacePointers);\n\tassert.ok(current.length > 0);\n\tassert.ok(previous.every((digest, index) => digest !== current[index]));\n\tassert.deepEqual(diff.split(\"\\n\").filter(line =>\n\t\t/^[+-]/u.test(line) && !/^(?:---|\\+\\+\\+)/u.test(line)\n\t\t&& !/^[+-]\\s*\"sha256\": \"[a-f0-9]{64}\"[,]?$/u.test(line)), []\n\t\t, \"The source-history seal must not promote support\");}\n",
+          "start": 6593
+        }
+      ],
+      "path": "tests/helpers/dependent-signature-completion-source-history-tests.mjs",
+      "previousSha256": "3bd5a11a8341b608f6615366df5daaf17841b3ad140c2c080725ac42c107d940"
+    },
+    {
+      "currentSha256": "aeabb88c447fe3103139abc7abd5c0bdfeaac92f2bfa9ff86cb0dd6b4fae38e1",
+      "edits": [
+        {
+          "current": "import { beforeDependentSignatureCompletePromotionSource, dependentSignatureCompletePromotionNormalizationPaths } from \"./dependent-signature-complete-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentSignatureCompletePromotionNormalizationPaths\n\t, ...dependentPythonReceiptCanonicalNormalizationPaths\n",
+          "previous": "\t...dependentPythonReceiptCanonicalNormalizationPaths\n",
+          "start": 223014
+        },
+        {
+          "current": "\tlet stage = beforeDependentSignatureCompletePromotionSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDependentPythonReceiptCanonicalSource(\n",
+          "previous": "\tlet stage = beforeDependentPythonReceiptCanonicalSource(\n",
+          "start": 279384
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c6ac0dece51007d4fcd106a480593ec9105c5c2503a6607f664e82b774765d11"
+    },
+    {
+      "currentSha256": "da8f2cf219b86e4572b49d85972e126e4f0edaf643b61fc9e2fda1d1af2e8e1e",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 980
+        },
+        {
+          "current": "\t\tconst mergeUpdate = record.leftUpdates.find(\n\t\t\tupdate => update.path === path);\n\t\tconst merged = await sourceAtFinHistoryMilestone(\n\t\t\tpath, mergeUpdate.currentSha256);\n",
+          "previous": "\t\tconst live = await readFile(path, \"utf8\");\n",
+          "start": 3607
+        },
+        {
+          "current": "\t\tlet integrated = merged;\n\t\tif(integration !== undefined)\n\t\t{\n\t\t\tintegrated = await sourceAtFinHistoryMilestone(\n\t\t\t\tpath, integration.currentSha256);\n\t\t\tassert.equal(reverseProofCoreLocalJoinUpdate(\n\t\t\t\tintegrated, integration), merged, path);\n\t\t}\n",
+          "previous": "\t\tconst integrated = integration === undefined ? live\n\t\t\t: beforeFinRefinementSource(\n\t\t\t\tpath, live, integration.currentSha256\n\t\t\t);\n\t\tconst merged = integration === undefined ? integrated\n\t\t\t: reverseProofCoreLocalJoinUpdate(integrated, integration);\n",
+          "start": 3869
+        },
+        {
+          "current": "\t\t\t, mergeUpdate.currentSha256, path);\n",
+          "previous": "\t\t\t, record.leftUpdates.find(update => update.path === path)\n\t\t\t\t.currentSha256, path);\n",
+          "start": 4149
+        }
+      ],
+      "path": "tests/helpers/proof-core-local-join-source-history-tests.mjs",
+      "previousSha256": "c9a661a9d5a3f88cdc11287f22744d0a727a60603533cdeb0955a1565f35bf19"
+    }
+  ],
+  "milestone": "dependent-signature-complete-promotion-source-v1",
+  "observations": 2,
+  "predecessorCommit": "9cefee70dcf7a393d34b237eafc9f1533719fcac",
+  "referenceFiles": 20,
+  "schemaVersion": 1,
+  "scope": "Replay the complete eleven-lane dependent-signature archive and same-run receipt, promote exactly 34 direct earlier-Nat Fin signature cells across 17 profiles and two author routes, add two observations, publish fourteen generated and author-facing guides, retain twenty exact reference files and twelve artifacts, preserve every unrelated support claim, and register the full transaction newest-first.",
+  "updates": [
+    {
+      "currentSha256": "09fa8189f365ce93e072d458d2014154e46dee76a90cbfc125c88adcd858f617",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](../evidence/dependent-signatures-hosted-20261028/index.json) covers C in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 52753
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 87536
+        }
+      ],
+      "path": "docs/consume/c.md",
+      "previousSha256": "3daef4a89119b01df40d6df61334d4fff5a2ae6dd7bc193b47f1cbb6089543ee"
+    },
+    {
+      "currentSha256": "17590815faef68642467b1286daff1429db71b6a9ce07f0fc5ed7ffc2d03e7fc",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](../evidence/dependent-signatures-hosted-20261028/index.json) covers C++ in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 42186
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 77650
+        }
+      ],
+      "path": "docs/consume/cpp.md",
+      "previousSha256": "e1c99d46d097bb3f0028bfe80204cef92d9a0fbe41213354eaf4d94fa77df3b7"
+    },
+    {
+      "currentSha256": "6880b13fbf28d2eb910b165a51fc3dfb6ea295af7174fb58384677f232f5a244",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](../evidence/dependent-signatures-hosted-20261028/index.json) covers C# in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 50753
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 83575
+        }
+      ],
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "619e77cf4961aa1e81e72eacfc249820b8f5a474d92ff5c393bc8ad305598d78"
+    },
+    {
+      "currentSha256": "53a21bbf5ec02eb80ea2ce204cf1a58dd4270e3a58d98e9ab49d25935b7a9d2e",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](../evidence/dependent-signatures-hosted-20261028/index.json) covers Java in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 56653
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 90371
+        }
+      ],
+      "path": "docs/consume/java.md",
+      "previousSha256": "9f959559277efd04ccb8b59053e7af09fc8ba52b47ceaa0f6f44a5067d25bb52"
+    },
+    {
+      "currentSha256": "28e1573f00f30727fe1124345bc10d7e5678147616403a96471e6b24c4110e02",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](../evidence/dependent-signatures-hosted-20261028/index.json) covers Kotlin in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 48885
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 82937
+        }
+      ],
+      "path": "docs/consume/kotlin.md",
+      "previousSha256": "d9bf9716935710c337a180fde224907f6f0f7a00f718f55e620e716fc9d351f6"
+    },
+    {
+      "currentSha256": "6cc09810955c8367d647db9fa809191b0bc55c56a46efc62236467b36bbc5986",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](../evidence/dependent-signatures-hosted-20261028/index.json) covers Perl in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 45407
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 78774
+        }
+      ],
+      "path": "docs/consume/perl.md",
+      "previousSha256": "285f8aabbd0416ccf3eea53a160a052b7c484f37b980c6323777e99c6d6d2733"
+    },
+    {
+      "currentSha256": "1a7d1fa49f68ecc534324357d6a89caf6f92ca58a30010fd26c042e28d0218cb",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](../evidence/dependent-signatures-hosted-20261028/index.json) covers Python in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 49527
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 81831
+        }
+      ],
+      "path": "docs/consume/python.md",
+      "previousSha256": "248b2ed677ffa57803e3e6070e5d17ff3b0683bf2031695f2486a64c1b6ae1ed"
+    },
+    {
+      "currentSha256": "75ee4a5ecb396ecbd8452663101aac2d3f16179f5f2fc9fd91dec59d71ccf37b",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](../evidence/dependent-signatures-hosted-20261028/index.json) covers Ruby in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 46499
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 81292
+        }
+      ],
+      "path": "docs/consume/ruby.md",
+      "previousSha256": "72b8981059dba65bbe181df31a607d30bb346283c910e98736098fb8d88c46c0"
+    },
+    {
+      "currentSha256": "cb07ed2b68cdd1712aac69a41813280dea37a73884f39f5d891df50d62fc9e0f",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](../evidence/dependent-signatures-hosted-20261028/index.json) covers Rust in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 48999
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 82237
+        }
+      ],
+      "path": "docs/consume/rust.md",
+      "previousSha256": "2be0ad0bb044fe7ecfe93b08535274f1f66d6012811d5d400f011ab3f5d9f724"
+    },
+    {
+      "currentSha256": "6dce84cb370d59a3c0785814369b80e521cb1d84c8dc2e9ee13c7cdc8f9a2be0",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](../evidence/dependent-signatures-hosted-20261028/index.json) covers WIT/WASI in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 63733
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 97870
+        }
+      ],
+      "path": "docs/consume/wit-wasi.md",
+      "previousSha256": "31dbc3a2e67c47cd32735462850ea52866317629109bf04eff1ab6ab2a02737d"
+    },
+    {
+      "currentSha256": "0af8ccd55aabb717d3408fb6d9b272c5644d2706d25a48c733a3966eda739247",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](evidence/dependent-signatures-hosted-20261028/index.json) covers Node JavaScript, TypeScript, Browser, React, Worker in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 31063
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 79559
+        }
+      ],
+      "path": "docs/javascript-typescript.md",
+      "previousSha256": "fb5a8b77866b71404346557cc4003ea4a7b37a001075dc9b0d87e7445ba50d1f"
+    },
+    {
+      "currentSha256": "463b10be226208337dd01cf9fd3fa4c2d5119e84b0c00b6d0e66b6c08237bbc8",
+      "edits": [
+        {
+          "current": "Missing instances, unresolved types, unsupported dependent runtime inputs, effects and admitted implementations stop the build. Analysis loads Lean's built-in class and instance indexes without executing package initializers. The metadata retains the exact compiler application, original declaration, documentation and theorem references. Target compilation must reproduce that metadata before linking. Public `analyze` continues to use the scalar profile; use the CPAN build to check native-only signatures. Specialization emits separately named concrete functions, without generic host-language overload dispatch.\n\n### Export a direct value-dependent Fin parameter\n\nLean Bridge supports the direct copied form where an explicit `Fin` parameter\nis indexed by an earlier explicit `Nat` parameter:\n\n```lean\ndef mirror (bound : Nat) (value : Fin bound) : Nat :=\n  bound - 1 - value.val\n```\n\nExport the declaration normally. The host API takes two values in that\nprofile's ordinary `Nat` representation; callers do not supply a proof. The\ngenerated adapter decodes both live arguments and rejects `value >= bound`\nbefore constructing `Fin bound` or entering `mirror`. A changing bound is\ntherefore checked on every call rather than frozen into package metadata.\n\nAn independently reviewed Binding IR records the second parameter as a\n`fin-parameter` dependency on the first. Fresh Lean metadata must reproduce\nthat exact relation. A missing, later, non-`Nat`, forged or otherwise altered\ndependency stops analysis or reconciliation.\n\nThe [complete hosted dependent-signature archive](../evidence/dependent-signatures-hosted-20261028/index.json)\nreplays this form across all seventeen consumer profiles and both author\nroutes, including zero, endpoint, changing and huge bounds, rejection without\ncaller mutation, and recovery. This contract does not admit dependent results,\nfields, callbacks, owned values, arbitrary index expressions or open dependent\nstructures.\n",
+          "previous": "Missing instances, unresolved types, dependent runtime inputs, effects and admitted implementations stop the build. Analysis loads Lean's built-in class and instance indexes without executing package initializers. The metadata retains the exact compiler application, original declaration, documentation and theorem references. Target compilation must reproduce that metadata before linking. Public `analyze` continues to use the scalar profile; use the CPAN build to check native-only signatures. Specialization emits separately named concrete functions, without generic host-language overload dispatch.\n",
+          "start": 24118
+        }
+      ],
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "53950611d16fd5fc7941a39ab581a3f0f11eabd1d82834ff1cc08a01a9232bce"
+    },
+    {
+      "currentSha256": "9e0e1d02dea2781e7437e06d903ff99852264a1d114e17634b92796ab9b97788",
+      "edits": [
+        {
+          "current": "Shared export configuration selects modules, optional exact exports, resources, closure arities and checked export contracts. The builder supports local modules, the pinned Lean standard library, and [locked Lake dependencies](../publish/cpan.md#build-with-locked-lake-dependencies), including generated public modules. Open generics, dependent signatures outside the supported direct earlier-Nat `Fin` parameter form, asynchronous operations and retained host callbacks require further work. Unsupported native shapes fail before packaging.\n",
+          "previous": "Shared export configuration selects modules, optional exact exports, resources, closure arities and checked export contracts. The builder supports local modules, the pinned Lean standard library, and [locked Lake dependencies](../publish/cpan.md#build-with-locked-lake-dependencies), including generated public modules. Open generics, dependent signatures, asynchronous operations and retained host callbacks require further work. Unsupported native shapes fail before packaging.\n",
+          "start": 60724
+        }
+      ],
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "ed562b41690511031b6655b2c775770a944c2e7f7c1d989bd9a76395f87a069c"
+    },
+    {
+      "currentSha256": "efae8cea62d477bba27d52ba155f050dedcdfe20b2649c6e60714d6d66c31519",
+      "edits": [
+        {
+          "current": "[Complete hosted dependent-signature acceptance](evidence/dependent-signatures-hosted-20261028/index.json) covers Native PHP, PHP-Wasm in installed ordinary-source and independently reviewed packages. The tested declaration takes an explicit `Nat` bound followed by `Fin bound`; the host passes both through its ordinary Nat representation, and the generated adapter rejects a value at or above the live earlier bound before Lean entry. The retained matrix covers this direct copied parameter dependency only. Dependent results, fields, callbacks, owned values, later or non-Nat bounds, arbitrary index expressions, and open dependent structures remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 97231
+        },
+        {
+          "current": "| `Dependent parameters and results` | `the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary. Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "previous": "| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n",
+          "start": 157003
+        }
+      ],
+      "path": "docs/php.md",
+      "previousSha256": "23e5ab850f1cfe5eacc50dc41bdd2fcf82ac32dd89684d3c71f754455ec1f92a"
+    },
+    {
+      "currentSha256": "dfb4e1240352821e36be5e32689e17770c91a9d2b3604607ccba174bed480432",
+      "edits": [
+        {
+          "current": "    },\n    {\n      \"id\": \"hosted-dependent-signature-complete\",\n      \"kind\": \"installed\",\n      \"revision\": \"70652587f69c330ea0feebb7bc4c6da6b20f4f04\",\n      \"command\": \"node --test --test-concurrency=1 tests/dependent-signature-complete-hosted-evidence.test.mjs\",\n      \"scope\": \"Eleven same-run producer artifacts and their aggregate receipt close the exact direct `(bound : Nat) (value : Fin bound)` dependency across seventeen profiles, ordinary Lean source and independently reviewed Binding IR.\",\n      \"files\": [\n        {\n          \"path\": \".github/workflows/dependent-signature-complete.yml\",\n          \"sha256\": \"d4d6f43b15f73c0659b1a8b20aae2192d973d3b2645bd6b29439eaa1dd7abe7a\"\n        },\n        {\n          \"path\": \"docs/evidence/dependent-signatures-hosted-20261028/index.json\",\n          \"sha256\": \"adbfdf47685ddc792c95437dee77eba52eddfb7c54d980e31a6219239c71416d\"\n        },\n        {\n          \"path\": \"scripts/archive-dependent-signature-hosted.mjs\",\n          \"sha256\": \"93fbb19673da98691eabcefadeb9702034f6da56b510f9a0f44c12edec807a18\"\n        },\n        {\n          \"path\": \"scripts/download-dependent-signature-hosted-inputs.mjs\",\n          \"sha256\": \"07968c80a715916fb01a791f743ac57d20ec30ecf0236de031defd32a57f86e1\"\n        },\n        {\n          \"path\": \"scripts/generate-reference-docs.mjs\",\n          \"sha256\": \"b690854ece6e2042f890a6aa80b94a63830dc2ee0c6aba9b8f3fdd5659412a83\"\n        },\n        {\n          \"path\": \"scripts/generate-type-docs.mjs\",\n          \"sha256\": \"a63a20974d519554c073ab4b13653d8c887398de23de5bc31c4a691ca080f61f\"\n        },\n        {\n          \"path\": \"scripts/promote-dependent-signature-complete.mjs\",\n          \"sha256\": \"18b7f0e56251cef0a77b7b266b2bc87698e59b91bf0262943fb2f3daf72f8db9\"\n        },\n        {\n          \"path\": \"tests/helpers/dependent-signature-complete-ci-tests.mjs\",\n          \"sha256\": \"9a73239d9cc50d945992c29bf783bf6645edeca9a9af09780593ead56b59f3da\"\n        },\n        {\n          \"path\": \"tests/helpers/dependent-signature-complete-documentation.mjs\",\n          \"sha256\": \"91db88c16e525a8cd388314c7b1c27c862aaf6a96a48c200d0d5d462ebfee343\"\n        },\n        {\n          \"path\": \"tests/helpers/dependent-signature-complete-documentation-tests.mjs\",\n          \"sha256\": \"ce9a1bf02762a282ad310555390e63c1aa07a036663d51f67dd0f5dadc333f30\"\n        },\n        {\n          \"path\": \"tests/helpers/dependent-signature-complete-promotion.mjs\",\n          \"sha256\": \"f4b34ecf9159deada139d3899c6a6b7bc9590b9bc56b3015093b5f0906479743\"\n        },\n        {\n          \"path\": \"tests/helpers/dependent-signature-complete-promotion-tests.mjs\",\n          \"sha256\": \"b72280abe0684ac2204caa2ac55caab8999852bf79f9e6420960bb2f0902e0d9\"\n        },\n        {\n          \"path\": \"tests/helpers/dependent-signature-complete-promotion-transaction-tests.mjs\",\n          \"sha256\": \"46008058f44432683c85e92b46a5a951c41170dd13fc762a2f43a06165c49174\"\n        },\n        {\n          \"path\": \"tests/helpers/dependent-signature-hosted-archive.mjs\",\n          \"sha256\": \"cbf838d0fa622c9827f0c74cb0d6e257e360a8f6a888815b7fa857453fcad0ac\"\n        },\n        {\n          \"path\": \"tests/helpers/dependent-signature-hosted-evidence.mjs\",\n          \"sha256\": \"757e36ca3527eda6eb727e5a11f8484ca159e72bb7164418c5a6ce6fcc02d05e\"\n        },\n        {\n          \"path\": \"tests/helpers/dependent-signature-hosted-tests.mjs\",\n          \"sha256\": \"8b00bee7609f25b90c042a91e12ec9ce9b838bf00569ea553e8a38e61eb8bfa5\"\n        },\n        {\n          \"path\": \"tests/dependent-signature-complete-hosted-evidence.test.mjs\",\n          \"sha256\": \"a57e6e6abfaf72442f129b249448c217f06770828d259331569040f9da32f7e9\"\n        },\n        {\n          \"path\": \"tests/dependent-signature-complete-promotion.test.mjs\",\n          \"sha256\": \"96d08bafdbb67b49dacecb2e0c29203bb35494e45f66aa25c874aa0835c21bda\"\n        },\n        {\n          \"path\": \"tests/helpers/promotion-file-transaction.mjs\",\n          \"sha256\": \"00181a5537d811a32ed39ff61093356b7f9af72a774026c3860e70b551a2df72\"\n        },\n        {\n          \"path\": \"tests/helpers/type-surface-promotion-io.mjs\",\n          \"sha256\": \"9bae6b22f1a875e1771887e8fc127a8631d9e477462d391b2db73c750e7c2d1a\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-browser-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"fa7b8699f215570f773a22088e9b2b53ba6584c0428b90d3e840f606a9c10806\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-native-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"3ac60e106b4a51b57b89592d47ac615993568a2330c10572f8843d5ab5b6c938\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-perl-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"590599dfc152a41df409535b60f677b7e7d52cf04901ee627af0a317a4dbd948\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-python-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"885b596ccec3681c33f42eeec909b7429341121ed2d7dd80ff325ada935c213c\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-rust-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"dadff39203868d02acbaf80dde6620609a7576a0110e3c935073b3ed20e50c8e\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-dotnet-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"adfe1a6d97d196b1d71c3d9f05ac65fad52a9642c554195735c0ded1b351ad42\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-jvm-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"89ea12007863c668bfa15713c16e003248d8622c1f9e95872b7cbdb5f535358a\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-ruby-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"fe3a965ba9375693346526f6790d858525ed45ca700a4fd15eeab26a5c60bedb\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-php-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"960f3de7a6623df96ae6dff838373adfa7cd0cefac084222cbe962a7ca49c025\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-php-wasm-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"eca68e16e8d58c692b3a28fc9201d5a234aec6e45fbf6d9bacc82a5b7eb14f4a\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-checked-record-wit-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"98911028486755595af72b138c311cddf9cf549bf5b38ed44f8f2995b0844fd2\"\n        },\n        {\n          \"path\": \"hosted-dependent-signature-complete/dependent-signature-matrix-70652587f69c330ea0feebb7bc4c6da6b20f4f04.zip\",\n          \"sha256\": \"30aedce7f83175e9cb21c8a057ff0968e32997cda75bbe1a3c7b8254fb3e2a95\"\n        }\n      ]\n",
+          "previous": "",
+          "start": 89703084
+        },
+        {
+          "current": "    },\n    {\n      \"id\": \"dependent-signature-complete-ordinary-source-hosted-installed\",\n      \"profiles\": [\n        \"node-javascript\",\n        \"node-typescript\",\n        \"browser-javascript\",\n        \"browser-react\",\n        \"browser-worker\",\n        \"c\",\n        \"cpp\",\n        \"perl\",\n        \"python\",\n        \"rust\",\n        \"dotnet\",\n        \"java\",\n        \"kotlin\",\n        \"ruby\",\n        \"php-native\",\n        \"php-wasm\",\n        \"wit-wasi\"\n      ],\n      \"shapes\": [\n        \"dependent\"\n      ],\n      \"positions\": [\n        \"signature\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Compiler-authenticated Lean source packages preserve an explicit Fin payload's dependency on an earlier explicit Nat parameter.\",\n      \"hostTypes\": {\n        \"dependent\": {\n          \"signature\": \"the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-dependent-signature-complete\"\n          ],\n          \"note\": \"Fresh Lean metadata authenticates Fin over an exact earlier explicit Nat parameter; independently reviewed Binding IR must reproduce the same parameter dependency.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-dependent-signature-complete\"\n          ],\n          \"note\": \"Generated public APIs expose the bound and payload through the profile's ordinary Nat representation and retain the live earlier-parameter relation.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-dependent-signature-complete\"\n          ],\n          \"note\": \"The copied adapter compares the decoded payload with the decoded earlier bound before constructing Fin or entering the exported Lean declaration.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-dependent-signature-complete\"\n          ],\n          \"note\": \"Both author routes produce reproducible source-free packages that install offline, relocate, and preserve the exact dependency metadata.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-dependent-signature-complete\"\n          ],\n          \"note\": \"Installed consumers exercise zero, exact endpoints, changing and huge bounds, rejection without caller mutation, and recovery through public host APIs.\"\n        }\n      },\n      \"limitations\": [\n        \"The eleven same-run producer artifacts establish all thirty-four direct dependent-signature cells: seventeen supported profiles across ordinary Lean source and independently reviewed Binding IR.\",\n        \"Every installed package checks a concrete Fin value against the live earlier Nat argument before entering Lean, exercises rejected endpoints and huge values, preserves caller data, and recovers for later calls.\",\n        \"The same-run receipt authenticates all forty-four independent checker summaries across eleven lanes, two author routes and full and result-only public APIs.\",\n        \"The native, managed, dynamic-language, browser, WIT/WASI and four-ABI Perl lanes use reproducible source-free package handoffs and public host APIs.\",\n        \"The archive retains all twelve complete original GitHub artifact ZIPs, API identities, job logs, canonical summaries and exact producer, checker and archiver source closures. External toolchains, runners, browsers and operating-system packages remain trusted recorded inputs.\",\n        \"Promotion is limited to a direct copied Fin parameter whose index is an exact earlier explicit Nat parameter. Dependent results, fields, callbacks, owned values, arbitrary index expressions, later parameters and non-Nat bounds remain outside this evidence.\"\n      ],\n      \"conversionNotes\": {\n        \"dependent\": \"Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary.\"\n      }\n    },\n    {\n      \"id\": \"dependent-signature-complete-reviewed-ir-hosted-installed\",\n      \"profiles\": [\n        \"node-javascript\",\n        \"node-typescript\",\n        \"browser-javascript\",\n        \"browser-react\",\n        \"browser-worker\",\n        \"c\",\n        \"cpp\",\n        \"perl\",\n        \"python\",\n        \"rust\",\n        \"dotnet\",\n        \"java\",\n        \"kotlin\",\n        \"ruby\",\n        \"php-native\",\n        \"php-wasm\",\n        \"wit-wasi\"\n      ],\n      \"shapes\": [\n        \"dependent\"\n      ],\n      \"positions\": [\n        \"signature\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Independently reviewed Binding IR packages preserve an explicit Fin payload's dependency on an earlier explicit Nat parameter.\",\n      \"hostTypes\": {\n        \"dependent\": {\n          \"signature\": \"the profile's ordinary Nat values for the bound and Fin payload; payload < the live earlier bound\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-dependent-signature-complete\"\n          ],\n          \"note\": \"Fresh Lean metadata authenticates Fin over an exact earlier explicit Nat parameter; independently reviewed Binding IR must reproduce the same parameter dependency.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-dependent-signature-complete\"\n          ],\n          \"note\": \"Generated public APIs expose the bound and payload through the profile's ordinary Nat representation and retain the live earlier-parameter relation.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-dependent-signature-complete\"\n          ],\n          \"note\": \"The copied adapter compares the decoded payload with the decoded earlier bound before constructing Fin or entering the exported Lean declaration.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-dependent-signature-complete\"\n          ],\n          \"note\": \"Both author routes produce reproducible source-free packages that install offline, relocate, and preserve the exact dependency metadata.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-dependent-signature-complete\"\n          ],\n          \"note\": \"Installed consumers exercise zero, exact endpoints, changing and huge bounds, rejection without caller mutation, and recovery through public host APIs.\"\n        }\n      },\n      \"limitations\": [\n        \"The eleven same-run producer artifacts establish all thirty-four direct dependent-signature cells: seventeen supported profiles across ordinary Lean source and independently reviewed Binding IR.\",\n        \"Every installed package checks a concrete Fin value against the live earlier Nat argument before entering Lean, exercises rejected endpoints and huge values, preserves caller data, and recovers for later calls.\",\n        \"The same-run receipt authenticates all forty-four independent checker summaries across eleven lanes, two author routes and full and result-only public APIs.\",\n        \"The native, managed, dynamic-language, browser, WIT/WASI and four-ABI Perl lanes use reproducible source-free package handoffs and public host APIs.\",\n        \"The archive retains all twelve complete original GitHub artifact ZIPs, API identities, job logs, canonical summaries and exact producer, checker and archiver source closures. External toolchains, runners, browsers and operating-system packages remain trusted recorded inputs.\",\n        \"Promotion is limited to a direct copied Fin parameter whose index is an exact earlier explicit Nat parameter. Dependent results, fields, callbacks, owned values, arbitrary index expressions, later parameters and non-Nat bounds remain outside this evidence.\"\n      ],\n      \"conversionNotes\": {\n        \"dependent\": \"Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary.\"\n      }\n",
+          "previous": "",
+          "start": 102836061
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "900de243b51b0ff517589d05fa04f33540e115a9752fbfc3cf0da9399591377f"
+    }
+  ]
+}
