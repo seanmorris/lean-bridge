@@ -19,6 +19,8 @@ import { generateCopiedRustPackage } from "../src/backends/rust/copied-values.mj
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
 import { renderWitConversions } from "../src/backends/wit/copied-conversions.mjs";
 import { hostNullReviewedIr } from "./helpers/host-null-fixture.mjs";
+import { hostNullSystemsWitTypes }
+	from "./helpers/host-null-systems-installed.mjs";
 
 const surfaceOptions = Object.freeze({
 	callables: true
@@ -102,6 +104,13 @@ test("Rust HostNull uses nested Option without leaking private ABI flags", () =>
 	assert.match(files["README.md"], /directly nested HostNull remain nested Option/u);
 });
 
+test("WIT/WASI HostNull preserves both nested option alias chains", () => {
+	const model = compileCopiedWitModel(hostNullReviewedIr(), {}
+		, { callables: true });
+	for(const pattern of hostNullSystemsWitTypes)
+		assert.match(model.wit, pattern);
+});
+
 test("WIT/WASI HostNull is a typed component option with validated tags", {
 	skip: !available(process.env.LEAN_BRIDGE_WASM_TOOLS ?? "wasm-tools")
 }, async t => {
@@ -109,9 +118,8 @@ test("WIT/WASI HostNull is a typed component option with validated tags", {
 	const model = compileCopiedWitModel(ir, {}, { callables: true });
 	const repeated = compileCopiedWitModel(structuredClone(ir), {}, { callables: true });
 	assert.equal(model.wit, repeated.wit); assert.equal(model.wat, repeated.wat);
-	assert.match(model.wit, /type bridge-value-1 = option<u32>;/u);
-	assert.match(model.wit, /type bridge-value-3 = option<bridge-value-2>;/u);
-	assert.match(model.wit, /type bridge-value-4 = option<bridge-value-1>;/u);
+	for(const pattern of hostNullSystemsWitTypes)
+		assert.match(model.wit, pattern);
 	assert.match(model.wit, /record packet \{ direct: bridge-value-1, nullable-option: bridge-value-3, optional-nullable: bridge-value-4 \}/u);
 	assert.match(model.wit, /call-host: func\([^]*borrow<function-bridge-value-1-to-bridge-value-3>\) -> bridge-value-3/u);
 	assert.match(model.wit, /make-closure: func\([^]*own<function-bridge-value-1-to-bridge-value-3>/u);

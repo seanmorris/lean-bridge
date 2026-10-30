@@ -31,6 +31,12 @@ export const hostNullSystemsProfiles = Object.freeze(["c", "cpp", "rust", "wit-w
 export const hostNullSystemsChecks = Object.freeze({
 	c: 38, cpp: 19, rust: 17, "wit-wasi": 51
 });
+export const hostNullSystemsWitTypes = Object.freeze([
+	/type bridge-value-1 = option<u32>/u
+	, /type bridge-value-2 = option<u32>/u
+	, /type bridge-value-3 = option<bridge-value-2>/u
+	, /type bridge-value-4 = option<bridge-value-1>/u
+]);
 const targets = Object.freeze({
 	c: Object.freeze({ name: "host-null-demo", version: "1.0.0" })
 	, cpp: Object.freeze({ name: "host-null-demo", version: "1.0.0" })
@@ -161,11 +167,8 @@ export const runHostNullSystemsAcceptance = async t => {
 				source: () => source, success: `host-null-${profile}`
 				, expectedChecks: hostNullSystemsChecks[profile]
 				, verifyInstalledPackage: verifyFinContainerEdgeArchiveClosure
-				, ...(profile === "wit-wasi" ? { wit: [
-					/type bridge-value-1 = option<u32>/u
-					, /type bridge-value-2 = option<option<u32>>/u
-					, /type bridge-value-3 = option<option<u32>>/u
-				] } : {})
+				, ...(profile === "wit-wasi"
+					? { wit: hostNullSystemsWitTypes } : {})
 			};
 			const result = await installCopiedConsumer({
 				profile, consumer, handoff, packages, environment, dependencies, fixture

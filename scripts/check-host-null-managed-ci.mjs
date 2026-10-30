@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import {
-	hostNullManagedChecks, hostNullManagedGroups
+	hostNullManagedChecks, hostNullManagedFixturePaths, hostNullManagedGroups
 } from "../tests/helpers/host-null-managed-installed.mjs";
 
 const values = Object.fromEntries(process.argv.slice(2).reduce(
@@ -111,7 +111,8 @@ for(const report of summary.routes)
 		]);
 		const extension = observation.profile === "dotnet" ? "cs"
 			: observation.profile === "java" ? "java" : "kt";
-		const fixturePath = `tests/fixtures/host-null-consumers/${extension}`;
+		const fixturePath = hostNullManagedFixturePaths[observation.profile];
+		assert.equal(typeof fixturePath, "string", observation.profile);
 		const retainedSource = await readFile(join(directory
 			, report.route, observation.profile, `consumer.${extension}`));
 		assert.deepEqual(retainedSource, sourceAt(fixturePath));

@@ -89,6 +89,7 @@ test("generated .NET HostNull sources and all three absence states compile witho
 
 test("managed HostNull CI retains both routes and gates .NET plus JVM observations", async () => {
 	const runner = await readFile("scripts/run-host-null-managed-ci.sh", "utf8");
+	const checker = await readFile("scripts/check-host-null-managed-ci.mjs", "utf8");
 	const installed = await readFile(
 		"tests/helpers/host-null-managed-installed.mjs", "utf8");
 	for(const required of [
@@ -108,6 +109,10 @@ test("managed HostNull CI retains both routes and gates .NET plus JVM observatio
 	assert.match(installed
 		, /const target = group === "dotnet" \? "nuget" : "maven";/u);
 	assert.match(installed, /targets: \[target\], environment/u);
+	assert.match(checker
+		, /hostNullManagedFixturePaths\[observation\.profile\]/u);
+	assert.doesNotMatch(checker
+		, /host-null-consumers\/\$\{extension\}/u);
 	assert.deepEqual(hostNullManagedFixturePaths, {
 		dotnet: "tests/fixtures/host-null-consumers/dotnet.cs"
 		, java: "tests/fixtures/host-null-consumers/java.java"
