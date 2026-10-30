@@ -1,0 +1,153 @@
+{
+  "failedJobIds": [
+    124003451593,
+    124003451626,
+    124003451779
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-managed-systems-repair-source-history.mjs",
+      "sha256": "530d4787286516a673647e892af48ce533577cba84e2efe4e24300c280048cb4"
+    },
+    {
+      "path": "tests/helpers/host-null-managed-systems-repair-source-history-tests.mjs",
+      "sha256": "5c712760a6ef143e05cb290554f02fc43e3999d22481e96a76e1c85293b3934d"
+    },
+    {
+      "path": "tests/helpers/host-null-managed-systems-repair-source-history.mjs",
+      "sha256": "8f4102b88383c3b8db1cad9fe7cea55164ef5211b0a4f3b71591930f44002b83"
+    }
+  ],
+  "hostedRunId": 41034251688,
+  "implementationCommit": "bb66a166b28db246276a0c535d7f69b7286725af",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c8722a023684f12c0a9f17d8e9cd314fb8265bd75ee0b2a96339b1bd38d6a365",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-managed-systems-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5637
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "032fb4365e1f5f52a31cccfe6b11ff2eb52a94b53ef53c5713c2215f797c60d4"
+    },
+    {
+      "currentSha256": "9fff7a570edf6959a6bef18669d10c05339fd9b10e16435ae2b26365f0669fb0",
+      "edits": [
+        {
+          "current": "import { beforeHostNullManagedSystemsRepairSource, hostNullManagedSystemsRepairNormalizationPaths } from \"./host-null-managed-systems-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullManagedSystemsRepairNormalizationPaths\n\t, ...directProofErasureCompletePromotionNormalizationPaths\n",
+          "previous": "\t...directProofErasureCompletePromotionNormalizationPaths\n",
+          "start": 226628
+        },
+        {
+          "current": "\tlet stage = beforeHostNullManagedSystemsRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureCompletePromotionSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureCompletePromotionSource(\n",
+          "start": 284176
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b8a8a0829bde616a34b2649c569c9ef835e1b6e5dd232957bed4394a8eea9d39"
+    }
+  ],
+  "milestone": "host-null-managed-systems-repair-source-v1",
+  "predecessorCommit": "674150f63580fd35b60cae30d95be45db61599d7",
+  "schemaVersion": 1,
+  "scope": "Repair three exact HostNull failures from run 41034251688: select the committed managed consumer fixtures by filename, retain JetBrains annotations on the closed Java compiler classpath, and leave systems output creation to the acceptance test. Preserve all HostNull semantics, profile cells, package routes, artifact gates and fail-closed receipt reconciliation.",
+  "supportClaimsChanged": false,
+  "updates": [
+    {
+      "currentSha256": "8b6fc96c5c8df035c9adfd70c61aae952ac0c01624fca5a2d57200b9c4be9972",
+      "edits": [
+        {
+          "current": "mkdir -p build\n",
+          "previous": "mkdir -p \"$output\"\n",
+          "start": 1018
+        }
+      ],
+      "path": "scripts/run-host-null-systems-ci.sh",
+      "previousSha256": "ae283513ac3b1520377bf95e07e39880e8a56dbdc392f960f165aedfe871ce0e"
+    },
+    {
+      "currentSha256": "46bd3f9240c302814c20299155252eab6e486977150f6013b446f29a04ad16a3",
+      "edits": [
+        {
+          "current": "\t\tclasspath = [\"classes\", join(lib, \"kotlin-stdlib.jar\")\n\t\t\t, join(lib, \"annotations-13.0.jar\")].join(delimiter);\n",
+          "previous": "\t\tclasspath = `classes${delimiter}${join(lib, \"kotlin-stdlib.jar\")}`;\n",
+          "start": 6114
+        }
+      ],
+      "path": "src/build/compile-jvm-sources.mjs",
+      "previousSha256": "3006f6fd85211daf7c21e5e79b6373d46b2952f1b7d9d0fea04e98e533da6402"
+    },
+    {
+      "currentSha256": "cb22c1db8fe439bad57574421f3913a2e5b9f1b6e912241625b2c0128e2e88cb",
+      "edits": [
+        {
+          "current": "import {\n\thostNullManagedFixturePaths, runHostNullManagedAcceptance\n} from \"./helpers/host-null-managed-installed.mjs\";\n",
+          "previous": "import { runHostNullManagedAcceptance } from \"./helpers/host-null-managed-installed.mjs\";\n",
+          "start": 669
+        },
+        {
+          "current": "\tassert.deepEqual(hostNullManagedFixturePaths, {\n\t\tdotnet: \"tests/fixtures/host-null-consumers/dotnet.cs\"\n\t\t, java: \"tests/fixtures/host-null-consumers/java.java\"\n\t\t, kotlin: \"tests/fixtures/host-null-consumers/kotlin.kt\"\n\t});\n\tfor(const path of Object.values(hostNullManagedFixturePaths))\n\t\tassert.ok((await readFile(path)).length > 0, path);\n",
+          "previous": "",
+          "start": 5464
+        }
+      ],
+      "path": "tests/dotnet-host-null-contract.test.mjs",
+      "previousSha256": "af529529028a5de7bb84577edb6738f6133f54ccfa2245ef058f91e0d4d9589a"
+    },
+    {
+      "currentSha256": "5ac4dcb8d1dbfba319207a19b47f176bfc0e4804da265a277892dad86ea7fbc5",
+      "edits": [
+        {
+          "current": "export const hostNullManagedFixturePaths = Object.freeze({\n\tdotnet: \"tests/fixtures/host-null-consumers/dotnet.cs\"\n\t, java: \"tests/fixtures/host-null-consumers/java.java\"\n\t, kotlin: \"tests/fixtures/host-null-consumers/kotlin.kt\"\n});\n",
+          "previous": "",
+          "start": 1435
+        },
+        {
+          "current": "\t\t\tconst source = await readFile(hostNullManagedFixturePaths[profile], \"utf8\");\n",
+          "previous": "\t\t\tconst source = await readFile(\n\t\t\t\t`tests/fixtures/host-null-consumers/${extensions[profile]}`, \"utf8\");\n",
+          "start": 5950
+        }
+      ],
+      "path": "tests/helpers/host-null-managed-installed.mjs",
+      "previousSha256": "5e387187b89918294d335a19697dfcd8eb941210407fc0184934cb888ddaafbb"
+    },
+    {
+      "currentSha256": "afc7347c4bdb9ab8fdec82a90ff0df70986e6e4d6152cc57e7f6374b22647aa7",
+      "edits": [
+        {
+          "current": "import { readFile } from \"node:fs/promises\";\n",
+          "previous": "",
+          "start": 169
+        },
+        {
+          "current": "test(\"the Java pass retains Kotlin annotations on its closed classpath\", async () => {\n\tconst source = await readFile(\"src/build/compile-jvm-sources.mjs\", \"utf8\");\n\tassert.match(source, /classpath = \\[\"classes\", join\\(lib, \"kotlin-stdlib\\.jar\"\\)[\\s\\S]*join\\(lib, \"annotations-13\\.0\\.jar\"\\)\\]\\.join\\(delimiter\\);/u);\n});\n\n",
+          "previous": "",
+          "start": 2567
+        }
+      ],
+      "path": "tests/jvm-kotlin-contract.test.mjs",
+      "previousSha256": "4e9292f1580fe86f1224102e185bdf58ae41adc147097d77bfb2c67730ab7ed2"
+    },
+    {
+      "currentSha256": "492ad29bb6c0f7c9f61024008272793702557ffca80f87fd3fede4e6ad656695",
+      "edits": [
+        {
+          "current": "\tassert.match(runner, /mkdir -p build/u);\n\tassert.doesNotMatch(runner, /mkdir -p \"\\$output\"/u);\n",
+          "previous": "",
+          "start": 1374
+        }
+      ],
+      "path": "tests/systems-host-null-ci.test.mjs",
+      "previousSha256": "e3071a09871d08018102fa4d98f1acc5edc67055cfc3e7adf45007db1877ae6a"
+    }
+  ]
+}

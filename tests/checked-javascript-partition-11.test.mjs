@@ -72,6 +72,7 @@ import "./helpers/host-null-scripting-type-surface-lineage-source-history-tests.
 import "./helpers/host-null-scripting-source-history-tests.mjs";
 import "./helpers/host-null-downstream-source-history-tests.mjs";
 import "./helpers/host-null-managed-source-history-tests.mjs";
+import "./helpers/host-null-managed-systems-repair-source-history-tests.mjs";
 import "./helpers/host-null-php-source-history-tests.mjs";
 import "./helpers/host-null-type-surface-lineage-source-history-tests.mjs";
 import "./helpers/host-null-partition-gap-source-history-tests.mjs";
