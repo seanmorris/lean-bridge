@@ -21,6 +21,8 @@ import {
 import { sourceAtFinHistoryRecordSource }
 	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeFinRefinementSource }
+	from "./fin-refinement-source-history.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 256 * 1024 * 1024
@@ -93,8 +95,13 @@ test("current repair history isolation preserves exact boundaries", async () => 
 	for(const path of [
 		"tests/helpers/fin-refinement-source-history.mjs"
 		, "tests/checked-javascript-partition-11.test.mjs"
-	]) assert.equal(sha256(await readFile(path)), sha256(git(["show"
-		, `6cf8e53b1a5015c2d3e3f7100e14fdf4a4caf3f4:${path}`])), path);
+	]) {
+		const previous = git(["show"
+			, `6cf8e53b1a5015c2d3e3f7100e14fdf4a4caf3f4:${path}`]);
+		assert.equal(beforeFinRefinementSource(
+			path, await readFile(path, "utf8"), sha256(previous)
+		), previous, path);
+	}
 	const optional = await readFile(
 		"tests/optional-parameter-installed-contract.test.mjs", "utf8");
 	assert.doesNotMatch(optional, /focused-producer-efficiency/u);

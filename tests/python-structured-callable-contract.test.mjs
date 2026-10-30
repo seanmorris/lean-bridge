@@ -23,10 +23,10 @@ test("Python structured callbacks preserve all earlier generated packages byte f
 		const changed = source + "\n// unrelated change\n";
 		assert.notEqual(sha256(beforeFinRefinementSource(path, changed, hash)), hash, path);
 	}
-	assertPythonStructuredCodegenRegression(record);
+	await assertPythonStructuredCodegenRegression(record);
 	const altered = structuredClone(record);
 	Object.values(altered.fixtures[0].files)[0].sha256 = "0".repeat(64);
-	assert.throws(() => assertPythonStructuredCodegenRegression(altered));
+	await assert.rejects(() => assertPythonStructuredCodegenRegression(altered));
 });
 
 test("Python callback annotations follow value direction while retaining ownership restrictions", () => {

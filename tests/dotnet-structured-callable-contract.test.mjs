@@ -18,10 +18,10 @@ test("C# structured callbacks preserve all earlier generated packages byte for b
 	const record = JSON.parse(await readFile("docs/evidence/dotnet-structured-codegen-regression-20260924.json"));
 	for(const [path, hash] of Object.entries(record.sourceHashes))
 		assert.equal(sha256(beforeDotnetRecursiveCallables(path, await readFile(path, "utf8"), hash)), hash, path);
-	assertDotnetStructuredCodegenRegression(record);
+	await assertDotnetStructuredCodegenRegression(record);
 	const altered = structuredClone(record);
 	Object.values(altered.fixtures[0].files)[0].sha256 = "0".repeat(64);
-	assert.throws(() => assertDotnetStructuredCodegenRegression(altered));
+	await assert.rejects(() => assertDotnetStructuredCodegenRegression(altered));
 });
 
 test("C# structured callbacks admit typed copied values while retaining ownership restrictions", () => {

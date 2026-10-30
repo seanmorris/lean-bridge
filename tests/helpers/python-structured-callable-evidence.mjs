@@ -151,7 +151,7 @@ export const assertPythonStructuredCallableIntegration = async record => {
 	const execution = JSON.parse(bytes); await assertPythonStructuredCallableExecution(execution);
 	assert.equal(record.codegen.path, pythonStructuredCodegenPath);
 	const codegenBytes = await readFile(record.codegen.path); assert.equal(sha256(codegenBytes), record.codegen.sha256);
-	const codegen = JSON.parse(codegenBytes); assertPythonStructuredCodegenRegression(codegen);
+	const codegen = JSON.parse(codegenBytes); await assertPythonStructuredCodegenRegression(codegen);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), pythonStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), pythonStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...pythonStructuredCallableChangedPaths, ...pythonStructuredCallableAddedPaths])].sort();

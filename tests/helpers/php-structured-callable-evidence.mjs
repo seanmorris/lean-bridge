@@ -194,7 +194,7 @@ export const assertPhpStructuredCallableIntegration = async record => {
 	await assertNpmStructuredCallableIntegration(previous);
 	const execution = await authenticated(record.execution, phpStructuredCallableExecutionPath);
 	await assertPhpStructuredCallableExecution(execution);
-	const codegen = await authenticated(record.codegen, phpStructuredCodegenPath); assertPhpStructuredCodegenRegression(codegen);
+	const codegen = await authenticated(record.codegen, phpStructuredCodegenPath); await assertPhpStructuredCodegenRegression(codegen);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), phpStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), phpStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...phpStructuredCallableChangedPaths, ...phpStructuredCallableAddedPaths])].sort();

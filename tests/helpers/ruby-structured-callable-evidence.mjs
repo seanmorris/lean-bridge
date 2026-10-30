@@ -136,7 +136,7 @@ export const assertRubyStructuredCallableIntegration = async record => {
 	const execution = JSON.parse(bytes); await assertRubyStructuredCallableExecution(execution);
 	assert.equal(record.codegen.path, rubyStructuredCodegenPath);
 	const codegenBytes = await readFile(record.codegen.path); assert.equal(sha256(codegenBytes), record.codegen.sha256);
-	const codegen = JSON.parse(codegenBytes); assertRubyStructuredCodegenRegression(codegen);
+	const codegen = JSON.parse(codegenBytes); await assertRubyStructuredCodegenRegression(codegen);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), rubyStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), rubyStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...rubyStructuredCallableChangedPaths, ...rubyStructuredCallableAddedPaths])].sort();

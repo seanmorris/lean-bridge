@@ -50,7 +50,7 @@ test("nominal JVM CI rejects omitted gates, narrowed artifacts and false success
 		, ["  managed-consumers:\n", "  managed-consumers:\n    if: false\n"]
 		, ["  managed-consumers:\n", "  managed-consumers:\n    continue-on-error: true\n"]
 		, ["        profile: [dotnet, jvm, ruby]", "        profile: [dotnet, ruby]"]
-		, ["      - managed-consumers\n", ""]
+		, ["      - managed-consumers\n      - owned-jvm-values\n", "      - owned-jvm-values\n"]
 		, [' || [ "${{ steps.nominal_jvm.outcome }}" != success ]', ""]
 		, [" || steps.nominal_jvm.outcome != 'success'", ""]
 		, ...["LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR", "LEAN_BRIDGE_NOMINAL_SUBTYPE_JVM_ROUTES", "LEAN_BRIDGE_NOMINAL_SUBTYPE_JVM_MODES"].map(name => [block, block.replace("        run: |", `        env:\n          ${name}: override\n        run: |`)])];

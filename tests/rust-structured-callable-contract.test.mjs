@@ -29,10 +29,10 @@ test("Rust structured callables preserve all earlier generated copied packages b
 		const changed = source + "\n// unrelated change\n";
 		assert.notEqual(sha256(beforeFinRefinementSource(path, changed, hash)), hash, path);
 	}
-	assertRustStructuredCodegenRegression(record);
+	await assertRustStructuredCodegenRegression(record);
 	const altered = structuredClone(record);
 	Object.values(altered.fixtures[0].files)[0].sha256 = "0".repeat(64);
-	assert.throws(() => assertRustStructuredCodegenRegression(altered));
+	await assert.rejects(() => assertRustStructuredCodegenRegression(altered));
 });
 
 test("Rust admits structured callbacks while rejecting recursive, retained and higher-order payloads", () => {

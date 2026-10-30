@@ -31,8 +31,12 @@ export const optionalParameterCurrentLineIntegrationAddedPaths = Object.freeze([
 ]);
 
 let history;
+const historyUrl = new URL(
+	`../../${optionalParameterCurrentLineIntegrationHistoryPath}`
+	, import.meta.url
+);
 const record = () => history ??= JSON.parse(readFileSync(
-	optionalParameterCurrentLineIntegrationHistoryPath, "utf8"));
+	historyUrl, "utf8"));
 export const optionalParameterCurrentLineIntegrationNormalizationPaths
 	= Object.freeze([...new Set([
 		...record().currentParentUpdates.map(item => item.path)

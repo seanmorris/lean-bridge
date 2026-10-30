@@ -25,8 +25,18 @@ export const nominalSubtypeJvmCiBlock = `      - name: Require nominal Java and 
 const anchor = "      - name: Upload installed Java and Kotlin corpus observations\n        if: always() && matrix.profile == 'jvm'\n";
 const command = '              consumer_command="$consumer_command && bash scripts/run-nominal-subtype-jvm-ci.sh \\"$JAVA_HOME/bin/java\\" \\"$JAVA_HOME/bin/javac\\" \\"$PWD/build/kotlin-tools/kotlinc/bin/kotlinc\\""\n';
 const directProofCommand = '              consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-managed-ci.sh jvm"\n';
+const hostNullCommand = '              consumer_command="$consumer_command && bash scripts/run-host-null-managed-ci.sh jvm"\n';
+const optionalParameterCommand = '              consumer_command="$consumer_command && bash scripts/run-optional-parameter-managed-ci.sh jvm"\n';
 const variants = [
 	{
+		summary: '              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ] || [ "${{ steps.host_null_managed.outcome }}" != success ] || [ "${{ steps.optional_parameters_managed.outcome }}" != success ]; then\n'
+		, updatedSummary: '              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ] || [ "${{ steps.host_null_managed.outcome }}" != success ] || [ "${{ steps.optional_parameters_managed.outcome }}" != success ]; then\n'
+		, gate: "(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success' || steps.optional_parameters_managed.outcome != 'success' || steps.host_null_managed.outcome != 'success'))"
+		, updatedGate: "(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success' || steps.optional_parameters_managed.outcome != 'success' || steps.host_null_managed.outcome != 'success'))"
+		, beforeSummary: directProofCommand + hostNullCommand + optionalParameterCommand
+		, afterCommand: directProofCommand + hostNullCommand + optionalParameterCommand
+	}
+	, {
 		summary: '              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ]; then\n'
 		, updatedSummary: '              if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ] || [ "${{ steps.nominal_jvm.outcome }}" != success ] || [ "${{ steps.direct_proof_managed.outcome }}" != success ]; then\n'
 		, gate: "(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success'))"

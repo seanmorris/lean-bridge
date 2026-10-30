@@ -130,7 +130,8 @@ export const assertRustStructuredCallableIntegration = async record => {
 	const execution = JSON.parse(bytes); await assertRustStructuredCallableExecution(execution);
 	assert.equal(record.codegen.path, rustStructuredCodegenPath);
 	const codegenBytes = await readFile(record.codegen.path); assert.equal(sha256(codegenBytes), record.codegen.sha256);
-	const codegen = JSON.parse(codegenBytes); assertRustStructuredCodegenRegression(codegen);
+	const codegen = JSON.parse(codegenBytes);
+	await assertRustStructuredCodegenRegression(codegen);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), rustStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), rustStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...rustStructuredCallableChangedPaths, ...rustStructuredCallableAddedPaths])].sort();

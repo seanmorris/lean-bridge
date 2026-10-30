@@ -48,7 +48,8 @@ test("nominal Ruby CI rejects skipped gates, wrong interpreters and narrowed ori
 		, ["  managed-consumers:\n", "  managed-consumers:\n    if: false\n"]
 		, ["  managed-consumers:\n", "  managed-consumers:\n    continue-on-error: true\n"]
 		, ["        profile: [dotnet, jvm, ruby]", "        profile: [dotnet, jvm]"]
-		, ["      - managed-consumers\n", ""]
+		, ["      - managed-consumers\n      - owned-jvm-values\n"
+			, "      - owned-jvm-values\n"]
 		, ["      - name: Install the ordinary Ruby runtime\n", "      - name: Unverified Ruby runtime\n"]
 		, ["      - name: Install the ordinary Ruby runtime\n        if: matrix.profile == 'ruby'", "      - name: Install the ordinary Ruby runtime\n        if: false"]
 		, ...["LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR", "LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_ROUTES", "LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_MODES"].map(name => [block, block.replace("          LEAN_NUM_THREADS:", `          ${name}: override\n          LEAN_NUM_THREADS:`)])

@@ -46,7 +46,8 @@ test("nominal Python CI rejects skipped gates, missing floors and narrowed origi
 		, ["  native-consumers:\n", "  native-consumers:\n    if: false\n"]
 		, ["  native-consumers:\n", "  native-consumers:\n    continue-on-error: true\n"]
 		, ["        profile: [c-family, python, rust]", "        profile: [c-family, rust]"]
-		, ["      - native-consumers\n", ""]
+		, ["      - native-consumers\n      - native-c-family-values\n"
+			, "      - native-c-family-values\n"]
 		, ...["311", "312"].map(suffix => [`        id: collection_python${suffix}\n`, ""])
 		, ...["LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR", "LEAN_BRIDGE_NOMINAL_SUBTYPE_PYTHONS"].map(name => [block, block.replace("          LEAN_NUM_THREADS:", `          ${name}: override\n          LEAN_NUM_THREADS:`)])
 	];

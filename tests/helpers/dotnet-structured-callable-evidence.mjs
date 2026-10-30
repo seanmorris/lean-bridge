@@ -157,7 +157,7 @@ export const assertDotnetStructuredCallableIntegration = async record => {
 	const execution = JSON.parse(bytes); await assertDotnetStructuredCallableExecution(execution);
 	assert.equal(record.codegen.path, dotnetStructuredCodegenPath);
 	const codegenBytes = await readFile(record.codegen.path); assert.equal(sha256(codegenBytes), record.codegen.sha256);
-	const codegen = JSON.parse(codegenBytes); assertDotnetStructuredCodegenRegression(codegen);
+	const codegen = JSON.parse(codegenBytes); await assertDotnetStructuredCodegenRegression(codegen);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), dotnetStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), dotnetStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...dotnetStructuredCallableChangedPaths, ...dotnetStructuredCallableAddedPaths])].sort();

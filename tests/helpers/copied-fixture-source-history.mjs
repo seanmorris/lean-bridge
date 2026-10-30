@@ -18,6 +18,10 @@ import { ownedCppCallbackChangedPaths } from "./owned-cpp-callback-result-histor
 import { ownedRustCallbackChangedPaths } from "./owned-rust-callback-result-history.mjs";
 import { ownedPythonCallbackChangedPaths } from "./owned-python-callback-result-history.mjs";
 import { ownedRubyCallbackChangedPaths } from "./owned-ruby-callback-result-history.mjs";
+import {
+	beforeOptionalParameterPhpWasmCountContractSource
+	, optionalParameterPhpWasmCountContractNormalizationPaths
+} from "./optional-parameter-php-wasm-count-contract-source-history.mjs";
 
 export const copiedFixtureReaderHistoryPath = "docs/evidence/copied-fixture-reader-repair-20261002.json";
 export const copiedFixtureReaderHistorySha256 = "767d1d2958676ed9018e7a690a96f49be5c709494aa8316b9dc7d09401601dee";
@@ -48,6 +52,7 @@ export const copiedFixtureReaderPaths = Object.freeze([...new Set([
 	, ...ownedRustCallbackChangedPaths
 	, ...ownedPythonCallbackChangedPaths
 	, ...ownedRubyCallbackChangedPaths
+	, ...optionalParameterPhpWasmCountContractNormalizationPaths
 ])].sort());
 
 /**
@@ -82,6 +87,10 @@ export const reverseCopiedFixtureReaderUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeCopiedFixtureReaders = (path, source, expected) => {
+	if(optionalParameterPhpWasmCountContractNormalizationPaths.includes(path))
+		source = beforeOptionalParameterPhpWasmCountContractSource(
+			path, source.toString(), expected
+		);
 	source = beforeOwnedCallbackResults(path, source, expected);
 	const update = readHistory().updates.find(entry => entry.path === path);
 	if(!update) return source;

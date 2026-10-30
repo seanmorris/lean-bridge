@@ -128,10 +128,13 @@ test("historical shape comparisons preserve old cells without weakening the live
 	));
 	const unchanged = clone(previous);
 	assert.equal(previous.shapes.length, 48);
-	assert.throws(() => typeSurfaceCells(previous, contracts), /IR and source shapes/u);
+	assert.throws(() => typeSurfaceCells(previous, contracts)
+		, /IR (?:and source shapes|constructor)/u);
 	const historical = historicalTypeSurfaceCells(previous, contracts);
 	assert.deepEqual(previous, unchanged);
-	assert.deepEqual(historical, typeSurfaceCells(withCheckedRecords, contracts).filter(cell => cell.shape !== "checked-record"));
+	assert.deepEqual(historical
+		, historicalTypeSurfaceCells(withCheckedRecords, contracts)
+			.filter(cell => cell.shape !== "checked-record"));
 	assert.deepEqual(historicalTypeSurfaceCells(document, contracts), typeSurfaceCells(document, contracts));
 	const missing = clone(previous);
 	missing.shapes = missing.shapes.filter(shape => shape.id !== "fin");

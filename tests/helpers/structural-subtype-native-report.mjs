@@ -10,7 +10,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../src/binding-ir/contract.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
-import { structuralSubtypeConfiguration, structuralSubtypeReview } from "./structural-subtype-installed-fixture.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
 
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const nativeFiles = [
@@ -35,8 +35,13 @@ export const checkStructuralSubtypeNativeReport = async (read, { route, producer
 		return value;
 	};
 	const original = path => execFileSync("git", ["show", `${producerCommit}:${path}`], { maxBuffer: 16 * 1024 * 1024 });
-	const report = await json("report.json"), expected = structuralSubtypeReview();
-	const configuration = structuralSubtypeConfiguration(route, ["c", "cpp"]);
+	const fixture = await moduleAtProducer(producerCommit
+		, "tests/helpers/structural-subtype-installed-fixture.mjs");
+	const report = await json("report.json")
+		, expected = fixture.structuralSubtypeReview();
+	const configuration = fixture.structuralSubtypeConfiguration(
+		route, ["c", "cpp"]
+	);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.route, route); assert.equal(report.producerCommit, producerCommit);
 	assert.deepEqual(report.profiles, ["c", "cpp"]); assert.deepEqual(report.configuration, configuration);
 	assert.deepEqual(await json("configuration.json"), configuration);

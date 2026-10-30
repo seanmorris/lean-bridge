@@ -126,7 +126,8 @@ export const assertCppStructuredCallableIntegration = async record => {
 	const execution = JSON.parse(bytes); await assertCppStructuredCallableExecution(execution);
 	assert.equal(record.codegen.path, cppStructuredCodegenPath);
 	const codegenBytes = await readFile(record.codegen.path); assert.equal(sha256(codegenBytes), record.codegen.sha256);
-	const codegen = JSON.parse(codegenBytes); assertCppStructuredCodegenRegression(codegen);
+	const codegen = JSON.parse(codegenBytes);
+	await assertCppStructuredCodegenRegression(codegen);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), cppStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), cppStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...cppStructuredCallableChangedPaths, ...cppStructuredCallableAddedPaths])].sort();

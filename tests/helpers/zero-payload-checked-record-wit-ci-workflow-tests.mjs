@@ -26,7 +26,7 @@ test("zero-payload checked-record WIT workflow requires four source/API selectio
 	assert.ok(shell.indexOf('mkdir "$output_root"') < shell.indexOf("export LEAN_BRIDGE_ZERO_PAYLOAD_WIT_TEST=1"));
 	// The same pinned SDK bytes and isolated installer as the consumer matrix.
 	const consumer = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	assertIsolatedWasmtimeCapiBootstraps(consumer, 3);
+	assertIsolatedWasmtimeCapiBootstraps(consumer, 4);
 	assert.ok(consumer.includes("          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\n"));
 });
 

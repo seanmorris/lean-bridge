@@ -17,15 +17,20 @@ import { compilePrimitiveCppModel } from "../src/backends/cpp/primitives.mjs";
 import { boostSources } from "../src/backends/cpp/boost.mjs";
 import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { assertCppStructuredCodegenRegression } from "./helpers/cpp-structured-callable-regression.mjs";
+import {
+	assertCppStructuredCodegenRegression, cppStructuredCodegenProducer
+} from "./helpers/cpp-structured-callable-regression.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 test("structured C++ callables preserve all existing copied fixture packages byte for byte", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/cpp-structured-codegen-regression-20260924.json"));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
-	assertCppStructuredCodegenRegression(record);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assert.equal(sha256(bytesAtProducer(cppStructuredCodegenProducer, path))
+			, hash, path);
+	await assertCppStructuredCodegenRegression(record);
 	const altered = structuredClone(record);
 	Object.values(altered.fixtures[0].files)[0].sha256 = "0".repeat(64);
-	assert.throws(() => assertCppStructuredCodegenRegression(altered));
+	await assert.rejects(() => assertCppStructuredCodegenRegression(altered));
 });
 
 test("C++ admits copied structured callables while retaining ownership and recursive gates", () => {

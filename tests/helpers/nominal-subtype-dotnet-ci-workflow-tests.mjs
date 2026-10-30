@@ -53,7 +53,8 @@ test("nominal C# CI rejects skipped gates, shared tool selection and narrowed ev
 		, ["  managed-consumers:\n", "  managed-consumers:\n    if: false\n"]
 		, ["  managed-consumers:\n", "  managed-consumers:\n    continue-on-error: true\n"]
 		, ["        profile: [dotnet, jvm, ruby]", "        profile: [jvm, ruby]"]
-		, ["      - managed-consumers\n", ""]
+		, ["      - managed-consumers\n      - owned-jvm-values\n"
+			, "      - owned-jvm-values\n"]
 		, ...["LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR", "LEAN_BRIDGE_NOMINAL_SUBTYPE_DOTNET_ROUTES", "LEAN_BRIDGE_NOMINAL_SUBTYPE_DOTNET_MODES"].map(name => [block, block.replace("          LEAN_NUM_THREADS:", `          ${name}: override\n          LEAN_NUM_THREADS:`)])
 	];
 	for(const [index, [from, to]] of replacements.entries())

@@ -71,7 +71,7 @@ test("reviewed side: full and result-only owned builds admit checked records onl
 	refused(ir => { type(ir, "Claim").source.extensions[erasedKey] = ["bounded"]; }, `${claim}.source.extensions.${erasedKey}`);
 	refused(ir => { type(ir, "Claim").source.extensions[erasedKey] = { fields: ["bounded"], extra: true }; }, `${claim}.source.extensions.${erasedKey}`);
 	refused(ir => { type(ir, "Ticket").source.extensions[erasedKey] = { fields: ["p"] }; }, `lean:${q("Ticket")}.source.extensions`);
-	refused(ir => { declaration(ir, "echoClaim").source.extensions[erasedKey] = { fields: ["bounded"] }; }, `lean:${q("echoClaim")}.source.extensions`);
+	refused(ir => { declaration(ir, "echoClaim").source.extensions[erasedKey] = { fields: ["bounded"] }; }, `lean:${q("echoClaim")}.source.extensions.${erasedKey}`);
 	// Every consumed occurrence names its constructor; a produced occurrence names none.
 	refused(ir => { declaration(ir, "echoClaim").source.extensions[refinementKey].parameters[0] = null; }, `lean:${q("echoClaim")}.parameters[0]`);
 	refused(ir => { declaration(ir, "echoBooking").source.extensions[refinementKey].parameters[0] = null; }, `lean:${q("echoBooking")}.parameters[0]`);

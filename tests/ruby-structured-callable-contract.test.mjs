@@ -23,10 +23,10 @@ test("Ruby structured callbacks preserve all earlier generated packages byte for
 		const changed = source + "\n// unrelated change\n";
 		assert.notEqual(sha256(beforeFinRefinementSource(path, changed, hash)), hash, path);
 	}
-	assertRubyStructuredCodegenRegression(record);
+	await assertRubyStructuredCodegenRegression(record);
 	const altered = structuredClone(record);
 	Object.values(altered.fixtures[0].files)[0].sha256 = "0".repeat(64);
-	assert.throws(() => assertRubyStructuredCodegenRegression(altered));
+	await assert.rejects(() => assertRubyStructuredCodegenRegression(altered));
 });
 
 test("Ruby structured callbacks admit copied values while retaining ownership restrictions", () => {

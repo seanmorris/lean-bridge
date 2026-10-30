@@ -50,7 +50,8 @@ test("nominal Rust CI rejects skipped gates, wrong toolchains and narrowed origi
 		, ["  native-consumers:\n", "  native-consumers:\n    if: false\n"]
 		, ["  native-consumers:\n", "  native-consumers:\n    continue-on-error: true\n"]
 		, ["        profile: [c-family, python, rust]", "        profile: [c-family, python]"]
-		, ["      - native-consumers\n", ""]
+		, ["      - native-consumers\n      - native-c-family-values\n"
+			, "      - native-c-family-values\n"]
 		, [block, block.replace("          bash scripts/bootstrap-rust-ci.sh\n", "")]
 		, [block, block.replace("          CARGO_BUILD_JOBS: \"1\"", "          CARGO_BUILD_JOBS: \"8\"")]
 		, ...["LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR", "LEAN_BRIDGE_NOMINAL_SUBTYPE_RUST_ROUTES", "LEAN_BRIDGE_NOMINAL_SUBTYPE_RUST_MODES"].map(name => [block, block.replace("          LEAN_NUM_THREADS:", `          ${name}: override\n          LEAN_NUM_THREADS:`)])

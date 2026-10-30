@@ -16,14 +16,24 @@ import "./helpers/managed-nominal-gate-history-tests.mjs";
 
 const workflow = () => readFile(".github/workflows/consumer-matrix.yml", "utf8");
 const directProof = { id: "direct_proof_managed", continueOnError: true };
+const optionalManaged = {
+	id: "optional_parameters_managed", continueOnError: true
+};
+const hostNullManaged = { id: "host_null_managed", continueOnError: true };
+const optionalLanguage = {
+	id: "optional_parameters_language", continueOnError: true
+};
 const checkDirectProof = source => assertManagedCiIsolation(source, null, {
-	dotnet: [directProof]
-	, jvm: [directProof]
-	, ruby: [{ id: "direct_proof_language", continueOnError: true }]
+	dotnet: [directProof, optionalManaged, hostNullManaged]
+	, jvm: [directProof, optionalManaged, hostNullManaged]
+	, ruby: [{ id: "direct_proof_language", continueOnError: true }
+		, optionalLanguage]
 });
 const checkCurrent = source => assertManagedCiIsolation(source, null, {
-	dotnet: [directProof], jvm: ["nominal_jvm", directProof]
-	, ruby: [{ id: "direct_proof_language", continueOnError: true }]
+	dotnet: [directProof, optionalManaged, hostNullManaged]
+	, jvm: ["nominal_jvm", directProof, optionalManaged, hostNullManaged]
+	, ruby: [{ id: "direct_proof_language", continueOnError: true }
+		, optionalLanguage]
 });
 
 test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => {
@@ -51,7 +61,7 @@ test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => 
 test("managed CI isolates timeout budgets, profile gates and artifact names", async () => {
 	assert.deepEqual(checkCurrent(await workflow()), {
 		profiles: ["dotnet", "jvm", "ruby"], timeoutMinutesPerProfile: 240
-		, failFast: false, selectedOutcomeCases: 39
+		, failFast: false, selectedOutcomeCases: 54
 		, artifactNamesIncludeProfile: true, commandsCompared: 0
 	});
 });
@@ -87,7 +97,7 @@ test("managed CI rejects dropped gates, shared artifacts and incomplete bootstra
 
 test("managed CI retains the historical baseline without accepting a removed current gate", async () => {
 	const previous = disableNominalSubtypeJvmWorkflow(await workflow());
-	assert.equal(checkDirectProof(previous).selectedOutcomeCases, 36);
+	assert.equal(checkDirectProof(previous).selectedOutcomeCases, 51);
 	assert.throws(() => checkCurrent(previous));
 });
 

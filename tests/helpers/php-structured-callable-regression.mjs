@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateCopiedPhpPackage } from "../../src/backends/php/copied-values.mjs";
 import { callableReviewedIr } from "./callable-fixture.mjs";
 import { phpCallableSignatures } from "./php-callable-fixture.mjs";
 import { collectionReviewedIr } from "./collection-fixture.mjs";
@@ -13,6 +12,7 @@ import { compoundReviewedIr } from "./compound-fixture.mjs";
 import { listReviewedIr } from "./list-fixture.mjs";
 import { nativeAliasReviewedIr } from "./native-alias-fixture.mjs";
 import { phpVariantReviewedIr } from "./php-variant-fixture.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
 
 export const phpStructuredRegressionFixtures = {
 	callables: () => callableReviewedIr(phpCallableSignatures)
@@ -20,22 +20,26 @@ export const phpStructuredRegressionFixtures = {
 	, lists: listReviewedIr, aliases: nativeAliasReviewedIr
 	, variants: phpVariantReviewedIr
 };
+export const phpStructuredCodegenProducer
+	= "89c43a33eb639bc8a2ca19df697ba56e9cfacae9";
 
 /**
  * Require the exact source identity and full file inventories, not selected samples.
  *
  * @param record - Independently rendered predecessor and current files.
  */
-export const assertPhpStructuredCodegenRegression = record => {
+export const assertPhpStructuredCodegenRegression = async record => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "php-structured-codegen-regression");
 	assert.equal(record.baselineRevision, "073ccdf8eb399e419bdafd233f40d9c55273ebb0");
+	const producer = await moduleAtProducer(
+		phpStructuredCodegenProducer, "src/backends/php/copied-values.mjs");
 	assert.deepEqual(record.fixtures.map(item => item.name), Object.keys(phpStructuredRegressionFixtures));
 	for(const fixture of record.fixtures)
 	{
 		const ir = phpStructuredRegressionFixtures[fixture.name]();
 		assert.equal(fixture.bindingIrSha256, sha256(canonicalJson(ir)));
-		const files = generateCopiedPhpPackage(ir);
+		const files = producer.generateCopiedPhpPackage(ir);
 		assert.deepEqual(fixture.files, Object.fromEntries(Object.entries(files).map(([path, source]) => [path, { bytes: Buffer.byteLength(source), sha256: sha256(source) }])));
 		assert.equal(fixture.identicalToPredecessor, true);
 	}

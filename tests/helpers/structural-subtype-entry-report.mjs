@@ -8,10 +8,8 @@ import { execFileSync } from "node:child_process";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
-import { structuralSubtypeEntrySource, structuralSubtypeEntryReview, structuralSubtypeEntryConfiguration, structuralSubtypeEntrySelection, structuralSubtypeEntryInterposer } from "./structural-subtype-entry.mjs";
-import { structuralSubtypeRawProbe, structuralSubtypeRawCases } from "./structural-subtype-entry-raw.mjs";
 import { checkStructuralSubtypePublicTrace, checkStructuralSubtypeRawTrace } from "./structural-subtype-entry-observe.mjs";
-import { generateNativeLeanAdapters } from "../../src/build/native-model.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
 
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const controlSource = `#include <structuralsubtypes.h>
@@ -24,15 +22,6 @@ int main(void) {
   puts("unrestricted-ok"); return 0;
 }
 `;
-
-const beforeUnusedUnitBinderRename = (model, header) => {
-	const current = "lean_object * _unit", previous = "lean_object * unit";
-	const count = model.types.filter(type => type.kind === "option").length;
-	assert.ok(count > 0);
-	assert.equal(header.split(current).length - 1, count
-		, "historical structural-entry adapters rename only unused Option Unit binders");
-	return header.replaceAll(current, previous);
-};
 
 /**
  * Require exact source identities, two reproduced archives and every public/raw execution.
@@ -50,8 +39,16 @@ export const checkStructuralSubtypeEntryReport = async (read, { route, producerC
 		return value;
 	};
 	const git = path => execFileSync("git", ["show", `${producerCommit}:${path}`], { maxBuffer: 16 * 1024 * 1024 });
+	const entry = await moduleAtProducer(producerCommit
+		, "tests/helpers/structural-subtype-entry.mjs");
+	const raw = await moduleAtProducer(producerCommit
+		, "tests/helpers/structural-subtype-entry-raw.mjs");
+	const native = await moduleAtProducer(producerCommit
+		, "src/build/native-model.mjs");
 	const original = git("tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean").toString();
-	const probe = structuralSubtypeEntrySource(original), review = structuralSubtypeEntryReview(), configuration = structuralSubtypeEntryConfiguration(route);
+	const probe = entry.structuralSubtypeEntrySource(original)
+		, review = entry.structuralSubtypeEntryReview()
+		, configuration = entry.structuralSubtypeEntryConfiguration(route);
 	const report = await json("report.json");
 	assert.equal(report.schemaVersion, 1); assert.equal(report.route, route); assert.equal(report.producerCommit, producerCommit);
 	assert.equal(report.scope, "separate-annotated-source-interposer"); assert.equal(report.dispatch.scope, report.scope);
@@ -83,14 +80,13 @@ export const checkStructuralSubtypeEntryReport = async (read, { route, producerC
 		for(const value of Object.values(report.builds[index].archives)) digest(value);
 	}
 	assert.deepEqual(await read("build-0/model.json"), await read("build-1/model.json"));
-	const selected = structuralSubtypeEntrySelection(model, probe);
+	const selected = entry.structuralSubtypeEntrySelection(model, probe);
 	assert.equal(selected.length, 59); assert.deepEqual(await json("observer/selected.json"), selected);
 	assert.deepEqual(report.dispatch.selected, selected);
-	const sources = { "interposer.c": '#include "component.h"\n' + structuralSubtypeEntryInterposer(selected)
-		, "component.h": beforeUnusedUnitBinderRename(
-			model, generateNativeLeanAdapters(model).header
-		)
-		, "raw.c": structuralSubtypeRawProbe(model), "control.c": controlSource };
+	const sources = { "interposer.c": '#include "component.h"\n' + entry.structuralSubtypeEntryInterposer(selected)
+		, "component.h": native.generateNativeLeanAdapters(model).header
+		, "raw.c": raw.structuralSubtypeRawProbe(model)
+		, "control.c": controlSource };
 	for(const [path, expected] of Object.entries(sources))
 	{
 		assert.equal((await read(`observer/${path}`)).toString(), expected);
@@ -147,7 +143,7 @@ export const checkStructuralSubtypeEntryReport = async (read, { route, producerC
 			for(const entry of call.entries) identities.add(`${entry.kind}/${entry.label}`);
 		}
 		assert.deepEqual(observation.totals, Object.fromEntries(["validator", "constructor", "adapter", "source"].map(kind => [kind, calls.reduce((sum, call) => sum + call.counts[kind], 0)])));
-		const rawCases = structuralSubtypeRawCases(); assert.equal(observation.raw.length, rawCases.length);
+		const rawCases = raw.structuralSubtypeRawCases(); assert.equal(observation.raw.length, rawCases.length);
 		for(const [index, item] of rawCases.entries())
 		{
 			const path = `${name}/raw-${item.name}-${item.bad}.json`, run = await json(path);

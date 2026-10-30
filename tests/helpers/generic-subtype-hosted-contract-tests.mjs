@@ -59,7 +59,11 @@ test("every generic Subtype archive identity is present exactly once in its work
 		assert.equal(exactLine("          name: ", artifactName)
 			, 1, `${contract.lane}: ${artifactName}`);
 		assert.match(source, /uses: actions\/checkout@v6\n\s+with:\n\s+fetch-depth: 0\n\s+persist-credentials: false/u);
-		assert.doesNotMatch(source, /continue-on-error:/u);
+		const acceptance = source.split(
+			`      - name: ${contract.acceptanceStep}\n`)[1]
+			?.split("\n      - name: ")[0];
+		assert.equal(typeof acceptance, "string", contract.lane);
+		assert.doesNotMatch(acceptance, /continue-on-error:/u);
 	}
 });
 

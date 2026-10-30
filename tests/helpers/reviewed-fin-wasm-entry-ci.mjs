@@ -100,7 +100,14 @@ export const insertWasmEntryCi = workflow => {
 	const summary = text.indexOf("\n  support-summary:\n");
 	const needs = summary + once(text.slice(summary), needsAnchor, "node-consumers requirement") + needsAnchor.length;
 	text = text.slice(0, needs) + needsLine + text.slice(needs);
-	assert.ok(text.endsWith("        run: exit 1\n"), "the summary ends with its enforcement steps");
+	const optionalEnforcement
+		= "      - name: Enforce complete optional-parameter matrix reconciliation\n";
+	const enforcement = text.indexOf(optionalEnforcement, summary);
+	if(enforcement >= 0)
+		return text.slice(0, enforcement) + wasmEntryCiEnforce
+			+ text.slice(enforcement);
+	assert.ok(text.endsWith("        run: exit 1\n")
+		, "the summary ends with its enforcement steps");
 	return text + wasmEntryCiEnforce;
 };
 

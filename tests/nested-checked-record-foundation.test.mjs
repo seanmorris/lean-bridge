@@ -380,7 +380,7 @@ test("native models retain rich checked-record checks and projections at nested 
 	const finCheck = calls.indexOf("arg0[%zu].digit is not below its Fin 10 bound");
 	const fieldCheck = calls.indexOf("arg0[%zu].word was rejected by NestedChecked.mkWord");
 	const recordCheck = calls.indexOf("arg0[%zu] was rejected by NestedChecked.mkPacket");
-	const dispatch = calls.indexOf(`lean_object *checked = ${model.exports[0].symbol}(`);
+	const dispatch = calls.indexOf(`lean_object *_lb_checked = ${model.exports[0].symbol}(`);
 	assert.ok(finCheck < fieldCheck && fieldCheck < recordCheck && recordCheck < dispatch);
 	assert.doesNotMatch(calls, /undefined/u);
 });

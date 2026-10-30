@@ -50,8 +50,10 @@ export const optionalParameterHistoryAdditions = Object.freeze([
 ]);
 
 let history;
+const historyUrl = new URL(`../../${optionalParameterHistoryPath}`
+	, import.meta.url);
 const record = () => history ??= JSON.parse(readFileSync(
-	optionalParameterHistoryPath, "utf8"));
+	historyUrl, "utf8"));
 export const optionalParameterNormalizationPaths = Object.freeze([
 	...new Set([
 		...record().updates.map(item => item.path)

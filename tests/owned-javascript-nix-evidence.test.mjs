@@ -111,7 +111,8 @@ test("real Nix CI rejects disabled tests, swallowed failures and missing observa
 		, ["      - name: Install archive acceptance tools\n", "      - name: Install archive acceptance tools\n        if: false\n"]
 		, ["      - name: Install archive acceptance tools\n        timeout-minutes: 20\n", "      - name: Install archive acceptance tools\n"]
 		, ["      - name: Install archive acceptance tools\n        timeout-minutes: 20\n", "      - name: Install archive acceptance tools\n        timeout-minutes: 240\n"]
-		, ["      - node-consumers\n", ""]
+		, ["      - nix-cache\n      - node-consumers\n      - reviewed-fin-wasm-entry\n"
+			, "      - nix-cache\n      - reviewed-fin-wasm-entry\n"]
 		, ["if: needs.node-consumers.result != 'success'", "if: false"]
 	]) {
 		const changed = source.replace(before, after); assert.notEqual(changed, source);

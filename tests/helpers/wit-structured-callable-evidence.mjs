@@ -197,7 +197,7 @@ export const assertWitStructuredCallableIntegration = async record => {
 	const execution = await authenticated(record.execution, witStructuredCallableExecutionPath);
 	await assertWitStructuredCallableExecution(execution);
 	const codegen = await authenticated(record.codegen, witStructuredCodegenPath);
-	assert.equal(codegen.baselineRevision, record.baselineRevision); assertWitStructuredCodegenRegression(codegen);
+	assert.equal(codegen.baselineRevision, record.baselineRevision); await assertWitStructuredCodegenRegression(codegen);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), witStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), witStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...witStructuredCallableChangedPaths, ...witStructuredCallableAddedPaths])].sort();
