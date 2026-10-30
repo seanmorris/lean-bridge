@@ -20,9 +20,12 @@ import {
 	, renderHostNullCompleteDocumentation
 } from "../tests/helpers/host-null-complete-documentation.mjs";
 import {
-	hostNullPerlRequalifiedEvidenceIds, hostNullPerlSharedSource
-	, refreshHostNullPerlEvidence
+	hostNullPerlSharedSource
 } from "../tests/helpers/host-null-complete-perl-evidence-refresh.mjs";
+import {
+	hostNullCompleteSourcePinEvidenceIds, hostNullTypeDocsSharedSource
+	, reconcileHostNullCompleteSourcePins
+} from "../tests/helpers/host-null-complete-source-pin-reconciliation.mjs";
 import {
 	readPromotionInventory, stageEvidenceRefresh, stagePromotionInventory
 } from "../tests/helpers/type-surface-promotion-io.mjs";
@@ -55,7 +58,10 @@ const [irSchema, consumers] = await Promise.all([
 	readFile("schema/binding-ir.schema.json", "utf8").then(JSON.parse)
 	, readFile("docs/consumer-support.v1.json", "utf8").then(JSON.parse)
 ]);
-const retain = { retainEvidence: hostNullPerlRequalifiedEvidenceIds };
+const fullOriginal = JSON.parse(await readFile(path, "utf8"));
+const retain = {
+	retainEvidence: hostNullCompleteSourcePinEvidenceIds(fullOriginal)
+};
 const original = await readPromotionInventory(createReadStream(path)
 	, { irSchema, consumers }, retain);
 const sources = {};
@@ -65,13 +71,19 @@ for(const [name, documentPath] of Object.entries(
 renderHostNullCompleteDocumentation(sources);
 
 const reference = await hostNullCompletePromotionReference();
-const currentPerlSource = await readFile(hostNullPerlSharedSource);
-assert.equal(sha256(gitBytes([
-	"show", `${reference.revision}:${hostNullPerlSharedSource}`
-])), sha256(currentPerlSource)
-, "Hosted producer must authenticate the current shared Perl source");
-const refreshedDocument = refreshHostNullPerlEvidence(
-	original.document, reference, sha256(currentPerlSource));
+const currentSources = Object.fromEntries(await Promise.all([
+	["perl", hostNullPerlSharedSource]
+	, ["typeDocs", hostNullTypeDocsSharedSource]
+].map(async ([name, sourcePath]) => {
+	const source = await readFile(sourcePath), digest = sha256(source);
+	assert.equal(sha256(gitBytes([
+		"show", `${reference.revision}:${sourcePath}`
+	])), digest, `Hosted producer must authenticate ${sourcePath}`);
+	return [name, digest];
+})));
+const reconciliation = reconcileHostNullCompleteSourcePins(
+	original.document, reference, currentSources);
+const refreshedDocument = reconciliation.inventory;
 const promoted = promoteHostNullComplete(
 	refreshedDocument, { irSchema, consumers }, reference);
 const generated = await renderReferenceDocuments({
@@ -129,7 +141,8 @@ try
 		, cells: 170
 		, observations: promoted.observations.length
 			- original.document.observations.length
-		, refreshedEvidence: hostNullPerlRequalifiedEvidenceIds.length
+		, refreshedEvidence: reconciliation.refreshedEvidence
+		, refreshedPins: reconciliation.refreshedPins
 		, inventory: next, files: files.map(file => file.path), head
 	}, null, 2) + "\n");
 }
