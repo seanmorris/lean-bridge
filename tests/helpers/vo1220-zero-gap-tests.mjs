@@ -6,13 +6,8 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test, { before } from "node:test";
-import {
-	hostNullCompleteHostedLanes
-} from "./host-null-complete-hosted-archive.mjs";
-import {
-	hostNullCompletePromotionEvidenceId
-	, hostNullCompletePromotionReferencePaths, promoteHostNullComplete
-} from "./host-null-complete-promotion.mjs";
+import { hostNullCompletePromotionEvidenceId }
+	from "./host-null-complete-promotion.mjs";
 import {
 	assertVo1220ZeroGap, vo1220CellCount, vo1220ShapeCells
 	, vo1220StageEntryCount, vo1220ZeroGapReport
@@ -25,36 +20,9 @@ const load = async () => {
 	].map(async path => JSON.parse(await readFile(path, "utf8"))));
 	return { document, contracts: { irSchema, consumers } };
 };
-const revision = "2".repeat(40);
-const reference = Object.freeze({
-	id: hostNullCompletePromotionEvidenceId, revision
-	, command: "hosted complete HostNull command"
-	, scope: "hosted complete HostNull scope"
-	, files: Object.freeze(hostNullCompletePromotionReferencePaths.map(
-		(path, index) => ({
-			path, sha256: ((index + 2) % 16).toString(16).repeat(64)
-		})
-	))
-	, artifacts: Object.freeze(hostNullCompleteHostedLanes.map((lane, index) => ({
-		path: `${lane.artifactPrefix}-${revision}.zip`
-		, sha256: "abcdef0"[index].repeat(64)
-	})))
-	, limitations: Object.freeze(Array.from({ length: 6 }, (_, index) =>
-		`complete hosted limitation ${index + 1}`))
-});
-
-const proposed = async () => {
-	const { document, contracts } = await load();
-	const report = vo1220ZeroGapReport(document, contracts);
-	return {
-		document: report.gaps.length === 0 ? document
-			: promoteHostNullComplete(document, contracts, reference)
-		, contracts
-	};
-};
 
 let fixture;
-before(async () => { fixture = await proposed(); });
+before(async () => { fixture = await load(); });
 
 test("#1220 zero-gap audit closes exactly 1,054 cells and 5,270 stages", async () => {
 	const { document, contracts } = fixture;
