@@ -177,7 +177,10 @@ for(const route of routes) test(
 			, "@lean-bridge/runtime": await tree(runtimePackageRoot)
 		};
 		const declarations = await readFile(join(componentRoot, "index.d.ts"), "utf8");
-		assert.match(declarations, /export declare function keep\(value: number\): number;/u);
+		const parameter = route === "ordinary" ? "arg0" : "value";
+		assert.match(declarations, new RegExp(
+			`export declare function keep\\(${parameter}: number\\): number;`, "u"
+		));
 		assert.doesNotMatch(declarations, /True|proof|_before|_after/u);
 		await saveLakeFile(records, "index.mjs", caller);
 		await saveLakeFile(records, "check.mjs", await readFile(
