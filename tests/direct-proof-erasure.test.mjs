@@ -13,6 +13,7 @@ import {
 } from "../src/analyze/reviewed-source.mjs";
 import {
 	assertDirectProofErasureIr
+	, directProofErasureExport
 	, directProofErasureFixture
 	, directProofErasureKey
 	, directProofErasureModule
@@ -21,7 +22,8 @@ import {
 	, directProofErasureTargets
 } from "./helpers/direct-proof-erasure-fixture.mjs";
 import {
-	directProofErasureTargetConfiguration, prepareDirectProofErasureProject
+	directProofErasureReceiptDeclaration, directProofErasureTargetConfiguration
+	, prepareDirectProofErasureProject
 } from "./helpers/direct-proof-erasure-packages.mjs";
 
 const capture = document => {
@@ -98,6 +100,14 @@ test("seventeen consumer profiles collapse to twelve exact package targets", () 
 	assert.throws(() => directProofErasureTargetConfiguration([]), TypeError);
 	assert.throws(() => directProofErasureTargetConfiguration(["unknown"]), TypeError);
 	assert.throws(() => directProofErasureTargetConfiguration(["c", "c"]), TypeError);
+});
+
+test("native and PHP-Wasm receipts retain their exact declaration domains", () => {
+	assert.equal(directProofErasureReceiptDeclaration("native-library-v1")
+		, directProofErasureExport);
+	assert.equal(directProofErasureReceiptDeclaration("php-wasm-copied-v1")
+		, `lean:${directProofErasureExport}`);
+	assert.throws(() => directProofErasureReceiptDeclaration("unknown"));
 });
 
 for(const route of ["ordinary", "reviewed"]) test(

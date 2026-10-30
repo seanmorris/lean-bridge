@@ -140,6 +140,17 @@ export const directProofErasurePhpComponentFactKeys = Object.freeze([
 	].map(suffix => `${prefix}${suffix}`))
 ]);
 
+/**
+ * Resolve the exact export identity owned by each compiled component receipt.
+ *
+ * @param profile - Native or PHP-Wasm compiled component profile.
+ */
+export const directProofErasureReceiptDeclaration = profile => {
+	assert.ok(["native-library-v1", "php-wasm-copied-v1"].includes(profile));
+	return profile === "native-library-v1" ? directProofErasureExport
+		: `lean:${directProofErasureExport}`;
+};
+
 const canonicalDocument = (bytes, label) => {
 	const value = JSON.parse(bytes);
 	assert.equal(bytes.toString(), canonicalJson(value), label);
@@ -168,8 +179,8 @@ const assertDirectProofErasureComponentDocuments = ({
 	assert.equal(receipt.modelSha256, sha256(modelBytes));
 	assert.equal(receipt.adaptersSha256, sha256(leanBytes));
 	assert.equal(receipt.exports.length, 1);
-	assert.ok([receipt.exports[0].declaration, receipt.exports[0].name]
-		.includes(directProofErasureExport));
+	assert.equal(receipt.exports[0].declaration
+		, directProofErasureReceiptDeclaration(profile));
 	const lean = leanBytes.toString("utf8");
 	assert.match(lean
 		, /_root_\.DirectProofErasure\.keep _root_\.True\.intro a0 _root_\.True\.intro/u);
