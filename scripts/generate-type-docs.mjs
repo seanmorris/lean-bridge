@@ -368,7 +368,7 @@ const directProofErasureCompleteGuide = (
 	assert.equal(selected.length, profiles.length
 		, "Complete proof-erasure evidence must cover every rendered profile");
 	const evidence = reference.replace(/reference\/types\.md$/u
-		, "evidence/direct-proof-erasure-hosted-20261028/index.json");
+		, "evidence/direct-proof-erasure-hosted-20261030/index.json");
 	return `[Complete hosted direct proof-erasure acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.`;
 };
 const nestedCheckedRecordPerlMarker = "[PHP-Wasm checked-record packages]";
@@ -563,7 +563,7 @@ export async function renderTypeDocuments({ root, inventory = null })
 	const genericReference = genericSubtypeMatrixReference(document);
 	const ownedCheckedReference = ownedCheckedRecordMatrixReference(document);
 	const directProofReference = hasDirectProofErasureCompleteEvidence(document)
-		? "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261028/index.json) binds ten immutable installed-package archives and a fresh-Lean refusal to all 204 proof cells across seventeen profiles, both author routes and six direct positions. Proof-only parameters, fields and synchronous callback positions have no runtime slot; proof-free public signatures omit them. A proof-valued export is refused. The evidence does not erase runtime data, refinement checks or assumptions from assurance metadata, and it does not establish host-supplied proofs or arbitrary proof-bearing data structures."
+		? "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) binds ten immutable installed-package archives, their same-run aggregate receipt, and a fresh-Lean refusal to all 204 proof cells across seventeen profiles, both author routes and six direct positions. Proof-only parameters, fields and synchronous callback positions have no runtime slot; proof-free public signatures omit them. A proof-valued export is refused. The evidence does not erase runtime data, refinement checks or assumptions from assurance metadata, and it does not establish host-supplied proofs or arbitrary proof-bearing data structures."
 		: "";
 	const profileRows = document.profiles.map(profile => {
 		const guide = Object.entries(typeGuideProfiles).find(([, profiles]) => profiles.includes(profile.id))[0];

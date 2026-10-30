@@ -21,6 +21,7 @@ import {
 } from "./direct-proof-erasure-complete-promotion.mjs";
 import {
 	directProofErasureHostedLanes
+	, directProofErasureHostedReceipt
 } from "./direct-proof-erasure-hosted-archive.mjs";
 
 const load = async () => {
@@ -36,12 +37,13 @@ const referenceFiles = directProofErasureCompleteReferencePaths.map(
 		path, sha256: ((index + 1) % 16).toString(16).repeat(64)
 	})
 );
-const referenceArtifacts = directProofErasureHostedLanes.map(
+const referenceArtifacts = [...directProofErasureHostedLanes
+	, directProofErasureHostedReceipt].map(
 	(lane, index) => ({
 		path: `${lane.artifactPrefix}-${revision}.zip`
 		, sha256: ((index + 5) % 16).toString(16).repeat(64)
 	})
-);
+	);
 const reference = Object.freeze({
 	id: directProofErasureCompleteEvidenceId, revision
 	, command: "hosted complete proof-erasure command"
@@ -132,7 +134,7 @@ test("complete proof-erasure promotion renders every consumer guide", async () =
 			document: proposed, ...contracts
 		}, profiles, "reference/types.md");
 		assert.match(source
-			, /\[Complete hosted direct proof-erasure acceptance\]\(evidence\/direct-proof-erasure-hosted-20261028\/index\.json\)/u
+			, /\[Complete hosted direct proof-erasure acceptance\]\(evidence\/direct-proof-erasure-hosted-20261030\/index\.json\)/u
 			, guide);
 		assert.match(source
 			, /Proof-only parameters, fields, callback arguments and callback results occupy no host slot/u

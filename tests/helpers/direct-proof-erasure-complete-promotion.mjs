@@ -10,6 +10,7 @@ import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import {
 	directProofErasureHostedEvidenceDirectory
 	, directProofErasureHostedLanes
+	, directProofErasureHostedReceipt
 } from "./direct-proof-erasure-hosted-archive.mjs";
 import {
 	checkDirectProofErasureHostedEvidence
@@ -76,7 +77,7 @@ export const directProofErasureCompleteReference = async () => {
 		id: directProofErasureCompleteEvidenceId
 		, revision: checked.producerCommit
 		, command: "node --test --test-concurrency=1 tests/direct-proof-erasure-complete-hosted-evidence.test.mjs"
-		, scope: "Ten same-revision hosted artifacts, one fresh-Lean refusal and the independently retained field/callback ledger close all 204 proof-erasure cells across seventeen profiles and both author routes."
+		, scope: "Ten same-revision consumer artifacts, their independently reconstructed aggregate receipt, one fresh-Lean refusal and the retained field/callback ledger close all 204 proof-erasure cells across seventeen profiles and both author routes."
 		, files, artifacts
 		, limitations: checked.limitations
 	});
@@ -126,16 +127,18 @@ export const promoteDirectProofErasureComplete = (
 		exactKeys(file, ["path", "sha256"], "proof-erasure reference file");
 		assert.match(file.sha256, /^[a-f0-9]{64}$/u);
 	}
-	assert.equal(reference.artifacts.length, 10);
-	assert.equal(new Set(reference.artifacts.map(item => item.path)).size, 10);
+	assert.equal(reference.artifacts.length, 11);
+	assert.equal(new Set(reference.artifacts.map(item => item.path)).size, 11);
 	for(const artifact of reference.artifacts)
 	{
 		exactKeys(artifact, ["path", "sha256"], "proof-erasure artifact");
 		assert.match(artifact.sha256, /^[a-f0-9]{64}$/u);
 	}
-	assert.deepEqual(reference.artifacts.map(item => item.path).sort()
-		, directProofErasureHostedLanes.map(lane =>
-			`${lane.artifactPrefix}-${reference.revision}.zip`).sort());
+	assert.deepEqual(reference.artifacts.map(item => item.path).sort(), [
+		...directProofErasureHostedLanes.map(lane =>
+			`${lane.artifactPrefix}-${reference.revision}.zip`)
+		, `${directProofErasureHostedReceipt.artifactPrefix}-${reference.revision}.zip`
+	].sort());
 	assert.equal(reference.limitations.length, 4);
 	assert.ok(reference.limitations.every(item => typeof item === "string"
 		&& item.length > 0));

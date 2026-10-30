@@ -16,7 +16,7 @@ test("complete direct proof-erasure evidence authenticates every hosted lane"
 		assert.equal(checked.supportPromoted, false);
 		assert.equal(checked.cells, 204);
 		assert.equal(checked.lanes.length, 10);
-		assert.equal(checked.artifacts.length, 10);
+		assert.equal(checked.artifacts.length, 11);
 		assert.equal(checked.limitations.length, 4);
 	}
 );

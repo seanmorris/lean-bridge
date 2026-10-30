@@ -23,24 +23,32 @@ import {
 } from "../tests/helpers/checked-record-value-index-hosted-archive.mjs";
 import {
 	assertDirectProofErasureHostedLocalSources
+	, assertDirectProofErasureHostedReceiptSteps
 	, assertDirectProofErasureHostedSteps
 	, directProofErasureHostedEvidenceDirectory
 	, directProofErasureHostedInputs
 	, directProofErasureHostedLanes
 	, directProofErasureHostedOriginal
 	, directProofErasureHostedProducer
+	, directProofErasureHostedReceipt
 	, directProofErasureHostedRefusal
 	, directProofErasureHostedRunId
 	, directProofErasureHostedSourcePath
 	, directProofErasureHostedSources
 	, inspectDirectProofErasureHostedArtifact
+	, inspectDirectProofErasureHostedReceipt
 	, parseDirectProofErasureHostedArchiveArgs
 	, replayDirectProofErasureHostedRoute
+	, validateDirectProofErasureHostedReceipt
 } from "../tests/helpers/direct-proof-erasure-hosted-archive.mjs";
 import {
 	closeDirectProofErasureMatrix, directProofErasureMatrixRoutes
 	, validateDirectProofErasureMatrixResults
 } from "../tests/helpers/direct-proof-erasure-matrix.mjs";
+import {
+	buildDirectProofErasureMatrixReceipt
+	, directProofErasureMatrixResultPath
+} from "../tests/helpers/direct-proof-erasure-matrix-receipt.mjs";
 
 let inputRoot;
 try
@@ -51,12 +59,16 @@ assert.equal(await realpath(inputRoot), inputRoot
 	, "Hosted input root must be canonical");
 assert.deepEqual((await readdir(inputRoot)).sort(), [
 	...directProofErasureHostedLanes.map(lane => lane.key)
+	, directProofErasureHostedReceipt.id
 	, directProofErasureHostedRefusal.id
 ].sort());
-for(const lane of directProofErasureHostedLanes)
-	assert.deepEqual((await readdir(join(inputRoot, lane.key))).sort(), [
-		"artifact.json", "artifact.zip", "job.json", "job.log", "run.json"
-	]);
+for(const selected of [
+	...directProofErasureHostedLanes, directProofErasureHostedReceipt
+])
+	assert.deepEqual((await readdir(join(
+		inputRoot, selected.key ?? selected.id))).sort(), [
+		"artifact.json", "artifact.zip", "job.json", "job.log", "run.json"]
+	);
 const refusalRoot = join(inputRoot, directProofErasureHostedRefusal.id);
 assert.deepEqual((await readdir(refusalRoot)).sort()
 	, ["job.json", "job.log", "run.json"]);
@@ -100,12 +112,12 @@ const putFile = async (path, source) => {
 	});
 };
 
-const routeResults = [], lanes = [];
+const routeResults = [], lanes = [], summaries = new Map();
 try
 {
 	const firstRun = JSON.parse(await readFile(join(
 		inputRoot, directProofErasureHostedLanes[0].key, "run.json")));
-	assert.ok(["failure", "success"].includes(firstRun.conclusion));
+	assert.equal(firstRun.conclusion, "success");
 	for(const lane of directProofErasureHostedLanes)
 	{
 		const selected = directProofErasureHostedInputs(inputRoot, lane);
@@ -119,16 +131,19 @@ try
 		try
 		{
 			const results = [];
-			const routes = directProofErasureMatrixRoutes.map(item =>
-				item.reportRoute);
-			for(const route of routes)
+			for(const matrixRoute of directProofErasureMatrixRoutes)
 			{
+				const route = matrixRoute.reportRoute;
 				const prefix = join(extracted.root, route);
 				const result = replayDirectProofErasureHostedRoute(
 					lane, route, extracted.root);
 				const verified = await readFile(join(prefix, "verified.json"));
 				assert.equal(verified.toString(), canonicalJson(result.result)
 					, `${lane.key}:${route}:verified`);
+				const resultPath = directProofErasureMatrixResultPath(
+					lane, matrixRoute, directProofErasureHostedProducer);
+				assert.ok(!summaries.has(resultPath), resultPath);
+				summaries.set(resultPath, verified);
 				const tap = await readFile(join(prefix, "run.tap"));
 				const report = await readFile(join(
 					prefix, "records/report.json"));
@@ -181,6 +196,62 @@ try
 	}
 	const matrix = validateDirectProofErasureMatrixResults(
 		routeResults, directProofErasureHostedProducer);
+	const receiptInputs = directProofErasureHostedInputs(
+		inputRoot, directProofErasureHostedReceipt);
+	const receiptHosted = await inspectDirectProofErasureHostedReceipt(
+		receiptInputs);
+	assertDirectProofErasureHostedReceiptSteps(receiptHosted.api.job.bytes);
+	const receiptExtracted
+		= await extractCheckedRecordValueIndexHostedArtifact(
+			receiptInputs["artifact-zip"]);
+	const receiptPartsRoot = await mkdtemp(join(
+		tmpdir(), "lean-bridge-direct-proof-matrix-zip-"));
+	let aggregate;
+	try
+	{
+		const receiptBytes = await readFile(join(
+			receiptExtracted.root, "receipt.json"));
+		const receipt = JSON.parse(receiptBytes);
+		assert.equal(receiptBytes.toString(), canonicalJson(receipt));
+		validateDirectProofErasureHostedReceipt(receipt);
+		const replayed = await buildDirectProofErasureMatrixReceipt(path => {
+			assert.ok(summaries.has(path), path); return summaries.get(path);
+		}, receipt.run);
+		assert.deepEqual(replayed, receipt);
+		await putBytes("hosted/output/matrix/receipt.json", receiptBytes);
+		await putFile("hosted/matrix/job.log", receiptInputs["job-log"]);
+		for(const [name, item] of Object.entries(receiptHosted.api))
+			await putBytes(`hosted/api/matrix/${name}.json`, item.bytes);
+		const parts = await splitCheckedRecordValueIndexHostedArtifact(
+			receiptInputs["artifact-zip"], receiptPartsRoot);
+		for(const part of parts)
+			await putFile(`hosted/matrix/artifact.zip.parts/${part.name}`
+				, part.path);
+		aggregate = {
+			receipt
+			, hostedRun: {
+				...receiptHosted.hostedRun
+				, apiRecords: Object.fromEntries(Object.entries(
+					receiptHosted.api).map(([name, item]) => [name, {
+					bytes: item.bytes.length, sha256: item.sha256}])
+				)
+				, artifact: {
+					...receiptHosted.hostedRun.artifact
+					, members: receiptExtracted.entries
+					, parts: parts.map(part => ({
+						path: `hosted/matrix/artifact.zip.parts/${part.name}`
+						, offset: part.offset, bytes: part.bytes
+						, sha256: part.sha256
+					}))
+				}
+			}
+		};
+	}
+	finally
+	{
+		await rm(receiptExtracted.root, { recursive: true });
+		await rm(receiptPartsRoot, { recursive: true });
+	}
 	const auditBytes = directProofErasureHostedOriginal(
 		directProofErasureHostedProducer
 		, "docs/evidence/proof-erasure-retained-audit-20261028.json"
@@ -234,7 +305,7 @@ try
 		, producerCommit: directProofErasureHostedProducer
 		, checkerCommit: archiveCommit, archiveCommit
 		, hostedRunConclusion: firstRun.conclusion
-		, matrix, closure: closure.counts, lanes
+		, matrix, closure: closure.counts, lanes, aggregate
 		, refusal: {
 			runId: directProofErasureHostedRunId
 			, job: directProofErasureHostedRefusal.jobName
@@ -243,9 +314,9 @@ try
 		}
 		, selectedSources, files
 		, limitations: [
-			"The ten hosted artifacts establish ordinary and independently reviewed installed proof-parameter erasure and proof-free public signatures for all seventeen supported consumer profiles."
+			"The ten same-run producer artifacts establish ordinary and independently reviewed installed proof-parameter erasure and proof-free public signatures for all seventeen supported consumer profiles."
 			, "The retained audit supplies the 102 previously authenticated field and callback cells; this archive supplies 68 direct installed cells and the fresh Lean refusal supplies 34 proof-valued result cells."
-			, "Every lane retains the complete original GitHub artifact ZIP, API identities, job log, selected TAP, report, receipt and verified bytes, plus exact producer, checker and archiver source closures."
+			, "The eleventh same-run artifact retains and independently reconstructs the exact twenty-record aggregate receipt; every artifact retains its original ZIP, API identities and job log plus exact producer, checker and archiver source closures."
 			, "External runtimes, compilers, package managers, browsers, GitHub Actions and operating systems remain trusted recorded inputs. This archive establishes exactly the 204-cell closure ledger and no broader support claim."
 		]
 	};

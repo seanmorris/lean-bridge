@@ -15,13 +15,16 @@ import {
 	checkedRecordValueIndexHostedDigest as digestFile
 } from "../tests/helpers/checked-record-value-index-hosted-archive.mjs";
 import {
-	assertDirectProofErasureHostedSteps
+	assertDirectProofErasureHostedReceiptSteps
+	, assertDirectProofErasureHostedSteps
 	, directProofErasureHostedInputs
 	, directProofErasureHostedLanes
 	, directProofErasureHostedProducer
+	, directProofErasureHostedReceipt
 	, directProofErasureHostedRefusal
 	, directProofErasureHostedRunId
 	, inspectDirectProofErasureHostedArtifact
+	, inspectDirectProofErasureHostedReceipt
 } from "../tests/helpers/direct-proof-erasure-hosted-archive.mjs";
 
 const usage = "Usage: download-direct-proof-erasure-hosted-inputs.mjs --output /absolute/hosted-input";
@@ -46,8 +49,9 @@ const collection = async (runId, key) => {
 	let total = null, page = 1;
 	while(true)
 	{
+		const attemptFilter = key === "jobs" ? "filter=all&" : "";
 		const value = object(api(
-			`${repository}/actions/runs/${runId}/${key}?per_page=100&page=${page}`
+			`${repository}/actions/runs/${runId}/${key}?${attemptFilter}per_page=100&page=${page}`
 		), `${key} API page ${page}`);
 		assert.ok(Number.isSafeInteger(value.total_count)
 			&& value.total_count >= 0);
@@ -104,7 +108,7 @@ const readRun = runId => {
 	assert.equal(value.id, runId);
 	assert.equal(value.head_sha, directProofErasureHostedProducer);
 	assert.equal(value.status, "completed");
-	assert.ok(["failure", "success"].includes(value.conclusion));
+	assert.equal(value.conclusion, "success");
 	assert.equal(value.repository?.full_name, "seanmorris/lean-bridge");
 	assert.equal(value.head_repository?.full_name, "seanmorris/lean-bridge");
 	return { bytes, value };
@@ -119,16 +123,21 @@ try
 		collection(directProofErasureHostedRunId, "jobs")
 		, collection(directProofErasureHostedRunId, "artifacts")
 	]);
-	for(const lane of directProofErasureHostedLanes)
+	const selected = [...directProofErasureHostedLanes
+		, directProofErasureHostedReceipt];
+	for(const item of selected)
 	{
-		const matchingJobs = jobs.filter(job => job.name === lane.job);
-		assert.equal(matchingJobs.length, 1, lane.job);
+		const receipt = item === directProofErasureHostedReceipt;
+		const jobName = receipt ? item.jobName : item.job;
+		const matchingJobs = jobs.filter(job => job.name === jobName
+			&& job.run_attempt === hostedRun.value.run_attempt);
+		assert.equal(matchingJobs.length, 1, jobName);
 		const job = matchingJobs[0];
 		assert.equal(job.run_id, directProofErasureHostedRunId);
 		assert.equal(job.head_sha, directProofErasureHostedProducer);
 		assert.equal(job.status, "completed");
-		assert.equal(job.conclusion, lane.jobConclusion);
-		const artifactName = `${lane.artifactPrefix}-${directProofErasureHostedProducer}`;
+		assert.equal(job.conclusion, "success");
+		const artifactName = `${item.artifactPrefix}-${directProofErasureHostedProducer}`;
 		const matchingArtifacts = artifacts.filter(item =>
 			item.name === artifactName);
 		assert.equal(matchingArtifacts.length, 1, artifactName);
@@ -137,7 +146,7 @@ try
 		assert.equal(artifact.workflow_run?.id, directProofErasureHostedRunId);
 		assert.equal(artifact.workflow_run?.head_sha
 			, directProofErasureHostedProducer);
-		const root = join(output, lane.key);
+		const root = join(output, item.key ?? item.id);
 		await mkdir(root);
 		const jobBytes = api(`${repository}/actions/jobs/${job.id}`);
 		const artifactBytes = api(
@@ -157,15 +166,24 @@ try
 			, "artifact API record");
 		assert.equal((await stat(zip)).size, metadata.size_in_bytes);
 		assert.equal(metadata.digest, `sha256:${await digestFile(zip)}`);
-		const captured = await inspectDirectProofErasureHostedArtifact(
-			directProofErasureHostedInputs(output, lane), lane
-			, hostedRun.value.conclusion);
-		assertDirectProofErasureHostedSteps(lane, captured.api.job.bytes);
+		const inputs = directProofErasureHostedInputs(output, item);
+		if(receipt)
+		{
+			const captured = await inspectDirectProofErasureHostedReceipt(inputs);
+			assertDirectProofErasureHostedReceiptSteps(captured.api.job.bytes);
+		}
+		else
+		{
+			const captured = await inspectDirectProofErasureHostedArtifact(
+				inputs, item, hostedRun.value.conclusion);
+			assertDirectProofErasureHostedSteps(item, captured.api.job.bytes);
+		}
 	}
 
 	assert.equal(hostedRun.value.path, directProofErasureHostedRefusal.workflow);
 	const refusalJobs = jobs.filter(job =>
-		job.name === directProofErasureHostedRefusal.jobName);
+		job.name === directProofErasureHostedRefusal.jobName
+		&& job.run_attempt === hostedRun.value.run_attempt);
 	assert.equal(refusalJobs.length, 1, directProofErasureHostedRefusal.jobName);
 	const refusalJob = refusalJobs[0];
 	assert.equal(refusalJob.status, "completed");
@@ -183,6 +201,7 @@ try
 		output, producerCommit: directProofErasureHostedProducer
 		, runId: directProofErasureHostedRunId
 		, lanes: directProofErasureHostedLanes.length, profiles: 17, cells: 204
+		, artifacts: selected.length
 	}, null, 2) + "\n");
 }
 finally

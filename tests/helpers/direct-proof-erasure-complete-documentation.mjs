@@ -47,7 +47,7 @@ assumptions remain in assurance metadata.
 A declaration whose runtime result is itself a proof is refused. Erasure also
 does not remove runtime data or validation: a \`Fin\`, \`Subtype\`, checked
 record or dependent payload still uses its checked host contract. The
-[complete hosted direct proof-erasure archive](../evidence/direct-proof-erasure-hosted-20261028/index.json)
+[complete hosted direct proof-erasure archive](../evidence/direct-proof-erasure-hosted-20261030/index.json)
 replays installed ordinary-source and independently reviewed packages across
 all seventeen consumer profiles, both author routes and all six direct
 positions.

@@ -15,22 +15,30 @@ import {
 	, extractCheckedRecordValueIndexHostedArtifact as extractArtifact
 } from "./checked-record-value-index-hosted-archive.mjs";
 import {
-	directProofErasureHostedEvidenceDirectory
+	assertDirectProofErasureHostedReceiptSteps
+	, directProofErasureHostedEvidenceDirectory
 	, directProofErasureHostedInputs
 	, directProofErasureHostedLanes
 	, directProofErasureHostedOriginal
 	, directProofErasureHostedProducer
+	, directProofErasureHostedReceipt
 	, directProofErasureHostedRefusal
 	, directProofErasureHostedRunId
 	, directProofErasureHostedSourcePath
 	, directProofErasureHostedSources
 	, inspectDirectProofErasureHostedArtifact
+	, inspectDirectProofErasureHostedReceipt
 	, replayDirectProofErasureHostedRoute
+	, validateDirectProofErasureHostedReceipt
 } from "./direct-proof-erasure-hosted-archive.mjs";
 import {
 	closeDirectProofErasureMatrix, directProofErasureMatrixRoutes
 	, validateDirectProofErasureMatrixResults
 } from "./direct-proof-erasure-matrix.mjs";
+import {
+	buildDirectProofErasureMatrixReceipt
+	, directProofErasureMatrixResultPath
+} from "./direct-proof-erasure-matrix-receipt.mjs";
 
 export const directProofErasureHostedEvidencePins = Object.freeze({
 	index: "PENDING_DIRECT_PROOF_ERASURE_INDEX"
@@ -74,7 +82,7 @@ export const checkDirectProofErasureHostedEvidence = async (
 		assert.equal(sha256(indexBytes), pins.index, "index.json");
 		const index = json(indexBytes, "index.json"), files = new Map();
 		exactKeys(index, [
-			"archiveCommit", "checkerCommit", "closure", "files"
+			"aggregate", "archiveCommit", "checkerCommit", "closure", "files"
 			, "hostedRunConclusion", "kind", "lanes", "limitations", "matrix"
 			, "producerCommit", "refusal", "schemaVersion", "selectedSources"
 		], "index keys");
@@ -83,7 +91,7 @@ export const checkDirectProofErasureHostedEvidence = async (
 		assert.equal(index.producerCommit, pins.producer);
 		assert.equal(index.checkerCommit, pins.archive);
 		assert.equal(index.archiveCommit, pins.archive);
-		assert.ok(["failure", "success"].includes(index.hostedRunConclusion));
+		assert.equal(index.hostedRunConclusion, "success");
 		assert.deepEqual(index.matrix, {
 			lanes: 10, routes: 2, profiles: 17, cells: 34
 		});
@@ -133,7 +141,7 @@ export const checkDirectProofErasureHostedEvidence = async (
 			, directProofErasureHostedLanes.map(lane => lane.key));
 		const root = await mkdtemp(join(
 			tmpdir(), "lean-direct-proof-erasure-evidence-"));
-		const routeResults = [], artifacts = [];
+		const routeResults = [], artifacts = [], summaries = new Map();
 		try
 		{
 			for(const archivedLane of index.lanes)
@@ -148,11 +156,16 @@ export const checkDirectProofErasureHostedEvidence = async (
 				assert.equal(archivedLane.hostedRun.runId, pins.runId);
 				const inputs = directProofErasureHostedInputs(root, lane);
 				await mkdir(join(root, lane.key));
+				const apiRecords = {};
 				for(const name of ["run", "job", "artifact"])
 				{
 					const path = `hosted/api/${lane.key}/${name}.json`;
 					expectedPaths.push(path);
-					await writeFile(inputs[`${name}-json`], get(path)
+					const bytes = get(path);
+					apiRecords[name] = {
+						bytes: bytes.length, sha256: sha256(bytes)
+					};
+					await writeFile(inputs[`${name}-json`], bytes
 						, { flag: "wx" });
 				}
 				const logPath = `hosted/${lane.key}/job.log`;
@@ -191,7 +204,8 @@ export const checkDirectProofErasureHostedEvidence = async (
 				const selected = await inspectDirectProofErasureHostedArtifact(
 					inputs, lane, index.hostedRunConclusion);
 				assert.deepEqual(archivedLane.hostedRun, {
-					...selected.hostedRun, artifact: {
+					...selected.hostedRun, apiRecords
+					, artifact: {
 						...selected.hostedRun.artifact
 						, members: archivedLane.hostedRun.artifact.members
 						, parts: archivedLane.hostedRun.artifact.parts
@@ -203,25 +217,124 @@ export const checkDirectProofErasureHostedEvidence = async (
 					assert.deepEqual(extracted.entries
 						, archivedLane.hostedRun.artifact.members);
 					const results = [];
-					for(const route of directProofErasureMatrixRoutes.map(item =>
-						item.reportRoute)){
+					for(const matrixRoute of directProofErasureMatrixRoutes)
+					{
+						const route = matrixRoute.reportRoute;
 						const result = replayDirectProofErasureHostedRoute(
 							lane, route, extracted.root);
 						results.push(result);
 						routeResults.push(result);
-						for(const name of [
-							"run.tap", "verified.json", "report.json", "receipt.json"
+						for(const [name, original] of [
+							["run.tap", join(extracted.root, route, "run.tap")]
+							, ["verified.json"
+							, join(
+								extracted.root, route, "verified.json")]
+							, ["report.json"
+							, join(
+								extracted.root, route, "records/report.json")]
+							, ["receipt.json"
+							, join(extracted.root, route, "records"
+								, lane.checker === "npm"
+									? "handoff/component-package-receipt.json"
+									: "handoff/package-set-receipt.json")]
 						]){
 							const path = `hosted/output/${lane.key}/${route}/${name}`;
 							expectedPaths.push(path);
+							assert.deepEqual(get(path), await readFile(original), path);
 						}
-						}
+						const resultPath = directProofErasureMatrixResultPath(
+							lane, matrixRoute, pins.producer);
+						assert.ok(!summaries.has(resultPath), resultPath);
+						summaries.set(resultPath, get(
+							`hosted/output/${lane.key}/${route}/verified.json`));
+					}
 					assert.deepEqual(results, archivedLane.results);
 				}
 				finally
 				{ await rm(extracted.root, { recursive: true }); }
-				artifacts.push(archivedLane.hostedRun.artifact);
+					artifacts.push(archivedLane.hostedRun.artifact);
 			}
+
+				exactKeys(index.aggregate, ["hostedRun", "receipt"], "aggregate");
+			const item = directProofErasureHostedReceipt;
+			const inputs = directProofErasureHostedInputs(root, item);
+			await mkdir(join(root, item.id));
+			const apiRecords = {};
+			for(const name of ["run", "job", "artifact"])
+			{
+				const path = `hosted/api/matrix/${name}.json`;
+				expectedPaths.push(path);
+				const bytes = get(path);
+				apiRecords[name] = {
+					bytes: bytes.length, sha256: sha256(bytes)
+				};
+				await writeFile(inputs[`${name}-json`], bytes
+					, { flag: "wx" });
+			}
+				const logPath = "hosted/matrix/job.log";
+				expectedPaths.push(logPath);
+				await writeFile(inputs["job-log"], get(logPath), { flag: "wx" });
+				let offset = 0;
+				const output = await open(inputs["artifact-zip"], "wx");
+				try
+				{
+					for(const part of index.aggregate.hostedRun.artifact.parts)
+					{
+						exactKeys(part, ["bytes", "offset", "path", "sha256"]
+							, "aggregate artifact part");
+						assert.equal(part.offset, offset);
+						const bytes = get(part.path);
+						expectedPaths.push(part.path);
+						assert.equal(bytes.length, part.bytes);
+						assert.equal(sha256(bytes), part.sha256);
+						let written = 0;
+						while(written < bytes.length)
+						{
+							const result = await output.write(bytes, written
+								, bytes.length - written, offset + written);
+							assert.ok(result.bytesWritten > 0);
+							written += result.bytesWritten;
+						}
+						offset += bytes.length;
+					}
+				}
+				finally
+				{ await output.close(); }
+				assert.equal(offset, index.aggregate.hostedRun.artifact.bytes);
+				assert.equal(await digestFile(inputs["artifact-zip"])
+					, index.aggregate.hostedRun.artifact.sha256);
+				const selected = await inspectDirectProofErasureHostedReceipt(inputs);
+				assertDirectProofErasureHostedReceiptSteps(selected.api.job.bytes);
+			assert.deepEqual(index.aggregate.hostedRun, {
+				...selected.hostedRun, apiRecords
+				, artifact: {
+						...selected.hostedRun.artifact
+						, members: index.aggregate.hostedRun.artifact.members
+						, parts: index.aggregate.hostedRun.artifact.parts
+				}
+			});
+				const extracted = await extractArtifact(inputs["artifact-zip"]);
+				let receipt;
+				try
+				{
+					assert.deepEqual(extracted.entries
+						, index.aggregate.hostedRun.artifact.members);
+					const bytes = await readFile(join(extracted.root, "receipt.json"));
+					receipt = json(bytes, "aggregate receipt.json");
+					const path = "hosted/output/matrix/receipt.json";
+					expectedPaths.push(path);
+					assert.deepEqual(bytes, get(path));
+				}
+				finally
+				{ await rm(extracted.root, { recursive: true }); }
+				validateDirectProofErasureHostedReceipt(receipt);
+				assert.deepEqual(receipt, index.aggregate.receipt);
+				const replayed = await buildDirectProofErasureMatrixReceipt(path => {
+					assert.ok(summaries.has(path), path); return summaries.get(path);
+				}, receipt.run);
+				assert.deepEqual(replayed, receipt);
+				assert.deepEqual(receipt.matrix, index.matrix);
+				artifacts.push(index.aggregate.hostedRun.artifact);
 		}
 		finally
 		{ await rm(root, { recursive: true }); }

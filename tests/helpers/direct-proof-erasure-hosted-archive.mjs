@@ -13,20 +13,71 @@ import {
 } from "./checked-record-value-index-hosted-archive.mjs";
 import {
 	directProofErasureMatrixLanes
-	, directProofErasureMatrixRoutes, directProofErasureMatrixWorkflow
+	, directProofErasureMatrixRoutes
 } from "./direct-proof-erasure-matrix.mjs";
+import {
+	directProofErasureFocusedWorkflow
+	, validateDirectProofErasureMatrixReceipt
+} from "./direct-proof-erasure-matrix-receipt.mjs";
 import { moduleSpecifiers } from "./module-closure.mjs";
 
 export const directProofErasureHostedProducer
-	= "52622818425c3fb69a81ef87b5af26ce429e3136";
-export const directProofErasureHostedRunId = 40824858819;
+	= "09ca211fec5fcebfd47747cd55485781adf93974";
+export const directProofErasureHostedRunId = 41021643593;
 export const directProofErasureHostedEvidenceDirectory
-	= "docs/evidence/direct-proof-erasure-hosted-20261028";
+	= "docs/evidence/direct-proof-erasure-hosted-20261030";
 export const directProofErasureHostedRefusal = Object.freeze({
-	id: "refusal", workflow: directProofErasureMatrixWorkflow
+	id: "refusal", workflow: directProofErasureFocusedWorkflow
 	, jobName: "Fresh Lean proof refusal"
 	, testName: "fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs"
 	, diagnostic: "proof-only"
+});
+export const directProofErasureHostedReceipt = Object.freeze({
+	id: "matrix", artifactPrefix: "direct-proof-erasure-matrix"
+	, jobName: "Reconcile the exact same-run receipt"
+});
+
+const laneContracts = Object.freeze({
+	npm: Object.freeze({
+		job: "Node and browser producer / reviewed generic Subtypes in Node and browsers"
+		, producerWorkflow: ".github/workflows/generic-subtype-npm-browser.yml"
+	})
+	, native: Object.freeze({
+		job: "Native and Perl producers / Ordinary and reviewed generic Subtypes in C and C++"
+		, producerWorkflow: ".github/workflows/generic-subtype-native-perl.yml"
+	})
+	, "language-perl": Object.freeze({
+		job: "Native and Perl producers / Ordinary and reviewed generic Subtypes across four Perl ABIs"
+		, producerWorkflow: ".github/workflows/generic-subtype-native-perl.yml"
+	})
+	, "language-python": Object.freeze({
+		job: "Python, Ruby and Rust producers / Ordinary and reviewed generic Subtypes on Python 3.11 and 3.12"
+		, producerWorkflow: ".github/workflows/generic-subtype-languages.yml"
+	})
+	, "language-ruby": Object.freeze({
+		job: "Python, Ruby and Rust producers / Ordinary and reviewed generic Subtypes on Ruby 3.3"
+		, producerWorkflow: ".github/workflows/generic-subtype-languages.yml"
+	})
+	, "language-rust": Object.freeze({
+		job: "Python, Ruby and Rust producers / Ordinary and reviewed generic Subtypes on Rust 1.90"
+		, producerWorkflow: ".github/workflows/generic-subtype-languages.yml"
+	})
+	, "managed-dotnet": Object.freeze({
+		job: "Managed and WIT producers / Generic Subtypes in .NET"
+		, producerWorkflow: ".github/workflows/generic-subtype-managed-wit.yml"
+	})
+	, "managed-jvm": Object.freeze({
+		job: "Managed and WIT producers / Generic Subtypes in Java and Kotlin"
+		, producerWorkflow: ".github/workflows/generic-subtype-managed-wit.yml"
+	})
+	, wit: Object.freeze({
+		job: "Managed and WIT producers / Generic Subtypes in WIT and WASI components"
+		, producerWorkflow: ".github/workflows/generic-subtype-managed-wit.yml"
+	})
+	, php: Object.freeze({
+		job: "PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm"
+		, producerWorkflow: ".github/workflows/nominal-subtype-php-wasm.yml"
+	})
 });
 
 const stepNames = Object.freeze({
@@ -81,16 +132,13 @@ const laneSteps = lane => {
 
 export const directProofErasureHostedLanes = Object.freeze(
 	directProofErasureMatrixLanes.map(lane => Object.freeze({
-		...lane, runId: directProofErasureHostedRunId
+		...lane, ...laneContracts[lane.key]
+		, runId: directProofErasureHostedRunId
 		, producerCommit: directProofErasureHostedProducer
-		, workflow: directProofErasureMatrixWorkflow
+		, workflow: directProofErasureFocusedWorkflow
 		, steps: laneSteps(lane)
-		, jobConclusion: lane.key === "language-perl" ? "failure" : "success"
-		, failedSteps: Object.freeze(lane.key === "language-perl" ? [
-			"Preserve HostNull scripting acceptance"
-			, "Upload this configuration's real-Lean corpus report"
-			, "Enforce scripting HostNull support"
-		] : [])
+		, jobConclusion: "success"
+		, failedSteps: Object.freeze([])
 	}))
 );
 
@@ -113,11 +161,12 @@ export const parseDirectProofErasureHostedArchiveArgs = args => {
  * Select the original hosted bytes for one consumer lane.
  *
  * @param root - Canonical input root.
- * @param lane - Closed consumer lane.
+ * @param selected - Closed consumer lane or aggregate receipt.
  */
-export const directProofErasureHostedInputs = (root, lane) => {
-	assert.ok(directProofErasureHostedLanes.includes(lane));
-	const prefix = `${root}/${lane.key}`;
+export const directProofErasureHostedInputs = (root, selected) => {
+	assert.ok(directProofErasureHostedLanes.includes(selected)
+		|| selected === directProofErasureHostedReceipt);
+	const prefix = `${root}/${selected.key ?? selected.id}`;
 	return {
 		"artifact-zip": `${prefix}/artifact.zip`
 		, "run-json": `${prefix}/run.json`
@@ -125,6 +174,23 @@ export const directProofErasureHostedInputs = (root, lane) => {
 		, "artifact-json": `${prefix}/artifact.json`
 		, "job-log": `${prefix}/job.log`
 	};
+};
+
+/**
+ * Bind the aggregate same-run receipt to the successful focused workflow.
+ *
+ * @param selected - Exact ZIP, API and log paths.
+ */
+export const inspectDirectProofErasureHostedReceipt = async selected => {
+	const hosted = await inspectCheckedRecordValueIndexHostedArtifact(selected, {
+		workflow: directProofErasureFocusedWorkflow
+		, jobName: directProofErasureHostedReceipt.jobName
+		, artifactPrefix: directProofErasureHostedReceipt.artifactPrefix
+		, conclusions: { run: "success", job: "success" }
+	});
+	assert.equal(hosted.hostedRun.runId, directProofErasureHostedRunId);
+	assert.equal(hosted.revision, directProofErasureHostedProducer);
+	return hosted;
 };
 
 /**
@@ -138,7 +204,7 @@ export const inspectDirectProofErasureHostedArtifact = async (
 	selected, lane, runConclusion = "success"
 ) => {
 	assert.ok(directProofErasureHostedLanes.includes(lane));
-	assert.ok(["failure", "success"].includes(runConclusion));
+	assert.equal(runConclusion, "success");
 	const hosted = await inspectCheckedRecordValueIndexHostedArtifact(
 		selected, {
 			workflow: lane.workflow, jobName: lane.job
@@ -170,6 +236,49 @@ export const assertDirectProofErasureHostedSteps = (lane, jobBytes) => {
 	assert.deepEqual(job.steps.filter(step => step.conclusion === "failure")
 		.map(step => step.name), lane.failedSteps);
 	return true;
+};
+
+/**
+ * Require the exact same-run download, reconciliation and receipt upload.
+ *
+ * @param jobBytes - Original receipt-job API bytes.
+ */
+export const assertDirectProofErasureHostedReceiptSteps = jobBytes => {
+	const job = JSON.parse(jobBytes), named = name => {
+		const matches = job.steps.filter(step => step.name === name);
+		assert.equal(matches.length, 1, `receipt:${name}`);
+		return matches[0];
+	};
+	const download = named("Download every same-run direct proof-erasure artifact");
+	const reconciliation = named(
+		"Reconcile all seventeen profiles and both author routes");
+	const upload = named("Preserve the complete direct proof-erasure receipt");
+	assert.equal(download.conclusion, "success");
+	assert.equal(reconciliation.conclusion, "success");
+	assert.equal(upload.conclusion, "success");
+	assert.ok(reconciliation.number > download.number);
+	assert.ok(upload.number > reconciliation.number);
+	assert.equal(named(
+		"Enforce every producer and exact receipt reconciliation"
+	).conclusion, "skipped");
+	return true;
+};
+
+/**
+ * Validate the focused same-run receipt against the exact hosted identity.
+ *
+ * @param receipt - Parsed aggregate receipt.
+ */
+export const validateDirectProofErasureHostedReceipt = receipt => {
+	validateDirectProofErasureMatrixReceipt(receipt);
+	assert.equal(receipt.run.repository, "seanmorris/lean-bridge");
+	assert.equal(receipt.run.workflow, directProofErasureFocusedWorkflow);
+	assert.equal(receipt.run.runId, directProofErasureHostedRunId);
+	assert.equal(receipt.run.producerCommit, directProofErasureHostedProducer);
+	assert.equal(receipt.records.length
+		, directProofErasureHostedLanes.length
+			* directProofErasureMatrixRoutes.length);
+	return receipt;
 };
 
 const checker = Object.freeze({
@@ -249,7 +358,10 @@ const tree = (revision, prefix) => execFileSync("git", [
 ], { encoding: "utf8" }).trim().split("\n").filter(Boolean);
 
 const producerEntries = Object.freeze([
-	directProofErasureMatrixWorkflow, ".github/workflows/perl-consumer.yml"
+	directProofErasureFocusedWorkflow
+	, ...new Set(Object.values(laneContracts).map(item =>
+		item.producerWorkflow))
+	, "scripts/reconcile-direct-proof-erasure-matrix.mjs"
 	, ...Object.values(checker)
 	, ...["npm", "native", "php", "language", "managed", "wit"]
 		.map(name => `scripts/run-direct-proof-erasure-${name}-ci.sh`)

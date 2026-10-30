@@ -29,7 +29,7 @@ test("complete direct proof-erasure publication owns exactly 204 passed cells"
 			, directProofErasureCompleteReferencePaths);
 		for(const file of evidence[0].files)
 			assert.equal(file.sha256, sha256(await readFile(file.path)), file.path);
-		assert.equal(evidence[0].artifacts.length, 10);
+		assert.equal(evidence[0].artifacts.length, 11);
 
 		const cells = new Map(typeSurfaceCells(inventory, contracts).map(cell =>
 			[cell.id, cell]));
