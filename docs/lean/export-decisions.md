@@ -17,7 +17,7 @@ Use the shared [export configuration](existing-package.md#configure-exports) to 
 | Defaults, optional arguments, host null | Authenticate declared defaults and expose target-idiomatic omission without changing the full-arity ABI. Keep omitted input, an explicit default value, host null, Unit, and Option.None distinct. |
 | Generics, implicit arguments, instances | Select finite build-time specializations and resolve the required dictionaries. |
 | `Fin`, `Subtype`, dependent signatures | Preserve runtime constraints through checked constructors or validation. An erased proof does not authorize an unchecked input. |
-| Theorems and proof arguments | Let Lean determine runtime erasure. Retain theorem identities and assumptions in assurance metadata. |
+| Theorems and direct proof arguments | Let Lean authenticate proof-only positions and erase their runtime slots. Retain theorem identities and assumptions in assurance metadata. Refuse proof-valued exports instead of fabricating host evidence. |
 | Resources, host objects, mutable members | Declare identity, ownership, borrowing, transfer, and disposal. Keep incompatible runtimes separate. |
 | Callbacks and returned closures | Specify argument/result types, retention, reentry, failure behavior, and lifetime. |
 | `IO`, `EIO`, declared errors | Preserve effect order and typed failures. An IO action is not automatically asynchronous. |

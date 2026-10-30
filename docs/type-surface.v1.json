@@ -1496186,6 +1496186,137 @@
           "sha256": "30aedce7f83175e9cb21c8a057ff0968e32997cda75bbe1a3c7b8254fb3e2a95"
         }
       ]
+    },
+    {
+      "id": "hosted-direct-proof-erasure-complete",
+      "kind": "installed",
+      "revision": "09ca211fec5fcebfd47747cd55485781adf93974",
+      "command": "node --test --test-concurrency=1 tests/direct-proof-erasure-complete-hosted-evidence.test.mjs",
+      "scope": "Ten same-revision consumer artifacts, their independently reconstructed aggregate receipt, one fresh-Lean refusal and the retained field/callback ledger close all 204 proof-erasure cells across seventeen profiles and both author routes.",
+      "files": [
+        {
+          "path": ".github/workflows/direct-proof-erasure-complete.yml",
+          "sha256": "fc564b08a166d221a3f55beaeeeab4ad388de4708a136be60fa76ef9096def97"
+        },
+        {
+          "path": "docs/evidence/direct-proof-erasure-hosted-20261030/index.json",
+          "sha256": "d3fcb15d2b6b8362c2b628738ff0ec575bfbd4a05a1ab0ce88da5e943417188e"
+        },
+        {
+          "path": "scripts/archive-direct-proof-erasure-hosted.mjs",
+          "sha256": "55ee9a1a3a613051fe4225255cea7f43d613ba6450b168d7ae43773bb01e899e"
+        },
+        {
+          "path": "scripts/download-direct-proof-erasure-hosted-inputs.mjs",
+          "sha256": "66cef279ff665bccda7e35262e48c8c4f3b2e942375137c9350ad45a05bbf9d4"
+        },
+        {
+          "path": "scripts/generate-reference-docs.mjs",
+          "sha256": "b690854ece6e2042f890a6aa80b94a63830dc2ee0c6aba9b8f3fdd5659412a83"
+        },
+        {
+          "path": "scripts/generate-type-docs.mjs",
+          "sha256": "a3d70492d06e8fe13a028df849b707b6ed881fdc12136f6ab20e3d2eccf991ba"
+        },
+        {
+          "path": "scripts/promote-direct-proof-erasure-complete.mjs",
+          "sha256": "b25a78035c26c1cfd4f09d395466b6ca4ba57d0a921c196f2cf2300194b1d95f"
+        },
+        {
+          "path": "tests/helpers/direct-proof-erasure-complete-ci-tests.mjs",
+          "sha256": "a23db399fb7de83c08e789bb47a1520de8ffad817a83f1c19e3b5d848733f8cd"
+        },
+        {
+          "path": "tests/helpers/direct-proof-erasure-complete-documentation.mjs",
+          "sha256": "995504657bf1366c0e77758752892bca48fc37baff49f2ececb2d07840cc790b"
+        },
+        {
+          "path": "tests/helpers/direct-proof-erasure-complete-documentation-tests.mjs",
+          "sha256": "b11151f21ad4cb93a129173ba75780782cfc67e297900c284d01fdb2ae090bbe"
+        },
+        {
+          "path": "tests/helpers/direct-proof-erasure-complete-promotion.mjs",
+          "sha256": "894929decd0256eca1e2d84dddb962bab3aa84c6f34e4ad03a9f63ea23934a93"
+        },
+        {
+          "path": "tests/helpers/direct-proof-erasure-complete-promotion-tests.mjs",
+          "sha256": "e6ffec45943839ac9adf67c9278e21336b0bf4c8d79866058d29074c3c3cd9e4"
+        },
+        {
+          "path": "tests/helpers/direct-proof-erasure-complete-promotion-transaction-tests.mjs",
+          "sha256": "30840d407fe4ab61759717e6b7c96d059ec639c425c5ad3ed5f5b62ac7bc6b19"
+        },
+        {
+          "path": "tests/helpers/direct-proof-erasure-hosted-archive.mjs",
+          "sha256": "ab9deb193bf5bdfc5b08bc36733e3d85bd6c08dae1746fb766c19661e34299eb"
+        },
+        {
+          "path": "tests/helpers/direct-proof-erasure-hosted-evidence.mjs",
+          "sha256": "b67dac7c1af0c2154b136e1915610be4df7aa3e22510a3b12fdca6bf5c92a198"
+        },
+        {
+          "path": "tests/direct-proof-erasure-complete-hosted-evidence.test.mjs",
+          "sha256": "4f8c9cff2309b346052ddff35a4453db452f5230361d34fc681b067bf7f1a002"
+        },
+        {
+          "path": "tests/direct-proof-erasure-complete-promotion.test.mjs",
+          "sha256": "8f1ee395c2ca6e6c42538f9a7bed31bf5a75f244ddf7fa63c00b629f15fb63c1"
+        },
+        {
+          "path": "tests/helpers/promotion-file-transaction.mjs",
+          "sha256": "00181a5537d811a32ed39ff61093356b7f9af72a774026c3860e70b551a2df72"
+        },
+        {
+          "path": "tests/helpers/type-surface-promotion-io.mjs",
+          "sha256": "9bae6b22f1a875e1771887e8fc127a8631d9e477462d391b2db73c750e7c2d1a"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-node-browser-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "5a462fbecad5a3a6bb21a01ab51a39a1f67375af7c5bc213a5b1356e81255c6e"
+        },
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-native-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "14417e0f900bde69050c379ce6975a71cf9fe577e93d614a9014ed7c0efef220"
+        },
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-php-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "008f440ec84ae41eb9e87e0006f8aaeba3cf063e3fafa633a4dfd8acbfcac5e8"
+        },
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-language-perl-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "0dd28dfb8f88acb1a05503955700cea9db715a574324224efc49bf24bbbafc7e"
+        },
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-language-python-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "f7f9e950bd3ad3a2a8439ed0d49e635fd135160bc40e4889988bbc7e6e817d1e"
+        },
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-language-ruby-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "c61b4253e95365d84a799730d8d47e5cad37de2b65a1a8f24cc0b5d552e6d75d"
+        },
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-language-rust-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "ceb9835c9aa9fb2db6e6d4c540e68831807281ecbc4577df2bd44870b568a56b"
+        },
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-managed-dotnet-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "852f8bb29e0150344522b0d7232d788841402b78e3fce141d7ac24d92d765326"
+        },
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-managed-jvm-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "36e775bbd30565711a2cdf9569d28cb076ddaa0776ed7d8028253b17ef19ad94"
+        },
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-wit-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "2109bdedca05b894c12ebf0b98a58de298cfec19f8c7ab8b41f2b676acf18747"
+        },
+        {
+          "path": "hosted-direct-proof-erasure-complete/direct-proof-erasure-matrix-09ca211fec5fcebfd47747cd55485781adf93974.zip",
+          "sha256": "e7fee36eab87a965643311cb0e76a2f96b43926d777fbae073f106dc83ef557f"
+        }
+      ]
     }
   ],
   "observations": [
@@ -1556385,6 +1556516,188 @@
       ],
       "conversionNotes": {
         "dependent": "Pass the bound and Fin payload through the profile's ordinary Nat representation. The adapter enforces payload < the live earlier bound before Lean entry; no proof value crosses the host boundary."
+      }
+    },
+    {
+      "id": "direct-proof-erasure-complete-ordinary-source-hosted-installed",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker",
+        "c",
+        "cpp",
+        "php-native",
+        "php-wasm",
+        "perl",
+        "python",
+        "ruby",
+        "rust",
+        "dotnet",
+        "java",
+        "kotlin",
+        "wit-wasi"
+      ],
+      "shapes": [
+        "proof"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result",
+        "signature"
+      ],
+      "path": "ordinary-source",
+      "scope": "Compiler-authenticated Lean source packages erase every proof-only runtime position while retaining theorem provenance and runtime checks.",
+      "hostTypes": {
+        "proof": {
+          "parameter": "erased; no host argument",
+          "result": "no runtime result; a proof-valued export is refused",
+          "field": "erased; no host field",
+          "callback-parameter": "erased; no host callback argument",
+          "callback-result": "erased; no host callback result",
+          "signature": "proof-free public signature"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-direct-proof-erasure-complete"
+          ],
+          "note": "Fresh Lean metadata identifies proof-only binders, fields, results and declarations from elaborated types while retaining theorem identity and assumptions."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-direct-proof-erasure-complete"
+          ],
+          "note": "Generated public APIs omit proof storage and proof arguments; they do not substitute null, Unit, a default value or fabricated evidence."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-direct-proof-erasure-complete"
+          ],
+          "note": "Compiled packages retain every runtime payload and refinement check while proof-only values have no ABI slot or allocation."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-direct-proof-erasure-complete"
+          ],
+          "note": "Both author routes produce receipt-closed prepared packages that install offline, relocate and replay after author and build removal."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-direct-proof-erasure-complete"
+          ],
+          "note": "Installed consumers exercise direct proof parameters and proof-free signatures, retained field and callback positions, and the fail-closed refusal of proof-valued exports."
+        }
+      },
+      "limitations": [
+        "The ten same-run producer artifacts establish ordinary and independently reviewed installed proof-parameter erasure and proof-free public signatures for all seventeen supported consumer profiles.",
+        "The retained audit supplies the 102 previously authenticated field and callback cells; this archive supplies 68 direct installed cells and the fresh Lean refusal supplies 34 proof-valued result cells.",
+        "The eleventh same-run artifact retains and independently reconstructs the exact twenty-record aggregate receipt; every artifact retains its original ZIP, API identities and job log plus exact producer, checker and archiver source closures.",
+        "External runtimes, compilers, package managers, browsers, GitHub Actions and operating systems remain trusted recorded inputs. This archive establishes exactly the 204-cell closure ledger and no broader support claim."
+      ],
+      "conversionNotes": {
+        "proof": "Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs."
+      }
+    },
+    {
+      "id": "direct-proof-erasure-complete-reviewed-ir-hosted-installed",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker",
+        "c",
+        "cpp",
+        "php-native",
+        "php-wasm",
+        "perl",
+        "python",
+        "ruby",
+        "rust",
+        "dotnet",
+        "java",
+        "kotlin",
+        "wit-wasi"
+      ],
+      "shapes": [
+        "proof"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result",
+        "signature"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Independently reviewed Binding IR packages erase every proof-only runtime position while retaining theorem provenance and runtime checks.",
+      "hostTypes": {
+        "proof": {
+          "parameter": "erased; no host argument",
+          "result": "no runtime result; a proof-valued export is refused",
+          "field": "erased; no host field",
+          "callback-parameter": "erased; no host callback argument",
+          "callback-result": "erased; no host callback result",
+          "signature": "proof-free public signature"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "hosted-direct-proof-erasure-complete"
+          ],
+          "note": "Fresh Lean metadata identifies proof-only binders, fields, results and declarations from elaborated types while retaining theorem identity and assumptions."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-direct-proof-erasure-complete"
+          ],
+          "note": "Generated public APIs omit proof storage and proof arguments; they do not substitute null, Unit, a default value or fabricated evidence."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "hosted-direct-proof-erasure-complete"
+          ],
+          "note": "Compiled packages retain every runtime payload and refinement check while proof-only values have no ABI slot or allocation."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "hosted-direct-proof-erasure-complete"
+          ],
+          "note": "Both author routes produce receipt-closed prepared packages that install offline, relocate and replay after author and build removal."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "hosted-direct-proof-erasure-complete"
+          ],
+          "note": "Installed consumers exercise direct proof parameters and proof-free signatures, retained field and callback positions, and the fail-closed refusal of proof-valued exports."
+        }
+      },
+      "limitations": [
+        "The ten same-run producer artifacts establish ordinary and independently reviewed installed proof-parameter erasure and proof-free public signatures for all seventeen supported consumer profiles.",
+        "The retained audit supplies the 102 previously authenticated field and callback cells; this archive supplies 68 direct installed cells and the fresh Lean refusal supplies 34 proof-valued result cells.",
+        "The eleventh same-run artifact retains and independently reconstructs the exact twenty-record aggregate receipt; every artifact retains its original ZIP, API identities and job log plus exact producer, checker and archiver source closures.",
+        "External runtimes, compilers, package managers, browsers, GitHub Actions and operating systems remain trusted recorded inputs. This archive establishes exactly the 204-cell closure ledger and no broader support claim."
+      ],
+      "conversionNotes": {
+        "proof": "Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs."
       }
     }
   ]
