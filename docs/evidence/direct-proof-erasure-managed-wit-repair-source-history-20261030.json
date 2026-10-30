@@ -1,0 +1,164 @@
+{
+  "failedJobIds": [
+    123830083085,
+    123830083116,
+    123830083150
+  ],
+  "failureCodes": [
+    "build-command-failed",
+    "ERR_ASSERTION"
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-managed-wit-repair-source-history.mjs",
+      "sha256": "90d57424f4319de29f2dca3f5499ce3cbad9c1df3597e3fe63b87572cc6a2322"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-managed-wit-repair-source-history-tests.mjs",
+      "sha256": "54a5be9e40a3d1cf1a884f9af709e47bfdf5940b1911202d301e903490d1cfc0"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-managed-wit-repair-source-history.mjs",
+      "sha256": "07f94a565780ab393f928126a858fea67092a27fb26816cb3f5542a1cb153c41"
+    }
+  ],
+  "hostedRunId": 40978622372,
+  "implementationCommit": "8a56eb33c03e494cd626bf63f2f8e6946ed420cc",
+  "integrationUpdates": [
+    {
+      "currentSha256": "1d20eaaf3460345ecd747d8e5eaba2e271304e1d4606e76f9cd273083f6c39e1",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-managed-wit-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "d7d3c9b4fc9d677a4d2317af6261b7b4e97533a2d22c0b7aab4e906f17e645b1"
+    },
+    {
+      "currentSha256": "b09c5dd79acd035fa10169862fb1c04ab53dada854236285d5eee20250c7717f",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureManagedWitRepairSource, directProofErasureManagedWitRepairNormalizationPaths } from \"./direct-proof-erasure-managed-wit-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureManagedWitRepairNormalizationPaths\n\t, ...directProofErasureLanguageClosureRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureLanguageClosureRepairNormalizationPaths\n",
+          "start": 223587
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureManagedWitRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureLanguageClosureRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureLanguageClosureRepairSource(\n",
+          "start": 280144
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3b0253af4edaf66bc04f7251b6abaeee2985ff2fe36b7294337d78c2c9cb3c8f"
+    }
+  ],
+  "milestone": "direct-proof-erasure-managed-wit-repair-source-v1",
+  "predecessorCommit": "f949ee06c47443b5213e67291b1faf00f832abb6",
+  "schemaVersion": 1,
+  "scope": "Allocate collision-free internal WIT callback locals and retain current .NET and Kotlin compiler diagnostics proving erased proof arguments are absent.",
+  "updates": [
+    {
+      "currentSha256": "122c54ffd441911fbc9977971a7034c6b3b656dadfaabf7bb04e60bde3af2e19",
+      "edits": [
+        {
+          "current": "\t\tconst used = new Set(fn.parameters.map(parameter => parameter.name));\n\t\tconst local = base => {\n\t\t\tlet candidate = base, suffix = 0;\n\t\t\twhile(used.has(candidate)) candidate = `${base}_${++suffix}`;\n\t\t\tused.add(candidate);\n\t\t\treturn candidate;\n\t\t};\n\t\tconst scope = local(\"scope\"), failure = local(\"failure\");\n\t\tconst nativeError = local(\"native_error\"), value = local(\"value\");\n\t\tconst converted = local(\"converted\");\n",
+          "previous": "",
+          "start": 2198
+        },
+        {
+          "current": "\t  lb_scope ${scope} = {.remaining = 16u * 1024u * 1024u};\n\t  wasmtime_error_t *${failure} = NULL;\n\t  ${p}_error ${nativeError} = {0};\n\t  ${result.name} ${value} = {0};\n\t  wasmtime_component_val_t ${converted} = {0};\n",
+          "previous": "  lb_scope scope = {.remaining = 16u * 1024u * 1024u};\n  wasmtime_error_t *failure = NULL;\n  ${p}_error native_error = {0};\n  ${result.name} value = {0};\n  wasmtime_component_val_t converted = {0};\n",
+          "start": 3082
+        },
+        {
+          "current": "${fn.parameters.map((parameter, i) => `  if (!lb_in_${parameter.copy.index}(&args[${i}], &${scope}, &${parameter.name})) { ${failure} = wasmtime_error_new(\"Invalid copied WIT input, allocation failure or 16 MiB conversion limit\"); goto done; }`).join(\"\\n\")}\n\t  if (${fn.name}(${fn.parameters.map(parameter => `${parameter.copy.aggregate ? \"&\" : \"\"}${parameter.name}`).concat(unit ? [] : [`&${value}`]).concat(`&${nativeError}`).join(\", \")}) != ${p.toUpperCase()}_STATUS_OK) {\n\t    ${failure} = wasmtime_error_new(${nativeError}.message ? ${nativeError}.message : \"Native Lean call failed\"); goto done;\n\t  }\n\t  if (!lb_out_${result.index}(&${value}, &${scope}, &${converted})) { ${failure} = wasmtime_error_new(\"16 MiB WIT result conversion limit\"); goto done; }\n\t  results[0] = ${converted}; ${converted} = (wasmtime_component_val_t){0};\n",
+          "previous": "${fn.parameters.map((parameter, i) => `  if (!lb_in_${parameter.copy.index}(&args[${i}], &scope, &${parameter.name})) { failure = wasmtime_error_new(\"Invalid copied WIT input, allocation failure or 16 MiB conversion limit\"); goto done; }`).join(\"\\n\")}\n  if (${fn.name}(${fn.parameters.map(parameter => `${parameter.copy.aggregate ? \"&\" : \"\"}${parameter.name}`).concat(unit ? [] : [\"&value\"]).concat(\"&native_error\").join(\", \")}) != ${p.toUpperCase()}_STATUS_OK) {\n    failure = wasmtime_error_new(native_error.message ? native_error.message : \"Native Lean call failed\"); goto done;\n  }\n  if (!lb_out_${result.index}(&value, &scope, &converted)) { failure = wasmtime_error_new(\"16 MiB WIT result conversion limit\"); goto done; }\n  results[0] = converted; converted = (wasmtime_component_val_t){0};\n",
+          "start": 3397
+        },
+        {
+          "current": "\t  wasmtime_component_val_delete(&${converted});\n\t  ${result.aggregate ? `${result.name}_clear(&${value});` : \"\"}\n\t  lb_scope_close(&${scope});\n\t  return ${failure};\n",
+          "previous": "  wasmtime_component_val_delete(&converted);\n  ${result.aggregate ? `${result.name}_clear(&value);` : \"\"}\n  lb_scope_close(&scope);\n  return failure;\n",
+          "start": 4241
+        }
+      ],
+      "path": "src/backends/wit/copied-host.mjs",
+      "previousSha256": "c28accb9b81d88963d2a60e146a2e7160a3832b0d9325405c77f0160728b4c03"
+    },
+    {
+      "currentSha256": "d40cb38f2d34a0b98a0f50ea7c940e749bba684c8b06100f072750aa0224ac52",
+      "edits": [
+        {
+          "current": "\tdirectProofErasureManagedDiagnosticPattern\n\t, directProofErasureManagedFailureDiagnostic\n\t, directProofErasureManagedGroups\n",
+          "previous": "\tdirectProofErasureManagedGroups\n",
+          "start": 918
+        },
+        {
+          "current": "",
+          "previous": "const diagnosticPattern = profile => profile === \"dotnet\"\n\t? /(?:No overload for method 'Keep' takes 3 arguments|best overload.*does not have a parameter named '_before')/iu\n\t: profile === \"java\"\n\t\t? /(?:method keep.*cannot be applied|actual and formal argument lists differ in length)/isu\n\t\t: /(?:cannot find a parameter with this name: _before|too many arguments for)/iu;\n\n",
+          "start": 3144
+        },
+        {
+          "current": "\t\t\t\tdiagnostic = directProofErasureManagedFailureDiagnostic(error);\n\t\t\t\tassert.match(diagnostic\n\t\t\t\t\t, directProofErasureManagedDiagnosticPattern(profile));\n",
+          "previous": "\t\t\t\tdiagnostic = error.details?.stderr ?? error.message;\n\t\t\t\tassert.match(diagnostic, diagnosticPattern(profile));\n",
+          "start": 8177
+        }
+      ],
+      "path": "tests/direct-proof-erasure-managed-installed.test.mjs",
+      "previousSha256": "13a86998fd146568591a0159f0d9f3da8a433dadeea93b0271f0292b3dc23ce1"
+    },
+    {
+      "currentSha256": "5af0ac47b7c30b0962928051797af510e3d11fdba8ce5794f590db4cdc363d5c",
+      "edits": [
+        {
+          "current": "/**\n * Exact compiler diagnostic proving that no erased proof slot was published.\n *\n * @param profile - Dotnet, Java or Kotlin.\n */\nexport const directProofErasureManagedDiagnosticPattern = profile =>\n\tprofile === \"dotnet\"\n\t\t? /(?:No overload for method 'Keep' takes 3 arguments|does not have a parameter named '_before')/iu\n\t\t: profile === \"java\"\n\t\t\t? /(?:method keep.*cannot be applied|actual and formal argument lists differ)/isu\n\t\t\t: /(?:cannot find a parameter with this name: _before|no parameter with name '_before' found|too many arguments for)/iu;\n\n/**\n * Retain diagnostics across process wrappers that assign compiler output to\n * stdout, stderr or only the enclosing error message.\n *\n * @param error - Rejected managed package installation.\n */\nexport const directProofErasureManagedFailureDiagnostic = error => [\n\terror?.details?.stderr, error?.details?.stdout, error?.message\n].filter(value => typeof value === \"string\" && value.length > 0).join(\"\\n\");\n\n",
+          "previous": "",
+          "start": 1110
+        },
+        {
+          "current": "\t\tassert.match(item.negativeProofArgument.diagnostic\n\t\t\t, directProofErasureManagedDiagnosticPattern(item.profile));\n",
+          "previous": "\t\tassert.match(item.negativeProofArgument.diagnostic, item.profile === \"dotnet\"\n\t\t\t? /(?:No overload for method 'Keep' takes 3 arguments|does not have a parameter named '_before')/iu\n\t\t\t: item.profile === \"java\"\n\t\t\t\t? /(?:method keep.*cannot be applied|actual and formal argument lists differ)/isu\n\t\t\t\t: /(?:cannot find a parameter with this name: _before|too many arguments for)/iu);\n",
+          "start": 4708
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-managed-report.mjs",
+      "previousSha256": "b1ff5768e01011cfb691c1b83764f4704046f30475c57cb81a57178f173b500e"
+    },
+    {
+      "currentSha256": "0296024b9be6b3a7960428505f70b21955f56895430054d267ebfd1a4385c46e",
+      "edits": [
+        {
+          "current": "import {\n\tdirectProofErasureManagedDiagnosticPattern\n\t, directProofErasureManagedFailureDiagnostic\n} from \"./direct-proof-erasure-managed-report.mjs\";\n\ntest(\"managed proof refusal retains stdout and current Kotlin diagnostics\", () => {\n\tconst dotnet = directProofErasureManagedFailureDiagnostic({\n\t\tmessage: \"dotnet exited with status 1\"\n\t\t, details: {\n\t\t\tstderr: \"\"\n\t\t\t, stdout: \"error CS1501: No overload for method 'Keep' takes 3 arguments\"\n\t\t}\n\t});\n\tassert.match(dotnet, directProofErasureManagedDiagnosticPattern(\"dotnet\"));\n\tassert.match(\"error: no parameter with name '_before' found.\"\n\t\t, directProofErasureManagedDiagnosticPattern(\"kotlin\"));\n});\n",
+          "previous": "",
+          "start": 460
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-managed-tests.mjs",
+      "previousSha256": "8cbbc42ee3c6e9588f51ec5bb4d720b2b7a2d5a7aefc00b63937869bae69066a"
+    },
+    {
+      "currentSha256": "820113d9ce35bd3b4fd4b5a8a7204343a0697d6f4245eec12a33e7e4bd6e8bd9",
+      "edits": [
+        {
+          "current": "import {\n\trenderWitHostHeader, renderWitHostSource\n} from \"../../src/backends/wit/copied-host.mjs\";\n",
+          "previous": "import { renderWitHostHeader } from \"../../src/backends/wit/copied-host.mjs\";\n",
+          "start": 275
+        },
+        {
+          "current": "\tconst host = renderWitHostSource(model.copied, new Uint8Array());\n\tassert.equal((host.match(/uint32_t value = \\{0\\};/gu) ?? []).length, 1);\n\tassert.match(host, /uint32_t value_1 = \\{0\\};/u);\n\tassert.match(host, /directprooferasure_keep\\(value, &value_1/u);\n",
+          "previous": "",
+          "start": 1371
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-wit-tests.mjs",
+      "previousSha256": "efe347913a888b5ae6f7541934aa08d2e3e62e516701861cf456de398323ad21"
+    }
+  ]
+}
