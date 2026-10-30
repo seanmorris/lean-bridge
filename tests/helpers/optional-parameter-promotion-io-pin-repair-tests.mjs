@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import {
@@ -16,16 +15,21 @@ import {
 	, optionalParameterPromotionIoRepairPredecessor
 	, repairOptionalParameterPromotionIoPins
 } from "./optional-parameter-promotion-io-pin-repair.mjs";
+import {
+	optionalParameterPromotionIoPinRepairImplementation
+} from "./optional-parameter-promotion-io-pin-repair-source-history.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 128 * 1024 * 1024
 });
 
-test("optional promotion reader repair changes exactly 33 live pins", async () => {
+test("optional promotion reader repair changes exactly 33 milestone pins", () => {
 	const before = JSON.parse(git(["show"
 		, `${optionalParameterPromotionIoRepairPredecessor}:docs/type-surface.v1.json`]));
-	const after = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
-	const sourceSha256 = sha256(await readFile(optionalParameterPromotionIoPath));
+	const after = JSON.parse(git(["show"
+		, `${optionalParameterPromotionIoPinRepairImplementation}:docs/type-surface.v1.json`]));
+	const sourceSha256 = sha256(git(["show"
+		, `${optionalParameterPromotionIoPinRepairImplementation}:${optionalParameterPromotionIoPath}`]));
 	assert.deepEqual(after
 		, repairOptionalParameterPromotionIoPins(before, sourceSha256));
 	assert.deepEqual(after.observations, before.observations);
