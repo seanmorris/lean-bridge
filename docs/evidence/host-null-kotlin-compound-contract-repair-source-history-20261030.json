@@ -1,0 +1,74 @@
+{
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-kotlin-compound-contract-repair-source-history.mjs",
+      "sha256": "9eb08c22834aa992f32a83ec62d3c08e4db3162410cbe04e0aecb0e10f22f694"
+    },
+    {
+      "path": "tests/helpers/host-null-kotlin-compound-contract-repair-source-history-tests.mjs",
+      "sha256": "1bcfc7ec4bb752f230b09b92aef0e868a4afaa16503065ffa09a40a7586b70bd"
+    },
+    {
+      "path": "tests/helpers/host-null-kotlin-compound-contract-repair-source-history.mjs",
+      "sha256": "b3a968bb0fa8e9f0cdbaa5619436c049fd0a7b95599ff1e93bd5a4d3f60a515b"
+    }
+  ],
+  "hostedProducerRunId": 41040646713,
+  "implementationCommit": "5793213b2e99456b5ce1bd42fdd886d8a43277ef",
+  "integrationUpdates": [
+    {
+      "currentSha256": "dfe9ccc315be5d288ddf9c0e21a9492699dad6b40ad55add03e46c34d6de2cf3",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-kotlin-compound-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c8722a023684f12c0a9f17d8e9cd314fb8265bd75ee0b2a96339b1bd38d6a365"
+    },
+    {
+      "currentSha256": "8b049e8329b45aff56155e4d7b27503009797677a2b72978fbed889a3a35b88b",
+      "edits": [
+        {
+          "current": "import { beforeHostNullKotlinCompoundContractRepairSource, hostNullKotlinCompoundContractRepairNormalizationPaths } from \"./host-null-kotlin-compound-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullKotlinCompoundContractRepairNormalizationPaths\n\t, ...hostNullManagedSystemsRepairNormalizationPaths\n",
+          "previous": "\t...hostNullManagedSystemsRepairNormalizationPaths\n",
+          "start": 226815
+        },
+        {
+          "current": "\tlet stage = beforeHostNullKotlinCompoundContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullManagedSystemsRepairSource(\n",
+          "previous": "\tlet stage = beforeHostNullManagedSystemsRepairSource(\n",
+          "start": 284424
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9fff7a570edf6959a6bef18669d10c05339fd9b10e16435ae2b26365f0669fb0"
+    }
+  ],
+  "milestone": "host-null-kotlin-compound-contract-repair-source-v1",
+  "predecessorCommit": "085f8eb345164262d26c418f5069667ff714f020",
+  "schemaVersion": 1,
+  "scope": "Align the full Kotlin compound contract with the established explicit HostNull semantics: Option, Result and Pair generic parameters remain nullable so nested HostNull values preserve None, Some(null) and Some(value). Reject stale non-null generic bounds and requireNonNull without rejecting legitimate nullable kotlin.Any? equality and hashing internals. No support claim or generator semantics change.",
+  "semanticImplementationCommit": "bbcf283d4ad2fde8b03fd110242326a8510570e8",
+  "supportClaimsChanged": false,
+  "updates": [
+    {
+      "currentSha256": "780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5",
+      "edits": [
+        {
+          "current": "\t\t\tassert.match(output.files[`${root}Option.kt`], /sealed interface Option<out T>/);\n\t\t\tassert.match(output.files[`${root}Result.kt`], /sealed interface Result<out T, out E>/);\n\t\t\tassert.match(output.files[`${root}Pair.kt`], /class Pair<out A, out B>/);\n\t\t\tfor(const file of [\"Option.kt\", \"Result.kt\", \"Pair.kt\"])\n\t\t\t{\n\t\t\t\tassert.doesNotMatch(output.files[root + file], /\\bvar\\b/);\n\t\t\t\tassert.doesNotMatch(output.files[root + file]\n\t\t\t\t\t, /\\b(?:out\\s+)?[A-Z]\\s*:\\s*kotlin\\.Any\\b|requireNonNull/u);\n\t\t\t}\n",
+          "previous": "\t\t\tassert.match(output.files[`${root}Option.kt`], /sealed interface Option<out T : kotlin.Any>/);\n\t\t\tassert.match(output.files[`${root}Result.kt`], /sealed interface Result<out T : kotlin.Any, out E : kotlin.Any>/);\n\t\t\tassert.match(output.files[`${root}Pair.kt`], /class Pair<out A : kotlin.Any, out B : kotlin.Any>/);\n\t\t\tfor(const file of [\"Option.kt\", \"Result.kt\", \"Pair.kt\"]) assert.doesNotMatch(output.files[root + file], /\\bvar\\b/);\n",
+          "start": 8972
+        }
+      ],
+      "path": "tests/jvm-kotlin-contract.test.mjs",
+      "previousSha256": "afc7347c4bdb9ab8fdec82a90ff0df70986e6e4d6152cc57e7f6374b22647aa7"
+    }
+  ]
+}
