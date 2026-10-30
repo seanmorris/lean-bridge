@@ -1,0 +1,382 @@
+{
+  "cells": 204,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-complete-promotion-source-history.mjs",
+      "sha256": "8002640e5322ee9306c8c0e33249cca1ee2217f7c1ff59b3d5aebbbd4cc2ae51"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-complete-promotion-source-history-tests.mjs",
+      "sha256": "fcff9d89a169c7d1aea3e7fd05b4d0d02355fa41f1f66e836bc88b98e7c7e1f0"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-complete-promotion-source-history.mjs",
+      "sha256": "fb58633b3ead23a26e01c31bb8ef62ef7a667bfa61a49070aa331f08a2a32c0f"
+    }
+  ],
+  "implementationCommit": "9b6769f57e55e68da32b7da702b7473dafb90a4f",
+  "implementationCommits": [
+    "9b6769f57e55e68da32b7da702b7473dafb90a4f"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "95d8b3ae598c294df86b737bfadd39b02ae6fd09c04cc8d4ec4471551517b39a",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"a85ba7ccd6e4ce143b574995150ff18b05ff147861c022eca0963e937acc0980\"\n",
+          "previous": "          \"sha256\": \"b11151f21ad4cb93a129173ba75780782cfc67e297900c284d01fdb2ae090bbe\"\n",
+          "start": 89712433
+        },
+        {
+          "current": "          \"sha256\": \"17a048ba36fea52e596fdea2e2c4336343dac597c50717a5710bd3990314ddf3\"\n",
+          "previous": "          \"sha256\": \"e6ffec45943839ac9adf67c9278e21336b0bf4c8d79866058d29074c3c3cd9e4\"\n",
+          "start": 89712813
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "067b189a9500bd0ea276c093b698e609f04c6556d043a7d201dcccee1507ed0b"
+    },
+    {
+      "currentSha256": "032fb4365e1f5f52a31cccfe6b11ff2eb52a94b53ef53c5713c2215f797c60d4",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-complete-promotion-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "8a89b69366368819251f32f93d8ca824a30b4e3ef702917bb8a22832cf21687b"
+    },
+    {
+      "currentSha256": "a85ba7ccd6e4ce143b574995150ff18b05ff147861c022eca0963e937acc0980",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 139
+        },
+        {
+          "current": "import { directProofErasureCompletePromotionPredecessor }\n\tfrom \"./direct-proof-erasure-complete-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 384
+        },
+        {
+          "current": "const readSource = ([name, path]) => [\n\tname\n\t, execFileSync(\"git\", [\"show\"\n\t\t, `${directProofErasureCompletePromotionPredecessor}:${path}`]\n\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 })\n];\nconst sources = Object.fromEntries(Object.entries(\n\tdirectProofErasureCompleteDocumentationPaths).map(readSource));\n",
+          "previous": "const readSource = async ([name, path]) => [name, await readFile(path, \"utf8\")];\nconst sources = Object.fromEntries(await Promise.all(Object.entries(\n\tdirectProofErasureCompleteDocumentationPaths).map(readSource)));\n",
+          "start": 513
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-documentation-tests.mjs",
+      "previousSha256": "b11151f21ad4cb93a129173ba75780782cfc67e297900c284d01fdb2ae090bbe"
+    },
+    {
+      "currentSha256": "17a048ba36fea52e596fdea2e2c4336343dac597c50717a5710bd3990314ddf3",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 123
+        },
+        {
+          "current": "import { directProofErasureCompletePromotionPredecessor }\n\tfrom \"./direct-proof-erasure-complete-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 762
+        },
+        {
+          "current": "\tconst document = JSON.parse(execFileSync(\"git\", [\"show\"\n\t\t, `${directProofErasureCompletePromotionPredecessor}:docs/type-surface.v1.json`]\n\t, { encoding: \"utf8\", maxBuffer: 128 * 1024 * 1024 }));\n\tconst [irSchema, consumers] = await Promise.all([\n\t\t\"schema/binding-ir.schema.json\", \"docs/consumer-support.v1.json\"\n",
+          "previous": "\tconst [document, irSchema, consumers] = await Promise.all([\n\t\t\"docs/type-surface.v1.json\", \"schema/binding-ir.schema.json\"\n\t\t, \"docs/consumer-support.v1.json\"\n",
+          "start": 1045
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-promotion-tests.mjs",
+      "previousSha256": "e6ffec45943839ac9adf67c9278e21336b0bf4c8d79866058d29074c3c3cd9e4"
+    },
+    {
+      "currentSha256": "b8a8a0829bde616a34b2649c569c9ef835e1b6e5dd232957bed4394a8eea9d39",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureCompletePromotionSource, directProofErasureCompletePromotionNormalizationPaths } from \"./direct-proof-erasure-complete-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureCompletePromotionNormalizationPaths\n\t, ...directProofErasureArchiveLaneIdentityRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureArchiveLaneIdentityRepairNormalizationPaths\n",
+          "start": 226466
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureCompletePromotionSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureArchiveLaneIdentityRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureArchiveLaneIdentityRepairSource(\n",
+          "start": 283961
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "25206c5b27ec6aa0f6948a29940700df6a723672115c7b38bc020d4b0f21939d"
+    }
+  ],
+  "milestone": "direct-proof-erasure-complete-promotion-source-v1",
+  "outputs": 16,
+  "predecessorCommit": "0ec3eed0ab4a013e0b7d5f5eb7ad9ce63acf2864",
+  "schemaVersion": 1,
+  "scope": "Replay the immutable ten-lane hosted archive and fresh-Lean refusal, promote exactly 204 direct proof-erasure cells across seventeen profiles, two author routes and six direct positions, add two observations, publish sixteen inventory and documentation outputs, and register the transaction newest-first.",
+  "updates": [
+    {
+      "currentSha256": "e2774ac619dd4e73478d2d8fa6f6ef42fc23feddad7851eed923b132b16f7c37",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) covers C in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 54849
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 92151
+        }
+      ],
+      "path": "docs/consume/c.md",
+      "previousSha256": "09fa8189f365ce93e072d458d2014154e46dee76a90cbfc125c88adcd858f617"
+    },
+    {
+      "currentSha256": "5fc363b18bf5f7720cf68a0365bc712821b182194bae0ba04010a4dcd8003344",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) covers C++ in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 44288
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 82195
+        }
+      ],
+      "path": "docs/consume/cpp.md",
+      "previousSha256": "17590815faef68642467b1286daff1429db71b6a9ce07f0fc5ed7ffc2d03e7fc"
+    },
+    {
+      "currentSha256": "2eaba0b67c1fe22d8c84223d2f5e0b60614db1d35f3f6be906128b6198b769a3",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) covers C# in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 52852
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 88494
+        }
+      ],
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "6880b13fbf28d2eb910b165a51fc3dfb6ea295af7174fb58384677f232f5a244"
+    },
+    {
+      "currentSha256": "6c1e56f4ffb5994f39b7d6f346e1408e1e889c6b747bcd58d0530b49d71964ae",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) covers Java in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 58758
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 95313
+        }
+      ],
+      "path": "docs/consume/java.md",
+      "previousSha256": "53a21bbf5ec02eb80ea2ce204cf1a58dd4270e3a58d98e9ab49d25935b7a9d2e"
+    },
+    {
+      "currentSha256": "ed2786a179528717d8620665c633f62828ca906774a2b86f6cc0d31d8c5481c2",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) covers Kotlin in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 50996
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 87886
+        }
+      ],
+      "path": "docs/consume/kotlin.md",
+      "previousSha256": "28e1573f00f30727fe1124345bc10d7e5678147616403a96471e6b24c4110e02"
+    },
+    {
+      "currentSha256": "7e824d487511ca54ae37d5d6156d537e36ca13ed6d25e874fa89dad5d7b7a95a",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) covers Perl in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 47512
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 83925
+        }
+      ],
+      "path": "docs/consume/perl.md",
+      "previousSha256": "6cc09810955c8367d647db9fa809191b0bc55c56a46efc62236467b36bbc5986"
+    },
+    {
+      "currentSha256": "8412fdd5d434058e1ad69fdcaa2481083e0707abe0e7fc4bc0425097ca7f1777",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) covers Python in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 51638
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 86691
+        }
+      ],
+      "path": "docs/consume/python.md",
+      "previousSha256": "1a7d1fa49f68ecc534324357d6a89caf6f92ca58a30010fd26c042e28d0218cb"
+    },
+    {
+      "currentSha256": "3fc77bda3b7fe1d46ab83db7d3e153b8c0b37a6ae44270dbfbf89c67ee6bffc5",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) covers Ruby in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 48604
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 86358
+        }
+      ],
+      "path": "docs/consume/ruby.md",
+      "previousSha256": "75ee4a5ecb396ecbd8452663101aac2d3f16179f5f2fc9fd91dec59d71ccf37b"
+    },
+    {
+      "currentSha256": "f73efc8a21a6851ebfdaf6104dab9211f9087999e55c2d128f0f1f69e8620258",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) covers Rust in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 51104
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 87156
+        }
+      ],
+      "path": "docs/consume/rust.md",
+      "previousSha256": "cb07ed2b68cdd1712aac69a41813280dea37a73884f39f5d891df50d62fc9e0f"
+    },
+    {
+      "currentSha256": "cbab47fc3e2ad554019935fe7ba8aa8ad3e05adf2528874807ddbc266e8bc1c6",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) covers WIT/WASI in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 65850
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 102859
+        }
+      ],
+      "path": "docs/consume/wit-wasi.md",
+      "previousSha256": "6dce84cb370d59a3c0785814369b80e521cb1d84c8dc2e9ee13c7cdc8f9a2be0"
+    },
+    {
+      "currentSha256": "ce78f1e1c936e393ffab077d78758b7527831bfe6456878aa709bd084bb8cc00",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](evidence/direct-proof-erasure-hosted-20261030/index.json) covers Node JavaScript, TypeScript, Browser, React, Worker in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 33300
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 85735
+        }
+      ],
+      "path": "docs/javascript-typescript.md",
+      "previousSha256": "0af8ccd55aabb717d3408fb6d9b272c5644d2706d25a48c733a3966eda739247"
+    },
+    {
+      "currentSha256": "805768e2b4a75b39700134705de8b7739501fc0aa396b80662d0001d702e7d94",
+      "edits": [
+        {
+          "current": "### Export direct proof arguments\n\nLean Bridge authenticates direct proof-only binders, record fields and\nsynchronous callback positions from elaborated Lean metadata, then omits their\nruntime slots. A downstream caller never supplies a proof, null, Unit or a\nplaceholder. Public signatures remain proof-free while theorem identities and\nassumptions remain in assurance metadata.\n\nA declaration whose runtime result is itself a proof is refused. Erasure also\ndoes not remove runtime data or validation: a `Fin`, `Subtype`, checked\nrecord or dependent payload still uses its checked host contract. The\n[complete hosted direct proof-erasure archive](../evidence/direct-proof-erasure-hosted-20261030/index.json)\nreplays installed ordinary-source and independently reviewed packages across\nall seventeen consumer profiles, both author routes and all six direct\npositions.\n\n",
+          "previous": "",
+          "start": 3489
+        }
+      ],
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "463b10be226208337dd01cf9fd3fa4c2d5119e84b0c00b6d0e66b6c08237bbc8"
+    },
+    {
+      "currentSha256": "cd81a2d07097575ed6edcf33711be6d2e70bd452305f97c2c7a1437278166b19",
+      "edits": [
+        {
+          "current": "| Theorems and direct proof arguments | Let Lean authenticate proof-only positions and erase their runtime slots. Retain theorem identities and assumptions in assurance metadata. Refuse proof-valued exports instead of fabricating host evidence. |\n",
+          "previous": "| Theorems and proof arguments | Let Lean determine runtime erasure. Retain theorem identities and assumptions in assurance metadata. |\n",
+          "start": 2030
+        }
+      ],
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "9e0e1d02dea2781e7437e06d903ff99852264a1d114e17634b92796ab9b97788"
+    },
+    {
+      "currentSha256": "5f5bd4218fe49506fb66bd361b56a1b2ee1b6f973ba08e7af9f0a626635ecbff",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](evidence/direct-proof-erasure-hosted-20261030/index.json) covers Native PHP, PHP-Wasm in installed ordinary-source and independently reviewed packages. Proof-only parameters, fields, callback arguments and callback results occupy no host slot; public signatures omit them. A declaration whose runtime result is itself a proof is refused instead of being represented by null, Unit, a default or fabricated evidence. Lean metadata retains theorem identity and assumptions, while runtime payloads and refinement checks remain intact. The retained matrix covers exactly these six direct positions; proof-bearing data structures, dependent runtime payloads and propositions that require host evidence keep their separate contracts.\n\n",
+          "previous": "",
+          "start": 99355
+        },
+        {
+          "current": "| `Prop / theorem / proof arguments` | `erased; no host argument` (input); `no runtime result; a proof-valued export is refused` (result); `erased; no host field` (field); `erased; no host callback argument` (callback input); `erased; no host callback result` (callback result); `proof-free public signature` (signature) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs. Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "previous": "| `Prop / theorem / proof arguments` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Record theorem identity and assumptions. Erasure does not remove the need to check a runtime refinement. |\n",
+          "start": 163787
+        }
+      ],
+      "path": "docs/php.md",
+      "previousSha256": "efae8cea62d477bba27d52ba155f050dedcdfe20b2649c6e60714d6d66c31519"
+    },
+    {
+      "currentSha256": "d6d1bf036c0ac7133ea8a3a71fb8800aefbcf88eff66db06261ccfbd5e03546d",
+      "edits": [
+        {
+          "current": "[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) binds ten immutable installed-package archives, their same-run aggregate receipt, and a fresh-Lean refusal to all 204 proof cells across seventeen profiles, both author routes and six direct positions. Proof-only parameters, fields and synchronous callback positions have no runtime slot; proof-free public signatures omit them. A proof-valued export is refused. The evidence does not erase runtime data, refinement checks or assumptions from assurance metadata, and it does not establish host-supplied proofs or arbitrary proof-bearing data structures.\n\n",
+          "previous": "",
+          "start": 1157
+        }
+      ],
+      "path": "docs/reference/types.md",
+      "previousSha256": "e509605b0a75c8997e7d4f23b1568d0f410ccb99af42d138d07c0aa394b8b3db"
+    },
+    {
+      "currentSha256": "067b189a9500bd0ea276c093b698e609f04c6556d043a7d201dcccee1507ed0b",
+      "edits": [
+        {
+          "current": "    },\n    {\n      \"id\": \"hosted-direct-proof-erasure-complete\",\n      \"kind\": \"installed\",\n      \"revision\": \"09ca211fec5fcebfd47747cd55485781adf93974\",\n      \"command\": \"node --test --test-concurrency=1 tests/direct-proof-erasure-complete-hosted-evidence.test.mjs\",\n      \"scope\": \"Ten same-revision consumer artifacts, their independently reconstructed aggregate receipt, one fresh-Lean refusal and the retained field/callback ledger close all 204 proof-erasure cells across seventeen profiles and both author routes.\",\n      \"files\": [\n        {\n          \"path\": \".github/workflows/direct-proof-erasure-complete.yml\",\n          \"sha256\": \"fc564b08a166d221a3f55beaeeeab4ad388de4708a136be60fa76ef9096def97\"\n        },\n        {\n          \"path\": \"docs/evidence/direct-proof-erasure-hosted-20261030/index.json\",\n          \"sha256\": \"d3fcb15d2b6b8362c2b628738ff0ec575bfbd4a05a1ab0ce88da5e943417188e\"\n        },\n        {\n          \"path\": \"scripts/archive-direct-proof-erasure-hosted.mjs\",\n          \"sha256\": \"55ee9a1a3a613051fe4225255cea7f43d613ba6450b168d7ae43773bb01e899e\"\n        },\n        {\n          \"path\": \"scripts/download-direct-proof-erasure-hosted-inputs.mjs\",\n          \"sha256\": \"66cef279ff665bccda7e35262e48c8c4f3b2e942375137c9350ad45a05bbf9d4\"\n        },\n        {\n          \"path\": \"scripts/generate-reference-docs.mjs\",\n          \"sha256\": \"b690854ece6e2042f890a6aa80b94a63830dc2ee0c6aba9b8f3fdd5659412a83\"\n        },\n        {\n          \"path\": \"scripts/generate-type-docs.mjs\",\n          \"sha256\": \"a3d70492d06e8fe13a028df849b707b6ed881fdc12136f6ab20e3d2eccf991ba\"\n        },\n        {\n          \"path\": \"scripts/promote-direct-proof-erasure-complete.mjs\",\n          \"sha256\": \"b25a78035c26c1cfd4f09d395466b6ca4ba57d0a921c196f2cf2300194b1d95f\"\n        },\n        {\n          \"path\": \"tests/helpers/direct-proof-erasure-complete-ci-tests.mjs\",\n          \"sha256\": \"a23db399fb7de83c08e789bb47a1520de8ffad817a83f1c19e3b5d848733f8cd\"\n        },\n        {\n          \"path\": \"tests/helpers/direct-proof-erasure-complete-documentation.mjs\",\n          \"sha256\": \"995504657bf1366c0e77758752892bca48fc37baff49f2ececb2d07840cc790b\"\n        },\n        {\n          \"path\": \"tests/helpers/direct-proof-erasure-complete-documentation-tests.mjs\",\n          \"sha256\": \"b11151f21ad4cb93a129173ba75780782cfc67e297900c284d01fdb2ae090bbe\"\n        },\n        {\n          \"path\": \"tests/helpers/direct-proof-erasure-complete-promotion.mjs\",\n          \"sha256\": \"894929decd0256eca1e2d84dddb962bab3aa84c6f34e4ad03a9f63ea23934a93\"\n        },\n        {\n          \"path\": \"tests/helpers/direct-proof-erasure-complete-promotion-tests.mjs\",\n          \"sha256\": \"e6ffec45943839ac9adf67c9278e21336b0bf4c8d79866058d29074c3c3cd9e4\"\n        },\n        {\n          \"path\": \"tests/helpers/direct-proof-erasure-complete-promotion-transaction-tests.mjs\",\n          \"sha256\": \"30840d407fe4ab61759717e6b7c96d059ec639c425c5ad3ed5f5b62ac7bc6b19\"\n        },\n        {\n          \"path\": \"tests/helpers/direct-proof-erasure-hosted-archive.mjs\",\n          \"sha256\": \"ab9deb193bf5bdfc5b08bc36733e3d85bd6c08dae1746fb766c19661e34299eb\"\n        },\n        {\n          \"path\": \"tests/helpers/direct-proof-erasure-hosted-evidence.mjs\",\n          \"sha256\": \"b67dac7c1af0c2154b136e1915610be4df7aa3e22510a3b12fdca6bf5c92a198\"\n        },\n        {\n          \"path\": \"tests/direct-proof-erasure-complete-hosted-evidence.test.mjs\",\n          \"sha256\": \"4f8c9cff2309b346052ddff35a4453db452f5230361d34fc681b067bf7f1a002\"\n        },\n        {\n          \"path\": \"tests/direct-proof-erasure-complete-promotion.test.mjs\",\n          \"sha256\": \"8f1ee395c2ca6e6c42538f9a7bed31bf5a75f244ddf7fa63c00b629f15fb63c1\"\n        },\n        {\n          \"path\": \"tests/helpers/promotion-file-transaction.mjs\",\n          \"sha256\": \"00181a5537d811a32ed39ff61093356b7f9af72a774026c3860e70b551a2df72\"\n        },\n        {\n          \"path\": \"tests/helpers/type-surface-promotion-io.mjs\",\n          \"sha256\": \"9bae6b22f1a875e1771887e8fc127a8631d9e477462d391b2db73c750e7c2d1a\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-node-browser-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"5a462fbecad5a3a6bb21a01ab51a39a1f67375af7c5bc213a5b1356e81255c6e\"\n        },\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-native-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"14417e0f900bde69050c379ce6975a71cf9fe577e93d614a9014ed7c0efef220\"\n        },\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-php-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"008f440ec84ae41eb9e87e0006f8aaeba3cf063e3fafa633a4dfd8acbfcac5e8\"\n        },\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-language-perl-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"0dd28dfb8f88acb1a05503955700cea9db715a574324224efc49bf24bbbafc7e\"\n        },\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-language-python-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"f7f9e950bd3ad3a2a8439ed0d49e635fd135160bc40e4889988bbc7e6e817d1e\"\n        },\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-language-ruby-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"c61b4253e95365d84a799730d8d47e5cad37de2b65a1a8f24cc0b5d552e6d75d\"\n        },\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-language-rust-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"ceb9835c9aa9fb2db6e6d4c540e68831807281ecbc4577df2bd44870b568a56b\"\n        },\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-managed-dotnet-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"852f8bb29e0150344522b0d7232d788841402b78e3fce141d7ac24d92d765326\"\n        },\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-managed-jvm-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"36e775bbd30565711a2cdf9569d28cb076ddaa0776ed7d8028253b17ef19ad94\"\n        },\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-wit-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"2109bdedca05b894c12ebf0b98a58de298cfec19f8c7ab8b41f2b676acf18747\"\n        },\n        {\n          \"path\": \"hosted-direct-proof-erasure-complete/direct-proof-erasure-matrix-09ca211fec5fcebfd47747cd55485781adf93974.zip\",\n          \"sha256\": \"e7fee36eab87a965643311cb0e76a2f96b43926d777fbae073f106dc83ef557f\"\n        }\n      ]\n",
+          "previous": "",
+          "start": 89710179
+        },
+        {
+          "current": "    },\n    {\n      \"id\": \"direct-proof-erasure-complete-ordinary-source-hosted-installed\",\n      \"profiles\": [\n        \"node-javascript\",\n        \"node-typescript\",\n        \"browser-javascript\",\n        \"browser-react\",\n        \"browser-worker\",\n        \"c\",\n        \"cpp\",\n        \"php-native\",\n        \"php-wasm\",\n        \"perl\",\n        \"python\",\n        \"ruby\",\n        \"rust\",\n        \"dotnet\",\n        \"java\",\n        \"kotlin\",\n        \"wit-wasi\"\n      ],\n      \"shapes\": [\n        \"proof\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\",\n        \"field\",\n        \"callback-parameter\",\n        \"callback-result\",\n        \"signature\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Compiler-authenticated Lean source packages erase every proof-only runtime position while retaining theorem provenance and runtime checks.\",\n      \"hostTypes\": {\n        \"proof\": {\n          \"parameter\": \"erased; no host argument\",\n          \"result\": \"no runtime result; a proof-valued export is refused\",\n          \"field\": \"erased; no host field\",\n          \"callback-parameter\": \"erased; no host callback argument\",\n          \"callback-result\": \"erased; no host callback result\",\n          \"signature\": \"proof-free public signature\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-direct-proof-erasure-complete\"\n          ],\n          \"note\": \"Fresh Lean metadata identifies proof-only binders, fields, results and declarations from elaborated types while retaining theorem identity and assumptions.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-direct-proof-erasure-complete\"\n          ],\n          \"note\": \"Generated public APIs omit proof storage and proof arguments; they do not substitute null, Unit, a default value or fabricated evidence.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-direct-proof-erasure-complete\"\n          ],\n          \"note\": \"Compiled packages retain every runtime payload and refinement check while proof-only values have no ABI slot or allocation.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-direct-proof-erasure-complete\"\n          ],\n          \"note\": \"Both author routes produce receipt-closed prepared packages that install offline, relocate and replay after author and build removal.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-direct-proof-erasure-complete\"\n          ],\n          \"note\": \"Installed consumers exercise direct proof parameters and proof-free signatures, retained field and callback positions, and the fail-closed refusal of proof-valued exports.\"\n        }\n      },\n      \"limitations\": [\n        \"The ten same-run producer artifacts establish ordinary and independently reviewed installed proof-parameter erasure and proof-free public signatures for all seventeen supported consumer profiles.\",\n        \"The retained audit supplies the 102 previously authenticated field and callback cells; this archive supplies 68 direct installed cells and the fresh Lean refusal supplies 34 proof-valued result cells.\",\n        \"The eleventh same-run artifact retains and independently reconstructs the exact twenty-record aggregate receipt; every artifact retains its original ZIP, API identities and job log plus exact producer, checker and archiver source closures.\",\n        \"External runtimes, compilers, package managers, browsers, GitHub Actions and operating systems remain trusted recorded inputs. This archive establishes exactly the 204-cell closure ledger and no broader support claim.\"\n      ],\n      \"conversionNotes\": {\n        \"proof\": \"Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs.\"\n      }\n    },\n    {\n      \"id\": \"direct-proof-erasure-complete-reviewed-ir-hosted-installed\",\n      \"profiles\": [\n        \"node-javascript\",\n        \"node-typescript\",\n        \"browser-javascript\",\n        \"browser-react\",\n        \"browser-worker\",\n        \"c\",\n        \"cpp\",\n        \"php-native\",\n        \"php-wasm\",\n        \"perl\",\n        \"python\",\n        \"ruby\",\n        \"rust\",\n        \"dotnet\",\n        \"java\",\n        \"kotlin\",\n        \"wit-wasi\"\n      ],\n      \"shapes\": [\n        \"proof\"\n      ],\n      \"positions\": [\n        \"parameter\",\n        \"result\",\n        \"field\",\n        \"callback-parameter\",\n        \"callback-result\",\n        \"signature\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Independently reviewed Binding IR packages erase every proof-only runtime position while retaining theorem provenance and runtime checks.\",\n      \"hostTypes\": {\n        \"proof\": {\n          \"parameter\": \"erased; no host argument\",\n          \"result\": \"no runtime result; a proof-valued export is refused\",\n          \"field\": \"erased; no host field\",\n          \"callback-parameter\": \"erased; no host callback argument\",\n          \"callback-result\": \"erased; no host callback result\",\n          \"signature\": \"proof-free public signature\"\n        }\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-direct-proof-erasure-complete\"\n          ],\n          \"note\": \"Fresh Lean metadata identifies proof-only binders, fields, results and declarations from elaborated types while retaining theorem identity and assumptions.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-direct-proof-erasure-complete\"\n          ],\n          \"note\": \"Generated public APIs omit proof storage and proof arguments; they do not substitute null, Unit, a default value or fabricated evidence.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-direct-proof-erasure-complete\"\n          ],\n          \"note\": \"Compiled packages retain every runtime payload and refinement check while proof-only values have no ABI slot or allocation.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-direct-proof-erasure-complete\"\n          ],\n          \"note\": \"Both author routes produce receipt-closed prepared packages that install offline, relocate and replay after author and build removal.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"hosted-direct-proof-erasure-complete\"\n          ],\n          \"note\": \"Installed consumers exercise direct proof parameters and proof-free signatures, retained field and callback positions, and the fail-closed refusal of proof-valued exports.\"\n        }\n      },\n      \"limitations\": [\n        \"The ten same-run producer artifacts establish ordinary and independently reviewed installed proof-parameter erasure and proof-free public signatures for all seventeen supported consumer profiles.\",\n        \"The retained audit supplies the 102 previously authenticated field and callback cells; this archive supplies 68 direct installed cells and the fresh Lean refusal supplies 34 proof-valued result cells.\",\n        \"The eleventh same-run artifact retains and independently reconstructs the exact twenty-record aggregate receipt; every artifact retains its original ZIP, API identities and job log plus exact producer, checker and archiver source closures.\",\n        \"External runtimes, compilers, package managers, browsers, GitHub Actions and operating systems remain trusted recorded inputs. This archive establishes exactly the 204-cell closure ledger and no broader support claim.\"\n      ],\n      \"conversionNotes\": {\n        \"proof\": \"Proof-only parameters, fields and synchronous callback positions consume no host storage; public signatures omit them, and proof-valued exports are rejected rather than represented by null, Unit, defaults or fabricated proofs.\"\n      }\n",
+          "previous": "",
+          "start": 102851095
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "dfb4e1240352821e36be5e32689e17770c91a9d2b3604607ccba174bed480432"
+    }
+  ]
+}

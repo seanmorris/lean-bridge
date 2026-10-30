@@ -4,16 +4,23 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import test from "node:test";
 import {
 	directProofErasureCompleteDocumentationPaths
 	, renderDirectProofErasureCompleteDocumentation
 } from "./direct-proof-erasure-complete-documentation.mjs";
+import { directProofErasureCompletePromotionPredecessor }
+	from "./direct-proof-erasure-complete-promotion-source-history.mjs";
 
-const readSource = async ([name, path]) => [name, await readFile(path, "utf8")];
-const sources = Object.fromEntries(await Promise.all(Object.entries(
-	directProofErasureCompleteDocumentationPaths).map(readSource)));
+const readSource = ([name, path]) => [
+	name
+	, execFileSync("git", ["show"
+		, `${directProofErasureCompletePromotionPredecessor}:${path}`]
+	, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 })
+];
+const sources = Object.fromEntries(Object.entries(
+	directProofErasureCompleteDocumentationPaths).map(readSource));
 
 test("complete direct proof-erasure docs state the exact runtime boundary", () => {
 	const rendered = renderDirectProofErasureCompleteDocumentation(sources);
