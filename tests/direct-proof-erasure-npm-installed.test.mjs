@@ -12,6 +12,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
@@ -87,7 +88,7 @@ for(const route of routes) test(
 			});
 			const before = await lakeInputState(prepared.projectRoot);
 			const outputRoot = join(prepared.directory, "release");
-			const built = await buildCanonicalProject({
+			await buildCanonicalProject({
 				projectRoot: prepared.projectRoot, outputRoot, engineRoot
 				, environment, targets: ["npm"]
 			}).catch(error => {
@@ -104,8 +105,12 @@ for(const route of routes) test(
 				receiptPath: join(release.output, "component-package-receipt.json")
 			});
 			assert.deepEqual(await lakeInputState(prepared.projectRoot), before);
+			const bindingIrBytes = await readFile(join(
+				bundleRoot, "binding/binding-ir.json"));
+			const bindingIr = JSON.parse(bindingIrBytes);
+			assert.equal(release.report.bindingIrSha256, hashBindingIr(bindingIr));
 			const fact = {
-				...bundle, bindingIrSha256: built.bindingIrSha256
+				...bundle, bindingIrSha256: release.report.bindingIrSha256
 				, componentArchiveSha256: sha256(await readFile(release.componentArchive))
 				, runtimeArchiveSha256: sha256(await readFile(release.runtimeArchive))
 				, receiptSha256: sha256(await readFile(
@@ -119,7 +124,8 @@ for(const route of routes) test(
 				, ["LeanBridgeGenerated.lean", "generated/LeanBridgeGenerated.lean"]
 				, ["provenance.json", "metadata/provenance.json"]
 			]) await saveLakeFile(records, `build-${attempt}/${name}`
-				, await readFile(join(bundleRoot, path)));
+				, name === "binding-ir.json" ? bindingIrBytes
+					: await readFile(join(bundleRoot, path)));
 			await saveLakeFile(records, `build-${attempt}/component-package-receipt.json`
 				, await readFile(join(release.output, "component-package-receipt.json")));
 			await saveLakeFile(records, `build-${attempt}/configuration.json`

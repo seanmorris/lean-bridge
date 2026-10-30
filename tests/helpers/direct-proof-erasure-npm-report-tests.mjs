@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
 	assertDirectProofErasureNpmDeclarationSurface
+	, validateDirectProofErasureNpmBuildFact
 } from "./direct-proof-erasure-npm-report.mjs";
 
 const declaration = parameter => `// The proof arguments are compiler-owned.
@@ -40,4 +41,24 @@ test("proof-erasure declarations reject wrong route binders", () => {
 		declaration("value"), "arg0"));
 	assert.throws(() => assertDirectProofErasureNpmDeclarationSurface(
 		declaration("arg0"), "value"));
+});
+
+test("proof-erasure npm build facts require the semantic IR identity", () => {
+	const digest = "a".repeat(64);
+	const fact = {
+		bindingIrFileSha256: digest, bindingIrSha256: digest
+		, compilerAdaptersSha256: digest, componentArchiveSha256: digest
+		, erasedProofs: 2, generatedLeanSha256: digest
+		, receiptSha256: digest, runtimeArchiveSha256: digest
+		, runtimeParameters: 1
+	};
+	assert.equal(validateDirectProofErasureNpmBuildFact(
+		Object.fromEntries(Object.entries(fact).reverse())), true);
+	for(const altered of [
+		Object.fromEntries(Object.entries(fact)
+			.filter(([key]) => key !== "bindingIrSha256"))
+		, { ...fact, unexpected: true }
+		, { ...fact, bindingIrSha256: "0" }
+		, { ...fact, erasedProofs: 1 }
+	]) assert.throws(() => validateDirectProofErasureNpmBuildFact(altered));
 });

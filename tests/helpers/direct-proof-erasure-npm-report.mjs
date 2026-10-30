@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import ts from "typescript";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validateCompilerAdapterPlan } from "../../src/build/compiler-adapters.mjs";
 import { validateComponentBuildPlan } from "../../src/build/component-plan.mjs";
 import {
@@ -35,6 +36,23 @@ const factKeys = [
 	, "componentArchiveSha256", "erasedProofs", "generatedLeanSha256"
 	, "receiptSha256", "runtimeArchiveSha256", "runtimeParameters"
 ];
+
+/**
+ * Validate one exact npm build fact without depending on property insertion
+ * order.
+ *
+ * @param fact - Retained build identity and proof-erasure counts.
+ */
+export const validateDirectProofErasureNpmBuildFact = fact => {
+	assert.ok(fact !== null && typeof fact === "object"
+		&& !Array.isArray(fact));
+	assert.deepEqual(Object.keys(fact).sort(), [...factKeys].sort());
+	for(const key of factKeys.filter(key => key.endsWith("Sha256")))
+		digest(fact[key]);
+	assert.equal(fact.runtimeParameters, 1);
+	assert.equal(fact.erasedProofs, 2);
+	return true;
+};
 
 /**
  * Require the exact proof-free declaration syntax while allowing documentation
@@ -100,13 +118,7 @@ export const validateDirectProofErasureNpmReport = (report, {
 	assert.equal(report.builds.length, 2);
 	assert.deepEqual(report.builds[1], report.builds[0]);
 	for(const fact of report.builds)
-	{
-		assert.deepEqual(Object.keys(fact).sort(), factKeys);
-		for(const key of factKeys.filter(key => key.endsWith("Sha256")))
-			digest(fact[key]);
-		assert.equal(fact.runtimeParameters, 1);
-		assert.equal(fact.erasedProofs, 2);
-	}
+		validateDirectProofErasureNpmBuildFact(fact);
 	validateComponentPackageReceipt(report.receipt);
 	assert.equal(report.receipt.package.package, "direct-proof-erasure@1.0.0");
 	assert.equal(report.receipt.bindingIrSha256, report.builds[0].bindingIrSha256);
@@ -209,6 +221,7 @@ export const checkDirectProofErasureNpmRecords = async (read, options) => {
 		assert.doesNotMatch(lean, /(?:sorry|unsafeCast|\baxiom\b)/u);
 		const fact = report.builds[attempt];
 		assert.equal(fact.bindingIrFileSha256, sha256(irBytes));
+		assert.equal(fact.bindingIrSha256, hashBindingIr(ir));
 		assert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));
 		assert.equal(fact.generatedLeanSha256
 			, sha256(await read(prefix + "LeanBridgeGenerated.lean")));
