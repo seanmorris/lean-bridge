@@ -28,6 +28,7 @@ import {
 	, directProofErasureHostedEvidenceDirectory
 	, directProofErasureHostedInputs
 	, directProofErasureHostedLanes
+	, directProofErasureHostedMatrixLane
 	, directProofErasureHostedOriginal
 	, directProofErasureHostedProducer
 	, directProofErasureHostedReceipt
@@ -141,7 +142,8 @@ try
 				assert.equal(verified.toString(), canonicalJson(result.result)
 					, `${lane.key}:${route}:verified`);
 				const resultPath = directProofErasureMatrixResultPath(
-					lane, matrixRoute, directProofErasureHostedProducer);
+					directProofErasureHostedMatrixLane(lane), matrixRoute
+					, directProofErasureHostedProducer);
 				assert.ok(!summaries.has(resultPath), resultPath);
 				summaries.set(resultPath, verified);
 				const tap = await readFile(join(prefix, "run.tap"));

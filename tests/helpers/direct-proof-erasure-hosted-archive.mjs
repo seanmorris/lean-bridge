@@ -143,6 +143,19 @@ export const directProofErasureHostedLanes = Object.freeze(
 );
 
 /**
+ * Recover the canonical matrix-lane identity from its hosted wrapper.
+ *
+ * @param lane - Closed hosted lane.
+ */
+export const directProofErasureHostedMatrixLane = lane => {
+	assert.ok(directProofErasureHostedLanes.includes(lane));
+	const matches = directProofErasureMatrixLanes.filter(item =>
+		item.key === lane.key);
+	assert.equal(matches.length, 1, lane.key);
+	return matches[0];
+};
+
+/**
  * Parse the one canonical input root holding ten lanes and one refusal.
  *
  * @param args - Command arguments after the script name.

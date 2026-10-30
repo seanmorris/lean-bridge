@@ -10,6 +10,7 @@ import {
 	assertDirectProofErasureHostedReceiptSteps
 	, assertDirectProofErasureHostedSteps
 	, directProofErasureHostedLanes
+	, directProofErasureHostedMatrixLane
 	, directProofErasureHostedProducer
 	, directProofErasureHostedReceipt
 	, directProofErasureHostedRefusal
@@ -17,6 +18,9 @@ import {
 	, directProofErasureHostedSources
 	, parseDirectProofErasureHostedArchiveArgs
 } from "./direct-proof-erasure-hosted-archive.mjs";
+import {
+	directProofErasureMatrixLanes
+} from "./direct-proof-erasure-matrix.mjs";
 import {
 	directProofErasureFocusedWorkflow
 } from "./direct-proof-erasure-matrix-receipt.mjs";
@@ -33,6 +37,10 @@ test("hosted proof-erasure capture closes ten lanes and seventeen profiles", () 
 		lane => lane.job)).size, 10);
 	for(const lane of directProofErasureHostedLanes)
 	{
+		const matrixLane = directProofErasureHostedMatrixLane(lane);
+		assert.ok(directProofErasureMatrixLanes.includes(matrixLane));
+		assert.notEqual(matrixLane, lane);
+		assert.equal(matrixLane.key, lane.key);
 		assert.equal(lane.runId, directProofErasureHostedRunId);
 		assert.equal(lane.producerCommit, directProofErasureHostedProducer);
 		assert.deepEqual(Object.keys(lane.steps).sort()
@@ -43,6 +51,9 @@ test("hosted proof-erasure capture closes ten lanes and seventeen profiles", () 
 		assert.match(lane.producerWorkflow
 			, /^\.github\/workflows\/[a-z0-9-]+\.yml$/u);
 	}
+	assert.throws(() => directProofErasureHostedMatrixLane({
+		...directProofErasureHostedLanes[0]
+	}));
 	assert.deepEqual(directProofErasureHostedReceipt, {
 		id: "matrix", artifactPrefix: "direct-proof-erasure-matrix"
 		, jobName: "Reconcile the exact same-run receipt"
