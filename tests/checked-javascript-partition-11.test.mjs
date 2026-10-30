@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
+import "./helpers/direct-proof-erasure-php-receipt-identity-repair-source-history-tests.mjs";
 import "./helpers/proof-erasure-partition-audit-repair-source-history-tests.mjs";
 import "./helpers/optional-parameter-pin-test-milestone-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-npm-route-binder-repair-source-history-tests.mjs";

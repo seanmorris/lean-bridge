@@ -1,0 +1,101 @@
+{
+  "failedJobId": 123853047291,
+  "failureCode": "ERR_ASSERTION",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-php-receipt-identity-repair-source-history.mjs",
+      "sha256": "c0c8c7666e4084d7b9cf170f0d754ec1c37b7a65fd3c59e78b7426495306ba52"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-php-receipt-identity-repair-source-history-tests.mjs",
+      "sha256": "a1b674b8600dcafdd911c6e4f61477384b5393493dd7f4a4fe63ff4327f20ca8"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-php-receipt-identity-repair-source-history.mjs",
+      "sha256": "43384593251bb0de8c1998702ec831857ab9dd71da669a6871079f59d6c5c990"
+    }
+  ],
+  "hostedRunId": 40986444238,
+  "implementationCommit": "4cc1370b57abfe3869da72e5c65e8aab23d89da1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a088d6e51881f2e6e1a2ad91bdbce79d6c94b828caa963df6e1000f0780f7b39",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-php-receipt-identity-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "bee80005c18dd0bc0020fe6a972495883836380bd76cec2e21ccaced43377df9"
+    },
+    {
+      "currentSha256": "bd4764a1e8fc176c9894d8a28ee63ba891ecd4e3d58dc01081b648f88eaa5076",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasurePhpReceiptIdentityRepairSource, directProofErasurePhpReceiptIdentityRepairNormalizationPaths } from \"./direct-proof-erasure-php-receipt-identity-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasurePhpReceiptIdentityRepairNormalizationPaths\n\t, ...proofErasurePartitionAuditRepairNormalizationPaths\n",
+          "previous": "\t...proofErasurePartitionAuditRepairNormalizationPaths\n",
+          "start": 224519
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasurePhpReceiptIdentityRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeProofErasurePartitionAuditRepairSource(\n",
+          "previous": "\tlet stage = beforeProofErasurePartitionAuditRepairSource(\n",
+          "start": 281380
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e665ab25dfc55be6fb6b654d549aecc37ca06d3536c4b1c734c6bddd632cfc6c"
+    }
+  ],
+  "milestone": "direct-proof-erasure-php-receipt-identity-repair-source-v1",
+  "predecessorCommit": "2afde2c25a6b2ded4cc5c198e01e8a28114a9baf",
+  "schemaVersion": 1,
+  "scope": "Verify native component receipts in the Lean declaration domain and PHP-Wasm copied-component receipts in the Binding IR domain, without accepting an ambiguous fallback name.",
+  "updates": [
+    {
+      "currentSha256": "7ed8926c33eaf1910c657c4a27c62958bb451bd13e096f442f58c20a9ac7f526",
+      "edits": [
+        {
+          "current": "\t, directProofErasureExport\n",
+          "previous": "",
+          "start": 531
+        },
+        {
+          "current": "\tdirectProofErasureReceiptDeclaration, directProofErasureTargetConfiguration\n\t, prepareDirectProofErasureProject\n",
+          "previous": "\tdirectProofErasureTargetConfiguration, prepareDirectProofErasureProject\n",
+          "start": 790
+        },
+        {
+          "current": "test(\"native and PHP-Wasm receipts retain their exact declaration domains\", () => {\n\tassert.equal(directProofErasureReceiptDeclaration(\"native-library-v1\")\n\t\t, directProofErasureExport);\n\tassert.equal(directProofErasureReceiptDeclaration(\"php-wasm-copied-v1\")\n\t\t, `lean:${directProofErasureExport}`);\n\tassert.throws(() => directProofErasureReceiptDeclaration(\"unknown\"));\n});\n\n",
+          "previous": "",
+          "start": 4466
+        }
+      ],
+      "path": "tests/direct-proof-erasure.test.mjs",
+      "previousSha256": "4522ae36c8723d8c660b7801659dd5d1933808a8b920a64fdb257854b7c72110"
+    },
+    {
+      "currentSha256": "b0421ed2dd8d2c7b120de7ebdcac5acc6f2ad4700e69e47b60a0fb3e4bc44970",
+      "edits": [
+        {
+          "current": "/**\n * Resolve the exact export identity owned by each compiled component receipt.\n *\n * @param profile - Native or PHP-Wasm compiled component profile.\n */\nexport const directProofErasureReceiptDeclaration = profile => {\n\tassert.ok([\"native-library-v1\", \"php-wasm-copied-v1\"].includes(profile));\n\treturn profile === \"native-library-v1\" ? directProofErasureExport\n\t\t: `lean:${directProofErasureExport}`;\n};\n\n",
+          "previous": "",
+          "start": 6497
+        },
+        {
+          "current": "\tassert.equal(receipt.exports[0].declaration\n\t\t, directProofErasureReceiptDeclaration(profile));\n",
+          "previous": "\tassert.ok([receipt.exports[0].declaration, receipt.exports[0].name]\n\t\t.includes(directProofErasureExport));\n",
+          "start": 8221
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-packages.mjs",
+      "previousSha256": "44a94be4efd6366605622b88115c4bfdc558acbb34d21ae2b4633fa6cc004d41"
+    }
+  ]
+}
