@@ -1,0 +1,387 @@
+{
+  "kind": "direct-proof-erasure-installed-matrix-v1",
+  "matrix": {
+    "cells": 34,
+    "lanes": 10,
+    "profiles": 17,
+    "routes": 2
+  },
+  "records": [
+    {
+      "artifact": "direct-proof-erasure-node-browser-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 305,
+      "lane": "npm",
+      "path": "direct-proof-erasure-node-browser-09ca211fec5fcebfd47747cd55485781adf93974/ordinary/verified.json",
+      "result": {
+        "browserProfiles": 3,
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profiles": [
+          "node-javascript",
+          "node-typescript",
+          "browser-javascript",
+          "browser-react",
+          "browser-worker"
+        ],
+        "rejections": 4,
+        "route": "ordinary"
+      },
+      "route": "ordinary",
+      "sha256": "4a93bc256818dec0d5b9444053c22da7bc94a0872064ecd63b0d6d98a234d022"
+    },
+    {
+      "artifact": "direct-proof-erasure-node-browser-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 305,
+      "lane": "npm",
+      "path": "direct-proof-erasure-node-browser-09ca211fec5fcebfd47747cd55485781adf93974/reviewed/verified.json",
+      "result": {
+        "browserProfiles": 3,
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profiles": [
+          "node-javascript",
+          "node-typescript",
+          "browser-javascript",
+          "browser-react",
+          "browser-worker"
+        ],
+        "rejections": 4,
+        "route": "reviewed"
+      },
+      "route": "reviewed",
+      "sha256": "2e1b5c48f42f6c39ce25fbedc4e1498a4a209491b7412e8552a56bfa498f66bd"
+    },
+    {
+      "artifact": "direct-proof-erasure-native-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 198,
+      "lane": "native",
+      "path": "direct-proof-erasure-native-09ca211fec5fcebfd47747cd55485781adf93974/ordinary/verified.json",
+      "result": {
+        "checks": 2010,
+        "executions": 4,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profiles": [
+          "c",
+          "cpp"
+        ],
+        "rejectedProofArguments": 2,
+        "route": "ordinary"
+      },
+      "route": "ordinary",
+      "sha256": "50f5c26758368273710451833c452d7bd300d7e49ec4eb5ba8d48441aa239c83"
+    },
+    {
+      "artifact": "direct-proof-erasure-native-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 198,
+      "lane": "native",
+      "path": "direct-proof-erasure-native-09ca211fec5fcebfd47747cd55485781adf93974/reviewed/verified.json",
+      "result": {
+        "checks": 2010,
+        "executions": 4,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profiles": [
+          "c",
+          "cpp"
+        ],
+        "rejectedProofArguments": 2,
+        "route": "reviewed"
+      },
+      "route": "reviewed",
+      "sha256": "65cfad5f5497999952106da300b40e8020852f431a650a628d8b2143ef56d4be"
+    },
+    {
+      "artifact": "direct-proof-erasure-php-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 214,
+      "lane": "php",
+      "path": "direct-proof-erasure-php-09ca211fec5fcebfd47747cd55485781adf93974/ordinary/verified.json",
+      "result": {
+        "checks": 2010,
+        "executions": 16,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profiles": [
+          "php-native",
+          "php-wasm"
+        ],
+        "rejectedProofArguments": 28,
+        "route": "ordinary"
+      },
+      "route": "ordinary",
+      "sha256": "3193f7f827c184ca593187ebd55875e0fa2f0bb39cf7b3ed84fb836dd91002e0"
+    },
+    {
+      "artifact": "direct-proof-erasure-php-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 214,
+      "lane": "php",
+      "path": "direct-proof-erasure-php-09ca211fec5fcebfd47747cd55485781adf93974/reviewed/verified.json",
+      "result": {
+        "checks": 2010,
+        "executions": 16,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profiles": [
+          "php-native",
+          "php-wasm"
+        ],
+        "rejectedProofArguments": 28,
+        "route": "reviewed"
+      },
+      "route": "reviewed",
+      "sha256": "8d5e7e1614f73bca9589c3d7055f219179f7080ef5b332ffb267272ca9acfc45"
+    },
+    {
+      "artifact": "direct-proof-erasure-language-perl-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 179,
+      "lane": "language-perl",
+      "path": "direct-proof-erasure-language-perl-09ca211fec5fcebfd47747cd55485781adf93974/ordinary/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profile": "perl",
+        "rejectedProofArguments": 1,
+        "route": "ordinary"
+      },
+      "route": "ordinary",
+      "sha256": "45c0aa08f9fa29aaa67431680d725e7b63c362ca7f7adc283edc72e024b2b809"
+    },
+    {
+      "artifact": "direct-proof-erasure-language-perl-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 179,
+      "lane": "language-perl",
+      "path": "direct-proof-erasure-language-perl-09ca211fec5fcebfd47747cd55485781adf93974/reviewed/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profile": "perl",
+        "rejectedProofArguments": 1,
+        "route": "reviewed"
+      },
+      "route": "reviewed",
+      "sha256": "70a4744b065ac06ae20ead1f196bec5ff709c0af74b105959d068f9a4c0d39cb"
+    },
+    {
+      "artifact": "direct-proof-erasure-language-python-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 181,
+      "lane": "language-python",
+      "path": "direct-proof-erasure-language-python-09ca211fec5fcebfd47747cd55485781adf93974/ordinary/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profile": "python",
+        "rejectedProofArguments": 1,
+        "route": "ordinary"
+      },
+      "route": "ordinary",
+      "sha256": "aa609c43ec5ba91d3584495e2e4aa5334b31e6dab8057e6cc2c5622a3bbecce1"
+    },
+    {
+      "artifact": "direct-proof-erasure-language-python-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 181,
+      "lane": "language-python",
+      "path": "direct-proof-erasure-language-python-09ca211fec5fcebfd47747cd55485781adf93974/reviewed/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profile": "python",
+        "rejectedProofArguments": 1,
+        "route": "reviewed"
+      },
+      "route": "reviewed",
+      "sha256": "664ab89e444ec340aaabae68d06634091c02ed7b5c28981f33c9ba1f86cd1105"
+    },
+    {
+      "artifact": "direct-proof-erasure-language-ruby-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 179,
+      "lane": "language-ruby",
+      "path": "direct-proof-erasure-language-ruby-09ca211fec5fcebfd47747cd55485781adf93974/ordinary/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profile": "ruby",
+        "rejectedProofArguments": 1,
+        "route": "ordinary"
+      },
+      "route": "ordinary",
+      "sha256": "1fd91812c5eb3c64c8dacb1968b4211b9676149c86c6a0ad72068d05685326c3"
+    },
+    {
+      "artifact": "direct-proof-erasure-language-ruby-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 179,
+      "lane": "language-ruby",
+      "path": "direct-proof-erasure-language-ruby-09ca211fec5fcebfd47747cd55485781adf93974/reviewed/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profile": "ruby",
+        "rejectedProofArguments": 1,
+        "route": "reviewed"
+      },
+      "route": "reviewed",
+      "sha256": "d971b9034758fa2788611802d617a188271d8eaf461ee023f89af3127e4b39ab"
+    },
+    {
+      "artifact": "direct-proof-erasure-language-rust-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 179,
+      "lane": "language-rust",
+      "path": "direct-proof-erasure-language-rust-09ca211fec5fcebfd47747cd55485781adf93974/ordinary/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profile": "rust",
+        "rejectedProofArguments": 1,
+        "route": "ordinary"
+      },
+      "route": "ordinary",
+      "sha256": "7c9f0c859fb0902fa071daae4c81e3b1c84f5d23852b1e98e95e1561a889d114"
+    },
+    {
+      "artifact": "direct-proof-erasure-language-rust-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 179,
+      "lane": "language-rust",
+      "path": "direct-proof-erasure-language-rust-09ca211fec5fcebfd47747cd55485781adf93974/reviewed/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profile": "rust",
+        "rejectedProofArguments": 1,
+        "route": "reviewed"
+      },
+      "route": "reviewed",
+      "sha256": "13343bd9b68873f755d96a0b1b4da920d085b658ac492faa7deea53464f6e258"
+    },
+    {
+      "artifact": "direct-proof-erasure-managed-dotnet-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 213,
+      "lane": "managed-dotnet",
+      "path": "direct-proof-erasure-managed-dotnet-09ca211fec5fcebfd47747cd55485781adf93974/ordinary/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "group": "dotnet",
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profiles": [
+          "dotnet"
+        ],
+        "rejectedProofArguments": 1,
+        "route": "ordinary"
+      },
+      "route": "ordinary",
+      "sha256": "fc63a3c3bbaa29656c5cd19251f7aead819b52981c64959c9d667e59f322f54c"
+    },
+    {
+      "artifact": "direct-proof-erasure-managed-dotnet-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 213,
+      "lane": "managed-dotnet",
+      "path": "direct-proof-erasure-managed-dotnet-09ca211fec5fcebfd47747cd55485781adf93974/reviewed/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "group": "dotnet",
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profiles": [
+          "dotnet"
+        ],
+        "rejectedProofArguments": 1,
+        "route": "reviewed"
+      },
+      "route": "reviewed",
+      "sha256": "2816057bcfd1ed037bd4a3f4c7894fcfaa441372738b890b9ac6abe10b80bd0a"
+    },
+    {
+      "artifact": "direct-proof-erasure-managed-jvm-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 222,
+      "lane": "managed-jvm",
+      "path": "direct-proof-erasure-managed-jvm-09ca211fec5fcebfd47747cd55485781adf93974/ordinary/verified.json",
+      "result": {
+        "checks": 2010,
+        "executions": 4,
+        "group": "jvm",
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profiles": [
+          "java",
+          "kotlin"
+        ],
+        "rejectedProofArguments": 2,
+        "route": "ordinary"
+      },
+      "route": "ordinary",
+      "sha256": "ce3c8387ea68c5866aee473c7fbd2617e96935bb72f7232ec3dc0ff5a7175462"
+    },
+    {
+      "artifact": "direct-proof-erasure-managed-jvm-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 222,
+      "lane": "managed-jvm",
+      "path": "direct-proof-erasure-managed-jvm-09ca211fec5fcebfd47747cd55485781adf93974/reviewed/verified.json",
+      "result": {
+        "checks": 2010,
+        "executions": 4,
+        "group": "jvm",
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profiles": [
+          "java",
+          "kotlin"
+        ],
+        "rejectedProofArguments": 2,
+        "route": "reviewed"
+      },
+      "route": "reviewed",
+      "sha256": "db0a4b62b914c7e9dd6b8448429865c1ed0bf5c77fa8f1ca57b0b9ff653ae46c"
+    },
+    {
+      "artifact": "direct-proof-erasure-wit-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 183,
+      "lane": "wit",
+      "path": "direct-proof-erasure-wit-09ca211fec5fcebfd47747cd55485781adf93974/ordinary/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profile": "wit-wasi",
+        "rejectedProofArguments": 1,
+        "route": "ordinary"
+      },
+      "route": "ordinary",
+      "sha256": "21d74c7a7eef4e083d34557b05e8e7ac806cae271e0bb45e1a427932f233b560"
+    },
+    {
+      "artifact": "direct-proof-erasure-wit-09ca211fec5fcebfd47747cd55485781adf93974",
+      "bytes": 183,
+      "lane": "wit",
+      "path": "direct-proof-erasure-wit-09ca211fec5fcebfd47747cd55485781adf93974/reviewed/verified.json",
+      "result": {
+        "checks": 1005,
+        "executions": 2,
+        "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+        "profile": "wit-wasi",
+        "rejectedProofArguments": 1,
+        "route": "reviewed"
+      },
+      "route": "reviewed",
+      "sha256": "dec03ec372ad78f7bfa54df3f087ca0e1645b23ba8f4a60feafcadffae3eb1c7"
+    }
+  ],
+  "run": {
+    "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+    "repository": "seanmorris/lean-bridge",
+    "runAttempt": 1,
+    "runId": 41021643593,
+    "workflow": ".github/workflows/direct-proof-erasure-complete.yml"
+  },
+  "schemaVersion": 1,
+  "totals": {
+    "browserProfiles": 6,
+    "checks": 26130,
+    "executions": 76,
+    "rejectedProofArguments": 76,
+    "rejections": 8,
+    "reports": 20
+  }
+}

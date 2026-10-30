@@ -1,0 +1,516 @@
+name: Generic Subtypes in .NET, JVM, native PHP and WIT
+
+on:
+  workflow_call:
+    inputs:
+      optional_parameters:
+        description: Run the complete optional-parameter package matrix.
+        required: false
+        type: boolean
+        default: false
+      direct_proof_erasure:
+        description: Run direct proof-erasure package acceptance.
+        required: false
+        type: boolean
+        default: false
+      host_null:
+        description: Run complete explicit HostNull package acceptance.
+        required: false
+        type: boolean
+        default: false
+  workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 7 * * 2"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: generic-subtype-managed-wit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dotnet:
+    name: Generic Subtypes in .NET
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - name: Check out the focused package revision
+        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Check out the exact revision
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-dotnet-toolchain.log
+      - name: Install the isolated pinned .NET SDK
+        timeout-minutes: 20
+        uses: actions/setup-dotnet@v6
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}/lean-bridge-generic-subtype-dotnet-8.0.424
+        with:
+          dotnet-version: '8.0.424'
+      - name: Execute installed .NET acceptance
+        id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-dotnet-ci.sh "$RUNNER_TEMP/lean-bridge-generic-subtype-dotnet-8.0.424/dotnet"
+      - name: Preserve complete and partial .NET records
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-dotnet-${{ github.sha }}
+          path: |
+            build/generic-subtype-dotnet-ci/
+            build/generic-subtype-dotnet-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Execute optional parameters through the prepared .NET package
+        id: optional_parameters
+        if: inputs.optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-optional-parameter-managed-ci.sh dotnet
+      - name: Preserve optional-parameter .NET records
+        if: always() && inputs.optional_parameters
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-managed-dotnet-${{ github.sha }}
+          path: build/optional-parameter-managed-ci/dotnet/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter .NET acceptance
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in prepared managed packages
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-direct-proof-erasure-managed-ci.sh dotnet
+      - name: Preserve direct proof-erasure managed acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-managed-dotnet-${{ github.sha }}
+          path: build/direct-proof-erasure-managed-ci/dotnet/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce managed consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Qualify HostNull in prepared .NET packages
+        id: host_null
+        if: inputs.host_null
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-host-null-managed-ci.sh dotnet
+      - name: Preserve HostNull .NET acceptance
+        if: always() && inputs.host_null
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-managed-dotnet-${{ github.sha }}
+          path: build/host-null-managed-ci/dotnet/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce HostNull .NET support
+        if: always() && inputs.host_null && steps.host_null.outcome != 'success'
+        run: exit 1
+      - name: Enforce installed .NET acceptance
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}
+        run: exit 1
+
+  jvm:
+    name: Generic Subtypes in Java and Kotlin
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - name: Check out the focused package revision
+        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Check out the exact revision
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep unzip xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-jvm-toolchain.log
+      - name: Select Java 22
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22.0.2'
+      - name: Install the checksummed Kotlin 2.2.0 compiler
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
+      - name: Execute installed JVM acceptance
+        id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-jvm-ci.sh "$JAVA_HOME/bin/java" "$JAVA_HOME/bin/javac" "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+      - name: Preserve complete and partial JVM records
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-jvm-${{ github.sha }}
+          path: |
+            build/generic-subtype-jvm-ci/
+            build/generic-subtype-jvm-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Execute optional parameters through prepared Java and Kotlin packages
+        id: optional_parameters
+        if: inputs.optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-optional-parameter-managed-ci.sh jvm
+      - name: Preserve optional-parameter JVM records
+        if: always() && inputs.optional_parameters
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-managed-jvm-${{ github.sha }}
+          path: build/optional-parameter-managed-ci/jvm/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter JVM acceptance
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in prepared managed packages
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-direct-proof-erasure-managed-ci.sh jvm
+      - name: Preserve direct proof-erasure managed acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-managed-jvm-${{ github.sha }}
+          path: build/direct-proof-erasure-managed-ci/jvm/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce managed consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Qualify HostNull in prepared JVM packages
+        id: host_null
+        if: inputs.host_null
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-host-null-managed-ci.sh jvm
+      - name: Preserve HostNull JVM acceptance
+        if: always() && inputs.host_null
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-managed-jvm-${{ github.sha }}
+          path: build/host-null-managed-ci/jvm/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce HostNull JVM support
+        if: always() && inputs.host_null && steps.host_null.outcome != 'success'
+        run: exit 1
+      - name: Enforce installed JVM acceptance
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}
+        run: exit 1
+
+  php:
+    name: Generic Subtypes in native PHP
+    if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out the focused package revision
+        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Check out the exact revision
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler, PHP, Composer, and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake composer git jq libgmp-dev libuv1-dev m4 php-cli php-common php-dev php-mbstring php-zip pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-php-toolchain.log
+      - name: Execute installed native PHP acceptance
+        id: acceptance
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-php-ci.sh "$(command -v php)" "$(command -v composer)"
+      - name: Preserve complete and partial PHP records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-php-${{ github.sha }}
+          path: |
+            build/generic-subtype-php-ci/
+            build/generic-subtype-php-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed native PHP acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
+
+  wit:
+    name: Generic Subtypes in WIT and WASI components
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - name: Check out the focused package revision
+        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Check out the exact revision
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies, the pinned Lean compiler and wasm-tools
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-wit-toolchain.log
+          bash scripts/bootstrap-toolchains.sh --wasm-tools-only 2>&1 | tee -a build/generic-subtype-wit-toolchain.log
+      - name: Install the pinned Rust toolchain for systems HostNull acceptance
+        if: inputs.host_null
+        timeout-minutes: 20
+        run: bash scripts/bootstrap-rust-ci.sh
+      - name: Build the pinned Wasmtime C API
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          (
+            set -euo pipefail
+            test "$(uname -sm)" = 'Linux x86_64'
+            mkdir -p build
+            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
+            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)
+            trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT
+            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \
+              --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \
+              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'
+            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
+            mkdir "$WASMTIME_CAPI_STAGING/unpacked"
+            tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a"
+            mv -T "$WASMTIME_CAPI_STAGING/unpacked" build/wasmtime-c-api
+          )
+      - name: Execute installed WIT acceptance
+        id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-wit-ci.sh "/usr/bin/cc" "$PWD/.toolchains/wasm-tools/bin/wasm-tools" "$PWD/build/wasmtime-c-api"
+      - name: Preserve complete and partial WIT records
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-wit-${{ github.sha }}
+          path: |
+            build/generic-subtype-wit-ci/
+            build/generic-subtype-wit-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Execute optional parameters through the prepared WIT package
+        id: optional_parameters
+        if: inputs.optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+          source scripts/env.sh
+          bash scripts/run-optional-parameter-wit-ci.sh
+      - name: Preserve optional-parameter WIT records
+        if: always() && inputs.optional_parameters
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-wit-${{ github.sha }}
+          path: build/optional-parameter-wit-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter WIT acceptance
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in the prepared WIT package
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+          source scripts/env.sh
+          bash scripts/run-direct-proof-erasure-wit-ci.sh
+      - name: Preserve direct proof-erasure WIT acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-wit-${{ github.sha }}
+          path: build/direct-proof-erasure-wit-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce WIT and WASI support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Qualify HostNull in prepared systems packages
+        id: host_null
+        if: inputs.host_null
+        continue-on-error: true
+        timeout-minutes: 150
+        env:
+          LEAN_BRIDGE_WASMTIME_C_API: ${{ github.workspace }}/build/wasmtime-c-api
+          LEAN_BRIDGE_WASM_TOOLS: ${{ github.workspace }}/.toolchains/wasm-tools/bin/wasm-tools
+        run: bash scripts/run-host-null-systems-ci.sh
+      - name: Preserve systems HostNull acceptance
+        if: always() && inputs.host_null
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-systems-${{ github.sha }}
+          path: build/host-null-systems-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce systems HostNull support
+        if: always() && inputs.host_null && steps.host_null.outcome != 'success'
+        run: exit 1
+      - name: Enforce installed WIT acceptance
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}
+        run: exit 1

@@ -1,0 +1,115 @@
+{
+  "component": {
+    "id": "directprooferasure@1.0.0",
+    "name": "directprooferasure",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 76647,
+          "path": "profiles/php-wasm/packages/php-wasm/archives/example-directprooferasure-php-wasm-1.0.0-php-wasm.zip",
+          "sha256": "3bbe8c4352e71a4e2e7a430ad6de49d325e3c22d3949d6bfbe7b69e581b6fac8"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/directprooferasure-php-wasm",
+      "profile": "php-wasm-copied-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@example/directprooferasure-php-wasm",
+          "version": "1.0.0"
+        },
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+        }
+      ],
+      "role": "api",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+      "target": "php-wasm",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51340500,
+          "path": "profiles/native/archives/example-directprooferasure-1.0.0-linux-x86_64.zip",
+          "sha256": "dff3325bee0ad06afd76161cac5f224c97a6a0edade77aced3df7d3c109ab19e"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/directprooferasure",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 108540,
+          "path": "profiles/php-wasm/packages/php-wasm/archives/example-directprooferasure-php-wasm-1.0.0.tgz",
+          "sha256": "1863d80f1bf7e3b5aa192f101723869ef61edc56ba717611fc60c896fb8588ad"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@example/directprooferasure-php-wasm",
+      "profile": "php-wasm-copied-v1",
+      "requires": [
+        {
+          "ecosystem": "npm",
+          "name": "@lean-bridge/php-wasm-copied-runtime",
+          "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+      "target": "php-wasm",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1660981,
+          "path": "profiles/php-wasm/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57.tgz",
+          "sha256": "e16f404599084d863e58d3ae7a1a02cd27e0d375da7acb000361aa68d041f823"
+        }
+      ],
+      "ecosystem": "npm",
+      "name": "@lean-bridge/php-wasm-copied-runtime",
+      "profile": "php-wasm-copied-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+      "target": "php-wasm",
+      "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "15e991f95a98674628351d7bdd246ab24d6d47bee268abf3e00fc662678dbb1c",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    {
+      "bindingIrSha256": "15e991f95a98674628351d7bdd246ab24d6d47bee268abf3e00fc662678dbb1c",
+      "id": "php-wasm-copied-v1",
+      "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "04f583e0031796edab5efb0c586ec3b9f02c25cf72a00030dcea8badaa5cf94b"
+  }
+}

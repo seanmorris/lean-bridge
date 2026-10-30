@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "directprooferasure@1.0.0",
+    "name": "directprooferasure",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50070528,
+          "path": "archives/directprooferasure-1.0.0-x86_64-linux.gem",
+          "sha256": "a2ba87b7433ede7cab6cc2dbdfeaf92717eb4552b20bf3b2fcb2a895389655a8"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "directprooferasure",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "7c503bc5aa5741011532ed36f8cac57e1c41eda0ccf741bbd883a4bd97c4c47f",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "4dd7d1aa2cac56ef735600de14ce3c29de681a298df5b907a33402cb53d680e0"
+  }
+}

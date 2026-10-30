@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "directprooferasure@1.0.0",
+    "name": "directprooferasure",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51340823,
+          "path": "archives/directprooferasure-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+          "sha256": "79f485d65f1893dac9ff322cb4261f8c748d0bc9eb552d288808203785f4eb60"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "directprooferasure",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "pypi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "e53952998cbf99a1510890d040041b72e86d16275bc575fe5cf0c0c43c97dbed",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "6150d029b08a5fd92541bef2cca3d8cbc99abcf54779d1fd26bd104caa1db546"
+  }
+}

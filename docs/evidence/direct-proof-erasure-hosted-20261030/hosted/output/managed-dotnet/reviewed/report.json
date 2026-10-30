@@ -1,0 +1,119 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/DirectProofErasure.Api.1.0.0.nupkg": "68d0b887d02acce6e97557918f3b9089eebb47f33c6e6ee2b3b050819f2f57d3"
+      },
+      "artifactsSha256": "a5e4c05e60be01a460f5a11d0f51f810500cde1e651d84e14608e3fa1e1d06d5",
+      "bindingIrFileSha256": "4a75add1b6bd9df2140e6bfc232cfdf22b8dcc392cea154f1cd855bbfb877feb",
+      "bindingIrSha256": "2e8867b7937ccacef58aa671adf08a815002d8d409394a1327c64892e1ac4ff1",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "e70812b9d619991761f5d787837751a993612335422c5fb1d7ed3639a1e4a787",
+      "modelSha256": "7bc1f77753f6f26821dde5601308617efba5e95f101c667347407d7faa636862",
+      "nativeComponentReceiptSha256": "2acd969db09284eb948b7ec0571b9ad76816065d62efa3c225cf7fb7a65956ca",
+      "packageSetReceiptSha256": "21af82a7e6e95d8fb1b497430fc85375dd3d2564f47ab264b92a4c9f0c4e0579",
+      "runtimeParameters": 1
+    },
+    {
+      "archives": {
+        "archives/DirectProofErasure.Api.1.0.0.nupkg": "68d0b887d02acce6e97557918f3b9089eebb47f33c6e6ee2b3b050819f2f57d3"
+      },
+      "artifactsSha256": "a5e4c05e60be01a460f5a11d0f51f810500cde1e651d84e14608e3fa1e1d06d5",
+      "bindingIrFileSha256": "4a75add1b6bd9df2140e6bfc232cfdf22b8dcc392cea154f1cd855bbfb877feb",
+      "bindingIrSha256": "2e8867b7937ccacef58aa671adf08a815002d8d409394a1327c64892e1ac4ff1",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "e70812b9d619991761f5d787837751a993612335422c5fb1d7ed3639a1e4a787",
+      "modelSha256": "7bc1f77753f6f26821dde5601308617efba5e95f101c667347407d7faa636862",
+      "nativeComponentReceiptSha256": "2acd969db09284eb948b7ec0571b9ad76816065d62efa3c225cf7fb7a65956ca",
+      "packageSetReceiptSha256": "21af82a7e6e95d8fb1b497430fc85375dd3d2564f47ab264b92a4c9f0c4e0579",
+      "runtimeParameters": 1
+    }
+  ],
+  "compilerFreePath": true,
+  "group": "dotnet",
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "buildInputsSha256": "112c362f628b0d5211759b569c810684916a415c87488f9f8608b7f19737c3f2",
+      "cacheFilesSha256": "f4aea2fd850f72efe6ad1d475b723121d4dc8279d59d03f6eb8d7f36ec13fcd9",
+      "checks": 1005,
+      "compilerFreePath": true,
+      "consumerSha256": "bf6627ebf1cfb458a633e1fbef25f0639db9df822fa00feba77e282171990d16",
+      "deployedFilesSha256": "6ea51dfe39764171adbeb2da2ee67b093700162664f8193ccc45fa75baf61ff7",
+      "executions": [
+        {
+          "checks": 1005,
+          "relocated": false
+        },
+        {
+          "checks": 1005,
+          "relocated": true
+        }
+      ],
+      "interpreterSha256": "634efbf2414144d140d6f59d167342c8b3b53b4c34346ed786dd0470ddc9a3cb",
+      "negativeProofArgument": {
+        "diagnostic": "<suite>/negative-dotnet/consumer.cs(2,59): error CS1739: The best overload for 'Keep' does not have a parameter named '_before' [<suite>/negative-dotnet/Consumer.csproj]\n\nBuild FAILED.\n\n<suite>/negative-dotnet/consumer.cs(2,59): error CS1739: The best overload for 'Keep' does not have a parameter named '_before' [<suite>/negative-dotnet/Consumer.csproj]\n    0 Warning(s)\n    1 Error(s)\n\nTime Elapsed 00:00:01.51\n\n/home/runner/work/_temp/lean-bridge-generic-subtype-dotnet-8.0.424/dotnet exited with status 1: {\"command\":\"/home/runner/work/_temp/lean-bridge-generic-subtype-dotnet-8.0.424/dotnet\",\"args\":[\"build\",\"--no-restore\",\"--disable-build-servers\",\"-p:UseSharedCompilation=false\",\"-o\",\"out\",\"-noAutoResponse\",\"-p:ImportDirectoryBuildProps=false\",\"-p:ImportDirectoryBuildTargets=false\",\"-p:ImportDirectoryPackagesProps=false\",\"-p:MSBuildEnableWorkloadResolver=false\"],\"exitCode\":1,\"signal\":null,\"stderr\":\"\",\"stdout\":\"<suite>/negative-dotnet/consumer.cs(2,59): error CS1739: The best overload for 'Keep' does not have a parameter named '_before' [<suite>/negative-dotnet/Consumer.csproj]\\n\\nBuild FAILED.\\n\\n<suite>/negative-dotnet/consumer.cs(2,59): error CS1739: The best overload for 'Keep' does not have a parameter named '_before' [<suite>/negative-dotnet/Consumer.csproj]\\n    0 Warning(s)\\n    1 Error(s)\\n\\nTime Elapsed 00:00:01.51\\n\"}",
+        "rejected": true,
+        "relocated": false
+      },
+      "offlineInstall": true,
+      "packageFileSetSha256": "49f3cea182079b44d66ed7470683c896d189e04ed68c76c2823cdb98279d77a1",
+      "profile": "dotnet",
+      "proofSlots": 0,
+      "receiptSha256": "751fd9bbdd343d94371790e062a975c5a0ac492ed07367c6cad4f533db843952",
+      "runtimeParameters": 1
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+  "profiles": [
+    "dotnet"
+  ],
+  "receipt": {
+    "component": {
+      "id": "directprooferasure@1.0.0",
+      "name": "directprooferasure",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51347224,
+            "path": "archives/DirectProofErasure.Api.1.0.0.nupkg",
+            "sha256": "68d0b887d02acce6e97557918f3b9089eebb47f33c6e6ee2b3b050819f2f57d3"
+          }
+        ],
+        "ecosystem": "nuget",
+        "name": "DirectProofErasure.Api",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "nuget",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "2e8867b7937ccacef58aa671adf08a815002d8d409394a1327c64892e1ac4ff1",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "fb2cfa71208761442c16acdc150b249624839cafaf006132129d17b38e1c7104"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

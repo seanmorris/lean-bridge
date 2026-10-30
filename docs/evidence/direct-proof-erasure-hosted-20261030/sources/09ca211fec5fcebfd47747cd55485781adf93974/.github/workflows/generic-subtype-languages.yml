@@ -1,0 +1,366 @@
+name: Generic Subtypes in Python, Ruby and Rust
+
+on:
+  workflow_call:
+    inputs:
+      optional_parameters:
+        description: Run the complete optional-parameter package matrix.
+        required: false
+        type: boolean
+        default: false
+      direct_proof_erasure:
+        description: Run direct proof-erasure package acceptance.
+        required: false
+        type: boolean
+        default: false
+  workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "17 6 * * 2"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: generic-subtype-languages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Ordinary and reviewed generic Subtypes on Python 3.11 and 3.12
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - name: Free hosted runner disk before checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Check out the focused package revision
+        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Check out the exact revision
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Select Python 3.11
+        id: python311
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Select Python 3.12
+        id: python312
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and package dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3-venv ripgrep xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-python-toolchain.log
+      - name: Execute installed Python acceptance
+        id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}
+        timeout-minutes: 125
+        env:
+          PYTHON311: ${{ steps.python311.outputs.python-path }}
+          PYTHON312: ${{ steps.python312.outputs.python-path }}
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-python-ci.sh "$PYTHON311" "$PYTHON312"
+      - name: Preserve complete and partial Python records
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-python-${{ github.sha }}
+          path: |
+            build/generic-subtype-python-ci/
+            build/generic-subtype-python-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Execute optional parameters through the prepared Python package
+        id: optional_parameters
+        if: inputs.optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-optional-parameter-language-ci.sh python
+      - name: Preserve optional-parameter Python records
+        if: always() && inputs.optional_parameters
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-language-python-${{ github.sha }}
+          path: build/optional-parameter-language-ci/python/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter Python acceptance
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in prepared language packages
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-direct-proof-erasure-language-ci.sh python
+      - name: Preserve direct proof-erasure language acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-language-python-${{ github.sha }}
+          path: build/direct-proof-erasure-language-ci/python/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce native consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Enforce installed Python acceptance
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && steps.acceptance.outcome != 'success' }}
+        run: exit 1
+
+  ruby:
+    name: Ordinary and reviewed generic Subtypes on Ruby 3.3
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - name: Free hosted runner disk before checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Check out the focused package revision
+        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Check out the exact revision
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and package dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-ruby-toolchain.log
+      - name: Execute installed Ruby acceptance
+        id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}
+        timeout-minutes: 125
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-ruby-ci.sh "$(command -v ruby)" "$(command -v gem)"
+      - name: Preserve complete and partial Ruby records
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-ruby-${{ github.sha }}
+          path: |
+            build/generic-subtype-ruby-ci/
+            build/generic-subtype-ruby-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Execute optional parameters through the prepared Ruby package
+        id: optional_parameters
+        if: inputs.optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-optional-parameter-language-ci.sh ruby
+      - name: Preserve optional-parameter Ruby records
+        if: always() && inputs.optional_parameters
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-language-ruby-${{ github.sha }}
+          path: build/optional-parameter-language-ci/ruby/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter Ruby acceptance
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in the prepared Ruby package
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-direct-proof-erasure-language-ci.sh ruby
+      - name: Preserve direct proof-erasure Ruby acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-language-ruby-${{ github.sha }}
+          path: build/direct-proof-erasure-language-ci/ruby/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce managed consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Enforce installed Ruby acceptance
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && steps.acceptance.outcome != 'success' }}
+        run: exit 1
+
+  rust:
+    name: Ordinary and reviewed generic Subtypes on Rust 1.90
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - name: Free hosted runner disk before checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Check out the focused package revision
+        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Check out the exact revision
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and package dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and pinned Lean and Rust toolchains
+        timeout-minutes: 40
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/generic-subtype-rust-toolchain.log
+          bash scripts/bootstrap-rust-ci.sh 2>&1 | tee -a build/generic-subtype-rust-toolchain.log
+      - name: Execute source-free Rust acceptance
+        id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure }}
+        timeout-minutes: 125
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-generic-subtype-rust-ci.sh "$PWD/.toolchains/rust-1.90.0/bin/rustc" "$PWD/.toolchains/rust-1.90.0/bin/cargo"
+      - name: Preserve complete and partial Rust records
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-rust-${{ github.sha }}
+          path: |
+            build/generic-subtype-rust-ci/
+            build/generic-subtype-rust-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Execute optional parameters through the prepared Rust package
+        id: optional_parameters
+        if: inputs.optional_parameters
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-optional-parameter-language-ci.sh rust
+      - name: Preserve optional-parameter Rust records
+        if: always() && inputs.optional_parameters
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-language-rust-${{ github.sha }}
+          path: build/optional-parameter-language-ci/rust/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter Rust acceptance
+        if: always() && inputs.optional_parameters && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Qualify direct proof erasure in prepared language packages
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure
+        continue-on-error: true
+        timeout-minutes: 125
+        run: bash scripts/run-direct-proof-erasure-language-ci.sh rust
+      - name: Preserve direct proof-erasure language acceptance
+        if: always() && inputs.direct_proof_erasure
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-language-rust-${{ github.sha }}
+          path: build/direct-proof-erasure-language-ci/rust/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce native consumer support
+        if: always() && inputs.direct_proof_erasure && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Enforce installed Rust acceptance
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && steps.acceptance.outcome != 'success' }}
+        run: exit 1

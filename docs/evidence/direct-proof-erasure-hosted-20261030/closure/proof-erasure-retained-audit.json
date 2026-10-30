@@ -1,0 +1,2640 @@
+{
+  "bindings": [
+    {
+      "basis": "erased-record-field",
+      "cell": "perl/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-perl-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-perl-20261016/index.json",
+          "sha256": "3369153c41485db63e24f0267d0bb13e8cdcb849b869a04af52c9878422a152f"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-perl-20261016/sources/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-perl-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-perl-promotion-tests.mjs",
+          "sha256": "99df049c52cf1741807243a8030ae8410ae0de39b5a971f351947af43e29ceca"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "perl/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-perl-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-perl-20261023/index.json",
+          "sha256": "7c796aa09c92418ea5a3cd1e16e0b5468e3bed35076fc356c3fd12a0131c1599"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-perl-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained perl callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "perl/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-perl-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-perl-20261023/index.json",
+          "sha256": "7c796aa09c92418ea5a3cd1e16e0b5468e3bed35076fc356c3fd12a0131c1599"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-perl-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained perl callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "perl/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-perl-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-perl-20261016/index.json",
+          "sha256": "3369153c41485db63e24f0267d0bb13e8cdcb849b869a04af52c9878422a152f"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-perl-20261016/sources/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-perl-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-perl-promotion-tests.mjs",
+          "sha256": "99df049c52cf1741807243a8030ae8410ae0de39b5a971f351947af43e29ceca"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "perl/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-perl-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-perl-20261023/index.json",
+          "sha256": "7c796aa09c92418ea5a3cd1e16e0b5468e3bed35076fc356c3fd12a0131c1599"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-perl-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained perl callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "perl/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-perl-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-perl-20261023/index.json",
+          "sha256": "7c796aa09c92418ea5a3cd1e16e0b5468e3bed35076fc356c3fd12a0131c1599"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-perl-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained perl callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "node-javascript/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-browser-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/index.json",
+          "sha256": "9ba5c13be3f015d51bc51ccd3c8eeda7e0069e333e07b864de01ed3d1e3e33f7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "sha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "node-javascript/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "node-javascript/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "node-javascript/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-browser-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/index.json",
+          "sha256": "9ba5c13be3f015d51bc51ccd3c8eeda7e0069e333e07b864de01ed3d1e3e33f7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "sha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "node-javascript/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "node-javascript/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "node-typescript/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-browser-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/index.json",
+          "sha256": "9ba5c13be3f015d51bc51ccd3c8eeda7e0069e333e07b864de01ed3d1e3e33f7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "sha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "node-typescript/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "node-typescript/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "node-typescript/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-browser-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/index.json",
+          "sha256": "9ba5c13be3f015d51bc51ccd3c8eeda7e0069e333e07b864de01ed3d1e3e33f7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "sha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "node-typescript/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "node-typescript/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "browser-javascript/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-browser-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/index.json",
+          "sha256": "9ba5c13be3f015d51bc51ccd3c8eeda7e0069e333e07b864de01ed3d1e3e33f7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "sha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-javascript/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-javascript/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "browser-javascript/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-browser-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/index.json",
+          "sha256": "9ba5c13be3f015d51bc51ccd3c8eeda7e0069e333e07b864de01ed3d1e3e33f7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "sha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-javascript/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-javascript/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "browser-react/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-browser-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/index.json",
+          "sha256": "9ba5c13be3f015d51bc51ccd3c8eeda7e0069e333e07b864de01ed3d1e3e33f7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "sha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-react/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-react/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "browser-react/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-browser-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/index.json",
+          "sha256": "9ba5c13be3f015d51bc51ccd3c8eeda7e0069e333e07b864de01ed3d1e3e33f7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "sha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-react/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-react/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "browser-worker/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-browser-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/index.json",
+          "sha256": "9ba5c13be3f015d51bc51ccd3c8eeda7e0069e333e07b864de01ed3d1e3e33f7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "sha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-worker/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-worker/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "browser-worker/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-browser-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/index.json",
+          "sha256": "9ba5c13be3f015d51bc51ccd3c8eeda7e0069e333e07b864de01ed3d1e3e33f7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-browser-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "sha256": "71bda4e87bfdceb145c24117d4e3862ec580ab1f7c89b604bcf8387c3a92850c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-worker/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "browser-worker/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-browser-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/index.json",
+          "sha256": "ce02bbe12ff9792a53d2e884f48eacdc043fc72bad87a81d1489218264feb06a"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-browser-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained browser callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "php-native/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-php-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-php-20261016/index.json",
+          "sha256": "434a4010a9e692055287e505e472f2a912313ae200dfa42aa39eefb405e6455b"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-php-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-php-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-php-promotion-tests.mjs",
+          "sha256": "65800ff734544f8f7d7749ef05f6ec2e808a5f7375f1570e0aa67f278c1a9bf3"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "php-native/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-php-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-php-native-20261023/index.json",
+          "sha256": "c084c91f479665caa2957396904c600a507e55db43bd97bd2081667dacd18287"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-php-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained php-native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "php-native/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-php-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-php-native-20261023/index.json",
+          "sha256": "c084c91f479665caa2957396904c600a507e55db43bd97bd2081667dacd18287"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-php-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained php-native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "php-native/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-php-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-php-20261016/index.json",
+          "sha256": "434a4010a9e692055287e505e472f2a912313ae200dfa42aa39eefb405e6455b"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-php-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-php-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-php-promotion-tests.mjs",
+          "sha256": "65800ff734544f8f7d7749ef05f6ec2e808a5f7375f1570e0aa67f278c1a9bf3"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "php-native/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-php-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-php-native-20261023/index.json",
+          "sha256": "c084c91f479665caa2957396904c600a507e55db43bd97bd2081667dacd18287"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-php-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained php-native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "php-native/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-php-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-php-native-20261023/index.json",
+          "sha256": "c084c91f479665caa2957396904c600a507e55db43bd97bd2081667dacd18287"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-php-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained php-native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "php-wasm/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-php-wasm-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-php-wasm-20261016/index.json",
+          "sha256": "2b15fdb79758837b7d32f11957f615e8243d2bc8e38e0105c3abdc97657dbfc8"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-php-wasm-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-php-wasm-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-php-wasm-promotion-tests.mjs",
+          "sha256": "4aac2211c4f60fd1b8cdd0c594a92e34ae479ee7f2d773ae8acfd148b1e72533"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "php-wasm/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-refinements-php-wasm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-refinements-php-wasm-20261023/index.json",
+          "sha256": "297895d119c12fd4dde45763fc18271774a62a6de1130de070528145f7a11208"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-refinements-php-wasm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test tests/helpers/callback-refinements-php-wasm-hosted-evidence-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/callback-refinements-php-wasm-hosted-evidence.mjs",
+          "sha256": "bfff332ebce08d197a3e0537d82ea5a5b908fdec86bdb8e67e712982ffd146ae"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "php-wasm/proof/ordinary-source/callback-result",
+      "evidence": "callback-refinements-php-wasm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-refinements-php-wasm-20261023/index.json",
+          "sha256": "297895d119c12fd4dde45763fc18271774a62a6de1130de070528145f7a11208"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-refinements-php-wasm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test tests/helpers/callback-refinements-php-wasm-hosted-evidence-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/callback-refinements-php-wasm-hosted-evidence.mjs",
+          "sha256": "bfff332ebce08d197a3e0537d82ea5a5b908fdec86bdb8e67e712982ffd146ae"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "php-wasm/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-php-wasm-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-php-wasm-20261016/index.json",
+          "sha256": "2b15fdb79758837b7d32f11957f615e8243d2bc8e38e0105c3abdc97657dbfc8"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-php-wasm-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-php-wasm-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-php-wasm-promotion-tests.mjs",
+          "sha256": "4aac2211c4f60fd1b8cdd0c594a92e34ae479ee7f2d773ae8acfd148b1e72533"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "php-wasm/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-refinements-php-wasm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-refinements-php-wasm-20261023/index.json",
+          "sha256": "297895d119c12fd4dde45763fc18271774a62a6de1130de070528145f7a11208"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-refinements-php-wasm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test tests/helpers/callback-refinements-php-wasm-hosted-evidence-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/callback-refinements-php-wasm-hosted-evidence.mjs",
+          "sha256": "bfff332ebce08d197a3e0537d82ea5a5b908fdec86bdb8e67e712982ffd146ae"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "php-wasm/proof/reviewed-ir/callback-result",
+      "evidence": "callback-refinements-php-wasm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-refinements-php-wasm-20261023/index.json",
+          "sha256": "297895d119c12fd4dde45763fc18271774a62a6de1130de070528145f7a11208"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-refinements-php-wasm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test tests/helpers/callback-refinements-php-wasm-hosted-evidence-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/callback-refinements-php-wasm-hosted-evidence.mjs",
+          "sha256": "bfff332ebce08d197a3e0537d82ea5a5b908fdec86bdb8e67e712982ffd146ae"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "dotnet/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-dotnet-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-dotnet-20261016/index.json",
+          "sha256": "3e4bd4f1b796ec25fc61d8310069b68c7b316d52545ecee4d9375c3851333175"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-dotnet-20261016/sources/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-dotnet-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-dotnet-promotion-tests.mjs",
+          "sha256": "bf30a67e555c97cc878023d3f95cce69cc80cdc4d9f98e6fc71b95768506a2a0"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "dotnet/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-dotnet-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-dotnet-20261023/index.json",
+          "sha256": "26e43faa5399c4b57b656f87ac9637f92c202f3f20d561b5ea2fae92a475d0d8"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-dotnet-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained dotnet callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "dotnet/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-dotnet-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-dotnet-20261023/index.json",
+          "sha256": "26e43faa5399c4b57b656f87ac9637f92c202f3f20d561b5ea2fae92a475d0d8"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-dotnet-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained dotnet callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "dotnet/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-dotnet-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-dotnet-20261016/index.json",
+          "sha256": "3e4bd4f1b796ec25fc61d8310069b68c7b316d52545ecee4d9375c3851333175"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-dotnet-20261016/sources/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-dotnet-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-dotnet-promotion-tests.mjs",
+          "sha256": "bf30a67e555c97cc878023d3f95cce69cc80cdc4d9f98e6fc71b95768506a2a0"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "dotnet/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-dotnet-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-dotnet-20261023/index.json",
+          "sha256": "26e43faa5399c4b57b656f87ac9637f92c202f3f20d561b5ea2fae92a475d0d8"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-dotnet-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained dotnet callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "dotnet/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-dotnet-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-dotnet-20261023/index.json",
+          "sha256": "26e43faa5399c4b57b656f87ac9637f92c202f3f20d561b5ea2fae92a475d0d8"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-dotnet-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained dotnet callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "java/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-jvm-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-jvm-20261016/index.json",
+          "sha256": "49f9f7b9803065e65b0ce10b0d0c63b3a2631dda56520bb80a3a55bddd42ed52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-jvm-20261016/sources/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+          "sha256": "4ea7ce2521340273f1bf6a2cce9ecde54d24e3010f6346ab61dadeb9d39eabb9"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "java/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-jvm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/index.json",
+          "sha256": "db04bbec5ec4ac090b03f469475ed7bb8286505acd77edd286affac534d8bb52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained jvm callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "java/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-jvm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/index.json",
+          "sha256": "db04bbec5ec4ac090b03f469475ed7bb8286505acd77edd286affac534d8bb52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained jvm callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "java/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-jvm-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-jvm-20261016/index.json",
+          "sha256": "49f9f7b9803065e65b0ce10b0d0c63b3a2631dda56520bb80a3a55bddd42ed52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-jvm-20261016/sources/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+          "sha256": "4ea7ce2521340273f1bf6a2cce9ecde54d24e3010f6346ab61dadeb9d39eabb9"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "java/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-jvm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/index.json",
+          "sha256": "db04bbec5ec4ac090b03f469475ed7bb8286505acd77edd286affac534d8bb52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained jvm callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "java/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-jvm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/index.json",
+          "sha256": "db04bbec5ec4ac090b03f469475ed7bb8286505acd77edd286affac534d8bb52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained jvm callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "kotlin/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-jvm-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-jvm-20261016/index.json",
+          "sha256": "49f9f7b9803065e65b0ce10b0d0c63b3a2631dda56520bb80a3a55bddd42ed52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-jvm-20261016/sources/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+          "sha256": "4ea7ce2521340273f1bf6a2cce9ecde54d24e3010f6346ab61dadeb9d39eabb9"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "kotlin/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-jvm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/index.json",
+          "sha256": "db04bbec5ec4ac090b03f469475ed7bb8286505acd77edd286affac534d8bb52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained jvm callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "kotlin/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-jvm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/index.json",
+          "sha256": "db04bbec5ec4ac090b03f469475ed7bb8286505acd77edd286affac534d8bb52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained jvm callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "kotlin/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-jvm-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-jvm-20261016/index.json",
+          "sha256": "49f9f7b9803065e65b0ce10b0d0c63b3a2631dda56520bb80a3a55bddd42ed52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-jvm-20261016/sources/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+          "sha256": "4ea7ce2521340273f1bf6a2cce9ecde54d24e3010f6346ab61dadeb9d39eabb9"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "kotlin/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-jvm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/index.json",
+          "sha256": "db04bbec5ec4ac090b03f469475ed7bb8286505acd77edd286affac534d8bb52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained jvm callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "kotlin/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-jvm-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/index.json",
+          "sha256": "db04bbec5ec4ac090b03f469475ed7bb8286505acd77edd286affac534d8bb52"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-jvm-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained jvm callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "ruby/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-ruby-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-ruby-20261016/index.json",
+          "sha256": "9a520f43076bdaca2fd38c8bfce320b6584dc022d8b3e2f06e5ef56f3213660e"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-ruby-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-ruby-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-ruby-promotion-tests.mjs",
+          "sha256": "a9cc8c1f9e823ed182ba15387203450716a33bd05073974fe3f84d187a153599"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "ruby/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "ruby/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "ruby/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-ruby-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-ruby-20261016/index.json",
+          "sha256": "9a520f43076bdaca2fd38c8bfce320b6584dc022d8b3e2f06e5ef56f3213660e"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-ruby-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-ruby-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-ruby-promotion-tests.mjs",
+          "sha256": "a9cc8c1f9e823ed182ba15387203450716a33bd05073974fe3f84d187a153599"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "ruby/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "ruby/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "python/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-python-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-python-20261016/index.json",
+          "sha256": "5897872bbfbb8193ef5164e76aecf99b0caedb533683991a23ea9af6309986f1"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-python-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-python-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-python-promotion-tests.mjs",
+          "sha256": "c68ca660fe846872db186c83d238cca90ed11bae631389aa15f4362c8c74e25c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "python/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "python/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "python/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-python-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-python-20261016/index.json",
+          "sha256": "5897872bbfbb8193ef5164e76aecf99b0caedb533683991a23ea9af6309986f1"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-python-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-python-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-python-promotion-tests.mjs",
+          "sha256": "c68ca660fe846872db186c83d238cca90ed11bae631389aa15f4362c8c74e25c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "python/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "python/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "rust/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-rust-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-rust-20261016/index.json",
+          "sha256": "b47565a3606961bce58ab9749b3d212693168592c4fc93e43323e8059e649019"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-rust-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-rust-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-rust-promotion-tests.mjs",
+          "sha256": "bd88187900e30e942522a72499608b18629ab150009e1359a695b5d7d5a20906"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "rust/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "rust/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "rust/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-rust-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-rust-20261016/index.json",
+          "sha256": "b47565a3606961bce58ab9749b3d212693168592c4fc93e43323e8059e649019"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-rust-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-rust-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-rust-promotion-tests.mjs",
+          "sha256": "bd88187900e30e942522a72499608b18629ab150009e1359a695b5d7d5a20906"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "rust/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "rust/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-languages-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/index.json",
+          "sha256": "000d2bc5c284881cf9f48f4822a9aae08c0e94245ae793236e9b6a93c539acfc"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-languages-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained languages callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "c/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-native-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-native-20261016/index.json",
+          "sha256": "902f0f40499a7dfad2cfc8c4ba7bad8e1789d0a4eaf32b09fbee24746bbd268c"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-native-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+          "sha256": "b30d624382ae6f551a8f69285de1ea46baeecd32105ebd1f9bbb1d154d464822"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "c/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/index.json",
+          "sha256": "ff1c87dbc66f4877d2a08f5b62df7fa492676a45b83e602aa159afb803a4d544"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "c/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/index.json",
+          "sha256": "ff1c87dbc66f4877d2a08f5b62df7fa492676a45b83e602aa159afb803a4d544"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "c/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-native-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-native-20261016/index.json",
+          "sha256": "902f0f40499a7dfad2cfc8c4ba7bad8e1789d0a4eaf32b09fbee24746bbd268c"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-native-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+          "sha256": "b30d624382ae6f551a8f69285de1ea46baeecd32105ebd1f9bbb1d154d464822"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "c/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/index.json",
+          "sha256": "ff1c87dbc66f4877d2a08f5b62df7fa492676a45b83e602aa159afb803a4d544"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "c/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/index.json",
+          "sha256": "ff1c87dbc66f4877d2a08f5b62df7fa492676a45b83e602aa159afb803a4d544"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "cpp/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-native-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-native-20261016/index.json",
+          "sha256": "902f0f40499a7dfad2cfc8c4ba7bad8e1789d0a4eaf32b09fbee24746bbd268c"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-native-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+          "sha256": "b30d624382ae6f551a8f69285de1ea46baeecd32105ebd1f9bbb1d154d464822"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "cpp/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/index.json",
+          "sha256": "ff1c87dbc66f4877d2a08f5b62df7fa492676a45b83e602aa159afb803a4d544"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "cpp/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/index.json",
+          "sha256": "ff1c87dbc66f4877d2a08f5b62df7fa492676a45b83e602aa159afb803a4d544"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "cpp/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-native-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-native-20261016/index.json",
+          "sha256": "902f0f40499a7dfad2cfc8c4ba7bad8e1789d0a4eaf32b09fbee24746bbd268c"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-native-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+          "sha256": "b30d624382ae6f551a8f69285de1ea46baeecd32105ebd1f9bbb1d154d464822"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "cpp/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/index.json",
+          "sha256": "ff1c87dbc66f4877d2a08f5b62df7fa492676a45b83e602aa159afb803a4d544"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "cpp/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-native-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/index.json",
+          "sha256": "ff1c87dbc66f4877d2a08f5b62df7fa492676a45b83e602aa159afb803a4d544"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-native-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained native callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "wit-wasi/proof/ordinary-source/field",
+      "evidence": "nested-checked-record-wit-ordinary-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-wit-20261016/index.json",
+          "sha256": "aabdb418ac48d1eda4a1a894af7c441df9186b18f7b198e3c09d37d769cf4be7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-wit-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-wit-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-wit-promotion-tests.mjs",
+          "sha256": "1cc5af7222490b6c774bde7675c8e87f53b5c3e5bf818b2e925bee0ed970f67b"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "wit-wasi/proof/ordinary-source/callback-parameter",
+      "evidence": "callback-checked-record-wit-wasi-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-wit-wasi-20261023/index.json",
+          "sha256": "9824a30e00d46b37e744a91e91643dca4c400c531c8ca8dc006285a80f90efcb"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-wit-wasi-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained wit-wasi callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "wit-wasi/proof/ordinary-source/callback-result",
+      "evidence": "callback-checked-record-wit-wasi-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-wit-wasi-20261023/index.json",
+          "sha256": "9824a30e00d46b37e744a91e91643dca4c400c531c8ca8dc006285a80f90efcb"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-wit-wasi-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained wit-wasi callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-record-field",
+      "cell": "wit-wasi/proof/reviewed-ir/field",
+      "evidence": "nested-checked-record-wit-reviewed-full-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/nested-checked-record-wit-20261016/index.json",
+          "sha256": "aabdb418ac48d1eda4a1a894af7c441df9186b18f7b198e3c09d37d769cf4be7"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/nested-checked-record-wit-20261016/sources/producer/tests/fixtures/onboarding/nested-checked-records/NestedCheckedRecords.lean",
+          "sha256": "31351649eecd9d596696e32350059f672d0ee42cd7604237e0966c5b664279e8"
+        },
+        "replayCommand": "node --test tests/helpers/nested-checked-record-wit-promotion-tests.mjs",
+        "replaySource": {
+          "path": "tests/helpers/nested-checked-record-wit-promotion-tests.mjs",
+          "sha256": "1cc5af7222490b6c774bde7675c8e87f53b5c3e5bf818b2e925bee0ed970f67b"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "wit-wasi/proof/reviewed-ir/callback-parameter",
+      "evidence": "callback-checked-record-wit-wasi-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-wit-wasi-20261023/index.json",
+          "sha256": "9824a30e00d46b37e744a91e91643dca4c400c531c8ca8dc006285a80f90efcb"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-wit-wasi-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained wit-wasi callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    },
+    {
+      "basis": "erased-callback-record-field",
+      "cell": "wit-wasi/proof/reviewed-ir/callback-result",
+      "evidence": "callback-checked-record-wit-wasi-hosted-installed",
+      "retained": {
+        "archiveIndex": {
+          "path": "docs/evidence/callback-checked-record-wit-wasi-20261023/index.json",
+          "sha256": "9824a30e00d46b37e744a91e91643dca4c400c531c8ca8dc006285a80f90efcb"
+        },
+        "fixtureSource": {
+          "path": "docs/evidence/callback-checked-record-wit-wasi-20261023/sources/producer/tests/fixtures/onboarding/callback-checked-records/CallbackCheckedRecords.lean",
+          "sha256": "8e6babb2f13a48d39de6158814b75f54c59173780e1310f2fa521cdd110909b7"
+        },
+        "replayCommand": "node --test --test-name-pattern='^retained wit-wasi callback checked-record evidence replays$' tests/callback-checked-record-hosted-evidence.test.mjs",
+        "replaySource": {
+          "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+          "sha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c"
+        }
+      },
+      "verification": "exact-retained-replay"
+    }
+  ],
+  "counts": {
+    "adjacentRecordCandidatesRejected": 68,
+    "cells": 204,
+    "directSignaturesUnobserved": 34,
+    "exactBindings": 102,
+    "residual": 102
+  },
+  "kind": "proof-erasure-retained-evidence-audit-v1",
+  "limitations": [
+    "This ledger reuses retained installed evidence only where the archive, replay source and authenticated Lean fixture prove an erased proof field at the named field or callback position.",
+    "Proof-only checked records at top-level parameter and result positions establish the checked-record shape, not direct Prop arguments or results; all sixty-eight such adjacent candidates remain unbound.",
+    "No retained record-field archive establishes a proof-only declaration signature; all thirty-four signature cells remain unbound.",
+    "The ledger does not promote type-surface support. Direct proof parameters, results and declaration signatures require implementation and new installed evidence."
+  ],
+  "planNode": 2173,
+  "residual": [
+    {
+      "candidate": "zero-payload-perl-ordinary-source-hosted-installed",
+      "cell": "perl/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-perl-result-only-ordinary-source-hosted-installed",
+      "cell": "perl/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "perl/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-perl-reviewed-ir-hosted-installed",
+      "cell": "perl/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-perl-result-only-reviewed-ir-hosted-installed",
+      "cell": "perl/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "perl/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-browser-ordinary-source-hosted-installed",
+      "cell": "node-javascript/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-browser-result-only-ordinary-source-hosted-installed",
+      "cell": "node-javascript/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "node-javascript/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-browser-reviewed-ir-hosted-installed",
+      "cell": "node-javascript/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-browser-result-only-reviewed-ir-hosted-installed",
+      "cell": "node-javascript/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "node-javascript/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-browser-ordinary-source-hosted-installed",
+      "cell": "node-typescript/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-browser-result-only-ordinary-source-hosted-installed",
+      "cell": "node-typescript/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "node-typescript/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-browser-reviewed-ir-hosted-installed",
+      "cell": "node-typescript/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-browser-result-only-reviewed-ir-hosted-installed",
+      "cell": "node-typescript/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "node-typescript/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-browser-ordinary-source-hosted-installed",
+      "cell": "browser-javascript/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-browser-result-only-ordinary-source-hosted-installed",
+      "cell": "browser-javascript/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "browser-javascript/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-browser-reviewed-ir-hosted-installed",
+      "cell": "browser-javascript/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-browser-result-only-reviewed-ir-hosted-installed",
+      "cell": "browser-javascript/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "browser-javascript/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-browser-ordinary-source-hosted-installed",
+      "cell": "browser-react/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-browser-result-only-ordinary-source-hosted-installed",
+      "cell": "browser-react/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "browser-react/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-browser-reviewed-ir-hosted-installed",
+      "cell": "browser-react/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-browser-result-only-reviewed-ir-hosted-installed",
+      "cell": "browser-react/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "browser-react/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-browser-ordinary-source-hosted-installed",
+      "cell": "browser-worker/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-browser-result-only-ordinary-source-hosted-installed",
+      "cell": "browser-worker/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "browser-worker/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-browser-reviewed-ir-hosted-installed",
+      "cell": "browser-worker/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-browser-result-only-reviewed-ir-hosted-installed",
+      "cell": "browser-worker/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "browser-worker/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-php-ordinary-source-hosted-installed",
+      "cell": "php-native/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-php-result-only-ordinary-source-hosted-installed",
+      "cell": "php-native/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "php-native/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-php-reviewed-ir-hosted-installed",
+      "cell": "php-native/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-php-result-only-reviewed-ir-hosted-installed",
+      "cell": "php-native/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "php-native/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-php-wasm-ordinary-source-hosted-installed",
+      "cell": "php-wasm/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-php-wasm-result-only-ordinary-source-hosted-installed",
+      "cell": "php-wasm/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "php-wasm/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-php-wasm-reviewed-ir-hosted-installed",
+      "cell": "php-wasm/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-php-wasm-result-only-reviewed-ir-hosted-installed",
+      "cell": "php-wasm/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "php-wasm/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-dotnet-ordinary-source-hosted-installed",
+      "cell": "dotnet/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-dotnet-result-only-ordinary-source-hosted-installed",
+      "cell": "dotnet/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "dotnet/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-dotnet-reviewed-ir-hosted-installed",
+      "cell": "dotnet/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-dotnet-result-only-reviewed-ir-hosted-installed",
+      "cell": "dotnet/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "dotnet/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-jvm-ordinary-source-hosted-installed",
+      "cell": "java/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-jvm-result-only-ordinary-source-hosted-installed",
+      "cell": "java/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "java/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-jvm-reviewed-ir-hosted-installed",
+      "cell": "java/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-jvm-result-only-reviewed-ir-hosted-installed",
+      "cell": "java/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "java/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-jvm-ordinary-source-hosted-installed",
+      "cell": "kotlin/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-jvm-result-only-ordinary-source-hosted-installed",
+      "cell": "kotlin/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "kotlin/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-jvm-reviewed-ir-hosted-installed",
+      "cell": "kotlin/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-jvm-result-only-reviewed-ir-hosted-installed",
+      "cell": "kotlin/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "kotlin/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-ruby-ordinary-source-hosted-installed",
+      "cell": "ruby/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-ruby-result-only-ordinary-source-hosted-installed",
+      "cell": "ruby/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "ruby/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-ruby-reviewed-ir-hosted-installed",
+      "cell": "ruby/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-ruby-result-only-reviewed-ir-hosted-installed",
+      "cell": "ruby/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "ruby/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-python-ordinary-source-hosted-installed",
+      "cell": "python/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-python-result-only-ordinary-source-hosted-installed",
+      "cell": "python/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "python/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-python-reviewed-ir-hosted-installed",
+      "cell": "python/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-python-result-only-reviewed-ir-hosted-installed",
+      "cell": "python/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "python/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-rust-ordinary-source-hosted-installed",
+      "cell": "rust/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-rust-result-only-ordinary-source-hosted-installed",
+      "cell": "rust/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "rust/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-rust-reviewed-ir-hosted-installed",
+      "cell": "rust/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-rust-result-only-reviewed-ir-hosted-installed",
+      "cell": "rust/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "rust/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-native-ordinary-source-hosted-installed",
+      "cell": "c/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-native-result-only-ordinary-source-hosted-installed",
+      "cell": "c/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "c/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-native-reviewed-ir-hosted-installed",
+      "cell": "c/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-native-result-only-reviewed-ir-hosted-installed",
+      "cell": "c/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "c/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-native-ordinary-source-hosted-installed",
+      "cell": "cpp/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-native-result-only-ordinary-source-hosted-installed",
+      "cell": "cpp/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "cpp/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-native-reviewed-ir-hosted-installed",
+      "cell": "cpp/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-native-result-only-reviewed-ir-hosted-installed",
+      "cell": "cpp/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "cpp/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-wit-ordinary-source-hosted-installed",
+      "cell": "wit-wasi/proof/ordinary-source/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-wit-result-only-ordinary-source-hosted-installed",
+      "cell": "wit-wasi/proof/ordinary-source/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "wit-wasi/proof/ordinary-source/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    },
+    {
+      "candidate": "zero-payload-wit-reviewed-ir-hosted-installed",
+      "cell": "wit-wasi/proof/reviewed-ir/parameter",
+      "reason": "proof-only-record-is-not-a-direct-proof-parameter"
+    },
+    {
+      "candidate": "zero-payload-wit-result-only-reviewed-ir-hosted-installed",
+      "cell": "wit-wasi/proof/reviewed-ir/result",
+      "reason": "proof-only-record-is-not-a-direct-proof-result"
+    },
+    {
+      "cell": "wit-wasi/proof/reviewed-ir/signature",
+      "reason": "direct-proof-signature-not-yet-observed"
+    }
+  ],
+  "schemaVersion": 1
+}

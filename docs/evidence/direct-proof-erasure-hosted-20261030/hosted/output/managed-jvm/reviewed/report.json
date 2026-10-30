@@ -1,0 +1,153 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/directprooferasure-1.0.0.jar": "b318185138e81af181c010574e375683ac027098ab6ffe4c1e3447b088b9f2bc",
+        "archives/directprooferasure-1.0.0.pom": "9b77c1d88edff5581642cbf4123ae4d7211ed1af31229418e6997dee749b4bb5"
+      },
+      "artifactsSha256": "a4400bb9a5b8d074737eb21ad9d2d8db4681e4d172bc592ac8648a2880c5d2d8",
+      "bindingIrFileSha256": "9061457ca36d71398293a474d206bc5c232310c6a5e671e7744877b957315d4c",
+      "bindingIrSha256": "4e63053ecfc853cc63145b1ff751c8672e001f24893f5e4aa6d5ed21e1ff3a20",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "e70812b9d619991761f5d787837751a993612335422c5fb1d7ed3639a1e4a787",
+      "modelSha256": "eb420f892f23d5ca7dbce6d17d4108cde50ed1d1e7b1b5d9165bf8541c5ebb7a",
+      "nativeComponentReceiptSha256": "56da41eb3262ba8755657e7034d59d04febdfc0dd18a77c241b703753fd7f049",
+      "packageSetReceiptSha256": "e5001bf3a159fc3fdef754bf56e198969f662f4b2d6e925e353904ab9971b668",
+      "runtimeParameters": 1
+    },
+    {
+      "archives": {
+        "archives/directprooferasure-1.0.0.jar": "b318185138e81af181c010574e375683ac027098ab6ffe4c1e3447b088b9f2bc",
+        "archives/directprooferasure-1.0.0.pom": "9b77c1d88edff5581642cbf4123ae4d7211ed1af31229418e6997dee749b4bb5"
+      },
+      "artifactsSha256": "a4400bb9a5b8d074737eb21ad9d2d8db4681e4d172bc592ac8648a2880c5d2d8",
+      "bindingIrFileSha256": "9061457ca36d71398293a474d206bc5c232310c6a5e671e7744877b957315d4c",
+      "bindingIrSha256": "4e63053ecfc853cc63145b1ff751c8672e001f24893f5e4aa6d5ed21e1ff3a20",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "e70812b9d619991761f5d787837751a993612335422c5fb1d7ed3639a1e4a787",
+      "modelSha256": "eb420f892f23d5ca7dbce6d17d4108cde50ed1d1e7b1b5d9165bf8541c5ebb7a",
+      "nativeComponentReceiptSha256": "56da41eb3262ba8755657e7034d59d04febdfc0dd18a77c241b703753fd7f049",
+      "packageSetReceiptSha256": "e5001bf3a159fc3fdef754bf56e198969f662f4b2d6e925e353904ab9971b668",
+      "runtimeParameters": 1
+    }
+  ],
+  "compilerFreePath": true,
+  "group": "jvm",
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "checks": 1005,
+      "classpathFilesSha256": "f9a73e85f1db05cb7d5557401ececa5c8aa251de4617d9bbf6982866c4a98f51",
+      "compilerFreePath": true,
+      "consumerSha256": "a3a1d4310a0886b21571fb279c36a69e0a73989abe5c69c2e9a40ef0baf4bdef",
+      "executions": [
+        {
+          "checks": 1005,
+          "relocated": false
+        },
+        {
+          "checks": 1005,
+          "relocated": true
+        }
+      ],
+      "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+      "negativeProofArgument": {
+        "diagnostic": "consumer.java:2: error: method keep in class Api cannot be applied to given types;\nfinal class Consumer { public static void main(String[] args) { Api.keep(true, 0L, true); } }\n                                                                   ^\n  required: long\n  found:    boolean,long,boolean\n  reason: actual and formal argument lists differ in length\n1 error\n\n/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac exited with status 1: {\"command\":\"/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac\",\"args\":[\"--release\",\"22\",\"-Werror\",\"-proc:none\",\"-cp\",\"component.jar\",\"-d\",\"classes\",\"consumer.java\"],\"exitCode\":1,\"signal\":null,\"stderr\":\"consumer.java:2: error: method keep in class Api cannot be applied to given types;\\nfinal class Consumer { public static void main(String[] args) { Api.keep(true, 0L, true); } }\\n                                                                   ^\\n  required: long\\n  found:    boolean,long,boolean\\n  reason: actual and formal argument lists differ in length\\n1 error\\n\",\"stdout\":\"\"}",
+        "rejected": true,
+        "relocated": false
+      },
+      "offlineInstall": true,
+      "packageFileSetSha256": "cc3e639cba549dd0adc6d479d2d781ce0aafc81b0fd3971d1c8de4e70d83af5f",
+      "profile": "java",
+      "proofSlots": 0,
+      "receiptSha256": "ba9bfb734dd25ea914fc9f56197f09f4957e914a10b2aa073b913bf1c31cae17",
+      "runtimeParameters": 1
+    },
+    {
+      "checks": 1005,
+      "classpathFilesSha256": "05703982be3e0cbb65da80b87910015fafa83fc87ff6faec980c0d90a4f58c2f",
+      "compilerFreePath": true,
+      "consumerSha256": "b316365add95b076c304ef50ab1187e2569bb2b7a46ce14944fdce90d2a44565",
+      "executions": [
+        {
+          "checks": 1005,
+          "relocated": false
+        },
+        {
+          "checks": 1005,
+          "relocated": true
+        }
+      ],
+      "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+      "negativeProofArgument": {
+        "diagnostic": "consumer.kt:2:23: error: no parameter with name '_before' found.\nfun main() { Api.keep(_before = true, value = 0L, _after = true) }\n                      ^^^^^^^\nconsumer.kt:2:39: error: no parameter with name 'value' found.\nfun main() { Api.keep(_before = true, value = 0L, _after = true) }\n                                      ^^^^^\nconsumer.kt:2:51: error: no parameter with name '_after' found.\nfun main() { Api.keep(_before = true, value = 0L, _after = true) }\n                                                  ^^^^^^\nconsumer.kt:2:51: error: no value passed for parameter 'arg0'.\nfun main() { Api.keep(_before = true, value = 0L, _after = true) }\n                                                  ^^^^^^^^^^^^^^\n\n/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc exited with status 1: {\"command\":\"/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc\",\"args\":[\"-Werror\",\"-jvm-target\",\"22\",\"-cp\",\"component.jar\",\"consumer.kt\",\"-include-runtime\",\"-d\",\"consumer.jar\"],\"exitCode\":1,\"signal\":null,\"stderr\":\"consumer.kt:2:23: error: no parameter with name '_before' found.\\nfun main() { Api.keep(_before = true, value = 0L, _after = true) }\\n                      ^^^^^^^\\nconsumer.kt:2:39: error: no parameter with name 'value' found.\\nfun main() { Api.keep(_before = true, value = 0L, _after = true) }\\n                                      ^^^^^\\nconsumer.kt:2:51: error: no parameter with name '_after' found.\\nfun main() { Api.keep(_before = true, value = 0L, _after = true) }\\n                                                  ^^^^^^\\nconsumer.kt:2:51: error: no value passed for parameter 'arg0'.\\nfun main() { Api.keep(_before = true, value = 0L, _after = true) }\\n                                                  ^^^^^^^^^^^^^^\\n\",\"stdout\":\"\"}",
+        "rejected": true,
+        "relocated": false
+      },
+      "offlineInstall": true,
+      "packageFileSetSha256": "cc3e639cba549dd0adc6d479d2d781ce0aafc81b0fd3971d1c8de4e70d83af5f",
+      "profile": "kotlin",
+      "proofSlots": 0,
+      "receiptSha256": "ba9bfb734dd25ea914fc9f56197f09f4957e914a10b2aa073b913bf1c31cae17",
+      "runtimeParameters": 1
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+  "profiles": [
+    "java",
+    "kotlin"
+  ],
+  "receipt": {
+    "component": {
+      "id": "directprooferasure@1.0.0",
+      "name": "directprooferasure",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51368293,
+            "path": "archives/directprooferasure-1.0.0.jar",
+            "sha256": "b318185138e81af181c010574e375683ac027098ab6ffe4c1e3447b088b9f2bc"
+          },
+          {
+            "bytes": 628,
+            "path": "archives/directprooferasure-1.0.0.pom",
+            "sha256": "9b77c1d88edff5581642cbf4123ae4d7211ed1af31229418e6997dee749b4bb5"
+          }
+        ],
+        "ecosystem": "maven",
+        "name": "org.leanbridge:directprooferasure",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "maven",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "4e63053ecfc853cc63145b1ff751c8672e001f24893f5e4aa6d5ed21e1ff3a20",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "8a30d6d36ae52c847ee03ea8c8b794c336881d6540e7c37118f66868757453b4"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

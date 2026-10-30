@@ -19,6 +19,7 @@ import {
 	, directProofErasureHostedEvidenceDirectory
 	, directProofErasureHostedInputs
 	, directProofErasureHostedLanes
+	, directProofErasureHostedMatrixLane
 	, directProofErasureHostedOriginal
 	, directProofErasureHostedProducer
 	, directProofErasureHostedReceipt
@@ -41,9 +42,9 @@ import {
 } from "./direct-proof-erasure-matrix-receipt.mjs";
 
 export const directProofErasureHostedEvidencePins = Object.freeze({
-	index: "PENDING_DIRECT_PROOF_ERASURE_INDEX"
+	index: "d3fcb15d2b6b8362c2b628738ff0ec575bfbd4a05a1ab0ce88da5e943417188e"
 	, producer: directProofErasureHostedProducer
-	, archive: "PENDING_DIRECT_PROOF_ERASURE_ARCHIVE"
+	, archive: "64ecea3bb60577f5bc76956c8f03bf7e27b71088"
 	, runId: directProofErasureHostedRunId
 });
 
@@ -243,7 +244,8 @@ export const checkDirectProofErasureHostedEvidence = async (
 							assert.deepEqual(get(path), await readFile(original), path);
 						}
 						const resultPath = directProofErasureMatrixResultPath(
-							lane, matrixRoute, pins.producer);
+							directProofErasureHostedMatrixLane(lane), matrixRoute
+							, pins.producer);
 						assert.ok(!summaries.has(resultPath), resultPath);
 						summaries.set(resultPath, get(
 							`hosted/output/${lane.key}/${route}/verified.json`));

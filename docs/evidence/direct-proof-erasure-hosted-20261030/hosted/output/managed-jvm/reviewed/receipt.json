@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "directprooferasure@1.0.0",
+    "name": "directprooferasure",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51368293,
+          "path": "archives/directprooferasure-1.0.0.jar",
+          "sha256": "b318185138e81af181c010574e375683ac027098ab6ffe4c1e3447b088b9f2bc"
+        },
+        {
+          "bytes": 628,
+          "path": "archives/directprooferasure-1.0.0.pom",
+          "sha256": "9b77c1d88edff5581642cbf4123ae4d7211ed1af31229418e6997dee749b4bb5"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:directprooferasure",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "4e63053ecfc853cc63145b1ff751c8672e001f24893f5e4aa6d5ed21e1ff3a20",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "8a30d6d36ae52c847ee03ea8c8b794c336881d6540e7c37118f66868757453b4"
+  }
+}

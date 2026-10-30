@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "directprooferasure@1.0.0",
+    "name": "directprooferasure",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51327328,
+          "path": "archives/directprooferasure-1.0.0.crate",
+          "sha256": "63f4d11d30392f8cb042fd55f68d71ec3ebfe3ef10895a9cbe31ff2141521cf1"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "directprooferasure",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "5d32f3a780ed774990a421f4d8427b906dedcd17027dd5fd0c6010f1d02f299f",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "96dbb5cfc0656fa08e0d30e8f29e4243805f1d55b5241d6cfa48bc2bc49ac56a"
+  }
+}

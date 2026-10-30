@@ -1,0 +1,117 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/directprooferasure-1.0.0-wit-wasi.tar.gz": "a695e244831c65ce78c118c3fa604141390c86b44b733921ed32aa6ad413f759"
+      },
+      "artifactsSha256": "6b96fcce1795aaa2f23572558ef4253f965f45d0f2d1e465df47f545cc0c86c9",
+      "bindingIrFileSha256": "f7e96439256640c06a566cb3580c4d009d54c9867550c1dd829bfa47b6305e28",
+      "bindingIrSha256": "f67c27d83c9ebc17fc9f94b6cf7640a1992b77a3827823930742a1ea85e14c60",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "489632dec4200a41b8098ac08b128eb79891cef1f531c9081fe87eb2408f0ca0",
+      "modelSha256": "c250c702683ddba46c7cc0deac856e4f87d33a2ee7bb9946b9cb05d441000dfa",
+      "nativeComponentReceiptSha256": "4f2593f2fef79d92a060145fb8ab784e2dd75dd06652919014ec24052108f832",
+      "packageSetReceiptSha256": "f2d4ad4a500c04f57d07db154ca5e815cf2deabe00436e1daaaceba7bb06ec49",
+      "runtimeParameters": 1
+    },
+    {
+      "archives": {
+        "archives/directprooferasure-1.0.0-wit-wasi.tar.gz": "a695e244831c65ce78c118c3fa604141390c86b44b733921ed32aa6ad413f759"
+      },
+      "artifactsSha256": "6b96fcce1795aaa2f23572558ef4253f965f45d0f2d1e465df47f545cc0c86c9",
+      "bindingIrFileSha256": "f7e96439256640c06a566cb3580c4d009d54c9867550c1dd829bfa47b6305e28",
+      "bindingIrSha256": "f67c27d83c9ebc17fc9f94b6cf7640a1992b77a3827823930742a1ea85e14c60",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "489632dec4200a41b8098ac08b128eb79891cef1f531c9081fe87eb2408f0ca0",
+      "modelSha256": "c250c702683ddba46c7cc0deac856e4f87d33a2ee7bb9946b9cb05d441000dfa",
+      "nativeComponentReceiptSha256": "4f2593f2fef79d92a060145fb8ab784e2dd75dd06652919014ec24052108f832",
+      "packageSetReceiptSha256": "f2d4ad4a500c04f57d07db154ca5e815cf2deabe00436e1daaaceba7bb06ec49",
+      "runtimeParameters": 1
+    }
+  ],
+  "compilerFreePath": true,
+  "independentBuilds": 2,
+  "observation": {
+    "checks": 1005,
+    "closure": {
+      "packageFileSetSha256": "c82ddb793132e765c9cbb9d1cf4a6b379224572e52c5668ed299caa1d39da451",
+      "receiptSha256": "ad41160193889d536c6686a3d68137ac5eb8c567e320eb9887ee3bbc69868f1d"
+    },
+    "compilerFreePath": true,
+    "componentWitSha256": "37f52981de9420fc0aa112b01d8f7d737a75540f45471db291eafde849ad7db4",
+    "consumerSha256": "3c2cffedb3ee71523f1dba11d4e15e90c4909bd423fdd78cb49c1a1803c0d156",
+    "executableSha256": "c337908710a0403bfcfb1db913b57e6239fa56a820118a9737b07a1eb815f3c9",
+    "executions": [
+      {
+        "checks": 1005,
+        "relocated": false
+      },
+      {
+        "checks": 1005,
+        "relocated": true
+      }
+    ],
+    "headerSha256": "aecdd945814bd3914f63ff6d62c3143decdc1ee4c8ba0617b877a0e944a04d8b",
+    "negativeProofArgument": {
+      "diagnostic": "Unknown export, invalid WIT input or 16 MiB conversion limit",
+      "rejected": true,
+      "relocated": true,
+      "suppliedArguments": 3
+    },
+    "offlineInstall": true,
+    "profile": "wit-wasi",
+    "proofSlots": 0,
+    "runtimeParameters": 1,
+    "witSha256": "7e8900e62e59418c6aabf119476477c879af51f4898d12c20d63345d51e49fdb"
+  },
+  "offlineInstall": true,
+  "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+  "profile": "wit-wasi",
+  "receipt": {
+    "component": {
+      "id": "directprooferasure@1.0.0",
+      "name": "directprooferasure",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 59194997,
+            "path": "archives/directprooferasure-1.0.0-wit-wasi.tar.gz",
+            "sha256": "a695e244831c65ce78c118c3fa604141390c86b44b733921ed32aa6ad413f759"
+          }
+        ],
+        "ecosystem": "wit-wasi",
+        "name": "directprooferasure",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "wit-wasi",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "f67c27d83c9ebc17fc9f94b6cf7640a1992b77a3827823930742a1ea85e14c60",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "76cd574f9c92ce2eb587ea326a1c03108c3c1b977656f02c8b7076daf0b7ead1"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

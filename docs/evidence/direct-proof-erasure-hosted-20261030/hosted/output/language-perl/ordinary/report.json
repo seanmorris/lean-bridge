@@ -1,0 +1,140 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/LeanBridge-DirectProofErasure-1.000.tar.gz": "b84568064cf2680e4dab79cdec62f816ee8b75587e4dc64672d7022065ad7a43",
+        "archives/LeanBridge-Runtime-0.0020103568905313654472106433640363813186987765492464369369227316606737746181621101.tar.gz": "fcc81f9060d5519d75852e15feddcd5dbec3581880a9ce90fa2b3c6eaea711e8"
+      },
+      "artifactsSha256": "e1e0c2fa441a745937e72a653fedebc05a82c39719453be5af8d8053925615a9",
+      "bindingIrFileSha256": "82eb3a270ef8bd9a6425e034eaf8312ecbb6a6fdc3208a33e28598be4d63c4db",
+      "bindingIrSha256": "4edde2f76c82ef182409379b5714c1ab923af6a2f56a9223a792a0e7a80e02fb",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "489632dec4200a41b8098ac08b128eb79891cef1f531c9081fe87eb2408f0ca0",
+      "modelSha256": "25cc9286a60081b588d0445fddb5b34766037d9aee41e97d7d47d1e70ea3c57d",
+      "nativeComponentReceiptSha256": "eac5a67db417ed766b267b1ae9d3f7ddd7b6fc9f28d800cedee9a485e42dfb2c",
+      "packageSetReceiptSha256": "97afcaad2f68ddb354716dc6ed1898f1a18c79cad7bc42e468ee1a65ae8c2ceb",
+      "runtimeParameters": 1
+    },
+    {
+      "archives": {
+        "archives/LeanBridge-DirectProofErasure-1.000.tar.gz": "b84568064cf2680e4dab79cdec62f816ee8b75587e4dc64672d7022065ad7a43",
+        "archives/LeanBridge-Runtime-0.0020103568905313654472106433640363813186987765492464369369227316606737746181621101.tar.gz": "fcc81f9060d5519d75852e15feddcd5dbec3581880a9ce90fa2b3c6eaea711e8"
+      },
+      "artifactsSha256": "e1e0c2fa441a745937e72a653fedebc05a82c39719453be5af8d8053925615a9",
+      "bindingIrFileSha256": "82eb3a270ef8bd9a6425e034eaf8312ecbb6a6fdc3208a33e28598be4d63c4db",
+      "bindingIrSha256": "4edde2f76c82ef182409379b5714c1ab923af6a2f56a9223a792a0e7a80e02fb",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "489632dec4200a41b8098ac08b128eb79891cef1f531c9081fe87eb2408f0ca0",
+      "modelSha256": "25cc9286a60081b588d0445fddb5b34766037d9aee41e97d7d47d1e70ea3c57d",
+      "nativeComponentReceiptSha256": "eac5a67db417ed766b267b1ae9d3f7ddd7b6fc9f28d800cedee9a485e42dfb2c",
+      "packageSetReceiptSha256": "97afcaad2f68ddb354716dc6ed1898f1a18c79cad7bc42e468ee1a65ae8c2ceb",
+      "runtimeParameters": 1
+    }
+  ],
+  "compilerFreePath": true,
+  "dependencies": null,
+  "independentBuilds": 2,
+  "observation": {
+    "checks": 1005,
+    "closure": {
+      "installedFilesSha256": "cc4872e5de4a72ea70eae1485aae6532f4f7bc628f823d0679132e5954a29a1d",
+      "interpreterSha256": "f230333b7da9570155586be18d54f1d92ff1219c63b6b993182486a0dfa1bbc8",
+      "receiptsSha256": "6f250d197c3ad06747210f09e7032e186876accb42561de7c5ec63cf0b67430b"
+    },
+    "compilerFreePath": true,
+    "consumerSha256": "082d5d3c9c31faf3b851af167c6eb684d17e17c80346cf6e0eda20e26c50d348",
+    "executions": [
+      {
+        "checks": 1005,
+        "relocated": false
+      },
+      {
+        "checks": 1005,
+        "relocated": true
+      }
+    ],
+    "negativeProofArgument": {
+      "diagnostic": "keep expects 1 arguments at -e line 1.\n",
+      "rejected": true,
+      "relocated": true
+    },
+    "offlineInstall": true,
+    "profile": "perl",
+    "proofSlots": 0,
+    "runtimeParameters": 1
+  },
+  "offlineInstall": true,
+  "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+  "profile": "perl",
+  "receipt": {
+    "component": {
+      "id": "directprooferasure@1.0.0",
+      "name": "directprooferasure",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 48811,
+            "path": "archives/LeanBridge-DirectProofErasure-1.000.tar.gz",
+            "sha256": "b84568064cf2680e4dab79cdec62f816ee8b75587e4dc64672d7022065ad7a43"
+          }
+        ],
+        "ecosystem": "cpan",
+        "name": "LeanBridge-DirectProofErasure",
+        "profile": "native-library-v1",
+        "requires": [
+          {
+            "ecosystem": "cpan",
+            "name": "LeanBridge-Runtime",
+            "version": "0.0020103568905313654472106433640363813186987765492464369369227316606737746181621101"
+          }
+        ],
+        "role": "component",
+        "runtimeDelivery": "dependency",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpan",
+        "version": "1.000"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51362878,
+            "path": "archives/LeanBridge-Runtime-0.0020103568905313654472106433640363813186987765492464369369227316606737746181621101.tar.gz",
+            "sha256": "fcc81f9060d5519d75852e15feddcd5dbec3581880a9ce90fa2b3c6eaea711e8"
+          }
+        ],
+        "ecosystem": "cpan",
+        "name": "LeanBridge-Runtime",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "runtime",
+        "runtimeDelivery": "provided",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpan",
+        "version": "0.0020103568905313654472106433640363813186987765492464369369227316606737746181621101"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "4edde2f76c82ef182409379b5714c1ab923af6a2f56a9223a792a0e7a80e02fb",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "544287303bb7224b43f7eb2a41695ebbfd8e5000492706adc4aefd4dd561f2e0"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

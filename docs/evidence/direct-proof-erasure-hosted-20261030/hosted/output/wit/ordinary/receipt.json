@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "directprooferasure@1.0.0",
+    "name": "directprooferasure",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59194997,
+          "path": "archives/directprooferasure-1.0.0-wit-wasi.tar.gz",
+          "sha256": "a695e244831c65ce78c118c3fa604141390c86b44b733921ed32aa6ad413f759"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "directprooferasure",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "f67c27d83c9ebc17fc9f94b6cf7640a1992b77a3827823930742a1ea85e14c60",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "76cd574f9c92ce2eb587ea326a1c03108c3c1b977656f02c8b7076daf0b7ead1"
+  }
+}

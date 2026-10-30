@@ -1,0 +1,360 @@
+﻿2026-10-30T07:41:42.9781560Z Current runner version: '2.338.0'
+2026-10-30T07:41:42.9807775Z ##[group]Runner Image Provisioner
+2026-10-30T07:41:42.9808848Z Hosted Compute Agent
+2026-10-30T07:41:42.9809468Z Version: 20261021.618
+2026-10-30T07:41:42.9810157Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-30T07:41:42.9810924Z Build Date: 2026-10-21T00:45:21Z
+2026-10-30T07:41:42.9811664Z Worker ID: {ab4a294a-50b4-48a8-896c-86eb0ca9090a}
+2026-10-30T07:41:42.9812449Z Region: westus
+2026-10-30T07:41:42.9813052Z Cloud: Azure
+2026-10-30T07:41:42.9813693Z ##[endgroup]
+2026-10-30T07:41:42.9815207Z ##[group]Operating System
+2026-10-30T07:41:42.9815990Z Ubuntu
+2026-10-30T07:41:42.9816874Z 24.04.5
+2026-10-30T07:41:42.9817470Z LTS
+2026-10-30T07:41:42.9818020Z ##[endgroup]
+2026-10-30T07:41:42.9818719Z ##[group]Runner Image
+2026-10-30T07:41:42.9819442Z Image: ubuntu-24.04
+2026-10-30T07:41:42.9820117Z Version: 20261025.353.1
+2026-10-30T07:41:42.9821451Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-30T07:41:42.9823066Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+2026-10-30T07:41:42.9824108Z ##[endgroup]
+2026-10-30T07:41:42.9825299Z ##[group]GITHUB_TOKEN Permissions
+2026-10-30T07:41:42.9827525Z Contents: read
+2026-10-30T07:41:42.9828699Z Metadata: read
+2026-10-30T07:41:42.9829349Z ##[endgroup]
+2026-10-30T07:41:42.9831522Z Secret source: Actions
+2026-10-30T07:41:42.9832601Z Cache mode: write
+2026-10-30T07:41:42.9833320Z Prepare workflow directory
+2026-10-30T07:41:43.0235131Z Prepare all required actions
+2026-10-30T07:41:43.0300886Z Getting action download info
+2026-10-30T07:41:43.3930437Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-30T07:41:43.5218335Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-30T07:41:43.6444476Z Download action repository 'actions/cache@v5' (SHA:caa296126883cff596d87d8935842f9db880ef25)
+2026-10-30T07:41:43.8613378Z Complete job name: Fresh Lean proof refusal
+2026-10-30T07:41:43.9539593Z ##[group]Run actions/checkout@v6
+2026-10-30T07:41:43.9540542Z with:
+2026-10-30T07:41:43.9541000Z   fetch-depth: 1
+2026-10-30T07:41:43.9541483Z   persist-credentials: false
+2026-10-30T07:41:43.9542064Z   sparse-checkout: schema
+scripts
+src
+tests
+
+2026-10-30T07:41:43.9542698Z   sparse-checkout-cone-mode: true
+2026-10-30T07:41:43.9543278Z   repository: seanmorris/lean-bridge
+2026-10-30T07:41:43.9547616Z   token: ***
+2026-10-30T07:41:43.9548087Z   ssh-strict: true
+2026-10-30T07:41:43.9548548Z   ssh-user: git
+2026-10-30T07:41:43.9548990Z   clean: true
+2026-10-30T07:41:43.9549439Z   fetch-tags: false
+2026-10-30T07:41:43.9549914Z   show-progress: true
+2026-10-30T07:41:43.9550383Z   lfs: false
+2026-10-30T07:41:43.9550818Z   submodules: false
+2026-10-30T07:41:43.9551290Z   set-safe-directory: true
+2026-10-30T07:41:43.9551824Z   allow-unsafe-pr-checkout: false
+2026-10-30T07:41:43.9552968Z ##[endgroup]
+2026-10-30T07:41:44.5138194Z Syncing repository: seanmorris/lean-bridge
+2026-10-30T07:41:44.5140834Z ##[group]Getting Git version info
+2026-10-30T07:41:44.5141968Z Working directory is '/home/runner/work/lean-bridge/lean-bridge'
+2026-10-30T07:41:44.5143726Z [command]/usr/bin/git version
+2026-10-30T07:41:44.5421398Z git version 2.56.0
+2026-10-30T07:41:44.5447059Z ##[endgroup]
+2026-10-30T07:41:44.5464507Z Temporarily overriding HOME='/home/runner/work/_temp/f3ec856e-f625-4a4e-907e-1db19abe9806' before making global git config changes
+2026-10-30T07:41:44.5467234Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-30T07:41:44.5470696Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lean-bridge/lean-bridge
+2026-10-30T07:41:44.5541046Z Deleting the contents of '/home/runner/work/lean-bridge/lean-bridge'
+2026-10-30T07:41:44.5543832Z ##[group]Determining repository object format
+2026-10-30T07:41:44.5545718Z ##[endgroup]
+2026-10-30T07:41:44.5547270Z ##[group]Initializing the repository
+2026-10-30T07:41:44.5548976Z [command]/usr/bin/git init /home/runner/work/lean-bridge/lean-bridge
+2026-10-30T07:41:44.5666733Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-30T07:41:44.5668561Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-30T07:41:44.5670174Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-30T07:41:44.5671473Z hint: call:
+2026-10-30T07:41:44.5672181Z hint:
+2026-10-30T07:41:44.5673074Z hint: 	git config --global init.defaultBranch <name>
+2026-10-30T07:41:44.5675096Z hint:
+2026-10-30T07:41:44.5677756Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-30T07:41:44.5680138Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-30T07:41:44.5681546Z hint:
+2026-10-30T07:41:44.5682349Z hint: 	git branch -m <name>
+2026-10-30T07:41:44.5683465Z hint:
+2026-10-30T07:41:44.5684848Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-30T07:41:44.5687682Z Initialized empty Git repository in /home/runner/work/lean-bridge/lean-bridge/.git/
+2026-10-30T07:41:44.5698058Z [command]/usr/bin/git remote add origin https://github.com/seanmorris/lean-bridge
+2026-10-30T07:41:44.5872239Z ##[endgroup]
+2026-10-30T07:41:44.5873638Z ##[group]Disabling automatic garbage collection
+2026-10-30T07:41:44.5878834Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-30T07:41:44.5926493Z ##[endgroup]
+2026-10-30T07:41:44.5928250Z ##[group]Setting up auth
+2026-10-30T07:41:44.5929198Z Removing SSH command configuration
+2026-10-30T07:41:44.5936987Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-30T07:41:44.5995029Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-30T07:41:44.6602696Z Removing HTTP extra header
+2026-10-30T07:41:44.6611339Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-30T07:41:44.6661671Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-30T07:41:44.6917183Z Removing includeIf entries pointing to credentials config files
+2026-10-30T07:41:44.6925492Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T07:41:44.6978384Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-30T07:41:44.7257749Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-30T07:41:44.7356779Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path /home/runner/work/_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:44.7405358Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:44.7455442Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:44.7503232Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:44.7544416Z ##[endgroup]
+2026-10-30T07:41:44.7546481Z ##[group]Fetching the repository
+2026-10-30T07:41:44.7558079Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +09ca211fec5fcebfd47747cd55485781adf93974:refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-30T07:41:45.7447872Z From https://github.com/seanmorris/lean-bridge
+2026-10-30T07:41:45.7449314Z  * [new ref]         09ca211fec5fcebfd47747cd55485781adf93974 -> origin/codex/vo2168-current-shallow-checkout
+2026-10-30T07:41:45.7460763Z [command]/usr/bin/git branch --list --remote origin/codex/vo2168-current-shallow-checkout
+2026-10-30T07:41:45.7499917Z   origin/codex/vo2168-current-shallow-checkout
+2026-10-30T07:41:45.7510912Z [command]/usr/bin/git rev-parse refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-30T07:41:45.7545875Z 09ca211fec5fcebfd47747cd55485781adf93974
+2026-10-30T07:41:45.7553211Z ##[endgroup]
+2026-10-30T07:41:45.7554326Z ##[group]Determining the checkout info
+2026-10-30T07:41:45.7555975Z ##[endgroup]
+2026-10-30T07:41:45.7558611Z ##[group]Setting up sparse checkout
+2026-10-30T07:41:45.7560196Z [command]/usr/bin/git sparse-checkout set schema scripts src tests
+2026-10-30T07:41:45.7624845Z ##[endgroup]
+2026-10-30T07:41:45.7627130Z ##[group]Checking out the ref
+2026-10-30T07:41:45.7629762Z [command]/usr/bin/git checkout --progress --force -B codex/vo2168-current-shallow-checkout refs/remotes/origin/codex/vo2168-current-shallow-checkout
+2026-10-30T07:41:49.1498345Z Updating files:   0% (1/10776)
+2026-10-30T07:41:49.1568139Z Updating files:   1% (108/10776)
+2026-10-30T07:41:49.1629474Z Updating files:   2% (216/10776)
+2026-10-30T07:41:49.1678520Z Updating files:   3% (324/10776)
+2026-10-30T07:41:49.1734859Z Updating files:   4% (432/10776)
+2026-10-30T07:41:49.1787447Z Updating files:   5% (539/10776)
+2026-10-30T07:41:49.1838329Z Updating files:   6% (647/10776)
+2026-10-30T07:41:49.1906669Z Updating files:   7% (755/10776)
+2026-10-30T07:41:49.1969093Z Updating files:   8% (863/10776)
+2026-10-30T07:41:49.2025244Z Updating files:   9% (970/10776)
+2026-10-30T07:41:49.2084103Z Updating files:  10% (1078/10776)
+2026-10-30T07:41:49.2142932Z Updating files:  11% (1186/10776)
+2026-10-30T07:41:49.2192434Z Updating files:  12% (1294/10776)
+2026-10-30T07:41:49.2252626Z Updating files:  13% (1401/10776)
+2026-10-30T07:41:49.2304285Z Updating files:  14% (1509/10776)
+2026-10-30T07:41:49.2350566Z Updating files:  15% (1617/10776)
+2026-10-30T07:41:49.2403146Z Updating files:  16% (1725/10776)
+2026-10-30T07:41:49.2547517Z Updating files:  17% (1832/10776)
+2026-10-30T07:41:49.2630871Z Updating files:  18% (1940/10776)
+2026-10-30T07:41:49.2719772Z Updating files:  19% (2048/10776)
+2026-10-30T07:41:49.2802181Z Updating files:  20% (2156/10776)
+2026-10-30T07:41:49.2884612Z Updating files:  21% (2263/10776)
+2026-10-30T07:41:49.2972040Z Updating files:  22% (2371/10776)
+2026-10-30T07:41:49.3040449Z Updating files:  23% (2479/10776)
+2026-10-30T07:41:49.3121958Z Updating files:  24% (2587/10776)
+2026-10-30T07:41:49.3201264Z Updating files:  25% (2694/10776)
+2026-10-30T07:41:49.3269152Z Updating files:  26% (2802/10776)
+2026-10-30T07:41:49.3329117Z Updating files:  27% (2910/10776)
+2026-10-30T07:41:49.3384330Z Updating files:  28% (3018/10776)
+2026-10-30T07:41:49.3444063Z Updating files:  29% (3126/10776)
+2026-10-30T07:41:49.3513612Z Updating files:  30% (3233/10776)
+2026-10-30T07:41:49.3562624Z Updating files:  31% (3341/10776)
+2026-10-30T07:41:49.3607306Z Updating files:  32% (3449/10776)
+2026-10-30T07:41:49.3653564Z Updating files:  33% (3557/10776)
+2026-10-30T07:41:49.3718136Z Updating files:  34% (3664/10776)
+2026-10-30T07:41:49.3784548Z Updating files:  35% (3772/10776)
+2026-10-30T07:41:49.3860338Z Updating files:  36% (3880/10776)
+2026-10-30T07:41:49.3932089Z Updating files:  37% (3988/10776)
+2026-10-30T07:41:49.3997298Z Updating files:  38% (4095/10776)
+2026-10-30T07:41:49.4074181Z Updating files:  39% (4203/10776)
+2026-10-30T07:41:49.4140195Z Updating files:  40% (4311/10776)
+2026-10-30T07:41:49.4212733Z Updating files:  41% (4419/10776)
+2026-10-30T07:41:49.4285387Z Updating files:  42% (4526/10776)
+2026-10-30T07:41:49.4358579Z Updating files:  43% (4634/10776)
+2026-10-30T07:41:49.4427266Z Updating files:  44% (4742/10776)
+2026-10-30T07:41:49.4510556Z Updating files:  45% (4850/10776)
+2026-10-30T07:41:49.4611521Z Updating files:  46% (4957/10776)
+2026-10-30T07:41:49.4677028Z Updating files:  47% (5065/10776)
+2026-10-30T07:41:49.4741826Z Updating files:  48% (5173/10776)
+2026-10-30T07:41:49.4809071Z Updating files:  49% (5281/10776)
+2026-10-30T07:41:49.4873680Z Updating files:  50% (5388/10776)
+2026-10-30T07:41:49.4951907Z Updating files:  51% (5496/10776)
+2026-10-30T07:41:49.5012833Z Updating files:  52% (5604/10776)
+2026-10-30T07:41:49.5088089Z Updating files:  53% (5712/10776)
+2026-10-30T07:41:49.5151021Z Updating files:  54% (5820/10776)
+2026-10-30T07:41:49.5221322Z Updating files:  55% (5927/10776)
+2026-10-30T07:41:49.5286783Z Updating files:  56% (6035/10776)
+2026-10-30T07:41:49.5349115Z Updating files:  57% (6143/10776)
+2026-10-30T07:41:49.5416858Z Updating files:  58% (6251/10776)
+2026-10-30T07:41:49.5485683Z Updating files:  59% (6358/10776)
+2026-10-30T07:41:49.5553074Z Updating files:  60% (6466/10776)
+2026-10-30T07:41:49.5619566Z Updating files:  61% (6574/10776)
+2026-10-30T07:41:49.5672713Z Updating files:  62% (6682/10776)
+2026-10-30T07:41:49.5742527Z Updating files:  63% (6789/10776)
+2026-10-30T07:41:49.5805739Z Updating files:  64% (6897/10776)
+2026-10-30T07:41:49.5862429Z Updating files:  65% (7005/10776)
+2026-10-30T07:41:49.5930390Z Updating files:  66% (7113/10776)
+2026-10-30T07:41:49.5994712Z Updating files:  67% (7220/10776)
+2026-10-30T07:41:49.6049581Z Updating files:  68% (7328/10776)
+2026-10-30T07:41:49.6108437Z Updating files:  69% (7436/10776)
+2026-10-30T07:41:49.6176375Z Updating files:  70% (7544/10776)
+2026-10-30T07:41:49.6254583Z Updating files:  71% (7651/10776)
+2026-10-30T07:41:49.6326003Z Updating files:  72% (7759/10776)
+2026-10-30T07:41:49.6407806Z Updating files:  73% (7867/10776)
+2026-10-30T07:41:49.6472388Z Updating files:  74% (7975/10776)
+2026-10-30T07:41:49.6535544Z Updating files:  75% (8082/10776)
+2026-10-30T07:41:49.6598438Z Updating files:  76% (8190/10776)
+2026-10-30T07:41:49.6688349Z Updating files:  77% (8298/10776)
+2026-10-30T07:41:49.6753392Z Updating files:  78% (8406/10776)
+2026-10-30T07:41:49.6818998Z Updating files:  79% (8514/10776)
+2026-10-30T07:41:49.6879921Z Updating files:  80% (8621/10776)
+2026-10-30T07:41:49.6939365Z Updating files:  81% (8729/10776)
+2026-10-30T07:41:49.7000770Z Updating files:  82% (8837/10776)
+2026-10-30T07:41:49.7056764Z Updating files:  83% (8945/10776)
+2026-10-30T07:41:49.7121318Z Updating files:  84% (9052/10776)
+2026-10-30T07:41:49.7199386Z Updating files:  85% (9160/10776)
+2026-10-30T07:41:49.7264738Z Updating files:  86% (9268/10776)
+2026-10-30T07:41:49.7328113Z Updating files:  87% (9376/10776)
+2026-10-30T07:41:49.7393942Z Updating files:  88% (9483/10776)
+2026-10-30T07:41:49.7446829Z Updating files:  89% (9591/10776)
+2026-10-30T07:41:49.7509949Z Updating files:  90% (9699/10776)
+2026-10-30T07:41:49.7593871Z Updating files:  91% (9807/10776)
+2026-10-30T07:41:49.7674546Z Updating files:  92% (9914/10776)
+2026-10-30T07:41:49.7749491Z Updating files:  93% (10022/10776)
+2026-10-30T07:41:49.7821213Z Updating files:  94% (10130/10776)
+2026-10-30T07:41:49.7895493Z Updating files:  95% (10238/10776)
+2026-10-30T07:41:49.7972657Z Updating files:  96% (10345/10776)
+2026-10-30T07:41:49.8042647Z Updating files:  97% (10453/10776)
+2026-10-30T07:41:49.8119063Z Updating files:  98% (10561/10776)
+2026-10-30T07:41:49.8185962Z Updating files:  99% (10669/10776)
+2026-10-30T07:41:49.8292290Z Updating files: 100% (10776/10776)
+2026-10-30T07:41:49.8292960Z Updating files: 100% (10776/10776), done.
+2026-10-30T07:41:50.0549730Z Switched to a new branch 'codex/vo2168-current-shallow-checkout'
+2026-10-30T07:41:50.0554102Z branch 'codex/vo2168-current-shallow-checkout' set up to track 'origin/codex/vo2168-current-shallow-checkout'.
+2026-10-30T07:41:50.0629402Z ##[endgroup]
+2026-10-30T07:41:50.0689611Z [command]/usr/bin/git log -1 --format=%H
+2026-10-30T07:41:50.0730634Z 09ca211fec5fcebfd47747cd55485781adf93974
+2026-10-30T07:41:50.0744162Z ##[group]Removing auth
+2026-10-30T07:41:50.0744826Z Removing SSH command configuration
+2026-10-30T07:41:50.0752264Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-30T07:41:50.0798639Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-30T07:41:50.1467244Z Removing HTTP extra header
+2026-10-30T07:41:50.1474040Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-30T07:41:50.1524313Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-30T07:41:50.2181216Z Removing includeIf entries pointing to credentials config files
+2026-10-30T07:41:50.2187073Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T07:41:50.2231132Z includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path
+2026-10-30T07:41:50.2231925Z includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path
+2026-10-30T07:41:50.2232414Z includeif.gitdir:/github/workspace/.git.path
+2026-10-30T07:41:50.2232766Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-30T07:41:50.2244610Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path
+2026-10-30T07:41:50.2286644Z /home/runner/work/_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:50.2300352Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git.path /home/runner/work/_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:50.2351886Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path
+2026-10-30T07:41:50.2388377Z /home/runner/work/_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:50.2412564Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/lean-bridge/lean-bridge/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:50.2460831Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-30T07:41:50.2498953Z /github/runner_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:50.2507894Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:50.2553555Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-30T07:41:50.2591791Z /github/runner_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:50.2600092Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config
+2026-10-30T07:41:50.2643771Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-30T07:41:50.3283504Z Removing credentials config '/home/runner/work/_temp/git-credentials-411e66ed-3dd4-47a4-830c-ac97329f3de8.config'
+2026-10-30T07:41:50.3293817Z ##[endgroup]
+2026-10-30T07:41:50.3560958Z ##[group]Run actions/setup-node@v6
+2026-10-30T07:41:50.3561259Z with:
+2026-10-30T07:41:50.3561462Z   node-version: 22
+2026-10-30T07:41:50.3561665Z   cache: npm
+2026-10-30T07:41:50.3561866Z   check-latest: false
+2026-10-30T07:41:50.3564646Z   token: ***
+2026-10-30T07:41:50.3564861Z   package-manager-cache: true
+2026-10-30T07:41:50.3565107Z ##[endgroup]
+2026-10-30T07:41:50.5105488Z Found in cache @ /opt/hostedtoolcache/node/22.23.4/x64
+2026-10-30T07:41:50.5106887Z ##[group]Environment details
+2026-10-30T07:41:50.9420556Z node: v22.23.4
+2026-10-30T07:41:50.9421160Z npm: 10.9.9
+2026-10-30T07:41:50.9421525Z yarn: 1.22.22
+2026-10-30T07:41:50.9422481Z ##[endgroup]
+2026-10-30T07:41:50.9443432Z [command]/opt/hostedtoolcache/node/22.23.4/x64/bin/npm config get cache
+2026-10-30T07:41:51.0632700Z /home/runner/.npm
+2026-10-30T07:41:51.3375217Z Cache hit for: node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e
+2026-10-30T07:41:52.6617387Z Received 0 of 55090959 (0.0%), 0.0 MBs/sec
+2026-10-30T07:41:53.1470698Z Received 55090959 of 55090959 (100.0%), 35.3 MBs/sec
+2026-10-30T07:41:53.1471961Z Cache Size: ~53 MB (55090959 B)
+2026-10-30T07:41:53.1507430Z [command]/usr/bin/tar -xf /home/runner/work/_temp/41c37c90-e623-4dce-b1d3-ea1f69d3e9c1/cache.tzst -P -C /home/runner/work/lean-bridge/lean-bridge --use-compress-program unzstd
+2026-10-30T07:41:53.3141000Z Cache restored successfully
+2026-10-30T07:41:53.3173868Z Cache restored from key: node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e
+2026-10-30T07:41:53.4064164Z ##[group]Run actions/cache@v5
+2026-10-30T07:41:53.4064469Z with:
+2026-10-30T07:41:53.4064733Z   path: .toolchains/elan
+.toolchains/elan-installer
+
+2026-10-30T07:41:53.4065286Z   key: proof-erasure-lean-Linux-48561797642af5c8e97c610aa6dc2c32b6ea621ba8f3b45d3129a02858d4a4b7
+2026-10-30T07:41:53.4065806Z   enableCrossOsArchive: false
+2026-10-30T07:41:53.4066350Z   fail-on-cache-miss: false
+2026-10-30T07:41:53.4066811Z   lookup-only: false
+2026-10-30T07:41:53.4067089Z   save-always: false
+2026-10-30T07:41:53.4067304Z ##[endgroup]
+2026-10-30T07:41:53.8106571Z Cache hit for: proof-erasure-lean-Linux-48561797642af5c8e97c610aa6dc2c32b6ea621ba8f3b45d3129a02858d4a4b7
+2026-10-30T07:41:55.0970228Z Received 12582912 of 742113816 (1.7%), 12.0 MBs/sec
+2026-10-30T07:41:56.1288563Z Received 134217728 of 742113816 (18.1%), 63.0 MBs/sec
+2026-10-30T07:41:57.1256999Z Received 260046848 of 742113816 (35.0%), 81.8 MBs/sec
+2026-10-30T07:41:58.1261433Z Received 335544320 of 742113816 (45.2%), 79.4 MBs/sec
+2026-10-30T07:41:59.1357936Z Received 461373440 of 742113816 (62.2%), 87.4 MBs/sec
+2026-10-30T07:42:00.1327685Z Received 629145600 of 742113816 (84.8%), 99.4 MBs/sec
+2026-10-30T07:42:00.9697559Z Received 742113816 of 742113816 (100.0%), 102.9 MBs/sec
+2026-10-30T07:42:00.9700809Z Cache Size: ~708 MB (742113816 B)
+2026-10-30T07:42:00.9774397Z [command]/usr/bin/tar -xf /home/runner/work/_temp/9a2393ea-eeff-4ed8-9d71-dd3f14919aed/cache.tzst -P -C /home/runner/work/lean-bridge/lean-bridge --use-compress-program unzstd
+2026-10-30T07:42:06.4340715Z Cache restored successfully
+2026-10-30T07:42:07.1551441Z Cache restored from key: proof-erasure-lean-Linux-48561797642af5c8e97c610aa6dc2c32b6ea621ba8f3b45d3129a02858d4a4b7
+2026-10-30T07:42:07.2431273Z ##[group]Run npm ci --ignore-scripts --no-audit --no-fund
+2026-10-30T07:42:07.2431778Z [36;1mnpm ci --ignore-scripts --no-audit --no-fund[0m
+2026-10-30T07:42:07.2468479Z shell: /usr/bin/bash -e {0}
+2026-10-30T07:42:07.2468752Z ##[endgroup]
+2026-10-30T07:42:12.1956088Z 
+2026-10-30T07:42:12.1967640Z added 422 packages in 5s
+2026-10-30T07:42:12.2707047Z ##[group]Run bash scripts/bootstrap-toolchains.sh --lean-only
+2026-10-30T07:42:12.2707579Z [36;1mbash scripts/bootstrap-toolchains.sh --lean-only[0m
+2026-10-30T07:42:12.2728479Z shell: /usr/bin/bash -e {0}
+2026-10-30T07:42:12.2728762Z ##[endgroup]
+2026-10-30T07:42:12.5465623Z /home/runner/work/lean-bridge/lean-bridge/.toolchains/downloads/elan-x86_64-unknown-linux-gnu.tar.gz: OK
+2026-10-30T07:42:12.5661041Z info: default toolchain set to 'leanprover/lean4:v4.32.2'
+2026-10-30T07:42:12.6258371Z ##[group]Run set -o pipefail
+2026-10-30T07:42:12.6258782Z [36;1mset -o pipefail[0m
+2026-10-30T07:42:12.6259241Z [36;1mmkdir -p build/direct-proof-erasure-refusal[0m
+2026-10-30T07:42:12.6259592Z [36;1msource scripts/env.sh[0m
+2026-10-30T07:42:12.6260064Z [36;1mLEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-concurrency=1 \[0m
+2026-10-30T07:42:12.6261110Z [36;1m  --test-name-pattern "fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs" \[0m
+2026-10-30T07:42:12.6261874Z [36;1m  tests/elaborated-metadata.test.mjs \[0m
+2026-10-30T07:42:12.6262256Z [36;1m  | tee build/direct-proof-erasure-refusal/run.tap[0m
+2026-10-30T07:42:12.6286654Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-30T07:42:12.6287028Z ##[endgroup]
+2026-10-30T07:42:12.6862412Z TAP version 13
+2026-10-30T07:42:34.8832944Z # Subtest: fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs
+2026-10-30T07:42:34.8845378Z ok 1 - fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs
+2026-10-30T07:42:34.8846650Z   ---
+2026-10-30T07:42:34.8847041Z   duration_ms: 22064.458046
+2026-10-30T07:42:34.8847458Z   type: 'test'
+2026-10-30T07:42:34.8847812Z   ...
+2026-10-30T07:42:34.9002321Z 1..1
+2026-10-30T07:42:34.9003259Z # tests 1
+2026-10-30T07:42:34.9004355Z # suites 0
+2026-10-30T07:42:34.9005219Z # pass 1
+2026-10-30T07:42:34.9010289Z # fail 0
+2026-10-30T07:42:34.9010736Z # cancelled 0
+2026-10-30T07:42:34.9011156Z # skipped 0
+2026-10-30T07:42:34.9012043Z # todo 0
+2026-10-30T07:42:34.9012579Z # duration_ms 22229.519322
+2026-10-30T07:42:34.9797247Z Post job cleanup.
+2026-10-30T07:42:35.1194933Z Cache hit occurred on the primary key proof-erasure-lean-Linux-48561797642af5c8e97c610aa6dc2c32b6ea621ba8f3b45d3129a02858d4a4b7, not saving cache.
+2026-10-30T07:42:35.1357533Z Post job cleanup.
+2026-10-30T07:42:35.2650348Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-26a2ea32ff9fbdbc806907cf3b846fc9f2d906ee6b040e7c2c0e2b49f755b41e, not saving cache.
+2026-10-30T07:42:35.2791647Z Post job cleanup.
+2026-10-30T07:42:35.3757054Z [command]/usr/bin/git version
+2026-10-30T07:42:35.3813346Z git version 2.56.0
+2026-10-30T07:42:35.3864455Z Temporarily overriding HOME='/home/runner/work/_temp/d36303cc-2b96-4105-bec6-30a69aa9e65d' before making global git config changes
+2026-10-30T07:42:35.3872061Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-30T07:42:35.3877350Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/lean-bridge/lean-bridge
+2026-10-30T07:42:35.3914396Z Removing SSH command configuration
+2026-10-30T07:42:35.3923011Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-30T07:42:35.3971121Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-30T07:42:35.4698660Z Removing HTTP extra header
+2026-10-30T07:42:35.4704844Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-30T07:42:35.4778934Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-30T07:42:35.5453377Z Removing includeIf entries pointing to credentials config files
+2026-10-30T07:42:35.5461915Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T07:42:35.5516945Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-30T07:42:35.6381207Z Cleaning up orphan processes

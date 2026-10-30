@@ -1,0 +1,116 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/directprooferasure-1.0.0-x86_64-linux.gem": "22e5d636086ad5544cf83a568a529945d925f09258b8292dac516ffdc5c6fa49"
+      },
+      "artifactsSha256": "6b0a13e7f4c0129de8dd16d38ee0c22bed5abfed6a54bc5c2aabbf72baba49fb",
+      "bindingIrFileSha256": "d8199d4b206d4e3375e2c88543a60e4c9f4ae085df3f80e4f3405435cb2e73b3",
+      "bindingIrSha256": "a7fd18bdd878e95d3105507ffe1c06ba16578b518337b6edd57254bc9c9cb4f6",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "e70812b9d619991761f5d787837751a993612335422c5fb1d7ed3639a1e4a787",
+      "modelSha256": "0a26a40730ba5f8756ae3a6414a81f4f7346846ad9e2400fc976b92d7ace9ba4",
+      "nativeComponentReceiptSha256": "a97c43309e6f9b3aeb08fe25e7f7baecc1359f43878f48041d8dc0fa5e4b8001",
+      "packageSetReceiptSha256": "f8ee8590597caddcdb9054fadec575b5a9927bc447ca7353f0825f6c0e64c288",
+      "runtimeParameters": 1
+    },
+    {
+      "archives": {
+        "archives/directprooferasure-1.0.0-x86_64-linux.gem": "22e5d636086ad5544cf83a568a529945d925f09258b8292dac516ffdc5c6fa49"
+      },
+      "artifactsSha256": "6b0a13e7f4c0129de8dd16d38ee0c22bed5abfed6a54bc5c2aabbf72baba49fb",
+      "bindingIrFileSha256": "d8199d4b206d4e3375e2c88543a60e4c9f4ae085df3f80e4f3405435cb2e73b3",
+      "bindingIrSha256": "a7fd18bdd878e95d3105507ffe1c06ba16578b518337b6edd57254bc9c9cb4f6",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "e70812b9d619991761f5d787837751a993612335422c5fb1d7ed3639a1e4a787",
+      "modelSha256": "0a26a40730ba5f8756ae3a6414a81f4f7346846ad9e2400fc976b92d7ace9ba4",
+      "nativeComponentReceiptSha256": "a97c43309e6f9b3aeb08fe25e7f7baecc1359f43878f48041d8dc0fa5e4b8001",
+      "packageSetReceiptSha256": "f8ee8590597caddcdb9054fadec575b5a9927bc447ca7353f0825f6c0e64c288",
+      "runtimeParameters": 1
+    }
+  ],
+  "compilerFreePath": true,
+  "dependencies": null,
+  "independentBuilds": 2,
+  "observation": {
+    "checks": 1005,
+    "closure": {
+      "environmentSha256": "376d10f8b3922925dd70ef0c0a5336b40a98e7208b1726c428992cc92f3c40ff",
+      "gemspecSha256": "4ed6184d6dafe9845dba9c0d3d8d88db6adeab4fc174ec08ead514fe7ea68eb9",
+      "interpreterSha256": "5705533003a8ca00e6359e2430ddf7a1737eb439983e1e1a4236d0396ec8771e",
+      "packageFileSetSha256": "2c48c66cb41c9fd795a8bbf82a04d3591dc90fccc72e5f9b89c4eb2e7a0187bf",
+      "receiptSha256": "d149a2ace37435f68f5a0175c3ae00157b010e6e7f06758585485903c10b48a4"
+    },
+    "compilerFreePath": true,
+    "consumerSha256": "7d063f4f5bc0cd24006aa08b955bedfc8fc33aa612694f98f4283823fadaeb09",
+    "executions": [
+      {
+        "checks": 1005,
+        "relocated": false
+      },
+      {
+        "checks": 1005,
+        "relocated": true
+      }
+    ],
+    "negativeProofArgument": {
+      "diagnostic": "<suite>/consumers/ruby-relocated/gems/gems/directprooferasure-1.0.0-x86_64-linux/lib/lean_bridge/directprooferasure.rb:8:in `keep': wrong number of arguments (given 3, expected 1) (ArgumentError)\n\tfrom -e:2:in `<main>'\n",
+      "rejected": true,
+      "relocated": true
+    },
+    "offlineInstall": true,
+    "profile": "ruby",
+    "proofSlots": 0,
+    "runtimeParameters": 1
+  },
+  "offlineInstall": true,
+  "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+  "profile": "ruby",
+  "receipt": {
+    "component": {
+      "id": "directprooferasure@1.0.0",
+      "name": "directprooferasure",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 50072064,
+            "path": "archives/directprooferasure-1.0.0-x86_64-linux.gem",
+            "sha256": "22e5d636086ad5544cf83a568a529945d925f09258b8292dac516ffdc5c6fa49"
+          }
+        ],
+        "ecosystem": "rubygems",
+        "name": "directprooferasure",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "rubygems",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "a7fd18bdd878e95d3105507ffe1c06ba16578b518337b6edd57254bc9c9cb4f6",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "648c74251496e17fe0afec0db0ee85faedd6be46511788c4cf9dc1b80739da58"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

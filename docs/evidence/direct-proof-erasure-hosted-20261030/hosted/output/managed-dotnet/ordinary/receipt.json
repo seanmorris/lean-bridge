@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "directprooferasure@1.0.0",
+    "name": "directprooferasure",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51345159,
+          "path": "archives/DirectProofErasure.Api.1.0.0.nupkg",
+          "sha256": "e79d703f46a2d0e6b45c51e285ff39a491494ed0ebeb3eb2186ff7504ea61a0e"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "DirectProofErasure.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "5efed1ba50e7ed4146cabd2a5b0655d216e8e7fdb39fd014061ace3055c4c7a2",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "43bd810fba7130b7912bd10c55822ad6c21cac0903a80b233c37b97b411599ac"
+  }
+}

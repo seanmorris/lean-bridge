@@ -1,0 +1,35 @@
+{
+  "bindingIrSha256": "df15fd0a889f6176f5174959fc490cc8ed4bf744fa21bc3c2ef4a444f36ab82f",
+  "component": {
+    "id": "directprooferasure@1.0.0",
+    "name": "directprooferasure",
+    "version": "1.0.0"
+  },
+  "componentArtifactSha256": "b508fc0ff0c58e8ba76918fb77d8198f9eb1d2a83da0d396622b8ab310783b36",
+  "componentBundleSha256": "b0c95657b17d680400869ceccaa561b94422191f5c9528b3f5affc3234bc192a",
+  "componentIdentitySha256": "68f729e89b4cbc7d206af473ab014e6e677784038fa98b5c7d07efe62a0d44d7",
+  "kind": "lean-bridge-component-package-receipt",
+  "package": {
+    "archive": "direct-proof-erasure-1.0.0.tgz",
+    "package": "direct-proof-erasure@1.0.0",
+    "sha256": "8a1074debc0e06c522d8e7e52062a49e674b8ccfb3668d23a8806e96a9123394"
+  },
+  "policies": {
+    "componentCompiledOnce": true,
+    "nativeCallablesOnly": true,
+    "runtimeBinaryInComponent": false,
+    "runtimeShared": true
+  },
+  "provenanceSha256": "82ceeebbee15125ba39b34c29fac58345dc88566fcb60e31de05bfa1b496ec2a",
+  "runtime": {
+    "archive": "lean-bridge-runtime-0.0.0-abi2.01474a1e96edb41ca75fac0183d88d6e047cd060b0dd42bcb7c48402baf03471.tgz",
+    "package": "@lean-bridge/runtime@0.0.0-abi2.01474a1e96edb41ca75fac0183d88d6e047cd060b0dd42bcb7c48402baf03471",
+    "sha256": "4ad022809902b44ce4a816e526dfef9393d6d20d4c1ce4841ab97bbcd70f3569"
+  },
+  "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+  "schemaVersion": 2,
+  "source": {
+    "treeSha256": "68ef28ba1c9a6b73f513d50078d29624e4091a331292b1fecaf3612fc85f8304"
+  },
+  "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+}

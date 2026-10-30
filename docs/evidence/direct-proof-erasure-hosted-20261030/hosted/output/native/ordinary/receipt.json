@@ -1,0 +1,57 @@
+{
+  "component": {
+    "id": "directprooferasure@1.0.0",
+    "name": "directprooferasure",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51318774,
+          "path": "archives/directprooferasure-1.0.0-c.tar.gz",
+          "sha256": "1fefdfe09b6a8b831575f82932f81fab740877a4fed23e73135cc69a0abc170d"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "directprooferasure",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51319405,
+          "path": "archives/directprooferasure-1.0.0-cpp.tar.gz",
+          "sha256": "541bd5fd1ea6633eb8365a0cb2987b668a393875212ddfe0c715115f4bd28b95"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "directprooferasure",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "5c4b6111a18a4faf449469272f39e2148996e20053934e1cbfaf8010dfb6de9c",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "4c761fd334e42305ef082e889ae8a22dfa192ca1acd9e8bda31824e9625fdbaa"
+  }
+}

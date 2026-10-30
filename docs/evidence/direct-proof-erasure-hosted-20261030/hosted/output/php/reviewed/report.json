@@ -1,0 +1,335 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "profiles/native/archives/example-directprooferasure-1.0.0-linux-x86_64.zip": "dff3325bee0ad06afd76161cac5f224c97a6a0edade77aced3df7d3c109ab19e",
+        "profiles/php-wasm/packages/php-wasm/archives/example-directprooferasure-php-wasm-1.0.0-php-wasm.zip": "3bbe8c4352e71a4e2e7a430ad6de49d325e3c22d3949d6bfbe7b69e581b6fac8",
+        "profiles/php-wasm/packages/php-wasm/archives/example-directprooferasure-php-wasm-1.0.0.tgz": "1863d80f1bf7e3b5aa192f101723869ef61edc56ba717611fc60c896fb8588ad",
+        "profiles/php-wasm/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57.tgz": "e16f404599084d863e58d3ae7a1a02cd27e0d375da7acb000361aa68d041f823"
+      },
+      "bindingIrSha256": "15e991f95a98674628351d7bdd246ab24d6d47bee268abf3e00fc662678dbb1c",
+      "erasedProofs": 2,
+      "nativeArtifactsSha256": "a249eebf37d6b395eea6dab0b7aeb8fa8678e8d6d125209d58ac7c86c631384f",
+      "nativeBindingIrFileSha256": "fae25e1a6aea88b0976505c296ab55122200c56866a894541636ff721fd74e01",
+      "nativeComponentReceiptSha256": "5587f608f6f38cf3fb273d271692ee81117cff1ec6fd9e797ce077c347712617",
+      "nativeGeneratedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "nativeMetadataSha256": "09d5f6c4d2790cb99e87f4842d6e9acb8c3ca7f8632b82927a0a5b7fe73155cb",
+      "nativeModelSha256": "939c6f24150ad5e0e8d6a1b7723f358337b717faff4ce9bf2ac21c8026ae6dcd",
+      "packageSetReceiptSha256": "579a8418db269163b7124ec1de10cd9c5ef0ae4f62dbde9acce54f1e9ed0024d",
+      "phpWasmArtifactsSha256": "ab1fa7961583f3bf52de93470f0a5a98a0fc28bcdbe9d4f0ce8b9477473a0288",
+      "phpWasmBindingIrFileSha256": "fae25e1a6aea88b0976505c296ab55122200c56866a894541636ff721fd74e01",
+      "phpWasmComponentReceiptSha256": "012408890f506dbfff75345d6624e79d5337cb7c3e640c53cdb7064560071ee9",
+      "phpWasmGeneratedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "phpWasmMetadataSha256": "09d5f6c4d2790cb99e87f4842d6e9acb8c3ca7f8632b82927a0a5b7fe73155cb",
+      "phpWasmModelSha256": "ca8f1c4c09db78ea8b4568d7be6275b6befda7a2577375111427b90d2d418312",
+      "runtimeParameters": 1
+    },
+    {
+      "archives": {
+        "profiles/native/archives/example-directprooferasure-1.0.0-linux-x86_64.zip": "dff3325bee0ad06afd76161cac5f224c97a6a0edade77aced3df7d3c109ab19e",
+        "profiles/php-wasm/packages/php-wasm/archives/example-directprooferasure-php-wasm-1.0.0-php-wasm.zip": "3bbe8c4352e71a4e2e7a430ad6de49d325e3c22d3949d6bfbe7b69e581b6fac8",
+        "profiles/php-wasm/packages/php-wasm/archives/example-directprooferasure-php-wasm-1.0.0.tgz": "1863d80f1bf7e3b5aa192f101723869ef61edc56ba717611fc60c896fb8588ad",
+        "profiles/php-wasm/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57.tgz": "e16f404599084d863e58d3ae7a1a02cd27e0d375da7acb000361aa68d041f823"
+      },
+      "bindingIrSha256": "15e991f95a98674628351d7bdd246ab24d6d47bee268abf3e00fc662678dbb1c",
+      "erasedProofs": 2,
+      "nativeArtifactsSha256": "a249eebf37d6b395eea6dab0b7aeb8fa8678e8d6d125209d58ac7c86c631384f",
+      "nativeBindingIrFileSha256": "fae25e1a6aea88b0976505c296ab55122200c56866a894541636ff721fd74e01",
+      "nativeComponentReceiptSha256": "5587f608f6f38cf3fb273d271692ee81117cff1ec6fd9e797ce077c347712617",
+      "nativeGeneratedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "nativeMetadataSha256": "09d5f6c4d2790cb99e87f4842d6e9acb8c3ca7f8632b82927a0a5b7fe73155cb",
+      "nativeModelSha256": "939c6f24150ad5e0e8d6a1b7723f358337b717faff4ce9bf2ac21c8026ae6dcd",
+      "packageSetReceiptSha256": "579a8418db269163b7124ec1de10cd9c5ef0ae4f62dbde9acce54f1e9ed0024d",
+      "phpWasmArtifactsSha256": "ab1fa7961583f3bf52de93470f0a5a98a0fc28bcdbe9d4f0ce8b9477473a0288",
+      "phpWasmBindingIrFileSha256": "fae25e1a6aea88b0976505c296ab55122200c56866a894541636ff721fd74e01",
+      "phpWasmComponentReceiptSha256": "012408890f506dbfff75345d6624e79d5337cb7c3e640c53cdb7064560071ee9",
+      "phpWasmGeneratedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "phpWasmMetadataSha256": "09d5f6c4d2790cb99e87f4842d6e9acb8c3ca7f8632b82927a0a5b7fe73155cb",
+      "phpWasmModelSha256": "ca8f1c4c09db78ea8b4568d7be6275b6befda7a2577375111427b90d2d418312",
+      "runtimeParameters": 1
+    }
+  ],
+  "compilerFreePath": true,
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "apiSha256": "7f3ed7fd5e919932641011dfacf50d41cb1645cce7eea194433f0c62908bd4d6",
+      "checks": 1005,
+      "compilerFreePath": true,
+      "consumerSha256": "22019d3af4ff790bc3f1ed0aea1c2b095d4a4ac4fbb3d1e27333684ee5a0e137",
+      "executions": [
+        {
+          "checks": 1005,
+          "mode": "strict",
+          "relocated": false
+        },
+        {
+          "checks": 1005,
+          "mode": "weak",
+          "relocated": false
+        },
+        {
+          "checks": 1005,
+          "mode": "weak",
+          "relocated": true
+        },
+        {
+          "checks": 1005,
+          "mode": "strict",
+          "relocated": true
+        }
+      ],
+      "negativeProofArgument": {
+        "attempts": 4,
+        "namedArguments": "_before,value,_after",
+        "rejected": true
+      },
+      "offlineInstall": true,
+      "profile": "php-native",
+      "proofSlots": 0,
+      "runtimeParameters": 1
+    },
+    {
+      "apiSha256": "54c1b7d702672985d09d122a6bf94398cce27968fc7cdd8b55c8cda131d40760",
+      "browserVersion": "151.0.7922.34",
+      "checks": 1005,
+      "compilerFreePath": true,
+      "consumerSha256": "a6074ff4b5a3de059b3269a49bc5df60988bca5459b1396df3d2a18c332abf86",
+      "driverSha256": "61b614432767788dd64d6215d29643f58c04825a417c4522643cb107955980bd",
+      "executions": [
+        {
+          "arrangement": "embedded",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "embedded",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "node"
+        },
+        {
+          "arrangement": "composer",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "node"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "startup",
+          "mode": "strict",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "weak",
+          "realm": "chromium"
+        },
+        {
+          "arrangement": "bundled",
+          "checks": 1005,
+          "libraries": 2,
+          "loading": "lazy",
+          "mode": "strict",
+          "realm": "chromium"
+        }
+      ],
+      "negativeProofArgument": {
+        "attempts": 24,
+        "namedArguments": "_before,value,_after",
+        "rejected": true
+      },
+      "offlineInstall": true,
+      "profile": "php-wasm",
+      "proofSlots": 0,
+      "runtimeParameters": 1
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+  "profiles": [
+    "php-native",
+    "php-wasm"
+  ],
+  "receipt": {
+    "component": {
+      "id": "directprooferasure@1.0.0",
+      "name": "directprooferasure",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 76647,
+            "path": "profiles/php-wasm/packages/php-wasm/archives/example-directprooferasure-php-wasm-1.0.0-php-wasm.zip",
+            "sha256": "3bbe8c4352e71a4e2e7a430ad6de49d325e3c22d3949d6bfbe7b69e581b6fac8"
+          }
+        ],
+        "ecosystem": "composer",
+        "name": "example/directprooferasure-php-wasm",
+        "profile": "php-wasm-copied-v1",
+        "requires": [
+          {
+            "ecosystem": "npm",
+            "name": "@example/directprooferasure-php-wasm",
+            "version": "1.0.0"
+          },
+          {
+            "ecosystem": "npm",
+            "name": "@lean-bridge/php-wasm-copied-runtime",
+            "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+          }
+        ],
+        "role": "api",
+        "runtimeDelivery": "dependency",
+        "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+        "target": "php-wasm",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51340500,
+            "path": "profiles/native/archives/example-directprooferasure-1.0.0-linux-x86_64.zip",
+            "sha256": "dff3325bee0ad06afd76161cac5f224c97a6a0edade77aced3df7d3c109ab19e"
+          }
+        ],
+        "ecosystem": "composer",
+        "name": "example/directprooferasure",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "php-native",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 108540,
+            "path": "profiles/php-wasm/packages/php-wasm/archives/example-directprooferasure-php-wasm-1.0.0.tgz",
+            "sha256": "1863d80f1bf7e3b5aa192f101723869ef61edc56ba717611fc60c896fb8588ad"
+          }
+        ],
+        "ecosystem": "npm",
+        "name": "@example/directprooferasure-php-wasm",
+        "profile": "php-wasm-copied-v1",
+        "requires": [
+          {
+            "ecosystem": "npm",
+            "name": "@lean-bridge/php-wasm-copied-runtime",
+            "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+          }
+        ],
+        "role": "component",
+        "runtimeDelivery": "dependency",
+        "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+        "target": "php-wasm",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 1660981,
+            "path": "profiles/php-wasm/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57.tgz",
+            "sha256": "e16f404599084d863e58d3ae7a1a02cd27e0d375da7acb000361aa68d041f823"
+          }
+        ],
+        "ecosystem": "npm",
+        "name": "@lean-bridge/php-wasm-copied-runtime",
+        "profile": "php-wasm-copied-v1",
+        "requires": [],
+        "role": "runtime",
+        "runtimeDelivery": "provided",
+        "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+        "target": "php-wasm",
+        "version": "0.0.0-copied1.9c18f1aedeb1c59451bd5b9605e78ad78719505a3b951639ed9a9449cc0b2a57"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "15e991f95a98674628351d7bdd246ab24d6d47bee268abf3e00fc662678dbb1c",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      },
+      {
+        "bindingIrSha256": "15e991f95a98674628351d7bdd246ab24d6d47bee268abf3e00fc662678dbb1c",
+        "id": "php-wasm-copied-v1",
+        "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "04f583e0031796edab5efb0c586ec3b9f02c25cf72a00030dcea8badaa5cf94b"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

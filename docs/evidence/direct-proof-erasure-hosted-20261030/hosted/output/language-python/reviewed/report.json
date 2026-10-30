@@ -1,0 +1,115 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/directprooferasure-1.0.0-py3-none-manylinux_2_38_x86_64.whl": "79f485d65f1893dac9ff322cb4261f8c748d0bc9eb552d288808203785f4eb60"
+      },
+      "artifactsSha256": "5f20357e9e5b106c4bbf148f65985f6e2a95da1dd57269c24559e37fc34bad18",
+      "bindingIrFileSha256": "69157237d21ab102e3726940303636ad1f1583f361d83a94bd33af07b1ed7ef5",
+      "bindingIrSha256": "e53952998cbf99a1510890d040041b72e86d16275bc575fe5cf0c0c43c97dbed",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "e70812b9d619991761f5d787837751a993612335422c5fb1d7ed3639a1e4a787",
+      "modelSha256": "e6a93bf68a5ee2ba0276bb4e3e90a48323647e7723216ba2cf6323334172a202",
+      "nativeComponentReceiptSha256": "d91a13ef2737fb4482b8a84a3da73fd960692cd70840370f1885c4d5350e4560",
+      "packageSetReceiptSha256": "48a2a2a285c2092debea4eb59080bc2721732d10012ae6affa9c8e9ccf7561c2",
+      "runtimeParameters": 1
+    },
+    {
+      "archives": {
+        "archives/directprooferasure-1.0.0-py3-none-manylinux_2_38_x86_64.whl": "79f485d65f1893dac9ff322cb4261f8c748d0bc9eb552d288808203785f4eb60"
+      },
+      "artifactsSha256": "5f20357e9e5b106c4bbf148f65985f6e2a95da1dd57269c24559e37fc34bad18",
+      "bindingIrFileSha256": "69157237d21ab102e3726940303636ad1f1583f361d83a94bd33af07b1ed7ef5",
+      "bindingIrSha256": "e53952998cbf99a1510890d040041b72e86d16275bc575fe5cf0c0c43c97dbed",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "e70812b9d619991761f5d787837751a993612335422c5fb1d7ed3639a1e4a787",
+      "modelSha256": "e6a93bf68a5ee2ba0276bb4e3e90a48323647e7723216ba2cf6323334172a202",
+      "nativeComponentReceiptSha256": "d91a13ef2737fb4482b8a84a3da73fd960692cd70840370f1885c4d5350e4560",
+      "packageSetReceiptSha256": "48a2a2a285c2092debea4eb59080bc2721732d10012ae6affa9c8e9ccf7561c2",
+      "runtimeParameters": 1
+    }
+  ],
+  "compilerFreePath": true,
+  "dependencies": null,
+  "independentBuilds": 2,
+  "observation": {
+    "checks": 1005,
+    "closure": {
+      "baselineSha256": "de3fe564defd4071eef068cf3b7466beb3e8b084bb856b88ccc05fb91c660b64",
+      "environmentSha256": "d15356603e048555e2c88b716836ad99b721bf979d765bf5044b4613d46586e0",
+      "interpreterSha256": "53dab24bf9e0e9c490088a53d71770b6f027b057678b313648e75f7fc87a675e",
+      "python": "3.12.15"
+    },
+    "compilerFreePath": true,
+    "consumerSha256": "a96a793038794bedc6fb9727f95081894b17177643fdea51a75c17aad65d30b9",
+    "executions": [
+      {
+        "checks": 1005,
+        "relocated": false
+      },
+      {
+        "checks": 1005,
+        "relocated": true
+      }
+    ],
+    "negativeProofArgument": {
+      "diagnostic": "Traceback (most recent call last):\n  File \"<string>\", line 2, in <module>\nTypeError: keep() takes 1 positional argument but 3 were given\n",
+      "rejected": true,
+      "relocated": true
+    },
+    "offlineInstall": true,
+    "profile": "python",
+    "proofSlots": 0,
+    "runtimeParameters": 1
+  },
+  "offlineInstall": true,
+  "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+  "profile": "python",
+  "receipt": {
+    "component": {
+      "id": "directprooferasure@1.0.0",
+      "name": "directprooferasure",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51340823,
+            "path": "archives/directprooferasure-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+            "sha256": "79f485d65f1893dac9ff322cb4261f8c748d0bc9eb552d288808203785f4eb60"
+          }
+        ],
+        "ecosystem": "pypi",
+        "name": "directprooferasure",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "pypi",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "e53952998cbf99a1510890d040041b72e86d16275bc575fe5cf0c0c43c97dbed",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "6150d029b08a5fd92541bef2cca3d8cbc99abcf54779d1fd26bd104caa1db546"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

@@ -1,0 +1,165 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/directprooferasure-1.0.0-c.tar.gz": "1fefdfe09b6a8b831575f82932f81fab740877a4fed23e73135cc69a0abc170d",
+        "archives/directprooferasure-1.0.0-cpp.tar.gz": "541bd5fd1ea6633eb8365a0cb2987b668a393875212ddfe0c715115f4bd28b95"
+      },
+      "artifactsSha256": "c19fbac0db6f9b1556bfc68395c73f7a68e862b2c580a8e3e7f9c09e8caf00ca",
+      "bindingIrFileSha256": "2221043c3d8d187127f8569316ed4f9b34db000e15bcb2b4696ad23fd3ec16ba",
+      "bindingIrSha256": "5c4b6111a18a4faf449469272f39e2148996e20053934e1cbfaf8010dfb6de9c",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "489632dec4200a41b8098ac08b128eb79891cef1f531c9081fe87eb2408f0ca0",
+      "modelSha256": "c08de25badfa0f6ea685a061a34ca02663d2ac272ee31db9cf824ff3572125e4",
+      "nativeComponentReceiptSha256": "bff6aac35a47bfb73ffa2c6445f80bc41a8ad58f2637f9ee4ce9653fb3566eb9",
+      "packageSetReceiptSha256": "f09d3a3c458024a9d7442c6c154bafe6ccfd9e391051b428f36800a8b58d7a66",
+      "runtimeParameters": 1
+    },
+    {
+      "archives": {
+        "archives/directprooferasure-1.0.0-c.tar.gz": "1fefdfe09b6a8b831575f82932f81fab740877a4fed23e73135cc69a0abc170d",
+        "archives/directprooferasure-1.0.0-cpp.tar.gz": "541bd5fd1ea6633eb8365a0cb2987b668a393875212ddfe0c715115f4bd28b95"
+      },
+      "artifactsSha256": "c19fbac0db6f9b1556bfc68395c73f7a68e862b2c580a8e3e7f9c09e8caf00ca",
+      "bindingIrFileSha256": "2221043c3d8d187127f8569316ed4f9b34db000e15bcb2b4696ad23fd3ec16ba",
+      "bindingIrSha256": "5c4b6111a18a4faf449469272f39e2148996e20053934e1cbfaf8010dfb6de9c",
+      "erasedProofs": 2,
+      "generatedLeanSha256": "d058879140ee2582d754675a8d8cf712a62781ec4863cc2aa2b5dbccc86f5cca",
+      "metadataSha256": "489632dec4200a41b8098ac08b128eb79891cef1f531c9081fe87eb2408f0ca0",
+      "modelSha256": "c08de25badfa0f6ea685a061a34ca02663d2ac272ee31db9cf824ff3572125e4",
+      "nativeComponentReceiptSha256": "bff6aac35a47bfb73ffa2c6445f80bc41a8ad58f2637f9ee4ce9653fb3566eb9",
+      "packageSetReceiptSha256": "f09d3a3c458024a9d7442c6c154bafe6ccfd9e391051b428f36800a8b58d7a66",
+      "runtimeParameters": 1
+    }
+  ],
+  "compilerFreePath": true,
+  "independentBuilds": 2,
+  "observations": [
+    {
+      "checks": 1005,
+      "compilerFreePath": true,
+      "consumerSha256": "6e241a29da88cc0694e62906c3201002da4d238e1513ed0c8088c270df70599e",
+      "executableSha256": "72c69fa1d1109b83b0055e37dbcedf787818c63994258230320b2b1525b0cce7",
+      "executions": [
+        {
+          "checks": 1005,
+          "relocated": false
+        },
+        {
+          "checks": 1005,
+          "relocated": true
+        }
+      ],
+      "headerSha256": "22b917e8569e28d8b3a7c253710a1e583ed55deba4b6a956ed8f465eda1c8c19",
+      "negativeProofArgument": {
+        "diagnostic": "proof-argument-negative.c: In function 'main':\nproof-argument-negative.c:5:48: error: passing argument 3 of 'directprooferasure_keep' from incompatible pointer type [-Werror=incompatible-pointer-types]\n    5 |   return (int)directprooferasure_keep(true, 0, &output, &error);\n      |                                                ^~~~~~~\n      |                                                |\n      |                                                uint32_t * {aka unsigned int *}\nIn file included from proof-argument-negative.c:1:\n<consumer>/directprooferasure-1.0.0-c/include/directprooferasure.h:37:107: note: expected 'directprooferasure_error *' but argument is of type 'uint32_t *' {aka 'unsigned int *'}\n   37 | directprooferasure_status directprooferasure_keep(uint32_t arg0, uint32_t *out, directprooferasure_error *error);\n      |                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~\nproof-argument-negative.c:5:15: error: too many arguments to function 'directprooferasure_keep'\n    5 |   return (int)directprooferasure_keep(true, 0, &output, &error);\n      |               ^~~~~~~~~~~~~~~~~~~~~~~\n<consumer>/directprooferasure-1.0.0-c/include/directprooferasure.h:37:27: note: declared here\n   37 | directprooferasure_status directprooferasure_keep(uint32_t arg0, uint32_t *out, directprooferasure_error *error);\n      |                           ^~~~~~~~~~~~~~~~~~~~~~~\ncc1: all warnings being treated as errors\n",
+        "rejected": true,
+        "relocated": true
+      },
+      "offlineInstall": true,
+      "packageFileSetSha256": "1968dfe68420c189e9b03b27104a71b3e564be2a8b6af6c91c5a6b9e285f4f29",
+      "profile": "c",
+      "proofSlots": 0,
+      "receiptSha256": "96e946da2dc83b12ba022c9814bbfc759a24093d45e2649f2fd32eb5daff31fc",
+      "runtimeParameters": 1
+    },
+    {
+      "checks": 1005,
+      "compilerFreePath": true,
+      "consumerSha256": "115c762e717cba43216ba6a481dce21c358ddb1d66a3124141bf7d1a77b45496",
+      "executableSha256": "9080262c21c991e66f2a0023e502d33f01580d2c50d3e7b8b378ae4267367245",
+      "executions": [
+        {
+          "checks": 1005,
+          "relocated": false
+        },
+        {
+          "checks": 1005,
+          "relocated": true
+        }
+      ],
+      "headerSha256": "e843f6e2a88786d822123ba03878212ac6e88de31af380b3a30298b049223495",
+      "negativeProofArgument": {
+        "diagnostic": "proof-argument-negative.cpp: In function 'int main()':\nproof-argument-negative.cpp:3:35: error: too many arguments to function 'uint32_t lean_bridge::directprooferasure::keep(uint32_t)'\n    3 | int main() { return (int)api::keep(true, 0); }\n      |                          ~~~~~~~~~^~~~~~~~~\nIn file included from proof-argument-negative.cpp:1:\n<consumer>/directprooferasure-1.0.0-cpp/include/directprooferasure.hpp:63:17: note: declared here\n   63 | inline uint32_t keep(uint32_t arg0) {\n      |                 ^~~~\n",
+        "rejected": true,
+        "relocated": true
+      },
+      "offlineInstall": true,
+      "packageFileSetSha256": "4d6cfbd5c10b94d8fb8e3d09fb2fc98e62b28c5f5625f50903cc00ddd48b0346",
+      "profile": "cpp",
+      "proofSlots": 0,
+      "receiptSha256": "1b57e4310b5e057b27a9ecb15cb7aed9e61aed4b1c153770d9e068dd459b8b2e",
+      "runtimeParameters": 1
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "receipt": {
+    "component": {
+      "id": "directprooferasure@1.0.0",
+      "name": "directprooferasure",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51318774,
+            "path": "archives/directprooferasure-1.0.0-c.tar.gz",
+            "sha256": "1fefdfe09b6a8b831575f82932f81fab740877a4fed23e73135cc69a0abc170d"
+          }
+        ],
+        "ecosystem": "c",
+        "name": "directprooferasure",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "c",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51319405,
+            "path": "archives/directprooferasure-1.0.0-cpp.tar.gz",
+            "sha256": "541bd5fd1ea6633eb8365a0cb2987b668a393875212ddfe0c715115f4bd28b95"
+          }
+        ],
+        "ecosystem": "cpp",
+        "name": "directprooferasure",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpp",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "5c4b6111a18a4faf449469272f39e2148996e20053934e1cbfaf8010dfb6de9c",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "4c761fd334e42305ef082e889ae8a22dfa192ca1acd9e8bda31824e9625fdbaa"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "ordinary",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}
