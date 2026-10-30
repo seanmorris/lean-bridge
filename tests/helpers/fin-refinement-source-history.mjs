@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeProofErasurePartitionAuditRepairSource, proofErasurePartitionAuditRepairNormalizationPaths } from "./proof-erasure-partition-audit-repair-source-history.mjs";
 import { beforeOptionalParameterPinTestMilestoneSource, optionalParameterPinTestMilestoneNormalizationPaths } from "./optional-parameter-pin-test-milestone-source-history.mjs";
 import { beforeDirectProofErasureNpmRouteBinderRepairSource, directProofErasureNpmRouteBinderRepairNormalizationPaths } from "./direct-proof-erasure-npm-route-binder-repair-source-history.mjs";
 import { beforeDirectProofErasurePhpProfileRepairSource, directProofErasurePhpProfileRepairNormalizationPaths } from "./direct-proof-erasure-php-profile-repair-source-history.mjs";
@@ -2410,7 +2411,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasureNpmRouteBinderRepairNormalizationPaths
+	...proofErasurePartitionAuditRepairNormalizationPaths
+	, ...directProofErasureNpmRouteBinderRepairNormalizationPaths
 	, ...optionalParameterPinTestMilestoneNormalizationPaths
 	, ...directProofErasurePhpProfileRepairNormalizationPaths
 	, ...directProofErasureManagedWitRepairNormalizationPaths
@@ -3559,7 +3561,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasureNpmRouteBinderRepairSource(
+	let stage = beforeProofErasurePartitionAuditRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasureNpmRouteBinderRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

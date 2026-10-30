@@ -1,0 +1,133 @@
+{
+  "historyAdditions": [
+    {
+      "path": "scripts/update-proof-erasure-partition-audit-repair-source-history.mjs",
+      "sha256": "dfc825bc5c4f4b753c8dfc2e23f8e72fdfd6b22c8ae48fedd82ff4a6f8e37fea"
+    },
+    {
+      "path": "tests/helpers/proof-erasure-partition-audit-repair-source-history-tests.mjs",
+      "sha256": "e3b7fb1f3bc2d8424bc682d77bcd2156e048e11c6eca4d1e52f1bbfc9e63cfc5"
+    },
+    {
+      "path": "tests/helpers/proof-erasure-partition-audit-repair-source-history.mjs",
+      "sha256": "39710e5e426919fd6f2e40d0830554f34a17599e46302d1b740e97b50a671a68"
+    }
+  ],
+  "implementationCommit": "a89453bb46b26666543508a2bd713854fe8101d0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bee80005c18dd0bc0020fe6a972495883836380bd76cec2e21ccaced43377df9",
+      "edits": [
+        {
+          "current": "import \"./helpers/proof-erasure-partition-audit-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "035d1a5933056c9dec3bee4d802f0447b401b48de5567f842fb3778b0197fdf8"
+    },
+    {
+      "currentSha256": "e665ab25dfc55be6fb6b654d549aecc37ca06d3536c4b1c734c6bddd632cfc6c",
+      "edits": [
+        {
+          "current": "import { beforeProofErasurePartitionAuditRepairSource, proofErasurePartitionAuditRepairNormalizationPaths } from \"./proof-erasure-partition-audit-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...proofErasurePartitionAuditRepairNormalizationPaths\n\t, ...directProofErasureNpmRouteBinderRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureNpmRouteBinderRepairNormalizationPaths\n",
+          "start": 224313
+        },
+        {
+          "current": "\tlet stage = beforeProofErasurePartitionAuditRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureNpmRouteBinderRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureNpmRouteBinderRepairSource(\n",
+          "start": 281107
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f362ba7e6cc6688468c3874be8ce6b7725d4be90b5132737a7a9b6d7dfda8039"
+    }
+  ],
+  "milestone": "proof-erasure-partition-audit-repair-source-v1",
+  "partition": "tests/checked-javascript-partition-11.test.mjs",
+  "predecessorCommit": "0db40421feb4b02bc8ba74553585684e142d2d98",
+  "repairedTests": [
+    "complete optional-parameter promotion changes only exact cells",
+    "complete optional-parameter promotion refuses partial and overlap",
+    "global Fin history reaches both WIT/lint branch parents",
+    "complete optional-parameter docs state the exact omission boundary",
+    "complete optional-parameter docs reject missing and repeated markers"
+  ],
+  "schemaVersion": 1,
+  "scope": "Bind complete optional-parameter promotion tests to their immutable pre-promotion inventory and documentation, and unwind the newest proof-erasure repair before older Fin-history transitions.",
+  "updates": [
+    {
+      "currentSha256": "f362ba7e6cc6688468c3874be8ce6b7725d4be90b5132737a7a9b6d7dfda8039",
+      "edits": [
+        {
+          "current": "\t...directProofErasureNpmRouteBinderRepairNormalizationPaths\n\t, ...optionalParameterPinTestMilestoneNormalizationPaths\n",
+          "previous": "\t...optionalParameterPinTestMilestoneNormalizationPaths\n\t, ...directProofErasureNpmRouteBinderRepairNormalizationPaths\n",
+          "start": 224139
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureNpmRouteBinderRepairSource(\n",
+          "previous": "\tlet stage = beforeOptionalParameterPinTestMilestoneSource(\n",
+          "start": 280876
+        },
+        {
+          "current": "\tstage = beforeOptionalParameterPinTestMilestoneSource(\n",
+          "previous": "\tstage = beforeDirectProofErasureNpmRouteBinderRepairSource(\n",
+          "start": 281055
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e4845880c17a4283db1a3862be71b95ec1c7e654ec88d1fa69172445651e6bd0"
+    },
+    {
+      "currentSha256": "21b6bb7d9f0b9e06331cf6b6f6507918d0733b9f24236f7315ac58db0c72dc38",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 137
+        },
+        {
+          "current": "import { optionalParameterCompletePromotionPredecessor }\n\tfrom \"./optional-parameter-complete-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 378
+        },
+        {
+          "current": "const readSource = ([name, path]) => [name\n\t, execFileSync(\"git\", [\"show\"\n\t\t, `${optionalParameterCompletePromotionPredecessor}:${path}`]\n\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 })];\nconst sources = Object.fromEntries(Object.entries(\n\toptionalParameterCompleteDocumentationPaths).map(readSource));\n",
+          "previous": "const readSource = async ([name, path]) => [name, await readFile(path, \"utf8\")];\nconst sources = Object.fromEntries(await Promise.all(Object.entries(\n\toptionalParameterCompleteDocumentationPaths).map(readSource)));\n",
+          "start": 504
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-complete-documentation-tests.mjs",
+      "previousSha256": "cc338c35989698066be819bc0d392c502266564eec4b6bf11fb48797a0622ad2"
+    },
+    {
+      "currentSha256": "b42246870ba5a380ffa95c8dc732fe124368475717e99ada3869c55bd909d022",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 128
+        },
+        {
+          "current": "import { optionalParameterCompletePromotionPredecessor }\n\tfrom \"./optional-parameter-complete-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 648
+        },
+        {
+          "current": "\tconst document = JSON.parse(execFileSync(\"git\", [\"show\"\n\t\t, `${optionalParameterCompletePromotionPredecessor}:docs/type-surface.v1.json`]\n\t, { encoding: \"utf8\", maxBuffer: 128 * 1024 * 1024 }));\n\tconst [irSchema, consumers] = await Promise.all([\n\t\t\"schema/binding-ir.schema.json\", \"docs/consumer-support.v1.json\"\n",
+          "previous": "\tconst [document, irSchema, consumers] = await Promise.all([\n\t\t\"docs/type-surface.v1.json\", \"schema/binding-ir.schema.json\"\n\t\t, \"docs/consumer-support.v1.json\"\n",
+          "start": 895
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-complete-promotion-tests.mjs",
+      "previousSha256": "4d62c6a56ff7e1aedcf933b3aec05428eb30cbf32ec163d461f7b80a38fc0bcc"
+    }
+  ]
+}
