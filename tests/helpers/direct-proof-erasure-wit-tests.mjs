@@ -7,7 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { compileWitPackageModel } from "../../src/backends/wit/generate.mjs";
-import { renderWitHostHeader } from "../../src/backends/wit/copied-host.mjs";
+import {
+	renderWitHostHeader, renderWitHostSource
+} from "../../src/backends/wit/copied-host.mjs";
 import { directProofErasureReview } from "./direct-proof-erasure-fixture.mjs";
 
 const forbidden = /(?:\bTrue\b|\bproof\b|_before|_after)/iu;
@@ -28,6 +30,10 @@ test("WIT direct proof API exposes one word and no proof slot", () => {
 	assert.match(header
 		, /directprooferasure_wasmtime_call\([\s\S]*?const wasmtime_component_val_t \*args, size_t count,[\s\S]*?wasmtime_component_val_t \*out\);/u);
 	assert.doesNotMatch(header, forbidden);
+	const host = renderWitHostSource(model.copied, new Uint8Array());
+	assert.equal((host.match(/uint32_t value = \{0\};/gu) ?? []).length, 1);
+	assert.match(host, /uint32_t value_1 = \{0\};/u);
+	assert.match(host, /directprooferasure_keep\(value, &value_1/u);
 });
 
 test("WIT direct proof caller supplies one payload and the negative probe supplies three", async () => {

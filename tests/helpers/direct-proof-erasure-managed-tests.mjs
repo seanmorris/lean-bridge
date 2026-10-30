@@ -9,6 +9,23 @@ import test from "node:test";
 import { generateDotnetBindingPackage } from "../../src/backends/dotnet/generate.mjs";
 import { generateJvmBindingPackage } from "../../src/backends/jvm/generate.mjs";
 import { directProofErasureReview } from "./direct-proof-erasure-fixture.mjs";
+import {
+	directProofErasureManagedDiagnosticPattern
+	, directProofErasureManagedFailureDiagnostic
+} from "./direct-proof-erasure-managed-report.mjs";
+
+test("managed proof refusal retains stdout and current Kotlin diagnostics", () => {
+	const dotnet = directProofErasureManagedFailureDiagnostic({
+		message: "dotnet exited with status 1"
+		, details: {
+			stderr: ""
+			, stdout: "error CS1501: No overload for method 'Keep' takes 3 arguments"
+		}
+	});
+	assert.match(dotnet, directProofErasureManagedDiagnosticPattern("dotnet"));
+	assert.match("error: no parameter with name '_before' found."
+		, directProofErasureManagedDiagnosticPattern("kotlin"));
+});
 
 test("managed direct proof APIs expose one word and no proof slot", () => {
 	const ir = directProofErasureReview();

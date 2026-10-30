@@ -52,29 +52,39 @@ export const renderWitHostSource = (model, componentBytes) => {
 	if(surface.callbacks.size) return renderCallableHostSource(model, componentBytes);
 	const callbacks = functions.map((fn, index) => {
 		const result = fn.resultCopy, unit = fn.resultType === "void";
+		const used = new Set(fn.parameters.map(parameter => parameter.name));
+		const local = base => {
+			let candidate = base, suffix = 0;
+			while(used.has(candidate)) candidate = `${base}_${++suffix}`;
+			used.add(candidate);
+			return candidate;
+		};
+		const scope = local("scope"), failure = local("failure");
+		const nativeError = local("native_error"), value = local("value");
+		const converted = local("converted");
 		return `static wasmtime_error_t *lb_call_${index}(void *data, wasmtime_context_t *context,
     const wasmtime_component_func_type_t *type, wasmtime_component_val_t *args, size_t count,
     wasmtime_component_val_t *results, size_t result_count) {
   (void)data; (void)context; (void)type;
   if (count != ${fn.parameters.length} || result_count != 1 || (${fn.parameters.length} && !args) || !results)
     return wasmtime_error_new("WIT import signature mismatch");
-  lb_scope scope = {.remaining = 16u * 1024u * 1024u};
-  wasmtime_error_t *failure = NULL;
-  ${p}_error native_error = {0};
-  ${result.name} value = {0};
-  wasmtime_component_val_t converted = {0};
+	  lb_scope ${scope} = {.remaining = 16u * 1024u * 1024u};
+	  wasmtime_error_t *${failure} = NULL;
+	  ${p}_error ${nativeError} = {0};
+	  ${result.name} ${value} = {0};
+	  wasmtime_component_val_t ${converted} = {0};
 ${fn.parameters.map(parameter => `  ${parameter.copy.name} ${parameter.name} = {0};`).join("\n")}
-${fn.parameters.map((parameter, i) => `  if (!lb_in_${parameter.copy.index}(&args[${i}], &scope, &${parameter.name})) { failure = wasmtime_error_new("Invalid copied WIT input, allocation failure or 16 MiB conversion limit"); goto done; }`).join("\n")}
-  if (${fn.name}(${fn.parameters.map(parameter => `${parameter.copy.aggregate ? "&" : ""}${parameter.name}`).concat(unit ? [] : ["&value"]).concat("&native_error").join(", ")}) != ${p.toUpperCase()}_STATUS_OK) {
-    failure = wasmtime_error_new(native_error.message ? native_error.message : "Native Lean call failed"); goto done;
-  }
-  if (!lb_out_${result.index}(&value, &scope, &converted)) { failure = wasmtime_error_new("16 MiB WIT result conversion limit"); goto done; }
-  results[0] = converted; converted = (wasmtime_component_val_t){0};
+${fn.parameters.map((parameter, i) => `  if (!lb_in_${parameter.copy.index}(&args[${i}], &${scope}, &${parameter.name})) { ${failure} = wasmtime_error_new("Invalid copied WIT input, allocation failure or 16 MiB conversion limit"); goto done; }`).join("\n")}
+	  if (${fn.name}(${fn.parameters.map(parameter => `${parameter.copy.aggregate ? "&" : ""}${parameter.name}`).concat(unit ? [] : [`&${value}`]).concat(`&${nativeError}`).join(", ")}) != ${p.toUpperCase()}_STATUS_OK) {
+	    ${failure} = wasmtime_error_new(${nativeError}.message ? ${nativeError}.message : "Native Lean call failed"); goto done;
+	  }
+	  if (!lb_out_${result.index}(&${value}, &${scope}, &${converted})) { ${failure} = wasmtime_error_new("16 MiB WIT result conversion limit"); goto done; }
+	  results[0] = ${converted}; ${converted} = (wasmtime_component_val_t){0};
 done:
-  wasmtime_component_val_delete(&converted);
-  ${result.aggregate ? `${result.name}_clear(&value);` : ""}
-  lb_scope_close(&scope);
-  return failure;
+	  wasmtime_component_val_delete(&${converted});
+	  ${result.aggregate ? `${result.name}_clear(&${value});` : ""}
+	  lb_scope_close(&${scope});
+	  return ${failure};
 }`;
 	}).join("\n\n");
 	return `#include "${p}_wasmtime.h"

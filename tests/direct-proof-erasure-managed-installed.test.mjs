@@ -23,7 +23,9 @@ import {
 	, retainDirectProofErasureNativeComponent
 } from "./helpers/direct-proof-erasure-packages.mjs";
 import {
-	directProofErasureManagedGroups
+	directProofErasureManagedDiagnosticPattern
+	, directProofErasureManagedFailureDiagnostic
+	, directProofErasureManagedGroups
 } from "./helpers/direct-proof-erasure-managed-report.mjs";
 import {
 	installFinContainerEdgeDotnet, runFinContainerEdgeDotnet
@@ -67,12 +69,6 @@ final class Consumer { public static void main(String[] args) { Api.keep(true, 0
 fun main() { Api.keep(_before = true, value = 0L, _after = true) }
 `
 })[profile];
-const diagnosticPattern = profile => profile === "dotnet"
-	? /(?:No overload for method 'Keep' takes 3 arguments|best overload.*does not have a parameter named '_before')/iu
-	: profile === "java"
-		? /(?:method keep.*cannot be applied|actual and formal argument lists differ in length)/isu
-		: /(?:cannot find a parameter with this name: _before|too many arguments for)/iu;
-
 for(const route of routes) test(
 	`installed direct proof-erasure managed packages reproduce and relocate ${group} ${route}`
 	, { skip: !enabled, timeout: 3_600_000 }, async t => {
@@ -182,8 +178,9 @@ for(const route of routes) test(
 				: pkg.artifacts.find(item => item.path.endsWith(".jar"));
 			let diagnostic = "";
 			const captureDiagnostic = error => {
-				diagnostic = error.details?.stderr ?? error.message;
-				assert.match(diagnostic, diagnosticPattern(profile));
+				diagnostic = directProofErasureManagedFailureDiagnostic(error);
+				assert.match(diagnostic
+					, directProofErasureManagedDiagnosticPattern(profile));
 				return true;
 			};
 			const negativeCompilation = profile === "dotnet"

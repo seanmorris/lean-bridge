@@ -29,6 +29,28 @@ const extension = profile => profile === "dotnet" ? "cs"
 	: profile === "java" ? "java" : "kt";
 
 /**
+ * Exact compiler diagnostic proving that no erased proof slot was published.
+ *
+ * @param profile - Dotnet, Java or Kotlin.
+ */
+export const directProofErasureManagedDiagnosticPattern = profile =>
+	profile === "dotnet"
+		? /(?:No overload for method 'Keep' takes 3 arguments|does not have a parameter named '_before')/iu
+		: profile === "java"
+			? /(?:method keep.*cannot be applied|actual and formal argument lists differ)/isu
+			: /(?:cannot find a parameter with this name: _before|no parameter with name '_before' found|too many arguments for)/iu;
+
+/**
+ * Retain diagnostics across process wrappers that assign compiler output to
+ * stdout, stderr or only the enclosing error message.
+ *
+ * @param error - Rejected managed package installation.
+ */
+export const directProofErasureManagedFailureDiagnostic = error => [
+	error?.details?.stderr, error?.details?.stdout, error?.message
+].filter(value => typeof value === "string" && value.length > 0).join("\n");
+
+/**
  * Validate one complete ordinary or reviewed managed report.
  *
  * @param report - Parsed canonical report.
@@ -88,11 +110,8 @@ export const validateDirectProofErasureManagedReport = (report, {
 		]);
 		assert.equal(item.negativeProofArgument.rejected, true);
 		assert.equal(item.negativeProofArgument.relocated, false);
-		assert.match(item.negativeProofArgument.diagnostic, item.profile === "dotnet"
-			? /(?:No overload for method 'Keep' takes 3 arguments|does not have a parameter named '_before')/iu
-			: item.profile === "java"
-				? /(?:method keep.*cannot be applied|actual and formal argument lists differ)/isu
-				: /(?:cannot find a parameter with this name: _before|too many arguments for)/iu);
+		assert.match(item.negativeProofArgument.diagnostic
+			, directProofErasureManagedDiagnosticPattern(item.profile));
 		for(const key of [
 			"consumerSha256", "receiptSha256", "packageFileSetSha256"
 			, "interpreterSha256"
