@@ -1,0 +1,163 @@
+{
+  "diagnosticArtifactIds": [
+    12971188224,
+    12972145611,
+    12972235145
+  ],
+  "failedJobIds": [
+    124021991307,
+    124021991314,
+    124021991342,
+    124028369157
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-final-gate-repair-source-history.mjs",
+      "sha256": "31a0acabe1a6ffaf7b7707e6ef0df58b0efd3642afe251b3397f19a3f861ced7"
+    },
+    {
+      "path": "tests/helpers/host-null-final-gate-repair-source-history-tests.mjs",
+      "sha256": "b9ca52c2a00ba2f3b51567038a556ce1135b18c4c58fe81ba32041287d91ea94"
+    },
+    {
+      "path": "tests/helpers/host-null-final-gate-repair-source-history.mjs",
+      "sha256": "654f47f7fc63e5fdb14ea62b89ad42a4d9b4df6cbc54d9248c3b79754d3155a0"
+    }
+  ],
+  "hostedRunId": 41040646713,
+  "implementationCommit": "b90de0f8f5d4286bda008d44d04e4f97e87e0785",
+  "integrationUpdates": [
+    {
+      "currentSha256": "dbd874b78c8276185f03076fd2df7fe765fd87afe10042f1fba4c99d5c4fa4c2",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-final-gate-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "dfe9ccc315be5d288ddf9c0e21a9492699dad6b40ad55add03e46c34d6de2cf3"
+    },
+    {
+      "currentSha256": "0e0ef778d301c81d105ab20598e559edf051eb8ed6b738d5587940eeb438e665",
+      "edits": [
+        {
+          "current": "import { beforeHostNullFinalGateRepairSource, hostNullFinalGateRepairNormalizationPaths } from \"./host-null-final-gate-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullFinalGateRepairNormalizationPaths\n\t, ...hostNullKotlinCompoundContractRepairNormalizationPaths\n",
+          "previous": "\t...hostNullKotlinCompoundContractRepairNormalizationPaths\n",
+          "start": 226962
+        },
+        {
+          "current": "\tlet stage = beforeHostNullFinalGateRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullKotlinCompoundContractRepairSource(\n",
+          "previous": "\tlet stage = beforeHostNullKotlinCompoundContractRepairSource(\n",
+          "start": 284619
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8b049e8329b45aff56155e4d7b27503009797677a2b72978fbed889a3a35b88b"
+    }
+  ],
+  "milestone": "host-null-final-gate-repair-source-v1",
+  "predecessorCommit": "2abf71eee32722c5bbc5b48701b61d77995e541a",
+  "replayedManagedChecks": 132,
+  "schemaVersion": 1,
+  "scope": "Repair the exact final-gate defects exposed by complete HostNull run 41040646713 after all affected runtime executions completed. The managed checker now consumes the canonical profile-to-fixture map used by its producer, and the systems installer verifies the generated WIT alias graph that preserves HostNull (Option T) and Option (HostNull T). No generator behavior, public contract or support claim changes.",
+  "supportClaimsChanged": false,
+  "updates": [
+    {
+      "currentSha256": "e865c34647435dd3802deb10ef7844e545172697fbfcfde3fdedf8974c14bc3a",
+      "edits": [
+        {
+          "current": "\thostNullManagedChecks, hostNullManagedFixturePaths, hostNullManagedGroups\n",
+          "previous": "\thostNullManagedChecks, hostNullManagedGroups\n",
+          "start": 447
+        },
+        {
+          "current": "\t\tconst fixturePath = hostNullManagedFixturePaths[observation.profile];\n\t\tassert.equal(typeof fixturePath, \"string\", observation.profile);\n",
+          "previous": "\t\tconst fixturePath = `tests/fixtures/host-null-consumers/${extension}`;\n",
+          "start": 4940
+        }
+      ],
+      "path": "scripts/check-host-null-managed-ci.mjs",
+      "previousSha256": "ec99cd799c452d39417c9af813bfeda132d10430b0633892d0327e5c9057a87a"
+    },
+    {
+      "currentSha256": "7b19cc0438df74517768f82002381eda7f221b31c519b3565f030b34744c8b56",
+      "edits": [
+        {
+          "current": "\tconst checker = await readFile(\"scripts/check-host-null-managed-ci.mjs\", \"utf8\");\n",
+          "previous": "",
+          "start": 4506
+        },
+        {
+          "current": "\tassert.match(checker\n\t\t, /hostNullManagedFixturePaths\\[observation\\.profile\\]/u);\n\tassert.doesNotMatch(checker\n\t\t, /host-null-consumers\\/\\$\\{extension\\}/u);\n",
+          "previous": "",
+          "start": 5547
+        }
+      ],
+      "path": "tests/dotnet-host-null-contract.test.mjs",
+      "previousSha256": "cb22c1db8fe439bad57574421f3913a2e5b9f1b6e912241625b2c0128e2e88cb"
+    },
+    {
+      "currentSha256": "0b72e58787f4937db5bfd741577d18c2d6e39d4ebfb546238cd419a645e2de94",
+      "edits": [
+        {
+          "current": "export const hostNullSystemsWitTypes = Object.freeze([\n\t/type bridge-value-1 = option<u32>/u\n\t, /type bridge-value-2 = option<u32>/u\n\t, /type bridge-value-3 = option<bridge-value-2>/u\n\t, /type bridge-value-4 = option<bridge-value-1>/u\n]);\n",
+          "previous": "",
+          "start": 1404
+        },
+        {
+          "current": "\t\t\t\t, ...(profile === \"wit-wasi\"\n\t\t\t\t\t? { wit: hostNullSystemsWitTypes } : {})\n",
+          "previous": "\t\t\t\t, ...(profile === \"wit-wasi\" ? { wit: [\n\t\t\t\t\t/type bridge-value-1 = option<u32>/u\n\t\t\t\t\t, /type bridge-value-2 = option<option<u32>>/u\n\t\t\t\t\t, /type bridge-value-3 = option<option<u32>>/u\n\t\t\t\t] } : {})\n",
+          "start": 7987
+        }
+      ],
+      "path": "tests/helpers/host-null-systems-installed.mjs",
+      "previousSha256": "4e66e1a1ace0764e963046578eb758483178bf440ed4569ad999eb74b74fd92f"
+    },
+    {
+      "currentSha256": "d6a91d4d181c83db73f993ebe0fd4693937f61cde95eb7f153e89a2548faa081",
+      "edits": [
+        {
+          "current": "import { hostNullSystemsWitTypes }\n\tfrom \"./helpers/host-null-systems-installed.mjs\";\n",
+          "previous": "",
+          "start": 182
+        },
+        {
+          "current": "\tassert.deepEqual(hostNullSystemsWitTypes.map(String), [\n\t\t\"/type bridge-value-1 = option<u32>/u\"\n\t\t, \"/type bridge-value-2 = option<u32>/u\"\n\t\t, \"/type bridge-value-3 = option<bridge-value-2>/u\"\n\t\t, \"/type bridge-value-4 = option<bridge-value-1>/u\"\n\t]);\n",
+          "previous": "",
+          "start": 1886
+        }
+      ],
+      "path": "tests/systems-host-null-ci.test.mjs",
+      "previousSha256": "492ad29bb6c0f7c9f61024008272793702557ffca80f87fd3fede4e6ad656695"
+    },
+    {
+      "currentSha256": "3a6ec0f8f7cbc4d5e5a3ee555ba2a943088dec15267bb7cd0b2cfdead17644db",
+      "edits": [
+        {
+          "current": "import { hostNullSystemsWitTypes }\n\tfrom \"./helpers/host-null-systems-installed.mjs\";\n",
+          "previous": "",
+          "start": 1140
+        },
+        {
+          "current": "test(\"WIT/WASI HostNull preserves both nested option alias chains\", () => {\n\tconst model = compileCopiedWitModel(hostNullReviewedIr(), {}\n\t\t, { callables: true });\n\tfor(const pattern of hostNullSystemsWitTypes)\n\t\tassert.match(model.wit, pattern);\n});\n\n",
+          "previous": "",
+          "start": 5947
+        },
+        {
+          "current": "\tfor(const pattern of hostNullSystemsWitTypes)\n\t\tassert.match(model.wit, pattern);\n",
+          "previous": "\tassert.match(model.wit, /type bridge-value-1 = option<u32>;/u);\n\tassert.match(model.wit, /type bridge-value-3 = option<bridge-value-2>;/u);\n\tassert.match(model.wit, /type bridge-value-4 = option<bridge-value-1>;/u);\n",
+          "start": 6628
+        }
+      ],
+      "path": "tests/systems-host-null-contract.test.mjs",
+      "previousSha256": "1e6b922bcb0851dcb3dd2f58c4719c7e5ddf7f92734a63651d8e7de3e56acedb"
+    }
+  ]
+}
