@@ -93,6 +93,7 @@ import "./helpers/host-null-complete-source-pin-reconciliation-tests.mjs";
 import "./helpers/host-null-complete-promotion-transaction-tests.mjs";
 import "./helpers/host-null-complete-promotion-source-history-tests.mjs";
 import "./helpers/vo1220-live-zero-gap-source-history-tests.mjs";
+import "./helpers/host-null-complete-static-repair-source-history-tests.mjs";
 import "./helpers/host-null-promotion-pin-reconciliation-source-history-tests.mjs";
 import "./helpers/host-null-javascript-promotion-tests.mjs";
 import "./helpers/host-null-php-report-tests.mjs";

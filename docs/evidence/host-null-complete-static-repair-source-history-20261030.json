@@ -1,0 +1,86 @@
+{
+  "failedJob": 124096528010,
+  "failedRun": 41065734932,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-complete-static-repair-source-history.mjs",
+      "sha256": "b647062f940857a8892e1c159c2a31c820d5183f42c4f74cb650eb5f7008b86e"
+    },
+    {
+      "path": "tests/helpers/host-null-complete-static-repair-source-history-tests.mjs",
+      "sha256": "4bbafbfb968f5b976038f924afe6c524ff0541a6f06c1aaff9d6f7672818f43d"
+    },
+    {
+      "path": "tests/helpers/host-null-complete-static-repair-source-history.mjs",
+      "sha256": "cf48f1b894369d14e015ace3d4a1c29bd373efa2940286ea73f87a7390ee1746"
+    }
+  ],
+  "implementationCommit": "c03b2365e3e6f8536e499ee2dc1a1a46441a56c7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "1867131cf77785e9eb7b1b7012bb58a902309248b259ad3abfe3f749da377577",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-complete-static-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7103
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "b53c4ebbe39c1d515123daa1d0ac9db8a58b0d325c726b5f6cb36a4871d78e2d"
+    },
+    {
+      "currentSha256": "692568afa6ffce914c72bcf1ca0e57119ca2084d7464ba93af8de698ba59f38f",
+      "edits": [
+        {
+          "current": "import { beforeHostNullCompleteStaticRepairSource, hostNullCompleteStaticRepairNormalizationPaths } from \"./host-null-complete-static-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullCompleteStaticRepairNormalizationPaths\n\t, ...vo1220LiveZeroGapNormalizationPaths\n",
+          "previous": "\t...vo1220LiveZeroGapNormalizationPaths\n",
+          "start": 227905
+        },
+        {
+          "current": "\tlet stage = beforeHostNullCompleteStaticRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220LiveZeroGapSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeVo1220LiveZeroGapSource(path, text, expected);\n",
+          "start": 285871
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4ea337be50cbe5b3dd5d9e5c9a8f23e5c30f6d631e179359b1d4ea11f550ee8f"
+    }
+  ],
+  "milestone": "host-null-complete-static-repair-source-v1",
+  "predecessorCommit": "fba471f1f927f02a5af9045c9c977234fe765c45",
+  "refreshedPins": 1,
+  "schemaVersion": 1,
+  "scope": "Correct the one Allman closing-rail lint defect introduced while making complete HostNull archive cell comparison order-independent. Preserve verifier behavior and the immutable seven-lane archive, advance exactly one live evidence-file digest, and keep all 1,054 VO #1220 cells and 5,270 stage entries unchanged.",
+  "updates": [
+    {
+      "currentSha256": "31b9d4864bb6246d116911a80fe34ad15d17ab1657644de5a879019cb7a0ccc8",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"33798c9070642ef10d49a6f65e07f3d5949667d5a29f95ccd5028506554ee8fc\"\n",
+          "previous": "          \"sha256\": \"ad4508f46d0f742bda4c64baa3770669cb61f9604ff2ec3ed44d62d8c95d6a3d\"\n",
+          "start": 89718929
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "ae13eb98a96dd33c431e02e40dff45a21fd06059e10cbf454ce1c3e98f7255b0"
+    },
+    {
+      "currentSha256": "33798c9070642ef10d49a6f65e07f3d5949667d5a29f95ccd5028506554ee8fc",
+      "edits": [
+        {
+          "current": "\t\t\t});\n",
+          "previous": "\t\t});\n",
+          "start": 5013
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-hosted-evidence.mjs",
+      "previousSha256": "ad4508f46d0f742bda4c64baa3770669cb61f9604ff2ec3ed44d62d8c95d6a3d"
+    }
+  ]
+}
