@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDirectProofErasureNpmDeclarationRouteRepairSource, directProofErasureNpmDeclarationRouteRepairNormalizationPaths } from "./direct-proof-erasure-npm-declaration-route-repair-source-history.mjs";
 import { beforeDirectProofErasurePhpReceiptIdentityRepairSource, directProofErasurePhpReceiptIdentityRepairNormalizationPaths } from "./direct-proof-erasure-php-receipt-identity-repair-source-history.mjs";
 import { beforeProofErasurePartitionAuditRepairSource, proofErasurePartitionAuditRepairNormalizationPaths } from "./proof-erasure-partition-audit-repair-source-history.mjs";
 import { beforeOptionalParameterPinTestMilestoneSource, optionalParameterPinTestMilestoneNormalizationPaths } from "./optional-parameter-pin-test-milestone-source-history.mjs";
@@ -2412,7 +2413,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasurePhpReceiptIdentityRepairNormalizationPaths
+	...directProofErasureNpmDeclarationRouteRepairNormalizationPaths
+	, ...directProofErasurePhpReceiptIdentityRepairNormalizationPaths
 	, ...proofErasurePartitionAuditRepairNormalizationPaths
 	, ...directProofErasureNpmRouteBinderRepairNormalizationPaths
 	, ...optionalParameterPinTestMilestoneNormalizationPaths
@@ -3563,7 +3565,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasurePhpReceiptIdentityRepairSource(
+	let stage = beforeDirectProofErasureNpmDeclarationRouteRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasurePhpReceiptIdentityRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

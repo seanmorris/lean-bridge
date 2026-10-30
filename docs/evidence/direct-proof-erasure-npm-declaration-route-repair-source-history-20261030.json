@@ -1,0 +1,74 @@
+{
+  "failedJobId": 123859733407,
+  "failureCode": "ERR_ASSERTION",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-npm-declaration-route-repair-source-history.mjs",
+      "sha256": "901421d1e4d8606e87f856d2aa20ea4c158ed56bc85b258a7b133199168daf5b"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-declaration-route-repair-source-history-tests.mjs",
+      "sha256": "e3c9c0d118811f5eb24947c70e3b6a5d7cc0c26824e901aa254fde5165bafcaf"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-declaration-route-repair-source-history.mjs",
+      "sha256": "b8c911959c43ffc9bbfc5e81881d6d787c9c8ca67e8dc5d0f6c20b6369d3283d"
+    }
+  ],
+  "hostedRunId": 40992970885,
+  "implementationCommit": "26a52c3e811a9bb0761a28a6018ec13b14053a11",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bf58f88487aaf59f9c6621b09c1be125a6966e58abd8a74f6de0efcf050dda60",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-npm-declaration-route-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "a088d6e51881f2e6e1a2ad91bdbce79d6c94b828caa963df6e1000f0780f7b39"
+    },
+    {
+      "currentSha256": "05d433c2f4ee9e89be30705adf607729c72d99f3d4721366b4a1890d2aba017a",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureNpmDeclarationRouteRepairSource, directProofErasureNpmDeclarationRouteRepairNormalizationPaths } from \"./direct-proof-erasure-npm-declaration-route-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureNpmDeclarationRouteRepairNormalizationPaths\n\t, ...directProofErasurePhpReceiptIdentityRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasurePhpReceiptIdentityRepairNormalizationPaths\n",
+          "start": 224728
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureNpmDeclarationRouteRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasurePhpReceiptIdentityRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasurePhpReceiptIdentityRepairSource(\n",
+          "start": 281657
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "bd4764a1e8fc176c9894d8a28ee63ba891ecd4e3d58dc01081b648f88eaa5076"
+    }
+  ],
+  "milestone": "direct-proof-erasure-npm-declaration-route-repair-source-v1",
+  "predecessorCommit": "0938c6e07b9beb2c64cf90e157f63f5db2d89b0a",
+  "schemaVersion": 1,
+  "scope": "Require generated npm declarations to retain the ordinary Binding IR parameter name arg0 and the reviewed-source parameter name value, without weakening proof-erasure checks.",
+  "updates": [
+    {
+      "currentSha256": "00d9c1b460bd949b0c7358543ec38b8649c895039f184a30b78bc3afb59607ae",
+      "edits": [
+        {
+          "current": "\t\tconst parameter = route === \"ordinary\" ? \"arg0\" : \"value\";\n\t\tassert.match(declarations, new RegExp(\n\t\t\t`export declare function keep\\\\(${parameter}: number\\\\): number;`, \"u\"\n\t\t));\n",
+          "previous": "\t\tassert.match(declarations, /export declare function keep\\(value: number\\): number;/u);\n",
+          "start": 8037
+        }
+      ],
+      "path": "tests/direct-proof-erasure-npm-installed.test.mjs",
+      "previousSha256": "6d2309f136c7dfe671bccb92315d6324de116c4677963c1e82acacde7223fd7c"
+    }
+  ]
+}
