@@ -67,7 +67,9 @@ const expected = lane => {
 const exactResult = (result, lane, route, producerCommit) => {
 	const metrics = expected(lane), identity = lane.checker === "language"
 		? { profile: lane.profile }
-		: lane.checker === "managed" ? { group: lane.group }
+		: lane.checker === "managed" ? {
+			group: lane.group, profiles: [...lane.profiles]
+		}
 			: lane.checker === "wit" ? { profile: "wit-wasi" }
 				: { profiles: [...lane.profiles] };
 	assert.deepEqual(Object.keys(result).sort(), [

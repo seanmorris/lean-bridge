@@ -32,7 +32,9 @@ const metrics = lane => lane.checker === "npm"
 					: { checks: 1005, executions: 2, rejectedProofArguments: 1 };
 const result = (lane, route) => ({
 	...lane.checker === "language" ? { profile: lane.profile }
-		: lane.checker === "managed" ? { group: lane.group }
+		: lane.checker === "managed" ? {
+			group: lane.group, profiles: [...lane.profiles]
+		}
 			: lane.checker === "wit" ? { profile: "wit-wasi" }
 				: { profiles: [...lane.profiles] }
 	, route: route.reportRoute, producerCommit, ...metrics(lane)
@@ -77,4 +79,20 @@ test("direct proof-erasure receipt rejects absent and substituted reports", asyn
 	const receipt = await build(records());
 	receipt.records[0].sha256 = "0".repeat(64);
 	assert.throws(() => validateDirectProofErasureMatrixReceipt(receipt));
+	for(const mutate of [
+		value => { value.profiles.pop(); }
+		, value => { delete value.profiles; }
+	]) {
+		const substituted = records();
+		const lane = directProofErasureMatrixLanes.find(item =>
+			item.checker === "managed");
+		const route = directProofErasureMatrixRoutes[0];
+		const managedPath = directProofErasureMatrixResultPath(
+			lane, route, producerCommit
+		);
+		const managed = JSON.parse(substituted.get(managedPath));
+		mutate(managed);
+		substituted.set(managedPath, Buffer.from(canonicalJson(managed)));
+		await assert.rejects(build(substituted));
+	}
 });
