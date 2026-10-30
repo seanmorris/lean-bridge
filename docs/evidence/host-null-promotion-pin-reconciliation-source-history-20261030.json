@@ -1,0 +1,150 @@
+{
+  "historyAdditions": [
+    {
+      "path": "scripts/update-host-null-promotion-pin-reconciliation-source-history.mjs",
+      "sha256": "f44e5b9e3bfb40031fa941f8d0cb00dbc1b4cbe61ebeb7bb97213daceaa3f945"
+    },
+    {
+      "path": "tests/helpers/host-null-promotion-pin-reconciliation-source-history-tests.mjs",
+      "sha256": "3e563121b19123ee1392d352f9c740b942b6d44100eca51ff27ab3e2df79da05"
+    },
+    {
+      "path": "tests/helpers/host-null-promotion-pin-reconciliation-source-history.mjs",
+      "sha256": "440a43083e65ddafbde4849fec136bf0d734bc99e7cb0683e723567b8cefefde"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "tests/helpers/host-null-complete-source-pin-reconciliation-tests.mjs",
+      "sha256": "2a2e0aa082ca3546d02d8aa2ea913b86509c8cf14392656e9d7ff25cde095371"
+    },
+    {
+      "path": "tests/helpers/host-null-complete-source-pin-reconciliation.mjs",
+      "sha256": "6515f1ea066a194f8486121ab2a35f309443848cb887fd6bece4c259b150a8c6"
+    }
+  ],
+  "implementationCommit": "c127e6a4df636d0be022fb9dee0162ecfb9268fc",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f7c855dce56d86ec8b684fa9e86d4e349aff2da211580ddbd7c6ee76de3024ba",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-promotion-pin-reconciliation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 6680
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "b4569e97a5e1ba5774425974d47cd17e3ae349eea2e5abf23fb26c73dece0a27"
+    },
+    {
+      "currentSha256": "e457f61f1acfc317ce03175c879299fb74a2e82428bf903bc1e0d71aa0765d67",
+      "edits": [
+        {
+          "current": "import { beforeHostNullPromotionPinReconciliationSource, hostNullPromotionPinReconciliationNormalizationPaths } from \"./host-null-promotion-pin-reconciliation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...hostNullPromotionPinReconciliationNormalizationPaths\n\t, ...hostNullFinalGateRepairNormalizationPaths\n",
+          "previous": "\t...hostNullFinalGateRepairNormalizationPaths\n",
+          "start": 227142
+        },
+        {
+          "current": "\tlet stage = beforeHostNullPromotionPinReconciliationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullFinalGateRepairSource(\n",
+          "previous": "\tlet stage = beforeHostNullFinalGateRepairSource(\n",
+          "start": 284858
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0e0ef778d301c81d105ab20598e559edf051eb8ed6b738d5587940eeb438e665"
+    }
+  ],
+  "milestone": "host-null-promotion-pin-reconciliation-source-v1",
+  "predecessorCommit": "4982d2336670114858cb4f001540495f5c764929",
+  "schemaVersion": 1,
+  "scope": "Repair complete HostNull publication before consuming hosted evidence. Preserve the already-current five-entry Perl repair, advance exactly 131 stale generate-type-docs pins across 132 retained evidence entries, reject unknown intermediate digests, and stage the bounded refresh transactionally before adding the 170-cell HostNull evidence. No generator behavior, runtime contract, support observation, archive byte or public claim changes.",
+  "supportClaimsChanged": false,
+  "typeDocsEvidence": 132,
+  "typeDocsStalePins": 131,
+  "updates": [
+    {
+      "currentSha256": "1a2d5d2b09796d8014b4e70bb71205b76ec6cd66037d2b7c787d011dcaa10e91",
+      "edits": [
+        {
+          "current": "\thostNullPerlSharedSource\n",
+          "previous": "\thostNullPerlRequalifiedEvidenceIds, hostNullPerlSharedSource\n\t, refreshHostNullPerlEvidence\n",
+          "start": 818
+        },
+        {
+          "current": "import {\n\thostNullCompleteSourcePinEvidenceIds, hostNullTypeDocsSharedSource\n\t, reconcileHostNullCompleteSourcePins\n} from \"../tests/helpers/host-null-complete-source-pin-reconciliation.mjs\";\n",
+          "previous": "",
+          "start": 916
+        },
+        {
+          "current": "const fullOriginal = JSON.parse(await readFile(path, \"utf8\"));\nconst retain = {\n\tretainEvidence: hostNullCompleteSourcePinEvidenceIds(fullOriginal)\n};\n",
+          "previous": "const retain = { retainEvidence: hostNullPerlRequalifiedEvidenceIds };\n",
+          "start": 2359
+        },
+        {
+          "current": "const currentSources = Object.fromEntries(await Promise.all([\n\t[\"perl\", hostNullPerlSharedSource]\n\t, [\"typeDocs\", hostNullTypeDocsSharedSource]\n].map(async ([name, sourcePath]) => {\n\tconst source = await readFile(sourcePath), digest = sha256(source);\n\tassert.equal(sha256(gitBytes([\n\t\t\"show\", `${reference.revision}:${sourcePath}`\n\t])), digest, `Hosted producer must authenticate ${sourcePath}`);\n\treturn [name, digest];\n})));\nconst reconciliation = reconcileHostNullCompleteSourcePins(\n\toriginal.document, reference, currentSources);\nconst refreshedDocument = reconciliation.inventory;\n",
+          "previous": "const currentPerlSource = await readFile(hostNullPerlSharedSource);\nassert.equal(sha256(gitBytes([\n\t\"show\", `${reference.revision}:${hostNullPerlSharedSource}`\n])), sha256(currentPerlSource)\n, \"Hosted producer must authenticate the current shared Perl source\");\nconst refreshedDocument = refreshHostNullPerlEvidence(\n\toriginal.document, reference, sha256(currentPerlSource));\n",
+          "start": 2888
+        },
+        {
+          "current": "\t\t, refreshedEvidence: reconciliation.refreshedEvidence\n\t\t, refreshedPins: reconciliation.refreshedPins\n",
+          "previous": "\t\t, refreshedEvidence: hostNullPerlRequalifiedEvidenceIds.length\n",
+          "start": 5721
+        }
+      ],
+      "path": "scripts/promote-host-null-complete.mjs",
+      "previousSha256": "d2ce204998db7b4a01c5454e8c03026ead03959d9a5a6e545468a7a72d62d417"
+    },
+    {
+      "currentSha256": "b4569e97a5e1ba5774425974d47cd17e3ae349eea2e5abf23fb26c73dece0a27",
+      "edits": [
+        {
+          "current": "import \"./helpers/host-null-complete-source-pin-reconciliation-tests.mjs\";\n",
+          "previous": "",
+          "start": 6534
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "dbd874b78c8276185f03076fd2df7fe765fd87afe10042f1fba4c99d5c4fa4c2"
+    },
+    {
+      "currentSha256": "675d876ab38e80484de64eb40a4e162ed1fc27737115943a45d2c8943e23cbfc",
+      "edits": [
+        {
+          "current": "\tassert.match(source, /reconcileHostNullCompleteSourcePins\\(/u);\n",
+          "previous": "\tassert.match(source, /refreshHostNullPerlEvidence\\(/u);\n",
+          "start": 660
+        },
+        {
+          "current": "\t\t, /Hosted producer must authenticate \\$\\{sourcePath\\}/u);\n",
+          "previous": "\t\t, /Hosted producer must authenticate the current shared Perl source/u);\n",
+          "start": 1021
+        },
+        {
+          "current": "\tassert.match(source, /refreshedEvidence: reconciliation\\.refreshedEvidence/u);\n\tassert.match(source, /refreshedPins: reconciliation\\.refreshedPins/u);\n",
+          "previous": "\tassert.match(source\n\t\t, /refreshedEvidence: hostNullPerlRequalifiedEvidenceIds\\.length/u);\n",
+          "start": 1860
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-promotion-transaction-tests.mjs",
+      "previousSha256": "ada539eebf1aa68a14bcf7ddf7242c6a78d8677be110a4af27d8746f410c415b"
+    },
+    {
+      "currentSha256": "43bff6b12e37a1887f7511f420b4603db643c56fcd16975c1275167def9f8260",
+      "edits": [
+        {
+          "current": "\t, \"tests/helpers/host-null-complete-source-pin-reconciliation.mjs\"\n\t, \"tests/helpers/host-null-complete-source-pin-reconciliation-tests.mjs\"\n",
+          "previous": "",
+          "start": 3611
+        }
+      ],
+      "path": "tests/helpers/host-null-complete-promotion.mjs",
+      "previousSha256": "f4cf14c0de89c8bd63580884d383355abfbd31678ca8460e2e2409d2d67f7625"
+    }
+  ]
+}
