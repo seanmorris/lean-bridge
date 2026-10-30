@@ -1,0 +1,117 @@
+{
+  "canonicalLaneIdentity": true,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-archive-lane-identity-repair-source-history.mjs",
+      "sha256": "40369e5a048afeb83dad37f89c9b75b04c80f50bc2452aa37afd455c19a0303f"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-archive-lane-identity-repair-source-history-tests.mjs",
+      "sha256": "7369fb6d2d00810c23781f085d171f91f947070823b259502ed22dcb1f1104ea"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-archive-lane-identity-repair-source-history.mjs",
+      "sha256": "de6593aca499dcf5cc21eddd2d7cfa06aa629ccd068aa32009c81822ffba5fb4"
+    }
+  ],
+  "hostedRunId": 41021643593,
+  "implementationCommit": "6efe6ac6f620d65da823e7cef6140d93c25e27a2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "8a89b69366368819251f32f93d8ca824a30b4e3ef702917bb8a22832cf21687b",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-archive-lane-identity-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "afe5613c545c1709a48b1b1a40005ed49febca9a2d43bd22725ea092009b35da"
+    },
+    {
+      "currentSha256": "25206c5b27ec6aa0f6948a29940700df6a723672115c7b38bc020d4b0f21939d",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureArchiveLaneIdentityRepairSource, directProofErasureArchiveLaneIdentityRepairNormalizationPaths } from \"./direct-proof-erasure-archive-lane-identity-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureArchiveLaneIdentityRepairNormalizationPaths\n\t, ...directProofErasureFocusedArchiveNormalizationPaths\n",
+          "previous": "\t...directProofErasureFocusedArchiveNormalizationPaths\n",
+          "start": 226283
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureArchiveLaneIdentityRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureFocusedArchiveSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureFocusedArchiveSource(\n",
+          "start": 283718
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "dfd25e529b6476f923c8cd82a91b1f6dc23e60c893e2387df45e023f7c3a62ad"
+    }
+  ],
+  "milestone": "direct-proof-erasure-archive-lane-identity-repair-source-v1",
+  "predecessorCommit": "2d962826d80d66d00732f61f48489112913cb30c",
+  "schemaVersion": 1,
+  "scope": "Resolve each authenticated hosted lane wrapper to its unique canonical matrix-lane object before invoking identity-checked aggregate receipt path construction.",
+  "updates": [
+    {
+      "currentSha256": "55ee9a1a3a613051fe4225255cea7f43d613ba6450b168d7ae43773bb01e899e",
+      "edits": [
+        {
+          "current": "\t, directProofErasureHostedMatrixLane\n",
+          "previous": "",
+          "start": 1039
+        },
+        {
+          "current": "\t\t\t\t\tdirectProofErasureHostedMatrixLane(lane), matrixRoute\n\t\t\t\t\t, directProofErasureHostedProducer);\n",
+          "previous": "\t\t\t\t\tlane, matrixRoute, directProofErasureHostedProducer);\n",
+          "start": 5599
+        }
+      ],
+      "path": "scripts/archive-direct-proof-erasure-hosted.mjs",
+      "previousSha256": "744cc1e66ee0b3f1eadf2112d41aa0a005033945e928f5ce43b9b0e476d2a3e1"
+    },
+    {
+      "currentSha256": "505370cab0e18a50b7835e530a486a43589c426b8441ec9fccfb789fbf384f46",
+      "edits": [
+        {
+          "current": "\t, directProofErasureHostedMatrixLane\n",
+          "previous": "",
+          "start": 336
+        },
+        {
+          "current": "import {\n\tdirectProofErasureMatrixLanes\n} from \"./direct-proof-erasure-matrix.mjs\";\n",
+          "previous": "",
+          "start": 644
+        },
+        {
+          "current": "\t\tconst matrixLane = directProofErasureHostedMatrixLane(lane);\n\t\tassert.ok(directProofErasureMatrixLanes.includes(matrixLane));\n\t\tassert.notEqual(matrixLane, lane);\n\t\tassert.equal(matrixLane.key, lane.key);\n",
+          "previous": "",
+          "start": 1429
+        },
+        {
+          "current": "\tassert.throws(() => directProofErasureHostedMatrixLane({\n\t\t...directProofErasureHostedLanes[0]\n\t}));\n",
+          "previous": "",
+          "start": 2103
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-hosted-archive-tests.mjs",
+      "previousSha256": "6c871f3e37647d3d6fd6eefb4c31407250e10e555c95b166b8b07552d763770b"
+    },
+    {
+      "currentSha256": "ab9deb193bf5bdfc5b08bc36733e3d85bd6c08dae1746fb766c19661e34299eb",
+      "edits": [
+        {
+          "current": "/**\n * Recover the canonical matrix-lane identity from its hosted wrapper.\n *\n * @param lane - Closed hosted lane.\n */\nexport const directProofErasureHostedMatrixLane = lane => {\n\tassert.ok(directProofErasureHostedLanes.includes(lane));\n\tconst matches = directProofErasureMatrixLanes.filter(item =>\n\t\titem.key === lane.key);\n\tassert.equal(matches.length, 1, lane.key);\n\treturn matches[0];\n};\n\n",
+          "previous": "",
+          "start": 5926
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-hosted-archive.mjs",
+      "previousSha256": "f48ee87a8285573d778721e5e72d444079967fa7c1ba3d2d76709b172d8b1d8e"
+    }
+  ]
+}

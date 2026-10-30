@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
+import "./helpers/direct-proof-erasure-archive-lane-identity-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-focused-archive-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-receipt-profile-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-npm-ir-route-repair-source-history-tests.mjs";
