@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDirectProofErasureLanguageClosureRepairSource, directProofErasureLanguageClosureRepairNormalizationPaths } from "./direct-proof-erasure-language-closure-repair-source-history.mjs";
 import { beforeDirectProofErasureComponentBinderRepairSource, directProofErasureComponentBinderRepairNormalizationPaths } from "./direct-proof-erasure-component-binder-repair-source-history.mjs";
 import { beforeDependentSignatureCompletePromotionSource, dependentSignatureCompletePromotionNormalizationPaths } from "./dependent-signature-complete-promotion-source-history.mjs";
 import { beforeDependentPythonReceiptCanonicalSource, dependentPythonReceiptCanonicalNormalizationPaths } from "./dependent-python-receipt-canonical-source-history.mjs";
@@ -2405,7 +2406,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasureComponentBinderRepairNormalizationPaths
+	...directProofErasureLanguageClosureRepairNormalizationPaths
+	, ...directProofErasureComponentBinderRepairNormalizationPaths
 	, ...dependentSignatureCompletePromotionNormalizationPaths
 	, ...dependentPythonReceiptCanonicalNormalizationPaths
 	, ...focusedManagedCheckoutNormalizationPaths
@@ -3549,7 +3551,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasureComponentBinderRepairSource(
+	let stage = beforeDirectProofErasureLanguageClosureRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasureComponentBinderRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

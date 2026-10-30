@@ -1,0 +1,97 @@
+{
+  "failedJobId": 123827757645,
+  "failureCode": "ERR_ASSERTION",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-language-closure-repair-source-history.mjs",
+      "sha256": "9b0aa21e01440de9ffe418acb06336cfd9f2abfdc2325c9271e73aec383ce94d"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-language-closure-repair-source-history-tests.mjs",
+      "sha256": "4afe6bc1fedca5da1c50dc17c870569c6f8e02890d5c59c0e2624e44bf77162b"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-language-closure-repair-source-history.mjs",
+      "sha256": "fdb86f7d64c2df51b99d15023a0014fac53dc2a4450e65f242cc73b491d941da"
+    }
+  ],
+  "hostedRunId": 40978622372,
+  "implementationCommit": "d3d26d78ac3a9ebd549e22b3f6097c970e9c4f1a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d7d3c9b4fc9d677a4d2317af6261b7b4e97533a2d22c0b7aab4e906f17e645b1",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-language-closure-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "df125de54d6784ffe22c99317d53d752a614a29941fe323a217c6ec57ccb7676"
+    },
+    {
+      "currentSha256": "3b0253af4edaf66bc04f7251b6abaeee2985ff2fe36b7294337d78c2c9cb3c8f",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureLanguageClosureRepairSource, directProofErasureLanguageClosureRepairNormalizationPaths } from \"./direct-proof-erasure-language-closure-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureLanguageClosureRepairNormalizationPaths\n\t, ...directProofErasureComponentBinderRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureComponentBinderRepairNormalizationPaths\n",
+          "start": 223406
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureLanguageClosureRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureComponentBinderRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureComponentBinderRepairSource(\n",
+          "start": 279904
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b86420dd195b4a7991e850b17013a85bd1e125673bfcc1dff5d54d958e5bd3d4"
+    }
+  ],
+  "milestone": "direct-proof-erasure-language-closure-repair-source-v1",
+  "predecessorCommit": "88d798c290eede50a0b5310de4a1dbc4e24fd67f",
+  "profile": "python",
+  "schemaVersion": 1,
+  "scope": "Validate each retained language closure against its exact schema while preserving Python's non-digest interpreter version identity.",
+  "updates": [
+    {
+      "currentSha256": "06d546d13656feda6b5926ffe7f7e854a02bc0e8951e1acd2fd05a7fc1c85b8f",
+      "edits": [
+        {
+          "current": "const closureKeys = Object.freeze({\n\tperl: Object.freeze([\n\t\t\"installedFilesSha256\", \"interpreterSha256\", \"receiptsSha256\"\n\t])\n\t, python: Object.freeze([\n\t\t\"baselineSha256\", \"environmentSha256\", \"interpreterSha256\", \"python\"\n\t])\n\t, ruby: Object.freeze([\n\t\t\"environmentSha256\", \"gemspecSha256\", \"interpreterSha256\"\n\t\t, \"packageFileSetSha256\", \"receiptSha256\"\n\t])\n\t, rust: Object.freeze([\n\t\t\"cargoSha256\", \"compilerSha256\", \"executableSha256\"\n\t\t, \"packageFileSetSha256\", \"receiptSha256\"\n\t])\n});\n\n/**\n * Authenticate the exact post-relocation closure for one language package.\n *\n * @param profile - Perl, Python, Ruby or Rust.\n * @param closure - Retained closure observation.\n */\nexport const validateDirectProofErasureLanguageClosure = (profile, closure) => {\n\tassert.ok(directProofErasureLanguageProfiles.includes(profile));\n\tassert.ok(closure && typeof closure === \"object\" && !Array.isArray(closure));\n\tassert.deepEqual(Object.keys(closure).sort(), [...closureKeys[profile]].sort());\n\tfor(const [key, value] of Object.entries(closure))\n\t{\n\t\tif(key.endsWith(\"Sha256\")) digest(value);\n\t}\n\tif(profile === \"python\")\n\t\tassert.match(closure.python, /^3\\.(?:1[1-9]|[2-9][0-9])\\.[0-9]+$/u);\n\treturn true;\n};\n",
+          "previous": "",
+          "start": 1486
+        },
+        {
+          "current": "\tvalidateDirectProofErasureLanguageClosure(profile, item.closure);\n",
+          "previous": "\tassert.ok(item.closure && typeof item.closure === \"object\");\n\tfor(const [key, value] of Object.entries(item.closure))\n\t{\n\t\tassert.match(key, /Sha256$/u);\n\t\tdigest(value);\n\t}\n\tfor(const key of profile === \"perl\"\n\t\t? [\"installedFilesSha256\", \"interpreterSha256\", \"receiptsSha256\"]\n\t\t: profile === \"python\"\n\t\t\t? [\"receiptSha256\", \"packageFileSetSha256\", \"environmentSha256\", \"interpreterSha256\"]\n\t\t\t: profile === \"ruby\"\n\t\t\t\t? [\"receiptSha256\", \"packageFileSetSha256\", \"environmentSha256\", \"interpreterSha256\", \"gemspecSha256\"]\n\t\t\t\t: [\"receiptSha256\", \"packageFileSetSha256\", \"compilerSha256\", \"cargoSha256\", \"executableSha256\"])\n\t\tdigest(item.closure[key]);\n",
+          "start": 5113
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-language-report.mjs",
+      "previousSha256": "063ac8b09332e21615c0493ad95aeca9c43fbf69b7c3cdd1e08eb3e327d428a9"
+    },
+    {
+      "currentSha256": "821ef46e6af039a93b0fdc80c3be360beeb41c133e710791d41f8f0ed8ec0163",
+      "edits": [
+        {
+          "current": "import {\n\tvalidateDirectProofErasureLanguageClosure\n} from \"./direct-proof-erasure-language-report.mjs\";\n",
+          "previous": "",
+          "start": 688
+        },
+        {
+          "current": "test(\"language direct proof reports require each exact closure shape\", () => {\n\tconst hash = \"a\".repeat(64);\n\tconst closures = {\n\t\tperl: {\n\t\t\tinstalledFilesSha256: hash, interpreterSha256: hash\n\t\t\t, receiptsSha256: hash\n\t\t}\n\t\t, python: {\n\t\t\tbaselineSha256: hash, environmentSha256: hash\n\t\t\t, interpreterSha256: hash, python: \"3.12.15\"\n\t\t}\n\t\t, ruby: {\n\t\t\tenvironmentSha256: hash, gemspecSha256: hash\n\t\t\t, interpreterSha256: hash, packageFileSetSha256: hash\n\t\t\t, receiptSha256: hash\n\t\t}\n\t\t, rust: {\n\t\t\tcargoSha256: hash, compilerSha256: hash, executableSha256: hash\n\t\t\t, packageFileSetSha256: hash, receiptSha256: hash\n\t\t}\n\t};\n\tfor(const [profile, closure] of Object.entries(closures))\n\t{\n\t\tassert.equal(validateDirectProofErasureLanguageClosure(\n\t\t\tprofile, closure), true);\n\t\tassert.throws(() => validateDirectProofErasureLanguageClosure(\n\t\t\tprofile, { ...closure, unexpectedSha256: hash }));\n\t}\n\tassert.throws(() => validateDirectProofErasureLanguageClosure(\n\t\t\"python\", { ...closures.python, python: \"python\" }));\n});\n\n",
+          "previous": "",
+          "start": 857
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-language-tests.mjs",
+      "previousSha256": "34cb6313aab61701d6739572b3891a1195bca83f8ba7e2ea064b6bbc127cbfb0"
+    }
+  ]
+}
