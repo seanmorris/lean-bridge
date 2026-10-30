@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
@@ -14,14 +15,18 @@ import {
 } from "./optional-parameter-complete-promotion.mjs";
 import { optionalParameterMatrixLanes }
 	from "./optional-parameter-matrix.mjs";
+import { optionalParameterCompletePromotionPredecessor }
+	from "./optional-parameter-complete-promotion-source-history.mjs";
 import {
 	typeSurfaceCells, validateTypeSurface
 } from "../../src/adoption/type-surface.mjs";
 
 const load = async () => {
-	const [document, irSchema, consumers] = await Promise.all([
-		"docs/type-surface.v1.json", "schema/binding-ir.schema.json"
-		, "docs/consumer-support.v1.json"
+	const document = JSON.parse(execFileSync("git", ["show"
+		, `${optionalParameterCompletePromotionPredecessor}:docs/type-surface.v1.json`]
+	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 }));
+	const [irSchema, consumers] = await Promise.all([
+		"schema/binding-ir.schema.json", "docs/consumer-support.v1.json"
 	].map(async path => JSON.parse(await readFile(path, "utf8"))));
 	return { document, contracts: { irSchema, consumers } };
 };

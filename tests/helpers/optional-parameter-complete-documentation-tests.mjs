@@ -4,16 +4,21 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import test from "node:test";
 import {
 	optionalParameterCompleteDocumentationPaths
 	, renderOptionalParameterCompleteDocumentation
 } from "./optional-parameter-complete-documentation.mjs";
+import { optionalParameterCompletePromotionPredecessor }
+	from "./optional-parameter-complete-promotion-source-history.mjs";
 
-const readSource = async ([name, path]) => [name, await readFile(path, "utf8")];
-const sources = Object.fromEntries(await Promise.all(Object.entries(
-	optionalParameterCompleteDocumentationPaths).map(readSource)));
+const readSource = ([name, path]) => [name
+	, execFileSync("git", ["show"
+		, `${optionalParameterCompletePromotionPredecessor}:${path}`]
+	, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 })];
+const sources = Object.fromEntries(Object.entries(
+	optionalParameterCompleteDocumentationPaths).map(readSource));
 
 test("complete optional-parameter docs state the exact omission boundary", () => {
 	const rendered = renderOptionalParameterCompleteDocumentation(sources);

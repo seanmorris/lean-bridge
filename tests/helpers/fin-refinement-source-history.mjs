@@ -2410,8 +2410,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...optionalParameterPinTestMilestoneNormalizationPaths
-	, ...directProofErasureNpmRouteBinderRepairNormalizationPaths
+	...directProofErasureNpmRouteBinderRepairNormalizationPaths
+	, ...optionalParameterPinTestMilestoneNormalizationPaths
 	, ...directProofErasurePhpProfileRepairNormalizationPaths
 	, ...directProofErasureManagedWitRepairNormalizationPaths
 	, ...directProofErasureLanguageClosureRepairNormalizationPaths
@@ -3559,12 +3559,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOptionalParameterPinTestMilestoneSource(
+	let stage = beforeDirectProofErasureNpmRouteBinderRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
-	stage = beforeDirectProofErasureNpmRouteBinderRepairSource(
+	stage = beforeOptionalParameterPinTestMilestoneSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
