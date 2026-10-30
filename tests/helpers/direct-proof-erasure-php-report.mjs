@@ -28,8 +28,66 @@ const factKeys = [
 	, "packageSetReceiptSha256"
 ];
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
-const apiPattern = /function keep\(mixed \$value\): int/u;
 const forbiddenProof = /(?:\bTrue\b|\bproof\b|_before|_after)/iu;
+
+/**
+ * Select the exact public parameter name owned by one author route.
+ *
+ * @param route - Ordinary compiler extraction or reviewed source.
+ */
+export const directProofErasurePhpParameter = route => {
+	assert.ok(["ordinary", "reviewed"].includes(route));
+	return route === "ordinary" ? "arg0" : "value";
+};
+
+/**
+ * Select the exact public Nat representation owned by one PHP profile.
+ *
+ * @param profile - Native PHP or PHP-Wasm.
+ */
+export const directProofErasurePhpReturnType = profile => {
+	assert.ok(directProofErasurePhpProfiles.includes(profile));
+	return profile === "php-native" ? "int" : "\\Brick\\Math\\BigInteger";
+};
+
+/**
+ * Bind the independent PHP caller to one route's public parameter name.
+ *
+ * @param source - Canonical reviewed-name caller fixture.
+ * @param options - Exact author route and PHP runtime profile.
+ * @param options.route - Ordinary compiler extraction or reviewed source.
+ * @param options.profile - Native PHP or PHP-Wasm.
+ */
+export const directProofErasurePhpConsumerSource = (source, {
+	route, profile
+}) => {
+	assert.equal(typeof source, "string");
+	const parameter = directProofErasurePhpParameter(route);
+	const reflection = "getName() === 'value'";
+	const negative = "keep(_before: true, value: 0, _after: true);";
+	assert.equal(source.split(reflection).length, 2);
+	assert.equal(source.split(negative).length, 2);
+	let caller = source.replace(reflection, `getName() === '${parameter}'`)
+		.replace(negative
+			, `keep(_before: true, ${parameter}: 0, _after: true);`);
+	if(profile === "php-native") return caller;
+	directProofErasurePhpReturnType(profile);
+	const importLine = "use function LeanDirectprooferasure\\keep;";
+	const loop = `for ($value = 0; $value < 1000; ++$value) {
+    check(keep($value) === $value);
+}`;
+	assert.equal(caller.split(importLine).length, 2);
+	assert.equal(caller.split(loop).length, 2);
+	caller = caller.replace(importLine
+		, `use Brick\\Math\\BigInteger;\n${importLine}`)
+		.replace("getName() === 'int'", "getName() === BigInteger::class")
+		.replace(`${parameter}: 0`, `${parameter}: BigInteger::of(0)`)
+		.replace(loop, `for ($value = 0; $value < 1000; ++$value) {
+    $input = BigInteger::of($value);
+    check(keep($input)->isEqualTo($input));
+}`);
+	return caller;
+};
 
 /**
  * Validate one complete ordinary or reviewed PHP report.
@@ -84,7 +142,7 @@ export const validateDirectProofErasurePhpReport = (report, {
 		assert.equal(item.runtimeParameters, 1);
 		assert.equal(item.negativeProofArgument.rejected, true);
 		assert.equal(item.negativeProofArgument.namedArguments
-			, "_before,value,_after");
+			, `_before,${directProofErasurePhpParameter(route)},_after`);
 		for(const key of ["apiSha256", "consumerSha256"]) digest(item[key]);
 	}
 	assert.deepEqual(native.executions, [
@@ -168,20 +226,27 @@ export const checkDirectProofErasurePhpRecords = async (read, options) => {
 	]) assert.deepEqual(await read(`build-0/${name}`)
 		, await read(`build-1/${name}`), name);
 	const nativeConsumer = await read("php-native/consumer.php");
-	assert.deepEqual(nativeConsumer, fixture(
+	const expectedConsumer = directProofErasurePhpConsumerSource(fixture(
 		"tests/fixtures/direct-proof-erasure-consumers/php.php"
+	).toString(), { route: options.route, profile: "php-native" });
+	assert.equal(nativeConsumer.toString(), expectedConsumer);
+	assert.match(nativeConsumer.toString(), new RegExp(
+		`keep\\(_before: true, ${directProofErasurePhpParameter(options.route)}: 0, _after: true\\)`, "u"
 	));
-	assert.match(nativeConsumer.toString()
-		, /keep\(_before: true, value: 0, _after: true\)/u);
 	assert.equal(report.observations[0].consumerSha256, sha256(nativeConsumer));
 	const wasmConsumer = await read("php-wasm/consumer.php");
-	assert.equal(wasmConsumer.toString(), nativeConsumer.toString()
-		.replace("require 'vendor/autoload.php';", ""));
+	const expectedWasmConsumer = directProofErasurePhpConsumerSource(fixture(
+		"tests/fixtures/direct-proof-erasure-consumers/php.php"
+	).toString(), { route: options.route, profile: "php-wasm" })
+		.replace("require 'vendor/autoload.php';", "");
+	assert.equal(wasmConsumer.toString(), expectedWasmConsumer);
 	assert.equal(report.observations[1].consumerSha256, sha256(wasmConsumer));
 	for(const item of report.observations)
 	{
 		const api = await read(`${item.profile}/Api.php`);
-		assert.match(api.toString(), apiPattern);
+		assert.ok(api.toString().includes(
+			`function keep(mixed $${directProofErasurePhpParameter(options.route)}): ${directProofErasurePhpReturnType(item.profile)}`
+		));
 		assert.doesNotMatch(api.toString(), forbiddenProof);
 		assert.equal(item.apiSha256, sha256(api));
 		const pkg = item.profile === "php-native"

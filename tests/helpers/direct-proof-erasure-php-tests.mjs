@@ -15,6 +15,10 @@ import {
 	directProofErasurePhpComponentFact
 	, directProofErasurePhpComponentFactKeys
 } from "./direct-proof-erasure-packages.mjs";
+import {
+	directProofErasurePhpConsumerSource, directProofErasurePhpParameter
+	, directProofErasurePhpReturnType
+} from "./direct-proof-erasure-php-report.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 test("PHP direct proof facts identify both compiled components", () => {
@@ -39,6 +43,38 @@ test("PHP direct proof facts identify both compiled components", () => {
 	assert.deepEqual(Object.keys(fact).sort()
 		, [...directProofErasurePhpComponentFactKeys].sort());
 	assert.ok(Object.values(fact).every(value => value !== undefined));
+});
+
+test("PHP direct proof callers retain each author route's exact binder", async () => {
+	const fixture = await readFile(
+		"tests/fixtures/direct-proof-erasure-consumers/php.php", "utf8"
+	);
+	for(const [route, parameter] of [
+		["ordinary", "arg0"], ["reviewed", "value"]
+	]) {
+		assert.equal(directProofErasurePhpParameter(route), parameter);
+		const native = directProofErasurePhpConsumerSource(fixture, {
+			route, profile: "php-native"
+		});
+		assert.match(native, new RegExp(`getName\\(\\) === '${parameter}'`, "u"));
+		assert.match(native, new RegExp(
+			`keep\\(_before: true, ${parameter}: 0, _after: true\\)`, "u"
+		));
+		assert.equal(directProofErasurePhpReturnType("php-native"), "int");
+		const wasm = directProofErasurePhpConsumerSource(fixture, {
+			route, profile: "php-wasm"
+		});
+		assert.match(wasm, /use Brick\\Math\\BigInteger;/u);
+		assert.match(wasm, /getName\(\) === BigInteger::class/u);
+		assert.match(wasm, new RegExp(
+			`keep\\(_before: true, ${parameter}: BigInteger::of\\(0\\), _after: true\\)`, "u"
+		));
+		assert.match(wasm, /keep\(\$input\)->isEqualTo\(\$input\)/u);
+		assert.equal(directProofErasurePhpReturnType("php-wasm")
+			, "\\Brick\\Math\\BigInteger");
+	}
+	assert.throws(() => directProofErasurePhpParameter("unknown"));
+	assert.throws(() => directProofErasurePhpReturnType("unknown"));
 });
 
 test("PHP direct proof callers expose one word and refuse named proof arguments", async t => {

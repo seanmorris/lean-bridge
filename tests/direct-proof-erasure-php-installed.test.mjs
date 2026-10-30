@@ -25,7 +25,8 @@ import {
 	, retainDirectProofErasurePhpComponents
 } from "./helpers/direct-proof-erasure-packages.mjs";
 import {
-	directProofErasurePhpProfiles
+	directProofErasurePhpConsumerSource, directProofErasurePhpParameter
+	, directProofErasurePhpProfiles, directProofErasurePhpReturnType
 } from "./helpers/direct-proof-erasure-php-report.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import {
@@ -47,14 +48,16 @@ const outputFor = route => resolve((
 ).replace("{route}", route));
 const apiPath = (root, profile) => join(root, "vendor/example"
 	, `${profile === "php-wasm" ? "directprooferasure-php-wasm" : "directprooferasure"}/src/Api.php`);
-const phpInvalid = `try {
-    \\LeanDirectprooferasure\\keep(_before: true, value: 0, _after: true);
+const phpInvalid = (route, profile) => `try {
+    \\LeanDirectprooferasure\\keep(_before: true, ${directProofErasurePhpParameter(route)}: ${profile === "php-native" ? "0" : "\\Brick\\Math\\BigInteger::of(0)"}, _after: true);
     throw new \\RuntimeException('Proof arguments were accepted');
 } catch (\\Error $error) {
     if (!str_contains($error->getMessage(), 'Unknown named parameter $_before')) throw $error;
 }`;
-const assertApi = source => {
-	assert.match(source, /function keep\(mixed \$value\): int/u);
+const assertApi = (source, route, profile) => {
+	assert.ok(source.includes(
+		`function keep(mixed $${directProofErasurePhpParameter(route)}): ${directProofErasurePhpReturnType(profile)}`
+	));
 	assert.doesNotMatch(source, /(?:\bTrue\b|\bproof\b|_before|_after)/iu);
 };
 
@@ -134,9 +137,15 @@ for(const route of routes) test(
 		});
 		const handoff = join(suite, "handoff");
 		await copyPackageSetHandoff(retained, handoff);
-		const source = await readFile(
+		const fixtureSource = await readFile(
 			"tests/fixtures/direct-proof-erasure-consumers/php.php", "utf8"
 		);
+		const nativeSource = directProofErasurePhpConsumerSource(fixtureSource, {
+			route, profile: "php-native"
+		});
+		const wasmFixtureSource = directProofErasurePhpConsumerSource(fixtureSource, {
+			route, profile: "php-wasm"
+		});
 		const consumer = join(suite, "consumers"), observations = [];
 
 		const nativePackages = receipt.packages.filter(
@@ -147,13 +156,13 @@ for(const route of routes) test(
 			, packages: nativePackages
 			, environment
 			, fixture: {
-				source: () => source, success: "direct-proof-php"
+				source: () => nativeSource, success: "direct-proof-php"
 				, expectedChecks: 1005
 			}
 		});
 		const nativeRoot = join(consumer, "php-native");
 		const nativeApi = await readFile(apiPath(nativeRoot, "php-native"));
-		assertApi(nativeApi.toString());
+		assertApi(nativeApi.toString(), route, "php-native");
 		const relocatedNative = join(consumer, "php-native-relocated");
 		await rename(nativeRoot, relocatedNative);
 		await assert.rejects(access(nativeRoot), { code: "ENOENT" });
@@ -170,17 +179,19 @@ for(const route of routes) test(
 			assert.equal(run.stdout, "direct-proof-php:1005\n");
 			nativeExecutions.push({ checks: 1005, mode, relocated: true });
 		}
-		await saveLakeFile(records, "php-native/consumer.php", source);
+		await saveLakeFile(records, "php-native/consumer.php", nativeSource);
 		await saveLakeFile(records, "php-native/Api.php", nativeApi);
 		observations.push({
 			profile: "php-native", checks: native.checks
 			, offlineInstall: native.offlineInstall
 			, compilerFreePath: native.compilerFreePath
 			, runtimeParameters: 1, proofSlots: 0
-			, consumerSha256: sha256(source), apiSha256: sha256(nativeApi)
+			, consumerSha256: sha256(nativeSource), apiSha256: sha256(nativeApi)
 			, executions: nativeExecutions
 			, negativeProofArgument: {
-				rejected: true, namedArguments: "_before,value,_after", attempts: 4
+				rejected: true
+				, namedArguments: `_before,${directProofErasurePhpParameter(route)},_after`
+				, attempts: 4
 			}
 		});
 
@@ -192,15 +203,15 @@ for(const route of routes) test(
 			, packages: wasmPackages
 			, environment
 			, fixture: {
-				source: () => source, success: "direct-proof-php"
-				, phpInvalid, removeHandoff: true
+				source: () => wasmFixtureSource, success: "direct-proof-php"
+				, phpInvalid: phpInvalid(route, "php-wasm"), removeHandoff: true
 			}
 		});
 		await assert.rejects(access(handoff), { code: "ENOENT" });
 		const wasmRoot = join(consumer, "php-wasm");
 		const wasmSource = await readFile(join(wasmRoot, "weak.php"));
 		const wasmApi = await readFile(apiPath(wasmRoot, "php-wasm"));
-		assertApi(wasmApi.toString());
+		assertApi(wasmApi.toString(), route, "php-wasm");
 		const driver = await readFile(join(wasmRoot, "driver.mjs"));
 		await saveLakeFile(records, "php-wasm/consumer.php", wasmSource);
 		await saveLakeFile(records, "php-wasm/Api.php", wasmApi);
@@ -214,7 +225,9 @@ for(const route of routes) test(
 			, driverSha256: wasm.driverSha256
 			, browserVersion: wasm.browserVersion, executions: wasm.executions
 			, negativeProofArgument: {
-				rejected: true, namedArguments: "_before,value,_after", attempts: 24
+				rejected: true
+				, namedArguments: `_before,${directProofErasurePhpParameter(route)},_after`
+				, attempts: 24
 			}
 		});
 		const report = {
