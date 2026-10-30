@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
+import "./helpers/direct-proof-erasure-component-binder-repair-source-history-tests.mjs";
 import "./helpers/dependent-signature-receipt-sparse-checkout-source-history-tests.mjs";
 import "./helpers/host-null-archive-dedup-source-history-tests.mjs";
 import "./helpers/host-null-archive-transaction-source-history-tests.mjs";

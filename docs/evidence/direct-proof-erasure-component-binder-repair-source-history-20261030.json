@@ -1,0 +1,86 @@
+{
+  "failedJobId": 123813096267,
+  "failureCode": "invalid-elaborated-metadata",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-component-binder-repair-source-history.mjs",
+      "sha256": "b5f3d860ccd02c71539e62b02b36e183c89bae077c9e414de22a1aed477f5077"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-component-binder-repair-source-history-tests.mjs",
+      "sha256": "f3b81cfa54dd37b80ba4ba9c7594d999b442d8034969e1bf66df740679221b79"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-component-binder-repair-source-history.mjs",
+      "sha256": "626b72068890628454f5cb2e6fd46c1ce70cc662448d840aa3c15cb12fe3798d"
+    }
+  ],
+  "hostedRunId": 40978622372,
+  "implementationCommit": "84efdae258458db3a3a4cd3632e8b8ca99a5d116",
+  "integrationUpdates": [
+    {
+      "currentSha256": "df125de54d6784ffe22c99317d53d752a614a29941fe323a217c6ec57ccb7676",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-component-binder-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "4b925ce507b012daa1ea0d9d385f728490bae4929fc00c992008a3658cc2bf09"
+    },
+    {
+      "currentSha256": "b86420dd195b4a7991e850b17013a85bd1e125673bfcc1dff5d54d958e5bd3d4",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureComponentBinderRepairSource, directProofErasureComponentBinderRepairNormalizationPaths } from \"./direct-proof-erasure-component-binder-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureComponentBinderRepairNormalizationPaths\n\t, ...dependentSignatureCompletePromotionNormalizationPaths\n",
+          "previous": "\t...dependentSignatureCompletePromotionNormalizationPaths\n",
+          "start": 223210
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureComponentBinderRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDependentSignatureCompletePromotionSource(\n",
+          "previous": "\tlet stage = beforeDependentSignatureCompletePromotionSource(\n",
+          "start": 279644
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "aeabb88c447fe3103139abc7abd5c0bdfeaac92f2bfa9ff86cb0dd6b4fae38e1"
+    }
+  ],
+  "milestone": "direct-proof-erasure-component-binder-repair-source-v1",
+  "predecessorCommit": "4fc14049384cb896919661eecaf3a7233ffa8c66",
+  "schemaVersion": 1,
+  "scope": "Preserve each runtime parameter's elaborated Lean binder identity while converting component types, so erasing a preceding proof cannot rename the remaining host parameter.",
+  "updates": [
+    {
+      "currentSha256": "16f052dbe8d1b6491205621bc5062d67e1bdb64694672e703840c53bd8171954",
+      "edits": [
+        {
+          "current": "        (\"type\", ← componentType (← ofExcept <| parameter.getObjVal? \"type\")),\n        (\"sourceIndex\", ← ofExcept <| parameter.getObjVal? \"sourceIndex\")] ++\n",
+          "previous": "        (\"type\", ← componentType (← ofExcept <| parameter.getObjVal? \"type\"))] ++\n",
+          "start": 110857
+        }
+      ],
+      "path": "src/analyze/NativeExports.lean",
+      "previousSha256": "82c3223591db88dc106e5899ca502d562e79ae5f48499921d409ef8b484fead2"
+    },
+    {
+      "currentSha256": "4522ae36c8723d8c660b7801659dd5d1933808a8b920a64fdb257854b7c72110",
+      "edits": [
+        {
+          "current": "test(\"component conversion retains each runtime binder's Lean source index\", async () => {\n\tconst source = await readFile(\"src/analyze/NativeExports.lean\", \"utf8\");\n\tconst conversion = source.split(\n\t\t\"let nativeParameters ← if native then pure nativeParameters else nativeParameters.mapM\"\n\t)[1]?.split(\"let result ← if native then pure result else componentType result\")[0];\n\tassert.ok(conversion, \"component parameter conversion\");\n\tassert.match(conversion\n\t\t, /\\(\"sourceIndex\", ← ofExcept <\\| parameter\\.getObjVal\\? \"sourceIndex\"\\)/u);\n\tassert.match(source\n\t\t, /let sourceIndex := \\(parameter\\.getObjValAs\\? Nat \"sourceIndex\"\\)/u);\n});\n\n",
+          "previous": "",
+          "start": 2199
+        }
+      ],
+      "path": "tests/direct-proof-erasure.test.mjs",
+      "previousSha256": "2ae9a915733f0b86b5311d7aebf5ba2da87521263905cc872fee74b8ee26ac60"
+    }
+  ]
+}
