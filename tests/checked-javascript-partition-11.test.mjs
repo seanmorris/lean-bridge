@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/host-null-final-gate-repair-source-history-tests.mjs";
+import "./helpers/core-current-source-closure-repair-source-history-tests.mjs";
 import "./helpers/core-native-exports-pin-repair-source-history-tests.mjs";
 import "./helpers/vo1220-zero-gap-audit-source-history-tests.mjs";
 import "./helpers/vo1220-zero-gap-tests.mjs";
