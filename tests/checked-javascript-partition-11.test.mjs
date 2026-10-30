@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/host-null-complete-entrypoints-source-history-tests.mjs";
+import "./helpers/direct-proof-erasure-php-fact-order-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-npm-declaration-syntax-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-php-profile-contract-repair-source-history-tests.mjs";
 import "./helpers/direct-proof-erasure-npm-declaration-route-repair-source-history-tests.mjs";

@@ -1,0 +1,101 @@
+{
+  "failedJobId": 123897464491,
+  "failureCode": "ERR_ASSERTION",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-php-fact-order-repair-source-history.mjs",
+      "sha256": "1cfdd08e516d08991932b7b9ae6c111d87c9c267798d77bc40abc9052c52bc63"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-php-fact-order-repair-source-history-tests.mjs",
+      "sha256": "fba2bf40ec1b80544f6aa2a82d5e38aa0877e14d6a1ffc43892e2d7a44fa5711"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-php-fact-order-repair-source-history.mjs",
+      "sha256": "6e86d0200c77de2c59edb1f1535c537d4113498365841cc4a299fd765a90e5b0"
+    }
+  ],
+  "hostedRunId": 41000680672,
+  "implementationCommit": "67a5be7b2419e65405b3e42f1359d180b848f1f6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c730907d352440fb498fe6273c1fb31cc538a50f97c1b9bf54666c86a0e6ff4b",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-php-fact-order-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "540bed821fc5e5c5472efa47da4b5b38dbf584539d9eabf5147731c1b0adca03"
+    },
+    {
+      "currentSha256": "74f28be7d084d3e4b233ca0e2050239319058c09c0a59790b92f6d1bfb84ffd3",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasurePhpFactOrderRepairSource, directProofErasurePhpFactOrderRepairNormalizationPaths } from \"./direct-proof-erasure-php-fact-order-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasurePhpFactOrderRepairNormalizationPaths\n\t, ...directProofErasureNpmDeclarationSyntaxRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureNpmDeclarationSyntaxRepairNormalizationPaths\n",
+          "start": 225334
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasurePhpFactOrderRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureNpmDeclarationSyntaxRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureNpmDeclarationSyntaxRepairSource(\n",
+          "start": 282460
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b49802080e3e46830d97f96cea0ac1c8ebe968658a9c7bd34bebadb0793830b9"
+    }
+  ],
+  "milestone": "direct-proof-erasure-php-fact-order-repair-source-v1",
+  "predecessorCommit": "0787b0abce6ef7d14cebc7e59a7200b18f1a7773",
+  "schemaVersion": 1,
+  "scope": "Validate the exact direct proof-erasure PHP build-fact key set independently of JavaScript object insertion order while retaining digest, proof-slot, runtime-parameter and archive checks.",
+  "updates": [
+    {
+      "currentSha256": "bd96c64059ecebcd307a85efdb9ad95034655554b16d387620ebe600a72ae3c6",
+      "edits": [
+        {
+          "current": "].sort();\n",
+          "previous": "];\n",
+          "start": 958
+        },
+        {
+          "current": "/**\n * Validate one order-independent retained PHP build fact.\n *\n * @param fact - Canonical build fact assembled from both compiled components.\n */\nexport const validateDirectProofErasurePhpBuildFact = fact => {\n\tassert.deepEqual(Object.keys(fact).sort(), factKeys);\n\tfor(const key of factKeys.filter(key => key.endsWith(\"Sha256\")))\n\t\tdigest(fact[key]);\n\tassert.equal(fact.runtimeParameters, 1);\n\tassert.equal(fact.erasedProofs, 2);\n\tassert.ok(Object.keys(fact.archives).length >= 4);\n\tfor(const value of Object.values(fact.archives)) digest(value);\n\treturn fact;\n};\n\n",
+          "previous": "",
+          "start": 1099
+        },
+        {
+          "current": "\t\tvalidateDirectProofErasurePhpBuildFact(fact);\n",
+          "previous": "\t{\n\t\tassert.deepEqual(Object.keys(fact).sort(), factKeys);\n\t\tfor(const key of factKeys.filter(key => key.endsWith(\"Sha256\")))\n\t\t\tdigest(fact[key]);\n\t\tassert.equal(fact.runtimeParameters, 1);\n\t\tassert.equal(fact.erasedProofs, 2);\n\t\tassert.ok(Object.keys(fact.archives).length >= 4);\n\t\tfor(const value of Object.values(fact.archives)) digest(value);\n\t}\n",
+          "start": 4983
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-php-report.mjs",
+      "previousSha256": "68e4e93891f71867b829e99309eab817554dc5fce7132ac864f912ff3d4b4d27"
+    },
+    {
+      "currentSha256": "8114b1bc2ca6b13e6183148732cba2d2aaf7e941f5bfd0c79394a9a5c4109240",
+      "edits": [
+        {
+          "current": "\t, validateDirectProofErasurePhpBuildFact\n",
+          "previous": "",
+          "start": 778
+        },
+        {
+          "current": "test(\"PHP direct proof report accepts canonical facts in any key order\", () => {\n\tconst hash = suffix => suffix.repeat(64).slice(0, 64);\n\tconst component = prefix => ({\n\t\tartifactsSha256: hash(prefix)\n\t\t, bindingIrFileSha256: hash(\"b\")\n\t\t, bindingIrSha256: hash(\"c\")\n\t\t, componentReceiptSha256: hash(\"d\")\n\t\t, erasedProofs: 2\n\t\t, generatedLeanSha256: hash(\"e\")\n\t\t, metadataSha256: hash(\"f\")\n\t\t, modelSha256: hash(\"0\")\n\t\t, runtimeParameters: 1\n\t});\n\tconst native = component(\"a\");\n\tnative.nativeComponentReceiptSha256 = native.componentReceiptSha256;\n\tdelete native.componentReceiptSha256;\n\tconst fact = {\n\t\t...directProofErasurePhpComponentFact({\n\t\t\tnative, phpWasm: component(\"1\")\n\t\t})\n\t\t, archives: Object.fromEntries([\"a\", \"b\", \"c\", \"d\"].map((key\n\t\t\t, index) => [key, hash(String(index + 2))]))\n\t\t, packageSetReceiptSha256: hash(\"9\")\n\t};\n\tconst reversed = Object.fromEntries(Object.entries(fact).reverse());\n\tassert.equal(validateDirectProofErasurePhpBuildFact(reversed), reversed);\n\tassert.throws(() => validateDirectProofErasurePhpBuildFact({\n\t\t...reversed, unexpected: true\n\t}));\n});\n\n",
+          "previous": "",
+          "start": 1766
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-php-tests.mjs",
+      "previousSha256": "4633369440b73bbce1f28e6a19ceb339f0bd82552a33cb73db67b7c63616813c"
+    }
+  ]
+}
