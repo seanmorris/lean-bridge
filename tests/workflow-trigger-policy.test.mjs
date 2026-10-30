@@ -20,6 +20,7 @@ const approvedAutomaticEvents = new Map([
 	, ["dependent-signature-complete.yml", ["pull_request", "push"]]
 	, ["direct-proof-erasure-complete.yml", ["pull_request", "push"]]
 	, ["host-null-complete.yml", ["pull_request", "push"]]
+	, ["optional-parameter-complete.yml", ["pull_request", "push"]]
 	, ["performance.yml", ["push"]]
 	, ["quality.yml", ["pull_request", "push"]]
 	, ["reproducible-release.yml", ["pull_request"]]
@@ -32,6 +33,7 @@ const pathScopedAutomaticWorkflows = new Set([
 	, "dependent-signature-complete.yml"
 	, "direct-proof-erasure-complete.yml"
 	, "host-null-complete.yml"
+	, "optional-parameter-complete.yml"
 	, "reviewed-fin-wasm-entry.yml"
 ]);
 
@@ -140,8 +142,8 @@ test("all workflows obey the reviewed automatic-trigger budget", async () => {
 	assert.equal(new Set(crons).size, sweep.length
 		, "weekly sweep slots do not overlap");
 
-	assert.equal(approvedAutomaticEvents.size, 11);
-	assert.equal(pathScopedAutomaticWorkflows.size, 6);
+	assert.equal(approvedAutomaticEvents.size, 12);
+	assert.equal(pathScopedAutomaticWorkflows.size, 7);
 	assert.equal(nonSweepWorkflows.size, 15);
 });
 
