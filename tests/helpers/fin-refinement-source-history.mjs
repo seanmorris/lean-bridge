@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDirectProofErasureNpmSemanticIrRepairSource, directProofErasureNpmSemanticIrRepairNormalizationPaths } from "./direct-proof-erasure-npm-semantic-ir-repair-source-history.mjs";
 import { beforeDirectProofErasurePhpFactOrderRepairSource, directProofErasurePhpFactOrderRepairNormalizationPaths } from "./direct-proof-erasure-php-fact-order-repair-source-history.mjs";
 import { beforeDirectProofErasureNpmDeclarationSyntaxRepairSource, directProofErasureNpmDeclarationSyntaxRepairNormalizationPaths } from "./direct-proof-erasure-npm-declaration-syntax-repair-source-history.mjs";
 import { beforeDirectProofErasurePhpProfileContractRepairSource, directProofErasurePhpProfileContractRepairNormalizationPaths } from "./direct-proof-erasure-php-profile-contract-repair-source-history.mjs";
@@ -2416,7 +2417,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasurePhpFactOrderRepairNormalizationPaths
+	...directProofErasureNpmSemanticIrRepairNormalizationPaths
+	, ...directProofErasurePhpFactOrderRepairNormalizationPaths
 	, ...directProofErasureNpmDeclarationSyntaxRepairNormalizationPaths
 	, ...directProofErasurePhpProfileContractRepairNormalizationPaths
 	, ...directProofErasureNpmDeclarationRouteRepairNormalizationPaths
@@ -3571,7 +3573,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasurePhpFactOrderRepairSource(
+	let stage = beforeDirectProofErasureNpmSemanticIrRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasurePhpFactOrderRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

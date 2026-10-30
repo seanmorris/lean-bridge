@@ -1,0 +1,140 @@
+{
+  "artifactId": 12956701954,
+  "failedJobId": 123902408087,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-npm-semantic-ir-repair-source-history.mjs",
+      "sha256": "a682b50429cb602e16daf3ba0332e2ba2d53d6efdc5407e74600a114d573d3e6"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-semantic-ir-repair-source-history-tests.mjs",
+      "sha256": "7f4f8f1658471ac12a2362ab6201e59a406b32b1a3263f26776c7da9e78c3002"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-npm-semantic-ir-repair-source-history.mjs",
+      "sha256": "3ab59c35d53d817ba87b8fdf270fbe5ac58be6bb0623ca3f72baef2cdb9e39ce"
+    }
+  ],
+  "hostedRunId": 41006389958,
+  "implementationCommit": "0f8dfe27af5490d289eedebcad7e2badbfe1ef01",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3814ab2410ccbfa8fdeb7c7d35a4976e05c5b618aa07f4e9a97f6865c42f4d3f",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-npm-semantic-ir-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c730907d352440fb498fe6273c1fb31cc538a50f97c1b9bf54666c86a0e6ff4b"
+    },
+    {
+      "currentSha256": "efd2fa41e13227308103b2b6f383dfe27c618d8bca1b456ec8ea34d1abd4efad",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureNpmSemanticIrRepairSource, directProofErasureNpmSemanticIrRepairNormalizationPaths } from \"./direct-proof-erasure-npm-semantic-ir-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureNpmSemanticIrRepairNormalizationPaths\n\t, ...directProofErasurePhpFactOrderRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasurePhpFactOrderRepairNormalizationPaths\n",
+          "start": 225525
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureNpmSemanticIrRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasurePhpFactOrderRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasurePhpFactOrderRepairSource(\n",
+          "start": 282713
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "74f28be7d084d3e4b233ca0e2050239319058c09c0a59790b92f6d1bfb84ffd3"
+    }
+  ],
+  "milestone": "direct-proof-erasure-npm-semantic-ir-repair-source-v1",
+  "missingField": "bindingIrSha256",
+  "packageExecutionPassed": true,
+  "predecessorCommit": "546a591fada14110d20b410fef767e4583885f37",
+  "schemaVersion": 1,
+  "scope": "Retain the semantic Binding IR identity in direct proof-erasure npm build facts, derive it from the verified package receipt, independently recompute it from the retained Binding IR, and reject omitted, altered or extra fact fields.",
+  "updates": [
+    {
+      "currentSha256": "cc020ca4297154eaf43c5b7eb34dfc8c71ed31cdc2d3794ff3c3c241cba7579b",
+      "edits": [
+        {
+          "current": "import { hashBindingIr } from \"../src/binding-ir/canonical.mjs\";\n",
+          "previous": "",
+          "start": 474
+        },
+        {
+          "current": "\t\t\tawait buildCanonicalProject({\n",
+          "previous": "\t\t\tconst built = await buildCanonicalProject({\n",
+          "start": 3902
+        },
+        {
+          "current": "\t\t\tconst bindingIrBytes = await readFile(join(\n\t\t\t\tbundleRoot, \"binding/binding-ir.json\"));\n\t\t\tconst bindingIr = JSON.parse(bindingIrBytes);\n\t\t\tassert.equal(release.report.bindingIrSha256, hashBindingIr(bindingIr));\n",
+          "previous": "",
+          "start": 4588
+        },
+        {
+          "current": "\t\t\t\t...bundle, bindingIrSha256: release.report.bindingIrSha256\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 4822
+        },
+        {
+          "current": "\t\t\t\t, name === \"binding-ir.json\" ? bindingIrBytes\n\t\t\t\t\t: await readFile(join(bundleRoot, path)));\n",
+          "previous": "\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 5562
+        }
+      ],
+      "path": "tests/direct-proof-erasure-npm-installed.test.mjs",
+      "previousSha256": "46c085af9d1b88462d70cb7057aef0fc22edab8b2ed45ce4095786c81c36f3ac"
+    },
+    {
+      "currentSha256": "46ded406db4cb0aa16ba503d41eb9e6e8493dff95ffaa2702049e5ccf7e40965",
+      "edits": [
+        {
+          "current": "\t, validateDirectProofErasureNpmBuildFact\n",
+          "previous": "",
+          "start": 265
+        },
+        {
+          "current": "\ntest(\"proof-erasure npm build facts require the semantic IR identity\", () => {\n\tconst digest = \"a\".repeat(64);\n\tconst fact = {\n\t\tbindingIrFileSha256: digest, bindingIrSha256: digest\n\t\t, compilerAdaptersSha256: digest, componentArchiveSha256: digest\n\t\t, erasedProofs: 2, generatedLeanSha256: digest\n\t\t, receiptSha256: digest, runtimeArchiveSha256: digest\n\t\t, runtimeParameters: 1\n\t};\n\tassert.equal(validateDirectProofErasureNpmBuildFact(\n\t\tObject.fromEntries(Object.entries(fact).reverse())), true);\n\tfor(const altered of [\n\t\tObject.fromEntries(Object.entries(fact)\n\t\t\t.filter(([key]) => key !== \"bindingIrSha256\"))\n\t\t, { ...fact, unexpected: true }\n\t\t, { ...fact, bindingIrSha256: \"0\" }\n\t\t, { ...fact, erasedProofs: 1 }\n\t]) assert.throws(() => validateDirectProofErasureNpmBuildFact(altered));\n});\n",
+          "previous": "",
+          "start": 1663
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-npm-report-tests.mjs",
+      "previousSha256": "cc7011c85c82d8d11b8c1adecb7f5c9afa643d2f7c4acf5577c83cdc70cd7af9"
+    },
+    {
+      "currentSha256": "97683dee0758b02458ac86cb2b525484ebd7a82ab4bf82675ace350f6680c944",
+      "edits": [
+        {
+          "current": "import { hashBindingIr } from \"../../src/binding-ir/canonical.mjs\";\n",
+          "previous": "",
+          "start": 289
+        },
+        {
+          "current": "/**\n * Validate one exact npm build fact without depending on property insertion\n * order.\n *\n * @param fact - Retained build identity and proof-erasure counts.\n */\nexport const validateDirectProofErasureNpmBuildFact = fact => {\n\tassert.ok(fact !== null && typeof fact === \"object\"\n\t\t&& !Array.isArray(fact));\n\tassert.deepEqual(Object.keys(fact).sort(), [...factKeys].sort());\n\tfor(const key of factKeys.filter(key => key.endsWith(\"Sha256\")))\n\t\tdigest(fact[key]);\n\tassert.equal(fact.runtimeParameters, 1);\n\tassert.equal(fact.erasedProofs, 2);\n\treturn true;\n};\n\n",
+          "previous": "",
+          "start": 1393
+        },
+        {
+          "current": "\t\tvalidateDirectProofErasureNpmBuildFact(fact);\n",
+          "previous": "\t{\n\t\tassert.deepEqual(Object.keys(fact).sort(), factKeys);\n\t\tfor(const key of factKeys.filter(key => key.endsWith(\"Sha256\")))\n\t\t\tdigest(fact[key]);\n\t\tassert.equal(fact.runtimeParameters, 1);\n\t\tassert.equal(fact.erasedProofs, 2);\n\t}\n",
+          "start": 4469
+        },
+        {
+          "current": "\t\tassert.equal(fact.bindingIrSha256, hashBindingIr(ir));\n",
+          "previous": "",
+          "start": 8993
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-npm-report.mjs",
+      "previousSha256": "5cf7a0221a3a58171c391d1a534397954f4510fd7a00bc9ae7a9d50217c2d9fb"
+    }
+  ]
+}
