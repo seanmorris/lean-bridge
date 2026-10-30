@@ -88,14 +88,17 @@ export const prepareDirectProofErasureProject = async (t, { route, profiles }) =
 export const assertDirectProofErasureBundle = async bundleRoot => {
 	const irBytes = await readFile(join(bundleRoot, "binding/binding-ir.json"));
 	const ir = JSON.parse(irBytes);
-	assertDirectProofErasureIr(ir);
+	const declaration = assertDirectProofErasureIr(
+		ir, directProofErasureModule, ["arg0", "value"]
+	);
+	const parameterName = declaration.parameters[0].name;
 	const adapterBytes = await readFile(join(bundleRoot, "locks/compiler-adapters.json"));
 	const adapters = JSON.parse(adapterBytes);
 	assert.equal(adapters.exports.length, 1);
 	const item = adapters.exports[0];
 	assert.equal(item.bindingId, `lean:${directProofErasureExport}`);
 	assert.equal(item.sourceDeclaration, directProofErasureExport);
-	assert.deepEqual(item.parameters, [{ name: "value", leanType: "_root_.UInt32" }]);
+	assert.deepEqual(item.parameters, [{ name: parameterName, leanType: "_root_.UInt32" }]);
 	assert.equal(item.leanResultType, "_root_.UInt32");
 	assert.deepEqual(item.erasedProofs, directProofErasureProofs);
 	assert.equal(adapters.privateAbi.exports.length, 1);
@@ -103,8 +106,8 @@ export const assertDirectProofErasureBundle = async bundleRoot => {
 	const leanBytes = await readFile(join(bundleRoot, "generated/LeanBridgeGenerated.lean"));
 	const lean = leanBytes.toString("utf8");
 	const escapedWrapper = item.wrapper.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
-	assert.match(lean, new RegExp(`def ${escapedWrapper} \\(value : _root_\\.UInt32\\) : _root_\\.UInt32 :=`, "u"));
-	assert.match(lean, /_root_\.DirectProofErasure\.keep _root_\.True\.intro value _root_\.True\.intro/u);
+	assert.match(lean, new RegExp(`def ${escapedWrapper} \\(${parameterName} : _root_\\.UInt32\\) : _root_\\.UInt32 :=`, "u"));
+	assert.match(lean, new RegExp(`_root_\\.DirectProofErasure\\.keep _root_\\.True\\.intro ${parameterName} _root_\\.True\\.intro`, "u"));
 	assert.doesNotMatch(lean, /(?:sorry|unsafeCast|\baxiom\b)/u);
 	return {
 		bindingIrSha256: hashBindingIr(ir)
