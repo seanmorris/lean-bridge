@@ -1,0 +1,87 @@
+{
+  "cells": 1054,
+  "gapEntries": 0,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-live-zero-gap-source-history.mjs",
+      "sha256": "aa18fcbe494abd25e23bb47b5b69e2ab79ccb39f051c9577685265c44dab5888"
+    },
+    {
+      "path": "tests/helpers/vo1220-live-zero-gap-source-history-tests.mjs",
+      "sha256": "8b17459c0157d6bbc948af1c62454d879a6915f816d114817516e434b62f785b"
+    },
+    {
+      "path": "tests/helpers/vo1220-live-zero-gap-source-history.mjs",
+      "sha256": "c9aad3cc7cce3098edb20c3585a9fe7c77d6d2f04e85cc3dcb21ff2d7009a804"
+    }
+  ],
+  "implementationCommit": "d8dc5300ec7cbd740facf363539757598821a6d0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b53c4ebbe39c1d515123daa1d0ac9db8a58b0d325c726b5f6cb36a4871d78e2d",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-live-zero-gap-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 7037
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "b96c323aa4adff5ef230ec5baa15b7998c1631500bcbef27a5b53c6f98bc9835"
+    },
+    {
+      "currentSha256": "4ea337be50cbe5b3dd5d9e5c9a8f23e5c30f6d631e179359b1d4ea11f550ee8f",
+      "edits": [
+        {
+          "current": "import { beforeVo1220LiveZeroGapSource, vo1220LiveZeroGapNormalizationPaths } from \"./vo1220-live-zero-gap-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220LiveZeroGapNormalizationPaths\n\t, ...hostNullCompletePromotionNormalizationPaths\n",
+          "previous": "\t...hostNullCompletePromotionNormalizationPaths\n",
+          "start": 227743
+        },
+        {
+          "current": "\tlet stage = beforeVo1220LiveZeroGapSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHostNullCompletePromotionSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeHostNullCompletePromotionSource(path, text, expected);\n",
+          "start": 285656
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "78383ae75e6a77f6e807a5e2d41ae874c0e7063d648db685afbe7b255aab0bf4"
+    }
+  ],
+  "milestone": "vo1220-live-zero-gap-source-v1",
+  "owner": 1220,
+  "passedCells": 1054,
+  "predecessorCommit": "c26629e8f70f2944883658ef757bf47167ba9bfa",
+  "schemaVersion": 1,
+  "scope": "Remove the prepublication synthetic HostNull promotion fallback from the final owner-derived VO #1220 audit. Require the live checked-in inventory itself to contain all ten owned shapes, exactly 1,054 fully passing cells and 5,270 passing stage entries with zero gaps, missing observations, invalid evidence or reviewed exclusions, while retaining all four mutation refusals.",
+  "stageEntries": 5270,
+  "syntheticFallback": false,
+  "updates": [
+    {
+      "currentSha256": "8697d95d2b8ef7fa82249bb89f014084d89f77830602c4c9d96465d0299c420d",
+      "edits": [
+        {
+          "current": "import { hostNullCompletePromotionEvidenceId }\n\tfrom \"./host-null-complete-promotion.mjs\";\n",
+          "previous": "import {\n\thostNullCompleteHostedLanes\n} from \"./host-null-complete-hosted-archive.mjs\";\nimport {\n\thostNullCompletePromotionEvidenceId\n\t, hostNullCompletePromotionReferencePaths, promoteHostNullComplete\n} from \"./host-null-complete-promotion.mjs\";\n",
+          "start": 222
+        },
+        {
+          "current": "",
+          "previous": "const revision = \"2\".repeat(40);\nconst reference = Object.freeze({\n\tid: hostNullCompletePromotionEvidenceId, revision\n\t, command: \"hosted complete HostNull command\"\n\t, scope: \"hosted complete HostNull scope\"\n\t, files: Object.freeze(hostNullCompletePromotionReferencePaths.map(\n\t\t(path, index) => ({\n\t\t\tpath, sha256: ((index + 2) % 16).toString(16).repeat(64)\n\t\t})\n\t))\n\t, artifacts: Object.freeze(hostNullCompleteHostedLanes.map((lane, index) => ({\n\t\tpath: `${lane.artifactPrefix}-${revision}.zip`\n\t\t, sha256: \"abcdef0\"[index].repeat(64)\n\t})))\n\t, limitations: Object.freeze(Array.from({ length: 6 }, (_, index) =>\n\t\t`complete hosted limitation ${index + 1}`))\n});\n\nconst proposed = async () => {\n\tconst { document, contracts } = await load();\n\tconst report = vo1220ZeroGapReport(document, contracts);\n\treturn {\n\t\tdocument: report.gaps.length === 0 ? document\n\t\t\t: promoteHostNullComplete(document, contracts, reference)\n\t\t, contracts\n\t};\n};\n",
+          "start": 770
+        },
+        {
+          "current": "before(async () => { fixture = await load(); });\n",
+          "previous": "before(async () => { fixture = await proposed(); });\n",
+          "start": 784
+        }
+      ],
+      "path": "tests/helpers/vo1220-zero-gap-tests.mjs",
+      "previousSha256": "18916e12503809f2220dcabfd192b884a14b06070d0dc5711bb271309349d9b8"
+    }
+  ]
+}

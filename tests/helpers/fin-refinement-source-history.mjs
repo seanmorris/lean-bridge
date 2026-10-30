@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeVo1220LiveZeroGapSource, vo1220LiveZeroGapNormalizationPaths } from "./vo1220-live-zero-gap-source-history.mjs";
 import { beforeHostNullCompletePromotionSource, hostNullCompletePromotionNormalizationPaths } from "./host-null-complete-promotion-source-history.mjs";
 import { beforeVo1220ZeroGapAuditSource, vo1220ZeroGapAuditNormalizationPaths } from "./vo1220-zero-gap-audit-source-history.mjs";
 import { beforeHostNullSystemsSemanticIdentityRepairSource, hostNullSystemsSemanticIdentityRepairNormalizationPaths } from "./host-null-systems-semantic-identity-repair-source-history.mjs";
@@ -2429,7 +2430,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostNullCompletePromotionNormalizationPaths
+	...vo1220LiveZeroGapNormalizationPaths
+	, ...hostNullCompletePromotionNormalizationPaths
 	, ...vo1220ZeroGapAuditNormalizationPaths
 	, ...hostNullSystemsSemanticIdentityRepairNormalizationPaths
 	, ...hostNullPromotionPinReconciliationNormalizationPaths
@@ -3597,7 +3599,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeHostNullCompletePromotionSource(path, text, expected);
+	let stage = beforeVo1220LiveZeroGapSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHostNullCompletePromotionSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
