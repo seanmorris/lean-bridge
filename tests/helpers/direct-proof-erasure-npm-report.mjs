@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import ts from "typescript";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validateCompilerAdapterPlan } from "../../src/build/compiler-adapters.mjs";
 import { validateComponentBuildPlan } from "../../src/build/component-plan.mjs";
@@ -34,6 +35,44 @@ const factKeys = [
 	, "componentArchiveSha256", "erasedProofs", "generatedLeanSha256"
 	, "receiptSha256", "runtimeArchiveSha256", "runtimeParameters"
 ];
+
+/**
+ * Require the exact proof-free declaration syntax while allowing documentation
+ * to explain why proof parameters are absent.
+ *
+ * @param source - Complete generated TypeScript declaration source.
+ * @param parameter - Exact public runtime parameter name for this author route.
+ */
+export const assertDirectProofErasureNpmDeclarationSurface = (
+	source, parameter
+) => {
+	assert.equal(typeof source, "string");
+	assert.ok(["arg0", "value"].includes(parameter));
+	const file = ts.createSourceFile(
+		"index.d.ts", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS
+	);
+	assert.deepEqual(file.parseDiagnostics, []);
+	const declarations = file.statements.filter(statement =>
+		ts.isFunctionDeclaration(statement)
+			&& statement.name?.text === "keep");
+	assert.equal(declarations.length, 1);
+	const [keep] = declarations;
+	assert.equal(keep.parameters.length, 1);
+	assert.ok(ts.isIdentifier(keep.parameters[0].name));
+	assert.equal(keep.parameters[0].name.text, parameter);
+	assert.equal(keep.parameters[0].type?.kind, ts.SyntaxKind.NumberKeyword);
+	assert.equal(keep.type?.kind, ts.SyntaxKind.NumberKeyword);
+	const forbidden = [];
+	const visit = node => {
+		if(ts.isIdentifier(node)
+			&& /True|proof|_before|_after/u.test(node.text))
+			forbidden.push(node.text);
+		ts.forEachChild(node, visit);
+	};
+	visit(file);
+	assert.deepEqual(forbidden, []);
+	return true;
+};
 
 /**
  * Validate the original canonical report and its source-free observations.
@@ -185,9 +224,11 @@ export const checkDirectProofErasureNpmRecords = async (read, options) => {
 	assert.equal((await read("index.mjs")).toString()
 		, 'import * as api from "direct-proof-erasure";\nimport {checkDirectProofErasure} from "./check.mjs";\nconsole.log(JSON.stringify(checkDirectProofErasure(api)));\n');
 	assert.equal(report.callerSha256, sha256(await read("index.mjs")));
-	assert.equal(report.declarationsSha256, sha256(await read("index.d.ts")));
-	assert.doesNotMatch((await read("index.d.ts")).toString()
-		, /True|proof|_before|_after/u);
+	const declarations = await read("index.d.ts");
+	assert.equal(report.declarationsSha256, sha256(declarations));
+	assertDirectProofErasureNpmDeclarationSurface(
+		declarations.toString(), options.route === "ordinary" ? "arg0" : "value"
+	);
 	const handoff = await json("handoff/component-package-receipt.json");
 	assert.deepEqual(handoff, report.receipt);
 	for(const item of [handoff.runtime, handoff.package])

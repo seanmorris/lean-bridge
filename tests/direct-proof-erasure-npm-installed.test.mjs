@@ -23,6 +23,9 @@ import {
 import {
 	assertDirectProofErasureBundle, prepareDirectProofErasureProject
 } from "./helpers/direct-proof-erasure-packages.mjs";
+import {
+	assertDirectProofErasureNpmDeclarationSurface
+} from "./helpers/direct-proof-erasure-npm-report.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_DIRECT_PROOF_NPM_TEST === "1";
@@ -178,10 +181,7 @@ for(const route of routes) test(
 		};
 		const declarations = await readFile(join(componentRoot, "index.d.ts"), "utf8");
 		const parameter = route === "ordinary" ? "arg0" : "value";
-		assert.match(declarations, new RegExp(
-			`export declare function keep\\(${parameter}: number\\): number;`, "u"
-		));
-		assert.doesNotMatch(declarations, /True|proof|_before|_after/u);
+		assertDirectProofErasureNpmDeclarationSurface(declarations, parameter);
 		await saveLakeFile(records, "index.mjs", caller);
 		await saveLakeFile(records, "check.mjs", await readFile(
 			"tests/fixtures/direct-proof-erasure-consumers/javascript.mjs"
