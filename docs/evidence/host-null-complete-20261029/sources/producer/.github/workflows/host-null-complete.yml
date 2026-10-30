@@ -1,0 +1,241 @@
+name: Complete HostNull acceptance
+
+on:
+  push:
+    paths:
+      - ".github/workflows/host-null-complete.yml"
+      - "docs/consume/**"
+      - "docs/evidence/host-null-complete-*/**"
+      - "docs/javascript-typescript.md"
+      - "docs/php.md"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*host-null-complete*.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/host-null-complete-*.test.mjs"
+      - "tests/helpers/host-null-complete-*.mjs"
+  pull_request:
+    paths:
+      - ".github/workflows/host-null-complete.yml"
+      - "docs/consume/**"
+      - "docs/evidence/host-null-complete-*/**"
+      - "docs/javascript-typescript.md"
+      - "docs/php.md"
+      - "docs/reference/**"
+      - "docs/consumer-support.v1.json"
+      - "docs/type-surface.v1.json"
+      - "package-lock.json"
+      - "package.json"
+      - "schema/binding-ir.schema.json"
+      - "scripts/*host-null-complete*.mjs"
+      - "scripts/generate-type-docs.mjs"
+      - "src/adoption/type-surface.mjs"
+      - "src/capsule/node.mjs"
+      - "tests/host-null-complete-*.test.mjs"
+      - "tests/helpers/host-null-complete-*.mjs"
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Bounded explicit HostNull suite to execute
+        required: true
+        default: audit
+        type: choice
+        options:
+          - audit
+          - produce
+  # One low-cost lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "31 8 * * 6"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: host-null-complete-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    if: inputs.suite != 'produce'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out complete source history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+            /docs/evidence/host-null-complete-*/
+          sparse-checkout-cone-mode: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Replay all seven immutable host archives
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/host-null-complete
+          node --test --test-concurrency=1 \
+            tests/host-null-complete-hosted-evidence.test.mjs \
+            | tee build/host-null-complete/evidence.tap
+      - name: Audit all 170 promoted cells and generated documentation
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test --test-concurrency=1 \
+            tests/host-null-complete-promotion.test.mjs \
+            | tee build/host-null-complete/promotion.tap
+      - name: Preserve the complete HostNull audit
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-complete-${{ github.run_id }}
+          path: build/host-null-complete/
+          if-no-files-found: error
+          retention-days: 14
+
+  npm-browser:
+    name: Node and browser producer
+    if: inputs.suite == 'produce'
+    uses: ./.github/workflows/generic-subtype-npm-browser.yml
+    with:
+      host_null: true
+
+  native-perl:
+    name: Scripting producer
+    needs: npm-browser
+    if: always() && inputs.suite == 'produce'
+    uses: ./.github/workflows/generic-subtype-native-perl.yml
+    with:
+      host_null: true
+
+  managed-wit:
+    name: Managed and systems producers
+    needs: native-perl
+    if: always() && inputs.suite == 'produce'
+    uses: ./.github/workflows/generic-subtype-managed-wit.yml
+    with:
+      host_null: true
+
+  php:
+    name: PHP and PHP-Wasm producer
+    needs: managed-wit
+    if: always() && inputs.suite == 'produce'
+    uses: ./.github/workflows/nominal-subtype-php-wasm.yml
+    with:
+      host_null: true
+
+  receipt:
+    name: Reconcile the exact same-run receipt
+    if: always() && inputs.suite == 'produce'
+    needs:
+      - npm-browser
+      - native-perl
+      - managed-wit
+      - php
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out the exact producer revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+          sparse-checkout-cone-mode: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Download every same-run HostNull artifact
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@v5
+        with:
+          pattern: host-null-*-${{ github.sha }}
+          path: build/host-null-complete-matrix-input
+      - name: Reconcile all seventeen profiles, both author routes and five positions
+        id: reconciliation
+        if: always()
+        continue-on-error: true
+        run: |
+          node scripts/reconcile-host-null-complete-matrix.mjs \
+            --directory build/host-null-complete-matrix-input \
+            --output build/host-null-complete-matrix/receipt.json \
+            --producer "${{ github.sha }}" \
+            --repository "${{ github.repository }}" \
+            --workflow ".github/workflows/host-null-complete.yml" \
+            --run-id "${{ github.run_id }}" \
+            --run-attempt "${{ github.run_attempt }}"
+      - name: Preserve the complete HostNull receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-complete-matrix-${{ github.sha }}
+          path: build/host-null-complete-matrix/receipt.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce every producer and exact receipt reconciliation
+        if: >-
+          always() &&
+          (needs.npm-browser.result != 'success' ||
+           needs.native-perl.result != 'success' ||
+           needs.managed-wit.result != 'success' ||
+           needs.php.result != 'success' ||
+           steps.download.outcome != 'success' ||
+           steps.reconciliation.outcome != 'success')
+        run: exit 1

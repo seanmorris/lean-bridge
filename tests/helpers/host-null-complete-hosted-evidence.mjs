@@ -25,10 +25,10 @@ import {
 export const hostNullCompleteHostedEvidence
 	= "docs/evidence/host-null-complete-20261029";
 export const hostNullCompleteHostedEvidencePins = Object.freeze({
-	index: "PENDING_HOST_NULL_COMPLETE_INDEX"
-	, producer: "PENDING_HOST_NULL_COMPLETE_PRODUCER"
-	, archive: "PENDING_HOST_NULL_COMPLETE_ARCHIVE"
-	, runId: 0
+	index: "6d991a47fef5f26298ce3d275b6ac10b60c382838b62ddbeefd074885c995bda"
+	, producer: "92a7ccbff4e006a61402f7d418e6c28d9a4e1f59"
+	, archive: "dde8ec629c7b2f71c8a4d47b34b6eb19744e88a3"
+	, runId: 41051984859
 });
 
 const exactKeys = (value, keys, label) => assert.deepEqual(
@@ -118,12 +118,17 @@ export const checkHostNullCompleteHostedEvidence = async (
 		assert.deepEqual(index.captures.map(item => item.lane)
 			, hostNullCompleteHostedLanes.map(item => item.id));
 		const flattened = index.captures.flatMap(capture =>
-			capture.accepted.cells);
-		assert.deepEqual(flattened.map(({ lane, receiptSha256, ...cell }) => {
+			capture.accepted.cells).map(({ lane, receiptSha256, ...cell }) => {
 			assert.equal(lane.length > 0, true);
 			assert.match(receiptSha256, /^[a-f0-9]{64}$/u);
 			return cell;
-		}), hostNullCompleteCells);
+		});
+		const key = cell => `${cell.route}:${cell.profile}:${cell.position}`;
+		const acceptedCells = new Map(flattened.map(cell => [key(cell), cell]));
+		assert.equal(acceptedCells.size, flattened.length
+			, "captured cells must be unique");
+		assert.deepEqual(hostNullCompleteCells.map(cell => acceptedCells.get(
+			key(cell))), hostNullCompleteCells);
 
 		const root = await mkdtemp(join(tmpdir(), "lean-host-null-complete-evidence-"));
 		try

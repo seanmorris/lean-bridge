@@ -1,0 +1,224 @@
+name: Generic Subtypes in npm and browsers
+
+on:
+  workflow_call:
+    inputs:
+      optional_parameters:
+        description: Run the complete optional-parameter package matrix.
+        required: false
+        type: boolean
+        default: false
+      direct_proof_erasure:
+        description: Run direct proof-erasure package acceptance.
+        required: false
+        type: boolean
+        default: false
+      host_null:
+        description: Run complete explicit HostNull package acceptance.
+        required: false
+        type: boolean
+        default: false
+  workflow_dispatch:
+  # One lane in the bounded weekly default-branch acceptance sweep.
+  schedule:
+    - cron: "47 10 * * 2"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: generic-subtype-npm-browser-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  installed:
+    name: ${{ matrix.route }} generic Subtypes in Node and browsers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        route: ${{ fromJSON((inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null) && '["reviewed"]' || '["ordinary","reviewed"]') }}
+    env:
+      EMCC_CORES: "2"
+      LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+      LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/lean-link-spike/lazy
+    steps:
+      - name: Free hosted runner disk before checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Check out the focused package revision
+        if: ${{ inputs.optional_parameters || inputs.direct_proof_erasure || inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
+      - name: Check out the exact revision and evidence history
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep xz-utils zstd
+      - name: Install dependencies and pinned compiler tools
+        timeout-minutes: 30
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/bootstrap-toolchains.sh
+      - name: Install Chromium, Firefox and WebKit
+        timeout-minutes: 20
+        run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
+      - name: Build the locked component engine
+        timeout-minutes: 40
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          nix build .#component-build-engine --out-link build/locked-lake-engine 2>&1 | tee build/generic-subtype-engine-${{ matrix.route }}.log
+          test -x build/locked-lake-engine/bin/lean-bridge-component-engine
+      - name: Build the pinned shared Wasm runtime
+        timeout-minutes: 60
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/generic-subtype-runtime-${{ matrix.route }}.log
+          test -s build/lean-link-spike/lazy/main.wasm
+      - name: Install and exercise the selected generic Subtype route
+        id: acceptance
+        if: ${{ !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        timeout-minutes: 90
+        env:
+          LEAN_BRIDGE_GENERIC_SUBTYPE_NPM_BROWSER_TEST: "1"
+          LEAN_BRIDGE_GENERIC_SUBTYPE_ROUTES: ${{ matrix.route }}
+          LEAN_BRIDGE_GENERIC_SUBTYPE_NPM_BROWSER_OUTPUT: build/generic-subtype-npm-browser/${{ matrix.route }}.json
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+        run: |
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/generic-subtype-npm-browser.test.mjs
+          test -s build/generic-subtype-npm-browser/${{ matrix.route }}.json
+      - name: Preserve complete and partial acceptance records
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: generic-subtype-npm-browser-${{ matrix.route }}-${{ github.sha }}
+          path: |
+            build/generic-subtype-npm-browser/${{ matrix.route }}.json
+            build/generic-subtype-engine-${{ matrix.route }}.log
+            build/generic-subtype-runtime-${{ matrix.route }}.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Exercise ordinary and reviewed finite specializations in every browser realm
+        if: ${{ matrix.route == 'reviewed' && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        timeout-minutes: 120
+        env:
+          LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_TEST: "1"
+          LEAN_BRIDGE_SIGNATURE_SPECIALIZATION_BROWSER_REPORT: build/signature-specializations/browser.json
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+        run: |
+          source scripts/env.sh
+          node --test --test-concurrency=1 \
+            --test-name-pattern='^installed ordinary and reviewed specialization packages execute selected instances in every browser realm$' \
+            tests/reviewed-specializations.test.mjs
+          test -s build/signature-specializations/browser.json
+      - name: Preserve finite-specialization browser observations
+        if: ${{ always() && matrix.route == 'reviewed' && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: signature-specializations-browser-${{ github.sha }}
+          path: build/signature-specializations/browser.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Execute the complete optional-parameter Node and browser matrix
+        id: optional_parameters
+        if: inputs.optional_parameters && matrix.route == 'reviewed'
+        continue-on-error: true
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-optional-parameter-npm-ci.sh
+      - name: Preserve optional-parameter Node and browser records
+        if: always() && inputs.optional_parameters && matrix.route == 'reviewed'
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-node-browser-${{ github.sha }}
+          path: build/optional-parameter-npm-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce optional-parameter Node and browser acceptance
+        if: always() && inputs.optional_parameters && matrix.route == 'reviewed' && steps.optional_parameters.outcome != 'success'
+        run: exit 1
+      - name: Require direct proof erasure in Node, TypeScript and three browsers
+        id: direct_proof_erasure
+        if: inputs.direct_proof_erasure && matrix.route == 'reviewed'
+        continue-on-error: true
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-direct-proof-erasure-npm-ci.sh
+      - name: Preserve direct proof-erasure npm and browser records
+        if: always() && inputs.direct_proof_erasure && matrix.route == 'reviewed'
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-node-browser-${{ github.sha }}
+          path: build/direct-proof-erasure-npm-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce Node support and the browser corpus
+        if: always() && inputs.direct_proof_erasure && matrix.route == 'reviewed' && steps.direct_proof_erasure.outcome != 'success'
+        run: exit 1
+      - name: Require explicit HostNull in Node, TypeScript and three browsers
+        id: host_null
+        if: inputs.host_null && matrix.route == 'reviewed'
+        continue-on-error: true
+        timeout-minutes: 120
+        env:
+          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/host-null-npm-installed.test.mjs
+          test -s build/host-null/npm/report.json
+      - name: Preserve explicit HostNull npm and browser observations
+        if: always() && inputs.host_null && matrix.route == 'reviewed'
+        uses: actions/upload-artifact@v7
+        with:
+          name: host-null-node-browser-${{ github.sha }}
+          path: build/host-null/npm/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce explicit HostNull npm and browser acceptance
+        if: always() && inputs.host_null && matrix.route == 'reviewed' && steps.host_null.outcome != 'success'
+        run: exit 1
+      - name: Enforce generic Subtype acceptance
+        if: ${{ always() && !inputs.optional_parameters && !inputs.direct_proof_erasure && !inputs.host_null && steps.acceptance.outcome != 'success' }}
+        run: exit 1
