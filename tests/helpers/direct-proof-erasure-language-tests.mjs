@@ -12,7 +12,42 @@ import { generatePythonBindingPackage } from "../../src/backends/python/generate
 import { generateRubyBindingPackage } from "../../src/backends/ruby/generate.mjs";
 import { generateRustBindingPackage } from "../../src/backends/rust/generate.mjs";
 import { directProofErasureReview } from "./direct-proof-erasure-fixture.mjs";
+import {
+	validateDirectProofErasureLanguageClosure
+} from "./direct-proof-erasure-language-report.mjs";
 import { nativeMetadataFixture } from "./native-metadata.mjs";
+
+test("language direct proof reports require each exact closure shape", () => {
+	const hash = "a".repeat(64);
+	const closures = {
+		perl: {
+			installedFilesSha256: hash, interpreterSha256: hash
+			, receiptsSha256: hash
+		}
+		, python: {
+			baselineSha256: hash, environmentSha256: hash
+			, interpreterSha256: hash, python: "3.12.15"
+		}
+		, ruby: {
+			environmentSha256: hash, gemspecSha256: hash
+			, interpreterSha256: hash, packageFileSetSha256: hash
+			, receiptSha256: hash
+		}
+		, rust: {
+			cargoSha256: hash, compilerSha256: hash, executableSha256: hash
+			, packageFileSetSha256: hash, receiptSha256: hash
+		}
+	};
+	for(const [profile, closure] of Object.entries(closures))
+	{
+		assert.equal(validateDirectProofErasureLanguageClosure(
+			profile, closure), true);
+		assert.throws(() => validateDirectProofErasureLanguageClosure(
+			profile, { ...closure, unexpectedSha256: hash }));
+	}
+	assert.throws(() => validateDirectProofErasureLanguageClosure(
+		"python", { ...closures.python, python: "python" }));
+});
 
 test("language direct proof APIs expose one word and no proof slot", () => {
 	const ir = directProofErasureReview();

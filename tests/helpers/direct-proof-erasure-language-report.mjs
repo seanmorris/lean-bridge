@@ -36,6 +36,41 @@ const factKeys = [
 	, "packageSetReceiptSha256", "runtimeParameters"
 ];
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
+const closureKeys = Object.freeze({
+	perl: Object.freeze([
+		"installedFilesSha256", "interpreterSha256", "receiptsSha256"
+	])
+	, python: Object.freeze([
+		"baselineSha256", "environmentSha256", "interpreterSha256", "python"
+	])
+	, ruby: Object.freeze([
+		"environmentSha256", "gemspecSha256", "interpreterSha256"
+		, "packageFileSetSha256", "receiptSha256"
+	])
+	, rust: Object.freeze([
+		"cargoSha256", "compilerSha256", "executableSha256"
+		, "packageFileSetSha256", "receiptSha256"
+	])
+});
+
+/**
+ * Authenticate the exact post-relocation closure for one language package.
+ *
+ * @param profile - Perl, Python, Ruby or Rust.
+ * @param closure - Retained closure observation.
+ */
+export const validateDirectProofErasureLanguageClosure = (profile, closure) => {
+	assert.ok(directProofErasureLanguageProfiles.includes(profile));
+	assert.ok(closure && typeof closure === "object" && !Array.isArray(closure));
+	assert.deepEqual(Object.keys(closure).sort(), [...closureKeys[profile]].sort());
+	for(const [key, value] of Object.entries(closure))
+	{
+		if(key.endsWith("Sha256")) digest(value);
+	}
+	if(profile === "python")
+		assert.match(closure.python, /^3\.(?:1[1-9]|[2-9][0-9])\.[0-9]+$/u);
+	return true;
+};
 
 /**
  * Validate one complete installed-language report.
@@ -94,20 +129,7 @@ export const validateDirectProofErasureLanguageReport = (report, {
 	assert.equal(item.negativeProofArgument.rejected, true);
 	assert.match(item.negativeProofArgument.diagnostic, negativePattern[profile]);
 	digest(item.consumerSha256);
-	assert.ok(item.closure && typeof item.closure === "object");
-	for(const [key, value] of Object.entries(item.closure))
-	{
-		assert.match(key, /Sha256$/u);
-		digest(value);
-	}
-	for(const key of profile === "perl"
-		? ["installedFilesSha256", "interpreterSha256", "receiptsSha256"]
-		: profile === "python"
-			? ["receiptSha256", "packageFileSetSha256", "environmentSha256", "interpreterSha256"]
-			: profile === "ruby"
-				? ["receiptSha256", "packageFileSetSha256", "environmentSha256", "interpreterSha256", "gemspecSha256"]
-				: ["receiptSha256", "packageFileSetSha256", "compilerSha256", "cargoSha256", "executableSha256"])
-		digest(item.closure[key]);
+	validateDirectProofErasureLanguageClosure(profile, item.closure);
 	if(profile === "rust")
 	{
 		assert.equal(report.dependencies.archive, "rust-dependencies.tar.gz");
