@@ -32,10 +32,16 @@ const references = Object.entries(laneProfiles).map(([lane, profiles]) => ({
 	, artifacts: [{ path: `test/${lane}.zip`, sha256: digest }]
 }));
 
+const gitJson = async (revision, path) => {
+	const chunks = [];
+	for await(const chunk of gitSourceBytes(revision, path)) chunks.push(chunk);
+	return JSON.parse(Buffer.concat(chunks).toString("utf8"));
+};
+
 test("nominal Subtype entry promotion adds evidence without support", async () => {
 	const [irSchema, consumers] = await Promise.all([
-		readFile("schema/binding-ir.schema.json", "utf8").then(JSON.parse)
-		, readFile("docs/consumer-support.v1.json", "utf8").then(JSON.parse)
+		gitJson(implementation, "schema/binding-ir.schema.json")
+		, gitJson(implementation, "docs/consumer-support.v1.json")
 	]);
 	const { document } = await readPromotionInventory(
 		gitSourceBytes(implementation, "docs/type-surface.v1.json")

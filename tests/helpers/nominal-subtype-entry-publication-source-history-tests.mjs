@@ -41,6 +41,11 @@ const names = arguments_ => git(arguments_).trim().split("\n")
 	.filter(Boolean).sort();
 const readRecord = async () => JSON.parse(await readFile(
 	nominalSubtypeEntryPublicationHistoryPath, "utf8"));
+const gitJson = async (revision, path) => {
+	const chunks = [];
+	for await(const chunk of gitSourceBytes(revision, path)) chunks.push(chunk);
+	return JSON.parse(Buffer.concat(chunks).toString("utf8"));
+};
 
 test("nominal Subtype entry publication authenticates every source transition"
 	, async () => {
@@ -124,16 +129,22 @@ test("nominal Subtype entry archives bind their complete evidence commits"
 
 test("nominal Subtype entry publication preserves every support observation"
 	, async () => {
-		const [irSchema, consumers] = await Promise.all([
-			readFile("schema/binding-ir.schema.json", "utf8").then(JSON.parse)
-			, readFile("docs/consumer-support.v1.json", "utf8").then(JSON.parse)
-		]);
-		const contracts = { irSchema, consumers };
+		const beforeCommit = nominalSubtypeEntryPublicationCommits.at(-2);
+		const afterCommit = nominalSubtypeEntryPublicationCommits.at(-1);
+		const [beforeIrSchema, beforeConsumers, afterIrSchema, afterConsumers]
+			= await Promise.all([
+				gitJson(beforeCommit, "schema/binding-ir.schema.json")
+				, gitJson(beforeCommit, "docs/consumer-support.v1.json")
+				, gitJson(afterCommit, "schema/binding-ir.schema.json")
+				, gitJson(afterCommit, "docs/consumer-support.v1.json")
+			]);
 		const before = await readPromotionInventory(gitSourceBytes(
-			nominalSubtypeEntryPublicationCommits.at(-2), inventoryPath), contracts);
+			beforeCommit, inventoryPath)
+		, { irSchema: beforeIrSchema, consumers: beforeConsumers });
 		// The publication's own inventory: later promotions change other observations.
 		const after = await readPromotionInventory(gitSourceBytes(
-			nominalSubtypeEntryPublicationCommits.at(-1), inventoryPath), contracts);
+			afterCommit, inventoryPath)
+		, { irSchema: afterIrSchema, consumers: afterConsumers });
 		assert.deepEqual(after.document.observations, before.document.observations);
 		const ids = ["nominal-subtype-entry-native-hosted-instrumented"
 			, "nominal-subtype-entry-browser-hosted-instrumented"];
@@ -154,7 +165,8 @@ test("nominal Subtype entry publication additions retain exact identities"
 				item.path === introduction.path);
 			assert.ok(addition);
 			assert.equal(addition.commit, introduction.commit);
-			assert.equal(sha256(await readFile(addition.path))
+			assert.equal(sha256(git(["show"
+				, `${nominalSubtypeEntryPublicationCommit}:${addition.path}`]))
 				, addition.currentSha256, addition.path);
 		}
 	}
