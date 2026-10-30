@@ -1,0 +1,573 @@
+{
+  "cells": 204,
+  "currentSourcePaths": [],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-focused-archive-source-history.mjs",
+      "sha256": "21b9cae7a5168417515a3b7cb579c8a81a344ebb948052c7b34dd535a9996914"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-focused-archive-source-history-tests.mjs",
+      "sha256": "d50d9b766c138a2c744dc2867dd588a3643f5f0376588bfb6040553922254cb0"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-focused-archive-source-history.mjs",
+      "sha256": "302f53d1fb2121d588ee597d80562a1c3e6a9a8ac95f5fe388046a964a67cb04"
+    }
+  ],
+  "implementationAdditions": [],
+  "implementationCommit": "ae0130afe02e26e37d43d852de9aef38405b7224",
+  "integrationUpdates": [
+    {
+      "currentSha256": "afe5613c545c1709a48b1b1a40005ed49febca9a2d43bd22725ea092009b35da",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-focused-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "3b0675c92dfc3f9dcc428354860e9688c78f76dac599af404ca8e34b132675dc"
+    },
+    {
+      "currentSha256": "dfd25e529b6476f923c8cd82a91b1f6dc23e60c893e2387df45e023f7c3a62ad",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasureFocusedArchiveSource, directProofErasureFocusedArchiveNormalizationPaths } from \"./direct-proof-erasure-focused-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasureFocusedArchiveNormalizationPaths\n\t, ...directProofErasureReceiptProfileRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureReceiptProfileRepairNormalizationPaths\n",
+          "start": 226074
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasureFocusedArchiveSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureReceiptProfileRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureReceiptProfileRepairSource(\n",
+          "start": 283441
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "00a1cec98fc5b9a4b6167e11c4e786bf3cc4df57cd8130d5aed9d6515125f4e5"
+    }
+  ],
+  "milestone": "direct-proof-erasure-focused-archive-source-v1",
+  "predecessorCommit": "09ca211fec5fcebfd47747cd55485781adf93974",
+  "producerArtifacts": 10,
+  "profiles": 17,
+  "receiptArtifacts": 1,
+  "reports": 20,
+  "schemaVersion": 1,
+  "scope": "Bind the exact successful focused proof-erasure run to ten producer artifacts and one same-run aggregate receipt, retain original API, log and ZIP bytes, replay twenty canonical reports across seventeen profiles, and promote exactly 204 proof-erasure cells.",
+  "updates": [
+    {
+      "currentSha256": "744cc1e66ee0b3f1eadf2112d41aa0a005033945e928f5ce43b9b0e476d2a3e1",
+      "edits": [
+        {
+          "current": "\t, assertDirectProofErasureHostedReceiptSteps\n",
+          "previous": "",
+          "start": 842
+        },
+        {
+          "current": "\t, directProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 1111
+        },
+        {
+          "current": "\t, inspectDirectProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 1330
+        },
+        {
+          "current": "\t, validateDirectProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 1455
+        },
+        {
+          "current": "import {\n\tbuildDirectProofErasureMatrixReceipt\n\t, directProofErasureMatrixResultPath\n} from \"../tests/helpers/direct-proof-erasure-matrix-receipt.mjs\";\n",
+          "previous": "",
+          "start": 1739
+        },
+        {
+          "current": "\t, directProofErasureHostedReceipt.id\n",
+          "previous": "",
+          "start": 2273
+        },
+        {
+          "current": "for(const selected of [\n\t...directProofErasureHostedLanes, directProofErasureHostedReceipt\n])\n\tassert.deepEqual((await readdir(join(\n\t\tinputRoot, selected.key ?? selected.id))).sort(), [\n\t\t\"artifact.json\", \"artifact.zip\", \"job.json\", \"job.log\", \"run.json\"]\n\t);\n",
+          "previous": "for(const lane of directProofErasureHostedLanes)\n\tassert.deepEqual((await readdir(join(inputRoot, lane.key))).sort(), [\n\t\t\"artifact.json\", \"artifact.zip\", \"job.json\", \"job.log\", \"run.json\"\n\t]);\n",
+          "start": 2360
+        },
+        {
+          "current": "const routeResults = [], lanes = [], summaries = new Map();\n",
+          "previous": "const routeResults = [], lanes = [];\n",
+          "start": 4322
+        },
+        {
+          "current": "\tassert.equal(firstRun.conclusion, \"success\");\n",
+          "previous": "\tassert.ok([\"failure\", \"success\"].includes(firstRun.conclusion));\n",
+          "start": 4504
+        },
+        {
+          "current": "\t\t\tfor(const matrixRoute of directProofErasureMatrixRoutes)\n",
+          "previous": "\t\t\tconst routes = directProofErasureMatrixRoutes.map(item =>\n\t\t\t\titem.reportRoute);\n\t\t\tfor(const route of routes)\n",
+          "start": 5079
+        },
+        {
+          "current": "\t\t\t\tconst route = matrixRoute.reportRoute;\n",
+          "previous": "",
+          "start": 5144
+        },
+        {
+          "current": "\t\t\t\tconst resultPath = directProofErasureMatrixResultPath(\n\t\t\t\t\tlane, matrixRoute, directProofErasureHostedProducer);\n\t\t\t\tassert.ok(!summaries.has(resultPath), resultPath);\n\t\t\t\tsummaries.set(resultPath, verified);\n",
+          "previous": "",
+          "start": 5502
+        },
+        {
+          "current": "\tconst receiptInputs = directProofErasureHostedInputs(\n\t\tinputRoot, directProofErasureHostedReceipt);\n\tconst receiptHosted = await inspectDirectProofErasureHostedReceipt(\n\t\treceiptInputs);\n\tassertDirectProofErasureHostedReceiptSteps(receiptHosted.api.job.bytes);\n\tconst receiptExtracted\n\t\t= await extractCheckedRecordValueIndexHostedArtifact(\n\t\t\treceiptInputs[\"artifact-zip\"]);\n\tconst receiptPartsRoot = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-direct-proof-matrix-zip-\"));\n\tlet aggregate;\n\ttry\n\t{\n\t\tconst receiptBytes = await readFile(join(\n\t\t\treceiptExtracted.root, \"receipt.json\"));\n\t\tconst receipt = JSON.parse(receiptBytes);\n\t\tassert.equal(receiptBytes.toString(), canonicalJson(receipt));\n\t\tvalidateDirectProofErasureHostedReceipt(receipt);\n\t\tconst replayed = await buildDirectProofErasureMatrixReceipt(path => {\n\t\t\tassert.ok(summaries.has(path), path); return summaries.get(path);\n\t\t}, receipt.run);\n\t\tassert.deepEqual(replayed, receipt);\n\t\tawait putBytes(\"hosted/output/matrix/receipt.json\", receiptBytes);\n\t\tawait putFile(\"hosted/matrix/job.log\", receiptInputs[\"job-log\"]);\n\t\tfor(const [name, item] of Object.entries(receiptHosted.api))\n\t\t\tawait putBytes(`hosted/api/matrix/${name}.json`, item.bytes);\n\t\tconst parts = await splitCheckedRecordValueIndexHostedArtifact(\n\t\t\treceiptInputs[\"artifact-zip\"], receiptPartsRoot);\n\t\tfor(const part of parts)\n\t\t\tawait putFile(`hosted/matrix/artifact.zip.parts/${part.name}`\n\t\t\t\t, part.path);\n\t\taggregate = {\n\t\t\treceipt\n\t\t\t, hostedRun: {\n\t\t\t\t...receiptHosted.hostedRun\n\t\t\t\t, apiRecords: Object.fromEntries(Object.entries(\n\t\t\t\t\treceiptHosted.api).map(([name, item]) => [name, {\n\t\t\t\t\tbytes: item.bytes.length, sha256: item.sha256}])\n\t\t\t\t)\n\t\t\t\t, artifact: {\n\t\t\t\t\t...receiptHosted.hostedRun.artifact\n\t\t\t\t\t, members: receiptExtracted.entries\n\t\t\t\t\t, parts: parts.map(part => ({\n\t\t\t\t\t\tpath: `hosted/matrix/artifact.zip.parts/${part.name}`\n\t\t\t\t\t\t, offset: part.offset, bytes: part.bytes\n\t\t\t\t\t\t, sha256: part.sha256\n\t\t\t\t\t}))\n\t\t\t\t}\n\t\t\t}\n\t\t};\n\t}\n\tfinally\n\t{\n\t\tawait rm(receiptExtracted.root, { recursive: true });\n\t\tawait rm(receiptPartsRoot, { recursive: true });\n\t}\n",
+          "previous": "",
+          "start": 7653
+        },
+        {
+          "current": "\t\t, matrix, closure: closure.counts, lanes, aggregate\n",
+          "previous": "\t\t, matrix, closure: closure.counts, lanes\n",
+          "start": 12503
+        },
+        {
+          "current": "\t\t\t\"The ten same-run producer artifacts establish ordinary and independently reviewed installed proof-parameter erasure and proof-free public signatures for all seventeen supported consumer profiles.\"\n",
+          "previous": "\t\t\t\"The ten hosted artifacts establish ordinary and independently reviewed installed proof-parameter erasure and proof-free public signatures for all seventeen supported consumer profiles.\"\n",
+          "start": 12824
+        },
+        {
+          "current": "\t\t\t, \"The eleventh same-run artifact retains and independently reconstructs the exact twenty-record aggregate receipt; every artifact retains its original ZIP, API identities and job log plus exact producer, checker and archiver source closures.\"\n",
+          "previous": "\t\t\t, \"Every lane retains the complete original GitHub artifact ZIP, API identities, job log, selected TAP, report, receipt and verified bytes, plus exact producer, checker and archiver source closures.\"\n",
+          "start": 13233
+        }
+      ],
+      "path": "scripts/archive-direct-proof-erasure-hosted.mjs",
+      "previousSha256": "47e404d98e211c1ddcbdeeb19b0342dcbd92787a0432462f2b47df815c6083a9"
+    },
+    {
+      "currentSha256": "66cef279ff665bccda7e35262e48c8c4f3b2e942375137c9350ad45a05bbf9d4",
+      "edits": [
+        {
+          "current": "\tassertDirectProofErasureHostedReceiptSteps\n\t, assertDirectProofErasureHostedSteps\n",
+          "previous": "\tassertDirectProofErasureHostedSteps\n",
+          "start": 541
+        },
+        {
+          "current": "\t, directProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 727
+        },
+        {
+          "current": "\t, inspectDirectProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 873
+        },
+        {
+          "current": "\t\tconst attemptFilter = key === \"jobs\" ? \"filter=all&\" : \"\";\n",
+          "previous": "",
+          "start": 1854
+        },
+        {
+          "current": "\t\t\t`${repository}/actions/runs/${runId}/${key}?${attemptFilter}per_page=100&page=${page}`\n",
+          "previous": "\t\t\t`${repository}/actions/runs/${runId}/${key}?per_page=100&page=${page}`\n",
+          "start": 1943
+        },
+        {
+          "current": "\tassert.equal(value.conclusion, \"success\");\n",
+          "previous": "\tassert.ok([\"failure\", \"success\"].includes(value.conclusion));\n",
+          "start": 3886
+        },
+        {
+          "current": "\tconst selected = [...directProofErasureHostedLanes\n\t\t, directProofErasureHostedReceipt];\n\tfor(const item of selected)\n",
+          "previous": "\tfor(const lane of directProofErasureHostedLanes)\n",
+          "start": 4376
+        },
+        {
+          "current": "\t\tconst receipt = item === directProofErasureHostedReceipt;\n\t\tconst jobName = receipt ? item.jobName : item.job;\n\t\tconst matchingJobs = jobs.filter(job => job.name === jobName\n\t\t\t&& job.run_attempt === hostedRun.value.run_attempt);\n\t\tassert.equal(matchingJobs.length, 1, jobName);\n",
+          "previous": "\t\tconst matchingJobs = jobs.filter(job => job.name === lane.job);\n\t\tassert.equal(matchingJobs.length, 1, lane.job);\n",
+          "start": 4498
+        },
+        {
+          "current": "\t\tassert.equal(job.conclusion, \"success\");\n\t\tconst artifactName = `${item.artifactPrefix}-${directProofErasureHostedProducer}`;\n",
+          "previous": "\t\tassert.equal(job.conclusion, lane.jobConclusion);\n\t\tconst artifactName = `${lane.artifactPrefix}-${directProofErasureHostedProducer}`;\n",
+          "start": 4974
+        },
+        {
+          "current": "\t\tconst root = join(output, item.key ?? item.id);\n",
+          "previous": "\t\tconst root = join(output, lane.key);\n",
+          "start": 5489
+        },
+        {
+          "current": "\t\tconst inputs = directProofErasureHostedInputs(output, item);\n\t\tif(receipt)\n\t\t{\n\t\t\tconst captured = await inspectDirectProofErasureHostedReceipt(inputs);\n\t\t\tassertDirectProofErasureHostedReceiptSteps(captured.api.job.bytes);\n\t\t}\n\t\telse\n\t\t{\n\t\t\tconst captured = await inspectDirectProofErasureHostedArtifact(\n\t\t\t\tinputs, item, hostedRun.value.conclusion);\n\t\t\tassertDirectProofErasureHostedSteps(item, captured.api.job.bytes);\n\t\t}\n",
+          "previous": "\t\tconst captured = await inspectDirectProofErasureHostedArtifact(\n\t\t\tdirectProofErasureHostedInputs(output, lane), lane\n\t\t\t, hostedRun.value.conclusion);\n\t\tassertDirectProofErasureHostedSteps(lane, captured.api.job.bytes);\n",
+          "start": 6516
+        },
+        {
+          "current": "\t\tjob.name === directProofErasureHostedRefusal.jobName\n\t\t&& job.run_attempt === hostedRun.value.run_attempt);\n",
+          "previous": "\t\tjob.name === directProofErasureHostedRefusal.jobName);\n",
+          "start": 7068
+        },
+        {
+          "current": "\t\t, artifacts: selected.length\n",
+          "previous": "",
+          "start": 8001
+        }
+      ],
+      "path": "scripts/download-direct-proof-erasure-hosted-inputs.mjs",
+      "previousSha256": "8b2e58c84750b67a3ecf70be73131065763f7048afae0a96c44b624fb2536f19"
+    },
+    {
+      "currentSha256": "a3d70492d06e8fe13a028df849b707b6ed881fdc12136f6ab20e3d2eccf991ba",
+      "edits": [
+        {
+          "current": "\t\t, \"evidence/direct-proof-erasure-hosted-20261030/index.json\");\n",
+          "previous": "\t\t, \"evidence/direct-proof-erasure-hosted-20261028/index.json\");\n",
+          "start": 30515
+        },
+        {
+          "current": "\t\t? \"[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261030/index.json) binds ten immutable installed-package archives, their same-run aggregate receipt, and a fresh-Lean refusal to all 204 proof cells across seventeen profiles, both author routes and six direct positions. Proof-only parameters, fields and synchronous callback positions have no runtime slot; proof-free public signatures omit them. A proof-valued export is refused. The evidence does not erase runtime data, refinement checks or assumptions from assurance metadata, and it does not establish host-supplied proofs or arbitrary proof-bearing data structures.\"\n",
+          "previous": "\t\t? \"[Complete hosted direct proof-erasure acceptance](../evidence/direct-proof-erasure-hosted-20261028/index.json) binds ten immutable installed-package archives and a fresh-Lean refusal to all 204 proof cells across seventeen profiles, both author routes and six direct positions. Proof-only parameters, fields and synchronous callback positions have no runtime slot; proof-free public signatures omit them. A proof-valued export is refused. The evidence does not erase runtime data, refinement checks or assumptions from assurance metadata, and it does not establish host-supplied proofs or arbitrary proof-bearing data structures.\"\n",
+          "start": 49429
+        }
+      ],
+      "path": "scripts/generate-type-docs.mjs",
+      "previousSha256": "a63a20974d519554c073ab4b13653d8c887398de23de5bc31c4a691ca080f61f"
+    },
+    {
+      "currentSha256": "4f8c9cff2309b346052ddff35a4453db452f5230361d34fc681b067bf7f1a002",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(checked.artifacts.length, 11);\n",
+          "previous": "\t\tassert.equal(checked.artifacts.length, 10);\n",
+          "start": 605
+        }
+      ],
+      "path": "tests/direct-proof-erasure-complete-hosted-evidence.test.mjs",
+      "previousSha256": "cc453641312db6529e63ab1cc5deed6d76aa62c3ab13f3073e30f31b99f6f0b2"
+    },
+    {
+      "currentSha256": "8f1ee395c2ca6e6c42538f9a7bed31bf5a75f244ddf7fa63c00b629f15fb63c1",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(evidence[0].artifacts.length, 11);\n",
+          "previous": "\t\tassert.equal(evidence[0].artifacts.length, 10);\n",
+          "start": 1343
+        }
+      ],
+      "path": "tests/direct-proof-erasure-complete-promotion.test.mjs",
+      "previousSha256": "1dd5964e104b2f72fcfb685f5e149ab5c6f837bd8f2d357644af1de076bcead6"
+    },
+    {
+      "currentSha256": "995504657bf1366c0e77758752892bca48fc37baff49f2ececb2d07840cc790b",
+      "edits": [
+        {
+          "current": "[complete hosted direct proof-erasure archive](../evidence/direct-proof-erasure-hosted-20261030/index.json)\n",
+          "previous": "[complete hosted direct proof-erasure archive](../evidence/direct-proof-erasure-hosted-20261028/index.json)\n",
+          "start": 2969
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-documentation.mjs",
+      "previousSha256": "d7ced2418070cd7bd27fdc71c3a54ddbe5d539b5f7da3e48ecf8666c9542d6e0"
+    },
+    {
+      "currentSha256": "e6ffec45943839ac9adf67c9278e21336b0bf4c8d79866058d29074c3c3cd9e4",
+      "edits": [
+        {
+          "current": "\t, directProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 751
+        },
+        {
+          "current": "const referenceArtifacts = [...directProofErasureHostedLanes\n\t, directProofErasureHostedReceipt].map(\n",
+          "previous": "const referenceArtifacts = directProofErasureHostedLanes.map(\n",
+          "start": 1341
+        },
+        {
+          "current": "\t);\n",
+          "previous": ");\n",
+          "start": 1572
+        },
+        {
+          "current": "\t\t\t, /\\[Complete hosted direct proof-erasure acceptance\\]\\(evidence\\/direct-proof-erasure-hosted-20261030\\/index\\.json\\)/u\n",
+          "previous": "\t\t\t, /\\[Complete hosted direct proof-erasure acceptance\\]\\(evidence\\/direct-proof-erasure-hosted-20261028\\/index\\.json\\)/u\n",
+          "start": 5488
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-promotion-tests.mjs",
+      "previousSha256": "3ffc818f713a8a47f52b67837a39d40eb8131da5f4b63bc895ffc3b804bbe183"
+    },
+    {
+      "currentSha256": "894929decd0256eca1e2d84dddb962bab3aa84c6f34e4ad03a9f63ea23934a93",
+      "edits": [
+        {
+          "current": "\t, directProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 379
+        },
+        {
+          "current": "\t\t, scope: \"Ten same-revision consumer artifacts, their independently reconstructed aggregate receipt, one fresh-Lean refusal and the retained field/callback ledger close all 204 proof-erasure cells across seventeen profiles and both author routes.\"\n",
+          "previous": "\t\t, scope: \"Ten same-revision hosted artifacts, one fresh-Lean refusal and the independently retained field/callback ledger close all 204 proof-erasure cells across seventeen profiles and both author routes.\"\n",
+          "start": 3630
+        },
+        {
+          "current": "\tassert.equal(reference.artifacts.length, 11);\n\tassert.equal(new Set(reference.artifacts.map(item => item.path)).size, 11);\n",
+          "previous": "\tassert.equal(reference.artifacts.length, 10);\n\tassert.equal(new Set(reference.artifacts.map(item => item.path)).size, 10);\n",
+          "start": 6229
+        },
+        {
+          "current": "\tassert.deepEqual(reference.artifacts.map(item => item.path).sort(), [\n\t\t...directProofErasureHostedLanes.map(lane =>\n\t\t\t`${lane.artifactPrefix}-${reference.revision}.zip`)\n\t\t, `${directProofErasureHostedReceipt.artifactPrefix}-${reference.revision}.zip`\n\t].sort());\n",
+          "previous": "\tassert.deepEqual(reference.artifacts.map(item => item.path).sort()\n\t\t, directProofErasureHostedLanes.map(lane =>\n\t\t\t`${lane.artifactPrefix}-${reference.revision}.zip`).sort());\n",
+          "start": 6524
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-complete-promotion.mjs",
+      "previousSha256": "3716e5cdf5ecb7f87ff50074455cf8c94415bb9ff0b89eb98962877e82b66b73"
+    },
+    {
+      "currentSha256": "6c871f3e37647d3d6fd6eefb4c31407250e10e555c95b166b8b07552d763770b",
+      "edits": [
+        {
+          "current": "\tassertDirectProofErasureHostedReceiptSteps\n\t, assertDirectProofErasureHostedSteps\n",
+          "previous": "\tassertDirectProofErasureHostedSteps\n",
+          "start": 220
+        },
+        {
+          "current": "\t, directProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 372
+        },
+        {
+          "current": "import {\n\tdirectProofErasureFocusedWorkflow\n} from \"./direct-proof-erasure-matrix-receipt.mjs\";\n",
+          "previous": "",
+          "start": 606
+        },
+        {
+          "current": "\tassert.equal(new Set(directProofErasureHostedLanes.map(\n\t\tlane => lane.job)).size, 10);\n",
+          "previous": "",
+          "start": 1165
+        },
+        {
+          "current": "\t\tassert.equal(lane.workflow, directProofErasureFocusedWorkflow);\n\t\tassert.equal(lane.jobConclusion, \"success\");\n\t\tassert.deepEqual(lane.failedSteps, []);\n\t\tassert.match(lane.producerWorkflow\n\t\t\t, /^\\.github\\/workflows\\/[a-z0-9-]+\\.yml$/u);\n",
+          "previous": "\t\tassert.equal(lane.jobConclusion\n\t\t\t, lane.key === \"language-perl\" ? \"failure\" : \"success\");\n\t\tassert.deepEqual(lane.failedSteps, lane.key === \"language-perl\" ? [\n\t\t\t\"Preserve HostNull scripting acceptance\"\n\t\t\t, \"Upload this configuration's real-Lean corpus report\"\n\t\t\t, \"Enforce scripting HostNull support\"\n\t\t] : []);\n",
+          "start": 1530
+        },
+        {
+          "current": "\tassert.deepEqual(directProofErasureHostedReceipt, {\n\t\tid: \"matrix\", artifactPrefix: \"direct-proof-erasure-matrix\"\n\t\t, jobName: \"Reconcile the exact same-run receipt\"\n\t});\n",
+          "previous": "",
+          "start": 1774
+        },
+        {
+          "current": "test(\"hosted proof-erasure steps require every focused lane to be green\", () => {\n",
+          "previous": "test(\"hosted proof-erasure steps isolate the exact unrelated Perl failures\", () => {\n",
+          "start": 2024
+        },
+        {
+          "current": "test(\"hosted proof-erasure receipt requires exact successful reconciliation\", () => {\n\tconst steps = [\n\t\t{ name: \"Download every same-run direct proof-erasure artifact\"\n\t\t\t, conclusion: \"success\", number: 1 }\n\t\t, { name: \"Reconcile all seventeen profiles and both author routes\"\n\t\t\t, conclusion: \"success\", number: 2 }\n\t\t, { name: \"Preserve the complete direct proof-erasure receipt\"\n\t\t\t, conclusion: \"success\", number: 3 }\n\t\t, { name: \"Enforce every producer and exact receipt reconciliation\"\n\t\t\t, conclusion: \"skipped\", number: 4 }\n\t];\n\tassert.equal(assertDirectProofErasureHostedReceiptSteps(\n\t\tBuffer.from(JSON.stringify({ steps }))), true);\n\tconst failed = steps.map(step => step.number === 2\n\t\t? { ...step, conclusion: \"failure\" } : step);\n\tassert.throws(() => assertDirectProofErasureHostedReceiptSteps(\n\t\tBuffer.from(JSON.stringify({ steps: failed }))));\n});\n\n",
+          "previous": "",
+          "start": 2721
+        },
+        {
+          "current": "",
+          "previous": "\tconst workflow = execFileSync(\"git\", [\"show\"\n\t\t, `${directProofErasureHostedProducer}:.github/workflows/consumer-matrix.yml`]\n\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n\tconst perl = execFileSync(\"git\", [\"show\"\n\t\t, `${directProofErasureHostedProducer}:.github/workflows/perl-consumer.yml`]\n\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 4136
+        },
+        {
+          "current": "\t{\n\t\tconst workflow = execFileSync(\"git\", [\"show\"\n\t\t\t, `${directProofErasureHostedProducer}:${lane.producerWorkflow}`]\n\t\t\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "previous": "",
+          "start": 4186
+        },
+        {
+          "current": "\t\t\tassert.ok(workflow.includes(`- name: ${step}`)\n\t\t\t\t, `${lane.key}:${step}`);\n\t}\n\tconst focused = execFileSync(\"git\", [\"show\"\n\t\t, `${directProofErasureHostedProducer}:${directProofErasureFocusedWorkflow}`]\n\t\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n\tfor(const step of [\n\t\t\"Download every same-run direct proof-erasure artifact\"\n\t\t, \"Reconcile all seventeen profiles and both author routes\"\n\t\t, \"Preserve the complete direct proof-erasure receipt\"\n\t\t, \"Enforce every producer and exact receipt reconciliation\"\n\t]) assert.ok(focused.includes(`- name: ${step}`), step);\n",
+          "previous": "\t\t\tassert.ok((lane.key === \"language-perl\" ? perl : workflow)\n\t\t\t\t.includes(`- name: ${step}`), `${lane.key}:${step}`);\n",
+          "start": 4409
+        },
+        {
+          "current": "\tconst producerPaths = new Set(sources.filter(source =>\n\t\tsource.revision === directProofErasureHostedProducer).map(source =>\n\t\tsource.path));\n\tfor(const path of [\n\t\tdirectProofErasureFocusedWorkflow\n\t\t, \".github/workflows/generic-subtype-npm-browser.yml\"\n\t\t, \".github/workflows/generic-subtype-native-perl.yml\"\n\t\t, \".github/workflows/generic-subtype-languages.yml\"\n\t\t, \".github/workflows/generic-subtype-managed-wit.yml\"\n\t\t, \".github/workflows/nominal-subtype-php-wasm.yml\"\n\t\t, \"scripts/reconcile-direct-proof-erasure-matrix.mjs\"\n\t]) assert.ok(producerPaths.has(path), path);\n\tfor(const obsolete of [\n\t\t\".github/workflows/consumer-matrix.yml\"\n\t\t, \".github/workflows/perl-consumer.yml\"\n\t]) assert.equal(producerPaths.has(obsolete), false, obsolete);\n",
+          "previous": "",
+          "start": 5650
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-hosted-archive-tests.mjs",
+      "previousSha256": "732f1faa22ff32984ca8af7ea59417e9f2d5e80bbeb14fcde8feb57f02eeead7"
+    },
+    {
+      "currentSha256": "f48ee87a8285573d778721e5e72d444079967fa7c1ba3d2d76709b172d8b1d8e",
+      "edits": [
+        {
+          "current": "\t, directProofErasureMatrixRoutes\n",
+          "previous": "\t, directProofErasureMatrixRoutes, directProofErasureMatrixWorkflow\n",
+          "start": 517
+        },
+        {
+          "current": "import {\n\tdirectProofErasureFocusedWorkflow\n\t, validateDirectProofErasureMatrixReceipt\n} from \"./direct-proof-erasure-matrix-receipt.mjs\";\n",
+          "previous": "",
+          "start": 595
+        },
+        {
+          "current": "\t= \"09ca211fec5fcebfd47747cd55485781adf93974\";\nexport const directProofErasureHostedRunId = 41021643593;\n",
+          "previous": "\t= \"52622818425c3fb69a81ef87b5af26ce429e3136\";\nexport const directProofErasureHostedRunId = 40824858819;\n",
+          "start": 838
+        },
+        {
+          "current": "\t= \"docs/evidence/direct-proof-erasure-hosted-20261030\";\n",
+          "previous": "\t= \"docs/evidence/direct-proof-erasure-hosted-20261028\";\n",
+          "start": 998
+        },
+        {
+          "current": "\tid: \"refusal\", workflow: directProofErasureFocusedWorkflow\n",
+          "previous": "\tid: \"refusal\", workflow: directProofErasureMatrixWorkflow\n",
+          "start": 1118
+        },
+        {
+          "current": "export const directProofErasureHostedReceipt = Object.freeze({\n\tid: \"matrix\", artifactPrefix: \"direct-proof-erasure-matrix\"\n\t, jobName: \"Reconcile the exact same-run receipt\"\n});\n\nconst laneContracts = Object.freeze({\n\tnpm: Object.freeze({\n\t\tjob: \"Node and browser producer / reviewed generic Subtypes in Node and browsers\"\n\t\t, producerWorkflow: \".github/workflows/generic-subtype-npm-browser.yml\"\n\t})\n\t, native: Object.freeze({\n\t\tjob: \"Native and Perl producers / Ordinary and reviewed generic Subtypes in C and C++\"\n\t\t, producerWorkflow: \".github/workflows/generic-subtype-native-perl.yml\"\n\t})\n\t, \"language-perl\": Object.freeze({\n\t\tjob: \"Native and Perl producers / Ordinary and reviewed generic Subtypes across four Perl ABIs\"\n\t\t, producerWorkflow: \".github/workflows/generic-subtype-native-perl.yml\"\n\t})\n\t, \"language-python\": Object.freeze({\n\t\tjob: \"Python, Ruby and Rust producers / Ordinary and reviewed generic Subtypes on Python 3.11 and 3.12\"\n\t\t, producerWorkflow: \".github/workflows/generic-subtype-languages.yml\"\n\t})\n\t, \"language-ruby\": Object.freeze({\n\t\tjob: \"Python, Ruby and Rust producers / Ordinary and reviewed generic Subtypes on Ruby 3.3\"\n\t\t, producerWorkflow: \".github/workflows/generic-subtype-languages.yml\"\n\t})\n\t, \"language-rust\": Object.freeze({\n\t\tjob: \"Python, Ruby and Rust producers / Ordinary and reviewed generic Subtypes on Rust 1.90\"\n\t\t, producerWorkflow: \".github/workflows/generic-subtype-languages.yml\"\n\t})\n\t, \"managed-dotnet\": Object.freeze({\n\t\tjob: \"Managed and WIT producers / Generic Subtypes in .NET\"\n\t\t, producerWorkflow: \".github/workflows/generic-subtype-managed-wit.yml\"\n\t})\n\t, \"managed-jvm\": Object.freeze({\n\t\tjob: \"Managed and WIT producers / Generic Subtypes in Java and Kotlin\"\n\t\t, producerWorkflow: \".github/workflows/generic-subtype-managed-wit.yml\"\n\t})\n\t, wit: Object.freeze({\n\t\tjob: \"Managed and WIT producers / Generic Subtypes in WIT and WASI components\"\n\t\t, producerWorkflow: \".github/workflows/generic-subtype-managed-wit.yml\"\n\t})\n\t, php: Object.freeze({\n\t\tjob: \"PHP and PHP-Wasm producer / Four nominal Subtype selections in PHP-Wasm\"\n\t\t, producerWorkflow: \".github/workflows/nominal-subtype-php-wasm.yml\"\n\t})\n});\n",
+          "previous": "",
+          "start": 1349
+        },
+        {
+          "current": "\t\t...lane, ...laneContracts[lane.key]\n\t\t, runId: directProofErasureHostedRunId\n",
+          "previous": "\t\t...lane, runId: directProofErasureHostedRunId\n",
+          "start": 5646
+        },
+        {
+          "current": "\t\t, workflow: directProofErasureFocusedWorkflow\n",
+          "previous": "\t\t, workflow: directProofErasureMatrixWorkflow\n",
+          "start": 5778
+        },
+        {
+          "current": "\t\t, jobConclusion: \"success\"\n\t\t, failedSteps: Object.freeze([])\n",
+          "previous": "\t\t, jobConclusion: lane.key === \"language-perl\" ? \"failure\" : \"success\"\n\t\t, failedSteps: Object.freeze(lane.key === \"language-perl\" ? [\n\t\t\t\"Preserve HostNull scripting acceptance\"\n\t\t\t, \"Upload this configuration's real-Lean corpus report\"\n\t\t\t, \"Enforce scripting HostNull support\"\n\t\t] : [])\n",
+          "start": 5853
+        },
+        {
+          "current": " * @param selected - Closed consumer lane or aggregate receipt.\n",
+          "previous": " * @param lane - Closed consumer lane.\n",
+          "start": 6638
+        },
+        {
+          "current": "export const directProofErasureHostedInputs = (root, selected) => {\n\tassert.ok(directProofErasureHostedLanes.includes(selected)\n\t\t|| selected === directProofErasureHostedReceipt);\n\tconst prefix = `${root}/${selected.key ?? selected.id}`;\n",
+          "previous": "export const directProofErasureHostedInputs = (root, lane) => {\n\tassert.ok(directProofErasureHostedLanes.includes(lane));\n\tconst prefix = `${root}/${lane.key}`;\n",
+          "start": 6706
+        },
+        {
+          "current": "/**\n * Bind the aggregate same-run receipt to the successful focused workflow.\n *\n * @param selected - Exact ZIP, API and log paths.\n */\nexport const inspectDirectProofErasureHostedReceipt = async selected => {\n\tconst hosted = await inspectCheckedRecordValueIndexHostedArtifact(selected, {\n\t\tworkflow: directProofErasureFocusedWorkflow\n\t\t, jobName: directProofErasureHostedReceipt.jobName\n\t\t, artifactPrefix: directProofErasureHostedReceipt.artifactPrefix\n\t\t, conclusions: { run: \"success\", job: \"success\" }\n\t});\n\tassert.equal(hosted.hostedRun.runId, directProofErasureHostedRunId);\n\tassert.equal(hosted.revision, directProofErasureHostedProducer);\n\treturn hosted;\n};\n\n",
+          "previous": "",
+          "start": 7161
+        },
+        {
+          "current": "\tassert.equal(runConclusion, \"success\");\n",
+          "previous": "\tassert.ok([\"failure\", \"success\"].includes(runConclusion));\n",
+          "start": 8223
+        },
+        {
+          "current": "/**\n * Require the exact same-run download, reconciliation and receipt upload.\n *\n * @param jobBytes - Original receipt-job API bytes.\n */\nexport const assertDirectProofErasureHostedReceiptSteps = jobBytes => {\n\tconst job = JSON.parse(jobBytes), named = name => {\n\t\tconst matches = job.steps.filter(step => step.name === name);\n\t\tassert.equal(matches.length, 1, `receipt:${name}`);\n\t\treturn matches[0];\n\t};\n\tconst download = named(\"Download every same-run direct proof-erasure artifact\");\n\tconst reconciliation = named(\n\t\t\"Reconcile all seventeen profiles and both author routes\");\n\tconst upload = named(\"Preserve the complete direct proof-erasure receipt\");\n\tassert.equal(download.conclusion, \"success\");\n\tassert.equal(reconciliation.conclusion, \"success\");\n\tassert.equal(upload.conclusion, \"success\");\n\tassert.ok(reconciliation.number > download.number);\n\tassert.ok(upload.number > reconciliation.number);\n\tassert.equal(named(\n\t\t\"Enforce every producer and exact receipt reconciliation\"\n\t).conclusion, \"skipped\");\n\treturn true;\n};\n\n/**\n * Validate the focused same-run receipt against the exact hosted identity.\n *\n * @param receipt - Parsed aggregate receipt.\n */\nexport const validateDirectProofErasureHostedReceipt = receipt => {\n\tvalidateDirectProofErasureMatrixReceipt(receipt);\n\tassert.equal(receipt.run.repository, \"seanmorris/lean-bridge\");\n\tassert.equal(receipt.run.workflow, directProofErasureFocusedWorkflow);\n\tassert.equal(receipt.run.runId, directProofErasureHostedRunId);\n\tassert.equal(receipt.run.producerCommit, directProofErasureHostedProducer);\n\tassert.equal(receipt.records.length\n\t\t, directProofErasureHostedLanes.length\n\t\t\t* directProofErasureMatrixRoutes.length);\n\treturn receipt;\n};\n\n",
+          "previous": "",
+          "start": 9481
+        },
+        {
+          "current": "\tdirectProofErasureFocusedWorkflow\n\t, ...new Set(Object.values(laneContracts).map(item =>\n\t\titem.producerWorkflow))\n\t, \"scripts/reconcile-direct-proof-erasure-matrix.mjs\"\n",
+          "previous": "\tdirectProofErasureMatrixWorkflow, \".github/workflows/perl-consumer.yml\"\n",
+          "start": 13906
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-hosted-archive.mjs",
+      "previousSha256": "0b124c71ad9256f8fa04dc657275ef27ccd42cf0903f03c7937e28161bfcc1e0"
+    },
+    {
+      "currentSha256": "d16aee6f15693ec066eed475fa097a31536cc3036742322775da87f8bf539cc0",
+      "edits": [
+        {
+          "current": "\tassertDirectProofErasureHostedReceiptSteps\n\t, directProofErasureHostedEvidenceDirectory\n",
+          "previous": "\tdirectProofErasureHostedEvidenceDirectory\n",
+          "start": 551
+        },
+        {
+          "current": "\t, directProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 779
+        },
+        {
+          "current": "\t, inspectDirectProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 998
+        },
+        {
+          "current": "\t, validateDirectProofErasureHostedReceipt\n",
+          "previous": "",
+          "start": 1079
+        },
+        {
+          "current": "import {\n\tbuildDirectProofErasureMatrixReceipt\n\t, directProofErasureMatrixResultPath\n} from \"./direct-proof-erasure-matrix-receipt.mjs\";\n",
+          "previous": "",
+          "start": 1333
+        },
+        {
+          "current": "\t\t\t\"aggregate\", \"archiveCommit\", \"checkerCommit\", \"closure\", \"files\"\n",
+          "previous": "\t\t\t\"archiveCommit\", \"checkerCommit\", \"closure\", \"files\"\n",
+          "start": 3135
+        },
+        {
+          "current": "\t\tassert.equal(index.hostedRunConclusion, \"success\");\n",
+          "previous": "\t\tassert.ok([\"failure\", \"success\"].includes(index.hostedRunConclusion));\n",
+          "start": 3626
+        },
+        {
+          "current": "\t\tconst routeResults = [], artifacts = [], summaries = new Map();\n",
+          "previous": "\t\tconst routeResults = [], artifacts = [];\n",
+          "start": 5512
+        },
+        {
+          "current": "\t\t\t\tconst apiRecords = {};\n",
+          "previous": "",
+          "start": 6085
+        },
+        {
+          "current": "\t\t\t\t\tconst bytes = get(path);\n\t\t\t\t\tapiRecords[name] = {\n\t\t\t\t\t\tbytes: bytes.length, sha256: sha256(bytes)\n\t\t\t\t\t};\n\t\t\t\t\tawait writeFile(inputs[`${name}-json`], bytes\n",
+          "previous": "\t\t\t\t\tawait writeFile(inputs[`${name}-json`], get(path)\n",
+          "start": 6256
+        },
+        {
+          "current": "\t\t\t\t\t...selected.hostedRun, apiRecords\n\t\t\t\t\t, artifact: {\n",
+          "previous": "\t\t\t\t\t...selected.hostedRun, artifact: {\n",
+          "start": 7754
+        },
+        {
+          "current": "\t\t\t\t\tfor(const matrixRoute of directProofErasureMatrixRoutes)\n\t\t\t\t\t{\n\t\t\t\t\t\tconst route = matrixRoute.reportRoute;\n",
+          "previous": "\t\t\t\t\tfor(const route of directProofErasureMatrixRoutes.map(item =>\n\t\t\t\t\t\titem.reportRoute)){\n",
+          "start": 8172
+        },
+        {
+          "current": "\t\t\t\t\t\tfor(const [name, original] of [\n\t\t\t\t\t\t\t[\"run.tap\", join(extracted.root, route, \"run.tap\")]\n\t\t\t\t\t\t\t, [\"verified.json\"\n\t\t\t\t\t\t\t, join(\n\t\t\t\t\t\t\t\textracted.root, route, \"verified.json\")]\n\t\t\t\t\t\t\t, [\"report.json\"\n\t\t\t\t\t\t\t, join(\n\t\t\t\t\t\t\t\textracted.root, route, \"records/report.json\")]\n\t\t\t\t\t\t\t, [\"receipt.json\"\n\t\t\t\t\t\t\t, join(extracted.root, route, \"records\"\n\t\t\t\t\t\t\t\t, lane.checker === \"npm\"\n\t\t\t\t\t\t\t\t\t? \"handoff/component-package-receipt.json\"\n\t\t\t\t\t\t\t\t\t: \"handoff/package-set-receipt.json\")]\n",
+          "previous": "\t\t\t\t\t\tfor(const name of [\n\t\t\t\t\t\t\t\"run.tap\", \"verified.json\", \"report.json\", \"receipt.json\"\n",
+          "start": 8442
+        },
+        {
+          "current": "\t\t\t\t\t\t\tassert.deepEqual(get(path), await readFile(original), path);\n",
+          "previous": "",
+          "start": 9037
+        },
+        {
+          "current": "\t\t\t\t\t\tconst resultPath = directProofErasureMatrixResultPath(\n\t\t\t\t\t\t\tlane, matrixRoute, pins.producer);\n\t\t\t\t\t\tassert.ok(!summaries.has(resultPath), resultPath);\n\t\t\t\t\t\tsummaries.set(resultPath, get(\n\t\t\t\t\t\t\t`hosted/output/${lane.key}/${route}/verified.json`));\n\t\t\t\t\t}\n",
+          "previous": "\t\t\t\t\t\t}\n",
+          "start": 9113
+        },
+        {
+          "current": "\t\t\t\t\tartifacts.push(archivedLane.hostedRun.artifact);\n",
+          "previous": "\t\t\t\tartifacts.push(archivedLane.hostedRun.artifact);\n",
+          "start": 9505
+        },
+        {
+          "current": "\n\t\t\t\texactKeys(index.aggregate, [\"hostedRun\", \"receipt\"], \"aggregate\");\n\t\t\tconst item = directProofErasureHostedReceipt;\n\t\t\tconst inputs = directProofErasureHostedInputs(root, item);\n\t\t\tawait mkdir(join(root, item.id));\n\t\t\tconst apiRecords = {};\n\t\t\tfor(const name of [\"run\", \"job\", \"artifact\"])\n\t\t\t{\n\t\t\t\tconst path = `hosted/api/matrix/${name}.json`;\n\t\t\t\texpectedPaths.push(path);\n\t\t\t\tconst bytes = get(path);\n\t\t\t\tapiRecords[name] = {\n\t\t\t\t\tbytes: bytes.length, sha256: sha256(bytes)\n\t\t\t\t};\n\t\t\t\tawait writeFile(inputs[`${name}-json`], bytes\n\t\t\t\t\t, { flag: \"wx\" });\n\t\t\t}\n\t\t\t\tconst logPath = \"hosted/matrix/job.log\";\n\t\t\t\texpectedPaths.push(logPath);\n\t\t\t\tawait writeFile(inputs[\"job-log\"], get(logPath), { flag: \"wx\" });\n\t\t\t\tlet offset = 0;\n\t\t\t\tconst output = await open(inputs[\"artifact-zip\"], \"wx\");\n\t\t\t\ttry\n\t\t\t\t{\n\t\t\t\t\tfor(const part of index.aggregate.hostedRun.artifact.parts)\n\t\t\t\t\t{\n\t\t\t\t\t\texactKeys(part, [\"bytes\", \"offset\", \"path\", \"sha256\"]\n\t\t\t\t\t\t\t, \"aggregate artifact part\");\n\t\t\t\t\t\tassert.equal(part.offset, offset);\n\t\t\t\t\t\tconst bytes = get(part.path);\n\t\t\t\t\t\texpectedPaths.push(part.path);\n\t\t\t\t\t\tassert.equal(bytes.length, part.bytes);\n\t\t\t\t\t\tassert.equal(sha256(bytes), part.sha256);\n\t\t\t\t\t\tlet written = 0;\n\t\t\t\t\t\twhile(written < bytes.length)\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\tconst result = await output.write(bytes, written\n\t\t\t\t\t\t\t\t, bytes.length - written, offset + written);\n\t\t\t\t\t\t\tassert.ok(result.bytesWritten > 0);\n\t\t\t\t\t\t\twritten += result.bytesWritten;\n\t\t\t\t\t\t}\n\t\t\t\t\t\toffset += bytes.length;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\tfinally\n\t\t\t\t{ await output.close(); }\n\t\t\t\tassert.equal(offset, index.aggregate.hostedRun.artifact.bytes);\n\t\t\t\tassert.equal(await digestFile(inputs[\"artifact-zip\"])\n\t\t\t\t\t, index.aggregate.hostedRun.artifact.sha256);\n\t\t\t\tconst selected = await inspectDirectProofErasureHostedReceipt(inputs);\n\t\t\t\tassertDirectProofErasureHostedReceiptSteps(selected.api.job.bytes);\n\t\t\tassert.deepEqual(index.aggregate.hostedRun, {\n\t\t\t\t...selected.hostedRun, apiRecords\n\t\t\t\t, artifact: {\n\t\t\t\t\t\t...selected.hostedRun.artifact\n\t\t\t\t\t\t, members: index.aggregate.hostedRun.artifact.members\n\t\t\t\t\t\t, parts: index.aggregate.hostedRun.artifact.parts\n\t\t\t\t}\n\t\t\t});\n\t\t\t\tconst extracted = await extractArtifact(inputs[\"artifact-zip\"]);\n\t\t\t\tlet receipt;\n\t\t\t\ttry\n\t\t\t\t{\n\t\t\t\t\tassert.deepEqual(extracted.entries\n\t\t\t\t\t\t, index.aggregate.hostedRun.artifact.members);\n\t\t\t\t\tconst bytes = await readFile(join(extracted.root, \"receipt.json\"));\n\t\t\t\t\treceipt = json(bytes, \"aggregate receipt.json\");\n\t\t\t\t\tconst path = \"hosted/output/matrix/receipt.json\";\n\t\t\t\t\texpectedPaths.push(path);\n\t\t\t\t\tassert.deepEqual(bytes, get(path));\n\t\t\t\t}\n\t\t\t\tfinally\n\t\t\t\t{ await rm(extracted.root, { recursive: true }); }\n\t\t\t\tvalidateDirectProofErasureHostedReceipt(receipt);\n\t\t\t\tassert.deepEqual(receipt, index.aggregate.receipt);\n\t\t\t\tconst replayed = await buildDirectProofErasureMatrixReceipt(path => {\n\t\t\t\t\tassert.ok(summaries.has(path), path); return summaries.get(path);\n\t\t\t\t}, receipt.run);\n\t\t\t\tassert.deepEqual(replayed, receipt);\n\t\t\t\tassert.deepEqual(receipt.matrix, index.matrix);\n\t\t\t\tartifacts.push(index.aggregate.hostedRun.artifact);\n",
+          "previous": "",
+          "start": 9564
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-hosted-evidence.mjs",
+      "previousSha256": "43de86229cd47a97470edc4556038baf46eb6a158e670501698d62d14325f0cc"
+    }
+  ]
+}

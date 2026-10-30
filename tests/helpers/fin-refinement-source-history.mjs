@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDirectProofErasureFocusedArchiveSource, directProofErasureFocusedArchiveNormalizationPaths } from "./direct-proof-erasure-focused-archive-source-history.mjs";
 import { beforeDirectProofErasureReceiptProfileRepairSource, directProofErasureReceiptProfileRepairNormalizationPaths } from "./direct-proof-erasure-receipt-profile-repair-source-history.mjs";
 import { beforeDirectProofErasureNpmIrRouteRepairSource, directProofErasureNpmIrRouteRepairNormalizationPaths } from "./direct-proof-erasure-npm-ir-route-repair-source-history.mjs";
 import { beforeDirectProofErasureNpmSemanticIrRepairSource, directProofErasureNpmSemanticIrRepairNormalizationPaths } from "./direct-proof-erasure-npm-semantic-ir-repair-source-history.mjs";
@@ -2419,7 +2420,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasureReceiptProfileRepairNormalizationPaths
+	...directProofErasureFocusedArchiveNormalizationPaths
+	, ...directProofErasureReceiptProfileRepairNormalizationPaths
 	, ...directProofErasureNpmIrRouteRepairNormalizationPaths
 	, ...directProofErasureNpmSemanticIrRepairNormalizationPaths
 	, ...directProofErasurePhpFactOrderRepairNormalizationPaths
@@ -3577,7 +3579,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasureReceiptProfileRepairSource(
+	let stage = beforeDirectProofErasureFocusedArchiveSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasureReceiptProfileRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
