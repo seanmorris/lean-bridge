@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreHostNullReconciliationSource, coreHostNullReconciliationNormalizationPaths } from "./core-host-null-reconciliation-source-history.mjs";
 import { beforeCoreFinalTestRegistrationSource, coreFinalTestRegistrationNormalizationPaths } from "./core-final-test-registration-source-history.mjs";
 import { beforeCoreArchivedSourcePinRestorationSource, coreArchivedSourcePinRestorationNormalizationPaths } from "./core-archived-source-pin-restoration-source-history.mjs";
 import { beforeCoreCurrentSourceClosureRepairSource, coreCurrentSourceClosureRepairNormalizationPaths } from "./core-current-source-closure-repair-source-history.mjs";
@@ -77,6 +78,7 @@ import { beforeDependentSignatureFocusedCiSource, dependentSignatureFocusedCiNor
 import { beforeDirectProofErasureFocusedCiSource, directProofErasureFocusedCiNormalizationPaths } from "./direct-proof-erasure-focused-ci-source-history.mjs";
 import { beforeOptionalParameterDispatchBridgeSource, optionalParameterDispatchBridgeNormalizationPaths } from "./optional-parameter-dispatch-bridge-source-history.mjs";
 import { beforeOptionalParameterFocusedCiSource, optionalParameterFocusedCiNormalizationPaths } from "./optional-parameter-focused-ci-source-history.mjs";
+import { beforeOptionalParameterPhpWasmCountContractSource, optionalParameterPhpWasmCountContractNormalizationPaths } from "./optional-parameter-php-wasm-count-contract-source-history.mjs";
 import { beforeOptionalParameterCurrentLineIntegrationSource, optionalParameterCurrentLineIntegrationNormalizationPaths } from "./optional-parameter-current-line-integration-source-history.mjs";
 import { beforeOptionalParameterSource, optionalParameterNormalizationPaths } from "./optional-parameter-source-history.mjs";
 import { beforeHostNullSystemsTypeSurfaceIntegrationSource, beforeHostNullSystemsTypeSurfaceSource, hostNullSystemsTypeSurfaceNormalizationPaths } from "./host-null-systems-type-surface-lineage-source-history.mjs";
@@ -2435,7 +2437,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreFinalTestRegistrationNormalizationPaths
+	...coreHostNullReconciliationNormalizationPaths
+	, ...coreFinalTestRegistrationNormalizationPaths
 	, ...coreArchivedSourcePinRestorationNormalizationPaths
 	, ...coreCurrentSourceClosureRepairNormalizationPaths
 	, ...coreNativeExportsPinRepairNormalizationPaths
@@ -2500,6 +2503,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...directProofErasureFocusedCiNormalizationPaths
 	, ...optionalParameterDispatchBridgeNormalizationPaths
 	, ...optionalParameterFocusedCiNormalizationPaths
+	, ...optionalParameterPhpWasmCountContractNormalizationPaths
 	, ...optionalParameterCurrentLineIntegrationNormalizationPaths
 	, ...optionalParameterNormalizationPaths
 	, ...hostNullSystemsTypeSurfaceNormalizationPaths
@@ -3609,7 +3613,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreFinalTestRegistrationSource(path, text, expected);
+	let stage = beforeCoreHostNullReconciliationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreFinalTestRegistrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
@@ -3901,6 +3909,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		return stage;
 	text = stage;
 	stage = beforeDirectProofErasureFocusedCiSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOptionalParameterPhpWasmCountContractSource(
+		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

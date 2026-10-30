@@ -1,0 +1,2247 @@
+{
+  "affectedJobs": [
+    124185638900,
+    124185638929,
+    124185639012,
+    124185639127,
+    124185639197
+  ],
+  "failedRun": 41085548611,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-core-host-null-reconciliation-source-history.mjs",
+      "sha256": "14264e02950b5140c2af859541fee255d3b87d3395d9965973c6aee8dd731aa3"
+    },
+    {
+      "path": "tests/helpers/core-host-null-reconciliation-source-history-tests.mjs",
+      "sha256": "795da00c83ab6e6ae457a7dce0470b5710b821c582a3995e6015f0a2f5b930c1"
+    },
+    {
+      "path": "tests/helpers/core-host-null-reconciliation-source-history.mjs",
+      "sha256": "9ea5dae72c89b44ff238deaca33890eade17df0b3994eda3d8bf9a9cb1fed67a"
+    }
+  ],
+  "implementationCommit": "87303da42452224305a55b48a3a996222c8a3b4d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "dcd8e96b463018d28d4c341b5b98f73f133161c585d375baa7d98e4686b5e33a",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-host-null-reconciliation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 170
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "5fb4a4f1d5943e16a932cb7037bb4f85c49df3a04b7dbc0a075730a41157929d"
+    },
+    {
+      "currentSha256": "22c555e57cd410864e1cc6139e32edfe6e35732d92a61ad3969b63f6228c60d5",
+      "edits": [
+        {
+          "current": "import { beforeCoreHostNullReconciliationSource, coreHostNullReconciliationNormalizationPaths } from \"./core-host-null-reconciliation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "import { beforeOptionalParameterPhpWasmCountContractSource, optionalParameterPhpWasmCountContractNormalizationPaths } from \"./optional-parameter-php-wasm-count-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12152
+        },
+        {
+          "current": "\t...coreHostNullReconciliationNormalizationPaths\n\t, ...coreFinalTestRegistrationNormalizationPaths\n",
+          "previous": "\t...coreFinalTestRegistrationNormalizationPaths\n",
+          "start": 228900
+        },
+        {
+          "current": "\t, ...optionalParameterPhpWasmCountContractNormalizationPaths\n",
+          "previous": "",
+          "start": 232665
+        },
+        {
+          "current": "\tlet stage = beforeCoreHostNullReconciliationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreFinalTestRegistrationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreFinalTestRegistrationSource(path, text, expected);\n",
+          "start": 287192
+        },
+        {
+          "current": "\tstage = beforeOptionalParameterPhpWasmCountContractSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n",
+          "previous": "",
+          "start": 297961
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a16dec77cc83a67bf4b20e36afe1ca8f008457df65cc136a6428e311def2205b"
+    }
+  ],
+  "milestone": "core-host-null-reconciliation-source-v1",
+  "pinnedPaths": 26,
+  "predecessorCommit": "dd5e6bb519e1a1fc39d3924937beb456cfc06871",
+  "refreshedPins": 247,
+  "schemaVersion": 1,
+  "scope": "Reconcile the final HostNull/Core full-shard failures without rewriting immutable evidence: preserve staged HostNull history, exact producer code generation, current managed gates, workflow mutation coverage and historical type-surface classification. Refresh only live source citations and register the complete repair as one reversible transition.",
+  "updates": [
+    {
+      "currentSha256": "23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f",
+      "edits": [
+        {
+          "current": "        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.direct_proof_managed.outcome != 'success' || steps.optional_parameters_managed.outcome != 'success' || steps.host_null_managed.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success' || steps.optional_parameters_managed.outcome != 'success' || steps.host_null_managed.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')))\n",
+          "previous": "        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.direct_proof_managed.outcome != 'success' || steps.optional_parameters_managed.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success' || steps.optional_parameters_managed.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')))\n",
+          "start": 328332
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0"
+    },
+    {
+      "currentSha256": "37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04",
+      "edits": [
+        {
+          "current": "\t\t{\n\t\t\t\"path\": \"src/capsule/transactional-directory.mjs\",\n\t\t\t\"classification\": \"strict-migration-backlog\"\n\t\t},\n",
+          "previous": "",
+          "start": 55962
+        }
+      ],
+      "path": "config/checked-javascript.json",
+      "previousSha256": "08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1"
+    },
+    {
+      "currentSha256": "b24073f64c2e2e9ca50d4ea761682b47210e8498a33c255c0d8f8287bc78b3c3",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 51063
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 55653
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 78051
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 78211
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 95246
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 95406
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 111547
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 111707
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 126315
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 135597
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 145222
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 168606
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 181575
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 183869
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 196470
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 199258
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 209254
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 222474
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 231007
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 239437
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 248454
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 256828
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 276108
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 285947
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 287765
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 298082
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 300552
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 316680
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 325976
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 338659
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 347914
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 357197
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 366330
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 375189
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 382576
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 390500
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 392312
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 401146
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 403122
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 415252
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 422350
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 432579
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 432739
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 440323
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 446697
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 452860
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 458957
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 465478
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 473144
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 482438
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 485228
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 493660
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 496951
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 503357
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 506640
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 524492
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 533057
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 544065
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 575950
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 582579
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 585377
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 592838
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 596129
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 613711
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 622234
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 633184
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 664702
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 673921
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 681261
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 693544
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 700404
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 704917
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 707887
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 709432
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 718821
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 721918
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 723458
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 733293
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 734500
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 747513
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 748548
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 758967
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 759294
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 771038
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 771365
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 782326
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 782653
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 790909
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 791236
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 797367
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 797694
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 805753
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 806080
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 813730
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 823670
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 836660
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 844666
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 868411
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 879219
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 900007
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1012069
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1012229
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 1033415
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1072310
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1078253
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1079704
+        },
+        {
+          "current": "          \"sha256\": \"9941e260bed0d3f0c1800442b0516153b94376017c8226ce46ba73034ffb50f0\"\n",
+          "previous": "          \"sha256\": \"4370ca75813bc69f9a5086f21c7fcb38c58579165de5a7e8b97cc94f669b427d\"\n",
+          "start": 1082857
+        },
+        {
+          "current": "          \"sha256\": \"d4bc51c24b63fe06a7d9e1d312ec2f259dfab5703f1ebfc197b2d71f56cebfcd\"\n",
+          "previous": "          \"sha256\": \"de3d398932beee5839422e10d16b94e383df774094c25c914c1a180e3336d93e\"\n",
+          "start": 1084085
+        },
+        {
+          "current": "          \"sha256\": \"67435467497ec8429c32803413adfa0f7ede7c26b3b44fb94592058801d9497c\"\n",
+          "previous": "          \"sha256\": \"6dea7bad1bc4f21b09b06f093b024c9414a190f55187fb2171bcc0e79db13c4f\"\n",
+          "start": 1084446
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1084951
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1086302
+        },
+        {
+          "current": "          \"sha256\": \"d4bc51c24b63fe06a7d9e1d312ec2f259dfab5703f1ebfc197b2d71f56cebfcd\"\n",
+          "previous": "          \"sha256\": \"de3d398932beee5839422e10d16b94e383df774094c25c914c1a180e3336d93e\"\n",
+          "start": 1089344
+        },
+        {
+          "current": "          \"sha256\": \"e5927b62258c3639f74e2de1297f584e1a444cf7abcdc7cb48994cfa2f8f5bc9\"\n",
+          "previous": "          \"sha256\": \"2ef81e312fc0519966589548728844e2b3263f51754cd6e218bee5bc26f4d886\"\n",
+          "start": 1089711
+        },
+        {
+          "current": "          \"sha256\": \"bb9667610f32f0939a8cefb55a7a30b9d875de931c83431f67f03cdc1a826c74\"\n",
+          "previous": "          \"sha256\": \"30130a6cdcbf71378d3fec6b442afd9123bdc9793ce1d5bfa3a7669577e57d34\"\n",
+          "start": 1090256
+        },
+        {
+          "current": "          \"sha256\": \"295e766f5b65130a626e74a8f7cc620e8cf4f851359186f838c6cfb4d36ca292\"\n",
+          "previous": "          \"sha256\": \"c74fb87c872e52d67ed34eb894151c53c37943b8cb08ad0cfce80166e20a73d2\"\n",
+          "start": 1091287
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1091954
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1093404
+        },
+        {
+          "current": "          \"sha256\": \"772bee07c2ce132fe49c56ebd032fdb6ba383cca9ac243791d00295f0ae2c5fd\"\n",
+          "previous": "          \"sha256\": \"02c8bffcd7523e99fb8ec40b5ab4efb103055df1de516bb790cd8fc03e936a0d\"\n",
+          "start": 1096833
+        },
+        {
+          "current": "          \"sha256\": \"db22aff15a833e9ab86219a7bb0f4f7cbad011057a554baef0a3056498421d58\"\n",
+          "previous": "          \"sha256\": \"7e4cc5d0e41a64f95ad0370c32c3ba0c2fe369ea4a1cff0e6d9aab92f09f89b8\"\n",
+          "start": 1097200
+        },
+        {
+          "current": "          \"sha256\": \"e5927b62258c3639f74e2de1297f584e1a444cf7abcdc7cb48994cfa2f8f5bc9\"\n",
+          "previous": "          \"sha256\": \"2ef81e312fc0519966589548728844e2b3263f51754cd6e218bee5bc26f4d886\"\n",
+          "start": 1097570
+        },
+        {
+          "current": "          \"sha256\": \"762f869365dc2c2fa6fe71ce20e8a792a2bf91cea8366888e8a753c496c88e6d\"\n",
+          "previous": "          \"sha256\": \"8e76dc0dabb0c1c147b7122900b0ef10c23772810c7a5316680c77d8cc397242\"\n",
+          "start": 1098611
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1099460
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1100904
+        },
+        {
+          "current": "          \"sha256\": \"772bee07c2ce132fe49c56ebd032fdb6ba383cca9ac243791d00295f0ae2c5fd\"\n",
+          "previous": "          \"sha256\": \"02c8bffcd7523e99fb8ec40b5ab4efb103055df1de516bb790cd8fc03e936a0d\"\n",
+          "start": 1103803
+        },
+        {
+          "current": "          \"sha256\": \"a9511c2a998b3444dc36f3f29443e262a64481fe8f963d3eec023e7bd7b4e492\"\n",
+          "previous": "          \"sha256\": \"20760c582d8942b1e556c210dff783932b4f88eab0215599d220b84cde0ac738\"\n",
+          "start": 1104173
+        },
+        {
+          "current": "          \"sha256\": \"b371f462f131c5c506c40f3cf598f9e39acb1c6ff4a6624e9b4af6a19c314c9e\"\n",
+          "previous": "          \"sha256\": \"628b34b24717a220ac6adf71269920ffb4dc5df95a090b419790e34b11e43750\"\n",
+          "start": 1104536
+        },
+        {
+          "current": "          \"sha256\": \"8716988a55549f779691e4229a4b5344ac0e032c2179228b6213bd1d2f9ace7d\"\n",
+          "previous": "          \"sha256\": \"95ecb81205066c78adba1f97ad9845b657536845787dbe99f15b339986609fbd\"\n",
+          "start": 1105747
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1106414
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1107954
+        },
+        {
+          "current": "          \"sha256\": \"76043442bb54561e5e32e4d0ab9b013ac482f57ef21aa418edf67063314e21a5\"\n",
+          "previous": "          \"sha256\": \"c120ef91cd31c5bf8a3ff8ac3c9066dcdc1546f51ca9b30cdc1939a14bb12e1e\"\n",
+          "start": 1110971
+        },
+        {
+          "current": "          \"sha256\": \"9f0fd159f1fa691eeef474df7c2f7438ea6d4289a015d86af8ac796c97bbe510\"\n",
+          "previous": "          \"sha256\": \"9f7f6c70f5865f65b79e7f35f3840c01cb6ea801f259e531808f3af0871948fd\"\n",
+          "start": 1112266
+        },
+        {
+          "current": "          \"sha256\": \"f8b851eb51f67e1aaebe7ef8c2a85dca312feca5658ff730d163e2585356ba9e\"\n",
+          "previous": "          \"sha256\": \"caf77f2621814611e547791fcf8f51c66cdae3e3a167432721c9abb852fed9c3\"\n",
+          "start": 1112814
+        },
+        {
+          "current": "          \"sha256\": \"a9511c2a998b3444dc36f3f29443e262a64481fe8f963d3eec023e7bd7b4e492\"\n",
+          "previous": "          \"sha256\": \"20760c582d8942b1e556c210dff783932b4f88eab0215599d220b84cde0ac738\"\n",
+          "start": 1113364
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1114048
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1115564
+        },
+        {
+          "current": "          \"sha256\": \"9f0fd159f1fa691eeef474df7c2f7438ea6d4289a015d86af8ac796c97bbe510\"\n",
+          "previous": "          \"sha256\": \"9f7f6c70f5865f65b79e7f35f3840c01cb6ea801f259e531808f3af0871948fd\"\n",
+          "start": 1119861
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1123286
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1132413
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1137538
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1137861
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1147348
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1149425
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 1150933
+        },
+        {
+          "current": "          \"sha256\": \"fbf7524d4369ea1184f15e72d09c42f256d5c96878f01e7d56e4e4fa1d499d68\"\n",
+          "previous": "          \"sha256\": \"26bf33d7266081bc18b67cd6d2463e8e07b97bcb66916b96fa8f5f2e5e221be4\"\n",
+          "start": 1153181
+        },
+        {
+          "current": "          \"sha256\": \"11a05f8ad96253ff10380b969b260262fa33d94b81c3bb8fe85aad1371be1f9e\"\n",
+          "previous": "          \"sha256\": \"21f20f52feb526ed6933d568d407f353c1c3af19d00b56bcb0c3fa6ff3021183\"\n",
+          "start": 1153541
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1155395
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1157296
+        },
+        {
+          "current": "          \"sha256\": \"fbf7524d4369ea1184f15e72d09c42f256d5c96878f01e7d56e4e4fa1d499d68\"\n",
+          "previous": "          \"sha256\": \"26bf33d7266081bc18b67cd6d2463e8e07b97bcb66916b96fa8f5f2e5e221be4\"\n",
+          "start": 1160166
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1164367
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1167261
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1167421
+        },
+        {
+          "current": "          \"sha256\": \"b08b3e88371e993aa16e85f8473b505dda70d549e87142898386fcd90b29e1c2\"\n",
+          "previous": "          \"sha256\": \"77e36a50d163b5cbac26d2145e63118edb0a6acc0ef6b1a6028d8474d6eedc7f\"\n",
+          "start": 1172357
+        },
+        {
+          "current": "          \"sha256\": \"278af7c51df7c5a3adaf5e805651b9eff2ed23109c02577ee54a149392eddc5c\"\n",
+          "previous": "          \"sha256\": \"ac08703c8206c4566ebc291c53eff539b53126e0be4224b26f9791a2636c0fcd\"\n",
+          "start": 1172896
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1173758
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1177375
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1177535
+        },
+        {
+          "current": "          \"sha256\": \"b08b3e88371e993aa16e85f8473b505dda70d549e87142898386fcd90b29e1c2\"\n",
+          "previous": "          \"sha256\": \"77e36a50d163b5cbac26d2145e63118edb0a6acc0ef6b1a6028d8474d6eedc7f\"\n",
+          "start": 1185410
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1186781
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1189136
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1189296
+        },
+        {
+          "current": "          \"sha256\": \"772bee07c2ce132fe49c56ebd032fdb6ba383cca9ac243791d00295f0ae2c5fd\"\n",
+          "previous": "          \"sha256\": \"02c8bffcd7523e99fb8ec40b5ab4efb103055df1de516bb790cd8fc03e936a0d\"\n",
+          "start": 1214663
+        },
+        {
+          "current": "          \"sha256\": \"db22aff15a833e9ab86219a7bb0f4f7cbad011057a554baef0a3056498421d58\"\n",
+          "previous": "          \"sha256\": \"7e4cc5d0e41a64f95ad0370c32c3ba0c2fe369ea4a1cff0e6d9aab92f09f89b8\"\n",
+          "start": 1215030
+        },
+        {
+          "current": "          \"sha256\": \"e5927b62258c3639f74e2de1297f584e1a444cf7abcdc7cb48994cfa2f8f5bc9\"\n",
+          "previous": "          \"sha256\": \"2ef81e312fc0519966589548728844e2b3263f51754cd6e218bee5bc26f4d886\"\n",
+          "start": 1215733
+        },
+        {
+          "current": "          \"sha256\": \"b08b3e88371e993aa16e85f8473b505dda70d549e87142898386fcd90b29e1c2\"\n",
+          "previous": "          \"sha256\": \"77e36a50d163b5cbac26d2145e63118edb0a6acc0ef6b1a6028d8474d6eedc7f\"\n",
+          "start": 1216273
+        },
+        {
+          "current": "          \"sha256\": \"762f869365dc2c2fa6fe71ce20e8a792a2bf91cea8366888e8a753c496c88e6d\"\n",
+          "previous": "          \"sha256\": \"8e76dc0dabb0c1c147b7122900b0ef10c23772810c7a5316680c77d8cc397242\"\n",
+          "start": 1219044
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1219893
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1221697
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1221857
+        },
+        {
+          "current": "          \"sha256\": \"d4bc51c24b63fe06a7d9e1d312ec2f259dfab5703f1ebfc197b2d71f56cebfcd\"\n",
+          "previous": "          \"sha256\": \"de3d398932beee5839422e10d16b94e383df774094c25c914c1a180e3336d93e\"\n",
+          "start": 1240678
+        },
+        {
+          "current": "          \"sha256\": \"e5927b62258c3639f74e2de1297f584e1a444cf7abcdc7cb48994cfa2f8f5bc9\"\n",
+          "previous": "          \"sha256\": \"2ef81e312fc0519966589548728844e2b3263f51754cd6e218bee5bc26f4d886\"\n",
+          "start": 1244766
+        },
+        {
+          "current": "          \"sha256\": \"bb9667610f32f0939a8cefb55a7a30b9d875de931c83431f67f03cdc1a826c74\"\n",
+          "previous": "          \"sha256\": \"30130a6cdcbf71378d3fec6b442afd9123bdc9793ce1d5bfa3a7669577e57d34\"\n",
+          "start": 1245311
+        },
+        {
+          "current": "          \"sha256\": \"b08b3e88371e993aa16e85f8473b505dda70d549e87142898386fcd90b29e1c2\"\n",
+          "previous": "          \"sha256\": \"77e36a50d163b5cbac26d2145e63118edb0a6acc0ef6b1a6028d8474d6eedc7f\"\n",
+          "start": 1246358
+        },
+        {
+          "current": "          \"sha256\": \"295e766f5b65130a626e74a8f7cc620e8cf4f851359186f838c6cfb4d36ca292\"\n",
+          "previous": "          \"sha256\": \"c74fb87c872e52d67ed34eb894151c53c37943b8cb08ad0cfce80166e20a73d2\"\n",
+          "start": 1249298
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1250137
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1251976
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1252136
+        },
+        {
+          "current": "          \"sha256\": \"772bee07c2ce132fe49c56ebd032fdb6ba383cca9ac243791d00295f0ae2c5fd\"\n",
+          "previous": "          \"sha256\": \"02c8bffcd7523e99fb8ec40b5ab4efb103055df1de516bb790cd8fc03e936a0d\"\n",
+          "start": 1276598
+        },
+        {
+          "current": "          \"sha256\": \"a9511c2a998b3444dc36f3f29443e262a64481fe8f963d3eec023e7bd7b4e492\"\n",
+          "previous": "          \"sha256\": \"20760c582d8942b1e556c210dff783932b4f88eab0215599d220b84cde0ac738\"\n",
+          "start": 1278021
+        },
+        {
+          "current": "          \"sha256\": \"b371f462f131c5c506c40f3cf598f9e39acb1c6ff4a6624e9b4af6a19c314c9e\"\n",
+          "previous": "          \"sha256\": \"628b34b24717a220ac6adf71269920ffb4dc5df95a090b419790e34b11e43750\"\n",
+          "start": 1278384
+        },
+        {
+          "current": "          \"sha256\": \"b08b3e88371e993aa16e85f8473b505dda70d549e87142898386fcd90b29e1c2\"\n",
+          "previous": "          \"sha256\": \"77e36a50d163b5cbac26d2145e63118edb0a6acc0ef6b1a6028d8474d6eedc7f\"\n",
+          "start": 1279290
+        },
+        {
+          "current": "          \"sha256\": \"8716988a55549f779691e4229a4b5344ac0e032c2179228b6213bd1d2f9ace7d\"\n",
+          "previous": "          \"sha256\": \"95ecb81205066c78adba1f97ad9845b657536845787dbe99f15b339986609fbd\"\n",
+          "start": 1282052
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1283073
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1284962
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1285287
+        },
+        {
+          "current": "          \"sha256\": \"b08b3e88371e993aa16e85f8473b505dda70d549e87142898386fcd90b29e1c2\"\n",
+          "previous": "          \"sha256\": \"77e36a50d163b5cbac26d2145e63118edb0a6acc0ef6b1a6028d8474d6eedc7f\"\n",
+          "start": 1318085
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1322376
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1324763
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1325088
+        },
+        {
+          "current": "          \"sha256\": \"76043442bb54561e5e32e4d0ab9b013ac482f57ef21aa418edf67063314e21a5\"\n",
+          "previous": "          \"sha256\": \"c120ef91cd31c5bf8a3ff8ac3c9066dcdc1546f51ca9b30cdc1939a14bb12e1e\"\n",
+          "start": 1337867
+        },
+        {
+          "current": "          \"sha256\": \"9f0fd159f1fa691eeef474df7c2f7438ea6d4289a015d86af8ac796c97bbe510\"\n",
+          "previous": "          \"sha256\": \"9f7f6c70f5865f65b79e7f35f3840c01cb6ea801f259e531808f3af0871948fd\"\n",
+          "start": 1343206
+        },
+        {
+          "current": "          \"sha256\": \"f8b851eb51f67e1aaebe7ef8c2a85dca312feca5658ff730d163e2585356ba9e\"\n",
+          "previous": "          \"sha256\": \"caf77f2621814611e547791fcf8f51c66cdae3e3a167432721c9abb852fed9c3\"\n",
+          "start": 1343754
+        },
+        {
+          "current": "          \"sha256\": \"a9511c2a998b3444dc36f3f29443e262a64481fe8f963d3eec023e7bd7b4e492\"\n",
+          "previous": "          \"sha256\": \"20760c582d8942b1e556c210dff783932b4f88eab0215599d220b84cde0ac738\"\n",
+          "start": 1346121
+        },
+        {
+          "current": "          \"sha256\": \"b08b3e88371e993aa16e85f8473b505dda70d549e87142898386fcd90b29e1c2\"\n",
+          "previous": "          \"sha256\": \"77e36a50d163b5cbac26d2145e63118edb0a6acc0ef6b1a6028d8474d6eedc7f\"\n",
+          "start": 1346660
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1348917
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1351339
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1351658
+        },
+        {
+          "current": "          \"sha256\": \"9f0fd159f1fa691eeef474df7c2f7438ea6d4289a015d86af8ac796c97bbe510\"\n",
+          "previous": "          \"sha256\": \"9f7f6c70f5865f65b79e7f35f3840c01cb6ea801f259e531808f3af0871948fd\"\n",
+          "start": 1363797
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1371297
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1373876
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1374036
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 1380027
+        },
+        {
+          "current": "          \"sha256\": \"fbf7524d4369ea1184f15e72d09c42f256d5c96878f01e7d56e4e4fa1d499d68\"\n",
+          "previous": "          \"sha256\": \"26bf33d7266081bc18b67cd6d2463e8e07b97bcb66916b96fa8f5f2e5e221be4\"\n",
+          "start": 1386869
+        },
+        {
+          "current": "          \"sha256\": \"11a05f8ad96253ff10380b969b260262fa33d94b81c3bb8fe85aad1371be1f9e\"\n",
+          "previous": "          \"sha256\": \"21f20f52feb526ed6933d568d407f353c1c3af19d00b56bcb0c3fa6ff3021183\"\n",
+          "start": 1387229
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1391189
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1393543
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1393703
+        },
+        {
+          "current": "          \"sha256\": \"fbf7524d4369ea1184f15e72d09c42f256d5c96878f01e7d56e4e4fa1d499d68\"\n",
+          "previous": "          \"sha256\": \"26bf33d7266081bc18b67cd6d2463e8e07b97bcb66916b96fa8f5f2e5e221be4\"\n",
+          "start": 1404460
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1412642
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1416931
+        },
+        {
+          "current": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "previous": "          \"sha256\": \"08a36b662fdcc87438b972fca0ad8572a3d69b177e1f9a8ab2df3d54147f25c1\"\n",
+          "start": 1417091
+        },
+        {
+          "current": "          \"sha256\": \"daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51\"\n",
+          "previous": "          \"sha256\": \"5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a\"\n",
+          "start": 1425661
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1428559
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1451705
+        },
+        {
+          "current": "          \"sha256\": \"98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20\"\n",
+          "previous": "          \"sha256\": \"8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789\"\n",
+          "start": 1512388
+        },
+        {
+          "current": "          \"sha256\": \"23ebcb533f770f297227fb9ae8c554056f604d27548e1252eed8b0b1a1decc9f\"\n",
+          "previous": "          \"sha256\": \"b872ae4f85c47103dbf5fcc2f03298fab6abb0e01c5ab5eef72953e9490e00c0\"\n",
+          "start": 1951842
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4010605
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4029624
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4048810
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4072850
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4096890
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4120930
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4144821
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4163537
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4182253
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4199348
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4216455
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4240241
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4264009
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4284495
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4304988
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4333228
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4361466
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4386306
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4411252
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4476316
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4541695
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4588176
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4634703
+        },
+        {
+          "current": "          \"sha256\": \"e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115\"\n",
+          "previous": "          \"sha256\": \"26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98\"\n",
+          "start": 4669764
+        },
+        {
+          "current": "          \"sha256\": \"8e4588191d8861d2b5081b486b5151716c0501455e7098aeb7269d639d6193f6\"\n",
+          "previous": "          \"sha256\": \"358b4d13be2d053605ca4fb267031853399dd8c730339dbb9d30a3da378ac8e8\"\n",
+          "start": 15315619
+        },
+        {
+          "current": "          \"sha256\": \"8e4588191d8861d2b5081b486b5151716c0501455e7098aeb7269d639d6193f6\"\n",
+          "previous": "          \"sha256\": \"358b4d13be2d053605ca4fb267031853399dd8c730339dbb9d30a3da378ac8e8\"\n",
+          "start": 15500650
+        },
+        {
+          "current": "          \"sha256\": \"8e4588191d8861d2b5081b486b5151716c0501455e7098aeb7269d639d6193f6\"\n",
+          "previous": "          \"sha256\": \"358b4d13be2d053605ca4fb267031853399dd8c730339dbb9d30a3da378ac8e8\"\n",
+          "start": 15686451
+        },
+        {
+          "current": "          \"sha256\": \"8e4588191d8861d2b5081b486b5151716c0501455e7098aeb7269d639d6193f6\"\n",
+          "previous": "          \"sha256\": \"358b4d13be2d053605ca4fb267031853399dd8c730339dbb9d30a3da378ac8e8\"\n",
+          "start": 15871938
+        },
+        {
+          "current": "          \"sha256\": \"3f054c7bf2c363df154282faf60d6c5c568b1d915597a9ceb44c6472a2a8a924\"\n",
+          "previous": "          \"sha256\": \"433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3\"\n",
+          "start": 75711427
+        },
+        {
+          "current": "          \"sha256\": \"3f054c7bf2c363df154282faf60d6c5c568b1d915597a9ceb44c6472a2a8a924\"\n",
+          "previous": "          \"sha256\": \"433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3\"\n",
+          "start": 75718301
+        },
+        {
+          "current": "          \"sha256\": \"3f054c7bf2c363df154282faf60d6c5c568b1d915597a9ceb44c6472a2a8a924\"\n",
+          "previous": "          \"sha256\": \"433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3\"\n",
+          "start": 75725186
+        },
+        {
+          "current": "          \"sha256\": \"3f054c7bf2c363df154282faf60d6c5c568b1d915597a9ceb44c6472a2a8a924\"\n",
+          "previous": "          \"sha256\": \"433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3\"\n",
+          "start": 75732112
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "7a3018192862c8eb18344bdfd7c58b700655c751db7323e56febd8c7d3ad0692"
+    },
+    {
+      "currentSha256": "98dd8879932d849bdb5674ddbc77b097c03605b81629160e0aace9e93939ea20",
+      "edits": [
+        {
+          "current": "${defaults.length ? `${defaults.join(\"\\n\")}\\n` : \"\"}    return Internal\\\\Native::call${index}(${fn.parameters.map(parameter => `$${parameter.name}`).join(\", \")});\n",
+          "previous": "${defaults.join(\"\\n\")}${defaults.length ? \"\\n\" : \"\"}\n    return Internal\\\\Native::call${index}(${fn.parameters.map(parameter => `$${parameter.name}`).join(\", \")});\n",
+          "start": 6410
+        },
+        {
+          "current": "\t\tfiles[\"README.md\"] += `\\n## Options, results and products\\n\\n${model.taggedOptions ? \"Because this package exposes HostNull, Option is fully tagged: new None() for None or new Some($value) for Some. This keeps HostNull.value(Option.none) distinct from HostNull.null and keeps Option.none distinct from Option.some(HostNull.null).\" : \"Option uses null for None or new Some($value) for Some. Unit is null, so new Some(null) preserves a present Unit or an outer Some containing None, according to the declared type.\"} Except uses new Ok($value) or new Err($error); both expose a readonly value property. Branch classes are final readonly classes in this component's namespace${model.taggedOptions ? \".\" : \" and require one payload.\"} PHPDoc records the payload type; every call checks it recursively, including weak-mode callers. Domain errors return Err; bridge failures throw. Prod uses an exact two-element list, retaining nested binary products. These types compose with arrays and records. Returned values are independently copied. PHP === compares wrapper identity, while == follows PHP's property-comparison rules. Readonly wrappers do not make arbitrary constructor payloads deeply immutable; only values accepted by the declared copied type may cross a call. Compound callbacks, identity-bearing copied values and recursive copied schemas remain unsupported.\\n`;\n",
+          "previous": "\t\tfiles[\"README.md\"] += `\\n## Options, results and products\\n\\n${model.taggedOptions ? \"Because this package exposes HostNull, Option is fully tagged: new None() for None or new Some($value) for Some. This keeps HostNull.value(Option.none) distinct from HostNull.null and keeps Option.none distinct from Option.some(HostNull.null).\" : \"Option uses null for None or new Some($value) for Some. Unit is null, so new Some(null) preserves a present Unit or an outer Some containing None, according to the declared type.\"} Except uses new Ok($value) or new Err($error); both expose a readonly value property. Branch classes are final readonly classes in this component's namespace. PHPDoc records the payload type; every call checks it recursively, including weak-mode callers. Domain errors return Err; bridge failures throw. Prod uses an exact two-element list, retaining nested binary products. These types compose with arrays and records. Returned values are independently copied. PHP === compares wrapper identity, while == follows PHP's property-comparison rules. Readonly wrappers do not make arbitrary constructor payloads deeply immutable; only values accepted by the declared copied type may cross a call. Compound callbacks, identity-bearing copied values and recursive copied schemas remain unsupported.\\n`;\n",
+          "start": 10301
+        }
+      ],
+      "path": "src/backends/php/copied-values.mjs",
+      "previousSha256": "8775ce87fbd8ac6c1baecced589a1891483873432864ad7e14fc4db57dd7f789"
+    },
+    {
+      "currentSha256": "9941e260bed0d3f0c1800442b0516153b94376017c8226ce46ba73034ffb50f0",
+      "edits": [
+        {
+          "current": "import {\n\tassertCppStructuredCodegenRegression, cppStructuredCodegenProducer\n} from \"./helpers/cpp-structured-callable-regression.mjs\";\nimport { bytesAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "import { assertCppStructuredCodegenRegression } from \"./helpers/cpp-structured-callable-regression.mjs\";\n",
+          "start": 879
+        },
+        {
+          "current": "\tfor(const [path, hash] of Object.entries(record.sourceHashes))\n\t\tassert.equal(sha256(bytesAtProducer(cppStructuredCodegenProducer, path))\n\t\t\t, hash, path);\n\tawait assertCppStructuredCodegenRegression(record);\n",
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);\n\tassertCppStructuredCodegenRegression(record);\n",
+          "start": 1297
+        },
+        {
+          "current": "\tawait assert.rejects(() => assertCppStructuredCodegenRegression(altered));\n",
+          "previous": "\tassert.throws(() => assertCppStructuredCodegenRegression(altered));\n",
+          "start": 1619
+        }
+      ],
+      "path": "tests/cpp-structured-callable-contract.test.mjs",
+      "previousSha256": "4370ca75813bc69f9a5086f21c7fcb38c58579165de5a7e8b97cc94f669b427d"
+    },
+    {
+      "currentSha256": "76043442bb54561e5e32e4d0ab9b013ac482f57ef21aa418edf67063314e21a5",
+      "edits": [
+        {
+          "current": "\tawait assertDotnetStructuredCodegenRegression(record);\n",
+          "previous": "\tassertDotnetStructuredCodegenRegression(record);\n",
+          "start": 1263
+        },
+        {
+          "current": "\tawait assert.rejects(() => assertDotnetStructuredCodegenRegression(altered));\n",
+          "previous": "\tassert.throws(() => assertDotnetStructuredCodegenRegression(altered));\n",
+          "start": 1431
+        }
+      ],
+      "path": "tests/dotnet-structured-callable-contract.test.mjs",
+      "previousSha256": "c120ef91cd31c5bf8a3ff8ac3c9066dcdc1546f51ca9b30cdc1939a14bb12e1e"
+    },
+    {
+      "currentSha256": "413c391eb35ecefbccf542cb07fe881cd921288b9fc4c99cb43b5ba470eb45d5",
+      "edits": [
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 4);\n",
+          "previous": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "start": 1726
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-wit-ci-workflow-tests.mjs",
+      "previousSha256": "4d0348564420719de86c92c508db4268c03d7d70436bb5791fb037e63743c511"
+    },
+    {
+      "currentSha256": "42c24094e980cf58d86423f99a52e27a55b312220295323b717898178979d42c",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeOptionalParameterPhpWasmCountContractSource\n\t, optionalParameterPhpWasmCountContractNormalizationPaths\n} from \"./optional-parameter-php-wasm-count-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 1354
+        },
+        {
+          "current": "\t, ...optionalParameterPhpWasmCountContractNormalizationPaths\n",
+          "previous": "",
+          "start": 2770
+        },
+        {
+          "current": "\tif(optionalParameterPhpWasmCountContractNormalizationPaths.includes(path))\n\t\tsource = beforeOptionalParameterPhpWasmCountContractSource(\n\t\t\tpath, source.toString(), expected\n\t\t);\n",
+          "previous": "",
+          "start": 4219
+        }
+      ],
+      "path": "tests/helpers/copied-fixture-source-history.mjs",
+      "previousSha256": "c50a1be354e522079b1a84074dbbbb6522a1f068c0690aa5d153ab0699c059c9"
+    },
+    {
+      "currentSha256": "d4bc51c24b63fe06a7d9e1d312ec2f259dfab5703f1ebfc197b2d71f56cebfcd",
+      "edits": [
+        {
+          "current": "\tconst codegen = JSON.parse(codegenBytes);\n\tawait assertCppStructuredCodegenRegression(codegen);\n",
+          "previous": "\tconst codegen = JSON.parse(codegenBytes); assertCppStructuredCodegenRegression(codegen);\n",
+          "start": 7772
+        }
+      ],
+      "path": "tests/helpers/cpp-structured-callable-evidence.mjs",
+      "previousSha256": "de3d398932beee5839422e10d16b94e383df774094c25c914c1a180e3336d93e"
+    },
+    {
+      "currentSha256": "67435467497ec8429c32803413adfa0f7ede7c26b3b44fb94592058801d9497c",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCppBindingPackage } from \"../../src/backends/cpp/generate.mjs\";\n",
+          "start": 209
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 654
+        },
+        {
+          "current": "export const cppStructuredCodegenProducer\n\t= \"646aceda428705779adc34a2b96a0c0dcd7356b5\";\n",
+          "previous": "",
+          "start": 984
+        },
+        {
+          "current": "export const assertCppStructuredCodegenRegression = async record => {\n",
+          "previous": "export const assertCppStructuredCodegenRegression = record => {\n",
+          "start": 1240
+        },
+        {
+          "current": "\tconst producer = await moduleAtProducer(\n\t\tcppStructuredCodegenProducer, \"src/backends/cpp/generate.mjs\");\n",
+          "previous": "",
+          "start": 1536
+        },
+        {
+          "current": "\t\tconst files = producer.generateCppBindingPackage(ir);\n",
+          "previous": "\t\tconst files = generateCppBindingPackage(ir);\n",
+          "start": 1921
+        }
+      ],
+      "path": "tests/helpers/cpp-structured-callable-regression.mjs",
+      "previousSha256": "6dea7bad1bc4f21b09b06f093b024c9414a190f55187fb2171bcc0e79db13c4f"
+    },
+    {
+      "currentSha256": "b7ca9e41e12a5cd1a291a0eacb6c9ec68c9b7e1d715079016b3bc833f3554cea",
+      "edits": [
+        {
+          "current": "import { beforeFinRefinementSource }\n\tfrom \"./fin-refinement-source-history.mjs\";\n",
+          "previous": "",
+          "start": 908
+        },
+        {
+          "current": "\t]) {\n\t\tconst previous = git([\"show\"\n\t\t\t, `6cf8e53b1a5015c2d3e3f7100e14fdf4a4caf3f4:${path}`]);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tpath, await readFile(path, \"utf8\"), sha256(previous)\n\t\t), previous, path);\n\t}\n",
+          "previous": "\t]) assert.equal(sha256(await readFile(path)), sha256(git([\"show\"\n\t\t, `6cf8e53b1a5015c2d3e3f7100e14fdf4a4caf3f4:${path}`])), path);\n",
+          "start": 3935
+        }
+      ],
+      "path": "tests/helpers/current-repair-history-isolation-source-history-tests.mjs",
+      "previousSha256": "3e4f41d3bc6a3b3643aa397b11cbf99f621f4bf2dfea987dbad14aabf1b591a0"
+    },
+    {
+      "currentSha256": "9f0fd159f1fa691eeef474df7c2f7438ea6d4289a015d86af8ac796c97bbe510",
+      "edits": [
+        {
+          "current": "\tconst codegen = JSON.parse(codegenBytes); await assertDotnetStructuredCodegenRegression(codegen);\n",
+          "previous": "\tconst codegen = JSON.parse(codegenBytes); assertDotnetStructuredCodegenRegression(codegen);\n",
+          "start": 11121
+        }
+      ],
+      "path": "tests/helpers/dotnet-structured-callable-evidence.mjs",
+      "previousSha256": "9f7f6c70f5865f65b79e7f35f3840c01cb6ea801f259e531808f3af0871948fd"
+    },
+    {
+      "currentSha256": "f8b851eb51f67e1aaebe7ef8c2a85dca312feca5658ff730d163e2585356ba9e",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCopiedDotnetPackage } from \"../../src/backends/dotnet/copied-values.mjs\";\n",
+          "start": 206
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "import { beforeOwnedDotnetProcessGenerated } from \"./owned-dotnet-process-history.mjs\";\n",
+          "start": 660
+        },
+        {
+          "current": "export const dotnetStructuredCodegenProducer\n\t= \"594287dd2e4ab9550de349f9414b3d0ecf9d0c22\";\n",
+          "previous": "",
+          "start": 999
+        },
+        {
+          "current": "export const assertDotnetStructuredCodegenRegression = async record => {\n",
+          "previous": "export const assertDotnetStructuredCodegenRegression = record => {\n",
+          "start": 1255
+        },
+        {
+          "current": "\tconst producer = await moduleAtProducer(\n\t\tdotnetStructuredCodegenProducer, \"src/backends/dotnet/copied-values.mjs\");\n",
+          "previous": "",
+          "start": 1531
+        },
+        {
+          "current": "\t\tconst files = producer.generateCopiedDotnetPackage(ir);\n\t\tassert.deepEqual(fixture.files, Object.fromEntries(Object.entries(files).map(([path, source]) =>\n\t\t\t[path, { bytes: Buffer.byteLength(source), sha256: sha256(source) }]\n\t\t)));\n",
+          "previous": "\t\tconst files = generateCopiedDotnetPackage(ir);\n\t\tassert.deepEqual(fixture.files, Object.fromEntries(Object.entries(files).map(([path, source]) => {\n\t\t\tconst original = beforeOwnedDotnetProcessGenerated(path, source, fixture.files[path]?.sha256);\n\t\t\treturn [path, { bytes: Buffer.byteLength(original), sha256: sha256(original) }];\n\t\t})));\n",
+          "start": 1933
+        }
+      ],
+      "path": "tests/helpers/dotnet-structured-callable-regression.mjs",
+      "previousSha256": "caf77f2621814611e547791fcf8f51c66cdae3e3a167432721c9abb852fed9c3"
+    },
+    {
+      "currentSha256": "292a68d0eca24f67825fb805c653e73b570cbf547f2cdc8404955afa93fa397f",
+      "edits": [
+        {
+          "current": "\t\tconst acceptance = source.split(\n\t\t\t`      - name: ${contract.acceptanceStep}\\n`)[1]\n\t\t\t?.split(\"\\n      - name: \")[0];\n\t\tassert.equal(typeof acceptance, \"string\", contract.lane);\n\t\tassert.doesNotMatch(acceptance, /continue-on-error:/u);\n",
+          "previous": "\t\tassert.doesNotMatch(source, /continue-on-error:/u);\n",
+          "start": 2771
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-hosted-contract-tests.mjs",
+      "previousSha256": "2605774f2b66684b223307e7a16f3053a36afc200cc0511abf1665332824aa16"
+    },
+    {
+      "currentSha256": "5e6914d4eb1ef4124b4c8068096a486039bd1b43b71d0936f4eb198e8fa9e086",
+      "edits": [
+        {
+          "current": "import {\n\tbindingIrTypeFacets, typeSurfaceCells\n} from \"../../src/adoption/type-surface.mjs\";\n",
+          "previous": "import { typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 163
+        },
+        {
+          "current": "const hostNullShape = Object.freeze({\n\tid: \"host-null\"\n\t, lean: \"Explicit nullable host value\"\n\t, family: \"checked-value\"\n\t, ir: \"constructor:host-null\"\n\t, meaning: \"Null from a declared host API.\"\n\t, bounds: \"Select an explicit host projection; null does not stand for every missing, erased or unsupported value.\"\n});\nconst laterShapes = Object.freeze([checkedRecordShape, hostNullShape]);\nconst laterConstructors = Object.freeze([\"host-null\"]);\n",
+          "previous": "",
+          "start": 909
+        },
+        {
+          "current": "\tconst currentConstructors = bindingIrTypeFacets(\n\t\tcontracts.irSchema).constructor;\n\tconst applicableShapes = currentConstructors.includes(hostNullShape.id)\n\t\t? laterShapes : [checkedRecordShape];\n\tconst applicableConstructors = currentConstructors.includes(hostNullShape.id)\n\t\t? laterConstructors : [];\n",
+          "previous": "",
+          "start": 1754
+        },
+        {
+          "current": "\tconst missing = applicableShapes.filter(shape => !known.has(shape.id));\n\tconst knownConstructors = new Set(document.irFacets.constructor);\n\tconst missingConstructors = applicableConstructors.filter(\n\t\tconstructor => !knownConstructors.has(constructor));\n\tif(missing.length === 0 && missingConstructors.length === 0)\n\t\treturn typeSurfaceCells(document, contracts);\n\tfor(const shape of missing)\n\t\tassert.ok(!document.observations.some(item => item.shapes.includes(shape.id)));\n\tconst shapes = document.shapes.map(shape => {\n\t\tif(shape.id !== hostNullShape.id\n\t\t\t|| !missingConstructors.includes(hostNullShape.id)) return shape;\n\t\tassert.deepEqual(shape, { ...hostNullShape, ir: null });\n\t\treturn hostNullShape;\n\t});\n",
+          "previous": "\tif(known.has(\"checked-record\")) return typeSurfaceCells(document, contracts);\n\tassert.ok(!document.observations.some(item => item.shapes.includes(checkedRecordShape.id)));\n",
+          "start": 2123
+        },
+        {
+          "current": "\t\t...document\n\t\t, irFacets: {\n\t\t\t...document.irFacets\n\t\t\t, constructor: [\n\t\t\t\t...document.irFacets.constructor, ...missingConstructors\n\t\t\t]\n\t\t}\n\t\t, shapes: [...shapes, ...missing]\n",
+          "previous": "\t\t...document, shapes: [...document.shapes, checkedRecordShape]\n",
+          "start": 2877
+        },
+        {
+          "current": "\tconst added = new Set(missing.map(shape => shape.id));\n\tfor(const cell of classified.filter(item => added.has(item.shape)))\n",
+          "previous": "\tfor(const cell of classified.filter(\n\t\titem => item.shape === checkedRecordShape.id))\n",
+          "start": 3073
+        }
+      ],
+      "path": "tests/helpers/historical-type-surface-cells.mjs",
+      "previousSha256": "f5032282bf0aff3a7d864e6458277b1bfc2ed9f39b265253a7a42ccbda193984"
+    },
+    {
+      "currentSha256": "1a9a4de6a44117e660b59e44122587767eaa30623d6329089c27941bbb67dec3",
+      "edits": [
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 4);\n",
+          "previous": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "start": 1712
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "5a49b555c10e2de7605598d2b02e4a2845952695eb379d0b2e78ba69bf6b60a5"
+    },
+    {
+      "currentSha256": "8e4588191d8861d2b5081b486b5151716c0501455e7098aeb7269d639d6193f6",
+      "edits": [
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 4);\n",
+          "previous": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "start": 1682
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "358b4d13be2d053605ca4fb267031853399dd8c730339dbb9d30a3da378ac8e8"
+    },
+    {
+      "currentSha256": "38f27a7029c223d2a8c8221bc5f112b5591c3cc90ef56350779125f8c192cda1",
+      "edits": [
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 4);\n",
+          "previous": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "start": 1711
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-wit-ci-workflow-tests.mjs",
+      "previousSha256": "b1e2c0beb16d4e1aa622d77a1d1f7d9fb849b6f7933393c78ccba7c0aa6c52d3"
+    },
+    {
+      "currentSha256": "52e562b543f618bc6e10eee6c060857b5378a9ddbad74dce181043504a3507df",
+      "edits": [
+        {
+          "current": "\t\t, [\"      - managed-consumers\\n      - owned-jvm-values\\n\"\n\t\t\t, \"      - owned-jvm-values\\n\"]\n",
+          "previous": "\t\t, [\"      - managed-consumers\\n\", \"\"]\n",
+          "start": 3627
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dotnet-ci-workflow-tests.mjs",
+      "previousSha256": "f603a24ad4a8f18b9a97ac59bdfe45d63b6a7325ba1a5ee05f86c51118cf2668"
+    },
+    {
+      "currentSha256": "fa1e26dfadaffd413f866fd7bbe33a27c41d0b80bccfd066fb02ac675f93338d",
+      "edits": [
+        {
+          "current": "\t\t, [\"      - managed-consumers\\n      - owned-jvm-values\\n\", \"      - owned-jvm-values\\n\"]\n",
+          "previous": "\t\t, [\"      - managed-consumers\\n\", \"\"]\n",
+          "start": 3595
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-ci-workflow-tests.mjs",
+      "previousSha256": "030e9e9c82b479584150b0c86274a53e0e3215b406b4e755f8136c31736dce69"
+    },
+    {
+      "currentSha256": "5bb174baf60fea82cde04c5a7b8436fd11883bba4b5cd738f6bebf63653f6dbf",
+      "edits": [
+        {
+          "current": "const hostNullCommand = '              consumer_command=\"$consumer_command && bash scripts/run-host-null-managed-ci.sh jvm\"\\n';\nconst optionalParameterCommand = '              consumer_command=\"$consumer_command && bash scripts/run-optional-parameter-managed-ci.sh jvm\"\\n';\n",
+          "previous": "",
+          "start": 1375
+        },
+        {
+          "current": "\t\tsummary: '              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ] || [ \"${{ steps.direct_proof_managed.outcome }}\" != success ] || [ \"${{ steps.host_null_managed.outcome }}\" != success ] || [ \"${{ steps.optional_parameters_managed.outcome }}\" != success ]; then\\n'\n\t\t, updatedSummary: '              if [ \"${{ steps.ordinary_jvm.outcome }}\" != success ] || [ \"${{ steps.type_corpus_jvm.outcome }}\" != success ] || [ \"${{ steps.nominal_jvm.outcome }}\" != success ] || [ \"${{ steps.direct_proof_managed.outcome }}\" != success ] || [ \"${{ steps.host_null_managed.outcome }}\" != success ] || [ \"${{ steps.optional_parameters_managed.outcome }}\" != success ]; then\\n'\n\t\t, gate: \"(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success' || steps.optional_parameters_managed.outcome != 'success' || steps.host_null_managed.outcome != 'success'))\"\n\t\t, updatedGate: \"(matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.nominal_jvm.outcome != 'success' || steps.direct_proof_managed.outcome != 'success' || steps.optional_parameters_managed.outcome != 'success' || steps.host_null_managed.outcome != 'success'))\"\n\t\t, beforeSummary: directProofCommand + hostNullCommand + optionalParameterCommand\n\t\t, afterCommand: directProofCommand + hostNullCommand + optionalParameterCommand\n\t}\n\t, {\n",
+          "previous": "",
+          "start": 1671
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-ci-workflow.mjs",
+      "previousSha256": "4830b1745ecb3773294f2fb8ecae48236f7551a5c879961ebd6c9996db536c0e"
+    },
+    {
+      "currentSha256": "ec0650c578ccfcaf3d12759d3e20b3e8f4788b7214809c852960fa40d40858b3",
+      "edits": [
+        {
+          "current": "\t\t, [\"      - native-consumers\\n      - native-c-family-values\\n\"\n\t\t\t, \"      - native-c-family-values\\n\"]\n",
+          "previous": "\t\t, [\"      - native-consumers\\n\", \"\"]\n",
+          "start": 3146
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-python-ci-workflow-tests.mjs",
+      "previousSha256": "ae4051fda3f3d3199e9c5499ef12f9d663d5ea9c89a243585c99422609bc9718"
+    },
+    {
+      "currentSha256": "7e7b4df8fdb92f4e8e192f830c0a7db3b56c03e2f1944776bba1de034f081f03",
+      "edits": [
+        {
+          "current": "\t\t, [\"      - managed-consumers\\n      - owned-jvm-values\\n\"\n\t\t\t, \"      - owned-jvm-values\\n\"]\n",
+          "previous": "\t\t, [\"      - managed-consumers\\n\", \"\"]\n",
+          "start": 3149
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-ruby-ci-workflow-tests.mjs",
+      "previousSha256": "725d7acde8e68367132cc2b664eff0cbd5aacbf5347a194a386827175f7444df"
+    },
+    {
+      "currentSha256": "dc436c0e1b85b016378777a5990460ec6984c3b8b02c85fa74ba96dd96bf779b",
+      "edits": [
+        {
+          "current": "\t\t, [\"      - native-consumers\\n      - native-c-family-values\\n\"\n\t\t\t, \"      - native-c-family-values\\n\"]\n",
+          "previous": "\t\t, [\"      - native-consumers\\n\", \"\"]\n",
+          "start": 3417
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-rust-ci-workflow-tests.mjs",
+      "previousSha256": "a3a0eb1c6b5ba54bc6545094de1dd53750ca900e36ee0a7ee1abaf66b5ae5f3c"
+    },
+    {
+      "currentSha256": "df4bc18a59815c6e544ba36532e6cf788d14bdd2d81f2de0a6b4952b5a0f19cc",
+      "edits": [
+        {
+          "current": "const historyUrl = new URL(\n\t`../../${optionalParameterCurrentLineIntegrationHistoryPath}`\n\t, import.meta.url\n);\n",
+          "previous": "",
+          "start": 1542
+        },
+        {
+          "current": "\thistoryUrl, \"utf8\"));\n",
+          "previous": "\toptionalParameterCurrentLineIntegrationHistoryPath, \"utf8\"));\n",
+          "start": 1713
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-current-line-integration-source-history.mjs",
+      "previousSha256": "6fdcf84db5ff00cba34b35a961de0d95c35341d462252fe7906f56329681ced2"
+    },
+    {
+      "currentSha256": "2e98643180b6d07fb7e5a821bfea9859c78f5979557bf463c31c09f7a4dc3975",
+      "edits": [
+        {
+          "current": "const historyUrl = new URL(`../../${optionalParameterHistoryPath}`\n\t, import.meta.url);\n",
+          "previous": "",
+          "start": 2144
+        },
+        {
+          "current": "\thistoryUrl, \"utf8\"));\n",
+          "previous": "\toptionalParameterHistoryPath, \"utf8\"));\n",
+          "start": 2290
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-source-history.mjs",
+      "previousSha256": "357332a5c923c0028679dd1c58d44b0cd9b6d926f2b9aa7210a17cc1bc726f38"
+    },
+    {
+      "currentSha256": "fbf7524d4369ea1184f15e72d09c42f256d5c96878f01e7d56e4e4fa1d499d68",
+      "edits": [
+        {
+          "current": "\tconst codegen = await authenticated(record.codegen, phpStructuredCodegenPath); await assertPhpStructuredCodegenRegression(codegen);\n",
+          "previous": "\tconst codegen = await authenticated(record.codegen, phpStructuredCodegenPath); assertPhpStructuredCodegenRegression(codegen);\n",
+          "start": 12637
+        }
+      ],
+      "path": "tests/helpers/php-structured-callable-evidence.mjs",
+      "previousSha256": "26bf33d7266081bc18b67cd6d2463e8e07b97bcb66916b96fa8f5f2e5e221be4"
+    },
+    {
+      "currentSha256": "11a05f8ad96253ff10380b969b260262fa33d94b81c3bb8fe85aad1371be1f9e",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCopiedPhpPackage } from \"../../src/backends/php/copied-values.mjs\";\n",
+          "start": 206
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 648
+        },
+        {
+          "current": "export const phpStructuredCodegenProducer\n\t= \"89c43a33eb639bc8a2ca19df697ba56e9cfacae9\";\n",
+          "previous": "",
+          "start": 978
+        },
+        {
+          "current": "export const assertPhpStructuredCodegenRegression = async record => {\n",
+          "previous": "export const assertPhpStructuredCodegenRegression = record => {\n",
+          "start": 1238
+        },
+        {
+          "current": "\tconst producer = await moduleAtProducer(\n\t\tphpStructuredCodegenProducer, \"src/backends/php/copied-values.mjs\");\n",
+          "previous": "",
+          "start": 1534
+        },
+        {
+          "current": "\t\tconst files = producer.generateCopiedPhpPackage(ir);\n",
+          "previous": "\t\tconst files = generateCopiedPhpPackage(ir);\n",
+          "start": 1924
+        }
+      ],
+      "path": "tests/helpers/php-structured-callable-regression.mjs",
+      "previousSha256": "21f20f52feb526ed6933d568d407f353c1c3af19d00b56bcb0c3fa6ff3021183"
+    },
+    {
+      "currentSha256": "772bee07c2ce132fe49c56ebd032fdb6ba383cca9ac243791d00295f0ae2c5fd",
+      "edits": [
+        {
+          "current": "\tconst codegen = JSON.parse(codegenBytes); await assertPythonStructuredCodegenRegression(codegen);\n",
+          "previous": "\tconst codegen = JSON.parse(codegenBytes); assertPythonStructuredCodegenRegression(codegen);\n",
+          "start": 9519
+        }
+      ],
+      "path": "tests/helpers/python-structured-callable-evidence.mjs",
+      "previousSha256": "02c8bffcd7523e99fb8ec40b5ab4efb103055df1de516bb790cd8fc03e936a0d"
+    },
+    {
+      "currentSha256": "db22aff15a833e9ab86219a7bb0f4f7cbad011057a554baef0a3056498421d58",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCopiedPythonPackage } from \"../../src/backends/python/copied-values.mjs\";\n",
+          "start": 210
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 661
+        },
+        {
+          "current": "export const pythonStructuredCodegenProducer\n\t= \"cbb6fecce821a9a9fef3c06ab93b9c46786c9323\";\n",
+          "previous": "",
+          "start": 995
+        },
+        {
+          "current": "export const assertPythonStructuredCodegenRegression = async record => {\n",
+          "previous": "export const assertPythonStructuredCodegenRegression = record => {\n",
+          "start": 1251
+        },
+        {
+          "current": "\tconst producer = await moduleAtProducer(\n\t\tpythonStructuredCodegenProducer, \"src/backends/python/copied-values.mjs\");\n",
+          "previous": "",
+          "start": 1527
+        },
+        {
+          "current": "\t\tconst files = producer.generateCopiedPythonPackage(ir);\n",
+          "previous": "\t\tconst files = generateCopiedPythonPackage(ir);\n",
+          "start": 1929
+        }
+      ],
+      "path": "tests/helpers/python-structured-callable-regression.mjs",
+      "previousSha256": "7e4cc5d0e41a64f95ad0370c32c3ba0c2fe369ea4a1cff0e6d9aab92f09f89b8"
+    },
+    {
+      "currentSha256": "2fb62793be32adee2c7d11c07688192dec9be2222391ea9ed5fc7a2fcb6dd940",
+      "edits": [
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 4);\n",
+          "previous": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "start": 1718
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "a32df13d27264a4ac83ee3eab1ee6ddb16189e5e268b49d821a533fdab2a9ebf"
+    },
+    {
+      "currentSha256": "3923a136a2d4b3d13e6f94f2b632cdead7fe4a2514e9f273dc2b4564b70fcaff",
+      "edits": [
+        {
+          "current": "\tconst optionalEnforcement\n\t\t= \"      - name: Enforce complete optional-parameter matrix reconciliation\\n\";\n\tconst enforcement = text.indexOf(optionalEnforcement, summary);\n\tif(enforcement >= 0)\n\t\treturn text.slice(0, enforcement) + wasmEntryCiEnforce\n\t\t\t+ text.slice(enforcement);\n\tassert.ok(text.endsWith(\"        run: exit 1\\n\")\n\t\t, \"the summary ends with its enforcement steps\");\n",
+          "previous": "\tassert.ok(text.endsWith(\"        run: exit 1\\n\"), \"the summary ends with its enforcement steps\");\n",
+          "start": 5044
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-entry-ci.mjs",
+      "previousSha256": "6409424654f62e01b66a0dfb777b6de3756d51f7f9098a0d64eab1fdd13a66e4"
+    },
+    {
+      "currentSha256": "a9511c2a998b3444dc36f3f29443e262a64481fe8f963d3eec023e7bd7b4e492",
+      "edits": [
+        {
+          "current": "\tconst codegen = JSON.parse(codegenBytes); await assertRubyStructuredCodegenRegression(codegen);\n",
+          "previous": "\tconst codegen = JSON.parse(codegenBytes); assertRubyStructuredCodegenRegression(codegen);\n",
+          "start": 8580
+        }
+      ],
+      "path": "tests/helpers/ruby-structured-callable-evidence.mjs",
+      "previousSha256": "20760c582d8942b1e556c210dff783932b4f88eab0215599d220b84cde0ac738"
+    },
+    {
+      "currentSha256": "b371f462f131c5c506c40f3cf598f9e39acb1c6ff4a6624e9b4af6a19c314c9e",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCopiedRubyPackage } from \"../../src/backends/ruby/copied-values.mjs\";\n",
+          "start": 208
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "export const rubyStructuredCodegenProducer\n\t= \"35d11c8f9a623faaf294e2e475f82ef847f831ed\";\n",
+          "previous": "",
+          "start": 981
+        },
+        {
+          "current": "export const assertRubyStructuredCodegenRegression = async record => {\n",
+          "previous": "export const assertRubyStructuredCodegenRegression = record => {\n",
+          "start": 1235
+        },
+        {
+          "current": "\tconst producer = await moduleAtProducer(\n\t\trubyStructuredCodegenProducer, \"src/backends/ruby/copied-values.mjs\");\n",
+          "previous": "",
+          "start": 1507
+        },
+        {
+          "current": "\t\tconst files = producer.generateCopiedRubyPackage(ir);\n",
+          "previous": "\t\tconst files = generateCopiedRubyPackage(ir);\n",
+          "start": 1901
+        }
+      ],
+      "path": "tests/helpers/ruby-structured-callable-regression.mjs",
+      "previousSha256": "628b34b24717a220ac6adf71269920ffb4dc5df95a090b419790e34b11e43750"
+    },
+    {
+      "currentSha256": "e5927b62258c3639f74e2de1297f584e1a444cf7abcdc7cb48994cfa2f8f5bc9",
+      "edits": [
+        {
+          "current": "\tconst codegen = JSON.parse(codegenBytes);\n\tawait assertRustStructuredCodegenRegression(codegen);\n",
+          "previous": "\tconst codegen = JSON.parse(codegenBytes); assertRustStructuredCodegenRegression(codegen);\n",
+          "start": 8390
+        }
+      ],
+      "path": "tests/helpers/rust-structured-callable-evidence.mjs",
+      "previousSha256": "2ef81e312fc0519966589548728844e2b3263f51754cd6e218bee5bc26f4d886"
+    },
+    {
+      "currentSha256": "bb9667610f32f0939a8cefb55a7a30b9d875de931c83431f67f03cdc1a826c74",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCopiedRustPackage } from \"../../src/backends/rust/copied-values.mjs\";\n",
+          "start": 208
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "",
+          "start": 655
+        },
+        {
+          "current": "export const rustStructuredCodegenProducer\n\t= \"8f17be5ad5262670b8853d96736f19333fdebe39\";\n",
+          "previous": "",
+          "start": 987
+        },
+        {
+          "current": "export const assertRustStructuredCodegenRegression = async record => {\n",
+          "previous": "export const assertRustStructuredCodegenRegression = record => {\n",
+          "start": 1248
+        },
+        {
+          "current": "\tconst producer = await moduleAtProducer(\n\t\trustStructuredCodegenProducer, \"src/backends/rust/copied-values.mjs\");\n",
+          "previous": "",
+          "start": 1546
+        },
+        {
+          "current": "\t\tconst files = producer.generateCopiedRustPackage(ir);\n",
+          "previous": "\t\tconst files = generateCopiedRustPackage(ir);\n",
+          "start": 1940
+        }
+      ],
+      "path": "tests/helpers/rust-structured-callable-regression.mjs",
+      "previousSha256": "30130a6cdcbf71378d3fec6b442afd9123bdc9793ce1d5bfa3a7669577e57d34"
+    },
+    {
+      "currentSha256": "da0bcca6749d1b5865f0c0a1fec1ebcfa7e53b52f42753bbebe52070ecc923f8",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { structuralSubtypeEntrySource, structuralSubtypeEntryReview, structuralSubtypeEntryConfiguration, structuralSubtypeEntrySelection, structuralSubtypeEntryInterposer } from \"./structural-subtype-entry.mjs\";\nimport { structuralSubtypeRawProbe, structuralSubtypeRawCases } from \"./structural-subtype-entry-raw.mjs\";\n",
+          "start": 429
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "import { generateNativeLeanAdapters } from \"../../src/build/native-model.mjs\";\n",
+          "start": 553
+        },
+        {
+          "current": "",
+          "previous": "const beforeUnusedUnitBinderRename = (model, header) => {\n\tconst current = \"lean_object * _unit\", previous = \"lean_object * unit\";\n\tconst count = model.types.filter(type => type.kind === \"option\").length;\n\tassert.ok(count > 0);\n\tassert.equal(header.split(current).length - 1, count\n\t\t, \"historical structural-entry adapters rename only unused Option Unit binders\");\n\treturn header.replaceAll(current, previous);\n};\n\n",
+          "start": 1103
+        },
+        {
+          "current": "\tconst entry = await moduleAtProducer(producerCommit\n\t\t, \"tests/helpers/structural-subtype-entry.mjs\");\n\tconst raw = await moduleAtProducer(producerCommit\n\t\t, \"tests/helpers/structural-subtype-entry-raw.mjs\");\n\tconst native = await moduleAtProducer(producerCommit\n\t\t, \"src/build/native-model.mjs\");\n",
+          "previous": "",
+          "start": 2016
+        },
+        {
+          "current": "\tconst probe = entry.structuralSubtypeEntrySource(original)\n\t\t, review = entry.structuralSubtypeEntryReview()\n\t\t, configuration = entry.structuralSubtypeEntryConfiguration(route);\n",
+          "previous": "\tconst probe = structuralSubtypeEntrySource(original), review = structuralSubtypeEntryReview(), configuration = structuralSubtypeEntryConfiguration(route);\n",
+          "start": 2422
+        },
+        {
+          "current": "\tconst selected = entry.structuralSubtypeEntrySelection(model, probe);\n",
+          "previous": "\tconst selected = structuralSubtypeEntrySelection(model, probe);\n",
+          "start": 5565
+        },
+        {
+          "current": "\tconst sources = { \"interposer.c\": '#include \"component.h\"\\n' + entry.structuralSubtypeEntryInterposer(selected)\n\t\t, \"component.h\": native.generateNativeLeanAdapters(model).header\n\t\t, \"raw.c\": raw.structuralSubtypeRawProbe(model)\n\t\t, \"control.c\": controlSource };\n",
+          "previous": "\tconst sources = { \"interposer.c\": '#include \"component.h\"\\n' + structuralSubtypeEntryInterposer(selected)\n\t\t, \"component.h\": beforeUnusedUnitBinderRename(\n\t\t\tmodel, generateNativeLeanAdapters(model).header\n\t\t)\n\t\t, \"raw.c\": structuralSubtypeRawProbe(model), \"control.c\": controlSource };\n",
+          "start": 5793
+        },
+        {
+          "current": "\t\tconst rawCases = raw.structuralSubtypeRawCases(); assert.equal(observation.raw.length, rawCases.length);\n",
+          "previous": "\t\tconst rawCases = structuralSubtypeRawCases(); assert.equal(observation.raw.length, rawCases.length);\n",
+          "start": 10284
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-entry-report.mjs",
+      "previousSha256": "c5972521662ba8b876d55dd8f8b24cc6536b6801898ce69ec8bb9a0e48a259ce"
+    },
+    {
+      "currentSha256": "e0a7271526a574501cee12d8c426bc5ed479be40b3954c7ea565a87e06124115",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "import { structuralSubtypeConfiguration, structuralSubtypeReview } from \"./structural-subtype-installed-fixture.mjs\";\n",
+          "start": 557
+        },
+        {
+          "current": "\tconst fixture = await moduleAtProducer(producerCommit\n\t\t, \"tests/helpers/structural-subtype-installed-fixture.mjs\");\n\tconst report = await json(\"report.json\")\n\t\t, expected = fixture.structuralSubtypeReview();\n\tconst configuration = fixture.structuralSubtypeConfiguration(\n\t\troute, [\"c\", \"cpp\"]\n\t);\n",
+          "previous": "\tconst report = await json(\"report.json\"), expected = structuralSubtypeReview();\n\tconst configuration = structuralSubtypeConfiguration(route, [\"c\", \"cpp\"]);\n",
+          "start": 2057
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-native-report.mjs",
+      "previousSha256": "26119afa111595360fd8a16564cf73bff5135a0f2a13c9cb51e0c4d90071dd98"
+    },
+    {
+      "currentSha256": "b08b3e88371e993aa16e85f8473b505dda70d549e87142898386fcd90b29e1c2",
+      "edits": [
+        {
+          "current": "\tassert.equal(codegen.baselineRevision, record.baselineRevision); await assertWitStructuredCodegenRegression(codegen);\n",
+          "previous": "\tassert.equal(codegen.baselineRevision, record.baselineRevision); assertWitStructuredCodegenRegression(codegen);\n",
+          "start": 11829
+        }
+      ],
+      "path": "tests/helpers/wit-structured-callable-evidence.mjs",
+      "previousSha256": "77e36a50d163b5cbac26d2145e63118edb0a6acc0ef6b1a6028d8474d6eedc7f"
+    },
+    {
+      "currentSha256": "278af7c51df7c5a3adaf5e805651b9eff2ed23109c02577ee54a149392eddc5c",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { compileCopiedWitModel } from \"../../src/backends/wit/copied-model.mjs\";\nimport { renderWitHostHeader, renderWitHostSource } from \"../../src/backends/wit/copied-host.mjs\";\nimport { generateCBindingPackage } from \"../../src/backends/c/generate.mjs\";\nimport { generateNativePrimitiveC } from \"../../src/backends/c/native-primitives.mjs\";\n",
+          "start": 212
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\n",
+          "previous": "import { beforeClosureThreadRegistry } from \"./closure-thread-registry.mjs\";\n",
+          "start": 557
+        },
+        {
+          "current": "export const witStructuredCodegenProducer\n\t= \"136e4942ed32bd923cb721eb80aa038cfaa07f74\";\n",
+          "previous": "",
+          "start": 1078
+        },
+        {
+          "current": "export const witStructuredGeneratedFiles = async ir => {\n\tconst [wit, host, c] = await Promise.all([\n\t\tmoduleAtProducer(witStructuredCodegenProducer, \"src/backends/wit/copied-model.mjs\")\n\t\t, moduleAtProducer(witStructuredCodegenProducer, \"src/backends/wit/copied-host.mjs\")\n\t\t, moduleAtProducer(witStructuredCodegenProducer, \"src/backends/c/generate.mjs\")\n\t]);\n\tconst model = wit.compileCopiedWitModel(ir, {}, { callables: true });\n\treturn { ...c.generateCBindingPackage(ir)\n",
+          "previous": "export const witStructuredGeneratedFiles = ir => {\n\tconst model = compileCopiedWitModel(ir, {}, { callables: true });\n\treturn { ...generateCBindingPackage(ir)\n",
+          "start": 1490
+        },
+        {
+          "current": "\t\t, \"host.h\": host.renderWitHostHeader(model)\n\t\t, \"host.c\": host.renderWitHostSource(model, new Uint8Array([0])) };\n",
+          "previous": "\t\t, \"host.h\": renderWitHostHeader(model)\n\t\t, \"host.c\": renderWitHostSource(model, new Uint8Array([0])) };\n",
+          "start": 2079
+        },
+        {
+          "current": "export const assertWitStructuredCodegenRegression = async record => {\n",
+          "previous": "export const assertWitStructuredCodegenRegression = record => {\n",
+          "start": 2898
+        },
+        {
+          "current": "\t\tassert.deepEqual(fixture.files, identity(await witStructuredGeneratedFiles(ir)));\n",
+          "previous": "\t\tassert.deepEqual(fixture.files, identity(witStructuredGeneratedFiles(ir)));\n",
+          "start": 3600
+        },
+        {
+          "current": "\tconst native = await moduleAtProducer(\n\t\twitStructuredCodegenProducer, \"src/backends/c/native-primitives.mjs\");\n",
+          "previous": "",
+          "start": 3786
+        },
+        {
+          "current": "\t\tassert.deepEqual(fixture.files, identity({ \"native.c\": native.generateNativePrimitiveC(model, witStructuredNativeReceipt) }));\n",
+          "previous": "\t\tassert.deepEqual(fixture.files, identity({ \"native.c\": beforeClosureThreadRegistry(generateNativePrimitiveC(model, witStructuredNativeReceipt)) }));\n",
+          "start": 4122
+        }
+      ],
+      "path": "tests/helpers/wit-structured-callable-regression.mjs",
+      "previousSha256": "ac08703c8206c4566ebc291c53eff539b53126e0be4224b26f9791a2636c0fcd"
+    },
+    {
+      "currentSha256": "0dcdf169a1b6eaff32c8f6824c7aaf0ecb621de5c4dc9f8f6fa62cde2dc6cd50",
+      "edits": [
+        {
+          "current": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 4);\n",
+          "previous": "\tassertIsolatedWasmtimeCapiBootstraps(consumer, 3);\n",
+          "start": 1710
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "4ba563750bccdfc4449fee6f7a51336de42e79184b88c24de7884b9fed5c962f"
+    },
+    {
+      "currentSha256": "8dfce4708baeeaedca50ca77b3b2ba6453465a02e273a7e0d6c0cc5023fe6260",
+      "edits": [
+        {
+          "current": "const optionalManaged = {\n\tid: \"optional_parameters_managed\", continueOnError: true\n};\nconst hostNullManaged = { id: \"host_null_managed\", continueOnError: true };\nconst optionalLanguage = {\n\tid: \"optional_parameters_language\", continueOnError: true\n};\n",
+          "previous": "",
+          "start": 837
+        },
+        {
+          "current": "\tdotnet: [directProof, optionalManaged, hostNullManaged]\n\t, jvm: [directProof, optionalManaged, hostNullManaged]\n\t, ruby: [{ id: \"direct_proof_language\", continueOnError: true }\n\t\t, optionalLanguage]\n",
+          "previous": "\tdotnet: [directProof]\n\t, jvm: [directProof]\n\t, ruby: [{ id: \"direct_proof_language\", continueOnError: true }]\n",
+          "start": 1165
+        },
+        {
+          "current": "\tdotnet: [directProof, optionalManaged, hostNullManaged]\n\t, jvm: [\"nominal_jvm\", directProof, optionalManaged, hostNullManaged]\n\t, ruby: [{ id: \"direct_proof_language\", continueOnError: true }\n\t\t, optionalLanguage]\n",
+          "previous": "\tdotnet: [directProof], jvm: [\"nominal_jvm\", directProof]\n\t, ruby: [{ id: \"direct_proof_language\", continueOnError: true }]\n",
+          "start": 1441
+        },
+        {
+          "current": "\t\t, failFast: false, selectedOutcomeCases: 54\n",
+          "previous": "\t\t, failFast: false, selectedOutcomeCases: 39\n",
+          "start": 3255
+        },
+        {
+          "current": "\tassert.equal(checkDirectProof(previous).selectedOutcomeCases, 51);\n",
+          "previous": "\tassert.equal(checkDirectProof(previous).selectedOutcomeCases, 36);\n",
+          "start": 5543
+        }
+      ],
+      "path": "tests/managed-ci-isolation.test.mjs",
+      "previousSha256": "8b0fee5879ff9f3dbfcead3d8e3d927a4124499127d9b54af3ed4587ace5eb7c"
+    },
+    {
+      "currentSha256": "26cea9156eb3b933cb337e9286fbffcd5de165bc5389e877c5d9d2bbbc699024",
+      "edits": [
+        {
+          "current": "\tconst dispatch = calls.indexOf(`lean_object *_lb_checked = ${model.exports[0].symbol}(`);\n",
+          "previous": "\tconst dispatch = calls.indexOf(`lean_object *checked = ${model.exports[0].symbol}(`);\n",
+          "start": 20404
+        }
+      ],
+      "path": "tests/nested-checked-record-foundation.test.mjs",
+      "previousSha256": "f2e2a38ebab8788aa4fb4024ee78460156879239a44397f6ab8a66106ba99274"
+    },
+    {
+      "currentSha256": "3f054c7bf2c363df154282faf60d6c5c568b1d915597a9ceb44c6472a2a8a924",
+      "edits": [
+        {
+          "current": "\trefused(ir => { declaration(ir, \"echoClaim\").source.extensions[erasedKey] = { fields: [\"bounded\"] }; }, `lean:${q(\"echoClaim\")}.source.extensions.${erasedKey}`);\n",
+          "previous": "\trefused(ir => { declaration(ir, \"echoClaim\").source.extensions[erasedKey] = { fields: [\"bounded\"] }; }, `lean:${q(\"echoClaim\")}.source.extensions`);\n",
+          "start": 4641
+        }
+      ],
+      "path": "tests/owned-checked-record-foundation.test.mjs",
+      "previousSha256": "433041fb3fb0738ee1de4ce1e96b2d6f70d639f4043a3727ae315809f11d94f3"
+    },
+    {
+      "currentSha256": "175e34abd29dd75c6c13435182e5927a99ee76a5833de9535c109511578624a6",
+      "edits": [
+        {
+          "current": "\t\t, [\"      - nix-cache\\n      - node-consumers\\n      - reviewed-fin-wasm-entry\\n\"\n\t\t\t, \"      - nix-cache\\n      - reviewed-fin-wasm-entry\\n\"]\n",
+          "previous": "\t\t, [\"      - node-consumers\\n\", \"\"]\n",
+          "start": 7229
+        }
+      ],
+      "path": "tests/owned-javascript-nix-evidence.test.mjs",
+      "previousSha256": "b4f4bdcc4ba32d93b87996deaf8315a5174311829cdda29b45e2d48c41420e50"
+    },
+    {
+      "currentSha256": "762f869365dc2c2fa6fe71ce20e8a792a2bf91cea8366888e8a753c496c88e6d",
+      "edits": [
+        {
+          "current": "\tawait assertPythonStructuredCodegenRegression(record);\n",
+          "previous": "\tassertPythonStructuredCodegenRegression(record);\n",
+          "start": 1388
+        },
+        {
+          "current": "\tawait assert.rejects(() => assertPythonStructuredCodegenRegression(altered));\n",
+          "previous": "\tassert.throws(() => assertPythonStructuredCodegenRegression(altered));\n",
+          "start": 1556
+        }
+      ],
+      "path": "tests/python-structured-callable-contract.test.mjs",
+      "previousSha256": "8e76dc0dabb0c1c147b7122900b0ef10c23772810c7a5316680c77d8cc397242"
+    },
+    {
+      "currentSha256": "8716988a55549f779691e4229a4b5344ac0e032c2179228b6213bd1d2f9ace7d",
+      "edits": [
+        {
+          "current": "\tawait assertRubyStructuredCodegenRegression(record);\n",
+          "previous": "\tassertRubyStructuredCodegenRegression(record);\n",
+          "start": 1361
+        },
+        {
+          "current": "\tawait assert.rejects(() => assertRubyStructuredCodegenRegression(altered));\n",
+          "previous": "\tassert.throws(() => assertRubyStructuredCodegenRegression(altered));\n",
+          "start": 1527
+        }
+      ],
+      "path": "tests/ruby-structured-callable-contract.test.mjs",
+      "previousSha256": "95ecb81205066c78adba1f97ad9845b657536845787dbe99f15b339986609fbd"
+    },
+    {
+      "currentSha256": "295e766f5b65130a626e74a8f7cc620e8cf4f851359186f838c6cfb4d36ca292",
+      "edits": [
+        {
+          "current": "\tawait assertRustStructuredCodegenRegression(record);\n",
+          "previous": "\tassertRustStructuredCodegenRegression(record);\n",
+          "start": 1817
+        },
+        {
+          "current": "\tawait assert.rejects(() => assertRustStructuredCodegenRegression(altered));\n",
+          "previous": "\tassert.throws(() => assertRustStructuredCodegenRegression(altered));\n",
+          "start": 1983
+        }
+      ],
+      "path": "tests/rust-structured-callable-contract.test.mjs",
+      "previousSha256": "c74fb87c872e52d67ed34eb894151c53c37943b8cb08ad0cfce80166e20a73d2"
+    },
+    {
+      "currentSha256": "daaa08448d34fb0c92169347ef1e573b3747d78b7f08aafd8062a32e653bee51",
+      "edits": [
+        {
+          "current": "\tassert.throws(() => typeSurfaceCells(previous, contracts)\n\t\t, /IR (?:and source shapes|constructor)/u);\n",
+          "previous": "\tassert.throws(() => typeSurfaceCells(previous, contracts), /IR and source shapes/u);\n",
+          "start": 8808
+        },
+        {
+          "current": "\tassert.deepEqual(historical\n\t\t, historicalTypeSurfaceCells(withCheckedRecords, contracts)\n\t\t\t.filter(cell => cell.shape !== \"checked-record\"));\n",
+          "previous": "\tassert.deepEqual(historical, typeSurfaceCells(withCheckedRecords, contracts).filter(cell => cell.shape !== \"checked-record\"));\n",
+          "start": 9022
+        }
+      ],
+      "path": "tests/type-surface.test.mjs",
+      "previousSha256": "5280d5665666663779a614d2b59a03e09f3855aefb50896da5ad1cf18ebb941a"
+    }
+  ]
+}
