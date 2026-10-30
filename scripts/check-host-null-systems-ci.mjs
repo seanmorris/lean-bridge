@@ -8,8 +8,10 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
+import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
+import { hostNullReviewedIr } from "../tests/helpers/host-null-fixture.mjs";
 import {
 	hostNullSystemsChecks, hostNullSystemsProfiles
 } from "../tests/helpers/host-null-systems-installed.mjs";
@@ -40,6 +42,18 @@ const json = async path => {
 	return { bytes, value };
 };
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
+const privateShape = ir => {
+	const abi = createComponentPrivateAbi(ir);
+	return {
+		...abi
+		, types: abi.types.toSorted((left, right) => left.id.localeCompare(right.id))
+		, callbacks: abi.callbacks.toSorted((left, right) => left.id.localeCompare(right.id))
+		, exports: abi.exports.toSorted((left, right) => left.bindingId.localeCompare(right.bindingId))
+	};
+};
+const expectedBindingIrSemanticSha256 = sha256(canonicalJson(
+	privateShape(hostNullReviewedIr())
+));
 const sourceAt = path => execFileSync("git", ["show", `${values.producer}:${path}`]);
 const summary = (await json("summary.json")).value;
 assert.equal(summary.schemaVersion, 1);
@@ -52,7 +66,11 @@ assert.deepEqual(summary.cells, summary.routes.flatMap(route =>
 		route: route.route, profile, position
 	})))
 ));
-assert.equal(new Set(summary.routes.map(route => route.bindingIrSha256)).size, 1);
+assert.equal(new Set(summary.routes.map(route => route.bindingIrSha256)).size
+	, summary.routes.length);
+assert.equal(new Set(summary.routes.map(route => route.bindingIrSemanticSha256)).size, 1);
+assert.ok(summary.routes.every(route => route.bindingIrSemanticSha256
+	=== expectedBindingIrSemanticSha256));
 const targets = {
 	c: { name: "host-null-demo", version: "1.0.0" }
 	, cpp: { name: "host-null-demo", version: "1.0.0" }
@@ -74,7 +92,8 @@ for(const report of summary.routes)
 		, "offlineInstall", "compilerFreePath", "relocatedInstallation"
 	]) assert.equal(report[key], true, key);
 	for(const key of [
-		"receiptSha256", "bindingIrSha256", "sourceTreeSha256", "modelSha256"
+		"receiptSha256", "bindingIrSha256", "bindingIrSemanticSha256"
+		, "sourceTreeSha256", "modelSha256"
 	]) digest(report[key]);
 	const retained = (await json(`${report.route}/report.json`)).value;
 	assert.deepEqual(retained, report);

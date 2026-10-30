@@ -27,6 +27,10 @@ test("hosted systems HostNull preserves the complete 40-cell acceptance", async 
 		, "sourceFreeRelocatedExecution", "invalidRepresentationRejected"
 		, "packageFileSetSha256", "hostNullSystemsProfiles"
 		, "verifyPackageSetReceipt", "dependency-handoff"
+		, "bindingIrSemanticSha256"
+		, "summary.routes.map(route => route.bindingIrSha256)).size\n\t, summary.routes.length"
+		, "summary.routes.map(route => route.bindingIrSemanticSha256)).size, 1"
+		, "expectedBindingIrSemanticSha256"
 	]) assert.ok(checker.includes(required), required);
 	assert.deepEqual(hostNullSystemsWitTypes.map(String), [
 		"/type bridge-value-1 = option<u32>/u"

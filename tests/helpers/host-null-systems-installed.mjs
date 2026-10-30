@@ -232,6 +232,7 @@ export const runHostNullSystemsAcceptance = async t => {
 			schemaVersion: 1, route, profiles: hostNullSystemsProfiles, producerCommit
 			, packages: receipt.packages, receiptSha256
 			, bindingIrSha256: built.bindingIrSha256
+			, bindingIrSemanticSha256: sha256(canonicalJson(privateShape(model.bindingIr)))
 			, sourceTreeSha256: model.sourceIdentity.sourceTreeSha256
 			, modelSha256: sha256(modelBytes), rustDependencies: dependencies
 			, observations, sourceRemovedBeforeInstallation: true
@@ -251,7 +252,9 @@ export const runHostNullSystemsAcceptance = async t => {
 	));
 	assert.equal(cells.length, selectedRoutes.length * hostNullSystemsProfiles.length * positions.length);
 	if(selectedRoutes.length === 2) assert.equal(cells.length, 40);
-	assert.equal(new Set(routes.map(route => route.bindingIrSha256)).size, 1);
+	assert.equal(new Set(routes.map(route => route.bindingIrSha256)).size
+		, selectedRoutes.length);
+	assert.equal(new Set(routes.map(route => route.bindingIrSemanticSha256)).size, 1);
 	const summary = { schemaVersion: 1, producerCommit, routes, cells };
 	await saveLakeFile(outputRoot, "summary.json", canonicalJson(summary));
 	return summary;
