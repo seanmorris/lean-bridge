@@ -165,6 +165,7 @@ const assertHostNullCompleteWorkflow = source => {
 	assert.deepEqual(sparseCheckoutPatterns(receipt), sparseSourcePatterns);
 	assert.match(receipt
 		, /^ {4}if: always\(\) && inputs\.suite == 'produce'$/mu);
+	assert.match(receipt, /uses: actions\/setup-node@v6\n {8}with:\n {10}node-version: "22"\n {10}cache: npm\n {6}- name: Install locked dependencies\n {8}run: npm ci --ignore-scripts --no-audit --no-fund/u);
 	assert.match(receipt, /pattern: host-null-\*-\$\{\{ github\.sha \}\}/u);
 	assert.ok(receipt.includes(
 		"node scripts/reconcile-host-null-complete-matrix.mjs"));
@@ -205,6 +206,7 @@ test("complete HostNull replay rejects missing inputs and bypasses", async () =>
 		, source.replace("    needs: npm-browser\n", "")
 		, source.replace("    if: always() && inputs.suite == 'produce'\n"
 			, "    if: inputs.suite == 'produce'\n")
+		, source.replace(/( {2}receipt:[\s\S]*?) {6}- name: Install locked dependencies\n {8}run: npm ci --ignore-scripts --no-audit --no-fund\n/u, "$1")
 		, source.replace("steps.reconciliation.outcome != 'success'", "false")
 		, source.replace("    timeout-minutes: 90\n"
 			, "    continue-on-error: true\n    timeout-minutes: 90\n")
