@@ -26,9 +26,25 @@ export const directProofErasurePhpProfiles = Object.freeze([
 const factKeys = [
 	"archives", ...directProofErasurePhpComponentFactKeys
 	, "packageSetReceiptSha256"
-];
+].sort();
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const forbiddenProof = /(?:\bTrue\b|\bproof\b|_before|_after)/iu;
+
+/**
+ * Validate one order-independent retained PHP build fact.
+ *
+ * @param fact - Canonical build fact assembled from both compiled components.
+ */
+export const validateDirectProofErasurePhpBuildFact = fact => {
+	assert.deepEqual(Object.keys(fact).sort(), factKeys);
+	for(const key of factKeys.filter(key => key.endsWith("Sha256")))
+		digest(fact[key]);
+	assert.equal(fact.runtimeParameters, 1);
+	assert.equal(fact.erasedProofs, 2);
+	assert.ok(Object.keys(fact.archives).length >= 4);
+	for(const value of Object.values(fact.archives)) digest(value);
+	return fact;
+};
 
 /**
  * Select the exact public parameter name owned by one author route.
@@ -114,15 +130,7 @@ export const validateDirectProofErasurePhpReport = (report, {
 	assert.equal(report.builds.length, 2);
 	assert.deepEqual(report.builds[1], report.builds[0]);
 	for(const fact of report.builds)
-	{
-		assert.deepEqual(Object.keys(fact).sort(), factKeys);
-		for(const key of factKeys.filter(key => key.endsWith("Sha256")))
-			digest(fact[key]);
-		assert.equal(fact.runtimeParameters, 1);
-		assert.equal(fact.erasedProofs, 2);
-		assert.ok(Object.keys(fact.archives).length >= 4);
-		for(const value of Object.values(fact.archives)) digest(value);
-	}
+		validateDirectProofErasurePhpBuildFact(fact);
 	validatePackageSetReceipt(report.receipt);
 	assert.equal(report.receipt.component.id, "directprooferasure@1.0.0");
 	assert.deepEqual([...new Set(report.receipt.packages.map(item => item.target))].sort()

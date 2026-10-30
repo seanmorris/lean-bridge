@@ -18,6 +18,7 @@ import {
 import {
 	directProofErasurePhpConsumerSource, directProofErasurePhpParameter
 	, directProofErasurePhpReturnType
+	, validateDirectProofErasurePhpBuildFact
 } from "./direct-proof-erasure-php-report.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
@@ -43,6 +44,37 @@ test("PHP direct proof facts identify both compiled components", () => {
 	assert.deepEqual(Object.keys(fact).sort()
 		, [...directProofErasurePhpComponentFactKeys].sort());
 	assert.ok(Object.values(fact).every(value => value !== undefined));
+});
+
+test("PHP direct proof report accepts canonical facts in any key order", () => {
+	const hash = suffix => suffix.repeat(64).slice(0, 64);
+	const component = prefix => ({
+		artifactsSha256: hash(prefix)
+		, bindingIrFileSha256: hash("b")
+		, bindingIrSha256: hash("c")
+		, componentReceiptSha256: hash("d")
+		, erasedProofs: 2
+		, generatedLeanSha256: hash("e")
+		, metadataSha256: hash("f")
+		, modelSha256: hash("0")
+		, runtimeParameters: 1
+	});
+	const native = component("a");
+	native.nativeComponentReceiptSha256 = native.componentReceiptSha256;
+	delete native.componentReceiptSha256;
+	const fact = {
+		...directProofErasurePhpComponentFact({
+			native, phpWasm: component("1")
+		})
+		, archives: Object.fromEntries(["a", "b", "c", "d"].map((key
+			, index) => [key, hash(String(index + 2))]))
+		, packageSetReceiptSha256: hash("9")
+	};
+	const reversed = Object.fromEntries(Object.entries(fact).reverse());
+	assert.equal(validateDirectProofErasurePhpBuildFact(reversed), reversed);
+	assert.throws(() => validateDirectProofErasurePhpBuildFact({
+		...reversed, unexpected: true
+	}));
 });
 
 test("PHP direct proof callers retain each author route's exact binder", async () => {
