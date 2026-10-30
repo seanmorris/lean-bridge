@@ -1,0 +1,274 @@
+{
+  "failedJobIds": [
+    123831331710
+  ],
+  "failureCodes": [
+    "ENOENT"
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-direct-proof-erasure-php-profile-repair-source-history.mjs",
+      "sha256": "c055dfc46858bee3302d5ad412914189d452815087157ecf55b55f397c1c0bde"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-php-profile-repair-source-history-tests.mjs",
+      "sha256": "f600dd2aea12619f68d64c6a488eeb4ad5f065c4d8890e2d29fd638f18d910d8"
+    },
+    {
+      "path": "tests/helpers/direct-proof-erasure-php-profile-repair-source-history.mjs",
+      "sha256": "c064727e843d4dec940e1b8f36f63b6a7868da974cf5a55dcee6fb097958e5b4"
+    }
+  ],
+  "hostedRunId": 40978622372,
+  "implementationCommit": "482e2960c91b84cde50bd5402ccd609ed8fe84ab",
+  "integrationUpdates": [
+    {
+      "currentSha256": "199aca3afa247ff52cb700ae3f679e98ae1925f074532a27697190d613e4813e",
+      "edits": [
+        {
+          "current": "import \"./helpers/direct-proof-erasure-php-profile-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 173
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "1d20eaaf3460345ecd747d8e5eaba2e271304e1d4606e76f9cd273083f6c39e1"
+    },
+    {
+      "currentSha256": "e20aa8b6859a534980b9ad7b018213b2200710b29a16065bbc280b4f8aee71e9",
+      "edits": [
+        {
+          "current": "import { beforeDirectProofErasurePhpProfileRepairSource, directProofErasurePhpProfileRepairNormalizationPaths } from \"./direct-proof-erasure-php-profile-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...directProofErasurePhpProfileRepairNormalizationPaths\n\t, ...directProofErasureManagedWitRepairNormalizationPaths\n",
+          "previous": "\t...directProofErasureManagedWitRepairNormalizationPaths\n",
+          "start": 223768
+        },
+        {
+          "current": "\tlet stage = beforeDirectProofErasurePhpProfileRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDirectProofErasureManagedWitRepairSource(\n",
+          "previous": "\tlet stage = beforeDirectProofErasureManagedWitRepairSource(\n",
+          "start": 280384
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b09c5dd79acd035fa10169862fb1c04ab53dada854236285d5eee20250c7717f"
+    }
+  ],
+  "milestone": "direct-proof-erasure-php-profile-repair-source-v1",
+  "predecessorCommit": "76c39b25f013e5fa516e57d055a212bc42f52d0c",
+  "schemaVersion": 1,
+  "scope": "Verify and retain both compiled PHP profiles instead of assuming the obsolete single-profile canonical bundle layout.",
+  "updates": [
+    {
+      "currentSha256": "4a80199656d52d1772d93ad48a0fc72393702d6622dbd20fa59b1eb4f103998e",
+      "edits": [
+        {
+          "current": "\tassertDirectProofErasurePhpComponents\n\t, directProofErasurePhpComponentFact\n\t, prepareDirectProofErasureProject\n\t, retainDirectProofErasurePhpComponents\n",
+          "previous": "\tassertDirectProofErasureBundle, prepareDirectProofErasureProject\n",
+          "start": 758
+        },
+        {
+          "current": "\t\t\tawait buildCanonicalProject({\n",
+          "previous": "\t\t\tconst built = await buildCanonicalProject({\n",
+          "start": 3832
+        },
+        {
+          "current": "\t\t\tconst components = await assertDirectProofErasurePhpComponents(\n\t\t\t\toutputRoot);\n",
+          "previous": "\t\t\tconst bundleRoot = join(outputRoot, \"bundle\");\n\t\t\tconst bundle = await assertDirectProofErasureBundle(bundleRoot);\n",
+          "start": 4079
+        },
+        {
+          "current": "\t\t\t\t...directProofErasurePhpComponentFact(components)\n",
+          "previous": "\t\t\t\t...bundle, bindingIrSha256: built.bindingIrSha256\n",
+          "start": 4683
+        },
+        {
+          "current": "\t\t\tawait retainDirectProofErasurePhpComponents(records, attempt\n\t\t\t\t, outputRoot);\n",
+          "previous": "\t\t\tfor(const [name, path] of [\n\t\t\t\t[\"binding-ir.json\", \"binding/binding-ir.json\"]\n\t\t\t\t, [\"compiler-adapters.json\", \"locks/compiler-adapters.json\"]\n\t\t\t\t, [\"component-build-plan.json\", \"locks/component-build-plan.json\"]\n\t\t\t\t, [\"LeanBridgeGenerated.lean\", \"generated/LeanBridgeGenerated.lean\"]\n\t\t\t\t, [\"provenance.json\", \"metadata/provenance.json\"]\n\t\t\t]) await saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t\t, await readFile(join(bundleRoot, path)));\n",
+          "start": 4805
+        }
+      ],
+      "path": "tests/direct-proof-erasure-php-installed.test.mjs",
+      "previousSha256": "060537584bfb2a9539c9ca679444da7f3c3523ef2045c93532d0f04a4dbba4d9"
+    },
+    {
+      "currentSha256": "96c3c5fc5227700d8560dcb8bd23e5c9a13d9c8dac9783f7d10eaae9b4732ea6",
+      "edits": [
+        {
+          "current": "import {\n\treadVerifiedPhpWasmCopiedComponent, readVerifiedPhpWasmCopiedRuntime\n} from \"../../src/build/php-wasm-copied-artifacts.mjs\";\n",
+          "previous": "",
+          "start": 528
+        },
+        {
+          "current": "export const directProofErasurePhpWasmRecordNames = Object.freeze([\n\t\"artifacts.json\", \"binding-ir.json\", \"generated.lean\", \"metadata.json\"\n\t, \"model.json\", \"php-wasm-component.json\"\n]);\n",
+          "previous": "",
+          "start": 5521
+        },
+        {
+          "current": "export const directProofErasurePhpComponentFactKeys = Object.freeze([\n\t\"bindingIrSha256\", \"erasedProofs\", \"runtimeParameters\"\n\t, ...[\"native\", \"phpWasm\"].flatMap(prefix => [\n\t\t\"ArtifactsSha256\", \"BindingIrFileSha256\", \"ComponentReceiptSha256\"\n\t\t, \"GeneratedLeanSha256\", \"MetadataSha256\", \"ModelSha256\"\n\t].map(suffix => `${prefix}${suffix}`))\n]);\n",
+          "previous": "",
+          "start": 5975
+        },
+        {
+          "current": "const assertDirectProofErasureComponentDocuments = ({\n",
+          "previous": "const assertNativeDirectProofErasureDocuments = ({\n",
+          "start": 6483
+        },
+        {
+          "current": "\t, profile, receiptName\n",
+          "previous": "",
+          "start": 6614
+        },
+        {
+          "current": "\tconst receipt = canonicalDocument(receiptBytes, receiptName);\n",
+          "previous": "\tconst receipt = canonicalDocument(receiptBytes, \"native-component.json\");\n",
+          "start": 6889
+        },
+        {
+          "current": "\tassert.ok([receipt.exports[0].declaration, receipt.exports[0].name]\n\t\t.includes(directProofErasureExport));\n",
+          "previous": "\tassert.equal(receipt.exports[0].declaration, directProofErasureExport);\n",
+          "start": 7638
+        },
+        {
+          "current": "\tassert.equal(artifacts.profile, profile);\n\tassert.equal(receipt.profile, profile);\n",
+          "previous": "\tassert.equal(artifacts.profile, \"native-library-v1\");\n",
+          "start": 7999
+        },
+        {
+          "current": "\t\t, [receiptName, receiptBytes]\n",
+          "previous": "\t\t, [\"native-component.json\", receiptBytes]\n",
+          "start": 8240
+        },
+        {
+          "current": "\t\t, componentReceiptSha256: sha256(receiptBytes)\n",
+          "previous": "\t\t, nativeComponentReceiptSha256: sha256(receiptBytes)\n",
+          "start": 8674
+        },
+        {
+          "current": "const readComponentDocuments = async (root, names) => {\n\tconst values = await Promise.all(names.map(name => readFile(join(root, name))));\n\treturn {\n\t\tartifactsBytes: values[0], irBytes: values[1], leanBytes: values[2]\n\t\t, metadataBytes: values[3], modelBytes: values[4], receiptBytes: values[5]\n\t};\n};\n\n",
+          "previous": "",
+          "start": 8777
+        },
+        {
+          "current": " * @param prefix - Native runtime/component path within that release.\n",
+          "previous": "",
+          "start": 9234
+        },
+        {
+          "current": "export const assertDirectProofErasureNativeComponent = async (\n\toutputRoot, prefix = \"native\"\n) => {\n\tconst nativeRoot = join(outputRoot, prefix, \"component\");\n\tconst runtime = await readVerifiedNativeRuntime(join(outputRoot, prefix, \"runtime\"));\n",
+          "previous": "export const assertDirectProofErasureNativeComponent = async outputRoot => {\n\tconst nativeRoot = join(outputRoot, \"native/component\");\n\tconst runtime = await readVerifiedNativeRuntime(join(outputRoot, \"native/runtime\"));\n",
+          "start": 9308
+        },
+        {
+          "current": "\tconst fact = assertDirectProofErasureComponentDocuments({\n\t\t...await readComponentDocuments(nativeRoot\n\t\t\t, directProofErasureNativeRecordNames)\n\t\t, profile: \"native-library-v1\", receiptName: \"native-component.json\"\n",
+          "previous": "\tconst [\n\t\tartifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes\n\t] = await Promise.all(directProofErasureNativeRecordNames.map(name =>\n\t\treadFile(join(nativeRoot, name))));\n\treturn assertNativeDirectProofErasureDocuments({\n\t\tartifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes\n",
+          "start": 9621
+        },
+        {
+          "current": "\tconst { componentReceiptSha256, ...rest } = fact;\n\treturn { ...rest, nativeComponentReceiptSha256: componentReceiptSha256 };\n",
+          "previous": "",
+          "start": 9843
+        },
+        {
+          "current": " * @param prefix - Native runtime/component path within that release.\n * @param destination - Evidence subdirectory for the retained records.\n",
+          "previous": "",
+          "start": 10215
+        },
+        {
+          "current": "\trecords, attempt, outputRoot, prefix = \"native\", destination = \"\"\n",
+          "previous": "\trecords, attempt, outputRoot\n",
+          "start": 10424
+        },
+        {
+          "current": "\t\tawait saveLakeFile(records, join(`build-${attempt}`, destination, name)\n\t\t\t, await readFile(join(outputRoot, prefix, \"component\", name)));\n",
+          "previous": "\t\tawait saveLakeFile(records, `build-${attempt}/${name}`\n\t\t\t, await readFile(join(outputRoot, \"native/component\", name)));\n",
+          "start": 10554
+        },
+        {
+          "current": "\tconst values = await Promise.all(directProofErasureNativeRecordNames.map(\n\t\tname => read(prefix + name)));\n\tconst fact = assertDirectProofErasureComponentDocuments({\n\t\tartifactsBytes: values[0], irBytes: values[1], leanBytes: values[2]\n\t\t, metadataBytes: values[3], modelBytes: values[4], receiptBytes: values[5]\n\t\t, profile: \"native-library-v1\", receiptName: \"native-component.json\"\n\t});\n\tconst { componentReceiptSha256, ...rest } = fact;\n\treturn { ...rest, nativeComponentReceiptSha256: componentReceiptSha256 };\n};\n\n/**\n * Verify both independently compiled components in a combined PHP release.\n *\n * @param outputRoot - Completed combined PHP release root.\n */\nexport const assertDirectProofErasurePhpComponents = async outputRoot => {\n\tconst native = await assertDirectProofErasureNativeComponent(\n\t\tjoin(outputRoot, \"profiles/native\"));\n\tconst phpRoot = join(outputRoot, \"profiles/php-wasm/php-wasm\");\n\tconst runtime = await readVerifiedPhpWasmCopiedRuntime(join(phpRoot, \"runtime\"));\n\tawait readVerifiedPhpWasmCopiedComponent(join(phpRoot, \"component\")\n\t\t, runtime.identity);\n\tconst phpWasm = assertDirectProofErasureComponentDocuments({\n\t\t...await readComponentDocuments(join(phpRoot, \"component\")\n\t\t\t, directProofErasurePhpWasmRecordNames)\n\t\t, profile: \"php-wasm-copied-v1\"\n\t\t, receiptName: \"php-wasm-component.json\"\n\t});\n\tassert.equal(phpWasm.bindingIrSha256, native.bindingIrSha256);\n\treturn { native, phpWasm };\n};\n\n/**\n * Flatten both checked PHP component identities into one reproducibility fact.\n *\n * @param root0 - Independently verified native and PHP-Wasm facts.\n * @param root0.native - Checked 64-bit component consumed by native PHP.\n * @param root0.phpWasm - Checked 32-bit component consumed by PHP-Wasm.\n */\nexport const directProofErasurePhpComponentFact = ({ native, phpWasm }) => ({\n\tbindingIrSha256: native.bindingIrSha256\n\t, erasedProofs: native.erasedProofs\n\t, runtimeParameters: native.runtimeParameters\n\t, ...Object.fromEntries([native, phpWasm].flatMap((fact, index) => {\n\t\tconst prefix = index === 0 ? \"native\" : \"phpWasm\";\n\t\tconst receiptKey = index === 0\n\t\t\t? \"nativeComponentReceiptSha256\" : \"componentReceiptSha256\";\n\t\treturn [\n\t\t\t[\"ArtifactsSha256\", \"artifactsSha256\"]\n\t\t\t, [\"BindingIrFileSha256\", \"bindingIrFileSha256\"]\n\t\t\t, [\"ComponentReceiptSha256\", receiptKey]\n\t\t\t, [\"GeneratedLeanSha256\", \"generatedLeanSha256\"]\n\t\t\t, [\"MetadataSha256\", \"metadataSha256\"]\n\t\t\t, [\"ModelSha256\", \"modelSha256\"]\n\t\t].map(([suffix, key]) => [`${prefix}${suffix}`, fact[key]]);\n\t}))\n});\n\n/**\n * Retain both PHP compiler components beside one route's consumer evidence.\n *\n * @param records - Route evidence directory.\n * @param attempt - Independent build index.\n * @param outputRoot - Completed combined PHP release root.\n */\nexport const retainDirectProofErasurePhpComponents = async (\n\trecords, attempt, outputRoot\n) => {\n\tawait retainDirectProofErasureNativeComponent(records, attempt\n\t\t, join(outputRoot, \"profiles/native\"), \"native\", \"native\");\n\tconst root = join(outputRoot, \"profiles/php-wasm/php-wasm/component\");\n\tfor(const name of directProofErasurePhpWasmRecordNames)\n\t\tawait saveLakeFile(records, `build-${attempt}/php-wasm/${name}`\n\t\t\t, await readFile(join(root, name)));\n};\n\n/**\n * Recheck both retained PHP compiler components without trusting the report.\n *\n * @param read - Safe reader rooted at one route's evidence directory.\n * @param prefix - Independent build record prefix.\n */\nexport const checkDirectProofErasurePhpComponentRecords = async (\n\tread, prefix\n) => {\n\tconst native = await checkDirectProofErasureNativeComponentRecords(\n\t\tread, `${prefix}native/`);\n\tconst values = await Promise.all(directProofErasurePhpWasmRecordNames.map(\n\t\tname => read(`${prefix}php-wasm/${name}`)));\n\tconst phpWasm = assertDirectProofErasureComponentDocuments({\n\t\tartifactsBytes: values[0], irBytes: values[1], leanBytes: values[2]\n\t\t, metadataBytes: values[3], modelBytes: values[4], receiptBytes: values[5]\n\t\t, profile: \"php-wasm-copied-v1\"\n\t\t, receiptName: \"php-wasm-component.json\"\n",
+          "previous": "\tconst [\n\t\tartifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes\n\t] = await Promise.all(directProofErasureNativeRecordNames.map(name =>\n\t\tread(prefix + name)));\n\treturn assertNativeDirectProofErasureDocuments({\n\t\tartifactsBytes, irBytes, leanBytes, metadataBytes, modelBytes, receiptBytes\n",
+          "start": 11008
+        },
+        {
+          "current": "\tassert.equal(phpWasm.bindingIrSha256, native.bindingIrSha256);\n\treturn { native, phpWasm };\n",
+          "previous": "",
+          "start": 15032
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-packages.mjs",
+      "previousSha256": "f60786e7a0cd44a213ba0bd64dbc94d58dac2d55d7ae3fab3da718ed222c46db"
+    },
+    {
+      "currentSha256": "ce28a5bc8c4132e294dad7f1b8d15f9e29ad2c840b42256065aeb88f1fdf605c",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { validateCompilerAdapterPlan } from \"../../src/build/compiler-adapters.mjs\";\nimport { validateComponentBuildPlan } from \"../../src/build/component-plan.mjs\";\n",
+          "start": 297
+        },
+        {
+          "current": "\tdirectProofErasureModule\n",
+          "previous": "\tassertDirectProofErasureIr\n\t, directProofErasureModule\n\t, directProofErasureProofs\n",
+          "start": 393
+        },
+        {
+          "current": "\tcheckDirectProofErasurePhpComponentRecords\n\t, directProofErasurePhpComponentFact\n\t, directProofErasurePhpComponentFactKeys\n\t, directProofErasureNativeRecordNames\n\t, directProofErasurePhpWasmRecordNames\n\t, directProofErasureTargetConfiguration\n",
+          "previous": "\tdirectProofErasureTargetConfiguration\n",
+          "start": 473
+        },
+        {
+          "current": "\t\"archives\", ...directProofErasurePhpComponentFactKeys\n\t, \"packageSetReceiptSha256\"\n",
+          "previous": "\t\"archives\", \"bindingIrFileSha256\", \"bindingIrSha256\"\n\t, \"compilerAdaptersSha256\", \"erasedProofs\", \"generatedLeanSha256\"\n\t, \"packageSetReceiptSha256\", \"runtimeParameters\"\n",
+          "start": 874
+        },
+        {
+          "current": "\t\tconst components = await checkDirectProofErasurePhpComponentRecords(\n\t\t\tread, prefix);\n\t\tconst componentFact = directProofErasurePhpComponentFact(components);\n",
+          "previous": "\t\tconst irBytes = await read(prefix + \"binding-ir.json\");\n\t\tconst ir = JSON.parse(irBytes); assertDirectProofErasureIr(ir);\n\t\tconst adaptersBytes = await read(prefix + \"compiler-adapters.json\");\n\t\tconst adapters = JSON.parse(adaptersBytes);\n\t\tvalidateCompilerAdapterPlan(adapters);\n\t\tassert.equal(adapters.exports.length, 1);\n\t\tassert.equal(adapters.exports[0].parameters.length, 1);\n\t\tassert.deepEqual(adapters.exports[0].erasedProofs\n\t\t\t, directProofErasureProofs);\n\t\tvalidateComponentBuildPlan(await json(prefix + \"component-build-plan.json\"));\n",
+          "start": 6152
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst leanBytes = await read(prefix + \"LeanBridgeGenerated.lean\");\n\t\tconst lean = leanBytes.toString();\n\t\tassert.match(lean, /keep _root_\\.True\\.intro value _root_\\.True\\.intro/u);\n\t\tassert.doesNotMatch(lean, /(?:sorry|unsafeCast|\\baxiom\\b)/u);\n",
+          "start": 6467
+        },
+        {
+          "current": "\t\tfor(const key of directProofErasurePhpComponentFactKeys)\n\t\t\tassert.deepEqual(fact[key], componentFact[key], key);\n",
+          "previous": "\t\tassert.equal(fact.bindingIrFileSha256, sha256(irBytes));\n\t\tassert.equal(fact.compilerAdaptersSha256, sha256(adaptersBytes));\n\t\tassert.equal(fact.generatedLeanSha256, sha256(leanBytes));\n",
+          "start": 6506
+        },
+        {
+          "current": "\t\t...directProofErasureNativeRecordNames.map(value => `native/${value}`)\n\t\t, ...directProofErasurePhpWasmRecordNames.map(value => `php-wasm/${value}`)\n\t\t, \"package-set-receipt.json\", \"configuration.json\", \"DirectProofErasure.lean\"\n",
+          "previous": "\t\t\"binding-ir.json\", \"compiler-adapters.json\", \"component-build-plan.json\"\n\t\t, \"LeanBridgeGenerated.lean\", \"provenance.json\"\n\t\t, \"package-set-receipt.json\", \"configuration.json\"\n\t\t, \"DirectProofErasure.lean\"\n",
+          "start": 6759
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-php-report.mjs",
+      "previousSha256": "1ab24a57fdca0267213376f3de6c7456736364b7f4e1429cf9c1f7edd4b01456"
+    },
+    {
+      "currentSha256": "4071d34083e1b683bb5d4d5a2437b14dcf9bcf64fa621e7500ec5d72735e62c8",
+      "edits": [
+        {
+          "current": "import {\n\tdirectProofErasurePhpComponentFact\n\t, directProofErasurePhpComponentFactKeys\n} from \"./direct-proof-erasure-packages.mjs\";\n",
+          "previous": "",
+          "start": 532
+        },
+        {
+          "current": "test(\"PHP direct proof facts identify both compiled components\", () => {\n\tconst hash = suffix => suffix.repeat(64).slice(0, 64);\n\tconst component = prefix => ({\n\t\tartifactsSha256: hash(prefix)\n\t\t, bindingIrFileSha256: hash(\"b\")\n\t\t, bindingIrSha256: hash(\"c\")\n\t\t, componentReceiptSha256: hash(\"d\")\n\t\t, erasedProofs: 2\n\t\t, generatedLeanSha256: hash(\"e\")\n\t\t, metadataSha256: hash(\"f\")\n\t\t, modelSha256: hash(\"0\")\n\t\t, runtimeParameters: 1\n\t});\n\tconst native = component(\"a\");\n\tnative.nativeComponentReceiptSha256 = native.componentReceiptSha256;\n\tdelete native.componentReceiptSha256;\n\tconst fact = directProofErasurePhpComponentFact({\n\t\tnative, phpWasm: component(\"1\")\n\t});\n\tassert.deepEqual(Object.keys(fact).sort()\n\t\t, [...directProofErasurePhpComponentFactKeys].sort());\n\tassert.ok(Object.values(fact).every(value => value !== undefined));\n});\n\n",
+          "previous": "",
+          "start": 719
+        },
+        {
+          "current": "\tconst installed = await readFile(\n\t\t\"tests/direct-proof-erasure-php-installed.test.mjs\", \"utf8\");\n\tassert.match(installed, /assertDirectProofErasurePhpComponents/u);\n\tassert.match(installed, /retainDirectProofErasurePhpComponents/u);\n\tassert.doesNotMatch(installed, /join\\(outputRoot, \"bundle\"\\)/u);\n",
+          "previous": "",
+          "start": 3352
+        }
+      ],
+      "path": "tests/helpers/direct-proof-erasure-php-tests.mjs",
+      "previousSha256": "07c42403643f24037fc86baa0010372e5527cfa2f5730b5e4201fd4fd0b59c23"
+    }
+  ]
+}

@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDirectProofErasurePhpProfileRepairSource, directProofErasurePhpProfileRepairNormalizationPaths } from "./direct-proof-erasure-php-profile-repair-source-history.mjs";
 import { beforeDirectProofErasureManagedWitRepairSource, directProofErasureManagedWitRepairNormalizationPaths } from "./direct-proof-erasure-managed-wit-repair-source-history.mjs";
 import { beforeDirectProofErasureLanguageClosureRepairSource, directProofErasureLanguageClosureRepairNormalizationPaths } from "./direct-proof-erasure-language-closure-repair-source-history.mjs";
 import { beforeDirectProofErasureComponentBinderRepairSource, directProofErasureComponentBinderRepairNormalizationPaths } from "./direct-proof-erasure-component-binder-repair-source-history.mjs";
@@ -2407,7 +2408,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...directProofErasureManagedWitRepairNormalizationPaths
+	...directProofErasurePhpProfileRepairNormalizationPaths
+	, ...directProofErasureManagedWitRepairNormalizationPaths
 	, ...directProofErasureLanguageClosureRepairNormalizationPaths
 	, ...directProofErasureComponentBinderRepairNormalizationPaths
 	, ...dependentSignatureCompletePromotionNormalizationPaths
@@ -3553,7 +3555,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDirectProofErasureManagedWitRepairSource(
+	let stage = beforeDirectProofErasurePhpProfileRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDirectProofErasureManagedWitRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
