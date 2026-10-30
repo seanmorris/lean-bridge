@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
 	assertDirectProofErasureNpmDeclarationSurface
+	, directProofErasureNpmParameterName
 	, validateDirectProofErasureNpmBuildFact
 } from "./direct-proof-erasure-npm-report.mjs";
 
@@ -37,6 +38,9 @@ test("proof-erasure declarations reject proof-bearing public syntax", () => {
 });
 
 test("proof-erasure declarations reject wrong route binders", () => {
+	assert.equal(directProofErasureNpmParameterName("ordinary"), "arg0");
+	assert.equal(directProofErasureNpmParameterName("reviewed"), "value");
+	assert.throws(() => directProofErasureNpmParameterName("unknown"));
 	assert.throws(() => assertDirectProofErasureNpmDeclarationSurface(
 		declaration("value"), "arg0"));
 	assert.throws(() => assertDirectProofErasureNpmDeclarationSurface(

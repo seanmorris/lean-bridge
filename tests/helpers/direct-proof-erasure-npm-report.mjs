@@ -55,6 +55,16 @@ export const validateDirectProofErasureNpmBuildFact = fact => {
 };
 
 /**
+ * Return the exact retained runtime parameter name for one author route.
+ *
+ * @param route - Ordinary Lean source or independently reviewed Binding IR.
+ */
+export const directProofErasureNpmParameterName = route => {
+	assert.ok(["ordinary", "reviewed"].includes(route));
+	return route === "ordinary" ? "arg0" : "value";
+};
+
+/**
  * Require the exact proof-free declaration syntax while allowing documentation
  * to explain why proof parameters are absent.
  *
@@ -194,6 +204,7 @@ export const checkDirectProofErasureNpmRecords = async (read, options) => {
 			? { exports: [`${directProofErasureModule}.keep`] } : {}
 		, targets: directProofErasureTargetConfiguration(profiles)
 	};
+	const parameter = directProofErasureNpmParameterName(options.route);
 	const source = execFileSync("git", ["show"
 		, `${options.producerCommit}:tests/fixtures/onboarding/direct-proof-erasure/DirectProofErasure.lean`]);
 	for(const attempt of [0, 1])
@@ -203,7 +214,10 @@ export const checkDirectProofErasureNpmRecords = async (read, options) => {
 			, expectedConfiguration);
 		assert.deepEqual(await read(prefix + "DirectProofErasure.lean"), source);
 		const irBytes = await read(prefix + "binding-ir.json");
-		const ir = JSON.parse(irBytes); assertDirectProofErasureIr(ir);
+		const ir = JSON.parse(irBytes); assertDirectProofErasureIr(
+			ir, directProofErasureModule
+			, [directProofErasureNpmParameterName(options.route)]
+		);
 		const adaptersBytes = await read(prefix + "compiler-adapters.json");
 		const adapters = JSON.parse(adaptersBytes); validateCompilerAdapterPlan(adapters);
 		assert.equal(adapters.exports.length, 1);
@@ -216,8 +230,8 @@ export const checkDirectProofErasureNpmRecords = async (read, options) => {
 		const receipt = JSON.parse(receiptBytes);
 		validateComponentPackageReceipt(receipt);
 		const lean = (await read(prefix + "LeanBridgeGenerated.lean")).toString();
-		assert.match(lean
-			, /keep _root_\.True\.intro value _root_\.True\.intro/u);
+		assert.ok(lean.includes(
+			`keep _root_.True.intro ${parameter} _root_.True.intro`));
 		assert.doesNotMatch(lean, /(?:sorry|unsafeCast|\baxiom\b)/u);
 		const fact = report.builds[attempt];
 		assert.equal(fact.bindingIrFileSha256, sha256(irBytes));
@@ -240,7 +254,7 @@ export const checkDirectProofErasureNpmRecords = async (read, options) => {
 	const declarations = await read("index.d.ts");
 	assert.equal(report.declarationsSha256, sha256(declarations));
 	assertDirectProofErasureNpmDeclarationSurface(
-		declarations.toString(), options.route === "ordinary" ? "arg0" : "value"
+		declarations.toString(), parameter
 	);
 	const handoff = await json("handoff/component-package-receipt.json");
 	assert.deepEqual(handoff, report.receipt);
