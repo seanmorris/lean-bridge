@@ -1,0 +1,184 @@
+{
+  "currentSourcePins": [
+    {
+      "count": 4,
+      "current": "6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75",
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previous": "2e3e07dd5ea4b605210caade1651fbbdbfb00bc97acb11660b41b7287dbb2c6d"
+    }
+  ],
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "expectedModelAudit": {
+    "compilerContractCases": 25,
+    "staleExpectationsCorrected": 3,
+    "supportedDependentParameters": 2,
+    "unsupportedDependentResults": 1
+  },
+  "failedRun": {
+    "job": 124481867425,
+    "workflow": 41181254244
+  },
+  "failure": "Compiler acceptance correctly admitted direct dependent-Fin parameters while three negative expected-model cells still classified them as dependent-type failures.",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-fin-compiler-contract-repair-source-history.mjs",
+      "sha256": "222b3db3518329666c76478fbd3a9b0b88a5e2a6de185f6f8f49538d238cd403"
+    },
+    {
+      "path": "tests/helpers/dependent-fin-compiler-contract-repair-source-history-tests.mjs",
+      "sha256": "e7a47ae4a1ee315695ab6d4c83e80d62488a52cde7546be49a5be6587ec56b7d"
+    },
+    {
+      "path": "tests/helpers/dependent-fin-compiler-contract-repair-source-history.mjs",
+      "sha256": "47bc21018c80de1fee79ad73f15596f854946fefdc89cad688c984b2bafaecc4"
+    }
+  ],
+  "implementationCommit": "84bc4ac41cff09f2b90af05edbc5907666a20789",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c9681f72e6a979d72c2a9b8580c43cc2b8e78e1f641d0c69c837450e460f0dc2",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75\"\n",
+          "previous": "          \"sha256\": \"2e3e07dd5ea4b605210caade1651fbbdbfb00bc97acb11660b41b7287dbb2c6d\"\n",
+          "start": 1436094
+        },
+        {
+          "current": "          \"sha256\": \"6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75\"\n",
+          "previous": "          \"sha256\": \"2e3e07dd5ea4b605210caade1651fbbdbfb00bc97acb11660b41b7287dbb2c6d\"\n",
+          "start": 1439320
+        },
+        {
+          "current": "          \"sha256\": \"6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75\"\n",
+          "previous": "          \"sha256\": \"2e3e07dd5ea4b605210caade1651fbbdbfb00bc97acb11660b41b7287dbb2c6d\"\n",
+          "start": 1445485
+        },
+        {
+          "current": "          \"sha256\": \"6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75\"\n",
+          "previous": "          \"sha256\": \"2e3e07dd5ea4b605210caade1651fbbdbfb00bc97acb11660b41b7287dbb2c6d\"\n",
+          "start": 1492821
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "96d0115d8e00f834b9dd2e54ed600ac614d0204f652d6aee5303fcabb3823f54"
+    },
+    {
+      "currentSha256": "edbf691fcfef90ce4b92932ef97d1c56bc6881d62f0efd8be31403eb237582e8",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-fin-compiler-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 177
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "61e9e1ff7ceee1b105364ca87028eeacc8521812ce164a714ddff662db968c3a"
+    },
+    {
+      "currentSha256": "35d7eb8578020bf93117995eeba9f6ca9c481042c9c4a1092ad012a278c457a0",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeDependentFinCompilerContractRepairSource\n\t, dependentFinCompilerContractRepairNormalizationPaths\n} from \"./dependent-fin-compiler-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentFinCompilerContractRepairNormalizationPaths\n\t, ...pythonDependentFinNatRejectionNormalizationPaths\n",
+          "previous": "\t...pythonDependentFinNatRejectionNormalizationPaths\n",
+          "start": 231018
+        },
+        {
+          "current": "\tlet stage = beforeDependentFinCompilerContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePythonDependentFinNatRejectionSource(\n",
+          "previous": "\tlet stage = beforePythonDependentFinNatRejectionSource(\n",
+          "start": 289963
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1abc133c308dc9211a3f2099e43b752b0082c77b8262eeb118f14f10e7fef848"
+    }
+  ],
+  "liveFiles": 2661,
+  "liveSourcePins": 4,
+  "milestone": "dependent-fin-compiler-contract-repair-source-v1",
+  "predecessorCommit": "7a9d47ae9f7e65bd2614fb8adfab5a7dd3735a99",
+  "remainingLiveSourceMismatches": 0,
+  "runtimeChanged": false,
+  "schemaVersion": 1,
+  "scope": "Audit all 25 compiler-contract cases in one pass; retain dependent-type rejection for a genuinely unsupported dependent result; authenticate direct and specialized dependent-Fin parameters as supported; report every matrix cell independently; and preserve every support observation, evidence identity, stage and the frozen 1,054-cell/5,270-stage #1220 model.",
+  "updates": [
+    {
+      "currentSha256": "6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75",
+      "edits": [
+        {
+          "current": "test(\"compiler diagnostics isolate unsupported selections while admitting direct dependent Fin\", { skip: !enabled }, async t => {\n",
+          "previous": "test(\"compiler diagnostics distinguish implicit, instance, dependent, generic, effectful and proof-only selections\", { skip: !enabled }, async t => {\n",
+          "start": 33277
+        },
+        {
+          "current": "\tconst expected = [\n\t\t[\"implicitValue\", \"implicit-parameter\"]\n\t\t, [\"instanceValue\", \"instance-parameter\"]\n\t\t, [\"dependentValue\", null]\n\t\t, [\"genericValue\", \"specialization-required\"]\n\t\t, [\"effectValue\", \"unsupported-effect\"]\n\t\t, [\"proofValue\", \"proof-only\"]\n\t];\n\tconst declarations = report.elaboration.metadata.modules.flatMap(module => module.declarations);\n\tconst runtime = new Map(report.bindingIr.document.declarations.map(item => [item.name, item]));\n\tfor(const [name, reason] of expected)\n\t\tawait t.test(name, () => {\n\t\t\tconst declaration = declarations.find(item => item.identity === `Shop.${name}`);\n\t\t\tassert.ok(declaration, `missing compiler declaration Shop.${name}`);\n\t\t\tassert.equal(declaration.projection.status, reason === null ? \"supported\" : \"unsupported\");\n\t\t\tif(reason !== null) assert.equal(declaration.projection.reason, reason);\n\t\t\tassert.equal(runtime.has(name), reason === null);\n\t\t\tconst hint = report.adapterHints.find(item => item.declaration === `Shop.${name}`);\n\t\t\tif(reason === null) assert.equal(hint, undefined);\n\t\t\telse\n\t\t\t{\n\t\t\t\tassert.equal(hint?.reason, reason);\n\t\t\t\tassert.equal(hint?.required, true);\n\t\t\t}\n\t\t});\n\tassert.equal(report.adapterHints.length, expected.filter(([, reason]) => reason !== null).length);\n\tassert.deepEqual(report.elaboration.metadata.diagnostics.map(item => item.code).sort()\n\t\t, [\"implicit-parameter\", \"instance-parameter\", \"proof-only\", \"specialization-required\", \"unsupported-effect\"]);\n\tassert.deepEqual([...runtime.keys()], [\"dependentValue\"]);\n\tconst dependent = runtime.get(\"dependentValue\");\n\tassert.deepEqual(dependent.parameters.map(item => item.type), [\n\t\t{ kind: \"primitive\", name: \"nat\" }\n\t\t, { kind: \"primitive\", name: \"nat\" }\n\t]);\n\tassert.deepEqual(dependent.source.extensions[\"lean-lang.org/refinements\"], {\n\t\tparameters: [null, { kind: \"fin-parameter\", parameter: 0 }], result: null\n\t});\n",
+          "previous": "\tassert.equal(report.bindingIr, null);\n\tassert.deepEqual(report.elaboration.metadata.diagnostics.map(item => item.code).sort(), [\"dependent-type\", \"implicit-parameter\", \"instance-parameter\", \"proof-only\", \"specialization-required\", \"unsupported-effect\"]);\n\tassert.ok(report.adapterHints.every(item => item.required));\n",
+          "start": 34204
+        },
+        {
+          "current": "\tawait assertJsonSchema(\"binding-ir\", report.bindingIr.document);\n",
+          "previous": "",
+          "start": 36155
+        },
+        {
+          "current": "test(\"finite specializations isolate rejections while admitting direct dependent Fin\", { skip: !enabled }, async t => {\n",
+          "previous": "test(\"finite specializations reject unresolved, dependent, effectful and admitted applications\", { skip: !enabled }, async t => {\n",
+          "start": 52670
+        },
+        {
+          "current": "\tconst accepted = [\"dependentArg\", \"dependent\", [\"UInt32\"]];\n\tconst rejected = [\n",
+          "previous": "\tconst cases = [\n",
+          "start": 53526
+        },
+        {
+          "current": "",
+          "previous": "\t\t, [\"dependentArg\", \"dependent\", [\"UInt32\"], \"dependent-type\"]\n",
+          "start": 53817
+        },
+        {
+          "current": "\tconst specializations = [accepted, ...rejected].map(([name, declaration, types]) => ({ name: `Shop.${name}`, declaration: `Shop.${declaration}`, types }));\n",
+          "previous": "\tconst specializations = cases.map(([name, declaration, types]) => ({ name: `Shop.${name}`, declaration: `Shop.${declaration}`, types }));\n",
+          "start": 54178
+        },
+        {
+          "current": "\tfor(const [name, , , reason] of rejected)\n\t\tawait t.test(name, () => {\n\t\t\tconst hint = result.adapterHints.find(item => item.declaration === `Shop.${name}`);\n\t\t\tassert.equal(hint?.reason, reason, JSON.stringify(result.diagnostics));\n\t\t\tassert.equal(hint?.required, true);\n\t\t});\n\tassert.equal(result.adapterHints.length, rejected.length);\n\tassert.equal(result.adapterHints.some(item => item.declaration === \"Shop.dependentArg\"), false);\n\tassert.deepEqual(result.bindingIr.document.declarations.map(item => item.name), [\"dependentArg\"]);\n\tconst dependent = result.bindingIr.document.declarations[0];\n\tassert.deepEqual(dependent.parameters.map(item => item.type), [\n\t\t{ kind: \"primitive\", name: \"nat\" }\n\t\t, { kind: \"primitive\", name: \"nat\" }\n\t\t, { kind: \"primitive\", name: \"uint32\" }\n\t]);\n\tassert.deepEqual(dependent.source.extensions[\"lean-lang.org/refinements\"], {\n\t\tparameters: [null, { kind: \"fin-parameter\", parameter: 0 }, null], result: null\n\t});\n\tassert.deepEqual(dependent.source.extensions[\"lean-lang.org/specialization\"], {\n\t\tname: \"Shop.dependentArg\"\n\t\t, application: \"(@_root_.Shop.dependent (@_root_.UInt32))\"\n\t\t, declaration: \"Shop.dependent\"\n\t\t, types: [\"UInt32\"]\n\t});\n",
+          "previous": "\tassert.equal(result.bindingIr, null);\n\tfor(const [name, , , reason] of cases)\n\t\tassert.ok(result.adapterHints.some(item => item.declaration === `Shop.${name}` && item.reason === reason), JSON.stringify(result.diagnostics));\n",
+          "start": 54610
+        },
+        {
+          "current": "\tawait assertJsonSchema(\"binding-ir\", result.bindingIr.document);\n",
+          "previous": "",
+          "start": 56056
+        }
+      ],
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previousSha256": "2e3e07dd5ea4b605210caade1651fbbdbfb00bc97acb11660b41b7287dbb2c6d"
+    },
+    {
+      "currentSha256": "d86c4e38365869cf96657ff0054b5738881208e4df968acf6a8b1bb19ee2af44",
+      "edits": [
+        {
+          "current": "test(\"captured APIs reject unsupported elaborated declarations before adapter compilation\", { skip: !enabled || Boolean(externalEngine), timeout: 360000 }, async t => {\n",
+          "previous": "test(\"captured APIs reject unsupported elaborated declarations before adapter compilation\", { skip: !enabled || Boolean(externalEngine), timeout: 180000 }, async t => {\n",
+          "start": 11769
+        },
+        {
+          "current": "\t\t, [\"dependent\", \"def Shop.quote (size : Nat) : Option (Fin size) := none\", /dependent-type/]\n",
+          "previous": "\t\t, [\"dependent\", \"def Shop.quote (size : Nat) (_value : Fin size) : UInt32 := 0\", /dependent-type/]\n",
+          "start": 12181
+        }
+      ],
+      "path": "tests/lake-wasm.test.mjs",
+      "previousSha256": "462bb1c4caad103565fbb1d4fd55972be0f1ebd1744115433b5724810b123459"
+    }
+  ]
+}

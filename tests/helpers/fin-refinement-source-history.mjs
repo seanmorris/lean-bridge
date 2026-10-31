@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeDependentFinCompilerContractRepairSource
+	, dependentFinCompilerContractRepairNormalizationPaths
+} from "./dependent-fin-compiler-contract-repair-source-history.mjs";
+import {
 	beforePythonDependentFinNatRejectionSource
 	, pythonDependentFinNatRejectionNormalizationPaths
 } from "./python-dependent-fin-nat-rejection-source-history.mjs";
@@ -2463,7 +2467,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...pythonDependentFinNatRejectionNormalizationPaths
+	...dependentFinCompilerContractRepairNormalizationPaths
+	, ...pythonDependentFinNatRejectionNormalizationPaths
 	, ...coreLiveSourcePinAggregationNormalizationPaths
 	, ...coreHistoryHubFixedPointNormalizationPaths
 	, ...consumerCallbackDiskBudgetNormalizationPaths
@@ -3651,7 +3656,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforePythonDependentFinNatRejectionSource(
+	let stage = beforeDependentFinCompilerContractRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePythonDependentFinNatRejectionSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
