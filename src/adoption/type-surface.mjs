@@ -270,6 +270,7 @@ export async function readTypeSurface(options = {})
 	}
 	const evidenceFiles = typeSurfaceEvidenceFiles(document);
 	const batchSize = 16;
+	const mismatches = [];
 	for(let offset = 0; offset < evidenceFiles.length; offset += batchSize)
 	{
 		const batch = evidenceFiles.slice(offset, offset + batchSize);
@@ -280,9 +281,12 @@ export async function readTypeSurface(options = {})
 			return digest(await readFile(filename));
 		}));
 		for(const [index, file] of batch.entries())
-			assert.equal(actual[index], file.sha256
-				, `stale source evidence: ${file.path}`);
+			if(actual[index] !== file.sha256)
+				mismatches.push({
+					path: file.path, actual: actual[index], expected: file.sha256
+				});
 	}
+	assert.deepEqual(mismatches, [], "stale source evidence");
 	return { document, irSchema, consumers };
 }
 

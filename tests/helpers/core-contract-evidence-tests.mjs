@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import test from "node:test";
@@ -334,6 +334,53 @@ test("one exact workflow receipt closes repeated type-surface reads", async t =>
 		commit, document, sourceSha256
 	}));
 });
+
+test("full evidence authentication reports every stale source in one pass"
+	, async t => {
+		const root = await mkdtemp(join(
+			tmpdir(), "lean-core-type-surface-mismatches-"));
+		t.after(() => rm(root, { recursive: true }));
+		const fixtures = [
+			{ path: "test-fixture/alpha.txt", original: "alpha\n"
+				, changed: "changed alpha\n" }
+			, { path: "test-fixture/beta.txt", original: "beta\n"
+				, changed: "changed beta\n" }
+		];
+		const document = JSON.parse(await readFile(
+			"docs/type-surface.v1.json", "utf8"));
+		for(const evidence of document.evidence)
+			evidence.files = fixtures.map(item => ({
+				path: item.path, sha256: sha256(item.original)
+			}));
+		const sources = {
+			"docs/type-surface.v1.json": JSON.stringify(document, null, 2) + "\n"
+			, "schema/binding-ir.schema.json": await readFile(
+				"schema/binding-ir.schema.json")
+			, "docs/consumer-support.v1.json": await readFile(
+				"docs/consumer-support.v1.json")
+			, ...Object.fromEntries(fixtures.map(item =>
+				[item.path, item.original]))
+		};
+		for(const [path, source] of Object.entries(sources))
+		{
+			const destination = join(root, path);
+			await mkdir(dirname(destination), { recursive: true });
+			await writeFile(destination, source);
+		}
+		assert.ok((await readTypeSurface({ repository: root })).document);
+		for(const item of fixtures)
+			await writeFile(join(root, item.path), item.changed);
+		await assert.rejects(readTypeSurface({ repository: root }), error => {
+			assert.match(error.message, /stale source evidence/u);
+			assert.deepEqual(error.actual, fixtures.map(item => ({
+				path: item.path, actual: sha256(item.changed)
+				, expected: sha256(item.original)
+			})));
+			assert.deepEqual(error.expected, []);
+			return true;
+		});
+	}
+);
 
 test("historical type-surface checks reuse live pins and reconstruct only changed Git sources", async () => {
 	const same = Buffer.from("same\n"), liveBytes = Buffer.from("live\n");
