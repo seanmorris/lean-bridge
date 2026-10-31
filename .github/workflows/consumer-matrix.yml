@@ -6074,12 +6074,41 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - name: Confirm the Docker source closure is shallow
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /docs/
+            !/docs/evidence/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Docker source closure is sparse and bounded
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse --is-shallow-repository)" = true
           test "$(git rev-list --count HEAD)" -eq 1
+          test ! -e docs/evidence
+          missing_blobs="$(git rev-list --objects --missing=print HEAD | grep -c '^?' || true)"
+          test "$missing_blobs" -gt 1000
+          git_bytes="$(du -sk .git | cut -f1)"
+          source_bytes="$(du -sk --exclude=.git . | cut -f1)"
+          test "$git_bytes" -lt 2097152
+          test "$source_bytes" -lt 2097152
+          printf 'missing blobs: %s\n.git KiB: %s\nsource KiB: %s\n' \
+            "$missing_blobs" "$git_bytes" "$source_bytes"
           du -sh .git
           df -h /
       - name: Install Node.js
@@ -6098,6 +6127,7 @@ jobs:
       - name: Execute the clean consumer through Docker
         env:
           LEAN_BRIDGE_BUILD_BACKEND: docker
+          LEAN_BRIDGE_CONSUMER_SOURCE_MODE: sparse-path
         run: npm run test:consumer:docker-ci
 
   perl-consumer:
