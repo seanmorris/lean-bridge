@@ -6,13 +6,13 @@
 
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 
-import { buildNpmPackage } from "../src/release/npm-package.mjs";
+import { buildNpmPackage, validateNpmPackageModuleClosure } from "../src/release/npm-package.mjs";
 import { buildUniversalReleaseBundle } from "../src/release/universal-release-bundle.mjs";
 
 const execute = promisify(execFile);
@@ -63,6 +63,14 @@ test("npm projection is deterministic and preserves every compiled core byte", a
   const runtime = await readFile(join(scratch, "first/package/internal/runtime.mjs"), "utf8");
   assert.match(runtime, /new URL\("\.\/wasm\/main\.wasm", import\.meta\.url\)/);
   assert.match(runtime, /new URL\("\.\/wasm\/alpha\.so\.wasm", import\.meta\.url\)/);
+	const dependency = join(scratch, "first/package/internal/bridge/src/binding-ir/default-value.mjs");
+	await access(dependency);
+	await validateNpmPackageModuleClosure(join(scratch, "first/package"));
+	await rm(dependency);
+	await assert.rejects(
+		validateNpmPackageModuleClosure(join(scratch, "first/package"))
+		, /contract\.mjs imports missing internal\/bridge\/src\/binding-ir\/default-value\.mjs/u
+	);
 }));
 
 test("a clean npm consumer installs, imports, and calls the generated native surface", async () => withBundle(async ({ scratch, bundle }) => {

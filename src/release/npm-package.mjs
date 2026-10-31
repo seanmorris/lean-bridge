@@ -8,10 +8,11 @@ import { createHash } from "node:crypto";
 import {
 	copyFile,
 	mkdir,
+	readFile,
 	readdir,
 	writeFile,
 } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, posix, resolve } from "node:path";
 
 import { validatePackagingBackendPlan } from "./backend-policy.mjs";
 import { readVerifiedCanonicalBundle } from "./canonical-bundle-input.mjs";
@@ -28,6 +29,49 @@ const ensureEmptyOutput = async output => {
 const copy = async (source, destination) => {
 	await mkdir(dirname(destination), { recursive: true });
 	await copyFile(source, destination);
+};
+
+const packageFiles = async root => {
+	const files = [];
+	const visit = async relative => {
+		for(const entry of await readdir(join(root, relative), { withFileTypes: true }))
+		{
+			const path = relative === "" ? entry.name : `${relative}/${entry.name}`;
+			if(entry.isDirectory()) await visit(path);
+			else files.push(path);
+		}
+	};
+	await visit("");
+	return files.sort();
+};
+
+const relativeImports = source => [
+	...source.matchAll(/\bfrom\s+["'](\.[^"']+)["']/gu)
+	, ...source.matchAll(/\bimport\s*(?:\(\s*)?["'](\.[^"']+)["']/gu)
+].map(match => match[1]);
+
+/**
+ * Refuse an assembled npm package whose relative ES-module graph is open.
+ *
+ * @param packageRoot - Root of the assembled package directory.
+ * @returns {Promise<readonly string[]>} The complete sorted package-file inventory.
+ */
+export const validateNpmPackageModuleClosure = async packageRoot => {
+	const files = await packageFiles(packageRoot);
+	const present = new Set(files);
+	for(const path of files)
+	{
+		if(!path.endsWith(".mjs")) continue;
+		const source = await readFile(join(packageRoot, path), "utf8");
+		for(const specifier of relativeImports(source))
+		{
+			const dependency = posix.normalize(posix.join(posix.dirname(path)
+				, specifier.split(/[?#]/u, 1)[0]));
+			if(dependency.startsWith("../") || !present.has(dependency))
+				throw new Error(`npm package module graph is open: ${path} imports missing ${dependency}`);
+		}
+	}
+	return Object.freeze(files);
 };
 
 const runtimeModule = () => `import createMain from "./wasm/main.mjs";
@@ -186,6 +230,7 @@ export const buildNpmPackage = async ({ bundleRoot, outputRoot }) => {
 		, ["runtime/javascript/src/runtime/weak-value-map.mjs", "internal/bridge/src/runtime/weak-value-map.mjs"]
 		, ["runtime/javascript/src/binding-ir/canonical.mjs", "internal/bridge/src/binding-ir/canonical.mjs"]
 		, ["runtime/javascript/src/binding-ir/contract.mjs", "internal/bridge/src/binding-ir/contract.mjs"]
+		, ["runtime/javascript/src/binding-ir/default-value.mjs", "internal/bridge/src/binding-ir/default-value.mjs"]
 		, ["runtime/javascript/src/binding-ir/sha256.mjs", "internal/bridge/src/binding-ir/sha256.mjs"]
 		, ["LICENSE", "LICENSE"]
 		, ["canonical-package.json", "metadata/canonical-package.json"]
@@ -225,6 +270,7 @@ export const buildNpmPackage = async ({ bundleRoot, outputRoot }) => {
 		}
 	};
 	await writeFile(join(packageRoot, "package.json"), json(packageJson));
+	await validateNpmPackageModuleClosure(packageRoot);
 
 	const coreArtifacts = copies.slice(5, 8).map(([sourcePath, packagePath]) => {
     const artifact = manifest.artifacts.find(candidate => candidate.path === sourcePath);

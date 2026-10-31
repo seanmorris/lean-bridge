@@ -123,7 +123,7 @@ test("canonical manifest inventories every release artifact with its actual byte
   assert.equal(sha256(source), firstResult.manifestSha256);
   assert.equal(hashCanonicalPackageManifest(manifest), firstResult.manifestSha256);
   assert.equal(manifest.artifacts.length, firstResult.artifactCount);
-  assert.equal(firstResult.artifactCount, 109);
+  assert.equal(firstResult.artifactCount, 111);
   for(const artifact of manifest.artifacts)
 {
     const bytes = await readFile(join(first, artifact.path));
@@ -134,6 +134,8 @@ test("canonical manifest inventories every release artifact with its actual byte
   assert.equal(manifest.artifacts.some(item => item.path === "bindings/javascript/index.d.ts"), true);
   assert.equal(manifest.artifacts.some(item => item.path === "bindings/c/include/lean_alpha.h"), true);
   assert.equal(manifest.artifacts.some(item => item.path === "runtime/javascript/alpha-descriptor.json"), true);
+  assert.equal(manifest.artifacts.some(item => item.path === "runtime/javascript/src/binding-ir/default-value.mjs"), true);
+  assert.equal(manifest.artifacts.some(item => item.path === "validators/src/binding-ir/default-value.mjs"), true);
   const npm = manifest.packages.find(item => item.ecosystem === "npm");
   assert.equal(npm.eligible, true);
   assert.equal(npm.target, "node-esm");

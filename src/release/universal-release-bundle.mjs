@@ -242,6 +242,7 @@ export const buildUniversalReleaseBundle = async ({
 		, ["validators/src/capsule/contract.mjs", await readFile(join(root, "src/capsule/contract.mjs")), "validator-capsule-contract", "validator"]
 		, ["validators/src/binding-ir/canonical.mjs", await readFile(join(root, "src/binding-ir/canonical.mjs")), "validator-binding-ir-canonical", "validator"]
 		, ["validators/src/binding-ir/contract.mjs", await readFile(join(root, "src/binding-ir/contract.mjs")), "validator-binding-ir-contract", "validator"]
+		, ["validators/src/binding-ir/default-value.mjs", await readFile(join(root, "src/binding-ir/default-value.mjs")), "validator-binding-ir-default-value", "validator"]
 		, ["validators/src/binding-ir/sha256.mjs", await readFile(join(root, "src/binding-ir/sha256.mjs")), "validator-binding-ir-sha256", "validator"]
 		, ["docs/README.md", generatedReadme(ir.component), "package-readme", "documentation"]
 		, ["LICENSE", licenseSource, "license", "license"]
@@ -344,6 +345,7 @@ export const buildUniversalReleaseBundle = async ({
 		, ["runtime/javascript/src/runtime/weak-value-map.mjs", await readFile(join(root, "src/runtime/weak-value-map.mjs")), "javascript-weak-value-map"]
 		, ["runtime/javascript/src/binding-ir/canonical.mjs", await readFile(join(root, "src/binding-ir/canonical.mjs")), "javascript-binding-ir-canonical"]
 		, ["runtime/javascript/src/binding-ir/contract.mjs", await readFile(join(root, "src/binding-ir/contract.mjs")), "javascript-binding-ir-contract"]
+		, ["runtime/javascript/src/binding-ir/default-value.mjs", await readFile(join(root, "src/binding-ir/default-value.mjs")), "javascript-binding-ir-default-value"]
 		, ["runtime/javascript/src/binding-ir/sha256.mjs", await readFile(join(root, "src/binding-ir/sha256.mjs")), "javascript-binding-ir-sha256"]
 	];
 	const runtimeSupportIds = [];
