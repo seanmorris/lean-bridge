@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeConsumerCallbackPackageCheckoutClosureSource
+	, consumerCallbackPackageCheckoutClosureNormalizationPaths
+} from "./consumer-callback-package-checkout-closure-source-history.mjs";
+import {
 	beforeConsumerTypeSurfaceDocumentationContractRepairSource
 	, consumerTypeSurfaceDocumentationContractRepairNormalizationPaths
 } from "./consumer-type-surface-documentation-contract-repair-source-history.mjs";
@@ -2503,7 +2507,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...consumerTypeSurfaceDocumentationContractRepairNormalizationPaths
+	...consumerCallbackPackageCheckoutClosureNormalizationPaths
+	, ...consumerTypeSurfaceDocumentationContractRepairNormalizationPaths
 	, ...consumerTypeSurfaceReceiptRepairNormalizationPaths
 	, ...alphaNpmModuleClosureNormalizationPaths
 	, ...consumerNixSourceClosureAuditNormalizationPaths
@@ -3701,7 +3706,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeConsumerTypeSurfaceDocumentationContractRepairSource(
+	let stage = beforeConsumerCallbackPackageCheckoutClosureSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeConsumerTypeSurfaceDocumentationContractRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
