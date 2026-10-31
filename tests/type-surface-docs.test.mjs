@@ -187,12 +187,14 @@ test("zero-payload matrix closure binds every lane, route and documented boundar
 	assert.match(rendered.reference, link);
 	assert.match(rendered.reference, /44 route evidence identities/u);
 	assert.match(rendered.reference, /68 profile\/path\/position cells/u);
-	const incomplete = {
-		document: JSON.parse(execFileSync("git", ["show"
-			, "e434aaffaeda338c7abbb13c439466a4f7fb4a17:docs/type-surface.v1.json"]
-		, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }))
-		, ...contracts
-	};
+	const incomplete = { document: structuredClone(document), ...contracts };
+	const omitted = zeroPayloadMatrixEvidenceIds[0];
+	const replacement = `${omitted}-omitted`;
+	// Keep the negative control on the current schema. A historical inventory is
+	// intentionally incompatible once a later IR constructor (for example
+	// HostNull) has entered the exhaustive classifier.
+	incomplete.document = JSON.parse(JSON.stringify(incomplete.document)
+		.replaceAll(`"${omitted}"`, `"${replacement}"`));
 	const refused = await renderTypeDocuments({ root, inventory: incomplete });
 	assert.doesNotMatch(refused.reference, link);
 	for(const source of Object.values(refused.documents))

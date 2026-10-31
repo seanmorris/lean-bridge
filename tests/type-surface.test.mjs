@@ -10,7 +10,7 @@ import { execFile } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { promisify } from "node:util";
+import { isDeepStrictEqual, promisify } from "node:util";
 import test from "node:test";
 import "./helpers/callback-checked-record-remaining-source-history-tests.mjs";
 import "./helpers/callback-checked-record-language-source-history-tests.mjs";
@@ -56,6 +56,10 @@ const { document, ...contracts } = await readTypeSurface();
 const clone = value => structuredClone(value);
 const finalTypeSurfaceAudit
 	= process.env.LEAN_BRIDGE_FINAL_TYPE_SURFACE_AUDIT === "1";
+const recordContractMismatch = (mismatches, label, actual, expected) => {
+	if(!isDeepStrictEqual(actual, expected))
+		mismatches.push({ label, actual, expected });
+};
 const completeOrdinaryShapePositions = Object.freeze({
 	dependent: Object.freeze({
 		positions: Object.freeze(["signature"])
@@ -542,6 +546,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const checkedRecords = checkedRecordGroups.length ? ["checked-record"] : [];
 	const nestedCheckedRecordFields = ["dotnet", "java", "kotlin", "php-native", "php-wasm", "python", "ruby", "rust", "wit-wasi"]
 		.includes(profile) ? 1 : 0;
+	const exactCheckedRecordMismatches = [];
 	const completeOrdinaryCount = Object.values(completeOrdinaryShapePositions)
 		.reduce((count, shape) => count + shape.positions.length, 0);
 	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + 2 * checkedRecords.length + nestedCheckedRecordFields + specialized.length + (nominalFin ? 1 : 0) + (nominalSubtype ? 1 : 0) + completeOrdinaryCount);
@@ -628,14 +633,25 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 					const zeroPayloadLane = {
 						rust: "rust", dotnet: "dotnet", java: "jvm", kotlin: "jvm"
 						, python: "python", ruby: "ruby", "php-native": "php"
-						, "wit-wasi": "wit"
+						, "php-wasm": "php-wasm", "wit-wasi": "wit"
 					}[profile];
 					const zeroPayload = !zeroPayloadLane || cell.position === "field" ? []
 						: (cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"]
 							: ["ordinary-source"]).map(route =>
 							`zero-payload-${zeroPayloadLane}-${route}-hosted-installed`);
-					assert.deepEqual(stage.evidence
-						, [...baseline, ...nested, ...inherited, ...recursiveChecked, ...valueIndexed, ...zeroPayload]);
+					const dependent = cell.position === "field" ? []
+						: (cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"]
+							: ["ordinary-source"]).map(route =>
+							`dependent-checked-record-${inheritedLane}-${route}-hosted-installed`);
+					const phpWasmOwned = profile !== "php-wasm" || cell.position === "field" ? []
+						: (cell.position === "result" ? ["full", "result-only"] : ["full"])
+							.map(mode => `owned-checked-record-php-wasm-ordinary-source-${mode}-installed`);
+					const owned = [`owned-checked-record-${inheritedLane}-hosted-installed`];
+					recordContractMismatch(exactCheckedRecordMismatches
+						, `${cell.id}/${stageName}`, stage.evidence
+						, [...baseline, ...nested, ...inherited, ...recursiveChecked
+							, ...valueIndexed, ...zeroPayload, ...phpWasmOwned
+							, ...dependent, ...owned]);
 				continue;
 			}
 			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.
@@ -684,9 +700,15 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 			assert.deepEqual(stage.evidence, [specialized.includes(cell.shape) ? `native-specializations-${specializationEvidence}-installed` : recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
 		}
 	}
+	assert.deepEqual(exactCheckedRecordMismatches, []
+		, `${profile}: exact checked-record evidence contracts differ`);
+	// Callable positions have their own exact shape/evidence contracts above and below.
+	// Keep this copied-value test scoped to copied positions instead of maintaining a
+	// second evidence-ID allowlist that becomes stale whenever callable proof grows.
 	for(const cell of cells.filter(cell => cell.profile === profile
 		&& cell.path === "ordinary-source" && !observed.includes(cell)
-		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "python-structured-callables-installed", "python-recursive-callables-installed", "ruby-callables-installed", "ruby-structured-callables-installed", "ruby-recursive-callables-installed", "rust-callables-installed", "rust-structured-callables-installed", "rust-recursive-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "dotnet-structured-callables-installed", "dotnet-recursive-callables-installed", "jvm-callables-installed", "jvm-structured-callables-installed", "jvm-recursive-callables-installed", "php-native-callables-installed", "php-native-structured-callables-installed", "php-native-recursive-callables-installed", "php-wasm-callables-installed", "php-wasm-structured-callables-installed", "php-wasm-recursive-callables-installed", "php-wasm-owned-callback-results-installed", "wit-wasi-callables-installed", "wit-wasi-structured-callables-installed", "wit-wasi-recursive-callables-installed", "callback-subtype-languages-generation", "callback-subtype-remaining-generation"].includes(id))))
+		&& !cell.position.startsWith("callback-")
+		&& !["callback", "closure"].includes(cell.shape)))
 		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });
 
@@ -735,7 +757,7 @@ test("refinements, host null and erased proofs retain their individual value pos
 	}
 });
 
-test("checked Subtype evidence preserves copied values and scopes native callback refinements", async () => {
+test("checked Subtype evidence preserves copied values and scopes every callback refinement", async () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const allInstalled = cells.filter(cell => cell.stages.installedExecution.state === "passed");
 	const fields = allInstalled.filter(cell => cell.position === "field");
@@ -796,50 +818,56 @@ test("checked Subtype evidence preserves copied values and scopes native callbac
 	}
 	const installed = allInstalled.filter(cell => ["parameter", "result"].includes(cell.position));
 	const callbacks = allInstalled.filter(cell => ["callback-parameter", "callback-result"].includes(cell.position));
-	const languageCallbacks = cells.filter(cell => ["python", "ruby", "rust"].includes(cell.profile)
-		&& ["callback-parameter", "callback-result"].includes(cell.position));
-	assert.equal(languageCallbacks.length, 12);
-	for(const cell of languageCallbacks)
-	{
-		assert.equal(cell.stages.analysis.state, "passed");
-		assert.equal(cell.stages.generation.state, "passed");
-		for(const name of ["compilation", "packaging", "installedExecution"])
-			assert.equal(cell.stages[name].state, "inspected");
-		for(const stage of Object.values(cell.stages))
-			assert.deepEqual(stage.evidence, ["callback-subtype-languages-generation"]);
-	}
-	const remainingCallbacks = cells.filter(cell => ["dotnet", "java", "kotlin", "php-native", "wit-wasi"].includes(cell.profile)
-		&& ["callback-parameter", "callback-result"].includes(cell.position));
-	assert.equal(remainingCallbacks.length, 20);
-	for(const cell of remainingCallbacks)
-	{
-		assert.equal(cell.stages.analysis.state, "passed");
-		assert.equal(cell.stages.generation.state, "passed");
-		for(const name of ["compilation", "packaging", "installedExecution"])
-			assert.equal(cell.stages[name].state, "inspected");
-		for(const stage of Object.values(cell.stages))
-			assert.deepEqual(stage.evidence, ["callback-subtype-remaining-generation"]);
-	}
-	assert.equal(allInstalled.length, installed.length + fields.length + callbacks.length);
-	assert.deepEqual(callbacks.map(cell => cell.id).sort()
-		, ["c", "cpp", "perl"].flatMap(profile => ["ordinary-source", "reviewed-ir"]
-			.flatMap(path => ["callback-parameter", "callback-result"]
-				.map(position => `${profile}/subtype/${path}/${position}`))).sort());
+	const expectedCallbackEvidence = profile => {
+		if(["node-javascript", "node-typescript", "browser-javascript"
+			, "browser-react", "browser-worker"].includes(profile))
+			return ["callback-subtype-browser-hosted-installed"];
+		if(["c", "cpp"].includes(profile))
+			return ["callback-subtype-native-local-installed"
+				, "callback-subtype-native-hosted-installed"];
+		if(profile === "perl")
+			return ["callback-subtype-perl-local-installed"
+				, "callback-subtype-perl-hosted-installed"];
+		if(profile === "php-wasm")
+			return ["callback-subtype-php-wasm-local-installed"];
+		if(["python", "ruby", "rust"].includes(profile))
+			return ["callback-subtype-languages-generation"
+				, "callback-subtype-languages-hosted-installed"];
+		if(["dotnet", "java", "kotlin", "php-native", "wit-wasi"].includes(profile))
+			return ["callback-subtype-remaining-generation"
+				, "callback-subtype-dotnet-hosted-installed"
+				, "callback-subtype-jvm-hosted-installed"
+				, "callback-subtype-php-native-hosted-installed"
+				, "callback-subtype-wit-wasi-hosted-installed"];
+		assert.fail(`Missing exact callback Subtype model for ${profile}`);
+	};
+	const expectedCallbacks = document.profiles.flatMap(({ id: profile }) =>
+		document.paths.flatMap(sourcePath =>
+			["callback-parameter", "callback-result"].map(position =>
+				`${profile}/subtype/${sourcePath}/${position}`)));
+	const callbackContractMismatches = [];
+	assert.deepEqual(callbacks.map(cell => cell.id).sort(), expectedCallbacks.sort());
 	for(const cell of callbacks)
 	{
-		const evidence = cell.profile === "perl"
-			? "callback-subtype-perl-local-installed"
-			: "callback-subtype-native-local-installed";
-		for(const stage of Object.values(cell.stages))
+		for(const [stageName, stage] of Object.entries(cell.stages))
 		{
-			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, [evidence]);
+			recordContractMismatch(callbackContractMismatches
+				, `${cell.id}/${stageName}/state`, stage.state, "passed");
+			recordContractMismatch(callbackContractMismatches
+				, `${cell.id}/${stageName}/evidence`, stage.evidence
+				, expectedCallbackEvidence(cell.profile));
 		}
-		assert.match(cell.hostType, cell.position === "callback-parameter"
-			? /checked by the selected constructor/u
-			: /checked by Lean with an explicit/u);
-		assert.ok(cell.limitations.some(note => /synchronous host callbacks/u.test(note)));
+		if(["c", "cpp", "perl"].includes(cell.profile))
+		{
+			assert.match(cell.hostType, cell.position === "callback-parameter"
+				? /checked by the selected constructor/u
+				: /checked by Lean with an explicit/u);
+			assert.ok(cell.limitations.some(note => /synchronous host callbacks/u.test(note)));
+		}
 	}
+	assert.deepEqual(callbackContractMismatches, []
+		, "exact callback Subtype stage and evidence contracts differ");
+	assert.equal(allInstalled.length, installed.length + fields.length + callbacks.length);
 	const primitive = installed.map(cell => {
 		const nominal = nominalProfiles.includes(cell.profile)
 			? ["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
@@ -872,8 +900,8 @@ test("checked Subtype evidence preserves copied values and scopes native callbac
 			return [name, { ...stage, evidence: stage.evidence.filter(id => !expected.includes(id) && !nominal.includes(id) && !primitiveNominal(cell).includes(id) && !recursivePhpWasm.includes(id)) }];
 		}));
 		// Require the exact nominal, primitive-base and structural supplements, then retain
-		// every earlier primitive-receipt assertion below. Other callback profiles
-		// remain open until they receive their own installed evidence.
+		// every earlier primitive-receipt assertion below. Callback positions have their
+		// own complete profile/path/position model above.
 		return {
 			...cell
 			, stages
