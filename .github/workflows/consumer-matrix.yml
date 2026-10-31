@@ -43,17 +43,65 @@ env:
     /docs/evidence/*/index.json
 
 jobs:
+  type-surface-authentication:
+    name: Type-surface evidence authentication
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Free hosted runner disk for the evidence checkout
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Authenticate the exact type-surface corpus once
+        run: |
+          node scripts/create-core-type-surface-evidence-receipt.mjs \
+            --receipt build/consumer-type-surface/receipt.json \
+            --manifest build/consumer-type-surface/materialization.json \
+            --commit "${{ github.sha }}"
+      - name: Preserve the exact type-surface receipt
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 7
+
   reviewed-ir-admission:
     name: Reviewed IR admission corpus
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
-    # This gate intentionally re-hashes the complete retained type-surface
-    # evidence corpus instead of trusting an upstream receipt.
     timeout-minutes: 60
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -1359,6 +1407,7 @@ jobs:
 
   node-consumers:
     name: Node and browser npm consumers
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     # Run 37805067353 hit three hours during the corpus. Leave time for the
     # remaining multi-profile, installed CLI and registry/browser gates.
@@ -1380,6 +1429,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -1805,6 +1861,7 @@ jobs:
 
   reviewed-fin-wasm-entry:
     name: Reviewed Fin Wasm entry (${{ matrix.mode }})
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     strategy:
@@ -1827,6 +1884,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -1870,6 +1934,7 @@ jobs:
 
   browser-consumer:
     name: Browser npm boundary
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
@@ -1888,6 +1953,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -2093,6 +2165,7 @@ jobs:
 
   php-wasm-receivers:
     name: PHP-Wasm receiver packages
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     env:
@@ -2115,6 +2188,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -2197,6 +2277,7 @@ jobs:
 
   php-wasm-callback-results:
     name: PHP-Wasm callback-result packages
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     env:
@@ -2219,6 +2300,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Fetch the exact retained PHP-Wasm callback producer
         shell: bash
         run: |
@@ -2301,6 +2389,7 @@ jobs:
 
   php-consumers:
     name: Native PHP
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     # Native PHP installed acceptance runs alone; PHP-Wasm has its own job (#1450).
     timeout-minutes: 240
@@ -2321,6 +2410,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -2615,6 +2711,7 @@ jobs:
 
   php-wasm-consumers:
     name: PHP-Wasm
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     # Transport and ownership ran in 115 minutes in run 38474413393; corpus lanes run independently.
     timeout-minutes: 240
@@ -2635,6 +2732,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -2828,6 +2932,7 @@ jobs:
 
   php-wasm-corpus:
     name: PHP-Wasm corpus (${{ matrix.profile }})
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     # The former 330-minute job timed out while compiling its last suite, after all earlier suites passed.
     timeout-minutes: 240
@@ -2854,6 +2959,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -3168,6 +3280,7 @@ jobs:
 
   php-multi-profile:
     name: PHP-Wasm mixed-profile release
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     env:
@@ -3194,6 +3307,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -3242,6 +3362,7 @@ jobs:
 
   native-c-family-values:
     name: C and C++ copied, callback and owned packages
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     timeout-minutes: 240
     steps:
@@ -3261,6 +3382,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Require source history before native consumer builds
         run: test "$(git rev-parse --is-shallow-repository)" = false
       - name: Install Node.js
@@ -3468,6 +3596,7 @@ jobs:
 
   native-consumers:
     name: Native consumer (${{ matrix.profile }})
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     # Run 37873560469 cut the c-family Compare step off at 240 minutes while it was still
     # passing tests. Python and Rust keep their 240-minute budget.
@@ -3500,6 +3629,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Require source history before native consumer builds
         run: test "$(git rev-parse --is-shallow-repository)" = false
       - name: Install Node.js
@@ -4318,6 +4454,7 @@ jobs:
 
   managed-consumers:
     name: Managed consumer (${{ matrix.profile }})
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     timeout-minutes: 240
     strategy:
@@ -4341,6 +4478,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Require source history before managed consumer builds
         run: test "$(git rev-parse --is-shallow-repository)" = false
       - name: Install Node.js
@@ -5277,6 +5421,7 @@ jobs:
 
   owned-jvm-values:
     name: Owned JVM values, transfers, borrows and receivers
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     timeout-minutes: 240
     steps:
@@ -5296,6 +5441,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -5462,6 +5614,7 @@ jobs:
 
   host-null-systems:
     name: Systems HostNull acceptance
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     timeout-minutes: 150
     steps:
@@ -5480,6 +5633,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -5546,6 +5706,7 @@ jobs:
 
   owned-wit-receivers:
     name: WIT receiver methods and properties
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     timeout-minutes: 150
     steps:
@@ -5564,6 +5725,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -5662,6 +5830,7 @@ jobs:
 
   wasi-consumer:
     name: WIT and WASI Component Model
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     # Copied, recursive, owned and original-owner installed-package gates
     # share this job. The full sequence exceeds two hours on hosted runners.
@@ -5683,6 +5852,13 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Require source history before WIT consumer builds
         run: test "$(git rev-parse --is-shallow-repository)" = false
       - name: Install Node.js

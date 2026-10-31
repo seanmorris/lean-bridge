@@ -32,7 +32,8 @@ export const instrumentJvmRecursiveCallbacks = (sources, namespace) => {
 	replace('_CallableGraphRuntime', 'register', /return CLEANER.register\(owner, lease\);/g, 'GraphFaultProbe.tick(); var cleanable = CLEANER.register(owner, lease); GraphFaultProbe.tick(); return cleanable;', 1);
 	replace('_CallableGraphRuntime', 'release', /release.invokeExact\(value\);/g, 'release.invokeExact(value); GraphFaultProbe.disposals++;', 1);
 	replace('_CallableGraphRuntime', 'returned', /( {20}int status = \(int\)[^\n]+;)/g, '$1\n                    GraphFaultProbe.tick();');
-	replace('_CallableGraphRuntime', 'stubs', /( {8}var stub = [^\n]+;)/g, '$1\n        GraphFaultProbe.tick();');
+	replace('_CallableGraphRuntime', 'stubs', /^([ \t]+)(var stub = [^\n]+;)$/gm
+		, '$1$2\n$1GraphFaultProbe.tick();');
 	replace('_CallableGraphRuntime', 'clear', /links.clear\(\).invokeExact\(output\);/g, 'GraphFaultProbe.clear(output, links.clear());');
 	return { files, edits };
 };

@@ -20,6 +20,7 @@ import { nativeRecursiveReviewedIr } from './helpers/native-recursive-reviewed.m
 import { callableReviewedIr } from './helpers/callable-fixture.mjs';
 import { structuredCallableReviewedIr } from './helpers/structured-callable-fixture.mjs';
 import { jvmRecursiveMixedFixture } from './helpers/jvm-recursive-callable-mixed.mjs';
+import { instrumentJvmRecursiveCallbacks } from './helpers/jvm-recursive-callable-instrument.mjs';
 
 const assets = (model, evidence) => jvmGraphAssets(model, evidence, true);
 
@@ -135,6 +136,19 @@ test('both public projections retain typed callback APIs without exposing FFM', 
 	assert.match(runtime, /new CallbackFrame\(catalog, scope, links\.lifecycle\(\)\)/);
 	assert.match(runtime, /long value = token; token = 0;/);
 	assert.match(runtime, /Thread\.currentThread\(\) != thread/);
+});
+
+test('recursive JVM fault instrumentation follows generated stub indentation', () => {
+	const ir = nativeRecursiveCallableReviewedIr(), compiled = model(ir);
+	const generated = generateCallableJvmGraphPackage(ir);
+	const instrumented = instrumentJvmRecursiveCallbacks(generated, compiled.namespace);
+	const path = 'src/main/java/' + compiled.namespace.replaceAll('.', '/')
+		+ '/_CallableGraphRuntime.java';
+	const stubs = [...generated[path].matchAll(/^([ \t]+)(var stub = [^\n]+;)$/gm)];
+	assert.equal(stubs.length, 36); assert.equal(instrumented.edits.stubs, 36);
+	for(const stub of stubs)
+		assert.ok(instrumented.files[path].includes(stub[0] + '\n'
+			+ stub[1] + 'GraphFaultProbe.tick();'));
 });
 
 test('the scoped JVM callable loader keeps exact asset hashes and long-token descriptors', () => {

@@ -167,16 +167,35 @@ const assertNixSourceClosures = source => {
 	const dedicated = jobs.get("nix-cache");
 	assert.match(dedicated, /^ {10}sparse-checkout: \|$/mu);
 	assert.doesNotMatch(dedicated, /docs\/evidence/u);
+	const producer = jobs.get("type-surface-authentication");
+	assert.match(producer
+		, /node scripts\/create-core-type-surface-evidence-receipt[.]mjs/u);
+	assert.match(producer
+		, /name: consumer-type-surface-\$\{\{ github[.]sha \}\}/u);
+	const reviewed = jobs.get("reviewed-ir-admission");
+	assert.match(reviewed, /^ {4}needs: type-surface-authentication$/mu);
+	assert.match(reviewed, /^ {8}uses: actions\/download-artifact@v8$/mu);
+	assert.match(reviewed
+		, /LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=\$GITHUB_WORKSPACE\/build\/consumer-type-surface\/receipt[.]json/u);
 	for(const name of expectedNixJobs.filter(item =>
 		!["docker-engine", "nix-cache"].includes(item))) {
 		const job = jobs.get(name);
 		assert.ok(job, name);
+		assert.match(job, /^ {4}needs: type-surface-authentication$/mu, name);
 		assert.match(job
 			, /^ {10}sparse-checkout: \$\{\{ env\.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT \}\}$/mu
 			, name);
 		assert.match(job, /^ {10}sparse-checkout-cone-mode: false$/mu, name);
 		assert.match(job
 			, /^ {8}run: bash scripts\/check-consumer-source-closure\.sh$/mu
+			, name);
+		assert.match(job, /^ {8}uses: actions\/download-artifact@v8$/mu
+			, name);
+		assert.match(job
+			, /^ {10}name: consumer-type-surface-\$\{\{ github[.]sha \}\}$/mu
+			, name);
+		assert.match(job
+			, /LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=\$GITHUB_WORKSPACE\/build\/consumer-type-surface\/receipt[.]json/u
 			, name);
 		}
 };
@@ -189,12 +208,18 @@ test("every downstream Nix job has one bounded metadata-only source closure"
 		for(const name of ["browser-consumer", "node-consumers"
 			, "native-consumers"]) {
 			const job = jobs.get(name);
-			const changed = job.replace(
-				"          sparse-checkout-cone-mode: false\n", "");
-			assert.notEqual(changed, job);
-			assert.throws(() => assertNixSourceClosures(
-				source.replace(job, () => changed))
-				, { name: "AssertionError" }, name);
+			for(const required of [
+				"    needs: type-surface-authentication\n"
+				, "          sparse-checkout-cone-mode: false\n"
+				, "        uses: actions/download-artifact@v8\n"
+				, "        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n"
+			]) {
+				const changed = job.replace(required, "");
+				assert.notEqual(changed, job, `${name}: ${required.trim()}`);
+				assert.throws(() => assertNixSourceClosures(
+					source.replace(job, () => changed))
+					, { name: "AssertionError" }, name);
+			}
 			}
 	}
 );
