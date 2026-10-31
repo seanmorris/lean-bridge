@@ -69,6 +69,20 @@ env:
     /docs/evidence/**/*.json
     /docs/evidence/**/*.md
     /docs/evidence/**/*.xml
+    /docs/evidence/checked-records-20261008/
+    /docs/evidence/checked-record-perl-installed-20261011/
+    /docs/evidence/checked-record-browser-20261011/
+    /docs/evidence/checked-record-php-wasm-20261011/
+    /docs/evidence/checked-record-python-hosts-20261010/
+    /docs/evidence/checked-record-ruby-jvm-20261010/
+    /docs/evidence/checked-record-remaining-hosts-20261010/
+    /docs/evidence/native-fin-callbacks-20261008/
+    /docs/evidence/browser-callback-fin-20261008/
+    /docs/evidence/reviewed-callback-fin-20261008/
+    /docs/evidence/reviewed-subtype-python-hosts-20261010/
+    /docs/evidence/reviewed-subtype-ruby-jvm-hosts-20261010/
+    /docs/evidence/reviewed-subtype-remaining-hosts-20261010/
+    /docs/evidence/php-wasm-subtype-installed-20261010/
 
 jobs:
   type-surface-authentication:
@@ -199,6 +213,7 @@ jobs:
 
   documentation:
     name: Documentation contract
+    needs: type-surface-authentication
     runs-on: ubuntu-24.04
     steps:
       - name: Free hosted runner disk before history-aware sparse checkout
@@ -214,6 +229,13 @@ jobs:
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
