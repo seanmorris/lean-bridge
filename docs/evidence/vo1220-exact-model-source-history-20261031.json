@@ -1,0 +1,136 @@
+{
+  "cells": 1054,
+  "exactModel": {
+    "bytes": 16916757,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-exact-model-source-history.mjs",
+      "sha256": "8487144a3ec196a7ddafb9e364a7a633c366c4bc522893d569cf6d6b2cfc2aa3"
+    },
+    {
+      "path": "tests/helpers/vo1220-exact-model-source-history-tests.mjs",
+      "sha256": "c2358b50ed6b697503af2fcadda5422778d2e1abc9b5691911207d661c237a0c"
+    },
+    {
+      "path": "tests/helpers/vo1220-exact-model-source-history.mjs",
+      "sha256": "c28470c2d88c6897ad91273d797787842b9a00f00465adbe193e2289e0ff757a"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "bytes": 16916757,
+      "path": "docs/evidence/vo1220-exact-type-surface-v1.json",
+      "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f"
+    },
+    {
+      "bytes": 1387,
+      "path": "scripts/vo1220-exact-model.mjs",
+      "sha256": "04b23d9dd1ecb1535d00cd22c56069ef3ed0cd5184cc1c10ae9f53bfb731b0bb"
+    }
+  ],
+  "implementationCommit": "0d7b4a48d366dc87e555b5b1dce1a627d5083565",
+  "integrationUpdates": [
+    {
+      "currentSha256": "8acf7f57782304a6ff6328c60a657b02ae6ee967ace0fae537db19f8fb395125",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-exact-model-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "8acf19a45c6a71fe0de7289bd5dc1e58f3d21a99252eb0b3388ece75bcb58d35"
+    },
+    {
+      "currentSha256": "1a926bd59b292f2ba5ddd17a98c1b6f12ca00f083fffce3b680639c5b41ed221",
+      "edits": [
+        {
+          "current": "import { beforeVo1220ExactModelSource, vo1220ExactModelNormalizationPaths } from \"./vo1220-exact-model-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ExactModelNormalizationPaths\n\t, ...consumerNixDiskBudgetNormalizationPaths\n",
+          "previous": "\t...consumerNixDiskBudgetNormalizationPaths\n",
+          "start": 230188
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ExactModelSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerNixDiskBudgetSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeConsumerNixDiskBudgetSource(path, text, expected);\n",
+          "start": 288866
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3b0908064a4efc5dea991267ee1bda1c182cfff3d8a7f6d9aaead64ec173ca7f"
+    }
+  ],
+  "milestone": "vo1220-exact-model-source-v1",
+  "owner": 1220,
+  "passedStageEntries": 5270,
+  "predecessorCommit": "740375293bc549f2be2bb7d260bf3c3b69254a6a",
+  "reportedMutationMismatches": 4,
+  "schemaVersion": 1,
+  "scope": "Freeze one reviewable expected model for all 1,054 VO #1220 cells and all 5,270 stage entries. Compare every identity, supported position, ordered evidence list, host type, scope and limitation string, stage state and note in one deterministic pass. Aggregate every mismatch instead of allowing the first stale assertion to conceal the rest of the matrix. Preserve the already-green zero-gap behavior and change no type-surface observation, evidence identity or product byte.",
+  "semanticChanges": 0,
+  "stageEntries": 5270,
+  "typeSurfaceChanged": false,
+  "updates": [
+    {
+      "currentSha256": "01f97a3cab29509098328c09f6ba860b7a969f6315177c01a7169c5052b15741",
+      "edits": [
+        {
+          "current": "\tassertVo1220ExactModel, assertVo1220ZeroGap, createVo1220ExactModel\n\t, vo1220CellCount, vo1220ExactModelMismatches, vo1220ExactModelPath\n\t, vo1220ShapeCells, vo1220StageEntryCount, vo1220ZeroGapReport\n",
+          "previous": "\tassertVo1220ZeroGap, vo1220CellCount, vo1220ShapeCells\n\t, vo1220StageEntryCount, vo1220ZeroGapReport\n",
+          "start": 322
+        },
+        {
+          "current": "\tconst [document, irSchema, consumers, exactModel] = await Promise.all([\n",
+          "previous": "\tconst [document, irSchema, consumers] = await Promise.all([\n",
+          "start": 584
+        },
+        {
+          "current": "\t\t, \"docs/consumer-support.v1.json\", vo1220ExactModelPath\n",
+          "previous": "\t\t, \"docs/consumer-support.v1.json\"\n",
+          "start": 720
+        },
+        {
+          "current": "\treturn { document, contracts: { irSchema, consumers }, exactModel };\n",
+          "previous": "\treturn { document, contracts: { irSchema, consumers } };\n",
+          "start": 843
+        },
+        {
+          "current": "test(\"#1220 exact model checks all 1,054 cells and 5,270 stages in one pass\"\n\t, async () => {\n\t\tconst { document, contracts, exactModel } = fixture;\n\t\tconst actual = assertVo1220ExactModel(\n\t\t\tdocument, contracts, exactModel);\n\t\tassert.equal(actual.model.length, 1054);\n\t\tassert.equal(actual.stageEntries, 5270);\n\t\tassert.equal(actual.model.flatMap(cell =>\n\t\t\tObject.keys(cell.stages)).length, 5270);\n\t}\n);\n\ntest(\"#1220 exact model reports every stale contract in the same matrix\"\n\t, async () => {\n\t\tconst { document, contracts, exactModel } = fixture;\n\t\tconst actual = createVo1220ExactModel(document, contracts);\n\t\tconst stale = structuredClone(exactModel);\n\t\tstale.model[0].hostType += \" stale host wording\";\n\t\tstale.model[1].scope += \" stale scope wording\";\n\t\tstale.model[2].stages.analysis.evidence.push(\"stale-evidence\");\n\t\tstale.model[3].stages.packaging.state = \"limited\";\n\t\tconst labels = vo1220ExactModelMismatches(stale, actual)\n\t\t\t.map(item => item.label);\n\t\tassert.ok(labels.includes(`${stale.model[0].id}/hostType`));\n\t\tassert.ok(labels.includes(`${stale.model[1].id}/scope`));\n\t\tassert.ok(labels.includes(\n\t\t\t`${stale.model[2].id}/analysis/evidence`));\n\t\tassert.ok(labels.includes(\n\t\t\t`${stale.model[3].id}/packaging/state`));\n\t\tassert.equal(labels.filter(label => label.includes(\"stale\")).length, 0);\n\t\tassert.ok(labels.length >= 4);\n\t}\n);\n\n",
+          "previous": "",
+          "start": 1458
+        }
+      ],
+      "path": "tests/helpers/vo1220-zero-gap-tests.mjs",
+      "previousSha256": "8697d95d2b8ef7fa82249bb89f014084d89f77830602c4c9d96465d0299c420d"
+    },
+    {
+      "currentSha256": "b30813d0962e9eb964cd248ea512b02ac0eb4e3d0870a4c3a87f045022c02aa2",
+      "edits": [
+        {
+          "current": "import { isDeepStrictEqual } from \"node:util\";\n",
+          "previous": "",
+          "start": 129
+        },
+        {
+          "current": "export const vo1220ExactModelPath\n\t= \"docs/evidence/vo1220-exact-type-surface-v1.json\";\n",
+          "previous": "",
+          "start": 1133
+        },
+        {
+          "current": "const exactCellFields = Object.freeze([\n\t\"id\", \"profile\", \"shape\", \"path\", \"position\", \"requirement\", \"exclusion\"\n\t, \"owner\", \"lean\", \"meaning\", \"bounds\", \"ownership\", \"absence\", \"failure\"\n\t, \"platform\", \"context\", \"wordBits\", \"hostType\", \"observation\", \"scope\"\n\t, \"conversionNote\", \"limitations\"\n]);\n\n/**\n * Freeze every #1220-owned cell and stage contract in a reviewable model.\n *\n * @param document - Current type-surface inventory.\n * @param contracts - Current Binding IR schema and consumer contract.\n * @returns {object} Complete exact model with no inferred support.\n */\nexport const createVo1220ExactModel = (document, contracts) => {\n\tconst shapes = new Set(Object.keys(vo1220ShapeCells));\n\tconst cells = typeSurfaceCells(document, contracts, cell =>\n\t\tshapes.has(cell.shape)).toSorted((left, right) =>\n\t\tleft.id.localeCompare(right.id)).map(cell => ({\n\t\t...Object.fromEntries(exactCellFields.map(field =>\n\t\t\t[field, structuredClone(cell[field])]))\n\t\t, stages: Object.fromEntries(vo1220Stages.map(stage =>\n\t\t\t[stage, structuredClone(cell.stages[stage])]))\n\t\t}));\n\treturn {\n\t\tschemaVersion: 1, kind: \"lean-bridge-vo1220-exact-type-surface-v1\"\n\t\t, planNode: vo1220Owner, contractVersion: document.contractVersion\n\t\t, profiles: document.profiles.map(profile => profile.id)\n\t\t, shapes: Object.keys(vo1220ShapeCells).sort()\n\t\t, paths: [...document.paths], positions: [...document.positions]\n\t\t, stages: [...vo1220Stages], cells: cells.length\n\t\t, stageEntries: cells.length * vo1220Stages.length, model: cells\n\t};\n};\n\n/**\n * Compare all cells and stages without stopping at the first stale contract.\n *\n * @param expected - Reviewed exact model.\n * @param actual - Current exact model.\n * @returns {Array<{label: string, actual: unknown, expected: unknown}>} All\n * model mismatches in deterministic order.\n */\nexport const vo1220ExactModelMismatches = (expected, actual) => {\n\tconst mismatches = [];\n\tconst record = (label, actualValue, expectedValue) => {\n\t\tif(!isDeepStrictEqual(actualValue, expectedValue))\n\t\t\tmismatches.push({ label, actual: actualValue, expected: expectedValue });\n\t};\n\tfor(const field of [\n\t\t\"schemaVersion\", \"kind\", \"planNode\", \"contractVersion\", \"profiles\"\n\t\t, \"shapes\", \"paths\", \"positions\", \"stages\", \"cells\", \"stageEntries\"\n\t]) record(field, actual[field], expected[field]);\n\tconst expectedCells = new Map(expected.model.map(cell => [cell.id, cell]));\n\tconst actualCells = new Map(actual.model.map(cell => [cell.id, cell]));\n\tfor(const id of [...new Set([\n\t\t...expectedCells.keys(), ...actualCells.keys()\n\t])].sort()) {\n\t\tconst expectedCell = expectedCells.get(id);\n\t\tconst actualCell = actualCells.get(id);\n\t\tif(expectedCell === undefined || actualCell === undefined)\n\t\t{\n\t\t\trecord(`${id}/cell`, actualCell ?? null, expectedCell ?? null);\n\t\t\tcontinue;\n\t\t}\n\t\trecord(`${id}/keys`, Object.keys(actualCell).sort()\n\t\t\t, Object.keys(expectedCell).sort());\n\t\tfor(const field of exactCellFields)\n\t\t\trecord(`${id}/${field}`, actualCell[field], expectedCell[field]);\n\t\tfor(const stage of vo1220Stages)\n\t\t{\n\t\t\tconst expectedStage = expectedCell.stages[stage];\n\t\t\tconst actualStage = actualCell.stages[stage];\n\t\t\trecord(`${id}/${stage}/keys`, Object.keys(actualStage ?? {}).sort()\n\t\t\t\t, Object.keys(expectedStage ?? {}).sort());\n\t\t\tfor(const field of [\"state\", \"evidence\", \"note\"])\n\t\t\t\trecord(`${id}/${stage}/${field}`\n\t\t\t\t\t, actualStage?.[field], expectedStage?.[field]);\n\t\t}\n\t}\n\treturn mismatches;\n};\n\n/**\n * Require the current #1220 surface to equal the reviewed full model.\n *\n * @param document - Current type-surface inventory.\n * @param contracts - Current Binding IR schema and consumer contract.\n * @param expected - Reviewed exact model.\n * @returns {object} Current exact model.\n */\nexport const assertVo1220ExactModel = (document, contracts, expected) => {\n\tconst actual = createVo1220ExactModel(document, contracts);\n\tassert.deepEqual(vo1220ExactModelMismatches(expected, actual), []);\n\treturn actual;\n};\n\n",
+          "previous": "",
+          "start": 1302
+        }
+      ],
+      "path": "tests/helpers/vo1220-zero-gap.mjs",
+      "previousSha256": "0efd97f118d0b2981fb312962514d5d9b3b84139943283f033b49a3ceee5b713"
+    }
+  ]
+}
