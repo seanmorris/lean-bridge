@@ -189,7 +189,8 @@ test("Docker consumer builds from one evidence-free path snapshot", async () => 
 
 test("Docker consumer rejects unknown source modes before execution", async () => {
 	await assert.rejects(execute("bash", [runnerPath], {
-		cwd: process.cwd(), env: {
+		cwd: process.cwd()
+		, env: {
 			...process.env, LEAN_BRIDGE_CONSUMER_SOURCE_MODE: "unknown"
 		}
 	}), error => {

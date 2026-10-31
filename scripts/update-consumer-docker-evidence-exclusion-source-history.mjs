@@ -90,8 +90,9 @@ for(const expression of [
 	, /test "\$source_bytes" -lt 2097152/u
 	, /^ {10}LEAN_BRIDGE_CONSUMER_SOURCE_MODE: sparse-path$/mu
 ]) assert.match(dockerJob, expression);
-const runner = git(["show", consumerDockerEvidenceExclusionImplementation
-	+ ":scripts/test-docker-consumer-ci.sh"]);
+const runner = git(["show"
+	, consumerDockerEvidenceExclusionImplementation
+		+ ":scripts/test-docker-consumer-ci.sh"]);
 for(const expression of [
 	/git -C "\$LEAN_BRIDGE_CI_ROOT" archive --format=tar HEAD -- \./u
 	, /':\(exclude\)docs\/evidence'/u

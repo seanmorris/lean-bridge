@@ -89,8 +89,9 @@ test("Docker evidence exclusion refreshes only 92 workflow pins", async () => {
 	})), [{
 		path: ".github/workflows/consumer-matrix.yml", count: 92
 	}]);
-	let restored = git(["show", consumerDockerEvidenceExclusionImplementation
-		+ ":docs/type-surface.v1.json"]);
+	let restored = git(["show"
+		, consumerDockerEvidenceExclusionImplementation
+			+ ":docs/type-surface.v1.json"]);
 	for(const pin of history.currentSourcePins)
 	{
 		assert.equal(restored.split(pin.current).length - 1, pin.count);
