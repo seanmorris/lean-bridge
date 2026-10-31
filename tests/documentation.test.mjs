@@ -955,9 +955,18 @@ test("consumer CI history preserves every consumer and pinned build path", async
   assert.equal(packageDocument.scripts["test:type-corpus:python"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=python node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:reviewed"], "LEAN_BRIDGE_REVIEWED_CORPUS_TEST=1 node --test tests/type-corpus-reviewed.test.mjs");
   const reviewedJob = liveWorkflow.split("  reviewed-ir-admission:\n")[1].split("  nix-cache:\n")[0];
+	assert.match(reviewedJob, /^ {4}needs: type-surface-authentication$/mu);
   assert.match(reviewedJob, /^ {4}timeout-minutes: 60$/m);
-  assert.doesNotMatch(reviewedJob, /sparse-checkout/u);
-  assert.match(reviewedJob, /intentionally re-hashes the complete retained type-surface/);
+	assert.match(reviewedJob, /fetch-depth: 1\n {10}persist-credentials: false\n {10}sparse-checkout: \$\{\{ env\.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT \}\}\n {10}sparse-checkout-cone-mode: false/u);
+	assert.doesNotMatch(reviewedJob, /fetch-depth: 0/u);
+	assert.match(reviewedJob, /uses: actions\/download-artifact@v8\n {8}with:\n {10}name: consumer-type-surface-\$\{\{ github\.sha \}\}\n {10}path: build\/consumer-type-surface/u);
+	assert.match(reviewedJob, /LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=\$GITHUB_WORKSPACE\/build\/consumer-type-surface\/receipt\.json/u);
+	assert.equal(reviewedJob.split("Restore the authenticated type-surface receipt").length - 1, 1);
+	assert.equal(reviewedJob.split("Bind the authenticated type-surface receipt").length - 1, 1);
+	assert.ok(reviewedJob.indexOf("Restore the authenticated type-surface receipt")
+		< reviewedJob.indexOf("Bind the authenticated type-surface receipt"));
+	assert.ok(reviewedJob.indexOf("Bind the authenticated type-surface receipt")
+		< reviewedJob.indexOf("npm run test:type-corpus:reviewed"));
   assert.match(reviewedJob, /bootstrap-toolchains\.sh --lean-only/);
   assert.match(reviewedJob, /npm run test:type-corpus:reviewed/);
   assert.match(reviewedCorpusTest
