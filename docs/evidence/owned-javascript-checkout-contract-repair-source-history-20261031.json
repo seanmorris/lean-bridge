@@ -1,0 +1,159 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-owned-javascript-checkout-contract-repair-source-history.mjs",
+      "sha256": "d320ee6712a1892a3667084ff5f946c6d097e90c445927612bcd64a28ff185cc"
+    },
+    {
+      "path": "tests/helpers/owned-javascript-checkout-contract-repair-source-history-tests.mjs",
+      "sha256": "8c46d9cc2863576066e9a972cd8af5be547c3e104229292d437efb5ff9e16103"
+    },
+    {
+      "path": "tests/helpers/owned-javascript-checkout-contract-repair-source-history.mjs",
+      "sha256": "2193bae90b47811479e1063eb85bbb2ec8a2684e1e8c14bf496b93cbe96866e4"
+    }
+  ],
+  "changedSupportCells": 0,
+  "failedRun": {
+    "headSha": "dc025457b2e8bc77da3fdbf744d9c696c1554e29",
+    "job": 124638176219,
+    "test": "CI executes consuming JavaScript packages and rejects skipped checks or missing reports",
+    "workflow": 41235164345
+  },
+  "implementationCommit": "d3c7456ee19f16a716ed09232835057ce8762148",
+  "integrationCommit": "e86d4a4dc15df6e1b3d0baecc1a720c0e13e9a12",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7e6d72de00d7acee8f4f13d136ac0ad01e0f30c5caa9f9afe4d492128503f826",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-javascript-checkout-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 186
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "ec321407827b0d4934ccc71571c7c23ffcf3fc768d6028439b32ef95ff2b7d1f"
+    },
+    {
+      "currentSha256": "d447932b666857963d52157f8a0dcf6dbd2210f86356602bdfb7e334aedda844",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeOwnedJavaScriptCheckoutContractRepairSource\n\t, ownedJavaScriptCheckoutContractRepairNormalizationPaths\n} from \"./owned-javascript-checkout-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...ownedJavaScriptCheckoutContractRepairNormalizationPaths\n\t, ...consumerDocumentationSparseInputClosureNormalizationPaths\n",
+          "previous": "\t...consumerDocumentationSparseInputClosureNormalizationPaths\n",
+          "start": 233474
+        },
+        {
+          "current": "\tlet stage = beforeOwnedJavaScriptCheckoutContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerDocumentationSparseInputClosureSource(\n",
+          "previous": "\tlet stage = beforeConsumerDocumentationSparseInputClosureSource(\n",
+          "start": 293211
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "87889a68ef294617239a8841bdf23a97536757dbe48a190c0fa596e5a8dbcc4b"
+    }
+  ],
+  "localFocusedTests": {
+    "failed": 0,
+    "passed": 15,
+    "skipped": 0
+  },
+  "milestone": "owned-javascript-checkout-contract-repair-source-v1",
+  "predecessorCommit": "dc025457b2e8bc77da3fdbf744d9c696c1554e29",
+  "rootCause": "The recurring owned JavaScript job adopted the required history-aware sparse checkout, but its exact CI-shape assertion and the dedicated owned checked-record npm producer still described the previous complete checkout. The stale assertion rejected correct hosted behavior after all production execution before it had changed any semantic contract.",
+  "schemaVersion": 1,
+  "scope": "Bind both recurring and scoped owned JavaScript producers to the same cleanup, complete blobless history and bounded sparse source manifest. Update the exact workflow model and mutation controls for all five checkout fields while retaining every runtime, package, browser, ownership, publication and history gate unchanged.",
+  "semanticChanges": 0,
+  "updates": [
+    {
+      "currentSha256": "42225533b0ecdf02462c22a3ea55f2bfcc4fdff87fab50651393b2fd88a63c16",
+      "edits": [
+        {
+          "current": "  LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: |\n    /*\n    !/*/\n    /.github/\n    /acceptance/\n    /config/\n    /containers/\n    /demos/\n    /nix/\n    /notices/\n    /patches/\n    /poc/\n    /schema/\n    /scripts/\n    /site/\n    /src/\n    /tests/\n    /docs/\n    !/docs/evidence/*\n    /docs/evidence/*.json\n    /docs/evidence/*.md\n    /docs/evidence/*.xml\n    /docs/evidence/*/index.json\n",
+          "previous": "",
+          "start": 310
+        },
+        {
+          "current": "      - name: Free hosted runner disk before history-aware sparse checkout\n        run: |\n          df -h /\n          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL\n          df -h /\n",
+          "previous": "",
+          "start": 1511
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 1871
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 1936
+        }
+      ],
+      "path": ".github/workflows/owned-checked-record-npm-browser.yml",
+      "previousSha256": "f72b7965915b2ce9c5d8d3de53cd113acf205bc356c9547e590dfa428701c2a5"
+    },
+    {
+      "currentSha256": "ecbea98cfb827429df4b1314569e968975db9b51e4c452e8fd4b42bc76e8314c",
+      "edits": [
+        {
+          "current": "\t\tassert.match(job, /uses: actions\\/checkout@v6\\n {8}with:\\n {10}fetch-depth: 0\\n {10}filter: blob:none\\n {10}persist-credentials: false\\n {10}sparse-checkout: \\$\\{\\{ env[.]LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT \\}\\}\\n {10}sparse-checkout-cone-mode: false/u);\n",
+          "previous": "\t\tassert.match(job, /uses: actions\\/checkout@v6\\n {8}with:\\n {10}fetch-depth: 0\\n {10}persist-credentials: false/u);\n",
+          "start": 1807
+        },
+        {
+          "current": "\t\t, [\"          filter: blob:none\\n\", \"\"]\n\t\t, [\"          filter: blob:none\\n\", \"          filter: tree:0\\n\"]\n\t\t, [\"          persist-credentials: false\\n\", \"          persist-credentials: true\\n\"]\n\t\t, [\"          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\\n\", \"\"]\n\t\t, [\"          sparse-checkout-cone-mode: false\\n\", \"          sparse-checkout-cone-mode: true\\n\"]\n",
+          "previous": "",
+          "start": 2992
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-npm-producer-tests.mjs",
+      "previousSha256": "b3aeeb567680169ccc759a45b93d5616713c690ff00783329ebf282c6c401f16"
+    },
+    {
+      "currentSha256": "25db98bc53280134d874bfe8c10ea911b63ed2f3cab934d7905e276ed7641765",
+      "edits": [
+        {
+          "current": "  LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: |\n    /*\n    !/*/\n    /.github/\n    /acceptance/\n    /config/\n    /containers/\n    /demos/\n    /nix/\n    /notices/\n    /patches/\n    /poc/\n    /schema/\n    /scripts/\n    /site/\n    /src/\n    /tests/\n    /docs/\n    !/docs/evidence/*\n    /docs/evidence/*.json\n    /docs/evidence/*.md\n    /docs/evidence/*.xml\n    /docs/evidence/*/index.json\n",
+          "previous": "",
+          "start": 910
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-npm-producer.mjs",
+      "previousSha256": "1ebf5211f6f48932ee51b5df3b3906e4cb7dba032bf71fc58a3f727fa0493f78"
+    },
+    {
+      "currentSha256": "f07782f62ab0bcbc5e485a5c4382c97d8969123201d4d6ca5161c6c32753de6b",
+      "edits": [
+        {
+          "current": "\t\t, \"          fetch-depth: 0\", \"          filter: blob:none\"\n\t\t, \"          persist-credentials: false\"\n\t\t, \"          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\"\n\t\t, \"          sparse-checkout-cone-mode: false\"\n",
+          "previous": "\t\t, \"          fetch-depth: 0\", \"          persist-credentials: false\"\n",
+          "start": 5050
+        },
+        {
+          "current": "\tconst cleanupName = \"Free hosted runner disk before history-aware sparse checkout\";\n\tassert.ok(job.indexOf(cleanupName) < job.indexOf(\"Check out the exact revision\"));\n",
+          "previous": "",
+          "start": 5301
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-wasm-ci.mjs",
+      "previousSha256": "bca87d571926e9df00fb48875cf3f0f05af02f69870341c1e082579b01f1420f"
+    },
+    {
+      "currentSha256": "ec49ccd7ea92eca3c1f7618e72b4220587743bb0e28daf0466bef6865e52bec1",
+      "edits": [
+        {
+          "current": "\tconst job = source.match(/^ {2}owned-javascript-wasm:\\n([^]*?)(?=^ {2}[a-z][a-z-]*:)/mu)?.[0];\n\tassert.ok(job);\n\tfor(const [before, after] of [\n\t\t[\"          fetch-depth: 0\\n\", \"          fetch-depth: 1\\n\"]\n\t\t, [\"          filter: blob:none\\n\", \"\"]\n\t\t, [\"          persist-credentials: false\\n\", \"          persist-credentials: true\\n\"]\n\t\t, [\"          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\\n\", \"\"]\n\t\t, [\"          sparse-checkout-cone-mode: false\\n\", \"          sparse-checkout-cone-mode: true\\n\"]\n\t\t, [\"      - name: Free hosted runner disk before history-aware sparse checkout\\n\", \"      - name: Unrelated cleanup\\n\"]\n\t]) {\n\t\tconst changedJob = job.replace(before, after);\n\t\tassert.notEqual(changedJob, job);\n\t\tassert.throws(() => assertOwnedJavaScriptWasmCi(\n\t\t\tsource.replace(job, changedJob)), before);\n\t}\n",
+          "previous": "",
+          "start": 4548
+        }
+      ],
+      "path": "tests/owned-javascript-wasm-ci.test.mjs",
+      "previousSha256": "6ff593d13870b034ebfedc41c51bfc8abb84cf69d5d5be24386b872a7e42c59d"
+    }
+  ]
+}
