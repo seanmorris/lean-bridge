@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreFinalAuditNormalizationSource, coreFinalAuditNormalizationPaths } from "./core-final-audit-normalization-source-history.mjs";
 import { beforeFinalDownstreamResourceSource, finalDownstreamResourceNormalizationPaths } from "./final-downstream-resource-source-history.mjs";
 import { beforeCoreStaticClassificationSparseSource, coreStaticClassificationSparseNormalizationPaths } from "./core-static-classification-sparse-source-history.mjs";
 import { beforeCoreFinalAuditRegistrationSource, coreFinalAuditRegistrationNormalizationPaths } from "./core-final-audit-registration-source-history.mjs";
@@ -1626,6 +1627,7 @@ const reverseExactTypeSurfaceTransition = (pieces, transition, update) => {
 			"currentSha256,edits,path,previousSha256"
 			, "currentSha256,edits,path,previousCommit,previousSha256"
 			, "currentCommit,currentSha256,edits,path,previousCommit,previousSha256"
+			, "commit,currentSha256,edits,path,previousSha256"
 			, "commit,currentSha256,edits,parent,path,previousSha256"
 			, "currentSha256,edits,path,previousSha256,strategy"
 			, "category,currentSha256,edits,path,previousSha256,strategy"
@@ -1637,7 +1639,8 @@ const reverseExactTypeSurfaceTransition = (pieces, transition, update) => {
 		if(update.commit !== undefined)
 		{
 			assert.match(update.commit, /^[0-9a-f]{40}$/u);
-			assert.match(update.parent, /^[0-9a-f]{40}$/u);
+			if(update.parent !== undefined)
+				assert.match(update.parent, /^[0-9a-f]{40}$/u);
 		}
 		if(update.category === undefined)
 		{
@@ -2442,7 +2445,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...finalDownstreamResourceNormalizationPaths
+	...coreFinalAuditNormalizationPaths
+	, ...finalDownstreamResourceNormalizationPaths
 	, ...coreStaticClassificationSparseNormalizationPaths
 	, ...coreFinalAuditRegistrationNormalizationPaths
 	, ...nominalEntryContractReplayNormalizationPaths
@@ -3623,7 +3627,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeFinalDownstreamResourceSource(path, text, expected);
+	let stage = beforeCoreFinalAuditNormalizationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeFinalDownstreamResourceSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
