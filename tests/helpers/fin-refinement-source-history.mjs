@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeCorePhpCiInputRepairSource
+	, corePhpCiInputRepairNormalizationPaths
+} from "./core-php-ci-input-repair-source-history.mjs";
+import {
 	beforeDependentFinCompilerContractRepairSource
 	, dependentFinCompilerContractRepairNormalizationPaths
 } from "./dependent-fin-compiler-contract-repair-source-history.mjs";
@@ -2467,7 +2471,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentFinCompilerContractRepairNormalizationPaths
+	...corePhpCiInputRepairNormalizationPaths
+	, ...dependentFinCompilerContractRepairNormalizationPaths
 	, ...pythonDependentFinNatRejectionNormalizationPaths
 	, ...coreLiveSourcePinAggregationNormalizationPaths
 	, ...coreHistoryHubFixedPointNormalizationPaths
@@ -3656,7 +3661,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDependentFinCompilerContractRepairSource(
+	let stage = beforeCorePhpCiInputRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDependentFinCompilerContractRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
