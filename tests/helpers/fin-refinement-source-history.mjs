@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeCoreLiveSourcePinAggregationSource
+	, coreLiveSourcePinAggregationNormalizationPaths
+} from "./core-live-source-pin-aggregation-source-history.mjs";
+import {
 	beforeCoreHistoryHubFixedPointSource
 	, coreHistoryHubFixedPointNormalizationPaths
 } from "./core-history-hub-fixed-point-source-history.mjs";
@@ -2455,7 +2459,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreHistoryHubFixedPointNormalizationPaths
+	...coreLiveSourcePinAggregationNormalizationPaths
+	, ...coreHistoryHubFixedPointNormalizationPaths
 	, ...consumerCallbackDiskBudgetNormalizationPaths
 	, ...vo1220ExactModelNormalizationPaths
 	, ...consumerNixDiskBudgetNormalizationPaths
@@ -3641,7 +3646,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreHistoryHubFixedPointSource(path, text, expected);
+	let stage = beforeCoreLiveSourcePinAggregationSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreHistoryHubFixedPointSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
