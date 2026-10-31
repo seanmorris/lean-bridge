@@ -122,8 +122,12 @@ test("Core/PHP CI input repair refreshes all 93 live citations"
 		assert.deepEqual(history.currentSourcePins.map(pin => [pin.path, pin.count])
 			, [[".github/workflows/consumer-matrix.yml", 92]
 				, [".github/workflows/quality.yml", 1]]);
-		const document = JSON.parse(await readFile(
-			"docs/type-surface.v1.json", "utf8"));
+		const inventoryPath = "docs/type-surface.v1.json";
+		const inventoryEndpoint = history.integrationUpdates.find(update =>
+			update.path === inventoryPath)?.currentSha256;
+		assert.ok(inventoryEndpoint);
+		const document = JSON.parse(await sourceAtFinHistoryMilestone(
+			inventoryPath, inventoryEndpoint));
 		const citations = document.evidence.flatMap(evidence => evidence.files);
 		for(const pin of history.currentSourcePins)
 		{

@@ -121,8 +121,12 @@ test("dependent Fin compiler repair refreshes exactly four live citations"
 			, previous: "2e3e07dd5ea4b605210caade1651fbbdbfb00bc97acb11660b41b7287dbb2c6d"
 			, current: "6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75"
 		}]);
-		const document = JSON.parse(await readFile(
-			"docs/type-surface.v1.json", "utf8"));
+		const inventoryPath = "docs/type-surface.v1.json";
+		const inventoryEndpoint = history.integrationUpdates.find(update =>
+			update.path === inventoryPath)?.currentSha256;
+		assert.ok(inventoryEndpoint);
+		const document = JSON.parse(await sourceAtFinHistoryMilestone(
+			inventoryPath, inventoryEndpoint));
 		const citations = document.evidence.flatMap(evidence => evidence.files)
 			.filter(file =>
 				file.path === "tests/elaborated-metadata.test.mjs");

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
@@ -11,6 +12,8 @@ import {
 	, proofErasureEvidenceAuditReport
 	, proofErasureEvidenceAuditReportPath
 } from "./proof-erasure-evidence-audit.mjs";
+import { proofErasureEvidenceAuditImplementation }
+	from "./proof-erasure-evidence-audit-source-history.mjs";
 import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 
 const inventoryPromise = readFile("docs/type-surface.v1.json", "utf8")
@@ -18,10 +21,20 @@ const inventoryPromise = readFile("docs/type-surface.v1.json", "utf8")
 const contractsPromise = readTypeSurfaceContracts();
 const inventory = () => inventoryPromise;
 const contracts = () => contractsPromise;
+const auditMilestoneInventory = () => JSON.parse(execFileSync("git", [
+	"show", `${proofErasureEvidenceAuditImplementation}:docs/type-surface.v1.json`
+], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }));
+const auditMilestoneContracts = () => Object.fromEntries([
+	["irSchema", "schema/binding-ir.schema.json"]
+	, ["consumers", "docs/consumer-support.v1.json"]
+].map(([name, path]) => [name
+	, JSON.parse(execFileSync("git", [
+		"show", `${proofErasureEvidenceAuditImplementation}:${path}`
+	], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }))]));
 
 test("proof evidence audit binds 102 exact cells and preserves 102 gaps", async () => {
 	const result = auditProofErasureEvidence(
-		await inventory(), await contracts());
+		auditMilestoneInventory(), auditMilestoneContracts());
 	assert.equal(result.cells.length, 204);
 	assert.equal(result.bindings.length, 102);
 	assert.equal(result.residual.length, 102);

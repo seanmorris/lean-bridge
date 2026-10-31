@@ -7,8 +7,8 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { collectCoreContractTestPaths, coreContractShardLabels
-	, coreContractShardManifest, verifyCoreContractShardManifests }
+import { coreContractShardLabels, coreContractShardManifest
+	, verifyCoreContractShardManifests }
 	from "../../scripts/core-contract-shards.mjs";
 import { authenticateSourceHistoryReverse, gitSourceBytes }
 	from "./source-history-stream.mjs";
@@ -95,7 +95,15 @@ test("final Core test repair closes all nine registrations and 102 pins", async 
 	const beforeDocument = JSON.parse(before), afterDocument = JSON.parse(after);
 	assert.deepEqual(afterDocument.profiles, beforeDocument.profiles);
 	assert.deepEqual(afterDocument.observations, beforeDocument.observations);
-	const paths = await collectCoreContractTestPaths();
+	const historicalProfileSource = git(["show"
+		, `${coreFinalTestRegistrationImplementation}:src/adoption/test-profiles.mjs`]);
+	const historicalProfile = await import("data:text/javascript;base64,"
+		+ Buffer.from(historicalProfileSource).toString("base64"));
+	const paths = historicalProfile.groupRepositoryTests(git([
+		"ls-tree", "-r", "--name-only"
+		, coreFinalTestRegistrationImplementation, "--", "tests"
+	]).trim().split("\n").filter(path => path.endsWith(".test.mjs"))
+		.toSorted()).contract;
 	assert.equal(paths.length, history.contractFiles);
 	for(const name of coreFinalTestRegistrationTests)
 		assert.ok(paths.includes(`tests/${name}.test.mjs`), name);

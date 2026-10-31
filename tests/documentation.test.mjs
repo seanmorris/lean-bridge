@@ -917,6 +917,11 @@ test("consumer CI history preserves every consumer and pinned build path", async
   assert.match(workflow, /if: needs\.php-multi-profile\.result != 'success'/);
   const phpWasmCallbackJob = workflow.split("  php-wasm-callback-results:\n")[1].split("\n  php-consumers:\n")[0];
   assert.match(phpWasmCallbackJob, /^ {4}timeout-minutes: 180$/m);
+  const livePhpWasmCallbackJob = liveWorkflow.split("  php-wasm-callback-results:\n")[1].split("\n  php-consumers:\n")[0];
+  assert.match(livePhpWasmCallbackJob, /producer=39a82da8a81730db7d576b706011f20ea4a29892/);
+  assert.match(livePhpWasmCallbackJob, /fetch\.negotiationAlgorithm=noop fetch --no-tags --depth=1 --filter=blob:limit=128k origin "\$producer"/);
+  assert.match(livePhpWasmCallbackJob, /git cat-file -e "\$producer:package\.json"/);
+  assert.doesNotMatch(livePhpWasmCallbackJob, /fetch-depth: 0/);
   assert.match(phpWasmCallbackJob, /npm run test:owned-php-wasm-callback-results/);
   assert.match(phpWasmCallbackJob, /npm run test:owned-php-wasm-callback-evidence/);
   for(const variant of ["no-host", "host", "combined"])
@@ -924,8 +929,14 @@ test("consumer CI history preserves every consumer and pinned build path", async
   assert.match(workflow, /^ {6}- php-wasm-callback-results$/m);
   assert.match(workflow, /if: needs\.php-wasm-callback-results\.result != 'success'/);
   assert.match(workflow, /LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build\/consumer-ci\/performance/);
-  assert.match(workflow, /npm run build:builder-image/);
-  assert.match(workflow, /npm run test:builder-ownership/);
+  const dockerJob = liveWorkflow.split("  docker-engine:\n")[1].split("\n  perl-consumer:\n")[0];
+  assert.match(dockerJob, /^ {10}fetch-depth: 1$/m);
+  assert.doesNotMatch(dockerJob, /^ {10}fetch-depth: 0$/m);
+  assert.match(dockerJob, /test "\$\(git rev-parse --is-shallow-repository\)" = true/);
+  assert.match(dockerJob, /test "\$\(git rev-list --count HEAD\)" -eq 1/);
+  assert.doesNotMatch(dockerJob, /actions\/cache|\.toolchains|npm run bootstrap/);
+  assert.match(dockerJob, /npm run build:builder-image/);
+  assert.match(dockerJob, /npm run test:builder-ownership/);
   assert.equal(packageDocument.scripts["test:builder-ownership"], "node scripts/check-builder-ownership.mjs");
   assert.match(packageDocument.scripts["test:consumer:native"], /\.\#universal-release-bundle/);
   assert.match(packageDocument.scripts["test:consumer:wasi"], /\.\#universal-release-bundle/);
