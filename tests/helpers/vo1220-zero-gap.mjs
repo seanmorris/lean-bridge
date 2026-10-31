@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { isDeepStrictEqual } from "node:util";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 
 export const vo1220Owner = 1220;
@@ -35,8 +36,107 @@ export const vo1220ClassifiedShapes = Object.freeze({
 export const vo1220CellCount = Object.values(vo1220ShapeCells)
 	.reduce((sum, count) => sum + count, 0);
 export const vo1220StageEntryCount = vo1220CellCount * vo1220Stages.length;
+export const vo1220ExactModelPath
+	= "docs/evidence/vo1220-exact-type-surface-v1.json";
 assert.equal(vo1220CellCount, 1054);
 assert.equal(vo1220StageEntryCount, 5270);
+
+const exactCellFields = Object.freeze([
+	"id", "profile", "shape", "path", "position", "requirement", "exclusion"
+	, "owner", "lean", "meaning", "bounds", "ownership", "absence", "failure"
+	, "platform", "context", "wordBits", "hostType", "observation", "scope"
+	, "conversionNote", "limitations"
+]);
+
+/**
+ * Freeze every #1220-owned cell and stage contract in a reviewable model.
+ *
+ * @param document - Current type-surface inventory.
+ * @param contracts - Current Binding IR schema and consumer contract.
+ * @returns {object} Complete exact model with no inferred support.
+ */
+export const createVo1220ExactModel = (document, contracts) => {
+	const shapes = new Set(Object.keys(vo1220ShapeCells));
+	const cells = typeSurfaceCells(document, contracts, cell =>
+		shapes.has(cell.shape)).toSorted((left, right) =>
+		left.id.localeCompare(right.id)).map(cell => ({
+		...Object.fromEntries(exactCellFields.map(field =>
+			[field, structuredClone(cell[field])]))
+		, stages: Object.fromEntries(vo1220Stages.map(stage =>
+			[stage, structuredClone(cell.stages[stage])]))
+		}));
+	return {
+		schemaVersion: 1, kind: "lean-bridge-vo1220-exact-type-surface-v1"
+		, planNode: vo1220Owner, contractVersion: document.contractVersion
+		, profiles: document.profiles.map(profile => profile.id)
+		, shapes: Object.keys(vo1220ShapeCells).sort()
+		, paths: [...document.paths], positions: [...document.positions]
+		, stages: [...vo1220Stages], cells: cells.length
+		, stageEntries: cells.length * vo1220Stages.length, model: cells
+	};
+};
+
+/**
+ * Compare all cells and stages without stopping at the first stale contract.
+ *
+ * @param expected - Reviewed exact model.
+ * @param actual - Current exact model.
+ * @returns {Array<{label: string, actual: unknown, expected: unknown}>} All
+ * model mismatches in deterministic order.
+ */
+export const vo1220ExactModelMismatches = (expected, actual) => {
+	const mismatches = [];
+	const record = (label, actualValue, expectedValue) => {
+		if(!isDeepStrictEqual(actualValue, expectedValue))
+			mismatches.push({ label, actual: actualValue, expected: expectedValue });
+	};
+	for(const field of [
+		"schemaVersion", "kind", "planNode", "contractVersion", "profiles"
+		, "shapes", "paths", "positions", "stages", "cells", "stageEntries"
+	]) record(field, actual[field], expected[field]);
+	const expectedCells = new Map(expected.model.map(cell => [cell.id, cell]));
+	const actualCells = new Map(actual.model.map(cell => [cell.id, cell]));
+	for(const id of [...new Set([
+		...expectedCells.keys(), ...actualCells.keys()
+	])].sort()) {
+		const expectedCell = expectedCells.get(id);
+		const actualCell = actualCells.get(id);
+		if(expectedCell === undefined || actualCell === undefined)
+		{
+			record(`${id}/cell`, actualCell ?? null, expectedCell ?? null);
+			continue;
+		}
+		record(`${id}/keys`, Object.keys(actualCell).sort()
+			, Object.keys(expectedCell).sort());
+		for(const field of exactCellFields)
+			record(`${id}/${field}`, actualCell[field], expectedCell[field]);
+		for(const stage of vo1220Stages)
+		{
+			const expectedStage = expectedCell.stages[stage];
+			const actualStage = actualCell.stages[stage];
+			record(`${id}/${stage}/keys`, Object.keys(actualStage ?? {}).sort()
+				, Object.keys(expectedStage ?? {}).sort());
+			for(const field of ["state", "evidence", "note"])
+				record(`${id}/${stage}/${field}`
+					, actualStage?.[field], expectedStage?.[field]);
+		}
+	}
+	return mismatches;
+};
+
+/**
+ * Require the current #1220 surface to equal the reviewed full model.
+ *
+ * @param document - Current type-surface inventory.
+ * @param contracts - Current Binding IR schema and consumer contract.
+ * @param expected - Reviewed exact model.
+ * @returns {object} Current exact model.
+ */
+export const assertVo1220ExactModel = (document, contracts, expected) => {
+	const actual = createVo1220ExactModel(document, contracts);
+	assert.deepEqual(vo1220ExactModelMismatches(expected, actual), []);
+	return actual;
+};
 
 /**
  * Describe every current #1220-owned cell without treating a gap as success.
