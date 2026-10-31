@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/consumer-callback-disk-budget-source-history-tests.mjs";
+import "./helpers/core-history-hub-fixed-point-source-history-tests.mjs";
 import "./helpers/vo1220-exact-model-source-history-tests.mjs";
 import "./helpers/consumer-nix-disk-budget-source-history-tests.mjs";
 import "./helpers/host-null-final-gate-repair-source-history-tests.mjs";

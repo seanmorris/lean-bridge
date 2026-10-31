@@ -1,0 +1,537 @@
+{
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "failedRun": {
+    "jobs": [
+      124447261222,
+      124447261242
+    ],
+    "workflow": 41170510578
+  },
+  "failures": [
+    "Native C-family historical source reconstruction",
+    "PHP-Wasm callback-result historical source reconstruction"
+  ],
+  "fixedPointReentry": true,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-core-history-hub-fixed-point-source-history.mjs",
+      "sha256": "af8ebb65ca27bed574a62a75a3a196e483d7ead25ece4d077deb00d8979a3fd6"
+    },
+    {
+      "path": "tests/helpers/core-history-hub-fixed-point-source-history-tests.mjs",
+      "sha256": "41aa35a66bc8a7efca49b7021d32f0833205986345668e7fd9ec84ea6b4f96b7"
+    },
+    {
+      "path": "tests/helpers/core-history-hub-fixed-point-source-history.mjs",
+      "sha256": "4bf7bebd42895a6412e8f9bca5ba7806db5a1e52bd77c63f88b50a79c89abadd"
+    }
+  ],
+  "implementationCommit": "40f0ca02accfda7a815137b81bf6d197b0bf2572",
+  "implementationPaths": 30,
+  "initialAdapters": 26,
+  "integrationUpdates": [
+    {
+      "currentSha256": "7815fdece8c03c0f1740dcdd9fc85c143d3f1718bff2a0d492a4ac3c1b51214c",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-history-hub-fixed-point-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 172
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "2dcc7724d82bbfc604c95db7e159264273593fdc7542a892c04bfeb31c7ac8b5"
+    },
+    {
+      "currentSha256": "49fa16e95b0dcbd95d55b84f37ad82fb80733a2b4903974bece3d17bfd10e8d3",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreHistoryHubFixedPointSource\n\t, coreHistoryHubFixedPointNormalizationPaths\n} from \"./core-history-hub-fixed-point-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreHistoryHubFixedPointNormalizationPaths\n\t, ...consumerCallbackDiskBudgetNormalizationPaths\n",
+          "previous": "\t...consumerCallbackDiskBudgetNormalizationPaths\n",
+          "start": 230499
+        },
+        {
+          "current": "\tlet stage = beforeCoreHistoryHubFixedPointSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerCallbackDiskBudgetSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeConsumerCallbackDiskBudgetSource(path, text, expected);\n",
+          "start": 289277
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "66b64a9bdd1caac7c9f3c59eea7c8965552035b251f8094d14c28fb1ccd98d3d"
+    }
+  ],
+  "legacyEndpointAdapters": 29,
+  "milestone": "core-history-hub-fixed-point-source-v1",
+  "predecessorCommit": "2acd7f6ddbf7b775384a028952e8beb1fea3007e",
+  "scannerDiscoveredAdapters": 3,
+  "schemaVersion": 1,
+  "scope": "Make the complete history hub re-enter its newest-first normalizer sequence whenever an authenticated pass changes source bytes but has not reached the requested digest. Migrate all 29 legacy endpoint acquisitions to the complete hub and scan every source-history contract so one predecessor-specific adapter cannot hide another. Preserve the exact 1,054-cell, 5,270-stage #1220 model and every product or evidence byte.",
+  "typeSurfaceChanges": 0,
+  "updates": [
+    {
+      "currentSha256": "e924311acdccb82c04579df2e60df8ec30b0dda417eaa721ad6de1afdea63336",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeReviewedCallbackFinAdmissionSource } from \"./reviewed-callback-fin-admission-source-history.mjs\";\n",
+          "start": 282
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeReviewedCallbackFinAdmissionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 969
+        }
+      ],
+      "path": "tests/helpers/callback-code-ci-repair-source-history-tests.mjs",
+      "previousSha256": "dcb2819ddbed97a37f24dba823830edda14f7a26bdbdc4ad4e2d71e4ef15665b"
+    },
+    {
+      "currentSha256": "f79aa0ce0bc4d0cb89d9ca3dd31534f2f46bc503c16f4151f6ae01a289aa31da",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeReviewedNpmSnapshotSource } from \"./reviewed-npm-snapshot-source-history.mjs\";\n",
+          "start": 355
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeReviewedNpmSnapshotSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 967
+        }
+      ],
+      "path": "tests/helpers/closure-history-ci-repair-source-history-tests.mjs",
+      "previousSha256": "7ee97d3d4edfd5ef20d464b47ba7a287fb2b320f68e72aef138e47129df5eccc"
+    },
+    {
+      "currentSha256": "3f31b3c98d8a4664eb75883fa1a7d9fad6057a81283c9efb4b9a1f97398cf2a5",
+      "edits": [
+        {
+          "current": "import { readFile, readdir } from \"node:fs/promises\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 194
+        },
+        {
+          "current": "const legacyEndpointMismatches = sources => {\n\tconst mismatches = [];\n\tconst pattern = /const source = (before(?!FinRefinementSource)[A-Za-z0-9_]+Source)\\(\\s*update\\.path\\s*,\\s*await readFile\\(\\s*update\\.path\\s*,\\s*\"utf8\"\\s*\\)\\s*(?:,\\s*update\\.currentSha256)?\\s*\\)/gu;\n\tfor(const [path, source] of sources)\n\t\tfor(const match of source.matchAll(pattern))\n\t\t\tmismatches.push({ path, adapter: match[1] });\n\treturn mismatches;\n};\n\n",
+          "previous": "",
+          "start": 1212
+        },
+        {
+          "current": "test(\"source-history transitions acquire current endpoints through the complete hub\"\n\t, async () => {\n\t\tconst directory = new URL(\"./\", import.meta.url);\n\t\tconst paths = (await readdir(directory)).filter(path =>\n\t\t\tpath.endsWith(\"-source-history-tests.mjs\"));\n\t\tconst sources = await Promise.all(paths.map(async path => [\n\t\t\tpath, await readFile(new URL(path, directory), \"utf8\")\n\t\t]));\n\t\tassert.deepEqual(legacyEndpointMismatches(sources), []);\n\t\tconst target = sources.find(([, source]) => source.includes(\n\t\t\t\"const source = beforeFinRefinementSource(update.path\"));\n\t\tassert.ok(target);\n\t\tconst mutant = target[1].replace(\n\t\t\t\"const source = beforeFinRefinementSource(update.path\"\n\t\t\t, \"const source = beforeLegacySource(update.path\");\n\t\tassert.deepEqual(legacyEndpointMismatches([[target[0], mutant]]), [{\n\t\t\tpath: target[0], adapter: \"beforeLegacySource\"\n\t\t}]);\n\t}\n);\n\n",
+          "previous": "",
+          "start": 3073
+        }
+      ],
+      "path": "tests/helpers/core-final-audit-normalization-source-history-tests.mjs",
+      "previousSha256": "9e1ced5b806e1265726b610ab3b16d26a436394ea32891bba7c31a5bde0e96c0"
+    },
+    {
+      "currentSha256": "7c245b68bac4c64190273b014fed5c1ade76d80ea06db3107e70957d24815eb1",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeReviewedFinAcceptanceSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1046
+        }
+      ],
+      "path": "tests/helpers/fin-product-arrays-source-history-tests.mjs",
+      "previousSha256": "3355a9f43883eb4b0968c8473f531bcdcae84f49b1d7ebbeff03e095262a25c3"
+    },
+    {
+      "currentSha256": "63d1870002011d9d96018997b68197030c462b2964262d7372945e4726f669e9",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeFinProductsFloorsSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 995
+        },
+        {
+          "current": "",
+          "previous": "\n",
+          "start": 3100
+        }
+      ],
+      "path": "tests/helpers/fin-products-ci-source-history-tests.mjs",
+      "previousSha256": "1eec7f1ce63832674ac7424b4112c1206b16030f9df38ee40dd40b57cff4afeb"
+    },
+    {
+      "currentSha256": "8c0e72eea64fe4d50e3820c07f3a61286fa68eff61de1388afd4344f1559e895",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeGenericRecordsEngineSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1045
+        },
+        {
+          "current": "",
+          "previous": "\n",
+          "start": 3196
+        }
+      ],
+      "path": "tests/helpers/fin-products-floors-source-history-tests.mjs",
+      "previousSha256": "e2d7710bd93b5edf0295df46ea6c5b53a45257baed2a557ef860d69c95c87bbf"
+    },
+    {
+      "currentSha256": "079afad1c304527f186464dd75d44c4bd70d3029da6bf5b18f868fdf4139ce50",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeBrowserInstallSource } from \"./browser-install-source-history.mjs\";\n",
+          "start": 274
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeBrowserInstallSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 939
+        }
+      ],
+      "path": "tests/helpers/fin-record-wit-format-source-history-tests.mjs",
+      "previousSha256": "7b986b598dcb169bf759bbd952a6d5ae17b94e197d2716d5255492e0083d751a"
+    },
+    {
+      "currentSha256": "66b64a9bdd1caac7c9f3c59eea7c8965552035b251f8094d14c28fb1ccd98d3d",
+      "edits": [
+        {
+          "current": "\tif(previous === text && text === input) return source;\n",
+          "previous": "\tif(previous === text) return text === input ? source : text;\n",
+          "start": 401323
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7840bb6030587cc4fa40aa775530844a64ce52db5eac769166a82d0d7ab55f31"
+    },
+    {
+      "currentSha256": "30b9f6c755976aece207cd736f2c6236ab85207a1f4e0c2cece9baad81501225",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeJvmShardSource } from \"./jvm-shard-source-history.mjs\";\n",
+          "start": 520
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeJvmShardSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 907
+        }
+      ],
+      "path": "tests/helpers/fin-wit-archive-source-history-tests.mjs",
+      "previousSha256": "8a69aabd6f242557491254fded5e1e9a589e3f579ad7b079cbe65f8d4db936ee"
+    },
+    {
+      "currentSha256": "2bf50d18185521350272b687bc3fc8871f1741fb2a948607dbe24d688b1353d0",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeReviewedSubtypeAdmissionSource } from \"./reviewed-subtype-admission-source-history.mjs\";\n",
+          "start": 359
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeReviewedSubtypeAdmissionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1003
+        }
+      ],
+      "path": "tests/helpers/native-fin-callback-admission-source-history-tests.mjs",
+      "previousSha256": "2bbcb7c92b536d357aa51e315f80d4be562d0d056c7fd3658c132e38fcde1c0e"
+    },
+    {
+      "currentSha256": "eeee9d28b317617d77dfd2f9f21e4279b59803287967d6da2307682a38221b68",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeClosureHistoryCiRepairSource } from \"./closure-history-ci-repair-source-history.mjs\";\n",
+          "start": 276
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeClosureHistoryCiRepairSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 985
+        }
+      ],
+      "path": "tests/helpers/native-fin-callback-archive-source-history-tests.mjs",
+      "previousSha256": "e3870d85821c08960767a9aa0abfe1c37d7416cb57c1c4a625ccdbbd6393bb15"
+    },
+    {
+      "currentSha256": "d6ae17e7d6cdf52e168ce1321e0383304dbf43f9a47c1c9919e8fae908bd2ff9",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforePhpWasmFinSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1012
+        }
+      ],
+      "path": "tests/helpers/native-fin-records-source-history-tests.mjs",
+      "previousSha256": "3301537b2f394f5dd7faa5fd0c2e47974a419be6386dc04e6779ac6150106165"
+    },
+    {
+      "currentSha256": "3b2450985e8b9d47f569393b73ae948ff2a2dee080dfde093d13944ca3e28615",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeNativeFinReplyPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1246
+        }
+      ],
+      "path": "tests/helpers/native-fin-reply-archive-source-history-tests.mjs",
+      "previousSha256": "8ba97e3c99c1c748df70c3434b31f959c7f648031881cd892f6b23ee9ee2e79d"
+    },
+    {
+      "currentSha256": "f096069513bfddafa350f4a2d570498148b7a84004ecc43e02f2c726d088e147",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeNodeConsumerBudgetSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1390
+        }
+      ],
+      "path": "tests/helpers/native-fin-reply-promotion-source-history-tests.mjs",
+      "previousSha256": "0e23a61a051e18476dfed7a67ff73e02f75d0586e8deabd997f47a1682483337"
+    },
+    {
+      "currentSha256": "83508e2096b21aebc2fd95036f3c444aef441d79a9c86eaaa2c4446b46dc7c82",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeCallbackCoverageRepairSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1177
+        }
+      ],
+      "path": "tests/helpers/native-fin-reply-source-history-tests.mjs",
+      "previousSha256": "ae9be6fab7387ee9352e5dcd9b1238cd8aaaf0f661a75ab16d175be6a741098e"
+    },
+    {
+      "currentSha256": "b3ee4116b451407fd8bf940e5d0c1be009b503970706d2f007b1a1b3a03023e0",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeBrowserGenericPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 2733
+        }
+      ],
+      "path": "tests/helpers/native-reply-refusal-source-history-tests.mjs",
+      "previousSha256": "c7d419d956e635dc975a56258a5c96b239e5788b8f9f19ae911c9372abd126ce"
+    },
+    {
+      "currentSha256": "51ff554c3e2939aa23c1e54d0a5b7945f8867f4466917eaafbfa9618f5b896b0",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeScalarFinSourceEntryIntegrationSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1487
+        }
+      ],
+      "path": "tests/helpers/native-reply-review-source-history-tests.mjs",
+      "previousSha256": "3bc536720fc20c3f509d48e691230c943f93a944030de28ec49220f855533136"
+    },
+    {
+      "currentSha256": "cbdd9374782a174692e38e493f8112396aea580ab2c55dc9f9e21e505be67ba3",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeNativeReplyReviewSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1224
+        }
+      ],
+      "path": "tests/helpers/native-reply-symbol-fix-source-history-tests.mjs",
+      "previousSha256": "3209c9e0dea2ec0cacb2d23551d6edc680e5e7c3aaa92eecf7db337c9416a7ba"
+    },
+    {
+      "currentSha256": "ed0ff3ffb74ab6fbdee4294c1f83e466c5ebb2465f25707d16ed5034c1635365",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeReviewedScalarHostsSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 997
+        }
+      ],
+      "path": "tests/helpers/perl-fin-archive-source-history-tests.mjs",
+      "previousSha256": "3ff2e4db2cf799438c6209cd007eae159f588bad6b9858587566e98c5b0050be"
+    },
+    {
+      "currentSha256": "172e7242c772a52f3d2172732dc04521ab2a5670cb7c6685414b85319d05d2f5",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeFinProductsSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 971
+        }
+      ],
+      "path": "tests/helpers/perl-fin-xs-audit-source-history-tests.mjs",
+      "previousSha256": "f2ee4b9853bfe8fa1ed3f06b1ef170b2072eb643d7702f2babe0055d3f16c6c0"
+    },
+    {
+      "currentSha256": "0c41dc947ce78514767e080701e97a5f5f147c02859fe74196913bca601ea2f4",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst previous = reversePerlRelocatedConsumerUpdate(source, update);\n",
+          "previous": "\t\tconst source = beforeRubyDispatchIntegrationSource(update.path, await readFile(update.path, \"utf8\")), previous = reversePerlRelocatedConsumerUpdate(source, update);\n",
+          "start": 1373
+        }
+      ],
+      "path": "tests/helpers/perl-relocated-consumer-source-history-tests.mjs",
+      "previousSha256": "b469c9a971675bb1dafcfd98bee1c657f1ff054910032493f52be9d76a948856"
+    },
+    {
+      "currentSha256": "c349953c7d40a5ec760f9603835ae3ce062842278c538244c689fe92c3caecbe",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeSubtypeAliasPositionSource } from \"./subtype-alias-position-source-history.mjs\";\n",
+          "start": 352
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeSubtypeAliasPositionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 946
+        }
+      ],
+      "path": "tests/helpers/reviewed-api-promotion-source-history-tests.mjs",
+      "previousSha256": "468e77fbe6d94fa0cc6c86fbec58c0e7d6de0c60fa0ec0e80353903f58125c0e"
+    },
+    {
+      "currentSha256": "33ed8360000ffce92ce5a92f9cc3153379342b8b7834e20cb56b42259f6c19c4",
+      "edits": [
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst restored = reverseReviewedInstantiationArchiveUpdate(source, update);\n",
+          "previous": "\t\tconst source = beforePhpDispatchIntegrationSource(update.path, await readFile(update.path, \"utf8\")), restored = reverseReviewedInstantiationArchiveUpdate(source, update);\n",
+          "start": 1417
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n\t\tconst expected = reviewedInstantiationArchiveProducerPins[update.path];\n",
+          "previous": "\t\tconst source = beforePhpDispatchIntegrationSource(update.path, await readFile(update.path, \"utf8\")), expected = reviewedInstantiationArchiveProducerPins[update.path];\n",
+          "start": 2772
+        }
+      ],
+      "path": "tests/helpers/reviewed-instantiation-archive-source-history-tests.mjs",
+      "previousSha256": "1b813d560f5d5b277f39c8ae61b415e751db44d8611040e8aa984861a833bbd4"
+    },
+    {
+      "currentSha256": "1ca0d0af94ed6683a8bba25efdf7ac99e4cbd682ae366fe3a74c6367b498f677",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeBrowserCallbackArchiveSource } from \"./browser-callback-archive-source-history.mjs\";\n",
+          "start": 279
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeBrowserCallbackArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 968
+        }
+      ],
+      "path": "tests/helpers/reviewed-instantiation-source-history-tests.mjs",
+      "previousSha256": "a5782073848a86ca31337378fcfede6676c94d70b57fec4b2b4c8f110df04d47"
+    },
+    {
+      "currentSha256": "bed2572f2b5209a8ef08c4b391f280c7b1ebaf4e205da322176c9a7fbee1a5e5",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeReviewedSubtypeHarnessSource } from \"./reviewed-subtype-harness-source-history.mjs\";\n",
+          "start": 364
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeReviewedSubtypeHarnessSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 963
+        }
+      ],
+      "path": "tests/helpers/reviewed-npm-snapshot-source-history-tests.mjs",
+      "previousSha256": "595e6f2706274074f41222f5bc2e6955b7d441f8d50a7e5649d1e30efd2131f3"
+    },
+    {
+      "currentSha256": "e07db994a88be787abf9313ee43a7264d65d64f3d9e1a60f60e47559cc161ae3",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforePhpWasmFinArchiveSource } from \"./php-wasm-fin-archive-source-history.mjs\";\n",
+          "start": 289
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforePhpWasmFinArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1059
+        }
+      ],
+      "path": "tests/helpers/reviewed-specialization-admission-source-history-tests.mjs",
+      "previousSha256": "3d3896836c1f4fd9441f5305fa7fe85e60cdebda16ce6b33155beb8412c20c5b"
+    },
+    {
+      "currentSha256": "6ca8e5ee5f042e7b231f9d5f385c0badd91defe4abceff6498e70606a73d3989",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeReviewedInstantiationSource } from \"./reviewed-instantiation-source-history.mjs\";\n",
+          "start": 280
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeReviewedInstantiationSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1027
+        }
+      ],
+      "path": "tests/helpers/reviewed-specialization-archive-source-history-tests.mjs",
+      "previousSha256": "6894b1faa4a8cd063bd419a9aab046b6a12452f9075d0f37a0bfe045e19be453"
+    },
+    {
+      "currentSha256": "5d13516efd444fa3717dc72dc14064804ec6742dc00052645745ce3e5fa2d0f8",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeNativeFinCallbackAdmissionSource } from \"./native-fin-callback-admission-source-history.mjs\";\n",
+          "start": 282
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeNativeFinCallbackAdmissionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 1039
+        }
+      ],
+      "path": "tests/helpers/reviewed-specialization-ci-hotfix-source-history-tests.mjs",
+      "previousSha256": "aa3762bbad87fc330fe2bcde4484045c1486bf60c399e68736afe74c6fde8029"
+    },
+    {
+      "currentSha256": "b772dc964636cfe1ef913ff292c4ccf958fddfb3e1d28bff831fad1cee5d6fe5",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeReviewedApiPromotionSource } from \"./reviewed-api-promotion-source-history.mjs\";\n",
+          "start": 354
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeReviewedApiPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 964
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-archive-source-history-tests.mjs",
+      "previousSha256": "d17a0e8e29402f3d6eaf91a8eb2f7898cfa4120849b1aefa5397116113cd2940"
+    },
+    {
+      "currentSha256": "14301ab83216b63dc6f2c96e74a942bc04ceef850d090a68bd5c819ef28b0c19",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeReviewedCallbackHarnessSource } from \"./reviewed-callback-harness-source-history.mjs\";\n",
+          "start": 354
+        },
+        {
+          "current": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst source = beforeReviewedCallbackHarnessSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "start": 964
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-harness-source-history-tests.mjs",
+      "previousSha256": "789b648eaa3cd07b8f289d900af6b62ccf5ef918156358490da448b667a459c9"
+    }
+  ]
+}
