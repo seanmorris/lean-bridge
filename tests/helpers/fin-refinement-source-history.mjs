@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	alphaNpmModuleClosureNormalizationPaths
+	, beforeAlphaNpmModuleClosureSource
+} from "./alpha-npm-module-closure-source-history.mjs";
+import {
 	beforeConsumerNixSourceClosureAuditSource
 	, consumerNixSourceClosureAuditNormalizationPaths
 } from "./consumer-nix-source-closure-audit-source-history.mjs";
@@ -2491,7 +2495,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...consumerNixSourceClosureAuditNormalizationPaths
+	...alphaNpmModuleClosureNormalizationPaths
+	, ...consumerNixSourceClosureAuditNormalizationPaths
 	, ...consumerDockerEvidenceExclusionLintNormalizationPaths
 	, ...consumerDockerEvidenceExclusionNormalizationPaths
 	, ...consumerDockerSourceClosureNormalizationPaths
@@ -3686,7 +3691,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeConsumerNixSourceClosureAuditSource(
+	let stage = beforeAlphaNpmModuleClosureSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeConsumerNixSourceClosureAuditSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

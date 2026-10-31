@@ -1,0 +1,192 @@
+{
+  "bundleAdditions": [
+    "runtime/javascript/src/binding-ir/default-value.mjs",
+    "validators/src/binding-ir/default-value.mjs"
+  ],
+  "closure": {
+    "assemblyGuard": "validateNpmPackageModuleClosure",
+    "covers": "every relative import in every assembled .mjs module",
+    "omittedDependencyControl": true
+  },
+  "currentSourcePins": [
+    {
+      "count": 1,
+      "current": "660b696bf505f94e98d450a711a5a129995a2b7a2a1b6cf6f20b925a452aaf83",
+      "path": "src/release/npm-package.mjs",
+      "previous": "45ff55e97b91c03d7af35370b87796fa22317db5bd3350807987ef93160b7190"
+    }
+  ],
+  "failedRun": {
+    "job": 124548376979,
+    "workflow": 41204400085
+  },
+  "failure": {
+    "code": "ERR_MODULE_NOT_FOUND",
+    "completedAt": "2026-10-31T14:05:43Z",
+    "consumer": "docker-engine-node",
+    "diskClosurePassed": true,
+    "executedProductBoundary": true,
+    "importer": "internal/bridge/src/binding-ir/contract.mjs",
+    "missing": "internal/bridge/src/binding-ir/default-value.mjs"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-alpha-npm-module-closure-source-history.mjs",
+      "sha256": "9ca962ceb8c8e167318f8fff445996d0dd6d86968f69624da559b07e7558acc3"
+    },
+    {
+      "path": "tests/helpers/alpha-npm-module-closure-source-history-tests.mjs",
+      "sha256": "60204e445ca32ec04b75361af976423aa224611d71056b626bb014e635687432"
+    },
+    {
+      "path": "tests/helpers/alpha-npm-module-closure-source-history.mjs",
+      "sha256": "a040ec1a06bc7111342702252938b46bfb0c4f77dedad0eb8f10ac117050cc4c"
+    }
+  ],
+  "implementationCommit": "0e16b51ed3ea32f6b037afa568fefd1bc7525115",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bcbb213f68cefb3559aa7e46d206862b61f7901a642a9254372caf5c251dfde8",
+      "edits": [
+        {
+          "current": "import \"./helpers/alpha-npm-module-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 177
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "287f5f828564e2e3b67970d2f93a2ac9bf77ceb53c0080637c97ad41c60ce57c"
+    },
+    {
+      "currentSha256": "379d30dc0b41ae414aeec61faecd7996f8cb3f75271eab6389daf67038acd89c",
+      "edits": [
+        {
+          "current": "import {\n\talphaNpmModuleClosureNormalizationPaths\n\t, beforeAlphaNpmModuleClosureSource\n} from \"./alpha-npm-module-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...alphaNpmModuleClosureNormalizationPaths\n\t, ...consumerNixSourceClosureAuditNormalizationPaths\n",
+          "previous": "\t...consumerNixSourceClosureAuditNormalizationPaths\n",
+          "start": 232136
+        },
+        {
+          "current": "\tlet stage = beforeAlphaNpmModuleClosureSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerNixSourceClosureAuditSource(\n",
+          "previous": "\tlet stage = beforeConsumerNixSourceClosureAuditSource(\n",
+          "start": 291441
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8717696cc64f2ceb9b54b223f12d2cf171f91e571b84252a831718b8f2fd59b1"
+    }
+  ],
+  "milestone": "alpha-npm-module-closure-source-v1",
+  "packageAddition": "internal/bridge/src/binding-ir/default-value.mjs",
+  "predecessorCommit": "3cc03005e0e07ba1ddf1806329f336862a997ea2",
+  "refreshedCitationCount": 1,
+  "schemaVersion": 1,
+  "scope": "Repair the installed Alpha npm package after the bounded Docker consumer reached real execution and found that contract.mjs imported an omitted default-value.mjs. Carry the dependency through both canonical-bundle roles, copy it into the installed internal bridge, and reject every assembled package whose complete relative ES-module graph is open. Prove the positive package path and a negative omitted-dependency mutation. Refresh exactly one live source citation without changing the public API or type support matrix.",
+  "sourceCommit": "76682edd86186efcd8c57b265c4516ba32282105",
+  "updates": [
+    {
+      "currentSha256": "660b696bf505f94e98d450a711a5a129995a2b7a2a1b6cf6f20b925a452aaf83",
+      "edits": [
+        {
+          "current": "\treadFile,\n",
+          "previous": "",
+          "start": 154
+        },
+        {
+          "current": "import { dirname, join, posix, resolve } from \"node:path\";\n",
+          "previous": "import { dirname, join, resolve } from \"node:path\";\n",
+          "start": 214
+        },
+        {
+          "current": "const packageFiles = async root => {\n\tconst files = [];\n\tconst visit = async relative => {\n\t\tfor(const entry of await readdir(join(root, relative), { withFileTypes: true }))\n\t\t{\n\t\t\tconst path = relative === \"\" ? entry.name : `${relative}/${entry.name}`;\n\t\t\tif(entry.isDirectory()) await visit(path);\n\t\t\telse files.push(path);\n\t\t}\n\t};\n\tawait visit(\"\");\n\treturn files.sort();\n};\n\nconst relativeImports = source => [\n\t...source.matchAll(/\\bfrom\\s+[\"'](\\.[^\"']+)[\"']/gu)\n\t, ...source.matchAll(/\\bimport\\s*(?:\\(\\s*)?[\"'](\\.[^\"']+)[\"']/gu)\n].map(match => match[1]);\n\n/**\n * Refuse an assembled npm package whose relative ES-module graph is open.\n *\n * @param packageRoot - Root of the assembled package directory.\n * @returns {Promise<readonly string[]>} The complete sorted package-file inventory.\n */\nexport const validateNpmPackageModuleClosure = async packageRoot => {\n\tconst files = await packageFiles(packageRoot);\n\tconst present = new Set(files);\n\tfor(const path of files)\n\t{\n\t\tif(!path.endsWith(\".mjs\")) continue;\n\t\tconst source = await readFile(join(packageRoot, path), \"utf8\");\n\t\tfor(const specifier of relativeImports(source))\n\t\t{\n\t\t\tconst dependency = posix.normalize(posix.join(posix.dirname(path)\n\t\t\t\t, specifier.split(/[?#]/u, 1)[0]));\n\t\t\tif(dependency.startsWith(\"../\") || !present.has(dependency))\n\t\t\t\tthrow new Error(`npm package module graph is open: ${path} imports missing ${dependency}`);\n\t\t}\n\t}\n\treturn Object.freeze(files);\n};\n\n",
+          "previous": "",
+          "start": 969
+        },
+        {
+          "current": "\t\t, [\"runtime/javascript/src/binding-ir/default-value.mjs\", \"internal/bridge/src/binding-ir/default-value.mjs\"]\n",
+          "previous": "",
+          "start": 8997
+        },
+        {
+          "current": "\tawait validateNpmPackageModuleClosure(packageRoot);\n",
+          "previous": "",
+          "start": 10701
+        }
+      ],
+      "path": "src/release/npm-package.mjs",
+      "previousSha256": "45ff55e97b91c03d7af35370b87796fa22317db5bd3350807987ef93160b7190"
+    },
+    {
+      "currentSha256": "e9065cfd853aae6b975543b798d12134b390b760a7f73e0f5d493588ac58fd27",
+      "edits": [
+        {
+          "current": "\t\t, [\"validators/src/binding-ir/default-value.mjs\", await readFile(join(root, \"src/binding-ir/default-value.mjs\")), \"validator-binding-ir-default-value\", \"validator\"]\n",
+          "previous": "",
+          "start": 12323
+        },
+        {
+          "current": "\t\t, [\"runtime/javascript/src/binding-ir/default-value.mjs\", await readFile(join(root, \"src/binding-ir/default-value.mjs\")), \"javascript-binding-ir-default-value\"]\n",
+          "previous": "",
+          "start": 18333
+        }
+      ],
+      "path": "src/release/universal-release-bundle.mjs",
+      "previousSha256": "0bdab7fe65a2e9e7a178ff89f7da76c1cc7e8b91b05d5b65265df77d49faf995"
+    },
+    {
+      "currentSha256": "b7897679ca4084b4403b19f2e02b150b1f0d29dfa4e72c11f1376560d1a50f7b",
+      "edits": [
+        {
+          "current": "import { access, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "start": 144
+        },
+        {
+          "current": "import { buildNpmPackage, validateNpmPackageModuleClosure } from \"../src/release/npm-package.mjs\";\n",
+          "previous": "import { buildNpmPackage } from \"../src/release/npm-package.mjs\";\n",
+          "start": 359
+        },
+        {
+          "current": "\tconst dependency = join(scratch, \"first/package/internal/bridge/src/binding-ir/default-value.mjs\");\n\tawait access(dependency);\n\tawait validateNpmPackageModuleClosure(join(scratch, \"first/package\"));\n\tawait rm(dependency);\n\tawait assert.rejects(\n\t\tvalidateNpmPackageModuleClosure(join(scratch, \"first/package\"))\n\t\t, /contract\\.mjs imports missing internal\\/bridge\\/src\\/binding-ir\\/default-value\\.mjs/u\n\t);\n",
+          "previous": "",
+          "start": 2663
+        }
+      ],
+      "path": "tests/npm-package.test.mjs",
+      "previousSha256": "3bed8d97f1378b9e497574851fadb778b0715a246d48a388a0aa326915852e42"
+    },
+    {
+      "currentSha256": "e2a15eb2d1f9a97534b4a1ed889198f5292130a2a2e45bb3399142170123f32e",
+      "edits": [
+        {
+          "current": "  assert.equal(firstResult.artifactCount, 111);\n",
+          "previous": "  assert.equal(firstResult.artifactCount, 109);\n",
+          "start": 6319
+        },
+        {
+          "current": "  assert.equal(manifest.artifacts.some(item => item.path === \"runtime/javascript/src/binding-ir/default-value.mjs\"), true);\n  assert.equal(manifest.artifacts.some(item => item.path === \"validators/src/binding-ir/default-value.mjs\"), true);\n",
+          "previous": "",
+          "start": 7061
+        }
+      ],
+      "path": "tests/universal-release-bundle.test.mjs",
+      "previousSha256": "5f90ae0d301d50a7c149c5f5760e562577f1f1edf854f451bc11994f046555a8"
+    },
+    {
+      "currentSha256": "f69bb6a6b828d5c5455068a52a5d232d4e377c40e1e3926a2a492e97bbb4a915",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"660b696bf505f94e98d450a711a5a129995a2b7a2a1b6cf6f20b925a452aaf83\"\n",
+          "previous": "          \"sha256\": \"45ff55e97b91c03d7af35370b87796fa22317db5bd3350807987ef93160b7190\"\n",
+          "start": 1056520
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "9aad57f1f7c3c686d7295be54108469dbfe3713d0b9e23d78c9fc06292e3d76d"
+    }
+  ]
+}
