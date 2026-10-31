@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/python-dependent-fin-nat-rejection-source-history-tests.mjs";
+import "./helpers/consumer-docker-evidence-exclusion-source-history-tests.mjs";
 import "./helpers/consumer-docker-source-closure-source-history-tests.mjs";
 import "./helpers/dependent-fin-lint-repair-source-history-tests.mjs";
 import "./helpers/core-php-ci-input-repair-source-history-tests.mjs";

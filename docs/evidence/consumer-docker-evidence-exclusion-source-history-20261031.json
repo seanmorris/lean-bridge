@@ -1,0 +1,643 @@
+{
+  "buildSource": {
+    "consumer": "tests/consumer-node.test.mjs",
+    "excluded": "docs/evidence",
+    "flakeOutputs": [
+      "universal-core-artifacts",
+      "npm-package"
+    ],
+    "mode": "sparse-path",
+    "revisionBoundary": "Behavioral Docker acceptance uses the flake path input's deterministic zero-revision fallback. Publication and reproducibility gates separately require the exact Git revision.",
+    "snapshotsPerAttempt": 1
+  },
+  "checkout": {
+    "coneMode": false,
+    "fetchDepth": 1,
+    "gitKiBCeiling": 2097152,
+    "missingBlobFloor": 1000,
+    "omitted": "docs/evidence",
+    "sourceKiBCeiling": 2097152,
+    "sparse": true
+  },
+  "currentSourcePins": [
+    {
+      "count": 92,
+      "current": "fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previous": "bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469"
+    }
+  ],
+  "failedRun": {
+    "job": 124530096368,
+    "workflow": 41197560800
+  },
+  "failure": {
+    "checkoutGitGiB": 25,
+    "completedAt": "2026-10-31T12:32:45Z",
+    "error": "write of 24576 bytes: No space left on device",
+    "runnerDiskAfterCheckoutGiB": 34,
+    "runnerDiskAfterCleanupGiB": 108,
+    "runnerDiskBeforeCleanupGiB": 86,
+    "step": "Execute the clean consumer through Docker"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-consumer-docker-evidence-exclusion-source-history.mjs",
+      "sha256": "c6ea1adfa79bd00331bda186a9f151a842878bb736733acc3f070bbe7b0ff76b"
+    },
+    {
+      "path": "tests/helpers/consumer-docker-evidence-exclusion-source-history-tests.mjs",
+      "sha256": "75e58d0ea22b445a813bd357fdb8c5aed2d2a3fe60a0a7deae7b043ec3d9c2c9"
+    },
+    {
+      "path": "tests/helpers/consumer-docker-evidence-exclusion-source-history.mjs",
+      "sha256": "f2c3b4bca8693034733f63bf0f426364d30bf710718c7942c1059fcdde941cf2"
+    }
+  ],
+  "implementationCommit": "83f380aa83596f083eed3303da7ce4021f0ddc62",
+  "integrationUpdates": [
+    {
+      "currentSha256": "fedd477d49486eaf3532f951b6c4056b33984a17420568e579984be502f5dabc",
+      "edits": [
+        {
+          "current": "import \"./helpers/consumer-docker-evidence-exclusion-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 177
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "29769fe1ed96e06dd4ef6e0db23f5fa2bc0f3174704b6946350d7269d8144d29"
+    },
+    {
+      "currentSha256": "16bb3b13959e4decc3777e63921ef8e033ec8a7ab2aed53c09c51f449ea77fa3",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeConsumerDockerEvidenceExclusionSource\n\t, consumerDockerEvidenceExclusionNormalizationPaths\n} from \"./consumer-docker-evidence-exclusion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...consumerDockerEvidenceExclusionNormalizationPaths\n\t, ...consumerDockerSourceClosureNormalizationPaths\n",
+          "previous": "\t...consumerDockerSourceClosureNormalizationPaths\n",
+          "start": 231639
+        },
+        {
+          "current": "\tlet stage = beforeConsumerDockerEvidenceExclusionSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerDockerSourceClosureSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeConsumerDockerSourceClosureSource(path, text, expected);\n",
+          "start": 290784
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "142950f22f7cbbfc4dda64d5fb150c8d340b05f60461ca04a6dc6c5a4cb7c6bc"
+    }
+  ],
+  "milestone": "consumer-docker-evidence-exclusion-source-v1",
+  "predecessorCommit": "2c6f762125be5fd3e66f35ce6d0caa93ef22ea49",
+  "refreshedCitationCount": 92,
+  "schemaVersion": 1,
+  "scope": "Exclude the 51.8 GB retained evidence corpus from the Docker consumer checkout after the exact hosted failure proved that a depth-one checkout still materialized the huge current tree. Require a blobless non-cone sparse checkout, fail closed on missing-blob and two independent size guards, and build both Nix outputs from one evidence-free tracked archive exposed as a path flake. Preserve the existing Docker builder, ownership checks, consumer behavior, exact transient retry and every type-surface claim. Refresh exactly 92 workflow citations and record zero semantic type-surface changes.",
+  "semanticChanges": 0,
+  "trackedTree": {
+    "allBytes": 51999627829,
+    "allFiles": 228984,
+    "evidenceBytes": 51797463311,
+    "evidenceFiles": 217300,
+    "nonEvidenceBytes": 202164518,
+    "nonEvidenceFiles": 11684
+  },
+  "updates": [
+    {
+      "currentSha256": "fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe",
+      "edits": [
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /docs/\n            !/docs/evidence/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Docker source closure is sparse and bounded\n",
+          "previous": "      - name: Confirm the Docker source closure is shallow\n",
+          "start": 387272
+        },
+        {
+          "current": "          test ! -e docs/evidence\n          missing_blobs=\"$(git rev-list --objects --missing=print HEAD | grep -c '^?' || true)\"\n          test \"$missing_blobs\" -gt 1000\n          git_bytes=\"$(du -sk .git | cut -f1)\"\n          source_bytes=\"$(du -sk --exclude=.git . | cut -f1)\"\n          test \"$git_bytes\" -lt 2097152\n          test \"$source_bytes\" -lt 2097152\n          printf 'missing blobs: %s\\n.git KiB: %s\\nsource KiB: %s\\n' \\\n            \"$missing_blobs\" \"$git_bytes\" \"$source_bytes\"\n",
+          "previous": "",
+          "start": 387967
+        },
+        {
+          "current": "          LEAN_BRIDGE_CONSUMER_SOURCE_MODE: sparse-path\n",
+          "previous": "",
+          "start": 389095
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469"
+    },
+    {
+      "currentSha256": "11c3b270b53a80fda2a3ff150ea1683a45cee84594470acef2f69e634c6827ba",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 78051
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 95246
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 111547
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 126315
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 135597
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 145222
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 168606
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 181575
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 196470
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 209254
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 222474
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 231007
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 239437
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 248454
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 256828
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 276108
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 285947
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 298082
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 316680
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 325976
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 338659
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 347914
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 357197
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 366330
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 375189
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 382576
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 390500
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 401146
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 415252
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 422350
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 432579
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 440323
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 446697
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 452860
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 458957
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 465478
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 473144
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 482438
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 493660
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 503357
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 524492
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 533057
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 544065
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 575950
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 582579
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 592838
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 613711
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 622234
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 633184
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 664702
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 673921
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 681261
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 693544
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 700404
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 709432
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 723458
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 734500
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 748548
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 759294
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 771365
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 782653
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 791236
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 797694
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 806080
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 823670
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 844666
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 900007
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1012069
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1072310
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1079704
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1086302
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1093404
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1100904
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1107954
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1115564
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1137538
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1149425
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1157296
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1167261
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1177375
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1189136
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1221697
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1251976
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1284962
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1324763
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1351339
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1373876
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1393543
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1416931
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1428559
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1451705
+        },
+        {
+          "current": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "previous": "          \"sha256\": \"bb3cd734bea343b82fe802cd9636b8940e6870a9adb397eedff752da24c85469\"\n",
+          "start": 1951842
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4686fc358c090870565ebf16af61e46b61ebf81bafd301748a36fc7cbc38ada1"
+    },
+    {
+      "currentSha256": "71eb270a40d969f25b14fe9b170a72287af664a556bbd9498c1b04911fabd0eb",
+      "edits": [
+        {
+          "current": "LEAN_BRIDGE_CI_SOURCE=\n",
+          "previous": "",
+          "start": 278
+        },
+        {
+          "current": "\ncleanup() {\n\trm -f -- \"$LEAN_BRIDGE_CI_LOG\"\n\tif [[ -n \"$LEAN_BRIDGE_CI_SOURCE\" ]]; then\n\t\tcase \"$LEAN_BRIDGE_CI_SOURCE\" in\n\t\t\t*/lean-bridge-docker-source.*)\n\t\t\t\trm -rf -- \"$LEAN_BRIDGE_CI_SOURCE\"\n\t\t\t\t;;\n\t\t\t*)\n\t\t\t\techo \"Refusing to remove unexpected source snapshot: $LEAN_BRIDGE_CI_SOURCE\" >&2\n\t\t\t\texit 1\n\t\t\t\t;;\n\t\tesac\n\tfi\n}\ntrap cleanup EXIT\n\nrun_consumer() {\n\tif [[ -z \"${LEAN_BRIDGE_CONSUMER_SOURCE_MODE:-}\" ]]; then\n\t\tnpm run test:consumer:node\n\t\treturn\n\tfi\n\tif [[ \"$LEAN_BRIDGE_CONSUMER_SOURCE_MODE\" != sparse-path ]]; then\n\t\techo \"Unknown consumer source mode: $LEAN_BRIDGE_CONSUMER_SOURCE_MODE\" >&2\n\t\treturn 2\n\tfi\n\tlocal flake=\"path:$LEAN_BRIDGE_CI_SOURCE\"\n\tnix --extra-experimental-features 'nix-command flakes' build \\\n\t\t\"$flake#universal-core-artifacts\" \\\n\t\t--out-link build/consumer-ci-runtime\n\tnix --extra-experimental-features 'nix-command flakes' build \\\n\t\t\"$flake#npm-package\" \\\n\t\t--out-link build/consumer-node-alpha-package\n\tLEAN_BRIDGE_RUNTIME_ROOT=build/consumer-ci-runtime/lazy \\\n\t\tLEAN_BRIDGE_ALPHA_NPM_PACKAGE_ROOT=build/consumer-node-alpha-package \\\n\t\tnode --test tests/consumer-node.test.mjs\n}\n\ncase \"${LEAN_BRIDGE_CONSUMER_SOURCE_MODE:-}\" in\n\t\"\")\n\t\t;;\n\tsparse-path)\n\t\tLEAN_BRIDGE_CI_SOURCE=$(mktemp -d \\\n\t\t\t\"${RUNNER_TEMP:-${TMPDIR:-/tmp}}/lean-bridge-docker-source.XXXXXX\")\n\t\tgit -C \"$LEAN_BRIDGE_CI_ROOT\" archive --format=tar HEAD -- . \\\n\t\t\t':(exclude)docs/evidence' \\\n\t\t\t| tar -C \"$LEAN_BRIDGE_CI_SOURCE\" -xf -\n\t\ttest ! -e \"$LEAN_BRIDGE_CI_SOURCE/docs/evidence\"\n\t\ttest -f \"$LEAN_BRIDGE_CI_SOURCE/flake.nix\"\n\t\ttest -f \"$LEAN_BRIDGE_CI_SOURCE/package.json\"\n\t\ttest -f \"$LEAN_BRIDGE_CI_SOURCE/tests/consumer-node.test.mjs\"\n\t\t;;\n\t*)\n\t\techo \"Unknown consumer source mode: $LEAN_BRIDGE_CONSUMER_SOURCE_MODE\" >&2\n\t\texit 2\n\t\t;;\nesac\n",
+          "previous": "trap 'rm -f \"$LEAN_BRIDGE_CI_LOG\"' EXIT\n",
+          "start": 433
+        },
+        {
+          "current": "\t\trun_consumer\n",
+          "previous": "\t\tnpm run test:consumer:node\n",
+          "start": 2249
+        }
+      ],
+      "path": "scripts/test-docker-consumer-ci.sh",
+      "previousSha256": "f910a544353b116cf478fc8c2a7eed5310ca790a9918e94401e939f7db95f8ef"
+    },
+    {
+      "currentSha256": "4876ae7057b05d62fe2096fd6cc7f9de174d0dcb4e7b36cd3c6cfa64069d228a",
+      "edits": [
+        {
+          "current": "import { access, chmod, mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "previous": "import { chmod, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "start": 163
+        },
+        {
+          "current": "const workflowPath = \".github/workflows/consumer-matrix.yml\";\nconst runnerPath = \"scripts/test-docker-consumer-ci.sh\";\n",
+          "previous": "",
+          "start": 429
+        },
+        {
+          "current": "\nconst dockerJob = source => source.split(\"  docker-engine:\\n\")[1]\n\t?.split(\"\\n  perl-consumer:\\n\")[0];\n\nconst assertBoundedCheckout = source => {\n\tconst job = dockerJob(source);\n\tassert.ok(job);\n\tassert.match(job, /^ {10}fetch-depth: 1$/mu);\n\tassert.match(job, /^ {10}sparse-checkout: \\|$/mu);\n\tassert.match(job, /^ {12}\\/\\*$/mu);\n\tassert.match(job, /^ {12}!\\/\\*\\/$/mu);\n\tassert.match(job, /^ {12}\\/docs\\/$/mu);\n\tassert.match(job, /^ {12}!\\/docs\\/evidence\\/$/mu);\n\tfor(const directory of [\n\t\t\".github\", \"acceptance\", \"config\", \"containers\", \"demos\", \"nix\"\n\t\t, \"notices\", \"patches\", \"poc\", \"schema\", \"scripts\", \"site\", \"src\"\n\t\t, \"tests\"\n\t]) assert.match(job, new RegExp(`^ {12}/${directory.replace(\".\", \"\\\\.\")}/$`, \"mu\"));\n\tassert.match(job, /^ {10}sparse-checkout-cone-mode: false$/mu);\n\tassert.match(job, /git rev-list --objects --missing=print HEAD/u);\n\tassert.match(job, /test \"\\$missing_blobs\" -gt 1000/u);\n\tassert.match(job, /test \"\\$git_bytes\" -lt 2097152/u);\n\tassert.match(job, /test \"\\$source_bytes\" -lt 2097152/u);\n\tassert.match(job, /^ {10}LEAN_BRIDGE_CONSUMER_SOURCE_MODE: sparse-path$/mu);\n};\n\ntest(\"Docker consumer checkout omits the retained evidence corpus and fails closed\", async () => {\n\tconst source = await readFile(workflowPath, \"utf8\");\n\tassertBoundedCheckout(source);\n\tconst job = dockerJob(source);\n\tassert.ok(job);\n\tconst alter = (from, to = \"\") => {\n\t\tconst changed = job.replace(from, to);\n\t\tassert.notEqual(changed, job);\n\t\treturn source.replace(job, changed);\n\t};\n\tfor(const [label, altered] of [\n\t\t[\"evidence exclusion\", alter(\"            !/docs/evidence/\\n\")]\n\t\t, [\"non-cone mode\", alter(\"          sparse-checkout-cone-mode: false\\n\")]\n\t\t, [\"missing-blob floor\", alter(\"          test \\\"$missing_blobs\\\" -gt 1000\\n\")]\n\t\t, [\"Git size ceiling\", alter(\"          test \\\"$git_bytes\\\" -lt 2097152\\n\")]\n\t\t, [\"path source mode\", alter(\"          LEAN_BRIDGE_CONSUMER_SOURCE_MODE: sparse-path\\n\")]\n\t]) {\n\t\tassert.throws(() => assertBoundedCheckout(altered), label);\n\t}\n});\n\nconst fakeNix = `#!/usr/bin/env bash\nset -euo pipefail\nflake=\nfor argument in \"$@\"; do\n  case \"$argument\" in path:*#*) flake=\"$argument\";; esac\ndone\ntest -n \"$flake\"\nsource_path=$(printf '%s' \"$flake\" | sed -e 's/^path://' -e 's/#.*$//')\ntest -f \"$source_path/flake.nix\"\ntest -f \"$source_path/package.json\"\ntest -f \"$source_path/tests/consumer-node.test.mjs\"\ntest ! -e \"$source_path/docs/evidence\"\nprintf '%s\\n' \"$flake\" >> \"$LEAN_BRIDGE_SPARSE_TRACE\"\n`;\n\nconst fakeNode = `#!/usr/bin/env bash\nset -euo pipefail\ntest \"$1\" = --test\ntest \"$2\" = tests/consumer-node.test.mjs\nprintf 'node:%s\\n' \"$*\" >> \"$LEAN_BRIDGE_SPARSE_TRACE\"\necho 'consumer passed'\n`;\n\ntest(\"Docker consumer builds from one evidence-free path snapshot\", async () => {\n\tconst scratch = await mkdtemp(join(tmpdir(), \"lean-bridge-docker-sparse-\"));\n\ttry\n\t{\n\t\tconst bin = join(scratch, \"bin\");\n\t\tconst trace = join(scratch, \"trace\");\n\t\tawait mkdir(bin);\n\t\tfor(const [name, source] of [[\"nix\", fakeNix], [\"node\", fakeNode]])\n\t\t{\n\t\t\tconst path = join(bin, name);\n\t\t\tawait writeFile(path, source);\n\t\t\tawait chmod(path, 0o755);\n\t\t}\n\t\tconst result = await execute(\"bash\", [runnerPath], {\n\t\t\tcwd: process.cwd(), maxBuffer: 8 * 1024 * 1024\n\t\t\t, env: {\n\t\t\t\t...process.env, PATH: `${bin}:${process.env.PATH}`\n\t\t\t\t, RUNNER_TEMP: scratch\n\t\t\t\t, LEAN_BRIDGE_CONSUMER_SOURCE_MODE: \"sparse-path\"\n\t\t\t\t, LEAN_BRIDGE_SPARSE_TRACE: trace\n\t\t\t}\n\t\t});\n\t\tassert.match(result.stdout, /consumer passed/u);\n\t\tconst records = (await readFile(trace, \"utf8\")).trim().split(\"\\n\");\n\t\tassert.equal(records.length, 3);\n\t\tassert.match(records[0], /^path:.+#universal-core-artifacts$/u);\n\t\tassert.match(records[1], /^path:.+#npm-package$/u);\n\t\tassert.equal(records[2], \"node:--test tests/consumer-node.test.mjs\");\n\t\tconst sourceRoot = records[0]\n\t\t\t.slice(\"path:\".length, -\"#universal-core-artifacts\".length);\n\t\tawait assert.rejects(access(sourceRoot));\n\t}\n\tfinally\n\t{ await rm(scratch, { recursive: true, force: true }); }\n});\n\ntest(\"Docker consumer rejects unknown source modes before execution\", async () => {\n\tawait assert.rejects(execute(\"bash\", [runnerPath], {\n\t\tcwd: process.cwd(), env: {\n\t\t\t...process.env, LEAN_BRIDGE_CONSUMER_SOURCE_MODE: \"unknown\"\n\t\t}\n\t}), error => {\n\t\tassert.equal(error.code, 2);\n\t\tassert.match(error.stderr, /Unknown consumer source mode: unknown/u);\n\t\treturn true;\n\t});\n});\n",
+          "previous": "",
+          "start": 2506
+        }
+      ],
+      "path": "tests/docker-consumer-ci.test.mjs",
+      "previousSha256": "84829fd9397841d383f8305d94360cc4321da8057a5d8ffbde773d3984bca53c"
+    }
+  ]
+}

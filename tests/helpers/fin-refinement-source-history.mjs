@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeConsumerDockerEvidenceExclusionSource
+	, consumerDockerEvidenceExclusionNormalizationPaths
+} from "./consumer-docker-evidence-exclusion-source-history.mjs";
+import {
 	beforeConsumerDockerSourceClosureSource
 	, consumerDockerSourceClosureNormalizationPaths
 } from "./consumer-docker-source-closure-source-history.mjs";
@@ -2479,7 +2483,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...consumerDockerSourceClosureNormalizationPaths
+	...consumerDockerEvidenceExclusionNormalizationPaths
+	, ...consumerDockerSourceClosureNormalizationPaths
 	, ...dependentFinLintRepairNormalizationPaths
 	, ...corePhpCiInputRepairNormalizationPaths
 	, ...dependentFinCompilerContractRepairNormalizationPaths
@@ -3671,7 +3676,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeConsumerDockerSourceClosureSource(path, text, expected);
+	let stage = beforeConsumerDockerEvidenceExclusionSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeConsumerDockerSourceClosureSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
