@@ -307,7 +307,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           pattern: core-shard-*-${{ github.sha }}
-          path: build/core-shards
+          path: build
           merge-multiple: true
       - name: Authenticate the complete contract partition
         run: node scripts/check-core-contract-shards.mjs build/core-shards
