@@ -15,7 +15,7 @@ concurrency:
 env:
   NODE_VERSION: "22"
   LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build/consumer-ci/performance
-  # Nix-backed consumer jobs need current source and evidence metadata, not the
+  # Consumer jobs need current source and evidence metadata, not the
   # 51.8 GB retained payload corpus. Keep this one declaration shared so a new
   # job cannot quietly restore the disk-exhausting full checkout.
   LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: |
@@ -522,7 +522,10 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -657,7 +660,10 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -822,7 +828,10 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -973,7 +982,10 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -1077,7 +1089,10 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -1174,7 +1189,10 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -1253,7 +1271,10 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -1331,7 +1352,10 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
