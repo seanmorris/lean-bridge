@@ -37,7 +37,7 @@ test("both npm producers require original Git history before toolchain work", as
 	{
 		const job = ownedJob(source);
 		assert.ok(job);
-		assert.match(job, /uses: actions\/checkout@v6\n {8}with:\n {10}fetch-depth: 0\n {10}persist-credentials: false/u);
+		assert.match(job, /uses: actions\/checkout@v6\n {8}with:\n {10}fetch-depth: 0\n {10}filter: blob:none\n {10}persist-credentials: false\n {10}sparse-checkout: \$\{\{ env[.]LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT \}\}\n {10}sparse-checkout-cone-mode: false/u);
 		assert.ok(job.indexOf(historyStepName) > job.indexOf("Check out the exact revision"));
 		assert.ok(job.indexOf(historyStepName) < job.indexOf("Install Node.js"));
 		assert.ok(job.includes(`git cat-file -e ${borrowProducer}:${borrowSource}`));
@@ -55,6 +55,11 @@ test("live npm policy rejects missing, shallow or bypassed history prerequisites
 	for(const [before, after] of [
 		["          fetch-depth: 0\n", ""]
 		, ["          fetch-depth: 0\n", "          fetch-depth: 1\n"]
+		, ["          filter: blob:none\n", ""]
+		, ["          filter: blob:none\n", "          filter: tree:0\n"]
+		, ["          persist-credentials: false\n", "          persist-credentials: true\n"]
+		, ["          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n", ""]
+		, ["          sparse-checkout-cone-mode: false\n", "          sparse-checkout-cone-mode: true\n"]
 		, [completeStep, ""]
 		, [completeStep, completeStep.replace("        shell: bash", "        if: false\n        shell: bash")]
 		, [completeStep, completeStep.replace("        shell: bash", "        continue-on-error: true\n        shell: bash")]

@@ -84,8 +84,13 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	const checkout = requiredStep(job, "Check out the exact revision");
 	assert.equal(checkout.trim(), [
 		"uses: actions/checkout@v6", "        with:"
-		, "          fetch-depth: 0", "          persist-credentials: false"
+		, "          fetch-depth: 0", "          filter: blob:none"
+		, "          persist-credentials: false"
+		, "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}"
+		, "          sparse-checkout-cone-mode: false"
 	].join("\n"));
+	const cleanupName = "Free hosted runner disk before history-aware sparse checkout";
+	assert.ok(job.indexOf(cleanupName) < job.indexOf("Check out the exact revision"));
 	const historyName = "Require source history before owned JavaScript builds";
 	assert.equal(script(requiredStep(job, historyName)), [
 		"set -euo pipefail"

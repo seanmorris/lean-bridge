@@ -25,6 +25,29 @@ concurrency:
 env:
   NODE_VERSION: "22"
   LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build/consumer-ci/performance
+  LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: |
+    /*
+    !/*/
+    /.github/
+    /acceptance/
+    /config/
+    /containers/
+    /demos/
+    /nix/
+    /notices/
+    /patches/
+    /poc/
+    /schema/
+    /scripts/
+    /site/
+    /src/
+    /tests/
+    /docs/
+    !/docs/evidence/*
+    /docs/evidence/*.json
+    /docs/evidence/*.md
+    /docs/evidence/*.xml
+    /docs/evidence/*/index.json
 
 jobs:
 `;

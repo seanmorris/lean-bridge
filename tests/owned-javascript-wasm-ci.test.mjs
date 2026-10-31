@@ -84,6 +84,21 @@ test("owned JavaScript CI builds production Wasm and executes every generated AP
 
 test("owned JavaScript CI rejects disabled execution, missing observations and swallowed failures", async () => {
 	const source = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const job = source.match(/^ {2}owned-javascript-wasm:\n([^]*?)(?=^ {2}[a-z][a-z-]*:)/mu)?.[0];
+	assert.ok(job);
+	for(const [before, after] of [
+		["          fetch-depth: 0\n", "          fetch-depth: 1\n"]
+		, ["          filter: blob:none\n", ""]
+		, ["          persist-credentials: false\n", "          persist-credentials: true\n"]
+		, ["          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n", ""]
+		, ["          sparse-checkout-cone-mode: false\n", "          sparse-checkout-cone-mode: true\n"]
+		, ["      - name: Free hosted runner disk before history-aware sparse checkout\n", "      - name: Unrelated cleanup\n"]
+	]) {
+		const changedJob = job.replace(before, after);
+		assert.notEqual(changedJob, job);
+		assert.throws(() => assertOwnedJavaScriptWasmCi(
+			source.replace(job, changedJob)), before);
+	}
 	const mutations = [
 		...ownedJavaScriptWasmCiTests.map(path => [path, ""])
 		, ...ownedJavaScriptNpmCiTests.map(path => [path, ""])
