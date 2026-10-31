@@ -266,7 +266,14 @@ const installed = async (item, root, packages, readSource) => {
 				}
 				const result = { mode: assetMode, checks: 7, brokerIdentities: 0 };
 				assert.deepEqual(asset.observation, result);
-				raw(asset.execution, perl, ["inspect-assets.pl", assetMode, path, join(consumer, "changed-native-file"), ...paths], consumer);
+				raw(asset.execution, perl, [
+					"inspect-assets.pl"
+					, assetMode
+					, path
+					, join(consumer, "changed-native-file")
+					, item.manifest.module
+					, ...paths
+				], consumer);
 				assert.deepEqual(JSON.parse(asset.execution.stdout), result);
 				assert.equal(asset.execution.stdout, JSON.stringify(JSON.parse(asset.execution.stdout)));
 			}

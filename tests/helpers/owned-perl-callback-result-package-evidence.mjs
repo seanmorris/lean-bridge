@@ -755,7 +755,9 @@ export const assertOwnedPerlCallbackInstalled = async (item, root, packages, rea
 			const expected = { mode: assetMode, checks: 7, brokerIdentities: 0 };
 			assert.deepEqual(asset.observation, expected);
 			cleanCommand(asset.execution, perl, ["inspect-assets.pl", assetMode, path
-				, join(consumerRoot, "changed-native-file"), ...assetPaths], consumerRoot);
+				, join(consumerRoot, "changed-native-file")
+				, item.manifest.module
+				, ...assetPaths], consumerRoot);
 			assert.deepEqual(JSON.parse(asset.execution.stdout), expected);
 		}
 	}
