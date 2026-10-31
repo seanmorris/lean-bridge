@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/python-dependent-fin-nat-rejection-source-history-tests.mjs";
+import "./helpers/consumer-nix-source-closure-audit-source-history-tests.mjs";
 import "./helpers/consumer-docker-evidence-exclusion-lint-source-history-tests.mjs";
 import "./helpers/consumer-docker-evidence-exclusion-source-history-tests.mjs";
 import "./helpers/consumer-docker-source-closure-source-history-tests.mjs";

@@ -1,0 +1,711 @@
+{
+  "checkout": {
+    "coneMode": false,
+    "evidenceMetadataKiBCeiling": 1572864,
+    "evidenceRootFormats": [
+      "json",
+      "md",
+      "xml"
+    ],
+    "excluded": "all other docs/evidence descendants",
+    "gitKiBCeiling": 2097152,
+    "missingBlobFloor": 1000,
+    "retainedArchiveFile": "index.json",
+    "sourceKiBCeiling": 2097152
+  },
+  "currentSourcePins": [
+    {
+      "count": 92,
+      "current": "b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previous": "fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe"
+    }
+  ],
+  "failedRun": {
+    "job": 124548377113,
+    "workflow": 41204400085
+  },
+  "failure": {
+    "completedAt": "2026-10-31T13:45:27Z",
+    "consumer": "browser-javascript",
+    "error": "write of 24576 bytes: No space left on device",
+    "executedProductBoundary": false,
+    "runnerDiskAfterCleanupGiB": 108,
+    "runnerDiskBeforeCleanupGiB": 86,
+    "step": "Install the npm archive and execute real Lean in Chromium"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-consumer-nix-source-closure-audit-source-history.mjs",
+      "sha256": "82ec1e574a2327db3d2607a1b890a96e7ae1bf5d72c54a5bc89fd4408665a7d4"
+    },
+    {
+      "path": "tests/helpers/consumer-nix-source-closure-audit-source-history-tests.mjs",
+      "sha256": "1a3699d4cc2b5a60eb229680a0401cb09e79ddcca851eec0fb4a174a9e1bcbf0"
+    },
+    {
+      "path": "tests/helpers/consumer-nix-source-closure-audit-source-history.mjs",
+      "sha256": "0f965ba759585913fba958f0e9d718ab2e67f7ebdaba715b3cdf320c481fc9e3"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "scripts/check-consumer-source-closure.sh",
+      "sha256": "94e0a7c251bdb4eb935f8e98d31fb9f3377b777079849c08b0edb9e9ff2c6db2"
+    }
+  ],
+  "implementationCommit": "01004d6e181c3c29a707962c324d52f4762d5860",
+  "integrationUpdates": [
+    {
+      "currentSha256": "287f5f828564e2e3b67970d2f93a2ac9bf77ceb53c0080637c97ad41c60ce57c",
+      "edits": [
+        {
+          "current": "import \"./helpers/consumer-nix-source-closure-audit-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 177
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "d254f60f8b45fb966326b6621b784f26a2c9cbecfe5df6523831af267995243c"
+    },
+    {
+      "currentSha256": "8717696cc64f2ceb9b54b223f12d2cf171f91e571b84252a831718b8f2fd59b1",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeConsumerNixSourceClosureAuditSource\n\t, consumerNixSourceClosureAuditNormalizationPaths\n} from \"./consumer-nix-source-closure-audit-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...consumerNixSourceClosureAuditNormalizationPaths\n\t, ...consumerDockerEvidenceExclusionLintNormalizationPaths\n",
+          "previous": "\t...consumerDockerEvidenceExclusionLintNormalizationPaths\n",
+          "start": 231993
+        },
+        {
+          "current": "\tlet stage = beforeConsumerNixSourceClosureAuditSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerDockerEvidenceExclusionLintSource(\n",
+          "previous": "\tlet stage = beforeConsumerDockerEvidenceExclusionLintSource(\n",
+          "start": 291252
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ab86bcf3a7c9609dd906c0846d9de895f3bd066119581c7f23d01d83b28785ae"
+    }
+  ],
+  "jobs": {
+    "dedicatedClosures": [
+      "docker-engine",
+      "nix-cache"
+    ],
+    "generalMetadataClosures": [
+      "browser-consumer",
+      "host-null-systems",
+      "managed-consumers",
+      "native-c-family-values",
+      "native-consumers",
+      "node-consumers",
+      "owned-jvm-values",
+      "owned-wit-receivers",
+      "php-consumers",
+      "php-multi-profile",
+      "php-wasm-callback-results",
+      "php-wasm-consumers",
+      "php-wasm-corpus",
+      "php-wasm-receivers",
+      "reviewed-fin-wasm-entry",
+      "wasi-consumer"
+    ],
+    "totalNix": 18
+  },
+  "milestone": "consumer-nix-source-closure-audit-v1",
+  "predecessorCommit": "6581667c0b51e780f48f3a9c7ab8a0158c4fd332",
+  "refreshedCitationCount": 92,
+  "schemaVersion": 1,
+  "scope": "Replace every disk-heavy full checkout in the downstream Nix matrix with one shared metadata-only sparse closure after the Browser npm job independently reproduced the Docker ENOSPC failure. Inventory all eighteen Nix-installing jobs: sixteen general consumer jobs must use the shared closure and its hosted size guard, while Docker and the signed-cache recipe retain their stricter dedicated closures. Preserve root evidence metadata and archive indexes needed by consumer contract tests, exclude all retained payloads, refresh exactly 92 workflow citations, and change no support cell or product behavior.",
+  "semanticChanges": 0,
+  "trackedTree": {
+    "allBytes": 51999721545,
+    "allFiles": 228993,
+    "evidenceBytes": 51797509531,
+    "evidenceFiles": 217302,
+    "nonEvidenceBytes": 202212014,
+    "nonEvidenceFiles": 11691
+  },
+  "updates": [
+    {
+      "currentSha256": "b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa",
+      "edits": [
+        {
+          "current": "  # Nix-backed consumer jobs need current source and evidence metadata, not the\n  # 51.8 GB retained payload corpus. Keep this one declaration shared so a new\n  # job cannot quietly restore the disk-exhausting full checkout.\n  LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: |\n    /*\n    !/*/\n    /.github/\n    /acceptance/\n    /config/\n    /containers/\n    /demos/\n    /nix/\n    /notices/\n    /patches/\n    /poc/\n    /schema/\n    /scripts/\n    /site/\n    /src/\n    /tests/\n    /docs/\n    !/docs/evidence/*\n    /docs/evidence/*.json\n    /docs/evidence/*.md\n    /docs/evidence/*.xml\n    /docs/evidence/*/index.json\n",
+          "previous": "",
+          "start": 299
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 67365
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 95512
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 98461
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 108483
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 113784
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 118946
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 143219
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 154316
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 179140
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 182342
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 195384
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 266455
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 338701
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 348341
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 352209
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n",
+          "previous": "",
+          "start": 358404
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe"
+    },
+    {
+      "currentSha256": "9aad57f1f7c3c686d7295be54108469dbfe3713d0b9e23d78c9fc06292e3d76d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 78051
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 95246
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 111547
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 126315
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 135597
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 145222
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 168606
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 181575
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 196470
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 209254
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 222474
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 231007
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 239437
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 248454
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 256828
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 276108
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 285947
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 298082
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 316680
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 325976
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 338659
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 347914
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 357197
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 366330
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 375189
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 382576
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 390500
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 401146
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 415252
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 422350
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 432579
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 440323
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 446697
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 452860
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 458957
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 465478
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 473144
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 482438
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 493660
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 503357
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 524492
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 533057
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 544065
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 575950
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 582579
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 592838
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 613711
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 622234
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 633184
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 664702
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 673921
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 681261
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 693544
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 700404
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 709432
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 723458
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 734500
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 748548
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 759294
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 771365
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 782653
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 791236
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 797694
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 806080
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 823670
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 844666
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 900007
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1012069
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1072310
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1079704
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1086302
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1093404
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1100904
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1107954
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1115564
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1137538
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1149425
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1157296
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1167261
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1177375
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1189136
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1221697
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1251976
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1284962
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1324763
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1351339
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1373876
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1393543
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1416931
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1428559
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1451705
+        },
+        {
+          "current": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "previous": "          \"sha256\": \"fb562e3fb8577c04c34bd9fa05b30fa0b61b828f8ca52930f0525813a6b6befe\"\n",
+          "start": 1951842
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "11c3b270b53a80fda2a3ff150ea1683a45cee84594470acef2f69e634c6827ba"
+    },
+    {
+      "currentSha256": "de84f9703c06f05b9094be3d63e26e987f679efeb99033f409e927a8a61fc448",
+      "edits": [
+        {
+          "current": "const sourceClosurePath = \"scripts/check-consumer-source-closure.sh\";\n",
+          "previous": "",
+          "start": 548
+        },
+        {
+          "current": "const workflowJobs = source => {\n\tconst starts = [...source.matchAll(/^ {2}([A-Za-z0-9_-]+):\\s*$/gmu)];\n\treturn new Map(starts.map((match, index) => [\n\t\tmatch[1]\n\t\t, source.slice(match.index\n\t\t\t, starts[index + 1]?.index ?? source.length)\n\t]));\n};\n\nconst metadataSparsePatterns = [\n\t\"/*\", \"!/*/\", \"/.github/\", \"/acceptance/\", \"/config/\"\n\t, \"/containers/\", \"/demos/\", \"/nix/\", \"/notices/\", \"/patches/\"\n\t, \"/poc/\", \"/schema/\", \"/scripts/\", \"/site/\", \"/src/\", \"/tests/\"\n\t, \"/docs/\", \"!/docs/evidence/*\", \"/docs/evidence/*.json\"\n\t, \"/docs/evidence/*.md\", \"/docs/evidence/*.xml\"\n\t, \"/docs/evidence/*/index.json\"\n];\n\nconst expectedNixJobs = [\n\t\"browser-consumer\", \"docker-engine\", \"host-null-systems\"\n\t, \"managed-consumers\", \"native-c-family-values\", \"native-consumers\"\n\t, \"nix-cache\", \"node-consumers\", \"owned-jvm-values\", \"owned-wit-receivers\"\n\t, \"php-consumers\", \"php-multi-profile\", \"php-wasm-callback-results\"\n\t, \"php-wasm-consumers\", \"php-wasm-corpus\", \"php-wasm-receivers\"\n\t, \"reviewed-fin-wasm-entry\", \"wasi-consumer\"\n];\n\nconst assertNixSourceClosures = source => {\n\tconst jobs = workflowJobs(source);\n\tconst sparseValue = [\"  LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: |\"\n\t\t, ...metadataSparsePatterns.map(pattern => `    ${pattern}`)].join(\"\\n\");\n\tassert.ok(source.includes(sparseValue));\n\tconst actual = [...jobs].filter(([, job]) => job.includes(\n\t\t\"uses: cachix/install-nix-action@v31\")).map(([name]) => name).sort();\n\tassert.deepEqual(actual, expectedNixJobs);\n\tconst dedicated = jobs.get(\"nix-cache\");\n\tassert.match(dedicated, /^ {10}sparse-checkout: \\|$/mu);\n\tassert.doesNotMatch(dedicated, /docs\\/evidence/u);\n\tfor(const name of expectedNixJobs.filter(item =>\n\t\t![\"docker-engine\", \"nix-cache\"].includes(item))) {\n\t\tconst job = jobs.get(name);\n\t\tassert.ok(job, name);\n\t\tassert.match(job\n\t\t\t, /^ {10}sparse-checkout: \\$\\{\\{ env\\.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT \\}\\}$/mu\n\t\t\t, name);\n\t\tassert.match(job, /^ {10}sparse-checkout-cone-mode: false$/mu, name);\n\t\tassert.match(job\n\t\t\t, /^ {8}run: bash scripts\\/check-consumer-source-closure\\.sh$/mu\n\t\t\t, name);\n\t\t}\n};\n\ntest(\"every downstream Nix job has one bounded metadata-only source closure\"\n\t, async () => {\n\t\tconst source = await readFile(workflowPath, \"utf8\");\n\t\tassertNixSourceClosures(source);\n\t\tconst jobs = workflowJobs(source);\n\t\tfor(const name of [\"browser-consumer\", \"node-consumers\"\n\t\t\t, \"native-consumers\"]) {\n\t\t\tconst job = jobs.get(name);\n\t\t\tconst changed = job.replace(\n\t\t\t\t\"          sparse-checkout-cone-mode: false\\n\", \"\");\n\t\t\tassert.notEqual(changed, job);\n\t\t\tassert.throws(() => assertNixSourceClosures(\n\t\t\t\tsource.replace(job, () => changed))\n\t\t\t\t, { name: \"AssertionError\" }, name);\n\t\t\t}\n\t}\n);\n\ntest(\"consumer source closure rejects retained payloads and reports its bounds\"\n\t, async () => {\n\t\tconst source = await readFile(sourceClosurePath, \"utf8\");\n\t\tfor(const expression of [\n\t\t\t/find docs\\/evidence -mindepth 2 -type f/u\n\t\t\t, /! -name index\\.json/u, /git rev-list --objects --missing=print/u\n\t\t\t, /test \"\\$missing_blobs\" -gt 1000/u\n\t\t\t, /test \"\\$git_kib\" -lt 2097152/u\n\t\t\t, /test \"\\$source_kib\" -lt 2097152/u\n\t\t\t, /test \"\\$evidence_kib\" -lt 1572864/u\n\t\t]) assert.match(source, expression);\n\t}\n);\n\nconst fakeClosureGit = `#!/usr/bin/env bash\nset -euo pipefail\ntest \"$1\" = rev-list\nfor index in $(seq 1 1001); do printf '?blob-%s\\\\n' \"$index\"; done\n`;\nconst fakeClosureDu = `#!/usr/bin/env bash\nset -euo pipefail\ncase \"\\${!#}\" in\n  .git) printf '1024\\\\t.git\\\\n';;\n  docs/evidence) printf '2048\\\\tdocs/evidence\\\\n';;\n  .) printf '4096\\\\t.\\\\n';;\n  *) exit 64;;\nesac\n`;\nconst fakeClosureDf = `#!/usr/bin/env bash\nset -euo pipefail\nprintf 'bounded disk\\\\n'\n`;\n\nconst runSourceClosureFixture = async retainedPayload => {\n\tconst scratch = await mkdtemp(join(tmpdir(), \"lean-bridge-source-closure-\"));\n\ttry\n\t{\n\t\tconst bin = join(scratch, \"bin\");\n\t\tconst evidence = join(scratch, \"docs\", \"evidence\");\n\t\tawait mkdir(join(evidence, \"archive\"), { recursive: true });\n\t\tawait mkdir(join(scratch, \".git\"));\n\t\tawait writeFile(join(evidence, \"vo1220-exact-type-surface-v1.json\"), \"{}\\n\");\n\t\tawait writeFile(join(evidence, \"archive\", \"index.json\"), \"{}\\n\");\n\t\tif(retainedPayload)\n\t\t\tawait writeFile(join(evidence, \"archive\", \"run.tap\"), \"payload\\n\");\n\t\tawait mkdir(bin);\n\t\tfor(const [name, source] of [\n\t\t\t[\"git\", fakeClosureGit], [\"du\", fakeClosureDu]\n\t\t\t, [\"df\", fakeClosureDf]\n\t\t]) {\n\t\t\tconst path = join(bin, name);\n\t\t\tawait writeFile(path, source);\n\t\t\tawait chmod(path, 0o755);\n\t\t}\n\t\ttry\n\t\t{\n\t\t\tconst result = await execute(\"bash\", [join(process.cwd()\n\t\t\t\t, sourceClosurePath)], {\n\t\t\t\tcwd: scratch\n\t\t\t\t, env: {\n\t\t\t\t\t...process.env, PATH: `${bin}:${process.env.PATH}`\n\t\t\t\t\t, GITHUB_WORKSPACE: scratch\n\t\t\t\t}}\n\t\t\t);\n\t\t\treturn { code: 0, stdout: result.stdout, stderr: result.stderr };\n\t\t}\n\t\tcatch(error)\n\t\t{ return { code: error.code, stdout: error.stdout, stderr: error.stderr }; }\n\t}\n\tfinally\n\t{ await rm(scratch, { recursive: true, force: true }); }\n};\n\ntest(\"consumer source closure accepts metadata and refuses one retained payload\"\n\t, async () => {\n\t\tconst accepted = await runSourceClosureFixture(false);\n\t\tassert.equal(accepted.code, 0);\n\t\tassert.match(accepted.stdout, /missing blobs: 1001/u);\n\t\tassert.match(accepted.stdout, /evidence metadata KiB: 2048/u);\n\t\tconst refused = await runSourceClosureFixture(true);\n\t\tassert.equal(refused.code, 1);\n\t\tassert.match(refused.stderr\n\t\t\t, /Retained evidence payload escaped.*archive\\/run\\.tap/u);\n\t}\n);\n\n",
+          "previous": "",
+          "start": 4576
+        }
+      ],
+      "path": "tests/docker-consumer-ci.test.mjs",
+      "previousSha256": "b01282ae9fd10e1f4723672dab4c439431c515f010abe8b447dafa10cdcf251f"
+    }
+  ]
+}
