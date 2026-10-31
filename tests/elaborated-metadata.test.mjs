@@ -943,7 +943,10 @@ end Shop
 		, { kind: "primitive", name: "uint32" }
 	]);
 	assert.deepEqual(dependent.source.extensions["lean-lang.org/refinements"], {
-		parameters: [null, { kind: "fin-parameter", parameter: 0 }, null], result: null
+		parameters: [
+			null, { kind: "fin-parameter", parameter: 0 }, null
+		]
+		, result: null
 	});
 	assert.deepEqual(dependent.source.extensions["lean-lang.org/specialization"], {
 		name: "Shop.dependentArg"
