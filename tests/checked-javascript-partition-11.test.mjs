@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/consumer-nix-disk-budget-source-history-tests.mjs";
 import "./helpers/host-null-final-gate-repair-source-history-tests.mjs";
 import "./helpers/core-host-null-reconciliation-source-history-tests.mjs";
 import "./helpers/optional-parameter-trigger-policy-source-history-tests.mjs";
