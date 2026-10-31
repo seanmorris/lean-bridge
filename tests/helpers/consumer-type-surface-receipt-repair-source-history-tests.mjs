@@ -7,6 +7,8 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { beforeConsumerTypeSurfaceDocumentationContractRepairSource }
+	from "./consumer-type-surface-documentation-contract-repair-source-history.mjs";
 import { compileCallableJvmGraphPackageModel }
 	from "../../src/backends/jvm/callable-graph-model.mjs";
 import { generateCallableJvmGraphPackage }
@@ -173,7 +175,9 @@ test("downstream receipt repair refreshes exactly 96 live citations"
 		, {
 			path: "tests/jvm-recursive-callable-contract.test.mjs", count: 3
 		}]);
-		let restored = await readFile("docs/type-surface.v1.json", "utf8");
+		let restored = beforeConsumerTypeSurfaceDocumentationContractRepairSource(
+			"docs/type-surface.v1.json"
+			, await readFile("docs/type-surface.v1.json", "utf8"));
 		for(const pin of history.currentSourcePins)
 		{
 			assert.equal(restored.split(pin.current).length - 1

@@ -1,0 +1,269 @@
+{
+  "contract": {
+    "bindBeforeExecution": true,
+    "checkoutDepth": 1,
+    "coneMode": false,
+    "dependency": "type-surface-authentication",
+    "receiptArtifact": "consumer-type-surface-${{ github.sha }}",
+    "receiptEnvironment": "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT",
+    "receiptPath": "build/consumer-type-surface/receipt.json",
+    "restoreBeforeBind": true,
+    "sparseCheckout": true
+  },
+  "currentSourcePin": {
+    "count": 25,
+    "current": "9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d",
+    "path": "tests/documentation.test.mjs",
+    "previous": "38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "failedRun": {
+    "headSha": "6b6e049f018f9525f0f64a5d1f41f195305aa5da",
+    "workflow": 41222778612
+  },
+  "failure": {
+    "completedAt": "2026-10-31T17:26:23Z",
+    "job": 124600962626,
+    "name": "Documentation contract",
+    "staleExpectation": "The reviewed IR job must not use sparse checkout.",
+    "test": "consumer CI history preserves every consumer and pinned build path"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-consumer-type-surface-documentation-contract-repair-source-history.mjs",
+      "sha256": "be8fe25f46b37bf3b14620533699d85c806dc3b66e542366fb8f81f934ea9ba7"
+    },
+    {
+      "path": "tests/helpers/consumer-type-surface-documentation-contract-repair-source-history-tests.mjs",
+      "sha256": "6aecfd696ebde3fd912e3159e2d617293f0fcbfd0518907253ddfcda1b532034"
+    },
+    {
+      "path": "tests/helpers/consumer-type-surface-documentation-contract-repair-source-history.mjs",
+      "sha256": "e6fa83a99f5463e1c9978d167d95926063182b27726c8fabeceafd853f46921e"
+    }
+  ],
+  "immutableEvidence": {
+    "path": "docs/evidence/consumer-docker-source-closure-source-history-20261031.json",
+    "retainedHistoricalPin": "38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6",
+    "sha256": "d557713fa5beee840ca4ed0ce59ad9704158ffa163b45e7f49470f9fdc1f9d83"
+  },
+  "implementationCommit": "6834dd438c3982bc732733bc647fd82e7a6e0af6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7c2a8ccef447b7bd0d61561aa0a52dc90cdbf072938553b00a1def3c3f8a7ee4",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 813888
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 832263
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1058470
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1075587
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1083361
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1088793
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1095894
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1103060
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1110117
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1118369
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1127832
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1144843
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1151918
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1159815
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1170695
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1182857
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1206383
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1237738
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1270538
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1305638
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1336484
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1359781
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1381672
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1401745
+        },
+        {
+          "current": "          \"sha256\": \"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d\"\n",
+          "previous": "          \"sha256\": \"38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6\"\n",
+          "start": 1421525
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "be05cbd606fea192613e2d8c0524bf19c0409884fe0a496e9a3d1c0dc7b8ee53"
+    },
+    {
+      "currentSha256": "a4ee6306db23385e102dac08d4216336f207801b7134595410f0875cd60708bd",
+      "edits": [
+        {
+          "current": "import \"./helpers/consumer-type-surface-documentation-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "998ab32a7776cecf6013d2449e62c29dfc11e598d4182822b9c13d4aaef77d03"
+    },
+    {
+      "currentSha256": "d141e84ac37160b998a3cfec1f2c5b4f1a9d01a0171150626ed75a3f0a9a8f15",
+      "edits": [
+        {
+          "current": "import { beforeConsumerTypeSurfaceDocumentationContractRepairSource }\n\tfrom \"./consumer-type-surface-documentation-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 266
+        },
+        {
+          "current": "\t\tlet restored = beforeConsumerTypeSurfaceDocumentationContractRepairSource(\n\t\t\t\"docs/type-surface.v1.json\"\n\t\t\t, await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n",
+          "previous": "\t\tlet restored = await readFile(\"docs/type-surface.v1.json\", \"utf8\");\n",
+          "start": 7126
+        }
+      ],
+      "path": "tests/helpers/consumer-type-surface-receipt-repair-source-history-tests.mjs",
+      "previousSha256": "454667d39238ecc25c9d6368181bc61c12aaccd28af4bd44d7203d31930b3d41"
+    },
+    {
+      "currentSha256": "d37a059126924af39e562d77a017d8af410d3df084f2ec75595573d3fa778ef4",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeConsumerTypeSurfaceDocumentationContractRepairSource\n\t, consumerTypeSurfaceDocumentationContractRepairNormalizationPaths\n} from \"./consumer-type-surface-documentation-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...consumerTypeSurfaceDocumentationContractRepairNormalizationPaths\n\t, ...consumerTypeSurfaceReceiptRepairNormalizationPaths\n",
+          "previous": "\t...consumerTypeSurfaceReceiptRepairNormalizationPaths\n",
+          "start": 232533
+        },
+        {
+          "current": "\tlet stage = beforeConsumerTypeSurfaceDocumentationContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerTypeSurfaceReceiptRepairSource(\n",
+          "previous": "\tlet stage = beforeConsumerTypeSurfaceReceiptRepairSource(\n",
+          "start": 291966
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5014981dc9d2c2df390e6a217d8b9a1314d6fc7526f399c3c5c7a308d6dc8556"
+    }
+  ],
+  "liveFiles": 2661,
+  "milestone": "consumer-type-surface-documentation-contract-repair-v1",
+  "missingLiveFiles": 0,
+  "predecessorCommit": "6b6e049f018f9525f0f64a5d1f41f195305aa5da",
+  "refreshedPins": 25,
+  "remainingMismatches": 0,
+  "rootCause": "The reviewed IR job deliberately moved to the bounded sparse checkout and authenticated type-surface receipt, while its documentation contract still required the retired complete-checkout shape.",
+  "schemaVersion": 1,
+  "scope": "Replace the stale full-checkout documentation assertion with the exact bounded reviewed-corpus contract already used by the current workflow: one-depth non-cone sparse checkout, an explicit producer dependency, one exact commit-bound receipt restore, one receipt binding, and binding before reviewed corpus execution. Compose the predecessor receipt-repair test through this newer history layer. Refresh exactly 25 live citations for the documentation contract without changing the workflow, runtime, package API, support cell, stage, observation, immutable prior receipt or frozen #1220 model.",
+  "updates": [
+    {
+      "currentSha256": "9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d",
+      "edits": [
+        {
+          "current": "\tassert.match(reviewedJob, /^ {4}needs: type-surface-authentication$/mu);\n",
+          "previous": "",
+          "start": 57502
+        },
+        {
+          "current": "\tassert.match(reviewedJob, /fetch-depth: 1\\n {10}persist-credentials: false\\n {10}sparse-checkout: \\$\\{\\{ env\\.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT \\}\\}\\n {10}sparse-checkout-cone-mode: false/u);\n\tassert.doesNotMatch(reviewedJob, /fetch-depth: 0/u);\n\tassert.match(reviewedJob, /uses: actions\\/download-artifact@v8\\n {8}with:\\n {10}name: consumer-type-surface-\\$\\{\\{ github\\.sha \\}\\}\\n {10}path: build\\/consumer-type-surface/u);\n\tassert.match(reviewedJob, /LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=\\$GITHUB_WORKSPACE\\/build\\/consumer-type-surface\\/receipt\\.json/u);\n\tassert.equal(reviewedJob.split(\"Restore the authenticated type-surface receipt\").length - 1, 1);\n\tassert.equal(reviewedJob.split(\"Bind the authenticated type-surface receipt\").length - 1, 1);\n\tassert.ok(reviewedJob.indexOf(\"Restore the authenticated type-surface receipt\")\n\t\t< reviewedJob.indexOf(\"Bind the authenticated type-surface receipt\"));\n\tassert.ok(reviewedJob.indexOf(\"Bind the authenticated type-surface receipt\")\n\t\t< reviewedJob.indexOf(\"npm run test:type-corpus:reviewed\"));\n",
+          "previous": "  assert.doesNotMatch(reviewedJob, /sparse-checkout/u);\n  assert.match(reviewedJob, /intentionally re-hashes the complete retained type-surface/);\n",
+          "start": 57635
+        }
+      ],
+      "path": "tests/documentation.test.mjs",
+      "previousSha256": "38f5c3a97a230c3865d7c16124bbc2a55c1f0eda3ca2ff44a34417cf7bf5b8d6"
+    }
+  ]
+}
