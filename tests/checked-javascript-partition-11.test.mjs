@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/consumer-documentation-sparse-input-closure-source-history-tests.mjs";
 import "./helpers/consumer-history-sparse-checkout-closure-source-history-tests.mjs";
 import "./helpers/consumer-matrix-checkout-closure-source-history-tests.mjs";
 import "./helpers/consumer-callback-package-checkout-closure-source-history-tests.mjs";

@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeConsumerDocumentationSparseInputClosureSource
+	, consumerDocumentationSparseInputClosureNormalizationPaths
+} from "./consumer-documentation-sparse-input-closure-source-history.mjs";
+import {
 	beforeConsumerHistorySparseCheckoutClosureSource
 	, consumerHistorySparseCheckoutClosureNormalizationPaths
 } from "./consumer-history-sparse-checkout-closure-source-history.mjs";
@@ -2515,7 +2519,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...consumerHistorySparseCheckoutClosureNormalizationPaths
+	...consumerDocumentationSparseInputClosureNormalizationPaths
+	, ...consumerHistorySparseCheckoutClosureNormalizationPaths
 	, ...consumerMatrixCheckoutClosureNormalizationPaths
 	, ...consumerCallbackPackageCheckoutClosureNormalizationPaths
 	, ...consumerTypeSurfaceDocumentationContractRepairNormalizationPaths
@@ -3716,7 +3721,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeConsumerHistorySparseCheckoutClosureSource(
+	let stage = beforeConsumerDocumentationSparseInputClosureSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeConsumerHistorySparseCheckoutClosureSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
