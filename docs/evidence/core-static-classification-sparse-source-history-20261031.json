@@ -1,0 +1,268 @@
+{
+  "failedAt": "2026-10-31T05:19:19Z",
+  "failedStaticJob": 124450245666,
+  "failedWorkflowRun": 41171335673,
+  "failureClass": "deterministic sparse-checkout ENOENT",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-core-static-classification-sparse-source-history.mjs",
+      "sha256": "0ffc9ea5326f9f08c602796b26754a9599b850ccc4c4d2dd8fe7769343bd44a5"
+    },
+    {
+      "path": "tests/helpers/core-static-classification-sparse-source-history-tests.mjs",
+      "sha256": "f88e1c8c3b7f824771b44c8a40685ab7fa814e8670391c78853c6987a9ad24b5"
+    },
+    {
+      "path": "tests/helpers/core-static-classification-sparse-source-history.mjs",
+      "sha256": "e838ac5defc5655a391eed7c0e261a722a848d23f25fb5d260074040befc70cf"
+    }
+  ],
+  "implementationCommit": "fdc08862356813f569a659b30625fa28ee45287d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4b3367932818f552e259d55f9c792430f3d09e27bc323cece7b2589183aa8dae",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-static-classification-sparse-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 473
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c8ac96c24b764b60d50eca68a7ce1cf811f58b4e5932e974ff782159f226d7b8"
+    },
+    {
+      "currentSha256": "a92153afdf892458930ffee3281fb21ef78e511c84f97247a709b8633b9bfd74",
+      "edits": [
+        {
+          "current": "import { beforeCoreStaticClassificationSparseSource, coreStaticClassificationSparseNormalizationPaths } from \"./core-static-classification-sparse-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreStaticClassificationSparseNormalizationPaths\n\t, ...coreFinalAuditRegistrationNormalizationPaths\n",
+          "previous": "\t...coreFinalAuditRegistrationNormalizationPaths\n",
+          "start": 229544
+        },
+        {
+          "current": "\tlet stage = beforeCoreStaticClassificationSparseSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreFinalAuditRegistrationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreFinalAuditRegistrationSource(path, text, expected);\n",
+          "start": 288048
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b998bacdd40bd50b14e665dd9f161d83d3d05c0fe32f4f328865942234e48496"
+    }
+  ],
+  "milestone": "core-static-classification-sparse-source-v1",
+  "missingPath": "docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json",
+  "predecessorCommit": "29a1e6fd07a06a6f1c345526ba1453189dd26834",
+  "refreshedCitationCount": 29,
+  "rootCause": "The static classifier executed tests/test-profiles.test.mjs, whose top-level history-helper import eagerly read retained evidence excluded from the static checkout.",
+  "schemaVersion": 1,
+  "scope": "Run only the closed repository-test classifier in the static Core preflight; lazy-load retained history only inside its full-contract test. Preserve the full historical registration test, every type-surface observation and evidence identity, and the complete checked-JavaScript quality contract. Refresh exactly the 29 citations for the two implementation sources.",
+  "semanticChanges": 0,
+  "typeSurfaceCounts": {
+    "evidence": 900,
+    "observations": 717,
+    "paths": 2,
+    "positions": 6,
+    "profiles": 17,
+    "stages": 5
+  },
+  "updates": [
+    {
+      "currentSha256": "05a3ae0e165a042484815d7e08774d78a5eb9111a9d4f0d8d93e521cc348b1b2",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 56845
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 79403
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 96606
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 112899
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 433545
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1013432
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1139511
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1168909
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1179169
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1193262
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1225806
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1256088
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1289051
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1330603
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1356155
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1378692
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1398384
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1418874
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 1429367
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 75698763
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 75703598
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 75708427
+        },
+        {
+          "current": "          \"sha256\": \"56d4a9122797d0ea77940302975b6a58b2e9320e91a8f7ccd949ea023dbc0fd3\"\n",
+          "previous": "          \"sha256\": \"58c3f06ff0e055286894bb4742bd2d69838b81919188f597ee516532827ca512\"\n",
+          "start": 75711769
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 75715301
+        },
+        {
+          "current": "          \"sha256\": \"56d4a9122797d0ea77940302975b6a58b2e9320e91a8f7ccd949ea023dbc0fd3\"\n",
+          "previous": "          \"sha256\": \"58c3f06ff0e055286894bb4742bd2d69838b81919188f597ee516532827ca512\"\n",
+          "start": 75718643
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 75722186
+        },
+        {
+          "current": "          \"sha256\": \"56d4a9122797d0ea77940302975b6a58b2e9320e91a8f7ccd949ea023dbc0fd3\"\n",
+          "previous": "          \"sha256\": \"58c3f06ff0e055286894bb4742bd2d69838b81919188f597ee516532827ca512\"\n",
+          "start": 75725528
+        },
+        {
+          "current": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "previous": "          \"sha256\": \"9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2\"\n",
+          "start": 75729112
+        },
+        {
+          "current": "          \"sha256\": \"56d4a9122797d0ea77940302975b6a58b2e9320e91a8f7ccd949ea023dbc0fd3\"\n",
+          "previous": "          \"sha256\": \"58c3f06ff0e055286894bb4742bd2d69838b81919188f597ee516532827ca512\"\n",
+          "start": 75732454
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "df1292445b612f919d4f1ccb6195df61cf1486dac73734b34fa90432bd14ec1c"
+    },
+    {
+      "currentSha256": "829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817",
+      "edits": [
+        {
+          "current": "    \"env:check:core\": \"bash scripts/inventory.sh --profile core && node --test --test-name-pattern='every repository test receives exactly one named execution profile' tests/test-profiles.test.mjs\",\n",
+          "previous": "    \"env:check:core\": \"bash scripts/inventory.sh --profile core && node --test tests/test-profiles.test.mjs\",\n",
+          "start": 32442
+        }
+      ],
+      "path": "package.json",
+      "previousSha256": "9eaac1127c51ee17ad1e194cb43ea8b9bd29192450e58cbbf04e2c63a3ef13f2"
+    },
+    {
+      "currentSha256": "e117022bc8a04f6e534e1600be3db8488d81f6deac1e611c21a404b0961454a2",
+      "edits": [
+        {
+          "current": "\t\t, /inventory\\.sh --profile core.*test-name-pattern=.*execution profile.*test-profiles\\.test\\.mjs/u);\n",
+          "previous": "\t\t, /inventory\\.sh --profile core.*test-profiles\\.test\\.mjs/u);\n",
+          "start": 2409
+        }
+      ],
+      "path": "tests/checked-javascript.test.mjs",
+      "previousSha256": "854449173f1562faaef828e8f9a0c5bff1ff38fdd54be69dab20329c9b15f0b4"
+    },
+    {
+      "currentSha256": "56d4a9122797d0ea77940302975b6a58b2e9320e91a8f7ccd949ea023dbc0fd3",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { verifyAddedTestRegistrations } from \"./helpers/test-registration-history.mjs\";\n",
+          "start": 412
+        },
+        {
+          "current": "test(\"historical test registration checks permit additions but reject edits and ambiguous lineage\", async () => {\n\tconst { verifyAddedTestRegistrations } = await import(\n\t\t\"./helpers/test-registration-history.mjs\");\n",
+          "previous": "test(\"historical test registration checks permit additions but reject edits and ambiguous lineage\", () => {\n",
+          "start": 7825
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "58c3f06ff0e055286894bb4742bd2d69838b81919188f597ee516532827ca512"
+    }
+  ]
+}

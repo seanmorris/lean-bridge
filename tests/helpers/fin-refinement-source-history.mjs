@@ -12,6 +12,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreStaticClassificationSparseSource, coreStaticClassificationSparseNormalizationPaths } from "./core-static-classification-sparse-source-history.mjs";
 import { beforeCoreFinalAuditRegistrationSource, coreFinalAuditRegistrationNormalizationPaths } from "./core-final-audit-registration-source-history.mjs";
 import { beforeNominalEntryContractReplaySource, nominalEntryContractReplayNormalizationPaths } from "./nominal-entry-contract-replay-source-history.mjs";
 import { beforeCoreHostNullReconciliationSource, coreHostNullReconciliationNormalizationPaths } from "./core-host-null-reconciliation-source-history.mjs";
@@ -2440,7 +2441,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreFinalAuditRegistrationNormalizationPaths
+	...coreStaticClassificationSparseNormalizationPaths
+	, ...coreFinalAuditRegistrationNormalizationPaths
 	, ...nominalEntryContractReplayNormalizationPaths
 	, ...coreHostNullReconciliationNormalizationPaths
 	, ...optionalParameterTriggerPolicyNormalizationPaths
@@ -3619,7 +3621,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreFinalAuditRegistrationSource(path, text, expected);
+	let stage = beforeCoreStaticClassificationSparseSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreFinalAuditRegistrationSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
