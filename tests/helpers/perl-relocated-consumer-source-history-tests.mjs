@@ -21,7 +21,9 @@ test("Perl installed relocation history authenticates exact predecessors and ref
 	assert.deepEqual(record.updates.map(update => update.path), perlRelocatedConsumerChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeRubyDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), previous = reversePerlRelocatedConsumerUpdate(source, update);
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		const previous = reversePerlRelocatedConsumerUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforePerlRelocatedConsumerSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);

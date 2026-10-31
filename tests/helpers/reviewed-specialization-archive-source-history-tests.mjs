@@ -7,7 +7,6 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeReviewedInstantiationSource } from "./reviewed-instantiation-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedSpecializationArchiveSource, reviewedSpecializationArchiveChangedPaths, reviewedSpecializationArchiveHistoryPath, reverseReviewedSpecializationArchiveUpdate } from "./reviewed-specialization-archive-source-history.mjs";
 
@@ -17,7 +16,8 @@ test("Reviewed specialization archive authenticates each exact source predecesso
 	assert.deepEqual(record.updates.map(update => update.path), reviewedSpecializationArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeReviewedInstantiationSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseReviewedSpecializationArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedSpecializationArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedSpecializationArchiveSource(update.path, source, update.currentSha256), source);

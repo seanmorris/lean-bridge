@@ -17,7 +17,8 @@ test("Perl Fin archive inspection authenticates each exact source predecessor", 
 	assert.deepEqual(record.updates.map(update => update.path), perlFinArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeReviewedScalarHostsSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reversePerlFinArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePerlFinArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforePerlFinArchiveSource(update.path, source, update.currentSha256), source);

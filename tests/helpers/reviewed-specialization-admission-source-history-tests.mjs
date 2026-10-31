@@ -7,7 +7,6 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePhpWasmFinArchiveSource } from "./php-wasm-fin-archive-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedSpecializationAdmissionSource, reviewedSpecializationAdmissionChangedPaths, reviewedSpecializationAdmissionHistoryPath, reverseReviewedSpecializationAdmissionUpdate } from "./reviewed-specialization-admission-source-history.mjs";
 
@@ -17,7 +16,8 @@ test("Reviewed finite-specialization admission authenticates each exact source p
 	assert.deepEqual(record.updates.map(update => update.path), reviewedSpecializationAdmissionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePhpWasmFinArchiveSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseReviewedSpecializationAdmissionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedSpecializationAdmissionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedSpecializationAdmissionSource(update.path, source, update.currentSha256), source);

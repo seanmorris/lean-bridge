@@ -17,7 +17,8 @@ test("Native Fin records authenticates each exact source predecessor", async () 
 	assert.deepEqual(record.updates.map(update => update.path), nativeFinRecordsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePhpWasmFinSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseNativeFinRecordsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinRecordsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinRecordsSource(update.path, source, update.currentSha256), source);

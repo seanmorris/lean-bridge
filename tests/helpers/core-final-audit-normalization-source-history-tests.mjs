@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 import { coreFinalTypeSurfaceAuditHistoryPath
 	, coreFinalTypeSurfaceAuditMilestones }
@@ -29,6 +29,15 @@ const git = arguments_ => execFileSync("git", arguments_, {
 });
 const record = async () => JSON.parse(await readFile(
 	coreFinalAuditNormalizationHistoryPath, "utf8"));
+
+const legacyEndpointMismatches = sources => {
+	const mismatches = [];
+	const pattern = /const source = (before(?!FinRefinementSource)[A-Za-z0-9_]+Source)\(\s*update\.path\s*,\s*await readFile\(\s*update\.path\s*,\s*"utf8"\s*\)\s*(?:,\s*update\.currentSha256)?\s*\)/gu;
+	for(const [path, source] of sources)
+		for(const match of source.matchAll(pattern))
+			mismatches.push({ path, adapter: match[1] });
+	return mismatches;
+};
 
 test("final-audit normalization covers every modified path in all milestones"
 	, async () => {
@@ -60,6 +69,27 @@ test("final-audit normalization covers every modified path in all milestones"
 			, coreFinalTypeSurfaceAuditMilestones.map(item => item.commit));
 		assert.deepEqual(history.integrationUpdates.map(item => item.path)
 			, coreFinalAuditNormalizationIntegrationPaths);
+	}
+);
+
+test("source-history transitions acquire current endpoints through the complete hub"
+	, async () => {
+		const directory = new URL("./", import.meta.url);
+		const paths = (await readdir(directory)).filter(path =>
+			path.endsWith("-source-history-tests.mjs"));
+		const sources = await Promise.all(paths.map(async path => [
+			path, await readFile(new URL(path, directory), "utf8")
+		]));
+		assert.deepEqual(legacyEndpointMismatches(sources), []);
+		const target = sources.find(([, source]) => source.includes(
+			"const source = beforeFinRefinementSource(update.path"));
+		assert.ok(target);
+		const mutant = target[1].replace(
+			"const source = beforeFinRefinementSource(update.path"
+			, "const source = beforeLegacySource(update.path");
+		assert.deepEqual(legacyEndpointMismatches([[target[0], mutant]]), [{
+			path: target[0], adapter: "beforeLegacySource"
+		}]);
 	}
 );
 

@@ -17,7 +17,8 @@ test("Perl Fin XS audit authenticates each exact source predecessor", async () =
 	assert.deepEqual(record.updates.map(update => update.path), perlFinXsAuditChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeFinProductsSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reversePerlFinXsAuditUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePerlFinXsAuditSource(update.path, source)), update.previousSha256);
 		assert.equal(beforePerlFinXsAuditSource(update.path, source, update.currentSha256), source);

@@ -17,7 +17,8 @@ test("Fin products floors authenticates each exact source predecessor", async ()
 	assert.deepEqual(record.updates.map(update => update.path), finProductsFloorsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeGenericRecordsEngineSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseFinProductsFloorsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinProductsFloorsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinProductsFloorsSource(update.path, source, update.currentSha256), source);
@@ -50,4 +51,3 @@ test("Fin products floors changes current source pins without inventing installe
 	}
 	assert.ok(refreshed > 0);
 });
-

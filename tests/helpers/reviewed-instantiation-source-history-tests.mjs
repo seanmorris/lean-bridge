@@ -7,7 +7,6 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeBrowserCallbackArchiveSource } from "./browser-callback-archive-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedInstantiationSource, reviewedInstantiationChangedPaths, reviewedInstantiationHistoryPath, reverseReviewedInstantiationUpdate } from "./reviewed-instantiation-source-history.mjs";
 
@@ -17,7 +16,8 @@ test("Reviewed generic instantiation authenticates each exact source predecessor
 	assert.deepEqual(record.updates.map(update => update.path), reviewedInstantiationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeBrowserCallbackArchiveSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseReviewedInstantiationUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedInstantiationSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedInstantiationSource(update.path, source, update.currentSha256), source);

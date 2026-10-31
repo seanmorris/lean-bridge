@@ -20,7 +20,9 @@ test("reviewed instantiation archive restores exact main predecessors without ac
 	assert.deepEqual(record.updates.map(update => update.path), reviewedInstantiationArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePhpDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), restored = reverseReviewedInstantiationArchiveUpdate(source, update);
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		const restored = reverseReviewedInstantiationArchiveUpdate(source, update);
 		assert.equal(sha256(restored), update.previousSha256);
 		assert.equal(beforeReviewedInstantiationArchiveSource(update.path, source), restored);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), restored);
@@ -38,7 +40,9 @@ test("reviewed native branch intermediates require the explicitly authenticated 
 	assert.deepEqual(record.producerUpdates.map(update => update.path), Object.keys(reviewedInstantiationArchiveProducerPins));
 	for(const update of record.producerUpdates)
 	{
-		const source = beforePhpDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), expected = reviewedInstantiationArchiveProducerPins[update.path];
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		const expected = reviewedInstantiationArchiveProducerPins[update.path];
 		assert.equal(update.previousSha256, expected);
 		const restored = beforeReviewedInstantiationArchiveSource(update.path, source, expected);
 		assert.equal(sha256(restored), expected);

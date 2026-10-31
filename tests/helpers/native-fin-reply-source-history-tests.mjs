@@ -20,7 +20,8 @@ test("Native Fin reply integration authenticates each exact source predecessor",
 	assert.deepEqual(record.updates.map(update => update.path), nativeFinReplyChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeCallbackCoverageRepairSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseNativeFinReplyUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinReplySource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinReplySource(update.path, source, update.currentSha256), source);

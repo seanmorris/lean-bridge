@@ -20,7 +20,8 @@ test("Native reply symbol fix integration authenticates each exact source predec
 	assert.deepEqual(record.updates.map(update => update.path), nativeReplySymbolFixChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeNativeReplyReviewSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseNativeReplySymbolFixUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeReplySymbolFixSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeReplySymbolFixSource(update.path, source, update.currentSha256), source);

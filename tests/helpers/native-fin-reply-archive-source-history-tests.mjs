@@ -20,7 +20,8 @@ test("Native Fin reply archive integration authenticates each exact source prede
 	assert.deepEqual(record.updates.map(update => update.path), nativeFinReplyArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeNativeFinReplyPromotionSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseNativeFinReplyArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinReplyArchiveSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinReplyArchiveSource(update.path, source, update.currentSha256), source);

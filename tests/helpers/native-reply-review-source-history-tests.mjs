@@ -22,7 +22,8 @@ test("Native reply review integration authenticates each exact source predecesso
 	assert.deepEqual(record.updates.map(update => update.path), nativeReplyReviewChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeScalarFinSourceEntryIntegrationSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseNativeReplyReviewUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeReplyReviewSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeReplyReviewSource(update.path, source, update.currentSha256), source);

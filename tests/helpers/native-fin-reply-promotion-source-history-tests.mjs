@@ -21,7 +21,8 @@ test("Native Fin reply promotion integration authenticates each exact source pre
 	assert.deepEqual(record.updates.map(update => update.path), nativeFinReplyPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeNodeConsumerBudgetSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseNativeFinReplyPromotionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinReplyPromotionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinReplyPromotionSource(update.path, source, update.currentSha256), source);

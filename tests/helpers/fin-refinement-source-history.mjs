@@ -6944,7 +6944,7 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	previous = beforeCoreTerminalReachabilitySource(
 		path, previous, expected
 	);
-	if(previous === text) return text === input ? source : text;
+	if(previous === text && text === input) return source;
 	return expected !== undefined && sha256(previous) !== expected
 		? beforeFinRefinementSource(path, previous, expected)
 		: previous;
