@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforePerlCallbackModuleArgumentRepairSource
+	, perlCallbackModuleArgumentRepairNormalizationPaths
+} from "./perl-callback-module-argument-repair-source-history.mjs";
+import {
 	beforeConsumerReceiptMilestoneTraversalRepairSource
 	, consumerReceiptMilestoneTraversalRepairNormalizationPaths
 } from "./consumer-receipt-milestone-traversal-repair-source-history.mjs";
@@ -2527,7 +2531,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...consumerReceiptMilestoneTraversalRepairNormalizationPaths
+	...perlCallbackModuleArgumentRepairNormalizationPaths
+	, ...consumerReceiptMilestoneTraversalRepairNormalizationPaths
 	, ...ownedJavaScriptCheckoutContractRepairNormalizationPaths
 	, ...consumerDocumentationSparseInputClosureNormalizationPaths
 	, ...consumerHistorySparseCheckoutClosureNormalizationPaths
@@ -3731,7 +3736,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeConsumerReceiptMilestoneTraversalRepairSource(
+	let stage = beforePerlCallbackModuleArgumentRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeConsumerReceiptMilestoneTraversalRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/perl-callback-module-argument-repair-source-history-tests.mjs";
 import "./helpers/consumer-documentation-sparse-input-closure-source-history-tests.mjs";
 import "./helpers/consumer-receipt-milestone-traversal-repair-source-history-tests.mjs";
 import "./helpers/owned-javascript-checkout-contract-repair-source-history-tests.mjs";

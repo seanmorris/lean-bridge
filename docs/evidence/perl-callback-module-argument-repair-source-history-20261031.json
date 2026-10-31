@@ -1,0 +1,100 @@
+{
+  "changedSupportCells": 0,
+  "evidenceContractChanges": 2,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-perl-callback-module-argument-repair-source-history.mjs",
+      "sha256": "e37ff89049a02036decb9c9effb0580b423b31fcbcde25ded394868b481e2cd1"
+    },
+    {
+      "path": "tests/helpers/perl-callback-module-argument-repair-source-history-tests.mjs",
+      "sha256": "680ef5b154d6091d0b8a00ce8aa02212e82489260321c6b113000070f897ae31"
+    },
+    {
+      "path": "tests/helpers/perl-callback-module-argument-repair-source-history.mjs",
+      "sha256": "82e90aad40fc10b2a34d7d44d7a3588215b8629f0cd1376e4250d8aaa5c30441"
+    }
+  ],
+  "hostedFailure": {
+    "artifactId": 13062220600,
+    "failed": 4,
+    "jobId": 124662134912,
+    "logSha256": "b05a501f10bdb9999801667edfefb8c4039e625017cc7ed91db701efa0fb1663",
+    "passed": 12,
+    "runId": 41242839565,
+    "tests": 16,
+    "unexpectedArgument": "LeanBridge::OwnedProbe"
+  },
+  "implementationCommit": "4b2f4b73ad64e765d9f1c941ebc66c8e381100c5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2f8916808acc23c08f53fc2d8d0222eeb9f027123f5f422458cdaa420b9b7213",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-callback-module-argument-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "d4be2fb41594679026bd7e98fd417edc64870bf38296a0f4fa99efd02dda4583"
+    },
+    {
+      "currentSha256": "02127baf3fb5328af4006e3fa220dc033c448d465cadac8234eb8dc05e6adf0c",
+      "edits": [
+        {
+          "current": "import {\n\tbeforePerlCallbackModuleArgumentRepairSource\n\t, perlCallbackModuleArgumentRepairNormalizationPaths\n} from \"./perl-callback-module-argument-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...perlCallbackModuleArgumentRepairNormalizationPaths\n\t, ...consumerReceiptMilestoneTraversalRepairNormalizationPaths\n",
+          "previous": "\t...consumerReceiptMilestoneTraversalRepairNormalizationPaths\n",
+          "start": 233849
+        },
+        {
+          "current": "\tlet stage = beforePerlCallbackModuleArgumentRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerReceiptMilestoneTraversalRepairSource(\n",
+          "previous": "\tlet stage = beforeConsumerReceiptMilestoneTraversalRepairSource(\n",
+          "start": 293707
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6cf383f8bed0e1c57f446c610bf7b788030f64c57b24807e978f757c08630fb5"
+    }
+  ],
+  "milestone": "perl-callback-module-argument-repair-source-v1",
+  "predecessorCommit": "766fd12a6297fe52fe3eeccc77105aacb2f32903",
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "0352364f9a34ca1c900b166a25274b230191d69a50bd5c6ce04fb7dff09cedd5",
+      "edits": [
+        {
+          "current": "\t\t\t\t, join(consumerRoot, \"changed-native-file\")\n\t\t\t\t, item.manifest.module\n\t\t\t\t, ...assetPaths], consumerRoot);\n",
+          "previous": "\t\t\t\t, join(consumerRoot, \"changed-native-file\"), ...assetPaths], consumerRoot);\n",
+          "start": 43113
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-package-evidence.mjs",
+      "previousSha256": "a141067c01b947e35e660d46fe2ff39f1551d576e947af272062261050b55b0b"
+    },
+    {
+      "currentSha256": "221b6735cf01373d996368753e4a308b64c93b094439e082a44feab99776a18d",
+      "edits": [
+        {
+          "current": "\t\t\t\traw(asset.execution, perl, [\n\t\t\t\t\t\"inspect-assets.pl\"\n\t\t\t\t\t, assetMode\n\t\t\t\t\t, path\n\t\t\t\t\t, join(consumer, \"changed-native-file\")\n\t\t\t\t\t, item.manifest.module\n\t\t\t\t\t, ...paths\n\t\t\t\t], consumer);\n",
+          "previous": "\t\t\t\traw(asset.execution, perl, [\"inspect-assets.pl\", assetMode, path, join(consumer, \"changed-native-file\"), ...paths], consumer);\n",
+          "start": 18050
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-variant-evidence.mjs",
+      "previousSha256": "0dca2ed36dc49daaa9c049afeeeb216e6f4ccae99280c4337dfc816dc51ea6ba"
+    }
+  ],
+  "validation": {
+    "affectedReconstructionTestsPassed": 4,
+    "hostedRuntimeTestsPassed": 41,
+    "optionalPackageForgeriesRejected": 438,
+    "runtimeSemanticChanges": 0
+  }
+}
