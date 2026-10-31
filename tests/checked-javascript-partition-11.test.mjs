@@ -8,6 +8,7 @@ import "./helpers/core-host-null-reconciliation-source-history-tests.mjs";
 import "./helpers/optional-parameter-trigger-policy-source-history-tests.mjs";
 import "./helpers/nominal-entry-contract-replay-source-history-tests.mjs";
 import "./helpers/core-final-test-registration-source-history-tests.mjs";
+import "./helpers/final-downstream-resource-source-history-tests.mjs";
 import "./helpers/core-static-classification-sparse-source-history-tests.mjs";
 import "./helpers/core-final-audit-registration-source-history-tests.mjs";
 import "./helpers/core-archived-source-pin-restoration-source-history-tests.mjs";
