@@ -1,0 +1,124 @@
+{
+  "currentSourcePins": [
+    {
+      "count": 4,
+      "current": "2571b2199c1c75788565db2a34a36096a70fa839f4b93d583d398226cf620d2e",
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previous": "6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75"
+    }
+  ],
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "failedRun": {
+    "job": 124497398223,
+    "step": "Run inventory, lint, and checked JavaScript",
+    "workflow": 41187496757
+  },
+  "failure": "The supported dependent-Fin specialization expectation exceeded the repository's column-80 grouped-list contract.",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-dependent-fin-lint-repair-source-history.mjs",
+      "sha256": "e27738d63fa5e85b99888dd0e67bd6d9b5d5da1d1d85013d889c69b5fca080bc"
+    },
+    {
+      "path": "tests/helpers/dependent-fin-lint-repair-source-history-tests.mjs",
+      "sha256": "4766665f6ab7f834017294a248faf753c9dd64b9910e13e8d60e51769f70d5bd"
+    },
+    {
+      "path": "tests/helpers/dependent-fin-lint-repair-source-history.mjs",
+      "sha256": "fd7c44d22fe9db3ce846aafa5ba7af9dc3681cc07e020f340756e7e086ace86c"
+    }
+  ],
+  "implementationCommit": "99f762d4a90cd98a5a6b0a89fbfdbf48b9e1ced3",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b3407e55b4e66fc1835ef2684e2d661810b98ccec374adbab8f8038b0f96087d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"2571b2199c1c75788565db2a34a36096a70fa839f4b93d583d398226cf620d2e\"\n",
+          "previous": "          \"sha256\": \"6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75\"\n",
+          "start": 1436094
+        },
+        {
+          "current": "          \"sha256\": \"2571b2199c1c75788565db2a34a36096a70fa839f4b93d583d398226cf620d2e\"\n",
+          "previous": "          \"sha256\": \"6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75\"\n",
+          "start": 1439320
+        },
+        {
+          "current": "          \"sha256\": \"2571b2199c1c75788565db2a34a36096a70fa839f4b93d583d398226cf620d2e\"\n",
+          "previous": "          \"sha256\": \"6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75\"\n",
+          "start": 1445485
+        },
+        {
+          "current": "          \"sha256\": \"2571b2199c1c75788565db2a34a36096a70fa839f4b93d583d398226cf620d2e\"\n",
+          "previous": "          \"sha256\": \"6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75\"\n",
+          "start": 1492821
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "62dfd6de5d32f8a5dfcee17bf436cf10cbb1280bbf7ac0fd8a9b18363da26339"
+    },
+    {
+      "currentSha256": "6158e23bf3c833e1bd3593e6d8157e6adae0cdc7a7267dcf9fa7a732b24186c4",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-fin-lint-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 177
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "4bf5462b545b6e50472dff47e78e4f8994baf6734069ec61ffa841011e1d070f"
+    },
+    {
+      "currentSha256": "cc80f7c84711b83a7ca1ba9acab7c8f83588a2d010460b2f3e3e8819c1c5cfc3",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeDependentFinLintRepairSource\n\t, dependentFinLintRepairNormalizationPaths\n} from \"./dependent-fin-lint-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...dependentFinLintRepairNormalizationPaths\n\t, ...corePhpCiInputRepairNormalizationPaths\n",
+          "previous": "\t...corePhpCiInputRepairNormalizationPaths\n",
+          "start": 231305
+        },
+        {
+          "current": "\tlet stage = beforeDependentFinLintRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCorePhpCiInputRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCorePhpCiInputRepairSource(path, text, expected);\n",
+          "start": 290342
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d4447b0af81619c596a306b47024c67ace989f83adb9984a2254aa74adc49962"
+    }
+  ],
+  "lintCommand": "npx eslint tests/elaborated-metadata.test.mjs",
+  "liveFiles": 2661,
+  "liveSourcePins": 4,
+  "milestone": "dependent-fin-lint-repair-source-v1",
+  "predecessorCommit": "71b83890269dc1cf62b4deef2680e3e32603705d",
+  "remainingLiveSourceMismatches": 0,
+  "runtimeChanged": false,
+  "schemaVersion": 1,
+  "scope": "Reflow only the supported dependent-Fin refinement expectation, prove the exact static gate passes, refresh its four live citations, and preserve every support observation, evidence identity, stage and the frozen 1,054-cell/5,270-stage #1220 model.",
+  "semanticChanges": 0,
+  "updates": [
+    {
+      "currentSha256": "2571b2199c1c75788565db2a34a36096a70fa839f4b93d583d398226cf620d2e",
+      "edits": [
+        {
+          "current": "\t\tparameters: [\n\t\t\tnull, { kind: \"fin-parameter\", parameter: 0 }, null\n\t\t]\n\t\t, result: null\n",
+          "previous": "\t\tparameters: [null, { kind: \"fin-parameter\", parameter: 0 }, null], result: null\n",
+          "start": 55475
+        }
+      ],
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previousSha256": "6b02ff75be5a3a9d95ae335208d0ce27a06b4aa505f07f036a19065eadd86c75"
+    }
+  ]
+}
