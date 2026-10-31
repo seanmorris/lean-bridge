@@ -659,10 +659,11 @@ test("live downstream workflows retain their required refinement gates", async (
 });
 
 test("consumer CI history preserves every consumer and pinned build path", async () => {
-  const [packageDocument, livePerlWorkflow, toolchainBootstrap] = await Promise.all([
+  const [packageDocument, livePerlWorkflow, toolchainBootstrap, reviewedCorpusTest] = await Promise.all([
     readFile("package.json", "utf8").then(JSON.parse)
     , readFile(".github/workflows/perl-consumer.yml", "utf8")
     , readFile("scripts/bootstrap-toolchains.sh", "utf8")
+    , readFile("tests/type-corpus-reviewed.test.mjs", "utf8")
   ]);
   // Partition transforms authenticate their own epochs; later workflow additions are checked above.
   const path = ".github/workflows/consumer-matrix.yml";
@@ -775,6 +776,12 @@ test("consumer CI history preserves every consumer and pinned build path", async
   const phpMultiProfileJob = workflow.match(/^ {2}php-multi-profile:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
   assert.ok(phpMultiProfileJob);
   assert.match(phpMultiProfileJob, /^ {4}timeout-minutes: 180$/m);
+  const livePhpMultiProfileJob = liveWorkflow.match(/^ {2}php-multi-profile:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
+  assert.ok(livePhpMultiProfileJob);
+  assert.ok(livePhpMultiProfileJob.indexOf("Free hosted runner disk before PHP-Wasm and Nix builds")
+    < livePhpMultiProfileJob.indexOf("Check out the exact revision"));
+  assert.match(livePhpMultiProfileJob
+    , /sudo rm -rf \/usr\/share\/dotnet \/usr\/local\/lib\/android \/opt\/ghc \/usr\/local\/\.ghcup \/opt\/hostedtoolcache\/CodeQL/u);
   assert.match(phpMultiProfileJob, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
   assert.match(workflow, /^ {6}- php-multi-profile$/m);
   assert.match(workflow, /if: needs\.php-multi-profile\.result != 'success'/);
@@ -812,6 +819,8 @@ test("consumer CI history preserves every consumer and pinned build path", async
   assert.match(reviewedJob, /intentionally re-hashes the complete retained type-surface/);
   assert.match(reviewedJob, /bootstrap-toolchains\.sh --lean-only/);
   assert.match(reviewedJob, /npm run test:type-corpus:reviewed/);
+  assert.match(reviewedCorpusTest
+    , /real reviewed-IR corpus records analysis and rejection without installed coverage"[\s\S]*timeout: 600_000/u);
   assert.doesNotMatch(reviewedJob, /continue-on-error/);
   assert.match(reviewedJob, /name: type-corpus-reviewed-ir-\$\{\{ github\.sha \}\}/);
   assert.match(reviewedJob, /path: build\/type-corpus\/reviewed-ir\.json\n\s*if-no-files-found: error/);

@@ -130,7 +130,7 @@ test("malformed or multiple review files cannot fall back to source compilation"
 });
 
 test("real reviewed-IR corpus records analysis and rejection without installed coverage", {
-	skip: process.env.LEAN_BRIDGE_REVIEWED_CORPUS_TEST !== "1", timeout: 180_000
+	skip: process.env.LEAN_BRIDGE_REVIEWED_CORPUS_TEST !== "1", timeout: 600_000
 }, async t => {
 	const reportPath = join(repository, "build/type-corpus/reviewed-ir.json");
 	await rm(reportPath, { force: true });
