@@ -1,0 +1,113 @@
+{
+  "failedRun": {
+    "aggregateJob": 124544716647,
+    "job": 124543662392,
+    "workflow": 41203403878
+  },
+  "failure": {
+    "completedAt": "2026-10-31T13:03:10Z",
+    "errors": 6,
+    "locations": [
+      "scripts/update-consumer-docker-evidence-exclusion-source-history.mjs:93",
+      "tests/docker-consumer-ci.test.mjs:192",
+      "tests/helpers/consumer-docker-evidence-exclusion-source-history-tests.mjs:92"
+    ],
+    "rule": "sm-no-saccade-style/leading-comma-lists",
+    "step": "Run static quality contract"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-consumer-docker-evidence-exclusion-lint-source-history.mjs",
+      "sha256": "e4e3bb52a166149d5337bcd3f339697c7e7f0ecd8ceec3c07af08fd4021616c8"
+    },
+    {
+      "path": "tests/helpers/consumer-docker-evidence-exclusion-lint-source-history-tests.mjs",
+      "sha256": "653f7d1e6b452dd9e03addb0d47add9542552995f600604598572a195f449426"
+    },
+    {
+      "path": "tests/helpers/consumer-docker-evidence-exclusion-lint-source-history.mjs",
+      "sha256": "7b809d689d417721fc32f364b1e59a5f12b937e379a90b89df6b69cef184011f"
+    }
+  ],
+  "implementationCommit": "cf29ece10de8cd905ffa8e12140b9840f95e2ba5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d254f60f8b45fb966326b6621b784f26a2c9cbecfe5df6523831af267995243c",
+      "edits": [
+        {
+          "current": "import \"./helpers/consumer-docker-evidence-exclusion-lint-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 177
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "fedd477d49486eaf3532f951b6c4056b33984a17420568e579984be502f5dabc"
+    },
+    {
+      "currentSha256": "ab86bcf3a7c9609dd906c0846d9de895f3bd066119581c7f23d01d83b28785ae",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeConsumerDockerEvidenceExclusionLintSource\n\t, consumerDockerEvidenceExclusionLintNormalizationPaths\n} from \"./consumer-docker-evidence-exclusion-lint-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...consumerDockerEvidenceExclusionLintNormalizationPaths\n\t, ...consumerDockerEvidenceExclusionNormalizationPaths\n",
+          "previous": "\t...consumerDockerEvidenceExclusionNormalizationPaths\n",
+          "start": 231825
+        },
+        {
+          "current": "\tlet stage = beforeConsumerDockerEvidenceExclusionLintSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerDockerEvidenceExclusionSource(\n",
+          "previous": "\tlet stage = beforeConsumerDockerEvidenceExclusionSource(\n",
+          "start": 291030
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "16bb3b13959e4decc3777e63921ef8e033ec8a7ab2aed53c09c51f449ea77fa3"
+    }
+  ],
+  "milestone": "consumer-docker-evidence-exclusion-lint-source-v1",
+  "predecessorCommit": "0983650a9bd41db3f4d52d64f6297eb6fd89058d",
+  "schemaVersion": 1,
+  "scope": "Repair exactly three multiline leading-comma layouts reported by the exact-head static quality job. Preserve every executable token, Docker source-closure behavior, type-surface byte, support claim and archived evidence record. Register the exact reversible transition and retain the failed run.",
+  "semanticChanges": 0,
+  "typeSurfaceChanges": 0,
+  "updates": [
+    {
+      "currentSha256": "37666b61afea870da20cf33b53d025c36673d6a4e62768119aa815ae989bacbd",
+      "edits": [
+        {
+          "current": "const runner = git([\"show\"\n\t, consumerDockerEvidenceExclusionImplementation\n\t\t+ \":scripts/test-docker-consumer-ci.sh\"]);\n",
+          "previous": "const runner = git([\"show\", consumerDockerEvidenceExclusionImplementation\n\t+ \":scripts/test-docker-consumer-ci.sh\"]);\n",
+          "start": 4333
+        }
+      ],
+      "path": "scripts/update-consumer-docker-evidence-exclusion-source-history.mjs",
+      "previousSha256": "c6ea1adfa79bd00331bda186a9f151a842878bb736733acc3f070bbe7b0ff76b"
+    },
+    {
+      "currentSha256": "b01282ae9fd10e1f4723672dab4c439431c515f010abe8b447dafa10cdcf251f",
+      "edits": [
+        {
+          "current": "\t\tcwd: process.cwd()\n\t\t, env: {\n",
+          "previous": "\t\tcwd: process.cwd(), env: {\n",
+          "start": 6602
+        }
+      ],
+      "path": "tests/docker-consumer-ci.test.mjs",
+      "previousSha256": "4876ae7057b05d62fe2096fd6cc7f9de174d0dcb4e7b36cd3c6cfa64069d228a"
+    },
+    {
+      "currentSha256": "2482fa7bbaeac43093ff8435ee56a90b52e2177f82b88c921831036e2ee41108",
+      "edits": [
+        {
+          "current": "\tlet restored = git([\"show\"\n\t\t, consumerDockerEvidenceExclusionImplementation\n\t\t\t+ \":docs/type-surface.v1.json\"]);\n",
+          "previous": "\tlet restored = git([\"show\", consumerDockerEvidenceExclusionImplementation\n\t\t+ \":docs/type-surface.v1.json\"]);\n",
+          "start": 3649
+        }
+      ],
+      "path": "tests/helpers/consumer-docker-evidence-exclusion-source-history-tests.mjs",
+      "previousSha256": "75e58d0ea22b445a813bd357fdb8c5aed2d2a3fe60a0a7deae7b043ec3d9c2c9"
+    }
+  ]
+}
