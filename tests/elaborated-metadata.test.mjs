@@ -569,7 +569,7 @@ end Shop
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 
-test("compiler diagnostics distinguish implicit, instance, dependent, generic, effectful and proof-only selections", { skip: !enabled }, async t => {
+test("compiler diagnostics isolate unsupported selections while admitting direct dependent Fin", { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t);
 	await saveLakeFile(context.root, "Shop.lean", `import Catalog
 namespace Shop
@@ -585,10 +585,45 @@ end Shop
 	const names = ["implicitValue", "instanceValue", "dependentValue", "genericValue", "effectValue", "proofValue"];
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Shop"], exports: names.map(name => `Shop.${name}`) }));
 	const report = await inspect(context);
-	assert.equal(report.bindingIr, null);
-	assert.deepEqual(report.elaboration.metadata.diagnostics.map(item => item.code).sort(), ["dependent-type", "implicit-parameter", "instance-parameter", "proof-only", "specialization-required", "unsupported-effect"]);
-	assert.ok(report.adapterHints.every(item => item.required));
+	const expected = [
+		["implicitValue", "implicit-parameter"]
+		, ["instanceValue", "instance-parameter"]
+		, ["dependentValue", null]
+		, ["genericValue", "specialization-required"]
+		, ["effectValue", "unsupported-effect"]
+		, ["proofValue", "proof-only"]
+	];
+	const declarations = report.elaboration.metadata.modules.flatMap(module => module.declarations);
+	const runtime = new Map(report.bindingIr.document.declarations.map(item => [item.name, item]));
+	for(const [name, reason] of expected)
+		await t.test(name, () => {
+			const declaration = declarations.find(item => item.identity === `Shop.${name}`);
+			assert.ok(declaration, `missing compiler declaration Shop.${name}`);
+			assert.equal(declaration.projection.status, reason === null ? "supported" : "unsupported");
+			if(reason !== null) assert.equal(declaration.projection.reason, reason);
+			assert.equal(runtime.has(name), reason === null);
+			const hint = report.adapterHints.find(item => item.declaration === `Shop.${name}`);
+			if(reason === null) assert.equal(hint, undefined);
+			else
+			{
+				assert.equal(hint?.reason, reason);
+				assert.equal(hint?.required, true);
+			}
+		});
+	assert.equal(report.adapterHints.length, expected.filter(([, reason]) => reason !== null).length);
+	assert.deepEqual(report.elaboration.metadata.diagnostics.map(item => item.code).sort()
+		, ["implicit-parameter", "instance-parameter", "proof-only", "specialization-required", "unsupported-effect"]);
+	assert.deepEqual([...runtime.keys()], ["dependentValue"]);
+	const dependent = runtime.get("dependentValue");
+	assert.deepEqual(dependent.parameters.map(item => item.type), [
+		{ kind: "primitive", name: "nat" }
+		, { kind: "primitive", name: "nat" }
+	]);
+	assert.deepEqual(dependent.source.extensions["lean-lang.org/refinements"], {
+		parameters: [null, { kind: "fin-parameter", parameter: 0 }], result: null
+	});
 	await assertJsonSchema("elaborated-export-metadata", report.elaboration.metadata);
+	await assertJsonSchema("binding-ir", report.bindingIr.document);
 });
 
 test("fresh Lean erases a closed proof binder and refuses conditional or proof-result APIs", { skip: !enabled }, async t => {
@@ -860,7 +895,7 @@ end Shop
 	}
 });
 
-test("finite specializations reject unresolved, dependent, effectful and admitted applications", { skip: !enabled }, async t => {
+test("finite specializations isolate rejections while admitting direct dependent Fin", { skip: !enabled }, async t => {
 	const context = await lakeWorkspaceFixture(t);
 	await saveLakeFile(context.root, "Shop.lean", `import Catalog
 namespace Shop
@@ -878,26 +913,48 @@ def needsUnsafe {α : Type} [UnsafeDefault α] : α := UnsafeDefault.value
 abbrev Words := Sum UInt32 UInt32
 end Shop
 `);
-	const cases = [
+	const accepted = ["dependentArg", "dependent", ["UInt32"]];
+	const rejected = [
 		["unknownType", "keep", ["UnknownType"], "invalid-specialization"]
 		, ["extraType", "keep", ["UInt32", "String"], "invalid-specialization"]
 		, ["remainingType", "two", ["UInt32"], "invalid-specialization"]
-		, ["dependentArg", "dependent", ["UInt32"], "dependent-type"]
 		, ["effectful", "effect", ["UInt32"], "unsupported-effect"]
 		, ["unproven", "admitted", ["UInt32"], "invalid-specialization"]
 		, ["missingInstance", "needsMissing", ["UInt32"], "invalid-specialization"]
 		, ["admittedInstance", "needsUnsafe", ["UInt32"], "invalid-specialization"]
 		, ["container", "keep", ["Shop.Words"], "unsupported-parameter-type"]
 	];
-	const specializations = cases.map(([name, declaration, types]) => ({ name: `Shop.${name}`, declaration: `Shop.${declaration}`, types }));
+	const specializations = [accepted, ...rejected].map(([name, declaration, types]) => ({ name: `Shop.${name}`, declaration: `Shop.${declaration}`, types }));
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Shop"], exports: specializations.map(item => item.name), specializations }));
 	const before = await lakeInputState(context.workspace), result = await inspect(context);
-	assert.equal(result.bindingIr, null);
-	for(const [name, , , reason] of cases)
-		assert.ok(result.adapterHints.some(item => item.declaration === `Shop.${name}` && item.reason === reason), JSON.stringify(result.diagnostics));
+	for(const [name, , , reason] of rejected)
+		await t.test(name, () => {
+			const hint = result.adapterHints.find(item => item.declaration === `Shop.${name}`);
+			assert.equal(hint?.reason, reason, JSON.stringify(result.diagnostics));
+			assert.equal(hint?.required, true);
+		});
+	assert.equal(result.adapterHints.length, rejected.length);
+	assert.equal(result.adapterHints.some(item => item.declaration === "Shop.dependentArg"), false);
+	assert.deepEqual(result.bindingIr.document.declarations.map(item => item.name), ["dependentArg"]);
+	const dependent = result.bindingIr.document.declarations[0];
+	assert.deepEqual(dependent.parameters.map(item => item.type), [
+		{ kind: "primitive", name: "nat" }
+		, { kind: "primitive", name: "nat" }
+		, { kind: "primitive", name: "uint32" }
+	]);
+	assert.deepEqual(dependent.source.extensions["lean-lang.org/refinements"], {
+		parameters: [null, { kind: "fin-parameter", parameter: 0 }, null], result: null
+	});
+	assert.deepEqual(dependent.source.extensions["lean-lang.org/specialization"], {
+		name: "Shop.dependentArg"
+		, application: "(@_root_.Shop.dependent (@_root_.UInt32))"
+		, declaration: "Shop.dependent"
+		, types: ["UInt32"]
+	});
 	assert.match(result.diagnostics.find(item => item.declaration === "Shop.admittedInstance").message, /sorry/);
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 	await assertJsonSchema("elaborated-export-metadata", result.elaboration.metadata);
+	await assertJsonSchema("binding-ir", result.bindingIr.document);
 });
 
 test("specialization names cannot shadow declarations or expose a dependency as a public root", { skip: !enabled }, async t => {

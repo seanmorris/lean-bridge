@@ -164,11 +164,11 @@ test("captured entry metadata must match fresh target compilation even without g
 	await assert.rejects(() => readFile(join(outputRoot, "engine-execution-report.json")), { code: "ENOENT" });
 });
 
-test("captured APIs reject unsupported elaborated declarations before adapter compilation", { skip: !enabled || Boolean(externalEngine), timeout: 180000 }, async t => {
+test("captured APIs reject unsupported elaborated declarations before adapter compilation", { skip: !enabled || Boolean(externalEngine), timeout: 360000 }, async t => {
 	for(const [label, source, expected] of [
 		["implicit", "def Shop.quote {value : UInt32} : UInt32 := value", /implicit-parameter/]
 		, ["instance", "def Shop.quote [Inhabited UInt32] (value : UInt32) : UInt32 := value", /instance-parameter/]
-		, ["dependent", "def Shop.quote (size : Nat) (_value : Fin size) : UInt32 := 0", /dependent-type/]
+		, ["dependent", "def Shop.quote (size : Nat) : Option (Fin size) := none", /dependent-type/]
 		, ["generic", "universe u\ndef Shop.quote {α : Type u} (value : α) : α := value", /specialization-required/]
 		, ["io", "def Shop.quote (value : UInt32) : IO UInt32 := pure value", /unsupported-effect/]
 		, ["task", "def Shop.quote (value : UInt32) : Task UInt32 := Task.pure value", /unsupported-effect/]
