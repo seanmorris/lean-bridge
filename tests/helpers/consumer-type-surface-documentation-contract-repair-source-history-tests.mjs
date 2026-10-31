@@ -7,6 +7,8 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { beforeConsumerMatrixCheckoutClosureSource }
+	from "./consumer-matrix-checkout-closure-source-history.mjs";
 import { beforeConsumerCallbackPackageCheckoutClosureSource }
 	from "./consumer-callback-package-checkout-closure-source-history.mjs";
 import {
@@ -131,9 +133,11 @@ test("reviewed-corpus contract repair refreshes exactly 25 live citations"
 			, current:
 				"9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d"
 		});
-		let restored = beforeConsumerCallbackPackageCheckoutClosureSource(
+		let restored = beforeConsumerMatrixCheckoutClosureSource(
 			"docs/type-surface.v1.json"
 			, await readFile("docs/type-surface.v1.json", "utf8"));
+		restored = beforeConsumerCallbackPackageCheckoutClosureSource(
+			"docs/type-surface.v1.json", restored);
 		assert.equal(restored.split(history.currentSourcePin.current).length - 1
 			, 25);
 		restored = restored.replaceAll(history.currentSourcePin.current
