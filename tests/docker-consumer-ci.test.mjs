@@ -15,6 +15,7 @@ import { promisify } from "node:util";
 const execute = promisify(execFile);
 const workflowPath = ".github/workflows/consumer-matrix.yml";
 const runnerPath = "scripts/test-docker-consumer-ci.sh";
+const sourceClosurePath = "scripts/check-consumer-source-closure.sh";
 
 const fakeNpm = `#!/usr/bin/env bash
 set -euo pipefail
@@ -127,6 +128,162 @@ test("Docker consumer checkout omits the retained evidence corpus and fails clos
 		assert.throws(() => assertBoundedCheckout(altered), label);
 	}
 });
+
+const workflowJobs = source => {
+	const starts = [...source.matchAll(/^ {2}([A-Za-z0-9_-]+):\s*$/gmu)];
+	return new Map(starts.map((match, index) => [
+		match[1]
+		, source.slice(match.index
+			, starts[index + 1]?.index ?? source.length)
+	]));
+};
+
+const metadataSparsePatterns = [
+	"/*", "!/*/", "/.github/", "/acceptance/", "/config/"
+	, "/containers/", "/demos/", "/nix/", "/notices/", "/patches/"
+	, "/poc/", "/schema/", "/scripts/", "/site/", "/src/", "/tests/"
+	, "/docs/", "!/docs/evidence/*", "/docs/evidence/*.json"
+	, "/docs/evidence/*.md", "/docs/evidence/*.xml"
+	, "/docs/evidence/*/index.json"
+];
+
+const expectedNixJobs = [
+	"browser-consumer", "docker-engine", "host-null-systems"
+	, "managed-consumers", "native-c-family-values", "native-consumers"
+	, "nix-cache", "node-consumers", "owned-jvm-values", "owned-wit-receivers"
+	, "php-consumers", "php-multi-profile", "php-wasm-callback-results"
+	, "php-wasm-consumers", "php-wasm-corpus", "php-wasm-receivers"
+	, "reviewed-fin-wasm-entry", "wasi-consumer"
+];
+
+const assertNixSourceClosures = source => {
+	const jobs = workflowJobs(source);
+	const sparseValue = ["  LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: |"
+		, ...metadataSparsePatterns.map(pattern => `    ${pattern}`)].join("\n");
+	assert.ok(source.includes(sparseValue));
+	const actual = [...jobs].filter(([, job]) => job.includes(
+		"uses: cachix/install-nix-action@v31")).map(([name]) => name).sort();
+	assert.deepEqual(actual, expectedNixJobs);
+	const dedicated = jobs.get("nix-cache");
+	assert.match(dedicated, /^ {10}sparse-checkout: \|$/mu);
+	assert.doesNotMatch(dedicated, /docs\/evidence/u);
+	for(const name of expectedNixJobs.filter(item =>
+		!["docker-engine", "nix-cache"].includes(item))) {
+		const job = jobs.get(name);
+		assert.ok(job, name);
+		assert.match(job
+			, /^ {10}sparse-checkout: \$\{\{ env\.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT \}\}$/mu
+			, name);
+		assert.match(job, /^ {10}sparse-checkout-cone-mode: false$/mu, name);
+		assert.match(job
+			, /^ {8}run: bash scripts\/check-consumer-source-closure\.sh$/mu
+			, name);
+		}
+};
+
+test("every downstream Nix job has one bounded metadata-only source closure"
+	, async () => {
+		const source = await readFile(workflowPath, "utf8");
+		assertNixSourceClosures(source);
+		const jobs = workflowJobs(source);
+		for(const name of ["browser-consumer", "node-consumers"
+			, "native-consumers"]) {
+			const job = jobs.get(name);
+			const changed = job.replace(
+				"          sparse-checkout-cone-mode: false\n", "");
+			assert.notEqual(changed, job);
+			assert.throws(() => assertNixSourceClosures(
+				source.replace(job, () => changed))
+				, { name: "AssertionError" }, name);
+			}
+	}
+);
+
+test("consumer source closure rejects retained payloads and reports its bounds"
+	, async () => {
+		const source = await readFile(sourceClosurePath, "utf8");
+		for(const expression of [
+			/find docs\/evidence -mindepth 2 -type f/u
+			, /! -name index\.json/u, /git rev-list --objects --missing=print/u
+			, /test "\$missing_blobs" -gt 1000/u
+			, /test "\$git_kib" -lt 2097152/u
+			, /test "\$source_kib" -lt 2097152/u
+			, /test "\$evidence_kib" -lt 1572864/u
+		]) assert.match(source, expression);
+	}
+);
+
+const fakeClosureGit = `#!/usr/bin/env bash
+set -euo pipefail
+test "$1" = rev-list
+for index in $(seq 1 1001); do printf '?blob-%s\\n' "$index"; done
+`;
+const fakeClosureDu = `#!/usr/bin/env bash
+set -euo pipefail
+case "\${!#}" in
+  .git) printf '1024\\t.git\\n';;
+  docs/evidence) printf '2048\\tdocs/evidence\\n';;
+  .) printf '4096\\t.\\n';;
+  *) exit 64;;
+esac
+`;
+const fakeClosureDf = `#!/usr/bin/env bash
+set -euo pipefail
+printf 'bounded disk\\n'
+`;
+
+const runSourceClosureFixture = async retainedPayload => {
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-source-closure-"));
+	try
+	{
+		const bin = join(scratch, "bin");
+		const evidence = join(scratch, "docs", "evidence");
+		await mkdir(join(evidence, "archive"), { recursive: true });
+		await mkdir(join(scratch, ".git"));
+		await writeFile(join(evidence, "vo1220-exact-type-surface-v1.json"), "{}\n");
+		await writeFile(join(evidence, "archive", "index.json"), "{}\n");
+		if(retainedPayload)
+			await writeFile(join(evidence, "archive", "run.tap"), "payload\n");
+		await mkdir(bin);
+		for(const [name, source] of [
+			["git", fakeClosureGit], ["du", fakeClosureDu]
+			, ["df", fakeClosureDf]
+		]) {
+			const path = join(bin, name);
+			await writeFile(path, source);
+			await chmod(path, 0o755);
+		}
+		try
+		{
+			const result = await execute("bash", [join(process.cwd()
+				, sourceClosurePath)], {
+				cwd: scratch
+				, env: {
+					...process.env, PATH: `${bin}:${process.env.PATH}`
+					, GITHUB_WORKSPACE: scratch
+				}}
+			);
+			return { code: 0, stdout: result.stdout, stderr: result.stderr };
+		}
+		catch(error)
+		{ return { code: error.code, stdout: error.stdout, stderr: error.stderr }; }
+	}
+	finally
+	{ await rm(scratch, { recursive: true, force: true }); }
+};
+
+test("consumer source closure accepts metadata and refuses one retained payload"
+	, async () => {
+		const accepted = await runSourceClosureFixture(false);
+		assert.equal(accepted.code, 0);
+		assert.match(accepted.stdout, /missing blobs: 1001/u);
+		assert.match(accepted.stdout, /evidence metadata KiB: 2048/u);
+		const refused = await runSourceClosureFixture(true);
+		assert.equal(refused.code, 1);
+		assert.match(refused.stderr
+			, /Retained evidence payload escaped.*archive\/run\.tap/u);
+	}
+);
 
 const fakeNix = `#!/usr/bin/env bash
 set -euo pipefail

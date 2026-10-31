@@ -15,6 +15,32 @@ concurrency:
 env:
   NODE_VERSION: "22"
   LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build/consumer-ci/performance
+  # Nix-backed consumer jobs need current source and evidence metadata, not the
+  # 51.8 GB retained payload corpus. Keep this one declaration shared so a new
+  # job cannot quietly restore the disk-exhausting full checkout.
+  LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: |
+    /*
+    !/*/
+    /.github/
+    /acceptance/
+    /config/
+    /containers/
+    /demos/
+    /nix/
+    /notices/
+    /patches/
+    /poc/
+    /schema/
+    /scripts/
+    /site/
+    /src/
+    /tests/
+    /docs/
+    !/docs/evidence/*
+    /docs/evidence/*.json
+    /docs/evidence/*.md
+    /docs/evidence/*.xml
+    /docs/evidence/*/index.json
 
 jobs:
   reviewed-ir-admission:
@@ -1350,6 +1376,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -1793,6 +1823,10 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -1850,6 +1884,10 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -2073,6 +2111,10 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -2173,6 +2215,10 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Fetch the exact retained PHP-Wasm callback producer
         shell: bash
         run: |
@@ -2271,6 +2317,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -2581,6 +2631,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -2796,6 +2850,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -3132,6 +3190,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -3195,6 +3257,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Require source history before native consumer builds
         run: test "$(git rev-parse --is-shallow-repository)" = false
       - name: Install Node.js
@@ -3430,6 +3496,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Require source history before native consumer builds
         run: test "$(git rev-parse --is-shallow-repository)" = false
       - name: Install Node.js
@@ -4267,6 +4337,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Require source history before managed consumer builds
         run: test "$(git rev-parse --is-shallow-repository)" = false
       - name: Install Node.js
@@ -5218,6 +5292,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -5398,6 +5476,10 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -5478,6 +5560,10 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -5593,6 +5679,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
       - name: Require source history before WIT consumer builds
         run: test "$(git rev-parse --is-shallow-repository)" = false
       - name: Install Node.js
