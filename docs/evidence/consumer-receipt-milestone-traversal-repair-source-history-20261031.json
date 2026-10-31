@@ -1,0 +1,100 @@
+{
+  "changedSupportCells": 0,
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "failure": {
+    "expectedPins": 92,
+    "failed": 1,
+    "observedPins": 0,
+    "passed": 98,
+    "path": ".github/workflows/consumer-matrix.yml",
+    "test": "downstream receipt repair refreshes exactly 96 live citations",
+    "tests": 99
+  },
+  "focusedTests": {
+    "failed": 0,
+    "passed": 8,
+    "skipped": 0
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-consumer-receipt-milestone-traversal-repair-source-history.mjs",
+      "sha256": "d022b1f940e6c32d28c00e9c638bf58eb30a82792e741e3ac8bb2ea67f32d527"
+    },
+    {
+      "path": "tests/helpers/consumer-receipt-milestone-traversal-repair-source-history-tests.mjs",
+      "sha256": "370d7dafba7268fdc06fed30da5c197ab90451244087f0055ccd659032ae4d39"
+    },
+    {
+      "path": "tests/helpers/consumer-receipt-milestone-traversal-repair-source-history.mjs",
+      "sha256": "eead8a2834225213d6b4dd93867e0e72b9d4102be21cae2070e420f44d9fa4b2"
+    }
+  ],
+  "implementationCommit": "6db91212bd5d52420b0203a545b6823044174246",
+  "integrationCommit": "89fe74543f2f26c2730823fa98d5d70bd8b81053",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d4be2fb41594679026bd7e98fd417edc64870bf38296a0f4fa99efd02dda4583",
+      "edits": [
+        {
+          "current": "import \"./helpers/consumer-receipt-milestone-traversal-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 186
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "7e6d72de00d7acee8f4f13d136ac0ad01e0f30c5caa9f9afe4d492128503f826"
+    },
+    {
+      "currentSha256": "6cf383f8bed0e1c57f446c610bf7b788030f64c57b24807e978f757c08630fb5",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeConsumerReceiptMilestoneTraversalRepairSource\n\t, consumerReceiptMilestoneTraversalRepairNormalizationPaths\n} from \"./consumer-receipt-milestone-traversal-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...consumerReceiptMilestoneTraversalRepairNormalizationPaths\n\t, ...ownedJavaScriptCheckoutContractRepairNormalizationPaths\n",
+          "previous": "\t...ownedJavaScriptCheckoutContractRepairNormalizationPaths\n",
+          "start": 233672
+        },
+        {
+          "current": "\tlet stage = beforeConsumerReceiptMilestoneTraversalRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedJavaScriptCheckoutContractRepairSource(\n",
+          "previous": "\tlet stage = beforeOwnedJavaScriptCheckoutContractRepairSource(\n",
+          "start": 293473
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d447932b666857963d52157f8a0dcf6dbd2210f86356602bdfb7e334aedda844"
+    }
+  ],
+  "milestone": "consumer-receipt-milestone-traversal-repair-source-v1",
+  "predecessorCommit": "0b992cfbbd749a44291f1d0d50377e3d85c7ed3a",
+  "rootCause": "The immutable consumer-receipt test peeled only one named documentation layer from the current type-surface document. Later authenticated live-pin transitions changed that document again, so the test compared the current state with an obsolete intermediate digest instead of traversing the complete history hub to its own recorded integration milestone.",
+  "schemaVersion": 1,
+  "scope": "Resolve the exact recorded type-surface integration digest through the complete source-history traversal before checking the 96 historical pin replacements. Preserve every source transition, support cell, stage, evidence identity, package API and frozen #1220 model.",
+  "semanticChanges": 0,
+  "updates": [
+    {
+      "currentSha256": "19b66b90163ede38932c824e1c15348980b08f2e92f9c247392819cfa05d5017",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeConsumerTypeSurfaceDocumentationContractRepairSource }\n\tfrom \"./consumer-type-surface-documentation-contract-repair-source-history.mjs\";\n",
+          "start": 266
+        },
+        {
+          "current": "\t\tconst integration = history.integrationUpdates.find(update =>\n\t\t\tupdate.path === \"docs/type-surface.v1.json\");\n\t\tassert.ok(integration);\n\t\tlet restored = await sourceAtFinHistoryMilestone(\n\t\t\tintegration.path, integration.currentSha256);\n",
+          "previous": "\t\tlet restored = beforeConsumerTypeSurfaceDocumentationContractRepairSource(\n\t\t\t\"docs/type-surface.v1.json\"\n\t\t\t, await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n",
+          "start": 6974
+        }
+      ],
+      "path": "tests/helpers/consumer-type-surface-receipt-repair-source-history-tests.mjs",
+      "previousSha256": "d141e84ac37160b998a3cfec1f2c5b4f1a9d01a0171150626ed75a3f0a9a8f15"
+    }
+  ]
+}
