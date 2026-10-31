@@ -734,7 +734,7 @@
   "scripts": {
     "bootstrap": "bash scripts/bootstrap-toolchains.sh",
     "env:check": "bash scripts/inventory.sh",
-    "env:check:core": "bash scripts/inventory.sh --profile core",
+    "env:check:core": "bash scripts/inventory.sh --profile core && node --test tests/test-profiles.test.mjs",
     "env:check:json": "bash scripts/inventory.sh --json",
     "build:lean-runtime": "bash scripts/build-lean-runtime.sh",
     "build:lean-runtime:threaded": "LEAN_WASM_RUNTIME_PROFILE=threaded bash scripts/build-lean-runtime.sh",

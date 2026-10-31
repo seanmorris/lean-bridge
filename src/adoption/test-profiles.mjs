@@ -622,6 +622,7 @@ const profileManifest = Object.freeze({
 		, "source-registration-history"
 		, "source-history-memo"
 		, "core-history-performance-evidence"
+		, "core-final-type-surface-audit-source-history"
 		, "source-inventory-order"
 		, "php-wasm-shared-regressions"
 		, "native-shared-admission"

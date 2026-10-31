@@ -53,6 +53,8 @@ test("the default and CI quality gates cover the same core contract", async () =
 	]);
 	assert.equal(packageDocument.scripts.check, "npm run check:core");
 	assert.match(packageDocument.scripts["check:core"], /env:check:core.*lint.*typecheck.*test:contracts/);
+	assert.match(packageDocument.scripts["env:check:core"]
+		, /inventory\.sh --profile core.*test-profiles\.test\.mjs/u);
 	assert.match(workflow, /node-version: 22/);
 	assert.match(workflow, /bootstrap-toolchains\.sh --wasm-tools-only/);
 	assert.match(workflow, /npm ci --ignore-scripts/);
