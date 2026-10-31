@@ -11,6 +11,9 @@ def rejected(call, parameter, bound):
         call()
     except api.LeanBridgeError as error:
         return error.status == 1 and str(error) == parameter + ' is not below its dependent Fin bound ' + bound
+    except ValueError:
+        # A negative Nat is rejected before the dependent Fin check.
+        return False
     return False
 def raises(kind, call):
     try:

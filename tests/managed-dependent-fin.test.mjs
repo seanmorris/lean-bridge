@@ -111,6 +111,10 @@ test("every dependent Fin profile has a target and installed consumer", async ()
 		assert.match(source, /1000/, profile);
 		assert.match(source, /arg2[^\n]*arg1/, profile);
 	}
+	const python = await readFile(
+		"tests/fixtures/dependent-fin-consumers/python.py", "utf8");
+	assert.match(python, /except ValueError:\n\s+# A negative Nat[^\n]*\n\s+return False/u
+		, "Python keeps a negative Nat distinct from a dependent Fin rejection");
 });
 
 test("the Lean fixture and the independent review state the same two direct dependencies", async () => {
