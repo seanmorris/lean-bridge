@@ -41,6 +41,34 @@ env:
     /docs/evidence/*.md
     /docs/evidence/*.xml
     /docs/evidence/*/index.json
+  # The documentation contract validates links to selected nested JSON
+  # receipts. It needs those text receipts, but never the retained package,
+  # archive, object or executable payloads beside them.
+  LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT: |
+    /*
+    !/*/
+    /.github/
+    /acceptance/
+    /config/
+    /containers/
+    /demos/
+    /nix/
+    /notices/
+    /patches/
+    /poc/
+    /schema/
+    /scripts/
+    /site/
+    /src/
+    /tests/
+    /docs/
+    !/docs/evidence/*
+    /docs/evidence/*.json
+    /docs/evidence/*.md
+    /docs/evidence/*.xml
+    /docs/evidence/**/*.json
+    /docs/evidence/**/*.md
+    /docs/evidence/**/*.xml
 
 jobs:
   type-surface-authentication:
@@ -173,7 +201,7 @@ jobs:
     name: Documentation contract
     runs-on: ubuntu-24.04
     steps:
-      - name: Free hosted runner disk before complete history checkout
+      - name: Free hosted runner disk before history-aware sparse checkout
         run: |
           df -h /
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
@@ -182,7 +210,10 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -209,7 +240,7 @@ jobs:
       LEAN_BRIDGE_COMPILER_ANALYSIS_TEST: "1"
       EMCC_CORES: "2"
     steps:
-      - name: Free hosted runner disk before complete history checkout
+      - name: Free hosted runner disk before history-aware sparse checkout
         run: |
           df -h /
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
@@ -218,7 +249,10 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Require source history before owned JavaScript builds
         shell: bash
         run: |
@@ -1466,6 +1500,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
@@ -2046,7 +2081,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 150
     steps:
-      - name: Free hosted runner disk before complete history checkout
+      - name: Free hosted runner disk before history-aware sparse checkout
         run: |
           df -h /
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
@@ -2055,7 +2090,10 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -2459,6 +2497,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
@@ -2781,6 +2820,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
@@ -3008,6 +3048,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
@@ -3356,6 +3397,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
@@ -3431,6 +3473,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
@@ -3678,6 +3721,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
@@ -4527,6 +4571,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
@@ -5490,6 +5535,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
@@ -5901,6 +5947,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
           sparse-checkout-cone-mode: false
