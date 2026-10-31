@@ -1,0 +1,711 @@
+{
+  "actionsCheckoutBehavior": {
+    "contract": "sparse checkout fetches with blob:none and then configures the requested sparse worktree",
+    "source": "actions/checkout src/git-source-provider.ts",
+    "version": "v6"
+  },
+  "additions": [
+    {
+      "path": "scripts/update-consumer-history-sparse-checkout-closure-source-history.mjs",
+      "sha256": "0c85627a724830d63a479697f2af3f21f29031a0ee81dc9058b2be4368345422"
+    },
+    {
+      "path": "tests/helpers/consumer-history-sparse-checkout-closure-source-history-tests.mjs",
+      "sha256": "693ef0e7ce77bad4df9b7cfbbc21f7aa309e0e806f4837c6a138785cdaf44046"
+    },
+    {
+      "path": "tests/helpers/consumer-history-sparse-checkout-closure-source-history.mjs",
+      "sha256": "9e1f4fa192a52035ee0a3848a5600899ac28710a8f0a6c9b8639280c0d9c5fb1"
+    }
+  ],
+  "annotation": {
+    "level": "failure",
+    "message": "No space left on device",
+    "path": "/home/runner/actions-runner/cached/2.338.2/_diag/Worker_*.log",
+    "title": "System.IO.IOException"
+  },
+  "checkoutJobs": 36,
+  "currentSourcePin": {
+    "count": 92,
+    "current": "3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2",
+    "path": ".github/workflows/consumer-matrix.yml",
+    "previous": "c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48"
+  },
+  "failedRun": {
+    "headSha": "384e44c25a9947019b15b8e21167ad66e80d777a",
+    "job": 124624546320,
+    "jobName": "Native PHP callback-result acceptance",
+    "workflow": 41230798417
+  },
+  "failure": "hosted runner ENOSPC while actions/checkout was active",
+  "historySparseCheckoutJobs": [
+    "documentation",
+    "owned-javascript-wasm",
+    "node-consumers",
+    "owned-php-callback-results",
+    "php-consumers",
+    "php-wasm-consumers",
+    "php-wasm-corpus",
+    "php-multi-profile",
+    "native-c-family-values",
+    "native-consumers",
+    "managed-consumers",
+    "owned-jvm-values",
+    "wasi-consumer"
+  ],
+  "implementationCommit": "b00a191bee46e2f3cc0fdb1a1e25d137c92403e2",
+  "integrationCommit": "5aab998d16155e6b2f8b39d5108bfdea7f61efc4",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f6dd7da1da96411cf4769dc5fb08c2219eb34b25cc74070e446aefbd08edfcb7",
+      "edits": [
+        {
+          "current": "import \"./helpers/consumer-history-sparse-checkout-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "1b0b8f24e30f984179cf1728c5ef39322e22a2e5bdb8c882d496b92e1cd40fde"
+    },
+    {
+      "currentSha256": "21f7b8c69948c38d6849bde598845321d1e9e86d591fb4201bb9c21f403060f7",
+      "edits": [
+        {
+          "current": "import { beforeConsumerHistorySparseCheckoutClosureSource }\n\tfrom \"./consumer-history-sparse-checkout-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 265
+        },
+        {
+          "current": "\t\tlet restored = beforeConsumerHistorySparseCheckoutClosureSource(\n",
+          "previous": "\t\tlet restored = beforeConsumerMatrixCheckoutClosureSource(\n",
+          "start": 6065
+        },
+        {
+          "current": "\t\trestored = beforeConsumerMatrixCheckoutClosureSource(\n\t\t\t\"docs/type-surface.v1.json\"\n\t\t\t, restored);\n",
+          "previous": "",
+          "start": 6222
+        }
+      ],
+      "path": "tests/helpers/consumer-type-surface-documentation-contract-repair-source-history-tests.mjs",
+      "previousSha256": "15eb50c732d133975d6d86f786afecd118508a7e40e2430d33dfe353593db940"
+    },
+    {
+      "currentSha256": "f613ed93362cef865fde93c1b1182f28840735f1db685f2b3510fef563480675",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeConsumerHistorySparseCheckoutClosureSource\n\t, consumerHistorySparseCheckoutClosureNormalizationPaths\n} from \"./consumer-history-sparse-checkout-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...consumerHistorySparseCheckoutClosureNormalizationPaths\n\t, ...consumerMatrixCheckoutClosureNormalizationPaths\n",
+          "previous": "\t...consumerMatrixCheckoutClosureNormalizationPaths\n",
+          "start": 233084
+        },
+        {
+          "current": "\tlet stage = beforeConsumerHistorySparseCheckoutClosureSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeConsumerMatrixCheckoutClosureSource(\n",
+          "previous": "\tlet stage = beforeConsumerMatrixCheckoutClosureSource(\n",
+          "start": 292695
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ab25815d712d05e38baef888bb4a71d151fa325b86bdc2014c282d06aeaf9481"
+    }
+  ],
+  "milestone": "consumer-history-sparse-checkout-closure-v1",
+  "newSparseCheckoutJobs": [
+    "documentation",
+    "owned-javascript-wasm",
+    "owned-php-callback-results"
+  ],
+  "observedSteps": {
+    "checkout": "failure",
+    "cleanup": "success",
+    "firstSemanticStep": "not started"
+  },
+  "pinRepairCommit": "d23faea35e47a6af5a0988d29e6e3a711bf385d9",
+  "pinUpdates": [
+    {
+      "currentSha256": "e508205aaf6031101805553005aaf07e077fc4aad337bd361684543359fcdcb8",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 78051
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 95246
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 111547
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 126315
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 135597
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 145222
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 168606
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 181575
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 196470
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 209254
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 222474
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 231007
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 239437
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 248454
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 256828
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 276108
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 285947
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 298082
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 316680
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 325976
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 338659
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 347914
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 357197
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 366330
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 375189
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 382576
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 390500
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 401146
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 415252
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 422350
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 432579
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 440323
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 446697
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 452860
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 458957
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 465478
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 473144
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 482438
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 493660
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 503357
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 524492
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 533057
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 544065
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 575950
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 582579
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 592838
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 613711
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 622234
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 633184
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 664702
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 673921
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 681261
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 693544
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 700404
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 709432
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 723458
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 734500
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 748548
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 759294
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 771365
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 782653
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 791236
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 797694
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 806080
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 823670
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 844666
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 900007
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1012069
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1072310
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1079704
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1086302
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1093404
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1100904
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1107954
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1115564
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1137538
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1149425
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1157296
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1167261
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1177375
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1189136
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1221697
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1251976
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1284962
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1324763
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1351339
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1373876
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1393543
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1416931
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1428559
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1451705
+        },
+        {
+          "current": "          \"sha256\": \"3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2\"\n",
+          "previous": "          \"sha256\": \"c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48\"\n",
+          "start": 1951842
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "362aa438deb20d522cca9e7f60a1b7d20433f5eab285a5611282852cccd43f3f"
+    }
+  ],
+  "predecessorCommit": "384e44c25a9947019b15b8e21167ad66e80d777a",
+  "rootCause": "The preceding closure bounded worktree materialization for current-tree jobs but deliberately retained three complete full-history checkouts. Cleanup alone could not fit the repository's retained 51.8 GB evidence corpus; native PHP exhausted the hosted runner before any semantic command. The same audit also made the blobless partial-clone behavior explicit for all thirteen history-dependent jobs instead of relying only on sparse-worktree appearance.",
+  "schemaVersion": 1,
+  "scope": "Preserve complete Git history while making every Consumer Matrix checkout sparse. Use explicit blob:none partial clones for all thirteen fetch-depth-zero jobs. Give Documentation a text-receipt manifest that includes nested JSON, Markdown and XML links without materializing retained archives or packages; use the shared source manifest for owned JavaScript/Wasm and native PHP callback acceptance. Preserve all semantic commands, exact historical commits, support observations, evidence scope and runtime behavior.",
+  "sparseCheckoutJobs": 36,
+  "updates": [
+    {
+      "currentSha256": "3f42de7adffc19c47844f0768be3451e810e8f51ac5a6ca83cee7af3f45001c2",
+      "edits": [
+        {
+          "current": "  # The documentation contract validates links to selected nested JSON\n  # receipts. It needs those text receipts, but never the retained package,\n  # archive, object or executable payloads beside them.\n  LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT: |\n    /*\n    !/*/\n    /.github/\n    /acceptance/\n    /config/\n    /containers/\n    /demos/\n    /nix/\n    /notices/\n    /patches/\n    /poc/\n    /schema/\n    /scripts/\n    /site/\n    /src/\n    /tests/\n    /docs/\n    !/docs/evidence/*\n    /docs/evidence/*.json\n    /docs/evidence/*.md\n    /docs/evidence/*.xml\n    /docs/evidence/**/*.json\n    /docs/evidence/**/*.md\n    /docs/evidence/**/*.xml\n",
+          "previous": "",
+          "start": 892
+        },
+        {
+          "current": "      - name: Free hosted runner disk before history-aware sparse checkout\n",
+          "previous": "      - name: Free hosted runner disk before complete history checkout\n",
+          "start": 6416
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 6776
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 6841
+        },
+        {
+          "current": "      - name: Free hosted runner disk before history-aware sparse checkout\n",
+          "previous": "      - name: Free hosted runner disk before complete history checkout\n",
+          "start": 7925
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 8285
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 8350
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 72280
+        },
+        {
+          "current": "      - name: Free hosted runner disk before history-aware sparse checkout\n",
+          "previous": "      - name: Free hosted runner disk before complete history checkout\n",
+          "start": 106873
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 107233
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 107298
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 126900
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 151654
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 163232
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 188537
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 192220
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 205743
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 277295
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 350022
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 371112
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "c729331a3cebe4f35c14eb0fae196997fb7cba4abd2ddc412c47dcaae284ba48"
+    }
+  ]
+}
