@@ -17,6 +17,7 @@ import { reviewedSubtypeNativeProfiles, reviewedSubtypeNativeReferences, promote
 import { beforeReviewedSubtypeNativePromotionSource, reviewedSubtypeNativePromotionChangedPaths, reviewedSubtypeNativePromotionHistoryPath, reviewedSubtypeNativePromotionPredecessor, reverseReviewedSubtypeNativePromotionUpdate } from "./reviewed-subtype-native-promotion-history.mjs";
 import "./fin-record-zero-ci-history-tests.mjs";
 import { beforeReviewedSubtypeHostCiReportSource } from "./reviewed-subtype-host-ci-report-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = async () => JSON.parse(beforeReviewedSubtypeNativePromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 
@@ -54,14 +55,15 @@ test("native Subtype promotion authenticates both Python floors, four Perl ABIs 
 });
 
 test("native Subtype promotion adds exactly eighteen cells and preserves every older observation", async () => {
-	const current = await readTypeSurface(), previous = await predecessor();
+	const contracts = typeSurfaceContractsAtProducer(reviewedSubtypeNativePromotionPredecessor);
+	const previous = await predecessor();
 	const proposed = await promoteReviewedSubtypeNative(previous, await reviewedSubtypeNativeReferences());
-	validateTypeSurface(proposed, current);
+	validateTypeSurface(proposed, contracts);
 	assert.equal(previous.evidence.length, 407); assert.equal(previous.observations.length, 509);
 	assert.equal(proposed.evidence.length, 419); assert.equal(proposed.observations.length, 518);
 	assert.deepEqual(proposed.evidence.slice(0, 407), previous.evidence);
 	assert.deepEqual(proposed.observations.slice(0, 509), previous.observations);
-	const before = typeSurfaceCells(previous, current), after = typeSurfaceCells(proposed, current), changed = [];
+	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(proposed, contracts), changed = [];
 	for(const [index, cell] of after.entries())
 	{
 		if(JSON.stringify(cell) === JSON.stringify(before[index])) continue;

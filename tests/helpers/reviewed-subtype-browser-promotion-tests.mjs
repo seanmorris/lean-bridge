@@ -10,12 +10,13 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCheckedRecordNativeHostSource } from "./checked-record-native-host-history.mjs";
 import { browserSubtypeRoot, browserSubtypeIndex, browserSubtypeProfiles, browserSubtypeEvidenceId, browserSubtypeObservationId, browserSubtypeLimit, browserSubtypeConversion, browserSubtypeReference, promoteBrowserSubtype } from "./reviewed-subtype-browser-promotion.mjs";
 import { beforeReviewedSubtypeBrowserPromotionSource, reviewedSubtypeBrowserPromotionChangedPaths, reviewedSubtypeBrowserPromotionHistoryPath, reviewedSubtypeBrowserPromotionPredecessor, reverseReviewedSubtypeBrowserPromotionUpdate } from "./reviewed-subtype-browser-promotion-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = async () => JSON.parse(beforeReviewedSubtypeBrowserPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
 
@@ -41,14 +42,15 @@ test("reviewed browser promotion authenticates every original artifact and actua
 });
 
 test("reviewed browser promotion adds exactly six cells and preserves every earlier claim", async () => {
-	const current = await readTypeSurface(), previous = await predecessor();
+	const contracts = typeSurfaceContractsAtProducer(reviewedSubtypeBrowserPromotionPredecessor);
+	const previous = await predecessor();
 	const proposed = await promoteBrowserSubtype(previous, await browserSubtypeReference());
-	validateTypeSurface(proposed, current);
+	validateTypeSurface(proposed, contracts);
 	assert.equal(previous.evidence.length, 419); assert.equal(previous.observations.length, 518);
 	assert.equal(proposed.evidence.length, 420); assert.equal(proposed.observations.length, 519);
 	assert.deepEqual(proposed.evidence.slice(0, 419), previous.evidence);
 	assert.deepEqual(proposed.observations.slice(0, 518), previous.observations);
-	const before = typeSurfaceCells(previous, current), after = typeSurfaceCells(proposed, current), changed = [];
+	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(proposed, contracts), changed = [];
 	for(const [index, cell] of after.entries())
 	{
 		if(JSON.stringify(cell) === JSON.stringify(before[index])) continue;

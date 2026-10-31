@@ -31,14 +31,14 @@ import {
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const inventory = async () => JSON.parse(execFileSync("git", ["show"
 	, `${nestedCheckedRecordBrowserPromotionPredecessor}:docs/type-surface.v1.json`]
 , { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
-const contracts = async () => ({
-	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
-	, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json"))
-});
+const contracts = () => typeSurfaceContractsAtProducer(
+	nestedCheckedRecordBrowserPromotionPredecessor
+);
 
 test("nested checked-record promotion authenticates four exact installed routes", async () => {
 	const references = await nestedCheckedRecordBrowserReferences();

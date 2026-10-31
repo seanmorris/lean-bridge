@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCheckedRecordBrowserArchiveSource, checkedRecordBrowserArchiveChangedPaths, checkedRecordBrowserArchiveHistoryPath, checkedRecordBrowserArchivePredecessor, reverseCheckedRecordBrowserArchiveUpdate } from "./checked-record-browser-archive-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 test("Checked-record browser archive repair authenticates exact test changes without changing support or observations", async () => {
 	const record = JSON.parse(await readFile(checkedRecordBrowserArchiveHistoryPath));
@@ -20,14 +21,17 @@ test("Checked-record browser archive repair authenticates exact test changes wit
 	const original = path => execFileSync("git", ["show", `${checkedRecordBrowserArchivePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			checkedRecordBrowserArchiveHistoryPath, update.path
+			, update.currentSha256, beforeCheckedRecordBrowserArchiveSource
 		);
 		const previous = reverseCheckedRecordBrowserArchiveUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCheckedRecordBrowserArchiveSource(update.path, current), previous);
 		assert.equal(beforeCheckedRecordBrowserArchiveSource(update.path, current, update.currentSha256), current);
-		assert.equal(beforeCheckedRecordBrowserArchiveSource(update.path, previous), previous);
+		assert.equal(beforeCheckedRecordBrowserArchiveSource(
+			update.path, previous, update.previousSha256
+		), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
 		assert.equal(beforeCheckedRecordBrowserArchiveSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }

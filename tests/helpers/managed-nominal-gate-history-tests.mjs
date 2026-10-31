@@ -12,6 +12,7 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeManagedNominalGateSource, managedNominalGateChangedPaths, managedNominalGateHistoryPath, managedNominalGatePredecessor, reverseManagedNominalGateUpdate } from "./managed-nominal-gate-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 test("managed nominal gate repair authenticates exact changes without changing support claims", async () => {
 	const record = JSON.parse(await readFile(managedNominalGateHistoryPath));
@@ -21,8 +22,9 @@ test("managed nominal gate repair authenticates exact changes without changing s
 	const original = path => execFileSync("git", ["show", `${managedNominalGatePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			managedNominalGateHistoryPath, update.path, update.currentSha256
+			, beforeManagedNominalGateSource
 		);
 		const previous = reverseManagedNominalGateUpdate(current, update);
 		assert.equal(previous, original(update.path));

@@ -36,8 +36,19 @@ const success = "steps.owned_wit_borrows.outcome == 'success' && ";
 const command = ' && npm run test:owned-wit-callback-packages"\n';
 const nominalCommand = ' && bash scripts/run-nominal-subtype-wit-ci.sh \\"/usr/bin/cc\\" \\"$PWD/.toolchains/wasm-tools/bin/wasm-tools\\" \\"$PWD/build/wasmtime-c-api\\"';
 const directProofCommand = " && bash scripts/run-direct-proof-erasure-wit-ci.sh";
+const optionalParameterCommand = " && bash scripts/run-optional-parameter-wit-ci.sh";
 const variants = [
 	{
+		gate: "        if: always() && (" + condition + " || steps.direct_proof_wit.outcome != 'success' || steps.optional_parameters_wit.outcome != 'success')\n"
+		, updatedGate: "        if: always() && (" + condition + " || steps.nominal_wit.outcome != 'success' || steps.direct_proof_wit.outcome != 'success' || steps.optional_parameters_wit.outcome != 'success')\n"
+		, success: success + "steps.direct_proof_wit.outcome == 'success' && steps.optional_parameters_wit.outcome == 'success' && "
+		, updatedSuccess: success + "steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && steps.optional_parameters_wit.outcome == 'success' && "
+		, command: command.replace('"\n', directProofCommand + optionalParameterCommand + '"\n')
+		, updatedCommand: command.replace('"\n', nominalCommand + directProofCommand + optionalParameterCommand + '"\n')
+		, anchor: "      - name: Qualify optional parameters in the prepared WIT package\n"
+	}
+
+	, {
 		gate: "        if: always() && (" + condition + " || steps.direct_proof_wit.outcome != 'success')\n"
 		, updatedGate: "        if: always() && (" + condition + " || steps.nominal_wit.outcome != 'success' || steps.direct_proof_wit.outcome != 'success')\n"
 		, success: success + "steps.direct_proof_wit.outcome == 'success' && "

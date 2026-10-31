@@ -9,17 +9,19 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { validateTypeSurface } from "../src/adoption/type-surface.mjs";
 import { supplementWasmEntryInventory, wasmEntrySupplementEvidence, wasmEntrySupplementObservations, wasmEntrySupplementReceipt, wasmEntrySupplementReferences } from "./helpers/wasm-entry-supplement.mjs";
-import { beforeWasmEntrySupplementSource, wasmEntrySupplementHistoryPath } from "./helpers/wasm-entry-supplement-source-history.mjs";
+import { beforeWasmEntrySupplementSource, wasmEntrySupplementHistoryPath, wasmEntrySupplementPredecessor } from "./helpers/wasm-entry-supplement-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./helpers/producer-source.mjs";
 import { sourceAtHistoryMilestone } from "./helpers/source-history-test-source.mjs";
 
-const readJson = async path => JSON.parse(await readFile(path));
 const originalPath = "docs/type-surface.v1.json";
 const original = JSON.parse(beforeWasmEntrySupplementSource(
 	originalPath, sourceAtHistoryMilestone(
 		wasmEntrySupplementHistoryPath, originalPath
 	)
 ));
-const contracts = { irSchema: await readJson("schema/binding-ir.schema.json"), consumers: await readJson("docs/consumer-support.v1.json") };
+const contracts = typeSurfaceContractsAtProducer(
+	wasmEntrySupplementPredecessor
+);
 
 test("Wasm entry references retain all sixteen original reports without merging the observation modes", async () => {
 	const { references, entries } = await wasmEntrySupplementEvidence();

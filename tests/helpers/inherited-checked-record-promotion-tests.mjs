@@ -13,7 +13,6 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	typeSurfaceCells, validateTypeSurface
 } from "../../src/adoption/type-surface.mjs";
-import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 import {
 	inheritedCheckedRecordPerlEvidenceSha256
 } from "./inherited-checked-record-perl-evidence.mjs";
@@ -32,6 +31,7 @@ import {
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const complete = inheritedCheckedRecordPerlEvidenceSha256 !== null;
 const inventoryPath = "docs/type-surface.v1.json";
@@ -121,7 +121,9 @@ test("inherited promotion changes exactly 102 copied checked-record cells", {
 			inheritedCheckedRecordPromotionHistoryPath, proposal
 		);
 	}
-	const contracts = await readTypeSurfaceContracts();
+	const contracts = typeSurfaceContractsAtProducer(
+		inheritedCheckedRecordPromotionPredecessor
+	);
 	validateTypeSurface(promoted, contracts);
 	// sourceAtHistoryMilestone authenticates the recorded milestone digest.
 	assert.equal(digest(JSON.parse(sourceAtHistoryMilestone(

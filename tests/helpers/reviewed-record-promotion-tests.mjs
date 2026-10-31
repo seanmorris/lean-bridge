@@ -17,6 +17,7 @@ import { reconcileReviewedRecordObservations, reviewedRecordEvidence, reviewedRe
 import { browserGenericCommandQualification, browserGenericEvidence, browserGenericEvidenceId } from "./browser-generic-promotion.mjs";
 import { assertReviewedInstantiationArchive } from "./reviewed-instantiation-evidence.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const reviewedRecordPromotionRevision = "5dd16b52a540f9da88a6611d6877073c1257a0c8";
 const promotedSource = path => execFileSync(
@@ -46,8 +47,9 @@ test("reviewed record promotion authenticates predecessors and refuses unknown s
 
 test("reviewed record reconciliation extends eight signatures and leaves every instance and browser cell intact", async () => {
 	const path = "docs/type-surface.v1.json";
-	const surface = await readTypeSurface(), contracts = { ...surface };
-	delete contracts.document;
+	const contracts = typeSurfaceContractsAtProducer(
+		reviewedRecordPromotionPredecessor
+	);
 	const source = sourceAtHistoryMilestone(reviewedRecordPromotionHistoryPath, path);
 	const document = JSON.parse(source);
 	const previous = JSON.parse(beforeReviewedRecordPromotionSource(path, source));

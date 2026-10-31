@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypePhpArchive, nominalSubtypePhpReferences, promoteNominalSubtypePhp, nominalSubtypePhpConversion, nominalSubtypePhpLimit } from "./nominal-subtype-php-promotion.mjs";
 import { nominalSubtypePhpPromotionHistoryPath, nominalSubtypePhpPromotionPredecessor } from "./nominal-subtype-php-promotion-history.mjs";
 import { beforeNominalSubtypeWitPromotionSource, beforeNominalSubtypeWitPromotionPins, nominalSubtypeWitPromotionHistoryPath } from "./nominal-subtype-wit-promotion-history.mjs";
@@ -16,6 +16,7 @@ import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
 import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypePhpPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -115,7 +116,9 @@ test("nominal PHP promotion adds two field cells and supplements four existing c
 			)
 		))
 	);
-	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypePhpPromotionPredecessor
+	);
 	const document = JSON.parse(await sourceBeforeFinHistoryRecord(
 		nominalSubtypeWitPromotionHistoryPath, "docs/type-surface.v1.json"
 		, beforeNominalSubtypeWitPromotionSource

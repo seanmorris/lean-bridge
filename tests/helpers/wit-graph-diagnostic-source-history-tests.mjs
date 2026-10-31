@@ -21,6 +21,7 @@ import {
 	, witGraphDiagnosticPredecessor
 	, reverseWitGraphDiagnosticUpdate
 } from "./wit-graph-diagnostic-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 test("WIT graph diagnostic history reconstructs every exact predecessor source", async () => {
 	const record = JSON.parse(await readFile(witGraphDiagnosticHistoryPath, "utf8"));
@@ -32,8 +33,9 @@ test("WIT graph diagnostic history reconstructs every exact predecessor source",
 		, witGraphDiagnosticChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			witGraphDiagnosticHistoryPath, update.path, update.currentSha256
+			, beforeWitGraphDiagnosticSource
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
@@ -68,8 +70,9 @@ test("WIT graph diagnostic history refreshes only immediately preceding source p
 	const record = JSON.parse(await readFile(witGraphDiagnosticHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
 	// Later layers stack on this inventory; rewind them through the shared hub.
-	const currentText = beforeFinRefinementSource(
-		path, await readFile(path, "utf8"), update.currentSha256
+	const currentText = await sourceAtFinHistoryRecordSource(
+		witGraphDiagnosticHistoryPath, path, update.currentSha256
+		, beforeWitGraphDiagnosticSource
 	);
 	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reverseWitGraphDiagnosticUpdate(currentText, update));

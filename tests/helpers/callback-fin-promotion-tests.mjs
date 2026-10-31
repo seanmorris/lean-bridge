@@ -7,27 +7,32 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { callbackFinPromotionReferences } from "./callback-fin-promotion-references.mjs";
 import { callbackFinPromotionHistoryPath } from "./callback-fin-promotion-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import {
+	sourceAtFinHistoryRecord
+	, sourceBeforeFinHistoryRecord
+} from "./source-at-fin-history-milestone.mjs";
 
 const typeSurfacePath = "docs/type-surface.v1.json";
-let typeSurfaceUpdate;
 
 const callbackTypeSurface = async digestKey => {
-	const update = typeSurfaceUpdate ??= JSON.parse(await readFile(
-		callbackFinPromotionHistoryPath, "utf8"
-	)).updates.find(item => item.path === typeSurfacePath);
-	assert.ok(update);
-	return beforeFinRefinementSource(typeSurfacePath
-		, await readFile(typeSurfacePath, "utf8"), update[digestKey]);
+	assert.ok(["currentSha256", "previousSha256"].includes(digestKey));
+	const reader = digestKey === "currentSha256"
+		? sourceAtFinHistoryRecord : sourceBeforeFinHistoryRecord;
+	return reader(callbackFinPromotionHistoryPath, typeSurfacePath
+		, beforeFinRefinementSource);
 };
 
 const readPromotedSurface = async () => {
-	const result = await readTypeSurface();
-	result.document = JSON.parse(await callbackTypeSurface("currentSha256"));
-	return result;
+	const history = JSON.parse(await readFile(callbackFinPromotionHistoryPath, "utf8"));
+	return {
+		document: JSON.parse(await callbackTypeSurface("currentSha256"))
+		, ...typeSurfaceContractsAtProducer(history.predecessorCommit)
+	};
 };
 
 const predecessor = async () => JSON.parse(

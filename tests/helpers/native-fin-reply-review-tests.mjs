@@ -11,15 +11,23 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { nativeFinReplyPromotionId } from "./native-fin-reply-promotion-references.mjs";
 import { clarifyNativeReplyEvidence, clarifyNativeReplyObservation, nativeReplyReviewDispatch, nativeReplyReviewEarlierShapes, nativeReplyReviewObservationIds, nativeReplyReviewPattern, nativeReplyReviewValidator } from "./native-fin-reply-review-notes.mjs";
-import { beforeNativeReplyReviewSource } from "./native-reply-review-source-history.mjs";
-import { beforeBrowserGenericPromotionSource } from "./browser-generic-promotion-source-history.mjs";
+import { beforeNativeReplyReviewSource, nativeReplyReviewHistoryPath } from "./native-reply-review-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import { sourceAtFinHistoryRecord, sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
-const previous = async () => JSON.parse(beforeNativeReplyReviewSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const typeSurfacePath = "docs/type-surface.v1.json";
+const previous = async () => JSON.parse(await sourceBeforeFinHistoryRecord(
+	nativeReplyReviewHistoryPath, typeSurfacePath, beforeNativeReplyReviewSource
+));
 
 test("reply review clarifies four existing observations without changing any accepted cell", async () => {
-	const { document: live, ...contracts } = await readTypeSurface(), baseline = await previous();
+	const baseline = await previous();
+	const history = JSON.parse(await readFile(nativeReplyReviewHistoryPath, "utf8"));
+	const contracts = typeSurfaceContractsAtProducer(history.predecessorCommit);
 	// Compare this historical clarification at its own epoch, before browser signature additions.
-	const document = JSON.parse(beforeBrowserGenericPromotionSource("docs/type-surface.v1.json", JSON.stringify(live, null, 2) + "\n"));
+	const document = JSON.parse(await sourceAtFinHistoryRecord(
+		nativeReplyReviewHistoryPath, typeSurfacePath, beforeNativeReplyReviewSource
+	));
 	assert.equal(document.observations.length, 490); assert.equal(document.evidence.length, 265);
 	assert.deepEqual(document.observations, baseline.observations.map(item => nativeReplyReviewObservationIds.includes(item.id) ? clarifyNativeReplyObservation(item) : item));
 	const oldCells = typeSurfaceCells(baseline, contracts), cells = typeSurfaceCells(document, contracts);

@@ -20,7 +20,11 @@ import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
+
+const sourceAt = (path, expected) => sourceAtFinHistoryRecordSource(
+	optionalParameterHistoryPath, path, expected, beforeOptionalParameterSource
+);
 
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 256 * 1024 * 1024
@@ -63,7 +67,7 @@ test("optional parameters reverse every modified source exactly", async () => {
 	}
 	for(const update of value.integrationUpdates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
+		const current = await sourceAt(
 			update.path, update.currentSha256);
 		const previous = git(["show"
 			, `${optionalParameterImplementation}:${update.path}`]);
@@ -92,8 +96,9 @@ test("optional parameters authenticate every added source", async () => {
 	{
 		assert.equal(exists(optionalParameterImplementation, addition.path)
 			, false, addition.path);
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAt(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
 	}
 });
 

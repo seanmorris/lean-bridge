@@ -20,7 +20,7 @@ import {
 	, proofErasurePartitionAuditRepairPredecessor
 	, reverseProofErasurePartitionAuditRepairUpdate
 } from "./proof-erasure-partition-audit-repair-source-history.mjs";
-import { sourceAtFinHistoryMilestone }
+import { sourceAtFinHistoryRecordSource }
 	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
@@ -60,8 +60,10 @@ test("partition audit repair reverses every source", async () => {
 		), update), true, update.path);
 	for(const update of history.integrationUpdates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256);
+		const current = await sourceAtFinHistoryRecordSource(
+			proofErasurePartitionAuditRepairHistoryPath, update.path
+			, update.currentSha256, beforeProofErasurePartitionAuditRepairSource
+		);
 		const previous = git(["show"
 			, `${proofErasurePartitionAuditRepairImplementation}:${update.path}`]);
 		assert.equal(reverseProofErasurePartitionAuditRepairUpdate(
@@ -94,8 +96,10 @@ test("partition audit repair authenticates history controls", async () => {
 		, proofErasurePartitionAuditRepairHistoryAdditions);
 	for(const addition of history.historyAdditions)
 	{
-		const source = await sourceAtFinHistoryMilestone(
-			addition.path, addition.sha256);
+		const source = await sourceAtFinHistoryRecordSource(
+			proofErasurePartitionAuditRepairHistoryPath, addition.path
+			, addition.sha256, beforeProofErasurePartitionAuditRepairSource
+		);
 		assert.equal(sha256(source), addition.sha256, addition.path);
 	}
 });

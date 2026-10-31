@@ -17,6 +17,10 @@ import {
 	, reverseClosedGenericCheckedRecordUpdate
 } from "./helpers/closed-generic-checked-record-source-history.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import {
+	sourceAtFinHistoryRecord
+	, sourceBeforeFinHistoryRecord
+} from "./helpers/source-at-fin-history-milestone.mjs";
 import { sha256 } from "./helpers/source-history-digest.mjs";
 import { beforeTestProfileBacklogRepairSource } from "./helpers/test-profile-backlog-repair-history.mjs";
 
@@ -35,8 +39,9 @@ test("closed generic checked-record correction has an exact reversible source tr
 		, [...closedGenericCheckedRecordChangedPaths].sort());
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecord(
+			closedGenericCheckedRecordHistoryPath, update.path
+			, beforeFinRefinementSource
 		);
 		const repositoryPrevious = git([
 			"show", `${closedGenericCheckedRecordPredecessor}:${update.path}`
@@ -47,8 +52,9 @@ test("closed generic checked-record correction has an exact reversible source tr
 		assert.equal(beforeTestProfileBacklogRepairSource(
 			update.path, previous
 		), repositoryPrevious, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, sha256(repositoryPrevious)
+		assert.equal(await sourceBeforeFinHistoryRecord(
+			closedGenericCheckedRecordHistoryPath, update.path
+			, beforeFinRefinementSource
 		), repositoryPrevious, update.path);
 		assert.equal(beforeClosedGenericCheckedRecordSource(
 			update.path, `${current}\n`, update.previousSha256

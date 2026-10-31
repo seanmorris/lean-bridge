@@ -14,6 +14,7 @@ import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { nominalPrimitiveSubtypeJvmProducer } from "./nominal-primitive-subtype-jvm-provenance.mjs";
 import {
 	nominalPrimitiveSubtypeJvmConversion
@@ -114,7 +115,10 @@ test("primitive-base JVM promotion supplements twelve cells only", async () => {
 		nominalPrimitiveSubtypeJvmPromotionHistoryPath
 		, await promoteNominalPrimitiveSubtypeJvm(original, references)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalPrimitiveSubtypeJvmPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypeJvmPromotionHistoryPath
 		, "docs/type-surface.v1.json"

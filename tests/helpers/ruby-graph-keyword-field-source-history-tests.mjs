@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeRubyGraphDiagnosticPins } from "./ruby-graph-diagnostic-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 import {
 	beforeRubyGraphKeywordFieldPins
 	, beforeRubyGraphKeywordFieldSource
@@ -21,6 +22,11 @@ import {
 	, rubyGraphKeywordFieldPredecessor
 	, reverseRubyGraphKeywordFieldUpdate
 } from "./ruby-graph-keyword-field-source-history.mjs";
+
+const sourceAt = (path, expected) => sourceAtFinHistoryRecordSource(
+	rubyGraphKeywordFieldHistoryPath, path, expected
+	, beforeRubyGraphKeywordFieldSource
+);
 
 test("Ruby graph keyword field history reconstructs every exact predecessor source", async () => {
 	const record = JSON.parse(await readFile(rubyGraphKeywordFieldHistoryPath, "utf8"));
@@ -32,8 +38,8 @@ test("Ruby graph keyword field history reconstructs every exact predecessor sour
 		, rubyGraphKeywordFieldChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAt(
+			update.path, update.currentSha256
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
@@ -68,8 +74,8 @@ test("Ruby graph keyword field history refreshes only immediately preceding sour
 	const record = JSON.parse(await readFile(rubyGraphKeywordFieldHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
 	// Later layers stack on this inventory; rewind them through the shared hub.
-	const currentText = beforeFinRefinementSource(
-		path, await readFile(path, "utf8"), update.currentSha256
+	const currentText = await sourceAt(
+		path, update.currentSha256
 	);
 	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reverseRubyGraphKeywordFieldUpdate(currentText, update));

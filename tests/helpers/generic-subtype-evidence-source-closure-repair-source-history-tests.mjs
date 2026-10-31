@@ -73,6 +73,9 @@ test("generic-Subtype source-closure history restores every source"
 );
 
 test("generic-Subtype source-closure history range is exact", () => {
+	const recordCommit = git(["log", "--diff-filter=A", "--format=%H"
+		, "--", genericSubtypeEvidenceSourceClosureRepairHistoryPath]).trim();
+	assert.match(recordCommit, /^[a-f0-9]{40}$/u);
 	assert.equal(git(["rev-parse"
 		, `${genericSubtypeEvidenceSourceClosureRepairImplementation}^`]).trim()
 	, genericSubtypeEvidenceSourceClosureRepairPredecessor);
@@ -88,7 +91,7 @@ test("generic-Subtype source-closure history range is exact", () => {
 		, genericSubtypeEvidenceSourceClosureRepairPredecessor
 		, genericSubtypeEvidenceSourceClosureRepairImplementation]), []);
 	assert.deepEqual(names(["diff", "--name-only"
-		, genericSubtypeEvidenceSourceClosureRepairImplementation, "HEAD"
+		, genericSubtypeEvidenceSourceClosureRepairImplementation, recordCommit
 		, "--", ...genericSubtypeEvidenceSourceClosureRepairImplementationPaths])
 	, [], "archive commits must not alter the repaired source closure");
 });

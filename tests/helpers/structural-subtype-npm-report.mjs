@@ -7,13 +7,8 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
-import { validateBindingIr } from "../../src/binding-ir/contract.mjs";
-import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
-import { validateCompilerAdapterPlan } from "../../src/build/compiler-adapters.mjs";
-import { validateComponentBuildPlan } from "../../src/build/component-plan.mjs";
-import { createComponentPrivateAbi } from "../../src/build/component-callable-adapters.mjs";
 import { validateComponentPackageReceipt } from "../../src/release/component-package-receipt.mjs";
-import { structuralSubtypeConfiguration, structuralSubtypeReview } from "./structural-subtype-installed-fixture.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
 
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const buildPaths = ["binding/binding-ir.json", "locks/compiler-adapters.json", "locks/component-build-plan.json", "metadata/provenance.json", "component-package-receipt.json", "StructuralSubtypes.lean"];
@@ -33,6 +28,18 @@ export const structuralSubtypeNpmRecordPaths = Object.freeze([
  */
 export const checkStructuralSubtypeNpmReport = async (read, { route, producerCommit }) => {
 	assert.ok(["ordinary", "reviewed"].includes(route)); assert.match(producerCommit, /^[a-f0-9]{40}$/u);
+	const producer = Object.assign({}, ...await Promise.all([
+		"src/binding-ir/contract.mjs"
+		, "src/analyze/reviewed-source.mjs"
+		, "src/build/compiler-adapters.mjs"
+		, "src/build/component-plan.mjs"
+		, "src/build/component-callable-adapters.mjs"
+		, "tests/helpers/structural-subtype-installed-fixture.mjs"
+	].map(path => moduleAtProducer(producerCommit, path))));
+	const { validateBindingIr, reviewedContractDifference
+		, validateCompilerAdapterPlan, validateComponentBuildPlan
+		, createComponentPrivateAbi, structuralSubtypeConfiguration
+		, structuralSubtypeReview } = producer;
 	const json = async path => {
 		const bytes = await read(path), value = JSON.parse(bytes);
 		assert.equal(bytes.toString(), canonicalJson(value), path);

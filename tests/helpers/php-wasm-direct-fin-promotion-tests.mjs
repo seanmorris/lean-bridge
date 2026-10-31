@@ -8,11 +8,12 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { phpWasmDirectArchiveRoot, phpWasmDirectProducer } from "./php-wasm-fin-direct-archive.mjs";
-import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
+import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath, phpWasmDirectPromotionPredecessor } from "./php-wasm-direct-fin-promotion-history.mjs";
 import { phpWasmDirectPromotionConversion, phpWasmDirectPromotionEnvironment, phpWasmDirectPromotionLimit, phpWasmDirectPromotionReferences, promotePhpWasmDirectFin } from "./php-wasm-direct-fin-promotion.mjs";
 import "./php-wasm-direct-fin-promotion-history-tests.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 const promotionSource = async path => {
@@ -58,11 +59,12 @@ test("direct PHP-Wasm promotion authenticates four selections without borrowing 
 });
 
 test("direct PHP-Wasm promotion supplements only its existing six Fin cells and preserves earlier evidence", async () => {
-	const current = await readTypeSurface(), previous = await predecessor();
-	current.document = JSON.parse(await promotionSource("docs/type-surface.v1.json"));
+	const contracts = typeSurfaceContractsAtProducer(phpWasmDirectPromotionPredecessor);
+	const previous = await predecessor();
+	const document = JSON.parse(await promotionSource("docs/type-surface.v1.json"));
 	const references = await phpWasmDirectPromotionReferences();
 	const proposed = await promotePhpWasmDirectFin(previous, references);
-	validateTypeSurface(proposed, current);
+	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.observations.length, previous.observations.length);
 	assert.equal(proposed.evidence.length, previous.evidence.length + 4);
 	assert.deepEqual(proposed.evidence.slice(0, previous.evidence.length), previous.evidence);
@@ -88,7 +90,7 @@ test("direct PHP-Wasm promotion supplements only its existing six Fin cells and 
 		}
 	}
 	assert.deepEqual(changed, ["php-wasm-fin-products-ordinary", "php-wasm-fin-records-ordinary", "php-wasm-fin-products-reviewed", "php-wasm-fin-records-reviewed"]);
-	const before = typeSurfaceCells(previous, current), after = typeSurfaceCells(proposed, current);
+	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(proposed, contracts);
 	let updated = 0;
 	for(const [index, cell] of after.entries())
 	{
@@ -99,9 +101,9 @@ test("direct PHP-Wasm promotion supplements only its existing six Fin cells and 
 	}
 	assert.equal(updated, 6);
 	const expected = structuredClone(proposed);
-	restoreHistoricalPins(expected, current.document);
-	assert.deepEqual(current.document, expected);
-	await assertHistoricalTypeSurfaceEvidence(current.document);
+	restoreHistoricalPins(expected, document);
+	assert.deepEqual(document, expected);
+	await assertHistoricalTypeSurfaceEvidence(document);
 });
 
 test("direct PHP-Wasm promotion refuses incomplete, duplicated or repeated supplements", async () => {

@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	optionalParameterCompleteCells, optionalParameterCompleteEvidenceId
@@ -20,15 +19,16 @@ import { optionalParameterCompletePromotionPredecessor }
 import {
 	typeSurfaceCells, validateTypeSurface
 } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const load = async () => {
 	const document = JSON.parse(execFileSync("git", ["show"
 		, `${optionalParameterCompletePromotionPredecessor}:docs/type-surface.v1.json`]
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 }));
-	const [irSchema, consumers] = await Promise.all([
-		"schema/binding-ir.schema.json", "docs/consumer-support.v1.json"
-	].map(async path => JSON.parse(await readFile(path, "utf8"))));
-	return { document, contracts: { irSchema, consumers } };
+	return { document
+		, contracts: typeSurfaceContractsAtProducer(
+			optionalParameterCompletePromotionPredecessor)
+	};
 };
 const revision = "3".repeat(40);
 const reference = Object.freeze({

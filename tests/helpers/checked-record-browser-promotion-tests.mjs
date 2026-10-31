@@ -8,10 +8,12 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { checkedRecordBrowserReferences, promoteCheckedRecordBrowsers, checkedRecordBrowserProfiles, checkedRecordBrowserArchiveRoot, checkedRecordBrowserArchiveIndex, checkedRecordBrowserConversion, checkedRecordBrowserLimit } from "./checked-record-browser-promotion.mjs";
 import { checkedRecordBrowserPromotionPredecessor, checkedRecordBrowserPromotionHistoryPath } from "./checked-record-browser-promotion-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 const baseline = () => JSON.parse(execFileSync("git", ["show", `${checkedRecordBrowserPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 const promotionSource = async path => {
@@ -73,13 +75,14 @@ test("browser promotion refuses missing or corrupt original provenance, callers 
 });
 
 test("browser promotion supplements eight Node cells and adds exactly twelve browser cells", async () => {
-	const current = await readTypeSurface(), previous = baseline(), unchanged = structuredClone(previous);
+	const contracts = typeSurfaceContractsAtProducer(checkedRecordBrowserPromotionPredecessor);
+	const previous = baseline(), unchanged = structuredClone(previous);
 	const references = await checkedRecordBrowserReferences(), proposed = await promoteCheckedRecordBrowsers(previous, references);
-	assert.deepEqual(previous, unchanged); validateTypeSurface(proposed, current);
+	assert.deepEqual(previous, unchanged); validateTypeSurface(proposed, contracts);
 	assert.equal(previous.evidence.length, 464); assert.equal(previous.observations.length, 555);
 	assert.equal(proposed.evidence.length, 468); assert.equal(proposed.observations.length, 567);
 	assert.deepEqual(proposed.evidence.slice(0, 464), previous.evidence);
-	const before = typeSurfaceCells(previous, current), after = typeSurfaceCells(proposed, current), changed = [];
+	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(proposed, contracts), changed = [];
 	for(const [index, cell] of after.entries())
 	{
 		if(JSON.stringify(cell) === JSON.stringify(before[index])) continue;
@@ -112,14 +115,21 @@ test("browser promotion supplements eight Node cells and adds exactly twelve bro
 	assert.equal(supplements, 8); assert.deepEqual(restored, previous);
 	const history = JSON.parse(await readFile(checkedRecordBrowserPromotionHistoryPath));
 	const path = "docs/type-surface.v1.json", update = history.updates.find(item => item.path === path);
-	const milestone = JSON.parse(beforeFinRefinementSource(path, await readFile(path, "utf8"), update.currentSha256));
+	const milestone = JSON.parse(await sourceAtFinHistoryRecordSource(
+		checkedRecordBrowserPromotionHistoryPath, path
+		, update.currentSha256, beforeFinRefinementSource
+	));
 	for(const entry of proposed.evidence) for(const file of entry.files)
 	{
 		const transition = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(transition) file.sha256 = transition.currentSha256;
 		if(previous.evidence.some(item => item.id === entry.id) || file.path.startsWith("docs/evidence/")) continue;
 		const original = milestone.evidence.find(item => item.id === entry.id).files.find(item => item.path === file.path);
-		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), original.sha256)), original.sha256);
+		const source = await sourceAtFinHistoryRecordSource(
+			checkedRecordBrowserPromotionHistoryPath, file.path
+			, original.sha256, beforeFinRefinementSource
+		);
+		assert.equal(sha256(source), original.sha256);
 		file.sha256 = original.sha256;
 	}
 	assert.deepEqual(proposed, milestone);

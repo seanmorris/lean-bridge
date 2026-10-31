@@ -10,12 +10,14 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCheckedRecordHostCiSource, checkedRecordHostCiHistoryPath } from "./checked-record-host-ci-history.mjs";
 import { checkedRecordNativeProfiles, checkedRecordNativeReferences, promoteCheckedRecordNative, checkedRecordNativeLimit, checkedRecordNativeConversion } from "./checked-record-native-promotion.mjs";
 import { beforeCheckedRecordNativePromotionSource, checkedRecordNativePromotionChangedPaths, checkedRecordNativePromotionHistoryPath, checkedRecordNativePromotionPredecessor, reverseCheckedRecordNativePromotionUpdate } from "./checked-record-native-promotion-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const predecessor = async () => {
 	const path = "docs/type-surface.v1.json";
@@ -62,14 +64,15 @@ test("native checked-record promotion authenticates all sixteen run groups and b
 });
 
 test("native checked-record promotion changes exactly thirty-two cells without broadening other positions", async () => {
-	const current = await readTypeSurface(), previous = await predecessor();
+	const contracts = typeSurfaceContractsAtProducer(checkedRecordNativePromotionPredecessor);
+	const previous = await predecessor();
 	const proposed = await promoteCheckedRecordNative(previous, await checkedRecordNativeReferences());
-	validateTypeSurface(proposed, current);
+	validateTypeSurface(proposed, contracts);
 	assert.equal(previous.evidence.length, 420); assert.equal(previous.observations.length, 519);
 	assert.equal(proposed.evidence.length, 436); assert.equal(proposed.observations.length, 551);
 	assert.deepEqual(proposed.evidence.slice(0, 420), previous.evidence);
 	assert.deepEqual(proposed.observations.slice(0, 519), previous.observations);
-	const before = typeSurfaceCells(previous, current), after = typeSurfaceCells(proposed, current), changed = [];
+	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(proposed, contracts), changed = [];
 	for(const [index, cell] of after.entries())
 	{
 		if(JSON.stringify(cell) === JSON.stringify(before[index])) continue;
@@ -105,7 +108,10 @@ test("native checked-record promotion changes exactly thirty-two cells without b
 		{
 			const original = milestone.evidence.find(item => item.id === entry.id)?.files.find(item => item.path === file.path);
 			assert.ok(original, file.path);
-			assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), original.sha256)), original.sha256, file.path);
+			const source = await sourceAtFinHistoryMilestone(
+				file.path, original.sha256, beforeFinRefinementSource
+			);
+			assert.equal(sha256(source), original.sha256, file.path);
 			file.sha256 = original.sha256;
 		}
 	assert.deepEqual(milestone, proposed);

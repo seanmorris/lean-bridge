@@ -12,14 +12,15 @@ import {
 	checkedRecordValueIndexPerlPromotionBaseline
 	, checkedRecordValueIndexPerlPromotionConversion
 	, checkedRecordValueIndexPerlPromotionLimit
+	, checkedRecordValueIndexPerlPromotionParent
 	, checkedRecordValueIndexPerlPromotionReferences
 	, promoteCheckedRecordValueIndexPerl
 } from "./checked-record-value-index-perl-promotion.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const contracts = async () => ({
-	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
-	, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json"))
-});
+const contracts = () => typeSurfaceContractsAtProducer(
+	checkedRecordValueIndexPerlPromotionParent
+);
 const target = cell => cell.profile === "perl"
 	&& cell.shape === "checked-record" && ["ordinary-source", "reviewed-ir"].includes(cell.path)
 	&& ["parameter", "result"].includes(cell.position);
@@ -53,10 +54,11 @@ test("Perl promotion changes only four exact cells and 94 stale profile pins", {
 	const frozen = structuredClone(original);
 	const references = await checkedRecordValueIndexPerlPromotionReferences();
 	const proposed = await promoteCheckedRecordValueIndexPerl(original, references);
-	validateTypeSurface(proposed, await contracts());
+	const historicalContracts = contracts();
+	validateTypeSurface(proposed, historicalContracts);
 	assert.deepEqual(original, frozen);
-	const before = new Map(typeSurfaceCells(original, await contracts()).map(cell => [cell.id, cell]));
-	const difference = typeSurfaceCells(proposed, await contracts()).filter(cell =>
+	const before = new Map(typeSurfaceCells(original, historicalContracts).map(cell => [cell.id, cell]));
+	const difference = typeSurfaceCells(proposed, historicalContracts).filter(cell =>
 		JSON.stringify(cell) !== JSON.stringify(before.get(cell.id)));
 	assert.equal(difference.length, 4);
 	for(const cell of difference)

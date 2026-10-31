@@ -13,6 +13,7 @@ import { nominalPrimitiveSubtypeBrowserProducer } from "./nominal-primitive-subt
 import { nominalPrimitiveSubtypeBrowserPromotionHistoryPath, nominalPrimitiveSubtypeBrowserPromotionPredecessor } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
 import { nominalPrimitiveSubtypeBrowserReferences, promoteNominalPrimitiveSubtypeBrowser, nominalPrimitiveSubtypeBrowserProfiles, nominalPrimitiveSubtypeBrowserConversion, nominalPrimitiveSubtypeBrowserLimit, nominalPrimitiveSubtypeBrowserField } from "./nominal-primitive-subtype-browser-promotion.mjs";
 import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeBrowserPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -91,7 +92,10 @@ test("primitive-base browser promotion supplements eighteen existing cells and p
 		nominalPrimitiveSubtypeBrowserPromotionHistoryPath
 		, await promoteNominalPrimitiveSubtypeBrowser(original, references)
 	);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const { document: current } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalPrimitiveSubtypeBrowserPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypeBrowserPromotionHistoryPath
 		, "docs/type-surface.v1.json"

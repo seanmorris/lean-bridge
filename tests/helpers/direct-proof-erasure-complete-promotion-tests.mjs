@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	renderTypeTable, typeGuideProfiles
@@ -22,6 +21,7 @@ import {
 } from "./direct-proof-erasure-complete-promotion.mjs";
 import { directProofErasureCompletePromotionPredecessor }
 	from "./direct-proof-erasure-complete-promotion-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import {
 	directProofErasureHostedLanes
 	, directProofErasureHostedReceipt
@@ -31,10 +31,10 @@ const load = async () => {
 	const document = JSON.parse(execFileSync("git", ["show"
 		, `${directProofErasureCompletePromotionPredecessor}:docs/type-surface.v1.json`]
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 }));
-	const [irSchema, consumers] = await Promise.all([
-		"schema/binding-ir.schema.json", "docs/consumer-support.v1.json"
-	].map(async path => JSON.parse(await readFile(path, "utf8"))));
-	return { document, contracts: { irSchema, consumers } };
+	return { document
+		, contracts: typeSurfaceContractsAtProducer(
+			directProofErasureCompletePromotionPredecessor)
+	};
 };
 const revision = "2".repeat(40);
 const referenceFiles = directProofErasureCompleteReferencePaths.map(

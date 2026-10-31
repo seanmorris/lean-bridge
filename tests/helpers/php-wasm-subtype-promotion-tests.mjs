@@ -8,11 +8,12 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { phpWasmSubtypeArchiveRoot, phpWasmSubtypeProducer } from "./php-wasm-subtype-archive.mjs";
-import { beforePhpWasmSubtypePromotionSource, phpWasmSubtypePromotionHistoryPath } from "./php-wasm-subtype-promotion-history.mjs";
+import { beforePhpWasmSubtypePromotionSource, phpWasmSubtypePromotionHistoryPath, phpWasmSubtypePromotionPredecessor } from "./php-wasm-subtype-promotion-history.mjs";
 import { phpWasmSubtypePromotionConversion, phpWasmSubtypePromotionEnvironment, phpWasmSubtypePromotionLimit, phpWasmSubtypePromotionReferences, promotePhpWasmSubtype } from "./php-wasm-subtype-promotion.mjs";
 import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const promotionSource = async path => {
 	const history = JSON.parse(await readFile(phpWasmSubtypePromotionHistoryPath));
@@ -57,15 +58,16 @@ test("PHP-Wasm Subtype promotion authenticates both source routes without invent
 });
 
 test("PHP-Wasm Subtype promotion changes only four cells and preserves every older observation", async () => {
-	const current = await readTypeSurface(), previous = await predecessor();
-	current.document = JSON.parse(await promotionSource("docs/type-surface.v1.json"));
+	const contracts = typeSurfaceContractsAtProducer(phpWasmSubtypePromotionPredecessor);
+	const previous = await predecessor();
+	const document = JSON.parse(await promotionSource("docs/type-surface.v1.json"));
 	const references = await phpWasmSubtypePromotionReferences(), proposed = await promotePhpWasmSubtype(previous, references);
-	validateTypeSurface(proposed, current);
+	validateTypeSurface(proposed, contracts);
 	assert.equal(previous.evidence.length, 405); assert.equal(previous.observations.length, 507);
 	assert.equal(proposed.evidence.length, 407); assert.equal(proposed.observations.length, 509);
 	assert.deepEqual(proposed.evidence.slice(0, previous.evidence.length), previous.evidence);
 	assert.deepEqual(proposed.observations.slice(0, previous.observations.length), previous.observations);
-	const before = typeSurfaceCells(previous, current), after = typeSurfaceCells(proposed, current), changed = [];
+	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(proposed, contracts), changed = [];
 	for(const [index, cell] of after.entries())
 	{
 		if(JSON.stringify(cell) === JSON.stringify(before[index])) continue;
@@ -84,9 +86,9 @@ test("PHP-Wasm Subtype promotion changes only four cells and preserves every old
 		assert.deepEqual(observation.conversionNotes, { subtype: phpWasmSubtypePromotionConversion });
 	}
 	const expected = structuredClone(proposed);
-	restoreHistoricalPins(expected, current.document);
-	assert.deepEqual(current.document, expected);
-	await assertHistoricalTypeSurfaceEvidence(current.document);
+	restoreHistoricalPins(expected, document);
+	assert.deepEqual(document, expected);
+	await assertHistoricalTypeSurfaceEvidence(document);
 });
 
 test("PHP-Wasm Subtype promotion refuses missing, duplicate, weakened or repeated evidence selections", async () => {

@@ -21,6 +21,7 @@ import {
 	, checkedRecordValueIndexBrowserPromotionBaseline
 	, checkedRecordValueIndexBrowserPromotionConversion
 	, checkedRecordValueIndexBrowserPromotionLimit
+	, checkedRecordValueIndexBrowserPromotionParent
 	, checkedRecordValueIndexBrowserPromotionProfiles
 	, checkedRecordValueIndexBrowserPromotionReferences
 	, promoteCheckedRecordValueIndexBrowsers
@@ -29,11 +30,11 @@ import {
 	checkedRecordValueIndexBrowserEvidence
 	, checkedRecordValueIndexBrowserEvidenceRevisions
 } from "./checked-record-value-index-browser-evidence.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const contracts = async () => ({
-	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
-	, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json"))
-});
+const contracts = () => typeSurfaceContractsAtProducer(
+	checkedRecordValueIndexBrowserPromotionParent
+);
 const targetId = cell => cell.shape === "checked-record"
 	&& checkedRecordValueIndexBrowserPromotionProfiles.includes(cell.profile)
 	&& ["ordinary-source", "reviewed-ir"].includes(cell.path)
@@ -146,12 +147,13 @@ test("hosted value-index browser promotion changes exactly twenty cells"
 				, await checkedRecordValueIndexBrowserPromotionReferences()
 			)
 		);
-		validateTypeSurface(proposed, await contracts());
+		const historicalContracts = contracts();
+		validateTypeSurface(proposed, historicalContracts);
 		assert.equal(sha256(canonicalJson(original)), frozenSha256);
 		assert.equal(proposed.evidence.length, original.evidence.length + 4);
 		assert.equal(proposed.observations.length, original.observations.length);
-		const before = typeSurfaceCells(original, await contracts(), auditedId);
-		const after = typeSurfaceCells(proposed, await contracts(), auditedId);
+		const before = typeSurfaceCells(original, historicalContracts, auditedId);
+		const after = typeSurfaceCells(proposed, historicalContracts, auditedId);
 		const beforeById = new Map(before.map(cell => [cell.id, cell]));
 		const changed = [];
 		for(const cell of after)

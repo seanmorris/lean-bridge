@@ -15,7 +15,8 @@ import { sha256 } from "../../src/capsule/node.mjs";
 const revisionPattern = /^[a-f0-9]{40}$/u;
 const digestPattern = /^[a-f0-9]{64}$/u;
 const sources = new Map();
-const maxSourceBytes = 64 * 1024 * 1024;
+const maxProducerSourceBytes = 512 * 1024 * 1024;
+const maxRetainedSourceBytes = 64 * 1024 * 1024;
 let retainedSourceBytes = 0;
 
 /**
@@ -97,14 +98,14 @@ export const bytesAtProducer = (revision, path, expected = undefined) => {
 	if(bytes === undefined)
 	{
 		bytes = execFileSync("git", ["show", key], {
-			maxBuffer: maxSourceBytes
+			maxBuffer: maxProducerSourceBytes
 			, stdio: ["ignore", "pipe", "pipe"]
 		});
-		if(bytes.length <= maxSourceBytes)
+		if(bytes.length <= maxRetainedSourceBytes)
 		{
 			sources.set(key, bytes);
 			retainedSourceBytes += bytes.length;
-			while(retainedSourceBytes > maxSourceBytes)
+			while(retainedSourceBytes > maxRetainedSourceBytes)
 			{
 				const oldestKey = sources.keys().next().value;
 				const oldest = sources.get(oldestKey);

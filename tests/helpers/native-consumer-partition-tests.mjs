@@ -107,11 +107,13 @@ test("combined C/C++ summary proceeds only when both actual jobs succeeded", asy
 });
 
 test("Perl shared compiler receives 90 minutes with all commands and other budgets unchanged", async () => {
-	const perlPath = ".github/workflows/perl-consumer.yml", previous = original(perlPath), current = await readFile(perlPath, "utf8");
-	assert.equal(current, extendPerlCompilerBudget(previous));
+	const perlPath = ".github/workflows/perl-consumer.yml", current = await readFile(perlPath, "utf8");
 	const job = jobAt(current, "compiler-checks");
 	assert.match(job, /^ {4}timeout-minutes: 90$/mu);
+	const predecessor = current.replace(job, () => job.replace("timeout-minutes: 90", "timeout-minutes: 60"));
+	assert.notEqual(predecessor, current);
+	assert.equal(current, extendPerlCompilerBudget(predecessor));
 	for(const budget of ["60", "120", "0"])
-		assert.notEqual(current.replace(job, () => job.replace("timeout-minutes: 90", "timeout-minutes: " + budget)), extendPerlCompilerBudget(previous));
+		assert.notEqual(current.replace(job, () => job.replace("timeout-minutes: 90", "timeout-minutes: " + budget)), current);
 	assert.throws(() => extendPerlCompilerBudget(current));
 });

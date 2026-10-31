@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeNativeOwnedGateSource, nativeOwnedGateChangedPaths, nativeOwnedGateHistoryPath, nativeOwnedGatePredecessor, reverseNativeOwnedGateUpdate } from "./native-owned-gate-history.mjs";
 
@@ -21,8 +22,9 @@ test("native owned CI repair preserves exact historical probes and the support i
 	const original = path => execFileSync("git", ["show", `${nativeOwnedGatePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			nativeOwnedGateHistoryPath, update.path, update.currentSha256
+			, beforeNativeOwnedGateSource
 		);
 		const previous = reverseNativeOwnedGateUpdate(current, update);
 		assert.equal(previous, original(update.path));

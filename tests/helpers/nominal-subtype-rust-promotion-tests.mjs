@@ -8,15 +8,16 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeRustArchive, nominalSubtypeRustReferences, promoteNominalSubtypeRust, nominalSubtypeRustConversion, nominalSubtypeRustLimit } from "./nominal-subtype-rust-promotion.mjs";
-import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
+import { nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRustPromotionPredecessor } from "./nominal-subtype-rust-promotion-history.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins,
 	withHistorySourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const predecessor = () => JSON.parse(execFileSync("git", ["show", "d2d819205189ceaaf80d7e2cc80901111c778de2:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeRustPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
 test("nominal Rust promotion authenticates all four source/API selections and the pinned Rust and Cargo toolchain", async () => {
 	const references = await nominalSubtypeRustReferences();
@@ -93,7 +94,10 @@ test("nominal Rust promotion adds two field cells and supplements four existing 
 		nominalSubtypeRustPromotionHistoryPath
 		, await promoteNominalSubtypeRust(original, references)
 	);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const current = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypeRustPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalSubtypeRustPromotionHistoryPath, "docs/type-surface.v1.json"
 	));

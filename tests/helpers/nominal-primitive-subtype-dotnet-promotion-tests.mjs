@@ -14,6 +14,7 @@ import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { nominalPrimitiveSubtypeDotnetProducer } from "./nominal-primitive-subtype-dotnet-provenance.mjs";
 import {
 	nominalPrimitiveSubtypeDotnetConversion
@@ -134,7 +135,10 @@ test("primitive-base C# promotion supplements six cells and preserves all others
 		nominalPrimitiveSubtypeDotnetPromotionHistoryPath
 		, await promoteNominalPrimitiveSubtypeDotnet(original, references)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalPrimitiveSubtypeDotnetPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypeDotnetPromotionHistoryPath
 		, "docs/type-surface.v1.json"

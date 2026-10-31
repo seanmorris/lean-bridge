@@ -11,15 +11,16 @@ import {
 	beforeNominalSubtypeJvmPromotionSource,
 	nominalSubtypeJvmPromotionHistoryPath
 } from "./nominal-subtype-jvm-promotion-history.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeNativeArchive, nominalSubtypeNativeProfiles, nominalSubtypeNativeReferences, promoteNominalSubtypeNative, nominalSubtypeNativeConversion, nominalSubtypeNativeLimit } from "./nominal-subtype-native-promotion.mjs";
-import { nominalSubtypeNativePromotionHistoryPath } from "./nominal-subtype-native-promotion-history.mjs";
+import { nominalSubtypeNativePromotionHistoryPath, nominalSubtypeNativePromotionPredecessor } from "./nominal-subtype-native-promotion-history.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins,
 	withHistorySourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const predecessor = () => JSON.parse(execFileSync("git", ["show", "4d9424e6c1fa551d0c6802d39ee7c5d469ed8c23:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeNativePromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
 test("nominal native promotion authenticates four installed selections at the observed glibc runtime", async () => {
 	const references = await nominalSubtypeNativeReferences();
@@ -85,7 +86,10 @@ test("nominal native promotion adds four C/C++ field cells and supplements eight
 		nominalSubtypeNativePromotionHistoryPath
 		, await promoteNominalSubtypeNative(original, references)
 	);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const current = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypeNativePromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalSubtypeNativePromotionHistoryPath, "docs/type-surface.v1.json"
 	));

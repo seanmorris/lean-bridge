@@ -27,6 +27,7 @@ import {
 	, reverseOwnedMatrixRefreshUpdate
 } from "./owned-matrix-refresh-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
 import { authenticateSourceHistoryReverse, gitSourceBytes } from "./source-history-stream.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
@@ -89,10 +90,7 @@ test("Owned matrix refresh preserves runtime and original evidence", () => {
 });
 
 test("Owned matrix refresh preserves every support observation", async () => {
-	const contracts = {
-		irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
-		, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json"))
-	};
+	const contracts = typeSurfaceContractsAtProducer(predecessor);
 	const previous = await readPromotionInventory(
 		Readable.from(gitSourceBytes(predecessor, "docs/type-surface.v1.json"))
 		, contracts

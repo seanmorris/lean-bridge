@@ -112,7 +112,7 @@ test("zero-payload Ruby carriers preserve empty, UNIT, Option, array and variant
 		const native = files[`lib/${zeroPayloadRubyRequirePath}/native.rb`];
 		assert.match(native, /raise TypeError, "Expected Witness" unless exact\?\(value, Witness\)/u);
 		assert.match(native, /raise TypeError, "Expected UNIT" unless same\?\(value, UNIT\)/u);
-		assert.match(native, /raise TypeError, "Option requires nil or Some\(value\)"/u);
+		assert.match(native, /raise TypeError, "Option requires nil or Some\.new\(value\)"/u);
 		assert.match(native, /raise TypeError, "Expected an exact Mark constructor"/u);
 		assert.match(native, /raise\(status == 1 \? RangeError : LeanBridgeError, message\)/u);
 	}

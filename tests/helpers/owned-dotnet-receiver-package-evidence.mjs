@@ -4,10 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { ownedJvmReceiverHistoricalBytes } from "./owned-jvm-receiver-history.mjs";
 import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 /** The commit whose complete source tree every digest in the .NET receiver record names. */
 export const ownedDotnetReceiverProducer = "58750ab55e52114fa1d48715216fc5c049f4d683";
@@ -49,12 +48,19 @@ export const assertOwnedDotnetReceiverPackages = async record => {
 		, ownedRustReceiverSource
 		, ownedDotnetInstalledReceiverProbe, ownedDotnetReceiverInvalidPrograms
 	} = await ownedDotnetReceiverProducerModules();
+	const producerSource = path => bytesAtProducer(
+		ownedDotnetReceiverProducer, path
+	);
 	const consumer = await ownedDotnetInstalledReceiverProbe();
-	const example = await readFile("tests/fixtures/documentation/consumers/dotnet/owned-receivers.cs", "utf8");
-	const guide = await readFile("docs/consume/dotnet.md", "utf8");
+	const example = producerSource(
+		"tests/fixtures/documentation/consumers/dotnet/owned-receivers.cs"
+	).toString();
+	const guide = producerSource("docs/consume/dotnet.md").toString();
 	assert.equal(guide.split("```csharp file=dotnet/owned-receivers.cs\n")[1].split("\n```")[0] + "\n", example);
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
-	const cliConfig = JSON.parse(ownedJvmReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
+	const lean = producerSource(
+		"tests/fixtures/onboarding/owned-aggregates/Owned.lean"
+	).toString();
+	const cliConfig = JSON.parse(producerSource("config/cli-package.v1.json"));
 	for(const item of record.packages)
 	{
 		for(const field of ["compiledLean", "installedPackage", "installedNuget"
@@ -159,8 +165,10 @@ export const assertOwnedDotnetReceiverPackages = async record => {
 		for(const path of cliConfig.files)
 		{
 			const file = item.cli.files.find(value => value.path === path);
-			const bytes = Buffer.from(ownedJvmReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
-			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
+			assert.ok(file, path);
+			const bytes = producerSource(path);
+			assert.equal(file.bytes, bytes.length);
+			assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.cliBuilds.length, 2);
 		for(const build of item.cliBuilds)

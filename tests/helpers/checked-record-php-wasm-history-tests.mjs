@@ -10,6 +10,10 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import {
+	sourceAtFinHistoryRecord
+	, sourceBeforeFinHistoryRecord
+} from "./source-at-fin-history-milestone.mjs";
 import { beforeCheckedRecordPhpWasmSource, checkedRecordPhpWasmChangedPaths, checkedRecordPhpWasmHistoryPath, checkedRecordPhpWasmPredecessor, reverseCheckedRecordPhpWasmUpdate } from "./checked-record-php-wasm-history.mjs";
 
 test("Checked-record PHP-Wasm foundation repair authenticates exact test changes without changing support or observations", async () => {
@@ -20,15 +24,18 @@ test("Checked-record PHP-Wasm foundation repair authenticates exact test changes
 	const original = path => execFileSync("git", ["show", `${checkedRecordPhpWasmPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecord(
+			checkedRecordPhpWasmHistoryPath, update.path
+			, beforeFinRefinementSource
 		);
 		const previous = reverseCheckedRecordPhpWasmUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCheckedRecordPhpWasmSource(update.path, current), previous);
 		assert.equal(beforeCheckedRecordPhpWasmSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeCheckedRecordPhpWasmSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.equal(await sourceBeforeFinHistoryRecord(
+			checkedRecordPhpWasmHistoryPath, update.path, beforeFinRefinementSource
+		), previous);
 		assert.equal(beforeCheckedRecordPhpWasmSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }

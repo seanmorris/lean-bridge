@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeBrowserCallbackArchiveSource, browserCallbackArchiveChangedPaths, browserCallbackArchiveHistoryPath, reverseBrowserCallbackArchiveUpdate } from "./browser-callback-archive-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 test("Browser callback archive authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(browserCallbackArchiveHistoryPath, "utf8"));
@@ -16,9 +17,9 @@ test("Browser callback archive authenticates each exact source predecessor", asy
 	assert.deepEqual(record.updates.map(update => update.path), browserCallbackArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8")
-			, update.currentSha256
+		const source = await sourceAtFinHistoryRecordSource(
+			browserCallbackArchiveHistoryPath, update.path, update.currentSha256
+			, beforeBrowserCallbackArchiveSource
 		);
 		assert.equal(sha256(reverseBrowserCallbackArchiveUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeBrowserCallbackArchiveSource(update.path, source)), update.previousSha256);

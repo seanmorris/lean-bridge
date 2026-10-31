@@ -7,9 +7,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedDotnetBorrow, ownedDotnetBorrowHistoricalBytes } from "./helpers/owned-dotnet-borrow-history.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
-import { beforeOwnedRubyBorrowCi, ownedRubyBorrowCiHistoricalBytes
+import { beforeOwnedRubyBorrowCi
 	, ownedRubyBorrowCiPath, ownedRubyBorrowCiBaseline, ownedRubyBorrowCiPrevious
 	, ownedRubyBorrowCiAddedPaths, ownedRubyBorrowCiChangedPaths
 	, reverseOwnedRubyBorrowCiUpdate } from "./helpers/owned-ruby-borrow-ci-history.mjs";
@@ -17,6 +16,9 @@ import { assertOwnedRubyBorrowExecution, assertOwnedRubyBorrowCi } from "./helpe
 import { ownedRubyBorrowPath, ownedRubyBorrowBaseline, ownedRubyBorrowPrevious
 	, ownedRubyBorrowAddedPaths, ownedRubyBorrowChangedPaths
 	, beforeOwnedRubyBorrow, reverseOwnedRubyBorrowUpdate } from "./helpers/owned-ruby-borrow-history.mjs";
+import {
+	bytesAtFinHistoryRecordSource, sourceAtFinHistoryRecordSource
+} from "./helpers/source-at-fin-history-milestone.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedRubyBorrowPath, "utf8"));
 
@@ -28,13 +30,22 @@ test("Ruby borrow evidence authenticates complete source changes without rewriti
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedRubyBorrowAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedRubyBorrowCiHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(
+		sha256(await bytesAtFinHistoryRecordSource(ownedRubyBorrowPath, path))
+		, hash, path
+	);
 	assert.deepEqual(record.updates.map(update => update.path), ownedRubyBorrowChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedRubyBorrowCi(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedRubyBorrow(update.path, source, update.previousSha256);
+		const source = await sourceAtFinHistoryRecordSource(
+			ownedRubyBorrowPath, update.path, update.currentSha256
+			, beforeOwnedRubyBorrow
+		);
+		const prior = beforeOwnedRubyBorrow(
+			update.path, source, update.previousSha256
+		);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedRubyBorrow(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedRubyBorrow(update.path, source, update.currentSha256), source);
@@ -46,15 +57,26 @@ test("Ruby borrow evidence authenticates complete source changes without rewriti
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedRubyBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeOwnedRubyBorrowCi(path, await readFile(path, "utf8"), record.sources[path]);
+	const path = "docs/type-surface.v1.json";
+	const current = await sourceAtFinHistoryRecordSource(
+		ownedRubyBorrowPath, path, record.sources[path], beforeOwnedRubyBorrow
+	);
 	const prior = JSON.parse(beforeOwnedRubyBorrow(path, current, previous.sources[path]));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRubyBorrowCiHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		file.sha256 = sha256(await bytesAtFinHistoryRecordSource(
+			ownedRubyBorrowPath, file.path
+		));
 	assert.deepEqual(JSON.parse(current), prior);
 	const module = "src/backends/ruby/owned-borrows.mjs";
-	const files = JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files;
-	assert.deepEqual(JSON.parse(await readFile("package.json", "utf8")).files, files);
+	const historical = async path_ => JSON.parse(await bytesAtFinHistoryRecordSource(
+		ownedRubyBorrowPath, path_
+	));
+	const files = (await historical("config/cli-package.v1.json")).files;
+	assert.deepEqual((await historical("package.json")).files, files);
 	assert.ok(files.includes(module));
-	assert.ok(JSON.parse(await readFile("nix/perl-engine-source-boundary.json", "utf8")).includedFiles.includes(module));
+	assert.ok((await historical(
+		"nix/perl-engine-source-boundary.json"
+	)).includedFiles.includes(module));
 });
 
 test("Ruby borrow profile repair authenticates the registration without changing runtime evidence", async () => {
@@ -70,21 +92,41 @@ test("Ruby borrow profile repair authenticates the registration without changing
 		assert.match(record.run.text, new RegExp(`^# ${name} ${count}$`, "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedRubyBorrowCiAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedDotnetBorrowHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(
+		sha256(await bytesAtFinHistoryRecordSource(ownedRubyBorrowCiPath, path))
+		, hash, path
+	);
 	assert.deepEqual(record.updates.map(update => update.path), ownedRubyBorrowCiChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		assert.equal(sha256(reverseOwnedRubyBorrowCiUpdate(beforeOwnedDotnetBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256), update)), update.previousSha256);
+		const source = await sourceAtFinHistoryRecordSource(
+			ownedRubyBorrowCiPath, update.path, update.currentSha256
+			, beforeOwnedRubyBorrowCi
+		);
+		assert.equal(sha256(reverseOwnedRubyBorrowCiUpdate(
+			source, update
+		)), update.previousSha256);
 	}
-	const path = "src/adoption/test-profiles.mjs", source = beforeOwnedDotnetBorrow(path, await readFile(path, "utf8"), record.sources[path]);
+	const path = "src/adoption/test-profiles.mjs";
+	const source = await sourceAtFinHistoryRecordSource(
+		ownedRubyBorrowCiPath, path, record.sources[path]
+		, beforeOwnedRubyBorrowCi
+	);
 	const prior = reverseOwnedRubyBorrowCiUpdate(source, record.updates.find(update => update.path === path));
 	assert.equal(source, prior.replace('\t\t, "owned-ruby-transfer-evidence"', '\t\t, "owned-ruby-transfer-evidence"\n\t\t, "owned-ruby-borrow-evidence"'));
 	assert.equal(classifyRepositoryTest("tests/owned-ruby-borrow-evidence.test.mjs"), "contract");
-	const indexPath = "docs/type-surface.v1.json", current = beforeOwnedDotnetBorrow(indexPath, await readFile(indexPath, "utf8"), record.sources[indexPath]);
+	const indexPath = "docs/type-surface.v1.json";
+	const current = await sourceAtFinHistoryRecordSource(
+		ownedRubyBorrowCiPath, indexPath, record.sources[indexPath]
+		, beforeOwnedRubyBorrowCi
+	);
 	const oldIndex = JSON.parse(reverseOwnedRubyBorrowCiUpdate(current, record.updates.find(update => update.path === indexPath)));
-	for(const evidence of oldIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedDotnetBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	for(const evidence of oldIndex.evidence) for(const file of evidence.files)
+		file.sha256 = sha256(await bytesAtFinHistoryRecordSource(
+			ownedRubyBorrowCiPath, file.path
+		));
 	assert.deepEqual(JSON.parse(current), oldIndex);
 });
 
@@ -92,7 +134,11 @@ test("Ruby borrow profile repair rejects unknown changes and forged reversal spa
 	const record = JSON.parse(await readFile(ownedRubyBorrowCiPath, "utf8"));
 	for(const update of record.updates)
 	{
-		const source = beforeOwnedDotnetBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrecorded */\n";
+		const source = await sourceAtFinHistoryRecordSource(
+			ownedRubyBorrowCiPath, update.path, update.currentSha256
+			, beforeOwnedRubyBorrowCi
+		);
+		const unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedRubyBorrowCi(update.path, unknown), unknown);
 		assert.equal(beforeOwnedRubyBorrowCi(update.path, source, update.currentSha256), source);
 		assert.throws(() => reverseOwnedRubyBorrowCiUpdate(unknown, update));

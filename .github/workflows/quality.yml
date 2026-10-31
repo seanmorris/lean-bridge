@@ -192,6 +192,12 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Resolve this shard's compiler requirements
+        id: core-toolchains
+        run: |
+          node scripts/core-contract-toolchains.mjs \
+            --shard "${{ matrix.shard }}/12" \
+            --github-output "$GITHUB_OUTPUT"
       - name: Restore pinned wasm-tools
         uses: actions/cache@v5
         with:
@@ -201,8 +207,30 @@ jobs:
           key: core-wasm-tools-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-toolchains.sh') }}
       - name: Install pinned wasm-tools
         run: bash scripts/bootstrap-toolchains.sh --wasm-tools-only
+      - name: Restore pinned component-build toolchains when selected tests require them
+        if: steps.core-toolchains.outputs.component == 'true'
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains/elan
+            .toolchains/elan-installer
+            .toolchains/lean4-src
+            .toolchains/emsdk
+            .toolchains/wabt
+          key: core-component-toolchain-v2-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'flake.lock', 'scripts/bootstrap-toolchains.sh') }}
+      - name: Install component-build OS prerequisites when selected tests require them
+        if: steps.core-toolchains.outputs.component == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep xz-utils zstd
+      - name: Install pinned component-build toolchains when selected tests require them
+        if: steps.core-toolchains.outputs.component == 'true'
+        run: bash scripts/bootstrap-toolchains.sh
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
+      - name: Build the pinned shared runtime when selected tests require it
+        if: steps.core-toolchains.outputs.component == 'true'
+        run: bash scripts/build-lean-link-spike.sh
       - name: Restore the authenticated type-surface receipt
         uses: actions/download-artifact@v8
         with:
@@ -217,6 +245,7 @@ jobs:
       - name: Report disk after shard evidence materialization
         run: df -h / "$GITHUB_WORKSPACE"
       - name: Install C/GMP contract-test headers
+        if: steps.core-toolchains.outputs.component != 'true'
         run: sudo apt-get update && sudo apt-get install -y libgmp-dev
       - name: Run one closed contract shard
         env:

@@ -4,21 +4,21 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import {
 	checkedRecordValueIndexPhpPromotionBaseline
 	, checkedRecordValueIndexPhpPromotionConversion
 	, checkedRecordValueIndexPhpPromotionLimit
+	, checkedRecordValueIndexPhpPromotionParent
 	, checkedRecordValueIndexPhpPromotionReferences
 	, promoteCheckedRecordValueIndexPhp
 } from "./checked-record-value-index-php-promotion.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const contracts = async () => ({
-	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
-	, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json"))
-});
+const contracts = () => typeSurfaceContractsAtProducer(
+	checkedRecordValueIndexPhpPromotionParent
+);
 const target = cell => cell.profile === "php-native"
 	&& cell.shape === "checked-record" && ["ordinary-source", "reviewed-ir"].includes(cell.path)
 	&& ["parameter", "result"].includes(cell.position);
@@ -52,10 +52,11 @@ test("native-PHP promotion changes only four exact cells", {
 	const frozen = structuredClone(original);
 	const references = await checkedRecordValueIndexPhpPromotionReferences();
 	const proposed = await promoteCheckedRecordValueIndexPhp(original, references);
-	validateTypeSurface(proposed, await contracts());
+	const historicalContracts = contracts();
+	validateTypeSurface(proposed, historicalContracts);
 	assert.deepEqual(original, frozen);
-	const before = new Map(typeSurfaceCells(original, await contracts()).map(cell => [cell.id, cell]));
-	const difference = typeSurfaceCells(proposed, await contracts()).filter(cell =>
+	const before = new Map(typeSurfaceCells(original, historicalContracts).map(cell => [cell.id, cell]));
+	const difference = typeSurfaceCells(proposed, historicalContracts).filter(cell =>
 		JSON.stringify(cell) !== JSON.stringify(before.get(cell.id)));
 	assert.equal(difference.length, 4);
 	for(const cell of difference)

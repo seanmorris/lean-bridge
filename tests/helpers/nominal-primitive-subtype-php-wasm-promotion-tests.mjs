@@ -19,6 +19,7 @@ import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import {
 	beforeNestedCheckedRecordNativeCorrectionPins
 } from "./nested-checked-record-native-correction-source-history.mjs";
@@ -161,7 +162,10 @@ test("primitive-base PHP-Wasm promotion supplements six cells only", async () =>
 				beforeNominalPrimitiveSubtypeJvmPromotionPins(
 					beforeNestedCheckedRecordNativeCorrectionPins(
 						await promoteNominalPrimitiveSubtypePhpWasm(original, references)))))));
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalPrimitiveSubtypePhpWasmPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypePhpWasmPromotionHistoryPath
 		, "docs/type-surface.v1.json"

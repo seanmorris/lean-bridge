@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeNpmArchive, nominalSubtypeNpmProfiles, nominalSubtypeNpmReferences, promoteNominalSubtypeNpm, nominalSubtypeNpmConversion, nominalSubtypeNpmLimit } from "./nominal-subtype-npm-promotion.mjs";
 import { beforeNominalSubtypeJvmPromotionSource
 	, nominalSubtypeJvmPromotionHistoryPath
@@ -15,10 +15,11 @@ import { beforeNominalSubtypeJvmPromotionSource
 import { beforeNominalSubtypeNativePromotionSource
 	, nominalSubtypeNativePromotionHistoryPath
 } from "./nominal-subtype-native-promotion-history.mjs";
-import { nominalSubtypeNpmPromotionHistoryPath } from "./nominal-subtype-npm-promotion-history.mjs";
+import { nominalSubtypeNpmPromotionHistoryPath, nominalSubtypeNpmPromotionPredecessor } from "./nominal-subtype-npm-promotion-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
-const predecessor = () => JSON.parse(execFileSync("git", ["show", "d5aedc154ed94073c85c0087c466b426c7991d56:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeNpmPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
 test("nominal npm promotion authenticates four installed selections at the observed Node runtime", async () => {
 	const references = await nominalSubtypeNpmReferences();
@@ -79,7 +80,11 @@ test("nominal npm promotion refuses missing originals and substituted scope or r
 
 test("nominal npm promotion adds four Node field cells and supplements eight existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeNpmReferences();
-	const proposed = await promoteNominalSubtypeNpm(original, references), { document: current, ...contracts } = await readTypeSurface();
+	const proposed = await promoteNominalSubtypeNpm(original, references);
+	const current = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypeNpmPromotionPredecessor
+	);
 	const inventoryPath = "docs/type-surface.v1.json";
 	const document = JSON.parse(beforeNominalSubtypeNativePromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeNativePromotionHistoryPath, inventoryPath)));
 	validateTypeSurface(proposed, contracts);

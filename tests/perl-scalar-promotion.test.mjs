@@ -4,6 +4,7 @@
  * @file
  */
 // core-evidence-prefix: reviewed-fin-hosts-
+// core-evidence-prefix: generic-record-specializations-
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";

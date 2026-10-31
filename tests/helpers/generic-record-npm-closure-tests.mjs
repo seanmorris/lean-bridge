@@ -16,6 +16,7 @@ import { beforePerlRefinementHostedSource } from "./perl-refinement-hosted-sourc
 import { beforeGenericNpmClosureSource, genericNpmClosureChangedPaths, genericNpmClosureHistoryPath, genericNpmClosurePredecessor, reverseGenericNpmClosureUpdate } from "./generic-record-npm-closure-source-history.mjs";
 import { genericNpmClosureCells, genericNpmClosureEvidence, genericNpmEvidenceId, reconcileGenericNpmEarlierEvidence, reconcileGenericNpmObservations } from "./generic-record-npm-closure.mjs";
 import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 test("hosted npm closure retains exact predecessors and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(genericNpmClosureHistoryPath));
@@ -42,7 +43,7 @@ test("hosted npm closure retains exact predecessors and refuses unknown edits", 
 });
 
 test("hosted npm reconciliation changes exactly twelve ordinary Node scopes and no stage states", async () => {
-	const contracts = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(genericNpmClosurePredecessor);
 	const path = "docs/type-surface.v1.json";
 	const source = await sourceAtFinHistoryRecord(
 		genericNpmClosureHistoryPath, path, beforePerlRefinementHostedSource

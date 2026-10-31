@@ -13,6 +13,7 @@ import { nominalPrimitiveSubtypeNativeProducer } from "./nominal-primitive-subty
 import { nominalPrimitiveSubtypeNativePromotionHistoryPath, nominalPrimitiveSubtypeNativePromotionPredecessor } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNativeReferences, promoteNominalPrimitiveSubtypeNative, nominalPrimitiveSubtypeNativeProfiles, nominalPrimitiveSubtypeNativeConversion, nominalPrimitiveSubtypeNativeLimit, nominalPrimitiveSubtypeNativeField } from "./nominal-primitive-subtype-native-promotion.mjs";
 import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeNativePromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -82,7 +83,10 @@ test("primitive-base Native promotion supplements twelve existing C/C++ cells an
 		nominalPrimitiveSubtypeNativePromotionHistoryPath
 		, await promoteNominalPrimitiveSubtypeNative(original, references)
 	);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const { document: current } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalPrimitiveSubtypeNativePromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypeNativePromotionHistoryPath
 		, "docs/type-surface.v1.json"

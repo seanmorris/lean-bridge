@@ -21,6 +21,7 @@ import {
 	, ownedCheckedRecordPromotionSelectionPath, renderOwnedCheckedRecordPromotion
 } from "./owned-checked-record-promotion.mjs";
 import { gitSourceBytes } from "./source-history-stream.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
 import { ownedCheckedRecordMatrixPublicationImplementation } from "./owned-checked-record-matrix-publication-source-history.mjs";
 import { ownedSubtypeMatrixPublicationImplementation } from "./owned-subtype-matrix-publication-source-history.mjs";
@@ -37,10 +38,9 @@ const hostTypes = {
 };
 let loaded;
 const current = () => loaded ??= (async () => {
-	const contracts = {
-		irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json", "utf8"))
-		, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json", "utf8"))
-	};
+	const contracts = typeSurfaceContractsAtProducer(
+		ownedCheckedRecordMatrixPublicationImplementation
+	);
 	const { document } = await readPromotionInventory(gitSourceBytes(
 		ownedCheckedRecordMatrixPublicationImplementation, "docs/type-surface.v1.json"
 	), contracts);

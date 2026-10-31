@@ -13,6 +13,7 @@ import { nominalPrimitiveSubtypePerlProducers } from "./nominal-primitive-subtyp
 import { nominalPrimitiveSubtypePerlPromotionHistoryPath, nominalPrimitiveSubtypePerlPromotionPredecessor } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 import { nominalPrimitiveSubtypePerlReferences, promoteNominalPrimitiveSubtypePerl, nominalPrimitiveSubtypePerlProfiles, nominalPrimitiveSubtypePerlConversion, nominalPrimitiveSubtypePerlLimit, nominalPrimitiveSubtypePerlField } from "./nominal-primitive-subtype-perl-promotion.mjs";
 import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypePerlPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 const abis = ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"];
@@ -99,7 +100,10 @@ test("primitive-base Perl promotion supplements six existing Perl cells and pres
 		nominalPrimitiveSubtypePerlPromotionHistoryPath
 		, await promoteNominalPrimitiveSubtypePerl(original, references)
 	);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const { document: current } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalPrimitiveSubtypePerlPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypePerlPromotionHistoryPath
 		, "docs/type-surface.v1.json"

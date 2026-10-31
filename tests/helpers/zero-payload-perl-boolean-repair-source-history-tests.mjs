@@ -11,6 +11,11 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
+	sourceAtFinHistoryRecord
+	, sourceAtFinHistoryRecordSource
+	, sourceBeforeFinHistoryRecord
+} from "./source-at-fin-history-milestone.mjs";
+import {
 	beforeZeroPayloadPerlBooleanRepairSource
 	, reverseZeroPayloadPerlBooleanRepairUpdate
 	, zeroPayloadPerlBooleanRepairChangedPaths
@@ -42,9 +47,9 @@ test("zero-payload Perl boolean repair restores every source", async () => {
 		, zeroPayloadPerlBooleanRepairChangedPaths);
 	for(const update of record.updates)
 	{
-		const latest = await readFile(update.path, "utf8");
-		const current = beforeFinRefinementSource(
-			update.path, latest, update.currentSha256
+		const current = await sourceAtFinHistoryRecord(
+			zeroPayloadPerlBooleanRepairHistoryPath, update.path
+			, beforeFinRefinementSource
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseZeroPayloadPerlBooleanRepairUpdate(
@@ -57,8 +62,10 @@ test("zero-payload Perl boolean repair restores every source", async () => {
 			update.path, current), previous);
 		assert.equal(beforeZeroPayloadPerlBooleanRepairSource(
 			update.path, current, update.currentSha256), current);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous);
+		assert.equal(await sourceBeforeFinHistoryRecord(
+			zeroPayloadPerlBooleanRepairHistoryPath, update.path
+			, beforeFinRefinementSource
+		), previous);
 		assert.equal(beforeZeroPayloadPerlBooleanRepairSource(
 			update.path, `${current}unknown`), `${current}unknown`);
 	}
@@ -71,8 +78,10 @@ test("zero-payload Perl boolean repair restores every source", async () => {
 		)), record.updates.find(item => item.path === path).currentSha256);
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+			zeroPayloadPerlBooleanRepairHistoryPath, addition.path
+			, addition.currentSha256, beforeFinRefinementSource
+		)), addition.currentSha256, addition.path);
 });
 
 test("zero-payload Perl boolean repair rejects altered transitions", async () => {
@@ -80,9 +89,9 @@ test("zero-payload Perl boolean repair rejects altered transitions", async () =>
 		zeroPayloadPerlBooleanRepairHistoryPath, "utf8"
 	));
 	const update = structuredClone(record.updates[0]);
-	const latest = await readFile(update.path, "utf8");
-	const current = beforeFinRefinementSource(
-		update.path, latest, update.currentSha256
+	const current = await sourceAtFinHistoryRecord(
+		zeroPayloadPerlBooleanRepairHistoryPath, update.path
+		, beforeFinRefinementSource
 	);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() => reverseZeroPayloadPerlBooleanRepairUpdate(

@@ -7,11 +7,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedPythonBorrow, ownedPythonBorrowHistoricalBytes } from "./helpers/owned-python-borrow-history.mjs";
 import { assertOwnedRustBorrowExecution, assertOwnedRustBorrowCi } from "./helpers/owned-rust-borrow-evidence.mjs";
 import { ownedRustBorrowPath, ownedRustBorrowBaseline, ownedRustBorrowPrevious
 	, ownedRustBorrowAddedPaths, ownedRustBorrowChangedPaths, beforeOwnedRustBorrow
 	, reverseOwnedRustBorrowUpdate } from "./helpers/owned-rust-borrow-history.mjs";
+import {
+	bytesAtFinHistoryRecordSource, sourceAtFinHistoryRecordSource
+} from "./helpers/source-at-fin-history-milestone.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedRustBorrowPath, "utf8"));
 
@@ -23,13 +25,19 @@ test("Rust borrow evidence authenticates exact source transitions without rewrit
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedRustBorrowAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedPythonBorrowHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(
+		sha256(await bytesAtFinHistoryRecordSource(ownedRustBorrowPath, path))
+		, hash, path
+	);
 	assert.deepEqual(record.updates.map(update => update.path), ownedRustBorrowChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedPythonBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = await sourceAtFinHistoryRecordSource(
+			ownedRustBorrowPath, update.path, update.currentSha256
+			, beforeOwnedRustBorrow
+		);
 		// Stop each reversal at its recorded predecessor; the hub otherwise walks past it.
 		const prior = beforeOwnedRustBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
@@ -43,14 +51,29 @@ test("Rust borrow evidence authenticates exact source transitions without rewrit
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedRustBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeOwnedPythonBorrow(path, await readFile(path, "utf8"), record.sources[path]);
+	const path = "docs/type-surface.v1.json";
+	const current = await sourceAtFinHistoryRecordSource(
+		ownedRustBorrowPath, path, record.sources[path], beforeOwnedRustBorrow
+	);
 	const prior = JSON.parse(beforeOwnedRustBorrow(path, current, previous.sources[path]));
 	const pins = new Map(JSON.parse(current).evidence.flatMap(evidence => evidence.files.map(file => [file.path, file.sha256])));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPythonBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path] ?? pins.get(file.path)));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		const expected = record.sources[file.path] ?? pins.get(file.path);
+		file.sha256 = sha256(await bytesAtFinHistoryRecordSource(
+			ownedRustBorrowPath, file.path
+		));
+		assert.equal(file.sha256, expected, file.path);
+	}
 	assert.deepEqual(JSON.parse(current), prior);
-	const files = JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files;
-	assert.deepEqual(JSON.parse(await readFile("package.json", "utf8")).files, files);
-	const included = JSON.parse(await readFile("nix/perl-engine-source-boundary.json", "utf8")).includedFiles;
+	const historical = async path_ => JSON.parse(await sourceAtFinHistoryRecordSource(
+		ownedRustBorrowPath, path_, record.sources[path_]
+	));
+	const files = (await historical("config/cli-package.v1.json")).files;
+	assert.deepEqual((await historical("package.json")).files, files);
+	const included = (await historical(
+		"nix/perl-engine-source-boundary.json"
+	)).includedFiles;
 	for(const language of ["cpp", "rust"])
 	{
 		const module = `src/backends/${language}/owned-borrows.mjs`;

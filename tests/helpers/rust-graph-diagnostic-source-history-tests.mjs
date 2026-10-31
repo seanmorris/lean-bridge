@@ -21,6 +21,7 @@ import {
 	, rustGraphDiagnosticPredecessor
 	, reverseRustGraphDiagnosticUpdate
 } from "./rust-graph-diagnostic-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 test("Rust graph diagnostic history reconstructs every exact predecessor source", async () => {
 	const record = JSON.parse(await readFile(rustGraphDiagnosticHistoryPath, "utf8"));
@@ -32,8 +33,9 @@ test("Rust graph diagnostic history reconstructs every exact predecessor source"
 		, rustGraphDiagnosticChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			rustGraphDiagnosticHistoryPath, update.path, update.currentSha256
+			, beforeRustGraphDiagnosticSource
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
@@ -67,8 +69,9 @@ test("Rust graph diagnostic history refreshes only immediately preceding source 
 	const path = "docs/type-surface.v1.json";
 	const record = JSON.parse(await readFile(rustGraphDiagnosticHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	const currentText = beforeFinRefinementSource(
-		path, await readFile(path, "utf8"), update.currentSha256
+	const currentText = await sourceAtFinHistoryRecordSource(
+		rustGraphDiagnosticHistoryPath, path, update.currentSha256
+		, beforeRustGraphDiagnosticSource
 	);
 	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reverseRustGraphDiagnosticUpdate(currentText, update));

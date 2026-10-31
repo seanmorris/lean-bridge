@@ -19,6 +19,11 @@ import {
 } from "./callback-checked-record-remaining-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import {
+	sourceAtFinHistoryRecord
+	, sourceAtFinHistoryRecordSource
+	, sourceBeforeFinHistoryRecord
+} from "./source-at-fin-history-milestone.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${callbackCheckedRecordRemainingPredecessor}:${path}`]
@@ -37,9 +42,10 @@ test("callback checked-record remaining history restores every changed source", 
 	assert.ok(record.repairedTypeSurfacePointers > 0);
 	for(const update of record.updates)
 	{
-		const latest = await readFile(update.path, "utf8");
-		const current = beforeFinRefinementSource(
-			update.path, latest, update.currentSha256);
+		const current = await sourceAtFinHistoryRecord(
+			callbackCheckedRecordRemainingHistoryPath, update.path
+			, beforeFinRefinementSource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseCallbackCheckedRecordRemainingUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -47,16 +53,19 @@ test("callback checked-record remaining history restores every changed source", 
 			update.path, current), previous);
 		assert.equal(beforeCallbackCheckedRecordRemainingSource(
 			update.path, current, update.currentSha256), current);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous);
+		assert.equal(await sourceBeforeFinHistoryRecord(
+			callbackCheckedRecordRemainingHistoryPath, update.path
+			, beforeFinRefinementSource
+		), previous);
 		assert.equal(beforeCallbackCheckedRecordRemainingSource(
 			update.path, current + "unknown"), current + "unknown");
 	}
 	for(const addition of record.additions)
 	{
-		const latest = await readFile(addition.path, "utf8");
-		const current = beforeFinRefinementSource(
-			addition.path, latest, addition.currentSha256);
+		const current = await sourceAtFinHistoryRecordSource(
+			callbackCheckedRecordRemainingHistoryPath, addition.path
+			, addition.currentSha256, beforeFinRefinementSource
+		);
 		assert.equal(sha256(current), addition.currentSha256, addition.path);
 	}
 });

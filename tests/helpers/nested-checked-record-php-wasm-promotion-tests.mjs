@@ -18,6 +18,7 @@ import {
 	nestedCheckedRecordPhpWasmPromotionHistoryPath
 	, nestedCheckedRecordPhpWasmPromotionPredecessor
 } from "./nested-checked-record-php-wasm-promotion-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
@@ -132,7 +133,8 @@ test("nested checked-record PHP-Wasm promotion supplements six cells only", asyn
 		nestedCheckedRecordPhpWasmPromotionHistoryPath
 		, await promoteNestedCheckedRecordPhpWasm(original, references)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(nestedCheckedRecordPhpWasmPromotionPredecessor);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nestedCheckedRecordPhpWasmPromotionHistoryPath
 		, "docs/type-surface.v1.json"

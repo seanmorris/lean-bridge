@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { recursiveSubtypePhpWasmProducer } from "./recursive-subtype-php-wasm-evidence.mjs";
 import { recursiveSubtypePhpWasmPromotionHistoryPath } from "./recursive-subtype-php-wasm-promotion-history.mjs";
 import {
@@ -26,6 +26,12 @@ import {
 const predecessor = () => JSON.parse(execFileSync("git", [
 	"show", `${recursiveSubtypePhpWasmProducer}:docs/type-surface.v1.json`
 ], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const contractsAt = revision => ({
+	irSchema: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:schema/binding-ir.schema.json`], { encoding: "utf8" }))
+	, consumers: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:docs/consumer-support.v1.json`], { encoding: "utf8" }))
+});
 
 test("recursive checked PHP-Wasm promotion derives two installed references", async () => {
 	const references = await recursiveSubtypePhpWasmReferences();
@@ -80,7 +86,8 @@ test("recursive checked PHP-Wasm promotion supplements exactly six existing cell
 		recursiveSubtypePhpWasmPromotionHistoryPath
 		, await promoteRecursiveSubtypePhpWasm(original, references)
 	);
-	const { document: published, ...contracts } = await readTypeSurface();
+	const published = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const contracts = contractsAt(recursiveSubtypePhpWasmProducer);
 	validateTypeSurface(proposed, contracts);
 	const inventoryPath = "docs/type-surface.v1.json";
 	const document = JSON.parse(sourceAtHistoryMilestone(

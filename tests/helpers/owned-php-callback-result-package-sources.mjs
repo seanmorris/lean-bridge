@@ -7,15 +7,20 @@ import assert from "node:assert/strict";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { nativeAllocationGuardHeader } from "../../src/build/native-allocation-guard.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedPhpPackage } from "../../src/backends/php/owned-package.mjs";
-import { ownedPhpAdapterSources } from "../../src/build/owned-php-artifacts.mjs";
-import { ownedDotnetCallbackResultConfiguration, ownedDotnetCallbackResultReviewedIr
-	, ownedDotnetCallbackResultSource, ownedDotnetCallbackResultCombinedConfiguration
-	, ownedDotnetCallbackResultCombinedReviewedIr
-	, ownedDotnetCallbackResultCombinedSource } from "./owned-dotnet-callback-result-fixture.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+
+export const ownedPhpCallbackPackageProducer
+	= "d463c2f89dbe154c17b59cc6063af597fe2e50a3";
+let producerPromise;
+const producer = () => producerPromise ??= Promise.all([
+	"src/build/native-graph-model.mjs"
+	, "src/build/native-allocation-guard.mjs"
+	, "src/backends/c/owned-package.mjs"
+	, "src/backends/php/owned-package.mjs"
+	, "src/build/owned-php-artifacts.mjs"
+	, "tests/helpers/owned-dotnet-callback-result-fixture.mjs"
+].map(path => moduleAtProducer(ownedPhpCallbackPackageProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 
 const hash = value => sha256(canonicalJson(value));
 const identity = source => ({ bytes: Buffer.byteLength(source), sha256: sha256(source) });
@@ -30,6 +35,14 @@ const identity = source => ({ bytes: Buffer.byteLength(source), sha256: sha256(s
  * @param readSource - Repository source reader, injectable for drift regressions.
  */
 export const assertOwnedPhpCallbackPackageSources = async (mode, variant, item, readSource = readFile) => {
+	const { createCompiledNativeModel, generateCompiledNativeLeanAdapters
+		, nativeAllocationGuardHeader, generateOwnedCPackage
+		, generateOwnedPhpPackage, ownedPhpAdapterSources
+		, ownedDotnetCallbackResultConfiguration
+		, ownedDotnetCallbackResultReviewedIr, ownedDotnetCallbackResultSource
+		, ownedDotnetCallbackResultCombinedConfiguration
+		, ownedDotnetCallbackResultCombinedReviewedIr
+		, ownedDotnetCallbackResultCombinedSource } = await producer();
 	const combined = variant === "combined", hostCallbacks = variant !== "no-host";
 	const capabilities = { hostCallbacks, callbackResultAnchors: true
 		, transferredInputs: combined, anchoredResults: combined

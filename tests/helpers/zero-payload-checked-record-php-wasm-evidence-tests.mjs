@@ -11,7 +11,10 @@ import {
 } from "./zero-payload-checked-record-php-wasm-evidence.mjs";
 
 test("hosted zero-payload PHP-Wasm archive authenticates compiler and installed routes", {
-	timeout: 120_000
+	// The cold archive pass authenticates more than one thousand retained files.
+	// Core run 41129035795 needed 122.2 seconds while sharing a runner with a
+	// second contract file; keep a bounded margin without weakening any check.
+	timeout: 300_000
 }, async () => {
 	const result = await checkZeroPayloadPhpWasmEvidence();
 	assert.equal(result.hostedAcceptance, true);

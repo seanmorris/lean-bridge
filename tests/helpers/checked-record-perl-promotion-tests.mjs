@@ -10,11 +10,14 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { checkedRecordPerlConversion, checkedRecordPerlLimit, checkedRecordPerlReferences, promoteCheckedRecordPerl } from "./checked-record-perl-promotion.mjs";
 import { beforeCheckedRecordPerlPromotionSource, checkedRecordPerlPromotionChangedPaths, checkedRecordPerlPromotionHistoryPath, checkedRecordPerlPromotionPredecessor, reverseCheckedRecordPerlPromotionUpdate } from "./checked-record-perl-promotion-history.mjs";
+import { sourceAtFinHistoryRecordSource }
+	from "./source-at-fin-history-milestone.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = async () => {
 	const path = "docs/type-surface.v1.json";
@@ -58,14 +61,15 @@ test("Perl checked-record support authenticates four installed routes and every 
 });
 
 test("Perl checked-record promotion changes exactly four cells and retains every earlier claim", async () => {
-	const current = await readTypeSurface(), previous = await predecessor();
+	const contracts = typeSurfaceContractsAtProducer(checkedRecordPerlPromotionPredecessor);
+	const previous = await predecessor();
 	const proposed = await promoteCheckedRecordPerl(previous, await checkedRecordPerlReferences());
-	validateTypeSurface(proposed, current);
+	validateTypeSurface(proposed, contracts);
 	assert.equal(previous.evidence.length, 436); assert.equal(previous.observations.length, 551);
 	assert.equal(proposed.evidence.length, 440); assert.equal(proposed.observations.length, 555);
 	assert.deepEqual(proposed.evidence.slice(0, 436), previous.evidence);
 	assert.deepEqual(proposed.observations.slice(0, 551), previous.observations);
-	const before = typeSurfaceCells(previous, current), after = typeSurfaceCells(proposed, current), changed = [];
+	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(proposed, contracts), changed = [];
 	for(const [index, cell] of after.entries())
 	{
 		if(JSON.stringify(cell) === JSON.stringify(before[index])) continue;
@@ -103,8 +107,9 @@ test("Perl checked-record promotion changes exactly four cells and retains every
 			assert.ok(original, file.path);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(sha256(source), file.sha256, file.path);
-			assert.equal(sha256(beforeFinRefinementSource(
-				file.path, source, original.sha256
+			assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+				checkedRecordPerlPromotionHistoryPath, file.path
+				, original.sha256, beforeFinRefinementSource
 			)), original.sha256, file.path);
 			authenticated.push([file, original.sha256]);
 		}

@@ -8,11 +8,13 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { structuralSubtypeArchives, structuralSubtypeProfiles, structuralSubtypeArchiveReferences, structuralSubtypeReferences, assertStructuralSubtypeOriginalTap, promoteStructuralSubtypes, structuralSubtypeConversion } from "./structural-subtype-promotion.mjs";
 import { structuralSubtypeConfiguration } from "./structural-subtype-installed-fixture.mjs";
+import { structuralSubtypePromotionPredecessor } from "./structural-subtype-promotion-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const predecessor = () => JSON.parse(execFileSync("git", ["show", "e844290c9bc4eb1052dcbce6e730f96e59165990:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const predecessor = () => JSON.parse(execFileSync("git", ["show", `${structuralSubtypePromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 const structuralGuideCommit = "61c695a42befc6f9aaa16503a7b6a310dc9b3b58";
 const sourceAtStructuralGuideMilestone = path => execFileSync("git", ["show", `${structuralGuideCommit}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 
@@ -149,7 +151,8 @@ test("structural promotion checks original three-test native TAP without substit
 });
 
 test("structural promotion supplements exactly sixty-eight existing cells and preserves other claims", async () => {
-	const original = predecessor(), contracts = await readTypeSurface();
+	const original = predecessor();
+	const contracts = typeSurfaceContractsAtProducer(structuralSubtypePromotionPredecessor);
 	const proposed = await promoteStructuralSubtypes(original, await structuralSubtypeReferences());
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 440); assert.equal(original.observations.length, 555);

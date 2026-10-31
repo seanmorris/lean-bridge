@@ -21,6 +21,7 @@ import {
 	, mutualCheckedRecordNpmArchivePredecessor
 	, reverseMutualCheckedRecordNpmArchiveUpdate
 } from "./helpers/mutual-checked-record-npm-archive-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./helpers/source-at-fin-history-milestone.mjs";
 
 test("the npm archive history reconstructs every exact predecessor source", async () => {
 	const record = JSON.parse(await readFile(
@@ -34,8 +35,9 @@ test("the npm archive history reconstructs every exact predecessor source", asyn
 		, mutualCheckedRecordNpmArchiveChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			mutualCheckedRecordNpmArchiveHistoryPath, update.path
+			, update.currentSha256, beforeMutualCheckedRecordNpmArchiveSource
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
@@ -73,8 +75,9 @@ test("the npm archive history refreshes only predecessor source pins", async () 
 		mutualCheckedRecordNpmArchiveHistoryPath, "utf8"
 	));
 	const update = record.updates.find(item => item.path === path);
-	const currentText = beforeFinRefinementSource(
-		path, await readFile(path, "utf8"), update.currentSha256
+	const currentText = await sourceAtFinHistoryRecordSource(
+		mutualCheckedRecordNpmArchiveHistoryPath, path
+		, update.currentSha256, beforeMutualCheckedRecordNpmArchiveSource
 	);
 	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reverseMutualCheckedRecordNpmArchiveUpdate(

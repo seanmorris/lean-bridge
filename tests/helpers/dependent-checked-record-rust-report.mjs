@@ -5,11 +5,9 @@
  */
 import assert from "node:assert/strict";
 import { posix } from "node:path";
-import { compiledPackageMetadata } from "../../src/analyze/package-metadata.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../src/binding-ir/contract.mjs";
-import { generateCopiedRustPackage } from "../../src/backends/rust/copied-values.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { dependentCheckedRecordSelection } from "./dependent-checked-record-browser-fixture.mjs";
@@ -36,6 +34,7 @@ import {
 import {
 	assertDependentCheckedRecordRustResources, dependentCheckedRecordRustLoadCeilings
 } from "./dependent-checked-record-rust-resources.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
 import { readOwnedPerlCallbackVariantTar } from "./owned-perl-callback-result-variant-archives.mjs";
 
 const digest = /^[a-f0-9]{64}$/u;
@@ -141,7 +140,8 @@ const checkModels = async options => {
  * @param options.floor - Explicit native glibc floor.
  */
 const checkPackage = async options => {
-	const { read, json, model, receipt, floor } = options;
+	const { read, json, model, receipt, floor, producer } = options;
+	const { compiledPackageMetadata, generateCopiedRustPackage } = producer;
 	const pkg = receipt.packages[0], crate = await json("crate.json");
 	assert.deepEqual(Object.keys(crate).sort()
 		, ["archive", "closure", "evidence", "files", "receiptSha256", "retained"]);
@@ -313,6 +313,10 @@ const checkEnvironment = async options => {
 export const checkDependentCheckedRecordRustReport = async (read, options) => {
 	const { route, producerCommit, runtime, floor, toolchain } = options;
 	assert.ok(dependentCheckedRecordRustRoutes.includes(route)); assert.match(producerCommit, /^[a-f0-9]{40}$/u);
+	const producer = Object.assign({}, ...await Promise.all([
+		"src/analyze/package-metadata.mjs"
+		, "src/backends/rust/copied-values.mjs"
+	].map(path => moduleAtProducer(producerCommit, path))));
 	const selection = dependentCheckedRecordSelection(route);
 	const mode = selection.resultOnly ? "result-only" : "full", json = reader(read);
 	assert.deepEqual(Object.keys(runtime).sort(), ["arch", "glibc", "platform"]);
@@ -368,7 +372,9 @@ export const checkDependentCheckedRecordRustReport = async (read, options) => {
 	assert.deepEqual(report.resourceChecks, resources);
 	for(const resource of resources) assertDependentCheckedRecordRustResources(resource, report.loadCeiling);
 	const { model, receipt } = await checkModels({ report, read, json, route, selection });
-	const { pkg, crate } = await checkPackage({ read, json, model, receipt, floor });
+	const { pkg, crate } = await checkPackage({
+		read, json, model, receipt, floor, producer
+	});
 	assert.equal((await read("consumer.rs")).toString(), await dependentCheckedRecordRustCaller());
 	const environment = await checkEnvironment({ read, json, crate, pkg, selection, toolchain });
 	assert.deepEqual(report.installation, environment.installation);

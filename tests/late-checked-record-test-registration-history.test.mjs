@@ -9,6 +9,7 @@ import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./helpers/source-at-fin-history-milestone.mjs";
 import {
 	beforeLateCheckedRecordTestRegistrationSource
 	, lateCheckedRecordTestRegistrationChangedPaths
@@ -17,6 +18,11 @@ import {
 	, reverseLateCheckedRecordTestRegistrationUpdate
 } from "./helpers/late-checked-record-test-registration-history.mjs";
 import { sha256 } from "./helpers/source-history-digest.mjs";
+
+const sourceAt = (path, expected) => sourceAtFinHistoryRecordSource(
+	lateCheckedRecordTestRegistrationHistoryPath, path, expected
+	, beforeLateCheckedRecordTestRegistrationSource
+);
 
 const expectedTests = [
 	"late-checked-record-test-registration-history"
@@ -42,9 +48,8 @@ test("late checked-record test registrations have one exact reversible lineage",
 	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8")
-			, update.currentSha256
+		const current = await sourceAt(
+			update.path, update.currentSha256
 		);
 		const previous = original(update.path);
 		assert.equal(sha256(current), update.currentSha256, update.path);
@@ -95,9 +100,8 @@ test("late test registration refreshes only matching current-source pins", async
 	assert.equal(pin.count, record.pinCount);
 	const inventoryUpdate = record.updates.find(
 		update => update.path === "docs/type-surface.v1.json");
-	const inventory = JSON.parse(beforeFinRefinementSource(
-		inventoryUpdate.path, await readFile(inventoryUpdate.path, "utf8")
-		, inventoryUpdate.currentSha256
+	const inventory = JSON.parse(await sourceAt(
+		inventoryUpdate.path, inventoryUpdate.currentSha256
 	));
 	const files = inventory.evidence.flatMap(entry => entry.files)
 		.filter(file => file.path === pin.path);

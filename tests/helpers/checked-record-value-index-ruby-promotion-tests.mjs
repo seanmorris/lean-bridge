@@ -13,6 +13,7 @@ import {
 	checkedRecordValueIndexRubyPromotionBaseline
 	, checkedRecordValueIndexRubyPromotionConversion
 	, checkedRecordValueIndexRubyPromotionLimit
+	, checkedRecordValueIndexRubyPromotionParent
 	, checkedRecordValueIndexRubyPromotionReferences
 	, promoteCheckedRecordValueIndexRuby
 } from "./checked-record-value-index-ruby-promotion.mjs";
@@ -20,9 +21,11 @@ import {
 	checkedRecordValueIndexRubyPromotionHistoryPath
 } from "./checked-record-value-index-ruby-promotion-source-history.mjs";
 
-const contracts = async () => ({
-	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
-	, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json"))
+const contractsAt = revision => ({
+	irSchema: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:schema/binding-ir.schema.json`], { encoding: "utf8" }))
+	, consumers: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:docs/consumer-support.v1.json`], { encoding: "utf8" }))
 });
 const target = cell => cell.profile === "ruby"
 	&& cell.shape === "checked-record"
@@ -58,11 +61,12 @@ test("Ruby promotion changes only four exact cells and refreshes stale pins", {
 	const frozen = structuredClone(original);
 	const references = await checkedRecordValueIndexRubyPromotionReferences();
 	const proposed = await promoteCheckedRecordValueIndexRuby(original, references);
-	validateTypeSurface(proposed, await contracts());
+	const contracts = contractsAt(checkedRecordValueIndexRubyPromotionParent);
+	validateTypeSurface(proposed, contracts);
 	assert.deepEqual(original, frozen);
-	const before = new Map(typeSurfaceCells(original, await contracts())
+	const before = new Map(typeSurfaceCells(original, contracts)
 		.map(cell => [cell.id, cell]));
-	const difference = typeSurfaceCells(proposed, await contracts()).filter(cell =>
+	const difference = typeSurfaceCells(proposed, contracts).filter(cell =>
 		JSON.stringify(cell) !== JSON.stringify(before.get(cell.id)));
 	assert.equal(difference.length, 4);
 	for(const cell of difference)

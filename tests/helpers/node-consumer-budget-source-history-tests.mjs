@@ -11,10 +11,11 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 import { beforeNodeConsumerBudgetSource, nodeConsumerBudgetChangedPaths, nodeConsumerBudgetHistoryPath, reverseNodeConsumerBudgetUpdate } from "./node-consumer-budget-source-history.mjs";
 
-const sourceAt = async (path, expected) => beforeFinRefinementSource(
-	path, await readFile(path, "utf8"), expected
+const sourceAt = (path, expected) => sourceAtFinHistoryRecordSource(
+	nodeConsumerBudgetHistoryPath, path, expected, beforeNodeConsumerBudgetSource
 );
 
 test("Node consumer budget integration authenticates each exact source predecessor", async () => {

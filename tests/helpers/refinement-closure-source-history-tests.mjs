@@ -11,6 +11,7 @@ import { beforeNominalFinSource } from "./nominal-fin-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeRefinementClosureSource, refinementClosureChangedPaths
 	, refinementClosureHistoryPath, reverseRefinementClosureUpdate } from "./refinement-closure-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 test("refinement closure repair authenticates predecessors and rejects unrelated edits", async () => {
 	const record = JSON.parse(await readFile(refinementClosureHistoryPath, "utf8"));
@@ -18,8 +19,10 @@ test("refinement closure repair authenticates predecessors and rejects unrelated
 	assert.deepEqual(record.updates.map(item => item.path), refinementClosureChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(update.path
-			, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtFinHistoryRecordSource(
+			refinementClosureHistoryPath, update.path, update.currentSha256
+			, beforeRefinementClosureSource
+		);
 		const source = beforeNominalFinSource(
 			update.path, current, update.currentSha256);
 		assert.equal(sha256(reverseRefinementClosureUpdate(source, update)), update.previousSha256);

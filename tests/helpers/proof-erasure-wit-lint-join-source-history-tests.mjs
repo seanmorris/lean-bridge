@@ -31,7 +31,14 @@ import { sha256 } from "./source-history-digest.mjs";
 import {
 	authenticateSourceHistoryReverse, gitSourceBytes
 } from "./source-history-stream.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import {
+	sourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource
+} from "./source-at-fin-history-milestone.mjs";
+
+const sourceAtJoin = (path, expected) => sourceAtFinHistoryRecordSource(
+	proofErasureWitLintJoinHistoryPath, path, expected
+	, beforeProofErasureWitLintJoinSource
+);
 
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 256 * 1024 * 1024
@@ -72,7 +79,7 @@ test("WIT/lint local join reverses live integration to either parent", async () 
 	{
 		const integration = value.integrationUpdates.find(
 			update => update.path === path);
-		const live = await sourceAtFinHistoryMilestone(
+		const live = await sourceAtJoin(
 			path, integration.currentSha256);
 		const merged = reverseProofErasureWitLintJoinUpdate(
 			live, integration
@@ -94,14 +101,13 @@ test("WIT/lint local join reverses live integration to either parent", async () 
 	}
 });
 
-test("global Fin history reaches both WIT/lint branch parents", async () => {
+test("exact history reconstruction reaches both WIT/lint branch parents", async () => {
 	const path = "tests/helpers/fin-refinement-source-history.mjs";
-	const live = await readFile(path, "utf8");
 	for(const revision of [proofErasureWitLintJoinLeftParent
 		, proofErasureWitLintJoinRightParent
 		, proofErasureWitLintJoinCommonAncestor]) {
 		const expected = git(["show", `${revision}:${path}`]);
-		assert.equal(beforeFinRefinementSource(path, live, sha256(expected))
+		assert.equal(await sourceAtFinHistoryMilestone(path, sha256(expected))
 			, expected, revision);
 		}
 });
@@ -135,7 +141,7 @@ test("WIT/lint local join refreshes exactly the merged workflow pins", async () 
 test("WIT/lint local join additions and refusals remain exact", async () => {
 	const value = await record();
 	for(const addition of value.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+		assert.equal(sha256(await sourceAtJoin(
 			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 	const update = value.leftUpdates[0];

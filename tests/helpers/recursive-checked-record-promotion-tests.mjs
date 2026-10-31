@@ -25,6 +25,7 @@ import {
 	recursiveCheckedRecordPromotionHistoryPath
 	, recursiveCheckedRecordPromotionPredecessor
 } from "./recursive-checked-record-promotion-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 } from "./source-history-test-source.mjs";
@@ -141,7 +142,8 @@ test("recursive promotion changes exactly 102 copied checked-record cells", {
 	const promoted = withHistoryMilestoneSourcePins(
 		recursiveCheckedRecordPromotionHistoryPath, proposal
 	);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const { document: current } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(recursiveCheckedRecordPromotionPredecessor);
 	const milestone = JSON.parse(sourceAtHistoryMilestone(
 		recursiveCheckedRecordPromotionHistoryPath, inventoryPath
 	));

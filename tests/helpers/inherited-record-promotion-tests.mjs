@@ -17,6 +17,7 @@ import { assertInheritedRecordArchive } from "./inherited-record-evidence.mjs";
 import { beforeInheritedRecordPromotionSource, inheritedRecordPromotionChangedPaths, inheritedRecordPromotionHistoryPath, inheritedRecordPromotionPredecessor, reverseInheritedRecordPromotionUpdate } from "./inherited-record-promotion-source-history.mjs";
 import { inheritedRecordEvidenceIds, inheritedRecordPromotedCells, inheritedRecordPromotedEvidence, inheritedRecordReceiptPath, reconcileInheritedRecordObservations } from "./inherited-record-promotion.mjs";
 import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 test("inherited record promotion authenticates exact predecessors and rejects unrecorded source edits", async () => {
 	const history = JSON.parse(await readFile(inheritedRecordPromotionHistoryPath, "utf8"));
@@ -43,8 +44,9 @@ test("inherited record promotion authenticates exact predecessors and rejects un
 });
 
 test("inherited record reconciliation changes exactly fourteen scopes without changing stage states", async () => {
-	const contracts = await readTypeSurface();
-	delete contracts.document;
+	const contracts = typeSurfaceContractsAtProducer(
+		inheritedRecordPromotionPredecessor
+	);
 	const path = "docs/type-surface.v1.json";
 	const source = await sourceAtFinHistoryRecord(
 		inheritedRecordPromotionHistoryPath, path, beforeRubyGdbCiSource

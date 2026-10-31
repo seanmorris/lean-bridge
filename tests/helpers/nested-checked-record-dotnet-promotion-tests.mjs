@@ -11,6 +11,8 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nestedCheckedRecordDotnetPromotionHistoryPath, nestedCheckedRecordDotnetPromotionPredecessor } from "./nested-checked-record-dotnet-promotion-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import { bytesAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
@@ -140,7 +142,8 @@ test("nested checked-record C# promotion supplements six cells and preserves all
 		nestedCheckedRecordDotnetPromotionHistoryPath
 		, await promoteNestedCheckedRecordDotnet(original, references)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(nestedCheckedRecordDotnetPromotionPredecessor);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nestedCheckedRecordDotnetPromotionHistoryPath
 		, "docs/type-surface.v1.json"
@@ -195,7 +198,9 @@ test("nested checked-record C# docs state the installed and open boundary", asyn
 		, "docs/evidence/nested-checked-record-dotnet-20261016.md"
 		, "docs/lean/existing-package.md", "docs/lean/export-decisions.md"
 		, "docs/reference/types.md"]){
-		const source = await readFile(path, "utf8");
+		const source = (await bytesAtFinHistoryRecordSource(
+			nestedCheckedRecordDotnetPromotionHistoryPath, path
+		)).toString();
 		assert.ok(source.includes("nested-checked-record-dotnet-20261016/index.json"), path);
 		const page = docPages.find(item => item.source === path);
 		if(page)

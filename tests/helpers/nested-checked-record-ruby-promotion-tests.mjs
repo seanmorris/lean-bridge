@@ -18,6 +18,7 @@ import {
 	nestedCheckedRecordRubyPromotionHistoryPath
 	, nestedCheckedRecordRubyPromotionPredecessor
 } from "./nested-checked-record-ruby-promotion-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
@@ -132,7 +133,8 @@ test("nested checked-record Ruby promotion supplements six cells only", async ()
 		nestedCheckedRecordRubyPromotionHistoryPath
 		, await promoteNestedCheckedRecordRuby(original, references)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(nestedCheckedRecordRubyPromotionPredecessor);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nestedCheckedRecordRubyPromotionHistoryPath
 		, "docs/type-surface.v1.json"

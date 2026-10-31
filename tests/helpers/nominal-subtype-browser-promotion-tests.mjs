@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypeBrowserArchive, nominalSubtypeBrowserReferences, promoteNominalSubtypeBrowser, nominalSubtypeBrowserProfiles, nominalSubtypeBrowserConversion, nominalSubtypeBrowserLimit } from "./nominal-subtype-browser-promotion.mjs";
@@ -18,6 +18,7 @@ import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeNominalPrimitiveSubtypeBrowserPromotionPins } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
 import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
 import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeBrowserPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -128,7 +129,9 @@ test("nominal browser promotion changes exactly eighteen Subtype cells and adds 
 			))
 		)
 	);
-	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypeBrowserPromotionPredecessor
+	);
 	const document = JSON.parse(await sourceBeforeFinHistoryRecord(
 		nominalSubtypePhpWasmPromotionHistoryPath, "docs/type-surface.v1.json"
 		, beforeNominalSubtypePhpWasmPromotionSource

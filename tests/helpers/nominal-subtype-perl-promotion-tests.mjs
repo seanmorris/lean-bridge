@@ -11,18 +11,19 @@ import { beforeNominalSubtypeJvmPromotionPins, nominalSubtypeJvmPromotionHistory
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
 import { nominalSubtypePerlArchive, nominalSubtypePerlReferences, promoteNominalSubtypePerl, nominalSubtypePerlConversion, nominalSubtypePerlLimit } from "./nominal-subtype-perl-promotion.mjs";
-import { nominalSubtypePerlPromotionHistoryPath } from "./nominal-subtype-perl-promotion-history.mjs";
+import { nominalSubtypePerlPromotionHistoryPath, nominalSubtypePerlPromotionPredecessor } from "./nominal-subtype-perl-promotion-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { nominalPrimitiveSubtypePerlPromotionHistoryPath } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 import { beforePrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
 import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const predecessor = () => JSON.parse(execFileSync("git", ["show", "7c9fbfee9c31b60dc7433ca6945be62e39810754:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypePerlPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 const beforeHistoryTransition = async (historyPath, path) => {
 	const record = JSON.parse(await readFile(historyPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
@@ -109,7 +110,10 @@ test("nominal Perl promotion adds two field cells and supplements four existing 
 			)
 		))
 	);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const current = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypePerlPromotionPredecessor
+	);
 	const document = JSON.parse(await beforeHistoryTransition(nominalSubtypePythonPromotionHistoryPath, "docs/type-surface.v1.json"));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath])

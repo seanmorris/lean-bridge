@@ -20,6 +20,7 @@ import {
 	, promoteNominalPrimitiveSubtypeRuby
 } from "./nominal-primitive-subtype-ruby-promotion.mjs";
 import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeRubyPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -103,7 +104,10 @@ test("primitive-base Ruby promotion supplements six existing Ruby cells and pres
 		nominalPrimitiveSubtypeRubyPromotionHistoryPath
 		, await promoteNominalPrimitiveSubtypeRuby(original, references)
 	);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const { document: current } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalPrimitiveSubtypeRubyPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypeRubyPromotionHistoryPath
 		, "docs/type-surface.v1.json"

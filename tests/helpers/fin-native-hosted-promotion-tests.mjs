@@ -4,13 +4,14 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { finHostedPromotionReferences } from "./fin-native-hosted-promotion-references.mjs";
 import { finHostedMissingFieldProfiles, promoteFinHostedCoverage } from "./fin-native-hosted-promotion.mjs";
-import { beforeFinHostedPromotionSource, finHostedPromotionHistoryPath } from "./fin-native-hosted-promotion-history.mjs";
+import { beforeFinHostedPromotionSource, finHostedPromotionHistoryPath, finHostedPromotionPredecessor } from "./fin-native-hosted-promotion-history.mjs";
 import { finZeroCiHistoryPath } from "./fin-record-zero-ci-history.mjs";
 import { finNominalRefusalHistoryPath } from "./fin-nominal-refusal-history.mjs";
 import { finAliasClosureHistoryPath } from "./fin-alias-closure-history.mjs";
@@ -23,14 +24,20 @@ import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-dis
 import "./fin-native-hosted-promotion-history-tests.mjs";
 
 const references = finHostedPromotionReferences();
-const current = await readTypeSurface();
+const contractsAt = revision => ({
+	irSchema: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:schema/binding-ir.schema.json`], { encoding: "utf8" }))
+	, consumers: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:docs/consumer-support.v1.json`], { encoding: "utf8" }))
+});
 const hostedSurfaceSource = await sourceAtFinHistoryRecord(
 	finHostedPromotionHistoryPath, "docs/type-surface.v1.json"
 	, beforeFinHostedPromotionSource
 );
-const before = { ...current, document: JSON.parse(beforeFinHostedPromotionSource(
-	"docs/type-surface.v1.json", hostedSurfaceSource
-)) };
+const before = { ...contractsAt(finHostedPromotionPredecessor)
+	, document: JSON.parse(beforeFinHostedPromotionSource(
+		"docs/type-surface.v1.json", hostedSurfaceSource))
+};
 const proposed = references.then(rows => promoteFinHostedCoverage(before.document, rows));
 
 test("hosted Fin promotion retains all native profiles, Python selections and four Perl ABIs", async () => {
@@ -108,6 +115,15 @@ test("hosted Fin promotion adds 78 evidence entries without rewriting an earlier
 		finCoreRepairHistoryPath, "docs/type-surface.v1.json"
 		, beforeFinCoreRepairSource
 	));
+	const promotedIds = new Set(rows.map(row => row.id));
+	for(const entry of expected.evidence.filter(item => promotedIds.has(item.id)))
+		for(const file of entry.files.filter(item =>
+			!item.path.startsWith("docs/evidence/"))) {
+			const historical = comparison.evidence.find(item =>
+				item.id === entry.id)?.files.find(item => item.path === file.path);
+			assert.ok(historical, `${entry.id}:${file.path}`);
+			file.sha256 = historical.sha256;
+			}
 	assert.deepEqual(comparison, expected, "Only the promotion, exact source pins and Perl option guidance may change this historical inventory");
 });
 

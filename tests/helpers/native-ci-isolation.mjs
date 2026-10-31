@@ -14,18 +14,18 @@ export const nativeCiProfiles = {
 	"c-family": {
 		consumers: ["c", "cpp"], ordinary: "ordinary_c"
 		, corpus: "type_corpus_c_family"
-		, additional: ["direct_proof_native"]
+		, additional: ["direct_proof_native", "optional_parameters_native"]
 		, upload: "Upload installed C and C++ corpus observations"
 	}
 	, python: {
 		consumers: ["python"], ordinary: "ordinary_python"
 		, corpus: "type_corpus_python"
-		, additional: ["direct_proof_language"]
+		, additional: ["direct_proof_language", "optional_parameters_language"]
 		, upload: "Upload the real-Lean type corpus report"
 	}
 	, rust: {
 		consumers: ["rust"], ordinary: "ordinary_rust", corpus: "type_corpus_rust"
-		, additional: ["direct_proof_language"]
+		, additional: ["direct_proof_language", "optional_parameters_language"]
 		, upload: "Upload installed Rust corpus observations"
 	}
 };
@@ -61,19 +61,26 @@ export const nativeCiCommands = step => {
 	assert.ok(match, step.name + " has a literal command block"); return match[1];
 };
 
-const context = (profile, overrides) => ({
-	always: () => true
-	, matrix: { profile, consumers: nativeCiProfiles[profile].consumers.join(" ") }
-	, steps: { collection_python311: { outputs: { "python-path": "/fixture/python311/bin/python3.11" } }
-		, collection_python312: { outputs: { "python-path": "/fixture/python312/bin/python3.12" } }
-		, ...Object.fromEntries(Object.entries({
-			consumer: "success"
-			, ...Object.fromEntries(Object.entries(nativeCiProfiles).flatMap(([name, spec]) =>
-				[spec.ordinary, spec.corpus, ...(spec.additional ?? [])]
-					.map(id => [id, name === profile ? "success" : "skipped"])))
-			, ...overrides
-		}).map(([id, outcome]) => [id, { outcome }])) }
-});
+const context = (profile, overrides) => {
+	const selected = new Set([
+		"consumer", nativeCiProfiles[profile].ordinary
+		, nativeCiProfiles[profile].corpus
+		, ...(nativeCiProfiles[profile].additional ?? [])
+	]);
+	const outcomes = Object.fromEntries([
+		"consumer"
+		, ...new Set(Object.values(nativeCiProfiles).flatMap(spec =>
+			[spec.ordinary, spec.corpus, ...(spec.additional ?? [])]))
+	].map(id => [id, selected.has(id) ? "success" : "skipped"]));
+	return {
+		always: () => true
+		, matrix: { profile, consumers: nativeCiProfiles[profile].consumers.join(" ") }
+		, steps: { collection_python311: { outputs: { "python-path": "/fixture/python311/bin/python3.11" } }
+			, collection_python312: { outputs: { "python-path": "/fixture/python312/bin/python3.12" } }
+			, ...Object.fromEntries(Object.entries({ ...outcomes, ...overrides })
+				.map(([id, outcome]) => [id, { outcome }])) }
+	};
+};
 // GitHub permits dashes in property names; JavaScript requires bracket access.
 const evaluate = (expression, profile, overrides = {}) => runInNewContext(
 	expression.replace(/\.([A-Za-z_][A-Za-z0-9_]*-[A-Za-z0-9_-]+)/gu, (_, property) => `[${JSON.stringify(property)}]`)

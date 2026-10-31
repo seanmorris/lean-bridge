@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCheckedRecordBrowserSource, checkedRecordBrowserChangedPaths, checkedRecordBrowserHistoryPath, checkedRecordBrowserPredecessor, reverseCheckedRecordBrowserUpdate } from "./checked-record-browser-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 test("checked-record browser foundation source history authenticates exact changes and refuses unknown edits", async () => {
 	const record = JSON.parse(await readFile(checkedRecordBrowserHistoryPath));
@@ -21,8 +22,9 @@ test("checked-record browser foundation source history authenticates exact chang
 	const gitSource = path => execFileSync("git", ["show", `${checkedRecordBrowserPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			checkedRecordBrowserHistoryPath, update.path, update.currentSha256
+			, beforeCheckedRecordBrowserSource
 		);
 		const previous = reverseCheckedRecordBrowserUpdate(current, update);
 		assert.equal(previous, gitSource(update.path));
@@ -50,17 +52,19 @@ test("checked-record browser foundation source history authenticates exact chang
 	}
 	assert.equal(pins, 10);
 	const inventoryUpdate = record.updates.find(update => update.path === "docs/type-surface.v1.json");
-	const inventoryCurrent = beforeFinRefinementSource(
-		"docs/type-surface.v1.json"
-		, await readFile("docs/type-surface.v1.json", "utf8")
-		, inventoryUpdate.currentSha256
+	const inventoryCurrent = await sourceAtFinHistoryRecordSource(
+		checkedRecordBrowserHistoryPath, "docs/type-surface.v1.json"
+		, inventoryUpdate.currentSha256, beforeCheckedRecordBrowserSource
 	);
 	const inventory = beforeCheckedRecordBrowserSource(
 		"docs/type-surface.v1.json", inventoryCurrent
 		, inventoryUpdate.currentSha256
 	);
 	assert.deepEqual(JSON.parse(inventory), expected);
-	assert.equal(beforeFinRefinementSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), sha256(JSON.stringify(original, null, 2) + "\n")), JSON.stringify(original, null, 2) + "\n");
+	assert.equal(beforeFinRefinementSource(
+		"docs/type-surface.v1.json", inventoryCurrent
+		, sha256(JSON.stringify(original, null, 2) + "\n")
+	), JSON.stringify(original, null, 2) + "\n");
 });
 
 test("checked-record browser foundation history writer refuses an unrelated checkout before writing", async t => {

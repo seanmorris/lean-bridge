@@ -8,21 +8,28 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { checkedRecordPhpWasmReferences, promoteCheckedRecordPhpWasm, checkedRecordPhpWasmProfiles, checkedRecordPhpWasmArchiveRoot, checkedRecordPhpWasmArchiveIndex, checkedRecordPhpWasmConversion, checkedRecordPhpWasmLimit } from "./checked-record-php-wasm-promotion.mjs";
-import { checkedRecordPhpWasmPromotionPredecessor, checkedRecordPhpWasmPromotionHistoryPath } from "./checked-record-php-wasm-promotion-history.mjs";
+import { beforeCheckedRecordPhpWasmPromotionSource, checkedRecordPhpWasmPromotionPredecessor, checkedRecordPhpWasmPromotionHistoryPath } from "./checked-record-php-wasm-promotion-history.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 const baseline = () => JSON.parse(execFileSync("git", ["show", `${checkedRecordPhpWasmPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const contractsAt = revision => ({
+	irSchema: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:schema/binding-ir.schema.json`], { encoding: "utf8" }))
+	, consumers: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:docs/consumer-support.v1.json`], { encoding: "utf8" }))
+});
 const promotionSource = async path => {
 	const history = JSON.parse(await readFile(
 		checkedRecordPhpWasmPromotionHistoryPath, "utf8"
 	));
 	const update = history.updates.find(item => item.path === path);
-	const source = await readFile(path, "utf8");
-	return update === undefined ? source : beforeFinRefinementSource(
-		path, source, update.currentSha256
-	);
+	return update === undefined ? readFile(path, "utf8")
+		: sourceAtFinHistoryRecordSource(
+			checkedRecordPhpWasmPromotionHistoryPath, path, update.currentSha256
+			, beforeCheckedRecordPhpWasmPromotionSource
+		);
 };
 
 test("PHP-Wasm checked-record promotion authenticates all four original installed routes", async () => {
@@ -71,14 +78,15 @@ test("PHP-Wasm promotion refuses missing or corrupt runtime, compiler and instal
 });
 
 test("PHP-Wasm promotion adds exactly four top-level checked-record cells without changing earlier claims", async () => {
-	const current = await readTypeSurface(), previous = baseline(), unchanged = structuredClone(previous);
+	const contracts = contractsAt(checkedRecordPhpWasmPromotionPredecessor);
+	const previous = baseline(), unchanged = structuredClone(previous);
 	const references = await checkedRecordPhpWasmReferences(), proposed = await promoteCheckedRecordPhpWasm(previous, references);
-	assert.deepEqual(previous, unchanged); validateTypeSurface(proposed, current);
+	assert.deepEqual(previous, unchanged); validateTypeSurface(proposed, contracts);
 	assert.equal(previous.evidence.length, 468); assert.equal(previous.observations.length, 567);
 	assert.equal(proposed.evidence.length, 472); assert.equal(proposed.observations.length, 571);
 	assert.deepEqual(proposed.evidence.slice(0, 468), previous.evidence);
 	assert.deepEqual(proposed.observations.slice(0, 567), previous.observations);
-	const before = typeSurfaceCells(previous, current), after = typeSurfaceCells(proposed, current), changed = [];
+	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(proposed, contracts), changed = [];
 	for(const [index, cell] of after.entries())
 	{
 		if(JSON.stringify(cell) === JSON.stringify(before[index])) continue;
@@ -99,14 +107,19 @@ test("PHP-Wasm promotion adds exactly four top-level checked-record cells withou
 	assert.deepEqual(restored, previous);
 	const history = JSON.parse(await readFile(checkedRecordPhpWasmPromotionHistoryPath));
 	const path = "docs/type-surface.v1.json", update = history.updates.find(item => item.path === path);
-	const milestone = JSON.parse(beforeFinRefinementSource(path, await readFile(path, "utf8"), update.currentSha256));
+	const milestone = JSON.parse(await sourceAtFinHistoryRecordSource(
+		checkedRecordPhpWasmPromotionHistoryPath, path, update.currentSha256
+		, beforeCheckedRecordPhpWasmPromotionSource
+	));
 	for(const entry of proposed.evidence) for(const file of entry.files)
 	{
 		const transition = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(transition) file.sha256 = transition.currentSha256;
 		if(previous.evidence.some(item => item.id === entry.id) || file.path.startsWith("docs/evidence/")) continue;
 		const original = milestone.evidence.find(item => item.id === entry.id).files.find(item => item.path === file.path);
-		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), original.sha256)), original.sha256);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			file.path, original.sha256
+		)), original.sha256);
 		file.sha256 = original.sha256;
 	}
 	assert.deepEqual(proposed, milestone);

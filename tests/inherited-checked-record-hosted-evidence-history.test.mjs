@@ -12,6 +12,10 @@ import test from "node:test";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import {
+	sourceAtFinHistoryRecord
+	, sourceBeforeFinHistoryRecord
+} from "./helpers/source-at-fin-history-milestone.mjs";
+import {
 	beforeInheritedCheckedRecordHostedEvidenceSource
 	, inheritedCheckedRecordHostedEvidenceChangedPaths
 	, inheritedCheckedRecordHostedEvidenceDraftParent
@@ -45,9 +49,9 @@ test("hosted inherited-record evidence has one exact reversible lineage", async 
 		, inheritedCheckedRecordHostedEvidenceChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8")
-			, update.currentSha256
+		const current = await sourceAtFinHistoryRecord(
+			inheritedCheckedRecordHostedEvidenceHistoryPath, update.path
+			, beforeFinRefinementSource
 		);
 		const previous = git(["show"
 			, `${update.previousRevision}:${update.path}`]);
@@ -59,8 +63,10 @@ test("hosted inherited-record evidence has one exact reversible lineage", async 
 			update.path, current), previous, update.path);
 		assert.equal(beforeInheritedCheckedRecordHostedEvidenceSource(
 			update.path, current, update.currentSha256), current, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(await sourceBeforeFinHistoryRecord(
+			inheritedCheckedRecordHostedEvidenceHistoryPath, update.path
+			, beforeFinRefinementSource
+		), previous, update.path);
 		const unknown = current + "unknown";
 		assert.equal(beforeInheritedCheckedRecordHostedEvidenceSource(
 			update.path, unknown), unknown, update.path);

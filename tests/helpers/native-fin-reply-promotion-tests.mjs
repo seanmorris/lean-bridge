@@ -7,21 +7,32 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
-import { beforeNativeFinReplyPromotionSource } from "./native-fin-reply-promotion-source-history.mjs";
+import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { beforeNativeFinReplyPromotionSource, nativeFinReplyPromotionHistoryPath } from "./native-fin-reply-promotion-source-history.mjs";
 import { nativeFinReplyPromotionDirections, nativeFinReplyPromotionFailure, nativeFinReplyPromotionId, nativeFinReplyPromotionLimit, nativeFinReplyPromotionObservation, nativeFinReplyPromotionObservationIds, nativeFinReplyPromotionReference, nativeFinReplyPromotionValidators } from "./native-fin-reply-promotion-references.mjs";
+import { beforeNativeReplyReviewSource, nativeReplyReviewHistoryPath } from "./native-reply-review-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
-import { beforeNativeReplyReviewSource } from "./native-reply-review-source-history.mjs";
+const typeSurfacePath = "docs/type-surface.v1.json";
 
 const readPromotedSurface = async () => {
-	const result = await readTypeSurface();
-	const source = beforeNativeReplyReviewSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n");
+	const source = await sourceBeforeFinHistoryRecord(
+		nativeReplyReviewHistoryPath, typeSurfacePath
+		, beforeNativeReplyReviewSource
+	);
 	assert.equal(sha256(source), "2b536b3981d1815e6bc343d10e27266d64eb7c3237890fd03137492481eeab0e", "authenticate the original reply-promotion inventory");
-	result.document = JSON.parse(source);
-	return result;
+	const history = JSON.parse(await readFile(nativeFinReplyPromotionHistoryPath, "utf8"));
+	return {
+		document: JSON.parse(source)
+		, ...typeSurfaceContractsAtProducer(history.predecessorCommit)
+	};
 };
 
-const predecessor = async () => JSON.parse(beforeNativeFinReplyPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const predecessor = async () => JSON.parse(await sourceBeforeFinHistoryRecord(
+	nativeFinReplyPromotionHistoryPath, typeSurfacePath
+	, beforeNativeFinReplyPromotionSource
+));
 const validate = (document, previous, reference, contracts) => {
 	assert.equal(document.observations.length, previous.observations.length);
 	for(const [index, observation] of previous.observations.entries())

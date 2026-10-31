@@ -19,6 +19,11 @@ import {
 } from "./callback-subtype-remaining-acceptance-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import {
+	sourceAtFinHistoryRecord
+	, sourceAtFinHistoryRecordSource
+	, sourceBeforeFinHistoryRecord
+} from "./source-at-fin-history-milestone.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${callbackSubtypeRemainingAcceptancePredecessor}:${path}`]
@@ -40,9 +45,9 @@ test("remaining callback Subtype acceptance history restores every source", asyn
 		, callbackSubtypeRemainingAcceptanceChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8")
-			, update.currentSha256
+		const current = await sourceAtFinHistoryRecord(
+			callbackSubtypeRemainingAcceptanceHistoryPath, update.path
+			, beforeFinRefinementSource
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseCallbackSubtypeRemainingAcceptanceUpdate(
@@ -53,16 +58,18 @@ test("remaining callback Subtype acceptance history restores every source", asyn
 			update.path, current), previous);
 		assert.equal(beforeCallbackSubtypeRemainingAcceptanceSource(
 			update.path, current, update.currentSha256), current);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous);
+		assert.equal(await sourceBeforeFinHistoryRecord(
+			callbackSubtypeRemainingAcceptanceHistoryPath, update.path
+			, beforeFinRefinementSource
+		), previous);
 		assert.equal(beforeCallbackSubtypeRemainingAcceptanceSource(
 			update.path, `${current}unknown`), `${current}unknown`);
 	}
 	for(const addition of record.additions)
 	{
-		const current = beforeFinRefinementSource(
-			addition.path, await readFile(addition.path, "utf8")
-			, addition.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			callbackSubtypeRemainingAcceptanceHistoryPath, addition.path
+			, addition.currentSha256, beforeFinRefinementSource
 		);
 		assert.equal(sha256(current), addition.currentSha256, addition.path);
 	}

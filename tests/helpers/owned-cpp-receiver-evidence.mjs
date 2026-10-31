@@ -7,8 +7,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertOwnedCppReceiverCi } from "./owned-cpp-receiver-ci.mjs";
-import { ownedRustReceiverHistoricalBytes } from "./owned-rust-receiver-history.mjs";
 import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const ownedCppReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-cpp-receivers";
 /** The commit whose complete source tree every digest in the C++ receiver record names. */
@@ -74,7 +74,12 @@ export const assertOwnedCppReceiverExecution = async record => {
 		...record.runtime.map(item => ({ mode: item.mode, ...item.result }))
 		, ...record.plain.map(item => ({ mode: item.mode, consuming: item.consuming, ...item.result }))
 	].map(canonicalJson).sort());
-	const leanSource = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
+	const producerSource = path => bytesAtProducer(
+		ownedCppReceiverProducer, path
+	);
+	const leanSource = producerSource(
+		"tests/fixtures/onboarding/owned-aggregates/Owned.lean"
+	).toString();
 	const probe = await ownedCppReceiverProbe();
 	const sourceIdentity = (input, mode, suffix) => {
 		assert.equal(Boolean(input.sourceIdentity.reviewedBindingIr), mode === "reviewed");
@@ -138,10 +143,12 @@ export const assertOwnedCppReceiverExecution = async record => {
 		assert.equal(item.probeSha256, sha256(ownedCppPlainReceiverProbe(item.consuming)));
 		assert.deepEqual(item.result, { checks: item.consuming ? 9 : 8, identities: 0 });
 	}
-	const page = await readFile("docs/consume/cpp.md", "utf8");
+	const page = producerSource("docs/consume/cpp.md").toString();
 	const example = page.match(/```cpp file=cpp\/owned-receivers\.cpp\n([\s\S]*?)```/u)?.[1];
 	assert.ok(example);
-	const cliConfig = JSON.parse(ownedRustReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
+	const cliConfig = JSON.parse(producerSource(
+		"config/cli-package.v1.json"
+	));
 	for(const item of record.packages)
 	{
 		trueFields(item, ["sourceRemovedBeforeInstall"
@@ -191,8 +198,10 @@ export const assertOwnedCppReceiverExecution = async record => {
 		for(const path of cliConfig.files)
 		{
 			const file = item.cli.files.find(file => file.path === path);
-			const bytes = Buffer.from(ownedRustReceiverHistoricalBytes(path, await readFile(path), file.sha256));
-			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
+			assert.ok(file, path);
+			const bytes = producerSource(path);
+			assert.equal(file.bytes, bytes.length);
+			assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.builds.length, 2);
 		for(const build of item.builds)

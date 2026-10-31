@@ -7,10 +7,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedPerlReceiver, ownedPerlReceiverHistoricalBytes } from "./helpers/owned-perl-receiver-history.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedJvmReceiverExecution } from "./helpers/owned-jvm-receiver-evidence.mjs";
 import { assertOwnedJvmReceiverCi, ownedJvmReceiverReports } from "./helpers/owned-jvm-receiver-ci.mjs";
+import { authenticateFinHistoryRecordSources, bytesAtFinHistoryRecordSource }
+	from "./helpers/source-at-fin-history-milestone.mjs";
 import "./helpers/jvm-shard-ci-tests.mjs";
 import "./helpers/jvm-producer-replay-repair-source-history-tests.mjs";
 import { ownedJvmReceiverPath, ownedJvmReceiverBaseline, ownedJvmReceiverPrevious
@@ -26,12 +27,14 @@ test("JVM receiver evidence binds exact sources and preserves historical support
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedJvmReceiverAddedPaths].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedPerlReceiverHistoricalBytes(path, await readFile(path), digest)), digest, path);
+	assert.equal(authenticateFinHistoryRecordSources(
+		ownedJvmReceiverPath, record.sources), true);
 	assert.deepEqual(record.updates.map(item => item.path), ownedJvmReceiverChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]); assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedPerlReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = (await bytesAtFinHistoryRecordSource(
+			ownedJvmReceiverPath, update.path)).toString();
 		const prior = beforeOwnedJvmReceiver(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedJvmReceiver(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedJvmReceiver(update.path, source, update.currentSha256), source);
@@ -43,9 +46,15 @@ test("JVM receiver evidence binds exact sources and preserves historical support
 			, { ...update, path: "unrelated.mjs" }])
 			assert.throws(() => reverseOwnedJvmReceiverUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeOwnedPerlReceiver(path, await readFile(path, "utf8"), record.sources[path]);
+	const path = "docs/type-surface.v1.json";
+	const current = (await bytesAtFinHistoryRecordSource(
+		ownedJvmReceiverPath, path)).toString();
 	const prior = JSON.parse(beforeOwnedJvmReceiver(path, current, previous.sources[path]));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPerlReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		assert.equal(typeof record.sources[file.path], "string", file.path);
+		file.sha256 = record.sources[file.path];
+	}
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["core", "plain", "unanchored", "packaging", "resource-packaging", "evidence"])
 		assert.equal(classifyRepositoryTest(`tests/owned-jvm-receiver-${name}.test.mjs`), "contract");

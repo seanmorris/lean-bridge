@@ -22,6 +22,8 @@ import {
 	, phpGraphDiagnosticPredecessor
 	, reversePhpGraphDiagnosticUpdate
 } from "./php-graph-diagnostic-source-history.mjs";
+import { sourceAtFinHistoryRecordSource }
+	from "./source-at-fin-history-milestone.mjs";
 
 test("PHP graph diagnostic history reconstructs every exact predecessor source", async () => {
 	const record = JSON.parse(await readFile(phpGraphDiagnosticHistoryPath, "utf8"));
@@ -33,8 +35,9 @@ test("PHP graph diagnostic history reconstructs every exact predecessor source",
 		, phpGraphDiagnosticChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			phpGraphDiagnosticHistoryPath, update.path
+			, update.currentSha256, beforeFinRefinementSource
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
@@ -69,8 +72,9 @@ test("PHP graph diagnostic history refreshes only immediately preceding source p
 	const record = JSON.parse(await readFile(phpGraphDiagnosticHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
 	// Later layers stack on this inventory; rewind them through the shared hub.
-	const currentText = beforeFinRefinementSource(
-		path, await readFile(path, "utf8"), update.currentSha256
+	const currentText = await sourceAtFinHistoryRecordSource(
+		phpGraphDiagnosticHistoryPath, path
+		, update.currentSha256, beforeFinRefinementSource
 	);
 	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reversePhpGraphDiagnosticUpdate(currentText, update));

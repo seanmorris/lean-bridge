@@ -12,7 +12,11 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeNativeFinJvmExitSource, nativeFinJvmExitChangedPaths, nativeFinJvmExitHistoryPath, nativeFinJvmExitPredecessor, reverseNativeFinJvmExitUpdate } from "./native-fin-jvm-exit-history.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
+
+const sourceAt = (path, expected) => sourceAtFinHistoryRecordSource(
+	nativeFinJvmExitHistoryPath, path, expected, beforeNativeFinJvmExitSource
+);
 
 test("scalar JVM exit repair preserves exact historical producers and support claims", async () => {
 	const record = JSON.parse(await readFile(nativeFinJvmExitHistoryPath));
@@ -22,8 +26,8 @@ test("scalar JVM exit repair preserves exact historical producers and support cl
 	const original = path => execFileSync("git", ["show", `${nativeFinJvmExitPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAt(
+			update.path, update.currentSha256
 		);
 		const previous = reverseNativeFinJvmExitUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -47,7 +51,7 @@ test("scalar JVM exit repair preserves exact historical producers and support cl
 	assert.equal(beforeFinRefinementSource(path, await readFile(path, "utf8"), sha256(original(path))), original(path));
 	assert.equal(inventory.evidence.length, 500); assert.equal(inventory.observations.length, 585);
 	const checkpoint = record.updates.find(update => update.path === path).currentSha256;
-	const currentInventory = JSON.parse(await sourceAtFinHistoryMilestone(
+	const currentInventory = JSON.parse(await sourceAt(
 		path, checkpoint, beforeNativeFinJvmExitSource
 	));
 	const pin = currentInventory.evidence.find(entry => entry.id === "jvm-fin-installed").files

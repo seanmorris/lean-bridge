@@ -69,7 +69,7 @@ test("split native recording preserves every command, outcome and output path", 
 		const failure = spawnSync("/bin/bash", args, { env: { PATH: "/usr/bin:/bin" } });
 		assert.equal(failure.status, 17, "recording failure must propagate");
 	}
-	assert.equal(count, 39);
+	assert.equal(count, 48);
 });
 
 test("recording split refuses missing, duplicate and misrouted steps", async () => {

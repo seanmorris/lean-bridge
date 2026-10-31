@@ -13,17 +13,18 @@ import {
 	checkedRecordValueIndexRustPromotionBaseline
 	, checkedRecordValueIndexRustPromotionConversion
 	, checkedRecordValueIndexRustPromotionLimit
+	, checkedRecordValueIndexRustPromotionParent
 	, checkedRecordValueIndexRustPromotionReferences
 	, promoteCheckedRecordValueIndexRust
 } from "./checked-record-value-index-rust-promotion.mjs";
 import {
 	checkedRecordValueIndexRustPromotionHistoryPath
 } from "./checked-record-value-index-rust-promotion-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const contracts = async () => ({
-	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
-	, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json"))
-});
+const contracts = () => typeSurfaceContractsAtProducer(
+	checkedRecordValueIndexRustPromotionParent
+);
 const target = cell => cell.profile === "rust"
 	&& cell.shape === "checked-record"
 	&& ["ordinary-source", "reviewed-ir"].includes(cell.path)
@@ -58,11 +59,12 @@ test("Rust promotion changes only four exact cells", {
 	const frozen = structuredClone(original);
 	const references = await checkedRecordValueIndexRustPromotionReferences();
 	const proposed = await promoteCheckedRecordValueIndexRust(original, references);
-	validateTypeSurface(proposed, await contracts());
+	const historicalContracts = contracts();
+	validateTypeSurface(proposed, historicalContracts);
 	assert.deepEqual(original, frozen);
-	const before = new Map(typeSurfaceCells(original, await contracts())
+	const before = new Map(typeSurfaceCells(original, historicalContracts)
 		.map(cell => [cell.id, cell]));
-	const difference = typeSurfaceCells(proposed, await contracts()).filter(cell =>
+	const difference = typeSurfaceCells(proposed, historicalContracts).filter(cell =>
 		JSON.stringify(cell) !== JSON.stringify(before.get(cell.id)));
 	assert.equal(difference.length, 4);
 	for(const cell of difference)

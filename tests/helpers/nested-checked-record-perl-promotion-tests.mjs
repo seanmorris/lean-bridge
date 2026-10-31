@@ -19,7 +19,7 @@ import {
 	, nestedCheckedRecordPerlPromotionHistoryPath
 	, nestedCheckedRecordPerlPromotionPredecessor
 } from "./nested-checked-record-perl-promotion-history.mjs";
-import { bytesAtProducer } from "./producer-source.mjs";
+import { bytesAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
@@ -131,7 +131,8 @@ test("nested checked-record Perl promotion supplements six cells only", async ()
 		nestedCheckedRecordPerlPromotionHistoryPath
 		, await promoteNestedCheckedRecordPerl(original, references, milestone)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(nestedCheckedRecordPerlPromotionPredecessor);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nestedCheckedRecordPerlPromotionHistoryPath
 		, "docs/type-surface.v1.json"

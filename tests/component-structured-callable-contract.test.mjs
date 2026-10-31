@@ -150,7 +150,7 @@ test("source-level nominal Fin trees share the structured callback ABI", () => {
 	const key = abi.callbacks.find(type => type.id === callback.id).key;
 	// Recovery is a public refined value, while wire validators keep using the
 	// compiler-normalized erased mirror selected for this callback signature.
-	assert.match(lean, /def callbackDefault_[a-f0-9]+ : LbErased\.Structured\.Payload := \{[\s\S]*«count» := \(⟨0, by decide⟩ : _root_\.Fin 3\)/u);
+	assert.match(lean, /def callbackDefault_[a-f0-9]+ : _root_\.Structured\.Payload := \{[\s\S]*«count» := \(⟨0, by decide⟩ : _root_\.Fin 3\)/u);
 	assert.match(lean, new RegExp(`def checked_${key}_result_refinement_0[\\s\\S]*LbErased\\.Structured\\.Payload\\.check`, "u"));
 	assert.match(lean, new RegExp(`def wrap_${key}[\\s\\S]*\\| \\.none => callbackDefault_[a-f0-9]+`, "u"));
 	assert.doesNotMatch(lean, /LbErased\.undefined/u);
@@ -236,7 +236,7 @@ test("recursive and structured packages reject refinements before dispatch with 
 		declaration.parameters[0].type = { kind: "primitive", name: "string" };
 		declaration.source.extensions["lean-lang.org/refinements"] = {
 			parameters: [{ kind: "subtype", constructor: "Structured.checkedText" }, null]
-			, result: { kind: "subtype", constructor: "Structured.checkedText" }
+			, result: null
 		};
 		if(version === 8)
 		{

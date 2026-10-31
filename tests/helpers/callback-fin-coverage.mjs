@@ -12,6 +12,14 @@ const callbackFinCoverage = [
 	, [["browser-javascript", "browser-react", "browser-worker"], "reviewed-ir", ["hosted-reviewed-callback-fin-browser-installed"]]
 	, [["c", "cpp"], "ordinary-source", ["native-callback-fin-ordinary-installed", "native-callback-fin-host-replies-installed"]]
 	, [["c", "cpp"], "reviewed-ir", ["reviewed-callback-fin-c-cpp-installed"]]
+	, [["perl", "ruby", "python", "rust"], "ordinary-source"
+		, ["hosted-callback-fin-native-languages-installed"]]
+	, [["perl", "ruby", "python", "rust"], "reviewed-ir"
+		, ["hosted-callback-fin-native-languages-installed"]]
+	, [["php-native", "dotnet", "java", "kotlin", "wit-wasi"]
+		, "ordinary-source", ["hosted-callback-fin-managed-wit-installed"]]
+	, [["php-native", "dotnet", "java", "kotlin", "wit-wasi"]
+		, "reviewed-ir", ["hosted-callback-fin-managed-wit-installed"]]
 	, [["php-wasm"], "ordinary-source", ["callback-refinements-php-wasm-hosted-installed"]]
 	, [["php-wasm"], "reviewed-ir", ["callback-refinements-php-wasm-hosted-installed"]]
 ];

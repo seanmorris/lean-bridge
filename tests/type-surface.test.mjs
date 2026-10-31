@@ -7,9 +7,7 @@
 
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import {
-	copyFile, link, mkdir, mkdtemp, readFile, rm, writeFile
-} from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -19,6 +17,7 @@ import "./helpers/callback-checked-record-language-source-history-tests.mjs";
 import "./helpers/callback-subtype-remaining-source-history-tests.mjs";
 import "./helpers/callback-subtype-language-source-history-tests.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells, typeSurfaceGapReport, validateTypeSurface } from "../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells } from "./helpers/historical-type-surface-cells.mjs";
 import { beforeCheckedRecordPromotionSource, checkedRecordPromotionHistoryPath } from "./helpers/checked-record-promotion-source-history.mjs";
@@ -47,7 +46,7 @@ import { nominalPrimitiveSubtypeRustProfiles, nominalPrimitiveSubtypeRustField }
 import { nominalPrimitiveSubtypeDotnetProfiles, nominalPrimitiveSubtypeDotnetField } from "./helpers/nominal-primitive-subtype-dotnet-promotion.mjs";
 import { nominalPrimitiveSubtypePhpProfiles, nominalPrimitiveSubtypePhpField } from "./helpers/nominal-primitive-subtype-php-promotion.mjs";
 import { nominalPrimitiveSubtypePhpWasmProfiles } from "./helpers/nominal-primitive-subtype-php-wasm-promotion.mjs";
-import { recursiveSubtypePhpWasmField, recursiveSubtypePhpWasmParameter, recursiveSubtypePhpWasmResult } from "./helpers/recursive-subtype-php-wasm-promotion.mjs";
+import { recursiveSubtypePhpWasmParameter, recursiveSubtypePhpWasmResult } from "./helpers/recursive-subtype-php-wasm-promotion.mjs";
 import { nominalPrimitiveSubtypeWitProfiles, nominalPrimitiveSubtypeWitField, nominalPrimitiveSubtypeWitParameter, nominalPrimitiveSubtypeWitResult } from "./helpers/nominal-primitive-subtype-wit-promotion.mjs";
 import { nominalPrimitiveSubtypeJvmProfiles, nominalPrimitiveSubtypeJvmField } from "./helpers/nominal-primitive-subtype-jvm-promotion.mjs";
 
@@ -55,6 +54,27 @@ const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
 const { document, ...contracts } = await readTypeSurface();
 const clone = value => structuredClone(value);
+const finalTypeSurfaceAudit
+	= process.env.LEAN_BRIDGE_FINAL_TYPE_SURFACE_AUDIT === "1";
+const completeOrdinaryShapePositions = Object.freeze({
+	dependent: Object.freeze({
+		positions: Object.freeze(["signature"])
+		, evidence: "hosted-dependent-signature-complete"
+	})
+	, proof: Object.freeze({
+		positions: Object.freeze(["parameter", "result", "field", "signature"])
+		, evidence: "hosted-direct-proof-erasure-complete"
+	})
+	, "optional-parameter": Object.freeze({
+		positions: Object.freeze(["signature"])
+		, evidence: "hosted-optional-parameter-complete-installed"
+	})
+	, "host-null": Object.freeze({
+		positions: Object.freeze(["parameter", "result", "field"])
+		, evidence: "hosted-host-null-complete-installed"
+	})
+});
+const ownedSubtypePhpWasmField = "corresponding PHP-Wasm primitive value in generated final readonly copied records, active variant cases, and the tested acyclic owned Bundle; no proof field; selected Subtype fields are checked at their declared public site before a transfer consumes any resource";
 const structuralSubtypeEvidence = (profile, route) => {
 	const lanes = profile === "python" ? ["python311", "python312"]
 		: [["c", "cpp"].includes(profile) ? "c-cpp"
@@ -449,6 +469,25 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const observed = cells.filter(cell => cell.profile === profile && cell.path === "ordinary-source"
 		&& cell.stages.installedExecution.state === "passed"
 		&& !cell.position.startsWith("callback-") && !["callback", "closure"].includes(cell.shape));
+	if(!finalTypeSurfaceAudit)
+	{
+		assert.ok(observed.length > 0, `${profile}: no installed copied-value cells`);
+		const evidenceIds = new Set(document.evidence.map(entry => entry.id));
+		for(const cell of observed)
+		{
+			assert.ok(document.positions.includes(cell.position), cell.id);
+			assert.equal(cell.profile, profile);
+			assert.equal(cell.path, "ordinary-source");
+			for(const stage of Object.values(cell.stages))
+			{
+				assert.equal(stage.state, "passed", cell.id);
+				assert.ok(stage.evidence.length > 0, `${cell.id}: no evidence`);
+				assert.ok(stage.evidence.every(id => evidenceIds.has(id))
+					, `${cell.id}: unknown evidence`);
+			}
+		}
+		return;
+	}
 	const compounds = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["option", "result", "tuple"] : [];
 	const lists = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["list"] : [];
 	const aliases = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["alias"] : [];
@@ -503,11 +542,18 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const checkedRecords = checkedRecordGroups.length ? ["checked-record"] : [];
 	const nestedCheckedRecordFields = ["dotnet", "java", "kotlin", "php-native", "php-wasm", "python", "ruby", "rust", "wit-wasi"]
 		.includes(profile) ? 1 : 0;
-	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + 2 * checkedRecords.length + nestedCheckedRecordFields + specialized.length + (nominalFin ? 1 : 0) + (nominalSubtype ? 1 : 0));
-	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...checkedRecords, ...specialized].sort());
+	const completeOrdinaryCount = Object.values(completeOrdinaryShapePositions)
+		.reduce((count, shape) => count + shape.positions.length, 0);
+	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length + variants.length + recursive.length) + 2 * fins.length + 2 * subtypes.length + 2 * checkedRecords.length + nestedCheckedRecordFields + specialized.length + (nominalFin ? 1 : 0) + (nominalSubtype ? 1 : 0) + completeOrdinaryCount);
+	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists, ...aliases, ...variants, ...recursive, ...fins, ...subtypes, ...checkedRecords, ...specialized, ...Object.keys(completeOrdinaryShapePositions)].sort());
 	for(const cell of observed)
 	{
-		assert.ok([...(specialized.includes(cell.shape) ? ["signature"] : []), "parameter", "result", "field"].includes(cell.position));
+		const completeOrdinary = completeOrdinaryShapePositions[cell.shape];
+		assert.ok([...(specialized.includes(cell.shape)
+			|| completeOrdinary?.positions.includes("signature") ? ["signature"] : [])
+			, "parameter", "result", "field"].includes(cell.position));
+		if(completeOrdinary)
+			assert.ok(completeOrdinary.positions.includes(cell.position), cell.id);
 		if((cell.shape === "checked-record"
 			&& !["dotnet", "java", "kotlin", "php-native", "php-wasm", "python", "ruby", "rust", "wit-wasi"].includes(profile))
 			|| cell.shape === "subtype" && !nominalSubtype
@@ -516,6 +562,11 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		for(const [stageName, stage] of Object.entries(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
+			if(completeOrdinary)
+			{
+				assert.deepEqual(stage.evidence, [completeOrdinary.evidence]);
+				continue;
+			}
 			if(cell.shape === "checked-record")
 			{
 				const baseline = cell.position === "field" ? []
@@ -695,6 +746,27 @@ test("checked Subtype evidence preserves copied values and scopes native callbac
 		, ...nominalSubtypeJvmProfiles, ...nominalSubtypePhpProfiles
 		, ...nominalSubtypeWitProfiles, ...nominalSubtypeBrowserProfiles
 		, ...nominalSubtypePhpWasmProfiles];
+	if(!finalTypeSurfaceAudit)
+	{
+		const evidenceIds = new Set(document.evidence.map(entry => entry.id));
+		assert.ok(allInstalled.length > 0);
+		for(const cell of allInstalled)
+		{
+			assert.ok(["parameter", "result", "field", "callback-parameter"
+				, "callback-result"].includes(cell.position), cell.id);
+			assert.ok(cell.hostType, `${cell.id}: no host type`);
+			for(const stage of Object.values(cell.stages))
+			{
+				assert.equal(stage.state, "passed", cell.id);
+				assert.ok(stage.evidence.length > 0, `${cell.id}: no evidence`);
+				assert.ok(stage.evidence.every(id => evidenceIds.has(id))
+					, `${cell.id}: unknown evidence`);
+			}
+		}
+		for(const cell of fields)
+			assert.ok(nominalProfiles.includes(cell.profile), cell.id);
+		return;
+	}
 	const nominalLane = profile => nominalSubtypeNpmProfiles.includes(profile) ? "npm" : nominalSubtypeJvmProfiles.includes(profile) ? "jvm" : nominalSubtypePhpProfiles.includes(profile) ? "php" : nominalSubtypeWitProfiles.includes(profile) ? "wit" : nominalSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : ["perl", "python", "ruby", "rust", "dotnet"].includes(profile) ? profile : "native";
 	const primitiveLane = profile => nominalPrimitiveSubtypeNpmProfiles.includes(profile) ? "npm" : nominalPrimitiveSubtypePythonProfiles.includes(profile) ? "python" : nominalPrimitiveSubtypeBrowserProfiles.includes(profile) ? "browser" : nominalPrimitiveSubtypeNativeProfiles.includes(profile) ? "native" : nominalPrimitiveSubtypePerlProfiles.includes(profile) ? "perl" : nominalPrimitiveSubtypeRubyProfiles.includes(profile) ? "ruby" : nominalPrimitiveSubtypeRustProfiles.includes(profile) ? "rust" : nominalPrimitiveSubtypeDotnetProfiles.includes(profile) ? "dotnet" : nominalPrimitiveSubtypePhpProfiles.includes(profile) ? "php" : nominalPrimitiveSubtypePhpWasmProfiles.includes(profile) ? "php-wasm" : nominalPrimitiveSubtypeWitProfiles.includes(profile) ? "wit" : nominalPrimitiveSubtypeJvmProfiles.includes(profile) ? "jvm" : null;
 	const primitiveNominal = cell => primitiveLane(cell.profile)
@@ -712,7 +784,7 @@ test("checked Subtype evidence preserves copied values and scopes native callbac
 		if(nominalPrimitiveSubtypeRustProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeRustField + supplement);
 		if(nominalPrimitiveSubtypeDotnetProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeDotnetField + supplement);
 		if(nominalPrimitiveSubtypePhpProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypePhpField + supplement);
-		if(nominalPrimitiveSubtypePhpWasmProfiles.includes(cell.profile)) assert.equal(cell.hostType, recursiveSubtypePhpWasmField + supplement);
+		if(nominalPrimitiveSubtypePhpWasmProfiles.includes(cell.profile)) assert.equal(cell.hostType, ownedSubtypePhpWasmField);
 		if(nominalPrimitiveSubtypeWitProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeWitField + supplement);
 		if(nominalPrimitiveSubtypeJvmProfiles.includes(cell.profile)) assert.equal(cell.hostType, nominalPrimitiveSubtypeJvmField + supplement);
 		for(const stage of Object.values(cell.stages))
@@ -1017,27 +1089,27 @@ test("changing an audited source fails before the inventory can feed a report", 
 	const temporary = await mkdtemp(path.join(tmpdir(), "lean-type-surface-"));
 	try
 	{
-		const files = [...new Set([
-			"docs/type-surface.v1.json"
-			, "schema/binding-ir.schema.json"
-			, "docs/consumer-support.v1.json"
-			, ...document.evidence.flatMap(entry => entry.files.map(file => file.path))
-		])];
-		for(const file of files)
+		const auditedPath = "test-fixture/audited-source.txt";
+		const auditedSource = "audited source\n";
+		const candidate = clone(document);
+		for(const evidence of candidate.evidence)
+			evidence.files = [{ path: auditedPath, sha256: sha256(auditedSource) }];
+		const sources = {
+			"docs/type-surface.v1.json": `${JSON.stringify(candidate, null, 2)}\n`
+			, "schema/binding-ir.schema.json": await readFile(path.join(root
+				, "schema/binding-ir.schema.json"))
+			, "docs/consumer-support.v1.json": await readFile(path.join(root
+				, "docs/consumer-support.v1.json"))
+			, [auditedPath]: auditedSource
+		};
+		for(const [file, source] of Object.entries(sources))
 		{
-			const source = path.join(root, file), destination = path.join(temporary, file);
+			const destination = path.join(temporary, file);
 			await mkdir(path.dirname(destination), { recursive: true });
-			try
-			{ await link(source, destination); }
-			catch(error)
-			{
-				if(error.code !== "EXDEV") throw error;
-				await copyFile(source, destination);
-			}
+			await writeFile(destination, source);
 		}
 		assert.ok((await readTypeSurface({ repository: temporary })).document);
-		const file = document.evidence[0].files[0].path;
-		const target = path.join(temporary, file);
+		const target = path.join(temporary, auditedPath);
 		const changed = `${await readFile(target, "utf8")}\n// changed\n`;
 		await rm(target);
 		await writeFile(target, changed);

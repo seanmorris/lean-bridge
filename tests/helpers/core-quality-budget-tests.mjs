@@ -15,6 +15,9 @@ import {
 	, coreContractShardLabels
 	, coreContractShardManifest, verifyCoreContractShardManifests
 } from "../../scripts/core-contract-shards.mjs";
+import {
+	coreContractToolchainPlan, coreContractToolchainTests
+} from "../../scripts/core-contract-toolchains.mjs";
 
 const assertCoreQualityBudget = source => {
 	const timeouts = [...source.matchAll(/^\s+timeout-minutes:\s*(\d+)\s*$/gmu)]
@@ -99,6 +102,27 @@ const assertCoreQualityBudget = source => {
 		, "Every shard must materialize and record its exact retained evidence closure");
 	assert.match(contractJob
 		, /LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT: \$\{\{ github\.workspace \}\}\/build\/core-type-surface\/receipt\.json/u);
+	assert.equal([...contractJob.matchAll(/^\s+node scripts\/core-contract-toolchains\.mjs \\\n\s+--shard "\$\{\{ matrix\.shard \}\}\/12" \\\n\s+--github-output "\$GITHUB_OUTPUT"\s*$/gmu)].length, 1
+		, "Every shard must derive compiler prerequisites from its selected files");
+	assert.equal([...contractJob.matchAll(/^\s+if: steps\.core-toolchains\.outputs\.component == 'true'\s*$/gmu)].length, 4
+		, "Only the selected shard may restore tools, install prerequisites, bootstrap and build the runtime");
+	assert.equal([...contractJob.matchAll(/^\s+run: bash scripts\/bootstrap-toolchains\.sh\s*$/gmu)].length, 1);
+	assert.equal([...contractJob.matchAll(/^\s+run: bash scripts\/build-lean-link-spike\.sh\s*$/gmu)].length, 1);
+	assert.equal([...contractJob.matchAll(/^\s+if: steps\.core-toolchains\.outputs\.component != 'true'\s*$/gmu)].length, 1
+		, "Other shards retain the lightweight GMP-only prerequisite path");
+	assert.doesNotMatch(contractJob, /matrix\.shard\s*==/u
+		, "Toolchain requirements must follow files, not matrix positions");
+	const wasmRestore = contractJob.indexOf("- name: Restore pinned wasm-tools");
+	const componentRestore = contractJob.indexOf(
+		"- name: Restore pinned component-build toolchains when selected tests require them");
+	assert.ok(wasmRestore >= 0 && wasmRestore < componentRestore
+		, "The shared wasm-tools cache must be restored before the selected component closure");
+	const componentCache = contractJob.slice(componentRestore, contractJob.indexOf(
+		"- name: Install component-build OS prerequisites when selected tests require them"
+		, componentRestore));
+	assert.match(componentCache, /core-component-toolchain-v2-/u);
+	assert.doesNotMatch(componentCache, /\.toolchains\/downloads/u
+		, "The component cache must not overlap the shared wasm-tools download cache");
 	const aggregate = source.slice(source.indexOf("\n  quality:\n"));
 	assert.match(aggregate, /fetch-depth: 1\n {10}persist-credentials: false\n {10}sparse-checkout: \|\n {12}scripts\n {12}src\n {12}tests\n {10}sparse-checkout-cone-mode: true\n/u
 		, "The aggregate needs the complete test tree and verifier source, not retained evidence");
@@ -301,6 +325,15 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 			, "--type-surface-receipt build/core-type-surface/missing.json")
 		, source.replace("build/core-evidence/core-shard-${{ matrix.shard }}-evidence.json"
 			, "build/core-shards/core-shard-${{ matrix.shard }}.json")
+		, source.replace("node scripts/core-contract-toolchains.mjs"
+			, "node scripts/snapshot-core-contract-toolchains.mjs")
+		, source.replace("steps.core-toolchains.outputs.component == 'true'"
+			, "matrix.shard == 10")
+		, source.replace("bash scripts/bootstrap-toolchains.sh\n"
+			, "true")
+		, source.replace("bash scripts/build-lean-link-spike.sh", "true")
+		, source.replace("            .toolchains/elan\n"
+			, "            .toolchains/downloads\n            .toolchains/elan\n")
 		, source.replace("          sparse-checkout: |", "          filter: tree:0\n          sparse-checkout: |")
 		, source.replace("/opt/hostedtoolcache/CodeQL", "/opt/hostedtoolcache")
 		, source.replace('df -h / "$GITHUB_WORKSPACE"', "true")
@@ -395,6 +428,34 @@ test("Hosted Core bounds each closed shard without truncating the profile", asyn
 		assert.throws(() => assertCoreProcessBudget(changed, shards), undefined
 			, `runner mutation ${index}`);
 	}
+});
+
+test("Core compiler prerequisites follow the selected behavior tests", async () => {
+	const paths = await collectCoreContractTestPaths();
+	assert.deepEqual(coreContractToolchainTests, {
+		component: ["tests/host-null-npm-installed.test.mjs"]
+	});
+	const plans = coreContractShardLabels.map(label =>
+		coreContractToolchainPlan(paths, label));
+	const requiringComponent = plans.filter(plan =>
+		plan.toolchains.component.required);
+	assert.equal(requiringComponent.length, 1);
+	assert.deepEqual(requiringComponent[0].toolchains.component.files
+		, ["tests/host-null-npm-installed.test.mjs"]);
+	assert.ok(requiringComponent[0].selectionSha256);
+	for(const plan of plans.filter(item =>
+		!item.toolchains.component.required))
+		assert.deepEqual(plan.toolchains.component.files, []);
+
+	const shifted = ["tests/000-core-shard-shift.test.mjs", ...paths].toSorted();
+	const shiftedPlans = coreContractShardLabels.map(label =>
+		coreContractToolchainPlan(shifted, label));
+	const shiftedComponent = shiftedPlans.filter(plan =>
+		plan.toolchains.component.required);
+	assert.equal(shiftedComponent.length, 1
+		, "Repartitioning preserves the file-derived component-build requirement");
+	assert.notDeepEqual(shiftedComponent[0].shard, requiringComponent[0].shard
+		, "The test-file requirement follows HostNull into its new shard");
 });
 
 test("history inventory checks reuse the authenticated type-surface pass", async () => {

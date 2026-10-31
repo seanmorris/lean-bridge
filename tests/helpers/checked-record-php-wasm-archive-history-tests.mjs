@@ -10,6 +10,10 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import {
+	sourceAtFinHistoryRecord
+	, sourceBeforeFinHistoryRecord
+} from "./source-at-fin-history-milestone.mjs";
 import { beforeCheckedRecordPhpWasmArchiveSource, checkedRecordPhpWasmArchiveChangedPaths, checkedRecordPhpWasmArchiveHistoryPath, checkedRecordPhpWasmArchivePredecessor, reverseCheckedRecordPhpWasmArchiveUpdate } from "./checked-record-php-wasm-archive-history.mjs";
 
 test("Checked-record PHP-Wasm archive repair authenticates exact test changes without changing support or observations", async () => {
@@ -20,15 +24,19 @@ test("Checked-record PHP-Wasm archive repair authenticates exact test changes wi
 	const original = path => execFileSync("git", ["show", `${checkedRecordPhpWasmArchivePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecord(
+			checkedRecordPhpWasmArchiveHistoryPath, update.path
+			, beforeFinRefinementSource
 		);
 		const previous = reverseCheckedRecordPhpWasmArchiveUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCheckedRecordPhpWasmArchiveSource(update.path, current), previous);
 		assert.equal(beforeCheckedRecordPhpWasmArchiveSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeCheckedRecordPhpWasmArchiveSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.equal(await sourceBeforeFinHistoryRecord(
+			checkedRecordPhpWasmArchiveHistoryPath, update.path
+			, beforeFinRefinementSource
+		), previous);
 		assert.equal(beforeCheckedRecordPhpWasmArchiveSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }

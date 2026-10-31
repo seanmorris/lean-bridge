@@ -12,6 +12,10 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCoreContractRepairSource } from "./core-contract-repair-history.mjs";
 import { beforeCliImportRepairSource, cliImportRepairChangedPaths, cliImportRepairHistoryPath, cliImportRepairPredecessor, reverseCliImportRepairUpdate } from "./cli-import-repair-history.mjs";
+import {
+	sourceAtFinHistoryRecord
+	, sourceBeforeFinHistoryRecord
+} from "./source-at-fin-history-milestone.mjs";
 
 test("CLI import repair history authenticates exact changes without changing support claims", async t => {
 	const record = JSON.parse(await readFile(cliImportRepairHistoryPath));
@@ -21,15 +25,17 @@ test("CLI import repair history authenticates exact changes without changing sup
 	const original = path => execFileSync("git", ["show", `${cliImportRepairPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecord(
+			cliImportRepairHistoryPath, update.path, beforeFinRefinementSource
 		);
 		const previous = reverseCliImportRepairUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCliImportRepairSource(update.path, current), previous);
 		assert.equal(beforeCliImportRepairSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeCliImportRepairSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.equal(await sourceBeforeFinHistoryRecord(
+			cliImportRepairHistoryPath, update.path, beforeFinRefinementSource
+		), previous);
 		assert.equal(beforeCliImportRepairSource(update.path, current + "unknown"), current + "unknown");
 		const mutations = [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -43,9 +49,9 @@ test("CLI import repair history authenticates exact changes without changing sup
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json", expected = JSON.parse(original(inventoryPath));
-	const inventoryUpdate = record.updates.find(item => item.path === inventoryPath);
-	const currentInventory = beforeFinRefinementSource(inventoryPath
-		, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
+	const currentInventory = await sourceAtFinHistoryRecord(
+		cliImportRepairHistoryPath, inventoryPath, beforeFinRefinementSource
+	);
 	assert.equal(beforeCliImportRepairSource(inventoryPath, currentInventory)
 		, original(inventoryPath));
 	let pins = 0;
@@ -56,9 +62,7 @@ test("CLI import repair history authenticates exact changes without changing sup
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.ok(pins > 0); assert.deepEqual(JSON.parse(beforeCoreContractRepairSource(
-		inventoryPath, beforeFinRefinementSource(inventoryPath
-			, await readFile(inventoryPath, "utf8")
-			, record.updates.find(item => item.path === inventoryPath).currentSha256)
+		inventoryPath, currentInventory
 	)), expected);
 	assert.equal(expected.evidence.length, 480); assert.equal(expected.observations.length, 575);
 	t.diagnostic(`${pins} current-source pins refreshed; all support claims unchanged`);

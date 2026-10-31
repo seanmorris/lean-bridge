@@ -16,6 +16,10 @@ import {
 	buildOptionalParameterMatrixReceipt, optionalParameterMatrixResultPath
 	, validateOptionalParameterMatrixReceipt
 } from "./optional-parameter-matrix-receipt.mjs";
+import {
+	focusedAcceptanceSparseCheckoutImplementation
+} from "./focused-acceptance-sparse-checkout-source-history.mjs";
+import { sourceAtProducer } from "./producer-source.mjs";
 
 const producerCommit = "a".repeat(40);
 const metrics = lane => lane.key === "npm"
@@ -261,10 +265,16 @@ test("consumer CI downloads, reconciles, retains and enforces the matrix", async
 });
 
 test("focused recurring CI produces and reconciles the exact optional matrix", async t => {
-	const sources = new Map(await Promise.all(focusedProducers.map(async item => [
-		item.file, await readFile(item.file, "utf8")
-	]))), callerPath = ".github/workflows/optional-parameter-complete.yml";
-	const caller = await readFile(callerPath, "utf8");
+	const sources = new Map(
+		focusedProducers.map(item => [item.file
+			, sourceAtProducer(
+				focusedAcceptanceSparseCheckoutImplementation, item.file
+			)
+		])
+	), callerPath = ".github/workflows/optional-parameter-complete.yml";
+	const caller = sourceAtProducer(
+		focusedAcceptanceSparseCheckoutImplementation, callerPath
+	);
 	for(const item of focusedProducers)
 		assertFocusedProducer(sources.get(item.file), item);
 	assertFocusedCaller(caller);

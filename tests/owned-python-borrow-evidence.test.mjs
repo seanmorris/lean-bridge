@@ -7,8 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedRubyBorrow, ownedRubyBorrowHistoricalBytes } from "./helpers/owned-ruby-borrow-history.mjs";
 import { assertOwnedPythonBorrowExecution, assertOwnedPythonBorrowCi } from "./helpers/owned-python-borrow-evidence.mjs";
+import { authenticateFinHistoryRecordSources, bytesAtFinHistoryRecordSource }
+	from "./helpers/source-at-fin-history-milestone.mjs";
 import "./helpers/owned-python-borrow-producer-replay-repair-source-history-tests.mjs";
 import { ownedPythonBorrowPath, ownedPythonBorrowBaseline, ownedPythonBorrowPrevious
 	, ownedPythonBorrowAddedPaths, ownedPythonBorrowChangedPaths
@@ -24,13 +25,15 @@ test("Python borrow evidence authenticates complete source changes without rewri
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedPythonBorrowAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedRubyBorrowHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	assert.equal(authenticateFinHistoryRecordSources(
+		ownedPythonBorrowPath, record.sources), true);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPythonBorrowChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedRubyBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = (await bytesAtFinHistoryRecordSource(
+			ownedPythonBorrowPath, update.path)).toString();
 		const prior = beforeOwnedPythonBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedPythonBorrow(update.path, prior, update.previousSha256), prior);
@@ -43,9 +46,18 @@ test("Python borrow evidence authenticates complete source changes without rewri
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedPythonBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeOwnedRubyBorrow(path, await readFile(path, "utf8"), record.sources[path]);
+	const path = "docs/type-surface.v1.json";
+	const current = (await bytesAtFinHistoryRecordSource(
+		ownedPythonBorrowPath, path)).toString();
 	const prior = JSON.parse(beforeOwnedPythonBorrow(path, current, previous.sources[path]));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRubyBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		file.sha256 = record.sources[file.path] ?? sha256(
+			await bytesAtFinHistoryRecordSource(
+				ownedPythonBorrowPath, file.path
+			)
+		);
+	}
 	assert.deepEqual(JSON.parse(current), prior);
 	const module = "src/backends/python/owned-borrows.mjs";
 	const files = JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files;

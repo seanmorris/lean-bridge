@@ -13,6 +13,7 @@ import {
 	checkedRecordValueIndexPhpWasmPromotionBaseline
 	, checkedRecordValueIndexPhpWasmPromotionConversion
 	, checkedRecordValueIndexPhpWasmPromotionLimit
+	, checkedRecordValueIndexPhpWasmPromotionParent
 	, checkedRecordValueIndexPhpWasmPromotionReferences
 	, promoteCheckedRecordValueIndexPhpWasm
 } from "./checked-record-value-index-php-wasm-promotion.mjs";
@@ -20,9 +21,11 @@ import {
 	checkedRecordValueIndexPhpWasmPromotionHistoryPath
 } from "./checked-record-value-index-php-wasm-promotion-source-history.mjs";
 
-const contracts = async () => ({
-	irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json"))
-	, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json"))
+const contractsAt = revision => ({
+	irSchema: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:schema/binding-ir.schema.json`], { encoding: "utf8" }))
+	, consumers: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:docs/consumer-support.v1.json`], { encoding: "utf8" }))
 });
 const target = cell => cell.profile === "php-wasm"
 	&& cell.shape === "checked-record"
@@ -60,11 +63,12 @@ test("PHP-Wasm promotion changes only four exact cells", {
 	const proposed = await promoteCheckedRecordValueIndexPhpWasm(
 		original, references
 	);
-	validateTypeSurface(proposed, await contracts());
+	const contracts = contractsAt(checkedRecordValueIndexPhpWasmPromotionParent);
+	validateTypeSurface(proposed, contracts);
 	assert.deepEqual(original, frozen);
-	const before = new Map(typeSurfaceCells(original, await contracts())
+	const before = new Map(typeSurfaceCells(original, contracts)
 		.map(cell => [cell.id, cell]));
-	const difference = typeSurfaceCells(proposed, await contracts()).filter(cell =>
+	const difference = typeSurfaceCells(proposed, contracts).filter(cell =>
 		JSON.stringify(cell) !== JSON.stringify(before.get(cell.id)));
 	assert.equal(difference.length, 4);
 	for(const cell of difference)

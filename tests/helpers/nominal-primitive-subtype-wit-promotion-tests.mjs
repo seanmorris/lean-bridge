@@ -15,6 +15,7 @@ import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { nominalPrimitiveSubtypeWitProducer } from "./nominal-primitive-subtype-wit-provenance.mjs";
 import {
 	nominalPrimitiveSubtypeWitConversion
@@ -119,7 +120,10 @@ test("primitive-base WIT promotion supplements six cells only", async () => {
 		nominalPrimitiveSubtypeWitPromotionHistoryPath
 		, beforeNominalPrimitiveSubtypeJvmPromotionPins(
 			await promoteNominalPrimitiveSubtypeWit(original, references)));
-	const { document: published, ...contracts } = await readTypeSurface();
+	const { document: published } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalPrimitiveSubtypeWitPromotionPredecessor
+	);
 	validateTypeSurface(proposed, contracts);
 	const inventoryPath = "docs/type-surface.v1.json";
 	const document = JSON.parse(sourceAtHistoryMilestone(

@@ -15,6 +15,7 @@ import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import {
 	nominalPrimitiveSubtypeRustConversion
 	, nominalPrimitiveSubtypeRustField
@@ -111,7 +112,10 @@ test("primitive-base Rust promotion supplements six existing Rust cells and pres
 		nominalPrimitiveSubtypeRustPromotionHistoryPath
 		, await promoteNominalPrimitiveSubtypeRust(original, references)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalPrimitiveSubtypeRustPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypeRustPromotionHistoryPath
 		, "docs/type-surface.v1.json"

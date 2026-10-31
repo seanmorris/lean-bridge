@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./helpers/source-at-fin-history-milestone.mjs";
 import {
 	beforeMutualCheckedRecordDotnetPins
 } from "./helpers/mutual-checked-record-dotnet-source-history.mjs";
@@ -20,6 +21,11 @@ import {
 	, mutualCheckedRecordJvmHistoryPath, mutualCheckedRecordJvmPredecessor
 	, reverseMutualCheckedRecordJvmUpdate
 } from "./helpers/mutual-checked-record-jvm-source-history.mjs";
+
+const sourceAt = (path, expected) => sourceAtFinHistoryRecordSource(
+	mutualCheckedRecordJvmHistoryPath, path, expected
+	, beforeMutualCheckedRecordJvmSource
+);
 
 test("the recursive JVM history reconstructs every exact predecessor source", async () => {
 	const record = JSON.parse(await readFile(
@@ -33,8 +39,8 @@ test("the recursive JVM history reconstructs every exact predecessor source", as
 		, mutualCheckedRecordJvmChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAt(
+			update.path, update.currentSha256
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
@@ -66,9 +72,8 @@ test("the recursive JVM history reconstructs every exact predecessor source", as
 
 test("the recursive JVM history refreshes only predecessor source pins", async () => {
 	const path = "docs/type-surface.v1.json";
-	const currentText = beforeFinRefinementSource(
-		path, await readFile(path, "utf8")
-		, JSON.parse(await readFile(
+	const currentText = await sourceAt(
+		path, JSON.parse(await readFile(
 			mutualCheckedRecordJvmHistoryPath, "utf8"
 		)).updates.find(item => item.path === path).currentSha256
 	);

@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -20,8 +20,8 @@ import {
 	, promoteCallbackRefinementsPhpWasm
 	, renderCallbackRefinementsPhpWasmPromotion
 } from "./callback-refinements-php-wasm-promotion.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const load = path => readFile(path, "utf8").then(JSON.parse);
 const baseline = () => JSON.parse(execFileSync("git", ["show"
 	, `${callbackRefinementsPhpWasmPromotionParent}:docs/type-surface.v1.json`]
 , { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 }));
@@ -61,11 +61,10 @@ test("PHP-Wasm callback refinement promotion derives the retained archive closur
 });
 
 test("PHP-Wasm callback refinement promotion splits resources and closes eight cells", async () => {
-	const [surface, irSchema, consumers] = await Promise.all([
-		baseline(), load("schema/binding-ir.schema.json")
-		, load("docs/consumer-support.v1.json")
-	]);
-	const contracts = { irSchema, consumers };
+	const surface = baseline();
+	const contracts = typeSurfaceContractsAtProducer(
+		callbackRefinementsPhpWasmPromotionParent
+	);
 	const reference = syntheticReference();
 	const promoted = promoteCallbackRefinementsPhpWasm(surface, reference);
 	assert.equal(promoted.evidence.length, surface.evidence.length + 1);

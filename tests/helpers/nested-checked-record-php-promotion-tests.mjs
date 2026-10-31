@@ -18,6 +18,7 @@ import {
 	nestedCheckedRecordPhpPromotionHistoryPath
 	, nestedCheckedRecordPhpPromotionPredecessor
 } from "./nested-checked-record-php-promotion-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
@@ -123,7 +124,8 @@ test("nested checked-record native PHP promotion supplements six cells only", as
 		nestedCheckedRecordPhpPromotionHistoryPath
 		, await promoteNestedCheckedRecordPhp(original, references)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(nestedCheckedRecordPhpPromotionPredecessor);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nestedCheckedRecordPhpPromotionHistoryPath
 		, "docs/type-surface.v1.json"

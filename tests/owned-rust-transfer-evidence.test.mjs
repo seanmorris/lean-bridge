@@ -12,8 +12,24 @@ import { assertOwnedRustTransferExecution, assertOwnedRustTransferCi } from "./h
 import { beforeOwnedRustTransfer, ownedRustTransferAddedPaths, ownedRustTransferBaseline
 	, ownedRustTransferChangedPaths, ownedRustTransferHistoricalBytes, ownedRustTransferPath
 	, ownedRustTransferPrevious, reverseOwnedRustTransferUpdate } from "./helpers/owned-rust-transfer-history.mjs";
+import {
+	bytesAtFinHistoryRecordSource, sourceAtFinHistoryRecordSource
+} from "./helpers/source-at-fin-history-milestone.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedRustTransferPath, "utf8"));
+const sourceCache = new Map();
+const sourceAt = (path, expected) => {
+	const key = `${path}\0${expected}`;
+	if(!sourceCache.has(key)) sourceCache.set(key
+		, sourceAtFinHistoryRecordSource(ownedRustTransferPath, path, expected));
+	return sourceCache.get(key);
+};
+const referenceCache = new Map();
+const referenceAt = path => {
+	if(!referenceCache.has(path)) referenceCache.set(path
+		, bytesAtFinHistoryRecordSource(ownedRustTransferPath, path));
+	return referenceCache.get(path);
+};
 
 test("Rust transfer acceptance binds current sources without promoting unrelated type cells", async () => {
 	const record = await read();
@@ -23,20 +39,38 @@ test("Rust transfer acceptance binds current sources without promoting unrelated
 	const previousBytes = await readFile(record.previous.path), previous = JSON.parse(previousBytes);
 	assert.equal(sha256(previousBytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedRustTransferAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedConsumerCiHistoricalBytes(path, await readFile(path), digest)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(
+		sha256(ownedConsumerCiHistoricalBytes(
+			path, Buffer.from(await sourceAt(path, digest)), digest
+		)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedRustTransferChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = beforeOwnedConsumerCi(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedRustTransfer(update.path, current, update.previousSha256);
+		const current = beforeOwnedConsumerCi(
+			update.path, await sourceAt(update.path, update.currentSha256)
+			, update.currentSha256
+		);
+		const prior = beforeOwnedRustTransfer(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedRustTransfer(update.path, prior), prior);
+		assert.equal(beforeOwnedRustTransfer(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedRustTransfer(update.path, current, update.currentSha256), current);
 	}
-	const current = beforeOwnedConsumerCi("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
-	const previousIndex = JSON.parse(beforeOwnedRustTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedConsumerCiHistoricalBytes(file.path, await readFile(file.path)));
+	const current = beforeOwnedConsumerCi("docs/type-surface.v1.json"
+		, await sourceAt("docs/type-surface.v1.json"
+			, record.sources["docs/type-surface.v1.json"])
+		, record.sources["docs/type-surface.v1.json"]);
+	const previousIndex = JSON.parse(beforeOwnedRustTransfer(
+		"docs/type-surface.v1.json", current
+		, previous.sources["docs/type-surface.v1.json"]
+	));
+	for(const evidence of previousIndex.evidence) for(const file of evidence.files)
+	{
+		file.sha256 = sha256(ownedConsumerCiHistoricalBytes(
+			file.path, await referenceAt(file.path)
+		));
+	}
 	assert.deepEqual(JSON.parse(current), previousIndex);
 });
 

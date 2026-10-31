@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlEvidenceRepairSource } from "./perl-evidence-repair-source-history.mjs";
 import { beforeCallbackFinSource, callbackFinChangedPaths
 	, callbackFinHistoryPath, reverseCallbackFinUpdate } from "./callback-fin-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 test("callback Fin history authenticates predecessors and rejects unrelated edits", async () => {
 	const record = JSON.parse(await readFile(callbackFinHistoryPath, "utf8"));
@@ -18,8 +19,10 @@ test("callback Fin history authenticates predecessors and rejects unrelated edit
 	assert.deepEqual(record.updates.map(item => item.path), callbackFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(update.path
-			, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtFinHistoryRecordSource(
+			callbackFinHistoryPath, update.path, update.currentSha256
+			, beforeCallbackFinSource
+		);
 		const source = beforePerlEvidenceRepairSource(
 			update.path, current, update.currentSha256);
 		assert.equal(sha256(reverseCallbackFinUpdate(source, update)), update.previousSha256);

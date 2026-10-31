@@ -8,15 +8,16 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeDotnetArchive, nominalSubtypeDotnetReferences, promoteNominalSubtypeDotnet, nominalSubtypeDotnetConversion, nominalSubtypeDotnetLimit } from "./nominal-subtype-dotnet-promotion.mjs";
-import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
+import { nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeDotnetPromotionPredecessor } from "./nominal-subtype-dotnet-promotion-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins,
 	withHistorySourcePins
 } from "./source-history-test-source.mjs";
 
-const predecessor = () => JSON.parse(execFileSync("git", ["show", "ad838834ca234ac7715462df368c28ca0d1cede1:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeDotnetPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
 test("nominal C# promotion authenticates all four source/API selections and the pinned .NET SDK and shared framework", async () => {
 	const references = await nominalSubtypeDotnetReferences();
@@ -96,7 +97,10 @@ test("nominal C# promotion adds two field cells and supplements four existing ce
 		nominalSubtypeDotnetPromotionHistoryPath
 		, await promoteNominalSubtypeDotnet(original, references)
 	);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const current = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypeDotnetPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalSubtypeDotnetPromotionHistoryPath, "docs/type-surface.v1.json"
 	));

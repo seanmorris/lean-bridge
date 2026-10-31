@@ -8,18 +8,14 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
-import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
-import { generateOwnedAggregateCarriers } from "../../src/build/owned-aggregate-carriers.mjs";
-import { generateOwnedDotnetPackage } from "../../src/backends/dotnet/owned-package.mjs";
 import { verifiedDotnetAssets } from "../../src/backends/dotnet/verified-assets.mjs";
-import { generateCopiedDotnetPackage } from "../../src/backends/dotnet/copied-values.mjs";
-import { dotnetStructuredRegressionFixtures } from "./dotnet-structured-callable-regression.mjs";
 import { ownedDotnetColdProject } from "./owned-dotnet-cold.mjs";
 import { assertOwnedDotnetReports } from "./owned-dotnet-evidence.mjs";
 import { ownedDotnetHistoryPath, ownedDotnetExecutionPath } from "./owned-dotnet-source-history.mjs";
-import { ownedDotnetProcessBaseline, ownedDotnetProcessChangedPaths, ownedDotnetProcessAddedPaths, reverseOwnedDotnetProcess } from "./owned-dotnet-process-history.mjs";
+import { ownedDotnetProcessBaseline, ownedDotnetProcessChangedPaths, ownedDotnetProcessAddedPaths, ownedDotnetProcessPath, reverseOwnedDotnetProcess } from "./owned-dotnet-process-history.mjs";
 import { nativeForkRepairHistoricalBytes } from "./native-fork-repair-history.mjs";
-import { beforeManagedHostNullReadme } from "./managed-host-null-readme-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 export const ownedDotnetProcessCommands = {
 	admission: "node --test --test-name-pattern='unsupported native targets' tests/owned-c-packaging.test.mjs"
@@ -40,16 +36,28 @@ export const ownedDotnetProcessScope = {
 export const ownedDotnetProcessProducer = "6e73096a2e309bca71106924a5276e0a2ddb0c8c";
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
+let producerModules;
+const generatedSourceModules = () => producerModules ??= Promise.all([
+	"src/backends/dotnet/copied-values.mjs"
+	, "src/backends/dotnet/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/build/owned-aggregate-carriers.mjs"
+	, "tests/helpers/dotnet-structured-callable-regression.mjs"
+].map(path => moduleAtProducerWithSourceReads(ownedDotnetProcessProducer, path)))
+	.then(modules => Object.assign({}, ...modules));
 
 /**
  * Regenerate every old C# file affected by the process-origin change.
  */
 export const ownedDotnetProcessGeneratedSources = async () => {
+	const { createCompiledNativeModel, generateOwnedAggregateCarriers
+		, generateOwnedDotnetPackage, generateCopiedDotnetPackage
+		, dotnetStructuredRegressionFixtures } = await generatedSourceModules();
 	const result = new Map();
 	const append = (model, evidence, previous) => {
 		for(const [path, current] of Object.entries(generateOwnedDotnetPackage(model.bindingIr, evidence).files))
 		{
-			const source = beforeManagedHostNullReadme(path, current);
+			const source = current;
 			const currentSha256 = sha256(source), previousSha256 = previous[path];
 			if(currentSha256 === previousSha256) continue;
 			const key = `${path}:${currentSha256}:${previousSha256}`;
@@ -74,7 +82,7 @@ export const ownedDotnetProcessGeneratedSources = async () => {
 	{
 		for(const [path, current] of Object.entries(generateCopiedDotnetPackage(dotnetStructuredRegressionFixtures[fixture.name]())))
 		{
-			const source = beforeManagedHostNullReadme(path, current);
+			const source = current;
 			const currentSha256 = sha256(source), previousSha256 = fixture.files[path].sha256;
 			if(currentSha256 !== previousSha256)
 				result.set(`${path}:${currentSha256}:${previousSha256}`, { path, source, currentSha256, previousSha256 });
@@ -150,7 +158,12 @@ export const assertOwnedDotnetProcess = async record => {
 	let inventory, oldInventory;
 	for(const path of paths)
 	{
-		const bytes = nativeForkRepairHistoricalBytes(path, await readFile(path), record.sources[path]);
+		const source = await sourceAtFinHistoryRecordSource(
+			ownedDotnetProcessPath, path, record.sources[path]
+		);
+		const bytes = nativeForkRepairHistoricalBytes(
+			path, Buffer.from(source), record.sources[path]
+		);
 		assert.equal(sha256(bytes), record.sources[path], path);
 		const update = updates.get(path);
 		if(update)

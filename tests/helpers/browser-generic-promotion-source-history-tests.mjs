@@ -16,6 +16,7 @@ import { beforeReviewedInstantiationArchiveSource } from "./reviewed-instantiati
 import { beforeBrowserGenericPromotionSource, browserGenericPromotionChangedPaths, browserGenericPromotionHistoryPath, browserGenericPromotionPredecessor, reverseBrowserGenericPromotionUpdate } from "./browser-generic-promotion-source-history.mjs";
 import { browserGenericCommandQualification, browserGenericEvidence, browserGenericEvidenceId, browserGenericObservation, browserGenericObservationId, browserGenericReceiptPath } from "./browser-generic-promotion.mjs";
 import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 test("browser generic promotion authenticates every source predecessor and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(browserGenericPromotionHistoryPath, "utf8"));
@@ -44,7 +45,10 @@ test("browser generic promotion changes exactly six ordinary signature cells and
 			browserGenericPromotionHistoryPath, path, beforeReviewedInstantiationArchiveSource
 	);
 	const previous = JSON.parse(beforeBrowserGenericPromotionSource(path, source));
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		browserGenericPromotionPredecessor
+	);
 	const document = JSON.parse(source);
 	assert.ok(live.observations.length >= document.observations.length);
 	assert.deepEqual(document.observations.slice(0, previous.observations.length), previous.observations);

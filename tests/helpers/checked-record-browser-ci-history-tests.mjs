@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCheckedRecordBrowserCiSource, checkedRecordBrowserCiChangedPaths, checkedRecordBrowserCiHistoryPath, checkedRecordBrowserCiPredecessor, reverseCheckedRecordBrowserCiUpdate } from "./checked-record-browser-ci-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 test("Checked-record browser CI repair authenticates exact test changes without changing support or observations", async () => {
 	const record = JSON.parse(await readFile(checkedRecordBrowserCiHistoryPath));
@@ -20,8 +21,9 @@ test("Checked-record browser CI repair authenticates exact test changes without 
 	const original = path => execFileSync("git", ["show", `${checkedRecordBrowserCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			checkedRecordBrowserCiHistoryPath, update.path, update.currentSha256
+			, beforeCheckedRecordBrowserCiSource
 		);
 		const previous = reverseCheckedRecordBrowserCiUpdate(current, update);
 		assert.equal(previous, original(update.path));

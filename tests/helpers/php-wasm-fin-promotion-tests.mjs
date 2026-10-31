@@ -7,10 +7,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
-import { beforePhpWasmFinPromotionSource } from "./php-wasm-fin-promotion-source-history.mjs";
+import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { beforePhpWasmFinPromotionSource, phpWasmFinPromotionHistoryPath } from "./php-wasm-fin-promotion-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { phpWasmFinPromotionConversion, phpWasmFinPromotionEnvironment, phpWasmFinPromotionLimit, phpWasmFinPromotionNestedOnly, phpWasmFinPromotionNotes, phpWasmFinPromotionReceipts, phpWasmFinPromotionReferences, phpWasmFinPromotionScope, phpWasmFinPromotionValidators } from "./php-wasm-fin-promotion-references.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 // Check this milestone at its authenticated identity; later host-reply support is separate.
 const promotedSurfaceSha256 = "c013a93c4736b746b89bb5b003fdbb61087479a93d40e0ce5656ebd707c7c5dc";
@@ -20,9 +21,11 @@ const parsePromotedSurface = source => {
 	return JSON.parse(previous);
 };
 const readPromotedSurface = async () => {
-	const result = await readTypeSurface();
-	result.document = parsePromotedSurface(JSON.stringify(result.document, null, 2) + "\n");
-	return result;
+	const history = JSON.parse(await readFile(phpWasmFinPromotionHistoryPath, "utf8"));
+	return {
+		document: parsePromotedSurface(await readFile("docs/type-surface.v1.json", "utf8"))
+		, ...typeSurfaceContractsAtProducer(history.predecessorCommit)
+	};
 };
 
 test("PHP promotion normalization refuses unauthenticated round-trip inventory bytes", async () => {

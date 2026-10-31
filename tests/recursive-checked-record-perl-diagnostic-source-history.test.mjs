@@ -12,6 +12,11 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import {
+	sourceAtFinHistoryRecord
+	, sourceAtFinHistoryRecordSource
+	, sourceBeforeFinHistoryRecord
+} from "./helpers/source-at-fin-history-milestone.mjs";
+import {
 	beforeMutualCheckedRecordJvmPins
 } from "./helpers/mutual-checked-record-jvm-source-history.mjs";
 import {
@@ -48,18 +53,23 @@ test("the recursive Perl diagnostic history reconstructs every exact predecessor
 		, recursiveCheckedRecordPerlDiagnosticEvidenceSourcePaths);
 	for(const source of record.pinSources)
 	{
-		const current = beforeFinRefinementSource(
-			source.path, await readFile(source.path, "utf8")
-			, source.currentSha256
-		);
+		const current = record.updates.some(update => update.path === source.path)
+			? await sourceAtFinHistoryRecord(
+				recursiveCheckedRecordPerlDiagnosticHistoryPath, source.path
+				, beforeFinRefinementSource
+			)
+			: await sourceAtFinHistoryRecordSource(
+				recursiveCheckedRecordPerlDiagnosticHistoryPath, source.path
+				, source.currentSha256, beforeFinRefinementSource
+			);
 		assert.equal(sha256(current), source.currentSha256, source.path);
 	}
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousCommit, previousCommit(update.path));
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8")
-			, update.currentSha256
+		const current = await sourceAtFinHistoryRecord(
+			recursiveCheckedRecordPerlDiagnosticHistoryPath, update.path
+			, beforeFinRefinementSource
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
@@ -72,8 +82,10 @@ test("the recursive Perl diagnostic history reconstructs every exact predecessor
 			update.path, current, update.currentSha256), current);
 		assert.equal(beforeRecursiveCheckedRecordPerlDiagnosticSource(
 			update.path, current, update.previousSha256), previous);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous);
+		assert.equal(await sourceBeforeFinHistoryRecord(
+			recursiveCheckedRecordPerlDiagnosticHistoryPath, update.path
+			, beforeFinRefinementSource
+		), previous);
 		assert.equal(beforeRecursiveCheckedRecordPerlDiagnosticSource(
 			update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [
@@ -100,8 +112,9 @@ test("the recursive Perl diagnostic history refreshes only predecessor source pi
 		recursiveCheckedRecordPerlDiagnosticHistoryPath, "utf8"
 	));
 	const update = record.updates.find(item => item.path === path);
-	const currentText = beforeFinRefinementSource(
-		path, await readFile(path, "utf8"), update.currentSha256
+	const currentText = await sourceAtFinHistoryRecord(
+		recursiveCheckedRecordPerlDiagnosticHistoryPath, path
+		, beforeFinRefinementSource
 	);
 	const current = JSON.parse(currentText);
 	const previous = JSON.parse(

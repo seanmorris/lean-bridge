@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeRefinementHistoryCacheSource, refinementHistoryCacheChangedPaths
 	, refinementHistoryCacheHistoryPath, reverseRefinementHistoryCacheUpdate } from "./refinement-history-cache-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 import { exactSourceHistoryCheckpoints } from "./source-history-memo.mjs";
 
 test("exact source-history checkpoints bound replay and reject ambiguous evidence", () => {
@@ -55,8 +56,10 @@ test("Fin cache integration authenticates every historical verifier edit", async
 	assert.deepEqual(record.updates.map(update => update.path), refinementHistoryCacheChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeFinRefinementSource(update.path
-			, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = await sourceAtFinHistoryRecordSource(
+			refinementHistoryCacheHistoryPath, update.path
+			, update.currentSha256, beforeRefinementHistoryCacheSource
+		);
 		assert.equal(sha256(reverseRefinementHistoryCacheUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeRefinementHistoryCacheSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeRefinementHistoryCacheSource(update.path, source, update.currentSha256), source);

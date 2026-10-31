@@ -12,6 +12,7 @@ import { compileDocumentationPage } from "../../scripts/generate-site-content.mj
 import { docPages } from "../../site/registry.mjs";
 import { checkedRecordNativeConversion, checkedRecordNativeLimit } from "./checked-record-native-promotion.mjs";
 import { nestedCheckedRecordJvmPromotionHistoryPath, nestedCheckedRecordJvmPromotionPredecessor } from "./nested-checked-record-jvm-promotion-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
@@ -130,7 +131,8 @@ test("nested checked-record JVM promotion supplements twelve cells only", async 
 		nestedCheckedRecordJvmPromotionHistoryPath
 		, await promoteNestedCheckedRecordJvm(original, references)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(nestedCheckedRecordJvmPromotionPredecessor);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nestedCheckedRecordJvmPromotionHistoryPath
 		, "docs/type-surface.v1.json"

@@ -11,7 +11,6 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeCallbackSubtypeNpmAcceptanceSource } from "./callback-subtype-npm-acceptance-source-history.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
 	beforeCallbackSubtypeNpmBrowserPointers
 	, beforeCallbackSubtypeNpmBrowserSource
@@ -22,6 +21,12 @@ import {
 	, reverseCallbackSubtypeNpmBrowserUpdate
 } from "./callback-subtype-npm-browser-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
+
+const sourceAt = (path, expected) => sourceAtFinHistoryRecordSource(
+	callbackSubtypeNpmBrowserHistoryPath, path, expected
+	, beforeCallbackSubtypeNpmBrowserSource
+);
 
 const original = path => execFileSync("git", ["show"
 	, `${callbackSubtypeNpmBrowserPredecessor}:${path}`]
@@ -42,8 +47,8 @@ test("callback Subtype npm/browser history restores every source and pointer", a
 	for(const update of record.updates)
 	{
 		const latest = await readFile(update.path, "utf8");
-		const current = beforeFinRefinementSource(
-			update.path, latest, update.currentSha256
+		const current = await sourceAt(
+			update.path, update.currentSha256
 		);
 		const milestone = beforeCallbackSubtypeNpmAcceptanceSource(
 			update.path, current, update.currentSha256
@@ -61,9 +66,8 @@ test("callback Subtype npm/browser history restores every source and pointer", a
 	}
 	for(const addition of record.additions)
 	{
-		const current = beforeFinRefinementSource(
-			addition.path, await readFile(addition.path, "utf8")
-			, addition.currentSha256
+		const current = await sourceAt(
+			addition.path, addition.currentSha256
 		);
 		const milestone = beforeCallbackSubtypeNpmAcceptanceSource(
 			addition.path, current, addition.currentSha256
@@ -72,9 +76,8 @@ test("callback Subtype npm/browser history restores every source and pointer", a
 	}
 	for(const pin of record.pinContainers)
 	{
-		const current = beforeFinRefinementSource(
-			pin.path, await readFile(pin.path, "utf8")
-			, pin.currentSha256
+		const current = await sourceAt(
+			pin.path, pin.currentSha256
 		);
 		assert.equal(sha256(current), pin.currentSha256, pin.path);
 		assert.equal(sha256(beforeCallbackSubtypeNpmBrowserPointers(

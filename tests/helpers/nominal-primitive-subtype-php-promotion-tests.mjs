@@ -14,6 +14,7 @@ import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
 	, withHistorySourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { nominalPrimitiveSubtypePhpProducer } from "./nominal-primitive-subtype-php-provenance.mjs";
 import {
 	nominalPrimitiveSubtypePhpConversion
@@ -132,7 +133,10 @@ test("primitive-base native PHP promotion supplements six cells only", async () 
 		nominalPrimitiveSubtypePhpPromotionHistoryPath
 		, await promoteNominalPrimitiveSubtypePhp(original, references)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const { document: live } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalPrimitiveSubtypePhpPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypePhpPromotionHistoryPath
 		, "docs/type-surface.v1.json"

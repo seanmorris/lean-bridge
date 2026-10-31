@@ -31,6 +31,7 @@ import {
 } from "./helpers/source-at-fin-history-milestone.mjs";
 import { gitSourceBytes } from "./helpers/source-history-stream.mjs";
 import { readPromotionInventory } from "./helpers/type-surface-promotion-io.mjs";
+import { typeSurfaceContractsAtProducer } from "./helpers/producer-source.mjs";
 import { phpWasmEntryProbeEvidenceId } from "./helpers/php-wasm-refinement-entry-publication.mjs";
 import { renderPhpWasmEntryProbeBoundary } from "./helpers/php-wasm-refinement-entry-publication-docs.mjs";
 
@@ -43,7 +44,8 @@ const [irSchema, consumers] = await Promise.all([
 	readJson("schema/binding-ir.schema.json")
 	, readJson("docs/consumer-support.v1.json")
 ]);
-const contracts = { irSchema, consumers };
+const currentContracts = { irSchema, consumers };
+const contracts = typeSurfaceContractsAtProducer(promotionPredecessor);
 const { document } = await readPromotionInventory(
 	gitSourceBytes(promotionPredecessor, "docs/type-surface.v1.json"), contracts
 );
@@ -146,10 +148,10 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 		root: ".", inventory: { document: promoted, ...contracts }
 	});
 	const { document: currentDocument } = await readPromotionInventory(
-		createReadStream("docs/type-surface.v1.json"), contracts
+		createReadStream("docs/type-surface.v1.json"), currentContracts
 	);
 	const current = await renderTypeDocuments({
-		root: ".", inventory: { document: currentDocument, ...contracts }
+		root: ".", inventory: { document: currentDocument, ...currentContracts }
 	});
 	const evidence = /callback-subtype-promotion-20261022\.md/u;
 	for(const [path, source] of Object.entries(after.documents))

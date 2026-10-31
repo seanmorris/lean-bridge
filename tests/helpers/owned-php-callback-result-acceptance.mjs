@@ -8,17 +8,17 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { basename, dirname, join } from "node:path";
 import ts from "typescript";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { packOwnedCallbackReports, unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
-import { beforePhpCallbackInstalledStaging, phpCallbackInstalledBaseline
+import { phpCallbackInstalledBaseline
 	, phpCallbackInstalledChangedPaths, phpCallbackInstalledCompletedPredecessor
 	, phpCallbackInstalledHistoryPath, phpCallbackInstalledHistorySha256
 	, phpCallbackInstalledIntroducedPaths, readPhpCallbackInstalledHistory } from "./php-callback-installed-staging-history.mjs";
 import { assertOwnedPhpCallbackStaged, ownedPhpCallbackStagedPath
 	, ownedPhpCallbackStagedSha256, readOwnedPhpCallbackStaged } from "./owned-php-callback-result-runtime-evidence.mjs";
 import { assertOwnedPhpInstalledLog, assertOwnedPhpInstalledReport
-	, ownedPhpInstalledCases, readOwnedPhpInstalledSource } from "./owned-php-callback-result-package-evidence.mjs";
+	, ownedPhpInstalledCases } from "./owned-php-callback-result-package-evidence.mjs";
+import { bytesAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 const keys = (value, names) => assert.deepEqual(Object.keys(value).sort()
 	, (Array.isArray(names) ? [...names] : names.split(" ")).sort());
@@ -66,6 +66,18 @@ export const ownedPhpCallbackScope = freeze({
 });
 export const ownedPhpCallbackVerificationCommand
 	= "LEAN_BRIDGE_OWNED_PHP_CALLBACK_RESULT_PACKAGE_EVIDENCE_TEST=1 node --test --test-concurrency=1 tests/owned-php-callback-result-package-evidence.test.mjs";
+const acceptanceSources = new Map();
+const sourceAtAcceptance = (sources, path) => {
+	const expected = sources[path], key = JSON.stringify([path, expected]);
+	if(!acceptanceSources.has(key)) acceptanceSources.set(key, (async () => {
+		const bytes = await bytesAtFinHistoryRecordSource(
+			ownedPhpCallbackEvidencePath, path
+		);
+		if(expected !== undefined) assert.equal(sha256(bytes), expected, path);
+		return bytes;
+	})());
+	return acceptanceSources.get(key);
+};
 
 const helper = name => `tests/helpers/owned-php-callback-result-${name}.mjs`;
 export const ownedPhpCallbackClosureRoots = freeze([
@@ -109,9 +121,10 @@ export const ownedPhpCallbackSourcePaths = async sources => {
 		visited.add(path);
 		if(!ownedPhpCallbackSuccessorPaths.has(path)) paths.add(path);
 		if(!path.endsWith(".mjs")) continue;
-		const tree = ts.createSourceFile(path, beforeFinRefinementSource(
-			path, await readFile(path, "utf8"), sources?.[path]
-		), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+		const source = await sourceAtAcceptance(sources, path);
+		const tree = ts.createSourceFile(
+			path, source.toString(), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS
+		);
 		const visit = node => {
 			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier
 				: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : null;
@@ -150,12 +163,17 @@ export const ownedPhpCallbackHandoffIdentity = item => {
  * Require the complete three-test verifier output and its observed exit.
  *
  * @param run - Original verifier TAP and independently observed exit.
+ * @param readSource - Read one verifier source from the authenticated producer.
  */
-export const assertOwnedPhpCallbackVerification = async run => {
+export const assertOwnedPhpCallbackVerification = async (
+	run, readSource = readFile
+) => {
 	keys(run, "command exitCode sha256 text");
 	assert.equal(run.command, ownedPhpCallbackVerificationCommand);
 	assert.equal(run.exitCode, 0); assert.equal(run.sha256, sha256(run.text));
-	const source = await readFile("tests/owned-php-callback-result-package-evidence.test.mjs", "utf8");
+	const source = (await readSource(
+		"tests/owned-php-callback-result-package-evidence.test.mjs"
+	)).toString();
 	const titles = [...source.matchAll(/^test\("([^"\n]+)"/gmu)].map(match => match[1]);
 	assert.equal(titles.length, 3);
 	const diagnostics = [
@@ -204,7 +222,7 @@ export const assertOwnedPhpCallbackAcceptance = async record => {
 	assert.deepEqual(Object.keys(record.sources), await ownedPhpCallbackSourcePaths(record.sources));
 	for(const [path, digest] of Object.entries(record.sources))
 	{
-		const source = beforePhpCallbackInstalledStaging(path, await readFile(path), digest);
+		const source = await sourceAtAcceptance(record.sources, path);
 		assert.equal(sha256(source), digest, path);
 	}
 	keys(record.archive, "format nodes reports");
@@ -213,11 +231,12 @@ export const assertOwnedPhpCallbackAcceptance = async record => {
 	const names = ownedPhpInstalledCases.map(value => value.name);
 	assert.deepEqual(Object.keys(reports), names); keys(record.logs, names); keys(record.handoffs, names);
 	const baseline = async name => reports[name];
+	const readSource = path => sourceAtAcceptance(record.sources, path);
 	let rawExecutionSlots = 0, publicRuns = 0, publicAssertions = 0, assetCases = 0;
 	for(const pin of ownedPhpInstalledCases)
 	{
 		const item = reports[pin.name];
-		await assertOwnedPhpInstalledReport(pin.name, item, readOwnedPhpInstalledSource, baseline);
+		await assertOwnedPhpInstalledReport(pin.name, item, readSource, baseline);
 		assertOwnedPhpInstalledLog(pin.name, record.logs[pin.name], item);
 		assert.deepEqual(record.handoffs[pin.name], ownedPhpCallbackHandoffIdentity(item));
 		rawExecutionSlots += item.producerExecutions.length + item.installationExecutions.length
@@ -231,5 +250,5 @@ export const assertOwnedPhpCallbackAcceptance = async record => {
 	assert.equal(new Set(Object.values(reports).map(item => item.directory)).size, 6);
 	assert.equal(new Set(Object.values(reports).flatMap(item => [item.savedHandoff, item.independentHandoff])).size, 12);
 	assert.deepEqual(record.archive, packOwnedCallbackReports(reports));
-	await assertOwnedPhpCallbackVerification(record.verification);
+	await assertOwnedPhpCallbackVerification(record.verification, readSource);
 };

@@ -26,6 +26,15 @@ const fixture = () => {
 			[profile, "ordinary-source", ["native-callback-fin-ordinary-installed", "native-callback-fin-host-replies-installed"]]
 			, [profile, "reviewed-ir", ["reviewed-callback-fin-c-cpp-installed"]]
 		])
+		, ...["perl", "ruby", "python", "rust"].flatMap(profile => [
+			[profile, "ordinary-source", ["hosted-callback-fin-native-languages-installed"]]
+			, [profile, "reviewed-ir", ["hosted-callback-fin-native-languages-installed"]]
+		])
+		, ...["php-native", "dotnet", "java", "kotlin", "wit-wasi"]
+			.flatMap(profile => [
+				[profile, "ordinary-source", ["hosted-callback-fin-managed-wit-installed"]]
+				, [profile, "reviewed-ir", ["hosted-callback-fin-managed-wit-installed"]]
+			])
 		, ["php-wasm", "ordinary-source", [evidence]]
 		, ["php-wasm", "reviewed-ir", [evidence]]
 	];
@@ -42,9 +51,9 @@ const fixture = () => {
 	);
 };
 
-test("Fin coverage accepts all 32 independently enumerated callback cells", () => {
+test("Fin coverage accepts all 68 independently enumerated callback cells", () => {
 	const cells = fixture();
-	assert.equal(cells.length, 32);
+	assert.equal(cells.length, 68);
 	assert.equal(cells.filter(cell => cell.profile.startsWith("browser-")
 		&& cell.path === "reviewed-ir").length, 6);
 	assert.equal(cells.filter(cell => cell.profile === "php-wasm").length, 4);

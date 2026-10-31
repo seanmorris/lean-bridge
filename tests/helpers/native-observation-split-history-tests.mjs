@@ -12,9 +12,11 @@ import test from "node:test";
 import { joinNativeObservations } from "./native-observation-split.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNativeObservationSplitSource, nativeObservationSplitChangedPaths, nativeObservationSplitHistoryPath, nativeObservationSplitPredecessor, reverseNativeObservationSplitUpdate } from "./native-observation-split-history.mjs";
+import { sourceAtFinHistoryRecordSource }
+	from "./source-at-fin-history-milestone.mjs";
 
-const sourceAt = async (path, expected) => beforeFinRefinementSource(
-	path, await readFile(path, "utf8"), expected
+const sourceAt = (path, expected) => sourceAtFinHistoryRecordSource(
+	nativeObservationSplitHistoryPath, path, expected, beforeFinRefinementSource
 );
 
 test("native observation split source history authenticates exact changes and refuses unknown edits", async () => {

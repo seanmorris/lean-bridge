@@ -13,8 +13,24 @@ import { assertOwnedPerlBorrowExecution, assertOwnedPerlBorrowCi } from "./helpe
 import { ownedPerlBorrowPath, ownedPerlBorrowBaseline, ownedPerlBorrowPrevious
 	, ownedPerlBorrowChangedPaths, ownedPerlBorrowAddedPaths
 	, beforeOwnedPerlBorrow, reverseOwnedPerlBorrowUpdate } from "./helpers/owned-perl-borrow-history.mjs";
+import {
+	bytesAtFinHistoryRecordSource, sourceAtFinHistoryRecordSource
+} from "./helpers/source-at-fin-history-milestone.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedPerlBorrowPath, "utf8"));
+const sourceCache = new Map();
+const sourceAt = (path, expected) => {
+	const key = `${path}\0${expected}`;
+	if(!sourceCache.has(key)) sourceCache.set(key
+		, sourceAtFinHistoryRecordSource(ownedPerlBorrowPath, path, expected));
+	return sourceCache.get(key);
+};
+const referenceCache = new Map();
+const referenceAt = path => {
+	if(!referenceCache.has(path)) referenceCache.set(path
+		, bytesAtFinHistoryRecordSource(ownedPerlBorrowPath, path));
+	return referenceCache.get(path);
+};
 
 test("Perl borrowed-result evidence preserves complete authenticated predecessor versions", async () => {
 	const record = await read();
@@ -24,16 +40,22 @@ test("Perl borrowed-result evidence preserves complete authenticated predecessor
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedPerlBorrowAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedPhpBorrowHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(
+		sha256(ownedPhpBorrowHistoricalBytes(
+			path, Buffer.from(await sourceAt(path, hash)), hash
+		)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPerlBorrowChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedPhpBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = beforeOwnedPhpBorrow(
+			update.path, await sourceAt(update.path, update.currentSha256)
+			, update.currentSha256
+		);
 		const prior = beforeOwnedPerlBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
-		assert.equal(beforeOwnedPerlBorrow(update.path, prior), prior);
+		assert.equal(beforeOwnedPerlBorrow(update.path, prior, update.previousSha256), prior);
 		assert.equal(beforeOwnedPerlBorrow(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrecorded change */\n";
 		assert.equal(beforeOwnedPerlBorrow(update.path, unknown), unknown);
@@ -43,9 +65,18 @@ test("Perl borrowed-result evidence preserves complete authenticated predecessor
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedPerlBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeOwnedPhpBorrow(path, await readFile(path, "utf8"), record.sources[path]);
-	const prior = JSON.parse(beforeOwnedPerlBorrow(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPhpBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	const path = "docs/type-surface.v1.json", current = beforeOwnedPhpBorrow(
+		path, await sourceAt(path, record.sources[path]), record.sources[path]
+	);
+	const prior = JSON.parse(beforeOwnedPerlBorrow(
+		path, current, previous.sources[path]
+	));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		file.sha256 = sha256(ownedPhpBorrowHistoricalBytes(
+			file.path, await referenceAt(file.path)
+		));
+	}
 	assert.deepEqual(JSON.parse(current), prior);
 	assert.equal(classifyRepositoryTest("tests/owned-perl-borrow-evidence.test.mjs"), "contract");
 	for(const name of ["owned-perl-borrows", "owned-perl-borrow-packaging", "owned-perl-borrow-documentation"])

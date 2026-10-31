@@ -21,6 +21,8 @@ import {
 	, mutualCheckedRecordDotnetDraftParent, mutualCheckedRecordDotnetHistoryPath
 	, mutualCheckedRecordDotnetPredecessor, reverseMutualCheckedRecordDotnetUpdate
 } from "./helpers/mutual-checked-record-dotnet-source-history.mjs";
+import { sourceAtFinHistoryRecordSource }
+	from "./helpers/source-at-fin-history-milestone.mjs";
 
 test("the recursive .NET history reconstructs every exact predecessor source", async () => {
 	const record = JSON.parse(await readFile(
@@ -34,8 +36,9 @@ test("the recursive .NET history reconstructs every exact predecessor source", a
 		, mutualCheckedRecordDotnetChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			mutualCheckedRecordDotnetHistoryPath, update.path
+			, update.currentSha256, beforeFinRefinementSource
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
@@ -71,8 +74,9 @@ test("the recursive .NET history refreshes only predecessor source pins", async 
 		mutualCheckedRecordDotnetHistoryPath, "utf8"
 	));
 	const update = record.updates.find(item => item.path === path);
-	const currentText = beforeFinRefinementSource(
-		path, await readFile(path, "utf8"), update.currentSha256
+	const currentText = await sourceAtFinHistoryRecordSource(
+		mutualCheckedRecordDotnetHistoryPath, path
+		, update.currentSha256, beforeFinRefinementSource
 	);
 	const current = JSON.parse(currentText);
 	const previous = JSON.parse(reverseMutualCheckedRecordDotnetUpdate(

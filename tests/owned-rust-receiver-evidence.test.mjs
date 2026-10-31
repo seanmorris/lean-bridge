@@ -9,7 +9,8 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedRustReceiverExecution } from "./helpers/owned-rust-receiver-evidence.mjs";
-import { ownedPythonReceiverHistoricalBytes } from "./helpers/owned-python-receiver-history.mjs";
+import { authenticateFinHistoryRecordSources, bytesAtFinHistoryRecordSource }
+	from "./helpers/source-at-fin-history-milestone.mjs";
 import { ownedRustReceiverPath, ownedRustReceiverBaseline, ownedRustReceiverPrevious
 	, ownedRustReceiverChangedPaths, ownedRustReceiverAddedPaths
 	, beforeOwnedRustReceiver, reverseOwnedRustReceiverUpdate } from "./helpers/owned-rust-receiver-history.mjs";
@@ -24,13 +25,15 @@ test("Rust receiver evidence binds complete sources without changing historical 
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedRustReceiverAddedPaths].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedPythonReceiverHistoricalBytes(path, await readFile(path), digest)), digest, path);
+	assert.equal(authenticateFinHistoryRecordSources(
+		ownedRustReceiverPath, record.sources), true);
 	assert.deepEqual(record.updates.map(item => item.path), ownedRustReceiverChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = ownedPythonReceiverHistoricalBytes(update.path, await readFile(update.path), update.currentSha256).toString();
+		const source = (await bytesAtFinHistoryRecordSource(
+			ownedRustReceiverPath, update.path)).toString();
 		const prior = beforeOwnedRustReceiver(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedRustReceiver(update.path, prior, update.previousSha256), prior);
@@ -43,9 +46,15 @@ test("Rust receiver evidence binds complete sources without changing historical 
 			, { ...update, path: "unrelated.mjs" }])
 			assert.throws(() => reverseOwnedRustReceiverUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = ownedPythonReceiverHistoricalBytes(path, await readFile(path), record.sources[path]).toString();
+	const path = "docs/type-surface.v1.json";
+	const current = (await bytesAtFinHistoryRecordSource(
+		ownedRustReceiverPath, path)).toString();
 	const prior = JSON.parse(beforeOwnedRustReceiver(path, current, previous.sources[path]));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPythonReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		assert.equal(typeof record.sources[file.path], "string", file.path);
+		file.sha256 = record.sources[file.path];
+	}
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["owned-rust-receivers", "owned-rust-receiver-packaging"
 		, "owned-rust-receiver-plain", "owned-rust-receiver-contract"

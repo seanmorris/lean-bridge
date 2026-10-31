@@ -12,6 +12,10 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
+	sourceAtFinHistoryRecord
+	, sourceBeforeFinHistoryRecord
+} from "./source-at-fin-history-milestone.mjs";
+import {
 	beforeNestedCheckedRecordNativeCorrectionPins
 	, beforeNestedCheckedRecordNativeCorrectionSource
 	, nestedCheckedRecordNativeCorrectionChangedPaths
@@ -42,8 +46,9 @@ test("nested native correction history reconstructs every exact source predecess
 			? nestedCheckedRecordNativeCorrectionSourcePredecessor
 			: nestedCheckedRecordNativeCorrectionDraftParent;
 		assert.equal(update.previousCommit, expectedCommit, update.path);
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecord(
+			nestedCheckedRecordNativeCorrectionHistoryPath, update.path
+			, beforeFinRefinementSource
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
@@ -55,8 +60,10 @@ test("nested native correction history reconstructs every exact source predecess
 			update.path, current, update.currentSha256), current);
 		assert.equal(beforeNestedCheckedRecordNativeCorrectionSource(
 			update.path, current, update.previousSha256), previous);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous);
+		assert.equal(await sourceBeforeFinHistoryRecord(
+			nestedCheckedRecordNativeCorrectionHistoryPath, update.path
+			, beforeFinRefinementSource
+		), previous);
 		assert.equal(beforeNestedCheckedRecordNativeCorrectionSource(
 			update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [
@@ -81,8 +88,9 @@ test("nested native corrections refresh only source pins", async () => {
 		nestedCheckedRecordNativeCorrectionHistoryPath, "utf8"
 	));
 	const inventoryUpdate = record.updates.find(update => update.path === path);
-	const currentText = beforeFinRefinementSource(
-		path, await readFile(path, "utf8"), inventoryUpdate.currentSha256
+	const currentText = await sourceAtFinHistoryRecord(
+		nestedCheckedRecordNativeCorrectionHistoryPath, path
+		, beforeFinRefinementSource
 	);
 	const current = JSON.parse(currentText);
 	const previous = JSON.parse(beforeNestedCheckedRecordNativeCorrectionSource(

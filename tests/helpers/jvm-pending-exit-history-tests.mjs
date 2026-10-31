@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeJvmPendingExitSource, jvmPendingExitChangedPaths, jvmPendingExitHistoryPath, jvmPendingExitPredecessor, reverseJvmPendingExitUpdate } from "./jvm-pending-exit-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 test("JVM pending exit authenticates each exact source change", async () => {
 	const record = JSON.parse(await readFile(jvmPendingExitHistoryPath));
@@ -20,14 +21,17 @@ test("JVM pending exit authenticates each exact source change", async () => {
 	const original = path => execFileSync("git", ["show", `${jvmPendingExitPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			jvmPendingExitHistoryPath, update.path, update.currentSha256
+			, beforeJvmPendingExitSource
 		);
 		const previous = reverseJvmPendingExitUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeJvmPendingExitSource(update.path, current), previous);
 		assert.equal(beforeJvmPendingExitSource(update.path, current, update.currentSha256), current);
-		assert.equal(beforeJvmPendingExitSource(update.path, previous), previous);
+		assert.equal(beforeJvmPendingExitSource(
+			update.path, previous, update.previousSha256
+		), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
 		assert.equal(beforeJvmPendingExitSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }

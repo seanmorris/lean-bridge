@@ -8,16 +8,17 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeNominalPrimitiveSubtypePythonPromotionSource, nominalPrimitiveSubtypePythonPromotionHistoryPath } from "./nominal-primitive-subtype-python-promotion-history.mjs";
 import { nominalSubtypePythonArchive, nominalSubtypePythonReferences, promoteNominalSubtypePython, nominalSubtypePythonConversion, nominalSubtypePythonLimit } from "./nominal-subtype-python-promotion.mjs";
-import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
+import { nominalSubtypePythonPromotionHistoryPath, nominalSubtypePythonPromotionPredecessor } from "./nominal-subtype-python-promotion-history.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins,
 	withHistorySourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const predecessor = () => JSON.parse(execFileSync("git", ["show", "ad3f7716d997ef8a4331ec8a3f2a6524a2ca3b30:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypePythonPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
 test("nominal Python promotion authenticates all four source/API selections and both interpreter floors", async () => {
 	const references = await nominalSubtypePythonReferences();
@@ -93,7 +94,10 @@ test("nominal Python promotion adds two field cells and supplements four existin
 		nominalSubtypePythonPromotionHistoryPath
 		, await promoteNominalSubtypePython(original, references)
 	);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const current = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypePythonPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalSubtypePythonPromotionHistoryPath, "docs/type-surface.v1.json"
 	));

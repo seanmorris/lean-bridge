@@ -8,14 +8,30 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
-import { beforeOwnedDotnetLifetime, ownedDotnetLifetimeHistoricalBytes } from "./helpers/owned-dotnet-lifetime-history.mjs";
 import { assertOwnedJvmBorrowExecution, assertOwnedJvmBorrowCi } from "./helpers/owned-jvm-borrow-evidence.mjs";
 import { ownedJvmBorrowPath, ownedJvmBorrowBaseline, ownedJvmBorrowPrevious
 	, ownedJvmBorrowAddedPaths, ownedJvmBorrowChangedPaths
 	, beforeOwnedJvmBorrow, reverseOwnedJvmBorrowUpdate } from "./helpers/owned-jvm-borrow-history.mjs";
+import {
+	authenticateFinHistoryRecordSources, bytesAtFinHistoryRecordSource
+	, sourceAtFinHistoryRecordSource
+} from "./helpers/source-at-fin-history-milestone.mjs";
 import "./helpers/core-residual-producer-replay-repair-source-history-tests.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedJvmBorrowPath, "utf8"));
+const sourceCache = new Map();
+const sourceAt = (path, expected) => {
+	const key = `${path}\0${expected}`;
+	if(!sourceCache.has(key)) sourceCache.set(key
+		, sourceAtFinHistoryRecordSource(ownedJvmBorrowPath, path, expected));
+	return sourceCache.get(key);
+};
+const referenceCache = new Map();
+const referenceAt = path => {
+	if(!referenceCache.has(path)) referenceCache.set(path
+		, bytesAtFinHistoryRecordSource(ownedJvmBorrowPath, path));
+	return referenceCache.get(path);
+};
 
 test("JVM borrow evidence authenticates complete source changes without rewriting predecessors", async () => {
 	const record = await read();
@@ -25,13 +41,14 @@ test("JVM borrow evidence authenticates complete source changes without rewritin
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedJvmBorrowAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedDotnetLifetimeHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	assert.equal(authenticateFinHistoryRecordSources(
+		ownedJvmBorrowPath, record.sources), true);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJvmBorrowChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedDotnetLifetime(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = await sourceAt(update.path, update.currentSha256);
 		const prior = beforeOwnedJvmBorrow(update.path, source, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedJvmBorrow(update.path, prior, update.previousSha256), prior);
@@ -44,10 +61,14 @@ test("JVM borrow evidence authenticates complete source changes without rewritin
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedJvmBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = beforeOwnedDotnetLifetime(path, await readFile(path, "utf8"), record.sources[path]);
+	const path = "docs/type-surface.v1.json";
+	const current = await sourceAt(path, record.sources[path]);
 	const prior = JSON.parse(beforeOwnedJvmBorrow(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(ownedDotnetLifetimeHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
+	{
+		file.sha256 = record.sources[file.path] ?? sha256(
+			await referenceAt(file.path));
+	}
 	assert.deepEqual(JSON.parse(current), prior);
 	const module = "src/backends/jvm/owned-borrows.mjs";
 	const files = JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files;

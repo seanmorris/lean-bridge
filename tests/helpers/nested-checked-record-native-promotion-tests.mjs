@@ -24,6 +24,7 @@ import {
 	nestedCheckedRecordNativePromotionHistoryPath
 	, nestedCheckedRecordNativePromotionPredecessor
 } from "./nested-checked-record-native-promotion-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import {
 	nestedCheckedRecordNativeArchiveSha256
@@ -133,7 +134,8 @@ test("nested native promotion changes twelve exact C/C++ cells", async () => {
 	const original = predecessor();
 	const references = await nestedCheckedRecordNativeReferences();
 	const promoted = await promoteNestedCheckedRecordNative(original, references);
-	const { document: current, ...contracts } = await readTypeSurface();
+	const { document: current } = await readTypeSurface();
+	const contracts = typeSurfaceContractsAtProducer(nestedCheckedRecordNativePromotionPredecessor);
 	validateTypeSurface(promoted, contracts);
 	assert.ok(current.evidence.length >= promoted.evidence.length);
 	assert.equal(promoted.evidence.length, 578);
@@ -184,12 +186,17 @@ test("nested native checked-record docs state the accepted and open boundary", a
 		, "docs/reference/types.md"];
 	for(const path of paths)
 	{
-		const source = await readFile(path, "utf8");
-		assert.ok(source.includes(
+		const live = await readFile(path, "utf8");
+		assert.ok(live.includes(
 			"nested-checked-record-native-20261016/index.json"), path);
 		const page = docPages.find(item => item.source === path);
 		if(page)
 		{
+			const source = sourceAtHistoryMilestone(
+				nestedCheckedRecordNativePromotionHistoryPath, path
+			);
+			assert.ok(source.includes(
+				"nested-checked-record-native-20261016/index.json"), path);
 			const compiled = await compileDocumentationPage(source, page
 				, { revision: nestedCheckedRecordNativePromotionPredecessor });
 			assert.ok(compiled.links.some(link => link.endsWith(

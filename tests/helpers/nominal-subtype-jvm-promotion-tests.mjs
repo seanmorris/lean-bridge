@@ -7,16 +7,17 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeJvmArchive, nominalSubtypeJvmReferences, promoteNominalSubtypeJvm, nominalSubtypeJvmConversion, nominalSubtypeJvmLimit } from "./nominal-subtype-jvm-promotion.mjs";
-import { nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
+import { nominalSubtypeJvmPromotionHistoryPath, nominalSubtypeJvmPromotionPredecessor } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { beforeNominalSubtypePhpPromotionSource, nominalSubtypePhpPromotionHistoryPath } from "./nominal-subtype-php-promotion-history.mjs";
 import {
 	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins,
 	withHistorySourcePins
 } from "./source-history-test-source.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
-const predecessor = () => JSON.parse(execFileSync("git", ["show", "58777508091f0e6b9b574cbfa2561c2c019b1570:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeJvmPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
 test("nominal JVM promotion authenticates all four selections and original Java/Kotlin execution records", async () => {
 	const references = await nominalSubtypeJvmReferences();
@@ -110,7 +111,10 @@ test("nominal JVM promotion adds four field cells and supplements eight existing
 		nominalSubtypeJvmPromotionHistoryPath
 		, await promoteNominalSubtypeJvm(original, references)
 	);
-	const { document: live, ...contracts } = await readTypeSurface();
+	const live = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypeJvmPromotionPredecessor
+	);
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalSubtypeJvmPromotionHistoryPath, "docs/type-surface.v1.json"
 	));

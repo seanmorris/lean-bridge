@@ -13,6 +13,9 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import {
+	sourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource
+} from "./helpers/source-at-fin-history-milestone.mjs";
+import {
 	beforeRecursiveCheckedRecordPerlPackageHistoricalSource
 	, beforeRecursiveCheckedRecordPerlPackageHistoryRepairPins
 	, beforeRecursiveCheckedRecordPerlPackageHistoryRepairSource
@@ -25,6 +28,11 @@ import {
 	, reverseRecursiveCheckedRecordPerlPackageHistoricalUpdate
 	, reverseRecursiveCheckedRecordPerlPackageHistoryRepairUpdate
 } from "./helpers/recursive-checked-record-perl-package-history-repair.mjs";
+
+const sourceAtRepair = (path, expected) => sourceAtFinHistoryRecordSource(
+	recursiveCheckedRecordPerlPackageHistoryRepairPath, path, expected
+	, beforeRecursiveCheckedRecordPerlPackageHistoryRepairSource
+);
 
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 512 * 1024 * 1024
@@ -43,8 +51,8 @@ test("recursive Perl package history repair authenticates its current integratio
 		, recursiveCheckedRecordPerlPackageHistoryRepairChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtRepair(
+			update.path, update.currentSha256
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = git(["show"
@@ -90,8 +98,8 @@ test("recursive Perl package history repair restores every omitted transition", 
 		assert.equal(beforeRecursiveCheckedRecordPerlPackageHistoricalSource(
 			update.path, current, update.previousSha256
 		), previous);
-		assert.equal(beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.previousSha256
+		assert.equal(await sourceAtFinHistoryMilestone(
+			update.path, update.previousSha256
 		), previous, update.path);
 		for(const mutate of [
 			item => { item.path = "unknown"; }
@@ -116,8 +124,8 @@ test("recursive Perl package history repair refreshes only current source pins",
 	));
 	const path = "docs/type-surface.v1.json";
 	const update = record.updates.find(item => item.path === path);
-	const currentText = beforeFinRefinementSource(
-		path, await readFile(path, "utf8"), update.currentSha256
+	const currentText = await sourceAtRepair(
+		path, update.currentSha256
 	);
 	const current = JSON.parse(currentText);
 	const previous = JSON.parse(

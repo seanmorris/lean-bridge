@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
+import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypePhpWasmArchive, nominalSubtypePhpWasmReferences, promoteNominalSubtypePhpWasm, nominalSubtypePhpWasmProfiles, nominalSubtypePhpWasmConversion, nominalSubtypePhpWasmLimit } from "./nominal-subtype-php-wasm-promotion.mjs";
@@ -17,6 +17,7 @@ import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
 import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypePhpWasmPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -129,7 +130,9 @@ test("nominal PHP-Wasm promotion changes exactly six Subtype cells and adds two 
 			await promoteNominalSubtypePhpWasm(original, references)
 		))
 	);
-	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypePhpWasmPromotionPredecessor
+	);
 	const document = JSON.parse(await sourceBeforeFinHistoryRecord(
 		nominalPrimitiveSubtypeNpmPromotionHistoryPath
 		, "docs/type-surface.v1.json"

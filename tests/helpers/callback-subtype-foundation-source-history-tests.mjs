@@ -12,7 +12,6 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeCallbackSubtypeNpmAcceptanceSource } from "./callback-subtype-npm-acceptance-source-history.mjs";
 import { beforeCallbackSubtypeNpmBrowserSource } from "./callback-subtype-npm-browser-source-history.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
 	beforeCallbackSubtypeFoundationSource
 	, callbackSubtypeFoundationChangedPaths
@@ -22,6 +21,12 @@ import {
 	, reverseCallbackSubtypeFoundationUpdate
 } from "./callback-subtype-foundation-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
+
+const sourceAt = (path, expected) => sourceAtFinHistoryRecordSource(
+	callbackSubtypeFoundationHistoryPath, path, expected
+	, beforeCallbackSubtypeFoundationSource
+);
 
 const original = path => execFileSync("git", ["show"
 	, `${callbackSubtypeFoundationPredecessor}:${path}`]
@@ -42,8 +47,8 @@ test("callback Subtype foundation history restores every source and pointer", as
 	for(const update of record.updates)
 	{
 		const latest = await readFile(update.path, "utf8");
-		const current = beforeFinRefinementSource(
-			update.path, latest, update.currentSha256
+		const current = await sourceAt(
+			update.path, update.currentSha256
 		);
 		const accepted = beforeCallbackSubtypeNpmAcceptanceSource(
 			update.path, current
@@ -64,9 +69,8 @@ test("callback Subtype foundation history restores every source and pointer", as
 	}
 	for(const addition of record.additions)
 	{
-		const current = beforeFinRefinementSource(
-			addition.path, await readFile(addition.path, "utf8")
-			, addition.currentSha256
+		const current = await sourceAt(
+			addition.path, addition.currentSha256
 		);
 		const accepted = beforeCallbackSubtypeNpmAcceptanceSource(
 			addition.path, current
@@ -78,9 +82,8 @@ test("callback Subtype foundation history restores every source and pointer", as
 	}
 	for(const pin of record.pinContainers)
 	{
-		const latest = await readFile(pin.path, "utf8");
-		const currentSource = beforeFinRefinementSource(
-			pin.path, latest, pin.currentSha256
+		const currentSource = await sourceAt(
+			pin.path, pin.currentSha256
 		);
 		const accepted = beforeCallbackSubtypeNpmAcceptanceSource(
 			pin.path, currentSource

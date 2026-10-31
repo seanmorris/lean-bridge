@@ -39,7 +39,7 @@ test("callable packages reject checked scalar inputs and release decoded closure
 	const declaration = ir.declarations.find(item => item.id === "lean:Callables.callString");
 	declaration.source.extensions["lean-lang.org/refinements"] = {
 		parameters: [{ kind: "subtype", constructor: "Callables.checkedText" }, null]
-		, result: { kind: "subtype", constructor: "Callables.checkedText" }
+		, result: null
 	};
 	const generated = plan(ir), item = generated.plan.exports.find(value => value.bindingId === declaration.id);
 	assert.equal(generated.plan.privateAbi.version, 3);

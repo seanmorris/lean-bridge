@@ -10,13 +10,20 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
+import { typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { beforeWasmEntryControlsSource } from "./helpers/wasm-entry-controls-source-history.mjs";
 import { assertHostedContainerInventory, assertHostedContainerReferences, hostedContainerCounterScope, hostedContainerObservationIds, hostedContainerReferences, hostedContainerSelectionIds, supplementHostedContainerInventory } from "./helpers/hosted-container-inventory.mjs";
 import { beforeHostedContainerInventorySource, hostedContainerInventoryChangedPaths, hostedContainerInventoryHistoryPath, hostedContainerInventoryPredecessor, reverseHostedContainerInventoryUpdate } from "./helpers/hosted-container-inventory-source-history.mjs";
 import { sourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource } from "./helpers/source-at-fin-history-milestone.mjs";
+
+const contractsAt = revision => ({
+	irSchema: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:schema/binding-ir.schema.json`], { encoding: "utf8" }))
+	, consumers: JSON.parse(execFileSync("git", ["show"
+		, `${revision}:docs/consumer-support.v1.json`], { encoding: "utf8" }))
+});
 
 const snapshot = async () => {
 	const history = JSON.parse(await readFile(hostedContainerInventoryHistoryPath));
@@ -103,7 +110,7 @@ test("hosted container inventory supplements exactly four existing observations 
 		}
 		assert.deepEqual(item.limitations, [...old.limitations, hostedContainerCounterScope]);
 	}
-	const { document: unused, ...contracts } = await readTypeSurface(); void unused;
+	const contracts = contractsAt(hostedContainerInventoryPredecessor);
 	const states = inventory => typeSurfaceCells(inventory, contracts).map(cell => [cell.id, Object.fromEntries(Object.entries(cell.stages).map(([key, value]) => [key, value.state]))]);
 	assert.deepEqual(states(current), states(previous));
 	assert.equal(classifyRepositoryTest("tests/hosted-container-inventory.test.mjs"), "contract");

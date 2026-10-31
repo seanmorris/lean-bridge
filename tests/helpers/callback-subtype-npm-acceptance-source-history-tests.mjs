@@ -18,8 +18,8 @@ import {
 	, callbackSubtypeNpmAcceptancePredecessor
 	, reverseCallbackSubtypeNpmAcceptanceUpdate
 } from "./callback-subtype-npm-acceptance-source-history.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${callbackSubtypeNpmAcceptancePredecessor}:${path}`]
@@ -39,9 +39,9 @@ test("callback Subtype npm acceptance history restores every source", async () =
 		, callbackSubtypeNpmAcceptanceChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8")
-			, update.currentSha256
+		const current = await sourceAtFinHistoryRecordSource(
+			callbackSubtypeNpmAcceptanceHistoryPath, update.path
+			, update.currentSha256, beforeCallbackSubtypeNpmAcceptanceSource
 		);
 		const previous = reverseCallbackSubtypeNpmAcceptanceUpdate(
 			current, update
@@ -56,11 +56,10 @@ test("callback Subtype npm acceptance history restores every source", async () =
 	}
 	for(const addition of record.additions)
 	{
-		const current = beforeCallbackSubtypeBrowserArtifactSource(
-			addition.path, beforeFinRefinementSource(
-				addition.path, await readFile(addition.path, "utf8")
-				, addition.currentSha256
-			), addition.currentSha256);
+		const current = await sourceAtFinHistoryRecordSource(
+			callbackSubtypeNpmAcceptanceHistoryPath, addition.path
+			, addition.currentSha256, beforeCallbackSubtypeBrowserArtifactSource
+		);
 		assert.equal(sha256(current), addition.currentSha256, addition.path);
 	}
 });

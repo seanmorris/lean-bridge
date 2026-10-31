@@ -18,7 +18,9 @@ import {
 } from "./helpers/ci-contract-repair-source-history.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { sha256 } from "./helpers/source-history-digest.mjs";
-import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
+import {
+	sourceAtFinHistoryRecordSource, sourceAtFinHistoryRecordUpdate
+} from "./helpers/source-at-fin-history-milestone.mjs";
 import {
 	beforeTestProfileBacklogRepairSource
 	, reverseTestProfileBacklogRepairUpdate
@@ -26,6 +28,16 @@ import {
 	, testProfileBacklogRepairHistoryPath
 	, testProfileBacklogRepairPredecessor
 } from "./helpers/test-profile-backlog-repair-history.mjs";
+
+const sourceAtBacklogRepair = (path, expected) =>
+	sourceAtFinHistoryRecordUpdate(
+		testProfileBacklogRepairHistoryPath, path, expected
+		, beforeTestProfileBacklogRepairSource
+	);
+const sourceAtContractRepair = (path, expected) =>
+	sourceAtFinHistoryRecordSource(
+		ciContractRepairHistoryPath, path, expected, beforeCiContractRepairSource
+	);
 
 test("checked-record test backlog is closed by one authenticated registration", async () => {
 	const record = JSON.parse(await readFile(
@@ -41,9 +53,8 @@ test("checked-record test backlog is closed by one authenticated registration", 
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8")
-			, update.currentSha256
+		const current = await sourceAtBacklogRepair(
+			update.path, update.currentSha256
 		);
 		const previous = original(update.path);
 		assert.equal(sha256(current), update.currentSha256, update.path);
@@ -118,9 +129,8 @@ test("contract repair authenticates every changed source and refreshed pin", asy
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8")
-			, update.currentSha256
+		const current = await sourceAtContractRepair(
+			update.path, update.currentSha256
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseCiContractRepairUpdate(current, update);
@@ -142,9 +152,8 @@ test("contract repair authenticates every changed source and refreshed pin", asy
 	const inventoryUpdate = record.updates.find(
 		update => update.path === "docs/type-surface.v1.json"
 	);
-	const inventory = JSON.parse(await sourceAtFinHistoryMilestone(
+	const inventory = JSON.parse(await sourceAtContractRepair(
 		inventoryUpdate.path, inventoryUpdate.currentSha256
-		, beforeCiContractRepairSource
 	));
 	let pinCount = 0;
 	for(const pin of record.pinUpdates)
@@ -160,9 +169,8 @@ test("contract repair authenticates every changed source and refreshed pin", asy
 	}
 	assert.equal(pinCount, record.pinCount);
 	const firstUpdate = record.updates[0];
-	const firstCurrent = await sourceAtFinHistoryMilestone(
+	const firstCurrent = await sourceAtContractRepair(
 		firstUpdate.path, firstUpdate.currentSha256
-		, beforeCiContractRepairSource
 	);
 	for(const mutate of [
 		update => { update.path = "unknown"; }

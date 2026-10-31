@@ -41,7 +41,8 @@ test("native CI rejects incomplete bootstrap, shared artifacts and permissive ga
 		, ["name: consumer-results-native-${{ matrix.profile }}-${{ github.sha }}", "name: consumer-results-native-${{ github.sha }}"]
 		, ["path: build/consumer-ci/results/native-${{ matrix.profile }}/*.json", "path: build/consumer-ci/results/*.json"]
 		, ["      - name: Prepare native compiler for this shard\n", "      - name: Prepare native compiler for this shard\n        if: matrix.profile == 'c-family'\n"]
-		, ["steps.type_corpus_rust.outcome != 'success'))", "steps.type_corpus_rust.outcome == 'failure'))"]
+		, ["steps.type_corpus_rust.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success'))"
+			, "steps.type_corpus_rust.outcome == 'failure' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success'))"]
 		, ["          test -s build/owned-rust-packaging/reviewed.json\n", ""]
 	]) {
 		const changed = body.replace(before, after); assert.notEqual(changed, body, before);
@@ -60,7 +61,8 @@ test("native recording scripts emit only selected rows and reject every incomple
 	{
 		const cases = [{}
 			, ...["failure", "skipped", "cancelled"].flatMap(outcome =>
-			["consumer", spec.ordinary, spec.corpus].map(id => ({ [id]: outcome })))];
+				["consumer", spec.ordinary, spec.corpus, ...(spec.additional ?? [])]
+					.map(id => ({ [id]: outcome })))];
 		for(const outcomes of cases)
 		{
 			const script = nativeCiRecordScript(source, profile, outcomes);
@@ -91,7 +93,7 @@ test("native recording scripts emit only selected rows and reject every incomple
 			++runs; rows += parsed.length;
 		}
 	}
-	assert.equal(runs, 30); assert.equal(rows, 40);
+	assert.equal(runs, 48); assert.equal(rows, 64);
 	t.diagnostic(`${runs} actual Bash recording runs checked ${rows} result rows.`);
 });
 
