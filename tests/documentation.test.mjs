@@ -9,6 +9,7 @@ import { consumerToolExportLines } from "./helpers/consumer-tool-lookups.mjs";
 import { access, readFile, readdir, stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
+import { isDeepStrictEqual } from "node:util";
 import "./helpers/node-consumer-budget-ci-tests.mjs";
 import "./helpers/node-consumer-budget-source-history-tests.mjs";
 import "./helpers/perl-xs-budget-source-history-tests.mjs";
@@ -75,6 +76,61 @@ const assertDependencyStep = (workflow, id, command, condition) => {
 	if(condition) assert.ok(step.includes(`if: ${condition}\n`));
 	else assert.doesNotMatch(step, /\bif:/u);
 	assert.ok(workflow.indexOf(marker) < workflow.indexOf(`id: ${id}\n`));
+};
+
+const nixDiskCleanupName = "Free hosted runner disk before Nix-backed builds";
+const nixDiskCleanupCommand = "sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL";
+const expectedNixJobs = [
+	"nix-cache", "node-consumers", "reviewed-fin-wasm-entry", "browser-consumer"
+	, "php-wasm-receivers", "php-wasm-callback-results", "php-consumers"
+	, "php-wasm-consumers", "php-wasm-corpus", "php-multi-profile"
+	, "native-c-family-values", "native-consumers", "managed-consumers"
+	, "owned-jvm-values", "host-null-systems", "owned-wit-receivers"
+	, "wasi-consumer", "docker-engine"
+];
+const diskBudgetedNixJobs = expectedNixJobs.filter(id => id !== "nix-cache");
+
+/**
+ * Audit every Nix consumer job together so one missing cleanup cannot hide the
+ * rest of the same workflow class. The sparse signing-only Nix recipe check is
+ * deliberately excluded from cleanup, but remains in the closed inventory.
+ *
+ * @param workflow - Complete Consumer Matrix workflow source.
+ * @returns {Array<{label: string, actual: unknown, expected: unknown}>} Every
+ * inventory, count, command or ordering mismatch.
+ */
+const nixDiskBudgetMismatches = workflow => {
+	const starts = [...workflow.matchAll(/^ {2}([a-z][a-z0-9-]*):\n/gmu)]
+		.map(match => ({ id: match[1], index: match.index }));
+	const jobs = starts.map((start, index) => [start.id
+		, workflow.slice(start.index, starts[index + 1]?.index ?? workflow.length)]);
+	const blocks = new Map(jobs);
+	const actualNixJobs = jobs.filter(([, body]) => body.includes("cachix/install-nix-action@v31"))
+		.map(([id]) => id);
+	const mismatches = [];
+	if(!isDeepStrictEqual(actualNixJobs, expectedNixJobs))
+		mismatches.push({ label: "Nix job inventory", actual: actualNixJobs, expected: expectedNixJobs });
+	const signing = blocks.get("nix-cache") ?? "";
+	if(signing.includes(nixDiskCleanupName))
+		mismatches.push({ label: "nix-cache/cleanup", actual: 1, expected: 0 });
+	for(const id of diskBudgetedNixJobs)
+	{
+		const body = blocks.get(id) ?? "";
+		const cleanupCount = body.split(nixDiskCleanupName).length - 1;
+		const commandCount = body.split(nixDiskCleanupCommand).length - 1;
+		if(cleanupCount !== 1)
+			mismatches.push({ label: `${id}/cleanup-count`, actual: cleanupCount, expected: 1 });
+		if(commandCount !== 1)
+			mismatches.push({ label: `${id}/command-count`, actual: commandCount, expected: 1 });
+		const cleanup = body.indexOf(nixDiskCleanupName);
+		for(const [label, marker] of [["checkout", "Check out the exact revision"], ["Nix install", "cachix/install-nix-action@v31"]])
+		{
+			const position = body.indexOf(marker);
+			if(cleanup < 0 || position < 0 || cleanup >= position)
+				mismatches.push({ label: `${id}/before-${label}`, actual: [cleanup, position], expected: "cleanup first" });
+		}
+	}
+	return mismatches;
 };
 
 test("the Alpha C# documentation project compiles only its own entrypoint", async () => {
@@ -658,6 +714,16 @@ test("live downstream workflows retain their required refinement gates", async (
   }
 });
 
+test("every Nix-backed consumer build reclaims hosted disk before checkout", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	assert.deepEqual(nixDiskBudgetMismatches(workflow), []);
+	const missingEveryCleanup = workflow.replaceAll(nixDiskCleanupName, "Missing Nix disk cleanup");
+	assert.deepEqual(nixDiskBudgetMismatches(missingEveryCleanup)
+		.filter(({ label }) => label.endsWith("/cleanup-count"))
+		.map(({ label }) => label)
+		, diskBudgetedNixJobs.map(id => `${id}/cleanup-count`));
+});
+
 test("consumer CI history preserves every consumer and pinned build path", async () => {
   const [packageDocument, livePerlWorkflow, toolchainBootstrap, reviewedCorpusTest] = await Promise.all([
     readFile("package.json", "utf8").then(JSON.parse)
@@ -776,12 +842,6 @@ test("consumer CI history preserves every consumer and pinned build path", async
   const phpMultiProfileJob = workflow.match(/^ {2}php-multi-profile:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
   assert.ok(phpMultiProfileJob);
   assert.match(phpMultiProfileJob, /^ {4}timeout-minutes: 180$/m);
-  const livePhpMultiProfileJob = liveWorkflow.match(/^ {2}php-multi-profile:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
-  assert.ok(livePhpMultiProfileJob);
-  assert.ok(livePhpMultiProfileJob.indexOf("Free hosted runner disk before PHP-Wasm and Nix builds")
-    < livePhpMultiProfileJob.indexOf("Check out the exact revision"));
-  assert.match(livePhpMultiProfileJob
-    , /sudo rm -rf \/usr\/share\/dotnet \/usr\/local\/lib\/android \/opt\/ghc \/usr\/local\/\.ghcup \/opt\/hostedtoolcache\/CodeQL/u);
   assert.match(phpMultiProfileJob, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
   assert.match(workflow, /^ {6}- php-multi-profile$/m);
   assert.match(workflow, /if: needs\.php-multi-profile\.result != 'success'/);
