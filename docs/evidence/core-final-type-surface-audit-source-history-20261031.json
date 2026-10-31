@@ -1,0 +1,2448 @@
+{
+  "historyAdditions": [
+    {
+      "path": "scripts/update-core-final-type-surface-audit-source-history.mjs",
+      "sha256": "8835174150aa18a50d474184c0534f41175994d16622b2127b78a46366945122"
+    },
+    {
+      "path": "tests/core-final-type-surface-audit-source-history.test.mjs",
+      "sha256": "1490ab18d9d4d84f6675056e2c72fa186412cdbff8dc0f89529f8fc19ccd567f"
+    },
+    {
+      "path": "tests/helpers/core-final-type-surface-audit-source-history.mjs",
+      "sha256": "17677cc4c95de50447aa2ae699187cbec1a1423fb18795eb2ee6fdef59189354"
+    }
+  ],
+  "milestone": "core-final-type-surface-audit-source-v1",
+  "milestones": [
+    {
+      "changes": [
+        {
+          "after": {
+            "bytes": 11793,
+            "mode": "100644",
+            "object": "af2d5b789a335c5ff455bf5d08b0ff622202f46a"
+          },
+          "before": {
+            "bytes": 10254,
+            "mode": "100644",
+            "object": "13a66f56d987a473ef53351578c50ba6d8970daf"
+          },
+          "path": ".github/workflows/quality.yml",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 32134,
+            "mode": "100644",
+            "object": "e8d7c8182a37754466910fdfb6030c38454a926f"
+          },
+          "before": {
+            "bytes": 31693,
+            "mode": "100644",
+            "object": "195da1cc999602363fce511bdb9d8abc12ac6008"
+          },
+          "path": "config/cli-package.v1.json",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 74030,
+            "mode": "100644",
+            "object": "61c63bd801475e1539edf04fec27e99dd72f9440"
+          },
+          "before": {
+            "bytes": 73853,
+            "mode": "100644",
+            "object": "ceb1b5360329bbc3dcc9447aeb813df10ca32cef"
+          },
+          "path": "package.json",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 19635,
+            "mode": "100644",
+            "object": "0c20d460dfbeb2920db19fe28cf63f2468344036"
+          },
+          "before": {
+            "bytes": 19635,
+            "mode": "100644",
+            "object": "c688194396c9999748c71930da033bf04006e358"
+          },
+          "path": "poc/lean-link-spike/bindings/generated-package-gate.json",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 2081,
+            "mode": "100644",
+            "object": "3726901ac25f830f700dd464105cb4c58838d0b6"
+          },
+          "before": null,
+          "path": "scripts/core-contract-toolchains.mjs",
+          "status": "A"
+        },
+        {
+          "after": {
+            "bytes": 6530,
+            "mode": "100644",
+            "object": "139d247555e000cb02261bd1200a127d865b0e04"
+          },
+          "before": {
+            "bytes": 6657,
+            "mode": "100644",
+            "object": "fa7e60677127bf22a362984efc234701e64a2394"
+          },
+          "path": "tests/callback-checked-record-promotion.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11868,
+            "mode": "100644",
+            "object": "48b846d1c7051cb77f9d1c7d297cb1a57cdbafcf"
+          },
+          "before": {
+            "bytes": 11695,
+            "mode": "100644",
+            "object": "5e49d85b3cff7cefe3e770b2085710f6d431f40f"
+          },
+          "path": "tests/callback-subtype-promotion.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3125,
+            "mode": "100644",
+            "object": "7eaff024998ecc31745fdd99f666b5ef5815766f"
+          },
+          "before": {
+            "bytes": 2944,
+            "mode": "100644",
+            "object": "9932f18584c6e2ffdf97b029d5cd8c77ede2f522"
+          },
+          "path": "tests/closed-generic-checked-record-source-history.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 9397,
+            "mode": "100644",
+            "object": "70f03708fa5efd3177457812f2c53ceb7ecf9fa9"
+          },
+          "before": {
+            "bytes": 9450,
+            "mode": "100644",
+            "object": "e7f7ef3b048df2bd82b30adc4dc89ad0798a5f91"
+          },
+          "path": "tests/component-callable-contract.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 21016,
+            "mode": "100644",
+            "object": "80838279661b9ac311d9eaf8baf5e5ef6679b501"
+          },
+          "before": {
+            "bytes": 21072,
+            "mode": "100644",
+            "object": "5342989cfc326af6ed5912bf9cf90e6c79033401"
+          },
+          "path": "tests/component-structured-callable-contract.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10315,
+            "mode": "100644",
+            "object": "7e5bed40ed352d862836434f2905a64d526214cb"
+          },
+          "before": {
+            "bytes": 10055,
+            "mode": "100644",
+            "object": "8d77d9da013e6a6966ca5f9bc13cb32898d763ab"
+          },
+          "path": "tests/fin-scalar-dispatch-inventory.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4565,
+            "mode": "100644",
+            "object": "7c74412f39bc041ee6db258a3364eea004255e60"
+          },
+          "before": {
+            "bytes": 4439,
+            "mode": "100644",
+            "object": "bd9e973098873b1bb38a2a3c5e609db84fcc6076"
+          },
+          "path": "tests/helpers/author-refinement-docs-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 1990,
+            "mode": "100644",
+            "object": "3826cbaad88ed2bd1fd5d07bed02bf166f327075"
+          },
+          "before": {
+            "bytes": 1857,
+            "mode": "100644",
+            "object": "a81edeb4cdc8ce34180f13ae14e559b35bd6d1c7"
+          },
+          "path": "tests/helpers/browser-callback-archive-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 9690,
+            "mode": "100644",
+            "object": "a58cf16ba2abbd50c711d6164acf38aa90510fa3"
+          },
+          "before": {
+            "bytes": 9540,
+            "mode": "100644",
+            "object": "a1433a694b6520e97e91071694f4fad8b259f72c"
+          },
+          "path": "tests/helpers/browser-generic-promotion-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3947,
+            "mode": "100644",
+            "object": "3ec99bc21d171910a570924c00f6a6c8694cce96"
+          },
+          "before": {
+            "bytes": 3725,
+            "mode": "100644",
+            "object": "ed20ae27273e417fb870b7557b3150f3274e7672"
+          },
+          "path": "tests/helpers/callback-checked-record-language-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3962,
+            "mode": "100644",
+            "object": "09eb4872e94d66456fc413d621e105f3c8efe35e"
+          },
+          "before": {
+            "bytes": 3737,
+            "mode": "100644",
+            "object": "9e1e0faf9babb293e742c2a19e0a01bbf001b9c6"
+          },
+          "path": "tests/helpers/callback-checked-record-remaining-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4784,
+            "mode": "100644",
+            "object": "ecce265345dbfa486141200b503457c342e77823"
+          },
+          "before": {
+            "bytes": 4531,
+            "mode": "100644",
+            "object": "7d5df1877d5dc77a25f93552d4fccf8665e88fb7"
+          },
+          "path": "tests/helpers/callback-coverage-repair-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5770,
+            "mode": "100644",
+            "object": "56a9efef5842322632b77720b7f9b06f0786c9bc"
+          },
+          "before": {
+            "bytes": 5285,
+            "mode": "100644",
+            "object": "9a91d20eac56ff506ce1f93bc4b76901f147f995"
+          },
+          "path": "tests/helpers/callback-fin-coverage-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 2505,
+            "mode": "100644",
+            "object": "650dfb50f0215ad284aa84bd4aaeb3b776da0684"
+          },
+          "before": {
+            "bytes": 2027,
+            "mode": "100644",
+            "object": "6c08d2776f2242b573a52e75f17368978164655d"
+          },
+          "path": "tests/helpers/callback-fin-coverage.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3364,
+            "mode": "100644",
+            "object": "10b92fe603defeedadd2faaecefc60f9a69df07d"
+          },
+          "before": {
+            "bytes": 3167,
+            "mode": "100644",
+            "object": "d51a9c8fb0817a194e966bc042fb25be3b9ad8a2"
+          },
+          "path": "tests/helpers/callback-fin-promotion-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 8602,
+            "mode": "100644",
+            "object": "68fa00e9c19604b23428300ea6a6572a660a9765"
+          },
+          "before": {
+            "bytes": 8382,
+            "mode": "100644",
+            "object": "136fdd574977607e45abe5750d86c37f3c1a8515"
+          },
+          "path": "tests/helpers/callback-fin-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 2052,
+            "mode": "100644",
+            "object": "3f6aae77f2a4acccfdf2b6fa8ed3176d174ba0c2"
+          },
+          "before": {
+            "bytes": 1934,
+            "mode": "100644",
+            "object": "6df7129f1f74ce552bb1951381b3be0fa300fdff"
+          },
+          "path": "tests/helpers/callback-fin-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 8340,
+            "mode": "100644",
+            "object": "c4dd0b6f69551fd5dc9c2bc5a852abe28e9bb691"
+          },
+          "before": {
+            "bytes": 8415,
+            "mode": "100644",
+            "object": "2244c5eff9df60898ed3f0698484ecf541a8d5de"
+          },
+          "path": "tests/helpers/callback-refinements-php-wasm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4880,
+            "mode": "100644",
+            "object": "d9405690ffac35846b8e9926534cf1a716e9610d"
+          },
+          "before": {
+            "bytes": 4848,
+            "mode": "100644",
+            "object": "88c67fb477933b09442d96015395c79f750bf726"
+          },
+          "path": "tests/helpers/callback-subtype-foundation-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3790,
+            "mode": "100644",
+            "object": "2439e7d6d6b010e0bdcaedb46667c2eb8d9d2c96"
+          },
+          "before": {
+            "bytes": 3586,
+            "mode": "100644",
+            "object": "9f08a4504ee595a03658cdc003cb709e251d7858"
+          },
+          "path": "tests/helpers/callback-subtype-language-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3688,
+            "mode": "100644",
+            "object": "68ca1a3e5095e09cb1b47205f5e1353e18b669ea"
+          },
+          "before": {
+            "bytes": 3657,
+            "mode": "100644",
+            "object": "32180b0ce9091f6badde4ecc1f4f6546a0803a1e"
+          },
+          "path": "tests/helpers/callback-subtype-npm-acceptance-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4235,
+            "mode": "100644",
+            "object": "d4ef025f35f63e56bae8f86adaa18aedcd391aa1"
+          },
+          "before": {
+            "bytes": 4182,
+            "mode": "100644",
+            "object": "cc45b1414ef70f9c9815397fddac368f77d22dd0"
+          },
+          "path": "tests/helpers/callback-subtype-npm-browser-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4062,
+            "mode": "100644",
+            "object": "f23de22983793351b11ce9da3532b71fa0ae8d1b"
+          },
+          "before": {
+            "bytes": 3789,
+            "mode": "100644",
+            "object": "e06c11850aead2ea3075637493a6124f54dbb532"
+          },
+          "path": "tests/helpers/callback-subtype-remaining-acceptance-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3895,
+            "mode": "100644",
+            "object": "768ba3c10722f61652d361e14e5b0f053bcf7e93"
+          },
+          "before": {
+            "bytes": 3694,
+            "mode": "100644",
+            "object": "a3c15cd2446d4b049eff834df9a748ef8f7ad1c2"
+          },
+          "path": "tests/helpers/callback-subtype-remaining-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3885,
+            "mode": "100644",
+            "object": "849ef24c737c6472c033d5dcea292394aa464bc3"
+          },
+          "before": {
+            "bytes": 3708,
+            "mode": "100644",
+            "object": "de9dd338dee095c8d17adfece96c0c120e0e94a7"
+          },
+          "path": "tests/helpers/checked-record-browser-archive-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3734,
+            "mode": "100644",
+            "object": "7b5cb97234997c985a6b3def4622692ad46f633b"
+          },
+          "before": {
+            "bytes": 3597,
+            "mode": "100644",
+            "object": "47760bd6490d8576536223dec14c2779e4b3d2e3"
+          },
+          "path": "tests/helpers/checked-record-browser-ci-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4727,
+            "mode": "100644",
+            "object": "736c4df7788c9efadb8f9dd6e342f703123a0331"
+          },
+          "before": {
+            "bytes": 4599,
+            "mode": "100644",
+            "object": "91499c596c447ca4d449619576fb1501b50bf5fc"
+          },
+          "path": "tests/helpers/checked-record-browser-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11055,
+            "mode": "100644",
+            "object": "cb88ff361e4620b6f0cd948ab5abdae8f8f47142"
+          },
+          "before": {
+            "bytes": 10701,
+            "mode": "100644",
+            "object": "95601862ead04a5bb0d7feff96b6f0f6297c225a"
+          },
+          "path": "tests/helpers/checked-record-browser-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 12589,
+            "mode": "100644",
+            "object": "f34b3d4710c79bcfbaa9d9ee9ca17aaf9bbbddb1"
+          },
+          "before": {
+            "bytes": 12343,
+            "mode": "100644",
+            "object": "baa0e64a2cacadfe13623d89645ef30552a564ee"
+          },
+          "path": "tests/helpers/checked-record-native-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 13057,
+            "mode": "100644",
+            "object": "85bf4c8b92284f0f3d2c0213685b7718a50dcc2d"
+          },
+          "before": {
+            "bytes": 12778,
+            "mode": "100644",
+            "object": "171d93aadca90e988073f469a708bdaba0937c14"
+          },
+          "path": "tests/helpers/checked-record-perl-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3902,
+            "mode": "100644",
+            "object": "d055e7e6a9d1a9cfa6f7967992c90a85ccc9eaf4"
+          },
+          "before": {
+            "bytes": 3715,
+            "mode": "100644",
+            "object": "9dfc9c4288ed4932ef74827bee72e0f7ef7edc7e"
+          },
+          "path": "tests/helpers/checked-record-php-wasm-archive-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3742,
+            "mode": "100644",
+            "object": "bf381bc381fd164bd419aae70873d276fa897a2f"
+          },
+          "before": {
+            "bytes": 3605,
+            "mode": "100644",
+            "object": "c55b7ab0c3e6fc476c3a606ed443ff787db5d4c3"
+          },
+          "path": "tests/helpers/checked-record-php-wasm-ci-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3756,
+            "mode": "100644",
+            "object": "f8885dea59cd0fbf5d98544a9ae09451988b5c41"
+          },
+          "before": {
+            "bytes": 3587,
+            "mode": "100644",
+            "object": "a80e729e906453befa7101f82676125aaf488aeb"
+          },
+          "path": "tests/helpers/checked-record-php-wasm-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10252,
+            "mode": "100644",
+            "object": "f7a845ce7ad58efb24788d0a2354dd5f3caef880"
+          },
+          "before": {
+            "bytes": 9735,
+            "mode": "100644",
+            "object": "18eb191d141c4e30fd01c1e27a5ca9b33ec17864"
+          },
+          "path": "tests/helpers/checked-record-php-wasm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10814,
+            "mode": "100644",
+            "object": "bb73ab1ea71216fefaa3a98b000aa24e71f24474"
+          },
+          "before": {
+            "bytes": 10720,
+            "mode": "100644",
+            "object": "8f310e7c594a20c6ea91cd8570f6e9906bd2570c"
+          },
+          "path": "tests/helpers/checked-record-value-index-browser-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3667,
+            "mode": "100644",
+            "object": "fa4c3c5dd469ec1414aadd95bf4f8339ca9de534"
+          },
+          "before": {
+            "bytes": 3580,
+            "mode": "100644",
+            "object": "ffb1d953f8619bad93781efcf49f9484791d7d5f"
+          },
+          "path": "tests/helpers/checked-record-value-index-perl-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3230,
+            "mode": "100644",
+            "object": "52b11f5af98b4acd0490e4533a9d433464866037"
+          },
+          "before": {
+            "bytes": 3190,
+            "mode": "100644",
+            "object": "4017df8af4cd945bab3a2d58019e0411f885fa06"
+          },
+          "path": "tests/helpers/checked-record-value-index-php-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4888,
+            "mode": "100644",
+            "object": "afb21683ac927e8bc9fc0e4dc778cfa65a186f26"
+          },
+          "before": {
+            "bytes": 4678,
+            "mode": "100644",
+            "object": "60ebad7766c289640a1e58ddeb23b8922717f9f8"
+          },
+          "path": "tests/helpers/checked-record-value-index-php-wasm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5052,
+            "mode": "100644",
+            "object": "01aa67f7dbe2f6df8c2e88d73b6702ef28d6889f"
+          },
+          "before": {
+            "bytes": 4961,
+            "mode": "100644",
+            "object": "2f92d7f2cab113368e4fa78f14b5c9b9453962d2"
+          },
+          "path": "tests/helpers/checked-record-value-index-python-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5120,
+            "mode": "100644",
+            "object": "3e07741247e2f07d4a820a87eac04d6c74f4b9e2"
+          },
+          "before": {
+            "bytes": 4916,
+            "mode": "100644",
+            "object": "ee86d6396693f61d6b393a87608f33c16dfb84e4"
+          },
+          "path": "tests/helpers/checked-record-value-index-ruby-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4656,
+            "mode": "100644",
+            "object": "cfdae943b9cf77a7698cfc05fb00a1b9e832fbce"
+          },
+          "before": {
+            "bytes": 4569,
+            "mode": "100644",
+            "object": "4612b9f1ed63222fa296339c4e31757b7494d024"
+          },
+          "path": "tests/helpers/checked-record-value-index-rust-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4654,
+            "mode": "100644",
+            "object": "084d9b864df0fdd351e5e06f96402cdbf7cccecc"
+          },
+          "before": {
+            "bytes": 4569,
+            "mode": "100644",
+            "object": "754e240c70a315f11daa013928cd809f700023d2"
+          },
+          "path": "tests/helpers/checked-record-value-index-wit-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4498,
+            "mode": "100644",
+            "object": "f404a2a96cc1d9176da175781df74e9b22931fc0"
+          },
+          "before": {
+            "bytes": 4577,
+            "mode": "100644",
+            "object": "6ec7c09a16fd97b9c3e09299d74b83831058f8ea"
+          },
+          "path": "tests/helpers/cli-import-repair-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 2936,
+            "mode": "100644",
+            "object": "283748fca9510d28167c208c4cad4c2d94781e6c"
+          },
+          "before": {
+            "bytes": 2822,
+            "mode": "100644",
+            "object": "820e33d794d360769e2ee577a8f85049bf04a381"
+          },
+          "path": "tests/helpers/copied-graph-repair-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 43443,
+            "mode": "100644",
+            "object": "399a64ce41a9b53eba0696a2c57e2bb1aa674170"
+          },
+          "before": {
+            "bytes": 39700,
+            "mode": "100644",
+            "object": "23b07edd81999e480fc4b3b8573e2c4f7495dd1f"
+          },
+          "path": "tests/helpers/core-quality-budget-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5297,
+            "mode": "100644",
+            "object": "cf5fa41f19d8b761a6bc6340c42c1cb801c7b1d6"
+          },
+          "before": {
+            "bytes": 5372,
+            "mode": "100644",
+            "object": "500868db7ef3c6a41ec201a14bb2a547f504228e"
+          },
+          "path": "tests/helpers/current-repair-history-isolation-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 21244,
+            "mode": "100644",
+            "object": "4f23e1e352d1b016bfb043ca88672b7d1ab09c4b"
+          },
+          "before": {
+            "bytes": 21062,
+            "mode": "100644",
+            "object": "80962b8ae47a42068f3185e3ce50062d5297feb2"
+          },
+          "path": "tests/helpers/dependent-checked-record-rust-report.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6531,
+            "mode": "100644",
+            "object": "34a20c74251679c6b92397646a2b4c0095c8aea5"
+          },
+          "before": {
+            "bytes": 6624,
+            "mode": "100644",
+            "object": "47d32b1e68fdcdc20b8d1e1a2f2f958b35467b57"
+          },
+          "path": "tests/helpers/dependent-signature-complete-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6834,
+            "mode": "100644",
+            "object": "14e885c676cb23258c37106e9b3c93f6f6f63318"
+          },
+          "before": {
+            "bytes": 6927,
+            "mode": "100644",
+            "object": "0ee4c8fdf73f066b8b168fa968d0d7c14c96284c"
+          },
+          "path": "tests/helpers/direct-proof-erasure-complete-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10464,
+            "mode": "100644",
+            "object": "ca5eccc5fe9eb5e09b1e97e26d2831ad70efe635"
+          },
+          "before": {
+            "bytes": 9664,
+            "mode": "100644",
+            "object": "0d496b88b7b3e35e9b8400193468962b6d1e34ab"
+          },
+          "path": "tests/helpers/fin-native-hosted-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10906,
+            "mode": "100644",
+            "object": "8d77ce049be71288ade992b0dc2489e39fc1e12f"
+          },
+          "before": {
+            "bytes": 10797,
+            "mode": "100644",
+            "object": "80417491503e11697162ec06060580f860f3e34c"
+          },
+          "path": "tests/helpers/generic-record-npm-closure-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6680,
+            "mode": "100644",
+            "object": "bbe78ea1b9dbd42002fa8f0f5c63601ccfa573e3"
+          },
+          "before": {
+            "bytes": 6486,
+            "mode": "100644",
+            "object": "2ab57c582142f0cabf7c5089ae6a37e4b285dcc0"
+          },
+          "path": "tests/helpers/generic-subtype-evidence-source-closure-repair-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3492,
+            "mode": "100644",
+            "object": "e60abc7ed967946fd1634f364cbb0ba44d37f158"
+          },
+          "before": {
+            "bytes": 3293,
+            "mode": "100644",
+            "object": "0635684ea08edb6a4c285747825cb1c6f6635528"
+          },
+          "path": "tests/helpers/history-digest-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 8034,
+            "mode": "100644",
+            "object": "2339eb9cf7bf07538a34353101c1d633ebb542bf"
+          },
+          "before": {
+            "bytes": 7988,
+            "mode": "100644",
+            "object": "96b2c23a2909a5128625869ade70efc3d01d9cd4"
+          },
+          "path": "tests/helpers/inherited-checked-record-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11941,
+            "mode": "100644",
+            "object": "99111bd9ec3040b4ac05c1c5826977e9133f5abf"
+          },
+          "before": {
+            "bytes": 11848,
+            "mode": "100644",
+            "object": "9cf713b68c285ecd4f598c58f7df59c399d275af"
+          },
+          "path": "tests/helpers/inherited-record-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3420,
+            "mode": "100644",
+            "object": "2eea0829e9a4392825efce4e544b59bb9d48055c"
+          },
+          "before": {
+            "bytes": 3269,
+            "mode": "100644",
+            "object": "180e36f76bcad24b844d1f35e7582299b82f7549"
+          },
+          "path": "tests/helpers/jvm-pending-exit-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4015,
+            "mode": "100644",
+            "object": "c64e939bc3e1742f07be286b21c20449c0f94c07"
+          },
+          "before": {
+            "bytes": 3886,
+            "mode": "100644",
+            "object": "5a822b0820194354417ef46d1e602c0094809eb2"
+          },
+          "path": "tests/helpers/managed-nominal-gate-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 9761,
+            "mode": "100644",
+            "object": "165a4e45b911e41f30da474ee76cd682825c4796"
+          },
+          "before": {
+            "bytes": 9464,
+            "mode": "100644",
+            "object": "f5e59ae5621e27ab35c0af3aeb18521bfb6748ac"
+          },
+          "path": "tests/helpers/native-ci-isolation.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 7377,
+            "mode": "100644",
+            "object": "67af6b620be408bfce43890c88149fb559f08303"
+          },
+          "before": {
+            "bytes": 7284,
+            "mode": "100644",
+            "object": "d245cb74367d9b3584eae0bb3c9d57c0fab0b5ce"
+          },
+          "path": "tests/helpers/native-consumer-partition-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4428,
+            "mode": "100644",
+            "object": "91c4e81d3d500ae00950a6b7d2546521b6a6a500"
+          },
+          "before": {
+            "bytes": 4344,
+            "mode": "100644",
+            "object": "152c92c0312c37df3dee37769aefec107d477433"
+          },
+          "path": "tests/helpers/native-fin-jvm-exit-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 8914,
+            "mode": "100644",
+            "object": "83d5bb890b2a91cc986663a1a9391917f255adaa"
+          },
+          "before": {
+            "bytes": 8526,
+            "mode": "100644",
+            "object": "4f09f288239632531a43998bba204c446dcc6c88"
+          },
+          "path": "tests/helpers/native-fin-reply-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6656,
+            "mode": "100644",
+            "object": "2f051638b7308428be31ba9af1935954727c8552"
+          },
+          "before": {
+            "bytes": 6375,
+            "mode": "100644",
+            "object": "4cd16b1d21c923089488b69f5e6d913e70624f63"
+          },
+          "path": "tests/helpers/native-fin-reply-review-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3677,
+            "mode": "100644",
+            "object": "2c8905ca58bddc80c4398c8c7fc853c4fdf83a0f"
+          },
+          "before": {
+            "bytes": 3557,
+            "mode": "100644",
+            "object": "b0654911123fc97bd6774097c47f9284395257cf"
+          },
+          "path": "tests/helpers/native-observation-split-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4824,
+            "mode": "100644",
+            "object": "428989056f7d35e35a3200bab1f0308535dca040"
+          },
+          "before": {
+            "bytes": 4824,
+            "mode": "100644",
+            "object": "7f71dde1fccfbd13443d5924880df5765a5f3752"
+          },
+          "path": "tests/helpers/native-observation-split-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 3936,
+            "mode": "100644",
+            "object": "22847b39ee0c0dac4d37d8de0c8fd043b4a72672"
+          },
+          "before": {
+            "bytes": 3813,
+            "mode": "100644",
+            "object": "221f33258b63969a9c33753fead24d9c0927b314"
+          },
+          "path": "tests/helpers/native-owned-gate-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10310,
+            "mode": "100644",
+            "object": "941d5fb8e20fdc925726e96106140afa5fef3d21"
+          },
+          "before": {
+            "bytes": 10313,
+            "mode": "100644",
+            "object": "c51c1be4517977d1cc401a7d0ce93d4a102463e9"
+          },
+          "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 12042,
+            "mode": "100644",
+            "object": "ddf6ef7762d8798fa5a74eaab6bf5aff9ce0a01b"
+          },
+          "before": {
+            "bytes": 11719,
+            "mode": "100644",
+            "object": "37bed44a4959c00d415ca13ef97bc38609fd6738"
+          },
+          "path": "tests/helpers/nested-checked-record-dotnet-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11465,
+            "mode": "100644",
+            "object": "2f560b1bf9d03dd176400510fae19874dbf978c5"
+          },
+          "before": {
+            "bytes": 11312,
+            "mode": "100644",
+            "object": "d1de2bbe8d9f3ffa18ffe9f3808379178a8e493d"
+          },
+          "path": "tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5768,
+            "mode": "100644",
+            "object": "02ffdcd4cec0e5287789b651554a45e466c8c3b7"
+          },
+          "before": {
+            "bytes": 5547,
+            "mode": "100644",
+            "object": "35341b09bd097a44769737082769d7acd6943ef5"
+          },
+          "path": "tests/helpers/nested-checked-record-native-correction-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10318,
+            "mode": "100644",
+            "object": "9b0dd23322fa5b6e93e8c812acad047ef1f1a999"
+          },
+          "before": {
+            "bytes": 9966,
+            "mode": "100644",
+            "object": "a9d35e98874ab351e11294c6088ec115c574882f"
+          },
+          "path": "tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11418,
+            "mode": "100644",
+            "object": "fafa9e0bec3216dba6226b6ecac159c257e4224b"
+          },
+          "before": {
+            "bytes": 11304,
+            "mode": "100644",
+            "object": "bcaefec4766b224bef634dc6dc921b5bfc3d237f"
+          },
+          "path": "tests/helpers/nested-checked-record-perl-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10130,
+            "mode": "100644",
+            "object": "7d89cecad666cd0e10f6932b6a11486d374a5e8a"
+          },
+          "before": {
+            "bytes": 9977,
+            "mode": "100644",
+            "object": "fe2a37d6a19999a6073b84c598af94dacf7e187d"
+          },
+          "path": "tests/helpers/nested-checked-record-php-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10608,
+            "mode": "100644",
+            "object": "7ff258eb2934e957bb1a1b430c2f01d96c380ccc"
+          },
+          "before": {
+            "bytes": 10451,
+            "mode": "100644",
+            "object": "309d60999fd594fdd6906754bcde13efd1d8b331"
+          },
+          "path": "tests/helpers/nested-checked-record-php-wasm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10564,
+            "mode": "100644",
+            "object": "4478e9f8ed7ef90086e2ff2894f7cb1f8b3ac17f"
+          },
+          "before": {
+            "bytes": 10408,
+            "mode": "100644",
+            "object": "1f505444f74cc69e6ce290aa64133aa729dfe33e"
+          },
+          "path": "tests/helpers/nested-checked-record-python-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10402,
+            "mode": "100644",
+            "object": "3870548e32c1735f278f6554a3b5a2dbc26f42d9"
+          },
+          "before": {
+            "bytes": 10248,
+            "mode": "100644",
+            "object": "1374d1dbdff77c5ac6d39c488c680a1c3692e7e5"
+          },
+          "path": "tests/helpers/nested-checked-record-ruby-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11386,
+            "mode": "100644",
+            "object": "1c24fa24810b7a5eb052cec1e5c7db446540cfb6"
+          },
+          "before": {
+            "bytes": 11232,
+            "mode": "100644",
+            "object": "bc7c169d8a1c39dd93733c7abeea2d96eb861484"
+          },
+          "path": "tests/helpers/nested-checked-record-rust-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10454,
+            "mode": "100644",
+            "object": "1b4bcb20c614e026f5d669aa01d555fd08016db2"
+          },
+          "before": {
+            "bytes": 10301,
+            "mode": "100644",
+            "object": "0c23c95f42ed606cb8a69a3fe56d0e56385df2fd"
+          },
+          "path": "tests/helpers/nested-checked-record-wit-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4100,
+            "mode": "100644",
+            "object": "e73c9eaafcf0e196faf3160330f3211e22623b69"
+          },
+          "before": {
+            "bytes": 3980,
+            "mode": "100644",
+            "object": "6d02e95d46dbbbf25aec2b6fa357277a31c21022"
+          },
+          "path": "tests/helpers/node-consumer-budget-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10667,
+            "mode": "100644",
+            "object": "bfe44984098062e761ce3adcab6594ca49b54a05"
+          },
+          "before": {
+            "bytes": 10501,
+            "mode": "100644",
+            "object": "9ca857e0b46161ecac9b6e2e5ff3c86df1d843d9"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11191,
+            "mode": "100644",
+            "object": "953ed8bbc6541a45aa1486d3e38c3c9df4cf0365"
+          },
+          "before": {
+            "bytes": 11026,
+            "mode": "100644",
+            "object": "86b8230d1a0a00386ac51a15325ea97a657a1750"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-dotnet-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 12243,
+            "mode": "100644",
+            "object": "a9bf7ee54d2f386b41632ea4bc518dd8d9ce3406"
+          },
+          "before": {
+            "bytes": 12081,
+            "mode": "100644",
+            "object": "7a2a071b59dce6f2d4f011aec10240237cc61dc4"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-jvm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10290,
+            "mode": "100644",
+            "object": "28af3ce437412103a8d305fe1b2fa43f8ce2ee5e"
+          },
+          "before": {
+            "bytes": 10125,
+            "mode": "100644",
+            "object": "f0f6a5fa1494c2cb2bb9558e973d667f446f9d02"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-native-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 9219,
+            "mode": "100644",
+            "object": "78d6cede014e8bb186d72a0f4cb352d80dfe24a2"
+          },
+          "before": {
+            "bytes": 9057,
+            "mode": "100644",
+            "object": "cd06ceb30734f552292a439d14cacd96c1aa7a20"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-npm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11368,
+            "mode": "100644",
+            "object": "2933193023a2f197c8d25269574e0207d53c5671"
+          },
+          "before": {
+            "bytes": 11205,
+            "mode": "100644",
+            "object": "d7f24663b70c204c71235058bb31e6281db577a3"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-perl-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10974,
+            "mode": "100644",
+            "object": "5e7bd4d9febc876d84ffe1e4a7f26675b6f68e94"
+          },
+          "before": {
+            "bytes": 10812,
+            "mode": "100644",
+            "object": "d4fc792f8dc77e3af5a238ca37c072d98cb1ac2a"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-php-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11983,
+            "mode": "100644",
+            "object": "6c5807c657b8fefa8294fd5c6e1641fe5e75fea8"
+          },
+          "before": {
+            "bytes": 11817,
+            "mode": "100644",
+            "object": "71d76d1cc3fc985775f8f1ef8ed96fa1cc2b3cc2"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-php-wasm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10012,
+            "mode": "100644",
+            "object": "7634126e48ac748f7ab8db6a2d83880d583f9a26"
+          },
+          "before": {
+            "bytes": 9847,
+            "mode": "100644",
+            "object": "0693b19b1b2fcc2131577c5cd9c5f54f04bf9f15"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-python-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10854,
+            "mode": "100644",
+            "object": "64009879e0d8ee439564d13882f87602807c3d2c"
+          },
+          "before": {
+            "bytes": 10691,
+            "mode": "100644",
+            "object": "b323a27866f769a408ecc176529b2a6a886ac827"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-ruby-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11267,
+            "mode": "100644",
+            "object": "51c08e3273f0007ef8557fd7a97b70c29461ccd9"
+          },
+          "before": {
+            "bytes": 11104,
+            "mode": "100644",
+            "object": "974f3957f49e8005d9f6de38e8be406b56a82473"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-rust-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11556,
+            "mode": "100644",
+            "object": "be7e8ec1728151248a7819439ff4a14a3f343785"
+          },
+          "before": {
+            "bytes": 11394,
+            "mode": "100644",
+            "object": "2bb1456478695471742516cc2c05fb8ba7676940"
+          },
+          "path": "tests/helpers/nominal-primitive-subtype-wit-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 13723,
+            "mode": "100644",
+            "object": "52560afd6e783da8cad55bcce2fe1e4261e6efda"
+          },
+          "before": {
+            "bytes": 13653,
+            "mode": "100644",
+            "object": "4685bfb9b72eb684d0833b7d1f880a9183cbc796"
+          },
+          "path": "tests/helpers/nominal-subtype-browser-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10379,
+            "mode": "100644",
+            "object": "036e3a5a5dc4e692e45866611704327059cf54d7"
+          },
+          "before": {
+            "bytes": 10169,
+            "mode": "100644",
+            "object": "d836282b2b7b3117929f31a19d37193c3000ceb7"
+          },
+          "path": "tests/helpers/nominal-subtype-dotnet-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11053,
+            "mode": "100644",
+            "object": "ac785a818296803e8538d0114cf1fafc40010892"
+          },
+          "before": {
+            "bytes": 10852,
+            "mode": "100644",
+            "object": "7fe92d3a744bbd221d209203db377b44f911355f"
+          },
+          "path": "tests/helpers/nominal-subtype-jvm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 9821,
+            "mode": "100644",
+            "object": "ba0a5fd953ffe022a43530b8739d0534e807295c"
+          },
+          "before": {
+            "bytes": 9611,
+            "mode": "100644",
+            "object": "a3ded4df7e6364fb0f8477e8d10da4cb235aa2b0"
+          },
+          "path": "tests/helpers/nominal-subtype-native-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 9621,
+            "mode": "100644",
+            "object": "43a47f180056c3ea49a369c3cdae61f95838134c"
+          },
+          "before": {
+            "bytes": 9413,
+            "mode": "100644",
+            "object": "de23ed2abfa216ab639cf1cc5a86a6e075b5a0fa"
+          },
+          "path": "tests/helpers/nominal-subtype-npm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11846,
+            "mode": "100644",
+            "object": "67f57c333d984401ce9f781bc1c6faf64eac2181"
+          },
+          "before": {
+            "bytes": 11642,
+            "mode": "100644",
+            "object": "4f5e8aa4d0be2302dc86619e918254e4c0add0bd"
+          },
+          "path": "tests/helpers/nominal-subtype-perl-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11674,
+            "mode": "100644",
+            "object": "efa18c0c7b3fead82cc0072c0090c81621632f1d"
+          },
+          "before": {
+            "bytes": 11608,
+            "mode": "100644",
+            "object": "5e8dea3eb5c2083692d10f340df4c0a2082865eb"
+          },
+          "path": "tests/helpers/nominal-subtype-php-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 13380,
+            "mode": "100644",
+            "object": "0f2a6144c5d1f3feac7a00d346bb803e5e504848"
+          },
+          "before": {
+            "bytes": 13310,
+            "mode": "100644",
+            "object": "9519e489e6474f197ec367473d8dae85e2032188"
+          },
+          "path": "tests/helpers/nominal-subtype-php-wasm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10360,
+            "mode": "100644",
+            "object": "313b49bcf734a001d6f7aec675d7ec0e44081952"
+          },
+          "before": {
+            "bytes": 10150,
+            "mode": "100644",
+            "object": "d4e99014576fab91873efa84c067c3b79f8015ca"
+          },
+          "path": "tests/helpers/nominal-subtype-python-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11419,
+            "mode": "100644",
+            "object": "7377e53371e26639919ee27e313038c9129b7986"
+          },
+          "before": {
+            "bytes": 11208,
+            "mode": "100644",
+            "object": "3334f3795eaae11af268f0d971d8c425983b99d1"
+          },
+          "path": "tests/helpers/nominal-subtype-ruby-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10109,
+            "mode": "100644",
+            "object": "7145a6aa21331eeb7ab64dc400177fc5dbc3d1f5"
+          },
+          "before": {
+            "bytes": 9905,
+            "mode": "100644",
+            "object": "5ec2ea6305f72e66c4aa4918162e2b45592cd7a4"
+          },
+          "path": "tests/helpers/nominal-subtype-rust-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 7622,
+            "mode": "100644",
+            "object": "47cabf183c22c19fa27d6b1454a1dad976abb433"
+          },
+          "before": {
+            "bytes": 6567,
+            "mode": "100644",
+            "object": "2e299ea014824bac2a91e64b405f3a5549745d8b"
+          },
+          "path": "tests/helpers/nominal-subtype-wit-ci-workflow.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 13033,
+            "mode": "100644",
+            "object": "da368d775daba21946261c5a2807ad29573aa85d"
+          },
+          "before": {
+            "bytes": 12967,
+            "mode": "100644",
+            "object": "c5add4a420521e56bbb8f7b372ed29be3bc138f9"
+          },
+          "path": "tests/helpers/nominal-subtype-wit-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4843,
+            "mode": "100644",
+            "object": "bbc50235eb0983fe939994667728a314938ff4ea"
+          },
+          "before": {
+            "bytes": 4937,
+            "mode": "100644",
+            "object": "140c407cc9ff35077be6d607ee32cafc597cca7d"
+          },
+          "path": "tests/helpers/optional-parameter-complete-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 14109,
+            "mode": "100644",
+            "object": "07fa5ee733c94631578c86ff8e798f86b4c3d201"
+          },
+          "before": {
+            "bytes": 13851,
+            "mode": "100644",
+            "object": "de2a0ae550cc8fd7b5fc6f5935a1125c9413d766"
+          },
+          "path": "tests/helpers/optional-parameter-matrix-receipt-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6659,
+            "mode": "100644",
+            "object": "6330a128f5c2d03635043c5985b8a62feb65f318"
+          },
+          "before": {
+            "bytes": 6498,
+            "mode": "100644",
+            "object": "7369a92bdf3694127b952421de6e9ffaa0c135ef"
+          },
+          "path": "tests/helpers/optional-parameter-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11085,
+            "mode": "100644",
+            "object": "eb15fd06e4bf5132c6b3f09e3d0a3bc89259e92f"
+          },
+          "before": {
+            "bytes": 11300,
+            "mode": "100644",
+            "object": "2a13ed81e515a94ebfe744fb8d451c581205b558"
+          },
+          "path": "tests/helpers/owned-borrow-evidence.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 12742,
+            "mode": "100644",
+            "object": "acf283288cf077da42ab5b76b29f3913882f1e3b"
+          },
+          "before": {
+            "bytes": 12751,
+            "mode": "100644",
+            "object": "11a8c735207bdfa91e0aa0f70ba77af4278191c7"
+          },
+          "path": "tests/helpers/owned-checked-record-published-matrix-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 13073,
+            "mode": "100644",
+            "object": "1e6c98c28c0f91ea0c40133ac1ffe5d9aa96b0da"
+          },
+          "before": {
+            "bytes": 13181,
+            "mode": "100644",
+            "object": "04755c75f545b44a9cb1febf48265636066118bf"
+          },
+          "path": "tests/helpers/owned-cpp-receiver-evidence.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 12730,
+            "mode": "100644",
+            "object": "d8098d7557e02c1749a672fac5cce758ebfe458e"
+          },
+          "before": {
+            "bytes": 12386,
+            "mode": "100644",
+            "object": "aaf5b265b03969cc59cd1283fdb4f627508e93eb"
+          },
+          "path": "tests/helpers/owned-dotnet-process-evidence.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 12091,
+            "mode": "100644",
+            "object": "a6f95ae091f922b60e04d9eaf09b29ce004ed7b9"
+          },
+          "before": {
+            "bytes": 12235,
+            "mode": "100644",
+            "object": "81a20d31566ef8c4eca932f8e615ae2eaa505ef4"
+          },
+          "path": "tests/helpers/owned-dotnet-receiver-package-evidence.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 9145,
+            "mode": "100644",
+            "object": "acfcdf8f14d14140c1995d386e7617d5325b50d4"
+          },
+          "before": {
+            "bytes": 9181,
+            "mode": "100644",
+            "object": "58840f3a1d83cd1a4df4371c00b7dc6cef8bcec8"
+          },
+          "path": "tests/helpers/owned-matrix-refresh-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 13028,
+            "mode": "100644",
+            "object": "d01263a6c5ea1b68fc78b6f138b0412e0e66b31b"
+          },
+          "before": {
+            "bytes": 12460,
+            "mode": "100644",
+            "object": "615b51bb3b89ae7529eab945bb9c918c0ea3dc09"
+          },
+          "path": "tests/helpers/owned-php-callback-result-acceptance.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 8779,
+            "mode": "100644",
+            "object": "de51880de904b05dc90ce45904195645dda61515"
+          },
+          "before": {
+            "bytes": 8481,
+            "mode": "100644",
+            "object": "4014a816d94022714924365fbbc41c5f8a28e28a"
+          },
+          "path": "tests/helpers/owned-php-callback-result-package-sources.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5420,
+            "mode": "100644",
+            "object": "287d435267dd1e498cfb5b211d9f42e8fb592ea3"
+          },
+          "before": {
+            "bytes": 5253,
+            "mode": "100644",
+            "object": "f86d3c95a9fe3401dbd4ee73b447c8f768e0390a"
+          },
+          "path": "tests/helpers/php-graph-diagnostic-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 7925,
+            "mode": "100644",
+            "object": "60c8b130a979d7342bbdcf670e8a3f9464ab5077"
+          },
+          "before": {
+            "bytes": 7804,
+            "mode": "100644",
+            "object": "83cd7e120909f4a04062a40118494aba59db0760"
+          },
+          "path": "tests/helpers/php-wasm-direct-fin-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11701,
+            "mode": "100644",
+            "object": "6af6388b32d216c76c57d5bc1e6794f8b523e095"
+          },
+          "before": {
+            "bytes": 11511,
+            "mode": "100644",
+            "object": "527e8e67dc229612a060684c8cecdf40d705fe20"
+          },
+          "path": "tests/helpers/php-wasm-fin-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 7698,
+            "mode": "100644",
+            "object": "902a6ef808be07a89ecac2e33bac57666d4d5bb7"
+          },
+          "before": {
+            "bytes": 7575,
+            "mode": "100644",
+            "object": "a2aa8720f0f22d6e9408fdd3bca1f2cc18a2c6da"
+          },
+          "path": "tests/helpers/php-wasm-subtype-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5119,
+            "mode": "100644",
+            "object": "b04acc4a8faecaad61595095238724ae24f6b2a8"
+          },
+          "before": {
+            "bytes": 5037,
+            "mode": "100644",
+            "object": "0aad008abd00de058766256b0deedd4b7540006b"
+          },
+          "path": "tests/helpers/producer-source.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5548,
+            "mode": "100644",
+            "object": "d22b43c49d1ae9866c2c08cdf13cf8dcec04a66b"
+          },
+          "before": {
+            "bytes": 5343,
+            "mode": "100644",
+            "object": "7b375bf045270e6bfc35ea132b64a5dedd99e111"
+          },
+          "path": "tests/helpers/proof-erasure-partition-audit-repair-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 7661,
+            "mode": "100644",
+            "object": "3bd409fbbbfcd50e15e92bfc6d340653bc861c86"
+          },
+          "before": {
+            "bytes": 7522,
+            "mode": "100644",
+            "object": "b98de16036a8269f5f89d73674cd2e848b4a626f"
+          },
+          "path": "tests/helpers/proof-erasure-wit-lint-join-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5174,
+            "mode": "100644",
+            "object": "288655d997a2ff7cb6da477108708f509645ae89"
+          },
+          "before": {
+            "bytes": 5015,
+            "mode": "100644",
+            "object": "370231e91bfdbe493289ca171e4246a8c4db4f5d"
+          },
+          "path": "tests/helpers/python-graph-diagnostic-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 9117,
+            "mode": "100644",
+            "object": "a9c76b191007791c481322729e71236d6899409a"
+          },
+          "before": {
+            "bytes": 8964,
+            "mode": "100644",
+            "object": "9349e69defa0eb6d8d07b1f6e6e65b49dbdd3493"
+          },
+          "path": "tests/helpers/recursive-checked-record-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6654,
+            "mode": "100644",
+            "object": "12d73aed861f887eabfb8668ff416158ce90d07b"
+          },
+          "before": {
+            "bytes": 6306,
+            "mode": "100644",
+            "object": "db08c75e6814ea3922a62a0ba0242cd7112227dc"
+          },
+          "path": "tests/helpers/recursive-subtype-php-wasm-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 2108,
+            "mode": "100644",
+            "object": "15bab8108188011d69c8e2d0f5fc21e854acb29a"
+          },
+          "before": {
+            "bytes": 1978,
+            "mode": "100644",
+            "object": "1e4c937bf788d6ca80a9aa9266d8da6ea0cf987d"
+          },
+          "path": "tests/helpers/refinement-closure-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4537,
+            "mode": "100644",
+            "object": "c0f6c33254f208fdbbf3e42ac117f252cf2bc608"
+          },
+          "before": {
+            "bytes": 4397,
+            "mode": "100644",
+            "object": "cf3ba037d3726993e8f81e721073143365a9844f"
+          },
+          "path": "tests/helpers/refinement-history-cache-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10524,
+            "mode": "100644",
+            "object": "f88c3cba26eeb4f6f427cd84be7c85baf3f5f2d6"
+          },
+          "before": {
+            "bytes": 10458,
+            "mode": "100644",
+            "object": "0d047e1c74a56e03a41cafd60157222769617e47"
+          },
+          "path": "tests/helpers/reviewed-record-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11658,
+            "mode": "100644",
+            "object": "5c92bf32d373c7207012e88470953fd4cf8dd39a"
+          },
+          "before": {
+            "bytes": 11537,
+            "mode": "100644",
+            "object": "b0dbd5eb1c394d5ad850438d65f74460262f05a9"
+          },
+          "path": "tests/helpers/reviewed-subtype-browser-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 12629,
+            "mode": "100644",
+            "object": "68a3a8d137194bcaf4cbf71575de8a1c74153e41"
+          },
+          "before": {
+            "bytes": 12492,
+            "mode": "100644",
+            "object": "d6c5d3d7eec40a6612f34b6c7025203704bd5fce"
+          },
+          "path": "tests/helpers/reviewed-subtype-native-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5624,
+            "mode": "100644",
+            "object": "d143eb195fde259e30a4a0203ad0cf44edac6dd7"
+          },
+          "before": {
+            "bytes": 5522,
+            "mode": "100644",
+            "object": "541892f8ae7b96d1dad6c7c8b5fc0d0ca1ecfb64"
+          },
+          "path": "tests/helpers/ruby-gdb-ci-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5132,
+            "mode": "100644",
+            "object": "ab50e302553825ff20d1296739bca960f47d5b78"
+          },
+          "before": {
+            "bytes": 4973,
+            "mode": "100644",
+            "object": "fd7f3294869ea98a6189eefeda5c5769bc718d54"
+          },
+          "path": "tests/helpers/ruby-graph-keyword-field-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4985,
+            "mode": "100644",
+            "object": "6618f7f91bd5d6d80e96d326d190edc2503bfb0a"
+          },
+          "before": {
+            "bytes": 4838,
+            "mode": "100644",
+            "object": "855106921c5db569f763d46e8e38d4f384b31f3d"
+          },
+          "path": "tests/helpers/ruby-member-escape-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5002,
+            "mode": "100644",
+            "object": "c40491268d4dbac6565479617a6ef9423c424661"
+          },
+          "before": {
+            "bytes": 4822,
+            "mode": "100644",
+            "object": "46881337a02d5bb18b5ab672518f66067d2a36be"
+          },
+          "path": "tests/helpers/rust-graph-diagnostic-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 16593,
+            "mode": "100644",
+            "object": "782d04c405f21a78272194d0bb145e427fb394a3"
+          },
+          "before": {
+            "bytes": 9129,
+            "mode": "100644",
+            "object": "76273eba7c92d0f175d4dc9f79fe31e0b5950a3b"
+          },
+          "path": "tests/helpers/source-at-fin-history-milestone.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 10425,
+            "mode": "100644",
+            "object": "a93942613d5e948c757e49dc6cfce7594b2f91b0"
+          },
+          "before": {
+            "bytes": 10311,
+            "mode": "100644",
+            "object": "5b8470f9b0324f801e5f43d4628f16e66faf8249"
+          },
+          "path": "tests/helpers/structural-subtype-npm-report.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 13818,
+            "mode": "100644",
+            "object": "e1b1039ee7fab54f0b7ae20e3c77fb99ffe6bea9"
+          },
+          "before": {
+            "bytes": 13610,
+            "mode": "100644",
+            "object": "a2292578014914d9f91323983dc43951788cd00d"
+          },
+          "path": "tests/helpers/structural-subtype-promotion-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5147,
+            "mode": "100644",
+            "object": "d71d68166a870d75c30724f1bb2f3636e180f476"
+          },
+          "before": {
+            "bytes": 4971,
+            "mode": "100644",
+            "object": "2823a9f35b91a1dd0d4aad79fe360815fc18c29d"
+          },
+          "path": "tests/helpers/wit-graph-diagnostic-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 1505,
+            "mode": "100644",
+            "object": "966b166d6c381b1498483dbadb2885ecc8323eec"
+          },
+          "before": {
+            "bytes": 1273,
+            "mode": "100644",
+            "object": "61fb30acb4259fefd793eaf15e186a758f6cf413"
+          },
+          "path": "tests/helpers/zero-payload-checked-record-php-wasm-evidence-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 14912,
+            "mode": "100644",
+            "object": "3e34c0775d4664a5580605a57b7262f7f9d20d59"
+          },
+          "before": {
+            "bytes": 14907,
+            "mode": "100644",
+            "object": "cca4b760c7ae64ff0cd07bf1b32cb630bc9ac8f1"
+          },
+          "path": "tests/helpers/zero-payload-checked-record-ruby-fixture-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5018,
+            "mode": "100644",
+            "object": "568650ef6d1b6249bb1ac7bf80f9f53ea455166e"
+          },
+          "before": {
+            "bytes": 4710,
+            "mode": "100644",
+            "object": "5dd370c1c40edd344001cb9fcaf535e5096a73d1"
+          },
+          "path": "tests/helpers/zero-payload-perl-boolean-repair-source-history-tests.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 13496,
+            "mode": "100644",
+            "object": "cd4457947e52d1cbaaf79adc30b14a9e7d803e25"
+          },
+          "before": {
+            "bytes": 13237,
+            "mode": "100644",
+            "object": "0968850fa9e32f2316e8761b34c26bd1b740aee2"
+          },
+          "path": "tests/hosted-container-inventory.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5001,
+            "mode": "100644",
+            "object": "50b917743978a8b3e17dfaa3dea27cda6981e60c"
+          },
+          "before": {
+            "bytes": 4796,
+            "mode": "100644",
+            "object": "9e93972aadddd90b52064085f62455c8ebf97f99"
+          },
+          "path": "tests/inherited-checked-record-hosted-evidence-history.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 4682,
+            "mode": "100644",
+            "object": "cad4257a3798ec60c210b45d85b22a641999681a"
+          },
+          "before": {
+            "bytes": 4514,
+            "mode": "100644",
+            "object": "8f9ddadf2479fe5f6b8497f28cf79072d4b1c1a6"
+          },
+          "path": "tests/late-checked-record-test-registration-history.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5181,
+            "mode": "100644",
+            "object": "a51cf8593ef1f138933309dc3cabcbcfe3a877de"
+          },
+          "before": {
+            "bytes": 4992,
+            "mode": "100644",
+            "object": "95d598b09d51f1e30bec32067445402f1e1ea839"
+          },
+          "path": "tests/mutual-checked-record-dotnet-source-history.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5181,
+            "mode": "100644",
+            "object": "82aa2dcece3944dc2a7ad5ba29bfc500c82c593e"
+          },
+          "before": {
+            "bytes": 5015,
+            "mode": "100644",
+            "object": "b41723fc71a77af0fb3fd106594de420856bf651"
+          },
+          "path": "tests/mutual-checked-record-jvm-source-history.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5309,
+            "mode": "100644",
+            "object": "bd9708509eb02ddb6fa51abf0944904abce80583"
+          },
+          "before": {
+            "bytes": 5081,
+            "mode": "100644",
+            "object": "492ed4fbd4bd3763aca921839eaad848986840db"
+          },
+          "path": "tests/mutual-checked-record-npm-archive-source-history.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6036,
+            "mode": "100644",
+            "object": "e0916e97842dfd7a1f336949317a444ce71f1a67"
+          },
+          "before": {
+            "bytes": 5775,
+            "mode": "100644",
+            "object": "db5018757c549eadc13bfbb908aace4e075aa765"
+          },
+          "path": "tests/native-ci-isolation.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 9791,
+            "mode": "100644",
+            "object": "71b6e9e7c74d95bd6d1e8711774685ffc34de8a4"
+          },
+          "before": {
+            "bytes": 9451,
+            "mode": "100644",
+            "object": "d4d06d17ff42ebd4d923c5615f4ba9a3e47eb552"
+          },
+          "path": "tests/owned-jvm-borrow-evidence.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 7624,
+            "mode": "100644",
+            "object": "c39dc4e3ca6492a11d57250a7d46d32685cbff8c"
+          },
+          "before": {
+            "bytes": 7682,
+            "mode": "100644",
+            "object": "c885ec64f78a62199cc637fa22b32a0f146c10c3"
+          },
+          "path": "tests/owned-jvm-receiver-evidence.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 7925,
+            "mode": "100644",
+            "object": "e29e64d7c0f4486ae2df7354cabaccd03fa51675"
+          },
+          "before": {
+            "bytes": 7201,
+            "mode": "100644",
+            "object": "15bfe3b2413fc5de1e3def44d4f7bb4d5a325421"
+          },
+          "path": "tests/owned-perl-borrow-evidence.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 8706,
+            "mode": "100644",
+            "object": "fe625c2704446aaa327b498546b88faf6a167627"
+          },
+          "before": {
+            "bytes": 8715,
+            "mode": "100644",
+            "object": "c878ee3a528ed52103348697d108b0cb755f908e"
+          },
+          "path": "tests/owned-python-borrow-evidence.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 12124,
+            "mode": "100644",
+            "object": "be69e08cddcf770161ee55af3c825a37fa942eee"
+          },
+          "before": {
+            "bytes": 11823,
+            "mode": "100644",
+            "object": "8f0a2f51a8a25032e5292c6a7c91819950611d0e"
+          },
+          "path": "tests/owned-ruby-borrow-evidence.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 8054,
+            "mode": "100644",
+            "object": "5a0720a8a35aa5d6414760c8fec648aa2615e39b"
+          },
+          "before": {
+            "bytes": 7792,
+            "mode": "100644",
+            "object": "023ea6c21272c549ab32385d48f3a66c73a4baa7"
+          },
+          "path": "tests/owned-rust-borrow-evidence.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6008,
+            "mode": "100644",
+            "object": "8f8fa99c7190b3b64c7b78ecf746e916c383d559"
+          },
+          "before": {
+            "bytes": 6074,
+            "mode": "100644",
+            "object": "5701b866c87b6b274b63c9db7ba83ccff40cab82"
+          },
+          "path": "tests/owned-rust-receiver-evidence.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6771,
+            "mode": "100644",
+            "object": "0c5aab75efa7414fa521474fa96961aa04009e54"
+          },
+          "before": {
+            "bytes": 5885,
+            "mode": "100644",
+            "object": "7d9c19e64c954679119571cff6f42411bc68f82e"
+          },
+          "path": "tests/owned-rust-transfer-evidence.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6799,
+            "mode": "100644",
+            "object": "1c4c836657e6b9c0e82349532e079639bff2e51a"
+          },
+          "before": {
+            "bytes": 6367,
+            "mode": "100644",
+            "object": "02392efed63a78fe8695adb7f3370e2102ca4626"
+          },
+          "path": "tests/owned-transfer-c-evidence.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 11504,
+            "mode": "100644",
+            "object": "32028dcac3f8669ceaaaeb573e2ab856623de2e3"
+          },
+          "before": {
+            "bytes": 11447,
+            "mode": "100644",
+            "object": "3fbdc496cca89f2ec9c743fb04d07596b85e8773"
+          },
+          "path": "tests/perl-scalar-promotion.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 6582,
+            "mode": "100644",
+            "object": "8d2566dfeef17085e5e176e5044e7df7019fcac2"
+          },
+          "before": {
+            "bytes": 6055,
+            "mode": "100644",
+            "object": "168a36e675a2deba98b903d95038c3beaa7adaa1"
+          },
+          "path": "tests/recursive-checked-record-perl-diagnostic-source-history.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 7088,
+            "mode": "100644",
+            "object": "94e49278fac62d188cc1813d58c3bfb46833e9c0"
+          },
+          "before": {
+            "bytes": 6859,
+            "mode": "100644",
+            "object": "d713274f5cb84092c2c9d7bfdfc8ff123b611056"
+          },
+          "path": "tests/recursive-checked-record-perl-package-history-repair.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 5340,
+            "mode": "100644",
+            "object": "497621b01f74b6b0f9cbc1bcef45a067513fe7fd"
+          },
+          "before": {
+            "bytes": 5155,
+            "mode": "100644",
+            "object": "1a6a527cb25b3514e938cf587ead80be1972a9a0"
+          },
+          "path": "tests/structured-docs-ci-evidence.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 7097,
+            "mode": "100644",
+            "object": "d6f0ccaf41b662bee40733503a5cd98c46d378f3"
+          },
+          "before": {
+            "bytes": 6867,
+            "mode": "100644",
+            "object": "92c323c3eadc0aed9c3d523de07191db510c1998"
+          },
+          "path": "tests/test-profile-backlog-repair.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 76261,
+            "mode": "100644",
+            "object": "0a68bfa21a8cb18ac2695a94a3df769130f73580"
+          },
+          "before": {
+            "bytes": 73045,
+            "mode": "100644",
+            "object": "8fdcdffd9b5f378f60310949bac780d751408d0d"
+          },
+          "path": "tests/type-surface.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 7683,
+            "mode": "100644",
+            "object": "b8f6f1ca8aec8a4c3f455340f6ee0990f1d2d1c1"
+          },
+          "before": {
+            "bytes": 7692,
+            "mode": "100644",
+            "object": "36be55dcf9776dba94b3694fd7d6c9dc3226c41e"
+          },
+          "path": "tests/wasm-entry-supplement.test.mjs",
+          "status": "M"
+        }
+      ],
+      "commit": "8f5e50a90602689f88c3213cbd182c620a30196b",
+      "parent": "4456a0c2025a3e914ea9143ecdbe1192f339dfc7",
+      "role": "behavior-and-semantic-gate",
+      "subject": "test(core): separate semantic acceptance from final snapshots",
+      "tree": "92674de908ec2cc9fec2d696f5afdfb1935ece41"
+    },
+    {
+      "changes": [
+        {
+          "after": {
+            "bytes": 102965930,
+            "mode": "100644",
+            "object": "6b073731ebfaa8ab77e85d3803f7d52372e11f72"
+          },
+          "before": {
+            "bytes": 102965930,
+            "mode": "100644",
+            "object": "bd251ccb31eb855b7608bae28aa890b71ed96ab6"
+          },
+          "path": "docs/type-surface.v1.json",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 2394,
+            "mode": "100644",
+            "object": "af3cd13114af2a17596183f0d65483c6add4339f"
+          },
+          "before": null,
+          "path": "scripts/reconcile-core-semantic-gate-live-pins.mjs",
+          "status": "A"
+        }
+      ],
+      "commit": "21d77a4566d7b502073ab32facba7b395c3350aa",
+      "parent": "8f5e50a90602689f88c3213cbd182c620a30196b",
+      "role": "live-source-pin-reconciliation",
+      "subject": "test(core): reconcile semantic gate live citations",
+      "tree": "1003295e0742a390d13b25f1a071f36a45b28a02"
+    },
+    {
+      "changes": [
+        {
+          "after": {
+            "bytes": 48799,
+            "mode": "100644",
+            "object": "d8f2da6526f0f67f1db7c4523c0391364e6f6b9d"
+          },
+          "before": {
+            "bytes": 48531,
+            "mode": "100644",
+            "object": "50fd5a1b1fea6cbcb31f26e4fb639768eb95d265"
+          },
+          "path": "tests/type-surface-docs.test.mjs",
+          "status": "M"
+        },
+        {
+          "after": {
+            "bytes": 76749,
+            "mode": "100644",
+            "object": "bb613787f2667c2107cd20995a756eb1a7e67257"
+          },
+          "before": {
+            "bytes": 76261,
+            "mode": "100644",
+            "object": "0a68bfa21a8cb18ac2695a94a3df769130f73580"
+          },
+          "path": "tests/type-surface.test.mjs",
+          "status": "M"
+        }
+      ],
+      "commit": "dd68f225961b4692132e98f5af9b64c5bb2d6aaf",
+      "parent": "21d77a4566d7b502073ab32facba7b395c3350aa",
+      "role": "exact-model-and-documentation-seal",
+      "subject": "test(core): seal exact type-surface contracts",
+      "tree": "cd51a68879c9d2a1725d5237f83db58cf9088e4d"
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": "Authenticate the contiguous behavior, current live-source citation, exact type-surface model and generated-documentation closure. Preserve separate semantic and final snapshot gates, all changed-path and Git blob identities, and the complete mismatch aggregation that prevents one stale row from hiding the rest of its matrix."
+}
