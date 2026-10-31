@@ -89,6 +89,15 @@ const expectedNixJobs = [
 	, "wasi-consumer", "docker-engine"
 ];
 const diskBudgetedNixJobs = expectedNixJobs.filter(id => id !== "nix-cache");
+const callbackDiskCleanupName
+	= "Free hosted runner disk before callback package builds";
+const callbackDiskCleanupCommand = nixDiskCleanupCommand;
+const expectedCallbackDiskJobs = [
+	"owned-dotnet-callback-results", "owned-perl-callback-results"
+	, "owned-jvm-callback-results", "owned-ruby-callback-results"
+	, "owned-python-callback-results", "owned-rust-callback-results"
+	, "owned-cpp-callback-results", "owned-callback-results"
+];
 
 /**
  * Audit every Nix consumer job together so one missing cleanup cannot hide the
@@ -129,6 +138,50 @@ const nixDiskBudgetMismatches = workflow => {
 			if(cleanup < 0 || position < 0 || cleanup >= position)
 				mismatches.push({ label: `${id}/before-${label}`, actual: [cleanup, position], expected: "cleanup first" });
 		}
+	}
+	return mismatches;
+};
+
+/**
+ * Audit every callback-result package job together. These jobs install the
+ * component toolchain, all browser engines and several downstream language
+ * SDKs, so leaving even one job on the full hosted image can exhaust disk late
+ * in otherwise successful installed-package execution.
+ *
+ * @param workflow - Complete Consumer Matrix workflow source.
+ * @returns {Array<{label: string, actual: unknown, expected: unknown}>} Every
+ * inventory, count, command or ordering mismatch.
+ */
+const callbackDiskBudgetMismatches = workflow => {
+	const starts = [...workflow.matchAll(/^ {2}([a-z][a-z0-9-]*):\n/gmu)]
+		.map(match => ({ id: match[1], index: match.index }));
+	const jobs = starts.map((start, index) => [start.id
+		, workflow.slice(start.index
+			, starts[index + 1]?.index ?? workflow.length)]);
+	const actual = jobs.filter(([, body]) =>
+		body.includes("name: Callback-result lifetimes in installed"))
+		.map(([id]) => id);
+	const mismatches = [];
+	if(!isDeepStrictEqual(actual, expectedCallbackDiskJobs))
+		mismatches.push({ label: "callback job inventory"
+			, actual, expected: expectedCallbackDiskJobs });
+	const blocks = new Map(jobs);
+	for(const id of expectedCallbackDiskJobs)
+	{
+		const body = blocks.get(id) ?? "";
+		const cleanupCount = body.split(callbackDiskCleanupName).length - 1;
+		const commandCount = body.split(callbackDiskCleanupCommand).length - 1;
+		if(cleanupCount !== 1)
+			mismatches.push({ label: `${id}/cleanup-count`
+				, actual: cleanupCount, expected: 1 });
+		if(commandCount !== 1)
+			mismatches.push({ label: `${id}/command-count`
+				, actual: commandCount, expected: 1 });
+		const cleanup = body.indexOf(callbackDiskCleanupName);
+		const checkout = body.indexOf("Check out the exact revision");
+		if(cleanup < 0 || checkout < 0 || cleanup >= checkout)
+			mismatches.push({ label: `${id}/before-checkout`
+				, actual: [cleanup, checkout], expected: "cleanup first" });
 	}
 	return mismatches;
 };
@@ -723,6 +776,23 @@ test("every Nix-backed consumer build reclaims hosted disk before checkout", asy
 		.map(({ label }) => label)
 		, diskBudgetedNixJobs.map(id => `${id}/cleanup-count`));
 });
+
+test("every callback-result package build reclaims hosted disk before checkout"
+	, async () => {
+		const workflow = await readFile(
+			".github/workflows/consumer-matrix.yml", "utf8");
+		assert.deepEqual(callbackDiskBudgetMismatches(workflow), []);
+		const missingEveryCleanup = workflow.replaceAll(
+			callbackDiskCleanupName, "Missing callback disk cleanup");
+		const mismatches = callbackDiskBudgetMismatches(missingEveryCleanup);
+		assert.deepEqual(mismatches.filter(({ label }) =>
+			label.endsWith("/cleanup-count")).map(({ label }) => label)
+			, expectedCallbackDiskJobs.map(id => `${id}/cleanup-count`));
+		assert.deepEqual(mismatches.filter(({ label }) =>
+			label.endsWith("/before-checkout")).map(({ label }) => label)
+			, expectedCallbackDiskJobs.map(id => `${id}/before-checkout`));
+	}
+);
 
 test("consumer CI history preserves every consumer and pinned build path", async () => {
   const [packageDocument, livePerlWorkflow, toolchainBootstrap, reviewedCorpusTest] = await Promise.all([
