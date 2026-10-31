@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/python-dependent-fin-nat-rejection-source-history-tests.mjs";
 import "./helpers/consumer-callback-disk-budget-source-history-tests.mjs";
 import "./helpers/core-live-source-pin-aggregation-source-history-tests.mjs";
 import "./helpers/core-history-hub-fixed-point-source-history-tests.mjs";

@@ -1,0 +1,96 @@
+{
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "failedRun": {
+    "job": 124447261240,
+    "workflow": 41170510578
+  },
+  "failure": "Python ValueError escaped the fixture's dependent-Fin rejection classifier",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-python-dependent-fin-nat-rejection-source-history.mjs",
+      "sha256": "553c18d03552791f188b4dbd7944fb58d650b1e1af211bc31b9407743962ba59"
+    },
+    {
+      "path": "tests/helpers/python-dependent-fin-nat-rejection-source-history-tests.mjs",
+      "sha256": "0b2b7207f459766c0db82dc5bf0d9de5e02aa03aff0482d8500a6973c2a85687"
+    },
+    {
+      "path": "tests/helpers/python-dependent-fin-nat-rejection-source-history.mjs",
+      "sha256": "ee243a0bee70a185bc104d4e7092fee313406a393f59ca0668ab6f1095778d6c"
+    }
+  ],
+  "implementationCommit": "d51b919c6e8fd054a065013987ed2d1adc273eaa",
+  "integrationUpdates": [
+    {
+      "currentSha256": "61e9e1ff7ceee1b105364ca87028eeacc8521812ce164a714ddff662db968c3a",
+      "edits": [
+        {
+          "current": "import \"./helpers/python-dependent-fin-nat-rejection-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "71c108aeb3b70a575ed206460b7ee4953a94aa0cca06b31694a2e1675aebf7ca"
+    },
+    {
+      "currentSha256": "1abc133c308dc9211a3f2099e43b752b0082c77b8262eeb118f14f10e7fef848",
+      "edits": [
+        {
+          "current": "import {\n\tbeforePythonDependentFinNatRejectionSource\n\t, pythonDependentFinNatRejectionNormalizationPaths\n} from \"./python-dependent-fin-nat-rejection-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...pythonDependentFinNatRejectionNormalizationPaths\n\t, ...coreLiveSourcePinAggregationNormalizationPaths\n",
+          "previous": "\t...coreLiveSourcePinAggregationNormalizationPaths\n",
+          "start": 230835
+        },
+        {
+          "current": "\tlet stage = beforePythonDependentFinNatRejectionSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreLiveSourcePinAggregationSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreLiveSourcePinAggregationSource(path, text, expected);\n",
+          "start": 289721
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b6764b812e5032cf58f08f4bc766a33ab2d8c1e3db319e19fe4bb5c9dff9cd37"
+    }
+  ],
+  "liveSourcePins": 0,
+  "milestone": "python-dependent-fin-nat-rejection-source-v1",
+  "predecessorCommit": "b2cadff2c026590258c37d94cc2e7256e96bd3dc",
+  "runtimeChanged": false,
+  "schemaVersion": 1,
+  "scope": "Keep negative Python integers in the existing Nat ValueError path and classify that path as distinct from LeanBridgeError dependent-Fin rejection. Change only the installed Python caller and its static contract; preserve generated runtime code, every support cell, stage, evidence identity, live source pin and the frozen #1220 model.",
+  "updates": [
+    {
+      "currentSha256": "c4fd6b89e27a00c37c610b000142883c27ec72f3d6159effefc24dd22c438616",
+      "edits": [
+        {
+          "current": "    except ValueError:\n        # A negative Nat is rejected before the dependent Fin check.\n        return False\n",
+          "previous": "",
+          "start": 385
+        }
+      ],
+      "path": "tests/fixtures/dependent-fin-consumers/python.py",
+      "previousSha256": "d5c2d1238e52331ce8961bc72abceed29e13dc7f928d4d2b95f92fc84d29eb7d"
+    },
+    {
+      "currentSha256": "4e27561d262932421e964ffc59e40f3d3bd34e0aaa0c72d4fc4973f7f7f019ea",
+      "edits": [
+        {
+          "current": "\tconst python = await readFile(\n\t\t\"tests/fixtures/dependent-fin-consumers/python.py\", \"utf8\");\n\tassert.match(python, /except ValueError:\\n\\s+# A negative Nat[^\\n]*\\n\\s+return False/u\n\t\t, \"Python keeps a negative Nat distinct from a dependent Fin rejection\");\n",
+          "previous": "",
+          "start": 6729
+        }
+      ],
+      "path": "tests/managed-dependent-fin.test.mjs",
+      "previousSha256": "77a196998a8700f2ca35ea6dda2d64387744addcd8a01e6db72720ab277ef3ad"
+    }
+  ]
+}
