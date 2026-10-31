@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/consumer-type-surface-receipt-repair-source-history-tests.mjs";
 import "./helpers/python-dependent-fin-nat-rejection-source-history-tests.mjs";
 import "./helpers/alpha-npm-module-closure-source-history-tests.mjs";
 import "./helpers/consumer-nix-source-closure-audit-source-history-tests.mjs";

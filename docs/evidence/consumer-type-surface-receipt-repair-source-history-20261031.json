@@ -1,0 +1,885 @@
+{
+  "currentSourcePins": [
+    {
+      "count": 92,
+      "current": "00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previous": "b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa"
+    },
+    {
+      "count": 1,
+      "current": "55b0fae760eb5a65474c6ed2d0f2565900cd5d145e29226c1a824790e4d9c056",
+      "path": "tests/helpers/jvm-recursive-callable-instrument.mjs",
+      "previous": "4d9e89ef05e329322770c0b56012915537e59f901d1a01e1df4e1917ad079b4d"
+    },
+    {
+      "count": 3,
+      "current": "48326b31b12f4f265adf0cd52a71b8506f6b9bc868999ef3969406d4e1d11df4",
+      "path": "tests/jvm-recursive-callable-contract.test.mjs",
+      "previous": "4623c5206047d8c89b05be6ea9bb80d35fa57f3a8f29d5cb721b7e09f6c9bd4c"
+    }
+  ],
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "failedRun": {
+    "workflow": 41209387856
+  },
+  "failures": [
+    {
+      "completedAt": "2026-10-31T16:10:45Z",
+      "instrumentationError": "stubs: undefined",
+      "job": 124566906989,
+      "missingEvidence": "docs/evidence/browser-callback-fin-20261008/ordinary.json",
+      "name": "Managed consumer (jvm)",
+      "step": "Enforce managed consumer support"
+    },
+    {
+      "completedAt": "2026-10-31T16:12:18Z",
+      "derivedUploadFailures": true,
+      "job": 124566907106,
+      "missingEvidence": "docs/evidence/browser-callback-fin-20261008/ordinary.json",
+      "name": "PHP-Wasm corpus (values)",
+      "step": "Enforce PHP-Wasm corpus"
+    }
+  ],
+  "historyAdditions": [
+    {
+      "path": "scripts/update-consumer-type-surface-receipt-repair-source-history.mjs",
+      "sha256": "8ad4ef75cfa1d857f1e36a036fcd29a6029152f70b6c159435af96f5f42f1191"
+    },
+    {
+      "path": "tests/helpers/consumer-type-surface-receipt-repair-source-history-tests.mjs",
+      "sha256": "454667d39238ecc25c9d6368181bc61c12aaccd28af4bd44d7203d31930b3d41"
+    },
+    {
+      "path": "tests/helpers/consumer-type-surface-receipt-repair-source-history.mjs",
+      "sha256": "11c31a77d04b5009837501b0b800003c8a8ae1e89478d545236608491ee63584"
+    }
+  ],
+  "implementationCommit": "a5eef89df2d3885970bd7e89001d7eba30891d7b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "be05cbd606fea192613e2d8c0524bf19c0409884fe0a496e9a3d1c0dc7b8ee53",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 78051
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 95246
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 111547
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 126315
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 135597
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 145222
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 168606
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 181575
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 196470
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 209254
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 222474
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 231007
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 239437
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 248454
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 256828
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 276108
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 285947
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 298082
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 316680
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 325976
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 338659
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 347914
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 357197
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 366330
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 375189
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 382576
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 390500
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 401146
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 415252
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 422350
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 432579
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 440323
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 446697
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 452860
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 458957
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 465478
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 473144
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 482438
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 493660
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 503357
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 524492
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 533057
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 544065
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 575950
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 582579
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 592838
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 613711
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 622234
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 633184
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 664702
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 673921
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 681261
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 693544
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 700404
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 709432
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 723458
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 734500
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 748548
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 759294
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 771365
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 782653
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 791236
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 797694
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 806080
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 823670
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 844666
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 900007
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1012069
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1072310
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1079704
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1086302
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1093404
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1100904
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1107954
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1115564
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1137538
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1149425
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1157296
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1167261
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1177375
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1189136
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1221697
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1251976
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1284962
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1324763
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1351339
+        },
+        {
+          "current": "          \"sha256\": \"55b0fae760eb5a65474c6ed2d0f2565900cd5d145e29226c1a824790e4d9c056\"\n",
+          "previous": "          \"sha256\": \"4d9e89ef05e329322770c0b56012915537e59f901d1a01e1df4e1917ad079b4d\"\n",
+          "start": 1364879
+        },
+        {
+          "current": "          \"sha256\": \"48326b31b12f4f265adf0cd52a71b8506f6b9bc868999ef3969406d4e1d11df4\"\n",
+          "previous": "          \"sha256\": \"4623c5206047d8c89b05be6ea9bb80d35fa57f3a8f29d5cb721b7e09f6c9bd4c\"\n",
+          "start": 1369249
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1373876
+        },
+        {
+          "current": "          \"sha256\": \"48326b31b12f4f265adf0cd52a71b8506f6b9bc868999ef3969406d4e1d11df4\"\n",
+          "previous": "          \"sha256\": \"4623c5206047d8c89b05be6ea9bb80d35fa57f3a8f29d5cb721b7e09f6c9bd4c\"\n",
+          "start": 1388294
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1393543
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1416931
+        },
+        {
+          "current": "          \"sha256\": \"48326b31b12f4f265adf0cd52a71b8506f6b9bc868999ef3969406d4e1d11df4\"\n",
+          "previous": "          \"sha256\": \"4623c5206047d8c89b05be6ea9bb80d35fa57f3a8f29d5cb721b7e09f6c9bd4c\"\n",
+          "start": 1424808
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1428559
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1451705
+        },
+        {
+          "current": "          \"sha256\": \"00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9\"\n",
+          "previous": "          \"sha256\": \"b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa\"\n",
+          "start": 1951842
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "f69bb6a6b828d5c5455068a52a5d232d4e377c40e1e3926a2a492e97bbb4a915"
+    },
+    {
+      "currentSha256": "998ab32a7776cecf6013d2449e62c29dfc11e598d4182822b9c13d4aaef77d03",
+      "edits": [
+        {
+          "current": "import \"./helpers/consumer-type-surface-receipt-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "bcbb213f68cefb3559aa7e46d206862b61f7901a642a9254372caf5c251dfde8"
+    },
+    {
+      "currentSha256": "5014981dc9d2c2df390e6a217d8b9a1314d6fc7526f399c3c5c7a308d6dc8556",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeConsumerTypeSurfaceReceiptRepairSource\n\t, consumerTypeSurfaceReceiptRepairNormalizationPaths\n} from \"./consumer-type-surface-receipt-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...consumerTypeSurfaceReceiptRepairNormalizationPaths\n\t, ...alphaNpmModuleClosureNormalizationPaths\n",
+          "previous": "\t...alphaNpmModuleClosureNormalizationPaths\n",
+          "start": 232313
+        },
+        {
+          "current": "\tlet stage = beforeConsumerTypeSurfaceReceiptRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeAlphaNpmModuleClosureSource(\n",
+          "previous": "\tlet stage = beforeAlphaNpmModuleClosureSource(\n",
+          "start": 291675
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "379d30dc0b41ae414aeec61faecd7996f8cb3f75271eab6389daf67038acd89c"
+    }
+  ],
+  "jvmInstrumentation": {
+    "indentationPreserved": true,
+    "instrumentedStubs": 36,
+    "runtimePath": "src/main/java/org/leanbridge/structured/_CallableGraphRuntime.java",
+    "stubAnchors": 36
+  },
+  "liveFiles": 2661,
+  "milestone": "consumer-type-surface-receipt-repair-v1",
+  "missingLiveFiles": 0,
+  "predecessorCommit": "7925a22f3315a13cdf9d13869c512159637fa853",
+  "receipt": {
+    "artifact": "consumer-type-surface-${{ github.sha }}",
+    "metadataConsumers": [
+      "browser-consumer",
+      "host-null-systems",
+      "managed-consumers",
+      "native-c-family-values",
+      "native-consumers",
+      "node-consumers",
+      "owned-jvm-values",
+      "owned-wit-receivers",
+      "php-consumers",
+      "php-multi-profile",
+      "php-wasm-callback-results",
+      "php-wasm-consumers",
+      "php-wasm-corpus",
+      "php-wasm-receivers",
+      "reviewed-fin-wasm-entry",
+      "wasi-consumer"
+    ],
+    "path": "build/consumer-type-surface/receipt.json",
+    "producer": "type-surface-authentication",
+    "reviewedConsumer": "reviewed-ir-admission"
+  },
+  "refreshedPins": 96,
+  "remainingMismatches": 0,
+  "rootCauses": [
+    {
+      "detail": "Metadata-only consumer checkouts invoked readTypeSurface without the commit-bound receipt produced from the complete authenticated corpus.",
+      "kind": "sparse-evidence-corpus"
+    },
+    {
+      "detail": "Fault instrumentation required eight spaces while the generated runtime uses tabs for stub declarations.",
+      "kind": "generated-jvm-indentation"
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": "Authenticate the retained type-surface evidence corpus once, distribute its exact commit-bound receipt to the reviewed corpus and all sixteen metadata-only Nix consumers, and retain their bounded sparse source closures. Repair recursive JVM fault instrumentation against the actual generated tab indentation and prove all 36 stub anchors. Refresh exactly 96 live source citations across three paths without changing any support cell, stage, observation, package API or frozen #1220 model.",
+  "updates": [
+    {
+      "currentSha256": "00c0bd9a424894a0b0e0fecce7e2e6323460c844ceff50b4e89b9e728bdf3ba9",
+      "edits": [
+        {
+          "current": "  type-surface-authentication:\n    name: Type-surface evidence authentication\n    runs-on: ubuntu-24.04\n    timeout-minutes: 90\n    steps:\n      - name: Free hosted runner disk for the evidence checkout\n        run: |\n          df -h /\n          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL\n          df -h /\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n          cache: npm\n      - name: Install dependencies without lifecycle scripts\n        run: npm ci --ignore-scripts\n      - name: Authenticate the exact type-surface corpus once\n        run: |\n          node scripts/create-core-type-surface-evidence-receipt.mjs \\\n            --receipt build/consumer-type-surface/receipt.json \\\n            --manifest build/consumer-type-surface/materialization.json \\\n            --commit \"${{ github.sha }}\"\n      - name: Preserve the exact type-surface receipt\n        uses: actions/upload-artifact@v7\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 7\n\n",
+          "previous": "",
+          "start": 910
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 2491
+        },
+        {
+          "current": "",
+          "previous": "    # This gate intentionally re-hashes the complete retained type-surface\n    # evidence corpus instead of trusting an upstream receipt.\n",
+          "start": 2556
+        },
+        {
+          "current": "          fetch-depth: 1\n",
+          "previous": "",
+          "start": 2682
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 2744
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 68696
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 69632
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 97387
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 98232
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 100872
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 101634
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 111188
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 112109
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 116942
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 117863
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 122607
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 123478
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 147316
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 148204
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 158543
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 159754
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 183886
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 185031
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 187899
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 188686
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 200910
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 202181
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 272830
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 273705
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 345617
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 346404
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 355735
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 356497
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 360056
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 360818
+        },
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 366528
+        },
+        {
+          "current": "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n",
+          "previous": "",
+          "start": 367466
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "b47d1fd93aebe2e690388fb275cece9136befcef0167138a61f8b5535feb2afa"
+    },
+    {
+      "currentSha256": "8a65508a9c09124a77949661ce43299f2ac06965ff32c0e7cccfa0c0ba4addab",
+      "edits": [
+        {
+          "current": "\tconst producer = jobs.get(\"type-surface-authentication\");\n\tassert.match(producer\n\t\t, /node scripts\\/create-core-type-surface-evidence-receipt[.]mjs/u);\n\tassert.match(producer\n\t\t, /name: consumer-type-surface-\\$\\{\\{ github[.]sha \\}\\}/u);\n\tconst reviewed = jobs.get(\"reviewed-ir-admission\");\n\tassert.match(reviewed, /^ {4}needs: type-surface-authentication$/mu);\n\tassert.match(reviewed, /^ {8}uses: actions\\/download-artifact@v8$/mu);\n\tassert.match(reviewed\n\t\t, /LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=\\$GITHUB_WORKSPACE\\/build\\/consumer-type-surface\\/receipt[.]json/u);\n",
+          "previous": "",
+          "start": 6192
+        },
+        {
+          "current": "\t\tassert.match(job, /^ {4}needs: type-surface-authentication$/mu, name);\n",
+          "previous": "",
+          "start": 6922
+        },
+        {
+          "current": "\t\tassert.match(job, /^ {8}uses: actions\\/download-artifact@v8$/mu\n\t\t\t, name);\n\t\tassert.match(job\n\t\t\t, /^ {10}name: consumer-type-surface-\\$\\{\\{ github[.]sha \\}\\}$/mu\n\t\t\t, name);\n\t\tassert.match(job\n\t\t\t, /LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=\\$GITHUB_WORKSPACE\\/build\\/consumer-type-surface\\/receipt[.]json/u\n\t\t\t, name);\n",
+          "previous": "",
+          "start": 7284
+        },
+        {
+          "current": "\t\t\tfor(const required of [\n\t\t\t\t\"    needs: type-surface-authentication\\n\"\n\t\t\t\t, \"          sparse-checkout-cone-mode: false\\n\"\n\t\t\t\t, \"        uses: actions/download-artifact@v8\\n\"\n\t\t\t\t, \"        run: echo \\\"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\\\" >> \\\"$GITHUB_ENV\\\"\\n\"\n\t\t\t]) {\n\t\t\t\tconst changed = job.replace(required, \"\");\n\t\t\t\tassert.notEqual(changed, job, `${name}: ${required.trim()}`);\n\t\t\t\tassert.throws(() => assertNixSourceClosures(\n\t\t\t\t\tsource.replace(job, () => changed))\n\t\t\t\t\t, { name: \"AssertionError\" }, name);\n\t\t\t}\n",
+          "previous": "\t\t\tconst changed = job.replace(\n\t\t\t\t\"          sparse-checkout-cone-mode: false\\n\", \"\");\n\t\t\tassert.notEqual(changed, job);\n\t\t\tassert.throws(() => assertNixSourceClosures(\n\t\t\t\tsource.replace(job, () => changed))\n\t\t\t\t, { name: \"AssertionError\" }, name);\n",
+          "start": 7954
+        }
+      ],
+      "path": "tests/docker-consumer-ci.test.mjs",
+      "previousSha256": "de84f9703c06f05b9094be3d63e26e987f679efeb99033f409e927a8a61fc448"
+    },
+    {
+      "currentSha256": "55b0fae760eb5a65474c6ed2d0f2565900cd5d145e29226c1a824790e4d9c056",
+      "edits": [
+        {
+          "current": "\treplace('_CallableGraphRuntime', 'stubs', /^([ \\t]+)(var stub = [^\\n]+;)$/gm\n\t\t, '$1$2\\n$1GraphFaultProbe.tick();');\n",
+          "previous": "\treplace('_CallableGraphRuntime', 'stubs', /( {8}var stub = [^\\n]+;)/g, '$1\\n        GraphFaultProbe.tick();');\n",
+          "start": 3229
+        }
+      ],
+      "path": "tests/helpers/jvm-recursive-callable-instrument.mjs",
+      "previousSha256": "4d9e89ef05e329322770c0b56012915537e59f901d1a01e1df4e1917ad079b4d"
+    },
+    {
+      "currentSha256": "48326b31b12f4f265adf0cd52a71b8506f6b9bc868999ef3969406d4e1d11df4",
+      "edits": [
+        {
+          "current": "import { instrumentJvmRecursiveCallbacks } from './helpers/jvm-recursive-callable-instrument.mjs';\n",
+          "previous": "",
+          "start": 1521
+        },
+        {
+          "current": "test('recursive JVM fault instrumentation follows generated stub indentation', () => {\n\tconst ir = nativeRecursiveCallableReviewedIr(), compiled = model(ir);\n\tconst generated = generateCallableJvmGraphPackage(ir);\n\tconst instrumented = instrumentJvmRecursiveCallbacks(generated, compiled.namespace);\n\tconst path = 'src/main/java/' + compiled.namespace.replaceAll('.', '/')\n\t\t+ '/_CallableGraphRuntime.java';\n\tconst stubs = [...generated[path].matchAll(/^([ \\t]+)(var stub = [^\\n]+;)$/gm)];\n\tassert.equal(stubs.length, 36); assert.equal(instrumented.edits.stubs, 36);\n\tfor(const stub of stubs)\n\t\tassert.ok(instrumented.files[path].includes(stub[0] + '\\n'\n\t\t\t+ stub[1] + 'GraphFaultProbe.tick();'));\n});\n\n",
+          "previous": "",
+          "start": 9530
+        }
+      ],
+      "path": "tests/jvm-recursive-callable-contract.test.mjs",
+      "previousSha256": "4623c5206047d8c89b05be6ea9bb80d35fa57f3a8f29d5cb721b7e09f6c9bd4c"
+    }
+  ]
+}
