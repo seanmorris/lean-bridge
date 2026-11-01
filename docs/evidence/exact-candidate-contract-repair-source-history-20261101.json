@@ -1,0 +1,487 @@
+{
+  "candidate": {
+    "commit": "766fd12a6297fe52fe3eeccc77105aacb2f32903",
+    "coreContractFailureJobs": [
+      124667145154,
+      124667145164
+    ],
+    "coreRunId": 41242839492,
+    "downstreamContractFailureJobs": [
+      124662134912,
+      124662134998,
+      124662135038,
+      124662135074,
+      124679799351
+    ],
+    "downstreamRunId": 41242839565,
+    "infrastructureJobs": [
+      124662134855,
+      124662134876,
+      124662134915
+    ]
+  },
+  "changedSupportCells": 0,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-exact-candidate-contract-repair-source-history.mjs",
+      "sha256": "51fa857e4b259054c690231ac88a7941bf477e32b38a6b6207f73ad88b652868"
+    },
+    {
+      "path": "tests/helpers/exact-candidate-contract-repair-source-history-tests.mjs",
+      "sha256": "750e3a8314472ad3dabbbbf5af0c97ac4364f3fd9711084bdc727f282c8c290a"
+    },
+    {
+      "path": "tests/helpers/exact-candidate-contract-repair-source-history.mjs",
+      "sha256": "6a36e8f8147ede890012a680945fed7b3109971fce2973eeacea96e6d492ffdc"
+    }
+  ],
+  "implementationCommit": "1eb64a578892a42cc934179cede63964bc9dc4f3",
+  "integrationUpdates": [
+    {
+      "currentSha256": "db4ba704557a1fe2e860e22cad8fa95bbcf0812f4b4d25e30873904216162f78",
+      "edits": [
+        {
+          "current": "import \"./helpers/exact-candidate-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "2f8916808acc23c08f53fc2d8d0222eeb9f027123f5f422458cdaa420b9b7213"
+    },
+    {
+      "currentSha256": "de9687ad63cb3ca31d6ec64c3befb3f1f8ef1fb7b6fc696f4e13028704b72ec1",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeExactCandidateContractRepairSource\n\t, exactCandidateContractRepairNormalizationPaths\n} from \"./exact-candidate-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...exactCandidateContractRepairNormalizationPaths\n\t, ...perlCallbackModuleArgumentRepairNormalizationPaths\n",
+          "previous": "\t...perlCallbackModuleArgumentRepairNormalizationPaths\n",
+          "start": 234013
+        },
+        {
+          "current": "\tlet stage = beforeExactCandidateContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlCallbackModuleArgumentRepairSource(\n",
+          "previous": "\tlet stage = beforePerlCallbackModuleArgumentRepairSource(\n",
+          "start": 293924
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "02127baf3fb5328af4006e3fa220dc033c448d465cadac8234eb8dc05e6adf0c"
+    }
+  ],
+  "milestone": "exact-candidate-contract-repair-source-v1",
+  "predecessorCommit": "98be5ee3c4e49a4255e1b6c99f38b8de8f2b199c",
+  "schemaVersion": 1,
+  "sourceContractChanges": 14,
+  "updates": [
+    {
+      "currentSha256": "829cc81450fd709598110e747b347c6c105e469a6401b4e688ab33b665ee806d",
+      "edits": [
+        {
+          "current": "    needs: type-surface-authentication\n",
+          "previous": "",
+          "start": 408289
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "e030dd3d7b920fdab9ca19301946ff4261a2aa2d217e2a57551c131ed795197f"
+    },
+    {
+      "currentSha256": "29dfbe30a3048818b9a4d633b6ed1d6d797daccd81749efb67f71ca0d2518fba",
+      "edits": [
+        {
+          "current": "env:\n  LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT: ${{ github.workspace }}/build/consumer-type-surface/receipt.json\n  # Reusable workflows do not inherit the caller's environment. Perl jobs need\n  # current source plus text evidence metadata, never the retained payload\n  # corpus that makes an unbounded checkout exceed hosted-runner budgets.\n  LEAN_BRIDGE_PERL_SPARSE_CHECKOUT: |\n    /*\n    !/*/\n    /.github/\n    /acceptance/\n    /config/\n    /containers/\n    /demos/\n    /nix/\n    /notices/\n    /patches/\n    /poc/\n    /schema/\n    /scripts/\n    /site/\n    /src/\n    /tests/\n    /docs/\n    !/docs/evidence/*\n    /docs/evidence/*.json\n    /docs/evidence/*.md\n    /docs/evidence/*.xml\n    /docs/evidence/*/index.json\n\n",
+          "previous": "",
+          "start": 102
+        },
+        {
+          "current": "          fetch-depth: 1\n          filter: blob:none\n",
+          "previous": "",
+          "start": 1008
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n",
+          "previous": "",
+          "start": 1098
+        },
+        {
+          "current": "          fetch-depth: 1\n          filter: blob:none\n",
+          "previous": "",
+          "start": 4388
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n",
+          "previous": "",
+          "start": 4478
+        },
+        {
+          "current": "          fetch-depth: 1\n          filter: blob:none\n",
+          "previous": "",
+          "start": 6491
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n",
+          "previous": "",
+          "start": 6581
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 10465
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n",
+          "previous": "",
+          "start": 10530
+        },
+        {
+          "current": "          fetch-depth: 1\n          filter: blob:none\n",
+          "previous": "",
+          "start": 27371
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n",
+          "previous": "",
+          "start": 27461
+        },
+        {
+          "current": "          fetch-depth: 1\n          filter: blob:none\n",
+          "previous": "",
+          "start": 31273
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n",
+          "previous": "",
+          "start": 31363
+        }
+      ],
+      "path": ".github/workflows/perl-consumer.yml",
+      "previousSha256": "f5fe22dd3add022d9389b15c67243d8c756c151c65431e6b06e1ea2445347f32"
+    },
+    {
+      "currentSha256": "b9e0fa3a02e259d4bacff8dbafcf88ef99076790f770fffb3444fd7c36c506f3",
+      "edits": [
+        {
+          "current": "const originalCheckout = \"      - uses: actions/checkout@v6\\n        with:\\n          persist-credentials: false\\n\";\nconst boundedCheckout = \"      - uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 1\\n          filter: blob:none\\n          persist-credentials: false\\n          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}\\n          sparse-checkout-cone-mode: false\\n\";\nconst receiptDownload = \"      - name: Restore the authenticated type-surface receipt\\n        uses: actions/download-artifact@v8\\n        with:\\n          name: consumer-type-surface-${{ github.sha }}\\n          path: build/consumer-type-surface\\n\";\nconst normalizeCheckout = value => value.replace(boundedCheckout\n\t, originalCheckout).replace(receiptDownload, \"\");\n",
+          "previous": "",
+          "start": 2575
+        },
+        {
+          "current": "",
+          "previous": "\tassert.equal(source.split(job).length, 2);\n",
+          "start": 3450
+        },
+        {
+          "current": "\tassert.equal(normalizeCheckout(\"  checked-records:\\n\" + actual + \"\\n\"), job);\n",
+          "previous": "\tassert.equal(\"  checked-records:\\n\" + actual + \"\\n\", job);\n",
+          "start": 3546
+        },
+        {
+          "current": "\tassert.equal(perl.trim(), \"name: Perl\\n    needs: type-surface-authentication\\n    uses: ./.github/workflows/perl-consumer.yml\");\n",
+          "previous": "\tassert.equal(perl.trim(), \"name: Perl\\n    uses: ./.github/workflows/perl-consumer.yml\");\n",
+          "start": 4690
+        },
+        {
+          "current": "\tconst body = source.split(\"  checked-records:\\n\")[1]\n\t\t?.split(/\\n {2}[a-z][a-z0-9-]*:\\n/u)[0];\n\tconst currentJob = \"  checked-records:\\n\" + body + \"\\n\";\n\tassert.equal(normalizeCheckout(currentJob), job);\n",
+          "previous": "",
+          "start": 5182
+        },
+        {
+          "current": "\t\tcurrentJob.replace(\"    runs-on:\", \"    if: false\\n    runs-on:\")\n\t\t, currentJob.replace(\"    runs-on:\", \"    continue-on-error: true\\n    runs-on:\")\n\t\t, currentJob.replace(\"          bash scripts/run-checked-record-perl-ci.sh\", \"          bash scripts/run-checked-record-perl-ci.sh || true\")\n\t\t, currentJob.replace(\"        if: always()\", \"        if: success()\")\n\t\t, currentJob.replace(\"          if-no-files-found: error\", \"          if-no-files-found: ignore\")\n\t\t, currentJob.replace(\"          path: build/checked-record-perl-ci/\", \"          path: build/checked-record-perl-ci/*/report.json\")\n\t\t, ...[\"5.36.3 threaded\", \"5.36.3 unthreaded\", \"5.38.2 threaded\", \"5.38.2 unthreaded\"].map(configuration => currentJob.replace(`          node scripts/build-perl-toolchains.mjs ${configuration}\\n`, \"\"))\n\t\t, currentJob.replace(\"          LEAN_NUM_THREADS:\", \"          LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR: 2.36\\n          LEAN_NUM_THREADS:\")\n\t\t, currentJob.replace(\"          bash scripts/run-checked-record-perl-ci.sh\", \"          set +e\\n          bash scripts/run-checked-record-perl-ci.sh\")\n",
+          "previous": "\t\tjob.replace(\"    runs-on:\", \"    if: false\\n    runs-on:\")\n\t\t, job.replace(\"    runs-on:\", \"    continue-on-error: true\\n    runs-on:\")\n\t\t, job.replace(\"          bash scripts/run-checked-record-perl-ci.sh\", \"          bash scripts/run-checked-record-perl-ci.sh || true\")\n\t\t, job.replace(\"        if: always()\", \"        if: success()\")\n\t\t, job.replace(\"          if-no-files-found: error\", \"          if-no-files-found: ignore\")\n\t\t, job.replace(\"          path: build/checked-record-perl-ci/\", \"          path: build/checked-record-perl-ci/*/report.json\")\n\t\t, ...[\"5.36.3 threaded\", \"5.36.3 unthreaded\", \"5.38.2 threaded\", \"5.38.2 unthreaded\"].map(configuration => job.replace(`          node scripts/build-perl-toolchains.mjs ${configuration}\\n`, \"\"))\n\t\t, job.replace(\"          LEAN_NUM_THREADS:\", \"          LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR: 2.36\\n          LEAN_NUM_THREADS:\")\n\t\t, job.replace(\"          bash scripts/run-checked-record-perl-ci.sh\", \"          set +e\\n          bash scripts/run-checked-record-perl-ci.sh\")\n",
+          "start": 5412
+        },
+        {
+          "current": "\t\tconst changed = source.replace(currentJob, altered);\n",
+          "previous": "\t\tconst changed = source.replace(job, altered);\n",
+          "start": 6512
+        }
+      ],
+      "path": "tests/helpers/checked-record-perl-ci-workflow-tests.mjs",
+      "previousSha256": "c2a722a5ce0fc82d423ae1821e46d09a26ae733e52f0115ce5aec76835ed7f1d"
+    },
+    {
+      "currentSha256": "c702435f333467cb3186e27487248f0237d68ec9666968309339b78d872e42f6",
+      "edits": [
+        {
+          "current": "import { readTypeSurface } from \"../../src/adoption/type-surface.mjs\";\n",
+          "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 242
+        },
+        {
+          "current": "\tconst cells = historicalTypeSurfaceCells(document, contracts)\n\t\t, old = historicalTypeSurfaceCells(previous, contracts);\n",
+          "previous": "\tconst cells = typeSurfaceCells(document, contracts), old = historicalTypeSurfaceCells(previous, contracts);\n",
+          "start": 5812
+        }
+      ],
+      "path": "tests/helpers/checked-record-promotion-tests.mjs",
+      "previousSha256": "17eab4067e2baa2f778071f05c7dee0ca081dcaa9e358e9f8387957db1c2bbec"
+    },
+    {
+      "currentSha256": "f588255600b13e2647ec8d64a1b3737a0da405d68c4028b67790eb319c3d7071",
+      "edits": [
+        {
+          "current": "import {\n\tsourceAtFinHistoryRecordSource, sourceAtFinHistoryRecordUpdate\n} from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 1063
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryRecordUpdate(\n\t\t\tledgerTransitionGapHistoryPath, update.path, update.currentSha256\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeLedgerTransitionGapSource\n",
+          "start": 2323
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tledgerTransitionGapHistoryPath, addition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path)), addition.currentSha256, addition.path);\n",
+          "start": 2994
+        },
+        {
+          "current": "\t\tconst milestone = beforeFinRefinementSource(\n\t\t\tpath, live, transitions[0].currentSha256\n\t\t);\n\t\tassert.equal(sha256(milestone), transitions[0].currentSha256, path);\n",
+          "previous": "",
+          "start": 4456
+        },
+        {
+          "current": "\t\tassert.equal(beforeLedgerTransitionGapSource(path, milestone)\n",
+          "previous": "\t\tassert.equal(beforeLedgerTransitionGapSource(path, live)\n",
+          "start": 4662
+        },
+        {
+          "current": "\t\t\tassert.equal(beforeLedgerTransitionGapSource(path, milestone, transition.currentSha256)\n",
+          "previous": "\t\t\tassert.equal(beforeLedgerTransitionGapSource(path, live, transition.currentSha256)\n",
+          "start": 4830
+        },
+        {
+          "current": "\t\tassert.equal(beforeLedgerTransitionGapSource(path, `${milestone}unknown`)\n\t\t\t, `${milestone}unknown`);\n",
+          "previous": "\t\tassert.equal(beforeLedgerTransitionGapSource(path, `${live}unknown`), `${live}unknown`);\n",
+          "start": 4988
+        }
+      ],
+      "path": "tests/helpers/ledger-transition-gap-source-history-tests.mjs",
+      "previousSha256": "35b3fd2bd7b2660a18ed32b1abc61517c44abe93d2bab42f047e2d4c393bedb2"
+    },
+    {
+      "currentSha256": "b3f37d574756810ed2c3ace44f24cc36bc45ff313fa2cc2b185de40774089669",
+      "edits": [
+        {
+          "current": "test(\"current native values require exactly the authenticated type-surface dependency\", async () => {\n\tconst source = await readFile(path, \"utf8\")\n\t\t, job = jobAt(source, \"native-c-family-values\");\n\tassert.equal(nativeConsumerValueGate(source).split, true);\n\tfor(const changed of [\n\t\tsource.replace(job, () => job.replace(\n\t\t\t\"    needs: type-surface-authentication\\n\", \"\"))\n\t\t, source.replace(job, () => job.replace(\n\t\t\t\"    needs: type-surface-authentication\\n\"\n\t\t\t, \"    needs: unrelated-authentication\\n\"))\n\t\t, source.replace(job, () => job.replace(\n\t\t\t\"    needs: type-surface-authentication\\n\"\n\t\t\t, \"    needs: type-surface-authentication\\n    needs: type-surface-authentication\\n\"))\n\t\t, source.replace(\"  type-surface-authentication:\\n\"\n\t\t\t, \"  renamed-type-surface-authentication:\\n\")\n\t]) {\n\t\tassert.notEqual(changed, source);\n\t\tassert.throws(() => nativeConsumerValueGate(changed));\n\t}\n});\n\n",
+          "previous": "",
+          "start": 2361
+        }
+      ],
+      "path": "tests/helpers/native-consumer-partition-tests.mjs",
+      "previousSha256": "e8581aa7234d1221122476dc233b260eac3c71abecd7bc0b30c2e55966eb27f2"
+    },
+    {
+      "currentSha256": "57317a61c9453d585e4f6827e4e26587c5efe35490ca27eac4c8a0aff2b751a0",
+      "edits": [
+        {
+          "current": "\t\tconst authenticated = workflow.includes(\"  type-surface-authentication:\\n\");\n\t\tif(authenticated)\n\t\t{\n\t\t\tassert.match(job, /^ {4}needs: type-surface-authentication$/mu);\n\t\t\tassert.equal(job.match(/^ {4}needs:/gmu)?.length, 1);\n\t\t}\n\t\telse assert.doesNotMatch(job, /^ {4}needs:/mu);\n\t\tassert.doesNotMatch(job, /^ {4}(?:if|continue-on-error):/mu);\n",
+          "previous": "\t\tassert.doesNotMatch(job, /^ {4}(?:if|needs|continue-on-error):/mu);\n",
+          "start": 2619
+        }
+      ],
+      "path": "tests/helpers/native-consumer-partition.mjs",
+      "previousSha256": "43caedfc69952fc1fd9e0bf864a14237b9095393d231f2719d6fb5a8ca7f1bc7"
+    },
+    {
+      "currentSha256": "ea4c35cee53bf3d999c9f6d8d433412813260350c6ddb9e3fdc4f320327e7bd5",
+      "edits": [
+        {
+          "current": "\tassert.match(parent, /\\n {2}perl-consumer:\\n {4}name: Perl\\n {4}needs: type-surface-authentication\\n {4}uses: \\.\\/\\.github\\/workflows\\/perl-consumer\\.yml\\n/u);\n",
+          "previous": "\tassert.match(parent, /\\n {2}perl-consumer:\\n {4}name: Perl\\n {4}uses: \\.\\/\\.github\\/workflows\\/perl-consumer\\.yml\\n/u);\n",
+          "start": 1837
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-perl-ci-workflow-tests.mjs",
+      "previousSha256": "835010d497cd3215e1fcb358443d0f1fc683315b36e679eeaaae1998155c5aa4"
+    },
+    {
+      "currentSha256": "150041c306d3b73e06c3543e67fb4ff3aba698100734d10455be4129bbcd4a0d",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeReviewedScalarHostsSource } from \"./reviewed-scalar-hosts-source-history.mjs\";\n",
+          "start": 346
+        },
+        {
+          "current": "import { sourceAtFinHistoryRecordUpdate } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 514
+        },
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryRecordUpdate(\n\t\t\tperlFinArchiveHistoryPath, update.path, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "start": 991
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tconst record = JSON.parse(await readFile(perlFinArchiveHistoryPath, \"utf8\"));\n\tconst source = await sourceAtFinHistoryRecordUpdate(\n\t\tperlFinArchiveHistoryPath, path\n\t\t, record.updates.find(update => update.path === path).currentSha256\n\t);\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeReviewedScalarHostsSource(path, await readFile(path, \"utf8\"));\n",
+          "start": 1949
+        },
+        {
+          "current": "\t\t\tconst update = record.updates.find(item => item.path === file.path);\n\t\t\tconst bytes = await sourceAtFinHistoryRecordUpdate(\n\t\t\t\tperlFinArchiveHistoryPath, file.path, update.currentSha256\n\t\t\t);\n",
+          "previous": "\t\t\tconst bytes = beforeReviewedScalarHostsSource(file.path, await readFile(file.path, \"utf8\"));\n",
+          "start": 2997
+        }
+      ],
+      "path": "tests/helpers/perl-fin-archive-source-history-tests.mjs",
+      "previousSha256": "ed0ff3ffb74ab6fbdee4294c1f83e466c5ebb2465f25707d16ed5034c1635365"
+    },
+    {
+      "currentSha256": "cdf4f3a1cab4870f6cf3919d6bb952ceba876cdedf11660143d6a6cb67757e2c",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeFinProductsSource } from \"./fin-products-source-history.mjs\";\n",
+          "start": 346
+        },
+        {
+          "current": "import { sourceAtFinHistoryRecordUpdate } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 515
+        },
+        {
+          "current": "\t\tconst source = await sourceAtFinHistoryRecordUpdate(\n\t\t\tperlFinXsAuditHistoryPath, update.path, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst source = beforeFinRefinementSource(update.path\n\t\t\t, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "start": 982
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tconst record = JSON.parse(await readFile(perlFinXsAuditHistoryPath, \"utf8\"));\n\tconst source = await sourceAtFinHistoryRecordUpdate(\n\t\tperlFinXsAuditHistoryPath, path\n\t\t, record.updates.find(update => update.path === path).currentSha256\n\t);\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeFinProductsSource(path, await readFile(path, \"utf8\"));\n",
+          "start": 1930
+        },
+        {
+          "current": "\t\t\tconst update = record.updates.find(item => item.path === file.path);\n\t\t\tconst bytes = await sourceAtFinHistoryRecordUpdate(\n\t\t\t\tperlFinXsAuditHistoryPath, file.path, update.currentSha256\n\t\t\t);\n",
+          "previous": "\t\t\tconst bytes = beforeFinProductsSource(file.path, await readFile(file.path, \"utf8\"));\n",
+          "start": 2978
+        }
+      ],
+      "path": "tests/helpers/perl-fin-xs-audit-source-history-tests.mjs",
+      "previousSha256": "172e7242c772a52f3d2172732dc04521ab2a5670cb7c6685414b85319d05d2f5"
+    },
+    {
+      "currentSha256": "039e3a9c169c7dd06158146cbf448b9bca4fd04c64f9187eabb34221041eafdd",
+      "edits": [
+        {
+          "current": " * Keep every reusable Perl checkout bounded while preserving the one lane that\n * authenticates source history before its long installed ABI build.\n",
+          "previous": " * Perl's historical evidence must be available before its long installed ABI builds.\n",
+          "start": 4
+        },
+        {
+          "current": "const workflowPath = \".github/workflows/perl-consumer.yml\";\nconst checkoutJobs = [\n\t\"checked-records\", \"nix-engine\", \"compiler-checks\", \"perl\"\n\t, \"perl-receivers\", \"perl-summary\"\n];\nconst sparsePatterns = [\n\t\"/*\", \"!/*/\", \"/.github/\", \"/acceptance/\", \"/config/\"\n\t, \"/containers/\", \"/demos/\", \"/nix/\", \"/notices/\", \"/patches/\"\n\t, \"/poc/\", \"/schema/\", \"/scripts/\", \"/site/\", \"/src/\", \"/tests/\"\n\t, \"/docs/\", \"!/docs/evidence/*\", \"/docs/evidence/*.json\"\n\t, \"/docs/evidence/*.md\", \"/docs/evidence/*.xml\"\n\t, \"/docs/evidence/*/index.json\"\n];\nconst sparseDeclaration = [\"  LEAN_BRIDGE_PERL_SPARSE_CHECKOUT: |\"\n\t, ...sparsePatterns.map(pattern => `    ${pattern}`)].join(\"\\n\") + \"\\n\";\nconst receiptEnvironment = \"  LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT: ${{ github.workspace }}/build/consumer-type-surface/receipt.json\\n\";\nconst receiptDownload = \"      - name: Restore the authenticated type-surface receipt\\n        uses: actions/download-artifact@v8\\n        with:\\n          name: consumer-type-surface-${{ github.sha }}\\n          path: build/consumer-type-surface\\n\";\n",
+          "previous": "",
+          "start": 286
+        },
+        {
+          "current": "\nconst jobs = source => {\n\tconst starts = [...source.matchAll(/^ {2}([a-z][a-z0-9-]*):\\n/gmu)];\n\treturn new Map(starts.map((match, index) => [match[1]\n\t\t, source.slice(match.index, starts[index + 1]?.index ?? source.length)]));\n};\n\nconst checkoutInput = job => {\n\tconst matches = [...job.matchAll(\n\t\t/^ {6}- uses: actions\\/checkout@v6\\n {8}with:\\n((?: {10}.*\\n)+)/gmu\n\t)];\n\tassert.equal(matches.length, 1);\n\treturn matches[0][1];\n};\n\nconst assertBoundedCheckouts = source => {\n\tassert.equal(source.split(receiptEnvironment).length, 2);\n\tassert.equal(source.split(sparseDeclaration).length, 2);\n\tconst blocks = jobs(source);\n\tconst actual = [...blocks].filter(([, body]) => body.includes(\n\t\t\"uses: actions/checkout@v6\")).map(([name]) => name);\n\tassert.deepEqual(actual, checkoutJobs);\n\tfor(const name of checkoutJobs)\n\t{\n\t\tconst input = checkoutInput(blocks.get(name));\n\t\tassert.match(input, new RegExp(`^ {10}fetch-depth: ${name === \"perl\" ? 0 : 1}$`, \"mu\"));\n\t\tfor(const line of [\n\t\t\t\"          filter: blob:none\\n\"\n\t\t\t, \"          persist-credentials: false\\n\"\n\t\t\t, \"          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}\\n\"\n\t\t\t, \"          sparse-checkout-cone-mode: false\\n\"\n\t\t]) assert.equal(input.split(line).length, 2, `${name}: ${line.trim()}`);\n\t\tassert.equal(blocks.get(name).split(receiptDownload).length, 2, name);\n\t}\n\treturn blocks;\n};\n\n",
+          "previous": "const checkout = \"      - uses: actions/checkout@v6\\n        with:\\n          fetch-depth: 0\\n          persist-credentials: false\\n\";\n",
+          "start": 1513
+        },
+        {
+          "current": "\tconst job = assertBoundedCheckouts(source).get(\"perl\");\n\tassert.equal(job.split(preflight).length, 2);\n\tassert.ok(job.indexOf(\"uses: actions/checkout@v6\")\n\t\t< job.indexOf(\"      - uses: actions/setup-node@v6\\n\"));\n\tassert.ok(job.indexOf(preflight)\n\t\t< job.indexOf(\"      - name: Test both install paths on this Perl configuration\\n\"));\n\tassert.doesNotMatch(job, /^ {4}(?:continue-on-error|if):/mu);\n\tassert.deepEqual([...job.matchAll(/^ {10}- (5\\.\\d+\\.\\d+-(?:un)?threaded)$/gmu)]\n\t\t.map(match => match[1]), [\n\t\t\"5.36.3-threaded\", \"5.36.3-unthreaded\"\n\t\t, \"5.38.2-threaded\", \"5.38.2-unthreaded\"]\n\t);\n",
+          "previous": "\tconst job = source.split(\"\\n  perl:\\n\")[1]?.split(/\\n {2}[a-z][a-z0-9-]*:\\n/u)[0];\n\tassert.ok(job);\n\tassert.equal(job.split(checkout + preflight).length, 2);\n\tassert.ok(job.indexOf(checkout) < job.indexOf(\"      - uses: actions/setup-node@v6\\n\"));\n\tassert.ok(job.indexOf(preflight) < job.indexOf(\"      - name: Test both install paths on this Perl configuration\\n\"));\n\tassert.doesNotMatch(job, /continue-on-error|\\n {4}if:/u);\n\tassert.deepEqual([...job.matchAll(/^ {10}- (5\\.\\d+\\.\\d+-(?:un)?threaded)$/gmu)].map(match => match[1]), [\n\t\t\"5.36.3-threaded\", \"5.36.3-unthreaded\", \"5.38.2-threaded\", \"5.38.2-unthreaded\"\n\t]);\n",
+          "start": 2914
+        },
+        {
+          "current": "test(\"all six reusable Perl checkouts are sparse, blobless and bounded\", async () => {\n\tassertBoundedCheckouts(await readFile(workflowPath, \"utf8\"));\n});\n\ntest(\"Perl checkout closure rejects every unbounded job and weakened manifest\", async t => {\n\tconst source = await readFile(workflowPath, \"utf8\"), blocks = jobs(source);\n\tlet mutations = 0;\n\tfor(const name of checkoutJobs)\n\t{\n\t\tconst job = blocks.get(name), input = checkoutInput(job);\n\t\tfor(const line of [\n\t\t\t`          fetch-depth: ${name === \"perl\" ? 0 : 1}\\n`\n\t\t\t, \"          filter: blob:none\\n\"\n\t\t\t, \"          persist-credentials: false\\n\"\n\t\t\t, \"          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}\\n\"\n\t\t\t, \"          sparse-checkout-cone-mode: false\\n\"\n\t\t]) {\n\t\t\tconst changedJob = job.replace(input, () => input.replace(line, \"\"));\n\t\t\tassert.notEqual(changedJob, job);\n\t\t\tassert.throws(() => assertBoundedCheckouts(\n\t\t\t\tsource.replace(job, () => changedJob)), { name: \"AssertionError\" });\n\t\t\tmutations++;\n\t\t}\n\t}\n\tfor(const line of [\"    !/docs/evidence/*\\n\"\n\t\t, \"    /docs/evidence/*/index.json\\n\", receiptEnvironment]) {\n\t\tconst changed = source.replace(line, \"\");\n\t\tassert.notEqual(changed, source);\n\t\tassert.throws(() => assertBoundedCheckouts(changed)\n\t\t\t, { name: \"AssertionError\" });\n\t\tmutations++;\n\t\t}\n\tfor(const name of checkoutJobs)\n\t{\n\t\tconst job = blocks.get(name);\n\t\tconst changedJob = job.replace(receiptDownload, \"\");\n\t\tassert.notEqual(changedJob, job);\n\t\tassert.throws(() => assertBoundedCheckouts(\n\t\t\tsource.replace(job, () => changedJob)), { name: \"AssertionError\" });\n\t\tmutations++;\n\t}\n\tassert.equal(mutations, 39);\n\tt.diagnostic(`${mutations} per-job and manifest weakening controls`);\n});\n\ntest(\"Perl ABI CI fetches history bloblessly and checks it before installing tools\", async () => {\n\trequireHistory(await readFile(workflowPath, \"utf8\"));\n",
+          "previous": "test(\"Perl ABI CI fetches historical sources and checks them before installing tools\", async () => {\n\trequireHistory(await readFile(\".github/workflows/perl-consumer.yml\", \"utf8\"));\n",
+          "start": 3517
+        },
+        {
+          "current": "\tconst source = await readFile(workflowPath, \"utf8\")\n\t\t, job = jobs(source).get(\"perl\");\n\tfor(const changedJob of [\n\t\tjob.replace(\"          fetch-depth: 0\\n\", \"          fetch-depth: 1\\n\")\n\t\t, job.replace(preflight, \"\")\n\t\t, job.replace(preflight, preflight.replace(\"        run:\"\n\t\t\t, \"        if: false\\n        run:\"))\n\t\t, job.replace(preflight, preflight.replace(\"        run:\"\n\t\t\t, \"        continue-on-error: true\\n        run:\"))\n\t\t, job.replace(preflight, preflight.replace(\"= false\", \"= true\"))\n\t\t, job.replace(preflight, preflight.replace(\"= false\"\n\t\t\t, \"= false || true\"))\n",
+          "previous": "\tconst source = await readFile(\".github/workflows/perl-consumer.yml\", \"utf8\");\n\tfor(const changed of [\n\t\tsource.replace(\"          fetch-depth: 0\\n\", \"\")\n\t\t, source.replace(\"          fetch-depth: 0\\n\", \"          fetch-depth: 1\\n\")\n\t\t, source.replace(checkout, checkout.replace(\"        with:\", \"        if: false\\n        with:\"))\n\t\t, source.replace(preflight, \"\")\n\t\t, source.replace(preflight, preflight.replace(\"        run:\", \"        if: false\\n        run:\"))\n\t\t, source.replace(preflight, preflight.replace(\"        run:\", \"        continue-on-error: true\\n        run:\"))\n\t\t, source.replace(preflight, preflight.replace(\"= false\", \"= true\"))\n\t\t, source.replace(preflight, preflight.replace(\"= false\", \"= false || true\"))\n",
+          "start": 5467
+        },
+        {
+          "current": "\t\tassert.notEqual(changedJob, job);\n\t\tassert.throws(() => requireHistory(source.replace(job, () => changedJob)));\n",
+          "previous": "\t\tassert.notEqual(changed, source);\n\t\tassert.throws(() => requireHistory(changed));\n",
+          "start": 6057
+        }
+      ],
+      "path": "tests/helpers/perl-history-checkout-tests.mjs",
+      "previousSha256": "d8aa5aa57f8979d224bb5c901da60a1212788c85fa697541e2e7f6553c326ddd"
+    },
+    {
+      "currentSha256": "b798e38666aa63607f3f6cc6da86b641cf962d004bc7fe91d8f0b4bb80c0a141",
+      "edits": [
+        {
+          "current": "\tconst source = original(path);\n",
+          "previous": "\tconst source = original(path), currentSource = await readFile(path, \"utf8\");\n",
+          "start": 2805
+        },
+        {
+          "current": "",
+          "previous": "\tassert.equal(beforeFinRefinementSource(\n\t\tpath, currentSource, sha256(source)\n\t), source);\n",
+          "start": 2876
+        },
+        {
+          "current": "\tconst checkpointSource = await sourceAtHistoryMilestone(\n\t\tphpWasmFailureDiagnosticsHistoryPath, path\n\t);\n\tassert.equal(sha256(checkpointSource), checkpoint.currentSha256);\n\tconst current = JSON.parse(checkpointSource);\n",
+          "previous": "\tconst current = JSON.parse(beforeFinRefinementSource(\n\t\tpath, currentSource, checkpoint.currentSha256\n\t));\n",
+          "start": 3047
+        }
+      ],
+      "path": "tests/helpers/php-wasm-failure-diagnostics-history-tests.mjs",
+      "previousSha256": "c807d46ac41c21839572405495c22d885474719c3f86e8cb16e9329c82bf6912"
+    },
+    {
+      "currentSha256": "d446698d0163dc9e92cce35bf320f31dcac8f3523f2cfa88d3de1eb92adaf40d",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 135
+        },
+        {
+          "current": "const retainedFile = async path => {\n\ttry\n\t{ return await readFile(path); }\n\tcatch(error)\n\t{\n\t\tif(error?.code !== \"ENOENT\") throw error;\n\t\treturn execFileSync(\"git\", [\"show\", `HEAD:${path}`]\n\t\t\t, { maxBuffer: 32 * 1024 * 1024 });\n\t}\n};\n\n",
+          "previous": "",
+          "start": 965
+        },
+        {
+          "current": "\tconst indexBytes = await retainedFile(root + \"/index.json\");\n",
+          "previous": "\tconst indexBytes = await readFile(root + \"/index.json\");\n",
+          "start": 6745
+        },
+        {
+          "current": "\t\tconst bytes = await retainedFile(root + \"/\" + file.path);\n",
+          "previous": "\t\tconst bytes = await readFile(root + \"/\" + file.path);\n",
+          "start": 7517
+        }
+      ],
+      "path": "tests/helpers/php-wasm-recursive-failure-evidence-tests.mjs",
+      "previousSha256": "706b760f6930dd4b7a3f223f34055d58690d04392e22bcd04bdaf361b862f294"
+    },
+    {
+      "currentSha256": "43374d5ddd35f5e6bd273191253dee829769e5d8c3d07e5de3a7402cb5f1496c",
+      "edits": [
+        {
+          "current": "import { beforeReviewedSubtypeHostCiSource, reviewedSubtypeHostCiHistoryPath } from \"./reviewed-subtype-host-ci-history.mjs\";\nimport { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "previous": "import { beforeReviewedSubtypeHostCiSource } from \"./reviewed-subtype-host-ci-history.mjs\";\nimport { beforeReviewedSubtypePackageCiSource } from \"./reviewed-subtype-package-ci-history.mjs\";\n",
+          "start": 528
+        },
+        {
+          "current": "\t\tconst path = \".github/workflows/\" + name;\n\t\tconst current = await sourceAtHistoryMilestone(reviewedSubtypeHostCiHistoryPath, path);\n",
+          "previous": "\t\tconst path = \".github/workflows/\" + name, current = beforeReviewedSubtypePackageCiSource(path, await readFile(path, \"utf8\"));\n",
+          "start": 1211
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-ci-workflow-tests.mjs",
+      "previousSha256": "ab34e766de2d0a20898f5e67628822b633d566cd5c02618be9a8ac7889cf06b4"
+    }
+  ],
+  "validation": {
+    "focusedHistoryAndSparseTestsPassed": 12,
+    "perlFinArchiveAfterMs": 6970,
+    "perlFinArchiveBeforeMs": 251308,
+    "perlFinXsAfterMs": 7048,
+    "perlFinXsBeforeMs": 250989,
+    "perlWorkflowContractTestsPassed": 104,
+    "phpWasmHistoryAfterMs": 7756,
+    "phpWasmHistoryBeforeObservedMs": 364000,
+    "phpWasmHistoryBeforeTerminated": true,
+    "reviewedSubtypeTestsPassed": 5,
+    "runtimeSemanticChanges": 0
+  }
+}
