@@ -93,8 +93,8 @@ test("final live-source pin repair reverses every authenticated source"
 test("final live-source repair authenticates all current pins in one pass"
 	, async () => {
 		const history = await record();
-		const document = JSON.parse(git(["show"
-			, `${finalLiveSourcePinRepairImplementation}:docs/type-surface.v1.json`]));
+		const document = JSON.parse(await readFile(
+			"docs/type-surface.v1.json", "utf8"));
 		const files = typeSurfaceEvidenceFiles(document).filter(file =>
 			!file.path.startsWith("docs/evidence/"));
 		const expected = new Map(files.map(file => [file.path, file.sha256]));
