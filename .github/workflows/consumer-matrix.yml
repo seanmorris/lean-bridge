@@ -41,7 +41,6 @@ env:
     /docs/evidence/*.md
     /docs/evidence/*.xml
     /docs/evidence/*/index.json
-    /docs/evidence/php-wasm-generic-records-20261007/
   # The documentation contract validates links to selected nested JSON
   # receipts. It needs those text receipts, but never the retained package,
   # archive, object or executable payloads beside them.
@@ -3077,6 +3076,18 @@ jobs:
           sparse-checkout-cone-mode: false
       - name: Confirm the Nix consumer source closure is sparse and bounded
         run: bash scripts/check-consumer-source-closure.sh
+      - name: Materialize the bounded PHP-Wasm generic-record replay archive
+        if: matrix.profile == 'refinements'
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive=docs/evidence/php-wasm-generic-records-20261007
+          git sparse-checkout add "/$archive/"
+          mapfile -t files < <(find "$archive" -maxdepth 1 -type f -printf '%f\n' | LC_ALL=C sort)
+          expected=(fin-reserved-name-failure.tap ordinary.json ordinary.tap receipt.json)
+          test "${files[*]}" = "${expected[*]}"
+          bytes="$(find "$archive" -maxdepth 1 -type f -printf '%s\n' | awk '{ total += $1 } END { print total + 0 }')"
+          test "$bytes" -eq 250321
       - name: Restore the authenticated type-surface receipt
         uses: actions/download-artifact@v8
         with:

@@ -145,8 +145,10 @@ const metadataSparsePatterns = [
 	, "/docs/", "!/docs/evidence/*", "/docs/evidence/*.json"
 	, "/docs/evidence/*.md", "/docs/evidence/*.xml"
 	, "/docs/evidence/*/index.json"
-	, "/docs/evidence/php-wasm-generic-records-20261007/"
 ];
+
+const genericRecordArchive
+	= "docs/evidence/php-wasm-generic-records-20261007";
 
 const expectedNixJobs = [
 	"browser-consumer", "docker-engine", "host-null-systems"
@@ -181,6 +183,24 @@ const assertNixSourceClosures = source => {
 	const phpWasmCorpus = jobs.get("php-wasm-corpus");
 	assert.match(phpWasmCorpus
 		, /LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests\/php-wasm-generic-records[.]test[.]mjs/u);
+	assert.match(phpWasmCorpus
+		, /^ {6}- name: Materialize the bounded PHP-Wasm generic-record replay archive$/mu);
+	assert.match(phpWasmCorpus
+		, /^ {8}if: matrix[.]profile == 'refinements'$/mu);
+	assert.match(phpWasmCorpus
+		, new RegExp(`^ {10}archive=${genericRecordArchive}$`, "mu"));
+	assert.match(phpWasmCorpus
+		, /^ {10}git sparse-checkout add "\/\$archive\/"$/mu);
+	assert.match(phpWasmCorpus
+		, /^ {10}test "\$bytes" -eq 250321$/mu);
+	assert.ok(phpWasmCorpus.indexOf(
+		"run: bash scripts/check-consumer-source-closure.sh")
+		< phpWasmCorpus.indexOf("git sparse-checkout add \"/$archive/\""));
+	assert.equal(source.split(genericRecordArchive).length - 1, 1);
+	for(const [name, job] of jobs)
+		if(name !== "php-wasm-corpus")
+			assert.doesNotMatch(job
+				, /php-wasm-generic-records-20261007/u, name);
 	for(const name of expectedNixJobs.filter(item =>
 		!["docker-engine", "nix-cache"].includes(item))) {
 		const job = jobs.get(name);
@@ -225,9 +245,9 @@ test("every downstream Nix job has one bounded metadata-only source closure"
 					, { name: "AssertionError" }, name);
 			}
 			}
-		const archivePattern
-			= "    /docs/evidence/php-wasm-generic-records-20261007/\n";
-		const withoutGenericRecordArchive = source.replace(archivePattern, "");
+		const materialization
+			= "          git sparse-checkout add \"/$archive/\"\n";
+		const withoutGenericRecordArchive = source.replace(materialization, "");
 		assert.notEqual(withoutGenericRecordArchive, source);
 		assert.throws(() => assertNixSourceClosures(withoutGenericRecordArchive)
 			, { name: "AssertionError" }, "PHP-Wasm generic-record archive");
