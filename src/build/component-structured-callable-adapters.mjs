@@ -8,7 +8,10 @@
 import { assertComponentStructuredCallableAbi, componentStructuredCallableRecoveryStatus, componentStructuredCallbackDirection } from "../abi/component-structured-callables.mjs";
 import { componentRecursiveLimits } from "../abi/component-recursive.mjs";
 import { componentRecursiveWalker, generateComponentRecursiveAdapters } from "./component-recursive-adapters.mjs";
-import { componentStructuredCallablePrefix, componentStructuredCopiedView, componentStructuredRuntimeRefinements } from "./component-structured-callable-lean.mjs";
+import {
+	componentStructuredCallableMirrors, componentStructuredCallablePrefix
+	, componentStructuredCopiedView, componentStructuredRuntimeRefinements
+} from "./component-structured-callable-lean.mjs";
 
 const budget = `  recursive_budget budget = { .bytes = 16u * 1024u * 1024u, .nodes = ${componentRecursiveLimits.valueNodes}, .owner = NULL, .path = {0} };`;
 const parameters = count => Array(Math.max(1, count)).fill("lean_object *").join(", ");
@@ -25,9 +28,18 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 	const copied = componentStructuredCopiedView(abi);
 	const nominalRefinements = abi.nominalRefinements ?? [];
 	const runtimeRefinements = componentStructuredRuntimeRefinements(abi);
-	const callbackRefinements = new Map(abi.callbacks.map(type => [type.id, runtimeRefinements(type, type.refinements)]));
 	const callbackDirections = new Map(abi.callbacks.map(type => [type.id
 		, componentStructuredCallbackDirection(abi, type)]));
+	// The Lean wrappers and native callback trampolines must validate the same
+	// normalized mirror. In particular, shared nominal Fin bounds are not part of
+	// the structural copied-graph codec: the mirror validator owns those bounds.
+	const conversion = componentStructuredCallableMirrors(
+		abi, exports, callbackDirections, nominalRefinements);
+	const callbackRefinements = new Map(abi.callbacks.map(type => [
+		type.id
+		, conversion ? conversion.refinementsFor(type.id)
+			: runtimeRefinements(type, type.refinements)
+	]));
 	const constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);
 	const walker = type => componentRecursiveWalker(copied, type, nominalRefinements);
 	const callbacks = new Map(abi.callbacks.map(signature => [signature.id, signature]));

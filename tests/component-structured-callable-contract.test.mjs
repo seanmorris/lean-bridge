@@ -156,6 +156,8 @@ test("source-level nominal Fin trees share the structured callback ABI", () => {
 	assert.doesNotMatch(lean, /LbErased\.undefined/u);
 	assert.match(generateJavaScriptPackage(ir)["internal/validators.mjs"], /refinement\.kind === 'record'/u);
 	const c = generateComponentStructuredCallableAdapters(abi, generated.plan.exports);
+	const callbackPrefix = `${abi.exports[0].symbol}_structured_${key}`;
+	assert.match(c, new RegExp(`if \\(!${callbackPrefix}_result_refinement_0\\(result\\)\\) status = 5`, "u"));
 	const symbol = abi.exports.find(item => item.bindingId === declaration.id).symbol;
 	assert.doesNotMatch(c, new RegExp(`${symbol}_refinement_0`, "u"));
 });
