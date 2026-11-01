@@ -1,0 +1,101 @@
+{
+  "changedSupportCells": 0,
+  "discovery": {
+    "contract": "reviewed-corpus contract repair refreshes exactly 25 live citations",
+    "expectedPins": 25,
+    "observedPinsAfterPartialNormalization": 0,
+    "partition": "tests/checked-javascript-partition-11.test.mjs"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-historical-citation-transition-audit-source-history.mjs",
+      "sha256": "0ceb4f8d891907972896c7d8b8bebe79fa08e77d05948126e66c324c0c2ad6b4"
+    },
+    {
+      "path": "tests/helpers/historical-citation-transition-audit-source-history-tests.mjs",
+      "sha256": "69fc9888ec4ba11ce17baa4c22bfe4dba5617508550a4d3e11981bea1cb73a38"
+    },
+    {
+      "path": "tests/helpers/historical-citation-transition-audit-source-history.mjs",
+      "sha256": "60354c8fbdc94e7d01c93c4ae9450dbc5ab4dc609ce92cc5ac10f601039e5de2"
+    }
+  ],
+  "implementationCommit": "f01067c7899a1abb2e66b547fb4ec7fcdff8653a",
+  "integrationCommit": "a301dfa88d38bfaca80b4f82e0a2ade873a6edcf",
+  "integrationUpdates": [
+    {
+      "currentSha256": "00480575cd45f8691ae58e41c487a8205a0d8302a49e7f17233f0eb38dec1729",
+      "edits": [
+        {
+          "current": "import \"./helpers/historical-citation-transition-audit-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "38435196cf7ebf27d7ef08c692602c098015755cd13a9ed8ab30801cf827589e"
+    },
+    {
+      "currentSha256": "73779fbac379533bdc6d5ddecb3bd2eca73d0c04cf1c50e5ad07d287cd07c798",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeHistoricalCitationTransitionAuditSource\n\t, historicalCitationTransitionAuditNormalizationPaths\n} from \"./historical-citation-transition-audit-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...historicalCitationTransitionAuditNormalizationPaths\n\t, ...currentLiveSourceInventoryAuditNormalizationPaths\n",
+          "previous": "\t...currentLiveSourceInventoryAuditNormalizationPaths\n",
+          "start": 235068
+        },
+        {
+          "current": "\tlet stage = beforeHistoricalCitationTransitionAuditSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCurrentLiveSourceInventoryAuditSource(\n",
+          "previous": "\tlet stage = beforeCurrentLiveSourceInventoryAuditSource(\n",
+          "start": 295318
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "22b33bb2c54dfdea4d5764863963c0504964596760d1a34bc49b9551e57b86ea"
+    }
+  ],
+  "milestone": "historical-citation-transition-audit-v1",
+  "predecessorCommit": "0d805a33c3a6b1eb6850498a47beb3349eb7bde5",
+  "repair": {
+    "currentStateDelegatedTo": "current live-source inventory audit",
+    "exactPins": 25,
+    "path": "docs/type-surface.v1.json"
+  },
+  "rootCause": "A historical transition test tried to reconstruct its milestone by applying a hand-picked subset of newer normalizers to today's inventory. Later authenticated layers outside that subset moved the same pins, so the test no longer observed its own recorded digest even though its immutable transition remained valid.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "9664093d339d0c552d04a4b468b3a6bc4bb4504964db213d371f99f51c8b0664",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforeConsumerDocumentationSparseInputClosureSource }\n\tfrom \"./consumer-documentation-sparse-input-closure-source-history.mjs\";\nimport { beforeConsumerHistorySparseCheckoutClosureSource }\n\tfrom \"./consumer-history-sparse-checkout-closure-source-history.mjs\";\nimport { beforeConsumerMatrixCheckoutClosureSource }\n\tfrom \"./consumer-matrix-checkout-closure-source-history.mjs\";\nimport { beforeConsumerCallbackPackageCheckoutClosureSource }\n\tfrom \"./consumer-callback-package-checkout-closure-source-history.mjs\";\n",
+          "start": 265
+        },
+        {
+          "current": "\t\tconst update = history.integrationUpdates.find(item =>\n\t\t\titem.path === \"docs/type-surface.v1.json\");\n\t\tassert.ok(update);\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n\t\tassert.equal(current.split(history.currentSourcePin.current).length - 1\n",
+          "previous": "\t\tlet restored = beforeConsumerDocumentationSparseInputClosureSource(\n\t\t\t\"docs/type-surface.v1.json\"\n\t\t\t, await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n\t\trestored = beforeConsumerHistorySparseCheckoutClosureSource(\n\t\t\t\"docs/type-surface.v1.json\", restored);\n\t\trestored = beforeConsumerMatrixCheckoutClosureSource(\n\t\t\t\"docs/type-surface.v1.json\"\n\t\t\t, restored);\n\t\trestored = beforeConsumerCallbackPackageCheckoutClosureSource(\n\t\t\t\"docs/type-surface.v1.json\", restored);\n\t\tassert.equal(restored.split(history.currentSourcePin.current).length - 1\n",
+          "start": 5683
+        },
+        {
+          "current": "\t\tassert.equal(reverseConsumerTypeSurfaceDocumentationContractRepairUpdate(\n\t\t\tcurrent, update), git([\"show\"\n",
+          "previous": "\t\trestored = restored.replaceAll(history.currentSourcePin.current\n\t\t\t, history.currentSourcePin.previous);\n\t\tassert.equal(restored, git([\"show\"\n",
+          "start": 5984
+        }
+      ],
+      "path": "tests/helpers/consumer-type-surface-documentation-contract-repair-source-history-tests.mjs",
+      "previousSha256": "104ba316d541d6dbb96372bba0d6559c9ec73a0782ad879ed3e4d0050ded92e7"
+    }
+  ]
+}
