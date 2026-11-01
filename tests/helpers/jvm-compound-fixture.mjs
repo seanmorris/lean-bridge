@@ -44,8 +44,9 @@ export const jvmCompoundPublicChecks = profile => Object.entries(values).map(([n
  * Materialize the independently written downstream source with its typed primitive cases.
  *
  * @param profile - Java or Kotlin.
+ * @param source - Optional authenticated fixture source.
  */
-export const jvmCompoundConsumer = profile => readFileSync(new URL(`../fixtures/compound-consumers/${profile === "java" ? "java.java" : "kotlin.kt"}`, import.meta.url), "utf8")
+export const jvmCompoundConsumer = (profile, source = readFileSync(new URL(`../fixtures/compound-consumers/${profile === "java" ? "java.java" : "kotlin.kt"}`, import.meta.url), "utf8")) => source
 	.replace("/* PRIMITIVE_CASES */", jvmCompoundPublicChecks(profile));
 
 /**

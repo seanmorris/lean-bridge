@@ -11,10 +11,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeNativeReplyRefusalSource } from "./native-reply-refusal-source-history.mjs";
 import { assertSourceEntryRun, sourceEntryLateMultiplicities } from "./scalar-fin-source-entry-run.mjs";
 import { assertSourceEntryWorkflow, insertSourceEntryWorkflow, sourceEntryStepName, sourceEntryUploadLine, sourceEntryWorkflowStep } from "./scalar-fin-source-entry-ci.mjs";
-import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWorkflow } from "./reviewed-subtype-package-ci-workflow.mjs";
-import { assertStructuralSubtypeWorkflow, disableStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
+import { beforeScalarFinSourceEntryCiSource, scalarFinSourceEntryCiHistoryPath } from "./scalar-fin-source-entry-ci-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 // The archived six-ABI run has the layout CI writes: run.tap, report.json and calls/.
 const archive = "docs/evidence/scalar-fin-source-entry-20261008";
@@ -200,16 +201,12 @@ test("the checker command exits zero on a complete run and nonzero without a rep
 });
 
 test("the CI step runs right after locked compilation, cannot be skipped or hidden by tee and uploads its whole directory", async () => {
-	const actual = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	assertStructuralSubtypeWorkflow(actual, "consumer-matrix.yml");
-	const current = disableStructuralSubtypeWorkflow(actual, "consumer-matrix.yml");
-	// The newer Subtype package checks run between compilation and this probe.
-	// Validate that entire required layer before checking the original adjacency.
-	assertReviewedSubtypePackageWorkflow(current);
-	const workflow = disableReviewedSubtypePackageWorkflow(current);
+	const path = ".github/workflows/consumer-matrix.yml";
+	const workflow = await sourceAtFinHistoryRecord(
+		scalarFinSourceEntryCiHistoryPath, path, beforeNativeReplyRefusalSource);
 	// Validate the checked-in step before exercising the insertion helper. A missing step must fail.
 	assertSourceEntryWorkflow(workflow);
-	const previous = workflow.replace(sourceEntryWorkflowStep, "").replace(sourceEntryUploadLine, "");
+	const previous = beforeScalarFinSourceEntryCiSource(path, workflow);
 	assert.equal(insertSourceEntryWorkflow(previous), workflow);
 	assert.equal(workflow.length, previous.length + sourceEntryWorkflowStep.length + sourceEntryUploadLine.length);
 	assert.throws(() => insertSourceEntryWorkflow(workflow), assert.AssertionError, "inserted only once");

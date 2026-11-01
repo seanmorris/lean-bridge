@@ -7,19 +7,22 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertReviewedSubtypePackageWorkflow as assertPreviousWorkflow, disableReviewedSubtypePackageWorkflow, enableReviewedSubtypePackageWorkflow, reviewedSubtypePackageNativeBlock, reviewedSubtypePackageNativeUpload, reviewedSubtypePackageNpmBlock } from "./reviewed-subtype-package-ci-workflow.mjs";
+import { beforeReviewedSubtypeBrowserSource } from "./reviewed-subtype-browser-history.mjs";
 import { beforeReviewedSubtypePackageCiSource, reviewedSubtypePackageCiHistoryPath } from "./reviewed-subtype-package-ci-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 import { withoutStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 
 const assertReviewedSubtypePackageWorkflow = source => assertPreviousWorkflow(withoutStructuralSubtypeWorkflow(source, "consumer-matrix.yml"));
 
 test("reviewed package workflow adds enforced C-family and locked-engine npm gates without deleting earlier commands", async () => {
-	const path = ".github/workflows/consumer-matrix.yml", source = await readFile(path, "utf8");
-	assertReviewedSubtypePackageWorkflow(source);
+	const path = ".github/workflows/consumer-matrix.yml";
 	const record = JSON.parse(await readFile(reviewedSubtypePackageCiHistoryPath));
 	const update = record.updates.find(item => item.path === path);
-	const milestone = beforeReviewedSubtypePackageCiSource(path, source, update.currentSha256);
+	const milestone = await sourceAtFinHistoryRecord(
+		reviewedSubtypePackageCiHistoryPath, path, beforeReviewedSubtypeBrowserSource);
 	assert.equal(sha256(milestone), update.currentSha256);
+	assertReviewedSubtypePackageWorkflow(milestone);
 	const previous = beforeReviewedSubtypePackageCiSource(path, milestone);
 	assert.notEqual(previous, milestone);
 	assert.equal(disableReviewedSubtypePackageWorkflow(milestone), previous);

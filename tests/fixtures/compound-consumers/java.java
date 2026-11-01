@@ -89,11 +89,15 @@ public final class Consumer {
         reject(IllegalStateException.class, () -> Option.none().value());
         reject(IllegalStateException.class, () -> Result.ok(Unit.INSTANCE).error());
         reject(IllegalStateException.class, () -> Result.err(Unit.INSTANCE).value());
-        reject(NullPointerException.class, () -> Option.some(null));
-        reject(NullPointerException.class, () -> Result.ok(null)); reject(NullPointerException.class, () -> Result.err(null));
-        reject(NullPointerException.class, () -> new Pair<>("allocated", null));
+        check(Option.some(null).isSome() && Option.some(null).value() == null);
+        check(Result.ok(null).isOk() && Result.ok(null).value() == null);
+        check(!Result.err(null).isOk() && Result.err(null).error() == null);
+        check(new Pair<>(null, null).first() == null && new Pair<>(null, null).second() == null);
         reject(NullPointerException.class, () -> Api.optionString(null)); reject(NullPointerException.class, () -> Api.resultString(null));
         reject(NullPointerException.class, () -> Api.tupleString(null)); reject(NullPointerException.class, () -> Api.transform(null));
+        reject(NullPointerException.class, () -> Api.optionString(Option.some(null)));
+        reject(NullPointerException.class, () -> Api.resultString(Result.ok(null))); reject(NullPointerException.class, () -> Api.resultString(Result.err(null)));
+        reject(NullPointerException.class, () -> Api.tupleString(new Pair<>(null, "allocated"))); reject(NullPointerException.class, () -> Api.tupleString(new Pair<>("allocated", null)));
         reject(IllegalArgumentException.class, () -> Api.optionNat(Option.some(BigInteger.valueOf(-1))));
         reject(IllegalArgumentException.class, () -> Api.resultNat(Result.err(BigInteger.valueOf(-1))));
         reject(IllegalArgumentException.class, () -> Api.optionUint8(Option.some(256)));

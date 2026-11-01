@@ -11,7 +11,9 @@ const nativeUploadAnchor = "            build/native-subtype/c-cpp.json\n";
 const nativeCommand = 'consumer_command="$consumer_command && LEAN_BRIDGE_SUBTYPE_PROFILES=c,cpp node --test tests/native-subtype.test.mjs';
 const npmAnchor = "      - name: Account Lean source entry on every installed scalar Fin call (instrumented probe packages)\n";
 const outcome = "steps.reviewed_fin_npm.outcome == 'success' && ";
-const enforced = "        if: steps.consumer.outcome != 'success' || steps.type_corpus_npm.outcome != 'success' || steps.reviewed_fin_npm.outcome != 'success'\n";
+const enforced = "steps.reviewed_fin_npm.outcome != 'success'";
+const enforcedSubtype = enforced
+	+ " || steps.reviewed_subtype_npm.outcome != 'success'";
 export const reviewedSubtypePackageNativeBlock = `          ${runner} c-cpp\n`;
 export const reviewedSubtypePackageNativeUpload = "            build/reviewed-subtype-package-ci/c-cpp/\n";
 export const reviewedSubtypePackageNpmBlock = `      - name: Check independently reviewed Subtype npm packages and strict TypeScript
@@ -38,8 +40,9 @@ const nodeCommands = (source, enabled) => {
 	const result = source.split("\n").map(line => {
 		if(!/--consumer node-(?:javascript|typescript) /u.test(line)) return line;
 		count++;
-		const end = 'tests/generic-records.test.mjs"', extended = `tests/generic-records.test.mjs && ${runner} npm"`;
-		return enabled ? once(line, end, extended) : once(line, extended, end);
+		const command = "tests/generic-records.test.mjs";
+		const extended = `${command} && ${runner} npm`;
+		return enabled ? once(line, command, extended) : once(line, extended, command);
 	}).join("\n");
 	assert.equal(count, 2); return result;
 };
@@ -57,7 +60,7 @@ export const enableReviewedSubtypePackageWorkflow = source => {
 	source = once(source, npmAnchor, reviewedSubtypePackageNpmBlock + npmAnchor);
 	assert.equal(source.split(outcome).length, 3);
 	source = source.replaceAll(outcome, outcome + "steps.reviewed_subtype_npm.outcome == 'success' && ");
-	source = once(source, enforced, enforced.trimEnd() + " || steps.reviewed_subtype_npm.outcome != 'success'\n");
+	source = once(source, enforced, enforcedSubtype);
 	return nodeCommands(source, true);
 };
 
@@ -73,7 +76,7 @@ export const disableReviewedSubtypePackageWorkflow = source => {
 	source = once(source, reviewedSubtypePackageNpmBlock, "");
 	const extended = outcome + "steps.reviewed_subtype_npm.outcome == 'success' && ";
 	assert.equal(source.split(extended).length, 3); source = source.replaceAll(extended, outcome);
-	source = once(source, enforced.trimEnd() + " || steps.reviewed_subtype_npm.outcome != 'success'\n", enforced);
+	source = once(source, enforcedSubtype, enforced);
 	source = nodeCommands(source, false);
 	assert.ok(!source.includes(runner)); return source;
 };

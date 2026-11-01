@@ -83,11 +83,15 @@ fun main() {
     reject(IllegalStateException::class.java) { Option.none<LeanUnit>().value() }
     reject(IllegalStateException::class.java) { Result.ok<LeanUnit, String>(LeanUnit.INSTANCE).error() }
     reject(IllegalStateException::class.java) { Result.err<LeanUnit, String>("error").value() }
-    reject(NullPointerException::class.java) { Option.some<String>(null) }
-    reject(NullPointerException::class.java) { Result.ok<String, String>(null) }; reject(NullPointerException::class.java) { Result.err<String, String>(null) }
-    reject(NullPointerException::class.java) { Pair("allocated", null) }
+    verify(Option.some<String?>(null).isSome() && Option.some<String?>(null).value() == null)
+    verify(Result.ok<String?, String?>(null).isOk() && Result.ok<String?, String?>(null).value() == null)
+    verify(!Result.err<String?, String?>(null).isOk() && Result.err<String?, String?>(null).error() == null)
+    verify(Pair<String?, String?>(null, null).first() == null && Pair<String?, String?>(null, null).second() == null)
     reject(NullPointerException::class.java) { Api.optionString(null) }; reject(NullPointerException::class.java) { Api.resultString(null) }
     reject(NullPointerException::class.java) { Api.tupleString(null) }; reject(NullPointerException::class.java) { Api.transform(null) }
+    reject(NullPointerException::class.java) { Api.optionString(Option.some(null)) }
+    reject(NullPointerException::class.java) { Api.resultString(Result.ok(null)) }; reject(NullPointerException::class.java) { Api.resultString(Result.err(null)) }
+    reject(NullPointerException::class.java) { Api.tupleString(Pair(null, "allocated")) }; reject(NullPointerException::class.java) { Api.tupleString(Pair("allocated", null)) }
     reject(IllegalArgumentException::class.java) { Api.optionNat(Option.some(BigInteger.valueOf(-1))) }
     reject(IllegalArgumentException::class.java) { Api.resultNat(Result.err(BigInteger.valueOf(-1))) }
     reject(IllegalArgumentException::class.java) { Api.optionUint8(Option.some(256)) }
