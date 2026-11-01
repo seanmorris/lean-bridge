@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforePhpWasmGenericRecordSparseCheckoutRepairSource
+	, phpWasmGenericRecordSparseCheckoutRepairNormalizationPaths
+} from "./php-wasm-generic-record-sparse-checkout-repair-source-history.mjs";
+import {
 	beforeFinalLiveSourcePinRepairSource
 	, finalLiveSourcePinRepairNormalizationPaths
 } from "./final-live-source-pin-repair-source-history.mjs";
@@ -2543,7 +2547,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...finalLiveSourcePinRepairNormalizationPaths
+	...phpWasmGenericRecordSparseCheckoutRepairNormalizationPaths
+	, ...finalLiveSourcePinRepairNormalizationPaths
 	, ...phpWasmFinHostedIsolationNormalizationPaths
 	, ...exactCandidateContractRepairNormalizationPaths
 	, ...perlCallbackModuleArgumentRepairNormalizationPaths
@@ -3751,7 +3756,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeFinalLiveSourcePinRepairSource(
+	let stage = beforePhpWasmGenericRecordSparseCheckoutRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeFinalLiveSourcePinRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
