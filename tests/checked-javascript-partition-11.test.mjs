@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/scalar-fin-suite-registration-source-history-tests.mjs";
 import "./helpers/consumer-suite-contract-repair-source-history-tests.mjs";
 import "./helpers/reviewed-source-timeout-budget-source-history-tests.mjs";
 import "./helpers/nominal-callback-result-repair-source-history-tests.mjs";

@@ -7,8 +7,8 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { collectCoreContractTestPaths, coreContractShardLabels
-	, coreContractShardManifest, verifyCoreContractShardManifests }
+import { coreContractShardLabels, coreContractShardManifest
+	, verifyCoreContractShardManifests }
 	from "../../scripts/core-contract-shards.mjs";
 import { authenticateSourceHistoryReverse, gitSourceBytes }
 	from "./source-history-stream.mjs";
@@ -33,6 +33,14 @@ const git = arguments_ => execFileSync("git", arguments_, {
 });
 const record = async () => JSON.parse(await readFile(
 	coreFinalAuditRegistrationHistoryPath, "utf8"));
+const historicalContractPaths = async revision => {
+	const source = git(["show", `${revision}:src/adoption/test-profiles.mjs`]);
+	const profiles = await import(`data:text/javascript;base64,${
+		Buffer.from(source).toString("base64")}`);
+	const paths = git(["ls-tree", "-r", "--name-only", revision, "--", "tests"])
+		.trim().split("\n").filter(path => path.endsWith(".test.mjs"));
+	return profiles.groupRepositoryTests(paths).contract;
+};
 
 test("final-audit registration records the complete preflight defect", async () => {
 	const history = await record();
@@ -92,7 +100,8 @@ test("final-audit registration closes its profile, preflight and live pins", asy
 		assert.equal(after.includes(pin.previous), false);
 	}
 	assert.equal(restored, before);
-	const paths = await collectCoreContractTestPaths();
+	const paths = await historicalContractPaths(
+		coreFinalAuditRegistrationImplementation);
 	assert.equal(paths.length, history.contractFiles);
 	assert.ok(paths.includes(
 		`tests/${coreFinalAuditRegistrationTest}.test.mjs`));
