@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -21,7 +21,7 @@ import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { javaCompilerOptions } from "./helpers/type-corpus-jvm-tools.mjs";
-import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
+import { assertJvmHistoricalSource, beforeCurrentJvmConsumerRepair, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 
 test("JVM compounds preserve typed branches, boxed payloads and binary products", () => {
 	const ir = compoundReviewedIr(), model = compileCopiedJvmModel(ir), files = generateCopiedJvmPackage(ir);
@@ -65,10 +65,18 @@ test("JVM compound evidence binds both languages to prepared packages and runtim
 	assert.deepEqual(record.signatures, compoundSignatures);
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.profile}`), ["ordinary-source/java", "ordinary-source/kotlin", "reviewed-ir/java", "reviewed-ir/kotlin"]);
 	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertJvmHistoricalSource("jvm-compounds-20260920", path, hash);
+	const consumerSources = Object.fromEntries(await Promise.all([
+		["java", "tests/fixtures/compound-consumers/java.java"]
+		, ["kotlin", "tests/fixtures/compound-consumers/kotlin.kt"]
+	].map(async ([profile, path]) => [profile
+		, jvmCompoundConsumer(profile
+		, beforeCurrentJvmConsumerRepair(path
+			, await readFile(path, "utf8"), record.sourceHashes[path]))])));
 	for(const run of record.executions)
 	{
 		assert.equal(run.checks, 36872);
-		assert.equal(record.consumerHashes[run.profile], sha256(jvmCompoundConsumer(run.profile)));
+		assert.equal(record.consumerHashes[run.profile]
+			, sha256(consumerSources[run.profile]));
 		assert.equal(run.jvm.consumerSourceSha256, record.consumerHashes[run.profile]);
 		assert.equal(run.jvm.signaturesSha256, sha256(jvmCompoundPublicChecks(run.profile)));
 		assert.equal(run.sourceRemovedBeforeInstallation, true);

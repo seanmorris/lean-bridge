@@ -37,4 +37,5 @@ test("sparse Scalar Fin runtime acceptance and retained history stay independent
 			/^ {2}LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: \|\n((?: {4}.*\n)+)/mu)?.[1];
 		assert.ok(sparse);
 		assert.doesNotMatch(sparse, /scalar-fin-source-entry-20261008/u);
-	});
+	}
+);

@@ -5,6 +5,8 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { beforeConsumerSuiteContractRepairSource }
+	from "./consumer-suite-contract-repair-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeJvmStructuredCallables } from "./jvm-structured-callable-source-history.mjs";
 
@@ -30,6 +32,16 @@ export const readJvmHistoricalEvidence = async name => {
 };
 
 /**
+ * Reconstruct a JVM source before the current consumer-suite repair.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Complete later source.
+ * @param expected - Optional exact historical digest.
+ */
+export const beforeCurrentJvmConsumerRepair = (path, source, expected) =>
+	beforeConsumerSuiteContractRepairSource(path, source, expected);
+
+/**
  * Check an unchanged source or its explicit old-to-current evidence lineage.
  * The current Kotlin receipt separately verifies every replacement source and run.
  *
@@ -38,7 +50,10 @@ export const readJvmHistoricalEvidence = async name => {
  * @param expected - Historical SHA-256, never rewritten to the current value.
  */
 export const assertJvmHistoricalSource = async (name, path, expected) => {
-	const current = sha256(beforeJvmStructuredCallables(path, await readFile(path, "utf8"), expected));
+	const live = await readFile(path, "utf8");
+	const repaired = beforeCurrentJvmConsumerRepair(path, live, expected);
+	const current = sha256(beforeJvmStructuredCallables(
+		path, repaired, expected));
 	if(current === expected) return;
 	const historical = await readJvmHistoricalEvidence(name);
 	const original = historical.sourceHashes[path] ?? historical.regressions?.find(run => run.test === path)?.sourceSha256;

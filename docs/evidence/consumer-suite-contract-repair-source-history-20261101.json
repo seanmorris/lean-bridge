@@ -1,0 +1,405 @@
+{
+  "changedSupportCells": 0,
+  "discovery": [
+    {
+      "failure": "retained Scalar Fin evidence was absent from the bounded sparse consumer checkout",
+      "job": 124801897251,
+      "lane": "Node and browser npm consumers",
+      "run": 41288729186
+    },
+    {
+      "failure": "the legacy compound caller expected generic wrapper construction to reject null",
+      "job": 124801897579,
+      "lane": "Managed consumer (jvm)",
+      "run": 41288729186
+    }
+  ],
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-consumer-suite-contract-repair-source-history.mjs",
+      "sha256": "98fb75e7ead938dc9b8cea674a7f46a792c4e43861da82a71132de78ecd71e10"
+    },
+    {
+      "path": "tests/helpers/consumer-suite-contract-repair-source-history-tests.mjs",
+      "sha256": "eb3a3e21a87cd95106dcd1a10417b9d5e1258c80b703e403bea9e12821feca91"
+    },
+    {
+      "path": "tests/helpers/consumer-suite-contract-repair-source-history.mjs",
+      "sha256": "99edcc614a5b8192cad157c7747c6250a9b2d28aa1a015e4f3bdda68036f16b2"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "214c1ede3546c6373de98fa54e8e95d7193b2dbc20fcef739b2cc4de1a5e8ba5",
+      "path": "tests/helpers/scalar-fin-source-entry-registration-tests.mjs"
+    },
+    {
+      "currentSha256": "f692971bb7d7c86a89374e82ade6d16a3fac6850313095dc05bf4e5553f6ad48",
+      "path": "tests/scalar-fin-source-entry.test.mjs"
+    }
+  ],
+  "implementationCommit": "07ee24a73db228ba99abbf9f64436fb37c50d306",
+  "integrationCommit": "418fc4fbbd77a1b1dd5d2005e812afe26a8c96b6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "688138f9f264bea198d781369cc0e41da4d6fcc7adaf6c5130b2e37813c7af37",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"e0de69c454eca078ff6693e2f7e1d4e9413bbcfce066668397ac79348ef6d9c5\"\n",
+          "previous": "          \"sha256\": \"bd507e8c016a479e71c9f89c9b8dc49257266a025517091cdd4cc511a7968ecd\"\n",
+          "start": 151287
+        },
+        {
+          "current": "          \"sha256\": \"6a3eb45dbb06a627f271149e686811dd76de3931414d63a0ffce3058c37a8c24\"\n",
+          "previous": "          \"sha256\": \"eff7c997a9472dfc68d6a38685a56b6281903dc1c675026500b0a1137c23b50d\"\n",
+          "start": 151639
+        },
+        {
+          "current": "          \"sha256\": \"f1e55e2b4fc44833fb78744235463725013b7a08fa7ec970d156b088396bedb1\"\n",
+          "previous": "          \"sha256\": \"cc4114c99f295e009edca8167abf6138eda0f034ac2ed66bc093cfdc04e3d5f7\"\n",
+          "start": 158958
+        },
+        {
+          "current": "          \"sha256\": \"bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1\"\n",
+          "previous": "          \"sha256\": \"faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9\"\n",
+          "start": 159626
+        },
+        {
+          "current": "          \"sha256\": \"bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1\"\n",
+          "previous": "          \"sha256\": \"faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9\"\n",
+          "start": 219478
+        },
+        {
+          "current": "          \"sha256\": \"bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1\"\n",
+          "previous": "          \"sha256\": \"faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9\"\n",
+          "start": 335046
+        },
+        {
+          "current": "          \"sha256\": \"bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1\"\n",
+          "previous": "          \"sha256\": \"faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9\"\n",
+          "start": 429570
+        },
+        {
+          "current": "          \"sha256\": \"bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1\"\n",
+          "previous": "          \"sha256\": \"faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9\"\n",
+          "start": 541342
+        },
+        {
+          "current": "          \"sha256\": \"e0de69c454eca078ff6693e2f7e1d4e9413bbcfce066668397ac79348ef6d9c5\"\n",
+          "previous": "          \"sha256\": \"bd507e8c016a479e71c9f89c9b8dc49257266a025517091cdd4cc511a7968ecd\"\n",
+          "start": 626970
+        },
+        {
+          "current": "          \"sha256\": \"6a3eb45dbb06a627f271149e686811dd76de3931414d63a0ffce3058c37a8c24\"\n",
+          "previous": "          \"sha256\": \"eff7c997a9472dfc68d6a38685a56b6281903dc1c675026500b0a1137c23b50d\"\n",
+          "start": 627322
+        },
+        {
+          "current": "          \"sha256\": \"f1e55e2b4fc44833fb78744235463725013b7a08fa7ec970d156b088396bedb1\"\n",
+          "previous": "          \"sha256\": \"cc4114c99f295e009edca8167abf6138eda0f034ac2ed66bc093cfdc04e3d5f7\"\n",
+          "start": 628901
+        },
+        {
+          "current": "          \"sha256\": \"4db71786cdb8619aaa705fd178e9df9784f95b93f8f236164ab6a82b80945c91\"\n",
+          "previous": "          \"sha256\": \"294be640c1e8fd9c8349f7044beda4d9fdd786b0cdbf8009ad02f0db7221e80b\"\n",
+          "start": 629399
+        },
+        {
+          "current": "          \"sha256\": \"bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1\"\n",
+          "previous": "          \"sha256\": \"faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9\"\n",
+          "start": 630583
+        },
+        {
+          "current": "          \"sha256\": \"bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1\"\n",
+          "previous": "          \"sha256\": \"faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9\"\n",
+          "start": 735866
+        },
+        {
+          "current": "          \"sha256\": \"bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1\"\n",
+          "previous": "          \"sha256\": \"faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9\"\n",
+          "start": 934586
+        },
+        {
+          "current": "          \"sha256\": \"bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1\"\n",
+          "previous": "          \"sha256\": \"faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9\"\n",
+          "start": 1120216
+        },
+        {
+          "current": "          \"sha256\": \"4db71786cdb8619aaa705fd178e9df9784f95b93f8f236164ab6a82b80945c91\"\n",
+          "previous": "          \"sha256\": \"294be640c1e8fd9c8349f7044beda4d9fdd786b0cdbf8009ad02f0db7221e80b\"\n",
+          "start": 1121951
+        },
+        {
+          "current": "          \"sha256\": \"bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1\"\n",
+          "previous": "          \"sha256\": \"faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9\"\n",
+          "start": 1366473
+        },
+        {
+          "current": "          \"sha256\": \"4db71786cdb8619aaa705fd178e9df9784f95b93f8f236164ab6a82b80945c91\"\n",
+          "previous": "          \"sha256\": \"294be640c1e8fd9c8349f7044beda4d9fdd786b0cdbf8009ad02f0db7221e80b\"\n",
+          "start": 1368911
+        },
+        {
+          "current": "          \"sha256\": \"299543a39ae61f3bdb22818db8355251d677de3b2bfb07ad6f69b2001b028c35\"\n",
+          "previous": "          \"sha256\": \"d12354b3e3696c0637fda5be7bcf73df605c75d9209ba1435012ed38e1e6b534\"\n",
+          "start": 1457887
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "912ed809056f8574e1caa812b487a994f710c5bc5a76e0ff783b295234b0198a"
+    },
+    {
+      "currentSha256": "78a62b9b5b91bd1fbf433a6532cfb6e84a7f9a0077904d2372a0c86412772c78",
+      "edits": [
+        {
+          "current": "import \"./helpers/consumer-suite-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "2aea910e4cd179e892ed5ce5f65e6183326bab919b956c3ee07cef116a427224"
+    },
+    {
+      "currentSha256": "03a403f5d8c01f579252b2884d8276e6f9339d23f775c4a7b0be06646e105f07",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeConsumerSuiteContractRepairSource\n\t, consumerSuiteContractRepairNormalizationPaths\n} from \"./consumer-suite-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...consumerSuiteContractRepairNormalizationPaths\n\t, ...reviewedSourceTimeoutBudgetNormalizationPaths\n",
+          "previous": "\t...reviewedSourceTimeoutBudgetNormalizationPaths\n",
+          "start": 235551
+        },
+        {
+          "current": "\tlet stage = beforeConsumerSuiteContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeReviewedSourceTimeoutBudgetSource(\n",
+          "previous": "\tlet stage = beforeReviewedSourceTimeoutBudgetSource(\n",
+          "start": 295957
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ccd6e6469f42ac58ced153b0a62098e4b0d551c3ea84472fceec3cd4bf5f43f7"
+    },
+    {
+      "currentSha256": "bf54e8155744c700efd32a4af7fc76316eba46a0ebb5c9612f66a8f2082434c1",
+      "edits": [
+        {
+          "current": "import { beforeConsumerSuiteContractRepairSource }\n\tfrom \"./consumer-suite-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 193
+        },
+        {
+          "current": "/**\n * Reconstruct a JVM source before the current consumer-suite repair.\n *\n * @param path - Repository-relative source path.\n * @param source - Complete later source.\n * @param expected - Optional exact historical digest.\n */\nexport const beforeCurrentJvmConsumerRepair = (path, source, expected) =>\n\tbeforeConsumerSuiteContractRepairSource(path, source, expected);\n\n",
+          "previous": "",
+          "start": 1589
+        },
+        {
+          "current": "\tconst live = await readFile(path, \"utf8\");\n\tconst repaired = beforeCurrentJvmConsumerRepair(path, live, expected);\n\tconst current = sha256(beforeJvmStructuredCallables(\n\t\tpath, repaired, expected));\n",
+          "previous": "\tconst current = sha256(beforeJvmStructuredCallables(path, await readFile(path, \"utf8\"), expected));\n",
+          "start": 2392
+        }
+      ],
+      "path": "tests/helpers/jvm-source-history.mjs",
+      "previousSha256": "faade6eeba82f400c530939164035da6e336aed486107b844b7852ecec6c1ac9"
+    },
+    {
+      "currentSha256": "4db71786cdb8619aaa705fd178e9df9784f95b93f8f236164ab6a82b80945c91",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, rm } from \"node:fs/promises\";\n",
+          "start": 182
+        },
+        {
+          "current": "import { assertJvmHistoricalSource, beforeCurrentJvmConsumerRepair, readJvmHistoricalEvidence } from \"./helpers/jvm-source-history.mjs\";\n",
+          "previous": "import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from \"./helpers/jvm-source-history.mjs\";\n",
+          "start": 1310
+        },
+        {
+          "current": "\tconst consumerSources = Object.fromEntries(await Promise.all([\n\t\t[\"java\", \"tests/fixtures/compound-consumers/java.java\"]\n\t\t, [\"kotlin\", \"tests/fixtures/compound-consumers/kotlin.kt\"]\n\t].map(async ([profile, path]) => [profile\n\t\t, jvmCompoundConsumer(profile\n\t\t, beforeCurrentJvmConsumerRepair(path\n\t\t\t, await readFile(path, \"utf8\"), record.sourceHashes[path]))])));\n",
+          "previous": "",
+          "start": 4684
+        },
+        {
+          "current": "\t\tassert.equal(record.consumerHashes[run.profile]\n\t\t\t, sha256(consumerSources[run.profile]));\n",
+          "previous": "\t\tassert.equal(record.consumerHashes[run.profile], sha256(jvmCompoundConsumer(run.profile)));\n",
+          "start": 5126
+        }
+      ],
+      "path": "tests/jvm-compound-contract.test.mjs",
+      "previousSha256": "294be640c1e8fd9c8349f7044beda4d9fdd786b0cdbf8009ad02f0db7221e80b"
+    }
+  ],
+  "livePinRefreshes": 20,
+  "milestone": "consumer-suite-contract-repair-source-v1",
+  "predecessorCommit": "5e3b5d5f57d3205b76a1f1452bffc9e9b4c11f6d",
+  "repairs": {
+    "jvmHostNull": "Assert that generic wrappers retain null, then require the generated API conversion boundary to reject those carriers at every non-HostNull Option, Result and Pair site in both Java and Kotlin.",
+    "sparseRegistration": "Keep runtime assertions in the sparse Consumer test and register every retained evidence/history suite exactly once through a dedicated Core-discovered test. Reconstruct old workflow milestones through their immutable ledgers instead of unwinding later gates manually."
+  },
+  "rootCauses": {
+    "jvmHostNull": "The HostNull projection correctly made generic Option, Result and Pair wrappers capable of retaining Some(null) and equivalent nested branches. The older compound caller still expected wrapper construction itself to throw, contradicting the explicit HostNull contract.",
+    "sparseRegistration": "The installed Scalar Fin runtime test imported four retained-history suites whose archive is intentionally absent from the bounded Consumer sparse checkout. Runtime acceptance and immutable evidence authentication were coupled even though Core already has the complete repository."
+  },
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "e0de69c454eca078ff6693e2f7e1d4e9413bbcfce066668397ac79348ef6d9c5",
+      "edits": [
+        {
+          "current": "        check(Option.some(null).isSome() && Option.some(null).value() == null);\n        check(Result.ok(null).isOk() && Result.ok(null).value() == null);\n        check(!Result.err(null).isOk() && Result.err(null).error() == null);\n        check(new Pair<>(null, null).first() == null && new Pair<>(null, null).second() == null);\n",
+          "previous": "        reject(NullPointerException.class, () -> Option.some(null));\n        reject(NullPointerException.class, () -> Result.ok(null)); reject(NullPointerException.class, () -> Result.err(null));\n        reject(NullPointerException.class, () -> new Pair<>(\"allocated\", null));\n",
+          "start": 7657
+        },
+        {
+          "current": "        reject(NullPointerException.class, () -> Api.optionString(Option.some(null)));\n        reject(NullPointerException.class, () -> Api.resultString(Result.ok(null))); reject(NullPointerException.class, () -> Api.resultString(Result.err(null)));\n        reject(NullPointerException.class, () -> Api.tupleString(new Pair<>(null, \"allocated\"))); reject(NullPointerException.class, () -> Api.tupleString(new Pair<>(\"allocated\", null)));\n",
+          "previous": "",
+          "start": 8262
+        }
+      ],
+      "path": "tests/fixtures/compound-consumers/java.java",
+      "previousSha256": "bd507e8c016a479e71c9f89c9b8dc49257266a025517091cdd4cc511a7968ecd"
+    },
+    {
+      "currentSha256": "6a3eb45dbb06a627f271149e686811dd76de3931414d63a0ffce3058c37a8c24",
+      "edits": [
+        {
+          "current": "    verify(Option.some<String?>(null).isSome() && Option.some<String?>(null).value() == null)\n    verify(Result.ok<String?, String?>(null).isOk() && Result.ok<String?, String?>(null).value() == null)\n    verify(!Result.err<String?, String?>(null).isOk() && Result.err<String?, String?>(null).error() == null)\n    verify(Pair<String?, String?>(null, null).first() == null && Pair<String?, String?>(null, null).second() == null)\n",
+          "previous": "    reject(NullPointerException::class.java) { Option.some<String>(null) }\n    reject(NullPointerException::class.java) { Result.ok<String, String>(null) }; reject(NullPointerException::class.java) { Result.err<String, String>(null) }\n    reject(NullPointerException::class.java) { Pair(\"allocated\", null) }\n",
+          "start": 6897
+        },
+        {
+          "current": "    reject(NullPointerException::class.java) { Api.optionString(Option.some(null)) }\n    reject(NullPointerException::class.java) { Api.resultString(Result.ok(null)) }; reject(NullPointerException::class.java) { Api.resultString(Result.err(null)) }\n    reject(NullPointerException::class.java) { Api.tupleString(Pair(null, \"allocated\")) }; reject(NullPointerException::class.java) { Api.tupleString(Pair(\"allocated\", null)) }\n",
+          "previous": "",
+          "start": 7602
+        }
+      ],
+      "path": "tests/fixtures/compound-consumers/kotlin.kt",
+      "previousSha256": "eff7c997a9472dfc68d6a38685a56b6281903dc1c675026500b0a1137c23b50d"
+    },
+    {
+      "currentSha256": "f1e55e2b4fc44833fb78744235463725013b7a08fa7ec970d156b088396bedb1",
+      "edits": [
+        {
+          "current": " * @param source - Optional authenticated fixture source.\n",
+          "previous": "",
+          "start": 3077
+        },
+        {
+          "current": "export const jvmCompoundConsumer = (profile, source = readFileSync(new URL(`../fixtures/compound-consumers/${profile === \"java\" ? \"java.java\" : \"kotlin.kt\"}`, import.meta.url), \"utf8\")) => source\n",
+          "previous": "export const jvmCompoundConsumer = profile => readFileSync(new URL(`../fixtures/compound-consumers/${profile === \"java\" ? \"java.java\" : \"kotlin.kt\"}`, import.meta.url), \"utf8\")\n",
+          "start": 3139
+        }
+      ],
+      "path": "tests/helpers/jvm-compound-fixture.mjs",
+      "previousSha256": "cc4114c99f295e009edca8167abf6138eda0f034ac2ed66bc093cfdc04e3d5f7"
+    },
+    {
+      "currentSha256": "fab5a3cbecb33c23ec09e94f681cfb62a608da021db98d47914429ed4f09fc62",
+      "edits": [
+        {
+          "current": "import { beforeReviewedSubtypeBrowserSource } from \"./reviewed-subtype-browser-history.mjs\";\n",
+          "previous": "",
+          "start": 526
+        },
+        {
+          "current": "import { sourceAtFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 754
+        },
+        {
+          "current": "\tconst path = \".github/workflows/consumer-matrix.yml\";\n",
+          "previous": "\tconst path = \".github/workflows/consumer-matrix.yml\", source = await readFile(path, \"utf8\");\n\tassertReviewedSubtypePackageWorkflow(source);\n",
+          "start": 1257
+        },
+        {
+          "current": "\tconst milestone = await sourceAtFinHistoryRecord(\n\t\treviewedSubtypePackageCiHistoryPath, path, beforeReviewedSubtypeBrowserSource);\n",
+          "previous": "\tconst milestone = beforeReviewedSubtypePackageCiSource(path, source, update.currentSha256);\n",
+          "start": 1458
+        },
+        {
+          "current": "\tassertReviewedSubtypePackageWorkflow(milestone);\n",
+          "previous": "",
+          "start": 1647
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-package-ci-workflow-tests.mjs",
+      "previousSha256": "f6a49f63173d3675af144f084ecad7d55d8f0cd6493a30dd9c7785ce8817956c"
+    },
+    {
+      "currentSha256": "05a4ba75c4d114f21b2b3a36279e8d901920b9287423a91195d2125e8f1e3813",
+      "edits": [
+        {
+          "current": "const enforced = \"steps.reviewed_fin_npm.outcome != 'success'\";\nconst enforcedSubtype = enforced\n\t+ \" || steps.reviewed_subtype_npm.outcome != 'success'\";\n",
+          "previous": "const enforced = \"        if: steps.consumer.outcome != 'success' || steps.type_corpus_npm.outcome != 'success' || steps.reviewed_fin_npm.outcome != 'success'\\n\";\n",
+          "start": 691
+        },
+        {
+          "current": "\t\tconst command = \"tests/generic-records.test.mjs\";\n\t\tconst extended = `${command} && ${runner} npm`;\n\t\treturn enabled ? once(line, command, extended) : once(line, extended, command);\n",
+          "previous": "\t\tconst end = 'tests/generic-records.test.mjs\"', extended = `tests/generic-records.test.mjs && ${runner} npm\"`;\n\t\treturn enabled ? once(line, end, extended) : once(line, extended, end);\n",
+          "start": 2082
+        },
+        {
+          "current": "\tsource = once(source, enforced, enforcedSubtype);\n",
+          "previous": "\tsource = once(source, enforced, enforced.trimEnd() + \" || steps.reviewed_subtype_npm.outcome != 'success'\\n\");\n",
+          "start": 3075
+        },
+        {
+          "current": "\tsource = once(source, enforcedSubtype, enforced);\n",
+          "previous": "\tsource = once(source, enforced.trimEnd() + \" || steps.reviewed_subtype_npm.outcome != 'success'\\n\", enforced);\n",
+          "start": 3836
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-package-ci-workflow.mjs",
+      "previousSha256": "7bc981f47cf358c3a8496ea0f95db6b840c4e38a3f6c241c52d116b318046d8e"
+    },
+    {
+      "currentSha256": "cd33186e4bc7712ef1b44a6f2e4772c29becd3a543dee36d2dd3881157f51adb",
+      "edits": [
+        {
+          "current": "import { beforeNativeReplyRefusalSource } from \"./native-reply-refusal-source-history.mjs\";\n",
+          "previous": "",
+          "start": 539
+        },
+        {
+          "current": "import { beforeScalarFinSourceEntryCiSource, scalarFinSourceEntryCiHistoryPath } from \"./scalar-fin-source-entry-ci-source-history.mjs\";\nimport { sourceAtFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { assertReviewedSubtypePackageWorkflow, disableReviewedSubtypePackageWorkflow } from \"./reviewed-subtype-package-ci-workflow.mjs\";\nimport { assertStructuralSubtypeWorkflow, disableStructuralSubtypeWorkflow } from \"./structural-subtype-ci-workflow.mjs\";\n",
+          "start": 910
+        },
+        {
+          "current": "\tconst path = \".github/workflows/consumer-matrix.yml\";\n\tconst workflow = await sourceAtFinHistoryRecord(\n\t\tscalarFinSourceEntryCiHistoryPath, path, beforeNativeReplyRefusalSource);\n",
+          "previous": "\tconst actual = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tassertStructuralSubtypeWorkflow(actual, \"consumer-matrix.yml\");\n\tconst current = disableStructuralSubtypeWorkflow(actual, \"consumer-matrix.yml\");\n\t// The newer Subtype package checks run between compilation and this probe.\n\t// Validate that entire required layer before checking the original adjacency.\n\tassertReviewedSubtypePackageWorkflow(current);\n\tconst workflow = disableReviewedSubtypePackageWorkflow(current);\n",
+          "start": 12002
+        },
+        {
+          "current": "\tconst previous = beforeScalarFinSourceEntryCiSource(path, workflow);\n",
+          "previous": "\tconst previous = workflow.replace(sourceEntryWorkflowStep, \"\").replace(sourceEntryUploadLine, \"\");\n",
+          "start": 12320
+        }
+      ],
+      "path": "tests/helpers/scalar-fin-source-entry-run-tests.mjs",
+      "previousSha256": "7b5a7f87308ce4584e40796516cf37bc459d02d87b2e2aa3d040d720bffe0b2a"
+    },
+    {
+      "currentSha256": "299543a39ae61f3bdb22818db8355251d677de3b2bfb07ad6f69b2001b028c35",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./helpers/scalar-fin-source-entry-evidence-tests.mjs\";\nimport \"./helpers/scalar-fin-source-entry-integration-source-history-tests.mjs\";\nimport \"./helpers/scalar-fin-source-entry-run-tests.mjs\";\nimport \"./helpers/scalar-fin-source-entry-ci-source-history-tests.mjs\";\n",
+          "start": 925
+        }
+      ],
+      "path": "tests/scalar-fin-rejection.test.mjs",
+      "previousSha256": "d12354b3e3696c0637fda5be7bcf73df605c75d9209ba1435012ed38e1e6b534"
+    }
+  ]
+}
