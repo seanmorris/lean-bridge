@@ -53,7 +53,10 @@ const contract = () => {
 };
 
 test("fresh Lean checks review identities, record layouts, selection and drift before linking", {
-	skip: process.env.LEAN_BRIDGE_REVIEWED_SOURCE_TEST !== "1", timeout: 180_000
+	// Eight fresh elaborations took 170.65 s on an otherwise successful hosted
+	// run and 180.04 s under ordinary contention. Preserve every refusal case
+	// while leaving enough budget for real runner variance.
+	skip: process.env.LEAN_BRIDGE_REVIEWED_SOURCE_TEST !== "1", timeout: 300_000
 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-source-test-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
