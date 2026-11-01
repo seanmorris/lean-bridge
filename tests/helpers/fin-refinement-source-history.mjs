@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeReviewedSourceTimeoutBudgetSource
+	, reviewedSourceTimeoutBudgetNormalizationPaths
+} from "./reviewed-source-timeout-budget-source-history.mjs";
+import {
 	beforeNominalCallbackResultRepairSource
 	, nominalCallbackResultRepairNormalizationPaths
 } from "./nominal-callback-result-repair-source-history.mjs";
@@ -2563,7 +2567,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...nominalCallbackResultRepairNormalizationPaths
+	...reviewedSourceTimeoutBudgetNormalizationPaths
+	, ...nominalCallbackResultRepairNormalizationPaths
 	, ...historicalCitationTransitionAuditNormalizationPaths
 	, ...currentLiveSourceInventoryAuditNormalizationPaths
 	, ...phpWasmGenericRecordArchiveIsolationNormalizationPaths
@@ -3776,7 +3781,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeNominalCallbackResultRepairSource(
+	let stage = beforeReviewedSourceTimeoutBudgetSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeNominalCallbackResultRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

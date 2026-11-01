@@ -1,0 +1,94 @@
+{
+  "changedSupportCells": 0,
+  "discovery": {
+    "hostedTimeoutMilliseconds": 180003.32307,
+    "job": 124789859338,
+    "localTimeoutMilliseconds": 180041.433069,
+    "priorSuccessMilliseconds": 170649.192996,
+    "run": 41285158941,
+    "test": "fresh Lean checks review identities, record layouts, selection and drift before linking"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-reviewed-source-timeout-budget-source-history.mjs",
+      "sha256": "0e3fe57949898f96c47d491223a0945836820cf9158cdea6994839b10f1c93a7"
+    },
+    {
+      "path": "tests/helpers/reviewed-source-timeout-budget-source-history-tests.mjs",
+      "sha256": "11e01ac703d503f3e3203f699aafcd313eb6d106890652c8e0467be57c7ccc86"
+    },
+    {
+      "path": "tests/helpers/reviewed-source-timeout-budget-source-history.mjs",
+      "sha256": "638a8fe53c241b6fd75aaa28c4a426280b51982e3b213a7ea7a5c932e26646c9"
+    }
+  ],
+  "implementationCommit": "c17907790de5f3a39219d5572d2cd0c528c38942",
+  "integrationCommit": "e06b5a37513170aff9580f532d710c781f68c41a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2aea910e4cd179e892ed5ce5f65e6183326bab919b956c3ee07cef116a427224",
+      "edits": [
+        {
+          "current": "import \"./helpers/reviewed-source-timeout-budget-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "41be81b830b4f6b8e4363ed14f459e335b862821363818cdfe25c91d938b33c9"
+    },
+    {
+      "currentSha256": "ccd6e6469f42ac58ced153b0a62098e4b0d551c3ea84472fceec3cd4bf5f43f7",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeReviewedSourceTimeoutBudgetSource\n\t, reviewedSourceTimeoutBudgetNormalizationPaths\n} from \"./reviewed-source-timeout-budget-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...reviewedSourceTimeoutBudgetNormalizationPaths\n\t, ...nominalCallbackResultRepairNormalizationPaths\n",
+          "previous": "\t...nominalCallbackResultRepairNormalizationPaths\n",
+          "start": 235390
+        },
+        {
+          "current": "\tlet stage = beforeReviewedSourceTimeoutBudgetSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNominalCallbackResultRepairSource(\n",
+          "previous": "\tlet stage = beforeNominalCallbackResultRepairSource(\n",
+          "start": 295744
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e976ac829100f7cac9888170e5178cbcf708d66db5279cea623a0893ca39482e"
+    }
+  ],
+  "milestone": "reviewed-source-timeout-budget-v1",
+  "predecessorCommit": "c558c0922f78f5bd4b832aaecf316d87f22a987d",
+  "repair": {
+    "localPassMilliseconds": 188608.836624,
+    "previousTimeoutMilliseconds": 180000,
+    "refusalVariants": 8,
+    "timeoutMilliseconds": 300000
+  },
+  "rootCause": "The test performs eight independent fresh Lean elaborations. Its immediately preceding hosted success consumed 94.8% of the fixed 180-second budget, leaving less than ten seconds for ordinary runner variance. The exact candidate and a local one-CPU reproduction both reached the same hard timeout after all earlier semantic checks passed.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "14c821cb2731cd6d8266739bc36047a777f8040d6928361a76302b47e7407778",
+      "edits": [
+        {
+          "current": "\t// Eight fresh elaborations took 170.65 s on an otherwise successful hosted\n\t// run and 180.04 s under ordinary contention. Preserve every refusal case\n\t// while leaving enough budget for real runner variance.\n\tskip: process.env.LEAN_BRIDGE_REVIEWED_SOURCE_TEST !== \"1\", timeout: 300_000\n",
+          "previous": "\tskip: process.env.LEAN_BRIDGE_REVIEWED_SOURCE_TEST !== \"1\", timeout: 180_000\n",
+          "start": 2865
+        }
+      ],
+      "path": "tests/reviewed-source-build.test.mjs",
+      "previousSha256": "f71e2b6a6dc515f03abbf3f9eacbc9be409fce6509b471c4f8e6524ca4409972"
+    }
+  ]
+}
