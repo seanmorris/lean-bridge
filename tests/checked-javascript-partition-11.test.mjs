@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/php-wasm-generic-record-archive-isolation-source-history-tests.mjs";
 import "./helpers/php-wasm-generic-record-sparse-checkout-repair-source-history-tests.mjs";
 import "./helpers/final-live-source-pin-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-fin-hosted-isolation-source-history-tests.mjs";
