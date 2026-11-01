@@ -22,6 +22,27 @@ const readPromotedSurface = async () => {
 	return result;
 };
 
+test("sparse reviewed-specialization runtime and retained evidence stay independently registered"
+	, async () => {
+		const [runtime, promotion, workflow] = await Promise.all([
+			readFile("tests/reviewed-specializations.test.mjs", "utf8")
+			, readFile("tests/helpers/reviewed-api-promotion-tests.mjs", "utf8")
+			, readFile(".github/workflows/consumer-matrix.yml", "utf8")
+		]);
+		assert.equal(runtime.includes("reviewed-specialization-evidence-tests.mjs")
+			, false);
+		assert.equal([...promotion.matchAll(
+			/^import "[.]\/reviewed-specialization-evidence-tests[.]mjs";$/gmu
+		)].length, 1);
+		assert.match(workflow
+			, /node --test --test-concurrency=1 tests\/reviewed-specializations[.]test[.]mjs/u);
+		const sparse = workflow.match(
+			/^ {2}LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: \|\n((?: {4}.*\n)+)/mu)?.[1];
+		assert.ok(sparse);
+		assert.doesNotMatch(sparse, /reviewed-specializations-20261008/u);
+	}
+);
+
 test("reviewed API promotion authenticates four original report sets without rewriting their receipts", async () => {
 	const references = await reviewedApiPromotionReferences();
 	assert.equal(references.length, 4);

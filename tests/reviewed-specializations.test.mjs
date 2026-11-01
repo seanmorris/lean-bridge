@@ -4,7 +4,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import "./helpers/reviewed-specialization-evidence-tests.mjs";
 import "./helpers/reviewed-specialization-archive-source-history-tests.mjs";
 import "./helpers/reviewed-specialization-ci-hotfix-source-history-tests.mjs";
 import { cp, lstat, mkdir, mkdtemp, readFile, realpath, rm, symlink } from "node:fs/promises";
