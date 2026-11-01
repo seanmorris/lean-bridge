@@ -1290,7 +1290,8 @@ test("consumer CI history preserves every consumer and pinned build path", async
   assert.ok(workflow.includes("LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs"));
   // Checked Fin and generic records on PHP-Wasm run after the collection gate, each with its own report.
-  const phpWasmGates = [["LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs", "build/php-wasm-fin/ordinary.json"]
+  const ordinaryPhpWasmFin = "LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts' tests/php-wasm-fin.test.mjs";
+  const phpWasmGates = [[ordinaryPhpWasmFin, "build/php-wasm-fin/ordinary.json"]
     , ["LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs", "build/php-wasm-fin/reviewed.json"]
     , ["LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests/php-wasm-generic-records.test.mjs", "build/generic-records/php-wasm.json"]];
   for(const [command, report] of phpWasmGates)
@@ -1299,6 +1300,9 @@ test("consumer CI history preserves every consumer and pinned build path", async
     assert.ok(workflow.includes(`            ${report}\n`), report);
     assert.ok(workflow.includes(` && ${command} && `), command);
   }
+  const phpWasmFinSource = await readFile("tests/php-wasm-fin.test.mjs", "utf8");
+  assert.equal([...phpWasmFinSource.matchAll(/^test\("([^"]+)"/gmu)]
+    .filter(([, name]) => name.includes("relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts")).length, 1);
   assert.ok(workflow.includes("test -s build/lists/php-wasm.json"));
   assert.ok(workflow.includes("test -s build/lists/php-wasm-zend-faults.json"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs"));
