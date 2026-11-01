@@ -7,6 +7,7 @@ import "./helpers/reviewed-specialization-sparse-suite-repair-source-history-tes
 import "./helpers/scalar-fin-suite-registration-source-history-tests.mjs";
 import "./helpers/consumer-suite-contract-repair-source-history-tests.mjs";
 import "./helpers/reviewed-source-timeout-budget-source-history-tests.mjs";
+import "./helpers/python-callback-tap-contract-repair-source-history-tests.mjs";
 import "./helpers/nominal-callback-result-repair-source-history-tests.mjs";
 import "./helpers/historical-citation-transition-audit-source-history-tests.mjs";
 import "./helpers/current-live-source-inventory-audit-source-history-tests.mjs";

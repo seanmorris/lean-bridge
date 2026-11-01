@@ -1,0 +1,696 @@
+{
+  "changedSupportCells": 0,
+  "discovery": {
+    "sanitizer": {
+      "lane": "Callback-result lifetimes in installed Python wheels",
+      "observed": "CPython startup Unicode cache varied between equivalent executions"
+    },
+    "tap": {
+      "job": 124937486225,
+      "lane": "Callback-result lifetimes in installed Python wheels",
+      "observed": "14 passing TAP tests followed by an exact 13-test gate failure",
+      "run": 41336197205
+    }
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-python-callback-tap-contract-repair-source-history.mjs",
+      "sha256": "cf8ab0326f91a1168454fe2e4f73ccb97c2c1e4a3f0e4544113cef6678cf8348"
+    },
+    {
+      "path": "tests/helpers/python-callback-tap-contract-repair-source-history-tests.mjs",
+      "sha256": "ba2ff7facf8f8eaa5211b419e2a7ba7c08cbefcdee099e27fa8d9cd50a251a88"
+    },
+    {
+      "path": "tests/helpers/python-callback-tap-contract-repair-source-history.mjs",
+      "sha256": "bfdb5f71e116dbdae833e39cb8eac1fd59b941fcb628530163cf3a87598eb33e"
+    }
+  ],
+  "implementationCommit": "d5d7ebbc8d4f7b580ba2d059c7d576b25368437c",
+  "integrationCommit": "06ce78445ab5c2bcbcced7be635cc90af55d4bee",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9af68cae4a4065c317683a709ef2090bcc4ab377b9a41bf998204329f9471db7",
+      "edits": [
+        {
+          "current": "import \"./helpers/python-callback-tap-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 413
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "38dd99e6d0e6392cc49ac6a98f436023bcf22e26c978f305bd095d93271a5de8"
+    },
+    {
+      "currentSha256": "aad938a58492a88c53f941996e20f585eb7e5b54a2e75e6f9c41c5df756b2691",
+      "edits": [
+        {
+          "current": "import {\n\tbeforePythonCallbackTapContractRepairSource\n\t, pythonCallbackTapContractRepairNormalizationPaths\n} from \"./python-callback-tap-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...pythonCallbackTapContractRepairNormalizationPaths\n\t, ...reviewedSpecializationSparseSuiteRepairNormalizationPaths\n",
+          "previous": "\t...reviewedSpecializationSparseSuiteRepairNormalizationPaths\n",
+          "start": 236081
+        },
+        {
+          "current": "\tlet stage = beforePythonCallbackTapContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeReviewedSpecializationSparseSuiteRepairSource(\n",
+          "previous": "\tlet stage = beforeReviewedSpecializationSparseSuiteRepairSource(\n",
+          "start": 296658
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f75c408370a2106a2de181a52b30fd26b7ff680a43f3802f474a40577ecc8845"
+    }
+  ],
+  "livePinRefreshes": 92,
+  "milestone": "python-callback-ci-contract-repair-source-v1",
+  "predecessorCommit": "54e4a5d6dead1d0ba47eede9fa6d115a7d3fe62a",
+  "repair": "Retain complete sanitizer diagnostics but compare them after removing only exact three-frame CPython Unicode startup allocations and their derived total; keep native/generated frames and explicit ASan, UBSan, 73-byte and 89-byte probes strict. Require a nonzero TAP suite whose test and pass counts agree and whose negative counters are zero. Record both consecutive transitions newest-first in the shared history normalizer.",
+  "replayDiscovery": [
+    {
+      "job": 124955948626,
+      "lane": "Native PHP callback-result acceptance",
+      "run": 41342383365
+    },
+    {
+      "job": 124962612878,
+      "lane": "PHP-Wasm callback-result packages",
+      "run": 41342383365
+    },
+    {
+      "job": 124962612805,
+      "lane": "WIT and WASI Component Model",
+      "run": 41342383365
+    }
+  ],
+  "rootCause": "CPython can retain a variable three-frame Unicode startup cache that is unrelated to the generated/native callback runtime, while the evidence compared complete sanitizer output byte-for-byte. The resulting repair and the subsequent nonzero TAP gate changed seven current sources without recording either reversible transition, so older PHP, PHP-Wasm and WIT readers stopped at the new digests.",
+  "runtimeSemanticChanges": 0,
+  "sanitizerCommit": "50ff74eb948703011169b3a0a47c80872ba69f9b",
+  "sanitizerUpdates": [
+    {
+      "currentSha256": "6bd5c836f6cc400932dc2ace743482c2888dd79bba8c918ebb34d692256d1e6e",
+      "edits": [
+        {
+          "current": "import { comparableOwnedPythonSanitizerBaseline, normalizeOwnedPythonSanitizer } from \"./owned-python-callback-result-sanitizers.mjs\";\n",
+          "previous": "import { normalizeOwnedPythonSanitizer } from \"./owned-python-callback-result-sanitizers.mjs\";\n",
+          "start": 896
+        },
+        {
+          "current": "\t\tconst tlsLive = observed.sanitizerProbes[3];\n\t\tassert.equal(tlsLive.fault, \"tls-live\"); assert.equal(tlsLive.reachable, true);\n\t\tassert.equal(comparableOwnedPythonSanitizerBaseline(tlsLive.diagnostic, \"<probe>\")\n\t\t\t, comparableOwnedPythonSanitizerBaseline(baseline, \"<probe>\"));\n",
+          "previous": "\t\tassert.deepEqual(observed.sanitizerProbes[3], { fault: \"tls-live\", reachable: true, diagnostic: baseline });\n",
+          "start": 7862
+        }
+      ],
+      "path": "tests/helpers/owned-python-callback-result-evidence.mjs",
+      "previousSha256": "4f318c6c7261d4569f914d3aa2301b5710403882df433351f8188b0d60ae8251"
+    },
+    {
+      "currentSha256": "a765ae463e2c66aef09a79324aaa2e83a0f39ce872061f5da135845c47228eb0",
+      "edits": [
+        {
+          "current": "const cpythonUnicodeStartupLeak = block => {\n\tconst lines = block.split(\"\\n\").map(line => line.trim());\n\treturn lines.length === 4\n\t\t&& /^Direct leak of \\d+ byte\\(s\\) in \\d+ object\\(s\\) allocated from:$/u.test(lines[0])\n\t\t&& /^#0 ADDRESS in malloc .*\\/asan_malloc_linux\\.cpp:\\d+$/u.test(lines[1])\n\t\t&& /^#1 ADDRESS in PyUnicode_New Objects\\/unicodeobject\\.c:\\d+$/u.test(lines[2])\n\t\t&& /^#2 ADDRESS in (?:_PyUnicode_FromASCII|_PyUnicode_FromUCS1|unicode_decode_utf8) Objects\\/unicodeobject\\.c:\\d+$/u.test(lines[3]);\n};\n\n/**\n * Compare executions without treating CPython's variable startup cache as an\n * application leak. Full diagnostics remain in the evidence; this projection\n * removes only exact three-frame CPython Unicode allocations and their derived\n * total. Any native/generated frame or additional stack frame remains visible.\n *\n * @param text - Complete sanitizer diagnostic.\n * @param directory - Exclusively owned probe root.\n */\nexport const comparableOwnedPythonSanitizerBaseline = (text, directory) =>\n\tnormalizeOwnedPythonSanitizer(text, directory).split(\"\\n\\n\")\n\t\t.filter(block => !cpythonUnicodeStartupLeak(block))\n\t\t.filter(block => !/^SUMMARY: AddressSanitizer: \\d+ byte\\(s\\) leaked in \\d+ allocation\\(s\\)\\.$/u.test(block))\n\t\t.join(\"\\n\\n\");\n\n",
+          "previous": "",
+          "start": 827
+        },
+        {
+          "current": "\t\tconst comparable = text => comparableOwnedPythonSanitizerBaseline(text, compiled.directory);\n",
+          "previous": "",
+          "start": 4730
+        },
+        {
+          "current": "\t\tassert.equal(comparable(observed.stderr), comparable(cold.stderr));\n",
+          "previous": "\t\tassert.equal(normalize(observed.stderr), normalize(cold.stderr));\n",
+          "start": 4973
+        },
+        {
+          "current": "\t\tassert.equal(comparable(held.stderr), comparable(cold.stderr));\n",
+          "previous": "\t\tassert.equal(normalize(held.stderr), normalize(cold.stderr));\n",
+          "start": 6212
+        }
+      ],
+      "path": "tests/helpers/owned-python-callback-result-sanitizers.mjs",
+      "previousSha256": "04ccded4ef538e6d734dc28f985166fd01d32ffa19ab370b76ae6d62267c16a3"
+    },
+    {
+      "currentSha256": "77e8a5673657336dc2b05decc40cfd63026f419f2c9e951271099f773b6986fb",
+      "edits": [
+        {
+          "current": "import { comparableOwnedPythonSanitizerBaseline, normalizeOwnedPythonSanitizer } from \"./helpers/owned-python-callback-result-sanitizers.mjs\";\n",
+          "previous": "import { normalizeOwnedPythonSanitizer } from \"./helpers/owned-python-callback-result-sanitizers.mjs\";\n",
+          "start": 885
+        },
+        {
+          "current": "test(\"Python sanitizer comparison excludes only exact CPython Unicode startup allocations\", () => {\n\tconst native = \"Direct leak of 128 byte(s) in 12 object(s) allocated from:\\n\"\n\t\t+ \"    #0 0xabc in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\\n\"\n\t\t+ \"    #1 0xdef in __gmp_default_allocate (/probe/runtime/lib/libleanshared.so+0x123)\";\n\tconst cpython = \"Direct leak of 58267 byte(s) in 1124 object(s) allocated from:\\n\"\n\t\t+ \"    #0 0xabc in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\\n\"\n\t\t+ \"    #1 0xdef in PyUnicode_New Objects/unicodeobject.c:1368\\n\"\n\t\t+ \"    #2 0x987 in unicode_decode_utf8 Objects/unicodeobject.c:4875\";\n\tconst summary = \"SUMMARY: AddressSanitizer: 58395 byte(s) leaked in 1136 allocation(s).\";\n\tconst report = [\"==42==ERROR: LeakSanitizer: detected memory leaks\", native, cpython, summary].join(\"\\n\\n\");\n\tconst changedStartup = report.replace(\"58267 byte(s) in 1124 object(s)\", \"58220 byte(s) in 1123 object(s)\")\n\t\t.replace(\"58395 byte(s) leaked in 1136 allocation(s)\", \"58348 byte(s) leaked in 1135 allocation(s)\");\n\tconst comparable = text => comparableOwnedPythonSanitizerBaseline(text, \"/probe\");\n\tassert.notEqual(normalizeOwnedPythonSanitizer(changedStartup, \"/probe\")\n\t\t, normalizeOwnedPythonSanitizer(report, \"/probe\"));\n\tassert.equal(comparable(changedStartup), comparable(report));\n\tassert.notEqual(comparable(report.replace(\"128 byte(s)\", \"129 byte(s)\")), comparable(report));\n\tassert.notEqual(comparable(report.replace(\"    #2 0x987 in unicode_decode_utf8 Objects/unicodeobject.c:4875\"\n\t\t, \"    #2 0x987 in unicode_decode_utf8 Objects/unicodeobject.c:4875\\n    #3 0x654 in generated_owner binding.c:42\")), comparable(report));\n\tassert.notEqual(comparable(report + \"\\n\\nDirect leak of 73 byte(s) in 1 object(s) allocated from:\\n\"\n\t\t+ \"    #0 0xabc in injected_leak (/probe/native.so+0x456)\"), comparable(report));\n\tassert.equal(comparable(report.replace(\"58395 byte(s) leaked in 1136 allocation(s)\"\n\t\t, \"99999 byte(s) leaked in 9999 allocation(s)\")), comparable(report));\n});\n\n",
+          "previous": "",
+          "start": 4484
+        }
+      ],
+      "path": "tests/owned-python-callback-results.test.mjs",
+      "previousSha256": "ac1627b34445a767fc3a6734f9e7e48e426b22866f95f0178d10400592d4bc7c"
+    }
+  ],
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58",
+      "edits": [
+        {
+          "current": "          tap_tests=\"$(sed -n 's/^# tests \\([0-9][0-9]*\\)$/\\1/p' build/owned-python-callback-results.log)\"\n          tap_pass=\"$(sed -n 's/^# pass \\([0-9][0-9]*\\)$/\\1/p' build/owned-python-callback-results.log)\"\n          test -n \"$tap_tests\"\n          test \"$tap_tests\" -gt 0\n          test \"$tap_tests\" = \"$tap_pass\"\n",
+          "previous": "          rg '^# tests 13$' build/owned-python-callback-results.log\n          rg '^# pass 13$' build/owned-python-callback-results.log\n",
+          "start": 58867
+        },
+        {
+          "current": "          rg '^# todo 0$' build/owned-python-callback-results.log\n",
+          "previous": "",
+          "start": 59392
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd"
+    },
+    {
+      "currentSha256": "bc0eb270854bca9b5e95514642e3605d85863712b460ffe567f0d16dad0be1e2",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 78051
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 95246
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 111547
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 126315
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 135597
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 145222
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 168606
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 181575
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 196470
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 209254
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 222474
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 231007
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 239437
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 248454
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 256828
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 276108
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 285947
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 298082
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 316680
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 325976
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 338659
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 347914
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 357197
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 366330
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 375189
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 382576
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 390500
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 401146
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 415252
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 422350
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 432579
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 440323
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 446697
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 452860
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 458957
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 465478
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 473144
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 482438
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 493660
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 503357
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 524492
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 533057
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 544065
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 575950
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 582579
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 592838
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 613711
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 622234
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 633184
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 664702
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 673921
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 681261
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 693544
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 700404
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 709432
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 723458
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 734500
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 748548
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 759294
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 771365
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 782653
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 791236
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 797694
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 806080
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 823670
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 844666
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 900007
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1012069
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1072310
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1079704
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1086302
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1093404
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1100904
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1107954
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1115564
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1137538
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1149425
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1157296
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1167261
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1177375
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1189136
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1221697
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1251976
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1284962
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1324763
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1351339
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1373876
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1393543
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1416931
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1428559
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1451705
+        },
+        {
+          "current": "          \"sha256\": \"1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58\"\n",
+          "previous": "          \"sha256\": \"7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd\"\n",
+          "start": 1951842
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4cbc83555efd36ac17b8b5a9869d42155fabb02304948ff823d2b129ac4959ea"
+    },
+    {
+      "currentSha256": "3b4b5e13f45f894f6a831bb9e16c7b8e54601539cd2c2faa7c056f26dfbfe30b",
+      "edits": [
+        {
+          "current": "export const ownedPythonCallbackResultSummaryGate = [\n\t`tap_tests=\"$(sed -n 's/^# tests \\\\([0-9][0-9]*\\\\)$/\\\\1/p' build/owned-python-callback-results.log)\"`\n\t, `tap_pass=\"$(sed -n 's/^# pass \\\\([0-9][0-9]*\\\\)$/\\\\1/p' build/owned-python-callback-results.log)\"`\n\t, 'test -n \"$tap_tests\"'\n\t, 'test \"$tap_tests\" -gt 0'\n\t, 'test \"$tap_tests\" = \"$tap_pass\"'\n\t, ...[\"fail 0\", \"cancelled 0\", \"skipped 0\", \"todo 0\"]\n\t\t.map(value => `rg '^# ${value}$' build/owned-python-callback-results.log`)\n];\n",
+          "previous": "",
+          "start": 964
+        },
+        {
+          "current": "\t\t, ...ownedPythonCallbackResultSummaryGate\n",
+          "previous": "\t\t, ...[\"tests 13\", \"pass 13\", \"fail 0\", \"cancelled 0\", \"skipped 0\"].map(value => `rg '^# ${value}$' build/owned-python-callback-results.log`)\n",
+          "start": 3536
+        },
+        {
+          "current": "\treturn { summary: \"nonzero-all-passed\", testFiles: 4, reports: 13\n\t\t, failurePropagated: true };\n",
+          "previous": "\treturn { tests: 13, testFiles: 4, reports: 13, failurePropagated: true };\n",
+          "start": 4337
+        }
+      ],
+      "path": "tests/helpers/owned-python-callback-result-ci.mjs",
+      "previousSha256": "a92482b4daeeb070d3b194fe29892d170368195f1c95ce9e9bf10510b852ba8a"
+    },
+    {
+      "currentSha256": "ab29ac0cc6ba82c7e5eaa0bfbd23b55bcbac237d152a3d69e4388923ab7d4e0f",
+      "edits": [
+        {
+          "current": "import { assertOwnedPythonCallbackResultCi, ownedPythonCallbackResultReports\n\t, ownedPythonCallbackResultSummaryGate } from \"./helpers/owned-python-callback-result-ci.mjs\";\n",
+          "previous": "import { assertOwnedPythonCallbackResultCi, ownedPythonCallbackResultReports } from \"./helpers/owned-python-callback-result-ci.mjs\";\n",
+          "start": 206
+        },
+        {
+          "current": "\t\tsummary: \"nonzero-all-passed\", testFiles: 4, reports: 13\n\t\t, failurePropagated: true\n",
+          "previous": "\t\ttests: 13, testFiles: 4, reports: 13, failurePropagated: true\n",
+          "start": 721
+        },
+        {
+          "current": "\t\t, ...ownedPythonCallbackResultSummaryGate.map(line => \"          \" + line)\n",
+          "previous": "\t\t, ...[\"tests 13\", \"pass 13\", \"fail 0\", \"cancelled 0\", \"skipped 0\"].map(value => `          rg '^# ${value}$' build/owned-python-callback-results.log`)\n",
+          "start": 1201
+        }
+      ],
+      "path": "tests/owned-python-callback-result-ci.test.mjs",
+      "previousSha256": "8bdc84091ee6258276fc7f0de48f893d565efe3ffffc4e159efcffc08c9a1e4a"
+    }
+  ],
+  "validation": {
+    "focusedAudits": "6/6 exact-head workflows passed",
+    "pythonTap": "14 tests, 14 pass, zero negative counters",
+    "sharedReplayEndpoints": 8
+  }
+}
