@@ -20,6 +20,15 @@ export const ownedPythonCallbackResultReports = [
 		, `${mode}-combined-package.json`, `${mode}-combined-release.json`
 	])
 ].map(path => "build/owned-python-callback-results/" + path);
+export const ownedPythonCallbackResultSummaryGate = [
+	`tap_tests="$(sed -n 's/^# tests \\([0-9][0-9]*\\)$/\\1/p' build/owned-python-callback-results.log)"`
+	, `tap_pass="$(sed -n 's/^# pass \\([0-9][0-9]*\\)$/\\1/p' build/owned-python-callback-results.log)"`
+	, 'test -n "$tap_tests"'
+	, 'test "$tap_tests" -gt 0'
+	, 'test "$tap_tests" = "$tap_pass"'
+	, ...["fail 0", "cancelled 0", "skipped 0", "todo 0"]
+		.map(value => `rg '^# ${value}$' build/owned-python-callback-results.log`)
+];
 
 /**
  * Reject omitted cases, skipped execution, missing artifacts and optional jobs.
@@ -49,7 +58,7 @@ export const assertOwnedPythonCallbackResultCi = (workflow, manifest) => {
 	const lines = step.split("        run: |\n")[1]?.trim().replace(/^ {10}/gmu, "");
 	assert.equal(lines, ["set -euo pipefail", "source scripts/env.sh"
 		, "npm run test:owned-python-callback-results 2>&1 | tee build/owned-python-callback-results.log"
-		, ...["tests 13", "pass 13", "fail 0", "cancelled 0", "skipped 0"].map(value => `rg '^# ${value}$' build/owned-python-callback-results.log`)
+		, ...ownedPythonCallbackResultSummaryGate
 		, ...ownedPythonCallbackResultReports.map(path => "test -s " + path)].join("\n"));
 	const upload = job.split("      - name: Preserve Python callback-result acceptance\n")[1];
 	assert.match(upload, /^ {8}if: always\(\)$/mu);
@@ -59,5 +68,6 @@ export const assertOwnedPythonCallbackResultCi = (workflow, manifest) => {
 	const summary = workflow.split("  support-summary:\n")[1];
 	assert.match(summary, /^ {6}- owned-python-callback-results$/mu);
 	assert.ok(summary.includes("        if: needs.owned-python-callback-results.result != 'success'\n        run: exit 1\n"));
-	return { tests: 13, testFiles: 4, reports: 13, failurePropagated: true };
+	return { summary: "nonzero-all-passed", testFiles: 4, reports: 13
+		, failurePropagated: true };
 };

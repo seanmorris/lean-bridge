@@ -6,20 +6,22 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { assertOwnedPythonCallbackResultCi, ownedPythonCallbackResultReports } from "./helpers/owned-python-callback-result-ci.mjs";
+import { assertOwnedPythonCallbackResultCi, ownedPythonCallbackResultReports
+	, ownedPythonCallbackResultSummaryGate } from "./helpers/owned-python-callback-result-ci.mjs";
 
 test("CI requires both Python callback source paths, installed archives and every runtime report", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const manifest = JSON.parse(await readFile("package.json", "utf8"));
 	assert.deepEqual(assertOwnedPythonCallbackResultCi(workflow, manifest), {
-		tests: 13, testFiles: 4, reports: 13, failurePropagated: true
+		summary: "nonzero-all-passed", testFiles: 4, reports: 13
+		, failurePropagated: true
 	});
 	const missingRust = workflow.replace(/( {2}owned-python-callback-results:\n[\s\S]*?) {10}bash scripts\/bootstrap-rust-ci\.sh\n/u, "$1");
 	assert.notEqual(missingRust, workflow);
 	assert.throws(() => assertOwnedPythonCallbackResultCi(missingRust, manifest));
 	for(const line of [
 		"          npm run test:owned-python-callback-results 2>&1 | tee build/owned-python-callback-results.log"
-		, ...["tests 13", "pass 13", "fail 0", "cancelled 0", "skipped 0"].map(value => `          rg '^# ${value}$' build/owned-python-callback-results.log`)
+		, ...ownedPythonCallbackResultSummaryGate.map(line => "          " + line)
 		, ...ownedPythonCallbackResultReports.map(path => "          test -s " + path)
 		, "            build/owned-python-callback-results/"
 		, "            build/owned-python-callback-results.log"

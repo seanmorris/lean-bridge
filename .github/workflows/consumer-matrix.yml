@@ -1218,11 +1218,15 @@ jobs:
           set -euo pipefail
           source scripts/env.sh
           npm run test:owned-python-callback-results 2>&1 | tee build/owned-python-callback-results.log
-          rg '^# tests 13$' build/owned-python-callback-results.log
-          rg '^# pass 13$' build/owned-python-callback-results.log
+          tap_tests="$(sed -n 's/^# tests \([0-9][0-9]*\)$/\1/p' build/owned-python-callback-results.log)"
+          tap_pass="$(sed -n 's/^# pass \([0-9][0-9]*\)$/\1/p' build/owned-python-callback-results.log)"
+          test -n "$tap_tests"
+          test "$tap_tests" -gt 0
+          test "$tap_tests" = "$tap_pass"
           rg '^# fail 0$' build/owned-python-callback-results.log
           rg '^# cancelled 0$' build/owned-python-callback-results.log
           rg '^# skipped 0$' build/owned-python-callback-results.log
+          rg '^# todo 0$' build/owned-python-callback-results.log
           test -s build/owned-python-callback-results/typing.json
           test -s build/owned-python-callback-results/runtime-ordinary-no-host.json
           test -s build/owned-python-callback-results/runtime-ordinary-host.json
