@@ -1,0 +1,155 @@
+{
+  "changedSupportCells": 0,
+  "currentSourcePins": [
+    {
+      "count": 4,
+      "current": "6d3f726045ed2031806fcfacc4775edb7f16ef08e15330c43408719aa558c98e",
+      "path": "tests/helpers/reviewed-api-promotion-tests.mjs",
+      "previous": "15660aff35ece75f78af32fdc299d98076adadf0e715c53169448fe79802d147"
+    },
+    {
+      "count": 2,
+      "current": "78d93ca85fee348cb2f05b0a85d525219ff170c14a5bcc00574ee6abbceeb2d1",
+      "path": "tests/reviewed-specializations.test.mjs",
+      "previous": "3cbcb36881906b9941633223e8ae2ae051fa430fc0ed93d854d9485e3eae53a8"
+    }
+  ],
+  "discovery": {
+    "failure": "the sparse runtime suite imported retained reviewed-specialization evidence that was intentionally absent from the consumer checkout",
+    "job": 124844426391,
+    "lane": "Native consumer (c-family)",
+    "workflow": 41303296188
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/refresh-reviewed-specialization-sparse-suite-repair-pins.mjs",
+      "sha256": "6f964cee8bdb629519b2c7ae6c9afac1cde6ccb827696ff4d5e693d021130e45"
+    },
+    {
+      "path": "scripts/update-reviewed-specialization-sparse-suite-repair-source-history.mjs",
+      "sha256": "44568ba549ec37c439ae3b99adb3175c4026799e6a40329f3e3ba7d4afd4c544"
+    },
+    {
+      "path": "tests/helpers/reviewed-specialization-sparse-suite-repair-source-history-tests.mjs",
+      "sha256": "284c006c9a7c5e9ff2b2840d7ea0651a7fa30932665054333c5cc70342ac6af2"
+    },
+    {
+      "path": "tests/helpers/reviewed-specialization-sparse-suite-repair-source-history.mjs",
+      "sha256": "62489e3aa94f5d1da1487b0c19b50df7e6dda27d28c670d0a43cfd3bb907fa06"
+    }
+  ],
+  "implementationCommit": "855ed16e3becff12d8e1c58e6e6ef7211e839a20",
+  "integrationCommit": "37b5132868186fa2e38445768d204bdad0ddfdd7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4cbc83555efd36ac17b8b5a9869d42155fabb02304948ff823d2b129ac4959ea",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"6d3f726045ed2031806fcfacc4775edb7f16ef08e15330c43408719aa558c98e\"\n",
+          "previous": "          \"sha256\": \"15660aff35ece75f78af32fdc299d98076adadf0e715c53169448fe79802d147\"\n",
+          "start": 1717704
+        },
+        {
+          "current": "          \"sha256\": \"6d3f726045ed2031806fcfacc4775edb7f16ef08e15330c43408719aa558c98e\"\n",
+          "previous": "          \"sha256\": \"15660aff35ece75f78af32fdc299d98076adadf0e715c53169448fe79802d147\"\n",
+          "start": 1723481
+        },
+        {
+          "current": "          \"sha256\": \"78d93ca85fee348cb2f05b0a85d525219ff170c14a5bcc00574ee6abbceeb2d1\"\n",
+          "previous": "          \"sha256\": \"3cbcb36881906b9941633223e8ae2ae051fa430fc0ed93d854d9485e3eae53a8\"\n",
+          "start": 1725623
+        },
+        {
+          "current": "          \"sha256\": \"6d3f726045ed2031806fcfacc4775edb7f16ef08e15330c43408719aa558c98e\"\n",
+          "previous": "          \"sha256\": \"15660aff35ece75f78af32fdc299d98076adadf0e715c53169448fe79802d147\"\n",
+          "start": 1727616
+        },
+        {
+          "current": "          \"sha256\": \"78d93ca85fee348cb2f05b0a85d525219ff170c14a5bcc00574ee6abbceeb2d1\"\n",
+          "previous": "          \"sha256\": \"3cbcb36881906b9941633223e8ae2ae051fa430fc0ed93d854d9485e3eae53a8\"\n",
+          "start": 1729789
+        },
+        {
+          "current": "          \"sha256\": \"6d3f726045ed2031806fcfacc4775edb7f16ef08e15330c43408719aa558c98e\"\n",
+          "previous": "          \"sha256\": \"15660aff35ece75f78af32fdc299d98076adadf0e715c53169448fe79802d147\"\n",
+          "start": 1731780
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "2c4067c31bc0d9150d6a8022c6673c953a8e6ef018c57fcce20dc02a519bfb0b"
+    },
+    {
+      "currentSha256": "38dd99e6d0e6392cc49ac6a98f436023bcf22e26c978f305bd095d93271a5de8",
+      "edits": [
+        {
+          "current": "import \"./helpers/reviewed-specialization-sparse-suite-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "7b502d922662796445ea862be6299ce6c694cd71a9ef4e06fc1cfaae9ddd2abf"
+    },
+    {
+      "currentSha256": "f75c408370a2106a2de181a52b30fd26b7ff680a43f3802f474a40577ecc8845",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeReviewedSpecializationSparseSuiteRepairSource\n\t, reviewedSpecializationSparseSuiteRepairNormalizationPaths\n} from \"./reviewed-specialization-sparse-suite-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...reviewedSpecializationSparseSuiteRepairNormalizationPaths\n\t, ...scalarFinSuiteRegistrationNormalizationPaths\n",
+          "previous": "\t...scalarFinSuiteRegistrationNormalizationPaths\n",
+          "start": 235907
+        },
+        {
+          "current": "\tlet stage = beforeReviewedSpecializationSparseSuiteRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeScalarFinSuiteRegistrationSource(\n",
+          "previous": "\tlet stage = beforeScalarFinSuiteRegistrationSource(\n",
+          "start": 296428
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "dccb2a41533f4b8aa2539d76ee8083867ea6891feffd75f268d52b502b6a76d0"
+    }
+  ],
+  "livePinRefreshes": 6,
+  "milestone": "reviewed-specialization-sparse-suite-repair-source-v1",
+  "predecessorCommit": "dc5625f6ec8679b0ecb8b537a49142cfb0409fa9",
+  "repair": "Keep current reviewed-specialization runtime and package checks in the sparse consumer suite. Authenticate the retained archive through the existing Core-only reviewed API promotion suite, assert both registrations, and keep the retained directory excluded from consumer checkouts.",
+  "rootCause": "The reviewed-specializations runtime test directly imported two archived-evidence checks. Consumer jobs intentionally exclude retained evidence directories, so the C-family lane completed all current runtime work and then failed on two ENOENT reads from the October 8 archive.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "6d3f726045ed2031806fcfacc4775edb7f16ef08e15330c43408719aa558c98e",
+      "edits": [
+        {
+          "current": "test(\"sparse reviewed-specialization runtime and retained evidence stay independently registered\"\n\t, async () => {\n\t\tconst [runtime, promotion, workflow] = await Promise.all([\n\t\t\treadFile(\"tests/reviewed-specializations.test.mjs\", \"utf8\")\n\t\t\t, readFile(\"tests/helpers/reviewed-api-promotion-tests.mjs\", \"utf8\")\n\t\t\t, readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\")\n\t\t]);\n\t\tassert.equal(runtime.includes(\"reviewed-specialization-evidence-tests.mjs\")\n\t\t\t, false);\n\t\tassert.equal([...promotion.matchAll(\n\t\t\t/^import \"[.]\\/reviewed-specialization-evidence-tests[.]mjs\";$/gmu\n\t\t)].length, 1);\n\t\tassert.match(workflow\n\t\t\t, /node --test --test-concurrency=1 tests\\/reviewed-specializations[.]test[.]mjs/u);\n\t\tconst sparse = workflow.match(\n\t\t\t/^ {2}LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: \\|\\n((?: {4}.*\\n)+)/mu)?.[1];\n\t\tassert.ok(sparse);\n\t\tassert.doesNotMatch(sparse, /reviewed-specializations-20261008/u);\n\t}\n);\n\n",
+          "previous": "",
+          "start": 1140
+        }
+      ],
+      "path": "tests/helpers/reviewed-api-promotion-tests.mjs",
+      "previousSha256": "15660aff35ece75f78af32fdc299d98076adadf0e715c53169448fe79802d147"
+    },
+    {
+      "currentSha256": "78d93ca85fee348cb2f05b0a85d525219ff170c14a5bcc00574ee6abbceeb2d1",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./helpers/reviewed-specialization-evidence-tests.mjs\";\n",
+          "start": 172
+        }
+      ],
+      "path": "tests/reviewed-specializations.test.mjs",
+      "previousSha256": "3cbcb36881906b9941633223e8ae2ae051fa430fc0ed93d854d9485e3eae53a8"
+    }
+  ]
+}
