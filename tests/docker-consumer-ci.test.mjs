@@ -145,6 +145,7 @@ const metadataSparsePatterns = [
 	, "/docs/", "!/docs/evidence/*", "/docs/evidence/*.json"
 	, "/docs/evidence/*.md", "/docs/evidence/*.xml"
 	, "/docs/evidence/*/index.json"
+	, "/docs/evidence/php-wasm-generic-records-20261007/"
 ];
 
 const expectedNixJobs = [
@@ -177,6 +178,9 @@ const assertNixSourceClosures = source => {
 	assert.match(reviewed, /^ {8}uses: actions\/download-artifact@v8$/mu);
 	assert.match(reviewed
 		, /LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=\$GITHUB_WORKSPACE\/build\/consumer-type-surface\/receipt[.]json/u);
+	const phpWasmCorpus = jobs.get("php-wasm-corpus");
+	assert.match(phpWasmCorpus
+		, /LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests\/php-wasm-generic-records[.]test[.]mjs/u);
 	for(const name of expectedNixJobs.filter(item =>
 		!["docker-engine", "nix-cache"].includes(item))) {
 		const job = jobs.get(name);
@@ -221,6 +225,12 @@ test("every downstream Nix job has one bounded metadata-only source closure"
 					, { name: "AssertionError" }, name);
 			}
 			}
+		const archivePattern
+			= "    /docs/evidence/php-wasm-generic-records-20261007/\n";
+		const withoutGenericRecordArchive = source.replace(archivePattern, "");
+		assert.notEqual(withoutGenericRecordArchive, source);
+		assert.throws(() => assertNixSourceClosures(withoutGenericRecordArchive)
+			, { name: "AssertionError" }, "PHP-Wasm generic-record archive");
 	}
 );
 

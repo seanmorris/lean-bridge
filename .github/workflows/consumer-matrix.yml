@@ -41,6 +41,7 @@ env:
     /docs/evidence/*.md
     /docs/evidence/*.xml
     /docs/evidence/*/index.json
+    /docs/evidence/php-wasm-generic-records-20261007/
   # The documentation contract validates links to selected nested JSON
   # receipts. It needs those text receipts, but never the retained package,
   # archive, object or executable payloads beside them.
