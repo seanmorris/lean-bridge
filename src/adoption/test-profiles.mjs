@@ -391,6 +391,7 @@ const profileManifest = Object.freeze({
 		, "unlocked-component"
 		, "browser-refinements"
 		, "scalar-fin-rejection"
+		, "scalar-fin-source-entry"
 		, "generic-records"
 		, "generic-record-arrays"
 		, "generic-record-array-evidence"
