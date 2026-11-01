@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeNominalCallbackResultRepairSource
+	, nominalCallbackResultRepairNormalizationPaths
+} from "./nominal-callback-result-repair-source-history.mjs";
+import {
 	beforeHistoricalCitationTransitionAuditSource
 	, historicalCitationTransitionAuditNormalizationPaths
 } from "./historical-citation-transition-audit-source-history.mjs";
@@ -2559,7 +2563,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...historicalCitationTransitionAuditNormalizationPaths
+	...nominalCallbackResultRepairNormalizationPaths
+	, ...historicalCitationTransitionAuditNormalizationPaths
 	, ...currentLiveSourceInventoryAuditNormalizationPaths
 	, ...phpWasmGenericRecordArchiveIsolationNormalizationPaths
 	, ...phpWasmGenericRecordSparseCheckoutRepairNormalizationPaths
@@ -3771,7 +3776,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeHistoricalCitationTransitionAuditSource(
+	let stage = beforeNominalCallbackResultRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHistoricalCitationTransitionAuditSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

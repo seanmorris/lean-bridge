@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/nominal-callback-result-repair-source-history-tests.mjs";
 import "./helpers/historical-citation-transition-audit-source-history-tests.mjs";
 import "./helpers/current-live-source-inventory-audit-source-history-tests.mjs";
 import "./helpers/php-wasm-generic-record-archive-isolation-source-history-tests.mjs";

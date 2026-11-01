@@ -1,0 +1,172 @@
+{
+  "changedSupportCells": 0,
+  "discovery": {
+    "contract": "checked Fin callbacks and closures compile, reproduce and recover in installed npm packages",
+    "expected": "status 5 expectation violation",
+    "job": 124761649316,
+    "observed": "raw nominal callback reply outside Fin bound returned normally",
+    "run": 41275246725,
+    "workflow": "Downstream consumer contract"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-nominal-callback-result-repair-source-history.mjs",
+      "sha256": "82a76c0403365067a25cca465a745b9f13775b98073a026b9e53507078527e28"
+    },
+    {
+      "path": "tests/helpers/nominal-callback-result-repair-source-history-tests.mjs",
+      "sha256": "f7aeb6556d66a24fff1115d274777fcf1c6710614142a7b1d0fce964ed27c092"
+    },
+    {
+      "path": "tests/helpers/nominal-callback-result-repair-source-history.mjs",
+      "sha256": "f26ff971c4eedd58fb5a147acac62745973c5b0967108d189f56c5369b0f9f25"
+    }
+  ],
+  "implementationCommit": "596229fd294f34417dc7fc2c80a34743703192d7",
+  "integrationCommit": "7e525c4e68fa7e75e095b17c05a711441c8f4b79",
+  "integrationUpdates": [
+    {
+      "currentSha256": "41be81b830b4f6b8e4363ed14f459e335b862821363818cdfe25c91d938b33c9",
+      "edits": [
+        {
+          "current": "import \"./helpers/nominal-callback-result-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "00480575cd45f8691ae58e41c487a8205a0d8302a49e7f17233f0eb38dec1729"
+    },
+    {
+      "currentSha256": "e976ac829100f7cac9888170e5178cbcf708d66db5279cea623a0893ca39482e",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeNominalCallbackResultRepairSource\n\t, nominalCallbackResultRepairNormalizationPaths\n} from \"./nominal-callback-result-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...nominalCallbackResultRepairNormalizationPaths\n\t, ...historicalCitationTransitionAuditNormalizationPaths\n",
+          "previous": "\t...historicalCitationTransitionAuditNormalizationPaths\n",
+          "start": 235229
+        },
+        {
+          "current": "\tlet stage = beforeNominalCallbackResultRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHistoricalCitationTransitionAuditSource(\n",
+          "previous": "\tlet stage = beforeHistoricalCitationTransitionAuditSource(\n",
+          "start": 295531
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "73779fbac379533bdc6d5ddecb3bd2eca73d0c04cf1c50e5ad07d287cd07c798"
+    }
+  ],
+  "localValidation": {
+    "after": "installed scalar and nominal npm callback contracts passed",
+    "before": "installed nominal npm callback contract reproduced the missing throw",
+    "nominalArchiveSha256": "1648d39368f2723e64c9d73ba741b7ee0f446a83990f624b7b85b72e31a99b00"
+  },
+  "milestone": "nominal-callback-result-repair-v1",
+  "pinAdditions": [
+    {
+      "path": "scripts/refresh-nominal-callback-result-pins.mjs",
+      "sha256": "d0f6956b4b4bf6ebcba84b7f5399ac66f05ed55bd3dbcc0b2f9791dd8ef55fad"
+    }
+  ],
+  "pinCommit": "494d67ccb62bbc974768bcaa42670712b9471d3b",
+  "pinUpdates": [
+    {
+      "currentSha256": "912ed809056f8574e1caa812b487a994f710c5bc5a76e0ff783b295234b0198a",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"6cfad79673cfadefb337982108913d41f59efb387be52d83fb7725768ccced1f\"\n",
+          "previous": "          \"sha256\": \"90a83b2c26cd0cf6a59aac9824bcc12e0535db07ef80aaf79ff8e8b0588d704f\"\n",
+          "start": 1141359
+        },
+        {
+          "current": "          \"sha256\": \"205ca7cdc457da8497c3bf5729a56d12368fc2883397f1d9cb1d2d66ee0b2c34\"\n",
+          "previous": "          \"sha256\": \"cc17b45ebe7ede5c95059b8a1a69eb3891db11bdfa82cf502bb7dae01c95feac\"\n",
+          "start": 1143615
+        },
+        {
+          "current": "          \"sha256\": \"6cfad79673cfadefb337982108913d41f59efb387be52d83fb7725768ccced1f\"\n",
+          "previous": "          \"sha256\": \"90a83b2c26cd0cf6a59aac9824bcc12e0535db07ef80aaf79ff8e8b0588d704f\"\n",
+          "start": 1440664
+        },
+        {
+          "current": "          \"sha256\": \"6cfad79673cfadefb337982108913d41f59efb387be52d83fb7725768ccced1f\"\n",
+          "previous": "          \"sha256\": \"90a83b2c26cd0cf6a59aac9824bcc12e0535db07ef80aaf79ff8e8b0588d704f\"\n",
+          "start": 1447020
+        },
+        {
+          "current": "          \"sha256\": \"205ca7cdc457da8497c3bf5729a56d12368fc2883397f1d9cb1d2d66ee0b2c34\"\n",
+          "previous": "          \"sha256\": \"cc17b45ebe7ede5c95059b8a1a69eb3891db11bdfa82cf502bb7dae01c95feac\"\n",
+          "start": 1448059
+        },
+        {
+          "current": "          \"sha256\": \"6cfad79673cfadefb337982108913d41f59efb387be52d83fb7725768ccced1f\"\n",
+          "previous": "          \"sha256\": \"90a83b2c26cd0cf6a59aac9824bcc12e0535db07ef80aaf79ff8e8b0588d704f\"\n",
+          "start": 1491601
+        },
+        {
+          "current": "          \"sha256\": \"205ca7cdc457da8497c3bf5729a56d12368fc2883397f1d9cb1d2d66ee0b2c34\"\n",
+          "previous": "          \"sha256\": \"cc17b45ebe7ede5c95059b8a1a69eb3891db11bdfa82cf502bb7dae01c95feac\"\n",
+          "start": 1492474
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "340228592eef4fbbad009051e97e6a6809903b4294ae8c25d8e7054ec1b47da5"
+    }
+  ],
+  "predecessorCommit": "123a2909ee8c32e5040506e691d855098df19730",
+  "repair": {
+    "boundary": "native callback result trampoline",
+    "mirror": "compiler-normalized shared nominal refinements",
+    "refreshedLiveCitations": 7,
+    "violationStatus": 5
+  },
+  "rootCause": "The Lean wrapper retained compiler-normalized shared nominal Fin mirrors, but the native callback trampoline independently stripped those refinements because copied-graph structure validation was assumed to enforce them. Structural validation checks shape, not nominal Fin bounds, so raw internal callback replies bypassed the public JavaScript validator and invalid values reached Lean recovery.",
+  "runtimeSemanticChanges": 1,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "6cfad79673cfadefb337982108913d41f59efb387be52d83fb7725768ccced1f",
+      "edits": [
+        {
+          "current": "import {\n\tcomponentStructuredCallableMirrors, componentStructuredCallablePrefix\n\t, componentStructuredCopiedView, componentStructuredRuntimeRefinements\n} from \"./component-structured-callable-lean.mjs\";\n",
+          "previous": "import { componentStructuredCallablePrefix, componentStructuredCopiedView, componentStructuredRuntimeRefinements } from \"./component-structured-callable-lean.mjs\";\n",
+          "start": 623
+        },
+        {
+          "current": "",
+          "previous": "\tconst callbackRefinements = new Map(abi.callbacks.map(type => [type.id, runtimeRefinements(type, type.refinements)]));\n",
+          "start": 1692
+        },
+        {
+          "current": "\t// The Lean wrappers and native callback trampolines must validate the same\n\t// normalized mirror. In particular, shared nominal Fin bounds are not part of\n\t// the structural copied-graph codec: the mirror validator owns those bounds.\n\tconst conversion = componentStructuredCallableMirrors(\n\t\tabi, exports, callbackDirections, nominalRefinements);\n\tconst callbackRefinements = new Map(abi.callbacks.map(type => [\n\t\ttype.id\n\t\t, conversion ? conversion.refinementsFor(type.id)\n\t\t\t: runtimeRefinements(type, type.refinements)\n\t]));\n",
+          "previous": "",
+          "start": 1819
+        }
+      ],
+      "path": "src/build/component-structured-callable-adapters.mjs",
+      "previousSha256": "90a83b2c26cd0cf6a59aac9824bcc12e0535db07ef80aaf79ff8e8b0588d704f"
+    },
+    {
+      "currentSha256": "205ca7cdc457da8497c3bf5729a56d12368fc2883397f1d9cb1d2d66ee0b2c34",
+      "edits": [
+        {
+          "current": "\tconst callbackPrefix = `${abi.exports[0].symbol}_structured_${key}`;\n\tassert.match(c, new RegExp(`if \\\\(!${callbackPrefix}_result_refinement_0\\\\(result\\\\)\\\\) status = 5`, \"u\"));\n",
+          "previous": "",
+          "start": 10172
+        }
+      ],
+      "path": "tests/component-structured-callable-contract.test.mjs",
+      "previousSha256": "cc17b45ebe7ede5c95059b8a1a69eb3891db11bdfa82cf502bb7dae01c95feac"
+    }
+  ]
+}
