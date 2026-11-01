@@ -31,7 +31,7 @@ test("nominal CPAN CI preserves all existing jobs and requires four selections w
 	), previous);
 	assertStructuralSubtypeWorkflow(previous, "perl-consumer.yml");
 	const parent = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	assert.match(parent, /\n {2}perl-consumer:\n {4}name: Perl\n {4}uses: \.\/\.github\/workflows\/perl-consumer\.yml\n/u);
+	assert.match(parent, /\n {2}perl-consumer:\n {4}name: Perl\n {4}needs: type-surface-authentication\n {4}uses: \.\/\.github\/workflows\/perl-consumer\.yml\n/u);
 	assert.match(parent.split("\n  support-summary:\n")[1], /^ {6}- perl-consumer$/mu);
 });
 

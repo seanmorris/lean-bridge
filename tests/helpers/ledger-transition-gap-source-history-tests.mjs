@@ -26,7 +26,9 @@ import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import {
+	sourceAtFinHistoryRecordSource, sourceAtFinHistoryRecordUpdate
+} from "./source-at-fin-history-milestone.mjs";
 
 const cpanPackagePath = "src/release/cpan-package.mjs";
 const git = args => execFileSync("git", args, {
@@ -54,8 +56,8 @@ test("ledger transition gaps and their live repair are exact", async () => {
 		, record.pinCount);
 	for(const update of record.updates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforeLedgerTransitionGapSource
+		const current = await sourceAtFinHistoryRecordUpdate(
+			ledgerTransitionGapHistoryPath, update.path, update.currentSha256
 		);
 		const previous = git(["show", `${ledgerTransitionGapPredecessor}:${update.path}`]);
 		assert.equal(reverseLedgerTransitionGapUpdate(current, update), previous, update.path);
@@ -66,7 +68,9 @@ test("ledger transition gaps and their live repair are exact", async () => {
 		assert.ok(finRefinementNormalizationPaths.includes(update.path), update.path);
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path)), addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+			ledgerTransitionGapHistoryPath, addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
 	assert.ok(record.historicalTransitions.length >= 1);
 	for(const transition of record.historicalTransitions)
 	{
@@ -89,13 +93,18 @@ test("ledger transition gaps and their live repair are exact", async () => {
 			assert.equal(transitions[index].previousSha256
 				, transitions[index + 1].currentSha256, path);
 		const live = await readFile(path, "utf8");
+		const milestone = beforeFinRefinementSource(
+			path, live, transitions[0].currentSha256
+		);
+		assert.equal(sha256(milestone), transitions[0].currentSha256, path);
 		const earliest = transitions.at(-1);
-		assert.equal(beforeLedgerTransitionGapSource(path, live)
+		assert.equal(beforeLedgerTransitionGapSource(path, milestone)
 			, git(["show", `${earliest.previousCommit}:${path}`]), path);
 		for(const transition of transitions)
-			assert.equal(beforeLedgerTransitionGapSource(path, live, transition.currentSha256)
+			assert.equal(beforeLedgerTransitionGapSource(path, milestone, transition.currentSha256)
 				, git(["show", `${transition.currentCommit}:${path}`]), path);
-		assert.equal(beforeLedgerTransitionGapSource(path, `${live}unknown`), `${live}unknown`);
+		assert.equal(beforeLedgerTransitionGapSource(path, `${milestone}unknown`)
+			, `${milestone}unknown`);
 		// The whole hub now reaches the oldest omitted state and, through the
 		// older ledgers, the milestone the hosted history readers require.
 		assert.equal(sha256(beforeFinRefinementSource(path, live, earliest.previousSha256))

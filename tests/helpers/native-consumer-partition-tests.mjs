@@ -37,6 +37,27 @@ test("native CI partition checkpoint preserves all 191 command lines, 77 artifac
 	assert.ok(record.includes("npm run test:native-fin"));
 });
 
+test("current native values require exactly the authenticated type-surface dependency", async () => {
+	const source = await readFile(path, "utf8")
+		, job = jobAt(source, "native-c-family-values");
+	assert.equal(nativeConsumerValueGate(source).split, true);
+	for(const changed of [
+		source.replace(job, () => job.replace(
+			"    needs: type-surface-authentication\n", ""))
+		, source.replace(job, () => job.replace(
+			"    needs: type-surface-authentication\n"
+			, "    needs: unrelated-authentication\n"))
+		, source.replace(job, () => job.replace(
+			"    needs: type-surface-authentication\n"
+			, "    needs: type-surface-authentication\n    needs: type-surface-authentication\n"))
+		, source.replace("  type-surface-authentication:\n"
+			, "  renamed-type-surface-authentication:\n")
+	]) {
+		assert.notEqual(changed, source);
+		assert.throws(() => nativeConsumerValueGate(changed));
+	}
+});
+
 test("native CI partition refuses every omitted command and original artifact path", async t => {
 	const source = await partitionCheckpoint(), previous = original(path);
 	let commands = 0, artifacts = 0;

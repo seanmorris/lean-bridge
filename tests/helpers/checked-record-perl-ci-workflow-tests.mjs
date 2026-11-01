@@ -12,11 +12,15 @@ import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { withoutStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 
 const job = "  checked-records:\n    name: Checked records across all four Perl ABIs\n    runs-on: ubuntu-24.04\n    timeout-minutes: 120\n    steps:\n      - uses: actions/checkout@v6\n        with:\n          persist-credentials: false\n      - uses: actions/setup-node@v6\n        with:\n          node-version: \"22\"\n          cache: npm\n      - name: Install the checkout dependencies\n        run: npm ci --ignore-scripts --no-audit --no-fund\n      - name: Bound apt network waits\n        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n      - name: Install the native build tools\n        timeout-minutes: 20\n        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd\n      - name: Install only the pinned Lean compiler\n        run: bash scripts/bootstrap-toolchains.sh --lean-only\n      - name: Restore the complete checksummed Perl toolchain matrix\n        uses: actions/cache@v4\n        with:\n          path: .toolchains/perl\n          key: perl-checked-record-abi-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}\n      - name: Build or verify every pinned Perl interpreter\n        run: |\n          node scripts/build-perl-toolchains.mjs 5.36.3 threaded\n          node scripts/build-perl-toolchains.mjs 5.36.3 unthreaded\n          node scripts/build-perl-toolchains.mjs 5.38.2 threaded\n          node scripts/build-perl-toolchains.mjs 5.38.2 unthreaded\n      - name: Require four source routes and both CPAN installation modes\n        env:\n          LEAN_NUM_THREADS: \"2\"\n        run: |\n          source scripts/env.sh\n          bash scripts/run-checked-record-perl-ci.sh\n      - name: Preserve complete and partial Perl checked-record observations\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: checked-record-perl-${{ github.sha }}\n          path: build/checked-record-perl-ci/\n          if-no-files-found: error\n\n";
+const originalCheckout = "      - uses: actions/checkout@v6\n        with:\n          persist-credentials: false\n";
+const boundedCheckout = "      - uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          filter: blob:none\n          persist-credentials: false\n          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n";
+const receiptDownload = "      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n";
+const normalizeCheckout = value => value.replace(boundedCheckout
+	, originalCheckout).replace(receiptDownload, "");
 const requireJob = source => {
 	source = withoutStructuralSubtypeWorkflow(source, "perl-consumer.yml");
-	assert.equal(source.split(job).length, 2);
 	const actual = source.split("  checked-records:\n")[1]?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
-	assert.equal("  checked-records:\n" + actual + "\n", job);
+	assert.equal(normalizeCheckout("  checked-records:\n" + actual + "\n"), job);
 	const summary = source.split("\n  perl-summary:\n")[1];
 	assert.ok(summary.includes("    needs:\n      - checked-records\n      - compiler-checks\n"));
 	assert.ok(summary.includes("PERL_ACCEPTED: ${{ needs.checked-records.result == 'success' && needs.compiler-checks.result == 'success'"));
@@ -34,25 +38,29 @@ test("Perl checked records require all four toolchains, every route and uncondit
 	assert.equal(previous, beforeCheckedRecordPerlCiSource(path, source));
 	const caller = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const perl = caller.split("\n  perl-consumer:\n")[1].split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
-	assert.equal(perl.trim(), "name: Perl\n    uses: ./.github/workflows/perl-consumer.yml");
+	assert.equal(perl.trim(), "name: Perl\n    needs: type-surface-authentication\n    uses: ./.github/workflows/perl-consumer.yml");
 	const summary = caller.split("\n  support-summary:\n")[1];
 	assert.match(summary, /^ {6}- perl-consumer$/mu);
 });
 
 test("Perl checked-record workflow rejects skipped lanes, missing tools and tolerated failures", async () => {
 	const source = withoutStructuralSubtypeWorkflow(await readFile(".github/workflows/perl-consumer.yml", "utf8"), "perl-consumer.yml");
+	const body = source.split("  checked-records:\n")[1]
+		?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
+	const currentJob = "  checked-records:\n" + body + "\n";
+	assert.equal(normalizeCheckout(currentJob), job);
 	for(const altered of [
-		job.replace("    runs-on:", "    if: false\n    runs-on:")
-		, job.replace("    runs-on:", "    continue-on-error: true\n    runs-on:")
-		, job.replace("          bash scripts/run-checked-record-perl-ci.sh", "          bash scripts/run-checked-record-perl-ci.sh || true")
-		, job.replace("        if: always()", "        if: success()")
-		, job.replace("          if-no-files-found: error", "          if-no-files-found: ignore")
-		, job.replace("          path: build/checked-record-perl-ci/", "          path: build/checked-record-perl-ci/*/report.json")
-		, ...["5.36.3 threaded", "5.36.3 unthreaded", "5.38.2 threaded", "5.38.2 unthreaded"].map(configuration => job.replace(`          node scripts/build-perl-toolchains.mjs ${configuration}\n`, ""))
-		, job.replace("          LEAN_NUM_THREADS:", "          LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR: 2.36\n          LEAN_NUM_THREADS:")
-		, job.replace("          bash scripts/run-checked-record-perl-ci.sh", "          set +e\n          bash scripts/run-checked-record-perl-ci.sh")
+		currentJob.replace("    runs-on:", "    if: false\n    runs-on:")
+		, currentJob.replace("    runs-on:", "    continue-on-error: true\n    runs-on:")
+		, currentJob.replace("          bash scripts/run-checked-record-perl-ci.sh", "          bash scripts/run-checked-record-perl-ci.sh || true")
+		, currentJob.replace("        if: always()", "        if: success()")
+		, currentJob.replace("          if-no-files-found: error", "          if-no-files-found: ignore")
+		, currentJob.replace("          path: build/checked-record-perl-ci/", "          path: build/checked-record-perl-ci/*/report.json")
+		, ...["5.36.3 threaded", "5.36.3 unthreaded", "5.38.2 threaded", "5.38.2 unthreaded"].map(configuration => currentJob.replace(`          node scripts/build-perl-toolchains.mjs ${configuration}\n`, ""))
+		, currentJob.replace("          LEAN_NUM_THREADS:", "          LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR: 2.36\n          LEAN_NUM_THREADS:")
+		, currentJob.replace("          bash scripts/run-checked-record-perl-ci.sh", "          set +e\n          bash scripts/run-checked-record-perl-ci.sh")
 	]) {
-		const changed = source.replace(job, altered);
+		const changed = source.replace(currentJob, altered);
 		assert.notEqual(changed, source);
 		assert.throws(() => requireJob(changed));
 	}

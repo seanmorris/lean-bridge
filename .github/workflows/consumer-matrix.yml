@@ -6521,6 +6521,7 @@ jobs:
 
   perl-consumer:
     name: Perl
+    needs: type-surface-authentication
     uses: ./.github/workflows/perl-consumer.yml
 
   optional-parameter-matrix:

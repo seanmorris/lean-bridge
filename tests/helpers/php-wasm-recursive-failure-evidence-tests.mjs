@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -19,6 +20,17 @@ const scratch = async t => {
 	const parent = await mkdtemp(join(tmpdir(), "lean-bridge-php-wasm-failure-controls-"));
 	t.after(() => rm(parent, { recursive: true }));
 	return parent;
+};
+
+const retainedFile = async path => {
+	try
+	{ return await readFile(path); }
+	catch(error)
+	{
+		if(error?.code !== "ENOENT") throw error;
+		return execFileSync("git", ["show", `HEAD:${path}`]
+			, { maxBuffer: 32 * 1024 * 1024 });
+	}
 };
 
 test("recursive PHP-Wasm diagnostics remove only successful probe scratch", async t => {
@@ -133,7 +145,7 @@ test("recursive PHP-Wasm failure uploads reject missing, ambiguous or success-on
 
 test("recursive PHP-Wasm upload repair retains the original hosted and locally reproduced failure", async () => {
 	const root = "docs/evidence/php-wasm-corpus-upload-failure-20261014";
-	const indexBytes = await readFile(root + "/index.json");
+	const indexBytes = await retainedFile(root + "/index.json");
 	assert.equal(sha256(indexBytes), "025c19403fb6dc05d49670b7699882e6dfa3ee49c3cc00c921ce758a279405d5");
 	const index = JSON.parse(indexBytes), content = {};
 	assert.equal(index.schemaVersion, 1);
@@ -147,7 +159,7 @@ test("recursive PHP-Wasm upload repair retains the original hosted and locally r
 	]);
 	for(const file of index.files)
 	{
-		const bytes = await readFile(root + "/" + file.path);
+		const bytes = await retainedFile(root + "/" + file.path);
 		assert.equal(bytes.length, file.bytes); assert.equal(sha256(bytes), file.sha256);
 		content[file.path] = bytes;
 	}

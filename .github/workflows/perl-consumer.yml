@@ -7,6 +7,35 @@ on:
 permissions:
   contents: read
 
+env:
+  LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT: ${{ github.workspace }}/build/consumer-type-surface/receipt.json
+  # Reusable workflows do not inherit the caller's environment. Perl jobs need
+  # current source plus text evidence metadata, never the retained payload
+  # corpus that makes an unbounded checkout exceed hosted-runner budgets.
+  LEAN_BRIDGE_PERL_SPARSE_CHECKOUT: |
+    /*
+    !/*/
+    /.github/
+    /acceptance/
+    /config/
+    /containers/
+    /demos/
+    /nix/
+    /notices/
+    /patches/
+    /poc/
+    /schema/
+    /scripts/
+    /site/
+    /src/
+    /tests/
+    /docs/
+    !/docs/evidence/*
+    /docs/evidence/*.json
+    /docs/evidence/*.md
+    /docs/evidence/*.xml
+    /docs/evidence/*/index.json
+
 jobs:
   checked-records:
     name: Checked records across all four Perl ABIs
@@ -15,7 +44,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
@@ -90,7 +128,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
@@ -123,7 +170,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
@@ -196,7 +252,15 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
       - name: Require source history before the Perl ABI build
         run: test "$(git rev-parse --is-shallow-repository)" = false
       - uses: actions/setup-node@v6
@@ -487,7 +551,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
@@ -562,7 +635,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_PERL_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
       - uses: actions/setup-node@v6
         with:
           node-version: "22"

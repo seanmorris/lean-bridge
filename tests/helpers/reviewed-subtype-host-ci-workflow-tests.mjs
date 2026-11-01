@@ -7,8 +7,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertReviewedSubtypeHostWorkflow as assertPreviousWorkflow, disableReviewedSubtypeHostWorkflow, enableReviewedSubtypeHostWorkflow, reviewedSubtypeHostCiBlock, reviewedSubtypeHostCiCommand, reviewedSubtypeHostCiGroups, reviewedSubtypeHostCiUpload } from "./reviewed-subtype-host-ci-workflow.mjs";
-import { beforeReviewedSubtypeHostCiSource } from "./reviewed-subtype-host-ci-history.mjs";
-import { beforeReviewedSubtypePackageCiSource } from "./reviewed-subtype-package-ci-history.mjs";
+import { beforeReviewedSubtypeHostCiSource, reviewedSubtypeHostCiHistoryPath } from "./reviewed-subtype-host-ci-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import "./reviewed-subtype-host-ci-history-tests.mjs";
 import { withoutStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 
@@ -17,7 +17,8 @@ const assertReviewedSubtypeHostWorkflow = (source, name) => assertPreviousWorkfl
 test("reviewed native CI workflows preserve every previous command while enabling all twelve runtime selections", async () => {
 	for(const name of ["consumer-matrix.yml", "perl-consumer.yml"])
 	{
-		const path = ".github/workflows/" + name, current = beforeReviewedSubtypePackageCiSource(path, await readFile(path, "utf8"));
+		const path = ".github/workflows/" + name;
+		const current = await sourceAtHistoryMilestone(reviewedSubtypeHostCiHistoryPath, path);
 		const previous = beforeReviewedSubtypeHostCiSource(path, current);
 		assertReviewedSubtypeHostWorkflow(current, name);
 		assert.notEqual(current, previous);

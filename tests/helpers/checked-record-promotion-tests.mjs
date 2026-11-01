@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
+import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { checkedRecordPromotionReferences } from "./checked-record-promotion-references.mjs";
 import { beforeCheckedRecordPromotionSource, checkedRecordPromotionHistoryPath } from "./checked-record-promotion-source-history.mjs";
@@ -88,7 +88,8 @@ test("checked-record promotion preserves six archived selections and their measu
 test("checked-record promotion adds sixteen cells without borrowing proof, dependent or browser coverage", async () => {
 	const { document, ...contracts } = await readPromotedSurface(), previous = await previousSurface(), references = await checkedRecordPromotionReferences();
 	assertPromotion(document, previous, references);
-	const cells = typeSurfaceCells(document, contracts), old = historicalTypeSurfaceCells(previous, contracts);
+	const cells = historicalTypeSurfaceCells(document, contracts)
+		, old = historicalTypeSurfaceCells(previous, contracts);
 	const byId = new Map(cells.map(cell => [cell.id, cell]));
 	for(const cell of old) assert.deepEqual(byId.get(cell.id), cell, cell.id);
 	const checked = cells.filter(cell => cell.shape === "checked-record");

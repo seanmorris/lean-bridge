@@ -59,7 +59,14 @@ export const nativeConsumerValueGate = workflow => {
 	{
 		assert.match(job, /^ {4}runs-on: ubuntu-24\.04$/mu);
 		assert.match(job, /^ {4}timeout-minutes: 240$/mu);
-		assert.doesNotMatch(job, /^ {4}(?:if|needs|continue-on-error):/mu);
+		const authenticated = workflow.includes("  type-surface-authentication:\n");
+		if(authenticated)
+		{
+			assert.match(job, /^ {4}needs: type-surface-authentication$/mu);
+			assert.equal(job.match(/^ {4}needs:/gmu)?.length, 1);
+		}
+		else assert.doesNotMatch(job, /^ {4}needs:/mu);
+		assert.doesNotMatch(job, /^ {4}(?:if|continue-on-error):/mu);
 		assert.doesNotMatch(step, /^ {8}(?:if|continue-on-error):/mu);
 		assert.ok(commandsAt(step).startsWith("          set -euo pipefail\n          source scripts/env.sh\n"));
 		assert.match(upload, /^ {8}if: always\(\)$/mu);

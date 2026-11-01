@@ -51,17 +51,16 @@ test("PHP-Wasm failure diagnostics preserves exact original sources and support 
 		}
 	}
 	const path = "docs/type-surface.v1.json";
-	const source = original(path), currentSource = await readFile(path, "utf8");
+	const source = original(path);
 	const inventory = JSON.parse(source);
-	assert.equal(beforeFinRefinementSource(
-		path, currentSource, sha256(source)
-	), source);
 	assert.equal(inventory.evidence.length, 496);
 	assert.equal(inventory.observations.length, 583);
 	const checkpoint = record.updates.find(update => update.path === path);
-	const current = JSON.parse(beforeFinRefinementSource(
-		path, currentSource, checkpoint.currentSha256
-	));
+	const checkpointSource = await sourceAtHistoryMilestone(
+		phpWasmFailureDiagnosticsHistoryPath, path
+	);
+	assert.equal(sha256(checkpointSource), checkpoint.currentSha256);
+	const current = JSON.parse(checkpointSource);
 	const expected = structuredClone(inventory); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
