@@ -45,8 +45,9 @@ int main() {
   CHECK(rejected([&] { api::mirror(word, word); }, "arg1", "arg0"));
   CHECK(api::mirror(huge, huge - 1) == 0
     && api::mirror(huge, 0) == huge - 1);
-  CHECK(api::mirror(huge + 1, huge) == 0);
-  for (const Nat& value : {huge, huge + 1, Nat(1) << 128})
+  const Nat huge_plus_one = huge + 1, much_larger = Nat(1) << 128;
+  CHECK(api::mirror(huge_plus_one, huge) == 0);
+  for (const Nat& value : {huge, huge_plus_one, much_larger})
     CHECK(rejected([&] { api::mirror(huge, value); }, "arg1", "arg0"));
   /* The bound changes every call and cannot be frozen into generated code. */
   for (unsigned bound = 0; bound < 12; ++bound) {
