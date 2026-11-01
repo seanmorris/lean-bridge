@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeCurrentLiveSourceInventoryAuditSource
+	, currentLiveSourceInventoryAuditNormalizationPaths
+} from "./current-live-source-inventory-audit-source-history.mjs";
+import {
 	beforePhpWasmGenericRecordArchiveIsolationSource
 	, phpWasmGenericRecordArchiveIsolationNormalizationPaths
 } from "./php-wasm-generic-record-archive-isolation-source-history.mjs";
@@ -2551,7 +2555,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmGenericRecordArchiveIsolationNormalizationPaths
+	...currentLiveSourceInventoryAuditNormalizationPaths
+	, ...phpWasmGenericRecordArchiveIsolationNormalizationPaths
 	, ...phpWasmGenericRecordSparseCheckoutRepairNormalizationPaths
 	, ...finalLiveSourcePinRepairNormalizationPaths
 	, ...phpWasmFinHostedIsolationNormalizationPaths
@@ -3761,7 +3766,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforePhpWasmGenericRecordArchiveIsolationSource(
+	let stage = beforeCurrentLiveSourceInventoryAuditSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePhpWasmGenericRecordArchiveIsolationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

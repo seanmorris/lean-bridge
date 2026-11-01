@@ -1,0 +1,94 @@
+{
+  "changedSupportCells": 0,
+  "discovery": {
+    "actual": "7e842a6dd36ee897a3defaaa40546ed7079c37ac4b85511839a947818798badd",
+    "gate": "all current live-source pins match in one complete pass",
+    "partition": "tests/checked-javascript-partition-11.test.mjs",
+    "path": ".github/workflows/consumer-matrix.yml",
+    "staleExpected": "83d38737fa631ff9fbbd5b6079ca0b62a986bf703c8313df825043610ea098c2"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-current-live-source-inventory-audit-source-history.mjs",
+      "sha256": "f8c21c9cb061df76a2d03db5f1e000bff23a8f02c9a9bce438015518eb2d6266"
+    },
+    {
+      "path": "tests/helpers/current-live-source-inventory-audit-source-history-tests.mjs",
+      "sha256": "30a120bf0f3387e91a37b99f1a99b8b9f02ec4265ee8db09f66e986e410d192b"
+    },
+    {
+      "path": "tests/helpers/current-live-source-inventory-audit-source-history.mjs",
+      "sha256": "27321485e7fdb0d949536e254586fbb7923fc1f48dbd9c587fc8a3808f7cd376"
+    }
+  ],
+  "implementationCommit": "0b5352aeee03f6ac61c58a2962e36f190c918493",
+  "integrationCommit": "98c3ec4b53e95b886899144097428235d669c15d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "38435196cf7ebf27d7ef08c692602c098015755cd13a9ed8ab30801cf827589e",
+      "edits": [
+        {
+          "current": "import \"./helpers/current-live-source-inventory-audit-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "8d0a75a4ae62046a535400e53abad4cd5d448157be6c229f1b7b487b9bed8f93"
+    },
+    {
+      "currentSha256": "22b33bb2c54dfdea4d5764863963c0504964596760d1a34bc49b9551e57b86ea",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCurrentLiveSourceInventoryAuditSource\n\t, currentLiveSourceInventoryAuditNormalizationPaths\n} from \"./current-live-source-inventory-audit-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...currentLiveSourceInventoryAuditNormalizationPaths\n\t, ...phpWasmGenericRecordArchiveIsolationNormalizationPaths\n",
+          "previous": "\t...phpWasmGenericRecordArchiveIsolationNormalizationPaths\n",
+          "start": 234889
+        },
+        {
+          "current": "\tlet stage = beforeCurrentLiveSourceInventoryAuditSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmGenericRecordArchiveIsolationSource(\n",
+          "previous": "\tlet stage = beforePhpWasmGenericRecordArchiveIsolationSource(\n",
+          "start": 295081
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1b46ff0c25e73b8595594eacb5b86c135990e0e802321b11f0680a80a8c2a01e"
+    }
+  ],
+  "milestone": "current-live-source-inventory-audit-v1",
+  "predecessorCommit": "32a0cfc2412163414dc4058bec11b502de6674ff",
+  "repair": {
+    "inventory": "docs/type-surface.v1.json",
+    "liveFiles": 2661,
+    "mismatches": 0,
+    "missingFiles": 0,
+    "selection": "current worktree"
+  },
+  "rootCause": "The current-state audit loaded docs/type-surface.v1.json from the earlier final-live-source repair commit, then compared those frozen expectations with current worktree bytes. Every later authenticated workflow change therefore appeared stale even when the current inventory was exact.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "b272ed02928880cfbe68a9ccaaec1cb1d144787bd038f8466ba7f1ba845f9800",
+      "edits": [
+        {
+          "current": "\t\tconst document = JSON.parse(await readFile(\n\t\t\t\"docs/type-surface.v1.json\", \"utf8\"));\n",
+          "previous": "\t\tconst document = JSON.parse(git([\"show\"\n\t\t\t, `${finalLiveSourcePinRepairImplementation}:docs/type-surface.v1.json`]));\n",
+          "start": 3916
+        }
+      ],
+      "path": "tests/helpers/final-live-source-pin-repair-source-history-tests.mjs",
+      "previousSha256": "f05219bdda3b2e1c2bc4d8a9b5e18101e87b031eb32f40964dce3d576a904b28"
+    }
+  ]
+}
