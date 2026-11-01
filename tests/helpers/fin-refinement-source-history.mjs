@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforePhpWasmFinHostedIsolationSource
+	, phpWasmFinHostedIsolationNormalizationPaths
+} from "./php-wasm-fin-hosted-isolation-source-history.mjs";
+import {
 	beforeExactCandidateContractRepairSource
 	, exactCandidateContractRepairNormalizationPaths
 } from "./exact-candidate-contract-repair-source-history.mjs";
@@ -2535,7 +2539,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...exactCandidateContractRepairNormalizationPaths
+	...phpWasmFinHostedIsolationNormalizationPaths
+	, ...exactCandidateContractRepairNormalizationPaths
 	, ...perlCallbackModuleArgumentRepairNormalizationPaths
 	, ...consumerReceiptMilestoneTraversalRepairNormalizationPaths
 	, ...ownedJavaScriptCheckoutContractRepairNormalizationPaths
@@ -3741,7 +3746,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeExactCandidateContractRepairSource(
+	let stage = beforePhpWasmFinHostedIsolationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeExactCandidateContractRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

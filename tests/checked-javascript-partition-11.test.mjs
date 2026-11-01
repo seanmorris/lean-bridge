@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/php-wasm-fin-hosted-isolation-source-history-tests.mjs";
 import "./helpers/exact-candidate-contract-repair-source-history-tests.mjs";
 import "./helpers/perl-callback-module-argument-repair-source-history-tests.mjs";
 import "./helpers/consumer-documentation-sparse-input-closure-source-history-tests.mjs";

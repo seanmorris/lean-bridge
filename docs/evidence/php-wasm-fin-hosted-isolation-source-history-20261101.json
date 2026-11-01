@@ -1,0 +1,125 @@
+{
+  "candidate": {
+    "cFamilyJobId": 124679799163,
+    "commit": "766fd12a6297fe52fe3eeccc77105aacb2f32903",
+    "downstreamRunId": 41242839565,
+    "phpWasmRefinementFailedTests": 43,
+    "phpWasmRefinementJobId": 124679799405
+  },
+  "changedSupportCells": 0,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-php-wasm-fin-hosted-isolation-source-history.mjs",
+      "sha256": "36303a0a6fce63216cf64f205dbc14f857f055080b52afc94d6232e9d834f49b"
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-hosted-isolation-source-history-tests.mjs",
+      "sha256": "d9d164b865a2d2f171cff8cf8d376ecfd7ee44010fe11ce5187323f20bb7c836"
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-hosted-isolation-source-history.mjs",
+      "sha256": "1e26f81a8efb3a21b01ae838ce2135b0568927ea09ed332b988bb32442fbd250"
+    }
+  ],
+  "implementationCommit": "0cf2a6f68f502f8363d4d3f64e960af4e9e59b32",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5d866b975cb5e3a4c9e3cba2347ba15534fe1df1f8ecac29eb20b95e2c731335",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-fin-hosted-isolation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "db4ba704557a1fe2e860e22cad8fa95bbcf0812f4b4d25e30873904216162f78"
+    },
+    {
+      "currentSha256": "169bb73734dbadd3c4507a201399a3f46c27ea3dd76f61cff4e34a7c10b13f24",
+      "edits": [
+        {
+          "current": "import {\n\tbeforePhpWasmFinHostedIsolationSource\n\t, phpWasmFinHostedIsolationNormalizationPaths\n} from \"./php-wasm-fin-hosted-isolation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...phpWasmFinHostedIsolationNormalizationPaths\n\t, ...exactCandidateContractRepairNormalizationPaths\n",
+          "previous": "\t...exactCandidateContractRepairNormalizationPaths\n",
+          "start": 234169
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmFinHostedIsolationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeExactCandidateContractRepairSource(\n",
+          "previous": "\tlet stage = beforeExactCandidateContractRepairSource(\n",
+          "start": 294130
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "de9687ad63cb3ca31d6ec64c3befb3f1f8ef1fb7b6fc696f4e13028704b72ec1"
+    },
+    {
+      "currentSha256": "5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e",
+      "edits": [
+        {
+          "current": "  const phpWasmGates = [[\"LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs\", \"build/php-wasm-fin/ordinary.json\"]\n",
+          "previous": "  const ordinaryPhpWasmFin = \"LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts' tests/php-wasm-fin.test.mjs\";\n  const phpWasmGates = [[ordinaryPhpWasmFin, \"build/php-wasm-fin/ordinary.json\"]\n",
+          "start": 109057
+        },
+        {
+          "current": "  const ordinaryPhpWasmFin = \"LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts' tests/php-wasm-fin.test.mjs\";\n  assert.equal(liveWorkflow.split(ordinaryPhpWasmFin).length - 1, 2);\n  assert.ok(liveWorkflow.includes(`          ${ordinaryPhpWasmFin}\\n          test -s build/php-wasm-fin/ordinary.json\\n`));\n  assert.ok(liveWorkflow.includes(` && ${ordinaryPhpWasmFin} && `));\n",
+          "previous": "",
+          "start": 109959
+        }
+      ],
+      "path": "tests/documentation.test.mjs",
+      "previousSha256": "b29fd662c0ac6cb8ff5f6dda87e83565d8361fafb3800aecef7c606a14d31ea1"
+    }
+  ],
+  "milestone": "php-wasm-fin-hosted-isolation-source-v1",
+  "predecessorCommit": "6a715d583bc26c31bf5f3db24889859ec4aaa9ca",
+  "schemaVersion": 1,
+  "sourceContractChanges": 2,
+  "updates": [
+    {
+      "currentSha256": "83d38737fa631ff9fbbd5b6079ca0b62a986bf703c8313df825043610ea098c2",
+      "edits": [
+        {
+          "current": "          LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts' tests/php-wasm-fin.test.mjs\n",
+          "previous": "          LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs\n",
+          "start": 174300
+        },
+        {
+          "current": "          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result \"$wasm_result\" --package-installation \"$wasm_executed\" --real-lean-execution \"$wasm_executed\" --command \"npm run test:consumer:php-wasm && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-wasm LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-wasm-host-null.test.mjs tests/php-host-null-contract.test.mjs && node scripts/check-host-null-php-reports.mjs --profile php-wasm --report build/host-null/php-wasm.json --packages build/host-null/packages/php-wasm && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts' tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_TEST=1 LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-fin-direct-tests.mjs && node scripts/check-php-wasm-direct-fin-reports.mjs --directory build/php-wasm-fin-direct && LEAN_BRIDGE_PHP_WASM_SUBTYPE_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-subtype-tests.mjs && node scripts/check-php-wasm-subtype-reports.mjs --directory build/php-wasm-subtype && set -euo pipefail && mkdir -p build/php-wasm-subtype-entry && node scripts/prepare-php-wasm-subtype-entry-runtime.mjs --output build/php-wasm-subtype-entry-input/php-wasm-runtime 2>&1 | tee build/php-wasm-subtype-entry/runtime-prepare.log && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_OUTPUT=build/php-wasm-subtype-entry node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^(ordinary|reviewed) installed PHP-Wasm Subtype entry probes record constructor and source calls$' tests/helpers/php-wasm-subtype-entry-installed-tests.mjs 2>&1 | tee build/php-wasm-subtype-entry/run.tap && node scripts/check-php-wasm-subtype-entry-reports.mjs --directory build/php-wasm-subtype-entry --tap build/php-wasm-subtype-entry/run.tap && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime bash scripts/run-structural-subtype-ci.sh php-wasm && LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests/php-wasm-generic-records.test.mjs && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-wasm LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-wasm node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows\"\n",
+          "previous": "          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result \"$wasm_result\" --package-installation \"$wasm_executed\" --real-lean-execution \"$wasm_executed\" --command \"npm run test:consumer:php-wasm && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/php-wasm-structured-callables.test.mjs tests/php-wasm-structured-callable-zend.test.mjs && npm run test:php-wasm-recursive-generated && npm run test:php-wasm-recursive-packages && LEAN_BRIDGE_OWNED_WASM32_TEST=1 node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_HOST_NULL_PACKAGE_DIR=build/host-null/packages/php-wasm LEAN_BRIDGE_PHP_WASM_HOST_NULL_TEST=1 node --test --test-concurrency=1 tests/php-wasm-host-null.test.mjs tests/php-host-null-contract.test.mjs && node scripts/check-host-null-php-reports.mjs --profile php-wasm --report build/host-null/php-wasm.json --packages build/host-null/packages/php-wasm && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ALIAS_TEST=1 node --test --test-concurrency=1 tests/php-wasm-aliases.test.mjs tests/php-wasm-alias-contract.test.mjs tests/php-wasm-alias-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/php-wasm-collections.test.mjs tests/php-wasm-collection-contract.test.mjs tests/php-wasm-collection-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs && LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_TEST=1 LEAN_BRIDGE_PHP_WASM_DIRECT_FIN_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-fin-direct-tests.mjs && node scripts/check-php-wasm-direct-fin-reports.mjs --directory build/php-wasm-fin-direct && LEAN_BRIDGE_PHP_WASM_SUBTYPE_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_LEAN_TEST=1 node --test --test-concurrency=1 tests/helpers/php-wasm-subtype-tests.mjs && node scripts/check-php-wasm-subtype-reports.mjs --directory build/php-wasm-subtype && set -euo pipefail && mkdir -p build/php-wasm-subtype-entry && node scripts/prepare-php-wasm-subtype-entry-runtime.mjs --output build/php-wasm-subtype-entry-input/php-wasm-runtime 2>&1 | tee build/php-wasm-subtype-entry/runtime-prepare.log && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_TEST=1 LEAN_BRIDGE_PHP_WASM_SUBTYPE_ENTRY_OUTPUT=build/php-wasm-subtype-entry node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^(ordinary|reviewed) installed PHP-Wasm Subtype entry probes record constructor and source calls$' tests/helpers/php-wasm-subtype-entry-installed-tests.mjs 2>&1 | tee build/php-wasm-subtype-entry/run.tap && node scripts/check-php-wasm-subtype-entry-reports.mjs --directory build/php-wasm-subtype-entry --tap build/php-wasm-subtype-entry/run.tap && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime bash scripts/run-structural-subtype-ci.sh php-wasm && LEAN_BRIDGE_PHP_WASM_GENERIC_RECORD_TEST=1 node --test --test-concurrency=1 tests/php-wasm-generic-records.test.mjs && LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=php-wasm LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=php-wasm node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs && LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 node --test --test-concurrency=1 tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 node --test tests/owned-php-wasm-package.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 node --test tests/owned-php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 node --test tests/owned-php-wasm-documentation.test.mjs && npm run test:owned-php-wasm-transfers && npm run test:owned-php-wasm-borrows\"\n",
+          "start": 183067
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "829cc81450fd709598110e747b347c6c105e469a6401b4e688ab33b665ee806d"
+    },
+    {
+      "currentSha256": "b29fd662c0ac6cb8ff5f6dda87e83565d8361fafb3800aecef7c606a14d31ea1",
+      "edits": [
+        {
+          "current": "  const ordinaryPhpWasmFin = \"LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts' tests/php-wasm-fin.test.mjs\";\n  const phpWasmGates = [[ordinaryPhpWasmFin, \"build/php-wasm-fin/ordinary.json\"]\n",
+          "previous": "  const phpWasmGates = [[\"LEAN_BRIDGE_PHP_WASM_FIN_TEST=1 node --test --test-concurrency=1 tests/php-wasm-fin.test.mjs\", \"build/php-wasm-fin/ordinary.json\"]\n",
+          "start": 109057
+        },
+        {
+          "current": "  const phpWasmFinSource = await readFile(\"tests/php-wasm-fin.test.mjs\", \"utf8\");\n  assert.equal([...phpWasmFinSource.matchAll(/^test\\(\"([^\"]+)\"/gmu)]\n    .filter(([, name]) => name.includes(\"relocated PHP-Wasm packages check Fin before Lean in Node and browser hosts\")).length, 1);\n",
+          "previous": "",
+          "start": 110106
+        }
+      ],
+      "path": "tests/documentation.test.mjs",
+      "previousSha256": "9d558637d133b355f831772df6e72e1fd0e9274c13608ae1b1851b69e8345a1d"
+    }
+  ],
+  "validation": {
+    "priorHostedStepDurationSeconds": 6759,
+    "runtimeSemanticChanges": 0,
+    "selectionProbeDurationMs": 1445,
+    "selectionProbeSkipped": 1,
+    "selectionProbeTests": 1
+  }
+}
