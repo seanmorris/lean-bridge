@@ -20,6 +20,30 @@ export const normalizeOwnedPythonSanitizer = (text, directory) => text.replace(/
 	// Keep each complete stack, byte count and object count unchanged.
 	.split("\n\n").map(block => block.trim()).filter(Boolean).sort().join("\n\n");
 
+const cpythonUnicodeStartupLeak = block => {
+	const lines = block.split("\n").map(line => line.trim());
+	return lines.length === 4
+		&& /^Direct leak of \d+ byte\(s\) in \d+ object\(s\) allocated from:$/u.test(lines[0])
+		&& /^#0 ADDRESS in malloc .*\/asan_malloc_linux\.cpp:\d+$/u.test(lines[1])
+		&& /^#1 ADDRESS in PyUnicode_New Objects\/unicodeobject\.c:\d+$/u.test(lines[2])
+		&& /^#2 ADDRESS in (?:_PyUnicode_FromASCII|_PyUnicode_FromUCS1|unicode_decode_utf8) Objects\/unicodeobject\.c:\d+$/u.test(lines[3]);
+};
+
+/**
+ * Compare executions without treating CPython's variable startup cache as an
+ * application leak. Full diagnostics remain in the evidence; this projection
+ * removes only exact three-frame CPython Unicode allocations and their derived
+ * total. Any native/generated frame or additional stack frame remains visible.
+ *
+ * @param text - Complete sanitizer diagnostic.
+ * @param directory - Exclusively owned probe root.
+ */
+export const comparableOwnedPythonSanitizerBaseline = (text, directory) =>
+	normalizeOwnedPythonSanitizer(text, directory).split("\n\n")
+		.filter(block => !cpythonUnicodeStartupLeak(block))
+		.filter(block => !/^SUMMARY: AddressSanitizer: \d+ byte\(s\) leaked in \d+ allocation\(s\)\.$/u.test(block))
+		.join("\n\n");
+
 /**
  * Compile once, then compare each interpreter with its own cold leak baseline.
  *
@@ -68,9 +92,10 @@ export const prepareOwnedPythonCallbackSanitizers = async (compiled, hostCallbac
 		assert.deepEqual(JSON.parse(cold.stdout), { cold: true });
 		assert.deepEqual(JSON.parse(observed.stdout), expected);
 		const normalize = text => normalizeOwnedPythonSanitizer(text, compiled.directory);
+		const comparable = text => comparableOwnedPythonSanitizerBaseline(text, compiled.directory);
 		for(const result of [cold, observed])
 			assert.doesNotMatch(result.stderr, /ERROR: AddressSanitizer|runtime error:|Tracer caught|fatal error/u);
-		assert.equal(normalize(observed.stderr), normalize(cold.stderr));
+		assert.equal(comparable(observed.stderr), comparable(cold.stderr));
 		const sanitizerProbes = [];
 		for(const [fault, diagnostic] of [
 			["address", /ERROR: AddressSanitizer: heap-buffer-overflow/u]
@@ -90,7 +115,7 @@ export const prepareOwnedPythonCallbackSanitizers = async (compiled, hostCallbac
 		sanitizerProbes.push({ fault: "leak", rejected: true, diagnostic: normalize(leaked.stderr) });
 		const held = await run({ LEAN_BRIDGE_OWNED_SANITIZER_FAULT: "tls-live" });
 		assert.deepEqual(JSON.parse(held.stdout), { tls: "live" });
-		assert.equal(normalize(held.stderr), normalize(cold.stderr));
+		assert.equal(comparable(held.stderr), comparable(cold.stderr));
 		sanitizerProbes.push({ fault: "tls-live", reachable: true, diagnostic: normalize(held.stderr) });
 		const tlsLeak = await run({ LEAN_BRIDGE_OWNED_SANITIZER_FAULT: "tls-leak" });
 		assert.deepEqual(JSON.parse(tlsLeak.stdout), { tls: "leak" });

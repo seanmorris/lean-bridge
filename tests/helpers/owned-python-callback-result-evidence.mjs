@@ -13,7 +13,7 @@ import { createCompiledNativeModel } from "../../src/build/native-graph-model.mj
 import { ownedPythonCallbackResultSource, ownedPythonCallbackResultCombinedSource } from "./owned-python-callback-result-fixture.mjs";
 import { ownedPythonCallbackNativeSource } from "./owned-python-callback-result-native.mjs";
 import { ownedPythonCallbackMutations } from "./owned-python-callback-result-mutations.mjs";
-import { normalizeOwnedPythonSanitizer } from "./owned-python-callback-result-sanitizers.mjs";
+import { comparableOwnedPythonSanitizerBaseline, normalizeOwnedPythonSanitizer } from "./owned-python-callback-result-sanitizers.mjs";
 
 const current = {
 	generateOwnedCPackage
@@ -143,6 +143,9 @@ export const assertOwnedPythonCallbackRuntime = async (item, replay) => {
 			assert.match(probe.diagnostic, diagnostic);
 			assert.notEqual(probe.diagnostic, baseline);
 		}
-		assert.deepEqual(observed.sanitizerProbes[3], { fault: "tls-live", reachable: true, diagnostic: baseline });
+		const tlsLive = observed.sanitizerProbes[3];
+		assert.equal(tlsLive.fault, "tls-live"); assert.equal(tlsLive.reachable, true);
+		assert.equal(comparableOwnedPythonSanitizerBaseline(tlsLive.diagnostic, "<probe>")
+			, comparableOwnedPythonSanitizerBaseline(baseline, "<probe>"));
 	}
 };

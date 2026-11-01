@@ -15,7 +15,7 @@ import { ownedPythonCallbackResultReviewedIr, ownedPythonCallbackResultCombinedR
 import { pythonGraphInterpreters } from "./helpers/python-graph-probes.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
-import { normalizeOwnedPythonSanitizer } from "./helpers/owned-python-callback-result-sanitizers.mjs";
+import { comparableOwnedPythonSanitizerBaseline, normalizeOwnedPythonSanitizer } from "./helpers/owned-python-callback-result-sanitizers.mjs";
 import { ownedPythonCallbackTyping } from "./helpers/owned-python-callback-result-typing.mjs";
 
 const variants = [
@@ -68,6 +68,31 @@ test("Python callback-result capability preserves whole owners without phantom e
 	}
 	const base = ownedAggregateReviewedIr();
 	assert.deepEqual(generateOwnedPythonPackage(base, null, { callbackResultAnchors: true }).files, generateOwnedPythonPackage(base).files);
+});
+
+test("Python sanitizer comparison excludes only exact CPython Unicode startup allocations", () => {
+	const native = "Direct leak of 128 byte(s) in 12 object(s) allocated from:\n"
+		+ "    #0 0xabc in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\n"
+		+ "    #1 0xdef in __gmp_default_allocate (/probe/runtime/lib/libleanshared.so+0x123)";
+	const cpython = "Direct leak of 58267 byte(s) in 1124 object(s) allocated from:\n"
+		+ "    #0 0xabc in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\n"
+		+ "    #1 0xdef in PyUnicode_New Objects/unicodeobject.c:1368\n"
+		+ "    #2 0x987 in unicode_decode_utf8 Objects/unicodeobject.c:4875";
+	const summary = "SUMMARY: AddressSanitizer: 58395 byte(s) leaked in 1136 allocation(s).";
+	const report = ["==42==ERROR: LeakSanitizer: detected memory leaks", native, cpython, summary].join("\n\n");
+	const changedStartup = report.replace("58267 byte(s) in 1124 object(s)", "58220 byte(s) in 1123 object(s)")
+		.replace("58395 byte(s) leaked in 1136 allocation(s)", "58348 byte(s) leaked in 1135 allocation(s)");
+	const comparable = text => comparableOwnedPythonSanitizerBaseline(text, "/probe");
+	assert.notEqual(normalizeOwnedPythonSanitizer(changedStartup, "/probe")
+		, normalizeOwnedPythonSanitizer(report, "/probe"));
+	assert.equal(comparable(changedStartup), comparable(report));
+	assert.notEqual(comparable(report.replace("128 byte(s)", "129 byte(s)")), comparable(report));
+	assert.notEqual(comparable(report.replace("    #2 0x987 in unicode_decode_utf8 Objects/unicodeobject.c:4875"
+		, "    #2 0x987 in unicode_decode_utf8 Objects/unicodeobject.c:4875\n    #3 0x654 in generated_owner binding.c:42")), comparable(report));
+	assert.notEqual(comparable(report + "\n\nDirect leak of 73 byte(s) in 1 object(s) allocated from:\n"
+		+ "    #0 0xabc in injected_leak (/probe/native.so+0x456)"), comparable(report));
+	assert.equal(comparable(report.replace("58395 byte(s) leaked in 1136 allocation(s)"
+		, "99999 byte(s) leaked in 9999 allocation(s)")), comparable(report));
 });
 
 test("Python callback stubs distinguish native owner arguments from raw host payloads", {
