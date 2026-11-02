@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/exact-head-replay-contract-repair-source-history-tests.mjs";
 import "./helpers/reviewed-specialization-sparse-suite-repair-source-history-tests.mjs";
 import "./helpers/scalar-fin-suite-registration-source-history-tests.mjs";
 import "./helpers/consumer-suite-contract-repair-source-history-tests.mjs";

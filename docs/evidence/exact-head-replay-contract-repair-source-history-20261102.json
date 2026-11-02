@@ -1,0 +1,152 @@
+{
+  "changedSupportCells": 0,
+  "discovery": [
+    {
+      "job": 124999140853,
+      "lane": "Core contract shard 5/12",
+      "observed": "Two stale C-family gate assertions and two pre-field Wasm archive mismatches",
+      "run": 41353878183
+    },
+    {
+      "job": 124996984188,
+      "lane": "Native PHP",
+      "observed": "The recursive ownership probe called the current private borrow helper without its recovery argument",
+      "run": 41353878302
+    }
+  ],
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-exact-head-replay-contract-repair-source-history.mjs",
+      "sha256": "712cee8b9d9d6316a55b745935a6aa972c1e8b2596a3ebb7180a711ed354a3bf"
+    },
+    {
+      "path": "tests/helpers/exact-head-replay-contract-repair-source-history-tests.mjs",
+      "sha256": "49bf1ab39e9aa6c1d540f0ae0f9a13e2b55edec03160ab424cfd6a30b1ee533f"
+    },
+    {
+      "path": "tests/helpers/exact-head-replay-contract-repair-source-history.mjs",
+      "sha256": "3d1621c6695851323159e35dfa48908629c84aaaba38169c8e877476c755e62b"
+    }
+  ],
+  "implementationCommit": "9f99036ebdeca984c32ef1f24b17b9f2b9276ef8",
+  "integrationCommit": "4c7621ebb15f242adbb31356f8d97f62ed998dbb",
+  "integrationUpdates": [
+    {
+      "currentSha256": "92af3852cbd5e877bd70d208cbc0bea3287d37481dcc8b9ca7664776b3aba627",
+      "edits": [
+        {
+          "current": "import \"./helpers/exact-head-replay-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "9af68cae4a4065c317683a709ef2090bcc4ab377b9a41bf998204329f9471db7"
+    },
+    {
+      "currentSha256": "00edd5e0cca90ab9a6c53d60802dd21f1e72f82299d825f68f2d651d8251a9c2",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeExactHeadReplayContractRepairSource\n\t, exactHeadReplayContractRepairNormalizationPaths\n} from \"./exact-head-replay-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...exactHeadReplayContractRepairNormalizationPaths\n\t, ...pythonCallbackTapContractRepairNormalizationPaths\n",
+          "previous": "\t...pythonCallbackTapContractRepairNormalizationPaths\n",
+          "start": 236249
+        },
+        {
+          "current": "\tlet stage = beforeExactHeadReplayContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePythonCallbackTapContractRepairSource(\n",
+          "previous": "\tlet stage = beforePythonCallbackTapContractRepairSource(\n",
+          "start": 296880
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "aad938a58492a88c53f941996e20f585eb7e5b54a2e75e6f9c41c5df756b2691"
+    }
+  ],
+  "livePinRefreshes": 1,
+  "milestone": "exact-head-replay-contract-repair-source-v1",
+  "predecessorCommit": "3c345fdbd765422c825dcd8ff889973885189d60",
+  "repair": "Parse the C-family failure group and require its refusal clauses without forbidding later gates. Authenticate the immutable Wasm archive through all three pre-field reconstructors. Pass an explicit null recovery pointer in the valid-result PHP ownership probe and advance its sole live source citation.",
+  "rootCause": "The C-family refusal test matched a closed two-clause substring after later mandatory gates were appended. The Wasm refusal authenticator used current field-aware builders for a deliberately pre-field archive even though dedicated historical reconstructors already existed. The PHP ownership probe did not follow the later explicit callback-recovery parameter.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "e7c956e3c9eeca42780e67580fcd04056711db180effa85d6072a3163c184352",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"c7a158eb45b3ee8c5f9b33c92c4c5e639e94bae6982f146eddc8a600906f0bf4\"\n",
+          "previous": "          \"sha256\": \"7be3fd85857744e9e503bc1ae853e07fb7c3db765ba3092ee7be8ec432bede8f\"\n",
+          "start": 1383249
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "bc0eb270854bca9b5e95514642e3605d85863712b460ffe567f0d16dad0be1e2"
+    },
+    {
+      "currentSha256": "c7a158eb45b3ee8c5f9b33c92c4c5e639e94bae6982f146eddc8a600906f0bf4",
+      "edits": [
+        {
+          "current": "    // This probe exercises a valid callback result, so it has no recovery value.\n    $descriptor=$borrow->invoke($runtime,$signature,$callback,$frame,null);\n",
+          "previous": "    $descriptor=$borrow->invoke($runtime,$signature,$callback,$frame);\n",
+          "start": 3226
+        }
+      ],
+      "path": "tests/fixtures/structured-callable-consumers/php-recursive-ownership.php",
+      "previousSha256": "7be3fd85857744e9e503bc1ae853e07fb7c3db765ba3092ee7be8ec432bede8f"
+    },
+    {
+      "currentSha256": "e727f1d234cfb9492f6ad2b1243961a615495abfd09bc1e32826e0c38303114c",
+      "edits": [
+        {
+          "current": "\tconst cFamily = /\\(matrix\\.profile == 'c-family' && \\(([^)]*)\\)\\)/u.exec(enforce.condition);\n\tassert.ok(cFamily, \"native enforcement retains a dedicated C-family failure gate\");\n\tconst failures = cFamily[1].split(\" || \");\n\tfor(const step of [\"ordinary_c\", \"type_corpus_c_family\"])\n\t\tassert.ok(failures.includes(`steps.${step}.outcome != 'success'`), `${step} remains mandatory`);\n",
+          "previous": "\tassert.ok(enforce.condition.includes(\"matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success')\"));\n",
+          "start": 3021
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-refusal-ci-tests.mjs",
+      "previousSha256": "b05d42e8f99f4d9f3db32883c3470416624cbd2e138b60c3f7ab0220610e1497"
+    },
+    {
+      "currentSha256": "74c2cc1e99b964e51e943b19c9f01b1a5106a84ab12c4d31208fa0ca9e523781",
+      "edits": [
+        {
+          "current": "import { reviewedFinWasmPreFieldIr } from \"./reviewed-fin-wasm-fixture.mjs\";\nimport { reviewedFinWasmPreFieldMismatches } from \"./reviewed-fin-wasm-mismatches.mjs\";\nimport { reviewedFinWasmPreFieldTypeScript } from \"./reviewed-fin-wasm-typescript.mjs\";\n",
+          "previous": "import { reviewedFinWasmIr } from \"./reviewed-fin-wasm-fixture.mjs\";\nimport { reviewedFinWasmMismatches } from \"./reviewed-fin-wasm-mismatches.mjs\";\nimport { reviewedFinWasmTypeScript } from \"./reviewed-fin-wasm-typescript.mjs\";\n",
+          "start": 346
+        },
+        {
+          "current": "\t\tconst expected = reviewedFinWasmPreFieldIr(selection);\n",
+          "previous": "\t\tconst expected = reviewedFinWasmIr(selection);\n",
+          "start": 10363
+        },
+        {
+          "current": "\t\tassert.deepEqual(report.mismatches, reviewedFinWasmPreFieldMismatches(selection).map(({ label, ir, expectedField }) => ({ label\n",
+          "previous": "\t\tassert.deepEqual(report.mismatches, reviewedFinWasmMismatches(selection).map(({ label, ir, expectedField }) => ({ label\n",
+          "start": 11125
+        },
+        {
+          "current": "\t\t\t, sourceSha256: sha256(reviewedFinWasmPreFieldTypeScript(selection))\n",
+          "previous": "\t\t\t, sourceSha256: sha256(reviewedFinWasmTypeScript(selection))\n",
+          "start": 11489
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-refusal-evidence.mjs",
+      "previousSha256": "4d1923ed08b19e38d53f9cff0ab79c6a7fd229d1c46513cba93082112fc3a4ad"
+    }
+  ],
+  "validation": {
+    "hostedReplacementRequired": true,
+    "phpModel": "24/24 focused PHP and native model contracts passed",
+    "wasmArchive": "6/6 archive and mutation contracts passed"
+  }
+}

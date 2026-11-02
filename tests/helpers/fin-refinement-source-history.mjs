@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeExactHeadReplayContractRepairSource
+	, exactHeadReplayContractRepairNormalizationPaths
+} from "./exact-head-replay-contract-repair-source-history.mjs";
+import {
 	beforePythonCallbackTapContractRepairSource
 	, pythonCallbackTapContractRepairNormalizationPaths
 } from "./python-callback-tap-contract-repair-source-history.mjs";
@@ -2583,7 +2587,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...pythonCallbackTapContractRepairNormalizationPaths
+	...exactHeadReplayContractRepairNormalizationPaths
+	, ...pythonCallbackTapContractRepairNormalizationPaths
 	, ...reviewedSpecializationSparseSuiteRepairNormalizationPaths
 	, ...scalarFinSuiteRegistrationNormalizationPaths
 	, ...consumerSuiteContractRepairNormalizationPaths
@@ -3801,7 +3806,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforePythonCallbackTapContractRepairSource(
+	let stage = beforeExactHeadReplayContractRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePythonCallbackTapContractRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
