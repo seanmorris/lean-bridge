@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeJvmGenericRecordArrayNullBoundaryRepairSource
+	, jvmGenericRecordArrayNullBoundaryRepairNormalizationPaths
+} from "./jvm-generic-record-array-null-boundary-repair-source-history.mjs";
+import {
 	beforeExactHeadReplayContractRepairSource
 	, exactHeadReplayContractRepairNormalizationPaths
 } from "./exact-head-replay-contract-repair-source-history.mjs";
@@ -2587,7 +2591,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...exactHeadReplayContractRepairNormalizationPaths
+	...jvmGenericRecordArrayNullBoundaryRepairNormalizationPaths
+	, ...exactHeadReplayContractRepairNormalizationPaths
 	, ...pythonCallbackTapContractRepairNormalizationPaths
 	, ...reviewedSpecializationSparseSuiteRepairNormalizationPaths
 	, ...scalarFinSuiteRegistrationNormalizationPaths
@@ -3806,7 +3811,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeExactHeadReplayContractRepairSource(
+	let stage = beforeJvmGenericRecordArrayNullBoundaryRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeExactHeadReplayContractRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

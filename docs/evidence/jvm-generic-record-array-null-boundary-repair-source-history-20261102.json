@@ -1,0 +1,136 @@
+{
+  "changedSupportCells": 0,
+  "discovery": {
+    "job": 125053723860,
+    "lane": "Managed consumer (jvm)",
+    "observed": "NatBox rejected a null required field before the Array rejection harness began",
+    "run": 41372695232
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-jvm-generic-record-array-null-boundary-repair-source-history.mjs",
+      "sha256": "53e21b6dfb08bea2f4febe08b9338ce584b63f8ea9d3a2ed09f6336eff019ba8"
+    },
+    {
+      "path": "tests/helpers/jvm-generic-record-array-null-boundary-repair-source-history-tests.mjs",
+      "sha256": "db9d18d018289383c120119f553f74c761e79420db87579cd6c49f4057f5e4d9"
+    },
+    {
+      "path": "tests/helpers/jvm-generic-record-array-null-boundary-repair-source-history.mjs",
+      "sha256": "31bbd9e0c37e34df9ca9eed8f5a9a8411a29a46b73a88ede526487d125ec90e6"
+    }
+  ],
+  "implementationCommit": "8062b1f94907d0540c76468ca6a66ca2e5b3e311",
+  "integrationCommit": "bb6cd7c192b8baf87886f1f0dc80406e8aa0086c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6470ea32f2dc02906ff05e46bccdf0dc1e01392a30a41014fd2a0104de4d5090",
+      "edits": [
+        {
+          "current": "import \"./helpers/jvm-generic-record-array-null-boundary-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 176
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "92af3852cbd5e877bd70d208cbc0bea3287d37481dcc8b9ca7664776b3aba627"
+    },
+    {
+      "currentSha256": "dbc503b4472cd9b3c85cb5a3a9c4c5fedd5bbdfd7e4d92ba49a3ec810f07916f",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeJvmGenericRecordArrayNullBoundaryRepairSource\n\t, jvmGenericRecordArrayNullBoundaryRepairNormalizationPaths\n} from \"./jvm-generic-record-array-null-boundary-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...jvmGenericRecordArrayNullBoundaryRepairNormalizationPaths\n\t, ...exactHeadReplayContractRepairNormalizationPaths\n",
+          "previous": "\t...exactHeadReplayContractRepairNormalizationPaths\n",
+          "start": 236449
+        },
+        {
+          "current": "\tlet stage = beforeJvmGenericRecordArrayNullBoundaryRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeExactHeadReplayContractRepairSource(\n",
+          "previous": "\tlet stage = beforeExactHeadReplayContractRepairSource(\n",
+          "start": 297144
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "00edd5e0cca90ab9a6c53d60802dd21f1e72f82299d825f68f2d651d8251a9c2"
+    }
+  ],
+  "livePinRefreshes": 0,
+  "milestone": "jvm-generic-record-array-null-boundary-repair-source-v1",
+  "predecessorCommit": "852e4c750aa0cb853b530b5d17236fb96ec3907b",
+  "repair": "Construct the invalid NatBox inside the rejection harness at each selected position, prove the failed assignment leaves the caller array unchanged, then run valid rowTotal and rowBoxSum recovery calls. Keep the null-record Array converter checks and the exact 1,071-check Java observation unchanged.",
+  "rootCause": "The Java Array consumer constructed NatBox(null, count) while preparing a broken row, before entering the exception harness. Generated required reference fields now reject null in their public record constructor, so the expected boundary fired correctly but escaped the test.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "b1d04809d2d5cc79c2ed3cacbedc2d1557aaa5e9b7c47e3a9103f78fd98cb580",
+      "edits": [
+        {
+          "current": "        // unchanged and the next valid call succeeds. A null record field is rejected by its public constructor before assignment, while a\n        // null record reaches the Array converter. A wrong record class does not compile.\n",
+          "previous": "        // unchanged and the next valid call succeeds. A wrong record class does not compile.\n",
+          "start": 1860
+        },
+        {
+          "current": "            final int failedPosition = position;\n",
+          "previous": "",
+          "start": 2150
+        },
+        {
+          "current": "            NatBox[] nullField = row.clone();\n            NatBox beforeNullField = nullField[failedPosition];\n            check(arrayRaises.test(NullPointerException.class, () -> nullField[failedPosition] = new NatBox(null, n(0))) && nullField[failedPosition] == beforeNullField);\n            check(Api.rowTotal(nullField).equals(rowExpected));\n            check(Api.rowBoxSum(new RowBox(nullField, n(4))).equals(rowExpected));\n            NatBox[][] brokenRows = {row.clone(), row.clone(), row.clone()};\n",
+          "previous": "            NatBox[][] brokenRows = {row.clone(), row.clone(), row.clone(), row.clone()};\n",
+          "start": 2919
+        },
+        {
+          "current": "            brokenRows[2][position] = null;\n            Class<?>[] kinds = {IllegalArgumentException.class, IllegalArgumentException.class, NullPointerException.class};\n            for (int member = 0; member < 3; ++member) {\n",
+          "previous": "            brokenRows[2][position] = new NatBox(null, n(0));\n            brokenRows[3][position] = null;\n            Class<?>[] kinds = {IllegalArgumentException.class, IllegalArgumentException.class, NullPointerException.class, NullPointerException.class};\n            for (int member = 0; member < 4; ++member) {\n",
+          "start": 3530
+        }
+      ],
+      "path": "tests/fixtures/generic-record-array-consumers/java.java",
+      "previousSha256": "abf76fb4cdf160cfcafe042f0e708392496a8811ebf9a35750abb63adb0a3cfe"
+    },
+    {
+      "currentSha256": "93feec78fc8250ca484cca12ed041e61d941690bb672dbada441415fe6974693",
+      "edits": [
+        {
+          "current": "\t\tif(profile === \"java\")\n\t\t{\n\t\t\t// Generated records reject required null fields at construction, so the refusal must stay inside the harness.\n\t\t\tassert.match(fragment, /final int failedPosition = position;/u);\n\t\t\tassert.match(fragment, /arrayRaises\\.test\\(NullPointerException\\.class, \\(\\) -> nullField\\[failedPosition\\] = new NatBox\\(null, n\\(0\\)\\)\\)/u);\n\t\t\tassert.match(fragment, /nullField\\[failedPosition\\] == beforeNullField/u);\n\t\t\tassert.doesNotMatch(fragment, /brokenRows\\[[^\\]]+\\]\\[position\\] = new NatBox\\(null/u);\n\t\t}\n",
+          "previous": "",
+          "start": 8835
+        }
+      ],
+      "path": "tests/generic-record-arrays.test.mjs",
+      "previousSha256": "1c745d7a3a8ae5f249e2d65f59a7ce98d1b0c40fccc352db71f2da24efed624b"
+    },
+    {
+      "currentSha256": "9951d1ea667e8b2a9ee583111ce0f091bff552e62d62cdb8bda74068a6ee04ca",
+      "edits": [
+        {
+          "current": "\t\t\t, \"NatBox constructor null field at 0..2 refused before assignment, unchanged, recovered; BoxRow and RowBox negative fields and null records refused, unchanged, recovered\"\n",
+          "previous": "\t\t\t, \"BoxRow and RowBox member negative value, negative count, null field, null record at 0..2 refused, unchanged, recovered\"\n",
+          "start": 7990
+        }
+      ],
+      "path": "tests/helpers/generic-record-arrays.mjs",
+      "previousSha256": "1a8bf5878f33b8839e2181aa3320013b02920f07e277a1d27e6bd78508f14d79"
+    }
+  ],
+  "validation": {
+    "installedPackageReplay": "12/12 tests passed from two independent Lean author roots",
+    "javaChecks": 2105,
+    "kotlinChecks": 2067,
+    "sourceFreeConsumers": [
+      "java",
+      "kotlin"
+    ]
+  }
+}
