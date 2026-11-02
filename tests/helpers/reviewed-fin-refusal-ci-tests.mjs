@@ -40,7 +40,11 @@ const validate = workflow => {
 	assert.ok(nativeCiRecordScript(workflow, "c-family").includes(`consumer_command="$consumer_command && ${command}"`));
 	const enforce = steps.find(step => step.name === "Enforce native consumer support");
 	assert.ok(enforce.condition.startsWith("always() && "));
-	assert.ok(enforce.condition.includes("matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success')"));
+	const cFamily = /\(matrix\.profile == 'c-family' && \(([^)]*)\)\)/u.exec(enforce.condition);
+	assert.ok(cFamily, "native enforcement retains a dedicated C-family failure gate");
+	const failures = cFamily[1].split(" || ");
+	for(const step of ["ordinary_c", "type_corpus_c_family"])
+		assert.ok(failures.includes(`steps.${step}.outcome != 'success'`), `${step} remains mandatory`);
 	assert.match(enforce.text, /^ {8}run: exit 1$/mu);
 	return patterns.map(pattern => new RegExp(pattern, "mu"));
 };

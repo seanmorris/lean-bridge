@@ -7,9 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { reviewedFinWasmIr } from "./reviewed-fin-wasm-fixture.mjs";
-import { reviewedFinWasmMismatches } from "./reviewed-fin-wasm-mismatches.mjs";
-import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
+import { reviewedFinWasmPreFieldIr } from "./reviewed-fin-wasm-fixture.mjs";
+import { reviewedFinWasmPreFieldMismatches } from "./reviewed-fin-wasm-mismatches.mjs";
+import { reviewedFinWasmPreFieldTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 
 export const wasmRefusalDirectory = "docs/evidence/reviewed-fin-wasm-refusals-20261009";
 export const wasmRefusalRevision = "d5a61df812a10d4cf22077048e7fa582af35accd";
@@ -134,19 +134,19 @@ export const assertWasmRefusalRecords = records => {
 		assert.equal(report.schemaVersion, 1); assert.equal(report.path, "reviewed-ir");
 		assert.equal(report.privateAbi, selection === "scalar" ? 2 : 6); assert.equal(report.independentBuilds, 2);
 		for(const flag of ["reproducible", "sourceRemovedBeforeInstallation", "compilerFreePath", "offlineInstall"]) assert.equal(report[flag], true);
-		const expected = reviewedFinWasmIr(selection);
+		const expected = reviewedFinWasmPreFieldIr(selection);
 		assert.equal(report.reviewedSourceSha256, sha256(canonicalJson(expected)));
 		assert.equal(report.sourceSha256, wasmRefusalSources["tests/fixtures/onboarding/reviewed-fin-wasm/ReviewedFin.lean"]);
 		assert.equal(report.consumerSha256, wasmRefusalSources["tests/fixtures/reviewed-fin-wasm/javascript.mjs"]);
 		assert.equal(report.compilerSha256, "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550");
 		assert.equal(report.metadataSha256, identity.metadata); assert.equal(report.bindingIrSha256, identity.binding);
 		assert.deepEqual(report.refinements, Object.fromEntries(expected.declarations.map(item => [item.source.declaration, item.source.extensions["lean-lang.org/refinements"]])));
-		assert.deepEqual(report.mismatches, reviewedFinWasmMismatches(selection).map(({ label, ir, expectedField }) => ({ label
+		assert.deepEqual(report.mismatches, reviewedFinWasmPreFieldMismatches(selection).map(({ label, ir, expectedField }) => ({ label
 			, reviewedSourceSha256: sha256(canonicalJson(ir))
 			, expectedField, fieldObserved: true
 			, code: "reviewed-ir-source-mismatch", outputAbsent: true })));
 		assert.deepEqual(report.typescript, { strict: true, skipLibCheck: false
-			, sourceSha256: sha256(reviewedFinWasmTypeScript(selection))
+			, sourceSha256: sha256(reviewedFinWasmPreFieldTypeScript(selection))
 			, compilerSha256: "e8f349eabd48486bdb2bf9dc1a00c89d58297270c54b745838879e2859194419"
 			, declarationsSha256: identity.declarations });
 		assert.equal(report.receiptSha256, identity.receipt); assert.equal(sha256(canonicalJson(report.receipt)), identity.receipt);

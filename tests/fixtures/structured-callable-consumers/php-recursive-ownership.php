@@ -50,7 +50,8 @@ foreach(cases(2) as $shape=>[$value,$other]) {
     $outputScope=new GraphScope($schema);$output=$outputScope->allocate($schema->nodes[$type]['size']);
     $replyScope=new GraphScope($schema);$frame=new NativeCallableFrame($replyScope);$invoked=0;
     $callback=static function($input) use (&$invoked,$value) {++$invoked;return $value;};
-    $descriptor=$borrow->invoke($runtime,$signature,$callback,$frame);
+    // This probe exercises a valid callback result, so it has no recovery value.
+    $descriptor=$borrow->invoke($runtime,$signature,$callback,$frame,null);
     try {
         ensure($forward->php_recursive_forward(\FFI::addr($descriptor),$roots[0],$output)===0);
         ensure($frame->failure===null && $invoked===1);
