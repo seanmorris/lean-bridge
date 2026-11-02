@@ -17,8 +17,10 @@
         check(java.util.Arrays.equals(made, new NatBox[] {natBox(0, 3), natBox(1, 3), natBox(2, 3)}) && Api.rowOf(n(0)).length == 0 && Api.rowTotal(made).equals(n(9)));
         check(Api.rowBoxSum(new RowBox(row, n(4))).equals(rowExpected) && Api.rowBoxSum(new RowBox(new NatBox[0], n(9))).equals(n(9)) && Api.rowBoxSum(new RowBox(made, n(0))).equals(n(3)));
         // Negative and null members at the first, middle and last position are the generated API's exact exceptions; the caller's input is
-        // unchanged and the next valid call succeeds. A wrong record class does not compile.
+        // unchanged and the next valid call succeeds. A null record field is rejected by its public constructor before assignment, while a
+        // null record reaches the Array converter. A wrong record class does not compile.
         for (int position = 0; position < 3; ++position) {
+            final int failedPosition = position;
             BigInteger[] negative = {n(1), arrayWide, n(3)}, missing = {n(1), arrayWide, n(3)};
             negative[position] = n(-1);
             missing[position] = null;
@@ -26,13 +28,17 @@
             check(Api.pushCount(new ArrayBox(new BigInteger[] {n(1), arrayWide, n(3)}, n(3))).equals(pushed));
             check(arrayRaises.test(NullPointerException.class, () -> Api.pushCount(new ArrayBox(missing, n(3)))) && missing[position] == null);
             check(Api.pushCount(new ArrayBox(new BigInteger[] {n(1), arrayWide, n(3)}, n(3))).equals(pushed));
-            NatBox[][] brokenRows = {row.clone(), row.clone(), row.clone(), row.clone()};
+            NatBox[] nullField = row.clone();
+            NatBox beforeNullField = nullField[failedPosition];
+            check(arrayRaises.test(NullPointerException.class, () -> nullField[failedPosition] = new NatBox(null, n(0))) && nullField[failedPosition] == beforeNullField);
+            check(Api.rowTotal(nullField).equals(rowExpected));
+            check(Api.rowBoxSum(new RowBox(nullField, n(4))).equals(rowExpected));
+            NatBox[][] brokenRows = {row.clone(), row.clone(), row.clone()};
             brokenRows[0][position] = natBox(-1, 0);
             brokenRows[1][position] = natBox(0, -1);
-            brokenRows[2][position] = new NatBox(null, n(0));
-            brokenRows[3][position] = null;
-            Class<?>[] kinds = {IllegalArgumentException.class, IllegalArgumentException.class, NullPointerException.class, NullPointerException.class};
-            for (int member = 0; member < 4; ++member) {
+            brokenRows[2][position] = null;
+            Class<?>[] kinds = {IllegalArgumentException.class, IllegalArgumentException.class, NullPointerException.class};
+            for (int member = 0; member < 3; ++member) {
                 NatBox[] broken = brokenRows[member];
                 NatBox before = broken[position];
                 check(arrayRaises.test(kinds[member], () -> Api.rowTotal(broken)) && broken.length == 3 && broken[position] == before);

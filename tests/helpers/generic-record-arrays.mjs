@@ -145,7 +145,7 @@ export const genericRecordArrayCases = Object.freeze({
 			, "rowOf 3 and 0, rowTotal of rowOf"
 			, "rowBoxSum nonempty, empty and rowOf field"
 			, "ArrayBox.value member -1 and null at 0..2 refused with IllegalArgumentException or NullPointerException, unchanged, recovered"
-			, "BoxRow and RowBox member negative value, negative count, null field, null record at 0..2 refused, unchanged, recovered"
+			, "NatBox constructor null field at 0..2 refused before assignment, unchanged, recovered; BoxRow and RowBox negative fields and null records refused, unchanged, recovered"
 			, "null Arrays, records and counts, negative counts, negative rowOf"
 			, "1000 Array rounds"] })
 	, kotlin: Object.freeze({ checks: 1037

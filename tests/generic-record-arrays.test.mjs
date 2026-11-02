@@ -115,6 +115,14 @@ test("each Array consumer is the pinned specialized consumer with one fragment i
 		}
 		if(profile === "cpp") assert.ok(fragment.includes("failure.status == GENERICRECORDS_STATUS_INVALID_ARGUMENT && failure.code == GENERICRECORDS_ERROR_INVALID_ARGUMENT"));
 		if(profile === "python") for(const kind of ["(-1, ValueError)", "(True, TypeError)", "(api.NatBox(-1, 0), ValueError)", "(api.NatBox(0, -1), ValueError)", "(api.NatBoxAgain(1, 0), TypeError)"]) assert.ok(fragment.includes(kind), kind);
+		if(profile === "java")
+		{
+			// Generated records reject required null fields at construction, so the refusal must stay inside the harness.
+			assert.match(fragment, /final int failedPosition = position;/u);
+			assert.match(fragment, /arrayRaises\.test\(NullPointerException\.class, \(\) -> nullField\[failedPosition\] = new NatBox\(null, n\(0\)\)\)/u);
+			assert.match(fragment, /nullField\[failedPosition\] == beforeNullField/u);
+			assert.doesNotMatch(fragment, /brokenRows\[[^\]]+\]\[position\] = new NatBox\(null/u);
+		}
 	}
 });
 
