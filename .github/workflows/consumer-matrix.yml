@@ -1511,6 +1511,8 @@ jobs:
     name: Node and browser npm consumers
     needs: type-surface-authentication
     runs-on: ubuntu-24.04
+    env:
+      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
     # Run 37805067353 hit three hours during the corpus. Leave time for the
     # remaining multi-profile, installed CLI and registry/browser gates.
     timeout-minutes: 330
@@ -2509,6 +2511,8 @@ jobs:
     name: Native PHP
     needs: type-surface-authentication
     runs-on: ubuntu-24.04
+    env:
+      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
     # Native PHP installed acceptance runs alone; PHP-Wasm has its own job (#1450).
     timeout-minutes: 240
     steps:
@@ -3733,6 +3737,8 @@ jobs:
     name: Native consumer (${{ matrix.profile }})
     needs: type-surface-authentication
     runs-on: ubuntu-24.04
+    env:
+      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
     # Run 37873560469 cut the c-family Compare step off at 240 minutes while it was still
     # passing tests. Python and Rust keep their 240-minute budget.
     timeout-minutes: ${{ matrix.profile == 'c-family' && 360 || 240 }}
@@ -4592,6 +4598,8 @@ jobs:
     name: Managed consumer (${{ matrix.profile }})
     needs: type-surface-authentication
     runs-on: ubuntu-24.04
+    env:
+      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
     timeout-minutes: 240
     strategy:
       fail-fast: false
@@ -5970,6 +5978,8 @@ jobs:
     name: WIT and WASI Component Model
     needs: type-surface-authentication
     runs-on: ubuntu-24.04
+    env:
+      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
     # Copied, recursive, owned and original-owner installed-package gates
     # share this job. The full sequence exceeds two hours on hosted runners.
     timeout-minutes: 240

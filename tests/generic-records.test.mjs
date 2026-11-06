@@ -8,21 +8,14 @@ import { access, cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
-import "./helpers/generic-refusal-fix-source-history-tests.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import "./helpers/refinement-engine-tests.mjs";
-import "./helpers/generic-records-engine-source-history-tests.mjs";
-import "./helpers/reviewed-scalar-rollout-evidence-tests.mjs";
-import "./helpers/reviewed-perl-scalar-evidence-tests.mjs";
-import "./helpers/reviewed-perl-container-evidence-tests.mjs";
 import "./helpers/reviewed-fin-wasm-installed-tests.mjs";
 import "./helpers/bounded-apt-tests.mjs";
-import "./helpers/reviewed-fin-acceptance-source-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { validateNativeType } from "../src/analyze/native-types.mjs";
 import { createNativeModel } from "../src/build/native-model.mjs";
-import "./helpers/generic-records-source-history-tests.mjs";
 import { createElaboratedSemanticModel, elaboratedComponent } from "../src/analyze/semantic-model.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
@@ -31,20 +24,31 @@ import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { genericRecordRustDiagnostics } from "./helpers/generic-record-rust.mjs";
 import { genericRecordDotnetDiagnostics } from "./helpers/generic-record-managed-types.mjs";
-import "./helpers/generic-record-hosts-source-history-tests.mjs";
-import "./helpers/generic-record-specialization-source-history-tests.mjs";
-import "./helpers/generic-record-host-evidence-tests.mjs";
-import "./helpers/refinement-core-followup-source-history-tests.mjs";
-import "./helpers/reviewed-scalar-hosts-source-history-tests.mjs";
-import "./helpers/refinement-ci-followup-source-history-tests.mjs";
 import "./helpers/reviewed-scalar-hosts-tests.mjs";
-import "./helpers/reviewed-fin-host-evidence-tests.mjs";
-import "./helpers/generic-specialization-evidence-tests.mjs";
-import "./helpers/reviewed-scalar-host-evidence-tests.mjs";
-import "./helpers/generic-record-promotion-source-history-tests.mjs";
-import "./helpers/reviewed-scalar-rollout-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
 import { genericRecordSpecializations, specializedGenericRecordCase, specializedGenericRecordConsumer } from "./helpers/generic-record-specializations.mjs";
 import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/generic-refusal-fix-source-history-tests.mjs")
+	, () => import("./helpers/generic-records-engine-source-history-tests.mjs")
+	, () => import("./helpers/reviewed-scalar-rollout-evidence-tests.mjs")
+	, () => import("./helpers/reviewed-perl-scalar-evidence-tests.mjs")
+	, () => import("./helpers/reviewed-perl-container-evidence-tests.mjs")
+	, () => import("./helpers/reviewed-fin-acceptance-source-history-tests.mjs")
+	, () => import("./helpers/generic-records-source-history-tests.mjs")
+	, () => import("./helpers/generic-record-hosts-source-history-tests.mjs")
+	, () => import("./helpers/generic-record-specialization-source-history-tests.mjs")
+	, () => import("./helpers/generic-record-host-evidence-tests.mjs")
+	, () => import("./helpers/refinement-core-followup-source-history-tests.mjs")
+	, () => import("./helpers/reviewed-scalar-hosts-source-history-tests.mjs")
+	, () => import("./helpers/refinement-ci-followup-source-history-tests.mjs")
+	, () => import("./helpers/reviewed-fin-host-evidence-tests.mjs")
+	, () => import("./helpers/generic-specialization-evidence-tests.mjs")
+	, () => import("./helpers/reviewed-scalar-host-evidence-tests.mjs")
+	, () => import("./helpers/generic-record-promotion-source-history-tests.mjs")
+	, () => import("./helpers/reviewed-scalar-rollout-source-history-tests.mjs")
+]);
 
 const wasm = process.env.LEAN_BRIDGE_LAKE_WASM_TEST === "1";
 const profiles = process.env.LEAN_BRIDGE_GENERIC_RECORD_PROFILES?.split(",").sort() ?? [];

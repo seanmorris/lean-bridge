@@ -10,7 +10,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertFinContainerEdgeJvmGdbRun, finContainerEdgeJvmWaitGdbScript } from "./fin-container-edge-jvm-gdb.mjs";
-import { readFinContainerEdgeJvm } from "./fin-container-edge-jvm.mjs";
+import { finContainerEdgeJvmExpectedBeforeOptionNullEntry, readFinContainerEdgeJvm } from "./fin-container-edge-jvm.mjs";
 
 const root = "docs/evidence/jvm-pending-exit-20261011";
 const indexDigest = "2920296b61862f5eb1cd6876bf90a196b2d7d81c63bad6ffe0c87c8aa2409fa7";
@@ -53,7 +53,7 @@ test("the pending JVM exit archive verifies the complete Java replay and refusal
 		assert.equal(sha256(script), summary.results[index].scriptSha256);
 		const stdout = (await read(`${stem}.stdout`)).toString();
 		const stderr = (await read(`${stem}.stderr`)).toString();
-		const rows = readFinContainerEdgeJvm(stdout, "java"); assert.equal(rows.length, 12046);
+		const rows = readFinContainerEdgeJvm(stdout, "java", finContainerEdgeJvmExpectedBeforeOptionNullEntry); assert.equal(rows.length, 12046);
 		const observer = { identity: config.identity
 			, configSha256: config.configSha256
 			, listings: JSON.parse(await read("runtime/listings.json"))

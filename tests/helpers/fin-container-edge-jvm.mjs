@@ -11,8 +11,12 @@ import { finContainerEdgeConsumer } from "./fin-container-edges.mjs";
 
 export const finContainerEdgeJvmChecks = Object.freeze({ java: 14089, kotlin: 14088 });
 
-/** Independently enumerate both JVM consumers, including their explicit null-carrier calls. */
-export const finContainerEdgeJvmExpected = Object.freeze((() => {
+/**
+ * Independently enumerate both JVM consumers, including their explicit null-carrier calls.
+ *
+ * @param publicOptionNull - Include the current public Option-null boundary observation.
+ */
+const expectedRows = publicOptionNull => Object.freeze((() => {
 	const rows = [], counts = Array(8).fill(0);
 	const add = (method, status) => {
 		const index = finContainerEdgeEntries.indexOf(method);
@@ -35,9 +39,11 @@ export const finContainerEdgeJvmExpected = Object.freeze((() => {
 		for(let column = 0; column < 3; column++) add("flatten", "fin");
 	}
 	add("present", "ok"); add("flatten", "ok");
-	// Option.some(null) rejects while evaluating the argument, before optionalDigits is called.
-	// Its original assertion remains in the consumer, but it is not a public API entry.
 	for(const method of ["emptyArray", "emptyList"]) add(method, "null");
+	// Current Option values can carry null far enough to enter the public API, which
+	// rejects the payload before conversion or Lean dispatch. The retained pending-exit
+	// archive predates that boundary and therefore omits this one public observation.
+	if(publicOptionNull) add("optionalDigits", "null");
 	for(const method of finContainerEdgeEntries.slice(0, 3)) add(method, "value");
 	for(let value = 0; value < 3; value++) add("optionalDigits", "value");
 	for(let cycle = 0; cycle < 1000; cycle++)
@@ -46,23 +52,28 @@ export const finContainerEdgeJvmExpected = Object.freeze((() => {
 	return rows;
 })());
 
+export const finContainerEdgeJvmExpectedBeforeOptionNullEntry = expectedRows(false);
+export const finContainerEdgeJvmExpected = expectedRows(true);
+
 /**
  * Require the host-specific success count and every measured call, not only final totals.
  *
  * @param stdout - Actual process output.
  * @param profile - Java or Kotlin.
+ * @param expected - Exact current or retained historical observation model.
  */
-export const readFinContainerEdgeJvm = (stdout, profile) => {
+export const readFinContainerEdgeJvm = (stdout, profile, expected = finContainerEdgeJvmExpected) => {
 	assert.ok(Object.hasOwn(finContainerEdgeJvmChecks, profile));
 	assert.ok(typeof stdout === "string" && stdout.endsWith("\n"));
 	const lines = stdout.slice(0, -1).split("\n");
 	assert.equal(lines.pop(), `fin-container-ok:${finContainerEdgeJvmChecks[profile]}`);
-	assert.equal(lines.length, finContainerEdgeJvmExpected.length);
+	assert.ok(Array.isArray(expected));
+	assert.equal(lines.length, expected.length);
 	return lines.map((line, index) => {
 		assert.match(line, new RegExp(`^edge-${profile} [1-9][0-9]* [A-Za-z]+ (?:ok|fin|null|value)(?: (?:0|[1-9][0-9]{0,14})){8}$`, "u"));
 		const [, step, method, status, ...counts] = line.split(" ");
 		const row = [Number(step), method, status, counts.map(Number)];
-		assert.deepEqual(row, finContainerEdgeJvmExpected[index], `${profile} edge call ${index + 1}`);
+		assert.deepEqual(row, expected[index], `${profile} edge call ${index + 1}`);
 		return row;
 	});
 };

@@ -237,6 +237,8 @@ jobs:
   perl:
     name: Perl XS (${{ matrix.configuration }})
     runs-on: ubuntu-24.04
+    env:
+      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
     # Copied and owned package families run sequentially on each Perl ABI; the
     # installed Compare and Verify chain alone took up to about 105 minutes.
     timeout-minutes: 180

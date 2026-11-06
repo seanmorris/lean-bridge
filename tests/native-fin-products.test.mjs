@@ -13,16 +13,12 @@ import { finProductRefinements, finProductTargets, finProductWitPatterns, instal
 import { assertReviewedFinChangesRefused, checkInstalledFinFixture, finFixtureProfiles } from "./helpers/fin-fixture-installed.mjs";
 import { finProductCompilerModel } from "./helpers/fin-product-model.mjs";
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
-import "./helpers/fin-product-evidence-tests.mjs";
 import { finProductDispatchColumns, finProductDispatchExpected, finProductDispatchInterposer, finProductDispatchProbe } from "./helpers/fin-product-dispatch.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { finProductReviewedIr } from "./helpers/reviewed-fin-product-fixture.mjs";
 import { validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
-import "./helpers/fin-products-source-history-tests.mjs";
-import "./helpers/fin-products-ci-source-history-tests.mjs";
-import "./helpers/fin-products-floors-source-history-tests.mjs";
-import "./helpers/refinement-perl-ci-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
@@ -34,6 +30,14 @@ import { generateCopiedRubyPackage } from "../src/backends/ruby/copied-values.mj
 import { generateCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
 import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/fin-product-evidence-tests.mjs")
+	, () => import("./helpers/fin-products-source-history-tests.mjs")
+	, () => import("./helpers/fin-products-ci-source-history-tests.mjs")
+	, () => import("./helpers/fin-products-floors-source-history-tests.mjs")
+	, () => import("./helpers/refinement-perl-ci-history-tests.mjs")
+]);
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { ...heap, heap: false } };
@@ -133,10 +137,11 @@ test("C adapters compare both components and only the active branch on caller li
 	const first = call.indexOf("lb_fin_below((&arg0->fst)->data, (&arg0->fst)->length, lb_fin_increment_0_0, 1)) return lb_invalid(error, \"arg0.0 is not below its Fin 10 bound\");");
 	const ok = call.indexOf("if ((&arg0->snd)->is_ok) {\n    if (!lb_fin_below((&(&arg0->snd)->ok)->data, (&(&arg0->snd)->ok)->length, lb_fin_increment_0_1, 1)) return lb_invalid(error, \"arg0.1.ok is not below its Fin 3 bound\");\n  }");
 	const error = call.indexOf("if (!(&arg0->snd)->is_ok) {\n    if (!lb_fin_below((&(&arg0->snd)->error)->data, (&(&arg0->snd)->error)->length, lb_fin_increment_0_2, 1)) return lb_invalid(error, \"arg0.1.error is not below its Fin 2 bound\");\n  }");
-	const dispatch = call.indexOf("lean_object *checked = ");
+	const copy = call.indexOf("lb_copy_2_check(arg0, &_lb_budget)");
+	const dispatch = call.search(/lean_object \*_lb_checked = lb_[0-9a-f]+\(lb_copy_2_in\(arg0\)\);/u);
 	// Every comparison follows the copy check and precedes the only conversion into Lean.
-	assert.ok(call.indexOf("_check(arg0, &budget)") < first && first < ok && ok < error && error < dispatch, call);
-	assert.equal(call.indexOf("_in(arg0)"), call.indexOf("lean_object *checked = ") + call.slice(dispatch).indexOf("_in(arg0)"));
+	assert.ok(copy >= 0 && copy < first && first < ok && ok < error && error < dispatch, call);
+	assert.equal((call.match(/lb_copy_2_in\(arg0\)/gu) ?? []).length, 1);
 	for(const [name, limbs] of [["lb_fin_increment_0_0", "0xau"], ["lb_fin_increment_0_1", "0x3u"], ["lb_fin_increment_0_2", "0x2u"]])
 		assert.ok(calls.includes(`static const uint32_t ${name}[1] = {${limbs}};`), name);
 	// A bound wider than 64 bits (10 * 2^64 + 10) becomes its exact limbs; Fin 0 compares against no limbs.

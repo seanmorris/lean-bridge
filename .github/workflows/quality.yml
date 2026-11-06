@@ -250,6 +250,7 @@ jobs:
       - name: Run one closed contract shard
         env:
           LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT: ${{ github.workspace }}/build/core-type-surface/receipt.json
+          LEAN_BRIDGE_RETAINED_CONTRACTS: required
         run: |
           source scripts/env.sh
           # Sample memory every 30 s so a lost runner still names its largest processes.
