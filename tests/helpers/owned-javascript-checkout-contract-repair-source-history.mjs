@@ -4,11 +4,10 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync, spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { assertOwnedCheckedRecordNpmProducer }
 	from "./owned-checked-record-npm-producer.mjs";
-import { assertOwnedJavaScriptWasmCi }
-	from "./owned-javascript-wasm-ci.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 export const ownedJavaScriptCheckoutContractRepairHistoryPath
@@ -46,6 +45,26 @@ let history;
 const record = () => history ??= JSON.parse(readFileSync(
 	ownedJavaScriptCheckoutContractRepairHistoryPath, "utf8"));
 
+// Execute the assertion bytes that accompanied this historical producer. A live
+// assertion legitimately evolves with later steps and budgets and must not silently
+// reinterpret an older workflow snapshot.
+let historicalAssertionSource;
+const assertHistoricalOwnedJavaScriptWasmCi = source => {
+	historicalAssertionSource ??= execFileSync("git", ["show"
+		, `${ownedJavaScriptCheckoutContractRepairImplementation}:tests/helpers/owned-javascript-wasm-ci.mjs`]
+	, { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+	const program = historicalAssertionSource + `
+let workflow = "";
+for await (const chunk of process.stdin) workflow += chunk;
+process.stdout.write(JSON.stringify(assertOwnedJavaScriptWasmCi(workflow)));
+`;
+	const checked = spawnSync(process.execPath
+		, ["--input-type=module", "-e", program]
+		, { input: source, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
+	assert.equal(checked.status, 0, checked.stderr);
+	return JSON.parse(checked.stdout);
+};
+
 /**
  * Require the recurring and scoped producers to share the complete bounded
  * checkout contract while retaining every semantic JavaScript gate.
@@ -56,7 +75,7 @@ const record = () => history ??= JSON.parse(readFileSync(
 export const assertOwnedJavaScriptCheckoutContractRepair = (
 	recurring, scoped
 ) => {
-	const recurringContract = assertOwnedJavaScriptWasmCi(recurring);
+	const recurringContract = assertHistoricalOwnedJavaScriptWasmCi(recurring);
 	const scopedContract = assertOwnedCheckedRecordNpmProducer(
 		scoped, recurring);
 	return { recurringContract, scopedContract, checkoutFields: 5 };

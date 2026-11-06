@@ -77,6 +77,11 @@ test("owned JavaScript checkout repair binds both exact producer shapes"
 		assert.equal(result.checkoutFields, 5);
 		assert.equal(result.recurringContract.productionRuntimeRequired, true);
 		assert.equal(result.scopedContract.jobs, 1);
+		const job = recurring.match(
+			/^ {2}owned-javascript-wasm:\n([^]*?)(?=^ {2}[a-z][a-z-]*:)/mu)[0];
+		assert.throws(() => assertOwnedJavaScriptCheckoutContractRepair(
+			recurring.replace(job, job.replace("    timeout-minutes: 90\n"
+				, "    timeout-minutes: 89\n")), scoped));
 		for(const field of [
 			"fetch-depth: 0", "filter: blob:none"
 			, "persist-credentials: false"
