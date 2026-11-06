@@ -1,0 +1,379 @@
+{
+  "changedSupportCells": 0,
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-retained-contract-milestone-binding-source-history.mjs",
+      "sha256": "abda115c9c1892d5fd2d9609c2d41ba0b78acf6295de1850bbca4994596088ca"
+    },
+    {
+      "path": "tests/helpers/retained-contract-milestone-binding-source-history-tests.mjs",
+      "sha256": "0b2cedd4e54f91a26f316506ede2e3f19c91f84f2d1c3dd1ae2f3d84f54cf1f3"
+    },
+    {
+      "path": "tests/helpers/retained-contract-milestone-binding-source-history.mjs",
+      "sha256": "e29e7028eae68fa023a5f745908a2fd6d83dfd05d922dea87a0f1e4ca81d0642"
+    }
+  ],
+  "implementationCommit": "efdee33564235f8770615518ec70cb07ca36f8b6",
+  "integrationCommit": "c5290fdf001dcc35e7c9ff2a8a8c30fe46f7e832",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a32f749e110db9f4bdf1b4ee62bf989a3c08611e9a82716cd36355625e333930",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"dbbf2b9524db502d325453c242a108c4536a42ae50c2ef6053d11894f1470d9b\"\n",
+          "previous": "          \"sha256\": \"ad91fbd4f78c50fcec012f5458cd38d5392ab131cd2658c1ac6994b62d710e04\"\n",
+          "start": 25648
+        },
+        {
+          "current": "          \"sha256\": \"dbbf2b9524db502d325453c242a108c4536a42ae50c2ef6053d11894f1470d9b\"\n",
+          "previous": "          \"sha256\": \"ad91fbd4f78c50fcec012f5458cd38d5392ab131cd2658c1ac6994b62d710e04\"\n",
+          "start": 29019
+        },
+        {
+          "current": "          \"sha256\": \"b23226c7334ceb2a9d3cdbf4a797b76da2360bbf7834983549c361d25b87b53a\"\n",
+          "previous": "          \"sha256\": \"0e754c0c61a4a9ccead39395232c2ab186d15e7775901f556cea7e8b3a5194b4\"\n",
+          "start": 229015
+        },
+        {
+          "current": "          \"sha256\": \"b23226c7334ceb2a9d3cdbf4a797b76da2360bbf7834983549c361d25b87b53a\"\n",
+          "previous": "          \"sha256\": \"0e754c0c61a4a9ccead39395232c2ab186d15e7775901f556cea7e8b3a5194b4\"\n",
+          "start": 1090779
+        },
+        {
+          "current": "          \"sha256\": \"b23226c7334ceb2a9d3cdbf4a797b76da2360bbf7834983549c361d25b87b53a\"\n",
+          "previous": "          \"sha256\": \"0e754c0c61a4a9ccead39395232c2ab186d15e7775901f556cea7e8b3a5194b4\"\n",
+          "start": 1248104
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "e28c3e969e0138d0da28c8d7cdd8f616a0599c0021074929051b761e8b3d2b3f"
+    },
+    {
+      "currentSha256": "4c26f9a0972b2b6e984f6c6e24d150362b8558e8bc4e486f5e70c8b0c5420788",
+      "edits": [
+        {
+          "current": "import \"./helpers/retained-contract-milestone-binding-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "b28dbdfc3d4760a878dabaf83b5e0c078f06e6bf95d0a708ed493e0dc9bfba8b"
+    },
+    {
+      "currentSha256": "9d89640d66cc117de58766563cf796a5abb29d008da020523150bbd7c2c1711f",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeRetainedContractMilestoneBindingSource\n\t, retainedContractMilestoneBindingNormalizationPaths\n} from \"./retained-contract-milestone-binding-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...retainedContractMilestoneBindingNormalizationPaths\n\t, ...historicalRegistrationSnapshotIsolationNormalizationPaths\n",
+          "previous": "\t...historicalRegistrationSnapshotIsolationNormalizationPaths\n",
+          "start": 238129
+        },
+        {
+          "current": "\tlet stage = beforeRetainedContractMilestoneBindingSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHistoricalRegistrationSnapshotIsolationSource(\n",
+          "previous": "\tlet stage = beforeHistoricalRegistrationSnapshotIsolationSource(\n",
+          "start": 299367
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b0e9531be0d60a5a2b3419bf87a5250488cdb37ec3adcce329e5a04dfc67176c"
+    }
+  ],
+  "milestone": "retained-contract-milestone-binding-v1",
+  "predecessorCommit": "e1934930d2536739e6f6c3a6cb6eb7861570c3e3",
+  "schemaVersion": 1,
+  "scope": "Bind the retained-contract checks that still read live sources to their authenticated milestones: the measured Fin container edge report gate, the owned checked-record npm producer header and its hosted evidence sources, the PHP Nix boundary repair reversal, the reviewed refinement and default fixtures, and the Rust collection generator comparison. The integration refreshes exactly the five live pins those repairs moved and registers the layer newest-first. No support cell, observation, evidence archive or product source changes.",
+  "updates": [
+    {
+      "currentSha256": "9ade67b0c9af77f3184298d70e66520019fa87a566e278cdf4154f0224f4cb3a",
+      "edits": [
+        {
+          "current": "import { finContainerEdgeJvmExpectedBeforeOptionNullEntry } from \"./fin-container-edge-jvm.mjs\";\n",
+          "previous": "",
+          "start": 475
+        },
+        {
+          "current": "\t\tawait assertFinContainerEdgeReport(report, run.profiles, {\n\t\t\tpython: run.python\n\t\t\t, jvmExpected: run.profiles.some(profile => [\"java\", \"kotlin\"].includes(profile))\n\t\t\t\t? finContainerEdgeJvmExpectedBeforeOptionNullEntry : undefined\n\t\t});\n",
+          "previous": "\t\tawait assertFinContainerEdgeReport(report, run.profiles, { python: run.python });\n",
+          "start": 5122
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-measured-evidence-tests.mjs",
+      "previousSha256": "f812bbc1929390502cf07cbd966a2d94eabc330bc59c95e3da7cd7ac627b5b90"
+    },
+    {
+      "currentSha256": "20dfcc5b8db6de57ab67a90db5545de476dad06b5f7f9c5bc4c370024655a4cc",
+      "edits": [
+        {
+          "current": " * @param rows - Exact current or retained historical public observations.\n",
+          "previous": "",
+          "start": 4263
+        },
+        {
+          "current": "export const finContainerEdgeReportTranscript = (profile, rows = undefined) => {\n",
+          "previous": "export const finContainerEdgeReportTranscript = profile => {\n",
+          "start": 4342
+        },
+        {
+          "current": "\trows ??= contract.rows;\n\tassert.ok(Array.isArray(rows));\n\treturn rows.map(([step, method, status, counts]) =>\n",
+          "previous": "\treturn contract.rows.map(([step, method, status, counts]) =>\n",
+          "start": 4504
+        },
+        {
+          "current": " * @param options.jvmExpected - Exact retained JVM observation model, when checking a historical Java or Kotlin report.\n",
+          "previous": "",
+          "start": 7004
+        },
+        {
+          "current": "export const assertFinContainerEdgeReport = async (report, profiles, { python, jvmExpected } = {}) => {\n",
+          "previous": "export const assertFinContainerEdgeReport = async (report, profiles, { python } = {}) => {\n",
+          "start": 7128
+        },
+        {
+          "current": "\tif(jvmExpected !== undefined)\n\t\tassert.ok(Array.isArray(jvmExpected) && profiles.some(profile => [\"java\", \"kotlin\"].includes(profile)));\n",
+          "previous": "",
+          "start": 7335
+        },
+        {
+          "current": "\t\tconst profile = item.profile, currentContract = finContainerEdgeReportContracts[profile];\n\t\tconst contract = jvmExpected !== undefined && [\"java\", \"kotlin\"].includes(profile)\n\t\t\t? { ...currentContract, rows: jvmExpected } : currentContract;\n",
+          "previous": "\t\tconst profile = item.profile, contract = finContainerEdgeReportContracts[profile];\n",
+          "start": 8073
+        },
+        {
+          "current": "\t\tconst transcriptSha256 = sha256(finContainerEdgeReportTranscript(profile, contract.rows));\n",
+          "previous": "\t\tconst transcriptSha256 = sha256(finContainerEdgeReportTranscript(profile));\n",
+          "start": 12167
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-report.mjs",
+      "previousSha256": "9591db08b2593ba07cbf208450f469779d900e48d2236696a82e3c7f2b9a8297"
+    },
+    {
+      "currentSha256": "5a7b11110d8a9d03c6fa69e5792f02732ede5ce09ee43f3fbfdf498cb6ec489f",
+      "edits": [
+        {
+          "current": "\tassertOwnedCheckedRecordNpmProducer\n\t, selectOwnedCheckedRecordWorkflow\n",
+          "previous": "\tassertOwnedCheckedRecordNpmProducer, selectOwnedCheckedRecordWorkflow\n",
+          "start": 775
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "5242c7bc9eb9aa74135de5c607a6a14a2d45321a2edb61a9f91807aecc8a8193"
+    },
+    {
+      "currentSha256": "44ceace2dd39a9bb6663f5566df4f491ee923db1a8d75faae014c07a6c380860",
+      "edits": [
+        {
+          "current": "export const ownedCheckedRecordNpmHeaderBeforeConsumerSparseCheckout = `name: Owned checked-record npm and browser producer\n",
+          "previous": "export const ownedCheckedRecordNpmHeader = `name: Owned checked-record npm and browser producer\n",
+          "start": 555
+        },
+        {
+          "current": "\njobs:\n`;\n\nexport const ownedCheckedRecordNpmHeader\n\t= ownedCheckedRecordNpmHeaderBeforeConsumerSparseCheckout.replace(`\n\njobs:\n`, `\n",
+          "previous": "",
+          "start": 938
+        },
+        {
+          "current": "`);\n",
+          "previous": "`;\n",
+          "start": 1457
+        },
+        {
+          "current": " * @param options - Exact authenticated policy generation to compare.\n * @param options.header - Current or retained pre-sparse-checkout producer header.\n",
+          "previous": "",
+          "start": 2443
+        },
+        {
+          "current": "export const assertOwnedCheckedRecordNpmProducer = (\n\tsource, recurring, { header } = {}\n) => {\n\theader ??= [ownedCheckedRecordNpmHeader\n\t\t, ownedCheckedRecordNpmHeaderBeforeConsumerSparseCheckout]\n\t\t.find(candidate => source.startsWith(candidate));\n\tassert.ok([ownedCheckedRecordNpmHeader\n\t\t, ownedCheckedRecordNpmHeaderBeforeConsumerSparseCheckout].includes(header));\n",
+          "previous": "export const assertOwnedCheckedRecordNpmProducer = (source, recurring) => {\n",
+          "start": 2601
+        },
+        {
+          "current": "\tconst expected = header + job.trimEnd().replace(\n",
+          "previous": "\tconst expected = ownedCheckedRecordNpmHeader + job.trimEnd().replace(\n",
+          "start": 3137
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-npm-producer.mjs",
+      "previousSha256": "25db98bc53280134d874bfe8c10ea911b63ed2f3cab934d7905e276ed7641765"
+    },
+    {
+      "currentSha256": "60188c1285bc7bf2a3ad2e1face92a7023e1ab2556df537f5035dd1d37bf10da",
+      "edits": [
+        {
+          "current": "\tassertOwnedCheckedRecordNpmProducer\n\t, selectOwnedCheckedRecordWorkflow\n",
+          "previous": "\tassertOwnedCheckedRecordNpmProducer, selectOwnedCheckedRecordWorkflow\n",
+          "start": 457
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-hosted-evidence-sources.mjs",
+      "previousSha256": "d9b4deb3860b45488127cc1065aa08c835cc035c3f1e5e804adc3165f2d02621"
+    },
+    {
+      "currentSha256": "dbbf2b9524db502d325453c242a108c4536a42ae50c2ef6053d11894f1470d9b",
+      "edits": [
+        {
+          "current": "\t// A nested Subtype decision is directional: the input names its checked constructor, the produced result carries none.\n\tconst checkedInput = wrap(\"option\", { kind: \"subtype\", constructor: \"Sample.checked\" });\n\tconst producedResult = wrap(\"option\", { kind: \"subtype\", constructor: null });\n\tconst nestedSubtype = document({ option: \"nat\" }, decision(checkedInput, producedResult));\n",
+          "previous": "\tconst nestedSubtype = document({ option: \"nat\" }, decision(wrap(\"option\", { kind: \"subtype\", constructor: \"Sample.checked\" })));\n",
+          "start": 10018
+        },
+        {
+          "current": "\tfor(const reversed of [decision(checkedInput, checkedInput), decision(producedResult, producedResult), decision(producedResult, checkedInput)])\n\t\tassert.throws(() => validateReviewedSource(reviewInput(document({ option: \"nat\" }, reversed))), { code: \"reviewed-ir-build-unsupported\" });\n",
+          "previous": "",
+          "start": 10454
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-tests.mjs",
+      "previousSha256": "ad91fbd4f78c50fcec012f5458cd38d5392ab131cd2658c1ac6994b62d710e04"
+    },
+    {
+      "currentSha256": "8e4f49c5dc8942bcd1303fcad6ca66ef19cea556ff4290815057b3a09c291038",
+      "edits": [
+        {
+          "current": "// A parameter decision names the checked constructor Lean applies on input; a\n// result decision carries no constructor, since produced values are never reconstructed.\n",
+          "previous": "",
+          "start": 1292
+        },
+        {
+          "current": "\tparameters: [subtype(\"Checks.word\")], result: subtype(null)\n",
+          "previous": "\tparameters: [subtype(\"Checks.word\")], result: subtype(\"Checks.word\")\n",
+          "start": 1536
+        },
+        {
+          "current": "\t// A produced result selects no constructor, so its contract site stays plain.\n\tassert.deepEqual(contracts, { \"Checks.echo\": { parameters: [checked(\"Checks.word\")], result: plain } });\n",
+          "previous": "\tassert.deepEqual(contracts, { \"Checks.echo\": { parameters: [checked(\"Checks.word\")], result: checked(\"Checks.word\") } });\n",
+          "start": 1994
+        },
+        {
+          "current": "\tassert.deepEqual(reviewedSubtypeContracts(ir), { \"Checks.echo\": { parameters: [checked(\"Checks.word\")], result: plain } });\n",
+          "previous": "\tassert.deepEqual(reviewedSubtypeContracts(ir), { \"Checks.echo\": { parameters: [checked(\"Checks.word\")], result: checked(\"Checks.word\") } });\n",
+          "start": 2351
+        },
+        {
+          "current": "\t// A result-only decision is admitted but selects no constructor, so it adds no contract.\n\tconst resultOnly = document([], \"nat\", { parameters: [], result: subtype(null) });\n\tassert.equal(reviewedSubtypeContracts(resultOnly), undefined);\n\tassert.throws(() => reviewedSubtypeContracts(document([], \"nat\", { parameters: [], result: subtype(\"Checks.even\") })));\n",
+          "previous": "\tconst resultOnly = document([], \"nat\", { parameters: [], result: subtype(\"Checks.even\") });\n\tassert.deepEqual(reviewedSubtypeContracts(resultOnly), { \"Checks.echo\": { parameters: [], result: checked(\"Checks.even\") } });\n",
+          "start": 2576
+        },
+        {
+          "current": "\t\t// Direction is part of the decision: no constructor on a produced result, and one on every checked input.\n\t\t, ir => { ir.declarations[0].source.extensions[key].result.constructor = \"Checks.word\"; }\n\t\t, ir => { ir.declarations[0].source.extensions[key].parameters[0].constructor = null; }\n",
+          "previous": "",
+          "start": 5923
+        },
+        {
+          "current": "\t\t\t, contracts: { \"Checks.echo\": { parameters: [checked(\"Checks.word\")], result: plain } }\n",
+          "previous": "\t\t\t, contracts: { \"Checks.echo\": { parameters: [checked(\"Checks.word\")], result: checked(\"Checks.word\") } }\n",
+          "start": 8028
+        },
+        {
+          "current": "\t\titem.source.extensions[key] = { parameters: [subtype(`Checks.${item.name}Constructor`)], result: subtype(null) };\n",
+          "previous": "\t\titem.source.extensions[key] = { parameters: [subtype(`Checks.${item.name}Constructor`)], result: subtype(`Checks.${item.name}Constructor`) };\n",
+          "start": 8662
+        },
+        {
+          "current": "\t\t, result: plain\n",
+          "previous": "\t\t, result: checked(`Checks.${name}Constructor`)\n",
+          "start": 9154
+        },
+        {
+          "current": "\t\t, request => { request.contracts[\"Checks.echo\"].result.refinement = { constructor: \"Checks.other\" }; }\n",
+          "previous": "\t\t, request => { request.contracts[\"Checks.echo\"].result.refinement.constructor = \"Checks.other\"; }\n",
+          "start": 9973
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-decisions-tests.mjs",
+      "previousSha256": "65729ddfb76f16372d5abeddecceef59c2b60911c48e11e2798ae585d62d6a66"
+    },
+    {
+      "currentSha256": "4727f6a906e429b3c3652b862f0b1b87446dca67ad8c0d0fdb6c1266922ecb0e",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { ownedPhpWasmHistoricalBytes } from \"./helpers/owned-php-wasm-source-history.mjs\";\n",
+          "start": 262
+        },
+        {
+          "current": "import { authenticateFinHistoryRecordSources\n\t, sourceAtFinHistoryRecordSource } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 717
+        },
+        {
+          "current": "const source = (path, expected) => sourceAtFinHistoryRecordSource(\n\tphpNixBoundaryHistoryPath, path, expected\n);\n",
+          "previous": "const source = async (path, expected) => ownedPhpWasmHistoricalBytes(path, await readFile(path), expected);\n",
+          "start": 922
+        },
+        {
+          "current": "\tassert.equal(authenticateFinHistoryRecordSources(\n\t\tphpNixBoundaryHistoryPath, record.sources\n\t), true);\n",
+          "previous": "\tfor(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await source(path, hash)), hash, path);\n",
+          "start": 1779
+        },
+        {
+          "current": "\t\tassert.equal(beforePhpNixBoundaryRepair(\n\t\t\tupdate.path, prior, update.previousSha256\n\t\t), prior);\n",
+          "previous": "\t\tassert.equal(beforePhpNixBoundaryRepair(update.path, prior), prior);\n",
+          "start": 2414
+        },
+        {
+          "current": "\tconst update = record.updates.find(item =>\n\t\titem.path === \"docs/type-surface.v1.json\");\n\tassert.ok(update);\n\tconst prior = JSON.parse(beforePhpNixBoundaryRepair(\n\t\t\"docs/type-surface.v1.json\", current, update.previousSha256\n\t));\n\tconst currentDocument = JSON.parse(current), pins = new Map();\n\tfor(const evidence of currentDocument.evidence) for(const file of evidence.files)\n\t{\n\t\tconst existing = pins.get(file.path);\n\t\tassert.ok(existing === undefined || existing === file.sha256, file.path);\n\t\tpins.set(file.path, file.sha256);\n\t}\n\tlet refreshed = 0;\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tconst hash = pins.get(file.path); assert.match(hash, /^[a-f0-9]{64}$/u);\n\t\tif(file.sha256 === hash) continue;\n\t\tassert.equal(record.sources[file.path], hash, file.path);\n\t\tfile.sha256 = hash; refreshed++;\n\t}\n\tassert.ok(refreshed > 0);\n\tassert.deepEqual(currentDocument, prior);\n",
+          "previous": "\tconst prior = JSON.parse(beforePhpNixBoundaryRepair(\"docs/type-surface.v1.json\", current));\n\tfor(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await source(file.path, record.sources[file.path]));\n\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3398
+        }
+      ],
+      "path": "tests/php-nix-boundary-repair-evidence.test.mjs",
+      "previousSha256": "9aaf88999e7e1b08ef8b8619fd389a2eda9d4fd76674f48011eda6a3aa8ff4eb"
+    },
+    {
+      "currentSha256": "f0be01ead1f0386d1bb537da634edc169f5f1824cde0cea02799f6df7226cc37",
+      "edits": [
+        {
+          "current": "test(\"a reviewed default cannot override the freshly compiled declaration\", () => {\n\tassert.throws(() => createNativeModel(fixture(ir => {\n\t\tir.declarations[0].parameters[0].optional = true;\n\t\tir.declarations[0].parameters[0].default = { kind: \"integer\", value: \"1\" };\n\t})), { code: \"reviewed-ir-source-mismatch\" });\n});\n\n",
+          "previous": "",
+          "start": 4157
+        },
+        {
+          "current": "\t\"effect\": ir => { ir.declarations[0].effects = [\"async\"]; ir.declarations[0].resultMode = \"promise\"; }\n",
+          "previous": "\t\"default\": ir => { ir.declarations[0].parameters[0].optional = true; ir.declarations[0].parameters[0].default = { kind: \"integer\", value: \"1\" }; }\n\t, \"effect\": ir => { ir.declarations[0].effects = [\"async\"]; ir.declarations[0].resultMode = \"promise\"; }\n",
+          "start": 4525
+        }
+      ],
+      "path": "tests/reviewed-source.test.mjs",
+      "previousSha256": "69f331ff50043d5ea7456db77f60df4b00d9910953d19bcc71b77648ed4e74c9"
+    },
+    {
+      "currentSha256": "b23226c7334ceb2a9d3cdbf4a797b76da2360bbf7834983549c361d25b87b53a",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateCopiedRustPackage } from \"../src/backends/rust/copied-values.mjs\";\n",
+          "start": 370
+        },
+        {
+          "current": "import { nominalSubtypeRustGenerator as rustGeneratorAtRevision } from \"./helpers/nominal-subtype-rust-generators.mjs\";\n",
+          "previous": "",
+          "start": 465
+        },
+        {
+          "current": "\tconst { baseRevision, conversion } = JSON.parse(await readFile(\"docs/evidence/rust-collections-20260922.json\"));\n",
+          "previous": "\tconst { conversion } = JSON.parse(await readFile(\"docs/evidence/rust-collections-20260922.json\"));\n",
+          "start": 7475
+        },
+        {
+          "current": "\tconst { generateCopiedRustPackage } = await rustGeneratorAtRevision(baseRevision);\n",
+          "previous": "",
+          "start": 8607
+        }
+      ],
+      "path": "tests/rust-collection-evidence.test.mjs",
+      "previousSha256": "0e754c0c61a4a9ccead39395232c2ab186d15e7775901f556cea7e8b3a5194b4"
+    }
+  ]
+}

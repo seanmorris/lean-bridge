@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeRetainedContractMilestoneBindingSource
+	, retainedContractMilestoneBindingNormalizationPaths
+} from "./retained-contract-milestone-binding-source-history.mjs";
+import {
 	beforeHistoricalRegistrationSnapshotIsolationSource
 	, historicalRegistrationSnapshotIsolationNormalizationPaths
 } from "./historical-registration-snapshot-isolation-source-history.mjs";
@@ -2627,7 +2631,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...historicalRegistrationSnapshotIsolationNormalizationPaths
+	...retainedContractMilestoneBindingNormalizationPaths
+	, ...historicalRegistrationSnapshotIsolationNormalizationPaths
 	, ...historicalPinSnapshotFollowupNormalizationPaths
 	, ...historicalPinSnapshotIsolationNormalizationPaths
 	, ...performanceCheckoutFilterNormalizationPaths
@@ -3856,7 +3861,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeHistoricalRegistrationSnapshotIsolationSource(
+	let stage = beforeRetainedContractMilestoneBindingSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeHistoricalRegistrationSnapshotIsolationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
