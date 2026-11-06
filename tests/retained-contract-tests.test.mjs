@@ -83,6 +83,12 @@ const deferredRetainedLoaders = Object.freeze([
 		, module: "./helpers/browser-generic-promotion-source-history-tests.mjs"
 		, family: "generic-record-browser-20261008" }
 ]);
+const nativeDeferredParents = Object.freeze([
+	{ parent: "tests/native-fin-records.test.mjs", loaders: 9 }
+	, { parent: "tests/native-fin-record-zero.test.mjs", loaders: 2 }
+	, { parent: "tests/native-fin-callbacks.test.mjs", loaders: 14 }
+	, { parent: "tests/native-subtype.test.mjs", loaders: 66 }
+]);
 const resolveSpecifier = (from, specifier) => normalize(join(dirname(from)
 	, extname(specifier) === "" ? `${specifier}.mjs` : specifier));
 const specifierCache = new Map();
@@ -154,15 +160,22 @@ const wholeFileTestEntries = job => {
  * that every retained reader stays reachable only through a loader.
  *
  * @param closure - Static module closure of the lane's whole-file entries.
+ * @param loaders - Retained loaders that must remain outside the closure.
+ * @param readerPath - Which modules can execute retained-reader assertions.
  */
-const assertDeferredLaneClosure = closure => {
+const assertDeferredLaneClosure = (
+	closure, loaders = deferredRetainedLoaders, readerPath = () => true
+) => {
 	const readers = [];
 	for(const [path, source] of closure)
+	{
+		if(!readerPath(path)) continue;
 		for(const shape of retainedReaderShapes)
 			for(const match of source.matchAll(shape))
 				readers.push(`${path} -> docs/evidence/${match[1]}`);
+	}
 	assert.deepEqual(readers, []);
-	for(const loader of deferredRetainedLoaders)
+	for(const loader of loaders)
 	{
 		const parent = closure.get(loader.parent);
 		assert.equal(typeof parent, "string", loader.parent);
@@ -204,5 +217,47 @@ test("the Node and browser consumer lane reaches no retained-evidence reader und
 		assert.notEqual(dropped.get(loader.parent), parent);
 		await assert.rejects(async () => assertDeferredLaneClosure(
 			await staticModuleClosure(entries, dropped)), { name: "AssertionError" }, `dropped ${loader.module}`);
+	}
+});
+
+test("native consumer entrypoints keep every retained test behind the deferred boundary", async () => {
+	const loaders = [];
+	for(const { parent, loaders: expected } of nativeDeferredParents)
+	{
+		const source = await readFile(parent, "utf8");
+		const start = source.indexOf("await registerRetainedContractTests([");
+		const end = source.indexOf("]);", start);
+		assert.ok(start >= 0 && end > start, parent);
+		const modules = [...source.slice(start, end).matchAll(
+			/\(\) => import\("([.][.]?\/[^"\r\n]+)"\)/gu
+		)].map(match => match[1]);
+		assert.equal(modules.length, expected, parent);
+		loaders.push(...modules.map(module => ({ parent, module })));
+	}
+	const entries = nativeDeferredParents.map(item => item.parent);
+	const closure = await staticModuleClosure(entries);
+	const testReader = path => /(?:-tests|[.]test)[.]mjs$/u.test(path);
+	assert.ok(closure.size > 500);
+	assertDeferredLaneClosure(closure, loaders, testReader);
+
+	// One eager-import and one dropped-loader mutation per entrypoint prevent
+	// both the closure assertion and the registration inventory from going
+	// vacuous without repeating the complete graph walk for all 91 loaders.
+	for(const { parent } of nativeDeferredParents)
+	{
+		const loader = loaders.find(item => item.parent === parent);
+		const source = closure.get(parent);
+		const eager = new Map([[parent
+			, `import "${loader.module}";\n${source}`]]);
+		await assert.rejects(async () => assertDeferredLaneClosure(
+			await staticModuleClosure(entries, eager), loaders, testReader
+		), { name: "AssertionError" }, `eager ${parent}`);
+		const dropped = new Map([[parent
+			, source.replace(
+			`() => import("${loader.module}")`, "() => Promise.resolve()")]]);
+		assert.notEqual(dropped.get(parent), source);
+		await assert.rejects(async () => assertDeferredLaneClosure(
+			await staticModuleClosure(entries, dropped), loaders, testReader
+		), { name: "AssertionError" }, `dropped ${parent}`);
 	}
 });
