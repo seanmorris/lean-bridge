@@ -132,11 +132,19 @@ test("owned WIT installed CI rejects hidden failures and disabled or missing che
 		, ["            build/owned-wit-packaging/*.json\n", ""]
 		, ["      - name: Preserve owned WIT installed execution\n        if: always()", "      - name: Preserve owned WIT installed execution\n        if: false"]
 		, ["steps.owned_wit_package.outcome != 'success'", "false"]
-		, ["      - wasi-consumer\n", ""]
 	]) {
 		const changed = prefix + jobAndFollowing.replace(before, after); assert.notEqual(changed, source);
 		assert.throws(() => assertOwnedWitPackageCi(changed), before);
 	}
+	// The first dependant after the WIT job is the optional-parameter matrix; the
+	// summary gate's own dependency is refused separately, inside its block.
+	const summaryStart = jobAndFollowing.indexOf("  support-summary:\n"); assert.ok(summaryStart > 0);
+	const earlier = jobAndFollowing.slice(0, summaryStart), summary = jobAndFollowing.slice(summaryStart);
+	assert.ok(earlier.includes("      - wasi-consumer\n") && summary.includes("      - wasi-consumer\n"));
+	const unguardedSummary = prefix + earlier + summary.replace("      - wasi-consumer\n", "");
+	assert.notEqual(unguardedSummary, source);
+	assert.throws(() => assertOwnedWitPackageCi(unguardedSummary), /support-summary needs wasi-consumer/u);
+	assert.throws(() => assertOwnedWitPackageCi(prefix + jobAndFollowing.replace("      - wasi-consumer\n", "")), /optional-parameter-matrix needs wasi-consumer/u);
 	const unrelated = prefix.replace("build-essential cmake pkg-config zstd ripgrep", "build-essential pkg-config zstd ripgrep");
 	assert.notEqual(unrelated, prefix);
 	assert.doesNotThrow(() => assertOwnedWitPackageCi(unrelated + jobAndFollowing));
