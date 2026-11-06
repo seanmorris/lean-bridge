@@ -107,7 +107,6 @@ test("the selection authenticates the installed bytes, contract and private ABI 
 		, ["probe control omitted", changed("scalar", "probe", ir => { ir.declarations.pop(); })]
 		, ["probe control refined", changed("scalar", "probe", ir => { ir.declarations.at(-1).source.extensions["lean-lang.org/refinements"] = { parameters: [{ kind: "fin", bound: "10" }], result: null }; })]
 		, ["probe control substituted", changed("scalar", "probe", ir => { ir.declarations.at(-1).parameters[0].type = { kind: "primitive", name: "int" }; })]
-		, ["probe control with a no-op refinement", changed("scalar", "probe", ir => { ir.declarations.at(-1).source.extensions["lean-lang.org/refinements"] = { parameters: [null], result: null }; })]
 		, ["probe as original", { descriptor: descriptorOf(instrumentReviewedFinWasmIr("scalar")), bytes, selection: "scalar", mode: "original" }]
 		, ["swapped adapter symbols", { descriptor: { ...original, privateAbi: { ...original.privateAbi, exports: original.privateAbi.exports.map((item, index, all) => ({ ...item, symbol: all[index === 0 ? 1 : index === 1 ? 0 : index].symbol })) } }, bytes, selection: "structural", mode: "original" }]
 		, ["a duplicated export in the ABI", { descriptor: { ...original, privateAbi: { ...original.privateAbi, exports: [...original.privateAbi.exports, original.privateAbi.exports[0]] } }, bytes, selection: "structural", mode: "original" }]
@@ -115,12 +114,18 @@ test("the selection authenticates the installed bytes, contract and private ABI 
 		, ["a duplicated adapter symbol", { descriptor: { ...original, privateAbi: { ...original.privateAbi, exports: original.privateAbi.exports.map((item, index, all) => ({ ...item, symbol: all[0].symbol })) } }, bytes, selection: "structural", mode: "original" }]
 		, ["original as probe", { descriptor: descriptorOf(reviewedFinWasmIr("scalar")), bytes, selection: "scalar", mode: "probe" }]
 	]) assert.throws(() => reviewedFinWasmEntrySelection(options), assert.AssertionError, label);
-	// Mismatched refinement/transport pairs cannot produce a private ABI at all.
+	// Mismatched refinement/transport pairs and all-null refinement trees cannot produce a private ABI at all.
 	// Keep these separate from valid rebuilt descriptors rejected by selection.
-	for(const [label, change] of [
-		["parameter type", ir => { ir.declarations[0].parameters[0].type = { kind: "primitive", name: "int" }; }]
-		, ["bound position", ir => { const value = refinement(ir, "label"); value.parameters = [value.parameters[1], value.parameters[0], value.parameters[2]]; }]
-	]) assert.throws(() => changed("scalar", "original", change), { name: "TypeError", message: "Refinement does not match its transport type" }, label);
+	const noOp = ir => { ir.declarations.at(-1).source.extensions["lean-lang.org/refinements"] = { parameters: [null], result: null }; };
+	for(const [label, mode, change, message] of [
+		["parameter type", "original", ir => { ir.declarations[0].parameters[0].type = { kind: "primitive", name: "int" }; }, "Refinement does not match its transport type"]
+		, ["bound position", "original", ir => { const value = refinement(ir, "label"); value.parameters = [value.parameters[1], value.parameters[0], value.parameters[2]]; }, "Refinement does not match its transport type"]
+		, ["probe control with a no-op refinement", "probe", noOp, "Invalid declaration refinement metadata"]
+	]) assert.throws(() => changed("scalar", mode, change), { name: "TypeError", message }, label);
+	// A descriptor carrying the no-op refinement beside a valid ABI is still refused by selection as a changed contract.
+	const smuggled = structuredClone(instrumentReviewedFinWasmIr("scalar")); noOp(smuggled);
+	assert.throws(() => reviewedFinWasmEntrySelection({ descriptor: { ...descriptorOf(instrumentReviewedFinWasmIr("scalar")), bindingIr: smuggled }, bytes, selection: "scalar", mode: "probe" })
+		, { name: "AssertionError", message: /^the probe binding IR is the expected contract\n[\s\S]*declarations\[6\]\.source\.extensions\.lean-lang\.org\/refinements/u });
 	// A contract duplicating an export is refused, here already by the production ABI derivation.
 	const duplicated = structuredClone(reviewedFinWasmIr("structural")); duplicated.declarations.push(structuredClone(duplicated.declarations[0]));
 	assert.throws(() => reviewedFinWasmEntrySelection({ descriptor: { ...original, bindingIr: duplicated }, bytes, selection: "structural", mode: "original" }));
