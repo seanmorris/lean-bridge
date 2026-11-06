@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/php-wasm-fin-local-identifier-source-history-tests.mjs";
 import "./helpers/owned-javascript-historical-assertion-reader-repair-source-history-tests.mjs";
 import "./helpers/native-subtype-result-projection-repair-source-history-tests.mjs";
 import "./helpers/owned-javascript-ci-budget-repair-source-history-tests.mjs";

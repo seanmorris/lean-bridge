@@ -1,0 +1,112 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "identifierRepairs": 2,
+    "livePinRefreshes": 0,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "candidate": "c2eca28ce3957c14e66364767bac90656ec5074e",
+    "coreRun": 42248050647,
+    "localReproduction": {
+      "fail": 1,
+      "pass": 0,
+      "tests": 1
+    },
+    "location": "tests/php-wasm-fin.test.mjs:157-158",
+    "profile": "contract",
+    "referenceImplementation": "a2b43c970e6ac48d40b8682a22d68022563c8e79",
+    "test": "the PHP-Wasm side module compares caller limbs with each bound before the only conversion into Lean"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-php-wasm-fin-local-identifier-source-history.mjs",
+      "sha256": "7052f7ab8496164aa327634e7603ffe9b9859a815139150c3d1520a8a468318f"
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-local-identifier-source-history-tests.mjs",
+      "sha256": "028c0b724dd1e8d90cff6576b2edd42eca0b56507ac89589b256ca9e941e5410"
+    },
+    {
+      "path": "tests/helpers/php-wasm-fin-local-identifier-source-history.mjs",
+      "sha256": "20306567b0668ba3a74baa0cfec9fc3cf6b365e19185a8da29fcfd62455b2cb2"
+    }
+  ],
+  "implementationCommit": "7b20949df43af27db0fc471dbc01e0d6f0a8148d",
+  "integrationCommit": "a010da503e21c0710a79a1531296acbfd5eab095",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f9ad3be056275a7ac0c4c0807b6e3cad8622a45bd50e6e5b1f070e8ce223dcca",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-fin-local-identifier-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "39faa873e51a667b5ce20616e7d7b8c3c8cb4035233f3f63dc23f501d52dfff0"
+    },
+    {
+      "currentSha256": "a3f9e07263ba7bc696a3975ad0173fa18afd5d9fb1a1c2f1daa2947cd0fb3753",
+      "edits": [
+        {
+          "current": "import {\n\tbeforePhpWasmFinLocalIdentifierSource\n\t, phpWasmFinLocalIdentifierNormalizationPaths\n} from \"./php-wasm-fin-local-identifier-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...phpWasmFinLocalIdentifierNormalizationPaths\n\t, ...ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths\n",
+          "previous": "\t...ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths\n",
+          "start": 239528
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmFinLocalIdentifierSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeOwnedJavaScriptHistoricalAssertionReaderRepairSource(\n",
+          "previous": "\tlet stage = beforeOwnedJavaScriptHistoricalAssertionReaderRepairSource(\n",
+          "start": 301217
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0726389b677d92d4dedbced46d627e85678ae2ae5e47c9048b2e5dd6f03c6eba"
+    }
+  ],
+  "inventorySha256": {
+    "after": "bee19f1f75576a17b30676610ddd24b5aac22dafeb95ae57b878ad7f9d4e80ba",
+    "before": "bee19f1f75576a17b30676610ddd24b5aac22dafeb95ae57b878ad7f9d4e80ba"
+  },
+  "milestone": "php-wasm-fin-local-identifier-v1",
+  "predecessorCommit": "ff1135274d110efa118d192559dfa54b04fc431d",
+  "refreshed": {},
+  "repair": "Search for the current generated locals `lean_object *_lb_checked = ` and `_check(arg0, &_lb_budget)`, the same contract tests/native-fin-product-arrays.test.mjs already asserts, and keep the budget-check, inner-limb, tag and dispatch ordering check unchanged.",
+  "rootCause": "The PHP-Wasm side-module ordering assertion still searched for the pre-prefix generated locals `lean_object *checked = ` and `_check(arg0, &budget)`. generateNativePrimitiveC has emitted `_lb_checked` and `_lb_budget` since 443596f, so both indexOf calls returned -1 and the ordering assertion failed in the Core contract profile, where php-wasm-fin runs ungated.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "a02d0cfd9c4a5624556c524ffebb9cbd1277ff18ebcea8c24834c9cb1dcb53b1",
+      "edits": [
+        {
+          "current": "\tconst inner = nest.indexOf(\"(&(&arg0->inner)->digit)->data\"), tag = nest.indexOf(\"(&arg0->tag)->data\"), dispatch = nest.indexOf(\"lean_object *_lb_checked = \");\n\tassert.ok(nest.indexOf(\"_check(arg0, &_lb_budget)\") < inner && inner < tag && tag < dispatch, nest);\n",
+          "previous": "\tconst inner = nest.indexOf(\"(&(&arg0->inner)->digit)->data\"), tag = nest.indexOf(\"(&arg0->tag)->data\"), dispatch = nest.indexOf(\"lean_object *checked = \");\n\tassert.ok(nest.indexOf(\"_check(arg0, &budget)\") < inner && inner < tag && tag < dispatch, nest);\n",
+          "start": 11658
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "a85260f1a927030d93564b33dcd405993587ae741d72546655d70dbe787a103e"
+    }
+  ],
+  "validation": {
+    "focused": {
+      "fail": 0,
+      "pass": 1,
+      "tests": 1
+    }
+  }
+}

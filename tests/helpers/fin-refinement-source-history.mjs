@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforePhpWasmFinLocalIdentifierSource
+	, phpWasmFinLocalIdentifierNormalizationPaths
+} from "./php-wasm-fin-local-identifier-source-history.mjs";
+import {
 	beforeOwnedJavaScriptHistoricalAssertionReaderRepairSource
 	, ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths
 } from "./owned-javascript-historical-assertion-reader-repair-source-history.mjs";
@@ -2659,7 +2663,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths
+	...phpWasmFinLocalIdentifierNormalizationPaths
+	, ...ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths
 	, ...nativeSubtypeResultProjectionRepairNormalizationPaths
 	, ...ownedJavaScriptCiBudgetRepairNormalizationPaths
 	, ...deferredWorkflowHistoryIsolationNormalizationPaths
@@ -3896,7 +3901,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeOwnedJavaScriptHistoricalAssertionReaderRepairSource(
+	let stage = beforePhpWasmFinLocalIdentifierSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedJavaScriptHistoricalAssertionReaderRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
