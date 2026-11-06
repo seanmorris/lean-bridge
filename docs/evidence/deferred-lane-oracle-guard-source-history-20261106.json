@@ -1,0 +1,268 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "eagerCurrentModules": 5,
+    "nativeLoaders": 98,
+    "nodeLoaders": 8,
+    "referenceOnlyHelpers": {
+      "native": 1,
+      "node": 4
+    },
+    "restoredMilestoneRoundTrips": 1,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-deferred-lane-oracle-guard-source-history.mjs",
+      "sha256": "c6e03f2f3605e9b45b3e2f97649f4bce7f03cc2e4cd8a02ebada5a759d00efbd"
+    },
+    {
+      "path": "tests/helpers/deferred-lane-oracle-guard-source-history-tests.mjs",
+      "sha256": "4b200e9c1a22e6654713996ce4e02e834b19ca358a4cb156fd66251ed176c27b"
+    },
+    {
+      "path": "tests/helpers/deferred-lane-oracle-guard-source-history.mjs",
+      "sha256": "735ffee36def0b44ddfa4979c11d57da56695247d3f4aafc2e332d1c0d6203ea"
+    }
+  ],
+  "implementationCommit": "e5180b705fb2ee0bb2353c84ae4eae9629c82b51",
+  "integrationCommit": "e7932341cac9591ccb11849a9351f909098d4513",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2cb86a082c584aff79a55c75526df7c42e0e978407041a4fa06423dbaea4e269",
+      "edits": [
+        {
+          "current": "import \"./helpers/deferred-lane-oracle-guard-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "6e018c0bac711be3d4418d7cc13950fa99b107491f4dfaecd7dc6fbba1eb2fcd"
+    },
+    {
+      "currentSha256": "cc7821fb254a23f61af732bb3961c45a8a04b6cf36cbc42b21a965b3e8b07433",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeDeferredLaneOracleGuardSource\n\t, deferredLaneOracleGuardNormalizationPaths\n} from \"./deferred-lane-oracle-guard-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...deferredLaneOracleGuardNormalizationPaths\n\t, ...nodeConsumerRetainedReaderDeferralNormalizationPaths\n",
+          "previous": "\t...nodeConsumerRetainedReaderDeferralNormalizationPaths\n",
+          "start": 238461
+        },
+        {
+          "current": "\tlet stage = beforeDeferredLaneOracleGuardSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNodeConsumerRetainedReaderDeferralSource(\n",
+          "previous": "\tlet stage = beforeNodeConsumerRetainedReaderDeferralSource(\n",
+          "start": 299806
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4dde168f530139fa636e69a07c3eb402992584c25d8e477a184fe62daa919630"
+    }
+  ],
+  "inventorySha256": "b1ee35e4797c2f989b00c454418322bb965110330ddbebab47e29d1c1ef9f1c6",
+  "milestone": "deferred-lane-oracle-guard-v1",
+  "predecessorCommit": "1fa9c39e8d994847ff1c4ae70e21bda945ed82e3",
+  "repair": "Decide retained references for the Node and native lanes with coreContractEvidenceDirectoryReferences over every non-source-history module of each static closure, bind the few reference-only helpers by module and family and refuse any module-level read in them, bind all 98 native loaders and 8 Node loaders by identity and order, keep the eager, dropped, renamed, exact-binding and named-current-module mutations, and restore the Fin 0 CI disable/enable equivalence at its milestone inside the deferred history suite. No workflow, evidence archive, support cell, pin or product source changes.",
+  "rootCause": "The sparse-lane guards decided which modules open retained evidence with ad-hoc regular expressions instead of the oracle the Core planner already uses, so a lane could pass with an eager reader the shapes did not recognize. The Fin 0 CI integration's disable/enable equivalence had been removed from its current suite because it is digest-gated against the live workflow; it holds only at the recorded milestone.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "supersedes": {
+    "astGuard": "238c02004036390d1daf9b1e093acbcdf95e012a",
+    "reason": "Both guards matched four hand-written reader shapes that miss trailing-slash bases, bare exported archive roots, template roots, two-line constants and in-test declarations, skipped every non-test helper, counted loaders without binding them, and their mutations tripped on loader absence rather than reader detection.",
+    "regexGuard": "50a36dde0a7486c60e84b86a4f70600ef739f998"
+  },
+  "updates": [
+    {
+      "currentSha256": "8675877bd6ce0a03af5273fec16b0f896a0ed827ab897165eacdcbfb4e127b05",
+      "edits": [
+        {
+          "current": "import { basename, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 306
+        },
+        {
+          "current": "import { assertFinRecordZeroWorkflow, disableFinRecordZeroWorkflow, enableFinRecordZeroWorkflow } from \"./fin-record-zero-ci.mjs\";\n",
+          "previous": "",
+          "start": 844
+        },
+        {
+          "current": "test(\"Fin zero CI integration is exactly the enable edit of both workflows at its milestone\", async () => {\n\t// The live workflows carry later layers, so the disable/enable round trip\n\t// against the recorded transition holds only at the milestone source; the\n\t// live round trip is asserted by assertFinRecordZeroWorkflow in every lane.\n\tconst history = JSON.parse(await readFile(finZeroCiHistoryPath, \"utf8\"));\n\tconst workflows = history.updates.map(update => update.path).filter(path => path.startsWith(\".github/workflows/\"));\n\tassert.deepEqual(workflows, [\".github/workflows/consumer-matrix.yml\", \".github/workflows/perl-consumer.yml\"]);\n\tfor(const path of workflows)\n\t{\n\t\tconst name = basename(path);\n\t\tconst current = await sourceAtHistoryMilestone(finZeroCiHistoryPath, path);\n\t\tassertFinRecordZeroWorkflow(current, name);\n\t\tconst previous = beforeFinZeroCiSource(path, current);\n\t\tassert.notEqual(previous, current, path);\n\t\tassert.equal(disableFinRecordZeroWorkflow(current, name), previous, path);\n\t\tassert.equal(enableFinRecordZeroWorkflow(previous, name), current, path);\n\t\tassert.throws(() => assertFinRecordZeroWorkflow(previous, name), path);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 3056
+        }
+      ],
+      "path": "tests/helpers/fin-record-zero-ci-history-tests.mjs",
+      "previousSha256": "4f057e8aef624b2a5ee8aa859276374d515f3889885ded03d050b30212206733"
+    },
+    {
+      "currentSha256": "57cf044f6cd44305cd5633fa8b8f9dcf2cdee9f0115889db1093b59ec5294621",
+      "edits": [
+        {
+          "current": "import { dirname, extname, join, normalize, resolve } from \"node:path\";\n",
+          "previous": "import { dirname, extname, join, normalize } from \"node:path\";\n",
+          "start": 99
+        },
+        {
+          "current": "import { coreContractEvidenceDirectoryReferences, trackedEvidenceDirectories }\n\tfrom \"../scripts/core-contract-evidence.mjs\";\n",
+          "previous": "",
+          "start": 340
+        },
+        {
+          "current": "//\n// Which modules reference a retained family is decided by the same oracle the\n// Core planner uses to materialize evidence, coreContractEvidenceDirectoryReferences,\n// applied to every module of a lane's static closure except the source-history\n// layers, which reach their families only through Git and the milestone readers.\n// A handful of helpers name a family without opening it at module level; they\n// are bound here by module and family, and a module-level read in one of them\n// fails the lane.\nconst evidenceDirectories = () => trackedEvidenceDirectories(resolve(\".\"));\nconst sourceHistoryModule = path => /-source-history(?:-tests)?[.]mjs$/u.test(path);\nconst referenceOnlyHelpers = Object.freeze({\n\tnode: Object.freeze([\n\t\t{\n\t\t\tmodule: \"tests/helpers/callback-subtype-hosted-evidence-sources.mjs\"\n\t\t\t, families: [\n\t\t\t\t\"callback-subtype-browser-20261022\"\n\t\t\t\t, \"callback-subtype-dotnet-20261022\"\n\t\t\t\t, \"callback-subtype-jvm-20261022\"\n\t\t\t\t, \"callback-subtype-languages-20261022\"\n\t\t\t\t, \"callback-subtype-native-20261022\"\n\t\t\t\t, \"callback-subtype-perl-20261022\"\n\t\t\t\t, \"callback-subtype-php-native-20261022\"\n\t\t\t\t, \"callback-subtype-wit-wasi-20261022\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\tmodule: \"tests/helpers/php-wasm-entry-build-input-supplement.mjs\"\n\t\t\t, families: [\n\t\t\t\t\"callback-refinements-php-wasm-20261023\"\n\t\t\t\t, \"php-wasm-entry-diagnostic-nominal-full-20261025\"\n\t\t\t\t, \"php-wasm-entry-hosted-20261025\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\tmodule: \"tests/helpers/php-wasm-entry-source-supplement.mjs\"\n\t\t\t, families: [\n\t\t\t\t\"php-wasm-entry-diagnostic-nominal-full-20261025\"\n\t\t\t\t, \"php-wasm-entry-hosted-20261025\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\tmodule: \"tests/helpers/php-wasm-refinement-entry-hosted-replay.mjs\"\n\t\t\t, families: [\"callback-refinements-php-wasm-20261023\"]\n\t\t}\n\t])\n\t, native: Object.freeze([\n\t\t{\n\t\t\tmodule: \"tests/helpers/native-fin-reply-evidence.mjs\"\n\t\t\t, families: [\"native-fin-replies-20261008\"]\n\t\t}\n\t])\n});\n",
+          "previous": "const retainedReaderShapes = Object.freeze([\n\t/^const directory = \"docs\\/evidence\\/([A-Za-z0-9_-]+)\";$/gmu\n\t, /readFile\\(\\s*[\"'`]docs\\/evidence\\/([A-Za-z0-9_-]+)\\//gu\n\t, /^export const [A-Za-z]+ = \"docs\\/evidence\\/([A-Za-z0-9_-]+)\\/[^\"]+\";$/gmu\n\t, /^const [A-Za-z]+\\n?\\s*= \"docs\\/evidence\\/([A-Za-z0-9_-]+)\\/[^\"]+\";$/gmu\n]);\n",
+          "start": 2846
+        },
+        {
+          "current": "// Every native consumer entrypoint registers exactly these loaders, in this\n// order; the lane proves each one stays outside the static closure.\nconst nativeRetainedLoaders = Object.freeze({\n\t\"tests/native-fin-records.test.mjs\": Object.freeze([\n\t\t\"./helpers/fin-nominal-refusal-archive-tests.mjs\"\n\t\t, \"./helpers/fin-record-alias-archive-tests.mjs\"\n\t\t, \"./helpers/fin-alias-closure-history-tests.mjs\"\n\t\t, \"./helpers/fin-nominal-refusal-history-tests.mjs\"\n\t\t, \"./helpers/native-fin-records-source-history-tests.mjs\"\n\t\t, \"./helpers/fin-record-evidence-tests.mjs\"\n\t\t, \"./helpers/native-fin-promotion-tests.mjs\"\n\t\t, \"./helpers/fin-record-wit-format-source-history-tests.mjs\"\n\t\t, \"./helpers/fin-wit-record-evidence-tests.mjs\"\n\t\t, \"./helpers/native-fin-diagnostic-source-history-tests.mjs\"\n\t\t, \"./helpers/native-fin-nix-boundary-history-tests.mjs\"\n\t\t, \"./helpers/native-fin-diagnostic-php-wasm-tests.mjs\"\n\t\t, \"./helpers/native-fin-diagnostic-callback-tests.mjs\"\n\t\t, \"./helpers/native-fin-diagnostic-ci-tests.mjs\"\n\t\t, \"./helpers/native-fin-diagnostic-evidence-tests.mjs\"\n\t\t, \"./helpers/fin-record-review-omission-history-tests.mjs\"\n\t])\n\t, \"tests/native-fin-record-zero.test.mjs\": Object.freeze([\n\t\t\"./helpers/fin-record-zero-archive-tests.mjs\"\n\t\t, \"./helpers/fin-record-zero-ci-history-tests.mjs\"\n\t])\n\t, \"tests/native-fin-callbacks.test.mjs\": Object.freeze([\n\t\t\"./helpers/native-fin-callback-evidence-tests.mjs\"\n\t\t, \"./helpers/native-fin-callback-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/callback-code-ci-repair-source-history-tests.mjs\"\n\t\t, \"./helpers/native-fin-callback-admission-source-history-tests.mjs\"\n\t\t, \"./helpers/native-fin-reply-evidence-tests.mjs\"\n\t\t, \"./helpers/native-fin-reply-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/native-fin-reply-promotion-tests.mjs\"\n\t\t, \"./helpers/native-fin-reply-promotion-source-history-tests.mjs\"\n\t\t, \"./helpers/native-fin-reply-source-history-tests.mjs\"\n\t\t, \"./helpers/native-reply-symbol-fix-source-history-tests.mjs\"\n\t\t, \"./helpers/native-fin-reply-review-tests.mjs\"\n\t\t, \"./helpers/native-reply-review-source-history-tests.mjs\"\n\t\t, \"./helpers/native-fin-reply-refusal-evidence-tests.mjs\"\n\t\t, \"./helpers/native-reply-refusal-source-history-tests.mjs\"\n\t])\n\t, \"tests/native-subtype.test.mjs\": Object.freeze([\n\t\t\"./helpers/subtype-alias-position-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-wit-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/callback-refinements-php-wasm-hosted-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/subtype-xs-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/checked-record-admission-source-history-tests.mjs\"\n\t\t, \"./helpers/structural-subtype-runtime-history-tests.mjs\"\n\t\t, \"./helpers/nominal-subtype-conversion-history-tests.mjs\"\n\t\t, \"./helpers/nominal-subtype-native-history-tests.mjs\"\n\t\t, \"./helpers/subtype-result-history-tests.mjs\"\n\t\t, \"./helpers/nominal-subtype-author-history-tests.mjs\"\n\t\t, \"./helpers/component-refinement-mirror-history-tests.mjs\"\n\t\t, \"./helpers/nominal-subtype-selection-history-tests.mjs\"\n\t\t, \"./helpers/generic-subtype-composition-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-hosted-archivers-source-history-tests.mjs\"\n\t\t, \"./helpers/nested-checked-record-regression-contract-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-hosted-failure-repair-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-foundation-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-native-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-native-evidence-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-native-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-perl-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-perl-evidence-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-perl-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-python-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-python-evidence-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-python-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-ruby-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-type-surface-gap-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-php-wasm-evidence-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-php-wasm-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-promotion-artifact-identity-hardening-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-wit-retained-pkg-config-repair-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-wit-pkg-config-space-repair-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-jvm-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-jvm-evidence-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-dotnet-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-dotnet-evidence-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-dotnet-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-php-evidence-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-php-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-browser-path-diagnostic-repair-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-browser-evidence-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-browser-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-wit-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-wit-evidence-tests.mjs\"\n\t\t, \"./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs\"\n\t\t, \"./helpers/callback-subtype-managed-consumer-repair-source-history-tests.mjs\"\n\t\t, \"./helpers/php-wasm-indexed-refinement-entry-source-history-tests.mjs\"\n\t\t, \"./helpers/php-wasm-owned-refinement-entry-source-history-tests.mjs\"\n\t\t, \"./helpers/wit-consumer-root-repair-source-history-tests.mjs\"\n\t\t, \"./helpers/callback-subtype-php-wasm-profile-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-php-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-rust-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-hosted-archive-preparation-source-history-tests.mjs\"\n\t\t, \"./helpers/zero-payload-native-control-contract-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-archive-selection-repair-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-ruby-evidence-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-ruby-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-rust-evidence-tests.mjs\"\n\t\t, \"./helpers/dependent-checked-record-rust-archive-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-generic-subtype-source-history-tests.mjs\"\n\t\t, \"./helpers/dependent-generic-subtype-ci-source-history-tests.mjs\"\n\t])\n});\n// One loader per native entrypoint whose own closure opens a retained family;\n// re-importing it eagerly must trip the oracle, not only the loader inventory.\nconst nativeFamilyLoaders = Object.freeze([\n\t{ parent: \"tests/native-fin-records.test.mjs\"\n\t\t, module: \"./helpers/fin-record-evidence-tests.mjs\" }\n\t, { parent: \"tests/native-fin-record-zero.test.mjs\"\n\t\t, module: \"./helpers/fin-record-zero-archive-tests.mjs\" }\n\t, { parent: \"tests/native-fin-callbacks.test.mjs\"\n\t\t, module: \"./helpers/native-fin-callback-evidence-tests.mjs\" }\n\t, { parent: \"tests/native-subtype.test.mjs\"\n\t\t, module: \"./helpers/dependent-checked-record-native-evidence-tests.mjs\" }\n",
+          "previous": "const nativeDeferredParents = Object.freeze([\n\t{ parent: \"tests/native-fin-records.test.mjs\", loaders: 16 }\n\t, { parent: \"tests/native-fin-record-zero.test.mjs\", loaders: 2 }\n\t, { parent: \"tests/native-fin-callbacks.test.mjs\", loaders: 14 }\n\t, { parent: \"tests/native-subtype.test.mjs\", loaders: 66 }\n",
+          "start": 6145
+        },
+        {
+          "current": "const referenceCache = new Map();\nconst moduleReadCalls\n\t= /^(?:readFile|readFileSync|readdir|readdirSync|existsSync|statSync|stat|access|open|execFileSync|spawnSync|execFile|spawn)$/u;\n",
+          "previous": "",
+          "start": 14802
+        },
+        {
+          "current": "/**\n * Retained families each non-history module of a closure references, as the\n * Core planner would select them.\n *\n * @param closure - Static module closure.\n * @param directories - Tracked top-level evidence directory names.\n */\nconst retainedReferences = (closure, directories) => {\n\tconst references = new Map();\n\tfor(const [path, source] of closure)\n\t{\n\t\tif(sourceHistoryModule(path)) continue;\n\t\tconst key = `${path}\\u0000${source}`;\n\t\tif(!referenceCache.has(key))\n\t\t\treferenceCache.set(key, [...coreContractEvidenceDirectoryReferences(\n\t\t\t\tsource, path, directories)].sort());\n\t\tconst families = referenceCache.get(key);\n\t\tif(families.length > 0) references.set(path, families);\n\t}\n\treturn references;\n};\n\n/**\n * Module-level statements that read the worktree or await, outside any\n * function body. A reference-only helper must have none.\n *\n * @param source - Module text.\n * @param path - Repository-relative module path.\n */\nconst moduleLevelReads = (source, path) => {\n\tconst file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true\n\t\t, ts.ScriptKind.JS);\n\tconst found = [];\n\tconst visit = node => {\n\t\tif(ts.isFunctionLike(node)) return;\n\t\tif(ts.isAwaitExpression(node)) found.push(\"await\");\n\t\tif(ts.isCallExpression(node))\n\t\t{\n\t\t\tconst callee = node.expression;\n\t\t\tconst name = ts.isIdentifier(callee) ? callee.text\n\t\t\t\t: ts.isPropertyAccessExpression(callee) ? callee.name.text : \"\";\n\t\t\tif(moduleReadCalls.test(name)) found.push(name);\n\t\t}\n\t\tts.forEachChild(node, visit);\n\t};\n\tfor(const statement of file.statements)\n\t\tif(!ts.isImportDeclaration(statement)) visit(statement);\n\treturn found;\n};\n\n",
+          "previous": "",
+          "start": 16544
+        },
+        {
+          "current": " * Assert that a deferred lane's static closure references retained families\n * only through the bound reference-only helpers, none of which reads at\n * module level.\n",
+          "previous": " * Assert that a deferred lane's static closure opens no retained family and\n * that every retained reader stays reachable only through a loader.\n",
+          "start": 18678
+        },
+        {
+          "current": " * @param helpers - Reference-only helpers bound to their families.\n * @param directories - Tracked top-level evidence directory names.\n",
+          "previous": " * @param loaders - Retained loaders that must remain outside the closure.\n * @param readerPath - Which modules can execute retained-reader assertions.\n",
+          "start": 18924
+        },
+        {
+          "current": "const assertRetainedReferences = (closure, helpers, directories) => {\n\tconst expected = [...helpers].map(helper => [helper.module\n\t\t, [...helper.families].sort()]).sort(([first], [second]) =>\n\t\tfirst.localeCompare(second));\n\tconst actual = [...retainedReferences(closure, directories)]\n\t\t.sort(([first], [second]) => first.localeCompare(second));\n\tassert.deepEqual(actual, expected);\n\tfor(const helper of helpers)\n",
+          "previous": "const assertDeferredLaneClosure = (\n\tclosure, loaders = deferredRetainedLoaders, readerPath = () => true\n) => {\n\tconst readers = [];\n\tfor(const [path, source] of closure)\n",
+          "start": 19064
+        },
+        {
+          "current": "\t\tassert.ok(closure.has(helper.module), helper.module);\n\t\tassert.deepEqual(moduleLevelReads(closure.get(helper.module)\n\t\t\t, helper.module), [], helper.module);\n",
+          "previous": "\t\tif(!readerPath(path)) continue;\n\t\tfor(const shape of retainedReaderShapes)\n\t\t\tfor(const match of source.matchAll(shape))\n\t\t\t\treaders.push(`${path} -> docs/evidence/${match[1]}`);\n",
+          "start": 19481
+        },
+        {
+          "current": "};\n\n/**\n * Assert that every retained loader stays registered through\n * registerRetainedContractTests and outside the static closure.\n *\n * @param closure - Static module closure of the lane's whole-file entries.\n * @param loaders - Retained loaders that must remain outside the closure.\n */\nconst assertLoadersDeferred = (closure, loaders) => {\n",
+          "previous": "\tassert.deepEqual(readers, []);\n",
+          "start": 19644
+        },
+        {
+          "current": "/**\n * Assert that a native entrypoint registers exactly its bound loaders, in order.\n *\n * @param parent - Native entrypoint path.\n * @param source - Entrypoint source.\n */\nconst registeredLoaders = (parent, source) => {\n\tconst start = source.indexOf(\"await registerRetainedContractTests([\");\n\tconst end = source.indexOf(\"]);\", start);\n\tassert.ok(start >= 0 && end > start, parent);\n\tconst modules = [...source.slice(start, end).matchAll(\n\t\t/\\(\\) => import\\(\"([.][.]?\\/[^\"\\r\\n]+)\"\\)/gu\n\t)].map(match => match[1]);\n\tassert.deepEqual(modules, [...nativeRetainedLoaders[parent]], parent);\n\treturn modules.map(module => ({ parent, module }));\n};\n\n",
+          "previous": "",
+          "start": 20593
+        },
+        {
+          "current": "\tconst directories = evidenceDirectories();\n",
+          "previous": "",
+          "start": 22123
+        },
+        {
+          "current": "\tassertRetainedReferences(closure, referenceOnlyHelpers.node, directories);\n\tassertLoadersDeferred(closure, deferredRetainedLoaders);\n",
+          "previous": "\tassertDeferredLaneClosure(closure);\n",
+          "start": 22253
+        },
+        {
+          "current": "\t\tconst families = [...retainedReferences(retained, directories).values()].flat();\n\t\tif(loader.family !== undefined)\n\t\t\tassert.ok(families.includes(loader.family), `${loader.module}: ${loader.family}`);\n",
+          "previous": "\t\tconst families = [...retained.values()].flatMap(source =>\n\t\t\tretainedReaderShapes.flatMap(shape => [...source.matchAll(shape)].map(match => match[1])));\n\t\tif(loader.family === undefined) assert.deepEqual(families, [], loader.module);\n\t\telse assert.ok(families.includes(loader.family), `${loader.module}: ${loader.family}`);\n",
+          "start": 22557
+        },
+        {
+          "current": "\t\tconst eagerClosure = await staticModuleClosure(entries, eager);\n\t\tawait assert.rejects(async () => assertLoadersDeferred(eagerClosure, deferredRetainedLoaders)\n\t\t\t, { name: \"AssertionError\" }, `eager ${loader.module}`);\n\t\tif(loader.family !== undefined)\n\t\t\tawait assert.rejects(async () => assertRetainedReferences(\n\t\t\t\teagerClosure, referenceOnlyHelpers.node, directories)\n\t\t\t, { name: \"AssertionError\" }, `eager reference ${loader.module}`);\n",
+          "previous": "\t\tawait assert.rejects(async () => assertDeferredLaneClosure(\n\t\t\tawait staticModuleClosure(entries, eager)), { name: \"AssertionError\" }, `eager ${loader.module}`);\n",
+          "start": 22890
+        },
+        {
+          "current": "\t\tawait assert.rejects(async () => assertLoadersDeferred(\n\t\t\tawait staticModuleClosure(entries, dropped), deferredRetainedLoaders)\n\t\t, { name: \"AssertionError\" }, `dropped ${loader.module}`);\n",
+          "previous": "\t\tawait assert.rejects(async () => assertDeferredLaneClosure(\n\t\t\tawait staticModuleClosure(entries, dropped)), { name: \"AssertionError\" }, `dropped ${loader.module}`);\n",
+          "start": 23520
+        },
+        {
+          "current": "\tconst entries = Object.keys(nativeRetainedLoaders);\n\tconst directories = evidenceDirectories();\n",
+          "previous": "\tconst loaders = [];\n\tfor(const { parent, loaders: expected } of nativeDeferredParents)\n\t{\n\t\tconst source = await readFile(parent, \"utf8\");\n\t\tconst start = source.indexOf(\"await registerRetainedContractTests([\");\n\t\tconst end = source.indexOf(\"]);\", start);\n\t\tassert.ok(start >= 0 && end > start, parent);\n\t\tconst modules = [...source.slice(start, end).matchAll(\n\t\t\t/\\(\\) => import\\(\"([.][.]?\\/[^\"\\r\\n]+)\"\\)/gu\n\t\t)].map(match => match[1]);\n\t\tassert.equal(modules.length, expected, parent);\n\t\tloaders.push(...modules.map(module => ({ parent, module })));\n\t}\n\tconst entries = nativeDeferredParents.map(item => item.parent);\n",
+          "start": 23824
+        },
+        {
+          "current": "",
+          "previous": "\tconst testReader = path => /(?:-tests|[.]test)[.]mjs$/u.test(path);\n",
+          "start": 23974
+        },
+        {
+          "current": "\tconst loaders = entries.flatMap(parent =>\n\t\tregisteredLoaders(parent, closure.get(parent)));\n\tassert.equal(loaders.length, 98);\n\tassertRetainedReferences(closure, referenceOnlyHelpers.native, directories);\n\tassertLoadersDeferred(closure, loaders);\n",
+          "previous": "\tassertDeferredLaneClosure(closure, loaders, testReader);\n",
+          "start": 24006
+        },
+        {
+          "current": "\tfor(const loader of loaders)\n\t\tawait readFile(resolveSpecifier(loader.parent, loader.module), \"utf8\");\n",
+          "previous": "",
+          "start": 24293
+        },
+        {
+          "current": "\t// Re-importing a family loader eagerly must trip the oracle itself, not\n\t// only the loader inventory; dropping any first loader must trip the\n\t// inventory; renaming a loader must trip the exact identity binding.\n\tfor(const parent of entries)\n",
+          "previous": "\t// One eager-import and one dropped-loader mutation per entrypoint prevent\n\t// both the closure assertion and the registration inventory from going\n\t// vacuous without repeating the complete graph walk for all 98 loaders.\n\tfor(const { parent } of nativeDeferredParents)\n",
+          "start": 24398
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst loader = loaders.find(item => item.parent === parent);\n",
+          "start": 24647
+        },
+        {
+          "current": "\t\tconst family = nativeFamilyLoaders.find(item => item.parent === parent).module;\n\t\tassert.ok(loaders.some(loader =>\n\t\t\tloader.parent === parent && loader.module === family), family);\n\t\tconst eagerClosure = await staticModuleClosure(entries\n\t\t\t, new Map([[parent, `import \"${family}\";\\n${source}`]]));\n\t\tawait assert.rejects(async () => assertRetainedReferences(\n\t\t\teagerClosure, referenceOnlyHelpers.native, directories)\n\t\t, { name: \"AssertionError\" }, `eager reference ${family}`);\n\t\tawait assert.rejects(async () => assertLoadersDeferred(eagerClosure, loaders)\n\t\t\t, { name: \"AssertionError\" }, `eager ${family}`);\n\t\tconst [first] = nativeRetainedLoaders[parent];\n\t\tconst dropped = source.replace(`() => import(\"${first}\")`\n\t\t\t, \"() => Promise.resolve()\");\n\t\tassert.notEqual(dropped, source);\n\t\tawait assert.rejects(async () => assertLoadersDeferred(\n\t\t\tawait staticModuleClosure(entries, new Map([[parent, dropped]])), loaders)\n\t\t, { name: \"AssertionError\" }, `dropped ${first}`);\n\t\tassert.throws(() => registeredLoaders(parent, dropped)\n\t\t\t, { name: \"AssertionError\" }, `identity ${first}`);\n\t\tconst renamed = source.replace(`() => import(\"${first}\")`\n\t\t\t, `() => import(\"${first.replace(/[.]mjs$/u, \"-renamed.mjs\")}\")`);\n\t\tassert.throws(() => registeredLoaders(parent, renamed)\n\t\t\t, { name: \"AssertionError\" }, `renamed ${first}`);\n",
+          "previous": "\t\tconst eager = new Map([[parent\n\t\t\t, `import \"${loader.module}\";\\n${source}`]]);\n\t\tawait assert.rejects(async () => assertDeferredLaneClosure(\n\t\t\tawait staticModuleClosure(entries, eager), loaders, testReader\n\t\t), { name: \"AssertionError\" }, `eager ${parent}`);\n\t\tconst dropped = new Map([[parent\n\t\t\t, source.replace(\n\t\t\t`() => import(\"${loader.module}\")`, \"() => Promise.resolve()\")]]);\n\t\tassert.notEqual(dropped.get(parent), source);\n\t\tawait assert.rejects(async () => assertDeferredLaneClosure(\n\t\t\tawait staticModuleClosure(entries, dropped), loaders, testReader\n\t\t), { name: \"AssertionError\" }, `dropped ${parent}`);\n",
+          "start": 24685
+        },
+        {
+          "current": "\t// The reference-only binding is exact in both directions, and a helper\n\t// that starts reading at module level is refused.\n\tconst [helper] = referenceOnlyHelpers.native;\n\tassert.throws(() => assertRetainedReferences(closure, [], directories)\n\t\t, { name: \"AssertionError\" });\n\tassert.throws(() => assertRetainedReferences(closure, [helper\n\t\t, { module: \"tests/helpers/fin-record-model.mjs\", families: [\"unknown-20261106\"] }\n\t], directories), { name: \"AssertionError\" });\n\tconst reading = new Map(closure);\n\treading.set(helper.module, `${closure.get(helper.module)}\\nconst eager = readFileSync(\"docs/evidence/${helper.families[0]}/receipt.json\");\\n`);\n\tassert.throws(() => assertRetainedReferences(reading, referenceOnlyHelpers.native\n\t\t, directories), { name: \"AssertionError\" });\n\n",
+          "previous": "",
+          "start": 26026
+        }
+      ],
+      "path": "tests/retained-contract-tests.test.mjs",
+      "previousSha256": "027fa7166cc5361d350c364afaec54f50f9921ea7accf19921c632082488fcd8"
+    }
+  ],
+  "validation": {
+    "measured": {
+      "tests/helpers/fin-record-zero-ci-history-tests.mjs": {
+        "environmental": "one type-surface authentication test needs docs/evidence/browser-callback-fin-20261008, absent from the sparse review worktree",
+        "pass": 5,
+        "tests": 6
+      },
+      "tests/retained-contract-tests.test.mjs": {
+        "fail": 0,
+        "nativeLaneMilliseconds": 4727,
+        "nodeLaneMilliseconds": 13823,
+        "pass": 6,
+        "tests": 6
+      }
+    },
+    "reportedByCodex": {
+      "base": "1fa9c39e8d994847ff1c4ae70e21bda945ed82e3",
+      "note": "Reported on the coordination board for 1fa9c39 before this guard; not re-measured here.",
+      "sparseSevenEntryWall": {
+        "fail": 0,
+        "pass": 153,
+        "seconds": 38.2,
+        "skip": 36,
+        "tests": 189
+      }
+    }
+  }
+}
