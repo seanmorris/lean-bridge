@@ -144,7 +144,7 @@ test("scoped npm producer rejects narrowed execution and widened triggers", asyn
 		, ["  contents: read", "  contents: write"]
 		, ["  cancel-in-progress: false", "  cancel-in-progress: true"]
 		, [ownedCheckedRecordNpmGuard, "true"]
-		, ["    timeout-minutes: 90", "    timeout-minutes: 1"]
+		, ["    timeout-minutes: 150", "    timeout-minutes: 1"]
 		, ['      LEAN_BRIDGE_OWNED_CHECKED_RECORD_BROWSER_TEST: "1"'
 			, '      LEAN_BRIDGE_OWNED_CHECKED_RECORD_BROWSER_TEST: "0"']
 		, ["chromium firefox webkit", "chromium"]
