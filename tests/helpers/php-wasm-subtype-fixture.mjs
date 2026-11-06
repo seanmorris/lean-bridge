@@ -24,6 +24,17 @@ const extras = {
 };
 const historicalContracts = structuredClone(nativeSubtypeContracts);
 const historicalRefinements = structuredClone(nativeSubtypeRefinements);
+// The archived PHP-Wasm producer predates directional result projection and selected
+// these result constructors. Preserve that immutable input without keeping the current
+// native installed-package fixture on the obsolete contract.
+for(const [name, constructor] of Object.entries({
+	"Subtypes.shout": "Subtypes.checkedWord"
+	, "Subtypes.pad": "Subtypes.checkedEven"
+	, "Subtypes.join": "Subtypes.checkedWord"
+})) {
+	historicalContracts[name].result = site(constructor);
+	historicalRefinements[name].result = checked(constructor);
+}
 const contracts = {}, refinements = {};
 for(const [name, contract] of Object.entries(nativeSubtypeContracts))
 {

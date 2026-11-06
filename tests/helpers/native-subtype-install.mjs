@@ -31,14 +31,16 @@ export const nativeSubtypeTargets = Object.freeze({ c: ["c", coordinate]
 
 const site = constructor => ({ ownership: "copy", lifetime: null, refinement: { constructor } });
 const plain = { ownership: "copy", lifetime: null, refinement: "reject" };
+// Lean-produced Subtype results project their base value; they do not select or rerun an input constructor.
+const projected = { ownership: "copy", lifetime: null };
 /** Export contracts naming the checked constructor at every refined site. */
 export const nativeSubtypeContracts = Object.freeze({
-	"Subtypes.shout": { parameters: [site("Subtypes.checkedWord")], result: site("Subtypes.checkedWord") }
+	"Subtypes.shout": { parameters: [site("Subtypes.checkedWord")], result: projected }
 	, "Subtypes.half": { parameters: [site("Subtypes.checkedEven")], result: plain }
 	, "Subtypes.scale": { parameters: [plain, site("Subtypes.checkedSmall")], result: plain }
 	, "Subtypes.head": { parameters: [site("Subtypes.checkedPayload")], result: plain }
-	, "Subtypes.pad": { parameters: [plain], result: site("Subtypes.checkedEven") }
-	, "Subtypes.join": { parameters: [site("Subtypes.checkedWord"), site("Subtypes.checkedWord")], result: site("Subtypes.checkedWord") }
+	, "Subtypes.pad": { parameters: [plain], result: projected }
+	, "Subtypes.join": { parameters: [site("Subtypes.checkedWord"), site("Subtypes.checkedWord")], result: projected }
 	, "Subtypes.clamp": { parameters: [site("Subtypes.checkedBounded")], result: plain }
 	// A site without a refinement key accepts the compiler-checked Fin bound.
 	, "Subtypes.mix": { parameters: [site("Subtypes.checkedEven"), { ownership: "copy", lifetime: null }], result: plain } });
@@ -46,14 +48,16 @@ export const nativeSubtypeContracts = Object.freeze({
 const checked = constructor => ({ kind: "subtype", constructor });
 /** Refinement trees the native model must carry for every export. */
 /**
- * The refinement a contract site implies: a checked constructor, the fixture's Fin 10
- * digit when no refinement key is present, or nothing for a "reject" site.
+ * The refinement a contract site implies: a checked input constructor, a projected
+ * Subtype result, the fixture's Fin 10 digit, or nothing for a "reject" site.
  *
  * @param site - Export contract site.
+ * @param result - Whether Lean produces this top-level value.
  */
-const refinementOf = site => typeof site.refinement === "object" ? checked(site.refinement.constructor) : site.refinement === undefined ? { kind: "fin", bound: "10" } : null;
+const refinementOf = (site, result = false) => typeof site.refinement === "object" ? checked(site.refinement.constructor)
+	: site.refinement === undefined ? result ? checked(null) : { kind: "fin", bound: "10" } : null;
 export const nativeSubtypeRefinements = Object.freeze(Object.fromEntries(Object.entries(nativeSubtypeContracts)
-	.map(([name, contract]) => [name, { parameters: contract.parameters.map(refinementOf), result: refinementOf(contract.result) }])));
+	.map(([name, contract]) => [name, { parameters: contract.parameters.map(site => refinementOf(site)), result: refinementOf(contract.result, true) }])));
 
 /**
  * Install and exercise the checked exports through public host APIs.

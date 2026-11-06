@@ -137,6 +137,8 @@ test("native types admit primitive Subtype at top-level and structural-container
 	const word = { kind: "refinement", base: text, predicate: { kind: "subtype", constructor: "Subtypes.checkedWord" }, abi: { ...heap } };
 	validateNativeType(word);
 	validateNativeType({ ...word, base: nat, predicate: { kind: "subtype", constructor: "Subtypes.checkedEven" }, abi: nat.abi });
+	validateNativeType({ ...word, predicate: { kind: "subtype", constructor: null } }, 0, false, "result");
+	assert.throws(() => validateNativeType(word, 0, false, "result"), /invalid Subtype refinement/);
 	assert.throws(() => validateNativeType(word, 1), /top-level/);
 	assert.throws(() => validateNativeType(word, 0, true), /top-level/);
 	validateNativeType(container("array", word));
@@ -145,14 +147,15 @@ test("native types admit primitive Subtype at top-level and structural-container
 	assert.throws(() => validateNativeType({ ...word, predicate: { kind: "subtype" } }), /refinement predicate fields/);
 	assert.throws(() => validateNativeType({ ...word, base: container("array", text), predicate: { kind: "subtype", constructor: "Subtypes.checkedWords" } }), /primitive base/);
 	assert.deepEqual(nativeFinBoundPaths(nativeSubtypeRefinements["Subtypes.scale"].parameters[1], "arg1"), ["arg1 checked by Subtypes.checkedSmall"]);
-	assert.deepEqual(nativeFinBoundPaths(nativeSubtypeRefinements["Subtypes.pad"].result, "result"), ["result checked by Subtypes.checkedEven"]);
+	assert.deepEqual(nativeSubtypeRefinements["Subtypes.pad"].result, { kind: "subtype", constructor: null });
+	assert.deepEqual(nativeFinBoundPaths(nativeSubtypeRefinements["Subtypes.pad"].result, "result"), ["result projects the Subtype base value"]);
 });
 
 test("Lean adapters construct each Subtype through its checked constructor and export one validator per checked parameter", () => {
 	const text = { kind: "primitive", name: "string", lean: "String", abi: { ...heap } };
 	const item = (name, parameters, result, refinements) => ({ name: `Subtypes.${name}`, module: "Subtypes", symbol: `lb_${name}`, parameters: parameters.map((type, i) => ({ name: `p${i}`, type })), result, refinements });
 	const exports = [
-		item("join", [text, text], text, { parameters: [{ kind: "subtype", constructor: "Subtypes.checkedWord" }, { kind: "subtype", constructor: "Subtypes.checkedWord" }], result: { kind: "subtype", constructor: "Subtypes.checkedWord" } })
+		item("join", [text, text], text, { parameters: [{ kind: "subtype", constructor: "Subtypes.checkedWord" }, { kind: "subtype", constructor: "Subtypes.checkedWord" }], result: { kind: "subtype", constructor: null } })
 		, item("mix", [nat, nat], nat, { parameters: [{ kind: "subtype", constructor: "Subtypes.checkedEven" }, { kind: "fin", bound: "10" }], result: null })];
 	const { leanSource, header } = generateNativeLeanAdapters({ component: { id: "subtypes@1.0.0" }, pointerBits: 64, types: [], exports });
 	const section = symbol => leanSource.slice(leanSource.indexOf(`@[export ${symbol}]`), leanSource.indexOf("\n\n", leanSource.indexOf(`@[export ${symbol}]`)) + 2);
