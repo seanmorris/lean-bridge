@@ -1,0 +1,164 @@
+{
+  "changedSupportCells": 0,
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-historical-pin-snapshot-isolation-source-history.mjs",
+      "sha256": "1501ba80843e4cef19b8c673d8ae3467a03f7ebca22d7171929c2e8d4c055e30"
+    },
+    {
+      "path": "tests/helpers/historical-pin-snapshot-isolation-source-history-tests.mjs",
+      "sha256": "54f81a87170a1535cddedd04fc9b06e6be57b55c0c24fd4741e8fb1c929e2800"
+    },
+    {
+      "path": "tests/helpers/historical-pin-snapshot-isolation-source-history.mjs",
+      "sha256": "9155e512eeb7d7962cf840bd84d18c5522ddc3a53819c113b24e88c8b70f19ea"
+    }
+  ],
+  "implementationCommit": "df5101dcfd553228b79be8a8765f0e830e38fd6e",
+  "integrationCommit": "2e7e41b03132205c4cdef4cbbf9d36e5b97ef6c7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "90baf5f5b5ce9744b305bcb8778c07fa610b9d20b0f5963571bf055eb999475a",
+      "edits": [
+        {
+          "current": "import \"./helpers/historical-pin-snapshot-isolation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "31bfe173405b414b51a1440d750e89b08b0f94eda3a43e24d2ceb6548fe65ff0"
+    },
+    {
+      "currentSha256": "f2f8f545ff77b25a78f82e661659c7567b320a344243316737d315292f13e02c",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeHistoricalPinSnapshotIsolationSource\n\t, historicalPinSnapshotIsolationNormalizationPaths\n} from \"./historical-pin-snapshot-isolation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...historicalPinSnapshotIsolationNormalizationPaths\n\t, ...performanceCheckoutFilterNormalizationPaths\n",
+          "previous": "\t...performanceCheckoutFilterNormalizationPaths\n",
+          "start": 237589
+        },
+        {
+          "current": "\tlet stage = beforeHistoricalPinSnapshotIsolationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerformanceCheckoutFilterSource(\n",
+          "previous": "\tlet stage = beforePerformanceCheckoutFilterSource(\n",
+          "start": 298652
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0f6f26c33f41c1f1e9cf5a9ae2a7b3cbd7375ddc499ddeb22d86b9bb4ff08314"
+    }
+  ],
+  "milestone": "historical-pin-snapshot-isolation-v1",
+  "predecessorCommit": "aa3297a61bfdb1bcb7a0c56b6efd9eaebf04e0f1",
+  "schemaVersion": 1,
+  "scope": "Bind six historical pin assertions to their milestone inventories and exact source bytes instead of the current checkout. Preserve every support claim, source pin, archive and exact type-surface cell; keep the separate final live-pin preflight authoritative for today's sources.",
+  "updates": [
+    {
+      "currentSha256": "b8e7800f3786b7b20a6bb18a130682c212212550def443a2a05fc369be217397",
+      "edits": [
+        {
+          "current": "\tconst inventoryUpdate = history.integrationUpdates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\");\n\tassert.ok(inventoryUpdate);\n\tconst inventory = await sourceAtFinHistoryRecordSource(\n\t\tconsumerSuiteContractRepairHistoryPath, inventoryUpdate.path\n\t\t, inventoryUpdate.currentSha256);\n",
+          "previous": "\tconst inventory = await readFile(\"docs/type-surface.v1.json\", \"utf8\");\n",
+          "start": 5632
+        }
+      ],
+      "path": "tests/helpers/consumer-suite-contract-repair-source-history-tests.mjs",
+      "previousSha256": "eb3a3e21a87cd95106dcd1a10417b9d5e1258c80b703e403bea9e12821feca91"
+    },
+    {
+      "currentSha256": "eaa79857ab59f20c75e6904304104b8a84585ccade21e7994b3d83dd6f462e48",
+      "edits": [
+        {
+          "current": "\tconst document = JSON.parse(git([\"show\"\n\t\t, `${coreHistoricalEvidenceReuseLivePinRepairImplementation}:docs/type-surface.v1.json`]));\n",
+          "previous": "\tconst document = JSON.parse(await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n",
+          "start": 24611
+        },
+        {
+          "current": "\t\t\t, [sha256(git([\"show\"\n\t\t\t\t, `${coreHistoricalEvidenceReuseLivePinRepairImplementation}:${path}`]))]\n\t\t\t, path);\n",
+          "previous": "\t\t\t, [sha256(await readFile(path))], path);\n",
+          "start": 25409
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "2de975e2a22ea081bab77c7e110e9813807e6872b4f74c26cb9c19b3d3fb85b3"
+    },
+    {
+      "currentSha256": "7e36d5bc97cb2f598a03a964b30c23cf52f3f0a2725f3124cda616d19c737ab4",
+      "edits": [
+        {
+          "current": "import { mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { dirname, join } from \"node:path\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 202
+        },
+        {
+          "current": "const withHistoricalSources = async (commit, paths, use) => {\n\tconst repository = await mkdtemp(join(tmpdir()\n\t\t, \"lean-final-audit-checkout-history-\"));\n\ttry\n\t{\n\t\tfor(const path of paths)\n\t\t{\n\t\t\tconst target = join(repository, path);\n\t\t\tawait mkdir(dirname(target), { recursive: true });\n\t\t\tawait writeFile(target, git([\"show\", `${commit}:${path}`]));\n\t\t}\n\t\treturn await use(repository);\n\t}\n\tfinally\n\t{\n\t\tawait rm(repository, { recursive: true, force: true });\n\t}\n};\n",
+          "previous": "",
+          "start": 1777
+        },
+        {
+          "current": "\t\tawait withHistoricalSources(\n\t\t\tfinalAuditCheckoutOptimizationValueIndexImplementation\n\t\t\t, finalAuditCheckoutOptimizationCurrentSources\n\t\t\t, async repository => {\n\t\t\t\tconst prior = await auditCurrentSourcePins(before, {\n\t\t\t\t\trepository\n\t\t\t\t\t, paths: finalAuditCheckoutOptimizationCurrentSources\n\t\t\t\t});\n\t\t\t\tassert.deepEqual(prior.findings, value.preflightBefore.findings);\n\t\t\t\tassert.deepEqual(previewCurrentSourcePinRefresh(before, prior)\n\t\t\t\t\t, { paths: 4, refreshed: 26 });\n\t\t\t\tconst after = await auditCurrentSourcePins(reconciled.inventory, {\n\t\t\t\t\trepository\n\t\t\t\t\t, paths: finalAuditCheckoutOptimizationCurrentSources\n\t\t\t\t});\n\t\t\t\tassert.equal(after.cohort, 4);\n\t\t\t\tassert.equal(after.occurrences, 26);\n\t\t\t\tassert.deepEqual(after.findings, []);\n\t\t\t}\n\t\t);\n",
+          "previous": "\t\tassert.deepEqual(previewCurrentSourcePinRefresh(\n\t\t\tbefore, await auditCurrentSourcePins(before))\n\t\t\t, { paths: 4, refreshed: 26 });\n\t\tassert.deepEqual(await auditCurrentSourcePins(reconciled.inventory)\n\t\t\t, value.preflightAfter);\n",
+          "start": 4326
+        }
+      ],
+      "path": "tests/helpers/final-audit-checkout-optimization-source-history-tests.mjs",
+      "previousSha256": "dfca5becbc2b1144c7e8f8f895f8d25f8de4277f0a7ce821fb96dafd9bc208d1"
+    },
+    {
+      "currentSha256": "54e1aeeabcbb68eba6ab4ce278699777c7642f28f876d414965a5c9ef170c9ee",
+      "edits": [
+        {
+          "current": "import { mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { dirname, join } from \"node:path\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 202
+        },
+        {
+          "current": "const withHistoricalSources = async (commit, paths, use) => {\n\tconst repository = await mkdtemp(join(tmpdir()\n\t\t, \"lean-performance-filter-history-\"));\n\ttry\n\t{\n\t\tfor(const path of paths)\n\t\t{\n\t\t\tconst target = join(repository, path);\n\t\t\tawait mkdir(dirname(target), { recursive: true });\n\t\t\tawait writeFile(target, git([\"show\", `${commit}:${path}`]));\n\t\t}\n\t\treturn await use(repository);\n\t}\n\tfinally\n\t{\n\t\tawait rm(repository, { recursive: true, force: true });\n\t}\n};\n",
+          "previous": "",
+          "start": 1723
+        },
+        {
+          "current": "\t\tconst pinnedPaths = [performanceCheckoutFilterCurrentSources[0]];\n\t\tawait withHistoricalSources(performanceCheckoutFilterImplementation\n\t\t\t, pinnedPaths, async repository => {\n\t\t\t\tconst preflight = await auditCurrentSourcePins(before, {\n\t\t\t\t\trepository, paths: pinnedPaths\n\t\t\t\t});\n\t\t\t\tassert.deepEqual(preflight.findings.map(item => item.path)\n\t\t\t\t\t, pinnedPaths);\n\t\t\t\tassert.deepEqual(previewCurrentSourcePinRefresh(before, preflight)\n\t\t\t\t\t, { paths: 1, refreshed: 1 });\n\t\t\t\tconst after = await auditCurrentSourcePins(reconciled.inventory, {\n\t\t\t\t\trepository, paths: pinnedPaths\n\t\t\t\t});\n\t\t\t\tassert.equal(after.cohort, 1);\n\t\t\t\tassert.equal(after.occurrences, 1);\n\t\t\t\tassert.deepEqual(after.findings, []);\n\t\t\t}\n\t\t);\n",
+          "previous": "\t\tconst preflight = await auditCurrentSourcePins(before);\n\t\tassert.deepEqual(preflight.findings.map(item => item.path)\n\t\t\t, [performanceCheckoutFilterCurrentSources[0]]);\n\t\tassert.deepEqual(previewCurrentSourcePinRefresh(before, preflight)\n\t\t\t, { paths: 1, refreshed: 1 });\n\t\tassert.deepEqual(await auditCurrentSourcePins(reconciled.inventory)\n\t\t\t, { cohort: 2661, occurrences: 16326, findings: [] });\n",
+          "start": 4158
+        }
+      ],
+      "path": "tests/helpers/performance-checkout-filter-source-history-tests.mjs",
+      "previousSha256": "68bd50a7d8c6d2b67a0eca41ac66bd75aa1f8c0bf22beb204cb6131128a42276"
+    },
+    {
+      "currentSha256": "432ec8268fba834235a21a04d6eef8eb1bf3cdcf9e5547980e4c57f5ccf1132a",
+      "edits": [
+        {
+          "current": "\t\tconst inventoryUpdate = history.integrationUpdates.find(update =>\n\t\t\tupdate.path === \"docs/type-surface.v1.json\");\n\t\tassert.ok(inventoryUpdate);\n\t\tconst inventory = await sourceAtFinHistoryRecordSource(\n\t\t\treviewedSpecializationSparseSuiteRepairHistoryPath\n\t\t\t, inventoryUpdate.path, inventoryUpdate.currentSha256);\n",
+          "previous": "\t\tconst inventory = await readFile(\"docs/type-surface.v1.json\", \"utf8\");\n",
+          "start": 5467
+        }
+      ],
+      "path": "tests/helpers/reviewed-specialization-sparse-suite-repair-source-history-tests.mjs",
+      "previousSha256": "284c006c9a7c5e9ff2b2840d7ea0651a7fa30932665054333c5cc70342ac6af2"
+    },
+    {
+      "currentSha256": "8a97e729716ad845319fcb187474e73db9b297d58e2d0e5008978099541a535a",
+      "edits": [
+        {
+          "current": "\t\tconst inventoryUpdate = history.integrationUpdates.find(update =>\n\t\t\tupdate.path === \"docs/type-surface.v1.json\");\n\t\tassert.ok(inventoryUpdate);\n\t\tconst inventory = await sourceAtFinHistoryRecordSource(\n\t\t\tscalarFinSuiteRegistrationHistoryPath, inventoryUpdate.path\n\t\t\t, inventoryUpdate.currentSha256);\n",
+          "previous": "\t\tconst inventory = await readFile(\"docs/type-surface.v1.json\", \"utf8\");\n",
+          "start": 4175
+        }
+      ],
+      "path": "tests/helpers/scalar-fin-suite-registration-source-history-tests.mjs",
+      "previousSha256": "4f42bf0c112b083e998795b2af8b8a12eff75f501a212bc0e9902566fe1ac753"
+    }
+  ]
+}

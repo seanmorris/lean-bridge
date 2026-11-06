@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/historical-pin-snapshot-isolation-source-history-tests.mjs";
 import "./helpers/performance-checkout-filter-source-history-tests.mjs";
 import "./helpers/final-audit-checkout-optimization-source-history-tests.mjs";
 import "./helpers/complete-current-source-pin-preflight-source-history-tests.mjs";

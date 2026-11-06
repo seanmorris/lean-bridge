@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeHistoricalPinSnapshotIsolationSource
+	, historicalPinSnapshotIsolationNormalizationPaths
+} from "./historical-pin-snapshot-isolation-source-history.mjs";
+import {
 	beforePerformanceCheckoutFilterSource
 	, performanceCheckoutFilterNormalizationPaths
 } from "./performance-checkout-filter-source-history.mjs";
@@ -2615,7 +2619,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...performanceCheckoutFilterNormalizationPaths
+	...historicalPinSnapshotIsolationNormalizationPaths
+	, ...performanceCheckoutFilterNormalizationPaths
 	, ...finalAuditCheckoutOptimizationNormalizationPaths
 	, ...completeCurrentSourcePinPreflightNormalizationPaths
 	, ...coreFocusedSourcePinRefreshNormalizationPaths
@@ -3841,7 +3846,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforePerformanceCheckoutFilterSource(
+	let stage = beforeHistoricalPinSnapshotIsolationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePerformanceCheckoutFilterSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
