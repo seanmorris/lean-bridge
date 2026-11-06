@@ -469,6 +469,27 @@ const hostText = (cells, profiles) => groupedProfiles(profiles, profile => {
 });
 
 /**
+ * A CommonMark inline HTML tag, comment, instruction or declaration: outside a
+ * code span the site compiler refuses the page as raw HTML. `Option<T>` is one;
+ * `std::vector<uint8_t>` and `Readonly<Record<K, V>>` are plain text.
+ */
+export const markdownRawHtml = /<\/?[A-Za-z][A-Za-z0-9-]*(?:\s[^<>]*)?\/?>|<!--|<\?|<![A-Z]/u;
+const outsideCode = text => text.split(/`[^`]*`/u).join(" ");
+
+/**
+ * Render a cell's conversion note; a note opening with a markup-like host type
+ * renders that type as code, exactly as the host column does.
+ *
+ * @param cell - Position-scoped type-surface cell.
+ * @param cell.conversionNote - Prose note, possibly opening with the host type.
+ * @param cell.hostType - Rendered host type, or null without a mapping.
+ */
+export const renderTypeNote = ({ conversionNote, hostType }) => {
+	if(!conversionNote || !hostType || !markdownRawHtml.test(hostType) || !conversionNote.startsWith(hostType)) return conversionNote;
+	return inline(hostType) + conversionNote.slice(hostType.length);
+};
+
+/**
  * Render every inventoried shape for an exact set of consumer profiles.
  *
  * @param inventory - Validated inventory and independent contracts.
@@ -484,9 +505,10 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 	const rows = document.shapes.map(shape => {
 		const selected = cells.filter(cell => cell.shape === shape.id);
 		const notes = groupedProfiles(profiles, profile => unique(selected.filter(cell => cell.profile === profile)
-			.map(cell => cell.conversionNote).filter(Boolean)).join(" "), " ")
+			.map(renderTypeNote).filter(Boolean)).join(" "), " ")
 			// Older WIT notes must render their type syntax as code, not HTML.
 			.replaceAll(/(?<!`)list<u32>(?!`)/gu, "`list<u32>`");
+		assert.ok(!markdownRawHtml.test(outsideCode(notes)), `${shape.id}: conversion notes must render type syntax as code, not raw HTML`);
 		return [inline(shape.lean), hostText(selected, profiles), coverageText(selected, profiles), `${notes ? notes + " " : ""}Required: ${shape.bounds}`];
 	});
 	const callbackSubtype = callbackSubtypeHostedGuide(
