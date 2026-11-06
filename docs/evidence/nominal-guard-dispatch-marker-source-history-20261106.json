@@ -1,0 +1,127 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "coverageRepairs": 1,
+    "guardedExports": 3,
+    "livePinRefreshes": 0,
+    "markerRepairs": 1,
+    "negativeMutations": 2,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "candidate": "dff17a56acfcf160af12d5254e88bf0a5b82d242",
+    "gotcha": 18,
+    "hostedFailure": false,
+    "location": "tests/helpers/nominal-subtype-native-tests.mjs:127-132",
+    "missedExport": {
+      "filtered": "eventFirst",
+      "publicName": "event_first"
+    },
+    "test": "nominal C and Perl guards check Fin first and only enter the active variant case",
+    "vacuousBound": {
+      "index": -1,
+      "marker": "lean_object *checked = "
+    }
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-nominal-guard-dispatch-marker-source-history.mjs",
+      "sha256": "33223c4c8142231d30967ece01c1815724bb29dac485a5870978d794a2de4245"
+    },
+    {
+      "path": "tests/helpers/nominal-guard-dispatch-marker-source-history-tests.mjs",
+      "sha256": "a4690a1459a65cefe9139094b4916615c664a8e6d46258b62a09cd8d7d03d1b5"
+    },
+    {
+      "path": "tests/helpers/nominal-guard-dispatch-marker-source-history.mjs",
+      "sha256": "5c899753ad4cfe88fe47979cc33ba857102437ec0ee92a1b051bb275ded70021"
+    }
+  ],
+  "implementationCommit": "ec1a258f7fce32c0ebe337b792c4eb7c174f01f9",
+  "integrationCommit": "e6e1ab280823feea3f42fe8bdb60e3594aa5a48e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f5e41f8c112249955cb29a979deb7711650e86c0e8f3bb3409f0f3e73270edf1",
+      "edits": [
+        {
+          "current": "import \"./helpers/nominal-guard-dispatch-marker-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "45dc2f5ab96d9a1d68ab8d35da166ec63f38cb0fb2a180554ca293a20b4bf443"
+    },
+    {
+      "currentSha256": "443d61d2bcd80fe8a10f0e7004f878ea49839f68ce3d560f0ea65f6553615fa6",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeNominalGuardDispatchMarkerSource\n\t, nominalGuardDispatchMarkerNormalizationPaths\n} from \"./nominal-guard-dispatch-marker-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...nominalGuardDispatchMarkerNormalizationPaths\n\t, ...nativeSubtypeArchivePinRestorationNormalizationPaths\n",
+          "previous": "\t...nativeSubtypeArchivePinRestorationNormalizationPaths\n",
+          "start": 240064
+        },
+        {
+          "current": "\tlet stage = beforeNominalGuardDispatchMarkerSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNativeSubtypeArchivePinRestorationSource(\n",
+          "previous": "\tlet stage = beforeNativeSubtypeArchivePinRestorationSource(\n",
+          "start": 301926
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8b44b0afda873adb2e493301f5be0330272cdbbf94d5f869b14fddd7bfa0a0ae"
+    }
+  ],
+  "inventorySha256": {
+    "after": "79438e8d13d015fe083343cc225c6fcbb6876337bbc2687636daca0d0d4d8c64",
+    "before": "79438e8d13d015fe083343cc225c6fcbb6876337bbc2687636daca0d0d4d8c64"
+  },
+  "milestone": "nominal-guard-dispatch-marker-v1",
+  "predecessorCommit": "dff17a56acfcf160af12d5254e88bf0a5b82d242",
+  "refreshed": {},
+  "repair": "Search for the current `lean_object *_lb_checked = ` marker, assert the refinement helper and dispatch markers exist and are ordered before slicing, cover all three intended exports (combine, event_first, nested) with an exact coverage assertion, and reject a stale or missing dispatch marker with negative mutations.",
+  "rootCause": "The guard ordering check sliced generateCopiedNativeCalls output from the refinement helper up to `lean_object *checked = ${item.symbol}(`. The C generator has emitted `_lb_checked` since 443596f, so indexOf returned -1 and the slice ran to the end of the source; the Fin-before-dispatch bound checked nothing and the test passed. Its filter also named eventFirst while the export's public name is event_first, so only combine and nested were checked.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "b38aebd146d3b194197f56f9d83893e9302a93c39baed5f309dcdf6160a36dce",
+      "edits": [
+        {
+          "current": "\t// Every positional marker must exist: a missing one returns -1 and would make the slice bound vacuous.\n\tconst guardBeforeDispatch = (text, item) => {\n",
+          "previous": "\tfor(const item of value.exports.filter(item => [\"combine\", \"nested\", \"eventFirst\"].includes(item.publicName)))\n\t{\n",
+          "start": 9093
+        },
+        {
+          "current": "\t\tconst first = text.indexOf(symbol + \"_\");\n\t\tconst dispatch = text.indexOf(`lean_object *_lb_checked = ${item.symbol}(`);\n\t\tassert.notEqual(first, -1, `${item.publicName}: refinement helper`);\n\t\tassert.notEqual(dispatch, -1, `${item.publicName}: Lean dispatch`);\n\t\tconst start = text.lastIndexOf(\"static \", first);\n\t\tassert.ok(start !== -1 && start < first && first < dispatch, item.publicName);\n\t\tconst body = text.slice(start, dispatch);\n\t\tassert.ok(body.indexOf(\"lb_fin_below(\") >= 0 && body.indexOf(\"lb_fin_below(\") < body.indexOf(symbol), item.publicName);\n\t};\n\tconst guarded = value.exports.filter(item => [\"combine\", \"nested\", \"event_first\"].includes(item.publicName));\n\tassert.deepEqual(guarded.map(item => item.publicName).sort(), [\"combine\", \"event_first\", \"nested\"]);\n\tfor(const item of guarded) guardBeforeDispatch(source, item);\n\tconst dispatchMarker = `lean_object *_lb_checked = ${guarded[0].symbol}(`;\n\tfor(const changed of [source.replace(dispatchMarker, `lean_object *checked = ${guarded[0].symbol}(`), source.replace(dispatchMarker, \"\")])\n\t\tassert.throws(() => guardBeforeDispatch(changed, guarded[0]), { name: \"AssertionError\" });\n",
+          "previous": "\t\tconst start = source.lastIndexOf(\"static \", source.indexOf(symbol + \"_\"));\n\t\tconst body = source.slice(start, source.indexOf(`lean_object *checked = ${item.symbol}(`));\n\t\tassert.ok(body.indexOf(\"lb_fin_below(\") >= 0 && body.indexOf(\"lb_fin_below(\") < body.indexOf(symbol));\n\t}\n",
+          "start": 9293
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-native-tests.mjs",
+      "previousSha256": "a113a108ee294b94099055d520c06ec69d205d427e66d43c57fbfa9f68c35e91"
+    }
+  ],
+  "validation": {
+    "focused": {
+      "fail": 0,
+      "pass": 6,
+      "tests": 6
+    },
+    "guardedExports": {
+      "combine": true,
+      "event_first": true,
+      "nested": true
+    }
+  }
+}

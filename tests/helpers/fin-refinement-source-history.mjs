@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeNominalGuardDispatchMarkerSource
+	, nominalGuardDispatchMarkerNormalizationPaths
+} from "./nominal-guard-dispatch-marker-source-history.mjs";
+import {
 	beforeNativeSubtypeArchivePinRestorationSource
 	, nativeSubtypeArchivePinRestorationNormalizationPaths
 } from "./native-subtype-archive-pin-restoration-source-history.mjs";
@@ -2671,7 +2675,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...nativeSubtypeArchivePinRestorationNormalizationPaths
+	...nominalGuardDispatchMarkerNormalizationPaths
+	, ...nativeSubtypeArchivePinRestorationNormalizationPaths
 	, ...foldedHistoryStateReconstructionRepairNormalizationPaths
 	, ...phpWasmFinLocalIdentifierNormalizationPaths
 	, ...ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths
@@ -3911,7 +3916,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeNativeSubtypeArchivePinRestorationSource(
+	let stage = beforeNominalGuardDispatchMarkerSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeNativeSubtypeArchivePinRestorationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
