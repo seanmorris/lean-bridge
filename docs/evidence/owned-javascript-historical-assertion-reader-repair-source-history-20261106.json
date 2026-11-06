@@ -1,0 +1,133 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "historicalAssertionCommit": "d3c7456ee19f16a716ed09232835057ce8762148",
+    "historicalAssertionReaders": 1,
+    "negativeHistoricalMutations": 1,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "failingTest": "owned JavaScript checkout repair binds both exact producer shapes",
+    "historicalProducer": "d3c7456ee19f16a716ed09232835057ce8762148",
+    "profile": "checked-javascript-partition-11"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-owned-javascript-historical-assertion-reader-repair-source-history.mjs",
+      "sha256": "0625bc1485c17ccbaa2642f7a0748d52565d1ff1d74eb66f69b11a11240310e0"
+    },
+    {
+      "path": "tests/helpers/owned-javascript-historical-assertion-reader-repair-source-history-tests.mjs",
+      "sha256": "d4846f1a61d37e36408140bf754f8c46e811986a93160f81c16be539fe6d7494"
+    },
+    {
+      "path": "tests/helpers/owned-javascript-historical-assertion-reader-repair-source-history.mjs",
+      "sha256": "d8cb576fbf23ec9a2a4c955724ad11a88f50027a66d7ba76c29f29eec8ff00ec"
+    }
+  ],
+  "implementationCommit": "456cbd56700e9ef9bbabf031905917b7e28e5502",
+  "integrationCommit": "54a56c0d015bcc24b506a41d582de5553bde9db6",
+  "integrationPredecessor": "6643f7c28e97b5edc911e57af18f42caf71748d5",
+  "integrationPredecessorHistory": "docs/evidence/native-subtype-result-projection-repair-source-history-20261106.json",
+  "integrationUpdates": [
+    {
+      "currentSha256": "39faa873e51a667b5ce20616e7d7b8c3c8cb4035233f3f63dc23f501d52dfff0",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-javascript-historical-assertion-reader-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "2dd5575902688129c744f86aef04d542e7fdde79d249bdcc9e6fdb719ccd5749"
+    },
+    {
+      "currentSha256": "0726389b677d92d4dedbced46d627e85678ae2ae5e47c9048b2e5dd6f03c6eba",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeOwnedJavaScriptHistoricalAssertionReaderRepairSource\n\t, ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths\n} from \"./owned-javascript-historical-assertion-reader-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths\n\t, ...nativeSubtypeResultProjectionRepairNormalizationPaths\n",
+          "previous": "\t...nativeSubtypeResultProjectionRepairNormalizationPaths\n",
+          "start": 239372
+        },
+        {
+          "current": "\tlet stage = beforeOwnedJavaScriptHistoricalAssertionReaderRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNativeSubtypeResultProjectionRepairSource(\n",
+          "previous": "\tlet stage = beforeNativeSubtypeResultProjectionRepairSource(\n",
+          "start": 301011
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6b2559e48ad3b296cd4c118660010b7785d8a0a7bbd12378e22501fa4177b939"
+    }
+  ],
+  "milestone": "owned-javascript-historical-assertion-reader-repair-v1",
+  "predecessorCommit": "b9a02c7691a1a89dad4157cb8613e0fa24e0c0ff",
+  "repair": "Load and execute the exact owned-JavaScript assertion source that accompanied the historical producer, keep execution bounded in a synchronous child process, and add a negative timeout mutation proving that the historical contract still rejects malformed bytes. Preserve the exact type-surface model, runtime and support claims.",
+  "rootCause": "The historical checkout-repair reader loaded workflow bytes from the authenticated d3c7456 producer but passed them to today's evolved owned-JavaScript assertion. Later timeout and step-order requirements therefore reinterpreted valid historical bytes as failures and made the checker itself the source of the regression.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "c3291b19b6ec17fd616e0e9e268cf4055dceec86e60c482462be7991e74292b9",
+      "edits": [
+        {
+          "current": "\t\tconst job = recurring.match(\n\t\t\t/^ {2}owned-javascript-wasm:\\n([^]*?)(?=^ {2}[a-z][a-z-]*:)/mu)[0];\n\t\tassert.throws(() => assertOwnedJavaScriptCheckoutContractRepair(\n\t\t\trecurring.replace(job, job.replace(\"    timeout-minutes: 90\\n\"\n\t\t\t\t, \"    timeout-minutes: 89\\n\")), scoped));\n",
+          "previous": "",
+          "start": 3479
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-checkout-contract-repair-source-history-tests.mjs",
+      "previousSha256": "8c46d9cc2863576066e9a972cd8af5be547c3e104229292d437efb5ff9e16103"
+    },
+    {
+      "currentSha256": "22ca4f3233db22333508920d6b335018ddf5faa26531afa95b6056c0b307c78c",
+      "edits": [
+        {
+          "current": "import { execFileSync, spawnSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 120
+        },
+        {
+          "current": "",
+          "previous": "import { assertOwnedJavaScriptWasmCi }\n\tfrom \"./owned-javascript-wasm-ci.mjs\";\n",
+          "start": 318
+        },
+        {
+          "current": "// Execute the assertion bytes that accompanied this historical producer. A live\n// assertion legitimately evolves with later steps and budgets and must not silently\n// reinterpret an older workflow snapshot.\nlet historicalAssertionSource;\nconst assertHistoricalOwnedJavaScriptWasmCi = source => {\n\thistoricalAssertionSource ??= execFileSync(\"git\", [\"show\"\n\t\t, `${ownedJavaScriptCheckoutContractRepairImplementation}:tests/helpers/owned-javascript-wasm-ci.mjs`]\n\t, { encoding: \"utf8\", maxBuffer: 16 * 1024 * 1024 });\n\tconst program = historicalAssertionSource + `\nlet workflow = \"\";\nfor await (const chunk of process.stdin) workflow += chunk;\nprocess.stdout.write(JSON.stringify(assertOwnedJavaScriptWasmCi(workflow)));\n`;\n\tconst checked = spawnSync(process.execPath\n\t\t, [\"--input-type=module\", \"-e\", program]\n\t\t, { input: source, encoding: \"utf8\", maxBuffer: 16 * 1024 * 1024 });\n\tassert.equal(checked.status, 0, checked.stderr);\n\treturn JSON.parse(checked.stdout);\n};\n\n",
+          "previous": "",
+          "start": 1996
+        },
+        {
+          "current": "\tconst recurringContract = assertHistoricalOwnedJavaScriptWasmCi(recurring);\n",
+          "previous": "\tconst recurringContract = assertOwnedJavaScriptWasmCi(recurring);\n",
+          "start": 3342
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-checkout-contract-repair-source-history.mjs",
+      "previousSha256": "2193bae90b47811479e1063eb85bbb2ec8a2684e1e8c14bf496b93cbe96866e4"
+    }
+  ],
+  "validation": {
+    "focusedTests": {
+      "fail": 0,
+      "pass": 4,
+      "tests": 4
+    },
+    "partitionInventory": {
+      "discoveredFailures": 1,
+      "unrelatedSubsequentFailures": 0
+    }
+  }
+}

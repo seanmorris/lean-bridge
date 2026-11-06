@@ -3,6 +3,9 @@
  *
  * @file
  */
+import "./helpers/owned-javascript-historical-assertion-reader-repair-source-history-tests.mjs";
+import "./helpers/native-subtype-result-projection-repair-source-history-tests.mjs";
+import "./helpers/owned-javascript-ci-budget-repair-source-history-tests.mjs";
 import "./helpers/deferred-workflow-history-isolation-source-history-tests.mjs";
 import "./helpers/common-native-deferral-lineage-source-history-tests.mjs";
 import "./helpers/deferred-lane-oracle-guard-source-history-tests.mjs";

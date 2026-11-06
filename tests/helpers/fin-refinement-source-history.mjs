@@ -13,6 +13,18 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeOwnedJavaScriptHistoricalAssertionReaderRepairSource
+	, ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths
+} from "./owned-javascript-historical-assertion-reader-repair-source-history.mjs";
+import {
+	beforeNativeSubtypeResultProjectionRepairSource
+	, nativeSubtypeResultProjectionRepairNormalizationPaths
+} from "./native-subtype-result-projection-repair-source-history.mjs";
+import {
+	beforeOwnedJavaScriptCiBudgetRepairSource
+	, ownedJavaScriptCiBudgetRepairNormalizationPaths
+} from "./owned-javascript-ci-budget-repair-source-history.mjs";
+import {
 	beforeDeferredWorkflowHistoryIsolationSource
 	, deferredWorkflowHistoryIsolationNormalizationPaths
 } from "./deferred-workflow-history-isolation-source-history.mjs";
@@ -2647,7 +2659,10 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...deferredWorkflowHistoryIsolationNormalizationPaths
+	...ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths
+	, ...nativeSubtypeResultProjectionRepairNormalizationPaths
+	, ...ownedJavaScriptCiBudgetRepairNormalizationPaths
+	, ...deferredWorkflowHistoryIsolationNormalizationPaths
 	, ...commonNativeDeferralLineageNormalizationPaths
 	, ...deferredLaneOracleGuardNormalizationPaths
 	, ...nodeConsumerRetainedReaderDeferralNormalizationPaths
@@ -3881,7 +3896,22 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeDeferredWorkflowHistoryIsolationSource(
+	let stage = beforeOwnedJavaScriptHistoricalAssertionReaderRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeNativeSubtypeResultProjectionRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeOwnedJavaScriptCiBudgetRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeDeferredWorkflowHistoryIsolationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
