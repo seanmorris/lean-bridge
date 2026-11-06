@@ -30,7 +30,8 @@ import { genericRecordSpecializations, specializedGenericRecordCase, specialized
 import { assertGenericRecordIr, checkGenericRecordNpmPackages, genericRecordEnvironment, genericRecordExports, genericRecordInstantiations, genericRecordProvenanceOnly, genericRecordSource, genericRecordTargets, installGenericRecordConsumer } from "./helpers/generic-record-packages.mjs";
 
 await registerRetainedContractTests([
-	() => import("./helpers/generic-refusal-fix-source-history-tests.mjs")
+	() => import("./helpers/browser-install-source-history-tests.mjs")
+	, () => import("./helpers/generic-refusal-fix-source-history-tests.mjs")
 	, () => import("./helpers/generic-records-engine-source-history-tests.mjs")
 	, () => import("./helpers/reviewed-scalar-rollout-evidence-tests.mjs")
 	, () => import("./helpers/reviewed-perl-scalar-evidence-tests.mjs")

@@ -82,6 +82,8 @@ const deferredRetainedLoaders = Object.freeze([
 	, { parent: "tests/generic-records-browser.test.mjs"
 		, module: "./helpers/browser-generic-promotion-source-history-tests.mjs"
 		, family: "generic-record-browser-20261008" }
+	, { parent: "tests/generic-records.test.mjs"
+		, module: "./helpers/browser-install-source-history-tests.mjs" }
 ]);
 const nativeDeferredParents = Object.freeze([
 	{ parent: "tests/native-fin-records.test.mjs", loaders: 9 }

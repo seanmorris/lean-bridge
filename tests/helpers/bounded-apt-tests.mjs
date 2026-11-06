@@ -10,7 +10,6 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
-import "./browser-install-source-history-tests.mjs";
 
 const action = "./.github/actions/bounded-apt";
 const network = /\bapt-get\s+(?:update|install)\b|\bplaywright\s+install[^\n]*--with-deps|\binstall-playwright-browsers\.sh\b/u;
