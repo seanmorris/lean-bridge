@@ -14,8 +14,8 @@ import { docPages } from "../site/registry.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import {
 	cellTypeCoverage, dependentCheckedRecordMatrixEvidenceIds
-	, dependentCheckedRecordMatrixProfiles, renderTypeDocuments
-	, renderTypeTable, replaceTypeSection
+	, dependentCheckedRecordMatrixProfiles, markdownRawHtml, renderTypeDocuments
+	, renderTypeNote, renderTypeTable, replaceTypeSection
 	, typeGuideProfiles, zeroPayloadMatrixEvidenceIds
 	, zeroPayloadMatrixProfiles
 } from "../scripts/generate-type-docs.mjs";
@@ -122,6 +122,23 @@ test("every consumer table is generated and includes all 48 source forms exactly
 		assert.match(source, /### (?:Alpha example API|Scalar package example|Workshop example API)/u);
 		assert.equal(replaceTypeSection(source, renderTypeTable(inventory, profiles, path.posix.relative(path.posix.dirname(filename), "docs/reference/types.md"))), source);
 	}
+});
+
+test("conversion notes render markup-like host types as code and no table line carries raw HTML", () => {
+	const note = "Only the declared HostNull null constructor uses the nullable branch.";
+	const markup = "boxed @Nullable T; Option<T> remains explicit None/Some", plain = "undef or T; Option remains generated None/Some";
+	assert.equal(renderTypeNote({ hostType: markup, conversionNote: `${markup}. ${note}` }), `\`${markup}\`. ${note}`);
+	assert.equal(renderTypeNote({ hostType: plain, conversionNote: `${plain}. ${note}` }), `${plain}. ${note}`);
+	assert.equal(renderTypeNote({ hostType: markup, conversionNote: note }), note);
+	assert.equal(renderTypeNote({ hostType: null, conversionNote: note }), note);
+	assert.equal(renderTypeNote({ hostType: markup, conversionNote: null }), null);
+	// Only a CommonMark tag is raw HTML to the site compiler; other angle brackets stay prose.
+	for(const text of ["Option<T> remains", "WIT option<T>; source", "</T>", "<!-- note -->"]) assert.match(text, markdownRawHtml);
+	for(const text of ["std::vector<uint8_t>. Unit", "Readonly<Record<PropertyKey, never>>", "payload < the live bound"]) assert.doesNotMatch(text, markdownRawHtml);
+	// So no generated table line may carry such a tag outside a code span.
+	for(const [filename, profiles] of Object.entries(typeGuideProfiles))
+		for(const line of renderTypeTable(inventory, profiles, path.posix.relative(path.posix.dirname(filename), "docs/reference/types.md")).split("\n"))
+			if(line.startsWith("| ")) assert.doesNotMatch(line.split(/`[^`]*`/u).join(" "), markdownRawHtml, `${filename}: ${line.slice(0, 80)}`);
 });
 
 test("zero-payload matrix closure binds every lane, route and documented boundary", async () => {
