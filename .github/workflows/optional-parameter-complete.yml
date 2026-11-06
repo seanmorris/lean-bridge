@@ -73,11 +73,32 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
-      - name: Check out complete source history
+      - name: Check out complete history and the exact optional-parameter corpus
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/optional-parameter-hosted-20261029/
+          sparse-checkout-cone-mode: false
+      - name: Require complete immutable source history
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse --is-shallow-repository)" = false
+          git cat-file -e 496de9b6f22725da76e2fbe3aba9a2a1dd76ce06^{commit}
+          git cat-file -e faf28c4216c0b68a742d4e5f6119432d78912e2f^{commit}
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
