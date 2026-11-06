@@ -7,13 +7,14 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { basename, join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinZeroCiSource, finZeroCiChangedPaths, finZeroCiHistoryPath, finZeroCiPredecessor, reverseFinZeroCiUpdate } from "./fin-record-zero-ci-history.mjs";
+import { assertFinRecordZeroWorkflow, disableFinRecordZeroWorkflow, enableFinRecordZeroWorkflow } from "./fin-record-zero-ci.mjs";
 import { assertHistoricalTypeSurfaceEvidence } from "./type-surface-historical-evidence.mjs";
 
 test("Fin zero CI integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -48,6 +49,26 @@ test("Fin zero CI integration authenticates every transition and refuses unrecor
 	const buffer = Buffer.from("unregistered bytes");
 	assert.equal(beforeFinZeroCiSource(finZeroCiChangedPaths[0], buffer), buffer);
 	assert.equal(beforeFinZeroCiSource("unknown.mjs", "unregistered bytes"), "unregistered bytes");
+});
+
+test("Fin zero CI integration is exactly the enable edit of both workflows at its milestone", async () => {
+	// The live workflows carry later layers, so the disable/enable round trip
+	// against the recorded transition holds only at the milestone source; the
+	// live round trip is asserted by assertFinRecordZeroWorkflow in every lane.
+	const history = JSON.parse(await readFile(finZeroCiHistoryPath, "utf8"));
+	const workflows = history.updates.map(update => update.path).filter(path => path.startsWith(".github/workflows/"));
+	assert.deepEqual(workflows, [".github/workflows/consumer-matrix.yml", ".github/workflows/perl-consumer.yml"]);
+	for(const path of workflows)
+	{
+		const name = basename(path);
+		const current = await sourceAtHistoryMilestone(finZeroCiHistoryPath, path);
+		assertFinRecordZeroWorkflow(current, name);
+		const previous = beforeFinZeroCiSource(path, current);
+		assert.notEqual(previous, current, path);
+		assert.equal(disableFinRecordZeroWorkflow(current, name), previous, path);
+		assert.equal(enableFinRecordZeroWorkflow(previous, name), current, path);
+		assert.throws(() => assertFinRecordZeroWorkflow(previous, name), path);
+	}
 });
 
 test("Fin zero CI integration preserves the earlier source ledgers", async () => {

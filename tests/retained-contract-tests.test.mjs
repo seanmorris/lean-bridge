@@ -1,10 +1,12 @@
 /** @file */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { dirname, extname, join, normalize } from "node:path";
+import { dirname, extname, join, normalize, resolve } from "node:path";
 import test from "node:test";
 import ts from "typescript";
 import { registerRetainedContractTests, retainedContractScope } from "./helpers/retained-contract-tests.mjs";
+import { coreContractEvidenceDirectoryReferences, trackedEvidenceDirectories }
+	from "../scripts/core-contract-evidence.mjs";
 
 const workflowJob = (source, job) => source.split(`\n  ${job}:\n`)[1]?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
 
@@ -54,12 +56,58 @@ test("sparse consumers defer retained contracts while Core requires them", async
 // sparse consumer lane that reaches one of them through a static import fails
 // with ENOENT before any current-behavior test runs (run 42177405137 job
 // 127767402756), so every reader must sit behind a retained-contract loader.
-const retainedReaderShapes = Object.freeze([
-	/^const directory = "docs\/evidence\/([A-Za-z0-9_-]+)";$/gmu
-	, /readFile\(\s*["'`]docs\/evidence\/([A-Za-z0-9_-]+)\//gu
-	, /^export const [A-Za-z]+ = "docs\/evidence\/([A-Za-z0-9_-]+)\/[^"]+";$/gmu
-	, /^const [A-Za-z]+\n?\s*= "docs\/evidence\/([A-Za-z0-9_-]+)\/[^"]+";$/gmu
-]);
+//
+// Which modules reference a retained family is decided by the same oracle the
+// Core planner uses to materialize evidence, coreContractEvidenceDirectoryReferences,
+// applied to every module of a lane's static closure except the source-history
+// layers, which reach their families only through Git and the milestone readers.
+// A handful of helpers name a family without opening it at module level; they
+// are bound here by module and family, and a module-level read in one of them
+// fails the lane.
+const evidenceDirectories = () => trackedEvidenceDirectories(resolve("."));
+const sourceHistoryModule = path => /-source-history(?:-tests)?[.]mjs$/u.test(path);
+const referenceOnlyHelpers = Object.freeze({
+	node: Object.freeze([
+		{
+			module: "tests/helpers/callback-subtype-hosted-evidence-sources.mjs"
+			, families: [
+				"callback-subtype-browser-20261022"
+				, "callback-subtype-dotnet-20261022"
+				, "callback-subtype-jvm-20261022"
+				, "callback-subtype-languages-20261022"
+				, "callback-subtype-native-20261022"
+				, "callback-subtype-perl-20261022"
+				, "callback-subtype-php-native-20261022"
+				, "callback-subtype-wit-wasi-20261022"
+			]
+		}
+		, {
+			module: "tests/helpers/php-wasm-entry-build-input-supplement.mjs"
+			, families: [
+				"callback-refinements-php-wasm-20261023"
+				, "php-wasm-entry-diagnostic-nominal-full-20261025"
+				, "php-wasm-entry-hosted-20261025"
+			]
+		}
+		, {
+			module: "tests/helpers/php-wasm-entry-source-supplement.mjs"
+			, families: [
+				"php-wasm-entry-diagnostic-nominal-full-20261025"
+				, "php-wasm-entry-hosted-20261025"
+			]
+		}
+		, {
+			module: "tests/helpers/php-wasm-refinement-entry-hosted-replay.mjs"
+			, families: ["callback-refinements-php-wasm-20261023"]
+		}
+	])
+	, native: Object.freeze([
+		{
+			module: "tests/helpers/native-fin-reply-evidence.mjs"
+			, families: ["native-fin-replies-20261008"]
+		}
+	])
+});
 // Loaders without a family are exact-history suites: they read their inputs
 // through Git and the milestone readers, never from the worktree.
 const deferredRetainedLoaders = Object.freeze([
@@ -85,11 +133,127 @@ const deferredRetainedLoaders = Object.freeze([
 	, { parent: "tests/generic-records.test.mjs"
 		, module: "./helpers/browser-install-source-history-tests.mjs" }
 ]);
-const nativeDeferredParents = Object.freeze([
-	{ parent: "tests/native-fin-records.test.mjs", loaders: 16 }
-	, { parent: "tests/native-fin-record-zero.test.mjs", loaders: 2 }
-	, { parent: "tests/native-fin-callbacks.test.mjs", loaders: 14 }
-	, { parent: "tests/native-subtype.test.mjs", loaders: 66 }
+// Every native consumer entrypoint registers exactly these loaders, in this
+// order; the lane proves each one stays outside the static closure.
+const nativeRetainedLoaders = Object.freeze({
+	"tests/native-fin-records.test.mjs": Object.freeze([
+		"./helpers/fin-nominal-refusal-archive-tests.mjs"
+		, "./helpers/fin-record-alias-archive-tests.mjs"
+		, "./helpers/fin-alias-closure-history-tests.mjs"
+		, "./helpers/fin-nominal-refusal-history-tests.mjs"
+		, "./helpers/native-fin-records-source-history-tests.mjs"
+		, "./helpers/fin-record-evidence-tests.mjs"
+		, "./helpers/native-fin-promotion-tests.mjs"
+		, "./helpers/fin-record-wit-format-source-history-tests.mjs"
+		, "./helpers/fin-wit-record-evidence-tests.mjs"
+		, "./helpers/native-fin-diagnostic-source-history-tests.mjs"
+		, "./helpers/native-fin-nix-boundary-history-tests.mjs"
+		, "./helpers/native-fin-diagnostic-php-wasm-tests.mjs"
+		, "./helpers/native-fin-diagnostic-callback-tests.mjs"
+		, "./helpers/native-fin-diagnostic-ci-tests.mjs"
+		, "./helpers/native-fin-diagnostic-evidence-tests.mjs"
+		, "./helpers/fin-record-review-omission-history-tests.mjs"
+	])
+	, "tests/native-fin-record-zero.test.mjs": Object.freeze([
+		"./helpers/fin-record-zero-archive-tests.mjs"
+		, "./helpers/fin-record-zero-ci-history-tests.mjs"
+	])
+	, "tests/native-fin-callbacks.test.mjs": Object.freeze([
+		"./helpers/native-fin-callback-evidence-tests.mjs"
+		, "./helpers/native-fin-callback-archive-source-history-tests.mjs"
+		, "./helpers/callback-code-ci-repair-source-history-tests.mjs"
+		, "./helpers/native-fin-callback-admission-source-history-tests.mjs"
+		, "./helpers/native-fin-reply-evidence-tests.mjs"
+		, "./helpers/native-fin-reply-archive-source-history-tests.mjs"
+		, "./helpers/native-fin-reply-promotion-tests.mjs"
+		, "./helpers/native-fin-reply-promotion-source-history-tests.mjs"
+		, "./helpers/native-fin-reply-source-history-tests.mjs"
+		, "./helpers/native-reply-symbol-fix-source-history-tests.mjs"
+		, "./helpers/native-fin-reply-review-tests.mjs"
+		, "./helpers/native-reply-review-source-history-tests.mjs"
+		, "./helpers/native-fin-reply-refusal-evidence-tests.mjs"
+		, "./helpers/native-reply-refusal-source-history-tests.mjs"
+	])
+	, "tests/native-subtype.test.mjs": Object.freeze([
+		"./helpers/subtype-alias-position-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-wit-archive-source-history-tests.mjs"
+		, "./helpers/callback-refinements-php-wasm-hosted-archive-source-history-tests.mjs"
+		, "./helpers/subtype-xs-archive-source-history-tests.mjs"
+		, "./helpers/checked-record-admission-source-history-tests.mjs"
+		, "./helpers/structural-subtype-runtime-history-tests.mjs"
+		, "./helpers/nominal-subtype-conversion-history-tests.mjs"
+		, "./helpers/nominal-subtype-native-history-tests.mjs"
+		, "./helpers/subtype-result-history-tests.mjs"
+		, "./helpers/nominal-subtype-author-history-tests.mjs"
+		, "./helpers/component-refinement-mirror-history-tests.mjs"
+		, "./helpers/nominal-subtype-selection-history-tests.mjs"
+		, "./helpers/generic-subtype-composition-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-hosted-archivers-source-history-tests.mjs"
+		, "./helpers/nested-checked-record-regression-contract-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-hosted-failure-repair-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-foundation-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-native-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-native-evidence-tests.mjs"
+		, "./helpers/dependent-checked-record-native-archive-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-perl-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-perl-evidence-tests.mjs"
+		, "./helpers/dependent-checked-record-perl-archive-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-python-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-python-evidence-tests.mjs"
+		, "./helpers/dependent-checked-record-python-archive-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-ruby-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-type-surface-gap-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-php-wasm-evidence-tests.mjs"
+		, "./helpers/dependent-checked-record-php-wasm-archive-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-promotion-artifact-identity-hardening-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-wit-retained-pkg-config-repair-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-wit-pkg-config-space-repair-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-jvm-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-jvm-evidence-tests.mjs"
+		, "./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-dotnet-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-dotnet-evidence-tests.mjs"
+		, "./helpers/dependent-checked-record-dotnet-archive-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-php-evidence-tests.mjs"
+		, "./helpers/dependent-checked-record-php-archive-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-browser-path-diagnostic-repair-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-browser-evidence-tests.mjs"
+		, "./helpers/dependent-checked-record-browser-archive-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-wit-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-wit-evidence-tests.mjs"
+		, "./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs"
+		, "./helpers/callback-subtype-managed-consumer-repair-source-history-tests.mjs"
+		, "./helpers/php-wasm-indexed-refinement-entry-source-history-tests.mjs"
+		, "./helpers/php-wasm-owned-refinement-entry-source-history-tests.mjs"
+		, "./helpers/wit-consumer-root-repair-source-history-tests.mjs"
+		, "./helpers/callback-subtype-php-wasm-profile-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-php-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-rust-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-hosted-archive-preparation-source-history-tests.mjs"
+		, "./helpers/zero-payload-native-control-contract-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-archive-selection-repair-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-ruby-evidence-tests.mjs"
+		, "./helpers/dependent-checked-record-ruby-archive-source-history-tests.mjs"
+		, "./helpers/dependent-checked-record-rust-evidence-tests.mjs"
+		, "./helpers/dependent-checked-record-rust-archive-source-history-tests.mjs"
+		, "./helpers/dependent-generic-subtype-source-history-tests.mjs"
+		, "./helpers/dependent-generic-subtype-ci-source-history-tests.mjs"
+	])
+});
+// One loader per native entrypoint whose own closure opens a retained family;
+// re-importing it eagerly must trip the oracle, not only the loader inventory.
+const nativeFamilyLoaders = Object.freeze([
+	{ parent: "tests/native-fin-records.test.mjs"
+		, module: "./helpers/fin-record-evidence-tests.mjs" }
+	, { parent: "tests/native-fin-record-zero.test.mjs"
+		, module: "./helpers/fin-record-zero-archive-tests.mjs" }
+	, { parent: "tests/native-fin-callbacks.test.mjs"
+		, module: "./helpers/native-fin-callback-evidence-tests.mjs" }
+	, { parent: "tests/native-subtype.test.mjs"
+		, module: "./helpers/dependent-checked-record-native-evidence-tests.mjs" }
 ]);
 const nativeEagerCurrentModules = Object.freeze([
 	{ parent: "tests/native-fin-records.test.mjs"
@@ -106,6 +270,9 @@ const nativeEagerCurrentModules = Object.freeze([
 const resolveSpecifier = (from, specifier) => normalize(join(dirname(from)
 	, extname(specifier) === "" ? `${specifier}.mjs` : specifier));
 const specifierCache = new Map();
+const referenceCache = new Map();
+const moduleReadCalls
+	= /^(?:readFile|readFileSync|readdir|readdirSync|existsSync|statSync|stat|access|open|execFileSync|spawnSync|execFile|spawn)$/u;
 
 /**
  * Relative specifiers that load eagerly: import declarations and re-exports.
@@ -153,6 +320,56 @@ const staticModuleClosure = async (entries, overrides = new Map()) => {
 };
 
 /**
+ * Retained families each non-history module of a closure references, as the
+ * Core planner would select them.
+ *
+ * @param closure - Static module closure.
+ * @param directories - Tracked top-level evidence directory names.
+ */
+const retainedReferences = (closure, directories) => {
+	const references = new Map();
+	for(const [path, source] of closure)
+	{
+		if(sourceHistoryModule(path)) continue;
+		const key = `${path}\u0000${source}`;
+		if(!referenceCache.has(key))
+			referenceCache.set(key, [...coreContractEvidenceDirectoryReferences(
+				source, path, directories)].sort());
+		const families = referenceCache.get(key);
+		if(families.length > 0) references.set(path, families);
+	}
+	return references;
+};
+
+/**
+ * Module-level statements that read the worktree or await, outside any
+ * function body. A reference-only helper must have none.
+ *
+ * @param source - Module text.
+ * @param path - Repository-relative module path.
+ */
+const moduleLevelReads = (source, path) => {
+	const file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true
+		, ts.ScriptKind.JS);
+	const found = [];
+	const visit = node => {
+		if(ts.isFunctionLike(node)) return;
+		if(ts.isAwaitExpression(node)) found.push("await");
+		if(ts.isCallExpression(node))
+		{
+			const callee = node.expression;
+			const name = ts.isIdentifier(callee) ? callee.text
+				: ts.isPropertyAccessExpression(callee) ? callee.name.text : "";
+			if(moduleReadCalls.test(name)) found.push(name);
+		}
+		ts.forEachChild(node, visit);
+	};
+	for(const statement of file.statements)
+		if(!ts.isImportDeclaration(statement)) visit(statement);
+	return found;
+};
+
+/**
  * Test files one job runs whole, without a test-name pattern.
  *
  * @param job - Workflow job source.
@@ -170,25 +387,37 @@ const wholeFileTestEntries = job => {
 };
 
 /**
- * Assert that a deferred lane's static closure opens no retained family and
- * that every retained reader stays reachable only through a loader.
+ * Assert that a deferred lane's static closure references retained families
+ * only through the bound reference-only helpers, none of which reads at
+ * module level.
+ *
+ * @param closure - Static module closure of the lane's whole-file entries.
+ * @param helpers - Reference-only helpers bound to their families.
+ * @param directories - Tracked top-level evidence directory names.
+ */
+const assertRetainedReferences = (closure, helpers, directories) => {
+	const expected = [...helpers].map(helper => [helper.module
+		, [...helper.families].sort()]).sort(([first], [second]) =>
+		first.localeCompare(second));
+	const actual = [...retainedReferences(closure, directories)]
+		.sort(([first], [second]) => first.localeCompare(second));
+	assert.deepEqual(actual, expected);
+	for(const helper of helpers)
+	{
+		assert.ok(closure.has(helper.module), helper.module);
+		assert.deepEqual(moduleLevelReads(closure.get(helper.module)
+			, helper.module), [], helper.module);
+	}
+};
+
+/**
+ * Assert that every retained loader stays registered through
+ * registerRetainedContractTests and outside the static closure.
  *
  * @param closure - Static module closure of the lane's whole-file entries.
  * @param loaders - Retained loaders that must remain outside the closure.
- * @param readerPath - Which modules can execute retained-reader assertions.
  */
-const assertDeferredLaneClosure = (
-	closure, loaders = deferredRetainedLoaders, readerPath = () => true
-) => {
-	const readers = [];
-	for(const [path, source] of closure)
-	{
-		if(!readerPath(path)) continue;
-		for(const shape of retainedReaderShapes)
-			for(const match of source.matchAll(shape))
-				readers.push(`${path} -> docs/evidence/${match[1]}`);
-	}
-	assert.deepEqual(readers, []);
+const assertLoadersDeferred = (closure, loaders) => {
 	for(const loader of loaders)
 	{
 		const parent = closure.get(loader.parent);
@@ -202,6 +431,23 @@ const assertDeferredLaneClosure = (
 		assert.equal(closure.has(resolveSpecifier(loader.parent, loader.module))
 			, false, loader.module);
 	}
+};
+
+/**
+ * Assert that a native entrypoint registers exactly its bound loaders, in order.
+ *
+ * @param parent - Native entrypoint path.
+ * @param source - Entrypoint source.
+ */
+const registeredLoaders = (parent, source) => {
+	const start = source.indexOf("await registerRetainedContractTests([");
+	const end = source.indexOf("]);", start);
+	assert.ok(start >= 0 && end > start, parent);
+	const modules = [...source.slice(start, end).matchAll(
+		/\(\) => import\("([.][.]?\/[^"\r\n]+)"\)/gu
+	)].map(match => match[1]);
+	assert.deepEqual(modules, [...nativeRetainedLoaders[parent]], parent);
+	return modules.map(module => ({ parent, module }));
 };
 
 /**
@@ -222,70 +468,93 @@ test("the Node and browser consumer lane reaches no retained-evidence reader und
 	const entries = wholeFileTestEntries(job);
 	for(const entry of ["tests/generic-records.test.mjs", "tests/generic-records-browser.test.mjs"])
 		assert.ok(entries.includes(entry), entry);
+	const directories = evidenceDirectories();
 	const closure = await staticModuleClosure(entries);
 	assert.ok(closure.size > 1000);
-	assertDeferredLaneClosure(closure);
+	assertRetainedReferences(closure, referenceOnlyHelpers.node, directories);
+	assertLoadersDeferred(closure, deferredRetainedLoaders);
 	for(const loader of deferredRetainedLoaders)
 	{
 		const target = resolveSpecifier(loader.parent, loader.module);
 		const retained = await staticModuleClosure([target]);
-		const families = [...retained.values()].flatMap(source =>
-			retainedReaderShapes.flatMap(shape => [...source.matchAll(shape)].map(match => match[1])));
-		if(loader.family === undefined) assert.deepEqual(families, [], loader.module);
-		else assert.ok(families.includes(loader.family), `${loader.module}: ${loader.family}`);
+		const families = [...retainedReferences(retained, directories).values()].flat();
+		if(loader.family !== undefined)
+			assert.ok(families.includes(loader.family), `${loader.module}: ${loader.family}`);
 		const parent = closure.get(loader.parent);
 		const eager = new Map([[loader.parent, `import "${loader.module}";\n${parent}`]]);
-		await assert.rejects(async () => assertDeferredLaneClosure(
-			await staticModuleClosure(entries, eager)), { name: "AssertionError" }, `eager ${loader.module}`);
+		const eagerClosure = await staticModuleClosure(entries, eager);
+		await assert.rejects(async () => assertLoadersDeferred(eagerClosure, deferredRetainedLoaders)
+			, { name: "AssertionError" }, `eager ${loader.module}`);
+		if(loader.family !== undefined)
+			await assert.rejects(async () => assertRetainedReferences(
+				eagerClosure, referenceOnlyHelpers.node, directories)
+			, { name: "AssertionError" }, `eager reference ${loader.module}`);
 		const dropped = new Map([[loader.parent
 			, parent.replace(`() => import("${loader.module}")`, "() => Promise.resolve()")]]);
 		assert.notEqual(dropped.get(loader.parent), parent);
-		await assert.rejects(async () => assertDeferredLaneClosure(
-			await staticModuleClosure(entries, dropped)), { name: "AssertionError" }, `dropped ${loader.module}`);
+		await assert.rejects(async () => assertLoadersDeferred(
+			await staticModuleClosure(entries, dropped), deferredRetainedLoaders)
+		, { name: "AssertionError" }, `dropped ${loader.module}`);
 	}
 });
 
 test("native consumer entrypoints keep every retained test behind the deferred boundary", async () => {
-	const loaders = [];
-	for(const { parent, loaders: expected } of nativeDeferredParents)
-	{
-		const source = await readFile(parent, "utf8");
-		const start = source.indexOf("await registerRetainedContractTests([");
-		const end = source.indexOf("]);", start);
-		assert.ok(start >= 0 && end > start, parent);
-		const modules = [...source.slice(start, end).matchAll(
-			/\(\) => import\("([.][.]?\/[^"\r\n]+)"\)/gu
-		)].map(match => match[1]);
-		assert.equal(modules.length, expected, parent);
-		loaders.push(...modules.map(module => ({ parent, module })));
-	}
-	const entries = nativeDeferredParents.map(item => item.parent);
+	const entries = Object.keys(nativeRetainedLoaders);
+	const directories = evidenceDirectories();
 	const closure = await staticModuleClosure(entries);
-	const testReader = path => /(?:-tests|[.]test)[.]mjs$/u.test(path);
 	assert.ok(closure.size > 500);
-	assertDeferredLaneClosure(closure, loaders, testReader);
+	const loaders = entries.flatMap(parent =>
+		registeredLoaders(parent, closure.get(parent)));
+	assert.equal(loaders.length, 98);
+	assertRetainedReferences(closure, referenceOnlyHelpers.native, directories);
+	assertLoadersDeferred(closure, loaders);
 	assertNativeCurrentClosure(closure);
+	for(const loader of loaders)
+		await readFile(resolveSpecifier(loader.parent, loader.module), "utf8");
 
-	// One eager-import and one dropped-loader mutation per entrypoint prevent
-	// both the closure assertion and the registration inventory from going
-	// vacuous without repeating the complete graph walk for all 98 loaders.
-	for(const { parent } of nativeDeferredParents)
+	// Re-importing a family loader eagerly must trip the oracle itself, not
+	// only the loader inventory; dropping any first loader must trip the
+	// inventory; renaming a loader must trip the exact identity binding.
+	for(const parent of entries)
 	{
-		const loader = loaders.find(item => item.parent === parent);
 		const source = closure.get(parent);
-		const eager = new Map([[parent
-			, `import "${loader.module}";\n${source}`]]);
-		await assert.rejects(async () => assertDeferredLaneClosure(
-			await staticModuleClosure(entries, eager), loaders, testReader
-		), { name: "AssertionError" }, `eager ${parent}`);
-		const dropped = new Map([[parent
-			, source.replace(
-			`() => import("${loader.module}")`, "() => Promise.resolve()")]]);
-		assert.notEqual(dropped.get(parent), source);
-		await assert.rejects(async () => assertDeferredLaneClosure(
-			await staticModuleClosure(entries, dropped), loaders, testReader
-		), { name: "AssertionError" }, `dropped ${parent}`);
+		const family = nativeFamilyLoaders.find(item => item.parent === parent).module;
+		assert.ok(loaders.some(loader =>
+			loader.parent === parent && loader.module === family), family);
+		const eagerClosure = await staticModuleClosure(entries
+			, new Map([[parent, `import "${family}";\n${source}`]]));
+		await assert.rejects(async () => assertRetainedReferences(
+			eagerClosure, referenceOnlyHelpers.native, directories)
+		, { name: "AssertionError" }, `eager reference ${family}`);
+		await assert.rejects(async () => assertLoadersDeferred(eagerClosure, loaders)
+			, { name: "AssertionError" }, `eager ${family}`);
+		const [first] = nativeRetainedLoaders[parent];
+		const dropped = source.replace(`() => import("${first}")`
+			, "() => Promise.resolve()");
+		assert.notEqual(dropped, source);
+		await assert.rejects(async () => assertLoadersDeferred(
+			await staticModuleClosure(entries, new Map([[parent, dropped]])), loaders)
+		, { name: "AssertionError" }, `dropped ${first}`);
+		assert.throws(() => registeredLoaders(parent, dropped)
+			, { name: "AssertionError" }, `identity ${first}`);
+		const renamed = source.replace(`() => import("${first}")`
+			, `() => import("${first.replace(/[.]mjs$/u, "-renamed.mjs")}")`);
+		assert.throws(() => registeredLoaders(parent, renamed)
+			, { name: "AssertionError" }, `renamed ${first}`);
 	}
+
+	// The reference-only binding is exact in both directions, and a helper
+	// that starts reading at module level is refused.
+	const [helper] = referenceOnlyHelpers.native;
+	assert.throws(() => assertRetainedReferences(closure, [], directories)
+		, { name: "AssertionError" });
+	assert.throws(() => assertRetainedReferences(closure, [helper
+		, { module: "tests/helpers/fin-record-model.mjs", families: ["unknown-20261106"] }
+	], directories), { name: "AssertionError" });
+	const reading = new Map(closure);
+	reading.set(helper.module, `${closure.get(helper.module)}\nconst eager = readFileSync("docs/evidence/${helper.families[0]}/receipt.json");\n`);
+	assert.throws(() => assertRetainedReferences(reading, referenceOnlyHelpers.native
+		, directories), { name: "AssertionError" });
 
 	// The inverse mutation catches an over-broad deferral repair: each named
 	// current module must remain eager even when all retained readers are absent.
