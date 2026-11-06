@@ -1,0 +1,226 @@
+{
+  "currentSourceDigests": [
+    {
+      "path": ".github/workflows/performance.yml",
+      "sha256": "15343442b61afa0a8cc98af77744f6417075e47bcb61a394980af9f311711ac4"
+    },
+    {
+      "path": "tests/performance-reproducibility.test.mjs",
+      "sha256": "a3ef7a6472e482794217e44473b4b5f4a133151e463b032c39dcd8b877156a6b"
+    }
+  ],
+  "currentSourcePaths": [
+    ".github/workflows/performance.yml",
+    "tests/performance-reproducibility.test.mjs"
+  ],
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-performance-checkout-filter-source-history.mjs",
+      "sha256": "fbf2e2f4d6a333710a7c1d95de63192db012c5210cd171d4bf902cc5542c01e0"
+    },
+    {
+      "path": "tests/helpers/performance-checkout-filter-source-history-tests.mjs",
+      "sha256": "68bd50a7d8c6d2b67a0eca41ac66bd75aa1f8c0bf22beb204cb6131128a42276"
+    },
+    {
+      "path": "tests/helpers/performance-checkout-filter-source-history.mjs",
+      "sha256": "30bbcde98e943c34673d726640e6a3c3313d7c134d19ce8cc474796546cc22c6"
+    }
+  ],
+  "implementationCommit": "137b13ad57697f5b7a14c285e85f42f8571c098d",
+  "implementationUpdates": [
+    {
+      "currentSha256": "15343442b61afa0a8cc98af77744f6417075e47bcb61a394980af9f311711ac4",
+      "edits": [
+        {
+          "current": "          # The native graph test imports the history hub, which reads retained\n          # root records and committed history, so the tree stays whole with\n          # complete history; historical blobs are fetched only when read.\n",
+          "previous": "",
+          "start": 477
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 734
+        },
+        {
+          "current": "          # archives stay off the runner, their blobs are never fetched, and\n          # history is not fetched.\n",
+          "previous": "          # archives stay off the runner and history is not fetched.\n",
+          "start": 5738
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 5876
+        },
+        {
+          "current": "          # archives stay off the runner, their blobs are never fetched, and\n          # history is not fetched.\n",
+          "previous": "          # archives stay off the runner and history is not fetched.\n",
+          "start": 8592
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 8730
+        },
+        {
+          "current": "          # archives stay off the runner, their blobs are never fetched, and\n          # history is not fetched.\n",
+          "previous": "          # archives stay off the runner and history is not fetched.\n",
+          "start": 11313
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 11451
+        },
+        {
+          "current": "          # archives stay off the runner, their blobs are never fetched, and\n          # history is not fetched.\n",
+          "previous": "          # archives stay off the runner and history is not fetched.\n",
+          "start": 13971
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 14109
+        },
+        {
+          "current": "          # git downgrades to full object copies from a shallow source and, from\n          # a blob-filtered source, reports every excluded blob as invalid while\n          # checking out. Retain complete, unfiltered history while keeping\n          # retained docs/evidence off the runner.\n",
+          "previous": "          # git downgrades to full object copies from a shallow source. Retain\n          # complete history while keeping retained docs/evidence off the runner.\n",
+          "start": 16583
+        },
+        {
+          "current": "          # archives stay off the runner, their blobs are never fetched, and\n          # history is not fetched.\n",
+          "previous": "          # archives stay off the runner and history is not fetched.\n",
+          "start": 20381
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 20519
+        }
+      ],
+      "path": ".github/workflows/performance.yml",
+      "previousSha256": "96baa657e9d73c131854e9afccc515184e02c97f788f18437f2ca5778743f220"
+    },
+    {
+      "currentSha256": "a3ef7a6472e482794217e44473b4b5f4a133151e463b032c39dcd8b877156a6b",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 113
+        },
+        {
+          "current": "const sparse = \"          sparse-checkout: |\\n            /*\\n            !/docs/evidence/\\n          sparse-checkout-cone-mode: false\\n\";\nconst filtered = \"          filter: blob:none\\n\";\nconst performanceJobs = [\"build\", \"spatial\", \"scaling\", \"overhead\", \"lifecycle\", \"reproducibility\", \"report\"];\nconst measuringJobs = [\"spatial\", \"scaling\", \"overhead\", \"lifecycle\", \"report\"];\n// The last workflow revision before blob filtering: nothing but the filter lines and comments may differ.\nconst unfilteredPredecessor = \"51770fecbfb4a19e085381225557df6427938112\";\n// The build job's native graph test imports the history hub, which reads retained root records and\n// committed history, so it keeps the whole tree with complete history and fetches historical blobs only\n// when read. The clean-build gate's shared clones report every excluded blob as invalid when their\n// source is blob-filtered, so reproducibility stays unfiltered.\nconst performanceCheckout = job => job === \"build\"\n\t? `          fetch-depth: 0\\n${filtered}          persist-credentials: false\\n`\n\t: job === \"reproducibility\"\n\t\t? `          fetch-depth: 0\\n          persist-credentials: false\\n${sparse}`\n\t\t: `          fetch-depth: 1\\n${filtered}          persist-credentials: false\\n${sparse}`;\nconst assertPerformanceCheckouts = workflow => {\n\tconst bodies = workflow.slice(workflow.indexOf(\"\\njobs:\\n\")).split(/^ {2}(?=[a-z]+:\\n)/mu).slice(1);\n\tassert.deepEqual(bodies.map(body => body.slice(0, body.indexOf(\":\"))), performanceJobs);\n\tfor(const body of bodies)\n\t{\n\t\tconst job = body.slice(0, body.indexOf(\":\"));\n\t\tassert.doesNotMatch(body, /uses: actions\\/checkout@(?!v6\\n)/u, job);\n\t\tconst checkouts = [...body.matchAll(/uses: actions\\/checkout@v6\\n {8}with:\\n((?: {10}.*\\n)+)/gu)];\n\t\tassert.equal(checkouts.length, 1, job);\n\t\tassert.equal(checkouts[0][1].replaceAll(/^ {10}#.*\\n/gmu, \"\"), performanceCheckout(job), job);\n\t}\n\tconst uncommented = workflow.replaceAll(/^ *#.*\\n/gmu, \"\");\n\tassert.equal(uncommented.split(\"docs/evidence\").length - 1, performanceJobs.length - 1);\n\tassert.match(workflow, /tests\\/native-graph-model\\.test\\.mjs/u);\n\tassert.ok(workflow.includes(\"      - name: Report disk after the sparse checkout\\n        run: df -h / \\\"$GITHUB_WORKSPACE\\\"\\n\"));\n};\n\n",
+          "previous": "",
+          "start": 5886
+        },
+        {
+          "current": "  assertPerformanceCheckouts(workflow);\n  // Every sparse line, command, artifact, timeout and job stays exactly where the unfiltered revision had it.\n  const strip = text => text.replaceAll(/^ *#.*\\n/gmu, \"\").replaceAll(filtered, \"\");\n  const predecessor = execFileSync(\"git\", [\"show\", `${unfilteredPredecessor}:.github/workflows/performance.yml`], { encoding: \"utf8\" });\n  assert.equal(strip(workflow), strip(predecessor));\n  assert.equal(predecessor.split(filtered).length - 1, 0);\n  assert.equal(workflow.split(filtered).length - 1, 6);\n});\n\ntest(\"performance checkouts reject a dropped filter, a widened tree, a shallow history reader or an older action\", async () => {\n  const workflow = await readFile(\".github/workflows/performance.yml\", \"utf8\");\n  const body = job => {\n    const start = workflow.indexOf(`\\n  ${job}:\\n`);\n    assert.ok(start > 0, job);\n    const next = /\\n {2}[a-z]+:\\n/gu;\n    next.lastIndex = start + 1;\n    const following = next.exec(workflow);\n    return [start, following === null ? workflow.length : following.index];\n  };\n  const mutate = (job, before, after) => {\n    const [start, end] = body(job);\n    const section = workflow.slice(start, end);\n    assert.ok(section.includes(before), `${job}: ${before}`);\n    return workflow.slice(0, start) + section.replace(before, after) + workflow.slice(end);\n  };\n  const exclusion = \"            !/docs/evidence/\\n\";\n  const cone = \"          sparse-checkout-cone-mode: false\\n\";\n  const mutants = [\n    ...performanceJobs.map(job => [job, \"uses: actions/checkout@v6\\n\", \"uses: actions/checkout@v4\\n\"])\n    , ...[\"build\", ...measuringJobs].map(job => [job, filtered, \"\"])\n    , ...measuringJobs.map(job => [job, exclusion, \"\"])\n    , ...measuringJobs.map(job => [job, cone, cone.replace(\"false\", \"true\")])\n    , ...measuringJobs.map(job => [job, \"          fetch-depth: 1\\n\", \"          fetch-depth: 0\\n\"])\n    , [\"build\", \"          fetch-depth: 0\\n\", \"          fetch-depth: 1\\n\"]\n    , [\"build\", \"          persist-credentials: false\\n\", `          persist-credentials: false\\n${sparse}`]\n    , [\"reproducibility\", \"          fetch-depth: 0\\n\", \"          fetch-depth: 1\\n\"]\n    , [\"reproducibility\", \"          persist-credentials: false\\n\", `${filtered}          persist-credentials: false\\n`]\n    , [\"reproducibility\", exclusion, \"\"]\n  ];\n  for(const [job, before, after] of mutants)\n",
+          "previous": "  const sparse = \"          sparse-checkout: |\\n            /*\\n            !/docs/evidence/\\n          sparse-checkout-cone-mode: false\\n\";\n  // The build job's native graph test imports the history hub, which reads retained records and commits.\n  const full = \"          fetch-depth: 0\\n          persist-credentials: false\\n\";\n  const jobs = new Map([\n    [\"build\", null], [\"spatial\", 1], [\"scaling\", 1], [\"overhead\", 1]\n    , [\"lifecycle\", 1], [\"reproducibility\", 0], [\"report\", 1]\n  ]);\n  const bodies = workflow.slice(workflow.indexOf(\"\\njobs:\\n\")).split(/^ {2}(?=[a-z]+:\\n)/mu).slice(1);\n  assert.deepEqual(bodies.map(body => body.slice(0, body.indexOf(\":\"))), [...jobs.keys()]);\n  for(const body of bodies)\n",
+          "start": 8313
+        },
+        {
+          "current": "    const changed = mutate(job, before, after);\n    assert.notEqual(changed, workflow);\n    assert.throws(() => assertPerformanceCheckouts(changed), `${job}: ${before.trim()}`);\n",
+          "previous": "    const job = body.slice(0, body.indexOf(\":\"));\n    const checkouts = [...body.matchAll(\n      /uses: actions\\/checkout@v6\\n {8}with:\\n((?: {10}.*\\n)+)/gu\n    )];\n    assert.equal(checkouts.length, 1, job);\n    if(jobs.get(job) === null)\n    {\n      assert.equal(checkouts[0][1], full, job);\n      continue;\n    }\n    const options = checkouts[0][1].replaceAll(/^ {10}#.*\\n/gmu, \"\");\n    assert.equal(options, `          fetch-depth: ${jobs.get(job)}\\n          persist-credentials: false\\n${sparse}`, job);\n",
+          "start": 10687
+        },
+        {
+          "current": "",
+          "previous": "  const uncommented = workflow.replaceAll(/^ *#.*\\n/gmu, \"\");\n  assert.equal(uncommented.split(\"docs/evidence\").length - 1, jobs.size - 1);\n  assert.match(workflow, /tests\\/native-graph-model\\.test\\.mjs/u);\n  assert.ok(workflow.includes(\"      - name: Report disk after the sparse checkout\\n        run: df -h / \\\"$GITHUB_WORKSPACE\\\"\\n\"));\n",
+          "start": 10869
+        }
+      ],
+      "path": "tests/performance-reproducibility.test.mjs",
+      "previousSha256": "a19746b40210c5222a980800645c6575ce10cfefc53cbdb10792594c15c8f69d"
+    }
+  ],
+  "integrationCommit": "1957fbe095cf4a317e659e0c4918add0bb3d0cfb",
+  "integrationUpdates": [
+    {
+      "currentSha256": "31bfe173405b414b51a1440d750e89b08b0f94eda3a43e24d2ceb6548fe65ff0",
+      "edits": [
+        {
+          "current": "import \"./helpers/performance-checkout-filter-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "6e976aabff9fcda58abf6ec2ce70c200da54b11b3bd0d76f44a82ab128ded172"
+    },
+    {
+      "currentSha256": "0f6f26c33f41c1f1e9cf5a9ae2a7b3cbd7375ddc499ddeb22d86b9bb4ff08314",
+      "edits": [
+        {
+          "current": "import {\n\tbeforePerformanceCheckoutFilterSource\n\t, performanceCheckoutFilterNormalizationPaths\n} from \"./performance-checkout-filter-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...performanceCheckoutFilterNormalizationPaths\n\t, ...finalAuditCheckoutOptimizationNormalizationPaths\n",
+          "previous": "\t...finalAuditCheckoutOptimizationNormalizationPaths\n",
+          "start": 237419
+        },
+        {
+          "current": "\tlet stage = beforePerformanceCheckoutFilterSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeFinalAuditCheckoutOptimizationSource(\n",
+          "previous": "\tlet stage = beforeFinalAuditCheckoutOptimizationSource(\n",
+          "start": 298427
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e51f1a071fc0dd83c268fccc752d46422ef6ab0165cbc19f4b3bf6d64fefb509"
+    }
+  ],
+  "milestone": "performance-checkout-filter-v1",
+  "pinRefreshCommit": "cc718b5ea2990a4a4cc173e7e5cfe92a1eab6aaf",
+  "pinUpdates": [
+    {
+      "currentSha256": "e28c3e969e0138d0da28c8d7cdd8f616a0599c0021074929051b761e8b3d2b3f",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"15343442b61afa0a8cc98af77744f6417075e47bcb61a394980af9f311711ac4\"\n",
+          "previous": "          \"sha256\": \"96baa657e9d73c131854e9afccc515184e02c97f788f18437f2ca5778743f220\"\n",
+          "start": 1137701
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "9db72602db21c718103a163aa19c58567c4d297035c2a2a68e30cd9df2abbc6c"
+    }
+  ],
+  "pinnedPaths": [
+    ".github/workflows/performance.yml"
+  ],
+  "predecessorCommit": "51770fecbfb4a19e085381225557df6427938112",
+  "preflightAfter": {
+    "cohort": 2661,
+    "findings": [],
+    "occurrences": 16326
+  },
+  "preflightBefore": {
+    "cohort": 2661,
+    "findings": [
+      {
+        "actualSha256": "15343442b61afa0a8cc98af77744f6417075e47bcb61a394980af9f311711ac4",
+        "evidenceIds": [
+          "npm-structured-callables-installed"
+        ],
+        "expectedSha256": [
+          "96baa657e9d73c131854e9afccc515184e02c97f788f18437f2ca5778743f220"
+        ],
+        "kind": "stale",
+        "path": ".github/workflows/performance.yml",
+        "pins": 1
+      }
+    ],
+    "occurrences": 16326
+  },
+  "refreshedPins": 1,
+  "schemaVersion": 1,
+  "scope": "Fetch historical Performance blobs only when read, retain full history for the native graph lane, keep the clean-build shared-clone source unfiltered, and use shallow sparse blobless checkouts for the five measurement/report lanes. Preserve every command, artifact, support claim and exact type-surface cell while refreshing only the one live workflow citation."
+}
