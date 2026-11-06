@@ -1,0 +1,161 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "foldedReaders": 3,
+    "livePinRefreshes": 0,
+    "reconstructedMilestoneCallSites": 6,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "candidate": "d68bae2bd688777b7ae635534da962d2f40de80f",
+    "coreRun": 42282673085,
+    "failingTests": 4,
+    "missingIntermediateCommits": 3,
+    "passingTests": 10,
+    "profile": "checked-javascript-partition-11"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-folded-history-state-reconstruction-repair-source-history.mjs",
+      "sha256": "604a13d519574bd439d743ec9264ebfefb1384d20d78b805fe8f742cbb7fd7a2"
+    },
+    {
+      "path": "tests/helpers/folded-history-state-reconstruction-repair-source-history-tests.mjs",
+      "sha256": "297e62b9f1ea0a6c80556a904f68c57a07107ab61df4bdcc81e01d901c7f005e"
+    },
+    {
+      "path": "tests/helpers/folded-history-state-reconstruction-repair-source-history.mjs",
+      "sha256": "1b6e6d762eb40605dfa13f492667b3dadc71df247d25f9d53ccb648544a2549e"
+    }
+  ],
+  "implementationCommit": "ce24b7c0aaf7dc034cb4aa1bcb05859821421a26",
+  "integrationCommit": "b82a53bfcdc32fb404a8d608f79faa4ae4fc9a85",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bad0482eef9328e7483bff62bfd6062460514957364a03a2437ab5a2423fa01d",
+      "edits": [
+        {
+          "current": "import \"./helpers/folded-history-state-reconstruction-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "f9ad3be056275a7ac0c4c0807b6e3cad8622a45bd50e6e5b1f070e8ce223dcca"
+    },
+    {
+      "currentSha256": "032c80ddbc6e849defd2ebfb8e7d1b633c52a495df64de7fba01d71ae98ef895",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeFoldedHistoryStateReconstructionRepairSource\n\t, foldedHistoryStateReconstructionRepairNormalizationPaths\n} from \"./folded-history-state-reconstruction-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...foldedHistoryStateReconstructionRepairNormalizationPaths\n\t, ...phpWasmFinLocalIdentifierNormalizationPaths\n",
+          "previous": "\t...phpWasmFinLocalIdentifierNormalizationPaths\n",
+          "start": 239723
+        },
+        {
+          "current": "\tlet stage = beforeFoldedHistoryStateReconstructionRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmFinLocalIdentifierSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePhpWasmFinLocalIdentifierSource(path, text, expected);\n",
+          "start": 301475
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a3f9e07263ba7bc696a3975ad0173fa18afd5d9fb1a1c2f1daa2947cd0fb3753"
+    }
+  ],
+  "inventorySha256": {
+    "after": "bee19f1f75576a17b30676610ddd24b5aac22dafeb95ae57b878ad7f9d4e80ba",
+    "before": "bee19f1f75576a17b30676610ddd24b5aac22dafeb95ae57b878ad7f9d4e80ba"
+  },
+  "milestone": "folded-history-state-reconstruction-repair-v1",
+  "predecessorCommit": "d68bae2bd688777b7ae635534da962d2f40de80f",
+  "refreshed": {},
+  "repair": "Reconstruct each authenticated current and predecessor integration digest through sourceAtFinHistoryMilestone and the ordered history hub. This consumes the reversible record transitions directly, stops at the requested digest, and no longer invents a Git commit for a synthetic state.",
+  "rootCause": "Three source-history records and their final integration were added together in ff11352. Their intermediate synthetic integration blobs were authenticated in the records but never existed as Git commits. Tests asked sourceAtFinHistoryRecordSource to read those intermediate digests from the one record-introduction commit, so valid folded history was rejected by its own reader.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "c5e191810cf717bdd79eb71626c795bc79541ec7a5da6c3a38c97b33ea588149",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import {\n\tsourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource\n} from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 1087
+        },
+        {
+          "current": "\t\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256);\n\t\t\tconst previous = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.previousSha256);\n",
+          "previous": "\t\t\tconst current = await sourceAtFinHistoryRecordSource(\n\t\t\t\tnativeSubtypeResultProjectionRepairHistoryPath, update.path\n\t\t\t\t\t, update.currentSha256);\n\t\t\tconst previous = await sourceAtFinHistoryRecordSource(\n\t\t\t\tvalue.integrationPredecessorHistory, update.path\n\t\t\t\t\t, update.previousSha256);\n",
+          "start": 4605
+        }
+      ],
+      "path": "tests/helpers/native-subtype-result-projection-repair-source-history-tests.mjs",
+      "previousSha256": "edf9311e138374910d7542971ce96ae52a68169e3daa8ec0c98ac3efd7f9a2ab"
+    },
+    {
+      "currentSha256": "92e593ea89a5687bf1fb47f8fd967ef173d7d2ae9cfb8e574a5aa8d4aaeb0102",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import {\n\tsourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource\n} from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 1007
+        },
+        {
+          "current": "\t\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\t\tconst current = await sourceAtFinHistoryRecordSource(\n\t\t\t\townedJavaScriptCiBudgetRepairHistoryPath, update.path\n\t\t\t\t, update.currentSha256);\n",
+          "start": 4694
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tinventoryUpdate.path, inventoryUpdate.currentSha256);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryRecordSource(\n\t\t\townedJavaScriptCiBudgetRepairHistoryPath, inventoryUpdate.path\n\t\t\t, inventoryUpdate.currentSha256);\n",
+          "start": 5923
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-ci-budget-repair-source-history-tests.mjs",
+      "previousSha256": "b76ac730ac167e8046037a2d51d35a06eee01278b59e10c021d15d35fdcf9041"
+    },
+    {
+      "currentSha256": "c5ef27043c072cd83f83259dc871cb8e4a904f71ac5d161c2c7bbbb8758a34fc",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone }\n\tfrom \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import {\n\tsourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource\n} from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 1224
+        },
+        {
+          "current": "\t\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.currentSha256);\n\t\t\tconst previous = await sourceAtFinHistoryMilestone(\n\t\t\t\tupdate.path, update.previousSha256);\n",
+          "previous": "\t\t\tconst current = await sourceAtFinHistoryRecordSource(\n\t\t\t\townedJavaScriptHistoricalAssertionReaderRepairHistoryPath\n\t\t\t\t, update.path, update.currentSha256);\n\t\t\tconst previous = await sourceAtFinHistoryRecordSource(\n\t\t\t\tvalue.integrationPredecessorHistory\n\t\t\t\t, update.path, update.previousSha256);\n",
+          "start": 4853
+        }
+      ],
+      "path": "tests/helpers/owned-javascript-historical-assertion-reader-repair-source-history-tests.mjs",
+      "previousSha256": "d4846f1a61d37e36408140bf754f8c46e811986a93160f81c16be539fe6d7494"
+    }
+  ],
+  "validation": {
+    "after": {
+      "fail": 0,
+      "pass": 14,
+      "tests": 14
+    },
+    "before": {
+      "fail": 4,
+      "pass": 10,
+      "tests": 14
+    },
+    "scopedLint": {
+      "errors": 0,
+      "warnings": 0
+    }
+  }
+}

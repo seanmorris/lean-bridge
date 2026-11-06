@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeFoldedHistoryStateReconstructionRepairSource
+	, foldedHistoryStateReconstructionRepairNormalizationPaths
+} from "./folded-history-state-reconstruction-repair-source-history.mjs";
+import {
 	beforePhpWasmFinLocalIdentifierSource
 	, phpWasmFinLocalIdentifierNormalizationPaths
 } from "./php-wasm-fin-local-identifier-source-history.mjs";
@@ -2663,7 +2667,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmFinLocalIdentifierNormalizationPaths
+	...foldedHistoryStateReconstructionRepairNormalizationPaths
+	, ...phpWasmFinLocalIdentifierNormalizationPaths
 	, ...ownedJavaScriptHistoricalAssertionReaderRepairNormalizationPaths
 	, ...nativeSubtypeResultProjectionRepairNormalizationPaths
 	, ...ownedJavaScriptCiBudgetRepairNormalizationPaths
@@ -3901,7 +3906,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforePhpWasmFinLocalIdentifierSource(path, text, expected);
+	let stage = beforeFoldedHistoryStateReconstructionRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePhpWasmFinLocalIdentifierSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
