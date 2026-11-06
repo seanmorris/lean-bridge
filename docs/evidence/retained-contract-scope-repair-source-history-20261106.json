@@ -1,0 +1,294 @@
+{
+  "behavior": {
+    "currentJvmRows": 12047,
+    "deferredConsumerJobs": 6,
+    "historicalJvmRows": 12046,
+    "retainedEntrypoints": 2
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "focusedRuns": [
+      41385981731,
+      41385983629,
+      41385985528,
+      41385987097,
+      41385988921,
+      41385990821
+    ],
+    "observed": "530/530 focused promoted cells passed while sparse broad lanes failed retained-history contracts outside their checkout closure",
+    "runs": [
+      41385913296,
+      41385913333
+    ]
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-retained-contract-scope-repair-source-history.mjs",
+      "sha256": "7a3291513cade63cbe80dae8eb6d69bfc11829a050be0e21708069b93f2fe7d9"
+    },
+    {
+      "path": "tests/helpers/retained-contract-scope-repair-source-history-tests.mjs",
+      "sha256": "62a8284c692d6c10677f2aca8e98c2b614fd8812a16ceaabdf826a6844a68b89"
+    },
+    {
+      "path": "tests/helpers/retained-contract-scope-repair-source-history.mjs",
+      "sha256": "e10612ed0d8c373ab878851b0cab41d7becc7e58f5256a9323774c90114886a2"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "tests/helpers/retained-contract-tests.mjs",
+      "sha256": "c39b8bc3cb375762c463d9f8ee2a6bf0b369e7cbd22465683fb973ec264c9661"
+    },
+    {
+      "path": "tests/retained-contract-tests.test.mjs",
+      "sha256": "d1542e707e3ec8032bab226f6fffbdc8d7b9a1c0fe14e053abcfcd19cd3a7dd9"
+    }
+  ],
+  "implementationCommit": "6b656face9812ffd4ff7055032e33f808fca2794",
+  "integrationCommit": "40b01328b3f7fb7786447b04de20cb0301d97fc5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4a288e23fa1f39d7fc4fff637d1106876e2ba36a8a6ebcea88f77e67da99841e",
+      "edits": [
+        {
+          "current": "import \"./helpers/retained-contract-scope-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 11152
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "6470ea32f2dc02906ff05e46bccdf0dc1e01392a30a41014fd2a0104de4d5090"
+    },
+    {
+      "currentSha256": "b591da1f4f66262eac8769f591b37e981ff633c43b51a2d43bb1d8cbc5a4e8c6",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeRetainedContractScopeRepairSource\n\t, retainedContractScopeRepairNormalizationPaths\n} from \"./retained-contract-scope-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...retainedContractScopeRepairNormalizationPaths\n\t, ...jvmGenericRecordArrayNullBoundaryRepairNormalizationPaths\n",
+          "previous": "\t...jvmGenericRecordArrayNullBoundaryRepairNormalizationPaths\n",
+          "start": 236610
+        },
+        {
+          "current": "\tlet stage = beforeRetainedContractScopeRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeJvmGenericRecordArrayNullBoundaryRepairSource(\n",
+          "previous": "\tlet stage = beforeJvmGenericRecordArrayNullBoundaryRepairSource(\n",
+          "start": 297357
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "dbc503b4472cd9b3c85cb5a3a9c4c5fedd5bbdfd7e4d92ba49a3ec810f07916f"
+    }
+  ],
+  "milestone": "retained-contract-scope-repair-source-v1",
+  "predecessorCommit": "b88e1ebfee44771d0e075d2aec582658d6c3642b",
+  "repair": "Defer only retained history/evidence module registration in sparse consumer jobs, require it explicitly in Core, keep current behavior tests active, bind the pending-exit archive to its immutable 12,046-row model, preserve the current 12,047-row model, and update the generated-C assertion to the current adapter boundary.",
+  "rootCause": "Sparse installed-consumer jobs executed exact history and retained-evidence suites imported for Core, so missing historical inputs and stale historical expectations could fail a current-behavior lane. The JVM pending-exit archive also preceded one current public Option-null entry and was being parsed against the later 12,047-row model.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "a511d3c4e164382906a06dc76a474d48f0000329f678c12dade9546b5e323ef5",
+      "edits": [
+        {
+          "current": "    env:\n      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n",
+          "previous": "",
+          "start": 73170
+        },
+        {
+          "current": "    env:\n      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n",
+          "previous": "",
+          "start": 127911
+        },
+        {
+          "current": "    env:\n      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n",
+          "previous": "",
+          "start": 207296
+        },
+        {
+          "current": "    env:\n      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n",
+          "previous": "",
+          "start": 279300
+        },
+        {
+          "current": "    env:\n      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n",
+          "previous": "",
+          "start": 373110
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "1101cef4f66ce6597879887be912261eed050acb4d9fddaa8f37d2d78f227e58"
+    },
+    {
+      "currentSha256": "0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c",
+      "edits": [
+        {
+          "current": "    env:\n      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n",
+          "previous": "",
+          "start": 10010
+        }
+      ],
+      "path": ".github/workflows/perl-consumer.yml",
+      "previousSha256": "29dfbe30a3048818b9a4d633b6ed1d6d797daccd81749efb67f71ca0d2518fba"
+    },
+    {
+      "currentSha256": "d0e743d6d10bb47f5ba24d821f4f9e07302daa5e9b73e1fd3a5b84e84adda16b",
+      "edits": [
+        {
+          "current": "          LEAN_BRIDGE_RETAINED_CONTRACTS: required\n",
+          "previous": "",
+          "start": 9255
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "08e1fd557be56500622c45716705992d3f4ce76fde22f78a516c286f417cef72"
+    },
+    {
+      "currentSha256": "5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./helpers/generic-refusal-fix-source-history-tests.mjs\";\n",
+          "start": 361
+        },
+        {
+          "current": "",
+          "previous": "import \"./helpers/generic-records-engine-source-history-tests.mjs\";\nimport \"./helpers/reviewed-scalar-rollout-evidence-tests.mjs\";\nimport \"./helpers/reviewed-perl-scalar-evidence-tests.mjs\";\nimport \"./helpers/reviewed-perl-container-evidence-tests.mjs\";\n",
+          "start": 560
+        },
+        {
+          "current": "",
+          "previous": "import \"./helpers/reviewed-fin-acceptance-source-history-tests.mjs\";\n",
+          "start": 660
+        },
+        {
+          "current": "",
+          "previous": "import \"./helpers/generic-records-source-history-tests.mjs\";\n",
+          "start": 862
+        },
+        {
+          "current": "",
+          "previous": "import \"./helpers/generic-record-hosts-source-history-tests.mjs\";\nimport \"./helpers/generic-record-specialization-source-history-tests.mjs\";\nimport \"./helpers/generic-record-host-evidence-tests.mjs\";\nimport \"./helpers/refinement-core-followup-source-history-tests.mjs\";\nimport \"./helpers/reviewed-scalar-hosts-source-history-tests.mjs\";\nimport \"./helpers/refinement-ci-followup-source-history-tests.mjs\";\n",
+          "start": 1502
+        },
+        {
+          "current": "import { registerRetainedContractTests } from \"./helpers/retained-contract-tests.mjs\";\n",
+          "previous": "import \"./helpers/reviewed-fin-host-evidence-tests.mjs\";\nimport \"./helpers/generic-specialization-evidence-tests.mjs\";\nimport \"./helpers/reviewed-scalar-host-evidence-tests.mjs\";\nimport \"./helpers/generic-record-promotion-source-history-tests.mjs\";\nimport \"./helpers/reviewed-scalar-rollout-source-history-tests.mjs\";\n",
+          "start": 1554
+        },
+        {
+          "current": "await registerRetainedContractTests([\n\t() => import(\"./helpers/generic-refusal-fix-source-history-tests.mjs\")\n\t, () => import(\"./helpers/generic-records-engine-source-history-tests.mjs\")\n\t, () => import(\"./helpers/reviewed-scalar-rollout-evidence-tests.mjs\")\n\t, () => import(\"./helpers/reviewed-perl-scalar-evidence-tests.mjs\")\n\t, () => import(\"./helpers/reviewed-perl-container-evidence-tests.mjs\")\n\t, () => import(\"./helpers/reviewed-fin-acceptance-source-history-tests.mjs\")\n\t, () => import(\"./helpers/generic-records-source-history-tests.mjs\")\n\t, () => import(\"./helpers/generic-record-hosts-source-history-tests.mjs\")\n\t, () => import(\"./helpers/generic-record-specialization-source-history-tests.mjs\")\n\t, () => import(\"./helpers/generic-record-host-evidence-tests.mjs\")\n\t, () => import(\"./helpers/refinement-core-followup-source-history-tests.mjs\")\n\t, () => import(\"./helpers/reviewed-scalar-hosts-source-history-tests.mjs\")\n\t, () => import(\"./helpers/refinement-ci-followup-source-history-tests.mjs\")\n\t, () => import(\"./helpers/reviewed-fin-host-evidence-tests.mjs\")\n\t, () => import(\"./helpers/generic-specialization-evidence-tests.mjs\")\n\t, () => import(\"./helpers/reviewed-scalar-host-evidence-tests.mjs\")\n\t, () => import(\"./helpers/generic-record-promotion-source-history-tests.mjs\")\n\t, () => import(\"./helpers/reviewed-scalar-rollout-source-history-tests.mjs\")\n]);\n\n",
+          "previous": "",
+          "start": 2088
+        }
+      ],
+      "path": "tests/generic-records.test.mjs",
+      "previousSha256": "653fd14d0a26c590615fa5cef113578976df32f1fb7581bb356dde05baa5bcb1"
+    },
+    {
+      "currentSha256": "d0d40e040d1ee462b7530ecb20e4bc08eecfc5d9dd90759eeae711dfcdf2c00e",
+      "edits": [
+        {
+          "current": "/**\n * Independently enumerate both JVM consumers, including their explicit null-carrier calls.\n *\n * @param publicOptionNull - Include the current public Option-null boundary observation.\n */\nconst expectedRows = publicOptionNull => Object.freeze((() => {\n",
+          "previous": "/** Independently enumerate both JVM consumers, including their explicit null-carrier calls. */\nexport const finContainerEdgeJvmExpected = Object.freeze((() => {\n",
+          "start": 548
+        },
+        {
+          "current": "",
+          "previous": "\t// Option.some(null) rejects while evaluating the argument, before optionalDigits is called.\n\t// Its original assertion remains in the consumer, but it is not a public API entry.\n",
+          "start": 1734
+        },
+        {
+          "current": "\t// Current Option values can carry null far enough to enter the public API, which\n\t// rejects the payload before conversion or Lean dispatch. The retained pending-exit\n\t// archive predates that boundary and therefore omits this one public observation.\n\tif(publicOptionNull) add(\"optionalDigits\", \"null\");\n",
+          "previous": "",
+          "start": 1805
+        },
+        {
+          "current": "export const finContainerEdgeJvmExpectedBeforeOptionNullEntry = expectedRows(false);\nexport const finContainerEdgeJvmExpected = expectedRows(true);\n\n",
+          "previous": "",
+          "start": 2479
+        },
+        {
+          "current": " * @param expected - Exact current or retained historical observation model.\n",
+          "previous": "",
+          "start": 2804
+        },
+        {
+          "current": "export const readFinContainerEdgeJvm = (stdout, profile, expected = finContainerEdgeJvmExpected) => {\n",
+          "previous": "export const readFinContainerEdgeJvm = (stdout, profile) => {\n",
+          "start": 2885
+        },
+        {
+          "current": "\tassert.ok(Array.isArray(expected));\n\tassert.equal(lines.length, expected.length);\n",
+          "previous": "\tassert.equal(lines.length, finContainerEdgeJvmExpected.length);\n",
+          "start": 3249
+        },
+        {
+          "current": "\t\tassert.deepEqual(row, expected[index], `${profile} edge call ${index + 1}`);\n",
+          "previous": "\t\tassert.deepEqual(row, finContainerEdgeJvmExpected[index], `${profile} edge call ${index + 1}`);\n",
+          "start": 3632
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-jvm.mjs",
+      "previousSha256": "9b3c9f5212957e1ad80d46e2bd42705a2e17bf238889b9bc1fe4df927bbee296"
+    },
+    {
+      "currentSha256": "4ec5729e2df3bb0752122b55ac36c8f72dc91afdac8209bc5e0ce556ad7dba48",
+      "edits": [
+        {
+          "current": "import { finContainerEdgeJvmExpectedBeforeOptionNullEntry, readFinContainerEdgeJvm } from \"./fin-container-edge-jvm.mjs\";\n",
+          "previous": "import { readFinContainerEdgeJvm } from \"./fin-container-edge-jvm.mjs\";\n",
+          "start": 532
+        },
+        {
+          "current": "\t\tconst rows = readFinContainerEdgeJvm(stdout, \"java\", finContainerEdgeJvmExpectedBeforeOptionNullEntry); assert.equal(rows.length, 12046);\n",
+          "previous": "\t\tconst rows = readFinContainerEdgeJvm(stdout, \"java\"); assert.equal(rows.length, 12046);\n",
+          "start": 2926
+        }
+      ],
+      "path": "tests/helpers/jvm-pending-exit-evidence-tests.mjs",
+      "previousSha256": "290f1416d2730c2c3ff608051d8f23926f37d1fca19ad5e846c8c5cd77078459"
+    },
+    {
+      "currentSha256": "24c72f7b5eb1f3987bda8d4f953087b7d2c83f65d684516d8c1927e1a90221bb",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./helpers/fin-product-evidence-tests.mjs\";\n",
+          "start": 814
+        },
+        {
+          "current": "import { registerRetainedContractTests } from \"./helpers/retained-contract-tests.mjs\";\n",
+          "previous": "import \"./helpers/fin-products-source-history-tests.mjs\";\nimport \"./helpers/fin-products-ci-source-history-tests.mjs\";\nimport \"./helpers/fin-products-floors-source-history-tests.mjs\";\nimport \"./helpers/refinement-perl-ci-history-tests.mjs\";\n",
+          "start": 1292
+        },
+        {
+          "current": "await registerRetainedContractTests([\n\t() => import(\"./helpers/fin-product-evidence-tests.mjs\")\n\t, () => import(\"./helpers/fin-products-source-history-tests.mjs\")\n\t, () => import(\"./helpers/fin-products-ci-source-history-tests.mjs\")\n\t, () => import(\"./helpers/fin-products-floors-source-history-tests.mjs\")\n\t, () => import(\"./helpers/refinement-perl-ci-history-tests.mjs\")\n]);\n\n",
+          "previous": "",
+          "start": 2307
+        },
+        {
+          "current": "\tconst copy = call.indexOf(\"lb_copy_2_check(arg0, &_lb_budget)\");\n\tconst dispatch = call.search(/lean_object \\*_lb_checked = lb_[0-9a-f]+\\(lb_copy_2_in\\(arg0\\)\\);/u);\n",
+          "previous": "\tconst dispatch = call.indexOf(\"lean_object *checked = \");\n",
+          "start": 11251
+        },
+        {
+          "current": "\tassert.ok(copy >= 0 && copy < first && first < ok && ok < error && error < dispatch, call);\n\tassert.equal((call.match(/lb_copy_2_in\\(arg0\\)/gu) ?? []).length, 1);\n",
+          "previous": "\tassert.ok(call.indexOf(\"_check(arg0, &budget)\") < first && first < ok && ok < error && error < dispatch, call);\n\tassert.equal(call.indexOf(\"_in(arg0)\"), call.indexOf(\"lean_object *checked = \") + call.slice(dispatch).indexOf(\"_in(arg0)\"));\n",
+          "start": 11506
+        }
+      ],
+      "path": "tests/native-fin-products.test.mjs",
+      "previousSha256": "a13c998c41d6cce32e07a90754b62d0ea5f37ef01c24b29d89bd91c1773e1aba"
+    }
+  ]
+}
