@@ -1,0 +1,101 @@
+{
+  "changedSupportCells": 0,
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-historical-pin-snapshot-followup-source-history.mjs",
+      "sha256": "24c02db0b1816b5661d22cdbd153c9301394860d5dc65e04b4b513bad999f0ad"
+    },
+    {
+      "path": "tests/helpers/historical-pin-snapshot-followup-source-history-tests.mjs",
+      "sha256": "ed35053d2ccc1734702598a5f3576b605a80c1db80f3428571888943917d58fe"
+    },
+    {
+      "path": "tests/helpers/historical-pin-snapshot-followup-source-history.mjs",
+      "sha256": "7108a65027d72fc4a20e707cb8c74219c20beb595138b8ade358344f1cbf0247"
+    }
+  ],
+  "implementationCommit": "b04d62a5d68daf66d49ad376d38700b45c31a96f",
+  "integrationCommit": "ff66a439b8c28794e80d2aaeb8f5ef03bed28cc7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7bf14c7b2110da8d670916fc7787454573750ecebc19410c8096b016d7b866e5",
+      "edits": [
+        {
+          "current": "import \"./helpers/historical-pin-snapshot-followup-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "90baf5f5b5ce9744b305bcb8778c07fa610b9d20b0f5963571bf055eb999475a"
+    },
+    {
+      "currentSha256": "fec411c5c6512ccfe596bffe2777a1caa37c4d17674e061448da4c074f095625",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeHistoricalPinSnapshotFollowupSource\n\t, historicalPinSnapshotFollowupNormalizationPaths\n} from \"./historical-pin-snapshot-followup-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...historicalPinSnapshotFollowupNormalizationPaths\n\t, ...historicalPinSnapshotIsolationNormalizationPaths\n",
+          "previous": "\t...historicalPinSnapshotIsolationNormalizationPaths\n",
+          "start": 237756
+        },
+        {
+          "current": "\tlet stage = beforeHistoricalPinSnapshotFollowupSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeHistoricalPinSnapshotIsolationSource(\n",
+          "previous": "\tlet stage = beforeHistoricalPinSnapshotIsolationSource(\n",
+          "start": 298873
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f2f8f545ff77b25a78f82e661659c7567b320a344243316737d315292f13e02c"
+    }
+  ],
+  "milestone": "historical-pin-snapshot-followup-v1",
+  "predecessorCommit": "885ed29d2b95fc33c28121c9a569faa4e47ddfe6",
+  "schemaVersion": 1,
+  "scope": "Bind the value-index evidence-pin and Python dependent-Fin no-pin assertions to their exact milestone inventories. Reconstruct the legacy replacement record directly so the recurring matrix test is both historical and fast. Preserve every support claim, source pin, archive and exact type-surface cell.",
+  "updates": [
+    {
+      "currentSha256": "e5763ac409ed89f057482eb23f26e78376c30962ce71d79af9dd5c899bd5a5a4",
+      "edits": [
+        {
+          "current": "const applyRecordedUpdate = (previous, update) => {\n\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\tif(Array.isArray(update.replacements))\n\t{\n\t\tlet current = previous;\n\t\tfor(const replacement of update.replacements)\n\t\t{\n\t\t\tassert.equal(current.split(replacement.previous).length - 1\n\t\t\t\t, replacement.count);\n\t\t\tcurrent = current.replaceAll(\n\t\t\t\treplacement.previous, replacement.current);\n\t\t}\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\treturn current;\n\t}\n\tassert.ok(Array.isArray(update.edits));\n\tlet previousCursor = 0, currentCursor = 0;\n\tconst parts = [];\n\tfor(const edit of update.edits)\n\t{\n\t\tconst unchangedLength = edit.start - currentCursor;\n\t\tassert.ok(unchangedLength >= 0);\n\t\tparts.push(previous.slice(previousCursor\n\t\t\t, previousCursor + unchangedLength), edit.current);\n\t\tpreviousCursor += unchangedLength;\n\t\tassert.equal(previous.slice(previousCursor\n\t\t\t, previousCursor + edit.previous.length), edit.previous);\n\t\tpreviousCursor += edit.previous.length;\n\t\tcurrentCursor = edit.start + edit.current.length;\n\t}\n\tparts.push(previous.slice(previousCursor));\n\tconst current = parts.join(\"\");\n\tassert.equal(sha256(current), update.currentSha256, update.path);\n\treturn current;\n};\n",
+          "previous": "",
+          "start": 1271
+        },
+        {
+          "current": "\t\tconst inventoryUpdate = record.updates.find(update =>\n\t\t\tupdate.path === \"docs/type-surface.v1.json\");\n\t\tassert.ok(inventoryUpdate);\n\t\tconst inventory = JSON.parse(applyRecordedUpdate(git([\"show\"\n\t\t\t, `${checkedRecordValueIndexMatrixEvidencePinRepairPredecessor}`\n\t\t\t\t+ `:${inventoryUpdate.path}`]), inventoryUpdate));\n",
+          "previous": "\t\tconst inventory = JSON.parse(await readFile(\n\t\t\t\"docs/type-surface.v1.json\", \"utf8\"\n\t\t));\n",
+          "start": 4514
+        },
+        {
+          "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.currentSha256\n\t\t\t\t, beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource))\n",
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 5220
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-matrix-evidence-pin-repair-source-history-tests.mjs",
+      "previousSha256": "7cae3bf50c768530a546fa121f7401eb685b88e8647429806a8812dcb383b3f0"
+    },
+    {
+      "currentSha256": "1396722d0446e3baa56f8905c6f9c39dcbc04f9f31b03d41a0910767fe408991",
+      "edits": [
+        {
+          "current": "\t\tconst document = JSON.parse(git([\"show\"\n\t\t\t, pythonDependentFinNatRejectionImplementation\n\t\t\t+ \":docs/type-surface.v1.json\"]));\n",
+          "previous": "\t\tconst document = JSON.parse(await readFile(\n\t\t\t\"docs/type-surface.v1.json\", \"utf8\"));\n",
+          "start": 3715
+        }
+      ],
+      "path": "tests/helpers/python-dependent-fin-nat-rejection-source-history-tests.mjs",
+      "previousSha256": "0b2b7207f459766c0db82dc5bf0d9de5e02aa03aff0482d8500a6973c2a85687"
+    }
+  ]
+}
