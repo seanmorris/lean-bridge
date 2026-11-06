@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/common-native-deferral-lineage-source-history-tests.mjs";
 import "./helpers/deferred-lane-oracle-guard-source-history-tests.mjs";
 import "./helpers/node-consumer-retained-reader-deferral-source-history-tests.mjs";
 import "./helpers/retained-contract-milestone-binding-source-history-tests.mjs";

@@ -1,0 +1,1390 @@
+{
+  "baseCommit": "48db6f6d05cffe6deb9372ee97b544e00e036c4c",
+  "behavior": {
+    "changedSupportCells": 0,
+    "mergePaths": {
+      "native": 7,
+      "node": 12
+    },
+    "refreshedPins": {
+      "tests/generic-records.test.mjs": 12,
+      "tests/native-subtype.test.mjs": 8
+    },
+    "resolutionPaths": 1,
+    "runtimeSemanticChanges": 0,
+    "splitAdditions": 4,
+    "stageAEdits": {
+      "deferral": 18,
+      "expectation": 10,
+      "guard": 3,
+      "staleHistoryCheck": 2
+    },
+    "stageCTransitions": 12
+  },
+  "browserInstallCommit": "afbf9998eb32873fbd50d2f5b13ec93701cc3eb8",
+  "changedSupportCells": 0,
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "guardCommit": "238c02004036390d1daf9b1e093acbcdf95e012a",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-common-native-deferral-lineage-source-history.mjs",
+      "sha256": "740e93764cc5554c6be14db00c7bbbebd3b45dd27566071986ac33da06ba2bb6"
+    },
+    {
+      "path": "tests/helpers/common-native-deferral-lineage-source-history-tests.mjs",
+      "sha256": "c5c083d80fd24aa5dfa8b473ddb5ec6c1c3ae02c4faba204e8a9a66530663cdc"
+    },
+    {
+      "path": "tests/helpers/common-native-deferral-lineage-source-history.mjs",
+      "sha256": "4bb0f1af498ac74cffdbd379f218d03d9b312ecb50f0f61d70fbc69035089b76"
+    }
+  ],
+  "integrationCommit": "1750091aaf49a955bf7cb31e5e31e6af81580bff",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2c31f05a29c19b827827de1f7e03744405bfa2beefb3fcfa25563154cc4bffb4",
+      "edits": [
+        {
+          "current": "import \"./helpers/common-native-deferral-lineage-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "2cb86a082c584aff79a55c75526df7c42e0e978407041a4fa06423dbaea4e269"
+    },
+    {
+      "currentSha256": "3483eb0058a1d3448ce8f5e7dd34146afd8ca90155cc5c58a3a5fe9c9ee3f60f",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCommonNativeDeferralLineageSource\n\t, commonNativeDeferralLineageNormalizationPaths\n} from \"./common-native-deferral-lineage-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...commonNativeDeferralLineageNormalizationPaths\n\t, ...deferredLaneOracleGuardNormalizationPaths\n",
+          "previous": "\t...deferredLaneOracleGuardNormalizationPaths\n",
+          "start": 238622
+        },
+        {
+          "current": "\tlet stage = beforeCommonNativeDeferralLineageSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeDeferredLaneOracleGuardSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeDeferredLaneOracleGuardSource(path, text, expected);\n",
+          "start": 300019
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cc7821fb254a23f61af732bb3961c45a8a04b6cf36cbc42b21a965b3e8b07433"
+    }
+  ],
+  "inventorySha256": {
+    "after": "2d945ddc932a593d2c1a858a55d6763ec3b86197e7cd2c5a90788ae0d1fa7bc4",
+    "before": "b1ee35e4797c2f989b00c454418322bb965110330ddbebab47e29d1c1ef9f1c6"
+  },
+  "lineage": [
+    {
+      "commit": "50a36dde0a7486c60e84b86a4f70600ef739f998",
+      "parents": [
+        "48db6f6d05cffe6deb9372ee97b544e00e036c4c"
+      ],
+      "paths": [
+        {
+          "path": "tests/helpers/fin-record-wit-format-tests.mjs",
+          "sha256": "4a5029ebc610c857100b0828a7c792ff542eb9bb598e692fe106de0346d9c632"
+        },
+        {
+          "path": "tests/helpers/fin-record-zero-ci-tests.mjs",
+          "sha256": "dbde72a948e6dc5ef145daeb518a88144a1a7bd66627fc253e8a5439d1a7e89a"
+        },
+        {
+          "path": "tests/helpers/structural-subtype-runtime-tests.mjs",
+          "sha256": "88813cee4d4b35c0266a6082fec98437d51f1e1eca1a69d841426e5a8fef443e"
+        },
+        {
+          "path": "tests/native-fin-callbacks.test.mjs",
+          "sha256": "03f844c73024832b123acc7b9751f90209f61b1ce710c5dee062624afc678303"
+        },
+        {
+          "path": "tests/native-fin-record-zero.test.mjs",
+          "sha256": "d583d9ebedf4c13e41d5e2d0eb793f5da95effcacf355d43cf90471a0f54f50f"
+        },
+        {
+          "path": "tests/native-fin-records.test.mjs",
+          "sha256": "07c96cd3ac7a855ab39f56dd2f589d7b8e0501ef755b1045827cbed0639d14a6"
+        },
+        {
+          "path": "tests/native-subtype.test.mjs",
+          "sha256": "ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc"
+        },
+        {
+          "path": "tests/retained-contract-tests.test.mjs",
+          "sha256": "506e1c4fa7896637b54f74945955eb1731441a5e2aa044b7b4d758edb7450317"
+        }
+      ],
+      "subject": "Defer retained native consumer contracts [skip ci]"
+    },
+    {
+      "commit": "1f6628ea59c27cb0f8e81a9d0e25ab0b78bbc1d4",
+      "parents": [
+        "50a36dde0a7486c60e84b86a4f70600ef739f998",
+        "3c90933657db89b638687e4df425485c106ebeb1"
+      ],
+      "paths": [
+        {
+          "path": "docs/evidence/node-consumer-retained-reader-deferral-source-history-20261106.json",
+          "sha256": "6a08a09e6566360af9796906b5d1297a29c0a0707c6dcf35439a46cd9347c3cc"
+        },
+        {
+          "path": "docs/type-surface.v1.json",
+          "sha256": "b1ee35e4797c2f989b00c454418322bb965110330ddbebab47e29d1c1ef9f1c6"
+        },
+        {
+          "path": "scripts/update-node-consumer-retained-reader-deferral-source-history.mjs",
+          "sha256": "1c87800fd3747e29d9afc4ab1b23af6af432f929543ec3563c98f74547f4f29b"
+        },
+        {
+          "path": "tests/checked-javascript-partition-11.test.mjs",
+          "sha256": "6e018c0bac711be3d4418d7cc13950fa99b107491f4dfaecd7dc6fbba1eb2fcd"
+        },
+        {
+          "path": "tests/generic-records-browser.test.mjs",
+          "sha256": "b967463e0ee733d5e04f491034a5180a55b29639d379a18f4e3199c463f2d002"
+        },
+        {
+          "path": "tests/helpers/fin-record-wit-format-tests.mjs",
+          "sha256": "4a5029ebc610c857100b0828a7c792ff542eb9bb598e692fe106de0346d9c632"
+        },
+        {
+          "path": "tests/helpers/fin-record-zero-ci-tests.mjs",
+          "sha256": "dbde72a948e6dc5ef145daeb518a88144a1a7bd66627fc253e8a5439d1a7e89a"
+        },
+        {
+          "path": "tests/helpers/fin-refinement-source-history.mjs",
+          "sha256": "4dde168f530139fa636e69a07c3eb402992584c25d8e477a184fe62daa919630"
+        },
+        {
+          "path": "tests/helpers/node-consumer-retained-reader-deferral-source-history-tests.mjs",
+          "sha256": "dec58f11700672244c21d5a31f50e67c030279d3fcddef6732bfcf8fde06d1d4"
+        },
+        {
+          "path": "tests/helpers/node-consumer-retained-reader-deferral-source-history.mjs",
+          "sha256": "0cdb55a5260e70205fc020ff63797870ca8caa42beb384a45c1e1fbd4a4b4095"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-archived-identity-tests.mjs",
+          "sha256": "83fe7d6839b6433a46770998ad68ef68826708885bf64a3042bb0eeb9c0c7f37"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-contract-tests.mjs",
+          "sha256": "3bb8159b86076922260e4a1f6814ed4d6a0fa5d574dc00802131390fc6bb78b1"
+        },
+        {
+          "path": "tests/helpers/reviewed-fin-wasm-installed-tests.mjs",
+          "sha256": "3679cfb721d149c5fd7ec86468520938b80354ef0f5425d7917deb38cd9fe736"
+        },
+        {
+          "path": "tests/helpers/structural-subtype-runtime-tests.mjs",
+          "sha256": "88813cee4d4b35c0266a6082fec98437d51f1e1eca1a69d841426e5a8fef443e"
+        },
+        {
+          "path": "tests/native-fin-callbacks.test.mjs",
+          "sha256": "03f844c73024832b123acc7b9751f90209f61b1ce710c5dee062624afc678303"
+        },
+        {
+          "path": "tests/native-fin-record-zero.test.mjs",
+          "sha256": "d583d9ebedf4c13e41d5e2d0eb793f5da95effcacf355d43cf90471a0f54f50f"
+        },
+        {
+          "path": "tests/native-fin-records.test.mjs",
+          "sha256": "07c96cd3ac7a855ab39f56dd2f589d7b8e0501ef755b1045827cbed0639d14a6"
+        },
+        {
+          "path": "tests/native-subtype.test.mjs",
+          "sha256": "ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc"
+        },
+        {
+          "path": "tests/retained-contract-tests.test.mjs",
+          "sha256": "352dfab65abdb2426d98dafb48b851fc7ad4b55a7a2d86e7081b83e8c28b04bd"
+        }
+      ],
+      "subject": "Merge Node retained-reader deferral [skip ci]"
+    },
+    {
+      "commit": "238c02004036390d1daf9b1e093acbcdf95e012a",
+      "parents": [
+        "1f6628ea59c27cb0f8e81a9d0e25ab0b78bbc1d4"
+      ],
+      "paths": [
+        {
+          "path": "tests/retained-contract-tests.test.mjs",
+          "sha256": "719e2a1dec17701db409429aae046e178be194f96170b4346c0940c17bcae0e8"
+        }
+      ],
+      "subject": "Guard native retained-reader closures [skip ci]"
+    },
+    {
+      "commit": "afbf9998eb32873fbd50d2f5b13ec93701cc3eb8",
+      "parents": [
+        "238c02004036390d1daf9b1e093acbcdf95e012a"
+      ],
+      "paths": [
+        {
+          "path": "tests/generic-records.test.mjs",
+          "sha256": "0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3"
+        },
+        {
+          "path": "tests/helpers/bounded-apt-tests.mjs",
+          "sha256": "345c9ec76beaa871518dddc35b7be9f526ae5b0f4b454b94c010e2949058104f"
+        },
+        {
+          "path": "tests/retained-contract-tests.test.mjs",
+          "sha256": "f974bc465c1b1705df4ffa90ca90b7692c7763ee08042f24028c87d287196110"
+        }
+      ],
+      "subject": "Defer browser install source history [skip ci]"
+    },
+    {
+      "commit": "1fa9c39e8d994847ff1c4ae70e21bda945ed82e3",
+      "parents": [
+        "afbf9998eb32873fbd50d2f5b13ec93701cc3eb8"
+      ],
+      "paths": [
+        {
+          "path": "tests/helpers/fin-nominal-refusals-tests.mjs",
+          "sha256": "e84ef3c3b5c80a2d32364108ce45cb3726e6f8eb09101e961941286207219b8a"
+        },
+        {
+          "path": "tests/helpers/native-fin-diagnostic-evidence-tests.mjs",
+          "sha256": "6673fb92b9e441f87e0b7476ab09d675a8fb879021234ded140ad5f806ab5774"
+        },
+        {
+          "path": "tests/helpers/native-fin-diagnostic-tests.mjs",
+          "sha256": "5ab58db5c688b028e6405cd87760ac954258ed56b0339bb8642e162a8f91fcfa"
+        },
+        {
+          "path": "tests/helpers/native-fin-nix-boundary-history-tests.mjs",
+          "sha256": "be93eb64b52513858f07f6b08342ee43acd27415a7d7d87a4418d91c8fbf8738"
+        },
+        {
+          "path": "tests/helpers/native-fin-nix-boundary-tests.mjs",
+          "sha256": "2af500ba0909a99c4024628b861052187083aeb9b95290c4c19027e3efd59681"
+        },
+        {
+          "path": "tests/helpers/native-fin-reply-promotion-current-tests.mjs",
+          "sha256": "1ca9baf7518bd0d19e78009974a448b56d1a92b0d152669e453f9d19de3f0e5d"
+        },
+        {
+          "path": "tests/helpers/native-fin-reply-promotion-tests.mjs",
+          "sha256": "aabb1ce960b2dc17075083c6f68bcbb5fddff741bcd29f4e0d7ad734ad4777d4"
+        },
+        {
+          "path": "tests/helpers/native-fin-reply-review-current-tests.mjs",
+          "sha256": "7ceba615ffd1071d201afdeaa2413eabeac45e55f7faaa923870f60bee8bf44f"
+        },
+        {
+          "path": "tests/helpers/native-fin-reply-review-tests.mjs",
+          "sha256": "eff8e966a352880a908078cb9f12ae26ffdea04d53210217e5eb7a605e8de5a7"
+        },
+        {
+          "path": "tests/native-fin-callbacks.test.mjs",
+          "sha256": "33f82d82cb53978735f990b3bd85e0cdd1d717eb8cc0c086446658804e530178"
+        },
+        {
+          "path": "tests/native-fin-records.test.mjs",
+          "sha256": "87ea3f60d0dfee7a761e89f60747cda946b1c559293718f8d1032d8969c55240"
+        },
+        {
+          "path": "tests/retained-contract-tests.test.mjs",
+          "sha256": "027fa7166cc5361d350c364afaec54f50f9921ea7accf19921c632082488fcd8"
+        }
+      ],
+      "subject": "Preserve eager native Fin contracts [skip ci]"
+    }
+  ],
+  "merge": {
+    "commit": "1f6628ea59c27cb0f8e81a9d0e25ab0b78bbc1d4",
+    "defaultRoute": "node",
+    "nativeExpectedDigests": [
+      {
+        "digests": [
+          "506e1c4fa7896637b54f74945955eb1731441a5e2aa044b7b4d758edb7450317"
+        ],
+        "path": "tests/retained-contract-tests.test.mjs"
+      }
+    ],
+    "nativeParentUpdates": [
+      {
+        "currentSha256": "352dfab65abdb2426d98dafb48b851fc7ad4b55a7a2d86e7081b83e8c28b04bd",
+        "edits": [
+          {
+            "current": "import { dirname, extname, join, normalize } from \"node:path\";\n",
+            "previous": "import { dirname, resolve } from \"node:path\";\n",
+            "start": 99
+          },
+          {
+            "current": "import ts from \"typescript\";\n",
+            "previous": "",
+            "start": 192
+          },
+          {
+            "current": "",
+            "previous": "const staticImports = source => {\n\tconst boundary = source.search(/^(?:await|class|const|export|function|let|test|var)\\b/gmu);\n\tconst header = boundary === -1 ? source : source.slice(0, boundary);\n\treturn [...header.matchAll(\n\t\t/^import\\s+(?:[^;]*?\\s+from\\s+)?[\"']([^\"']+)[\"'];/gmu\n\t)].map(match => match[1]).filter(specifier => specifier.startsWith(\".\"));\n};\nconst retainedPaths = source => [...source.matchAll(\n\t/[\"'`](docs\\/evidence\\/[^\"'`\\r\\n]+)[\"'`]/gu\n)].map(match => match[1]).filter(path => path.slice(\"docs/evidence/\".length)\n\t.includes(\"/\"));\nconst retainedReaders = async (entrypoints, overrides = new Map()) => {\n\tconst pending = entrypoints.map(path => resolve(path)), seen = new Set();\n\tconst readers = [];\n\twhile(pending.length > 0)\n\t{\n\t\tconst path = pending.pop();\n\t\tif(seen.has(path)) continue;\n\t\tseen.add(path);\n\t\tconst source = overrides.get(path) ?? await readFile(path, \"utf8\");\n\t\tconst retained = retainedPaths(source);\n\t\tif(retained.length > 0 && /(?:-tests|[.]test)[.]mjs$/u.test(path))\n\t\t\treaders.push({ path, retained });\n\t\tfor(const specifier of staticImports(source))\n\t\t{\n\t\t\tconst imported = resolve(dirname(path), specifier);\n\t\t\tpending.push(imported);\n\t\t}\n\t}\n\treturn readers;\n};\n",
+            "start": 442
+          },
+          {
+            "current": "// Retained-evidence readers open an archived family from the worktree. A\n// sparse consumer lane that reaches one of them through a static import fails\n// with ENOENT before any current-behavior test runs (run 42177405137 job\n// 127767402756), so every reader must sit behind a retained-contract loader.\nconst retainedReaderShapes = Object.freeze([\n\t/^const directory = \"docs\\/evidence\\/([A-Za-z0-9_-]+)\";$/gmu\n\t, /readFile\\(\\s*[\"'`]docs\\/evidence\\/([A-Za-z0-9_-]+)\\//gu\n\t, /^export const [A-Za-z]+ = \"docs\\/evidence\\/([A-Za-z0-9_-]+)\\/[^\"]+\";$/gmu\n\t, /^const [A-Za-z]+\\n?\\s*= \"docs\\/evidence\\/([A-Za-z0-9_-]+)\\/[^\"]+\";$/gmu\n]);\n// Loaders without a family are exact-history suites: they read their inputs\n// through Git and the milestone readers, never from the worktree.\nconst deferredRetainedLoaders = Object.freeze([\n\t{ parent: \"tests/helpers/reviewed-fin-wasm-installed-tests.mjs\"\n\t\t, module: \"./reviewed-fin-wasm-archived-identity-tests.mjs\"\n\t\t, family: \"reviewed-fin-npm-20261007\" }\n\t, { parent: \"tests/helpers/reviewed-fin-wasm-installed-tests.mjs\"\n\t\t, module: \"./reviewed-fin-wasm-evidence-tests.mjs\"\n\t\t, family: \"reviewed-fin-npm-20261007\" }\n\t, { parent: \"tests/helpers/reviewed-fin-wasm-installed-tests.mjs\"\n\t\t, module: \"./reviewed-fin-promotion-tests.mjs\"\n\t\t, family: \"reviewed-fin-hosts-20261007\" }\n\t, { parent: \"tests/generic-records-browser.test.mjs\"\n\t\t, module: \"./helpers/generic-record-browser-source-history-tests.mjs\" }\n\t, { parent: \"tests/generic-records-browser.test.mjs\"\n\t\t, module: \"./helpers/generic-record-browser-evidence-tests.mjs\"\n\t\t, family: \"generic-record-browser-20261008\" }\n\t, { parent: \"tests/generic-records-browser.test.mjs\"\n\t\t, module: \"./helpers/generic-record-browser-archive-source-history-tests.mjs\" }\n\t, { parent: \"tests/generic-records-browser.test.mjs\"\n\t\t, module: \"./helpers/browser-generic-promotion-source-history-tests.mjs\"\n\t\t, family: \"generic-record-browser-20261008\" }\n]);\nconst resolveSpecifier = (from, specifier) => normalize(join(dirname(from)\n\t, extname(specifier) === \"\" ? `${specifier}.mjs` : specifier));\nconst specifierCache = new Map();\n\n/**\n * Relative specifiers that load eagerly: import declarations and re-exports.\n * Dynamic `import()` calls, strings and comments never contribute.\n *\n * @param source - Module text.\n * @param path - Repository-relative module path.\n */\nconst staticSpecifiers = (source, path) => {\n\tconst key = `${path}\\u0000${source}`;\n\tif(specifierCache.has(key)) return specifierCache.get(key);\n\tconst file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true\n\t\t, ts.ScriptKind.JS);\n\tconst found = [];\n\tfor(const statement of file.statements)\n\t\tif((ts.isImportDeclaration(statement) || ts.isExportDeclaration(statement))\n\t\t\t&& statement.moduleSpecifier\n\t\t\t&& ts.isStringLiteralLike(statement.moduleSpecifier)\n\t\t\t&& /^\\.\\.?\\//u.test(statement.moduleSpecifier.text))\n\t\t\tfound.push(statement.moduleSpecifier.text);\n\tspecifierCache.set(key, found);\n\treturn found;\n};\n\n/**\n * Every module a lane loads eagerly from its whole-file test entries.\n *\n * @param entries - Repository-relative test entry paths.\n * @param overrides - Module sources substituted for the worktree's files.\n */\nconst staticModuleClosure = async (entries, overrides = new Map()) => {\n\tconst closure = new Map();\n\tconst queue = [...entries];\n\twhile(queue.length > 0)\n\t{\n\t\tconst path = queue.shift();\n\t\tif(closure.has(path)) continue;\n\t\tconst source = overrides.has(path) ? overrides.get(path)\n\t\t\t: await readFile(path, \"utf8\");\n\t\tclosure.set(path, source);\n\t\tfor(const specifier of staticSpecifiers(source, path))\n\t\t\tqueue.push(resolveSpecifier(path, specifier));\n\t}\n\treturn closure;\n};\n\n/**\n * Test files one job runs whole, without a test-name pattern.\n *\n * @param job - Workflow job source.\n */\nconst wholeFileTestEntries = job => {\n\tconst entries = new Set();\n\tfor(const line of job.replace(/\\\\\\n\\s*/gu, \" \").split(\"\\n\"))\n\t{\n\t\tif(!/\\bnode --test\\b/u.test(line) || line.includes(\"--test-name-pattern\")\n\t\t\t|| line.includes(\"consumer-ci.mjs\")) continue;\n\t\tfor(const match of line.matchAll(/tests\\/[A-Za-z0-9_.-]+\\.test\\.mjs/gu))\n\t\t\tentries.add(match[0]);\n\t}\n\treturn [...entries].sort();\n};\n\n/**\n * Assert that a deferred lane's static closure opens no retained family and\n * that every retained reader stays reachable only through a loader.\n *\n * @param closure - Static module closure of the lane's whole-file entries.\n */\nconst assertDeferredLaneClosure = closure => {\n\tconst readers = [];\n\tfor(const [path, source] of closure)\n\t\tfor(const shape of retainedReaderShapes)\n\t\t\tfor(const match of source.matchAll(shape))\n\t\t\t\treaders.push(`${path} -> docs/evidence/${match[1]}`);\n\tassert.deepEqual(readers, []);\n\tfor(const loader of deferredRetainedLoaders)\n",
+            "previous": "test(\"deferred native consumer entrypoints have no static retained-evidence readers\", async () => {\n\tconst entrypoints = [\n\t\t\"tests/native-fin-records.test.mjs\"\n\t\t, \"tests/native-fin-record-zero.test.mjs\"\n\t\t, \"tests/native-fin-callbacks.test.mjs\"\n\t\t, \"tests/native-subtype.test.mjs\"\n\t];\n\tassert.deepEqual(await retainedReaders(entrypoints), []);\n\tconst counts = [];\n\tfor(const path of entrypoints)\n",
+            "start": 2406
+          },
+          {
+            "current": "\t\tconst parent = closure.get(loader.parent);\n\t\tassert.equal(typeof parent, \"string\", loader.parent);\n\t\tconst registration = parent.indexOf(\"await registerRetainedContractTests([\");\n\t\tconst entry = parent.indexOf(`() => import(\"${loader.module}\")`);\n\t\tassert.ok(registration >= 0 && entry > registration\n\t\t\t, `${loader.parent}: ${loader.module}`);\n\t\tassert.equal(parent.includes(`import \"${loader.module}\";`), false\n\t\t\t, `${loader.parent}: ${loader.module}`);\n\t\tassert.equal(closure.has(resolveSpecifier(loader.parent, loader.module))\n\t\t\t, false, loader.module);\n",
+            "previous": "\t\tconst source = await readFile(path, \"utf8\");\n\t\tcounts.push(source.match(/\\(\\) => import\\(\"[.]\\/helpers\\//gu)?.length ?? 0);\n",
+            "start": 7134
+          },
+          {
+            "current": "};\n",
+            "previous": "\tassert.deepEqual(counts, [9, 2, 14, 66]);\n",
+            "start": 7699
+          },
+          {
+            "current": "test(\"the Node and browser consumer lane reaches no retained-evidence reader under deferred scope\", async () => {\n\tconst consumers = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tconst job = workflowJob(consumers, \"node-consumers\");\n\tassert.match(job, /LEAN_BRIDGE_RETAINED_CONTRACTS: deferred/u);\n\tconst entries = wholeFileTestEntries(job);\n\tfor(const entry of [\"tests/generic-records.test.mjs\", \"tests/generic-records-browser.test.mjs\"])\n\t\tassert.ok(entries.includes(entry), entry);\n\tconst closure = await staticModuleClosure(entries);\n\tassert.ok(closure.size > 1000);\n\tassertDeferredLaneClosure(closure);\n\tfor(const loader of deferredRetainedLoaders)\n\t{\n\t\tconst target = resolveSpecifier(loader.parent, loader.module);\n\t\tconst retained = await staticModuleClosure([target]);\n\t\tconst families = [...retained.values()].flatMap(source =>\n\t\t\tretainedReaderShapes.flatMap(shape => [...source.matchAll(shape)].map(match => match[1])));\n\t\tif(loader.family === undefined) assert.deepEqual(families, [], loader.module);\n\t\telse assert.ok(families.includes(loader.family), `${loader.module}: ${loader.family}`);\n\t\tconst parent = closure.get(loader.parent);\n\t\tconst eager = new Map([[loader.parent, `import \"${loader.module}\";\\n${parent}`]]);\n\t\tawait assert.rejects(async () => assertDeferredLaneClosure(\n\t\t\tawait staticModuleClosure(entries, eager)), { name: \"AssertionError\" }, `eager ${loader.module}`);\n\t\tconst dropped = new Map([[loader.parent\n\t\t\t, parent.replace(`() => import(\"${loader.module}\")`, \"() => Promise.resolve()\")]]);\n\t\tassert.notEqual(dropped.get(loader.parent), parent);\n\t\tawait assert.rejects(async () => assertDeferredLaneClosure(\n\t\t\tawait staticModuleClosure(entries, dropped)), { name: \"AssertionError\" }, `dropped ${loader.module}`);\n\t}\n",
+            "previous": "\t// Prove the closure check is not vacuous: restoring one archived suite to the\n\t// static graph must identify its dated retained-evidence directory.\n\tconst path = resolve(\"tests/native-fin-record-zero.test.mjs\");\n\tconst source = await readFile(path, \"utf8\");\n\tconst mutant = `import \"./helpers/fin-record-zero-archive-tests.mjs\";\\n${source}`;\n\tconst readers = await retainedReaders([path], new Map([[path, mutant]]));\n\tassert.ok(readers.some(reader => reader.retained.some(value =>\n\t\tvalue.startsWith(\"docs/evidence/fin-record-zero-native-20261010/\"))));\n",
+            "start": 7703
+          }
+        ],
+        "path": "tests/retained-contract-tests.test.mjs",
+        "previousSha256": "506e1c4fa7896637b54f74945955eb1731441a5e2aa044b7b4d758edb7450317"
+      }
+    ],
+    "parentSelection": [
+      {
+        "baseSha256": null,
+        "mergeSha256": "6a08a09e6566360af9796906b5d1297a29c0a0707c6dcf35439a46cd9347c3cc",
+        "nativeParentSha256": null,
+        "nodeParentSha256": "6a08a09e6566360af9796906b5d1297a29c0a0707c6dcf35439a46cd9347c3cc",
+        "path": "docs/evidence/node-consumer-retained-reader-deferral-source-history-20261106.json",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": "a32f749e110db9f4bdf1b4ee62bf989a3c08611e9a82716cd36355625e333930",
+        "mergeSha256": "b1ee35e4797c2f989b00c454418322bb965110330ddbebab47e29d1c1ef9f1c6",
+        "nativeParentSha256": "a32f749e110db9f4bdf1b4ee62bf989a3c08611e9a82716cd36355625e333930",
+        "nodeParentSha256": "b1ee35e4797c2f989b00c454418322bb965110330ddbebab47e29d1c1ef9f1c6",
+        "path": "docs/type-surface.v1.json",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": null,
+        "mergeSha256": "1c87800fd3747e29d9afc4ab1b23af6af432f929543ec3563c98f74547f4f29b",
+        "nativeParentSha256": null,
+        "nodeParentSha256": "1c87800fd3747e29d9afc4ab1b23af6af432f929543ec3563c98f74547f4f29b",
+        "path": "scripts/update-node-consumer-retained-reader-deferral-source-history.mjs",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": "4c26f9a0972b2b6e984f6c6e24d150362b8558e8bc4e486f5e70c8b0c5420788",
+        "mergeSha256": "6e018c0bac711be3d4418d7cc13950fa99b107491f4dfaecd7dc6fbba1eb2fcd",
+        "nativeParentSha256": "4c26f9a0972b2b6e984f6c6e24d150362b8558e8bc4e486f5e70c8b0c5420788",
+        "nodeParentSha256": "6e018c0bac711be3d4418d7cc13950fa99b107491f4dfaecd7dc6fbba1eb2fcd",
+        "path": "tests/checked-javascript-partition-11.test.mjs",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": "24cefdba316c1ff498f95622cd467be3b3fce7309bbd09cce83d30d95d75f11c",
+        "mergeSha256": "b967463e0ee733d5e04f491034a5180a55b29639d379a18f4e3199c463f2d002",
+        "nativeParentSha256": "24cefdba316c1ff498f95622cd467be3b3fce7309bbd09cce83d30d95d75f11c",
+        "nodeParentSha256": "b967463e0ee733d5e04f491034a5180a55b29639d379a18f4e3199c463f2d002",
+        "path": "tests/generic-records-browser.test.mjs",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": "f7b57cfb2ace0c3f675e2e0e43fbde54bb21cb728c2805b7e80140e216722dcd",
+        "mergeSha256": "4a5029ebc610c857100b0828a7c792ff542eb9bb598e692fe106de0346d9c632",
+        "nativeParentSha256": "4a5029ebc610c857100b0828a7c792ff542eb9bb598e692fe106de0346d9c632",
+        "nodeParentSha256": "f7b57cfb2ace0c3f675e2e0e43fbde54bb21cb728c2805b7e80140e216722dcd",
+        "path": "tests/helpers/fin-record-wit-format-tests.mjs",
+        "selectedParent": "native"
+      },
+      {
+        "baseSha256": "db84403f471529e8fc03fda5c32bfaceb68fafdab956504dca6b35e48abe92c2",
+        "mergeSha256": "dbde72a948e6dc5ef145daeb518a88144a1a7bd66627fc253e8a5439d1a7e89a",
+        "nativeParentSha256": "dbde72a948e6dc5ef145daeb518a88144a1a7bd66627fc253e8a5439d1a7e89a",
+        "nodeParentSha256": "db84403f471529e8fc03fda5c32bfaceb68fafdab956504dca6b35e48abe92c2",
+        "path": "tests/helpers/fin-record-zero-ci-tests.mjs",
+        "selectedParent": "native"
+      },
+      {
+        "baseSha256": "9d89640d66cc117de58766563cf796a5abb29d008da020523150bbd7c2c1711f",
+        "mergeSha256": "4dde168f530139fa636e69a07c3eb402992584c25d8e477a184fe62daa919630",
+        "nativeParentSha256": "9d89640d66cc117de58766563cf796a5abb29d008da020523150bbd7c2c1711f",
+        "nodeParentSha256": "4dde168f530139fa636e69a07c3eb402992584c25d8e477a184fe62daa919630",
+        "path": "tests/helpers/fin-refinement-source-history.mjs",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": null,
+        "mergeSha256": "dec58f11700672244c21d5a31f50e67c030279d3fcddef6732bfcf8fde06d1d4",
+        "nativeParentSha256": null,
+        "nodeParentSha256": "dec58f11700672244c21d5a31f50e67c030279d3fcddef6732bfcf8fde06d1d4",
+        "path": "tests/helpers/node-consumer-retained-reader-deferral-source-history-tests.mjs",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": null,
+        "mergeSha256": "0cdb55a5260e70205fc020ff63797870ca8caa42beb384a45c1e1fbd4a4b4095",
+        "nativeParentSha256": null,
+        "nodeParentSha256": "0cdb55a5260e70205fc020ff63797870ca8caa42beb384a45c1e1fbd4a4b4095",
+        "path": "tests/helpers/node-consumer-retained-reader-deferral-source-history.mjs",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": null,
+        "mergeSha256": "83fe7d6839b6433a46770998ad68ef68826708885bf64a3042bb0eeb9c0c7f37",
+        "nativeParentSha256": null,
+        "nodeParentSha256": "83fe7d6839b6433a46770998ad68ef68826708885bf64a3042bb0eeb9c0c7f37",
+        "path": "tests/helpers/reviewed-fin-wasm-archived-identity-tests.mjs",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": "420307f26ef0d2a9554027b80030da2d1133026491e3c7ac9bc3da9b4d8b3dba",
+        "mergeSha256": "3bb8159b86076922260e4a1f6814ed4d6a0fa5d574dc00802131390fc6bb78b1",
+        "nativeParentSha256": "420307f26ef0d2a9554027b80030da2d1133026491e3c7ac9bc3da9b4d8b3dba",
+        "nodeParentSha256": "3bb8159b86076922260e4a1f6814ed4d6a0fa5d574dc00802131390fc6bb78b1",
+        "path": "tests/helpers/reviewed-fin-wasm-contract-tests.mjs",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": "cc0091f89787963c577ae80b15654311f31d10a15bcb5c63982d06c84b2fdf57",
+        "mergeSha256": "3679cfb721d149c5fd7ec86468520938b80354ef0f5425d7917deb38cd9fe736",
+        "nativeParentSha256": "cc0091f89787963c577ae80b15654311f31d10a15bcb5c63982d06c84b2fdf57",
+        "nodeParentSha256": "3679cfb721d149c5fd7ec86468520938b80354ef0f5425d7917deb38cd9fe736",
+        "path": "tests/helpers/reviewed-fin-wasm-installed-tests.mjs",
+        "selectedParent": "node"
+      },
+      {
+        "baseSha256": "46eba85df7a854ca15e4df74a52aeb2534c8bc014d7445a1687a8ec2438cfc72",
+        "mergeSha256": "88813cee4d4b35c0266a6082fec98437d51f1e1eca1a69d841426e5a8fef443e",
+        "nativeParentSha256": "88813cee4d4b35c0266a6082fec98437d51f1e1eca1a69d841426e5a8fef443e",
+        "nodeParentSha256": "46eba85df7a854ca15e4df74a52aeb2534c8bc014d7445a1687a8ec2438cfc72",
+        "path": "tests/helpers/structural-subtype-runtime-tests.mjs",
+        "selectedParent": "native"
+      },
+      {
+        "baseSha256": "ff01b71de2b912d0666b9d5a43bba6871939cba92643d4bf591ab9fa29b78fcf",
+        "mergeSha256": "03f844c73024832b123acc7b9751f90209f61b1ce710c5dee062624afc678303",
+        "nativeParentSha256": "03f844c73024832b123acc7b9751f90209f61b1ce710c5dee062624afc678303",
+        "nodeParentSha256": "ff01b71de2b912d0666b9d5a43bba6871939cba92643d4bf591ab9fa29b78fcf",
+        "path": "tests/native-fin-callbacks.test.mjs",
+        "selectedParent": "native"
+      },
+      {
+        "baseSha256": "a605660310fcf609e7a8b0edb2102828e60dd824b0e9071a71d528ad4243909f",
+        "mergeSha256": "d583d9ebedf4c13e41d5e2d0eb793f5da95effcacf355d43cf90471a0f54f50f",
+        "nativeParentSha256": "d583d9ebedf4c13e41d5e2d0eb793f5da95effcacf355d43cf90471a0f54f50f",
+        "nodeParentSha256": "a605660310fcf609e7a8b0edb2102828e60dd824b0e9071a71d528ad4243909f",
+        "path": "tests/native-fin-record-zero.test.mjs",
+        "selectedParent": "native"
+      },
+      {
+        "baseSha256": "b562eccb0002e8e97991f1c9c9fabeeb60cc7913b14db54a0d226aad2930c6c2",
+        "mergeSha256": "07c96cd3ac7a855ab39f56dd2f589d7b8e0501ef755b1045827cbed0639d14a6",
+        "nativeParentSha256": "07c96cd3ac7a855ab39f56dd2f589d7b8e0501ef755b1045827cbed0639d14a6",
+        "nodeParentSha256": "b562eccb0002e8e97991f1c9c9fabeeb60cc7913b14db54a0d226aad2930c6c2",
+        "path": "tests/native-fin-records.test.mjs",
+        "selectedParent": "native"
+      },
+      {
+        "baseSha256": "0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958",
+        "mergeSha256": "ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc",
+        "nativeParentSha256": "ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc",
+        "nodeParentSha256": "0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958",
+        "path": "tests/native-subtype.test.mjs",
+        "selectedParent": "native"
+      },
+      {
+        "baseSha256": "d1542e707e3ec8032bab226f6fffbdc8d7b9a1c0fe14e053abcfcd19cd3a7dd9",
+        "mergeSha256": "352dfab65abdb2426d98dafb48b851fc7ad4b55a7a2d86e7081b83e8c28b04bd",
+        "nativeParentSha256": "506e1c4fa7896637b54f74945955eb1731441a5e2aa044b7b4d758edb7450317",
+        "nodeParentSha256": "352dfab65abdb2426d98dafb48b851fc7ad4b55a7a2d86e7081b83e8c28b04bd",
+        "path": "tests/retained-contract-tests.test.mjs",
+        "selectedParent": "node"
+      }
+    ],
+    "parents": {
+      "native": "50a36dde0a7486c60e84b86a4f70600ef739f998",
+      "node": "3c90933657db89b638687e4df425485c106ebeb1"
+    }
+  },
+  "mergeCommit": "1f6628ea59c27cb0f8e81a9d0e25ab0b78bbc1d4",
+  "mergeResolution": "The merge kept every path at exactly one parent: the seven native-branch paths at 50a36dd, the twelve Node-deferral paths at 3c90933, and tests/retained-contract-tests.test.mjs at 3c90933, dropping the native branch's first regex guard, which re-entered as the AST guard in 238c020 and was later superseded by deferred-lane-oracle-guard-v1.",
+  "milestone": "common-native-deferral-lineage-v1",
+  "nativeBranchCommit": "50a36dde0a7486c60e84b86a4f70600ef739f998",
+  "nodeParentCommit": "3c90933657db89b638687e4df425485c106ebeb1",
+  "oracleSealCommit": "66168b1918d1f9da0eb19fcf9f0da60dd7599650",
+  "pinRepair": {
+    "commit": "f93a6ff2787718735cd4cdc0e5c79e46224ed163",
+    "refreshed": {
+      "tests/generic-records.test.mjs": {
+        "count": 12,
+        "current": "0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3",
+        "previous": "5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543"
+      },
+      "tests/native-subtype.test.mjs": {
+        "count": 8,
+        "current": "ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc",
+        "previous": "0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958"
+      }
+    },
+    "updates": [
+      {
+        "currentSha256": "2d945ddc932a593d2c1a858a55d6763ec3b86197e7cd2c5a90788ae0d1fa7bc4",
+        "edits": [
+          {
+            "current": "          \"sha256\": \"ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc\"\n",
+            "previous": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+            "start": 44675
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1467246
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1471181
+          },
+          {
+            "current": "          \"sha256\": \"ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc\"\n",
+            "previous": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+            "start": 1545411
+          },
+          {
+            "current": "          \"sha256\": \"ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc\"\n",
+            "previous": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+            "start": 1549543
+          },
+          {
+            "current": "          \"sha256\": \"ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc\"\n",
+            "previous": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+            "start": 1553187
+          },
+          {
+            "current": "          \"sha256\": \"ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc\"\n",
+            "previous": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+            "start": 1557183
+          },
+          {
+            "current": "          \"sha256\": \"ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc\"\n",
+            "previous": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+            "start": 1560800
+          },
+          {
+            "current": "          \"sha256\": \"ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc\"\n",
+            "previous": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+            "start": 1564422
+          },
+          {
+            "current": "          \"sha256\": \"ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc\"\n",
+            "previous": "          \"sha256\": \"0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958\"\n",
+            "start": 1568048
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1571052
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1575826
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1580381
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1585362
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1590250
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1594624
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1598996
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1603370
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1607961
+          },
+          {
+            "current": "          \"sha256\": \"0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3\"\n",
+            "previous": "          \"sha256\": \"5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543\"\n",
+            "start": 1949235
+          }
+        ],
+        "path": "docs/type-surface.v1.json",
+        "previousSha256": "b1ee35e4797c2f989b00c454418322bb965110330ddbebab47e29d1c1ef9f1c6"
+      }
+    ]
+  },
+  "pinRepairCommit": "f93a6ff2787718735cd4cdc0e5c79e46224ed163",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "scope": "Authenticate the native consumer deferral and its lineage without conflating it with current-expectation repairs: the native branch over the common base with every edit classified, the dual-parent merge with the sealed Node deferral and digest-selected parent routing, the AST guard, the browser-install loader and the current/retained split, the refresh of exactly twenty live pins, and the newest-first registration. The sealed Node deferral record keeps ownership of its own transitions. No product, workflow, support cell, observation or evidence archive changes.",
+  "splitCommit": "1fa9c39e8d994847ff1c4ae70e21bda945ed82e3",
+  "stageA": {
+    "editClassification": [
+      {
+        "edits": [
+          {
+            "kind": "deferral",
+            "start": 567
+          }
+        ],
+        "path": "tests/helpers/fin-record-wit-format-tests.mjs"
+      },
+      {
+        "edits": [
+          {
+            "kind": "deferral",
+            "start": 296
+          },
+          {
+            "kind": "staleHistoryCheck",
+            "start": 919
+          },
+          {
+            "kind": "staleHistoryCheck",
+            "start": 1038
+          }
+        ],
+        "path": "tests/helpers/fin-record-zero-ci-tests.mjs"
+      },
+      {
+        "edits": [
+          {
+            "kind": "expectation",
+            "start": 3533
+          },
+          {
+            "kind": "expectation",
+            "start": 5557
+          },
+          {
+            "kind": "expectation",
+            "start": 6361
+          }
+        ],
+        "path": "tests/helpers/structural-subtype-runtime-tests.mjs"
+      },
+      {
+        "edits": [
+          {
+            "kind": "deferral",
+            "start": 343
+          },
+          {
+            "kind": "deferral",
+            "start": 442
+          },
+          {
+            "kind": "deferral",
+            "start": 492
+          },
+          {
+            "kind": "deferral",
+            "start": 2799
+          },
+          {
+            "kind": "expectation",
+            "start": 21491
+          }
+        ],
+        "path": "tests/native-fin-callbacks.test.mjs"
+      },
+      {
+        "edits": [
+          {
+            "kind": "deferral",
+            "start": 201
+          },
+          {
+            "kind": "deferral",
+            "start": 250
+          }
+        ],
+        "path": "tests/native-fin-record-zero.test.mjs"
+      },
+      {
+        "edits": [
+          {
+            "kind": "deferral",
+            "start": 257
+          },
+          {
+            "kind": "deferral",
+            "start": 309
+          },
+          {
+            "kind": "deferral",
+            "start": 2037
+          },
+          {
+            "kind": "expectation",
+            "start": 7316
+          },
+          {
+            "kind": "expectation",
+            "start": 7723
+          },
+          {
+            "kind": "expectation",
+            "start": 7849
+          },
+          {
+            "kind": "expectation",
+            "start": 8091
+          },
+          {
+            "kind": "expectation",
+            "start": 9007
+          }
+        ],
+        "path": "tests/native-fin-records.test.mjs"
+      },
+      {
+        "edits": [
+          {
+            "kind": "deferral",
+            "start": 1743
+          },
+          {
+            "kind": "deferral",
+            "start": 1946
+          },
+          {
+            "kind": "deferral",
+            "start": 2003
+          },
+          {
+            "kind": "deferral",
+            "start": 2178
+          },
+          {
+            "kind": "deferral",
+            "start": 2275
+          },
+          {
+            "kind": "deferral",
+            "start": 2328
+          },
+          {
+            "kind": "deferral",
+            "start": 2672
+          },
+          {
+            "kind": "expectation",
+            "start": 13011
+          }
+        ],
+        "path": "tests/native-subtype.test.mjs"
+      },
+      {
+        "edits": [
+          {
+            "kind": "guard",
+            "start": 99
+          },
+          {
+            "kind": "guard",
+            "start": 396
+          },
+          {
+            "kind": "guard",
+            "start": 3568
+          }
+        ],
+        "path": "tests/retained-contract-tests.test.mjs"
+      }
+    ],
+    "implementationCommit": "50a36dde0a7486c60e84b86a4f70600ef739f998",
+    "predecessorCommit": "48db6f6d05cffe6deb9372ee97b544e00e036c4c",
+    "updates": [
+      {
+        "currentSha256": "4a5029ebc610c857100b0828a7c792ff542eb9bb598e692fe106de0346d9c632",
+        "edits": [
+          {
+            "current": "",
+            "previous": "import \"./fin-record-wit-format-source-history-tests.mjs\";\n",
+            "start": 567
+          }
+        ],
+        "path": "tests/helpers/fin-record-wit-format-tests.mjs",
+        "previousSha256": "f7b57cfb2ace0c3f675e2e0e43fbde54bb21cb728c2805b7e80140e216722dcd"
+      },
+      {
+        "currentSha256": "dbde72a948e6dc5ef145daeb518a88144a1a7bd66627fc253e8a5439d1a7e89a",
+        "edits": [
+          {
+            "current": "import { assertFinRecordZeroWorkflow, finRecordZeroCiBlock, finRecordZeroCiCheck, finRecordZeroCiInvocation, finRecordZeroCiSelections } from \"./fin-record-zero-ci.mjs\";\n",
+            "previous": "import { assertFinRecordZeroWorkflow, disableFinRecordZeroWorkflow, enableFinRecordZeroWorkflow, finRecordZeroCiBlock, finRecordZeroCiCheck, finRecordZeroCiInvocation, finRecordZeroCiSelections } from \"./fin-record-zero-ci.mjs\";\nimport { beforeFinZeroCiSource } from \"./fin-record-zero-ci-history.mjs\";\nimport { beforePhpWasmDirectFinSource } from \"./php-wasm-fin-direct-history.mjs\";\n",
+            "start": 296
+          },
+          {
+            "current": "\t\tconst workflow = await readFile(\".github/workflows/\" + name, \"utf8\");\n",
+            "previous": "\t\tconst path = \".github/workflows/\" + name, workflow = beforePhpWasmDirectFinSource(path, await readFile(path, \"utf8\"));\n",
+            "start": 919
+          },
+          {
+            "current": "",
+            "previous": "\t\tconst previous = beforeFinZeroCiSource(path, workflow);\n\t\tassert.notEqual(previous, workflow);\n\t\tassert.equal(disableFinRecordZeroWorkflow(workflow, name), previous);\n\t\tassert.equal(enableFinRecordZeroWorkflow(previous, name), workflow);\n",
+            "start": 1038
+          }
+        ],
+        "path": "tests/helpers/fin-record-zero-ci-tests.mjs",
+        "previousSha256": "db84403f471529e8fc03fda5c32bfaceb68fafdab956504dca6b35e48abe92c2"
+      },
+      {
+        "currentSha256": "88813cee4d4b35c0266a6082fec98437d51f1e1eca1a69d841426e5a8fef443e",
+        "edits": [
+          {
+            "current": "\tassert.throws(() => validateNativeType({ kind: \"callback\", parameters: [one(\"list\", sub())], result: nat, abi: heap }, 0, false, \"parameter\"), /invalid Subtype refinement/);\n",
+            "previous": "\tassert.throws(() => validateNativeType({ kind: \"callback\", parameters: [one(\"list\", sub())], result: nat, abi: heap }, 0, false, \"parameter\"), /Subtype refinements require/);\n",
+            "start": 3533
+          },
+          {
+            "current": "\tconst result = generateNativeLeanAdapters(model(nat, one(\"array\", one(\"option\", sub(null))))).leanSource;\n\tassert.match(result, /\\.map \\(fun _bridgeValue0 => \\(\\(_bridgeValue0\\)\\.map \\(fun _bridgeValue1 => \\(_root_\\.Subtype\\.val \\(_bridgeValue1\\)\\)\\)\\)\\)/);\n",
+            "previous": "\tconst result = generateNativeLeanAdapters(model(nat, one(\"array\", one(\"option\", sub())))).leanSource;\n\tassert.match(result, /\\.map \\(fun _bridgeValue0 => \\(\\(_bridgeValue0\\)\\.map \\(fun _bridgeValue1 => \\(_bridgeValue1\\)\\.val\\)\\)\\)/);\n",
+            "start": 5557
+          },
+          {
+            "current": "\tassert.ok(body.indexOf(`${item.symbol}_refinement_0_0_0_1_1(`) < body.indexOf(`lean_object *_lb_checked = ${item.symbol}(`));\n",
+            "previous": "\tassert.ok(body.indexOf(`${item.symbol}_refinement_0_0_0_1_1(`) < body.indexOf(`lean_object *checked = ${item.symbol}(`));\n",
+            "start": 6361
+          }
+        ],
+        "path": "tests/helpers/structural-subtype-runtime-tests.mjs",
+        "previousSha256": "46eba85df7a854ca15e4df74a52aeb2534c8bc014d7445a1687a8ec2438cfc72"
+      },
+      {
+        "currentSha256": "03f844c73024832b123acc7b9751f90209f61b1ce710c5dee062624afc678303",
+        "edits": [
+          {
+            "current": "",
+            "previous": "import \"./helpers/native-fin-callback-evidence-tests.mjs\";\nimport \"./helpers/native-fin-callback-archive-source-history-tests.mjs\";\nimport \"./helpers/callback-code-ci-repair-source-history-tests.mjs\";\nimport \"./helpers/native-fin-callback-admission-source-history-tests.mjs\";\n",
+            "start": 343
+          },
+          {
+            "current": "",
+            "previous": "import \"./helpers/native-fin-reply-evidence-tests.mjs\";\nimport \"./helpers/native-fin-reply-archive-source-history-tests.mjs\";\nimport \"./helpers/native-fin-reply-promotion-tests.mjs\";\nimport \"./helpers/native-fin-reply-promotion-source-history-tests.mjs\";\n",
+            "start": 442
+          },
+          {
+            "current": "import { registerRetainedContractTests } from \"./helpers/retained-contract-tests.mjs\";\n",
+            "previous": "import \"./helpers/native-fin-reply-source-history-tests.mjs\";\nimport \"./helpers/native-reply-symbol-fix-source-history-tests.mjs\";\nimport \"./helpers/native-fin-reply-review-tests.mjs\";\nimport \"./helpers/native-reply-review-source-history-tests.mjs\";\nimport \"./helpers/native-fin-reply-refusal-evidence-tests.mjs\";\nimport \"./helpers/native-reply-refusal-source-history-tests.mjs\";\n",
+            "start": 492
+          },
+          {
+            "current": "await registerRetainedContractTests([\n\t() => import(\"./helpers/native-fin-callback-evidence-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-callback-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/callback-code-ci-repair-source-history-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-callback-admission-source-history-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-reply-evidence-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-reply-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-reply-promotion-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-reply-promotion-source-history-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-reply-source-history-tests.mjs\")\n\t, () => import(\"./helpers/native-reply-symbol-fix-source-history-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-reply-review-tests.mjs\")\n\t, () => import(\"./helpers/native-reply-review-source-history-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-reply-refusal-evidence-tests.mjs\")\n\t, () => import(\"./helpers/native-reply-refusal-source-history-tests.mjs\")\n]);\n\n",
+            "previous": "",
+            "start": 2799
+          },
+          {
+            "current": "\t\t, [\"a host callback's Subtype result\", { reply: [finCallback([nat], replySubtype), nat] }, true, /checked Subtype refinements require a top-level or structural-container parameter or result/u]\n\t\t, [\"a host callback's optional Subtype result\", { reply: [finCallback([nat], { kind: \"option\", element: replySubtype, abi: replyHeap }), nat] }, true, /checked Subtype refinements require a top-level or structural-container parameter or result/u]\n",
+            "previous": "\t\t, [\"a host callback's Subtype result\", { reply: [finCallback([nat], replySubtype), nat] }, true, /Subtype refinements require a top-level or structural-container native parameter or result/u]\n\t\t, [\"a host callback's optional Subtype result\", { reply: [finCallback([nat], { kind: \"option\", element: replySubtype, abi: replyHeap }), nat] }, true, /Subtype refinements require a top-level or structural-container native parameter or result/u]\n",
+            "start": 21491
+          }
+        ],
+        "path": "tests/native-fin-callbacks.test.mjs",
+        "previousSha256": "ff01b71de2b912d0666b9d5a43bba6871939cba92643d4bf591ab9fa29b78fcf"
+      },
+      {
+        "currentSha256": "d583d9ebedf4c13e41d5e2d0eb793f5da95effcacf355d43cf90471a0f54f50f",
+        "edits": [
+          {
+            "current": "",
+            "previous": "import \"./helpers/fin-record-zero-archive-tests.mjs\";\n",
+            "start": 201
+          },
+          {
+            "current": "import { registerRetainedContractTests } from \"./helpers/retained-contract-tests.mjs\";\n\nawait registerRetainedContractTests([\n\t() => import(\"./helpers/fin-record-zero-archive-tests.mjs\")\n\t, () => import(\"./helpers/fin-record-zero-ci-history-tests.mjs\")\n]);\n",
+            "previous": "import \"./helpers/fin-record-zero-ci-history-tests.mjs\";\n",
+            "start": 250
+          }
+        ],
+        "path": "tests/native-fin-record-zero.test.mjs",
+        "previousSha256": "a605660310fcf609e7a8b0edb2102828e60dd824b0e9071a71d528ad4243909f"
+      },
+      {
+        "currentSha256": "07c96cd3ac7a855ab39f56dd2f589d7b8e0501ef755b1045827cbed0639d14a6",
+        "edits": [
+          {
+            "current": "",
+            "previous": "import \"./helpers/fin-nominal-refusals-tests.mjs\";\nimport \"./helpers/fin-nominal-refusal-history-tests.mjs\";\nimport \"./helpers/native-fin-records-source-history-tests.mjs\";\nimport \"./helpers/fin-record-evidence-tests.mjs\";\nimport \"./helpers/native-fin-promotion-tests.mjs\";\n",
+            "start": 257
+          },
+          {
+            "current": "import { registerRetainedContractTests } from \"./helpers/retained-contract-tests.mjs\";\n",
+            "previous": "import \"./helpers/fin-wit-record-evidence-tests.mjs\";\nimport \"./helpers/native-fin-diagnostic-tests.mjs\";\nimport \"./helpers/fin-record-review-omission-history-tests.mjs\";\n",
+            "start": 309
+          },
+          {
+            "current": "await registerRetainedContractTests([\n\t() => import(\"./helpers/fin-nominal-refusals-tests.mjs\")\n\t, () => import(\"./helpers/fin-nominal-refusal-history-tests.mjs\")\n\t, () => import(\"./helpers/fin-record-wit-format-source-history-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-records-source-history-tests.mjs\")\n\t, () => import(\"./helpers/fin-record-evidence-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-promotion-tests.mjs\")\n\t, () => import(\"./helpers/fin-wit-record-evidence-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-diagnostic-tests.mjs\")\n\t, () => import(\"./helpers/fin-record-review-omission-history-tests.mjs\")\n]);\n\n",
+            "previous": "",
+            "start": 2037
+          },
+          {
+            "current": "\tordered(call(\"nest_sum\"), \"_check(arg0, &_lb_budget)\"\n",
+            "previous": "\tordered(call(\"nest_sum\"), \"_check(arg0, &budget)\"\n",
+            "start": 7316
+          },
+          {
+            "current": "\t\t, \"lean_object *_lb_checked = \", \"_in(arg0)\");\n",
+            "previous": "\t\t, \"lean_object *checked = \", \"_in(arg0)\");\n",
+            "start": 7723
+          },
+          {
+            "current": "\tordered(call(\"late_sum\"), \"_check(arg0, &_lb_budget)\", \"lb_fin_below((&arg0->digit)->data\", \"lean_object *_lb_checked = \", \"_in(arg0)\");\n",
+            "previous": "\tordered(call(\"late_sum\"), \"_check(arg0, &budget)\", \"lb_fin_below((&arg0->digit)->data\", \"lean_object *checked = \", \"_in(arg0)\");\n",
+            "start": 7849
+          },
+          {
+            "current": "\tordered(call(\"shape_size\"), \"if (arg0->kind == 0u) {\", \"(&arg0->cases.circle.radius)->data\", \"lean_object *_lb_checked = \");\n",
+            "previous": "\tordered(call(\"shape_size\"), \"if (arg0->kind == 0u) {\", \"(&arg0->cases.circle.radius)->data\", \"lean_object *checked = \");\n",
+            "start": 8091
+          },
+          {
+            "current": "\tordered(call(\"tile_list\"), \"for (size_t k2 = 0; k2 < arg0->length; ++k2) {\", \"(&(&arg0->data[k2])->digit)->data\", \"lean_object *_lb_checked = \");\n\tordered(call(\"tile_pair\"), \"(&(&arg0->fst)->digit)->data\", \"if ((&arg0->snd)->kind == 0u) {\", \"(&(&arg0->snd)->cases.circle.radius)->data\", \"lean_object *_lb_checked = \");\n\tordered(call(\"tile_except\"), \"if (arg0->is_ok) {\", \"(&(&arg0->ok)->digit)->data\", \"if (!arg0->is_ok) {\", \"if ((&arg0->error)->kind == 0u) {\", \"(&(&arg0->error)->cases.circle.radius)->data\", \"lean_object *_lb_checked = \");\n",
+            "previous": "\tordered(call(\"tile_list\"), \"for (size_t k2 = 0; k2 < arg0->length; ++k2) {\", \"(&(&arg0->data[k2])->digit)->data\", \"lean_object *checked = \");\n\tordered(call(\"tile_pair\"), \"(&(&arg0->fst)->digit)->data\", \"if ((&arg0->snd)->kind == 0u) {\", \"(&(&arg0->snd)->cases.circle.radius)->data\", \"lean_object *checked = \");\n\tordered(call(\"tile_except\"), \"if (arg0->is_ok) {\", \"(&(&arg0->ok)->digit)->data\", \"if (!arg0->is_ok) {\", \"if ((&arg0->error)->kind == 0u) {\", \"(&(&arg0->error)->cases.circle.radius)->data\", \"lean_object *checked = \");\n",
+            "start": 9007
+          }
+        ],
+        "path": "tests/native-fin-records.test.mjs",
+        "previousSha256": "b562eccb0002e8e97991f1c9c9fabeeb60cc7913b14db54a0d226aad2930c6c2"
+      },
+      {
+        "currentSha256": "ff0ad697af0b0c17f191e4ccff2db3482ed864524940a7caa3c9c8970873fecc",
+        "edits": [
+          {
+            "current": "import { registerRetainedContractTests } from \"./helpers/retained-contract-tests.mjs\";\n",
+            "previous": "import \"./helpers/subtype-alias-position-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-archive-source-history-tests.mjs\";\nimport \"./helpers/callback-refinements-php-wasm-hosted-archive-source-history-tests.mjs\";\nimport \"./helpers/subtype-xs-archive-source-history-tests.mjs\";\nimport \"./helpers/checked-record-admission-source-history-tests.mjs\";\n",
+            "start": 1743
+          },
+          {
+            "current": "",
+            "previous": "import \"./helpers/structural-subtype-runtime-history-tests.mjs\";\n",
+            "start": 1946
+          },
+          {
+            "current": "",
+            "previous": "import \"./helpers/nominal-subtype-conversion-history-tests.mjs\";\n",
+            "start": 2003
+          },
+          {
+            "current": "",
+            "previous": "import \"./helpers/nominal-subtype-native-history-tests.mjs\";\n",
+            "start": 2178
+          },
+          {
+            "current": "",
+            "previous": "import \"./helpers/subtype-result-history-tests.mjs\";\nimport \"./helpers/nominal-subtype-author-history-tests.mjs\";\nimport \"./helpers/component-refinement-mirror-history-tests.mjs\";\n",
+            "start": 2275
+          },
+          {
+            "current": "",
+            "previous": "import \"./helpers/nominal-subtype-selection-history-tests.mjs\";\nimport \"./helpers/generic-subtype-composition-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-hosted-archivers-source-history-tests.mjs\";\nimport \"./helpers/nested-checked-record-regression-contract-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-hosted-failure-repair-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-foundation-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-native-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-native-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-native-archive-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-perl-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-perl-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-perl-archive-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-python-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-python-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-python-archive-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-ruby-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-type-surface-gap-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-php-wasm-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-php-wasm-archive-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-promotion-artifact-identity-hardening-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-retained-pkg-config-repair-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-pkg-config-space-repair-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-jvm-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-jvm-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-dotnet-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-dotnet-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-dotnet-archive-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-php-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-php-archive-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-browser-path-diagnostic-repair-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-browser-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-browser-archive-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-evidence-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs\";\nimport \"./helpers/callback-subtype-managed-consumer-repair-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-indexed-refinement-entry-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-owned-refinement-entry-source-history-tests.mjs\";\n",
+            "start": 2328
+          },
+          {
+            "current": "\nawait registerRetainedContractTests([\n\t() => import(\"./helpers/subtype-alias-position-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-wit-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/callback-refinements-php-wasm-hosted-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/subtype-xs-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/checked-record-admission-source-history-tests.mjs\")\n\t, () => import(\"./helpers/structural-subtype-runtime-history-tests.mjs\")\n\t, () => import(\"./helpers/nominal-subtype-conversion-history-tests.mjs\")\n\t, () => import(\"./helpers/nominal-subtype-native-history-tests.mjs\")\n\t, () => import(\"./helpers/subtype-result-history-tests.mjs\")\n\t, () => import(\"./helpers/nominal-subtype-author-history-tests.mjs\")\n\t, () => import(\"./helpers/component-refinement-mirror-history-tests.mjs\")\n\t, () => import(\"./helpers/nominal-subtype-selection-history-tests.mjs\")\n\t, () => import(\"./helpers/generic-subtype-composition-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-hosted-archivers-source-history-tests.mjs\")\n\t, () => import(\"./helpers/nested-checked-record-regression-contract-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-hosted-failure-repair-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-foundation-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-native-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-native-evidence-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-native-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-perl-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-perl-evidence-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-perl-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-python-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-python-evidence-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-python-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-ruby-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-type-surface-gap-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-php-wasm-evidence-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-php-wasm-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-promotion-artifact-identity-hardening-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-wit-retained-pkg-config-repair-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-wit-pkg-config-space-repair-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-jvm-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-jvm-evidence-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-dotnet-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-dotnet-evidence-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-dotnet-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-php-evidence-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-php-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-browser-path-diagnostic-repair-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-browser-evidence-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-browser-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-wit-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-wit-evidence-tests.mjs\")\n\t, () => import(\"./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs\")\n\t, () => import(\"./helpers/callback-subtype-managed-consumer-repair-source-history-tests.mjs\")\n\t, () => import(\"./helpers/php-wasm-indexed-refinement-entry-source-history-tests.mjs\")\n\t, () => import(\"./helpers/php-wasm-owned-refinement-entry-source-history-tests.mjs\")\n\t, () => import(\"./helpers/wit-consumer-root-repair-source-history-tests.mjs\")\n\t, () => import(\"./helpers/callback-subtype-php-wasm-profile-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-php-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-rust-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-hosted-archive-preparation-source-history-tests.mjs\")\n\t, () => import(\"./helpers/zero-payload-native-control-contract-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-archive-selection-repair-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-ruby-evidence-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-ruby-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-rust-evidence-tests.mjs\")\n\t, () => import(\"./helpers/dependent-checked-record-rust-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-generic-subtype-source-history-tests.mjs\")\n\t, () => import(\"./helpers/dependent-generic-subtype-ci-source-history-tests.mjs\")\n]);\n",
+            "previous": "import \"./helpers/wit-consumer-root-repair-source-history-tests.mjs\";\nimport \"./helpers/callback-subtype-php-wasm-profile-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-php-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-rust-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-hosted-archive-preparation-source-history-tests.mjs\";\nimport \"./helpers/zero-payload-native-control-contract-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-archive-selection-repair-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-ruby-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-ruby-archive-source-history-tests.mjs\";\nimport \"./helpers/dependent-checked-record-rust-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-rust-archive-source-history-tests.mjs\";\nimport \"./helpers/dependent-generic-subtype-source-history-tests.mjs\";\nimport \"./helpers/dependent-generic-subtype-ci-source-history-tests.mjs\";\n",
+            "start": 2672
+          },
+          {
+            "current": "\tassert.equal(section(\"lb_join\"), \"@[export lb_join]\\ndef f_lb_join (a0 : _root_.String) (a1 : _root_.String) : (_root_.Option _root_.String) :=\\n  match _root_.Subtypes.checkedWord a0 with\\n  | .some _bridgeSubtype0 =>\\n    match _root_.Subtypes.checkedWord a1 with\\n    | .some _bridgeSubtype1 =>\\n      _root_.Option.some ((_root_.Subtype.val (_root_.Subtypes.join _bridgeSubtype0 _bridgeSubtype1)))\\n    | .none =>\\n      _root_.Option.none\\n  | .none =>\\n    _root_.Option.none\\n\\n\");\n",
+            "previous": "\tassert.equal(section(\"lb_join\"), \"@[export lb_join]\\ndef f_lb_join (a0 : _root_.String) (a1 : _root_.String) : (_root_.Option _root_.String) :=\\n  match _root_.Subtypes.checkedWord a0 with\\n  | .some _bridgeSubtype0 =>\\n    match _root_.Subtypes.checkedWord a1 with\\n    | .some _bridgeSubtype1 =>\\n      _root_.Option.some ((_root_.Subtypes.join _bridgeSubtype0 _bridgeSubtype1).val)\\n    | .none =>\\n      _root_.Option.none\\n  | .none =>\\n    _root_.Option.none\\n\\n\");\n",
+            "start": 13011
+          }
+        ],
+        "path": "tests/native-subtype.test.mjs",
+        "previousSha256": "0482517dcdd62abdb77c3d20686c58fd33fbc6303325b1cb9a7cd9dc16f5c958"
+      },
+      {
+        "currentSha256": "506e1c4fa7896637b54f74945955eb1731441a5e2aa044b7b4d758edb7450317",
+        "edits": [
+          {
+            "current": "import { dirname, resolve } from \"node:path\";\n",
+            "previous": "",
+            "start": 99
+          },
+          {
+            "current": "const staticImports = source => {\n\tconst boundary = source.search(/^(?:await|class|const|export|function|let|test|var)\\b/gmu);\n\tconst header = boundary === -1 ? source : source.slice(0, boundary);\n\treturn [...header.matchAll(\n\t\t/^import\\s+(?:[^;]*?\\s+from\\s+)?[\"']([^\"']+)[\"'];/gmu\n\t)].map(match => match[1]).filter(specifier => specifier.startsWith(\".\"));\n};\nconst retainedPaths = source => [...source.matchAll(\n\t/[\"'`](docs\\/evidence\\/[^\"'`\\r\\n]+)[\"'`]/gu\n)].map(match => match[1]).filter(path => path.slice(\"docs/evidence/\".length)\n\t.includes(\"/\"));\nconst retainedReaders = async (entrypoints, overrides = new Map()) => {\n\tconst pending = entrypoints.map(path => resolve(path)), seen = new Set();\n\tconst readers = [];\n\twhile(pending.length > 0)\n\t{\n\t\tconst path = pending.pop();\n\t\tif(seen.has(path)) continue;\n\t\tseen.add(path);\n\t\tconst source = overrides.get(path) ?? await readFile(path, \"utf8\");\n\t\tconst retained = retainedPaths(source);\n\t\tif(retained.length > 0 && /(?:-tests|[.]test)[.]mjs$/u.test(path))\n\t\t\treaders.push({ path, retained });\n\t\tfor(const specifier of staticImports(source))\n\t\t{\n\t\t\tconst imported = resolve(dirname(path), specifier);\n\t\t\tpending.push(imported);\n\t\t}\n\t}\n\treturn readers;\n};\n",
+            "previous": "",
+            "start": 396
+          },
+          {
+            "current": "\ntest(\"deferred native consumer entrypoints have no static retained-evidence readers\", async () => {\n\tconst entrypoints = [\n\t\t\"tests/native-fin-records.test.mjs\"\n\t\t, \"tests/native-fin-record-zero.test.mjs\"\n\t\t, \"tests/native-fin-callbacks.test.mjs\"\n\t\t, \"tests/native-subtype.test.mjs\"\n\t];\n\tassert.deepEqual(await retainedReaders(entrypoints), []);\n\tconst counts = [];\n\tfor(const path of entrypoints)\n\t{\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tcounts.push(source.match(/\\(\\) => import\\(\"[.]\\/helpers\\//gu)?.length ?? 0);\n\t}\n\tassert.deepEqual(counts, [9, 2, 14, 66]);\n\n\t// Prove the closure check is not vacuous: restoring one archived suite to the\n\t// static graph must identify its dated retained-evidence directory.\n\tconst path = resolve(\"tests/native-fin-record-zero.test.mjs\");\n\tconst source = await readFile(path, \"utf8\");\n\tconst mutant = `import \"./helpers/fin-record-zero-archive-tests.mjs\";\\n${source}`;\n\tconst readers = await retainedReaders([path], new Map([[path, mutant]]));\n\tassert.ok(readers.some(reader => reader.retained.some(value =>\n\t\tvalue.startsWith(\"docs/evidence/fin-record-zero-native-20261010/\"))));\n});\n",
+            "previous": "",
+            "start": 3568
+          }
+        ],
+        "path": "tests/retained-contract-tests.test.mjs",
+        "previousSha256": "d1542e707e3ec8032bab226f6fffbdc8d7b9a1c0fe14e053abcfcd19cd3a7dd9"
+      }
+    ]
+  },
+  "stageC": {
+    "browserInstall": {
+      "implementationCommit": "afbf9998eb32873fbd50d2f5b13ec93701cc3eb8",
+      "predecessorCommit": "238c02004036390d1daf9b1e093acbcdf95e012a",
+      "updates": [
+        {
+          "currentSha256": "0a267b9826a41a359ea6eb47042b601ffa5325776d765625d2eff0f6ecad03a3",
+          "edits": [
+            {
+              "current": "\t() => import(\"./helpers/browser-install-source-history-tests.mjs\")\n\t, () => import(\"./helpers/generic-refusal-fix-source-history-tests.mjs\")\n",
+              "previous": "\t() => import(\"./helpers/generic-refusal-fix-source-history-tests.mjs\")\n",
+              "start": 2126
+            }
+          ],
+          "path": "tests/generic-records.test.mjs",
+          "previousSha256": "5d358b00aa180b860d022ddd8c7d7da7c8eea0ad6438a0c26f10e21f78241543"
+        },
+        {
+          "currentSha256": "345c9ec76beaa871518dddc35b7be9f526ae5b0f4b454b94c010e2949058104f",
+          "edits": [
+            {
+              "current": "",
+              "previous": "import \"./browser-install-source-history-tests.mjs\";\n",
+              "start": 436
+            }
+          ],
+          "path": "tests/helpers/bounded-apt-tests.mjs",
+          "previousSha256": "b7e35afa0471e0010242eb8af3586f27469fae140f18057a4d1f2bc7635da852"
+        },
+        {
+          "currentSha256": "f974bc465c1b1705df4ffa90ca90b7692c7763ee08042f24028c87d287196110",
+          "edits": [
+            {
+              "current": "\t, { parent: \"tests/generic-records.test.mjs\"\n\t\t, module: \"./helpers/browser-install-source-history-tests.mjs\" }\n",
+              "previous": "",
+              "start": 4328
+            }
+          ],
+          "path": "tests/retained-contract-tests.test.mjs",
+          "previousSha256": "719e2a1dec17701db409429aae046e178be194f96170b4346c0940c17bcae0e8"
+        }
+      ]
+    },
+    "guard": {
+      "implementationCommit": "238c02004036390d1daf9b1e093acbcdf95e012a",
+      "predecessorCommit": "1f6628ea59c27cb0f8e81a9d0e25ab0b78bbc1d4",
+      "updates": [
+        {
+          "currentSha256": "719e2a1dec17701db409429aae046e178be194f96170b4346c0940c17bcae0e8",
+          "edits": [
+            {
+              "current": "const nativeDeferredParents = Object.freeze([\n\t{ parent: \"tests/native-fin-records.test.mjs\", loaders: 9 }\n\t, { parent: \"tests/native-fin-record-zero.test.mjs\", loaders: 2 }\n\t, { parent: \"tests/native-fin-callbacks.test.mjs\", loaders: 14 }\n\t, { parent: \"tests/native-subtype.test.mjs\", loaders: 66 }\n]);\n",
+              "previous": "",
+              "start": 4332
+            },
+            {
+              "current": " * @param loaders - Retained loaders that must remain outside the closure.\n * @param readerPath - Which modules can execute retained-reader assertions.\n",
+              "previous": "",
+              "start": 7100
+            },
+            {
+              "current": "const assertDeferredLaneClosure = (\n\tclosure, loaders = deferredRetainedLoaders, readerPath = () => true\n) => {\n",
+              "previous": "const assertDeferredLaneClosure = closure => {\n",
+              "start": 7256
+            },
+            {
+              "current": "\t{\n\t\tif(!readerPath(path)) continue;\n",
+              "previous": "",
+              "start": 7427
+            },
+            {
+              "current": "\t}\n",
+              "previous": "",
+              "start": 7611
+            },
+            {
+              "current": "\tfor(const loader of loaders)\n",
+              "previous": "\tfor(const loader of deferredRetainedLoaders)\n",
+              "start": 7646
+            },
+            {
+              "current": "\ntest(\"native consumer entrypoints keep every retained test behind the deferred boundary\", async () => {\n\tconst loaders = [];\n\tfor(const { parent, loaders: expected } of nativeDeferredParents)\n\t{\n\t\tconst source = await readFile(parent, \"utf8\");\n\t\tconst start = source.indexOf(\"await registerRetainedContractTests([\");\n\t\tconst end = source.indexOf(\"]);\", start);\n\t\tassert.ok(start >= 0 && end > start, parent);\n\t\tconst modules = [...source.slice(start, end).matchAll(\n\t\t\t/\\(\\) => import\\(\"([.][.]?\\/[^\"\\r\\n]+)\"\\)/gu\n\t\t)].map(match => match[1]);\n\t\tassert.equal(modules.length, expected, parent);\n\t\tloaders.push(...modules.map(module => ({ parent, module })));\n\t}\n\tconst entries = nativeDeferredParents.map(item => item.parent);\n\tconst closure = await staticModuleClosure(entries);\n\tconst testReader = path => /(?:-tests|[.]test)[.]mjs$/u.test(path);\n\tassert.ok(closure.size > 500);\n\tassertDeferredLaneClosure(closure, loaders, testReader);\n\n\t// One eager-import and one dropped-loader mutation per entrypoint prevent\n\t// both the closure assertion and the registration inventory from going\n\t// vacuous without repeating the complete graph walk for all 91 loaders.\n\tfor(const { parent } of nativeDeferredParents)\n\t{\n\t\tconst loader = loaders.find(item => item.parent === parent);\n\t\tconst source = closure.get(parent);\n\t\tconst eager = new Map([[parent\n\t\t\t, `import \"${loader.module}\";\\n${source}`]]);\n\t\tawait assert.rejects(async () => assertDeferredLaneClosure(\n\t\t\tawait staticModuleClosure(entries, eager), loaders, testReader\n\t\t), { name: \"AssertionError\" }, `eager ${parent}`);\n\t\tconst dropped = new Map([[parent\n\t\t\t, source.replace(\n\t\t\t`() => import(\"${loader.module}\")`, \"() => Promise.resolve()\")]]);\n\t\tassert.notEqual(dropped.get(parent), source);\n\t\tawait assert.rejects(async () => assertDeferredLaneClosure(\n\t\t\tawait staticModuleClosure(entries, dropped), loaders, testReader\n\t\t), { name: \"AssertionError\" }, `dropped ${parent}`);\n\t}\n});\n",
+              "previous": "",
+              "start": 10025
+            }
+          ],
+          "path": "tests/retained-contract-tests.test.mjs",
+          "previousSha256": "352dfab65abdb2426d98dafb48b851fc7ad4b55a7a2d86e7081b83e8c28b04bd"
+        }
+      ]
+    },
+    "split": {
+      "additions": [
+        {
+          "path": "tests/helpers/native-fin-diagnostic-evidence-tests.mjs",
+          "sha256": "6673fb92b9e441f87e0b7476ab09d675a8fb879021234ded140ad5f806ab5774"
+        },
+        {
+          "path": "tests/helpers/native-fin-nix-boundary-history-tests.mjs",
+          "sha256": "be93eb64b52513858f07f6b08342ee43acd27415a7d7d87a4418d91c8fbf8738"
+        },
+        {
+          "path": "tests/helpers/native-fin-reply-promotion-current-tests.mjs",
+          "sha256": "1ca9baf7518bd0d19e78009974a448b56d1a92b0d152669e453f9d19de3f0e5d"
+        },
+        {
+          "path": "tests/helpers/native-fin-reply-review-current-tests.mjs",
+          "sha256": "7ceba615ffd1071d201afdeaa2413eabeac45e55f7faaa923870f60bee8bf44f"
+        }
+      ],
+      "implementationCommit": "1fa9c39e8d994847ff1c4ae70e21bda945ed82e3",
+      "predecessorCommit": "afbf9998eb32873fbd50d2f5b13ec93701cc3eb8",
+      "updates": [
+        {
+          "currentSha256": "e84ef3c3b5c80a2d32364108ce45cb3726e6f8eb09101e961941286207219b8a",
+          "edits": [
+            {
+              "current": "",
+              "previous": "import \"./fin-nominal-refusal-archive-tests.mjs\";\n",
+              "start": 306
+            },
+            {
+              "current": "",
+              "previous": "import \"./fin-record-alias-archive-tests.mjs\";\nimport \"./fin-alias-closure-history-tests.mjs\";\n",
+              "start": 345
+            }
+          ],
+          "path": "tests/helpers/fin-nominal-refusals-tests.mjs",
+          "previousSha256": "7917d7b9fd529c8d1f6dbb3cb0f64ec437021a206954f4ee66d011fe9393d608"
+        },
+        {
+          "currentSha256": "5ab58db5c688b028e6405cd87760ac954258ed56b0339bb8642e162a8f91fcfa",
+          "edits": [
+            {
+              "current": "",
+              "previous": "import { sha256 } from \"../../src/capsule/node.mjs\";\n",
+              "start": 408
+            },
+            {
+              "current": "",
+              "previous": "import { finRecordDispatchColumns, finRecordDispatchExpected } from \"./fin-record-dispatch.mjs\";\nimport \"./native-fin-diagnostic-source-history-tests.mjs\";\n",
+              "start": 1117
+            },
+            {
+              "current": "",
+              "previous": "import \"./native-fin-diagnostic-php-wasm-tests.mjs\";\nimport \"./native-fin-diagnostic-callback-tests.mjs\";\nimport \"./native-fin-diagnostic-ci-tests.mjs\";\n",
+              "start": 1163
+            },
+            {
+              "current": "",
+              "previous": "test(\"the first installed Fin diagnostic report retains exact original bytes and only its measured C/C++ scope\", async () => {\n\tconst directory = \"docs/evidence/native-fin-diagnostics-20261010\";\n\tconst reportBytes = await readFile(`${directory}/ordinary-c-cpp.json`);\n\tconst tap = await readFile(`${directory}/ordinary-c-cpp.tap`, \"utf8\");\n\tassert.equal(sha256(reportBytes), \"31b27a9cc5b78f4bfd979ede83ce9bf0d70e9e2ebd0dcb00a0b2cf46859d6387\");\n\tassert.equal(sha256(tap), \"e824c012d8a90820c942e690186e845642f7aa261873090cd9d2e26902095738\");\n\tassert.match(tap, /# tests 1\\n# suites 0\\n# pass 1\\n# fail 0\\n# cancelled 0\\n# skipped 0\\n/u);\n\tconst report = JSON.parse(reportBytes);\n\tassert.equal(report.reproducible, true);\n\tassert.deepEqual(report.reports.map(item => [item.profile, item.checks]), [[\"c\", 2064], [\"cpp\", 2053]]);\n\tfor(const entry of report.reports)\n\t{\n\t\tassert.equal(entry.path, \"ordinary-source\");\n\t\tfor(const fact of [\"sourceRemovedBeforeInstallation\", \"offlineInstall\", \"compilerFreePath\"]) assert.equal(entry[fact], true, fact);\n\t\tassert.equal(entry.packages.length, 1);\n\t\tassert.equal(entry.packages[0].target, entry.profile);\n\t\tfor(const archive of entry.packages[0].artifacts) assert.equal(report.archives[archive.path], archive.sha256);\n\t}\n\tassert.deepEqual(report.reports[0].dispatch.columns, finRecordDispatchColumns);\n\tassert.deepEqual(report.reports[0].dispatch.observed, finRecordDispatchExpected);\n\tassert.equal(Object.hasOwn(report.reports[1], \"dispatch\"), false);\n});\n\n",
+              "start": 2775
+            }
+          ],
+          "path": "tests/helpers/native-fin-diagnostic-tests.mjs",
+          "previousSha256": "5376a07b76cefd98cc1bd8d4b535517edf06c8c25b75cd16ef6e08dfc7de4e2c"
+        },
+        {
+          "currentSha256": "2af500ba0909a99c4024628b861052187083aeb9b95290c4c19027e3efd59681",
+          "edits": [
+            {
+              "current": "import { spawnSync } from \"node:child_process\";\n",
+              "previous": "import { execFileSync, spawnSync } from \"node:child_process\";\n",
+              "start": 145
+            },
+            {
+              "current": "",
+              "previous": "import { sha256 } from \"./source-history-digest.mjs\";\nimport { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\nimport { beforeFinDiagnosticCiSource } from \"./native-fin-diagnostic-ci-history.mjs\";\nimport { beforeFinNixBoundarySource, finNixBoundaryChangedPaths, finNixBoundaryHistoryPath, finNixBoundaryPredecessor, reverseFinNixBoundaryUpdate } from \"./native-fin-nix-boundary-history.mjs\";\nimport \"./native-fin-nix-comparison-history-tests.mjs\";\nimport \"./native-history-checkout-tests.mjs\";\n",
+              "start": 375
+            },
+            {
+              "current": "",
+              "previous": "\ntest(\"Nix Fin boundary history authenticates both source identities and preserves the earlier ledger\", async () => {\n\tconst history = JSON.parse(await readFile(finNixBoundaryHistoryPath, \"utf8\"));\n\tassert.equal(history.schemaVersion, 1);\n\tassert.equal(history.milestone, \"native-fin-nix-boundary-v1\");\n\tassert.equal(history.predecessorCommit, finNixBoundaryPredecessor);\n\tassert.deepEqual(history.updates.map(update => update.path), finNixBoundaryChangedPaths);\n\tfor(const update of history.updates)\n\t{\n\t\tconst current = beforeFinDiagnosticCiSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinNixBoundaryUpdate(current, update);\n\t\tassert.equal(beforeFinNixBoundarySource(update.path, current), previous);\n\t\tassert.equal(beforeFinNixBoundarySource(update.path, previous), previous);\n\t\tassert.equal(beforeFinNixBoundarySource(update.path, current, update.currentSha256), current);\n\t\tassert.equal(beforeFinRefinementSource(update.path, current, update.currentSha256), current);\n\t\tassert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);\n\t\tassert.equal(beforeFinRefinementSource(update.path, current), beforeFinRefinementSource(update.path, previous));\n\t\tconst changed = current + \"\\n// unrelated edit\\n\";\n\t\tassert.equal(beforeFinNixBoundarySource(update.path, changed), changed);\n\t\tassert.throws(() => reverseFinNixBoundaryUpdate(changed, update));\n\t\tassert.throws(() => reverseFinNixBoundaryUpdate(current, { ...update, previousSha256: \"0\".repeat(64) }));\n\t\tassert.throws(() => reverseFinNixBoundaryUpdate(current, { ...update, path: \"unknown\" }));\n\t\tassert.throws(() => reverseFinNixBoundaryUpdate(current, { ...update, edits: [] }));\n\t\tassert.throws(() => reverseFinNixBoundaryUpdate(current, { ...update, edits: [...update.edits, update.edits[0]] }));\n\t\tassert.throws(() => reverseFinNixBoundaryUpdate(current, { ...update, edits: [{ ...update.edits[0], current: \"wrong\" }, ...update.edits.slice(1)] }));\n\t}\n\tassert.equal(sha256(await readFile(\"docs/evidence/native-fin-diagnostic-source-history-20261010.json\")), \"2bc3b1217601bb0eb0c19b9f1496d00ab5df831e3a1bd1881a4429b28fd210ab\");\n});\n\ntest(\"Nix Fin boundary refreshes exactly eighteen source pins without changing support or observations\", async () => {\n\tconst path = \"docs/type-surface.v1.json\", source = beforeFinDiagnosticCiSource(path, await readFile(path, \"utf8\"));\n\tconst current = JSON.parse(source), previous = JSON.parse(beforeFinNixBoundarySource(path, source));\n\tconst boundaryPath = \"nix/perl-engine-source-boundary.json\";\n\tconst boundary = beforeFinDiagnosticCiSource(boundaryPath, await readFile(boundaryPath, \"utf8\"));\n\tconst previousDigest = sha256(beforeFinNixBoundarySource(boundaryPath, boundary)), currentDigest = sha256(boundary);\n\tconst history = JSON.parse(await readFile(finNixBoundaryHistoryPath, \"utf8\"));\n\tconst transition = history.updates.find(update => update.path === boundaryPath);\n\tassert.equal(currentDigest, transition.currentSha256);\n\tassert.equal(previousDigest, transition.previousSha256);\n\tconst original = path => execFileSync(\"git\", [\"show\", `${finNixBoundaryPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n\tassert.equal(beforeFinNixBoundarySource(boundaryPath, boundary), original(boundaryPath));\n\tassert.deepEqual(previous, JSON.parse(original(path)));\n\tconst expected = structuredClone(previous); let count = 0;\n\tfor(const entry of expected.evidence) for(const file of entry.files) if(file.path === boundaryPath)\n\t{\n\t\tassert.equal(file.sha256, previousDigest); file.sha256 = currentDigest; count++;\n\t}\n\tassert.equal(count, 18);\n\tassert.deepEqual(current, expected);\n\tassert.deepEqual(current.observations, previous.observations);\n});\n",
+              "start": 2569
+            }
+          ],
+          "path": "tests/helpers/native-fin-nix-boundary-tests.mjs",
+          "previousSha256": "f5b80a1d6acb3928196a1de63028935ab3c60ead98065a475d6e6a2a53256d96"
+        },
+        {
+          "currentSha256": "aabb1ce960b2dc17075083c6f68bcbb5fddff741bcd29f4e0d7ad734ad4777d4",
+          "edits": [
+            {
+              "current": "import { nativeFinReplyPromotionId, nativeFinReplyPromotionObservation, nativeFinReplyPromotionObservationIds, nativeFinReplyPromotionReference, nativeFinReplyPromotionValidators } from \"./native-fin-reply-promotion-references.mjs\";\n",
+              "previous": "import { nativeFinReplyPromotionDirections, nativeFinReplyPromotionFailure, nativeFinReplyPromotionId, nativeFinReplyPromotionLimit, nativeFinReplyPromotionObservation, nativeFinReplyPromotionObservationIds, nativeFinReplyPromotionReference, nativeFinReplyPromotionValidators } from \"./native-fin-reply-promotion-references.mjs\";\n",
+              "start": 481
+            },
+            {
+              "current": "",
+              "previous": "\ntest(\"C/C++ conversion tables distinguish ordinary contained host replies from earlier reviewed closure directions\", async () => {\n\tfor(const profile of [\"c\", \"cpp\"])\n\t{\n\t\tconst text = await readFile(`docs/consume/${profile}.md`, \"utf8\"), row = text.split(\"\\n\").find(line => line.startsWith(\"| `Fin n` |\"));\n\t\tfor(const required of [nativeFinReplyPromotionDirections, nativeFinReplyPromotionFailure, nativeFinReplyPromotionLimit]) assert.ok(row.includes(required), required);\n\t\tassert.ok(text.includes(\"../evidence/native-fin-replies-20261008/receipt.json\"));\n\t\tassert.ok(row.includes(\"callback-result coverage here means results produced by Lean\"), \"retain the separate reviewed observation's direction\");\n\t}\n});\n",
+              "start": 8102
+            }
+          ],
+          "path": "tests/helpers/native-fin-reply-promotion-tests.mjs",
+          "previousSha256": "52fe228f2c2f6fb879157a216c263fa5d20d3281f3fb3b672e0c86ce98fe67b0"
+        },
+        {
+          "currentSha256": "eff8e966a352880a908078cb9f12ae26ffdea04d53210217e5eb7a605e8de5a7",
+          "edits": [
+            {
+              "current": "",
+              "previous": "import { spawnSync } from \"node:child_process\";\n",
+              "start": 152
+            },
+            {
+              "current": "import { typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+              "previous": "import { readTypeSurface, typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+              "start": 280
+            },
+            {
+              "current": "import { clarifyNativeReplyEvidence, clarifyNativeReplyObservation, nativeReplyReviewObservationIds, nativeReplyReviewValidator } from \"./native-fin-reply-review-notes.mjs\";\n",
+              "previous": "import { clarifyNativeReplyEvidence, clarifyNativeReplyObservation, nativeReplyReviewDispatch, nativeReplyReviewEarlierShapes, nativeReplyReviewObservationIds, nativeReplyReviewPattern, nativeReplyReviewValidator } from \"./native-fin-reply-review-notes.mjs\";\n",
+              "start": 441
+            },
+            {
+              "current": "",
+              "previous": "\ntest(\"C/C++ documentation labels both routes and scopes the measured environment and dispatch\", async () => {\n\tconst { document } = await readTypeSurface();\n\tfor(const profile of [\"c\", \"cpp\"])\n\t{\n\t\tconst text = await readFile(`docs/consume/${profile}.md`, \"utf8\"), row = text.split(\"\\n\").find(line => line.startsWith(\"| `Fin n` |\"));\n\t\tconst ordinary = document.observations.find(item => item.id === `callback-fin-${profile}-ordinary-source`);\n\t\tconst reviewed = document.observations.find(item => item.id === `callback-fin-${profile}-reviewed-ir`);\n\t\tfor(const item of [ordinary, reviewed])\n\t\t{\n\t\t\tassert.ok(row.includes(item.hostTypes.fin[\"callback-result\"]));\n\t\t\tassert.ok(row.includes(item.conversionNotes.fin));\n\t\t\tassert.match(item.hostTypes.fin[\"callback-result\"], /below the declared Fin bound/u);\n\t\t}\n\t\tassert.ok(ordinary.conversionNotes.fin.startsWith(\"Ordinary source: \"));\n\t\tassert.ok(reviewed.conversionNotes.fin.startsWith(\"Reviewed IR: \"));\n\t\tassert.match(reviewed.conversionNotes.fin, /Native host-produced refined replies are not established by this evidence/u);\n\t\tassert.ok(ordinary.stages.installedExecution.note.includes(nativeReplyReviewEarlierShapes));\n\t\tassert.ok(ordinary.limitations[1].startsWith(\"Host-reply run: \"));\n\t\tassert.match(ordinary.limitations[1], /measured glibc 2\\.36/u);\n\t\tassert.ok(ordinary.limitations[3].startsWith(\"Earlier closure-argument run: \"));\n\t\tassert.match(ordinary.limitations[3], /does not measure host glibc/u);\n\t\tassert.ok(ordinary.stages.packaging.note.includes(ordinary.limitations[3]));\n\t\tassert.ok(text.includes(nativeReplyReviewDispatch));\n\t\tassert.ok(!text.includes(\"Source-dispatch counters were measured in C only.\"));\n\t}\n});\n\ntest(\"host-reply reproduction selects exactly the five intended gated producers\", async () => {\n\tconst { document } = await readTypeSurface();\n\tconst entry = document.evidence.find(item => item.id === nativeFinReplyPromotionId);\n\tassert.ok(entry.command.includes(`--test-name-pattern='${nativeReplyReviewPattern}'`));\n\tconst env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith(\"LEAN_BRIDGE_\") && key !== \"NODE_TEST_CONTEXT\"));\n\tconst run = spawnSync(process.execPath, [\"--test\", \"--test-concurrency=1\", \"--test-reporter=tap\", `--test-name-pattern=${nativeReplyReviewPattern}`, \"tests/native-fin-callbacks.test.mjs\"], { env, encoding: \"utf8\", maxBuffer: 2 * 1024 * 1024 });\n\tassert.equal(run.status, 0, run.stderr);\n\tconst names = [...run.stdout.matchAll(/^ok \\d+ - (.*) # SKIP$/gmu)].map(match => match[1]);\n\tassert.deepEqual(names.sort(), [\n\t\t\"fresh Lean admits every safe direction and compiles the generated adapter\"\n\t\t, \"fresh Lean refuses a host callback's result without a Fin-free failure value and admits one with it\"\n\t\t, \"fresh Lean admits every checked host reply family and compiles each typed reconstruction\"\n\t\t, \"generated C wrapper execution: C reply walks and Lean's own reconstruction both refuse host replies under ASan and UBSan\"\n\t\t, \"relocated source-free C and C++ packages check every host reply bound and recover\"\n\t].sort());\n\tfor(const line of [\"# tests 5\", \"# pass 0\", \"# fail 0\", \"# skipped 5\"]) assert.ok(run.stdout.includes(line + \"\\n\"), line);\n\tconst matcher = new RegExp(nativeReplyReviewPattern, \"u\"), unanchored = new RegExp(nativeReplyReviewPattern.slice(4, -1), \"u\");\n\tfor(const name of names)\n\t{\n\t\tassert.ok(matcher.test(name));\n\t\tassert.ok(unanchored.test(`archive of ${name}`));\n\t\tassert.ok(!matcher.test(`archive of ${name}`));\n\t}\n});\n",
+              "start": 3008
+            }
+          ],
+          "path": "tests/helpers/native-fin-reply-review-tests.mjs",
+          "previousSha256": "84e5fccd9be0901fa051a26f075ab8a3b2fc4fbe678e0ebe020f4d10ec6a9730"
+        },
+        {
+          "currentSha256": "33f82d82cb53978735f990b3bd85e0cdd1d717eb8cc0c086446658804e530178",
+          "edits": [
+            {
+              "current": "import \"./helpers/native-fin-reply-promotion-current-tests.mjs\";\nimport \"./helpers/native-fin-reply-review-current-tests.mjs\";\n",
+              "previous": "",
+              "start": 492
+            }
+          ],
+          "path": "tests/native-fin-callbacks.test.mjs",
+          "previousSha256": "03f844c73024832b123acc7b9751f90209f61b1ce710c5dee062624afc678303"
+        },
+        {
+          "currentSha256": "87ea3f60d0dfee7a761e89f60747cda946b1c559293718f8d1032d8969c55240",
+          "edits": [
+            {
+              "current": "import \"./helpers/fin-nominal-refusals-tests.mjs\";\n",
+              "previous": "",
+              "start": 257
+            },
+            {
+              "current": "import \"./helpers/native-fin-diagnostic-tests.mjs\";\n",
+              "previous": "",
+              "start": 360
+            },
+            {
+              "current": "\t() => import(\"./helpers/fin-nominal-refusal-archive-tests.mjs\")\n\t, () => import(\"./helpers/fin-record-alias-archive-tests.mjs\")\n\t, () => import(\"./helpers/fin-alias-closure-history-tests.mjs\")\n",
+              "previous": "\t() => import(\"./helpers/fin-nominal-refusals-tests.mjs\")\n",
+              "start": 2178
+            },
+            {
+              "current": "",
+              "previous": "\t, () => import(\"./helpers/fin-record-wit-format-source-history-tests.mjs\")\n",
+              "start": 2439
+            },
+            {
+              "current": "\t, () => import(\"./helpers/fin-record-wit-format-source-history-tests.mjs\")\n",
+              "previous": "",
+              "start": 2631
+            },
+            {
+              "current": "\t, () => import(\"./helpers/native-fin-diagnostic-source-history-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-nix-boundary-history-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-diagnostic-php-wasm-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-diagnostic-callback-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-diagnostic-ci-tests.mjs\")\n\t, () => import(\"./helpers/native-fin-diagnostic-evidence-tests.mjs\")\n",
+              "previous": "\t, () => import(\"./helpers/native-fin-diagnostic-tests.mjs\")\n",
+              "start": 2770
+            }
+          ],
+          "path": "tests/native-fin-records.test.mjs",
+          "previousSha256": "07c96cd3ac7a855ab39f56dd2f589d7b8e0501ef755b1045827cbed0639d14a6"
+        },
+        {
+          "currentSha256": "027fa7166cc5361d350c364afaec54f50f9921ea7accf19921c632082488fcd8",
+          "edits": [
+            {
+              "current": "\t{ parent: \"tests/native-fin-records.test.mjs\", loaders: 16 }\n",
+              "previous": "\t{ parent: \"tests/native-fin-records.test.mjs\", loaders: 9 }\n",
+              "start": 4491
+            },
+            {
+              "current": "const nativeEagerCurrentModules = Object.freeze([\n\t{ parent: \"tests/native-fin-records.test.mjs\"\n\t\t, module: \"tests/helpers/fin-nominal-refusals-tests.mjs\" }\n\t, { parent: \"tests/native-fin-records.test.mjs\"\n\t\t, module: \"tests/helpers/native-fin-diagnostic-tests.mjs\" }\n\t, { parent: \"tests/helpers/native-fin-diagnostic-tests.mjs\"\n\t\t, module: \"tests/helpers/native-fin-nix-boundary-tests.mjs\" }\n\t, { parent: \"tests/native-fin-callbacks.test.mjs\"\n\t\t, module: \"tests/helpers/native-fin-reply-promotion-current-tests.mjs\" }\n\t, { parent: \"tests/native-fin-callbacks.test.mjs\"\n\t\t, module: \"tests/helpers/native-fin-reply-review-current-tests.mjs\" }\n]);\n",
+              "previous": "",
+              "start": 4750
+            },
+            {
+              "current": "/**\n * Splitting mixed current/history modules must not make a deferred lane green\n * by silently removing the current half of its contract.\n *\n * @param closure - Static module closure of native consumer entrypoints.\n */\nconst assertNativeCurrentClosure = closure => {\n\tfor(const { module } of nativeEagerCurrentModules)\n\t\tassert.ok(closure.has(module), `current ${module}`);\n};\n\n",
+              "previous": "",
+              "start": 9009
+            },
+            {
+              "current": "\tassertNativeCurrentClosure(closure);\n",
+              "previous": "",
+              "start": 12105
+            },
+            {
+              "current": "\t// vacuous without repeating the complete graph walk for all 98 loaders.\n",
+              "previous": "\t// vacuous without repeating the complete graph walk for all 91 loaders.\n",
+              "start": 12293
+            },
+            {
+              "current": "\n\t// The inverse mutation catches an over-broad deferral repair: each named\n\t// current module must remain eager even when all retained readers are absent.\n\tfor(const { parent, module } of nativeEagerCurrentModules)\n\t{\n\t\tconst source = closure.get(parent);\n\t\tconst relative = `./${module.slice(dirname(parent).length + 1)}`;\n\t\tconst omitted = new Map([[parent\n\t\t\t, source.replace(`import \"${relative}\";`, \"\")]]);\n\t\tassert.notEqual(omitted.get(parent), source, `${parent}: ${relative}`);\n\t\tawait assert.rejects(async () => assertNativeCurrentClosure(\n\t\t\tawait staticModuleClosure(entries, omitted)\n\t\t), { name: \"AssertionError\" }, `omitted current ${module}`);\n\t}\n",
+              "previous": "",
+              "start": 13144
+            }
+          ],
+          "path": "tests/retained-contract-tests.test.mjs",
+          "previousSha256": "f974bc465c1b1705df4ffa90ca90b7692c7763ee08042f24028c87d287196110"
+        }
+      ]
+    }
+  },
+  "validation": {
+    "reportedByCodex": {
+      "atOracleSeal": {
+        "fail": 0,
+        "pass": 153,
+        "seconds": 42.9,
+        "skip": 36,
+        "tests": 189
+      },
+      "base": "1fa9c39e8d994847ff1c4ae70e21bda945ed82e3",
+      "note": "Reported on the coordination board; not re-measured here.",
+      "sparseSevenEntryWall": {
+        "fail": 0,
+        "pass": 153,
+        "seconds": 38.2,
+        "skip": 36,
+        "tests": 189
+      }
+    }
+  }
+}
