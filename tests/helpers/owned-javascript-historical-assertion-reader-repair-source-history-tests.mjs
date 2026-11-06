@@ -24,9 +24,8 @@ import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
-import {
-	sourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource
-} from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 512 * 1024 * 1024
@@ -117,12 +116,10 @@ test("historical assertion reader repair reverses both authenticated layers"
 		}
 		for(const update of value.integrationUpdates)
 		{
-			const current = await sourceAtFinHistoryRecordSource(
-				ownedJavaScriptHistoricalAssertionReaderRepairHistoryPath
-				, update.path, update.currentSha256);
-			const previous = await sourceAtFinHistoryRecordSource(
-				value.integrationPredecessorHistory
-				, update.path, update.previousSha256);
+			const current = await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256);
+			const previous = await sourceAtFinHistoryMilestone(
+				update.path, update.previousSha256);
 			assert.equal(
 				reverseOwnedJavaScriptHistoricalAssertionReaderRepairUpdate(
 					current, update), previous, update.path);

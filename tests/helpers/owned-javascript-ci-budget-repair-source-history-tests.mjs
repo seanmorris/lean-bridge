@@ -24,9 +24,8 @@ import {
 	beforeFinRefinementSource, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
-import {
-	sourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource
-} from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryMilestone }
+	from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_, {
 	encoding: "utf8", maxBuffer: 512 * 1024 * 1024
@@ -115,9 +114,8 @@ test("owned JavaScript budget repair reverses implementation and integration"
 		}
 		for(const update of value.integrationUpdates)
 		{
-			const current = await sourceAtFinHistoryRecordSource(
-				ownedJavaScriptCiBudgetRepairHistoryPath, update.path
-				, update.currentSha256);
+			const current = await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256);
 			const previous = blob(ownedJavaScriptCiBudgetRepairImplementation
 				, update.path);
 			assert.equal(reverseOwnedJavaScriptCiBudgetRepairUpdate(
@@ -144,9 +142,8 @@ test("owned JavaScript budget repair refreshes exactly ninety-two live pins"
 		const inventoryUpdate = value.integrationUpdates.find(update =>
 			update.path === "docs/type-surface.v1.json");
 		assert.ok(inventoryUpdate);
-		const current = await sourceAtFinHistoryRecordSource(
-			ownedJavaScriptCiBudgetRepairHistoryPath, inventoryUpdate.path
-			, inventoryUpdate.currentSha256);
+		const current = await sourceAtFinHistoryMilestone(
+			inventoryUpdate.path, inventoryUpdate.currentSha256);
 		assert.equal(current.split(entry.current).length - 1, 92);
 		assert.equal(current.replaceAll(entry.current, entry.previous)
 			, blob(ownedJavaScriptCiBudgetRepairImplementation
