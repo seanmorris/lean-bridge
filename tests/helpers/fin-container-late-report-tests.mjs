@@ -13,11 +13,15 @@ import { finContainerTargets } from "./fin-container-install.mjs";
 import { finLateAdditionalChecks, finLateConsumer, finLateProfiles } from "./fin-container-late-consumers.mjs";
 import { assertFinLateReport, assertFinLateTap } from "./fin-container-late-report.mjs";
 import "./fin-container-late-ci-tests.mjs";
-import "./fin-container-late-disk-tests.mjs";
-import "./fin-container-late-native-archive-tests.mjs";
-import "./fin-container-late-wit-report-tests.mjs";
 import "./fin-container-late-ci-workflow-tests.mjs";
-import "./fin-container-late-ci-history-tests.mjs";
+import { registerRetainedContractTests } from "./retained-contract-tests.mjs";
+
+await registerRetainedContractTests([
+	() => import("./fin-container-late-disk-tests.mjs")
+	, () => import("./fin-container-late-native-archive-tests.mjs")
+	, () => import("./fin-container-late-wit-report-tests.mjs")
+	, () => import("./fin-container-late-ci-history-tests.mjs")
+]);
 
 const synthetic = async () => {
 	const profiles = [...finLateProfiles].sort(), source = await finContainerEdgeSource(), hash = sha256("synthetic, not an installed observation");

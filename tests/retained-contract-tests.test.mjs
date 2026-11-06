@@ -9,6 +9,14 @@ import { coreContractEvidenceDirectoryReferences, trackedEvidenceDirectories }
 	from "../scripts/core-contract-evidence.mjs";
 
 const workflowJob = (source, job) => source.split(`\n  ${job}:\n`)[1]?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
+const deferredWorkflowJobs = Object.freeze([
+	[".github/workflows/consumer-matrix.yml", "node-consumers"]
+	, [".github/workflows/consumer-matrix.yml", "php-consumers"]
+	, [".github/workflows/consumer-matrix.yml", "native-consumers"]
+	, [".github/workflows/consumer-matrix.yml", "managed-consumers"]
+	, [".github/workflows/consumer-matrix.yml", "wasi-consumer"]
+	, [".github/workflows/perl-consumer.yml", "perl"]
+]);
 
 test("retained contracts are required by default and reject an unknown policy", async () => {
 	assert.equal(retainedContractScope({}), "required");
@@ -66,6 +74,7 @@ test("sparse consumers defer retained contracts while Core requires them", async
 // fails the lane.
 const evidenceDirectories = () => trackedEvidenceDirectories(resolve("."));
 const sourceHistoryModule = path => /-source-history(?:-tests)?[.]mjs$/u.test(path);
+const sourceHistoryTestModule = path => /(?:source-)?history-tests[.]mjs$/u.test(path);
 const referenceOnlyHelpers = Object.freeze({
 	node: Object.freeze([
 		{
@@ -136,7 +145,59 @@ const deferredRetainedLoaders = Object.freeze([
 // Every native consumer entrypoint registers exactly these loaders, in this
 // order; the lane proves each one stays outside the static closure.
 const nativeRetainedLoaders = Object.freeze({
-	"tests/native-fin-records.test.mjs": Object.freeze([
+	"tests/reviewed-npm-packaging.test.mjs": Object.freeze([
+		"./helpers/reviewed-npm-snapshot-source-history-tests.mjs"
+	])
+	, "tests/reviewed-specializations.test.mjs": Object.freeze([
+		"./helpers/reviewed-specialization-archive-source-history-tests.mjs"
+		, "./helpers/reviewed-specialization-ci-hotfix-source-history-tests.mjs"
+		, "./helpers/reviewed-specialization-admission-source-history-tests.mjs"
+	])
+	, "tests/native-fin-containers.test.mjs": Object.freeze([
+		"./helpers/container-host-dispatch-source-history-tests.mjs"
+		, "./helpers/perl-fin-archive-source-history-tests.mjs"
+		, "./helpers/perl-fin-xs-audit-source-history-tests.mjs"
+		, "./helpers/zero-payload-ordinary-evidence-expectation-source-history-tests.mjs"
+		, "./helpers/history-reader-buffer-repair-source-history-tests.mjs"
+		, "./helpers/hub-transition-gap-source-history-tests.mjs"
+		, "./helpers/history-reader-hub-repair-source-history-tests.mjs"
+		, "./helpers/ledger-transition-gap-source-history-tests.mjs"
+		, "./helpers/perl-engine-owned-refinement-closure-source-history-tests.mjs"
+		, "./helpers/zero-payload-type-surface-gap-source-history-tests.mjs"
+	])
+	, "tests/helpers/fin-container-late-report-tests.mjs": Object.freeze([
+		"./fin-container-late-disk-tests.mjs"
+		, "./fin-container-late-native-archive-tests.mjs"
+		, "./fin-container-late-wit-report-tests.mjs"
+		, "./fin-container-late-ci-history-tests.mjs"
+	])
+	, "tests/fin-container-edges.test.mjs": Object.freeze([
+		"./helpers/fin-container-late-history-tests.mjs"
+	])
+	, "tests/native-specializations.test.mjs": Object.freeze([
+		"./helpers/native-consumer-ci-repair-source-history-tests.mjs"
+	])
+	, "tests/helpers/maven-prerequisite-tests.mjs": Object.freeze([
+		"./maven-prerequisite-history-tests.mjs"
+	])
+	, "tests/owned-perl-xs.test.mjs": Object.freeze([
+		"./helpers/owned-perl-callback-result-history-tests.mjs"
+		, "./helpers/owned-perl-callback-result-variant-history-tests.mjs"
+	])
+	, "tests/perl-fin-containers.test.mjs": Object.freeze([
+		"./helpers/perl-container-subtype-ci-history-tests.mjs"
+		, "./helpers/perl-history-checkout-history-tests.mjs"
+	])
+	, "tests/perl-refinements.test.mjs": Object.freeze([
+		"./helpers/perl-relocated-consumer-source-history-tests.mjs"
+	])
+	, "tests/perl-fin.test.mjs": Object.freeze([
+		"./helpers/perl-scalar-relocation-source-history-tests.mjs"
+	])
+	, "tests/native-fin-product-arrays.test.mjs": Object.freeze([
+		"./helpers/fin-product-arrays-source-history-tests.mjs"
+	])
+	, "tests/native-fin-records.test.mjs": Object.freeze([
 		"./helpers/fin-nominal-refusal-archive-tests.mjs"
 		, "./helpers/fin-record-alias-archive-tests.mjs"
 		, "./helpers/fin-alias-closure-history-tests.mjs"
@@ -246,7 +307,9 @@ const nativeRetainedLoaders = Object.freeze({
 // One loader per native entrypoint whose own closure opens a retained family;
 // re-importing it eagerly must trip the oracle, not only the loader inventory.
 const nativeFamilyLoaders = Object.freeze([
-	{ parent: "tests/native-fin-records.test.mjs"
+	{ parent: "tests/helpers/fin-container-late-report-tests.mjs"
+		, module: "./fin-container-late-native-archive-tests.mjs" }
+	, { parent: "tests/native-fin-records.test.mjs"
 		, module: "./helpers/fin-record-evidence-tests.mjs" }
 	, { parent: "tests/native-fin-record-zero.test.mjs"
 		, module: "./helpers/fin-record-zero-archive-tests.mjs" }
@@ -387,6 +450,24 @@ const wholeFileTestEntries = job => {
 };
 
 /**
+ * Every test entry a deferred workflow invokes, including patterned runs whose
+ * module initialization still belongs to the sparse consumer boundary.
+ *
+ * @param job - Workflow job source.
+ */
+const allTestEntries = job => [...new Set([...job.matchAll(
+	/tests\/[A-Za-z0-9_./-]+[.]test[.]mjs/gu
+)].map(match => match[0]))].sort();
+
+/**
+ * Refuse any exact-history suite in a deferred lane's eager module closure.
+ *
+ * @param closure - Complete static module closure for the workflow entrypoints.
+ */
+const assertNoEagerHistory = closure => assert.deepEqual(
+	[...closure.keys()].filter(sourceHistoryTestModule).sort(), []);
+
+/**
  * Assert that a deferred lane's static closure references retained families
  * only through the bound reference-only helpers, none of which reads at
  * module level.
@@ -470,7 +551,7 @@ test("the Node and browser consumer lane reaches no retained-evidence reader und
 		assert.ok(entries.includes(entry), entry);
 	const directories = evidenceDirectories();
 	const closure = await staticModuleClosure(entries);
-	assert.ok(closure.size > 1000);
+	assert.ok(entries.every(entry => closure.has(entry)));
 	assertRetainedReferences(closure, referenceOnlyHelpers.node, directories);
 	assertLoadersDeferred(closure, deferredRetainedLoaders);
 	for(const loader of deferredRetainedLoaders)
@@ -502,10 +583,11 @@ test("native consumer entrypoints keep every retained test behind the deferred b
 	const entries = Object.keys(nativeRetainedLoaders);
 	const directories = evidenceDirectories();
 	const closure = await staticModuleClosure(entries);
-	assert.ok(closure.size > 500);
+	assert.ok(entries.every(entry => closure.has(entry)));
 	const loaders = entries.flatMap(parent =>
 		registeredLoaders(parent, closure.get(parent)));
-	assert.equal(loaders.length, 98);
+	assert.equal(loaders.length, 126);
+	assertNoEagerHistory(closure);
 	assertRetainedReferences(closure, referenceOnlyHelpers.native, directories);
 	assertLoadersDeferred(closure, loaders);
 	assertNativeCurrentClosure(closure);
@@ -518,16 +600,19 @@ test("native consumer entrypoints keep every retained test behind the deferred b
 	for(const parent of entries)
 	{
 		const source = closure.get(parent);
-		const family = nativeFamilyLoaders.find(item => item.parent === parent).module;
-		assert.ok(loaders.some(loader =>
-			loader.parent === parent && loader.module === family), family);
-		const eagerClosure = await staticModuleClosure(entries
-			, new Map([[parent, `import "${family}";\n${source}`]]));
-		await assert.rejects(async () => assertRetainedReferences(
-			eagerClosure, referenceOnlyHelpers.native, directories)
-		, { name: "AssertionError" }, `eager reference ${family}`);
-		await assert.rejects(async () => assertLoadersDeferred(eagerClosure, loaders)
-			, { name: "AssertionError" }, `eager ${family}`);
+		const family = nativeFamilyLoaders.find(item => item.parent === parent)?.module;
+		if(family !== undefined)
+		{
+			assert.ok(loaders.some(loader =>
+				loader.parent === parent && loader.module === family), family);
+			const eagerClosure = await staticModuleClosure(entries
+				, new Map([[parent, `import "${family}";\n${source}`]]));
+			await assert.rejects(async () => assertRetainedReferences(
+				eagerClosure, referenceOnlyHelpers.native, directories)
+				, { name: "AssertionError" }, `eager reference ${family}`);
+			await assert.rejects(async () => assertLoadersDeferred(eagerClosure, loaders)
+				, { name: "AssertionError" }, `eager ${family}`);
+		}
 		const [first] = nativeRetainedLoaders[parent];
 		const dropped = source.replace(`() => import("${first}")`
 			, "() => Promise.resolve()");
@@ -542,6 +627,15 @@ test("native consumer entrypoints keep every retained test behind the deferred b
 		assert.throws(() => registeredLoaders(parent, renamed)
 			, { name: "AssertionError" }, `renamed ${first}`);
 	}
+
+	const historyLoader = loaders.find(loader => sourceHistoryTestModule(
+		resolveSpecifier(loader.parent, loader.module)));
+	assert.ok(historyLoader);
+	const eagerHistory = new Map([[historyLoader.parent
+		, `import "${historyLoader.module}";\n${closure.get(historyLoader.parent)}`]]);
+	await assert.rejects(async () => assertNoEagerHistory(
+		await staticModuleClosure(entries, eagerHistory)
+	), { name: "AssertionError" }, `eager history ${historyLoader.module}`);
 
 	// The reference-only binding is exact in both directions, and a helper
 	// that starts reading at module level is refused.
@@ -568,5 +662,24 @@ test("native consumer entrypoints keep every retained test behind the deferred b
 		await assert.rejects(async () => assertNativeCurrentClosure(
 			await staticModuleClosure(entries, omitted)
 		), { name: "AssertionError" }, `omitted current ${module}`);
+	}
+});
+
+test("every deferred workflow keeps exact history outside its complete eager closure", async () => {
+	const sources = new Map();
+	const directories = evidenceDirectories();
+	for(const [path] of deferredWorkflowJobs)
+		if(!sources.has(path)) sources.set(path, await readFile(path, "utf8"));
+	for(const [path, jobName] of deferredWorkflowJobs)
+	{
+		const job = workflowJob(sources.get(path), jobName);
+		assert.match(job, /LEAN_BRIDGE_RETAINED_CONTRACTS: deferred/u);
+		const entries = allTestEntries(job);
+		assert.ok(entries.length > 0, `${path}: ${jobName}`);
+		const closure = await staticModuleClosure(entries);
+		assertNoEagerHistory(closure);
+		const helpers = jobName === "node-consumers" ? referenceOnlyHelpers.node
+			: jobName === "native-consumers" ? referenceOnlyHelpers.native : [];
+		assertRetainedReferences(closure, helpers, directories);
 	}
 });

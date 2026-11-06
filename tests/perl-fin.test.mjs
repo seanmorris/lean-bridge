@@ -9,7 +9,7 @@ import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import "./helpers/perl-scalar-relocation-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
 import { relocatePerlConsumer } from "./helpers/perl-relocated-consumer.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
@@ -22,6 +22,10 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { reviewedScalarHostIr } from "./helpers/reviewed-scalar-host-fixture.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/perl-scalar-relocation-source-history-tests.mjs")
+]);
 
 const huge = "1180591620717411303424";
 const expectedBounds = {

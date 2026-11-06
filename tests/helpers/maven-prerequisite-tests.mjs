@@ -6,10 +6,14 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import "./maven-prerequisite-history-tests.mjs";
+import { registerRetainedContractTests } from "./retained-contract-tests.mjs";
 import { isMavenPrerequisiteResolutionFailure, mavenPrerequisiteGoals, runMavenPrerequisite } from "../../scripts/maven-prerequisite.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { beforeMavenPrerequisiteSource } from "./maven-prerequisite-history.mjs";
+
+await registerRetainedContractTests([
+	() => import("./maven-prerequisite-history-tests.mjs")
+]);
 
 const failure = (goal, change = {}) => Object.assign(new Error("Maven exited with status 1"), {
 	code: "build-command-failed"

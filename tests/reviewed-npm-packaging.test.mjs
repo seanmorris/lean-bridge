@@ -16,7 +16,11 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import { reviewedNativeSpecializationIr } from "./helpers/reviewed-native-specialization-fixture.mjs";
-import "./helpers/reviewed-npm-snapshot-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/reviewed-npm-snapshot-source-history-tests.mjs")
+]);
 
 const enabled = process.env.LEAN_BRIDGE_REVIEWED_NPM_PACKAGING_TEST === "1";
 const engineRoot = process.cwd();

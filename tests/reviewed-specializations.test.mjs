@@ -4,13 +4,11 @@
  * @file
  */
 import assert from "node:assert/strict";
-import "./helpers/reviewed-specialization-archive-source-history-tests.mjs";
-import "./helpers/reviewed-specialization-ci-hotfix-source-history-tests.mjs";
 import { cp, lstat, mkdir, mkdtemp, readFile, realpath, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
-import "./helpers/reviewed-specialization-admission-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
 import { inspectLeanProject } from "../src/analyze/lean-project.mjs";
 import { prepareLakeEntryIntent } from "../src/build/lake-entry-intent.mjs";
 import { resolveLakeBuildWorkspace } from "../src/build/lake-build-workspace.mjs";
@@ -35,6 +33,12 @@ import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import { installSpecializationConsumer, nativeSpecializationEnvironment, nativeSpecializationSignatures, nativeSpecializationTargets } from "./helpers/native-specialization-install.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/reviewed-specialization-archive-source-history-tests.mjs")
+	, () => import("./helpers/reviewed-specialization-ci-hotfix-source-history-tests.mjs")
+	, () => import("./helpers/reviewed-specialization-admission-source-history-tests.mjs")
+]);
 
 const key = "lean-lang.org/specialization";
 // Application text as the compiler prints it; the review records it and fresh Lean must agree.

@@ -10,7 +10,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { relocatePerlConsumer } from "./helpers/perl-relocated-consumer.mjs";
 import "./helpers/perl-relocated-consumer-tests.mjs";
-import "./helpers/perl-relocated-consumer-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
@@ -21,6 +21,10 @@ import { readArchivedSubtypeXs } from "./helpers/native-subtype-install.mjs";
 import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
 import { createNativeModel, nativeTypeKey } from "../src/build/native-model.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/perl-relocated-consumer-source-history-tests.mjs")
+]);
 
 const site = constructor => ({ ownership: "copy", lifetime: null, refinement: { constructor } });
 const plain = { ownership: "copy", lifetime: null, refinement: "reject" };

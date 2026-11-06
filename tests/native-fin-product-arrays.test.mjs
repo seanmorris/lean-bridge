@@ -31,7 +31,11 @@ import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { finProductArrayRefinements, finProductArrayTargets, finProductArrayTree, finProductArrayWitPatterns, installFinProductArrayConsumer } from "./helpers/fin-product-array-install.mjs";
 import { finProductArrayReviewedIr } from "./helpers/reviewed-fin-product-array-fixture.mjs";
 import { assertReviewedFinChangesRefused, checkInstalledFinFixture, finFixtureProfiles } from "./helpers/fin-fixture-installed.mjs";
-import "./helpers/fin-product-arrays-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/fin-product-arrays-source-history-tests.mjs")
+]);
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const nat = { kind: "primitive", name: "nat", lean: "Nat", abi: { ...heap, heap: false } };
@@ -73,9 +77,9 @@ test("C adapters compare every element's component and active error branch on ca
 	const loop = call.indexOf("for (size_t k2 = 0; k2 < arg0->length; ++k2) {");
 	const component = call.indexOf("if (!lb_fin_below((&(&arg0->data[k2])->fst)->data, (&(&arg0->data[k2])->fst)->length, lb_fin_rows_0_0, 1)) {");
 	const branch = call.indexOf("if (!(&(&arg0->data[k2])->snd)->is_ok) {\n      if (!lb_fin_below((&(&(&arg0->data[k2])->snd)->error)->data, (&(&(&arg0->data[k2])->snd)->error)->length, lb_fin_rows_0_1, 1)) {");
-	const dispatch = call.indexOf("lean_object *checked = ");
+	const dispatch = call.indexOf("lean_object *_lb_checked = ");
 	// The copy check, then each element's comparisons, then the only conversion into Lean.
-	assert.ok(call.indexOf("_check(arg0, &budget)") < loop && loop < component && component < branch && branch < dispatch, call);
+	assert.ok(call.indexOf("_check(arg0, &_lb_budget)") < loop && loop < component && component < branch && branch < dispatch, call);
 	for(const [index, path, bound] of [[0, "arg0[%zu].0", "4"], [1, "arg0[%zu].1.error", "6"]])
 	{
 		const buffer = `lb_fin_rows_0_${index}_message`;

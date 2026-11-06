@@ -29,7 +29,11 @@ import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import "./helpers/fin-container-late-source-tests.mjs";
 import "./helpers/fin-container-late-installed-tests.mjs";
-import "./helpers/fin-container-late-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/fin-container-late-history-tests.mjs")
+]);
 
 test("the edge fixture preserves the eight original exports and adds four explicit round trips", async () => {
 	const original = await readFile("tests/fixtures/onboarding/native-fin-containers/FinContainers.lean", "utf8");

@@ -28,16 +28,20 @@ import { finContainerEntryProfiles, observeFinContainerEntry } from "./helpers/f
 import { observeCppFinContainerEntry } from "./helpers/cpp-fin-container-entry-probe.mjs";
 import { finContainerReviewedIr } from "./helpers/reviewed-fin-container-fixture.mjs";
 import "./helpers/fin-container-host-dispatch-tests.mjs";
-import "./helpers/container-host-dispatch-source-history-tests.mjs";
-import "./helpers/perl-fin-archive-source-history-tests.mjs";
-import "./helpers/perl-fin-xs-audit-source-history-tests.mjs";
-import "./helpers/zero-payload-ordinary-evidence-expectation-source-history-tests.mjs";
-import "./helpers/history-reader-buffer-repair-source-history-tests.mjs";
-import "./helpers/hub-transition-gap-source-history-tests.mjs";
-import "./helpers/history-reader-hub-repair-source-history-tests.mjs";
-import "./helpers/ledger-transition-gap-source-history-tests.mjs";
-import "./helpers/perl-engine-owned-refinement-closure-source-history-tests.mjs";
-import "./helpers/zero-payload-type-surface-gap-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/container-host-dispatch-source-history-tests.mjs")
+	, () => import("./helpers/perl-fin-archive-source-history-tests.mjs")
+	, () => import("./helpers/perl-fin-xs-audit-source-history-tests.mjs")
+	, () => import("./helpers/zero-payload-ordinary-evidence-expectation-source-history-tests.mjs")
+	, () => import("./helpers/history-reader-buffer-repair-source-history-tests.mjs")
+	, () => import("./helpers/hub-transition-gap-source-history-tests.mjs")
+	, () => import("./helpers/history-reader-hub-repair-source-history-tests.mjs")
+	, () => import("./helpers/ledger-transition-gap-source-history-tests.mjs")
+	, () => import("./helpers/perl-engine-owned-refinement-closure-source-history-tests.mjs")
+	, () => import("./helpers/zero-payload-type-surface-gap-source-history-tests.mjs")
+]);
 
 const profiles = process.env.LEAN_BRIDGE_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];
 const reviewedProfiles = process.env.LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES?.split(",").sort() ?? [];

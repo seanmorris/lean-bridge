@@ -16,7 +16,11 @@ import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { installSpecializationConsumer, nativeSpecializationEnvironment, nativeSpecializations
 	, nativeSpecializationSignatures, nativeSpecializationTargets } from "./helpers/native-specialization-install.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
-import "./helpers/native-consumer-ci-repair-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/native-consumer-ci-repair-source-history-tests.mjs")
+]);
 
 const profiles = process.env.LEAN_BRIDGE_SPECIALIZATION_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate specialization profile");
