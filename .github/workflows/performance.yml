@@ -25,7 +25,11 @@ jobs:
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          # The native graph test imports the history hub, which reads retained
+          # root records and committed history, so the tree stays whole with
+          # complete history; historical blobs are fetched only when read.
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -142,8 +146,10 @@ jobs:
         with:
           # Benchmark builds, measurements and the report read only the exact
           # current tree and never a retained docs/evidence payload, so the
-          # archives stay off the runner and history is not fetched.
+          # archives stay off the runner, their blobs are never fetched, and
+          # history is not fetched.
           fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: |
             /*
@@ -204,8 +210,10 @@ jobs:
         with:
           # Benchmark builds, measurements and the report read only the exact
           # current tree and never a retained docs/evidence payload, so the
-          # archives stay off the runner and history is not fetched.
+          # archives stay off the runner, their blobs are never fetched, and
+          # history is not fetched.
           fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: |
             /*
@@ -262,8 +270,10 @@ jobs:
         with:
           # Benchmark builds, measurements and the report read only the exact
           # current tree and never a retained docs/evidence payload, so the
-          # archives stay off the runner and history is not fetched.
+          # archives stay off the runner, their blobs are never fetched, and
+          # history is not fetched.
           fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: |
             /*
@@ -320,8 +330,10 @@ jobs:
         with:
           # Benchmark builds, measurements and the report read only the exact
           # current tree and never a retained docs/evidence payload, so the
-          # archives stay off the runner and history is not fetched.
+          # archives stay off the runner, their blobs are never fetched, and
+          # history is not fetched.
           fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: |
             /*
@@ -377,8 +389,10 @@ jobs:
       - uses: actions/checkout@v6
         with:
           # The clean-build gate clones this checkout with shared objects, which
-          # git downgrades to full object copies from a shallow source. Retain
-          # complete history while keeping retained docs/evidence off the runner.
+          # git downgrades to full object copies from a shallow source and, from
+          # a blob-filtered source, reports every excluded blob as invalid while
+          # checking out. Retain complete, unfiltered history while keeping
+          # retained docs/evidence off the runner.
           fetch-depth: 0
           persist-credentials: false
           sparse-checkout: |
@@ -452,8 +466,10 @@ jobs:
         with:
           # Benchmark builds, measurements and the report read only the exact
           # current tree and never a retained docs/evidence payload, so the
-          # archives stay off the runner and history is not fetched.
+          # archives stay off the runner, their blobs are never fetched, and
+          # history is not fetched.
           fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
           sparse-checkout: |
             /*
