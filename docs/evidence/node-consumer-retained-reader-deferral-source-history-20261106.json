@@ -1,0 +1,191 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "deferredLoaders": 7,
+    "extractedTests": 1,
+    "retainedFamilies": 7,
+    "runtimeSemanticChanges": 0,
+    "staticRetainedReaders": 0
+  },
+  "changedSupportCells": 0,
+  "currentSourcePin": {
+    "count": 1,
+    "current": "b967463e0ee733d5e04f491034a5180a55b29639d379a18f4e3199c463f2d002",
+    "path": "tests/generic-records-browser.test.mjs",
+    "previous": "24cefdba316c1ff498f95622cd467be3b3fce7309bbd09cce83d30d95d75f11c"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "failedRun": {
+    "headSha": "aa3297a61bfdb1bcb7a0c56b6efd9eaebf04e0f1",
+    "job": 127767402756,
+    "jobName": "Node and browser npm consumers",
+    "step": "Compile locked and dependency-free projects and install relocated npm releases offline",
+    "workflow": 42177405137
+  },
+  "failure": "fourteen retained-evidence tests of tests/generic-records.test.mjs failed with ENOENT under the metadata-only consumer sparse checkout",
+  "historyAdditions": [
+    {
+      "path": "scripts/update-node-consumer-retained-reader-deferral-source-history.mjs",
+      "sha256": "1c87800fd3747e29d9afc4ab1b23af6af432f929543ec3563c98f74547f4f29b"
+    },
+    {
+      "path": "tests/helpers/node-consumer-retained-reader-deferral-source-history-tests.mjs",
+      "sha256": "dec58f11700672244c21d5a31f50e67c030279d3fcddef6732bfcf8fde06d1d4"
+    },
+    {
+      "path": "tests/helpers/node-consumer-retained-reader-deferral-source-history.mjs",
+      "sha256": "0cdb55a5260e70205fc020ff63797870ca8caa42beb384a45c1e1fbd4a4b4095"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "tests/helpers/reviewed-fin-wasm-archived-identity-tests.mjs",
+      "sha256": "83fe7d6839b6433a46770998ad68ef68826708885bf64a3042bb0eeb9c0c7f37"
+    }
+  ],
+  "implementationCommit": "c8eedc635fdd34065433490baf2e6df15b097b81",
+  "integrationCommit": "a2280d787b249127bfe0d07bd1cb1decee740639",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b1ee35e4797c2f989b00c454418322bb965110330ddbebab47e29d1c1ef9f1c6",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"b967463e0ee733d5e04f491034a5180a55b29639d379a18f4e3199c463f2d002\"\n",
+          "previous": "          \"sha256\": \"24cefdba316c1ff498f95622cd467be3b3fce7309bbd09cce83d30d95d75f11c\"\n",
+          "start": 1908387
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a32f749e110db9f4bdf1b4ee62bf989a3c08611e9a82716cd36355625e333930"
+    },
+    {
+      "currentSha256": "6e018c0bac711be3d4418d7cc13950fa99b107491f4dfaecd7dc6fbba1eb2fcd",
+      "edits": [
+        {
+          "current": "import \"./helpers/node-consumer-retained-reader-deferral-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "4c26f9a0972b2b6e984f6c6e24d150362b8558e8bc4e486f5e70c8b0c5420788"
+    },
+    {
+      "currentSha256": "4dde168f530139fa636e69a07c3eb402992584c25d8e477a184fe62daa919630",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeNodeConsumerRetainedReaderDeferralSource\n\t, nodeConsumerRetainedReaderDeferralNormalizationPaths\n} from \"./node-consumer-retained-reader-deferral-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...nodeConsumerRetainedReaderDeferralNormalizationPaths\n\t, ...retainedContractMilestoneBindingNormalizationPaths\n",
+          "previous": "\t...retainedContractMilestoneBindingNormalizationPaths\n",
+          "start": 238312
+        },
+        {
+          "current": "\tlet stage = beforeNodeConsumerRetainedReaderDeferralSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeRetainedContractMilestoneBindingSource(\n",
+          "previous": "\tlet stage = beforeRetainedContractMilestoneBindingSource(\n",
+          "start": 299609
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9d89640d66cc117de58766563cf796a5abb29d008da020523150bbd7c2c1711f"
+    }
+  ],
+  "milestone": "node-consumer-retained-reader-deferral-v1",
+  "missingFamilies": [
+    "reviewed-fin-npm-20261007",
+    "reviewed-fin-hosts-20261007",
+    "reviewed-scalar-hosts-20261007",
+    "reviewed-scalar-rollout-20261007",
+    "reviewed-perl-scalar-20261007",
+    "reviewed-perl-containers-20261007",
+    "generic-record-browser-20261008"
+  ],
+  "predecessorCommit": "48db6f6d05cffe6deb9372ee97b544e00e036c4c",
+  "repair": "Register the archived-identity, original-archive and promotion suites of the reviewed Fin npm boundary and the browser archive, history and promotion suites through registerRetainedContractTests, extract the archived structural identity test into its own retained module so the current contract suite stays eager, and prove in tests/retained-contract-tests.test.mjs that the node-consumers static import closure reaches no retained-evidence reader while every loader stays registered. No workflow, evidence archive, support cell or product source changes.",
+  "rootCause": "The sparse Node and browser npm job defers retained contracts, but tests/helpers/reviewed-fin-wasm-installed-tests.mjs imported the original npm archive, promotion and host evidence suites eagerly, and tests/generic-records-browser.test.mjs imported the browser archive, its history layers and promotion suite eagerly. Both chains open retained docs/evidence families the metadata-only checkout never materializes, so the lane failed before its current-behavior tests, and the browser archive reader would have failed one step later.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "b967463e0ee733d5e04f491034a5180a55b29639d379a18f4e3199c463f2d002",
+      "edits": [
+        {
+          "current": "import { registerRetainedContractTests } from \"./helpers/retained-contract-tests.mjs\";\n",
+          "previous": "import \"./helpers/generic-record-browser-source-history-tests.mjs\";\nimport \"./helpers/generic-record-browser-evidence-tests.mjs\";\nimport \"./helpers/generic-record-browser-archive-source-history-tests.mjs\";\nimport \"./helpers/browser-generic-promotion-source-history-tests.mjs\";\n",
+          "start": 397
+        },
+        {
+          "current": "// The browser archive, its history layers and the promotion suite open the\n// retained generic-record-browser-20261008 evidence, so sparse consumer lanes\n// defer them while Core requires them. Current browser behavior stays active.\nawait registerRetainedContractTests([\n\t() => import(\"./helpers/generic-record-browser-source-history-tests.mjs\")\n\t, () => import(\"./helpers/generic-record-browser-evidence-tests.mjs\")\n\t, () => import(\"./helpers/generic-record-browser-archive-source-history-tests.mjs\")\n\t, () => import(\"./helpers/browser-generic-promotion-source-history-tests.mjs\")\n]);\n\n",
+          "previous": "",
+          "start": 1338
+        }
+      ],
+      "path": "tests/generic-records-browser.test.mjs",
+      "previousSha256": "24cefdba316c1ff498f95622cd467be3b3fce7309bbd09cce83d30d95d75f11c"
+    },
+    {
+      "currentSha256": "3bb8159b86076922260e4a1f6814ed4d6a0fa5d574dc00802131390fc6bb78b1",
+      "edits": [
+        {
+          "current": "import { reviewedFinWasmMismatches, reviewedFinWasmRefusal } from \"./reviewed-fin-wasm-mismatches.mjs\";\n",
+          "previous": "import { reviewedFinWasmMismatches, reviewedFinWasmPreFieldMismatches, reviewedFinWasmRefusal } from \"./reviewed-fin-wasm-mismatches.mjs\";\n",
+          "start": 1075
+        },
+        {
+          "current": "",
+          "previous": "test(\"the eight earlier structural Wasm refusal inputs remain byte-identical to their archived identities\", async () => {\n\tconst bytes = await readFile(\"docs/evidence/reviewed-fin-npm-20261007/reviewed-structural.json\");\n\tassert.equal(sha256(bytes), \"eb908163d52e8dfc3d24a7327eec6e7e9c366715030ab6284fe33b7c22d4af19\");\n\tconst report = JSON.parse(bytes);\n\tassert.deepEqual(reviewedFinWasmPreFieldMismatches(\"structural\").map(({ label, ir }) => ({ label, reviewedSourceSha256: sha256(canonicalJson(ir)) }))\n\t\t, report.mismatches.map(({ label, reviewedSourceSha256 }) => ({ label, reviewedSourceSha256 })));\n});\n\n",
+          "start": 14287
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-contract-tests.mjs",
+      "previousSha256": "420307f26ef0d2a9554027b80030da2d1133026491e3c7ac9bc3da9b4d8b3dba"
+    },
+    {
+      "currentSha256": "3679cfb721d149c5fd7ec86468520938b80354ef0f5425d7917deb38cd9fe736",
+      "edits": [
+        {
+          "current": "import { registerRetainedContractTests } from \"./retained-contract-tests.mjs\";\n",
+          "previous": "",
+          "start": 450
+        },
+        {
+          "current": "\n// The archived-identity, original-archive and promotion suites open retained\n// npm and host evidence, so sparse consumer lanes defer them while Core\n// requires them. The current contract and installed-package suites stay active.\nawait registerRetainedContractTests([\n\t() => import(\"./reviewed-fin-wasm-archived-identity-tests.mjs\")\n\t, () => import(\"./reviewed-fin-wasm-evidence-tests.mjs\")\n\t, () => import(\"./reviewed-fin-promotion-tests.mjs\")\n]);\n",
+          "previous": "import \"./reviewed-fin-wasm-evidence-tests.mjs\";\nimport \"./reviewed-fin-promotion-tests.mjs\";\n",
+          "start": 578
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-wasm-installed-tests.mjs",
+      "previousSha256": "cc0091f89787963c577ae80b15654311f31d10a15bcb5c63982d06c84b2fdf57"
+    },
+    {
+      "currentSha256": "352dfab65abdb2426d98dafb48b851fc7ad4b55a7a2d86e7081b83e8c28b04bd",
+      "edits": [
+        {
+          "current": "import { dirname, extname, join, normalize } from \"node:path\";\n",
+          "previous": "",
+          "start": 99
+        },
+        {
+          "current": "import ts from \"typescript\";\n",
+          "previous": "",
+          "start": 192
+        },
+        {
+          "current": "\n// Retained-evidence readers open an archived family from the worktree. A\n// sparse consumer lane that reaches one of them through a static import fails\n// with ENOENT before any current-behavior test runs (run 42177405137 job\n// 127767402756), so every reader must sit behind a retained-contract loader.\nconst retainedReaderShapes = Object.freeze([\n\t/^const directory = \"docs\\/evidence\\/([A-Za-z0-9_-]+)\";$/gmu\n\t, /readFile\\(\\s*[\"'`]docs\\/evidence\\/([A-Za-z0-9_-]+)\\//gu\n\t, /^export const [A-Za-z]+ = \"docs\\/evidence\\/([A-Za-z0-9_-]+)\\/[^\"]+\";$/gmu\n\t, /^const [A-Za-z]+\\n?\\s*= \"docs\\/evidence\\/([A-Za-z0-9_-]+)\\/[^\"]+\";$/gmu\n]);\n// Loaders without a family are exact-history suites: they read their inputs\n// through Git and the milestone readers, never from the worktree.\nconst deferredRetainedLoaders = Object.freeze([\n\t{ parent: \"tests/helpers/reviewed-fin-wasm-installed-tests.mjs\"\n\t\t, module: \"./reviewed-fin-wasm-archived-identity-tests.mjs\"\n\t\t, family: \"reviewed-fin-npm-20261007\" }\n\t, { parent: \"tests/helpers/reviewed-fin-wasm-installed-tests.mjs\"\n\t\t, module: \"./reviewed-fin-wasm-evidence-tests.mjs\"\n\t\t, family: \"reviewed-fin-npm-20261007\" }\n\t, { parent: \"tests/helpers/reviewed-fin-wasm-installed-tests.mjs\"\n\t\t, module: \"./reviewed-fin-promotion-tests.mjs\"\n\t\t, family: \"reviewed-fin-hosts-20261007\" }\n\t, { parent: \"tests/generic-records-browser.test.mjs\"\n\t\t, module: \"./helpers/generic-record-browser-source-history-tests.mjs\" }\n\t, { parent: \"tests/generic-records-browser.test.mjs\"\n\t\t, module: \"./helpers/generic-record-browser-evidence-tests.mjs\"\n\t\t, family: \"generic-record-browser-20261008\" }\n\t, { parent: \"tests/generic-records-browser.test.mjs\"\n\t\t, module: \"./helpers/generic-record-browser-archive-source-history-tests.mjs\" }\n\t, { parent: \"tests/generic-records-browser.test.mjs\"\n\t\t, module: \"./helpers/browser-generic-promotion-source-history-tests.mjs\"\n\t\t, family: \"generic-record-browser-20261008\" }\n]);\nconst resolveSpecifier = (from, specifier) => normalize(join(dirname(from)\n\t, extname(specifier) === \"\" ? `${specifier}.mjs` : specifier));\nconst specifierCache = new Map();\n\n/**\n * Relative specifiers that load eagerly: import declarations and re-exports.\n * Dynamic `import()` calls, strings and comments never contribute.\n *\n * @param source - Module text.\n * @param path - Repository-relative module path.\n */\nconst staticSpecifiers = (source, path) => {\n\tconst key = `${path}\\u0000${source}`;\n\tif(specifierCache.has(key)) return specifierCache.get(key);\n\tconst file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true\n\t\t, ts.ScriptKind.JS);\n\tconst found = [];\n\tfor(const statement of file.statements)\n\t\tif((ts.isImportDeclaration(statement) || ts.isExportDeclaration(statement))\n\t\t\t&& statement.moduleSpecifier\n\t\t\t&& ts.isStringLiteralLike(statement.moduleSpecifier)\n\t\t\t&& /^\\.\\.?\\//u.test(statement.moduleSpecifier.text))\n\t\t\tfound.push(statement.moduleSpecifier.text);\n\tspecifierCache.set(key, found);\n\treturn found;\n};\n\n/**\n * Every module a lane loads eagerly from its whole-file test entries.\n *\n * @param entries - Repository-relative test entry paths.\n * @param overrides - Module sources substituted for the worktree's files.\n */\nconst staticModuleClosure = async (entries, overrides = new Map()) => {\n\tconst closure = new Map();\n\tconst queue = [...entries];\n\twhile(queue.length > 0)\n\t{\n\t\tconst path = queue.shift();\n\t\tif(closure.has(path)) continue;\n\t\tconst source = overrides.has(path) ? overrides.get(path)\n\t\t\t: await readFile(path, \"utf8\");\n\t\tclosure.set(path, source);\n\t\tfor(const specifier of staticSpecifiers(source, path))\n\t\t\tqueue.push(resolveSpecifier(path, specifier));\n\t}\n\treturn closure;\n};\n\n/**\n * Test files one job runs whole, without a test-name pattern.\n *\n * @param job - Workflow job source.\n */\nconst wholeFileTestEntries = job => {\n\tconst entries = new Set();\n\tfor(const line of job.replace(/\\\\\\n\\s*/gu, \" \").split(\"\\n\"))\n\t{\n\t\tif(!/\\bnode --test\\b/u.test(line) || line.includes(\"--test-name-pattern\")\n\t\t\t|| line.includes(\"consumer-ci.mjs\")) continue;\n\t\tfor(const match of line.matchAll(/tests\\/[A-Za-z0-9_.-]+\\.test\\.mjs/gu))\n\t\t\tentries.add(match[0]);\n\t}\n\treturn [...entries].sort();\n};\n\n/**\n * Assert that a deferred lane's static closure opens no retained family and\n * that every retained reader stays reachable only through a loader.\n *\n * @param closure - Static module closure of the lane's whole-file entries.\n */\nconst assertDeferredLaneClosure = closure => {\n\tconst readers = [];\n\tfor(const [path, source] of closure)\n\t\tfor(const shape of retainedReaderShapes)\n\t\t\tfor(const match of source.matchAll(shape))\n\t\t\t\treaders.push(`${path} -> docs/evidence/${match[1]}`);\n\tassert.deepEqual(readers, []);\n\tfor(const loader of deferredRetainedLoaders)\n\t{\n\t\tconst parent = closure.get(loader.parent);\n\t\tassert.equal(typeof parent, \"string\", loader.parent);\n\t\tconst registration = parent.indexOf(\"await registerRetainedContractTests([\");\n\t\tconst entry = parent.indexOf(`() => import(\"${loader.module}\")`);\n\t\tassert.ok(registration >= 0 && entry > registration\n\t\t\t, `${loader.parent}: ${loader.module}`);\n\t\tassert.equal(parent.includes(`import \"${loader.module}\";`), false\n\t\t\t, `${loader.parent}: ${loader.module}`);\n\t\tassert.equal(closure.has(resolveSpecifier(loader.parent, loader.module))\n\t\t\t, false, loader.module);\n\t}\n};\n\ntest(\"the Node and browser consumer lane reaches no retained-evidence reader under deferred scope\", async () => {\n\tconst consumers = await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\");\n\tconst job = workflowJob(consumers, \"node-consumers\");\n\tassert.match(job, /LEAN_BRIDGE_RETAINED_CONTRACTS: deferred/u);\n\tconst entries = wholeFileTestEntries(job);\n\tfor(const entry of [\"tests/generic-records.test.mjs\", \"tests/generic-records-browser.test.mjs\"])\n\t\tassert.ok(entries.includes(entry), entry);\n\tconst closure = await staticModuleClosure(entries);\n\tassert.ok(closure.size > 1000);\n\tassertDeferredLaneClosure(closure);\n\tfor(const loader of deferredRetainedLoaders)\n\t{\n\t\tconst target = resolveSpecifier(loader.parent, loader.module);\n\t\tconst retained = await staticModuleClosure([target]);\n\t\tconst families = [...retained.values()].flatMap(source =>\n\t\t\tretainedReaderShapes.flatMap(shape => [...source.matchAll(shape)].map(match => match[1])));\n\t\tif(loader.family === undefined) assert.deepEqual(families, [], loader.module);\n\t\telse assert.ok(families.includes(loader.family), `${loader.module}: ${loader.family}`);\n\t\tconst parent = closure.get(loader.parent);\n\t\tconst eager = new Map([[loader.parent, `import \"${loader.module}\";\\n${parent}`]]);\n\t\tawait assert.rejects(async () => assertDeferredLaneClosure(\n\t\t\tawait staticModuleClosure(entries, eager)), { name: \"AssertionError\" }, `eager ${loader.module}`);\n\t\tconst dropped = new Map([[loader.parent\n\t\t\t, parent.replace(`() => import(\"${loader.module}\")`, \"() => Promise.resolve()\")]]);\n\t\tassert.notEqual(dropped.get(loader.parent), parent);\n\t\tawait assert.rejects(async () => assertDeferredLaneClosure(\n\t\t\tawait staticModuleClosure(entries, dropped)), { name: \"AssertionError\" }, `dropped ${loader.module}`);\n\t}\n});\n",
+          "previous": "",
+          "start": 2405
+        }
+      ],
+      "path": "tests/retained-contract-tests.test.mjs",
+      "previousSha256": "d1542e707e3ec8032bab226f6fffbdc8d7b9a1c0fe14e053abcfcd19cd3a7dd9"
+    }
+  ]
+}

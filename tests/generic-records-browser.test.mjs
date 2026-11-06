@@ -9,10 +9,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import "./helpers/component-package-handoff-tests.mjs";
-import "./helpers/generic-record-browser-source-history-tests.mjs";
-import "./helpers/generic-record-browser-evidence-tests.mjs";
-import "./helpers/generic-record-browser-archive-source-history-tests.mjs";
-import "./helpers/browser-generic-promotion-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -20,6 +17,16 @@ import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import { genericRecordInstantiations, genericRecordProvenanceOnly } from "./helpers/generic-record-packages.mjs";
 import { checkGenericRecordBrowserPackages, genericRecordArrayExports, genericRecordArrayInstantiations, genericRecordBrowserConfiguration, genericRecordBrowserExpected, genericRecordBrowserInstantiations, genericRecordBrowserProfiles, genericRecordBrowserSource, genericRecordBrowserSpecializations, validateGenericRecordBrowserObservation } from "./helpers/generic-record-browser.mjs";
 import { executeCorpus } from "./fixtures/generic-record-browser/javascript.mjs";
+
+// The browser archive, its history layers and the promotion suite open the
+// retained generic-record-browser-20261008 evidence, so sparse consumer lanes
+// defer them while Core requires them. Current browser behavior stays active.
+await registerRetainedContractTests([
+	() => import("./helpers/generic-record-browser-source-history-tests.mjs")
+	, () => import("./helpers/generic-record-browser-evidence-tests.mjs")
+	, () => import("./helpers/generic-record-browser-archive-source-history-tests.mjs")
+	, () => import("./helpers/browser-generic-promotion-source-history-tests.mjs")
+]);
 
 const enabled = process.env.LEAN_BRIDGE_GENERIC_RECORD_BROWSER_TEST === "1";
 const engineRoot = process.cwd();
