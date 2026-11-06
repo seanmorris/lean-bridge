@@ -26,6 +26,41 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 256 * 1024 * 1024
 });
+const applyRecordedUpdate = (previous, update) => {
+	assert.equal(sha256(previous), update.previousSha256, update.path);
+	if(Array.isArray(update.replacements))
+	{
+		let current = previous;
+		for(const replacement of update.replacements)
+		{
+			assert.equal(current.split(replacement.previous).length - 1
+				, replacement.count);
+			current = current.replaceAll(
+				replacement.previous, replacement.current);
+		}
+		assert.equal(sha256(current), update.currentSha256, update.path);
+		return current;
+	}
+	assert.ok(Array.isArray(update.edits));
+	let previousCursor = 0, currentCursor = 0;
+	const parts = [];
+	for(const edit of update.edits)
+	{
+		const unchangedLength = edit.start - currentCursor;
+		assert.ok(unchangedLength >= 0);
+		parts.push(previous.slice(previousCursor
+			, previousCursor + unchangedLength), edit.current);
+		previousCursor += unchangedLength;
+		assert.equal(previous.slice(previousCursor
+			, previousCursor + edit.previous.length), edit.previous);
+		previousCursor += edit.previous.length;
+		currentCursor = edit.start + edit.current.length;
+	}
+	parts.push(previous.slice(previousCursor));
+	const current = parts.join("");
+	assert.equal(sha256(current), update.currentSha256, update.path);
+	return current;
+};
 
 test("value-index matrix evidence-pin repair has one reversible lineage"
 	, async () => {
@@ -72,9 +107,12 @@ test("value-index matrix evidence-pin repair closes pins and additions"
 		assert.equal(record.pinCount, 72);
 		assert.deepEqual(record.pinUpdates
 			, checkedRecordValueIndexMatrixEvidencePinRepairPins);
-		const inventory = JSON.parse(await readFile(
-			"docs/type-surface.v1.json", "utf8"
-		));
+		const inventoryUpdate = record.updates.find(update =>
+			update.path === "docs/type-surface.v1.json");
+		assert.ok(inventoryUpdate);
+		const inventory = JSON.parse(applyRecordedUpdate(git(["show"
+			, `${checkedRecordValueIndexMatrixEvidencePinRepairPredecessor}`
+				+ `:${inventoryUpdate.path}`]), inventoryUpdate));
 		for(const pin of checkedRecordValueIndexMatrixEvidencePinRepairPins)
 		{
 			const matches = inventory.evidence.flatMap(evidence => evidence.files)
@@ -85,7 +123,9 @@ test("value-index matrix evidence-pin repair closes pins and additions"
 		}
 		for(const addition of record.additions)
 		{
-			assert.equal(sha256(await readFile(addition.path))
+			assert.equal(sha256(await sourceAtFinHistoryMilestone(
+				addition.path, addition.currentSha256
+				, beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource))
 				, addition.currentSha256, addition.path);
 			assert.notEqual(spawnSync("git", ["cat-file", "-e"
 				, `${checkedRecordValueIndexMatrixEvidencePinRepairPredecessor}:${addition.path}`]

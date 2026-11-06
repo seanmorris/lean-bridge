@@ -88,8 +88,9 @@ test("Python fixture classifies negative Nat before dependent Fin", async () => 
 
 test("Python fixture repair changes no published source pin or exact model"
 	, async () => {
-		const document = JSON.parse(await readFile(
-			"docs/type-surface.v1.json", "utf8"));
+		const document = JSON.parse(git(["show"
+			, pythonDependentFinNatRejectionImplementation
+			+ ":docs/type-surface.v1.json"]));
 		const live = typeSurfaceEvidenceFiles(document);
 		for(const path of pythonDependentFinNatRejectionImplementationPaths)
 			assert.equal(live.filter(file => file.path === path).length, 0, path);
