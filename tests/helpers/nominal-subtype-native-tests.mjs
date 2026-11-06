@@ -124,13 +124,24 @@ test("nominal C and Perl guards check Fin first and only enter the active varian
 	assert.match(source, /arg0\.right\.payload was rejected by NominalConversion\.plusTwo/u);
 	assert.match(source, /arg0\.choices\.values\[%zu\]\?\.error was rejected by NominalConversion\.plusTwo/u);
 	assert.doesNotMatch(source, /undefined/u);
-	for(const item of value.exports.filter(item => ["combine", "nested", "eventFirst"].includes(item.publicName)))
-	{
+	// Every positional marker must exist: a missing one returns -1 and would make the slice bound vacuous.
+	const guardBeforeDispatch = (text, item) => {
 		const symbol = `${item.symbol}_refinement_0`;
-		const start = source.lastIndexOf("static ", source.indexOf(symbol + "_"));
-		const body = source.slice(start, source.indexOf(`lean_object *checked = ${item.symbol}(`));
-		assert.ok(body.indexOf("lb_fin_below(") >= 0 && body.indexOf("lb_fin_below(") < body.indexOf(symbol));
-	}
+		const first = text.indexOf(symbol + "_");
+		const dispatch = text.indexOf(`lean_object *_lb_checked = ${item.symbol}(`);
+		assert.notEqual(first, -1, `${item.publicName}: refinement helper`);
+		assert.notEqual(dispatch, -1, `${item.publicName}: Lean dispatch`);
+		const start = text.lastIndexOf("static ", first);
+		assert.ok(start !== -1 && start < first && first < dispatch, item.publicName);
+		const body = text.slice(start, dispatch);
+		assert.ok(body.indexOf("lb_fin_below(") >= 0 && body.indexOf("lb_fin_below(") < body.indexOf(symbol), item.publicName);
+	};
+	const guarded = value.exports.filter(item => ["combine", "nested", "event_first"].includes(item.publicName));
+	assert.deepEqual(guarded.map(item => item.publicName).sort(), ["combine", "event_first", "nested"]);
+	for(const item of guarded) guardBeforeDispatch(source, item);
+	const dispatchMarker = `lean_object *_lb_checked = ${guarded[0].symbol}(`;
+	for(const changed of [source.replace(dispatchMarker, `lean_object *checked = ${guarded[0].symbol}(`), source.replace(dispatchMarker, "")])
+		assert.throws(() => guardBeforeDispatch(changed, guarded[0]), { name: "AssertionError" });
 	const receipt = { library: "libcomponent_test.so", nativeLibrary: { sha256: "b".repeat(64) }, runtimeIdentity: "c".repeat(64), initializer: "initialize_Sample" };
 	const xs = generatePerlBindingPackage(value, receipt)["Component.xs"];
 	assert.match(xs, /%s\.right\.payload was rejected by NominalConversion\.plusTwo/u);
