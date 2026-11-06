@@ -61,12 +61,15 @@ test("Perl scalar relocation preserves the inventory without refreshing pins or 
 	assert.deepEqual(current, previous);
 });
 
-test("Perl scalar relocation retains the reviewed handoff and three-source counter scope", async () => {
-	const source = await readFile("tests/perl-fin.test.mjs", "utf8");
+test("Perl scalar relocation authenticates the reviewed handoff and retains the three-source counter scope", async () => {
+	const path = "tests/perl-fin.test.mjs";
+	const source = sourceAtHistoryMilestone(
+		perlScalarRelocationHistoryPath, path
+	);
 	const registration = 'import "./helpers/perl-scalar-relocation-source-history-tests.mjs";\n';
 	assert.equal(source.split(registration).length, 2);
 	assert.equal(sha256(source.replace(registration, "")), "49d933169b4e0fea7cfd5c4bdfa9941e2ffeafdee19b4ea45f31dd721d5789f8");
-	assert.match(source, /static unsigned long counts\[3\];/u);
+	assert.match(await readFile(path, "utf8"), /static unsigned long counts\[3\];/u);
 });
 
 test("the Perl scalar relocation updater refuses another HEAD before any write", async t => {

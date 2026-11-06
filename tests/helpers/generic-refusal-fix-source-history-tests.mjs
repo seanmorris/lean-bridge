@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeInheritedRecordPromotionSource } from "./inherited-record-promotion-source-history.mjs";
 import { beforeGenericRefusalFixSource, genericRefusalFixChangedPaths, genericRefusalFixHistoryPath, genericRefusalFixPredecessor, reverseGenericRefusalFixUpdate } from "./generic-refusal-fix-source-history.mjs";
+import { retainedContractScopeRepairPredecessor } from "./retained-contract-scope-repair-source-history.mjs";
 import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("Generic refusal fix history authenticates exact predecessors and rejects unrecorded edits", async () => {
@@ -62,11 +63,19 @@ test("Generic refusal fix refreshes exactly 11 source pins without changing cove
 	assert.deepEqual(current, previous);
 });
 
-test("the generic refusal correction retains the exact reviewed source handoff", async () => {
-	const path = "tests/generic-records.test.mjs", text = await readFile(path, "utf8");
+test("the generic refusal correction authenticates the reviewed handoff and retains lazy registration", async () => {
+	const path = "tests/generic-records.test.mjs";
 	const addition = 'import "./helpers/generic-refusal-fix-source-history-tests.mjs";\n';
+	const text = execFileSync("git", ["show"
+		, `${retainedContractScopeRepairPredecessor}:${path}`]
+	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	assert.equal(text.split(addition).length, 2);
 	assert.equal(sha256(text.replace(addition, "")), "4e064e24cec511c0e9afaf385604f1962c169e9ee4e0e0cd8850e9225905658e");
+	const live = await readFile(path, "utf8");
+	assert.equal(live.split(addition).length, 1);
+	assert.equal(live.split(
+		'() => import("./helpers/generic-refusal-fix-source-history-tests.mjs")'
+	).length, 2);
 });
 
 test("the Generic refusal fix updater refuses another HEAD before any write", async t => {
