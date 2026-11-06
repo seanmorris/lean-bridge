@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/final-audit-checkout-optimization-source-history-tests.mjs";
 import "./helpers/complete-current-source-pin-preflight-source-history-tests.mjs";
 import "./helpers/current-source-pin-preflight-tests.mjs";
 import "./helpers/exact-head-replay-contract-repair-source-history-tests.mjs";

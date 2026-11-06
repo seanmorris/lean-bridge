@@ -5,7 +5,9 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
 import test from "node:test";
 import {
 	auditCurrentSourcePins, previewCurrentSourcePinRefresh
@@ -38,6 +40,24 @@ const git = arguments_ => execFileSync("git", arguments_, {
 });
 const record = async () => JSON.parse(await readFile(
 	completeCurrentSourcePinPreflightHistoryPath, "utf8"));
+const withHistoricalSources = async (commit, paths, use) => {
+	const repository = await mkdtemp(join(tmpdir()
+		, "lean-complete-pin-preflight-history-"));
+	try
+	{
+		for(const path of paths)
+		{
+			const target = join(repository, path);
+			await mkdir(dirname(target), { recursive: true });
+			await writeFile(target, git(["show", `${commit}:${path}`]));
+		}
+		return await use(repository);
+	}
+	finally
+	{
+		await rm(repository, { recursive: true, force: true });
+	}
+};
 
 test("complete current-source preflight records the whole discovered cohort"
 	, async () => {
@@ -82,11 +102,28 @@ test("complete current-source refresh is the exact generated reconciliation"
 			, `${completeCurrentSourcePinPreflightImplementation}:docs/type-surface.v1.json`])));
 		assert.deepEqual(reconciled.inventory.profiles, before.profiles);
 		assert.deepEqual(reconciled.inventory.observations, before.observations);
-		const prior = await auditCurrentSourcePins(before);
-		assert.deepEqual(previewCurrentSourcePinRefresh(before, prior)
-			, { paths: 5, refreshed: 216 });
-		assert.deepEqual(await auditCurrentSourcePins(reconciled.inventory)
-			, value.finalPreflight);
+		await withHistoricalSources(completeCurrentSourcePinPreflightPredecessor
+			, completeCurrentSourcePinPreflightCurrentSources
+			, async repository => {
+				const prior = await auditCurrentSourcePins(before, {
+					repository, paths: completeCurrentSourcePinPreflightCurrentSources
+				});
+				assert.deepEqual(prior.findings, value.discovery.findings);
+				assert.deepEqual(previewCurrentSourcePinRefresh(before, prior)
+					, { paths: 5, refreshed: 216 });
+			}
+		);
+		await withHistoricalSources(completeCurrentSourcePinPreflightImplementation
+			, completeCurrentSourcePinPreflightCurrentSources
+			, async repository => {
+				const after = await auditCurrentSourcePins(reconciled.inventory, {
+					repository, paths: completeCurrentSourcePinPreflightCurrentSources
+				});
+				assert.equal(after.cohort, 5);
+				assert.equal(after.occurrences, 216);
+				assert.deepEqual(after.findings, []);
+			}
+		);
 	}
 );
 

@@ -1,0 +1,449 @@
+{
+  "currentSourceDigests": [
+    {
+      "path": ".github/workflows/checked-record-value-index-matrix.yml",
+      "sha256": "5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5"
+    },
+    {
+      "path": ".github/workflows/optional-parameter-complete.yml",
+      "sha256": "d44ce04089a6d5f57c55fa4132d58df6bcfb5860f2b12108881e547f27753bf3"
+    },
+    {
+      "path": "tests/checked-record-value-index-matrix.test.mjs",
+      "sha256": "2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0"
+    },
+    {
+      "path": "tests/helpers/optional-parameter-complete-ci-tests.mjs",
+      "sha256": "97dcf58550c14beb85ce048467e9d8d16ad822ede008aee4a5b32e607cf260e0"
+    }
+  ],
+  "currentSourcePaths": [
+    ".github/workflows/checked-record-value-index-matrix.yml",
+    ".github/workflows/optional-parameter-complete.yml",
+    "tests/checked-record-value-index-matrix.test.mjs",
+    "tests/helpers/optional-parameter-complete-ci-tests.mjs"
+  ],
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-final-audit-checkout-optimization-source-history.mjs",
+      "sha256": "5ba7bc3be55b5fafb8f3685c5aa1eddd898546e7222080e6017a7577b03aeb4f"
+    },
+    {
+      "path": "tests/helpers/final-audit-checkout-optimization-source-history-tests.mjs",
+      "sha256": "dfca5becbc2b1144c7e8f8f895f8d25f8de4277f0a7ce821fb96dafd9bc208d1"
+    },
+    {
+      "path": "tests/helpers/final-audit-checkout-optimization-source-history.mjs",
+      "sha256": "6e47c091dfbf35e048e1b40003df115e0cd47bdd1ed4a397a82a962c1d20fd0c"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-ci-tests.mjs",
+      "sha256": "9fca1fa8d7d945f9c18cd12b2cdb2a872e1cc199e57102ac8bed0cb35908c897"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-ci.mjs",
+      "sha256": "75bb7f50c52febab243be7e5896789aa8d6e593a3f4291052e604a34f46a0604"
+    }
+  ],
+  "implementationUpdates": [
+    {
+      "currentSha256": "5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5",
+      "edits": [
+        {
+          "current": "      - \"tests/helpers/checked-record-value-index-matrix-ci*.mjs\"\n",
+          "previous": "",
+          "start": 480
+        },
+        {
+          "current": "      - \"tests/helpers/checked-record-value-index-matrix-ci*.mjs\"\n",
+          "previous": "",
+          "start": 1062
+        },
+        {
+          "current": "      # The promotion and source-history suites read Git history; the only\n      # archive payloads either test opens are the retained value-index\n      # archives, so everything else stays an index or a root record.\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n",
+          "previous": "      - uses: actions/checkout@v4\n",
+          "start": 1470
+        },
+        {
+          "current": "          filter: blob:none\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /acceptance/\n            /config/\n            /containers/\n            /demos/\n            /nix/\n            /notices/\n            /patches/\n            /poc/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/*.json\n            /docs/evidence/*.md\n            /docs/evidence/*.xml\n            /docs/evidence/*/index.json\n            /docs/evidence/checked-record-value-index-*/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 1803
+        }
+      ],
+      "path": ".github/workflows/checked-record-value-index-matrix.yml",
+      "previousSha256": "8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646"
+    },
+    {
+      "currentSha256": "d44ce04089a6d5f57c55fa4132d58df6bcfb5860f2b12108881e547f27753bf3",
+      "edits": [
+        {
+          "current": "      - name: Check out complete history and the exact optional-parameter corpus\n",
+          "previous": "      - name: Check out complete source history\n",
+          "start": 2264
+        },
+        {
+          "current": "          filter: blob:none\n",
+          "previous": "",
+          "start": 2418
+        },
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/optional-parameter-hosted-20261029/\n          sparse-checkout-cone-mode: false\n      - name: Require complete immutable source history\n        shell: bash\n        run: |\n          set -euo pipefail\n          test \"$(git rev-parse --is-shallow-repository)\" = false\n          git cat-file -e 496de9b6f22725da76e2fbe3aba9a2a1dd76ce06^{commit}\n          git cat-file -e faf28c4216c0b68a742d4e5f6119432d78912e2f^{commit}\n",
+          "previous": "",
+          "start": 2483
+        }
+      ],
+      "path": ".github/workflows/optional-parameter-complete.yml",
+      "previousSha256": "4fbc669cc0eaf9730592c424a2e5468ab26f40862eafc198fc670a8cb8f395a0"
+    },
+    {
+      "currentSha256": "2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0",
+      "edits": [
+        {
+          "current": "import \"./helpers/checked-record-value-index-matrix-ci-tests.mjs\";\n",
+          "previous": "",
+          "start": 87
+        }
+      ],
+      "path": "tests/checked-record-value-index-matrix.test.mjs",
+      "previousSha256": "d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e"
+    },
+    {
+      "currentSha256": "97dcf58550c14beb85ce048467e9d8d16ad822ede008aee4a5b32e607cf260e0",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 132
+        },
+        {
+          "current": "import {\n\toptionalParameterCompleteReferencePaths\n} from \"./optional-parameter-complete-promotion.mjs\";\nimport {\n\toptionalParameterHostedEvidenceDirectory\n} from \"./optional-parameter-hosted-archive.mjs\";\nimport { collectModuleClosure } from \"./module-closure.mjs\";\n",
+          "previous": "",
+          "start": 258
+        },
+        {
+          "current": "const producerRevision = \"496de9b6f22725da76e2fbe3aba9a2a1dd76ce06\";\nconst archiveRevision = \"faf28c4216c0b68a742d4e5f6119432d78912e2f\";\nconst auditSparseRoots = Object.freeze([\n\t\".github\", \"schema\", \"scripts\", \"site\", \"src\", \"tests\", \"docs\"\n]);\nconst auditCheckout = `      - name: Check out complete history and the exact optional-parameter corpus\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          filter: blob:none\n          persist-credentials: false\n          sparse-checkout: |\n            /*\n            !/*/\n            /.github/\n            /schema/\n            /scripts/\n            /site/\n            /src/\n            /tests/\n            /docs/\n            !/docs/evidence/*\n            /docs/evidence/optional-parameter-hosted-20261029/\n          sparse-checkout-cone-mode: false\n`;\nconst auditHistoryGuard = `      - name: Require complete immutable source history\n        shell: bash\n        run: |\n          set -euo pipefail\n          test \"$(git rev-parse --is-shallow-repository)\" = false\n          git cat-file -e ${producerRevision}^{commit}\n          git cat-file -e ${archiveRevision}^{commit}\n`;\n\nconst auditSparseSelects = path => {\n\tassert.ok(typeof path === \"string\" && path.length > 0\n\t\t&& !path.startsWith(\"/\") && !path.includes(\"\\\\\"));\n\tif(!path.includes(\"/\")) return true;\n\tconst root = path.slice(0, path.indexOf(\"/\"));\n\tif(!auditSparseRoots.includes(root)) return false;\n\tif(!path.startsWith(\"docs/evidence/\")) return true;\n\treturn path.startsWith(`${optionalParameterHostedEvidenceDirectory}/`);\n};\n\nconst auditEntryPoints = Object.freeze([\n\t\"tests/optional-parameter-complete-hosted-evidence.test.mjs\"\n\t, \"tests/optional-parameter-complete-promotion.test.mjs\"\n\t, ...[\"npm\", \"native\", \"php\", \"language\", \"managed\", \"wit\"]\n\t\t.map(name => `scripts/check-optional-parameter-${name}-ci.mjs`)\n]);\n\n",
+          "previous": "",
+          "start": 1220
+        },
+        {
+          "current": "\tconst audit = source.slice(source.indexOf(\"  audit:\\n\")\n\t\t, source.indexOf(\"  npm-browser:\\n\"));\n\tassert.equal(audit.split(auditCheckout).length - 1, 1);\n\tassert.equal(audit.split(auditHistoryGuard).length - 1, 1);\n\tassert.equal(audit.match(/actions\\/checkout@/gu)?.length, 1);\n\tassert.ok(audit.indexOf(auditCheckout) < audit.indexOf(auditHistoryGuard));\n\tassert.ok(audit.indexOf(auditHistoryGuard)\n\t\t< audit.indexOf(\"      - name: Install Node.js\\n\"));\n",
+          "previous": "\tassert.match(source, /uses: actions\\/checkout@v6\\n {8}with:\\n {10}fetch-depth: 0\\n {10}persist-credentials: false/u);\n",
+          "start": 3913
+        },
+        {
+          "current": "test(\"optional-parameter audit materializes only its complete input closure\"\n\t, async () => {\n\t\tconst archiveIndexPath\n\t\t\t= `${optionalParameterHostedEvidenceDirectory}/index.json`;\n\t\tconst archiveIndex = JSON.parse(await readFile(\n\t\t\tarchiveIndexPath, \"utf8\"));\n\t\tconst required = new Set([\n\t\t\t\"package.json\", \"package-lock.json\", archiveIndexPath\n\t\t\t, \"docs/type-surface.v1.json\", \"docs/consumer-support.v1.json\"\n\t\t\t, \"docs/lean/existing-package.md\", \"docs/lean/export-decisions.md\"\n\t\t\t, \"schema/binding-ir.schema.json\"\n\t\t\t, ...optionalParameterCompleteReferencePaths\n\t\t]);\n\t\tfor(const entry of auditEntryPoints)\n\t\t\tfor(const path of await collectModuleClosure(entry)) required.add(path);\n\t\tfor(const descriptor of archiveIndex.files)\n\t\t\trequired.add(\n\t\t\t\t`${optionalParameterHostedEvidenceDirectory}/${descriptor.path}`);\n\t\tfor(const path of required)\n\t\t\tassert.equal(auditSparseSelects(path), true, path);\n\n\t\tconst evidenceEntries = execFileSync(\"git\", [\n\t\t\t\"ls-tree\", \"--name-only\", \"HEAD:docs/evidence\"\n\t\t], { encoding: \"utf8\" }).trim().split(\"\\n\").filter(Boolean);\n\t\tassert.ok(evidenceEntries.length > 1);\n\t\tfor(const entry of evidenceEntries)\n\t\t{\n\t\t\tconst path = `docs/evidence/${entry}`;\n\t\t\tassert.equal(auditSparseSelects(path + (entry\n\t\t\t\t=== \"optional-parameter-hosted-20261029\" ? \"/index.json\" : \"/\"))\n\t\t\t\t, entry === \"optional-parameter-hosted-20261029\", path);\n\t\t}\n\t}\n);\n\n",
+          "previous": "",
+          "start": 6388
+        },
+        {
+          "current": "\t\t, source.replace(\"          fetch-depth: 0\\n\"\n\t\t\t, \"          fetch-depth: 1\\n\")\n\t\t, source.replace(\"          filter: blob:none\\n\", \"\")\n\t\t, source.replace(\"          persist-credentials: false\\n\"\n\t\t\t, \"          persist-credentials: true\\n\")\n\t\t, source.replace(\"            !/docs/evidence/*\\n\", \"\")\n\t\t, source.replace(\n\t\t\t\"            /docs/evidence/optional-parameter-hosted-20261029/\\n\"\n\t\t\t, \"            /docs/evidence/\\n\")\n\t\t, source.replace(\"          sparse-checkout-cone-mode: false\\n\"\n\t\t\t, \"          sparse-checkout-cone-mode: true\\n\")\n\t\t, ...auditSparseRoots.map(root => source.replace(\n\t\t\t`            /${root}/\\n`, \"\"))\n\t\t, source.replace(\"          test \\\"$(git rev-parse --is-shallow-repository)\\\" = false\\n\", \"\")\n\t\t, source.replace(producerRevision, \"0\".repeat(40))\n\t\t, source.replace(archiveRevision, \"0\".repeat(40))\n",
+          "previous": "",
+          "start": 8220
+        }
+      ],
+      "path": "tests/helpers/optional-parameter-complete-ci-tests.mjs",
+      "previousSha256": "f42d7e26381a5cbec2e28f129b42a67f31a672aa92f9ebe1b4f854a4a60b2f4e"
+    }
+  ],
+  "integrationCommit": "fa40b43588e03ee1af5f8f072fed0c1809aed579",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6e976aabff9fcda58abf6ec2ce70c200da54b11b3bd0d76f44a82ab128ded172",
+      "edits": [
+        {
+          "current": "import \"./helpers/final-audit-checkout-optimization-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "0136b1349ca3607c7039b1846c01db28a6ce82b0ff1bd92b1a0d23206e80e3b4"
+    },
+    {
+      "currentSha256": "32597091b577e45b8db7488959c89b9ff48178dca3fa6a8ac47822dd757a2ab4",
+      "edits": [
+        {
+          "current": "import { mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { dirname, join } from \"node:path\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 204
+        },
+        {
+          "current": "const withHistoricalSources = async (commit, paths, use) => {\n\tconst repository = await mkdtemp(join(tmpdir()\n\t\t, \"lean-complete-pin-preflight-history-\"));\n\ttry\n\t{\n\t\tfor(const path of paths)\n\t\t{\n\t\t\tconst target = join(repository, path);\n\t\t\tawait mkdir(dirname(target), { recursive: true });\n\t\t\tawait writeFile(target, git([\"show\", `${commit}:${path}`]));\n\t\t}\n\t\treturn await use(repository);\n\t}\n\tfinally\n\t{\n\t\tawait rm(repository, { recursive: true, force: true });\n\t}\n};\n",
+          "previous": "",
+          "start": 1806
+        },
+        {
+          "current": "\t\tawait withHistoricalSources(completeCurrentSourcePinPreflightPredecessor\n\t\t\t, completeCurrentSourcePinPreflightCurrentSources\n\t\t\t, async repository => {\n\t\t\t\tconst prior = await auditCurrentSourcePins(before, {\n\t\t\t\t\trepository, paths: completeCurrentSourcePinPreflightCurrentSources\n\t\t\t\t});\n\t\t\t\tassert.deepEqual(prior.findings, value.discovery.findings);\n\t\t\t\tassert.deepEqual(previewCurrentSourcePinRefresh(before, prior)\n\t\t\t\t\t, { paths: 5, refreshed: 216 });\n\t\t\t}\n\t\t);\n\t\tawait withHistoricalSources(completeCurrentSourcePinPreflightImplementation\n\t\t\t, completeCurrentSourcePinPreflightCurrentSources\n\t\t\t, async repository => {\n\t\t\t\tconst after = await auditCurrentSourcePins(reconciled.inventory, {\n\t\t\t\t\trepository, paths: completeCurrentSourcePinPreflightCurrentSources\n\t\t\t\t});\n\t\t\t\tassert.equal(after.cohort, 5);\n\t\t\t\tassert.equal(after.occurrences, 216);\n\t\t\t\tassert.deepEqual(after.findings, []);\n\t\t\t}\n\t\t);\n",
+          "previous": "\t\tconst prior = await auditCurrentSourcePins(before);\n\t\tassert.deepEqual(previewCurrentSourcePinRefresh(before, prior)\n\t\t\t, { paths: 5, refreshed: 216 });\n\t\tassert.deepEqual(await auditCurrentSourcePins(reconciled.inventory)\n\t\t\t, value.finalPreflight);\n",
+          "start": 4431
+        }
+      ],
+      "path": "tests/helpers/complete-current-source-pin-preflight-source-history-tests.mjs",
+      "previousSha256": "b3df0959cc67285a72970f6487b54c4c51e95b358177a9a63e51548851f29aa2"
+    },
+    {
+      "currentSha256": "e51f1a071fc0dd83c268fccc752d46422ef6ab0165cbc19f4b3bf6d64fefb509",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeFinalAuditCheckoutOptimizationSource\n\t, finalAuditCheckoutOptimizationNormalizationPaths\n} from \"./final-audit-checkout-optimization-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...finalAuditCheckoutOptimizationNormalizationPaths\n\t, ...completeCurrentSourcePinPreflightNormalizationPaths\n",
+          "previous": "\t...completeCurrentSourcePinPreflightNormalizationPaths\n",
+          "start": 237265
+        },
+        {
+          "current": "\tlet stage = beforeFinalAuditCheckoutOptimizationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCompleteCurrentSourcePinPreflightSource(\n",
+          "previous": "\tlet stage = beforeCompleteCurrentSourcePinPreflightSource(\n",
+          "start": 298223
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "96bf5f8cd2a727251484786bedff19380134223f7f2f35eef465528bc1626d7f"
+    }
+  ],
+  "measurements": {
+    "optionalRetainedCorpusBytes": 1065300246,
+    "valueIndexBaselineCheckoutSeconds": 597,
+    "valueIndexSparseMissingReads": 0,
+    "valueIndexSparseReplayTests": 28
+  },
+  "milestone": "final-audit-checkout-optimization-v1",
+  "optionalImplementationCommit": "48d87f850f105a62e62de8d0063b24e1c3466d2f",
+  "pinRefreshCommit": "14162831a52c53d9bde88457a01617cd8660789b",
+  "pinUpdates": [
+    {
+      "currentSha256": "9db72602db21c718103a163aa19c58567c4d297035c2a2a68e30cd9df2abbc6c",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 49231777
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 49232138
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 49629443
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 49629804
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 50027413
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 50027774
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 50425483
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 50425844
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 50823938
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 50824299
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 51033796
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 51034157
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 51243782
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 51244143
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 51454326
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 51454687
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 51665069
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 51665430
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 52069880
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 52070241
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 52474913
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 52475274
+        },
+        {
+          "current": "          \"sha256\": \"5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5\"\n",
+          "previous": "          \"sha256\": \"8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646\"\n",
+          "start": 52877331
+        },
+        {
+          "current": "          \"sha256\": \"2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0\"\n",
+          "previous": "          \"sha256\": \"d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e\"\n",
+          "start": 52877692
+        },
+        {
+          "current": "          \"sha256\": \"d44ce04089a6d5f57c55fa4132d58df6bcfb5860f2b12108881e547f27753bf3\"\n",
+          "previous": "          \"sha256\": \"4fbc669cc0eaf9730592c424a2e5468ab26f40862eafc198fc670a8cb8f395a0\"\n",
+          "start": 89696749
+        },
+        {
+          "current": "          \"sha256\": \"97dcf58550c14beb85ce048467e9d8d16ad822ede008aee4a5b32e607cf260e0\"\n",
+          "previous": "          \"sha256\": \"f42d7e26381a5cbec2e28f129b42a67f31a672aa92f9ebe1b4f854a4a60b2f4e\"\n",
+          "start": 89698366
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "bca28605938a5b3f74e4cfea2f83689cd7e0da53d74a34dc57fd1c66bd36b604"
+    }
+  ],
+  "predecessorCommit": "b9264805cd5d07fcd59e8e3da1bd1ba9691e2d64",
+  "preflightAfter": {
+    "cohort": 2661,
+    "findings": [],
+    "occurrences": 16326
+  },
+  "preflightBefore": {
+    "cohort": 2661,
+    "findings": [
+      {
+        "actualSha256": "5cf90167f8624e2a04759619809ff2e4e1c5f1c35f49f5a5ac218c792f4abeb5",
+        "evidenceIds": [
+          "checked-record-value-index-dotnet-ordinary-source-hosted-installed",
+          "checked-record-value-index-dotnet-result-only-ordinary-source-hosted-installed",
+          "checked-record-value-index-dotnet-result-only-reviewed-ir-hosted-installed",
+          "checked-record-value-index-dotnet-reviewed-ir-hosted-installed",
+          "checked-record-value-index-jvm-ordinary-source-hosted-installed",
+          "checked-record-value-index-jvm-result-only-ordinary-source-hosted-installed",
+          "checked-record-value-index-jvm-result-only-reviewed-ir-hosted-installed",
+          "checked-record-value-index-jvm-reviewed-ir-hosted-installed",
+          "checked-record-value-index-native-ordinary-source-hosted-installed",
+          "checked-record-value-index-native-result-only-ordinary-source-hosted-installed",
+          "checked-record-value-index-native-result-only-reviewed-ir-hosted-installed",
+          "checked-record-value-index-native-reviewed-ir-hosted-installed"
+        ],
+        "expectedSha256": [
+          "8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646"
+        ],
+        "kind": "stale",
+        "path": ".github/workflows/checked-record-value-index-matrix.yml",
+        "pins": 12
+      },
+      {
+        "actualSha256": "d44ce04089a6d5f57c55fa4132d58df6bcfb5860f2b12108881e547f27753bf3",
+        "evidenceIds": [
+          "hosted-optional-parameter-complete-installed"
+        ],
+        "expectedSha256": [
+          "4fbc669cc0eaf9730592c424a2e5468ab26f40862eafc198fc670a8cb8f395a0"
+        ],
+        "kind": "stale",
+        "path": ".github/workflows/optional-parameter-complete.yml",
+        "pins": 1
+      },
+      {
+        "actualSha256": "2eafabd9660c3851e420bc3e5e7c3f4ada0933cd76e62411efb8aa8ea20956f0",
+        "evidenceIds": [
+          "checked-record-value-index-dotnet-ordinary-source-hosted-installed",
+          "checked-record-value-index-dotnet-result-only-ordinary-source-hosted-installed",
+          "checked-record-value-index-dotnet-result-only-reviewed-ir-hosted-installed",
+          "checked-record-value-index-dotnet-reviewed-ir-hosted-installed",
+          "checked-record-value-index-jvm-ordinary-source-hosted-installed",
+          "checked-record-value-index-jvm-result-only-ordinary-source-hosted-installed",
+          "checked-record-value-index-jvm-result-only-reviewed-ir-hosted-installed",
+          "checked-record-value-index-jvm-reviewed-ir-hosted-installed",
+          "checked-record-value-index-native-ordinary-source-hosted-installed",
+          "checked-record-value-index-native-result-only-ordinary-source-hosted-installed",
+          "checked-record-value-index-native-result-only-reviewed-ir-hosted-installed",
+          "checked-record-value-index-native-reviewed-ir-hosted-installed"
+        ],
+        "expectedSha256": [
+          "d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e"
+        ],
+        "kind": "stale",
+        "path": "tests/checked-record-value-index-matrix.test.mjs",
+        "pins": 12
+      },
+      {
+        "actualSha256": "97dcf58550c14beb85ce048467e9d8d16ad822ede008aee4a5b32e607cf260e0",
+        "evidenceIds": [
+          "hosted-optional-parameter-complete-installed"
+        ],
+        "expectedSha256": [
+          "f42d7e26381a5cbec2e28f129b42a67f31a672aa92f9ebe1b4f854a4a60b2f4e"
+        ],
+        "kind": "stale",
+        "path": "tests/helpers/optional-parameter-complete-ci-tests.mjs",
+        "pins": 1
+      }
+    ],
+    "occurrences": 16326
+  },
+  "refreshedPins": 26,
+  "schemaVersion": 1,
+  "scope": "Retain complete Git reachability while materializing only the exact optional-parameter and value-index evidence corpora their recurring audits read. Preserve every replay, inventory, source-history, artifact and support assertion; add fail-closed workflow contracts; refresh only the resulting current-source citations.",
+  "valueIndexImplementationCommit": "7ecd1825af8000705c8c521e8a2635a2cfdf398e"
+}
