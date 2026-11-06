@@ -1,0 +1,228 @@
+{
+  "behavior": {
+    "archivePaths": 7,
+    "changedSupportCells": 0,
+    "priorLiveDigestOccurrences": 28,
+    "restoredArchiveOccurrences": 18,
+    "retainedLiveOccurrences": 10,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "digests": {
+    "archive": "2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8",
+    "live": "04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226"
+  },
+  "discovery": {
+    "failure": "stale source evidence",
+    "runs": [
+      {
+        "commit": "d68bae2bd688777b7ae635534da962d2f40de80f",
+        "job": 128116532126,
+        "lane": "Type-surface evidence authentication",
+        "run": 42282677223
+      },
+      {
+        "commit": "f956b91f096316363ae627823c9f30bf1f100eb5",
+        "job": 128126678576,
+        "lane": "Type-surface evidence authentication",
+        "run": 42285130078
+      }
+    ]
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-native-subtype-archive-pin-restoration-source-history.mjs",
+      "sha256": "aaff5703165d5cda1666305e974e975257f3fda7505eb76dc112040096bd5eb5"
+    },
+    {
+      "path": "tests/helpers/native-subtype-archive-pin-restoration-source-history-tests.mjs",
+      "sha256": "f403b1c6377108a4d710e347cf2e23989657d8018fce5229273d2781a2abbe7f"
+    },
+    {
+      "path": "tests/helpers/native-subtype-archive-pin-restoration-source-history.mjs",
+      "sha256": "1a55c10ad4ce49cc3df28866037a842321d662d4cf528c06fc68d9a306b3f466"
+    }
+  ],
+  "implementationCommit": "1ac4e6c2cb06d08927bf476696e4d46e2de64f78",
+  "integrationCommit": "81a601c2dfbb9765360267dffc5e2644a6b396eb",
+  "integrationUpdates": [
+    {
+      "currentSha256": "45dc2f5ab96d9a1d68ab8d35da166ec63f38cb0fb2a180554ca293a20b4bf443",
+      "edits": [
+        {
+          "current": "import \"./helpers/native-subtype-archive-pin-restoration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "bad0482eef9328e7483bff62bfd6062460514957364a03a2437ab5a2423fa01d"
+    },
+    {
+      "currentSha256": "8b44b0afda873adb2e493301f5be0330272cdbbf94d5f869b14fddd7bfa0a0ae",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeNativeSubtypeArchivePinRestorationSource\n\t, nativeSubtypeArchivePinRestorationNormalizationPaths\n} from \"./native-subtype-archive-pin-restoration-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...nativeSubtypeArchivePinRestorationNormalizationPaths\n\t, ...foldedHistoryStateReconstructionRepairNormalizationPaths\n",
+          "previous": "\t...foldedHistoryStateReconstructionRepairNormalizationPaths\n",
+          "start": 239906
+        },
+        {
+          "current": "\tlet stage = beforeNativeSubtypeArchivePinRestorationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeFoldedHistoryStateReconstructionRepairSource(\n",
+          "previous": "\tlet stage = beforeFoldedHistoryStateReconstructionRepairSource(\n",
+          "start": 301717
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "032c80ddbc6e849defd2ebfb8e7d1b633c52a495df64de7fba01d71ae98ef895"
+    }
+  ],
+  "inventorySha256": {
+    "after": "79438e8d13d015fe083343cc225c6fcbb6876337bbc2687636daca0d0d4d8c64",
+    "before": "bee19f1f75576a17b30676610ddd24b5aac22dafeb95ae57b878ad7f9d4e80ba"
+  },
+  "milestone": "native-subtype-archive-pin-restoration-v1",
+  "predecessorCommit": "f956b91f096316363ae627823c9f30bf1f100eb5",
+  "repair": "Restore exactly the 18 archive pin occurrences on the seven archived paths to the digest of their immutable bytes, keep the 10 live occurrences on the new helper digest, and change no other inventory byte.",
+  "restorations": {
+    "docs/evidence/perl-relocated-hosted-20261009/source/tests/helpers/native-subtype-install.mjs.source": 4,
+    "docs/evidence/php-wasm-subtype-installed-20261010/sources/tests/helpers/native-subtype-install.mjs": 2,
+    "docs/evidence/reviewed-subtype-python-hosts-20261010/sources/tests/helpers/native-subtype-install.mjs.txt": 2,
+    "docs/evidence/reviewed-subtype-remaining-hosts-20261010/sources/033dc35/tests/helpers/native-subtype-install.mjs.txt": 3,
+    "docs/evidence/reviewed-subtype-remaining-hosts-20261010/sources/135617a/tests/helpers/native-subtype-install.mjs.txt": 4,
+    "docs/evidence/reviewed-subtype-remaining-hosts-20261010/sources/a0f0ca4/tests/helpers/native-subtype-install.mjs.txt": 1,
+    "docs/evidence/reviewed-subtype-ruby-jvm-hosts-20261010/sources/tests/helpers/native-subtype-install.mjs.txt": 2
+  },
+  "rootCause": "The native Subtype result-projection repair refreshed the tests/helpers/native-subtype-install.mjs pin with a whole-inventory digest replacement. The old digest also pinned seven immutable archived copies of that helper, so 18 archive pin occurrences moved to the new live digest while the archived bytes still hash to the old one. readTypeSurface then refused the inventory with stale source evidence.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "79438e8d13d015fe083343cc225c6fcbb6876337bbc2687636daca0d0d4d8c64",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 2037834
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 2059984
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 2082198
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 2104225
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3402310
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3414938
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3429450
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3440077
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3451917
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3463969
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3477310
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3491062
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3504980
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3515363
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3533227
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3548013
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3562761
+        },
+        {
+          "current": "          \"sha256\": \"2e76844b8fd44c1e7c872379af297695fc3419fb885c459dbad7ce51f02821e8\"\n",
+          "previous": "          \"sha256\": \"04e1a083402e6e3a07dbb240198c76966f95353d31654d867acf22e007a74226\"\n",
+          "start": 3577547
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "bee19f1f75576a17b30676610ddd24b5aac22dafeb95ae57b878ad7f9d4e80ba"
+    }
+  ],
+  "validation": {
+    "archivePins": {
+      "after": {
+        "mismatches": 0,
+        "missing": 0
+      },
+      "before": {
+        "mismatches": 7,
+        "missing": 0
+      },
+      "occurrences": 353379,
+      "paths": 121154
+    },
+    "currentSourcePins": {
+      "findings": 0,
+      "occurrences": 16326,
+      "paths": 2661,
+      "rewrites": 0
+    }
+  }
+}

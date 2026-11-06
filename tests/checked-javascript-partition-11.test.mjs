@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/native-subtype-archive-pin-restoration-source-history-tests.mjs";
 import "./helpers/folded-history-state-reconstruction-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-fin-local-identifier-source-history-tests.mjs";
 import "./helpers/owned-javascript-historical-assertion-reader-repair-source-history-tests.mjs";
