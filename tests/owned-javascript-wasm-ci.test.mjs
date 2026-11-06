@@ -87,7 +87,8 @@ test("owned JavaScript CI rejects disabled execution, missing observations and s
 	const job = source.match(/^ {2}owned-javascript-wasm:\n([^]*?)(?=^ {2}[a-z][a-z-]*:)/mu)?.[0];
 	assert.ok(job);
 	for(const [before, after] of [
-		["          fetch-depth: 0\n", "          fetch-depth: 1\n"]
+		["    timeout-minutes: 150\n", "    timeout-minutes: 90\n"]
+		, ["          fetch-depth: 0\n", "          fetch-depth: 1\n"]
 		, ["          filter: blob:none\n", ""]
 		, ["          persist-credentials: false\n", "          persist-credentials: true\n"]
 		, ["          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n", ""]

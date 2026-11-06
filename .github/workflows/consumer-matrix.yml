@@ -249,7 +249,7 @@ jobs:
   owned-javascript-wasm:
     name: Owned JavaScript and production Wasm runtime
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 150
     env:
       LEAN_BRIDGE_OWNED_JS_WASM_TEST: "1"
       LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: "1"

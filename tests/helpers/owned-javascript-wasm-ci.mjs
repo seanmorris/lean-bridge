@@ -71,6 +71,7 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	assert.doesNotMatch(job, /^ {4}(?:if|continue-on-error):/mu);
 	assert.doesNotMatch(job, /^ {8}continue-on-error:/mu);
 	assert.match(job, /^ {4}runs-on: ubuntu-24\.04$/mu);
+	assert.match(job, /^ {4}timeout-minutes: 150$/mu);
 	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_TEST: "1"$/mu);
 	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: "1"$/mu);
 	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST: "1"$/mu);
