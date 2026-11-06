@@ -86,10 +86,22 @@ const deferredRetainedLoaders = Object.freeze([
 		, module: "./helpers/browser-install-source-history-tests.mjs" }
 ]);
 const nativeDeferredParents = Object.freeze([
-	{ parent: "tests/native-fin-records.test.mjs", loaders: 9 }
+	{ parent: "tests/native-fin-records.test.mjs", loaders: 16 }
 	, { parent: "tests/native-fin-record-zero.test.mjs", loaders: 2 }
 	, { parent: "tests/native-fin-callbacks.test.mjs", loaders: 14 }
 	, { parent: "tests/native-subtype.test.mjs", loaders: 66 }
+]);
+const nativeEagerCurrentModules = Object.freeze([
+	{ parent: "tests/native-fin-records.test.mjs"
+		, module: "tests/helpers/fin-nominal-refusals-tests.mjs" }
+	, { parent: "tests/native-fin-records.test.mjs"
+		, module: "tests/helpers/native-fin-diagnostic-tests.mjs" }
+	, { parent: "tests/helpers/native-fin-diagnostic-tests.mjs"
+		, module: "tests/helpers/native-fin-nix-boundary-tests.mjs" }
+	, { parent: "tests/native-fin-callbacks.test.mjs"
+		, module: "tests/helpers/native-fin-reply-promotion-current-tests.mjs" }
+	, { parent: "tests/native-fin-callbacks.test.mjs"
+		, module: "tests/helpers/native-fin-reply-review-current-tests.mjs" }
 ]);
 const resolveSpecifier = (from, specifier) => normalize(join(dirname(from)
 	, extname(specifier) === "" ? `${specifier}.mjs` : specifier));
@@ -192,6 +204,17 @@ const assertDeferredLaneClosure = (
 	}
 };
 
+/**
+ * Splitting mixed current/history modules must not make a deferred lane green
+ * by silently removing the current half of its contract.
+ *
+ * @param closure - Static module closure of native consumer entrypoints.
+ */
+const assertNativeCurrentClosure = closure => {
+	for(const { module } of nativeEagerCurrentModules)
+		assert.ok(closure.has(module), `current ${module}`);
+};
+
 test("the Node and browser consumer lane reaches no retained-evidence reader under deferred scope", async () => {
 	const consumers = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const job = workflowJob(consumers, "node-consumers");
@@ -241,10 +264,11 @@ test("native consumer entrypoints keep every retained test behind the deferred b
 	const testReader = path => /(?:-tests|[.]test)[.]mjs$/u.test(path);
 	assert.ok(closure.size > 500);
 	assertDeferredLaneClosure(closure, loaders, testReader);
+	assertNativeCurrentClosure(closure);
 
 	// One eager-import and one dropped-loader mutation per entrypoint prevent
 	// both the closure assertion and the registration inventory from going
-	// vacuous without repeating the complete graph walk for all 91 loaders.
+	// vacuous without repeating the complete graph walk for all 98 loaders.
 	for(const { parent } of nativeDeferredParents)
 	{
 		const loader = loaders.find(item => item.parent === parent);
@@ -261,5 +285,19 @@ test("native consumer entrypoints keep every retained test behind the deferred b
 		await assert.rejects(async () => assertDeferredLaneClosure(
 			await staticModuleClosure(entries, dropped), loaders, testReader
 		), { name: "AssertionError" }, `dropped ${parent}`);
+	}
+
+	// The inverse mutation catches an over-broad deferral repair: each named
+	// current module must remain eager even when all retained readers are absent.
+	for(const { parent, module } of nativeEagerCurrentModules)
+	{
+		const source = closure.get(parent);
+		const relative = `./${module.slice(dirname(parent).length + 1)}`;
+		const omitted = new Map([[parent
+			, source.replace(`import "${relative}";`, "")]]);
+		assert.notEqual(omitted.get(parent), source, `${parent}: ${relative}`);
+		await assert.rejects(async () => assertNativeCurrentClosure(
+			await staticModuleClosure(entries, omitted)
+		), { name: "AssertionError" }, `omitted current ${module}`);
 	}
 });

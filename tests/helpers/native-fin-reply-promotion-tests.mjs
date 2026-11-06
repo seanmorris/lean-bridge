@@ -9,7 +9,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { beforeNativeFinReplyPromotionSource, nativeFinReplyPromotionHistoryPath } from "./native-fin-reply-promotion-source-history.mjs";
-import { nativeFinReplyPromotionDirections, nativeFinReplyPromotionFailure, nativeFinReplyPromotionId, nativeFinReplyPromotionLimit, nativeFinReplyPromotionObservation, nativeFinReplyPromotionObservationIds, nativeFinReplyPromotionReference, nativeFinReplyPromotionValidators } from "./native-fin-reply-promotion-references.mjs";
+import { nativeFinReplyPromotionId, nativeFinReplyPromotionObservation, nativeFinReplyPromotionObservationIds, nativeFinReplyPromotionReference, nativeFinReplyPromotionValidators } from "./native-fin-reply-promotion-references.mjs";
 import { beforeNativeReplyReviewSource, nativeReplyReviewHistoryPath } from "./native-reply-review-source-history.mjs";
 import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
@@ -132,14 +132,4 @@ test("host-reply promotion refuses corruption of every original receipt, output 
 			const bytes = await readFile(path);
 			return path === file.path ? Buffer.concat([bytes, Buffer.from("\n")]) : bytes;
 		}), assert.AssertionError, file.path);
-});
-
-test("C/C++ conversion tables distinguish ordinary contained host replies from earlier reviewed closure directions", async () => {
-	for(const profile of ["c", "cpp"])
-	{
-		const text = await readFile(`docs/consume/${profile}.md`, "utf8"), row = text.split("\n").find(line => line.startsWith("| `Fin n` |"));
-		for(const required of [nativeFinReplyPromotionDirections, nativeFinReplyPromotionFailure, nativeFinReplyPromotionLimit]) assert.ok(row.includes(required), required);
-		assert.ok(text.includes("../evidence/native-fin-replies-20261008/receipt.json"));
-		assert.ok(row.includes("callback-result coverage here means results produced by Lean"), "retain the separate reviewed observation's direction");
-	}
 });

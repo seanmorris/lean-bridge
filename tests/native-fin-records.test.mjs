@@ -7,7 +7,9 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
+import "./helpers/fin-nominal-refusals-tests.mjs";
 import "./helpers/fin-record-wit-format-tests.mjs";
+import "./helpers/native-fin-diagnostic-tests.mjs";
 import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
 import { generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
@@ -29,14 +31,21 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
 
 await registerRetainedContractTests([
-	() => import("./helpers/fin-nominal-refusals-tests.mjs")
+	() => import("./helpers/fin-nominal-refusal-archive-tests.mjs")
+	, () => import("./helpers/fin-record-alias-archive-tests.mjs")
+	, () => import("./helpers/fin-alias-closure-history-tests.mjs")
 	, () => import("./helpers/fin-nominal-refusal-history-tests.mjs")
-	, () => import("./helpers/fin-record-wit-format-source-history-tests.mjs")
 	, () => import("./helpers/native-fin-records-source-history-tests.mjs")
 	, () => import("./helpers/fin-record-evidence-tests.mjs")
 	, () => import("./helpers/native-fin-promotion-tests.mjs")
+	, () => import("./helpers/fin-record-wit-format-source-history-tests.mjs")
 	, () => import("./helpers/fin-wit-record-evidence-tests.mjs")
-	, () => import("./helpers/native-fin-diagnostic-tests.mjs")
+	, () => import("./helpers/native-fin-diagnostic-source-history-tests.mjs")
+	, () => import("./helpers/native-fin-nix-boundary-history-tests.mjs")
+	, () => import("./helpers/native-fin-diagnostic-php-wasm-tests.mjs")
+	, () => import("./helpers/native-fin-diagnostic-callback-tests.mjs")
+	, () => import("./helpers/native-fin-diagnostic-ci-tests.mjs")
+	, () => import("./helpers/native-fin-diagnostic-evidence-tests.mjs")
 	, () => import("./helpers/fin-record-review-omission-history-tests.mjs")
 ]);
 

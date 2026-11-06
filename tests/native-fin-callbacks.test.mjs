@@ -9,6 +9,8 @@ import assert from "node:assert/strict";
 import "./helpers/fin-reply-compiled-tests.mjs";
 import "./helpers/fin-reply-installed-tests.mjs";
 import "./helpers/native-fin-reply-ci-tests.mjs";
+import "./helpers/native-fin-reply-promotion-current-tests.mjs";
+import "./helpers/native-fin-reply-review-current-tests.mjs";
 import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
