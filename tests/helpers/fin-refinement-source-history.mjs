@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeCoreFocusedSourcePinRefreshSource
+	, coreFocusedSourcePinRefreshNormalizationPaths
+} from "./core-focused-source-pin-refresh-source-history.mjs";
+import {
 	beforeCoreFocusedRootRepairSource
 	, coreFocusedRootRepairNormalizationPaths
 } from "./core-focused-root-repair-source-history.mjs";
@@ -2599,7 +2603,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreFocusedRootRepairNormalizationPaths
+	...coreFocusedSourcePinRefreshNormalizationPaths
+	, ...coreFocusedRootRepairNormalizationPaths
 	, ...retainedContractScopeRepairNormalizationPaths
 	, ...jvmGenericRecordArrayNullBoundaryRepairNormalizationPaths
 	, ...exactHeadReplayContractRepairNormalizationPaths
@@ -3821,7 +3826,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeCoreFocusedRootRepairSource(path, text, expected);
+	let stage = beforeCoreFocusedSourcePinRefreshSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeCoreFocusedRootRepairSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;
