@@ -122,5 +122,7 @@ export const assertOwnedWitPackageCi = workflow => {
 	const observations = step(job, "Record WIT and WASI observations");
 	for(const name of ["test_result", "executed"])
 		assert.match(observations.split(`          ${name}=`)[1]?.split("\n")[0] ?? "", /steps\.owned_wit_package\.outcome == 'success'/u);
-	assert.ok(workflow.split("  support-summary:\n")[1]?.split("    runs-on:")[0].includes("      - wasi-consumer\n"));
+	// Both aggregates gating on WIT acceptance must depend on the job itself.
+	for(const aggregate of ["optional-parameter-matrix", "support-summary"])
+		assert.ok(workflow.split(`  ${aggregate}:\n`)[1]?.split("    runs-on:")[0].includes("      - wasi-consumer\n"), `${aggregate} needs wasi-consumer`);
 };
