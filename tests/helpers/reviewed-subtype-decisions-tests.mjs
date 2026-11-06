@@ -24,8 +24,10 @@ const reviewInput = ir => {
 	return { schemaVersion: 1, path: "api.binding-ir.json", source
 		, sourceSha256: sha256(source), semanticSha256: hashBindingIr(ir) };
 };
+// A parameter decision names the checked constructor Lean applies on input; a
+// result decision carries no constructor, since produced values are never reconstructed.
 const document = (parameters = ["string"], result = "string", decision = {
-	parameters: [subtype("Checks.word")], result: subtype("Checks.word")
+	parameters: [subtype("Checks.word")], result: subtype(null)
 }) => {
 	const ir = corpusReviewedIr({ id: "checked" }, [{ name: "Checks.echo", parameters, result }]);
 	if(decision !== undefined) ir.declarations[0].source.extensions[key] = decision;
@@ -35,16 +37,19 @@ const document = (parameters = ["string"], result = "string", decision = {
 test("reviewed Subtype selection maps each exact site without mutating its author", () => {
 	const ir = document(), original = canonicalJson(ir);
 	const contracts = reviewedSubtypeContracts(ir);
-	assert.deepEqual(contracts, { "Checks.echo": { parameters: [checked("Checks.word")], result: checked("Checks.word") } });
+	// A produced result selects no constructor, so its contract site stays plain.
+	assert.deepEqual(contracts, { "Checks.echo": { parameters: [checked("Checks.word")], result: plain } });
 	assert.equal(canonicalJson(ir), original);
 	contracts["Checks.echo"].parameters[0].refinement.constructor = "Checks.changed";
 	assert.equal(canonicalJson(ir), original);
-	assert.deepEqual(reviewedSubtypeContracts(ir), { "Checks.echo": { parameters: [checked("Checks.word")], result: checked("Checks.word") } });
+	assert.deepEqual(reviewedSubtypeContracts(ir), { "Checks.echo": { parameters: [checked("Checks.word")], result: plain } });
 });
 
 test("result-only and mixed Fin, nominal and unrefined sites keep distinct decisions", () => {
-	const resultOnly = document([], "nat", { parameters: [], result: subtype("Checks.even") });
-	assert.deepEqual(reviewedSubtypeContracts(resultOnly), { "Checks.echo": { parameters: [], result: checked("Checks.even") } });
+	// A result-only decision is admitted but selects no constructor, so it adds no contract.
+	const resultOnly = document([], "nat", { parameters: [], result: subtype(null) });
+	assert.equal(reviewedSubtypeContracts(resultOnly), undefined);
+	assert.throws(() => reviewedSubtypeContracts(document([], "nat", { parameters: [], result: subtype("Checks.even") })));
 	const ir = document(["nat", "nat", { record: "Checks.Box", fields: { digit: "nat" } }, "string"], "string", {
 		parameters: [subtype("Checks.even"), fin("10"), null, null], result: null
 	});
@@ -89,6 +94,9 @@ test("malformed and ownership-bearing Subtype decisions are refused while struct
 		, ir => { ir.declarations[0].source.extensions[key].parameters[0].constructor = "Checks.word\n"; }
 		, ir => { ir.declarations[0].source.extensions[key].parameters[0].constructor = "Checks.word x"; }
 		, ir => { ir.declarations[0].source.extensions[key] = { parameters: [null], result: null }; }
+		// Direction is part of the decision: no constructor on a produced result, and one on every checked input.
+		, ir => { ir.declarations[0].source.extensions[key].result.constructor = "Checks.word"; }
+		, ir => { ir.declarations[0].source.extensions[key].parameters[0].constructor = null; }
 		, ir => { ir.declarations[0].parameters[0].type = { kind: "named", id: "lean:Checks.Box" }; }
 		, ir => { ir.declarations[0].parameters[0].ownership = "borrow"; }
 		, ir => { ir.declarations[0].parameters[0].lifetime = { scope: "call", anchor: null }; }
@@ -126,7 +134,7 @@ test("reviewed primitive Subtype decisions select their constructors for fresh c
 		validateReviewedSource(review);
 		assert.deepEqual(reviewedSourceSelection(review), {
 			exports: ["Checks.echo"], arities: []
-			, contracts: { "Checks.echo": { parameters: [checked("Checks.word")], result: checked("Checks.word") } }
+			, contracts: { "Checks.echo": { parameters: [checked("Checks.word")], result: plain } }
 		});
 	}
 });
@@ -140,14 +148,14 @@ test("specializations of one generic select independent constructors by public e
 			name: `Checks.${item.name}`, declaration: "Checks.echo"
 			, types: ["Checks.Even"], application: "@Checks.echo.{0} Checks.Even"
 		};
-		item.source.extensions[key] = { parameters: [subtype(`Checks.${item.name}Constructor`)], result: subtype(`Checks.${item.name}Constructor`) };
+		item.source.extensions[key] = { parameters: [subtype(`Checks.${item.name}Constructor`)], result: subtype(null) };
 	}
 	const selection = reviewedSourceSelection(reviewInput(ir));
 	assert.deepEqual(selection.exports, ["Checks.first", "Checks.second"]);
 	assert.deepEqual(Object.keys(selection.contracts), ["Checks.first", "Checks.second"]);
 	for(const name of ["first", "second"]) assert.deepEqual(selection.contracts[`Checks.${name}`], {
 		parameters: [checked(`Checks.${name}Constructor`)]
-		, result: checked(`Checks.${name}Constructor`)
+		, result: plain
 	});
 	assert.equal(selection.specializations.length, 2);
 });
@@ -162,7 +170,7 @@ test("review reconciliation authenticates constructor selection and compiled con
 	for(const mutate of [
 		request => { delete request.contracts; }
 		, request => { request.contracts["Checks.echo"].parameters[0].refinement.constructor = "Checks.other"; }
-		, request => { request.contracts["Checks.echo"].result.refinement.constructor = "Checks.other"; }
+		, request => { request.contracts["Checks.echo"].result.refinement = { constructor: "Checks.other" }; }
 		, request => { request.contracts["Checks.other"] = request.contracts["Checks.echo"]; }
 	]) {
 		const changed = structuredClone(identity); mutate(changed.request);

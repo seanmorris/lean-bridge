@@ -10,6 +10,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertFinContainerEdgeReport } from "./fin-container-edge-report.mjs";
+import { finContainerEdgeJvmExpectedBeforeOptionNullEntry } from "./fin-container-edge-jvm.mjs";
 
 const directory = "docs/evidence/fin-container-edges-measured-20261010";
 const indexSha256 = "7a196a4cab3b3c10fdd1a444f6ab233bf5370d66cc4e660c8e07eea884e757ce";
@@ -89,7 +90,11 @@ test("all archived native edge selections pass the strict raw and public report 
 		assert.ok(Date.parse(end.endedAt) <= Date.parse(verified.verifiedAt));
 		for(const [name, expected] of [["tests", 1], ["pass", 1], ["fail", 0], ["skipped", 0]])
 			assert.equal(Number(tap.toString().match(new RegExp(`^# ${name} (\\d+)$`, "m"))?.[1]), expected);
-		await assertFinContainerEdgeReport(report, run.profiles, { python: run.python });
+		await assertFinContainerEdgeReport(report, run.profiles, {
+			python: run.python
+			, jvmExpected: run.profiles.some(profile => ["java", "kotlin"].includes(profile))
+				? finContainerEdgeJvmExpectedBeforeOptionNullEntry : undefined
+		});
 	}
 });
 

@@ -74,9 +74,15 @@ for(const [label, change] of Object.entries({
 	assert.throws(() => createNativeModel(fixture(change)), { code: "reviewed-ir-source-mismatch" });
 });
 
+test("a reviewed default cannot override the freshly compiled declaration", () => {
+	assert.throws(() => createNativeModel(fixture(ir => {
+		ir.declarations[0].parameters[0].optional = true;
+		ir.declarations[0].parameters[0].default = { kind: "integer", value: "1" };
+	})), { code: "reviewed-ir-source-mismatch" });
+});
+
 for(const [label, change] of Object.entries({
-	"default": ir => { ir.declarations[0].parameters[0].optional = true; ir.declarations[0].parameters[0].default = { kind: "integer", value: "1" }; }
-	, "effect": ir => { ir.declarations[0].effects = ["async"]; ir.declarations[0].resultMode = "promise"; }
+	"effect": ir => { ir.declarations[0].effects = ["async"]; ir.declarations[0].resultMode = "promise"; }
 	, "claimed theorem": ir => { ir.declarations[0].source.extensions["lean-lang.org/theorem-references"] = ["Forged.proof"]; }
 	, "producer extension": ir => { ir.producers[0].extensions["example.org/decision"] = true; }
 })) test(`unsupported reviewed ${label} is not discarded`, () => {

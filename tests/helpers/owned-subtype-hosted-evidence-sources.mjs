@@ -13,7 +13,8 @@ import {
 	ownedSubtypeHostedContracts, ownedSubtypeHostedLaneNames
 } from "./owned-subtype-hosted-contracts.mjs";
 import {
-	assertOwnedCheckedRecordNpmProducer, selectOwnedCheckedRecordWorkflow
+	assertOwnedCheckedRecordNpmProducer
+	, selectOwnedCheckedRecordWorkflow
 } from "./owned-checked-record-npm-producer.mjs";
 
 export const ownedSubtypeHostedOriginal = callbackSubtypeHostedOriginal;

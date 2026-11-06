@@ -9,7 +9,7 @@ export const ownedCheckedRecordNpmWorkflow
 	= ".github/workflows/owned-checked-record-npm-browser.yml";
 export const ownedCheckedRecordNpmTagPrefix = "ci/owned-checked-record-npm/";
 export const ownedCheckedRecordNpmGuard = "${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'create' && github.event.ref_type == 'tag' && github.event.ref == format('ci/owned-checked-record-npm/{0}', github.sha)) }}";
-export const ownedCheckedRecordNpmHeader = `name: Owned checked-record npm and browser producer
+export const ownedCheckedRecordNpmHeaderBeforeConsumerSparseCheckout = `name: Owned checked-record npm and browser producer
 
 on:
   create:
@@ -25,6 +25,15 @@ concurrency:
 env:
   NODE_VERSION: "22"
   LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build/consumer-ci/performance
+
+jobs:
+`;
+
+export const ownedCheckedRecordNpmHeader
+	= ownedCheckedRecordNpmHeaderBeforeConsumerSparseCheckout.replace(`
+
+jobs:
+`, `
   LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT: |
     /*
     !/*/
@@ -50,7 +59,7 @@ env:
     /docs/evidence/*/index.json
 
 jobs:
-`;
+`);
 
 /**
  * Select only a lane's recurring workflow or its exact scoped counterpart.
@@ -74,11 +83,20 @@ export const selectOwnedCheckedRecordWorkflow = (lane, workflow = lane.workflow)
  *
  * @param source - Complete dedicated producer workflow.
  * @param recurring - Complete recurring Consumer Matrix workflow.
+ * @param options - Exact authenticated policy generation to compare.
+ * @param options.header - Current or retained pre-sparse-checkout producer header.
  */
-export const assertOwnedCheckedRecordNpmProducer = (source, recurring) => {
+export const assertOwnedCheckedRecordNpmProducer = (
+	source, recurring, { header } = {}
+) => {
+	header ??= [ownedCheckedRecordNpmHeader
+		, ownedCheckedRecordNpmHeaderBeforeConsumerSparseCheckout]
+		.find(candidate => source.startsWith(candidate));
+	assert.ok([ownedCheckedRecordNpmHeader
+		, ownedCheckedRecordNpmHeaderBeforeConsumerSparseCheckout].includes(header));
 	const job = recurring.match(/^ {2}owned-javascript-wasm:\n[\s\S]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
 	assert.ok(job, "Recurring JavaScript producer must exist");
-	const expected = ownedCheckedRecordNpmHeader + job.trimEnd().replace(
+	const expected = header + job.trimEnd().replace(
 		"  owned-javascript-wasm:\n"
 		, "  owned-javascript-wasm:\n    if: " + ownedCheckedRecordNpmGuard + "\n"
 	) + "\n";

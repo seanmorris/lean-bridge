@@ -8,8 +8,8 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
-import { generateCopiedRustPackage } from "../src/backends/rust/copied-values.mjs";
 import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
+import { nominalSubtypeRustGenerator as rustGeneratorAtRevision } from "./helpers/nominal-subtype-rust-generators.mjs";
 import { beforeRustStructuredCallables } from "./helpers/rust-structured-callable-source-history.mjs";
 
 const observations = run => Object.fromEntries(["checks", "calls", "rejected", "faultTests", "nativeFaultChecks", "conversionCheckpoints"].map(key => [key, run[key]]));
@@ -101,7 +101,7 @@ test("Rust collection evidence binds original crates, exact public types and fai
 });
 
 test("Rust conversion preflight distinguishes compiler checks from installed Lean calls", async () => {
-	const { conversion } = JSON.parse(await readFile("docs/evidence/rust-collections-20260922.json"));
+	const { baseRevision, conversion } = JSON.parse(await readFile("docs/evidence/rust-collections-20260922.json"));
 	assert.equal(conversion.compiledLean, false); assert.equal(conversion.installedPackage, false);
 	assert.equal(conversion.tests, 4); assert.equal(conversion.primitiveShapes, 19);
 	assert.equal(conversion.records, 7); assert.equal(conversion.fixedArrayDepth, 24);
@@ -112,6 +112,7 @@ test("Rust conversion preflight distinguishes compiler checks from installed Lea
 	assert.equal(conversion.nativeFaultsCompiled, true); assert.equal(conversion.nativeFaultsExecuted, false);
 	assert.equal(conversion.nativeFaultsSha256, sha256(await readFile("tests/fixtures/collection-consumers/rust-faults.rs")));
 	assert.equal(conversion.fixtureSha256, sha256(await readFile("tests/fixtures/collection-consumers/rust-conversions.rs")));
+	const { generateCopiedRustPackage } = await rustGeneratorAtRevision(baseRevision);
 	const files = generateCopiedRustPackage(collectionReviewedIr(), null, { name: "collections-api", version: "1.0.0" });
 	assert.deepEqual(conversion.generatedSourceHashes, Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])));
 });

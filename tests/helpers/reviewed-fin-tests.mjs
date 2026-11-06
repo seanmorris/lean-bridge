@@ -168,8 +168,13 @@ test("malformed reviewed constraints fail before selecting compiler exports", ()
 		assert.throws(() => reviewedSourceSelection(reviewInput(document("nat", constraints))), { code: "reviewed-ir-build-unsupported" });
 	for(const transport of ["int", "uint64", "string", { array: "nat" }])
 		assert.throws(() => validateReviewedSource(reviewInput(document(transport))), { code: "reviewed-ir-build-unsupported" });
-	const nestedSubtype = document({ option: "nat" }, decision(wrap("option", { kind: "subtype", constructor: "Sample.checked" })));
+	// A nested Subtype decision is directional: the input names its checked constructor, the produced result carries none.
+	const checkedInput = wrap("option", { kind: "subtype", constructor: "Sample.checked" });
+	const producedResult = wrap("option", { kind: "subtype", constructor: null });
+	const nestedSubtype = document({ option: "nat" }, decision(checkedInput, producedResult));
 	validateReviewedSource(reviewInput(nestedSubtype));
+	for(const reversed of [decision(checkedInput, checkedInput), decision(producedResult, producedResult), decision(producedResult, checkedInput)])
+		assert.throws(() => validateReviewedSource(reviewInput(document({ option: "nat" }, reversed))), { code: "reviewed-ir-build-unsupported" });
 	nestedSubtype.declarations[0].parameters[0].type.constructor = "list";
 	assert.throws(() => validateReviewedSource(reviewInput(nestedSubtype)), { code: "reviewed-ir-build-unsupported" });
 });

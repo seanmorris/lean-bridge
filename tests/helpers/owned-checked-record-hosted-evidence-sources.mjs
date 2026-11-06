@@ -16,7 +16,8 @@ import {
 	ownedCheckedRecordHostedLaneNames, ownedCheckedRecordHostedLanes
 } from "./owned-checked-record-hosted-contracts.mjs";
 import {
-	assertOwnedCheckedRecordNpmProducer, selectOwnedCheckedRecordWorkflow
+	assertOwnedCheckedRecordNpmProducer
+	, selectOwnedCheckedRecordWorkflow
 } from "./owned-checked-record-npm-producer.mjs";
 import { requiresOwnedCheckedRecordPhpWasmContexts } from "./owned-checked-record-php-wasm-context-evidence.mjs";
 

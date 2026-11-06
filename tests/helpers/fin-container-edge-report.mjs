@@ -64,10 +64,13 @@ export const finContainerEdgeReportModel = (componentId = "fincontainers@1.0.0")
  * Exact output digest for the whole measured public caller.
  *
  * @param profile - Explicit native profile.
+ * @param rows - Exact current or retained historical public observations.
  */
-export const finContainerEdgeReportTranscript = profile => {
+export const finContainerEdgeReportTranscript = (profile, rows = undefined) => {
 	const contract = finContainerEdgeReportContracts[profile]; assert.ok(contract);
-	return contract.rows.map(([step, method, status, counts]) =>
+	rows ??= contract.rows;
+	assert.ok(Array.isArray(rows));
+	return rows.map(([step, method, status, counts]) =>
 		`edge-${contract.prefix} ${step} ${method} ${status} ${counts.join(" ")}\n`).join("")
 		+ `fin-container-ok:${finContainerEdgeChecks[profile]}\n`;
 };
@@ -115,9 +118,12 @@ const observationIdentity = (value, item, model, publicSymbols = []) => {
  * @param profiles - Explicit, ordered selection expected from this CI job.
  * @param options - Optional exact Python floor required by this job.
  * @param options.python - Expected Python major/minor, when selected.
+ * @param options.jvmExpected - Exact retained JVM observation model, when checking a historical Java or Kotlin report.
  */
-export const assertFinContainerEdgeReport = async (report, profiles, { python } = {}) => {
+export const assertFinContainerEdgeReport = async (report, profiles, { python, jvmExpected } = {}) => {
 	if(python !== undefined) assert.ok(["3.11", "3.12"].includes(python) && profiles.includes("python"));
+	if(jvmExpected !== undefined)
+		assert.ok(Array.isArray(jvmExpected) && profiles.some(profile => ["java", "kotlin"].includes(profile)));
 	assert.ok(Array.isArray(profiles) && profiles.length > 0);
 	assert.deepEqual(profiles, [...new Set(profiles)].sort());
 	assert.ok(profiles.every(profile => finContainerEdgeProfiles.includes(profile)));
@@ -129,7 +135,9 @@ export const assertFinContainerEdgeReport = async (report, profiles, { python } 
 	const sourceSha256 = sha256(await finContainerEdgeSource()), model = finContainerEdgeReportModel();
 	for(const item of report.reports)
 	{
-		const profile = item.profile, contract = finContainerEdgeReportContracts[profile];
+		const profile = item.profile, currentContract = finContainerEdgeReportContracts[profile];
+		const contract = jvmExpected !== undefined && ["java", "kotlin"].includes(profile)
+			? { ...currentContract, rows: jvmExpected } : currentContract;
 		assert.equal(item.path, "ordinary-source");
 		assert.equal(item.checks, finContainerEdgeChecks[profile]);
 		assert.equal(item.fixtureSha256, sourceSha256);
@@ -188,7 +196,7 @@ export const assertFinContainerEdgeReport = async (report, profiles, { python } 
 		assert.deepEqual(host.libraries, raw.libraries);
 		for(const [symbol, owner] of Object.entries(raw.definitions)) assert.equal(host.definitions[symbol], owner);
 		if(profile !== "dotnet") assert.equal(host.libraryDirectory, raw.libraryDirectory);
-		const transcriptSha256 = sha256(finContainerEdgeReportTranscript(profile));
+		const transcriptSha256 = sha256(finContainerEdgeReportTranscript(profile, contract.rows));
 		if(profile === "php-native")
 		{
 			assert.equal(item.repeatStrictExecution, true);

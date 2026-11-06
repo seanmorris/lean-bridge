@@ -7,14 +7,17 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { ownedPhpWasmHistoricalBytes } from "./helpers/owned-php-wasm-source-history.mjs";
 import { assertPhpNixBoundaryExecution, assertPhpNixImportClosure, phpNixBoundaryManifest, phpNixBoundaryModules } from "./helpers/php-nix-boundary-repair-evidence.mjs";
 import { beforePhpNixBoundaryRepair, phpNixBoundaryAddedPaths, phpNixBoundaryBaseline
 	, phpNixBoundaryChangedPaths, phpNixBoundaryHistoricalBytes, phpNixBoundaryHistoryPath
 	, phpNixBoundaryPrevious, reversePhpNixBoundaryUpdate } from "./helpers/php-nix-boundary-repair-history.mjs";
+import { authenticateFinHistoryRecordSources
+	, sourceAtFinHistoryRecordSource } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
-const source = async (path, expected) => ownedPhpWasmHistoricalBytes(path, await readFile(path), expected);
+const source = (path, expected) => sourceAtFinHistoryRecordSource(
+	phpNixBoundaryHistoryPath, path, expected
+);
 
 test("PHP Nix boundary repair preserves the exact JVM and earlier receipts", async () => {
 	const record = await json(phpNixBoundaryHistoryPath);
@@ -28,7 +31,9 @@ test("PHP Nix boundary repair preserves the exact JVM and earlier receipts", asy
 		...Object.keys(previous.sources), ...phpNixBoundaryChangedPaths
 		, ...phpNixBoundaryAddedPaths
 	])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await source(path, hash)), hash, path);
+	assert.equal(authenticateFinHistoryRecordSources(
+		phpNixBoundaryHistoryPath, record.sources
+	), true);
 	assert.deepEqual(record.updates.map(update => update.path), phpNixBoundaryChangedPaths);
 	for(const update of record.updates)
 	{
@@ -37,7 +42,9 @@ test("PHP Nix boundary repair preserves the exact JVM and earlier receipts", asy
 		const current = (await source(update.path, update.currentSha256)).toString();
 		const prior = beforePhpNixBoundaryRepair(update.path, current, update.previousSha256);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
-		assert.equal(beforePhpNixBoundaryRepair(update.path, prior), prior);
+		assert.equal(beforePhpNixBoundaryRepair(
+			update.path, prior, update.previousSha256
+		), prior);
 		assert.equal(beforePhpNixBoundaryRepair(update.path, current, update.currentSha256), current);
 		const unknown = current + "\n/* unrecorded source-filter edit */\n";
 		assert.equal(beforePhpNixBoundaryRepair(update.path, unknown), unknown);
@@ -49,9 +56,29 @@ test("PHP Nix boundary repair preserves the exact JVM and earlier receipts", asy
 	const binary = Buffer.from([0, 255, 192, 128]);
 	assert.equal(phpNixBoundaryHistoricalBytes("unknown.bin", binary), binary);
 	const current = (await source("docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"])).toString();
-	const prior = JSON.parse(beforePhpNixBoundaryRepair("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await source(file.path, record.sources[file.path]));
-	assert.deepEqual(JSON.parse(current), prior);
+	const update = record.updates.find(item =>
+		item.path === "docs/type-surface.v1.json");
+	assert.ok(update);
+	const prior = JSON.parse(beforePhpNixBoundaryRepair(
+		"docs/type-surface.v1.json", current, update.previousSha256
+	));
+	const currentDocument = JSON.parse(current), pins = new Map();
+	for(const evidence of currentDocument.evidence) for(const file of evidence.files)
+	{
+		const existing = pins.get(file.path);
+		assert.ok(existing === undefined || existing === file.sha256, file.path);
+		pins.set(file.path, file.sha256);
+	}
+	let refreshed = 0;
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		const hash = pins.get(file.path); assert.match(hash, /^[a-f0-9]{64}$/u);
+		if(file.sha256 === hash) continue;
+		assert.equal(record.sources[file.path], hash, file.path);
+		file.sha256 = hash; refreshed++;
+	}
+	assert.ok(refreshed > 0);
+	assert.deepEqual(currentDocument, prior);
 });
 
 test("PHP Nix boundary evidence binds the reproduced failures and both passing runs", async () => {
