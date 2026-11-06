@@ -1,0 +1,257 @@
+{
+  "behavior": {
+    "compilerPagesChecked": 8,
+    "generatedGuides": 6,
+    "repairedControls": 3
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "jobs": [
+      306,
+      494,
+      534
+    ],
+    "observed": "Raw CommonMark tags broke six generated consumer guides; two mutation controls targeted boundaries earlier than the production contracts they intended to test",
+    "run": 41385913296
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-core-focused-root-repair-source-history.mjs",
+      "sha256": "6ac2a5b5792275c14b71c64d798d0c1fcfba4f465d26c38ee2500e5549a24dfe"
+    },
+    {
+      "path": "tests/helpers/core-focused-root-repair-source-history-tests.mjs",
+      "sha256": "5bfa4a2bdc59e4443861c0baf61fd014aeb5212414a171795a7ac481c8148c5a"
+    },
+    {
+      "path": "tests/helpers/core-focused-root-repair-source-history.mjs",
+      "sha256": "a4a7a4b9ef8d4a0affe4256e834ec3e163acae452210b8fc16946dd903fc69a8"
+    }
+  ],
+  "implementationCommit": "ea100413aaa4b1ccc50b94b97eff52130bd468ba",
+  "integrationCommit": "018f3915455031c871958c27331b6c97b88e129a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "102bd56294c62e3f0d855b2c8e181851141161db8e9f3bb5b85a606adcdb51f7",
+      "edits": [
+        {
+          "current": "\t\t, \"retained-contract-tests\"\n",
+          "previous": "",
+          "start": 12870
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "3ec58789494f149af921fcab0cafe14231663217a20c90280f3157d90a290aa9"
+    },
+    {
+      "currentSha256": "a0852988755f9be2c8d2f520c7f0aac1f2aa937b1a38dd9bf36f388b76f1c215",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-focused-root-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 11152
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "4a288e23fa1f39d7fc4fff637d1106876e2ba36a8a6ebcea88f77e67da99841e"
+    },
+    {
+      "currentSha256": "cf8fcd97f99556e978d6d7023914fc342131d054bb11d2a2c2c17d3674098149",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreFocusedRootRepairSource\n\t, coreFocusedRootRepairNormalizationPaths\n} from \"./core-focused-root-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreFocusedRootRepairNormalizationPaths\n\t, ...retainedContractScopeRepairNormalizationPaths\n",
+          "previous": "\t...retainedContractScopeRepairNormalizationPaths\n",
+          "start": 236753
+        },
+        {
+          "current": "\tlet stage = beforeCoreFocusedRootRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeRetainedContractScopeRepairSource(\n",
+          "previous": "\tlet stage = beforeRetainedContractScopeRepairSource(\n",
+          "start": 297546
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b591da1f4f66262eac8769f591b37e981ff633c43b51a2d43bb1d8cbc5a4e8c6"
+    }
+  ],
+  "milestone": "core-focused-root-repair-source-v1",
+  "predecessorCommit": "593ec8dbe0ed03eb4f3836c5a59dec465e4347a7",
+  "repair": "Render markup-like leading host types as Markdown code and reject any remaining raw tag outside code spans; test the no-op Fin mutant at ABI derivation while retaining a valid-ABI smuggling control at selection; and mutate both WIT aggregate dependencies independently.",
+  "rootCause": "Generated conversion-note prose copied markup-like host types outside code spans, so the site compiler parsed Option<T> as forbidden inline HTML. The Fin no-op mutant failed during private ABI derivation, before selection, and the WIT dependency mutant removed the first wasi-consumer edge instead of specifically exercising support-summary.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "5372760db108888f2bedc0897fb095dcd0291d697a72d1f59eb33d34d59dc175",
+      "edits": [
+        {
+          "current": "| `Explicit nullable host value` | `std::optional<T>; source HostNull and Option remain separate nested layers` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | `std::optional<T>; source HostNull and Option remain separate nested layers`. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "previous": "| `Explicit nullable host value` | `std::optional<T>; source HostNull and Option remain separate nested layers` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | std::optional<T>; source HostNull and Option remain separate nested layers. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "start": 84084
+        }
+      ],
+      "path": "docs/consume/cpp.md",
+      "previousSha256": "555f6b5f6ee4d4e7e65749a89ce7e43891cf91e821289c7542dc884b16b9f47d"
+    },
+    {
+      "currentSha256": "859df6c5ce7fed62e0d3681fc5d56e5f840dc394e4f188ba84160ad8089c9624",
+      "edits": [
+        {
+          "current": "| `Explicit nullable host value` | `nullable T; Option<T> remains explicit None/Some` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | `nullable T; Option<T> remains explicit None/Some`. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "previous": "| `Explicit nullable host value` | `nullable T; Option<T> remains explicit None/Some` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | nullable T; Option<T> remains explicit None/Some. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "start": 90381
+        }
+      ],
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "466db66bfb160a70a6a7dfc56a417a00bb6df1dbedfab90032e426f8521366f3"
+    },
+    {
+      "currentSha256": "3ee24d29032083193ff7d10175e3ab4717ec2d5843531a7e5c1c2fdcd71d1455",
+      "edits": [
+        {
+          "current": "| `Explicit nullable host value` | `boxed @Nullable T; Option<T> remains explicit None/Some` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | `boxed @Nullable T; Option<T> remains explicit None/Some`. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "previous": "| `Explicit nullable host value` | `boxed @Nullable T; Option<T> remains explicit None/Some` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | boxed @Nullable T; Option<T> remains explicit None/Some. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "start": 97202
+        }
+      ],
+      "path": "docs/consume/java.md",
+      "previousSha256": "eb38033cbf8436b8279a0eec36502b1114bea733ac8c2fcd67a978d8f8422941"
+    },
+    {
+      "currentSha256": "ee43ef63a1bce5d72e79dcd166f04f3bcf81a324305a043d474c91faca1561e1",
+      "edits": [
+        {
+          "current": "| `Explicit nullable host value` | `T?; Option<T> remains explicit None/Some` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | `T?; Option<T> remains explicit None/Some`. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "previous": "| `Explicit nullable host value` | `T?; Option<T> remains explicit None/Some` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | T?; Option<T> remains explicit None/Some. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "start": 89771
+        }
+      ],
+      "path": "docs/consume/kotlin.md",
+      "previousSha256": "dc2a952ecceec0990d30d361aaa44d9c7881cbbe0cee1c1a3174ed153d0494f5"
+    },
+    {
+      "currentSha256": "c4a26b96c67331d59133508cbcf711c44c976cb108bb3c75110c25764dbca702",
+      "edits": [
+        {
+          "current": "| `Explicit nullable host value` | `Option<T>; source HostNull and Option remain separate nested layers` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | `Option<T>; source HostNull and Option remain separate nested layers`. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "previous": "| `Explicit nullable host value` | `Option<T>; source HostNull and Option remain separate nested layers` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Option<T>; source HostNull and Option remain separate nested layers. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "start": 89044
+        }
+      ],
+      "path": "docs/consume/rust.md",
+      "previousSha256": "ff4d3f4690f4e4bb898b087e696e90394c19036f5a757b184d16dbae35c3633e"
+    },
+    {
+      "currentSha256": "466268a1b48bf8fe52d4c3c86525eea4a04be22e05ff12a0805fab4ba3cefae8",
+      "edits": [
+        {
+          "current": "| `Explicit nullable host value` | `WIT option<T>; source HostNull and Option remain separate nested layers` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | `WIT option<T>; source HostNull and Option remain separate nested layers`. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "previous": "| `Explicit nullable host value` | `WIT option<T>; source HostNull and Option remain separate nested layers` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | WIT option<T>; source HostNull and Option remain separate nested layers. Only the declared HostNull null constructor uses the nullable branch; source Option, Unit, erased proofs and omitted/default arguments retain their own representations. Required: Select an explicit host projection; null does not stand for every missing, erased or unsupported value. |\n",
+          "start": 104756
+        }
+      ],
+      "path": "docs/consume/wit-wasi.md",
+      "previousSha256": "26b53ab3d4666e027ab3701eb739f8373087f420571f991e943a2d69b777bf3a"
+    },
+    {
+      "currentSha256": "de0c348afb438486adf47a1857ec0c9ea615d792b0f0801bb0082f72edb359b3",
+      "edits": [
+        {
+          "current": "/**\n * A CommonMark inline HTML tag, comment, instruction or declaration: outside a\n * code span the site compiler refuses the page as raw HTML. `Option<T>` is one;\n * `std::vector<uint8_t>` and `Readonly<Record<K, V>>` are plain text.\n */\nexport const markdownRawHtml = /<\\/?[A-Za-z][A-Za-z0-9-]*(?:\\s[^<>]*)?\\/?>|<!--|<\\?|<![A-Z]/u;\nconst outsideCode = text => text.split(/`[^`]*`/u).join(\" \");\n\n/**\n * Render a cell's conversion note; a note opening with a markup-like host type\n * renders that type as code, exactly as the host column does.\n *\n * @param cell - Position-scoped type-surface cell.\n * @param cell.conversionNote - Prose note, possibly opening with the host type.\n * @param cell.hostType - Rendered host type, or null without a mapping.\n */\nexport const renderTypeNote = ({ conversionNote, hostType }) => {\n\tif(!conversionNote || !hostType || !markdownRawHtml.test(hostType) || !conversionNote.startsWith(hostType)) return conversionNote;\n\treturn inline(hostType) + conversionNote.slice(hostType.length);\n};\n\n",
+          "previous": "",
+          "start": 44522
+        },
+        {
+          "current": "\t\t\t.map(renderTypeNote).filter(Boolean)).join(\" \"), \" \")\n",
+          "previous": "\t\t\t.map(cell => cell.conversionNote).filter(Boolean)).join(\" \"), \" \")\n",
+          "start": 46546
+        },
+        {
+          "current": "\t\tassert.ok(!markdownRawHtml.test(outsideCode(notes)), `${shape.id}: conversion notes must render type syntax as code, not raw HTML`);\n",
+          "previous": "",
+          "start": 46731
+        }
+      ],
+      "path": "scripts/generate-type-docs.mjs",
+      "previousSha256": "a3d70492d06e8fe13a028df849b707b6ed881fdc12136f6ab20e3d2eccf991ba"
+    },
+    {
+      "currentSha256": "1e3fa5b024a8b9e298aa6ccdf9c877c698bbb83e1126f86f79d21d66efaac46a",
+      "edits": [
+        {
+          "current": "\t// Both aggregates gating on WIT acceptance must depend on the job itself.\n\tfor(const aggregate of [\"optional-parameter-matrix\", \"support-summary\"])\n\t\tassert.ok(workflow.split(`  ${aggregate}:\\n`)[1]?.split(\"    runs-on:\")[0].includes(\"      - wasi-consumer\\n\"), `${aggregate} needs wasi-consumer`);\n",
+          "previous": "\tassert.ok(workflow.split(\"  support-summary:\\n\")[1]?.split(\"    runs-on:\")[0].includes(\"      - wasi-consumer\\n\"));\n",
+          "start": 7534
+        }
+      ],
+      "path": "tests/helpers/wit-owned-package-evidence.mjs",
+      "previousSha256": "dc53fd99dc9f1ba3cbd373da1133d0d84d3a285a0146dfad44035d88d8465e52"
+    },
+    {
+      "currentSha256": "06589717dd8c049247a7764f96eb499bb96bd0dc44f30953d84ca25e9bf0f344",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t\t, [\"probe control with a no-op refinement\", changed(\"scalar\", \"probe\", ir => { ir.declarations.at(-1).source.extensions[\"lean-lang.org/refinements\"] = { parameters: [null], result: null }; })]\n",
+          "start": 9523
+        },
+        {
+          "current": "\t// Mismatched refinement/transport pairs and all-null refinement trees cannot produce a private ABI at all.\n",
+          "previous": "\t// Mismatched refinement/transport pairs cannot produce a private ABI at all.\n",
+          "start": 10783
+        },
+        {
+          "current": "\tconst noOp = ir => { ir.declarations.at(-1).source.extensions[\"lean-lang.org/refinements\"] = { parameters: [null], result: null }; };\n\tfor(const [label, mode, change, message] of [\n\t\t[\"parameter type\", \"original\", ir => { ir.declarations[0].parameters[0].type = { kind: \"primitive\", name: \"int\" }; }, \"Refinement does not match its transport type\"]\n\t\t, [\"bound position\", \"original\", ir => { const value = refinement(ir, \"label\"); value.parameters = [value.parameters[1], value.parameters[0], value.parameters[2]]; }, \"Refinement does not match its transport type\"]\n\t\t, [\"probe control with a no-op refinement\", \"probe\", noOp, \"Invalid declaration refinement metadata\"]\n\t]) assert.throws(() => changed(\"scalar\", mode, change), { name: \"TypeError\", message }, label);\n\t// A descriptor carrying the no-op refinement beside a valid ABI is still refused by selection as a changed contract.\n\tconst smuggled = structuredClone(instrumentReviewedFinWasmIr(\"scalar\")); noOp(smuggled);\n\tassert.throws(() => reviewedFinWasmEntrySelection({ descriptor: { ...descriptorOf(instrumentReviewedFinWasmIr(\"scalar\")), bindingIr: smuggled }, bytes, selection: \"scalar\", mode: \"probe\" })\n\t\t, { name: \"AssertionError\", message: /^the probe binding IR is the expected contract\\n[\\s\\S]*declarations\\[6\\]\\.source\\.extensions\\.lean-lang\\.org\\/refinements/u });\n",
+          "previous": "\tfor(const [label, change] of [\n\t\t[\"parameter type\", ir => { ir.declarations[0].parameters[0].type = { kind: \"primitive\", name: \"int\" }; }]\n\t\t, [\"bound position\", ir => { const value = refinement(ir, \"label\"); value.parameters = [value.parameters[1], value.parameters[0], value.parameters[2]]; }]\n\t]) assert.throws(() => changed(\"scalar\", \"original\", change), { name: \"TypeError\", message: \"Refinement does not match its transport type\" }, label);\n",
+          "start": 10970
+        }
+      ],
+      "path": "tests/reviewed-fin-wasm-entry-controls.test.mjs",
+      "previousSha256": "74fb5f75cb483a3fb91a6f8e740e39451242b38b2ca0bf3ce339f857234f7caa"
+    },
+    {
+      "currentSha256": "d427d224b6f61ab43b7e0ba7cab7c1f56a5fd802c1ba3847f1501dd3655eb555",
+      "edits": [
+        {
+          "current": "\t, dependentCheckedRecordMatrixProfiles, markdownRawHtml, renderTypeDocuments\n\t, renderTypeNote, renderTypeTable, replaceTypeSection\n",
+          "previous": "\t, dependentCheckedRecordMatrixProfiles, renderTypeDocuments\n\t, renderTypeTable, replaceTypeSection\n",
+          "start": 546
+        },
+        {
+          "current": "test(\"conversion notes render markup-like host types as code and no table line carries raw HTML\", () => {\n\tconst note = \"Only the declared HostNull null constructor uses the nullable branch.\";\n\tconst markup = \"boxed @Nullable T; Option<T> remains explicit None/Some\", plain = \"undef or T; Option remains generated None/Some\";\n\tassert.equal(renderTypeNote({ hostType: markup, conversionNote: `${markup}. ${note}` }), `\\`${markup}\\`. ${note}`);\n\tassert.equal(renderTypeNote({ hostType: plain, conversionNote: `${plain}. ${note}` }), `${plain}. ${note}`);\n\tassert.equal(renderTypeNote({ hostType: markup, conversionNote: note }), note);\n\tassert.equal(renderTypeNote({ hostType: null, conversionNote: note }), note);\n\tassert.equal(renderTypeNote({ hostType: markup, conversionNote: null }), null);\n\t// Only a CommonMark tag is raw HTML to the site compiler; other angle brackets stay prose.\n\tfor(const text of [\"Option<T> remains\", \"WIT option<T>; source\", \"</T>\", \"<!-- note -->\"]) assert.match(text, markdownRawHtml);\n\tfor(const text of [\"std::vector<uint8_t>. Unit\", \"Readonly<Record<PropertyKey, never>>\", \"payload < the live bound\"]) assert.doesNotMatch(text, markdownRawHtml);\n\t// So no generated table line may carry such a tag outside a code span.\n\tfor(const [filename, profiles] of Object.entries(typeGuideProfiles))\n\t\tfor(const line of renderTypeTable(inventory, profiles, path.posix.relative(path.posix.dirname(filename), \"docs/reference/types.md\")).split(\"\\n\"))\n\t\t\tif(line.startsWith(\"| \")) assert.doesNotMatch(line.split(/`[^`]*`/u).join(\" \"), markdownRawHtml, `${filename}: ${line.slice(0, 80)}`);\n});\n\n",
+          "previous": "",
+          "start": 6181
+        }
+      ],
+      "path": "tests/type-surface-docs.test.mjs",
+      "previousSha256": "885177d97571750684ad4455f16171d8a2d3bb6e99fab6dfa7e81fcc3f36e767"
+    },
+    {
+      "currentSha256": "c4735bd625a931c96090b71758e4c02183547599491058d74d7845786a77f702",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t\t, [\"      - wasi-consumer\\n\", \"\"]\n",
+          "start": 7724
+        },
+        {
+          "current": "\t// The first dependant after the WIT job is the optional-parameter matrix; the\n\t// summary gate's own dependency is refused separately, inside its block.\n\tconst summaryStart = jobAndFollowing.indexOf(\"  support-summary:\\n\"); assert.ok(summaryStart > 0);\n\tconst earlier = jobAndFollowing.slice(0, summaryStart), summary = jobAndFollowing.slice(summaryStart);\n\tassert.ok(earlier.includes(\"      - wasi-consumer\\n\") && summary.includes(\"      - wasi-consumer\\n\"));\n\tconst unguardedSummary = prefix + earlier + summary.replace(\"      - wasi-consumer\\n\", \"\");\n\tassert.notEqual(unguardedSummary, source);\n\tassert.throws(() => assertOwnedWitPackageCi(unguardedSummary), /support-summary needs wasi-consumer/u);\n\tassert.throws(() => assertOwnedWitPackageCi(prefix + jobAndFollowing.replace(\"      - wasi-consumer\\n\", \"\")), /optional-parameter-matrix needs wasi-consumer/u);\n",
+          "previous": "",
+          "start": 7899
+        }
+      ],
+      "path": "tests/wit-owned-package-evidence.test.mjs",
+      "previousSha256": "fd12e668fb507af469a6e6209cfc77655851da937fbc871241b0f6edaf6489c2"
+    }
+  ]
+}

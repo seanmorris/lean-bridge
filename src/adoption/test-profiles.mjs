@@ -328,6 +328,7 @@ const profileManifest = Object.freeze({
 		, "fin-entry-integration"
 		, "wasm-frame-entry-observer"
 		, "reviewed-fin-wasm-entry-controls"
+		, "retained-contract-tests"
 		, "wasm-entry-controls-history"
 		, "reviewed-fin-wasm-entry-harness"
 		, "wasm-entry-harness-history"
