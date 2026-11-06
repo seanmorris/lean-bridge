@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/node-consumer-retained-reader-deferral-source-history-tests.mjs";
 import "./helpers/retained-contract-milestone-binding-source-history-tests.mjs";
 import "./helpers/historical-registration-snapshot-isolation-source-history-tests.mjs";
 import "./helpers/historical-pin-snapshot-followup-source-history-tests.mjs";
