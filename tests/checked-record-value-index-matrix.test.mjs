@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/checked-record-value-index-matrix-ci-tests.mjs";
 import "./helpers/checked-record-value-index-matrix-promotion-tests.mjs";
 import "./helpers/checked-record-value-index-matrix-promotion-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-matrix-checkout-source-history-tests.mjs";

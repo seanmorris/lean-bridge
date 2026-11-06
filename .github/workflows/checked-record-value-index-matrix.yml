@@ -10,6 +10,7 @@ on:
       - "tests/checked-record-value-index-matrix.test.mjs"
       - "tests/checked-record-value-index-matrix-inventory.test.mjs"
       - "tests/helpers/checked-record-value-index-*-evidence.mjs"
+      - "tests/helpers/checked-record-value-index-matrix-ci*.mjs"
       - "tests/helpers/checked-record-value-index-matrix-promotion*.mjs"
   pull_request:
     paths:
@@ -20,6 +21,7 @@ on:
       - "tests/checked-record-value-index-matrix.test.mjs"
       - "tests/checked-record-value-index-matrix-inventory.test.mjs"
       - "tests/helpers/checked-record-value-index-*-evidence.mjs"
+      - "tests/helpers/checked-record-value-index-matrix-ci*.mjs"
       - "tests/helpers/checked-record-value-index-matrix-promotion*.mjs"
   workflow_dispatch:
   schedule:
@@ -37,9 +39,40 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      # The promotion and source-history suites read Git history; the only
+      # archive payloads either test opens are the retained value-index
+      # archives, so everything else stays an index or a root record.
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          filter: blob:none
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /.github/
+            /acceptance/
+            /config/
+            /containers/
+            /demos/
+            /nix/
+            /notices/
+            /patches/
+            /poc/
+            /schema/
+            /scripts/
+            /site/
+            /src/
+            /tests/
+            /docs/
+            !/docs/evidence/*
+            /docs/evidence/*.json
+            /docs/evidence/*.md
+            /docs/evidence/*.xml
+            /docs/evidence/*/index.json
+            /docs/evidence/checked-record-value-index-*/
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
