@@ -9,9 +9,17 @@ import { canonicalJson } from "../../src/capsule/node.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { checkReviewedFinWasm } from "./reviewed-fin-wasm-install.mjs";
 import { reviewedFinWasmSelections } from "./reviewed-fin-wasm-fixture.mjs";
+import { registerRetainedContractTests } from "./retained-contract-tests.mjs";
 import "./reviewed-fin-wasm-contract-tests.mjs";
-import "./reviewed-fin-wasm-evidence-tests.mjs";
-import "./reviewed-fin-promotion-tests.mjs";
+
+// The archived-identity, original-archive and promotion suites open retained
+// npm and host evidence, so sparse consumer lanes defer them while Core
+// requires them. The current contract and installed-package suites stay active.
+await registerRetainedContractTests([
+	() => import("./reviewed-fin-wasm-archived-identity-tests.mjs")
+	, () => import("./reviewed-fin-wasm-evidence-tests.mjs")
+	, () => import("./reviewed-fin-promotion-tests.mjs")
+]);
 
 const browsers = process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_BROWSER_TEST === "1";
 const enabled = process.env.LEAN_BRIDGE_REVIEWED_FIN_WASM_TEST === "1" || browsers;

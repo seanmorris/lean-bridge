@@ -17,7 +17,7 @@ import { reviewedFinWasmBuildFacts, reviewedFinWasmExpected } from "./reviewed-f
 import { reviewedFinWasmTypeScriptPrelude } from "./reviewed-fin-wasm-entry-producer.mjs";
 import { reviewedFinWasmTypeScript } from "./reviewed-fin-wasm-typescript.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
-import { reviewedFinWasmMismatches, reviewedFinWasmPreFieldMismatches, reviewedFinWasmRefusal } from "./reviewed-fin-wasm-mismatches.mjs";
+import { reviewedFinWasmMismatches, reviewedFinWasmRefusal } from "./reviewed-fin-wasm-mismatches.mjs";
 import { reviewedFinBrowserProfiles, validateReviewedFinBrowserObservation } from "./reviewed-fin-wasm-browser.mjs";
 import { nominalRefinementEntries } from "../../src/abi/refinements.mjs";
 
@@ -257,14 +257,6 @@ test("both reviewed Wasm ABIs reconcile changed bounds only after matching revie
 	assert.ok(source.includes("await assert.rejects(lstat(outputRoot), { code: \"ENOENT\" });"));
 	assert.ok(source.indexOf("assert.deepEqual(facts[0], facts[1])") < source.indexOf("const mismatches = reviewed ?"));
 	assert.ok(source.indexOf("const mismatches = reviewed ?") < source.indexOf("await rm(producers"));
-});
-
-test("the eight earlier structural Wasm refusal inputs remain byte-identical to their archived identities", async () => {
-	const bytes = await readFile("docs/evidence/reviewed-fin-npm-20261007/reviewed-structural.json");
-	assert.equal(sha256(bytes), "eb908163d52e8dfc3d24a7327eec6e7e9c366715030ab6284fe33b7c22d4af19");
-	const report = JSON.parse(bytes);
-	assert.deepEqual(reviewedFinWasmPreFieldMismatches("structural").map(({ label, ir }) => ({ label, reviewedSourceSha256: sha256(canonicalJson(ir)) }))
-		, report.mismatches.map(({ label, reviewedSourceSha256 }) => ({ label, reviewedSourceSha256 })));
 });
 
 test("Fin browser observations require the selected corpus, real realm and every rejection", () => {
