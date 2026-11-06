@@ -47,7 +47,7 @@ test("independent admission gates preserve copied Subtypes without admitting cal
 		, { kind: "variant", name: "Sample.Choice", lean: "Sample.Choice", cases: [{ name: "value", constructor: "Sample.Choice.value", fields: [{ name: "value", type: sub() }] }], abi: heap }
 	];
 	for(const type of nominal) validateNativeType(type, 0, false, "parameter");
-	assert.throws(() => validateNativeType({ kind: "callback", parameters: [one("list", sub())], result: nat, abi: heap }, 0, false, "parameter"), /Subtype refinements require/);
+	assert.throws(() => validateNativeType({ kind: "callback", parameters: [one("list", sub())], result: nat, abi: heap }, 0, false, "parameter"), /invalid Subtype refinement/);
 	assert.throws(() => validateNativeType(one("array", sub()), 1), /refinements require/);
 });
 
@@ -72,8 +72,8 @@ test("native adapters preserve normalized values and emit one leaf validator for
 	assert.match(generated.leanSource, /let _bridgeValue2b ← \(match[^]*pure \(_bridgeValue2a, _bridgeValue2b\)/);
 	assert.equal((generated.leanSource.match(/_root_\.Sample\.increment /g) ?? []).length, 1);
 	assert.doesNotMatch(generated.leanSource, /unsafeCast|sorry|panic/);
-	const result = generateNativeLeanAdapters(model(nat, one("array", one("option", sub())))).leanSource;
-	assert.match(result, /\.map \(fun _bridgeValue0 => \(\(_bridgeValue0\)\.map \(fun _bridgeValue1 => \(_bridgeValue1\)\.val\)\)\)/);
+	const result = generateNativeLeanAdapters(model(nat, one("array", one("option", sub(null))))).leanSource;
+	assert.match(result, /\.map \(fun _bridgeValue0 => \(\(_bridgeValue0\)\.map \(fun _bridgeValue1 => \(_root_\.Subtype\.val \(_bridgeValue1\)\)\)\)\)/);
 });
 
 test("generated C checks mixed Fin leaves before any constructor and reports actual rejected paths", () => {
@@ -83,7 +83,7 @@ test("generated C checks mixed Fin leaves before any constructor and reports act
 	assert.ok(body.length > 0);
 	assert.ok(body.indexOf("_check(") < body.indexOf("lb_fin_below("));
 	assert.ok(body.indexOf("lb_fin_below(") < body.indexOf(`${item.symbol}_refinement_0_0_0_0(`));
-	assert.ok(body.indexOf(`${item.symbol}_refinement_0_0_0_1_1(`) < body.indexOf(`lean_object *checked = ${item.symbol}(`));
+	assert.ok(body.indexOf(`${item.symbol}_refinement_0_0_0_1_1(`) < body.indexOf(`lean_object *_lb_checked = ${item.symbol}(`));
 	assert.match(body, /arg0\[%zu\]\?\.0 was rejected by Sample\.normalize/);
 	assert.match(body, /arg0\[%zu\]\?\.1\.error was rejected by Sample\.checked/);
 	assert.match(body, /arg0\[%zu\]\?\.1\.ok is not below its Fin 184467440737095516170 bound/);

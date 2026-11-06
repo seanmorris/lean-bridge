@@ -23,86 +23,90 @@ import { nativeSubtypeDispatchColumns, nativeSubtypeDispatchExpected, nativeSubt
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { perlSubtypeDispatchColumns, perlSubtypeDispatchSteps, perlSubtypeInterposer, perlSubtypePrelude } from "./helpers/perl-subtype-dispatch.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
-import "./helpers/subtype-alias-position-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-wit-archive-source-history-tests.mjs";
-import "./helpers/callback-refinements-php-wasm-hosted-archive-source-history-tests.mjs";
-import "./helpers/subtype-xs-archive-source-history-tests.mjs";
-import "./helpers/checked-record-admission-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
 import "./helpers/structural-subtype-extractor-tests.mjs";
 import "./helpers/structural-subtype-runtime-tests.mjs";
-import "./helpers/structural-subtype-runtime-history-tests.mjs";
 import "./helpers/nominal-subtype-conversion-tests.mjs";
-import "./helpers/nominal-subtype-conversion-history-tests.mjs";
 import "./helpers/nominal-subtype-selection-tests.mjs";
 import "./helpers/nominal-subtype-selection-extractor-tests.mjs";
 import "./helpers/nominal-subtype-native-tests.mjs";
-import "./helpers/nominal-subtype-native-history-tests.mjs";
 import "./helpers/subtype-result-tests.mjs";
 import "./helpers/subtype-result-source-tests.mjs";
-import "./helpers/subtype-result-history-tests.mjs";
-import "./helpers/nominal-subtype-author-history-tests.mjs";
-import "./helpers/component-refinement-mirror-history-tests.mjs";
 import "./helpers/nominal-subtype-author-tests.mjs";
-import "./helpers/nominal-subtype-selection-history-tests.mjs";
-import "./helpers/generic-subtype-composition-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-hosted-archivers-source-history-tests.mjs";
-import "./helpers/nested-checked-record-regression-contract-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-hosted-failure-repair-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-foundation-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-native-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-native-evidence-tests.mjs";
-import "./helpers/dependent-checked-record-native-archive-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-perl-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-perl-evidence-tests.mjs";
-import "./helpers/dependent-checked-record-perl-archive-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-python-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-python-evidence-tests.mjs";
-import "./helpers/dependent-checked-record-python-archive-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-ruby-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-type-surface-gap-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-php-wasm-evidence-tests.mjs";
-import "./helpers/dependent-checked-record-php-wasm-archive-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-promotion-artifact-identity-hardening-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-wit-retained-pkg-config-repair-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-wit-pkg-config-space-repair-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-jvm-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-jvm-evidence-tests.mjs";
-import "./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-dotnet-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-dotnet-evidence-tests.mjs";
-import "./helpers/dependent-checked-record-dotnet-archive-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-php-evidence-tests.mjs";
-import "./helpers/dependent-checked-record-php-archive-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-browser-path-diagnostic-repair-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-browser-evidence-tests.mjs";
-import "./helpers/dependent-checked-record-browser-archive-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-wit-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-wit-evidence-tests.mjs";
-import "./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs";
-import "./helpers/callback-subtype-managed-consumer-repair-source-history-tests.mjs";
-import "./helpers/php-wasm-indexed-refinement-entry-source-history-tests.mjs";
-import "./helpers/php-wasm-owned-refinement-entry-source-history-tests.mjs";
 import "./helpers/php-wasm-owned-refinement-entry-selection-tests.mjs";
 import "./helpers/php-wasm-owned-refinement-entry-source-tests.mjs";
 import "./helpers/php-wasm-owned-refinement-entry-plan-tests.mjs";
 import "./helpers/php-wasm-owned-refinement-entry-fixtures-tests.mjs";
 import "./helpers/php-wasm-owned-refinement-entry-ci-tests.mjs";
-import "./helpers/wit-consumer-root-repair-source-history-tests.mjs";
-import "./helpers/callback-subtype-php-wasm-profile-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-php-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-rust-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-hosted-archive-preparation-source-history-tests.mjs";
-import "./helpers/zero-payload-native-control-contract-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-archive-selection-repair-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-ruby-evidence-tests.mjs";
-import "./helpers/dependent-checked-record-ruby-archive-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-rust-evidence-tests.mjs";
-import "./helpers/dependent-checked-record-rust-archive-source-history-tests.mjs";
-import "./helpers/dependent-generic-subtype-source-history-tests.mjs";
-import "./helpers/dependent-generic-subtype-ci-source-history-tests.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/subtype-alias-position-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-wit-archive-source-history-tests.mjs")
+	, () => import("./helpers/callback-refinements-php-wasm-hosted-archive-source-history-tests.mjs")
+	, () => import("./helpers/subtype-xs-archive-source-history-tests.mjs")
+	, () => import("./helpers/checked-record-admission-source-history-tests.mjs")
+	, () => import("./helpers/structural-subtype-runtime-history-tests.mjs")
+	, () => import("./helpers/nominal-subtype-conversion-history-tests.mjs")
+	, () => import("./helpers/nominal-subtype-native-history-tests.mjs")
+	, () => import("./helpers/subtype-result-history-tests.mjs")
+	, () => import("./helpers/nominal-subtype-author-history-tests.mjs")
+	, () => import("./helpers/component-refinement-mirror-history-tests.mjs")
+	, () => import("./helpers/nominal-subtype-selection-history-tests.mjs")
+	, () => import("./helpers/generic-subtype-composition-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-hosted-archivers-source-history-tests.mjs")
+	, () => import("./helpers/nested-checked-record-regression-contract-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-hosted-failure-repair-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-foundation-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-native-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-native-evidence-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-native-archive-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-perl-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-perl-evidence-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-perl-archive-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-python-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-python-evidence-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-python-archive-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-ruby-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-type-surface-gap-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-php-wasm-evidence-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-php-wasm-archive-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-promotion-artifact-identity-hardening-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-wit-retained-pkg-config-repair-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-wit-pkg-config-space-repair-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-jvm-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-jvm-evidence-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-dotnet-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-dotnet-evidence-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-dotnet-archive-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-php-evidence-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-php-archive-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-browser-path-diagnostic-repair-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-browser-evidence-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-browser-archive-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-wit-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-wit-evidence-tests.mjs")
+	, () => import("./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs")
+	, () => import("./helpers/callback-subtype-managed-consumer-repair-source-history-tests.mjs")
+	, () => import("./helpers/php-wasm-indexed-refinement-entry-source-history-tests.mjs")
+	, () => import("./helpers/php-wasm-owned-refinement-entry-source-history-tests.mjs")
+	, () => import("./helpers/wit-consumer-root-repair-source-history-tests.mjs")
+	, () => import("./helpers/callback-subtype-php-wasm-profile-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-php-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-rust-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-hosted-archive-preparation-source-history-tests.mjs")
+	, () => import("./helpers/zero-payload-native-control-contract-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-archive-selection-repair-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-ruby-evidence-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-ruby-archive-source-history-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-rust-evidence-tests.mjs")
+	, () => import("./helpers/dependent-checked-record-rust-archive-source-history-tests.mjs")
+	, () => import("./helpers/dependent-generic-subtype-source-history-tests.mjs")
+	, () => import("./helpers/dependent-generic-subtype-ci-source-history-tests.mjs")
+]);
 
 const profiles = process.env.LEAN_BRIDGE_SUBTYPE_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Subtype profile");
@@ -152,7 +156,7 @@ test("Lean adapters construct each Subtype through its checked constructor and e
 		, item("mix", [nat, nat], nat, { parameters: [{ kind: "subtype", constructor: "Subtypes.checkedEven" }, { kind: "fin", bound: "10" }], result: null })];
 	const { leanSource, header } = generateNativeLeanAdapters({ component: { id: "subtypes@1.0.0" }, pointerBits: 64, types: [], exports });
 	const section = symbol => leanSource.slice(leanSource.indexOf(`@[export ${symbol}]`), leanSource.indexOf("\n\n", leanSource.indexOf(`@[export ${symbol}]`)) + 2);
-	assert.equal(section("lb_join"), "@[export lb_join]\ndef f_lb_join (a0 : _root_.String) (a1 : _root_.String) : (_root_.Option _root_.String) :=\n  match _root_.Subtypes.checkedWord a0 with\n  | .some _bridgeSubtype0 =>\n    match _root_.Subtypes.checkedWord a1 with\n    | .some _bridgeSubtype1 =>\n      _root_.Option.some ((_root_.Subtypes.join _bridgeSubtype0 _bridgeSubtype1).val)\n    | .none =>\n      _root_.Option.none\n  | .none =>\n    _root_.Option.none\n\n");
+	assert.equal(section("lb_join"), "@[export lb_join]\ndef f_lb_join (a0 : _root_.String) (a1 : _root_.String) : (_root_.Option _root_.String) :=\n  match _root_.Subtypes.checkedWord a0 with\n  | .some _bridgeSubtype0 =>\n    match _root_.Subtypes.checkedWord a1 with\n    | .some _bridgeSubtype1 =>\n      _root_.Option.some ((_root_.Subtype.val (_root_.Subtypes.join _bridgeSubtype0 _bridgeSubtype1)))\n    | .none =>\n      _root_.Option.none\n  | .none =>\n    _root_.Option.none\n\n");
 	for(const index of [0, 1])
 		assert.equal(section(`lb_join_refinement_${index}`), `@[export lb_join_refinement_${index}]\ndef f_lb_join_refinement_${index} (value : _root_.String) : _root_.UInt8 :=\n  match _root_.Subtypes.checkedWord value with\n  | .some _ => 1\n  | .none => 0\n\n`);
 	// A Fin parameter beside a Subtype keeps its decidable guard and gets no validator.

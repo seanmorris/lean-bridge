@@ -6,23 +6,10 @@
  * @file
  */
 import assert from "node:assert/strict";
-import "./helpers/native-fin-callback-evidence-tests.mjs";
-import "./helpers/native-fin-callback-archive-source-history-tests.mjs";
-import "./helpers/callback-code-ci-repair-source-history-tests.mjs";
-import "./helpers/native-fin-callback-admission-source-history-tests.mjs";
 import "./helpers/fin-reply-compiled-tests.mjs";
 import "./helpers/fin-reply-installed-tests.mjs";
-import "./helpers/native-fin-reply-evidence-tests.mjs";
-import "./helpers/native-fin-reply-archive-source-history-tests.mjs";
-import "./helpers/native-fin-reply-promotion-tests.mjs";
-import "./helpers/native-fin-reply-promotion-source-history-tests.mjs";
 import "./helpers/native-fin-reply-ci-tests.mjs";
-import "./helpers/native-fin-reply-source-history-tests.mjs";
-import "./helpers/native-reply-symbol-fix-source-history-tests.mjs";
-import "./helpers/native-fin-reply-review-tests.mjs";
-import "./helpers/native-reply-review-source-history-tests.mjs";
-import "./helpers/native-fin-reply-refusal-evidence-tests.mjs";
-import "./helpers/native-reply-refusal-source-history-tests.mjs";
+import { registerRetainedContractTests } from "./helpers/retained-contract-tests.mjs";
 import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -48,6 +35,23 @@ import { createComponentPrivateAbi } from "../src/build/component-callable-adapt
 import { nativeCallbackFinGuide } from "../src/release/native-c-family.mjs";
 import { finReplyCompilerModel, finReplyHostShape, finReplyOptionDigit } from "./helpers/fin-reply-model.mjs";
 import { finCallback, finCallbackBound, finCallbackCompilerModel, finCallbackNat, finCallbackSignatures, finCallbackTile } from "./helpers/fin-callback-model.mjs";
+
+await registerRetainedContractTests([
+	() => import("./helpers/native-fin-callback-evidence-tests.mjs")
+	, () => import("./helpers/native-fin-callback-archive-source-history-tests.mjs")
+	, () => import("./helpers/callback-code-ci-repair-source-history-tests.mjs")
+	, () => import("./helpers/native-fin-callback-admission-source-history-tests.mjs")
+	, () => import("./helpers/native-fin-reply-evidence-tests.mjs")
+	, () => import("./helpers/native-fin-reply-archive-source-history-tests.mjs")
+	, () => import("./helpers/native-fin-reply-promotion-tests.mjs")
+	, () => import("./helpers/native-fin-reply-promotion-source-history-tests.mjs")
+	, () => import("./helpers/native-fin-reply-source-history-tests.mjs")
+	, () => import("./helpers/native-reply-symbol-fix-source-history-tests.mjs")
+	, () => import("./helpers/native-fin-reply-review-tests.mjs")
+	, () => import("./helpers/native-reply-review-source-history-tests.mjs")
+	, () => import("./helpers/native-fin-reply-refusal-evidence-tests.mjs")
+	, () => import("./helpers/native-reply-refusal-source-history-tests.mjs")
+]);
 
 const fin = bound => ({ kind: "fin", bound });
 const leased = (parameters, result = null) => ({ parameters: [null], result: { kind: "callback", parameters, result } });
@@ -272,8 +276,8 @@ test("host replies without a Fin-free failure value, nested callbacks, mixed bou
 		// A record's field is structural wherever the record appears, so the host-reply rule is the model's.
 		, ["a host callback's record result", { reply: [finCallback([nat], finCallbackTile), nat] }, true, /a host callback result needs a Fin-free failure value/u]
 		// Subtype and checked records are refused by native type validation before any reply rule applies.
-		, ["a host callback's Subtype result", { reply: [finCallback([nat], replySubtype), nat] }, true, /Subtype refinements require a top-level or structural-container native parameter or result/u]
-		, ["a host callback's optional Subtype result", { reply: [finCallback([nat], { kind: "option", element: replySubtype, abi: replyHeap }), nat] }, true, /Subtype refinements require a top-level or structural-container native parameter or result/u]
+		, ["a host callback's Subtype result", { reply: [finCallback([nat], replySubtype), nat] }, true, /checked Subtype refinements require a top-level or structural-container parameter or result/u]
+		, ["a host callback's optional Subtype result", { reply: [finCallback([nat], { kind: "option", element: replySubtype, abi: replyHeap }), nat] }, true, /checked Subtype refinements require a top-level or structural-container parameter or result/u]
 		, ["a host callback's checked-record result", { reply: [finCallback([nat], replyInterval), nat] }, true, /checked records cross only through a parameter constructor or as a result/u]
 		, ["a host callback's optional checked-record result", { reply: [finCallback([nat], { kind: "option", element: replyInterval, abi: replyHeap }), nat] }, true, /checked records cross only through a parameter constructor or as a result/u]];
 	for(const [label, signatures, callbacks, pattern] of refused)

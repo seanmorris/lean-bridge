@@ -12,7 +12,6 @@ import test from "node:test";
 import { compileCopiedWitModel } from "../../src/backends/wit/copied-model.mjs";
 import { finRecordCompilerModel } from "./fin-record-model.mjs";
 import { finRecordWitPatterns } from "./fin-record-install.mjs";
-import "./fin-record-wit-format-source-history-tests.mjs";
 
 const accepts = wit => finRecordWitPatterns.every(pattern => pattern.test(wit));
 const canonicalLayout = wit => wit.replace(/((?:record|variant) [a-z0-9-]+) \{ ([^{}]+) \}/gu,
