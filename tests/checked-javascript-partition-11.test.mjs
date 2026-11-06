@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/complete-current-source-pin-preflight-source-history-tests.mjs";
 import "./helpers/current-source-pin-preflight-tests.mjs";
 import "./helpers/exact-head-replay-contract-repair-source-history-tests.mjs";
 import "./helpers/jvm-generic-record-array-null-boundary-repair-source-history-tests.mjs";

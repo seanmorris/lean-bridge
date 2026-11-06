@@ -65,8 +65,11 @@ test("focused source-pin refresh is the exact generated reconciliation"
 			, `${coreFocusedSourcePinRefreshImplementation}:docs/type-surface.v1.json`])));
 		const final = implementation;
 		assert.equal(final.refreshed, value.refreshedPins);
-		assert.deepEqual(final.inventory, JSON.parse(await readFile(
-			"docs/type-surface.v1.json", "utf8")));
+		const implementationSource = git(["show"
+			, `${coreFocusedSourcePinRefreshImplementation}:docs/type-surface.v1.json`]);
+		assert.deepEqual(final.inventory, JSON.parse(
+			await sourceAtFinHistoryMilestone(
+				"docs/type-surface.v1.json", sha256(implementationSource))));
 		assert.deepEqual(dependentCheckedRecordPromotionCurrentSourcePaths(
 			before, coreFocusedSourcePinRefreshCurrentSources).sort()
 			, coreFocusedSourcePinRefreshCurrentSources);
