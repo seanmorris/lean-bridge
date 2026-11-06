@@ -121,7 +121,12 @@ test("reviewed-specialization sparse repair refreshes only six live pins"
 				, current: "78d93ca85fee348cb2f05b0a85d525219ff170c14a5bcc00574ee6abbceeb2d1"
 			}
 		]);
-		const inventory = await readFile("docs/type-surface.v1.json", "utf8");
+		const inventoryUpdate = history.integrationUpdates.find(update =>
+			update.path === "docs/type-surface.v1.json");
+		assert.ok(inventoryUpdate);
+		const inventory = await sourceAtFinHistoryRecordSource(
+			reviewedSpecializationSparseSuiteRepairHistoryPath
+			, inventoryUpdate.path, inventoryUpdate.currentSha256);
 		for(const pin of history.currentSourcePins)
 		{
 			assert.equal(inventory.split(pin.previous).length - 1, 0, pin.path);

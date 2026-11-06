@@ -532,7 +532,8 @@ test("Core historical-reuse live-pin repair records its exact change", async () 
 });
 
 test("Core historical-reuse live pins cite the exact current sources", async () => {
-	const document = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const document = JSON.parse(git(["show"
+		, `${coreHistoricalEvidenceReuseLivePinRepairImplementation}:docs/type-surface.v1.json`]));
 	const expected = new Map([
 		["tests/callback-subtype-hosted-evidence.test.mjs", 8]
 		, ["tests/helpers/callback-subtype-hosted-evidence-sources.mjs", 8]
@@ -547,7 +548,9 @@ test("Core historical-reuse live pins cite the exact current sources", async () 
 	{
 		assert.equal(citations.get(path).length, count, path);
 		assert.deepEqual([...new Set(citations.get(path))]
-			, [sha256(await readFile(path))], path);
+			, [sha256(git(["show"
+				, `${coreHistoricalEvidenceReuseLivePinRepairImplementation}:${path}`]))]
+			, path);
 	}
 });
 

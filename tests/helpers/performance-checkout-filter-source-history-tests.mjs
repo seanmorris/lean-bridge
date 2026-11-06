@@ -5,7 +5,9 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
 import test from "node:test";
 import {
 	auditCurrentSourcePins, previewCurrentSourcePinRefresh
@@ -39,6 +41,24 @@ const git = arguments_ => execFileSync("git", arguments_, {
 });
 const record = async () => JSON.parse(await readFile(
 	performanceCheckoutFilterHistoryPath, "utf8"));
+const withHistoricalSources = async (commit, paths, use) => {
+	const repository = await mkdtemp(join(tmpdir()
+		, "lean-performance-filter-history-"));
+	try
+	{
+		for(const path of paths)
+		{
+			const target = join(repository, path);
+			await mkdir(dirname(target), { recursive: true });
+			await writeFile(target, git(["show", `${commit}:${path}`]));
+		}
+		return await use(repository);
+	}
+	finally
+	{
+		await rm(repository, { recursive: true, force: true });
+	}
+};
 
 test("performance checkout filter history records exact boundaries", async () => {
 	const value = await record();
@@ -77,13 +97,24 @@ test("performance checkout filter refreshes the one live workflow citation"
 		assert.equal(reconciled.refreshed, 1);
 		assert.deepEqual(reconciled.inventory, JSON.parse(git(["show"
 			, `${performanceCheckoutFilterPinRefresh}:${inventoryPath}`])));
-		const preflight = await auditCurrentSourcePins(before);
-		assert.deepEqual(preflight.findings.map(item => item.path)
-			, [performanceCheckoutFilterCurrentSources[0]]);
-		assert.deepEqual(previewCurrentSourcePinRefresh(before, preflight)
-			, { paths: 1, refreshed: 1 });
-		assert.deepEqual(await auditCurrentSourcePins(reconciled.inventory)
-			, { cohort: 2661, occurrences: 16326, findings: [] });
+		const pinnedPaths = [performanceCheckoutFilterCurrentSources[0]];
+		await withHistoricalSources(performanceCheckoutFilterImplementation
+			, pinnedPaths, async repository => {
+				const preflight = await auditCurrentSourcePins(before, {
+					repository, paths: pinnedPaths
+				});
+				assert.deepEqual(preflight.findings.map(item => item.path)
+					, pinnedPaths);
+				assert.deepEqual(previewCurrentSourcePinRefresh(before, preflight)
+					, { paths: 1, refreshed: 1 });
+				const after = await auditCurrentSourcePins(reconciled.inventory, {
+					repository, paths: pinnedPaths
+				});
+				assert.equal(after.cohort, 1);
+				assert.equal(after.occurrences, 1);
+				assert.deepEqual(after.findings, []);
+			}
+		);
 	}
 );
 

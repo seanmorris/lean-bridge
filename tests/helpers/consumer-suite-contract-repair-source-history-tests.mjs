@@ -135,7 +135,12 @@ test("consumer-suite additions and current pins are exact", async () => {
 	for(const addition of history.historyAdditions)
 		assert.equal(sha256(await sourceAtFinHistoryMilestone(
 			addition.path, addition.sha256)), addition.sha256, addition.path);
-	const inventory = await readFile("docs/type-surface.v1.json", "utf8");
+	const inventoryUpdate = history.integrationUpdates.find(update =>
+		update.path === "docs/type-surface.v1.json");
+	assert.ok(inventoryUpdate);
+	const inventory = await sourceAtFinHistoryRecordSource(
+		consumerSuiteContractRepairHistoryPath, inventoryUpdate.path
+		, inventoryUpdate.currentSha256);
 	for(const [digest, count] of [
 		["e0de69c454eca078ff6693e2f7e1d4e9413bbcfce066668397ac79348ef6d9c5", 2]
 		, ["6a3eb45dbb06a627f271149e686811dd76de3931414d63a0ffce3058c37a8c24", 2]

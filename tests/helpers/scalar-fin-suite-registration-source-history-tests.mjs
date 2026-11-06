@@ -102,7 +102,12 @@ test("Scalar Fin registration refreshes only its complete live pin set"
 			, previous: "cd2afbdcbd40042ec7bf9b9eb31882d688cb155a970ad8d09f154eb43f748cdb"
 			, current: "3ec58789494f149af921fcab0cafe14231663217a20c90280f3157d90a290aa9"
 		}]);
-		const inventory = await readFile("docs/type-surface.v1.json", "utf8");
+		const inventoryUpdate = history.integrationUpdates.find(update =>
+			update.path === "docs/type-surface.v1.json");
+		assert.ok(inventoryUpdate);
+		const inventory = await sourceAtFinHistoryRecordSource(
+			scalarFinSuiteRegistrationHistoryPath, inventoryUpdate.path
+			, inventoryUpdate.currentSha256);
 		assert.equal(inventory.split(history.currentSourcePins[0].previous)
 			.length - 1, 0);
 		assert.equal(inventory.split(history.currentSourcePins[0].current)

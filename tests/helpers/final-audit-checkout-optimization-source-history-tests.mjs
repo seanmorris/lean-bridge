@@ -5,7 +5,9 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
 import test from "node:test";
 import {
 	auditCurrentSourcePins, previewCurrentSourcePinRefresh
@@ -38,6 +40,24 @@ const git = arguments_ => execFileSync("git", arguments_, {
 });
 const record = async () => JSON.parse(await readFile(
 	finalAuditCheckoutOptimizationHistoryPath, "utf8"));
+const withHistoricalSources = async (commit, paths, use) => {
+	const repository = await mkdtemp(join(tmpdir()
+		, "lean-final-audit-checkout-history-"));
+	try
+	{
+		for(const path of paths)
+		{
+			const target = join(repository, path);
+			await mkdir(dirname(target), { recursive: true });
+			await writeFile(target, git(["show", `${commit}:${path}`]));
+		}
+		return await use(repository);
+	}
+	finally
+	{
+		await rm(repository, { recursive: true, force: true });
+	}
+};
 
 test("final audit checkout history records the exact bounded optimization"
 	, async () => {
@@ -84,11 +104,26 @@ test("final audit checkout pin refresh is the exact generated reconciliation"
 			, `${finalAuditCheckoutOptimizationPinRefresh}:docs/type-surface.v1.json`])));
 		assert.deepEqual(reconciled.inventory.profiles, before.profiles);
 		assert.deepEqual(reconciled.inventory.observations, before.observations);
-		assert.deepEqual(previewCurrentSourcePinRefresh(
-			before, await auditCurrentSourcePins(before))
-			, { paths: 4, refreshed: 26 });
-		assert.deepEqual(await auditCurrentSourcePins(reconciled.inventory)
-			, value.preflightAfter);
+		await withHistoricalSources(
+			finalAuditCheckoutOptimizationValueIndexImplementation
+			, finalAuditCheckoutOptimizationCurrentSources
+			, async repository => {
+				const prior = await auditCurrentSourcePins(before, {
+					repository
+					, paths: finalAuditCheckoutOptimizationCurrentSources
+				});
+				assert.deepEqual(prior.findings, value.preflightBefore.findings);
+				assert.deepEqual(previewCurrentSourcePinRefresh(before, prior)
+					, { paths: 4, refreshed: 26 });
+				const after = await auditCurrentSourcePins(reconciled.inventory, {
+					repository
+					, paths: finalAuditCheckoutOptimizationCurrentSources
+				});
+				assert.equal(after.cohort, 4);
+				assert.equal(after.occurrences, 26);
+				assert.deepEqual(after.findings, []);
+			}
+		);
 	}
 );
 
