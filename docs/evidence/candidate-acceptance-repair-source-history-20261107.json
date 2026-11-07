@@ -1,0 +1,2055 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "currentSourcePaths": 14,
+    "implementationPaths": 43,
+    "refreshedPins": 165,
+    "runtimeSemanticChanges": 1
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [
+    {
+      "count": 92,
+      "current": "63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd",
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previous": "2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281"
+    },
+    {
+      "count": 8,
+      "current": "1314e7f153eafc7cee4b1660e892f6f8bf7668084b6963a01848a9121a9011d5",
+      "path": "src/build/component-copied-adapters.mjs",
+      "previous": "a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc"
+    },
+    {
+      "count": 25,
+      "current": "bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a",
+      "path": "tests/documentation.test.mjs",
+      "previous": "34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95"
+    },
+    {
+      "count": 2,
+      "current": "c66d46d9d65f7e5f59e7929b138bece88f523b2bcf764a0015fdb6ae94fae90b",
+      "path": "tests/fixtures/collection-consumers/java.java",
+      "previous": "9278370234000e92ce8f55524b2c9b4c11fd31260e262bc30014a66bd680dc2b"
+    },
+    {
+      "count": 2,
+      "current": "a1b4fa71008adb3bd3ad982e200a7ed55e1002904db5074569b439094e0a8897",
+      "path": "tests/fixtures/variant-consumers/java.java",
+      "previous": "1037e66b688d1f3f8d3123ff098927f97df71e7cb74bf621916c5575ce03a16c"
+    },
+    {
+      "count": 2,
+      "current": "747650791531719de4eb56b1a31158c1a9bcd24e346967b93e22148fe6a33779",
+      "path": "tests/fixtures/variant-consumers/kotlin.kt",
+      "previous": "07c574558ffaa68576213a237020550fc1d2285529c5badb7fbb8f519f3dc763"
+    },
+    {
+      "count": 4,
+      "current": "b6fb8b66faaf112c1467757ea2c32d10adf6544262b585b1b89432f377618f95",
+      "path": "tests/helpers/nominal-subtype-perl-promotion-tests.mjs",
+      "previous": "8bb1da735b823e2bc9ae7ce7fc886788548e60c34001351e9c5947793e21f78e"
+    },
+    {
+      "count": 4,
+      "current": "8a9e5b204e7f9d0d543f48f7db1d134274e52d90ce679d967d226c4cc469f9ee",
+      "path": "tests/helpers/nominal-subtype-perl-promotion.mjs",
+      "previous": "d8c4e61be86d1935afd690b371441bfe8cf7e5ed66b2609f0cd0d19cd99f473d"
+    },
+    {
+      "count": 4,
+      "current": "df137a42ab65f38df3a4df6c473584f605cd6f16cab3a32eac585d9000f897a6",
+      "path": "tests/helpers/nominal-subtype-php-promotion-tests.mjs",
+      "previous": "656935e1b3848ac9cd0e8df2524de7a85984e38511798be850ebc35d4fb10564"
+    },
+    {
+      "count": 4,
+      "current": "a4b5847c7260089ce7b6d99b3137a0918ec137aab297051ad43be4ae8a249838",
+      "path": "tests/helpers/nominal-subtype-php-promotion.mjs",
+      "previous": "fe0897340e58cc359106aa531f6020db74fb799ab14ced24e643d760b0354cd6"
+    },
+    {
+      "count": 4,
+      "current": "d5a67b7e4b77d5d2d44dd28f42617ca640b59ffca754d894ea5e47bb23ffe35b",
+      "path": "tests/helpers/nominal-subtype-ruby-promotion-tests.mjs",
+      "previous": "b779c540f22107163556f07af9ec0d82c1867c35fef81d4ef60a7dfe58a1fee5"
+    },
+    {
+      "count": 4,
+      "current": "ef0578c48040e1f9717346edee717d8508fb72ddc2472a66e069bef44fbaea80",
+      "path": "tests/helpers/nominal-subtype-ruby-promotion.mjs",
+      "previous": "29dff3e780ad810a19c7f89922949df356fe370f60c517de961272d321c01692"
+    },
+    {
+      "count": 8,
+      "current": "f628584c60ce8546810d3dad0d32943c68b5720746241f64797f86669e0b7aec",
+      "path": "tests/jvm-kotlin-contract.test.mjs",
+      "previous": "780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5"
+    },
+    {
+      "count": 2,
+      "current": "849e648195496d5c1e539eeb00ef56eddeb08f891f898efeb463303fd6085386",
+      "path": "tests/word-contract.test.mjs",
+      "previous": "cdd699f7d0d912239180549f52d61cc4f5fe9347823849ed8bf13a1ff7c56ecf"
+    }
+  ],
+  "discovery": {
+    "candidate": "d6a4044154d4e998d31b7ad24ad245d5e5b93347",
+    "coreRun": 42344725453,
+    "downstreamRun": 42344727501,
+    "jvmJob": 128323854228,
+    "rubyJob": 128323854052
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-candidate-acceptance-repair-source-history.mjs",
+      "sha256": "a2014390ec03743093750937fe4840946d8871c5e928e025fa49c24664d63a9a"
+    },
+    {
+      "path": "tests/helpers/candidate-acceptance-repair-source-history-tests.mjs",
+      "sha256": "5aa5c4977bdceceed17d604e9f9b3eb07497a33ee09f8136676ae08d79b9de45"
+    },
+    {
+      "path": "tests/helpers/candidate-acceptance-repair-source-history.mjs",
+      "sha256": "87130eecd73eb03f906e07d088e2d329090499288f02160a3b8cd076429878f9"
+    }
+  ],
+  "implementationCommit": "c3cf955c16549cc407f8ad7f0ebe2a250730b61e",
+  "implementationCommits": [
+    "1ad4636b946dea50f2a3ad07d90c2d7397516238",
+    "7d44315102cf20e416b5ad5ec74a29cf5b1157b0",
+    "8714adbb3f9b8746823e8b087b24fa227b5bd578",
+    "203b1acd57f37389e507e3c229ec9c54c1d39982",
+    "e7e77bbbaa21df3ec0475dde34c757c3441928b8",
+    "175562acad1d7a899302ff0b260d37ef09bbcc78",
+    "97b327cb87a38031ecc47c3b6d1b3c6fd9dc0a57",
+    "958a43a5e8ac5fac67b912df48e3ab0fc9b4b2fc",
+    "c3cf955c16549cc407f8ad7f0ebe2a250730b61e"
+  ],
+  "integrationCommit": "b5618d91a80e83568b070afc622b3af3f838d6fb",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4a6c580530fd5c23fbee0a4c07513c3daf1f08b37a34c075fd61bb0c4c258528",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 78051
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 95246
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 111547
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 126315
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 135597
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 145222
+        },
+        {
+          "current": "          \"sha256\": \"c66d46d9d65f7e5f59e7929b138bece88f523b2bcf764a0015fdb6ae94fae90b\"\n",
+          "previous": "          \"sha256\": \"9278370234000e92ce8f55524b2c9b4c11fd31260e262bc30014a66bd680dc2b\"\n",
+          "start": 150208
+        },
+        {
+          "current": "          \"sha256\": \"a1b4fa71008adb3bd3ad982e200a7ed55e1002904db5074569b439094e0a8897\"\n",
+          "previous": "          \"sha256\": \"1037e66b688d1f3f8d3123ff098927f97df71e7cb74bf621916c5575ce03a16c\"\n",
+          "start": 155758
+        },
+        {
+          "current": "          \"sha256\": \"747650791531719de4eb56b1a31158c1a9bcd24e346967b93e22148fe6a33779\"\n",
+          "previous": "          \"sha256\": \"07c574558ffaa68576213a237020550fc1d2285529c5badb7fbb8f519f3dc763\"\n",
+          "start": 156287
+        },
+        {
+          "current": "          \"sha256\": \"f628584c60ce8546810d3dad0d32943c68b5720746241f64797f86669e0b7aec\"\n",
+          "previous": "          \"sha256\": \"780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5\"\n",
+          "start": 163743
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 168606
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 181575
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 196470
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 209254
+        },
+        {
+          "current": "          \"sha256\": \"c66d46d9d65f7e5f59e7929b138bece88f523b2bcf764a0015fdb6ae94fae90b\"\n",
+          "previous": "          \"sha256\": \"9278370234000e92ce8f55524b2c9b4c11fd31260e262bc30014a66bd680dc2b\"\n",
+          "start": 213182
+        },
+        {
+          "current": "          \"sha256\": \"f628584c60ce8546810d3dad0d32943c68b5720746241f64797f86669e0b7aec\"\n",
+          "previous": "          \"sha256\": \"780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5\"\n",
+          "start": 219137
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 222474
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 231007
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 239437
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 248454
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 256828
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 276108
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 285947
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 298082
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 316680
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 325976
+        },
+        {
+          "current": "          \"sha256\": \"a1b4fa71008adb3bd3ad982e200a7ed55e1002904db5074569b439094e0a8897\"\n",
+          "previous": "          \"sha256\": \"1037e66b688d1f3f8d3123ff098927f97df71e7cb74bf621916c5575ce03a16c\"\n",
+          "start": 330836
+        },
+        {
+          "current": "          \"sha256\": \"747650791531719de4eb56b1a31158c1a9bcd24e346967b93e22148fe6a33779\"\n",
+          "previous": "          \"sha256\": \"07c574558ffaa68576213a237020550fc1d2285529c5badb7fbb8f519f3dc763\"\n",
+          "start": 331365
+        },
+        {
+          "current": "          \"sha256\": \"f628584c60ce8546810d3dad0d32943c68b5720746241f64797f86669e0b7aec\"\n",
+          "previous": "          \"sha256\": \"780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5\"\n",
+          "start": 334705
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 338659
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 347914
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 357197
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 366330
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 375189
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 382576
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 390500
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 401146
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 415252
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 422350
+        },
+        {
+          "current": "          \"sha256\": \"f628584c60ce8546810d3dad0d32943c68b5720746241f64797f86669e0b7aec\"\n",
+          "previous": "          \"sha256\": \"780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5\"\n",
+          "start": 429229
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 432579
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 440323
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 446697
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 452860
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 458957
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 465478
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 473144
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 482438
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 493660
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 503357
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 524492
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 533057
+        },
+        {
+          "current": "          \"sha256\": \"f628584c60ce8546810d3dad0d32943c68b5720746241f64797f86669e0b7aec\"\n",
+          "previous": "          \"sha256\": \"780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5\"\n",
+          "start": 541001
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 544065
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 575950
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 582579
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 592838
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 613711
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 622234
+        },
+        {
+          "current": "          \"sha256\": \"f628584c60ce8546810d3dad0d32943c68b5720746241f64797f86669e0b7aec\"\n",
+          "previous": "          \"sha256\": \"780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5\"\n",
+          "start": 630242
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 633184
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 664702
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 673921
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 681261
+        },
+        {
+          "current": "          \"sha256\": \"1314e7f153eafc7cee4b1660e892f6f8bf7668084b6963a01848a9121a9011d5\"\n",
+          "previous": "          \"sha256\": \"a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc\"\n",
+          "start": 684267
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 693544
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 700404
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 709432
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 723458
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 734500
+        },
+        {
+          "current": "          \"sha256\": \"f628584c60ce8546810d3dad0d32943c68b5720746241f64797f86669e0b7aec\"\n",
+          "previous": "          \"sha256\": \"780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5\"\n",
+          "start": 735525
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 748548
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 759294
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 771365
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 782653
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 791236
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 797694
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 806080
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 813888
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 823670
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 832263
+        },
+        {
+          "current": "          \"sha256\": \"849e648195496d5c1e539eeb00ef56eddeb08f891f898efeb463303fd6085386\"\n",
+          "previous": "          \"sha256\": \"cdd699f7d0d912239180549f52d61cc4f5fe9347823849ed8bf13a1ff7c56ecf\"\n",
+          "start": 836818
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 844666
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 900007
+        },
+        {
+          "current": "          \"sha256\": \"f628584c60ce8546810d3dad0d32943c68b5720746241f64797f86669e0b7aec\"\n",
+          "previous": "          \"sha256\": \"780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5\"\n",
+          "start": 934245
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1012069
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1058470
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1072310
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1075587
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1079704
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1083361
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1086302
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1088793
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1093404
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1095894
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1100904
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1103060
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1107954
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1110117
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1115564
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1118369
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1127832
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1137538
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1144843
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1149425
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1151918
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1157296
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1159815
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1167261
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1170695
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1177375
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1182857
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1189136
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1206383
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1221697
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1237738
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1251976
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1270538
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1284962
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1305638
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1324763
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1336484
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1351339
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1359781
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1373876
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1381672
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1393543
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1401745
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1416931
+        },
+        {
+          "current": "          \"sha256\": \"bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a\"\n",
+          "previous": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "start": 1421525
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1428559
+        },
+        {
+          "current": "          \"sha256\": \"1314e7f153eafc7cee4b1660e892f6f8bf7668084b6963a01848a9121a9011d5\"\n",
+          "previous": "          \"sha256\": \"a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc\"\n",
+          "start": 1440141
+        },
+        {
+          "current": "          \"sha256\": \"849e648195496d5c1e539eeb00ef56eddeb08f891f898efeb463303fd6085386\"\n",
+          "previous": "          \"sha256\": \"cdd699f7d0d912239180549f52d61cc4f5fe9347823849ed8bf13a1ff7c56ecf\"\n",
+          "start": 1445806
+        },
+        {
+          "current": "          \"sha256\": \"1314e7f153eafc7cee4b1660e892f6f8bf7668084b6963a01848a9121a9011d5\"\n",
+          "previous": "          \"sha256\": \"a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc\"\n",
+          "start": 1446498
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1451705
+        },
+        {
+          "current": "          \"sha256\": \"1314e7f153eafc7cee4b1660e892f6f8bf7668084b6963a01848a9121a9011d5\"\n",
+          "previous": "          \"sha256\": \"a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc\"\n",
+          "start": 1456884
+        },
+        {
+          "current": "          \"sha256\": \"1314e7f153eafc7cee4b1660e892f6f8bf7668084b6963a01848a9121a9011d5\"\n",
+          "previous": "          \"sha256\": \"a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc\"\n",
+          "start": 1668263
+        },
+        {
+          "current": "          \"sha256\": \"1314e7f153eafc7cee4b1660e892f6f8bf7668084b6963a01848a9121a9011d5\"\n",
+          "previous": "          \"sha256\": \"a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc\"\n",
+          "start": 1672608
+        },
+        {
+          "current": "          \"sha256\": \"1314e7f153eafc7cee4b1660e892f6f8bf7668084b6963a01848a9121a9011d5\"\n",
+          "previous": "          \"sha256\": \"a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc\"\n",
+          "start": 1676965
+        },
+        {
+          "current": "          \"sha256\": \"1314e7f153eafc7cee4b1660e892f6f8bf7668084b6963a01848a9121a9011d5\"\n",
+          "previous": "          \"sha256\": \"a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc\"\n",
+          "start": 1681330
+        },
+        {
+          "current": "          \"sha256\": \"63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd\"\n",
+          "previous": "          \"sha256\": \"2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281\"\n",
+          "start": 1951842
+        },
+        {
+          "current": "          \"sha256\": \"8a9e5b204e7f9d0d543f48f7db1d134274e52d90ce679d967d226c4cc469f9ee\"\n",
+          "previous": "          \"sha256\": \"d8c4e61be86d1935afd690b371441bfe8cf7e5ed66b2609f0cd0d19cd99f473d\"\n",
+          "start": 5078623
+        },
+        {
+          "current": "          \"sha256\": \"b6fb8b66faaf112c1467757ea2c32d10adf6544262b585b1b89432f377618f95\"\n",
+          "previous": "          \"sha256\": \"8bb1da735b823e2bc9ae7ce7fc886788548e60c34001351e9c5947793e21f78e\"\n",
+          "start": 5078807
+        },
+        {
+          "current": "          \"sha256\": \"8a9e5b204e7f9d0d543f48f7db1d134274e52d90ce679d967d226c4cc469f9ee\"\n",
+          "previous": "          \"sha256\": \"d8c4e61be86d1935afd690b371441bfe8cf7e5ed66b2609f0cd0d19cd99f473d\"\n",
+          "start": 5136890
+        },
+        {
+          "current": "          \"sha256\": \"b6fb8b66faaf112c1467757ea2c32d10adf6544262b585b1b89432f377618f95\"\n",
+          "previous": "          \"sha256\": \"8bb1da735b823e2bc9ae7ce7fc886788548e60c34001351e9c5947793e21f78e\"\n",
+          "start": 5137074
+        },
+        {
+          "current": "          \"sha256\": \"8a9e5b204e7f9d0d543f48f7db1d134274e52d90ce679d967d226c4cc469f9ee\"\n",
+          "previous": "          \"sha256\": \"d8c4e61be86d1935afd690b371441bfe8cf7e5ed66b2609f0cd0d19cd99f473d\"\n",
+          "start": 5195584
+        },
+        {
+          "current": "          \"sha256\": \"b6fb8b66faaf112c1467757ea2c32d10adf6544262b585b1b89432f377618f95\"\n",
+          "previous": "          \"sha256\": \"8bb1da735b823e2bc9ae7ce7fc886788548e60c34001351e9c5947793e21f78e\"\n",
+          "start": 5195768
+        },
+        {
+          "current": "          \"sha256\": \"8a9e5b204e7f9d0d543f48f7db1d134274e52d90ce679d967d226c4cc469f9ee\"\n",
+          "previous": "          \"sha256\": \"d8c4e61be86d1935afd690b371441bfe8cf7e5ed66b2609f0cd0d19cd99f473d\"\n",
+          "start": 5254756
+        },
+        {
+          "current": "          \"sha256\": \"b6fb8b66faaf112c1467757ea2c32d10adf6544262b585b1b89432f377618f95\"\n",
+          "previous": "          \"sha256\": \"8bb1da735b823e2bc9ae7ce7fc886788548e60c34001351e9c5947793e21f78e\"\n",
+          "start": 5254940
+        },
+        {
+          "current": "          \"sha256\": \"ef0578c48040e1f9717346edee717d8508fb72ddc2472a66e069bef44fbaea80\"\n",
+          "previous": "          \"sha256\": \"29dff3e780ad810a19c7f89922949df356fe370f60c517de961272d321c01692\"\n",
+          "start": 5434199
+        },
+        {
+          "current": "          \"sha256\": \"d5a67b7e4b77d5d2d44dd28f42617ca640b59ffca754d894ea5e47bb23ffe35b\"\n",
+          "previous": "          \"sha256\": \"b779c540f22107163556f07af9ec0d82c1867c35fef81d4ef60a7dfe58a1fee5\"\n",
+          "start": 5434383
+        },
+        {
+          "current": "          \"sha256\": \"ef0578c48040e1f9717346edee717d8508fb72ddc2472a66e069bef44fbaea80\"\n",
+          "previous": "          \"sha256\": \"29dff3e780ad810a19c7f89922949df356fe370f60c517de961272d321c01692\"\n",
+          "start": 5458664
+        },
+        {
+          "current": "          \"sha256\": \"d5a67b7e4b77d5d2d44dd28f42617ca640b59ffca754d894ea5e47bb23ffe35b\"\n",
+          "previous": "          \"sha256\": \"b779c540f22107163556f07af9ec0d82c1867c35fef81d4ef60a7dfe58a1fee5\"\n",
+          "start": 5458848
+        },
+        {
+          "current": "          \"sha256\": \"ef0578c48040e1f9717346edee717d8508fb72ddc2472a66e069bef44fbaea80\"\n",
+          "previous": "          \"sha256\": \"29dff3e780ad810a19c7f89922949df356fe370f60c517de961272d321c01692\"\n",
+          "start": 5483556
+        },
+        {
+          "current": "          \"sha256\": \"d5a67b7e4b77d5d2d44dd28f42617ca640b59ffca754d894ea5e47bb23ffe35b\"\n",
+          "previous": "          \"sha256\": \"b779c540f22107163556f07af9ec0d82c1867c35fef81d4ef60a7dfe58a1fee5\"\n",
+          "start": 5483740
+        },
+        {
+          "current": "          \"sha256\": \"ef0578c48040e1f9717346edee717d8508fb72ddc2472a66e069bef44fbaea80\"\n",
+          "previous": "          \"sha256\": \"29dff3e780ad810a19c7f89922949df356fe370f60c517de961272d321c01692\"\n",
+          "start": 5508331
+        },
+        {
+          "current": "          \"sha256\": \"d5a67b7e4b77d5d2d44dd28f42617ca640b59ffca754d894ea5e47bb23ffe35b\"\n",
+          "previous": "          \"sha256\": \"b779c540f22107163556f07af9ec0d82c1867c35fef81d4ef60a7dfe58a1fee5\"\n",
+          "start": 5508515
+        },
+        {
+          "current": "          \"sha256\": \"a4b5847c7260089ce7b6d99b3137a0918ec137aab297051ad43be4ae8a249838\"\n",
+          "previous": "          \"sha256\": \"fe0897340e58cc359106aa531f6020db74fb799ab14ced24e643d760b0354cd6\"\n",
+          "start": 5999481
+        },
+        {
+          "current": "          \"sha256\": \"df137a42ab65f38df3a4df6c473584f605cd6f16cab3a32eac585d9000f897a6\"\n",
+          "previous": "          \"sha256\": \"656935e1b3848ac9cd0e8df2524de7a85984e38511798be850ebc35d4fb10564\"\n",
+          "start": 5999664
+        },
+        {
+          "current": "          \"sha256\": \"a4b5847c7260089ce7b6d99b3137a0918ec137aab297051ad43be4ae8a249838\"\n",
+          "previous": "          \"sha256\": \"fe0897340e58cc359106aa531f6020db74fb799ab14ced24e643d760b0354cd6\"\n",
+          "start": 6031792
+        },
+        {
+          "current": "          \"sha256\": \"df137a42ab65f38df3a4df6c473584f605cd6f16cab3a32eac585d9000f897a6\"\n",
+          "previous": "          \"sha256\": \"656935e1b3848ac9cd0e8df2524de7a85984e38511798be850ebc35d4fb10564\"\n",
+          "start": 6031975
+        },
+        {
+          "current": "          \"sha256\": \"a4b5847c7260089ce7b6d99b3137a0918ec137aab297051ad43be4ae8a249838\"\n",
+          "previous": "          \"sha256\": \"fe0897340e58cc359106aa531f6020db74fb799ab14ced24e643d760b0354cd6\"\n",
+          "start": 6064605
+        },
+        {
+          "current": "          \"sha256\": \"df137a42ab65f38df3a4df6c473584f605cd6f16cab3a32eac585d9000f897a6\"\n",
+          "previous": "          \"sha256\": \"656935e1b3848ac9cd0e8df2524de7a85984e38511798be850ebc35d4fb10564\"\n",
+          "start": 6064788
+        },
+        {
+          "current": "          \"sha256\": \"a4b5847c7260089ce7b6d99b3137a0918ec137aab297051ad43be4ae8a249838\"\n",
+          "previous": "          \"sha256\": \"fe0897340e58cc359106aa531f6020db74fb799ab14ced24e643d760b0354cd6\"\n",
+          "start": 6097360
+        },
+        {
+          "current": "          \"sha256\": \"df137a42ab65f38df3a4df6c473584f605cd6f16cab3a32eac585d9000f897a6\"\n",
+          "previous": "          \"sha256\": \"656935e1b3848ac9cd0e8df2524de7a85984e38511798be850ebc35d4fb10564\"\n",
+          "start": 6097543
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "c2b8641133010cfaea458a73c5d0b0f2d38480d0523e16b29b7e5a9a527bf951"
+    },
+    {
+      "currentSha256": "24d7c6d6bdcbfb46c4b4103f65315805d50403d17ea3cb5f5a5f99e89cc68013",
+      "edits": [
+        {
+          "current": "import \"./helpers/candidate-acceptance-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 168
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "2ba3d79b750e919a2c17623d0a0a4f9d0d51e1032059f1603816ed35f16de9ce"
+    },
+    {
+      "currentSha256": "88b6a9b4df2d2e9dced7a07949cd5e5b74ea6fab1afc03dc88f764e522c3adc1",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCandidateAcceptanceRepairSource\n\t, candidateAcceptanceRepairNormalizationPaths\n} from \"./candidate-acceptance-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...candidateAcceptanceRepairNormalizationPaths\n\t, ...coreHistoricalReaderRepairNormalizationPaths\n",
+          "previous": "\t...coreHistoricalReaderRepairNormalizationPaths\n",
+          "start": 241186
+        },
+        {
+          "current": "\tlet stage = beforeCandidateAcceptanceRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeCoreHistoricalReaderRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeCoreHistoricalReaderRepairSource(path, text, expected);\n",
+          "start": 303410
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e66f8fa8b2b0429d4ad32a22595bd4287dbf29c45cecb66a3fe1cd817c072b60"
+    }
+  ],
+  "inventorySha256": {
+    "after": "4a6c580530fd5c23fbee0a4c07513c3daf1f08b37a34c075fd61bb0c4c258528",
+    "before": "c2b8641133010cfaea458a73c5d0b0f2d38480d0523e16b29b7e5a9a527bf951"
+  },
+  "milestone": "candidate-acceptance-repair-source-v1",
+  "predecessorCommit": "ec456c06a98e32e73b85b96ce06c829e26f51e51",
+  "repair": "Bind historical readers and renderers to their recorded producers, close the complete unowned-path sets, preserve dependent Fin in the complete Lean wrapper without a nonexistent unary import, surface copied-record constructor refusals, and preserve every late qualification through parallel WIT finalization or a measured managed ceiling. Refresh only exact current-source pins after all behavior and CI repairs are stable.",
+  "rootCause": "The first complete exact cohort exposed a finite set of producer-era/current-source reader mismatches, unsafe direct assertions over unowned inventory paths, dependent-Fin copied-adapter imports that Lean does not emit, copied JVM fixture refusals hidden by reflection, and WIT/managed jobs whose late qualifications could not fit their budgets.",
+  "runtimeSemanticChanges": 1,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "63e606f51df6834877cf40052f7997ed21ba514cb523e635919ca66dfa3c2fbd",
+      "edits": [
+        {
+          "current": "    # Ruby completed its corpus and nominal package gates after 238 minutes in\n    # run 42344727501/job 128323854052; 240 minutes cancelled the first late\n    # qualification. Keep the complete matrix below GitHub's six-hour ceiling.\n    timeout-minutes: 360\n",
+          "previous": "    timeout-minutes: 240\n",
+          "start": 279357
+        },
+        {
+          "current": "    # Keep the ordinary, recursive and owned WIT package gates together. The\n    # independent late qualification sequence runs in parallel below so\n    # neither job approaches the hosted runner's six-hour hard ceiling.\n    timeout-minutes: 300\n",
+          "previous": "    # Copied, recursive, owned and original-owner installed-package gates\n    # share this job. The full sequence exceeds two hours on hosted runners.\n    timeout-minutes: 240\n",
+          "start": 373402
+        },
+        {
+          "current": "",
+          "previous": "      - name: Verify frozen direct WIT callback-result acceptance\n        run: npm run test:owned-wit-callback-evidence\n",
+          "start": 375237
+        },
+        {
+          "current": "",
+          "previous": "      - name: Require nominal WIT packages\n        id: nominal_wit\n        timeout-minutes: 45\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          bash scripts/run-nominal-subtype-wit-ci.sh \"/usr/bin/cc\" \"$PWD/.toolchains/wasm-tools/bin/wasm-tools\" \"$PWD/build/wasmtime-c-api\"\n      - name: Preserve complete and partial nominal WIT records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: nominal-subtype-wit-${{ github.sha }}-attempt-${{ github.run_attempt }}\n          path: build/nominal-subtype-wit-ci/\n          if-no-files-found: error\n          overwrite: false\n          retention-days: 30\n      - name: Qualify optional parameters in the prepared WIT package\n        id: optional_parameters_wit\n        continue-on-error: true\n        timeout-minutes: 100\n        run: |\n          export LEAN_BRIDGE_WASMTIME_C_API=\"$PWD/build/wasmtime-c-api\"\n          source scripts/env.sh\n          bash scripts/run-optional-parameter-wit-ci.sh\n      - name: Preserve optional-parameter WIT acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-wit-${{ github.sha }}\n          path: build/optional-parameter-wit-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Qualify direct proof erasure in the prepared WIT package\n        id: direct_proof_wit\n        continue-on-error: true\n        timeout-minutes: 100\n        run: |\n          export LEAN_BRIDGE_WASMTIME_C_API=\"$PWD/build/wasmtime-c-api\"\n          source scripts/env.sh\n          bash scripts/run-direct-proof-erasure-wit-ci.sh\n      - name: Preserve direct proof-erasure WIT acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-wit-${{ github.sha }}\n          path: build/direct-proof-erasure-wit-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n",
+          "start": 393828
+        },
+        {
+          "current": "          test_result=\"${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && 'passed' || 'failed' }}\"\n          executed=\"${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && 'true' || 'false' }}\"\n",
+          "previous": "          test_result=\"${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && steps.optional_parameters_wit.outcome == 'success' && 'passed' || 'failed' }}\"\n          executed=\"${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && steps.optional_parameters_wit.outcome == 'success' && 'true' || 'false' }}\"\n",
+          "start": 393931
+        },
+        {
+          "current": "      - name: Preserve base WIT and WASI observation inputs\n",
+          "previous": "      - name: Upload WIT and WASI observations\n",
+          "start": 403967
+        },
+        {
+          "current": "          name: wasi-consumer-base-${{ github.sha }}\n          path: |\n            build/consumer-ci/results/wit-wasi.json\n            build/consumer-ci/performance/wit-wasi.json\n",
+          "previous": "          name: consumer-results-wasi-${{ github.sha }}\n          path: build/consumer-ci/results/*.json\n",
+          "start": 404103
+        },
+        {
+          "current": "        if: always() && (steps.consumer.outcome != 'success' || steps.ordinary_wit.outcome != 'success' || steps.structured_wit.outcome != 'success' || steps.recursive_wit.outcome != 'success' || steps.type_corpus_wit.outcome != 'success' || steps.owned_wit_projection.outcome != 'success' || steps.owned_wit_native.outcome != 'success' || steps.owned_wit_session.outcome != 'success' || steps.owned_wit_package.outcome != 'success' || steps.owned_wit_callback_packages.outcome != 'success' || steps.owned_wit_transfers.outcome != 'success' || steps.owned_wit_borrows.outcome != 'success')\n",
+          "previous": "        if: always() && (steps.consumer.outcome != 'success' || steps.ordinary_wit.outcome != 'success' || steps.structured_wit.outcome != 'success' || steps.recursive_wit.outcome != 'success' || steps.type_corpus_wit.outcome != 'success' || steps.owned_wit_projection.outcome != 'success' || steps.owned_wit_native.outcome != 'success' || steps.owned_wit_session.outcome != 'success' || steps.owned_wit_package.outcome != 'success' || steps.owned_wit_callback_packages.outcome != 'success' || steps.owned_wit_transfers.outcome != 'success' || steps.owned_wit_borrows.outcome != 'success' || steps.nominal_wit.outcome != 'success' || steps.direct_proof_wit.outcome != 'success' || steps.optional_parameters_wit.outcome != 'success')\n",
+          "start": 404415
+        },
+        {
+          "current": "  wasi-qualifications:\n    name: WIT nominal, optional and proof-erasure qualifications\n    needs: type-surface-authentication\n    runs-on: ubuntu-24.04\n    timeout-minutes: 330\n    env:\n      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n    steps:\n      - name: Free hosted runner disk before Nix-backed builds\n        shell: bash\n        run: |\n          set -euo pipefail\n          df -h /\n          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL\n          df -h /\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          filter: blob:none\n          persist-credentials: false\n          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Confirm the Nix consumer source closure is sparse and bounded\n        run: bash scripts/check-consumer-source-closure.sh\n      - name: Restore the authenticated type-surface receipt\n        uses: actions/download-artifact@v8\n        with:\n          name: consumer-type-surface-${{ github.sha }}\n          path: build/consumer-type-surface\n      - name: Bind the authenticated type-surface receipt\n        run: echo \"LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json\" >> \"$GITHUB_ENV\"\n      - name: Require source history before WIT qualification builds\n        run: test \"$(git rev-parse --is-shallow-repository)\" = false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n          cache: npm\n      - name: Install Nix\n        uses: cachix/install-nix-action@v31\n      - name: Install dependencies without lifecycle scripts\n        run: npm ci --ignore-scripts\n      - name: Bound apt network waits\n        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n      - name: Install WIT qualification build dependencies\n        timeout-minutes: 20\n        run: |\n          sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep\n      - name: Prepare Lean, wasm-tools and Wasmtime\n        timeout-minutes: 30\n        run: |\n          bash scripts/bootstrap-toolchains.sh --lean-only\n          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\n          (\n            set -euo pipefail\n            test \"$(uname -sm)\" = 'Linux x86_64'\n            mkdir -p build\n            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\n            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\n            trap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\n            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n            mkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\n            tar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\n            test -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\n            mv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n          )\n      - name: Require nominal WIT packages\n        id: nominal_wit\n        continue-on-error: true\n        timeout-minutes: 45\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          bash scripts/run-nominal-subtype-wit-ci.sh \"/usr/bin/cc\" \"$PWD/.toolchains/wasm-tools/bin/wasm-tools\" \"$PWD/build/wasmtime-c-api\"\n      - name: Preserve complete and partial nominal WIT records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: nominal-subtype-wit-${{ github.sha }}-attempt-${{ github.run_attempt }}\n          path: build/nominal-subtype-wit-ci/\n          if-no-files-found: error\n          overwrite: false\n          retention-days: 30\n      - name: Qualify optional parameters in the prepared WIT package\n        id: optional_parameters_wit\n        if: ${{ !cancelled() }}\n        continue-on-error: true\n        timeout-minutes: 100\n        run: |\n          export LEAN_BRIDGE_WASMTIME_C_API=\"$PWD/build/wasmtime-c-api\"\n          source scripts/env.sh\n          bash scripts/run-optional-parameter-wit-ci.sh\n      - name: Preserve optional-parameter WIT acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: optional-parameter-wit-${{ github.sha }}\n          path: build/optional-parameter-wit-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Qualify direct proof erasure in the prepared WIT package\n        id: direct_proof_wit\n        if: ${{ !cancelled() }}\n        continue-on-error: true\n        timeout-minutes: 100\n        run: |\n          export LEAN_BRIDGE_WASMTIME_C_API=\"$PWD/build/wasmtime-c-api\"\n          source scripts/env.sh\n          bash scripts/run-direct-proof-erasure-wit-ci.sh\n      - name: Preserve direct proof-erasure WIT acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: direct-proof-erasure-wit-${{ github.sha }}\n          path: build/direct-proof-erasure-wit-ci/\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce all three WIT qualifications\n        if: always() && (steps.nominal_wit.outcome != 'success' || steps.optional_parameters_wit.outcome != 'success' || steps.direct_proof_wit.outcome != 'success')\n        run: exit 1\n\n  wasi-consumer-finalize:\n    name: Finalize WIT and WASI support observation\n    if: always()\n    needs:\n      - wasi-consumer\n      - wasi-qualifications\n    runs-on: ubuntu-24.04\n    timeout-minutes: 15\n    steps:\n      - name: Check out the exact observation writer\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 1\n          persist-credentials: false\n          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n      - name: Restore base WIT and WASI observation inputs\n        uses: actions/download-artifact@v8\n        with:\n          name: wasi-consumer-base-${{ github.sha }}\n          path: build/wasi-consumer-base\n      - name: Finalize the combined WIT and WASI observation\n        shell: bash\n        run: |\n          set -euo pipefail\n          base=build/wasi-consumer-base/results/wit-wasi.json\n          performance=build/wasi-consumer-base/performance/wit-wasi.json\n          command=\"$(node -e 'const fs = require(\"node:fs\"); process.stdout.write(JSON.parse(fs.readFileSync(process.argv[1], \"utf8\")).command);' \"$base\")\"\n          test_result=\"${{ needs.wasi-consumer.result == 'success' && needs.wasi-qualifications.result == 'success' && 'passed' || 'failed' }}\"\n          executed=\"${{ needs.wasi-consumer.result == 'success' && needs.wasi-qualifications.result == 'success' && 'true' || 'false' }}\"\n          node scripts/consumer-ci.mjs record --consumer wit-wasi \\\n            --output build/consumer-ci/results/wit-wasi.json \\\n            --performance \"$performance\" --test-result \"$test_result\" \\\n            --package-installation \"$executed\" --real-lean-execution \"$executed\" \\\n            --command \"$command\"\n      - name: Upload final WIT and WASI observations\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: consumer-results-wasi-${{ github.sha }}\n          path: build/consumer-ci/results/*.json\n          if-no-files-found: error\n          overwrite: true\n          retention-days: 30\n      - name: Enforce the combined WIT and WASI result\n        if: always() && (needs.wasi-consumer.result != 'success' || needs.wasi-qualifications.result != 'success')\n        run: exit 1\n\n",
+          "previous": "",
+          "start": 407618
+        },
+        {
+          "current": "      - wasi-consumer-finalize\n",
+          "previous": "",
+          "start": 416278
+        },
+        {
+          "current": "      - wasi-consumer-finalize\n",
+          "previous": "",
+          "start": 418897
+        },
+        {
+          "current": "      - name: Enforce combined WIT and WASI acceptance\n        if: needs.wasi-consumer-finalize.result != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 423239
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "2d7bc76132d7e84a4649994d65dad7426d1189140bc53fdcc561475b0d629281"
+    },
+    {
+      "currentSha256": "1314e7f153eafc7cee4b1660e892f6f8bf7668084b6963a01848a9121a9011d5",
+      "edits": [
+        {
+          "current": "\t\t\t\t&& refinement.kind !== \"fin-parameter\"\n",
+          "previous": "",
+          "start": 1988
+        },
+        {
+          "current": "\t\t// A dependent Fin is checked by the complete Lean wrapper against its live bound\n\t\t// argument; compiler-adapters.mjs exports no unary validator for it.\n\t\tfor(const [index, refinement] of refinements.entries())\n",
+          "previous": "\t\tfor(const [index, refinement] of refinements.entries()) if(refinement)\n",
+          "start": 2987
+        },
+        {
+          "current": "\t\t\tif(refinement && refinement.kind !== \"fin-parameter\")\n\t\t\t{\n\t\t\t\tif(object(item.parameters[index])) lines.push(`  lean_inc(a${index});`);\n\t\t\t\tlines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 5; }`);\n\t\t\t}\n",
+          "previous": "\t\t\tif(object(item.parameters[index])) lines.push(`  lean_inc(a${index});`);\n\t\t\tlines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 5; }`);\n",
+          "start": 3205
+        }
+      ],
+      "path": "src/build/component-copied-adapters.mjs",
+      "previousSha256": "a3f7c5a8b1fd585fa4ce46315e0e7cfabac9ab2d56c30a7dbc657a9827a608bc"
+    },
+    {
+      "currentSha256": "efad6649a412c3fa5ae94280c9aa8c327e2d6daa27c73974e46ead5859f6e754",
+      "edits": [
+        {
+          "current": "\t\t// The record's predecessor side is its exact pre-correction state. Only the\n\t\t// inventory's differs from its Git predecessor blob, by exactly the\n\t\t// test-profile backlog repair checked above.\n",
+          "previous": "",
+          "start": 2285
+        },
+        {
+          "current": "\t\t), previous, update.path);\n\t\tassert.equal(sha256(repositoryPrevious) === update.previousSha256\n\t\t\t, update.path !== \"docs/type-surface.v1.json\", update.path);\n\t\t// The complete hub still reaches the Git predecessor from the current side.\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, sha256(repositoryPrevious)\n",
+          "previous": "",
+          "start": 2619
+        }
+      ],
+      "path": "tests/closed-generic-checked-record-source-history.test.mjs",
+      "previousSha256": "fc5d91d8c7c6c930b2691fc00f4473505b3f48a64a1c26cbcba1c4ad01b22195"
+    },
+    {
+      "currentSha256": "bacf1ddfa2974ff2f26a58830af578a04a5f293cee890a9aad37b65de08c479a",
+      "edits": [
+        {
+          "current": "\t, \"wasi-consumer\", \"docker-engine\", \"wasi-qualifications\"\n",
+          "previous": "\t, \"wasi-consumer\", \"docker-engine\"\n",
+          "start": 5417
+        },
+        {
+          "current": "  assert.match(wasiJob, /^ {4}timeout-minutes: 300$/m);\n",
+          "previous": "  assert.match(wasiJob, /^ {4}timeout-minutes: 240$/m);\n",
+          "start": 52902
+        },
+        {
+          "current": "  const wasiQualifications = workflow.match(/^ {2}wasi-qualifications:\\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\\n)/mu)?.[0];\n  assert.ok(wasiQualifications);\n  assert.match(wasiQualifications, /^ {4}timeout-minutes: 330$/m);\n",
+          "previous": "",
+          "start": 53078
+        }
+      ],
+      "path": "tests/documentation.test.mjs",
+      "previousSha256": "34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95"
+    },
+    {
+      "currentSha256": "f943ecad5b258a2acdb3fb7d8842e47bd8fd9fb6370089f2cb12bf4cff3b237f",
+      "edits": [
+        {
+          "current": "\t\t, value => value.replace(/(\\n {2}wasi-consumer:\\n(?:.*\\n)*? {4}timeout-minutes: )300\\n/u, \"$11\\n\")\n",
+          "previous": "\t\t, value => value.replace(/(\\n {2}wasi-consumer:\\n(?:.*\\n)*? {4}timeout-minutes: )240\\n/u, \"$1300\\n\")\n",
+          "start": 4489
+        }
+      ],
+      "path": "tests/fin-container-entry-ci.test.mjs",
+      "previousSha256": "8367cc1f99f372368f8c78c9ed1c5c797b3e52e8084a2cf4b8e5216ae1740e9a"
+    },
+    {
+      "currentSha256": "c66d46d9d65f7e5f59e7929b138bece88f523b2bcf764a0015fdb6ae94fae90b",
+      "edits": [
+        {
+          "current": "        } catch (java.lang.reflect.InvocationTargetException error) {\n            // Copied records refuse a null field in their own constructor.\n            if (error.getCause() instanceof RuntimeException refused) throw refused;\n            throw new AssertionError(error);\n",
+          "previous": "",
+          "start": 3378
+        },
+        {
+          "current": "            final int field = i; reject(NullPointerException.class, () -> call(() -> Api.recordReverse(new Primitives[] {scalar, change(scalar, field, null)})));\n",
+          "previous": "            var invalid = change(scalar, i, null); reject(NullPointerException.class, () -> call(() -> Api.recordReverse(new Primitives[] {scalar, invalid})));\n",
+          "start": 7862
+        }
+      ],
+      "path": "tests/fixtures/collection-consumers/java.java",
+      "previousSha256": "9278370234000e92ce8f55524b2c9b4c11fd31260e262bc30014a66bd680dc2b"
+    },
+    {
+      "currentSha256": "a1b4fa71008adb3bd3ad982e200a7ed55e1002904db5074569b439094e0a8897",
+      "edits": [
+        {
+          "current": "        } catch (java.lang.reflect.InvocationTargetException error) {\n            // Copied records refuse a null field in their own constructor.\n            if (error.getCause() instanceof RuntimeException refused) throw refused;\n            throw new AssertionError(error);\n",
+          "previous": "",
+          "start": 2680
+        }
+      ],
+      "path": "tests/fixtures/variant-consumers/java.java",
+      "previousSha256": "1037e66b688d1f3f8d3123ff098927f97df71e7cb74bf621916c5575ce03a16c"
+    },
+    {
+      "currentSha256": "747650791531719de4eb56b1a31158c1a9bcd24e346967b93e22148fe6a33779",
+      "edits": [
+        {
+          "current": "    // Copied records refuse a null field in their own constructor.\n    try { return ScalarsAll::class.java.getConstructor(*types).newInstance(*values) }\n    catch (error: java.lang.reflect.InvocationTargetException) { throw error.targetException }\n",
+          "previous": "    return ScalarsAll::class.java.getConstructor(*types).newInstance(*values)\n",
+          "start": 2052
+        }
+      ],
+      "path": "tests/fixtures/variant-consumers/kotlin.kt",
+      "previousSha256": "07c574558ffaa68576213a237020550fc1d2285529c5badb7fbb8f519f3dc763"
+    },
+    {
+      "currentSha256": "d562f628b94a2c6569569b85c00688f0383411f9dbcf51d0589d255644a422d5",
+      "edits": [
+        {
+          "current": "import {\n\tsourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource\n} from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 1127
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\tcheckedRecordValueIndexPerlPromotionHistoryPath\n\t\t\t\t, addition.path, addition.currentSha256\n\t\t))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 5090
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-perl-promotion-source-history-tests.mjs",
+      "previousSha256": "02649c20ea295913792f1ea422932d57244160e23bab35f64b736275c75ce95f"
+    },
+    {
+      "currentSha256": "498fff0a97173d1d97e424ba49a9add3f92c730c4b284f8c4fabd8dc7ca0bae2",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 1123
+        },
+        {
+          "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryRecordSource(\n\t\t\t\tcheckedRecordValueIndexPhpPromotionHistoryPath\n\t\t\t\t, addition.path, addition.currentSha256\n\t\t\t))\n",
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 5117
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-php-promotion-source-history-tests.mjs",
+      "previousSha256": "65f6e450bf0ae5bbd46adc3bc708b6cd1700facff7015c5054d485c788580f9a"
+    },
+    {
+      "currentSha256": "aaf3e5d2c9e8cc06a70664694d1c4af6d6b1780437c7ecb2d08a476ccbdf04b4",
+      "edits": [
+        {
+          "current": "\t, { job: \"managed-consumers\", profiles: [\"dotnet\"], counted: [\"dotnet\"], step: \"type_corpus_dotnet\", timeout: \"360\", gdb: true }\n\t, { job: \"managed-consumers\", profiles: [\"java\", \"kotlin\"], counted: [\"java\", \"kotlin\"], step: \"type_corpus_jvm\", timeout: \"360\", gdb: true }\n\t, { job: \"managed-consumers\", profiles: [\"ruby\"], counted: [\"ruby\"], step: \"type_corpus_ruby\", timeout: \"360\", gdb: true }\n\t, { job: \"wasi-consumer\", profiles: [\"wit-wasi\"], counted: [\"wit-wasi\"], step: \"ordinary_wit\", timeout: \"300\", gdb: false }\n",
+          "previous": "\t, { job: \"managed-consumers\", profiles: [\"dotnet\"], counted: [\"dotnet\"], step: \"type_corpus_dotnet\", timeout: \"240\", gdb: true }\n\t, { job: \"managed-consumers\", profiles: [\"java\", \"kotlin\"], counted: [\"java\", \"kotlin\"], step: \"type_corpus_jvm\", timeout: \"240\", gdb: true }\n\t, { job: \"managed-consumers\", profiles: [\"ruby\"], counted: [\"ruby\"], step: \"type_corpus_ruby\", timeout: \"240\", gdb: true }\n\t, { job: \"wasi-consumer\", profiles: [\"wit-wasi\"], counted: [\"wit-wasi\"], step: \"ordinary_wit\", timeout: \"240\", gdb: false }\n",
+          "start": 2423
+        }
+      ],
+      "path": "tests/helpers/fin-container-entry-ci.mjs",
+      "previousSha256": "4e1ae21aaa7d78d011686f25c3c0296d3513ee5b52b422859955368ef96daee0"
+    },
+    {
+      "currentSha256": "83b3897635e6e421c258550ee3046e61aeeba9e5d0d514a6656f31ff67e2ecf8",
+      "edits": [
+        {
+          "current": "\tassert.match(body, /run 42344727501\\/job 128323854052/u);\n\tassert.match(body, /^ {4}timeout-minutes: 360$/mu);\n",
+          "previous": "\tassert.match(body, /^ {4}timeout-minutes: 240$/mu);\n",
+          "start": 4050
+        },
+        {
+          "current": "\treturn { profiles, timeoutMinutesPerProfile: 360, failFast: false\n",
+          "previous": "\treturn { profiles, timeoutMinutesPerProfile: 240, failFast: false\n",
+          "start": 9878
+        }
+      ],
+      "path": "tests/helpers/managed-ci-isolation.mjs",
+      "previousSha256": "bdc328767873b814fc7ec2167baa4ab0ba6d399818b78c855fc4bcb2410b9e4e"
+    },
+    {
+      "currentSha256": "0b2b22fb0f762ac367265e2bd1e73158186ea9932ced9d6f647c6d15883123d5",
+      "edits": [
+        {
+          "current": "\tassert.throws(() => reviewedSubtypeContracts(document));\n",
+          "previous": "\tassert.notEqual(reviewedSubtypeContracts(document), undefined);\n",
+          "start": 6351
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-fixture-tests.mjs",
+      "previousSha256": "f24f2537cbf1c144c9c49fecebd3d7f5b1631228e927495801247d6c1c261a99"
+    },
+    {
+      "currentSha256": "c6134d59d714c66824375fd3e7ddba9036e9b305d4532c85f97eb57441266afc",
+      "edits": [
+        {
+          "current": "\tfor(const [from, to] of [[\"fetch-depth: 0\", \"fetch-depth: 1\"], [\"persist-credentials: false\", \"persist-credentials: true\"], [\"timeout-minutes: 360\", \"timeout-minutes: 1\"]])\n",
+          "previous": "\tfor(const [from, to] of [[\"fetch-depth: 0\", \"fetch-depth: 1\"], [\"persist-credentials: false\", \"persist-credentials: true\"], [\"timeout-minutes: 240\", \"timeout-minutes: 1\"]])\n",
+          "start": 4356
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dotnet-ci-workflow-tests.mjs",
+      "previousSha256": "52e562b543f618bc6e10eee6c060857b5378a9ddbad74dce181043504a3507df"
+    },
+    {
+      "currentSha256": "643fbca25b4283e650282c76b5d53f70ea3d0d3fa8ba3758a1fc2c5c93324709",
+      "edits": [
+        {
+          "current": "\tassert.match(body, /^ {4}timeout-minutes: 360$/mu);\n",
+          "previous": "\tassert.match(body, /^ {4}timeout-minutes: 240$/mu);\n",
+          "start": 2773
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dotnet-ci-workflow.mjs",
+      "previousSha256": "ab30e04b4a4a3d371a6b5e691e0a06c2978bad19b5e505a56d5d233f281f3482"
+    },
+    {
+      "currentSha256": "1f0eea3110797b7ad80d1d05f8e76b078714fce682e73be7e195089706958dfb",
+      "edits": [
+        {
+          "current": "\t\t, [\"timeout-minutes: 360\", \"timeout-minutes: 1\"]\n",
+          "previous": "\t\t, [\"timeout-minutes: 240\", \"timeout-minutes: 1\"]\n",
+          "start": 4541
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-ci-workflow-tests.mjs",
+      "previousSha256": "fa1e26dfadaffd413f866fd7bbe33a27c41d0b80bccfd066fb02ac675f93338d"
+    },
+    {
+      "currentSha256": "3bf1b6a918b99f8f028c9c068c6858127e272fd56b0563ad00509128c4db66eb",
+      "edits": [
+        {
+          "current": "\tassert.match(body, /^ {4}timeout-minutes: 360$/mu);\n",
+          "previous": "\tassert.match(body, /^ {4}timeout-minutes: 240$/mu);\n",
+          "start": 7136
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-ci-workflow.mjs",
+      "previousSha256": "5bb174baf60fea82cde04c5a7b8436fd11883bba4b5cd738f6bebf63653f6dbf"
+    },
+    {
+      "currentSha256": "b6fb8b66faaf112c1467757ea2c32d10adf6544262b585b1b89432f377618f95",
+      "edits": [
+        {
+          "current": "import { sourceReaderAtEvidencePins } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 1907
+        },
+        {
+          "current": "\tconst document = JSON.parse(await beforeHistoryTransition(\n\t\tnominalSubtypePythonPromotionHistoryPath, \"docs/type-surface.v1.json\"\n\t));\n\tconst readAtPromotion = sourceReaderAtEvidencePins(document\n\t\t, entry => entry.id.startsWith(\"nominal-subtype-perl-\")\n\t\t, nominalSubtypePerlPromotionHistoryPath);\n",
+          "previous": "",
+          "start": 7108
+        },
+        {
+          "current": "\t\t\t\tawait promoteNominalSubtypePerl(\n\t\t\t\t\toriginal, references, readAtPromotion\n\t\t\t\t)\n",
+          "previous": "\t\t\t\tawait promoteNominalSubtypePerl(original, references)\n",
+          "start": 7578
+        },
+        {
+          "current": "",
+          "previous": "\tconst document = JSON.parse(await beforeHistoryTransition(nominalSubtypePythonPromotionHistoryPath, \"docs/type-surface.v1.json\"));\n",
+          "start": 7856
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-perl-promotion-tests.mjs",
+      "previousSha256": "8bb1da735b823e2bc9ae7ce7fc886788548e60c34001351e9c5947793e21f78e"
+    },
+    {
+      "currentSha256": "8a9e5b204e7f9d0d543f48f7db1d134274e52d90ce679d967d226c4cc469f9ee",
+      "edits": [
+        {
+          "current": " * @param read - Current or authenticated historical source reader.\n",
+          "previous": "",
+          "start": 6660
+        },
+        {
+          "current": "export const promoteNominalSubtypePerl = async (\n\toriginal, references, read = readFile\n) => {\n",
+          "previous": "export const promoteNominalSubtypePerl = async (original, references) => {\n",
+          "start": 6732
+        },
+        {
+          "current": "\t\tvalidators.push({ path, sha256: sha256(await read(path)) });\n",
+          "previous": "\t\tvalidators.push({ path, sha256: sha256(await readFile(path)) });\n",
+          "start": 7200
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-perl-promotion.mjs",
+      "previousSha256": "d8c4e61be86d1935afd690b371441bfe8cf7e5ed66b2609f0cd0d19cd99f473d"
+    },
+    {
+      "currentSha256": "df137a42ab65f38df3a4df6c473584f605cd6f16cab3a32eac585d9000f897a6",
+      "edits": [
+        {
+          "current": "import { sourceBeforeFinHistoryRecord, sourceReaderAtEvidencePins } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceBeforeFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 976
+        },
+        {
+          "current": "\tconst document = JSON.parse(await sourceBeforeFinHistoryRecord(\n\t\tnominalSubtypeWitPromotionHistoryPath, \"docs/type-surface.v1.json\"\n\t\t, beforeNominalSubtypeWitPromotionSource\n\t));\n\tconst readAtPromotion = sourceReaderAtEvidencePins(document\n\t\t, entry => entry.id.startsWith(\"nominal-subtype-php-\")\n\t\t, nominalSubtypePhpPromotionHistoryPath);\n",
+          "previous": "",
+          "start": 7024
+        },
+        {
+          "current": "\t\t\t\tawait promoteNominalSubtypePhp(\n\t\t\t\t\toriginal, references, readAtPromotion\n\t\t\t\t)\n",
+          "previous": "\t\t\t\tawait promoteNominalSubtypePhp(original, references)\n",
+          "start": 7538
+        },
+        {
+          "current": "",
+          "previous": "\tconst document = JSON.parse(await sourceBeforeFinHistoryRecord(\n\t\tnominalSubtypeWitPromotionHistoryPath, \"docs/type-surface.v1.json\"\n\t\t, beforeNominalSubtypeWitPromotionSource\n\t));\n",
+          "start": 7732
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-promotion-tests.mjs",
+      "previousSha256": "656935e1b3848ac9cd0e8df2524de7a85984e38511798be850ebc35d4fb10564"
+    },
+    {
+      "currentSha256": "a4b5847c7260089ce7b6d99b3137a0918ec137aab297051ad43be4ae8a249838",
+      "edits": [
+        {
+          "current": " * @param read - Current or authenticated historical source reader.\n",
+          "previous": "",
+          "start": 7616
+        },
+        {
+          "current": "export const promoteNominalSubtypePhp = async (\n\toriginal, references, read = readFile\n) => {\n",
+          "previous": "export const promoteNominalSubtypePhp = async (original, references) => {\n",
+          "start": 7688
+        },
+        {
+          "current": "\t\tvalidators.push({ path, sha256: sha256(await read(path)) });\n",
+          "previous": "\t\tvalidators.push({ path, sha256: sha256(await readFile(path)) });\n",
+          "start": 8139
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-promotion.mjs",
+      "previousSha256": "fe0897340e58cc359106aa531f6020db74fb799ab14ced24e643d760b0354cd6"
+    },
+    {
+      "currentSha256": "c17b31e8f92104c3453a87db9c2b03d3db0a9678b6f34f181fa4cee2536d6b19",
+      "edits": [
+        {
+          "current": "\tfor(const [from, to] of [[\"fetch-depth: 0\", \"fetch-depth: 1\"], [\"ruby-version: '3.3.12'\", \"ruby-version: '3.2.0'\"], [\"timeout-minutes: 360\", \"timeout-minutes: 1\"]])\n",
+          "previous": "\tfor(const [from, to] of [[\"fetch-depth: 0\", \"fetch-depth: 1\"], [\"ruby-version: '3.3.12'\", \"ruby-version: '3.2.0'\"], [\"timeout-minutes: 240\", \"timeout-minutes: 1\"]])\n",
+          "start": 4140
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-ruby-ci-workflow-tests.mjs",
+      "previousSha256": "7e7b4df8fdb92f4e8e192f830c0a7db3b56c03e2f1944776bba1de034f081f03"
+    },
+    {
+      "currentSha256": "51fabe6755e4e7b8e932479ec5de668292c2e776f9a45b3b3eb63b06bbbc8116",
+      "edits": [
+        {
+          "current": "\tassert.match(body, /^ {4}timeout-minutes: 360$/mu);\n",
+          "previous": "\tassert.match(body, /^ {4}timeout-minutes: 240$/mu);\n",
+          "start": 2683
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-ruby-ci-workflow.mjs",
+      "previousSha256": "3f41780f16a1b95623be612d39578007eca9ed211ea6c7722b435f21a7cf1af4"
+    },
+    {
+      "currentSha256": "d5a67b7e4b77d5d2d44dd28f42617ca640b59ffca754d894ea5e47bb23ffe35b",
+      "edits": [
+        {
+          "current": "import { sourceReaderAtEvidencePins } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 1697
+        },
+        {
+          "current": "\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalSubtypeRubyPromotionHistoryPath, \"docs/type-surface.v1.json\"\n\t));\n\tconst readAtPromotion = sourceReaderAtEvidencePins(document\n\t\t, entry => entry.id.startsWith(\"nominal-subtype-ruby-\")\n\t\t, nominalSubtypeRubyPromotionHistoryPath);\n",
+          "previous": "",
+          "start": 6685
+        },
+        {
+          "current": "\t\t\t\tawait promoteNominalSubtypeRuby(\n\t\t\t\t\toriginal, references, readAtPromotion\n\t\t\t\t)\n",
+          "previous": "\t\t\t\tawait promoteNominalSubtypeRuby(original, references)\n",
+          "start": 7148
+        },
+        {
+          "current": "",
+          "previous": "\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalSubtypeRubyPromotionHistoryPath, \"docs/type-surface.v1.json\"\n\t));\n",
+          "start": 7426
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-ruby-promotion-tests.mjs",
+      "previousSha256": "b779c540f22107163556f07af9ec0d82c1867c35fef81d4ef60a7dfe58a1fee5"
+    },
+    {
+      "currentSha256": "ef0578c48040e1f9717346edee717d8508fb72ddc2472a66e069bef44fbaea80",
+      "edits": [
+        {
+          "current": " * @param read - Current or authenticated historical source reader.\n",
+          "previous": "",
+          "start": 6642
+        },
+        {
+          "current": "export const promoteNominalSubtypeRuby = async (\n\toriginal, references, read = readFile\n) => {\n",
+          "previous": "export const promoteNominalSubtypeRuby = async (original, references) => {\n",
+          "start": 6714
+        },
+        {
+          "current": "\t\tvalidators.push({ path, sha256: sha256(await read(path)) });\n",
+          "previous": "\t\tvalidators.push({ path, sha256: sha256(await readFile(path)) });\n",
+          "start": 7182
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-ruby-promotion.mjs",
+      "previousSha256": "29dff3e780ad810a19c7f89922949df356fe370f60c517de961272d321c01692"
+    },
+    {
+      "currentSha256": "ca834ae60dcdd29cec09ba8013350358c3e0070235235ac3e1a311ecc20f0c28",
+      "edits": [
+        {
+          "current": "const bodyOf = (source, job) => new RegExp(\n\t`^ {2}${job}:\\\\n[\\\\s\\\\S]*?(?=^ {2}[a-z][a-z0-9-]*:\\\\n)`, \"mu\"\n).exec(source)[0];\n",
+          "previous": "const bodyOf = source => /^ {2}wasi-consumer:\\n[\\s\\S]*?(?=^ {2}[a-z][a-z0-9-]*:\\n)/mu.exec(source)[0];\n",
+          "start": 1046
+        },
+        {
+          "current": "\tassert.equal(checkpoint.replace(bodyOf(checkpoint, \"wasi-consumer\"), \"\")\n\t\t, previous.replace(bodyOf(previous, \"wasi-consumer\"), \"\"));\n",
+          "previous": "\tassert.equal(checkpoint.replace(bodyOf(checkpoint), \"\"), previous.replace(bodyOf(previous), \"\"));\n",
+          "start": 1743
+        },
+        {
+          "current": "\t\t, [\"  wasi-qualifications:\\n\", \"  wasi-qualifications:\\n    if: false\\n\"]\n\t\t, [\"  wasi-qualifications:\\n\", \"  wasi-qualifications:\\n    continue-on-error: true\\n\"]\n\t\t, [\"        continue-on-error: true\\n        timeout-minutes: 45\", \"        timeout-minutes: 45\"]\n\t\t, [\"        if: ${{ !cancelled() }}\\n\", \"\"]\n\t\t, [\"steps.nominal_wit.outcome != 'success' || \", \"\"]\n",
+          "previous": "\t\t, [\"  wasi-consumer:\\n\", \"  wasi-consumer:\\n    if: false\\n\"]\n\t\t, [\"  wasi-consumer:\\n\", \"  wasi-consumer:\\n    continue-on-error: true\\n\"]\n\t\t, [\"      - wasi-consumer\\n\", \"\"]\n\t\t, [\"steps.nominal_wit.outcome == 'success' && \", \"\"]\n\t\t, [\" || steps.nominal_wit.outcome != 'success'\", \"\"]\n",
+          "start": 3157
+        },
+        {
+          "current": "\tconst [beforeSummary, supportSummary] = source.split(\"\\n  support-summary:\\n\");\n\tassert.equal(typeof supportSummary, \"string\");\n\tconst withoutWasi = supportSummary.replace(\"      - wasi-consumer\\n\", \"\");\n\tassert.notEqual(withoutWasi, supportSummary);\n\tassert.throws(() => assertNominalSubtypeWitWorkflow(\n\t\t`${beforeSummary}\\n  support-summary:\\n${withoutWasi}`\n\t), assert.AssertionError); controls++;\n\tconst withoutFinalizer = supportSummary.replace(\n\t\t\"      - wasi-consumer-finalize\\n\", \"\"\n\t);\n\tassert.notEqual(withoutFinalizer, supportSummary);\n\tassert.throws(() => assertNominalSubtypeWitWorkflow(\n\t\t`${beforeSummary}\\n  support-summary:\\n${withoutFinalizer}`\n\t), assert.AssertionError); controls++;\n\tconst withoutFinalizerGate = supportSummary.replace(\n\t\t\"      - name: Enforce combined WIT and WASI acceptance\\n        if: needs.wasi-consumer-finalize.result != 'success'\\n        run: exit 1\\n\", \"\"\n\t);\n\tassert.notEqual(withoutFinalizerGate, supportSummary);\n\tassert.throws(() => assertNominalSubtypeWitWorkflow(\n\t\t`${beforeSummary}\\n  support-summary:\\n${withoutFinalizerGate}`\n\t), assert.AssertionError); controls++;\n\tconst body = bodyOf(source, \"wasi-qualifications\");\n",
+          "previous": "\tconst body = bodyOf(source);\n",
+          "start": 4100
+        },
+        {
+          "current": "\t\t, [\"timeout-minutes: 330\", \"timeout-minutes: 1\"]\n",
+          "previous": "\t\t, [\"timeout-minutes: 240\", \"timeout-minutes: 1\"]\n",
+          "start": 5408
+        },
+        {
+          "current": "\t\t, [\"if: always() && (steps.nominal_wit.outcome\", \"if: (steps.nominal_wit.outcome\"]\n",
+          "previous": "\t\t, [\"if: always() && (steps.consumer.outcome\", \"if: (steps.consumer.outcome\"]\n",
+          "start": 5730
+        },
+        {
+          "current": "\tassert.equal(controls, 33); t.diagnostic(`${controls} weakened workflow controls`);\n",
+          "previous": "\tassert.equal(controls, 30); t.diagnostic(`${controls} weakened workflow controls`);\n",
+          "start": 6034
+        },
+        {
+          "current": "\tconst source = await readFile(path, \"utf8\"), controlsExpected = 135;\n\tconst base = bodyOf(source, \"wasi-consumer\");\n\tconst qualifications = bodyOf(source, \"wasi-qualifications\");\n\tconst finalize = bodyOf(source, \"wasi-consumer-finalize\");\n\tlet controls = 0;\n\tconst runSteps = (expression, ids, overrides) => runInNewContext(\n\t\texpression\n\t\t, { always: () => true\n\t\t, steps: Object.fromEntries(ids.map(\n\t\t\tid => [id, { outcome: overrides[id] ?? \"success\" }]\n\t\t)) }, { timeout: 100 }\n\t);\n\tconst baseExpression = base.split(\n\t\t\"      - name: Enforce WIT and WASI support\\n\"\n\t)[1].split(\"\\n\")[0].trim().slice(\"if: \".length);\n\tconst baseSummaries = [...base.matchAll(\n\t\t/^ {10}(test_result|executed)=\"\\$\\{\\{ (.+) \\}\\}\"$/gmu\n\t)];\n\tassert.equal(baseSummaries.length, 2);\n\tassert.equal(runSteps(baseExpression, nominalSubtypeWitRequiredSteps, {}), false);\n\tfor(const [,, value] of baseSummaries)\n\t\tassert.ok([\"passed\", \"true\"].includes(runSteps(\n\t\t\tvalue, nominalSubtypeWitRequiredSteps, {}\n\t\t)));\n\tfor(const id of nominalSubtypeWitRequiredSteps)\n\t\tfor(const outcome of [\"failure\", \"skipped\", \"cancelled\"])\n\t\t{\n\t\t\tconst override = { [id]: outcome };\n\t\t\tassert.equal(runSteps(baseExpression\n\t\t\t\t, nominalSubtypeWitRequiredSteps, override), true); controls++;\n\t\t\tfor(const [, name, value] of baseSummaries)\n\t\t\t{\n\t\t\t\tassert.equal(runSteps(value, nominalSubtypeWitRequiredSteps, override)\n\t\t\t\t\t, name === \"test_result\" ? \"failed\" : \"false\"); controls++;\n\t\t\t}\n\t\t}\n\tconst qualificationIds = [\n\t\t\"nominal_wit\", \"direct_proof_wit\", \"optional_parameters_wit\"\n\t];\n\tconst qualificationExpression = qualifications.split(\n\t\t\"      - name: Enforce all three WIT qualifications\\n\"\n\t)[1].split(\"\\n\")[0].trim().slice(\"if: \".length);\n\tassert.equal(runSteps(qualificationExpression, qualificationIds, {}), false);\n\tfor(const id of qualificationIds)\n\t\tfor(const outcome of [\"failure\", \"skipped\", \"cancelled\"])\n\t\t{\n\t\t\tassert.equal(runSteps(qualificationExpression, qualificationIds\n\t\t\t\t, { [id]: outcome }), true); controls++;\n\t\t}\n\tconst finalJobs = [\"wasi-consumer\", \"wasi-qualifications\"];\n\tconst runNeeds = (expression, overrides) => runInNewContext(\n\t\texpression.replaceAll(\"needs.wasi-consumer\", 'needs[\"wasi-consumer\"]')\n\t\t\t.replaceAll(\"needs.wasi-qualifications\"\n\t\t\t\t, 'needs[\"wasi-qualifications\"]')\n\t\t, { always: () => true\n\t\t, needs: Object.fromEntries(finalJobs.map(\n\t\t\tjob => [job, { result: overrides[job] ?? \"success\" }]\n\t\t)) }, { timeout: 100 }\n\t);\n\tconst finalExpression = finalize.split(\n\t\t\"      - name: Enforce the combined WIT and WASI result\\n\"\n\t)[1].split(\"\\n\")[0].trim().slice(\"if: \".length);\n\tconst finalSummaries = [...finalize.matchAll(\n\t\t/^ {10}(test_result|executed)=\"\\$\\{\\{ (.+) \\}\\}\"$/gmu\n\t)];\n\tassert.equal(finalSummaries.length, 2);\n\tassert.equal(runNeeds(finalExpression, {}), false);\n\tfor(const [,, value] of finalSummaries)\n\t\tassert.ok([\"passed\", \"true\"].includes(runNeeds(value, {})));\n\tfor(const job of finalJobs)\n\t\tfor(const outcome of [\"failure\", \"skipped\", \"cancelled\"])\n",
+          "previous": "\tconst body = bodyOf(await readFile(path, \"utf8\")); let controls = 0;\n\tconst expression = body.split(\"      - name: Enforce WIT and WASI support\\n\")[1].split(\"\\n\")[0].trim().slice(\"if: \".length);\n\tconst ids = [...nominalSubtypeWitRequiredSteps, \"nominal_wit\"];\n\tconst run = (expression, overrides) => runInNewContext(expression, { always: () => true\n\t\t, steps: Object.fromEntries(ids.map(id => [id, { outcome: overrides[id] ?? \"success\" }])) }, { timeout: 100 });\n\tassert.equal(run(expression, {}), false);\n\tconst summaries = [...body.matchAll(/^ {10}(test_result|executed)=\"\\$\\{\\{ (.+) \\}\\}\"$/gmu)]; assert.equal(summaries.length, 2);\n\tfor(const [,, value] of summaries) assert.ok([\"passed\", \"true\"].includes(run(value, {})));\n\tfor(const id of ids) for(const outcome of [\"failure\", \"skipped\", \"cancelled\"])\n",
+          "start": 6223
+        },
+        {
+          "current": "\t\tconst override = { [job]: outcome };\n\t\tassert.equal(runNeeds(finalExpression, override), true); controls++;\n\t\tfor(const [, name, value] of finalSummaries)\n\t\t{\n\t\t\tassert.equal(runNeeds(value, override)\n\t\t\t\t, name === \"test_result\" ? \"failed\" : \"false\"); controls++;\n\t\t}\n",
+          "previous": "\t\tconst override = { [id]: outcome }; assert.equal(run(expression, override), true); controls++;\n\t\tfor(const [, name, value] of summaries)\n\t\t{ assert.equal(run(value, override), name === \"test_result\" ? \"failed\" : \"false\"); controls++; }\n",
+          "start": 9209
+        },
+        {
+          "current": "\tassert.equal(controls, controlsExpected);\n\tt.diagnostic(`${controls} failed, skipped and cancelled gate/observation controls`);\n",
+          "previous": "\tassert.equal(controls, 117); t.diagnostic(`${controls} failed, skipped and cancelled gate/observation controls`);\n",
+          "start": 9483
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-wit-ci-workflow-tests.mjs",
+      "previousSha256": "eb2b068bb8adcce5a875d14d8cda15d6a75c7e9b4d0dca0c8eb14b764cda68a2"
+    },
+    {
+      "currentSha256": "fd20baef0989f9800e9114c3e8ef368f6af8edaaf574adb9218af4d06f6e1a0f",
+      "edits": [
+        {
+          "current": "        continue-on-error: true\n",
+          "previous": "",
+          "start": 346
+        },
+        {
+          "current": "const nominalSubtypeWitHistoricalCiBlock = nominalSubtypeWitCiBlock.replace(\n\t\"        continue-on-error: true\\n\", \"\"\n);\n",
+          "previous": "",
+          "start": 991
+        },
+        {
+          "current": "const jobBody = (source, job) => {\n\tconst body = new RegExp(`^ {2}${job}:\\\\n[\\\\s\\\\S]*?(?=^ {2}[a-z][a-z0-9-]*:\\\\n)`, \"mu\")\n\t\t.exec(source)?.[0];\n",
+          "previous": "const bodyOf = source => {\n\tconst body = /^ {2}wasi-consumer:\\n[\\s\\S]*?(?=^ {2}[a-z][a-z0-9-]*:\\n)/mu.exec(source)?.[0];\n",
+          "start": 4087
+        },
+        {
+          "current": "const historicalBodyOf = source => jobBody(source, \"wasi-consumer\");\n",
+          "previous": "",
+          "start": 4286
+        },
+        {
+          "current": "\tconst body = historicalBodyOf(source);\n\tassert.ok(!body.includes(\"run-nominal-subtype-wit-ci.sh\"));\n",
+          "previous": "\tconst body = bodyOf(source); assert.ok(!body.includes(\"run-nominal-subtype-wit-ci.sh\"));\n",
+          "start": 5098
+        },
+        {
+          "current": "\tlet updated = once(body, insertion\n\t\t, nominalSubtypeWitHistoricalCiBlock + insertion);\n",
+          "previous": "\tlet updated = once(body, insertion, nominalSubtypeWitCiBlock + insertion);\n",
+          "start": 5324
+        },
+        {
+          "current": "\tconst body = historicalBodyOf(source);\n",
+          "previous": "\tconst body = bodyOf(source);\n",
+          "start": 5857
+        },
+        {
+          "current": "\tlet previous = once(body, nominalSubtypeWitHistoricalCiBlock, \"\");\n",
+          "previous": "\tlet previous = once(body, nominalSubtypeWitCiBlock, \"\");\n",
+          "start": 6002
+        },
+        {
+          "current": "\tconst base = jobBody(source, \"wasi-consumer\");\n\tconst qualifications = jobBody(source, \"wasi-qualifications\");\n\tconst finalize = jobBody(source, \"wasi-consumer-finalize\");\n\tassert.match(base, /^ {4}runs-on: ubuntu-24\\.04$/mu);\n\tassert.match(base, /^ {4}timeout-minutes: 300$/mu);\n\tassert.match(base, /^ {10}fetch-depth: 0$/mu);\n\tassert.match(base, /^ {10}persist-credentials: false$/mu);\n\tassert.doesNotMatch(base, /^ {4}(?:if:|continue-on-error:)/mu);\n\tassert.doesNotMatch(base\n\t\t, /test:owned-wit-callback-evidence|id: (?:nominal_wit|direct_proof_wit|optional_parameters_wit)/u);\n\tfor(const id of nominalSubtypeWitRequiredSteps)\n\t{\n\t\tassert.equal(base.split(`steps.${id}.outcome == 'success'`).length - 1\n\t\t\t, 2, `${id} base observations`);\n\t\tassert.equal(base.split(`steps.${id}.outcome != 'success'`).length - 1\n\t\t\t, 1, `${id} base gate`);\n\t}\n\tassert.match(qualifications, /^ {4}needs: type-surface-authentication$/mu);\n\tassert.match(qualifications, /^ {4}runs-on: ubuntu-24\\.04$/mu);\n\tassert.match(qualifications, /^ {4}timeout-minutes: 330$/mu);\n\tassert.match(qualifications, /^ {10}fetch-depth: 0$/mu);\n\tassert.match(qualifications, /^ {10}persist-credentials: false$/mu);\n\tassert.doesNotMatch(qualifications, /^ {4}(?:if:|continue-on-error:)/mu);\n\tassert.ok(qualifications.includes(nominalSubtypeWitCiBlock));\n\tassert.equal(qualifications.split(\"        continue-on-error: true\\n\").length - 1, 3);\n\tassert.equal(qualifications.split(\"        if: ${{ !cancelled() }}\\n\").length - 1, 2);\n",
+          "previous": "\tassert.equal(enableNominalSubtypeWitWorkflow(disableNominalSubtypeWitWorkflow(source)), source);\n\tconst body = bodyOf(source); assert.ok(body.includes(nominalSubtypeWitCiBlock));\n\tconst { updatedGate, updatedCommand } = variantFor(body, true);\n\tassert.match(body, /^ {4}runs-on: ubuntu-24\\.04$/mu);\n\tassert.match(body, /^ {4}timeout-minutes: 240$/mu);\n\tassert.match(body, /^ {10}fetch-depth: 0$/mu); assert.match(body, /^ {10}persist-credentials: false$/mu);\n\tassert.doesNotMatch(body, /^ {4}(?:if:|continue-on-error:)|LEAN_BRIDGE_NOMINAL_SUBTYPE_WIT_/mu);\n",
+          "start": 6528
+        },
+        {
+          "current": "\t\t, \"          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\\n\"\n\t\t, \"bash scripts/run-optional-parameter-wit-ci.sh\"\n\t\t, \"bash scripts/run-direct-proof-erasure-wit-ci.sh\"])\n\t\tassert.ok(qualifications.includes(required), required);\n\tassertIsolatedWasmtimeCapiBootstraps(qualifications);\n\tassert.match(qualifications\n\t\t, /name: Enforce all three WIT qualifications\\n {8}if: always\\(\\) && \\(steps\\.nominal_wit\\.outcome/u);\n\tfor(const id of [\"nominal_wit\", \"direct_proof_wit\", \"optional_parameters_wit\"])\n\t\tassert.equal(qualifications.split(`steps.${id}.outcome != 'success'`).length - 1\n\t\t\t, 1, `${id} qualification gate`);\n\tassert.match(finalize, /^ {4}if: always\\(\\)$/mu);\n\tfor(const job of [\"wasi-consumer\", \"wasi-qualifications\"])\n\t{\n\t\tassert.match(finalize, new RegExp(`^ {6}- ${job}$`, \"mu\"));\n\t\tassert.equal(finalize.split(`needs.${job}.result == 'success'`).length - 1\n\t\t\t, 2, `${job} final observations`);\n\t\tassert.equal(finalize.split(`needs.${job}.result != 'success'`).length - 1\n\t\t\t, 1, `${job} final gate`);\n\t}\n\tassert.match(finalize, /name: consumer-results-wasi-\\$\\{\\{ github\\.sha \\}\\}/u);\n",
+          "previous": "\t\t, \"          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\\n\"])\n\t\tassert.ok(body.includes(required));\n\tassertIsolatedWasmtimeCapiBootstraps(body);\n\tassert.ok(body.includes(updatedCommand)); assert.ok(body.includes(updatedGate));\n\tassert.ok(body.indexOf(\"        id: type_corpus_wit\\n\") < body.indexOf(nominalSubtypeWitCiBlock));\n\tassert.ok(body.indexOf(nominalSubtypeWitCiBlock) < body.indexOf(anchor));\n",
+          "start": 8162
+        },
+        {
+          "current": "\tconst supportSummary = source.split(\"\\n  support-summary:\\n\")[1];\n\tassert.match(supportSummary, /^ {6}- wasi-consumer$/mu);\n\tassert.match(supportSummary, /^ {6}- wasi-consumer-finalize$/mu);\n\tassert.match(supportSummary\n\t\t, /name: Enforce combined WIT and WASI acceptance\\n {8}if: needs\\.wasi-consumer-finalize\\.result != 'success'\\n {8}run: exit 1/u);\n\tassert.match(source.split(\"\\n  optional-parameter-matrix:\\n\")[1]\n\t\t, /^ {6}- wasi-consumer-finalize$/mu);\n",
+          "previous": "\tassert.match(source.split(\"\\n  support-summary:\\n\")[1], /^ {6}- wasi-consumer$/mu);\n",
+          "start": 9457
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-wit-ci-workflow.mjs",
+      "previousSha256": "b2f493dfda6d8b8e78f6a76e0cd79b750705a2ea4af96cae6e06589e39aae237"
+    },
+    {
+      "currentSha256": "d2bb9acb0cb735b8b59f022848a0791d10bd215784b2d838898f0fb0ee8e4188",
+      "edits": [
+        {
+          "current": "import { createReadStream } from \"node:fs\";\n",
+          "previous": "",
+          "start": 204
+        },
+        {
+          "current": "",
+          "previous": "import { typeSurfaceCells } from \"../../src/adoption/type-surface.mjs\";\n",
+          "start": 360
+        },
+        {
+          "current": "import { renderTypeDocuments } from \"../../scripts/generate-type-docs.mjs\";\n",
+          "previous": "import { renderReferenceDocuments } from \"../../scripts/generate-reference-docs.mjs\";\nimport { ownedCheckedRecordMatrixReference } from \"../../scripts/generate-type-docs.mjs\";\n",
+          "start": 428
+        },
+        {
+          "current": "",
+          "previous": "import {\n\townedCheckedRecordPromotionArchiveReferences, ownedCheckedRecordPromotionLimit\n\t, ownedCheckedRecordPromotionPath, ownedCheckedRecordPromotionProfiles\n\t, ownedCheckedRecordPromotionSelectionPath, renderOwnedCheckedRecordPromotion\n} from \"./owned-checked-record-promotion.mjs\";\n",
+          "start": 832
+        },
+        {
+          "current": "import { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from \"./producer-source.mjs\";\nimport { moduleAtProducerWithSourceReads } from \"./producer-module.mjs\";\n",
+          "previous": "import { typeSurfaceContractsAtProducer } from \"./producer-source.mjs\";\n",
+          "start": 894
+        },
+        {
+          "current": "import { ownedCheckedAlignedPublicationImplementation } from \"./owned-checked-record-aligned-publication-source-history.mjs\";\n",
+          "previous": "import { ownedCheckedRecordMatrixPublicationImplementation } from \"./owned-checked-record-matrix-publication-source-history.mjs\";\n",
+          "start": 1148
+        },
+        {
+          "current": "/**\n * Load the functions that rendered and checked a publication at that revision.\n *\n * @param revision - Exact publication commit.\n */\nconst publicationProducer = async revision => {\n\tconst [surface, typeDocs, documentation, promotion] = await Promise.all([\n\t\t\"src/adoption/type-surface.mjs\"\n\t\t, \"scripts/generate-type-docs.mjs\"\n\t\t, \"tests/helpers/owned-checked-record-documentation.mjs\"\n\t\t, \"tests/helpers/owned-checked-record-promotion.mjs\"\n\t].map(path => moduleAtProducerWithSourceReads(revision, path)));\n\treturn {\n\t\ttypeSurfaceCells: surface.typeSurfaceCells\n\t\t, matrixReference: typeDocs.ownedCheckedRecordMatrixReference\n\t\t, renderTypeDocuments: typeDocs.renderTypeDocuments\n\t\t, documentationPaths: documentation.ownedCheckedRecordDocumentationPaths\n\t\t, renderDocumentation: documentation.renderOwnedCheckedRecordDocumentation\n\t\t, promotion\n\t};\n};\n",
+          "previous": "",
+          "start": 2174
+        },
+        {
+          "current": "\t// The aligned selection was published with the aligned inventory (60eb342). The\n\t// earlier 098df87 publication still names the superseded 20261024 native capture.\n\tconst milestone = ownedCheckedAlignedPublicationImplementation;\n\tconst contracts = typeSurfaceContractsAtProducer(milestone);\n\tconst producer = await publicationProducer(milestone);\n\tconst { promotion } = producer;\n",
+          "previous": "\tconst contracts = typeSurfaceContractsAtProducer(\n\t\townedCheckedRecordMatrixPublicationImplementation\n\t);\n",
+          "start": 3080
+        },
+        {
+          "current": "\t\tmilestone, \"docs/type-surface.v1.json\"\n",
+          "previous": "\t\townedCheckedRecordMatrixPublicationImplementation, \"docs/type-surface.v1.json\"\n",
+          "start": 3529
+        },
+        {
+          "current": "\tconst selected = bytesAtProducer(milestone, promotion.ownedCheckedRecordPromotionSelectionPath);\n",
+          "previous": "\tconst selected = await readFile(ownedCheckedRecordPromotionSelectionPath);\n",
+          "start": 4048
+        },
+        {
+          "current": "\tconst bytes = selection.archives.map(entry => bytesAtProducer(milestone, entry.index.path));\n",
+          "previous": "\tconst bytes = [];\n\tfor(const entry of selection.archives) bytes.push(await readFile(entry.index.path));\n",
+          "start": 4298
+        },
+        {
+          "current": "\t\t, profiles: [...promotion.ownedCheckedRecordPromotionProfiles[index.lane]]\n",
+          "previous": "\t\t, profiles: [...ownedCheckedRecordPromotionProfiles[index.lane]]\n",
+          "start": 4539
+        },
+        {
+          "current": "\t\t, command: `node scripts/check-owned-checked-record-matrix.mjs --selection ${promotion.ownedCheckedRecordPromotionSelectionPath}`\n",
+          "previous": "\t\t, command: `node scripts/check-owned-checked-record-matrix.mjs --selection ${ownedCheckedRecordPromotionSelectionPath}`\n",
+          "start": 4780
+        },
+        {
+          "current": "\t\t, ...promotion.ownedCheckedRecordPromotionArchiveReferences(index\n",
+          "previous": "\t\t, ...ownedCheckedRecordPromotionArchiveReferences(index\n",
+          "start": 5172
+        },
+        {
+          "current": "\treturn { document, before, independent, contracts, references, producer };\n",
+          "previous": "\treturn { document, before, independent, contracts, references };\n",
+          "start": 5314
+        },
+        {
+          "current": "const assertPublished = (document, before, contracts, references, independent, producer) => {\n",
+          "previous": "const assertPublished = (document, before, contracts, references, independent) => {\n",
+          "start": 5397
+        },
+        {
+          "current": "\tconst cells = producer.typeSurfaceCells(document, contracts, cell => targets.has(cell.id));\n",
+          "previous": "\tconst cells = typeSurfaceCells(document, contracts, cell => targets.has(cell.id));\n",
+          "start": 6413
+        },
+        {
+          "current": "\t\tassert.deepEqual(observation.limitations, [...prior.limitations, producer.promotion.ownedCheckedRecordPromotionLimit]);\n",
+          "previous": "\t\tassert.deepEqual(observation.limitations, [...prior.limitations, ownedCheckedRecordPromotionLimit]);\n",
+          "start": 7485
+        },
+        {
+          "current": "\tassert.match(producer.matrixReference(document), /exactly 170 cells/u);\n",
+          "previous": "\tassert.match(ownedCheckedRecordMatrixReference(document), /exactly 170 cells/u);\n",
+          "start": 8467
+        },
+        {
+          "current": "\tconst { document, before, independent, contracts, references, producer } = await current();\n\tassert.equal(assertPublished(document, before, contracts, references, independent, producer), true);\n",
+          "previous": "\tconst { document, before, independent, contracts, references } = await current();\n\tassert.equal(assertPublished(document, before, contracts, references, independent), true);\n",
+          "start": 8662
+        },
+        {
+          "current": "\tconst { document, before, independent, contracts, references, producer } = await current();\n",
+          "previous": "\tconst { document, before, independent, contracts, references } = await current();\n",
+          "start": 8971
+        },
+        {
+          "current": "\t\tassert.throws(() => assertPublished({ ...document, evidence }, before, contracts, references, independent, producer));\n",
+          "previous": "\t\tassert.throws(() => assertPublished({ ...document, evidence }, before, contracts, references, independent));\n",
+          "start": 9357
+        },
+        {
+          "current": "\tassert.throws(() => assertPublished({ ...document, evidence: document.evidence.filter(entry => entry.id !== first) }, before, contracts, references, independent, producer));\n",
+          "previous": "\tassert.throws(() => assertPublished({ ...document, evidence: document.evidence.filter(entry => entry.id !== first) }, before, contracts, references, independent));\n",
+          "start": 9481
+        },
+        {
+          "current": "\t\tassert.throws(() => assertPublished({ ...document, observations }, before, contracts, references, independent, producer));\n",
+          "previous": "\t\tassert.throws(() => assertPublished({ ...document, observations }, before, contracts, references, independent));\n",
+          "start": 10446
+        },
+        {
+          "current": "\tconst { document, before, independent, contracts, references, producer } = await current();\n",
+          "previous": "\tconst { document, before, independent, contracts, references } = await current();\n",
+          "start": 10700
+        },
+        {
+          "current": "\t\t\t\t, before, contracts, references, independent, producer), assert.AssertionError, id);\n",
+          "previous": "\t\t\t\t, before, contracts, references, independent), assert.AssertionError, id);\n",
+          "start": 11928
+        },
+        {
+          "current": "/**\n * Require each guide's owned checked-record section to be exactly the rendered one.\n *\n * @param originals - Complete guide text by documentation name.\n * @param paths - Guide paths by documentation name.\n * @param render - Owned checked-record documentation renderer of the same revision.\n */\nconst assertOwnedCheckedRecordGuides = (originals, paths, render) => {\n\tconst sources = {};\n\tfor(const [name, path] of Object.entries(paths))\n",
+          "previous": "test(\"published owned checked-record guides and generated references match the current inventory\", async () => {\n\tconst { document, contracts, references } = await current();\n\tconst generated = await renderReferenceDocuments({ root: process.cwd(), inventory: { document, ...contracts } });\n\tfor(const [path, expected] of Object.entries(generated)) assert.equal(sha256(await readFile(path)), sha256(expected), path);\n\tconst sources = {}, originals = {};\n\tfor(const [name, path] of Object.entries(ownedCheckedRecordDocumentationPaths))\n",
+          "start": 12029
+        },
+        {
+          "current": "\t\tconst source = originals[name];\n",
+          "previous": "\t\tconst source = await readFile(path, \"utf8\"); originals[name] = source;\n",
+          "start": 12473
+        },
+        {
+          "current": "\tconst expected = render(sources);\n",
+          "previous": "\tconst expected = renderOwnedCheckedRecordDocumentation(sources);\n",
+          "start": 13251
+        },
+        {
+          "current": "};\n\ntest(\"published owned checked-record guides and generated references match their aligned publication\", async () => {\n\tconst { document, contracts, references, producer } = await current();\n\tconst milestone = ownedCheckedAlignedPublicationImplementation;\n\t// The publication's renderer, inventory and guide bytes all come from its own revision.\n\tconst { documents, reference } = await producer.renderTypeDocuments({\n\t\troot: process.cwd(), inventory: { document, ...contracts } });\n\tassert.ok(Object.keys(documents).length > 0);\n\tfor(const [path, expected] of Object.entries(documents))\n\t\tassert.equal(sha256(bytesAtProducer(milestone, path)), sha256(expected), path);\n\tassert.equal(sourceAtProducer(milestone, \"docs/reference/types.md\").split(reference).length, 2);\n\tassertOwnedCheckedRecordGuides(Object.fromEntries(Object.entries(producer.documentationPaths)\n\t\t.map(([name, path]) => [name, sourceAtProducer(milestone, path)]))\n\t, producer.documentationPaths, producer.renderDocumentation);\n\tassert.equal(sourceAtProducer(milestone, producer.promotion.ownedCheckedRecordPromotionPath)\n\t\t, producer.promotion.renderOwnedCheckedRecordPromotion(references));\n});\n\ntest(\"current owned checked-record guides and generated references match the current inventory\", async () => {\n\tconst contracts = {\n\t\tirSchema: JSON.parse(await readFile(\"schema/binding-ir.schema.json\", \"utf8\"))\n\t\t, consumers: JSON.parse(await readFile(\"docs/consumer-support.v1.json\", \"utf8\"))\n\t};\n\tconst { document } = await readPromotionInventory(createReadStream(\"docs/type-surface.v1.json\"), contracts);\n\tconst { documents, reference } = await renderTypeDocuments({\n\t\troot: process.cwd(), inventory: { document, ...contracts } });\n\tassert.ok(Object.keys(documents).length > 0);\n\tfor(const [path, expected] of Object.entries(documents))\n\t\tassert.equal(sha256(await readFile(path)), sha256(expected), path);\n\tassert.equal((await readFile(\"docs/reference/types.md\", \"utf8\")).split(reference).length, 2);\n\tconst originals = {};\n\tfor(const [name, path] of Object.entries(ownedCheckedRecordDocumentationPaths))\n\t\toriginals[name] = await readFile(path, \"utf8\");\n\tassertOwnedCheckedRecordGuides(originals, ownedCheckedRecordDocumentationPaths\n\t\t, renderOwnedCheckedRecordDocumentation);\n",
+          "previous": "\tassert.equal(await readFile(ownedCheckedRecordPromotionPath, \"utf8\"), renderOwnedCheckedRecordPromotion(references));\n",
+          "start": 13398
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-published-matrix-tests.mjs",
+      "previousSha256": "a264142ab2bcff3eee8c62fed633b65eb4851489401d239561187c6e34121a6c"
+    },
+    {
+      "currentSha256": "df73fc4aca93f74fccc4d8beb19c6200f4422c334f0990d346b5f57c44841c03",
+      "edits": [
+        {
+          "current": "\tconst entrypoint = await readFile(\"tests/owned-perl-xs.test.mjs\", \"utf8\");\n\tconst loader = '() => import(\"./helpers/owned-perl-callback-result-history-tests.mjs\")';\n\tassert.equal(entrypoint.split(loader).length, 2);\n\tassert.ok(entrypoint.indexOf(loader)\n\t\t> entrypoint.indexOf(\"await registerRetainedContractTests([\"));\n\tassert.doesNotMatch(entrypoint\n",
+          "previous": "\tassert.match(await readFile(\"tests/owned-perl-xs.test.mjs\", \"utf8\")\n",
+          "start": 1130
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-history-tests.mjs",
+      "previousSha256": "b504f84689052dfd397e46e826e32fab55e6bea6684e5f5d37b490ee5023d2cf"
+    },
+    {
+      "currentSha256": "677b9a6a9d70805d2042b1030b27db78799392ccd99cc4a762444e1421ed8f9e",
+      "edits": [
+        {
+          "current": "/**\n * Build a repository-relative byte reader from the source pins carried by a\n * historical type-surface document. This keeps a replay from silently hashing\n * today's validator beside an older evidence row.\n *\n * @param document - Historical type-surface document.\n * @param accept - Select the evidence rows whose source closure is replayed.\n * @param historyPath - Optional immutable ledger that introduced the sources.\n */\nexport const sourceReaderAtEvidencePins = (\n\tdocument, accept = () => true, historyPath = undefined\n) => {\n\tassert.ok(document && typeof document === \"object\"\n\t\t&& Array.isArray(document.evidence));\n\tassert.equal(typeof accept, \"function\");\n\tconst pins = new Map();\n\tfor(const evidence of document.evidence.filter(accept))\n\t{\n\t\tassert.ok(Array.isArray(evidence.files));\n\t\tfor(const file of evidence.files)\n\t\t{\n\t\t\tassert.equal(typeof file.path, \"string\");\n\t\t\tassert.match(file.sha256, digestPattern);\n\t\t\tconst previous = pins.get(file.path);\n\t\t\tassert.ok(previous === undefined || previous === file.sha256\n\t\t\t\t, `Conflicting historical source pins for ${file.path}`);\n\t\t\tpins.set(file.path, file.sha256);\n\t\t}\n\t}\n\tassert.ok(pins.size > 0);\n\treturn async path => {\n\t\tconst expected = pins.get(path);\n\t\tif(expected === undefined) return readFile(path);\n\t\treturn Buffer.from(historyPath === undefined\n\t\t\t? await sourceAtFinHistoryMilestone(path, expected)\n\t\t\t: await sourceAtFinHistoryRecordSource(\n\t\t\t\thistoryPath, path, expected\n\t\t\t)\n\t\t);\n\t};\n};\n\n",
+          "previous": "",
+          "start": 13243
+        }
+      ],
+      "path": "tests/helpers/source-at-fin-history-milestone.mjs",
+      "previousSha256": "0401bf60950e682e05a6cad3e52e660775835ebd485caeebdcf0b424de1edece"
+    },
+    {
+      "currentSha256": "12822315b40d5464640b4f76935042e2c6af3bf39e0d6dd54cda83c98ed1f2a0",
+      "edits": [
+        {
+          "current": "\t\t// Today's directional rule refuses the archived produced-result constructors, so\n\t\t// this archive is replayed only through its recorded producer above.\n\t\tassert.throws(() => generateCopiedPhpPackage(model.bindingIr)\n\t\t\t, { name: \"TypeError\", message: \"Invalid declaration refinement metadata\" });\n",
+          "previous": "\t\tconst current = generateCopiedPhpPackage(model.bindingIr)[\"src/Api.php\"];\n\t\tassert.notEqual(current, api);\n",
+          "start": 3797
+        },
+        {
+          "current": "\t\t// Today's projected-result documentation substituted into the recorded API.\n\t\tconst projected = api.replaceAll(\"result[*] checked by StructuralSubtypes.checkedPositive\"\n\t\t\t, \"result[*] projects the Subtype base value\");\n\t\tfor(const replacement of [projected\n",
+          "previous": "\t\tassert.match(current, /result\\[\\*\\] projects the Subtype base value/u);\n\t\tfor(const replacement of [current\n",
+          "start": 4182
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-php-evidence-tests.mjs",
+      "previousSha256": "1eef04996b2708c0ed27faf9989b1ebfb00c2983a9e32f67fbe7868778151a85"
+    },
+    {
+      "currentSha256": "f072966c9a6f07da8d1a9f8a6db7db6b3f67594b7f302645de03510a8d16e882",
+      "edits": [
+        {
+          "current": "\t\t// Today's directional rule refuses the archived produced-result constructors, so\n\t\t// the recorded identities are replayed only through the recorded producer.\n\t\tassert.throws(() => copiedPhpPublicSource(compileCopiedPhpModel(model.bindingIr, options))\n\t\t\t, { name: \"TypeError\", message: \"Invalid declaration refinement metadata\" });\n",
+          "previous": "\t\tconst current = copiedPhpPublicSource(compileCopiedPhpModel(model.bindingIr, options));\n\t\tassert.notEqual(generated, current);\n",
+          "start": 5471
+        },
+        {
+          "current": "\t\t// Today's projected-result documentation substituted into the recorded source.\n\t\tconst projected = generated.replaceAll(\"result[*] checked by StructuralSubtypes.checkedPositive\"\n\t\t\t, \"result[*] projects the Subtype base value\");\n\t\tassert.notEqual(projected, generated);\n",
+          "previous": "\t\tassert.match(current, /result\\[\\*\\] projects the Subtype base value/u);\n",
+          "start": 5897
+        },
+        {
+          "current": "\t\t\tassert.notDeepEqual(recorded, identity(Buffer.from(projected)));\n",
+          "previous": "\t\t\tassert.notDeepEqual(recorded, identity(Buffer.from(current)));\n",
+          "start": 6468
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-php-wasm-evidence-tests.mjs",
+      "previousSha256": "20a4b2ec380b24a26db0d02496269a32fff37657da564462642f05327b0a6d9e"
+    },
+    {
+      "currentSha256": "f1a9a8677e7e351d4d5d3980231102ded908006a56b4abceaf3144f4f22f7bdb",
+      "edits": [
+        {
+          "current": "\t// Both aggregates must wait for the base job and its split qualification\n\t// finalizer before consuming or publishing WIT observations.\n",
+          "previous": "\t// Both aggregates gating on WIT acceptance must depend on the job itself.\n",
+          "start": 7534
+        },
+        {
+          "current": "\t{\n\t\tconst needs = workflow.split(`  ${aggregate}:\\n`)[1]\n\t\t\t?.split(\"    runs-on:\")[0] ?? \"\";\n\t\tassert.ok(needs.includes(\"      - wasi-consumer\\n\")\n\t\t\t, `${aggregate} needs wasi-consumer`);\n\t\tassert.ok(needs.includes(\"      - wasi-consumer-finalize\\n\")\n\t\t\t, `${aggregate} needs wasi-consumer-finalize`);\n\t}\n",
+          "previous": "\t\tassert.ok(workflow.split(`  ${aggregate}:\\n`)[1]?.split(\"    runs-on:\")[0].includes(\"      - wasi-consumer\\n\"), `${aggregate} needs wasi-consumer`);\n",
+          "start": 7746
+        }
+      ],
+      "path": "tests/helpers/wit-owned-package-evidence.mjs",
+      "previousSha256": "1e3fa5b024a8b9e298aa6ccdf9c877c698bbb83e1126f86f79d21d66efaac46a"
+    },
+    {
+      "currentSha256": "f628584c60ce8546810d3dad0d32943c68b5720746241f64797f86669e0b7aec",
+      "edits": [
+        {
+          "current": "import { cVariantReviewedIr } from \"./helpers/c-variant-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1087
+        },
+        {
+          "current": "\n/**\n * Require a consumer fixture to see a copied record constructor's own null\n * refusal, and to build every null-field record inside that refusal.\n *\n * @param source - Java or Kotlin consumer fixture.\n * @param kotlin - Whether the fixture is Kotlin.\n */\nconst assertSurfacedNullRefusals = (source, kotlin) => {\n\tassert.match(source, kotlin\n\t\t? /catch \\(error: java\\.lang\\.reflect\\.InvocationTargetException\\) \\{ throw error\\.targetException \\}/u\n\t\t: /catch \\(java\\.lang\\.reflect\\.InvocationTargetException error\\) \\{\\n[^\\n]*\\n\\s+if \\(error\\.getCause\\(\\) instanceof RuntimeException refused\\) throw refused;/u);\n\tconst nulls = source.split(\"\\n\").filter(line => /\\bchange\\([^;]*,\\s*null\\)/u.test(line));\n\tassert.ok(nulls.length > 0);\n\tfor(const line of nulls)\n\t{\n\t\tconst refusal = line.search(/\\breject\\(NullPointerException/u);\n\t\tassert.ok(refusal >= 0 && refusal < line.search(/\\bchange\\([^;]*,\\s*null\\)/u), line.trim());\n\t}\n};\n\ntest(\"JVM consumer fixtures surface copied-record constructor null refusals\", async () => {\n\t// Copied records refuse a null reference field in their own constructor, so a\n\t// reflective helper must not hide that refusal behind InvocationTargetException.\n\tconst variants = generateCopiedJvmPackage(cVariantReviewedIr());\n\tassert.match(variants[\"src/main/java/org/leanbridge/variants/ScalarsAll.java\"]\n\t\t, /java\\.util\\.Objects\\.requireNonNull\\(bytes\\);/u);\n\tfor(const [path, kotlin] of [\n\t\t[\"tests/fixtures/variant-consumers/java.java\", false]\n\t\t, [\"tests/fixtures/variant-consumers/kotlin.kt\", true]\n\t\t, [\"tests/fixtures/collection-consumers/java.java\", false]\n\t\t, [\"tests/fixtures/collection-consumers/kotlin.kt\", true]\n\t]) assertSurfacedNullRefusals(await readFile(path, \"utf8\"), kotlin);\n\t// The pre-repair helper and an eagerly built null record are both refused.\n\tconst java = await readFile(\"tests/fixtures/collection-consumers/java.java\", \"utf8\");\n\tconst hidden = java.replace(/ {8}\\} catch \\(java\\.lang\\.reflect\\.InvocationTargetException error\\) \\{\\n(?:[^\\n]*\\n){3}/u, \"\");\n\tassert.notEqual(hidden, java);\n\tassert.throws(() => assertSurfacedNullRefusals(hidden, false), assert.AssertionError);\n\tconst eager = java.replace(\"final int field = i; reject(NullPointerException.class, () -> call(() -> Api.recordReverse(new Primitives[] {scalar, change(scalar, field, null)})));\"\n\t\t, \"var invalid = change(scalar, i, null); reject(NullPointerException.class, () -> call(() -> Api.recordReverse(new Primitives[] {scalar, invalid})));\");\n\tassert.notEqual(eager, java);\n\tassert.throws(() => assertSurfacedNullRefusals(eager, false), assert.AssertionError);\n\tconst kotlin = await readFile(\"tests/fixtures/variant-consumers/kotlin.kt\", \"utf8\");\n\tconst unwrapped = kotlin.replace(/ {4}catch \\(error: java\\.lang\\.reflect\\.InvocationTargetException\\) \\{ throw error\\.targetException \\}\\n/u, \"\");\n\tassert.notEqual(unwrapped, kotlin);\n\tassert.throws(() => assertSurfacedNullRefusals(unwrapped, true), assert.AssertionError);\n});\n",
+          "previous": "",
+          "start": 9786
+        }
+      ],
+      "path": "tests/jvm-kotlin-contract.test.mjs",
+      "previousSha256": "780cebc5f26543035c8600626faf7fcfce2dd20f96000ad44f9cfd38c9b52dc5"
+    },
+    {
+      "currentSha256": "46c20d5166eaa4ceb860ddc081201b78fdeffbefd98a93a450341a96930d23ab",
+      "edits": [
+        {
+          "current": "\t\tprofiles: [\"dotnet\", \"jvm\", \"ruby\"], timeoutMinutesPerProfile: 360\n",
+          "previous": "\t\tprofiles: [\"dotnet\", \"jvm\", \"ruby\"], timeoutMinutesPerProfile: 240\n",
+          "start": 3186
+        },
+        {
+          "current": "\t\t, [\"timeout-minutes: 360\", \"timeout-minutes: 240\"]\n",
+          "previous": "",
+          "start": 3776
+        }
+      ],
+      "path": "tests/managed-ci-isolation.test.mjs",
+      "previousSha256": "8dfce4708baeeaedca50ca77b3b2ba6453465a02e273a7e0d6c0cc5023fe6260"
+    },
+    {
+      "currentSha256": "342205f9db30bd27ef5096d39a6d27a15a783f37fc118a7ec11e08b101a561a7",
+      "edits": [
+        {
+          "current": "\t// rejected type for the one selected export. A host reply has no nested constructor selection, while\n\t// a checked constructor configured on the callback parameter never reaches the reply.\n",
+          "previous": "\t// rejected type for the one selected export; a checked constructor configured on the callback\n\t// parameter never reaches the reply.\n",
+          "start": 41529
+        },
+        {
+          "current": "\t\t\t, pattern: /Subtype refinements require a configured checked constructor: /u\n",
+          "previous": "\t\t\t, pattern: /Subtype refinements require a top-level or structural-container parameter or result: /u\n",
+          "start": 42381
+        },
+        {
+          "current": "\t\t\t, pattern: /nested checked records require an exact checked-record selection: [^\"]*Interval/u\n",
+          "previous": "\t\t\t, pattern: /checked records currently require a top-level parameter or result: [^\"]*Interval/u\n",
+          "start": 42662
+        },
+        {
+          "current": "\t\t\t, pattern: /nested checked records require an exact checked-record selection: [^\"]*Interval/u\n",
+          "previous": "\t\t\t, pattern: /checked records currently require a top-level parameter or result: [^\"]*Interval/u\n",
+          "start": 42937
+        }
+      ],
+      "path": "tests/native-fin-callbacks.test.mjs",
+      "previousSha256": "33f82d82cb53978735f990b3bd85e0cdd1d717eb8cc0c086446658804e530178"
+    },
+    {
+      "currentSha256": "069cf5c3792a722892e531224412105806ba09298ff88b716a7266c8effb838e",
+      "edits": [
+        {
+          "current": "// The receiver record authenticates the sources its .NET predecessor recorded plus its\n// own additions. Its milestone inventory also pins 854 files (1,627 occurrences) that\n// neither record ever owned; that set is closed, and their pins must stay unchanged.\nconst ownedJvmReceiverUnownedInventory = Object.freeze({\n\tpaths: 854\n\t, sha256: \"0de30b1254976b9a588bcff7d677802ee09c4368685de494f1996843ff1c7323\"\n});\n\n/**\n * Restore the record's authenticated pins and return the inventory paths it does not own.\n *\n * @param prior - Reconstructed predecessor inventory, updated in place.\n * @param sources - Record-owned source digests.\n */\nconst restoreOwnedJvmReceiverPins = (prior, sources) => {\n\tconst unowned = new Set();\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tconst digest = sources[file.path];\n\t\tif(digest === undefined)\n\t\t{\n\t\t\tunowned.add(file.path);\n\t\t\tcontinue;\n\t\t}\n\t\tassert.equal(typeof digest, \"string\", file.path);\n\t\tfile.sha256 = digest;\n\t}\n\treturn [...unowned].sort();\n};\n\n/**\n * Require exactly the closed set of inventory paths that neither receiver record owns.\n *\n * @param paths - Sorted unowned inventory paths.\n */\nconst assertOwnedJvmReceiverUnownedInventory = paths => {\n\tassert.equal(paths.length, ownedJvmReceiverUnownedInventory.paths);\n\tassert.equal(sha256(paths.join(\"\\n\")), ownedJvmReceiverUnownedInventory.sha256);\n};\n\n",
+          "previous": "",
+          "start": 1126
+        },
+        {
+          "current": "\tconst pristine = structuredClone(prior);\n\tconst unowned = restoreOwnedJvmReceiverPins(prior, record.sources);\n\tassertOwnedJvmReceiverUnownedInventory(unowned);\n\tassert.ok(unowned.every(item => !Object.hasOwn(previous.sources, item)));\n\t// Unowned pins are not rewritten, so this also proves every one of them is unchanged.\n",
+          "previous": "\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tconst digest = record.sources[file.path];\n\t\tif(digest !== undefined)\n\t\t{\n\t\t\tassert.equal(typeof digest, \"string\", file.path);\n\t\t\tfile.sha256 = digest;\n\t\t}\n\t}\n",
+          "start": 4628
+        },
+        {
+          "current": "\t// Any other unowned inventory file, or an owned source dropped from the record, fails.\n\tconst added = structuredClone(pristine);\n\tadded.evidence[0].files.push({ path: \"docs/evidence/unowned-probe.json\", sha256: \"0\".repeat(64) });\n\tassert.throws(() => assertOwnedJvmReceiverUnownedInventory(\n\t\trestoreOwnedJvmReceiverPins(added, record.sources)), assert.AssertionError);\n\tconst owned = Object.keys(record.sources).find(item => prior.evidence.some(\n\t\tevidence => evidence.files.some(file => file.path === item)));\n\tassert.ok(owned);\n\tconst dropped = { ...record.sources }; delete dropped[owned];\n\tassert.throws(() => assertOwnedJvmReceiverUnownedInventory(\n\t\trestoreOwnedJvmReceiverPins(structuredClone(pristine), dropped)), assert.AssertionError);\n",
+          "previous": "",
+          "start": 4999
+        }
+      ],
+      "path": "tests/owned-jvm-receiver-evidence.test.mjs",
+      "previousSha256": "de187b105b1d4f20d1dd6d3f5119cb7c17eeec0a5457ff0aae129b6732f8345c"
+    },
+    {
+      "currentSha256": "21db3dada7b4f46b15849989de985026b961200cc0ae5e6987eeb8af93709e0a",
+      "edits": [
+        {
+          "current": "// The receiver record authenticates the sources its predecessor recorded plus its own\n// additions. Its milestone inventory also pins 854 files (1,627 occurrences) that\n// neither record ever owned; that set is closed, and their pins must stay unchanged.\nconst ownedRustReceiverUnownedInventory = Object.freeze({\n\tpaths: 854\n\t, sha256: \"0de30b1254976b9a588bcff7d677802ee09c4368685de494f1996843ff1c7323\"\n});\n\n/**\n * Restore the record's authenticated pins and return inventory paths it does not own.\n *\n * @param prior - Reconstructed predecessor inventory, updated in place.\n * @param sources - Record-owned source digests.\n */\nconst restoreOwnedRustReceiverPins = (prior, sources) => {\n\tconst unowned = new Set();\n\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tconst digest = sources[file.path];\n\t\tif(digest === undefined)\n\t\t{\n\t\t\tunowned.add(file.path);\n\t\t\tcontinue;\n\t\t}\n\t\tassert.equal(typeof digest, \"string\", file.path);\n\t\tfile.sha256 = digest;\n\t}\n\treturn [...unowned].sort();\n};\n\n/**\n * Require exactly the closed set of inventory paths neither receiver record owns.\n *\n * @param paths - Sorted unowned inventory paths.\n */\nconst assertOwnedRustReceiverUnownedInventory = paths => {\n\tassert.equal(paths.length, ownedRustReceiverUnownedInventory.paths);\n\tassert.equal(sha256(paths.join(\"\\n\"))\n\t\t, ownedRustReceiverUnownedInventory.sha256);\n};\n\n",
+          "previous": "",
+          "start": 912
+        },
+        {
+          "current": "\tconst pristine = structuredClone(prior);\n\tconst unowned = restoreOwnedRustReceiverPins(prior, record.sources);\n\tassertOwnedRustReceiverUnownedInventory(unowned);\n\tassert.ok(unowned.every(item => !Object.hasOwn(previous.sources, item)));\n\t// Unowned pins are not rewritten, proving every one remains unchanged.\n",
+          "previous": "\tfor(const evidence of prior.evidence) for(const file of evidence.files)\n\t{\n\t\tassert.equal(typeof record.sources[file.path], \"string\", file.path);\n\t\tfile.sha256 = record.sources[file.path];\n\t}\n",
+          "start": 4490
+        },
+        {
+          "current": "\t// Any other unowned inventory file, or an owned source dropped from the record, fails.\n\tconst added = structuredClone(pristine);\n\tadded.evidence[0].files.push({\n\t\tpath: \"docs/evidence/unowned-probe.json\", sha256: \"0\".repeat(64)\n\t});\n\tassert.throws(() => assertOwnedRustReceiverUnownedInventory(\n\t\trestoreOwnedRustReceiverPins(added, record.sources)), assert.AssertionError);\n\tconst owned = Object.keys(record.sources).find(item => prior.evidence.some(\n\t\tevidence => evidence.files.some(file => file.path === item)));\n\tassert.ok(owned);\n\tconst dropped = { ...record.sources }; delete dropped[owned];\n\tassert.throws(() => assertOwnedRustReceiverUnownedInventory(\n\t\trestoreOwnedRustReceiverPins(structuredClone(pristine), dropped))\n\t, assert.AssertionError);\n",
+          "previous": "",
+          "start": 4848
+        }
+      ],
+      "path": "tests/owned-rust-receiver-evidence.test.mjs",
+      "previousSha256": "61ba76cae4a2267e1a65c865c9aa83a8179f592064b20f9db748fe290ca9666f"
+    },
+    {
+      "currentSha256": "a790f943e2c88d64a9a1ccd24a10bc8930bfb0882bde8e7b1b4f44ed4a982365",
+      "edits": [
+        {
+          "current": "\tfor(const job of [\"node-consumers\", \"php-consumers\", \"native-consumers\"\n\t\t, \"managed-consumers\", \"wasi-consumer\", \"wasi-qualifications\"]) {\n",
+          "previous": "\tfor(const job of [\"node-consumers\", \"php-consumers\", \"native-consumers\", \"managed-consumers\", \"wasi-consumer\"])\n\t{\n",
+          "start": 2452
+        },
+        {
+          "current": "\t\t}\n",
+          "previous": "\t}\n",
+          "start": 2757
+        }
+      ],
+      "path": "tests/retained-contract-tests.test.mjs",
+      "previousSha256": "e437c4a21b7acb5881d1e8c903dde28291e53f13715733d478c645ee69b82d3c"
+    },
+    {
+      "currentSha256": "ed75da5425e385313e3eb47501fc2a36d4c5da5f5d54ce80eca039d61893d46a",
+      "edits": [
+        {
+          "current": "\t\t, [\"      - perl-consumer\\n      - wasi-consumer\\n      - wasi-consumer-finalize\\n      - owned-wit-receivers\\n\"\n\t\t\t, \"      - perl-consumer\\n      - wasi-consumer-finalize\\n      - owned-wit-receivers\\n\"]\n",
+          "previous": "\t\t, [\"      - perl-consumer\\n      - wasi-consumer\\n      - owned-wit-receivers\\n\"\n\t\t\t, \"      - perl-consumer\\n      - owned-wit-receivers\\n\"]\n",
+          "start": 6999
+        }
+      ],
+      "path": "tests/wit-owned-native-evidence.test.mjs",
+      "previousSha256": "85a02af8d7ab880da434fe74fe8151b279df87289d1da5aaa032f464e237de81"
+    },
+    {
+      "currentSha256": "813ede1e5314b3f2d79e1310f5843472b3e47d59f9e9d870b19fa0288b57cad9",
+      "edits": [
+        {
+          "current": "\t// Both downstream aggregates retain the base WIT job even though the final\n\t// observation also waits for the split qualification job.\n",
+          "previous": "\t// The first dependant after the WIT job is the optional-parameter matrix; the\n\t// summary gate's own dependency is refused separately, inside its block.\n",
+          "start": 7899
+        },
+        {
+          "current": "\tconst optional = /^ {2}optional-parameter-matrix:\\n[\\s\\S]*?(?=^ {2}[a-z][a-z0-9-]*:\\n)/mu.exec(source)?.[0];\n\tassert.ok(optional);\n\tconst unguardedOptional = source.replace(optional\n\t\t, optional.replace(\"      - wasi-consumer\\n\", \"\"));\n\tassert.notEqual(unguardedOptional, source);\n\tassert.throws(() => assertOwnedWitPackageCi(unguardedOptional)\n\t\t, /optional-parameter-matrix needs wasi-consumer/u);\n",
+          "previous": "\tassert.throws(() => assertOwnedWitPackageCi(prefix + jobAndFollowing.replace(\"      - wasi-consumer\\n\", \"\")), /optional-parameter-matrix needs wasi-consumer/u);\n",
+          "start": 8586
+        }
+      ],
+      "path": "tests/wit-owned-package-evidence.test.mjs",
+      "previousSha256": "c4735bd625a931c96090b71758e4c02183547599491058d74d7845786a77f702"
+    },
+    {
+      "currentSha256": "881e15aac6d53597866a64ee09b33a16e2d5835b692be1943dd00604c301eb23",
+      "edits": [
+        {
+          "current": "\t\t, [\"      - perl-consumer\\n      - wasi-consumer\\n      - wasi-consumer-finalize\\n      - owned-wit-receivers\\n\"\n\t\t\t, \"      - perl-consumer\\n      - wasi-consumer-finalize\\n      - owned-wit-receivers\\n\"]\n",
+          "previous": "\t\t, [\"      - perl-consumer\\n      - wasi-consumer\\n      - owned-wit-receivers\\n\"\n\t\t\t, \"      - perl-consumer\\n      - owned-wit-receivers\\n\"]\n",
+          "start": 7188
+        }
+      ],
+      "path": "tests/wit-owned-session-evidence.test.mjs",
+      "previousSha256": "53eb0cf8714a078df8b7f19c7864309358fa039b897dc2cd9ef37682b975d217"
+    },
+    {
+      "currentSha256": "849e648195496d5c1e539eeb00ef56eddeb08f891f898efeb463303fd6085386",
+      "edits": [
+        {
+          "current": "import { generateComponentCopiedAdapters } from \"../src/build/component-copied-adapters.mjs\";\nimport { generateCompilerAdapters } from \"../src/build/compiler-adapters.mjs\";\n",
+          "previous": "",
+          "start": 937
+        },
+        {
+          "current": "import { corpusReviewedIr } from \"./helpers/type-corpus-reviewed-ir.mjs\";\n",
+          "previous": "",
+          "start": 1816
+        },
+        {
+          "current": "\ntest(\"dependent Fin on copied-array exports stays in the complete Lean wrapper\", async () => {\n\tconst ir = corpusReviewedIr({ id: \"refinements\" }, [{ name: \"Refinements.pick\"\n\t\t, parameters: [\"nat\", { array: \"nat\" }, \"nat\"], result: \"nat\" }]);\n\tir.declarations[0].source.extensions[\"lean-lang.org/refinements\"] = {\n\t\tparameters: [{ kind: \"fin\", bound: \"10\" }, null\n\t\t\t, { kind: \"fin-parameter\", parameter: 0 }]\n\t\t, result: null\n\t};\n\tconst generated = generateCompilerAdapters({ analysis: {\n\t\tbindingIr: { origin: \"lean-elaborated\", document: ir, semanticSha256: \"1\".repeat(64) }\n\t\t, exportCandidates: [{ declaration: \"Refinements.pick\"\n\t\t\t, sourceModule: \"Refinements\", status: \"exportable\" }]\n\t}\n\t, componentPlan: { sha256: \"2\".repeat(64)\n\t\t, document: { bindingIr: { semanticSha256: \"1\".repeat(64) } } } });\n\tawait assertJsonSchema(\"compiler-adapter-plan\", generated.plan);\n\tassert.equal(generated.plan.privateAbi.version, 4);\n\tconst { symbol } = generated.plan.exports[0];\n\tconst lean = generated.files[\"LeanBridgeGenerated.lean\"];\n\tconst c = generateComponentCopiedAdapters(\n\t\tgenerated.plan.privateAbi, generated.plan.exports);\n\t// Every unary validator the side module imports must be a Lean export, or\n\t// packaging refuses the unresolved env import.\n\tconst exported = [...lean.matchAll(/^@\\[export (\\S+_refinement_\\d+)\\]$/gmu)]\n\t\t.map(match => match[1]).sort();\n\tconst imported = [...c.matchAll(/^extern uint8_t (\\S+_refinement_\\d+)\\(/gmu)]\n\t\t.map(match => match[1]).sort();\n\tassert.deepEqual(imported, exported);\n\t// The static Fin keeps its unary validator; the dependent Fin has none.\n\tassert.deepEqual(imported, [`${symbol}_refinement_0`]);\n\tassert.doesNotMatch(c, new RegExp(`${symbol}_refinement_2`, \"u\"));\n\tassert.ok(c.indexOf(`${symbol}_refinement_0(a0)`)\n\t\t< c.indexOf(`${symbol}_lean(a0, a1, a2)`));\n\t// The complete wrapper checks the live bound and refuses an out-of-bound argument.\n\tconst guard = lean.indexOf(\"if _bridgeFin2 : (value2) < value0 then\");\n\tconst call = lean.indexOf(\"_root_.Refinements.pick ⟨value0, _bridgeFin0⟩ value1 ⟨value2, _bridgeFin2⟩\");\n\tconst refusal = lean.indexOf(\n\t\t\"panic! \\\"Lean Bridge rejected an invalid refined value\\\"\", call);\n\tassert.notEqual(guard, -1); assert.notEqual(call, -1); assert.notEqual(refusal, -1);\n\tassert.ok(guard < call && call < refusal);\n\tassert.doesNotMatch(lean, /sorry|unsafeCast|axiom/u);\n});\n",
+          "previous": "",
+          "start": 14578
+        }
+      ],
+      "path": "tests/word-contract.test.mjs",
+      "previousSha256": "cdd699f7d0d912239180549f52d61cc4f5fe9347823849ed8bf13a1ff7c56ecf"
+    }
+  ],
+  "validation": {
+    "jvmCollections": {
+      "durationSeconds": 675,
+      "fail": 0,
+      "pass": 1,
+      "tests": 1
+    },
+    "jvmVariants": {
+      "durationSeconds": 796,
+      "fail": 0,
+      "pass": 1,
+      "tests": 1
+    },
+    "managedHistory": {
+      "durationSeconds": 623,
+      "fail": 0,
+      "pass": 13,
+      "tests": 13
+    },
+    "touchedLint": "passed",
+    "typecheck": "passed",
+    "workflowLint": "passed"
+  }
+}
