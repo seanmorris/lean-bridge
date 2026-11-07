@@ -8,16 +8,8 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
-import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
-import { jvmCollectionConsumer, jvmCollectionDocumentation, jvmCollectionPublicChecks, jvmCollectionRejections } from "./helpers/jvm-collection-fixture.mjs";
-import { jvmKotlinMetadataConsumer } from "./helpers/jvm-kotlin-metadata-fixture.mjs";
+import { jvmCollectionConsumer } from "./helpers/jvm-collection-fixture.mjs";
 import { jvmHistoricalReceipts, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
-import { compoundReviewedIr } from "./helpers/compound-source-fixture.mjs";
-import { listReviewedIr } from "./helpers/list-fixture.mjs";
-import { nativeAliasReviewedIr } from "./helpers/native-alias-fixture.mjs";
-import { cVariantReviewedIr } from "./helpers/c-variant-fixture.mjs";
-import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
-import { jvmCallableSignatures } from "./helpers/jvm-callable-fixture.mjs";
 import { assertCurrentKotlinCollectionSources } from "./helpers/current-collection-evidence.mjs";
 import { beforeJvmStructuredCallables } from "./helpers/jvm-structured-callable-source-history.mjs";
 import { beforeOwnedJvmGenerated } from "./helpers/owned-jvm-source-history.mjs";
@@ -62,6 +54,13 @@ const assertRecordedConsumerSources = (record, sources) => {
  */
 const assertRecordedConsumer = (run, consumer) =>
 	assert.equal(run.jvm.consumerSourceSha256, sha256(consumer(run.profile)), `${run.path}/${run.profile}`);
+
+/**
+ * Load one of the producer's own helpers, whose fixture and documentation reads also resolve at the producer.
+ *
+ * @param path - Repository-relative helper module.
+ */
+const atKotlinCollectionProducer = path => moduleAtProducerWithSourceReads(kotlinCollectionProducer, path);
 // Installed sources are regenerated with the producer's generator; later generator changes never reach back.
 const generatedSources = async fixture => {
 	const { generateCopiedJvmKotlinPackage } = await moduleAtProducerWithSourceReads(
@@ -103,11 +102,12 @@ test("Kotlin collections bind current sources to both original installed source 
 	const record = await receipt();
 	// Each consumer digest names the producer helper's transform of the producer fixtures. Rebuild them there,
 	// bound to the record's own source digests, so later fixture and helper changes never reach back.
+	// Every other archived value below is also judged with the producer's helpers, fixtures and documentation.
 	const producerSources = Object.fromEntries(kotlinCollectionConsumerSources.map(path => [path, bytesAtProducer(kotlinCollectionProducer, path)]));
 	assertRecordedConsumerSources(record, producerSources);
-	const { jvmCollectionConsumer: producerConsumer } = await moduleAtProducerWithSourceReads(
-		kotlinCollectionProducer, "tests/helpers/jvm-collection-fixture.mjs"
-	);
+	const producerFixture = await atKotlinCollectionProducer("tests/helpers/jvm-collection-fixture.mjs");
+	const { collectionReviewedIr, collectionSignatures } = await atKotlinCollectionProducer("tests/helpers/collection-fixture.mjs");
+	const producerConsumer = producerFixture.jvmCollectionConsumer;
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.profiles, ["java", "kotlin"]);
 	assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
@@ -129,7 +129,7 @@ test("Kotlin collections bind current sources to both original installed source 
 		assert.equal(run.checks, run.profile === "java" ? 158171 : 158334);
 		assert.equal(run.calls, 4435); assert.equal(run.rejected, 30);
 		assertRecordedConsumer(run, producerConsumer);
-		assert.equal(run.jvm.signaturesSha256, sha256(jvmCollectionPublicChecks(run.profile)));
+		assert.equal(run.jvm.signaturesSha256, sha256(producerFixture.jvmCollectionPublicChecks(run.profile)));
 		for(const key of ["publicApiOnly", "exactPublicSignatures", "runtimeOverridesDisabled", "handoffRemovedBeforeExecution"]) assert.equal(run.jvm[key], true);
 		assert.equal(Object.keys(run.installedFiles).length, 77);
 		// NativeAssets embeds compiled library identities checked below and by the installed loader.
@@ -144,7 +144,7 @@ test("Kotlin collections bind current sources to both original installed source 
 		assert.deepEqual(run.observation.nativeLibraries, run.jvm.nativeLibraries);
 		for(const [name, hash] of Object.entries(run.jvm.nativeLibraries))
 			assert.equal(run.installedFiles[`META-INF/lean-bridge/native/linux-x64/${name}`].sha256, hash);
-		const expected = jvmCollectionRejections(run.profile), rejected = run.observation.results.filter(item => item.status === "rejected-at-compile-time");
+		const expected = producerFixture.jvmCollectionRejections(run.profile), rejected = run.observation.results.filter(item => item.status === "rejected-at-compile-time");
 		assert.equal(rejected.length, 8); assert.deepEqual(rejected.map(item => item.id), expected.map(item => item.id));
 		for(const [index, result] of rejected.entries())
 		{
@@ -163,7 +163,7 @@ test("Kotlin collections bind current sources to both original installed source 
 		}
 		for(const [path, hash] of Object.entries(faults.originalSources))
 			assert.equal(run.installedFiles[`META-INF/lean-bridge/jvm/${path}`].sha256, hash);
-		const example = jvmCollectionDocumentation(run.profile);
+		const example = producerFixture.jvmCollectionDocumentation(run.profile);
 		assert.equal(run.documentation.sourceSha256, sha256(example.source)); assert.equal(run.documentation.stdout, example.stdout);
 		for(const key of ["sourceFreeExecution", "compilerFreeExecution", "repeatExecution"]) assert.equal(run.documentation[key], true);
 		const other = record.executions.find(item => item.path === run.path && item.profile !== run.profile);
@@ -213,6 +213,10 @@ test("Kotlin collection archives, installed files and observations reproduce ind
 
 test("Kotlin companion API retains installed JVM compounds, lists, aliases, variants and callable owners", async () => {
 	const record = await receipt();
+	// Regression inputs and metadata consumers are the producer's own; later fixture changes never reach back.
+	const [{ callableReviewedIr }, { jvmCallableSignatures }, { compoundReviewedIr }, { listReviewedIr }, { nativeAliasReviewedIr }, { cVariantReviewedIr }, { jvmKotlinMetadataConsumer }] = await Promise.all(
+		["callable-fixture", "jvm-callable-fixture", "compound-source-fixture", "list-fixture", "native-alias-fixture", "c-variant-fixture", "jvm-kotlin-metadata-fixture"].map(name => atKotlinCollectionProducer(`tests/helpers/${name}.mjs`))
+	);
 	const fixtures = { callables: () => callableReviewedIr(jvmCallableSignatures), compounds: compoundReviewedIr, lists: listReviewedIr, aliases: nativeAliasReviewedIr, variants: cVariantReviewedIr };
 	const checks = { callables: [66683, 66655, 118, [6, 6]], compounds: [36872, 36872, 1588, [10, 11]], lists: [91674, 91696, 122, [12, 12]], aliases: [3711, 3711, 103, [12, 12]], variants: [209998, 209998, 25, [10, 10]] };
 	assert.deepEqual(record.regressions.map(run => run.name), Object.keys(fixtures));

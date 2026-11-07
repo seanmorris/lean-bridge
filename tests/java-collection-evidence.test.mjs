@@ -8,12 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
-import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
-import { jvmCollectionConsumer, jvmCollectionDocumentation, jvmCollectionPublicChecks, jvmCollectionRejections } from "./helpers/jvm-collection-fixture.mjs";
-import { compoundReviewedIr } from "./helpers/compound-fixture.mjs";
-import { listReviewedIr } from "./helpers/list-fixture.mjs";
-import { nativeAliasReviewedIr } from "./helpers/native-alias-fixture.mjs";
-import { nativeVariantReviewedIr } from "./helpers/native-variant-fixture.mjs";
+import { jvmCollectionConsumer } from "./helpers/jvm-collection-fixture.mjs";
 import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 import { beforeOwnedJvmGenerated } from "./helpers/owned-jvm-source-history.mjs";
 import { moduleAtProducerWithSourceReads } from "./helpers/producer-module.mjs";
@@ -44,6 +39,13 @@ const assertRecordedConsumerSources = (record, sources) => {
  */
 const assertRecordedConsumer = (run, consumer) =>
 	assert.equal(run.jvm.consumerSourceSha256, sha256(consumer(run.profile)), `${run.path}/${run.profile}`);
+
+/**
+ * Load one of the producer's own helpers, whose fixture and documentation reads also resolve at the producer.
+ *
+ * @param path - Repository-relative helper module.
+ */
+const atJavaCollectionProducer = path => moduleAtProducerWithSourceReads(javaCollectionProducer, path);
 const observations = run => ({ checks: run.checks
 	, calls: run.calls
 	, rejected: run.rejected
@@ -55,11 +57,12 @@ test("Java collections retain original archives, typed callers and source-free d
 	const record = await receipt();
 	// The consumer digest names the producer helper's transform of the producer fixture. Rebuild it there,
 	// bound to the record's own source digests, so later fixture and helper changes never reach back.
+	// Every other archived value below is also judged with the producer's helpers, fixtures and documentation.
 	const producerSources = Object.fromEntries(javaCollectionConsumerSources.map(path => [path, bytesAtProducer(javaCollectionProducer, path)]));
 	assertRecordedConsumerSources(record, producerSources);
-	const { jvmCollectionConsumer: producerConsumer } = await moduleAtProducerWithSourceReads(
-		javaCollectionProducer, "tests/helpers/jvm-collection-fixture.mjs"
-	);
+	const producerFixture = await atJavaCollectionProducer("tests/helpers/jvm-collection-fixture.mjs");
+	const { collectionReviewedIr, collectionSignatures } = await atJavaCollectionProducer("tests/helpers/collection-fixture.mjs");
+	const producerConsumer = producerFixture.jvmCollectionConsumer;
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.profiles, ["java"]);
 	assert.equal(record.jdk, "22.0.2"); assert.equal(record.hostGlibc, "2.36"); assert.equal(record.packageGlibcFloor, "2.36");
@@ -73,7 +76,7 @@ test("Java collections retain original archives, typed callers and source-free d
 	});
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, profiles: ["java"], reports })));
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
-	const example = jvmCollectionDocumentation();
+	const example = producerFixture.jvmCollectionDocumentation();
 	for(const run of record.executions)
 	{
 		assert.equal(run.profile, "java"); assert.equal(run.checks, 158171); assert.equal(run.calls, 4435); assert.equal(run.rejected, 30);
@@ -85,7 +88,7 @@ test("Java collections retain original archives, typed callers and source-free d
 			assert.equal(jvm[key], true, key);
 		assert.deepEqual(jvm.runtimeModules, ["java.base@22.0.2"]);
 		assertRecordedConsumer(run, producerConsumer);
-		assert.equal(jvm.signaturesSha256, sha256(jvmCollectionPublicChecks("java")));
+		assert.equal(jvm.signaturesSha256, sha256(producerFixture.jvmCollectionPublicChecks("java")));
 		assert.equal(jvm.deployment["package.jar"].sha256, jvm.archiveSha256);
 		assert.ok(jvm.deployment["classes/Example.class"]);
 		assert.ok(Object.keys(jvm.dependencies.files).length > 100);
@@ -101,7 +104,7 @@ test("Java collections retain original archives, typed callers and source-free d
 			assert.equal(run.installedFiles[`META-INF/lean-bridge/native/linux-x64/${name}`].sha256, hash);
 		assert.deepEqual(run.observation.nativeLibraries, jvm.nativeLibraries);
 		assert.deepEqual(run.observation.errors, []);
-		const expected = jvmCollectionRejections("java"), rejected = run.observation.results.filter(result => result.status === "rejected-at-compile-time");
+		const expected = producerFixture.jvmCollectionRejections("java"), rejected = run.observation.results.filter(result => result.status === "rejected-at-compile-time");
 		assert.equal(rejected.length, 8); assert.deepEqual(rejected.map(result => result.id), expected.map(result => result.id));
 		for(const [index, result] of rejected.entries())
 		{
@@ -177,8 +180,11 @@ test("JVM conversion and equality evidence distinguishes host checks from instal
 		assert.equal(preflight.compiledLean, false); assert.equal(preflight.installedPackage, false);
 	}
 	assert.deepEqual(conversion.observation, { checks: 984, nativeCalls: 0, rejected: 562 });
-	assert.equal(conversion.probeSourceSha256, sha256(await readFile("tests/fixtures/collection-consumers/jvm-conversions.java")));
-	// Generated sources are rebuilt with the producer's generator; later generator changes never reach back.
+	assert.equal(conversion.probeSourceSha256, sha256(bytesAtProducer(javaCollectionProducer, "tests/fixtures/collection-consumers/jvm-conversions.java")));
+	// Generated sources are rebuilt with the producer's generator and fixtures; later changes never reach back.
+	const [{ collectionReviewedIr }, { compoundReviewedIr }, { listReviewedIr }, { nativeAliasReviewedIr }, { nativeVariantReviewedIr }] = await Promise.all(
+		["collection-fixture", "compound-fixture", "list-fixture", "native-alias-fixture", "native-variant-fixture"].map(name => atJavaCollectionProducer(`tests/helpers/${name}.mjs`))
+	);
 	const { generateCopiedJvmPackage } = await moduleAtProducerWithSourceReads(
 		javaCollectionProducer, "src/backends/jvm/copied-values.mjs"
 	);
@@ -190,7 +196,7 @@ test("JVM conversion and equality evidence distinguishes host checks from instal
 		.map(fixture => javaSources(fixture, equality.generatedSourceHashes))));
 	for(const [profile, extension, checks] of [["java", "java", 32069], ["kotlin", "kt", 15642]])
 	{
-		assert.equal(equality.consumerHashes[profile], sha256(await readFile(`tests/fixtures/collection-consumers/jvm-equality.${extension}`)));
+		assert.equal(equality.consumerHashes[profile], sha256(bytesAtProducer(javaCollectionProducer, `tests/fixtures/collection-consumers/jvm-equality.${extension}`)));
 		assert.deepEqual(equality.observations[profile], { checks, generatedProfiles: 5, fixedArrayDepth: 24, nativeCalls: 0 });
 	}
 	assert.deepEqual(regressions.map(run => run.name), ["compounds", "lists", "aliases", "variants", "callables", "native"]);

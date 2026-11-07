@@ -8,8 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
-import { cVariantReviewedIr, cVariantSignatures } from "./helpers/c-variant-fixture.mjs";
-import { jvmVariantConsumer, jvmVariantRejections } from "./helpers/jvm-variant-fixture.mjs";
+import { jvmVariantConsumer } from "./helpers/jvm-variant-fixture.mjs";
 import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 import { moduleAtProducerWithSourceReads } from "./helpers/producer-module.mjs";
 import { bytesAtProducer } from "./helpers/producer-source.mjs";
@@ -47,11 +46,12 @@ test("Maven variant evidence binds both languages to original archives and indep
 	const record = await readJvmHistoricalEvidence("jvm-variants-20260921");
 	// Each consumer digest names the producer's fixture as its helper read it. Rebuild it there, bound to
 	// the record's own source digests, so later fixture and helper changes never reach back.
+	// Every other archived value below is also judged with the producer's helpers and fixtures.
 	const producerSources = Object.fromEntries(jvmVariantConsumerSources.map(path => [path, bytesAtProducer(jvmVariantProducer, path)]));
 	assertRecordedConsumerSources(record, producerSources);
-	const { jvmVariantConsumer: producerConsumer } = await moduleAtProducerWithSourceReads(
-		jvmVariantProducer, "tests/helpers/jvm-variant-fixture.mjs"
-	);
+	const producerFixture = await moduleAtProducerWithSourceReads(jvmVariantProducer, "tests/helpers/jvm-variant-fixture.mjs");
+	const { cVariantReviewedIr, cVariantSignatures } = await moduleAtProducerWithSourceReads(jvmVariantProducer, "tests/helpers/c-variant-fixture.mjs");
+	const producerConsumer = producerFixture.jvmVariantConsumer;
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64);
 	assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
 	assert.deepEqual(record.profiles, ["java", "kotlin"]);
@@ -73,7 +73,7 @@ test("Maven variant evidence binds both languages to original archives and indep
 		assert.equal(jvm.deployment["package.jar"].sha256, jvm.archiveSha256);
 		assert.ok(jvm.dependencies.fileCount > 0);
 		for(const key of ["runtimeFilesSha256", "mavenFilesSha256", "compiledProjectionSha256", "signaturesSha256", "packageReceiptSha256"]) assert.match(jvm[key], /^[a-f0-9]{64}$/);
-		const expected = jvmVariantRejections(run.profile);
+		const expected = producerFixture.jvmVariantRejections(run.profile);
 		assert.equal(expected.length, 10); assert.deepEqual(run.compilerRejections.map(result => result.id), expected.map(result => result.id));
 		for(const [index, result] of run.compilerRejections.entries())
 		{
