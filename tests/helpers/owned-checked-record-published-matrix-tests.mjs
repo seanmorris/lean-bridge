@@ -5,25 +5,20 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { createReadStream } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import test from "node:test";
-import { typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { renderReferenceDocuments } from "../../scripts/generate-reference-docs.mjs";
-import { ownedCheckedRecordMatrixReference } from "../../scripts/generate-type-docs.mjs";
+import { renderTypeDocuments } from "../../scripts/generate-type-docs.mjs";
 import { ownedCheckedRecordDocumentationPaths, renderOwnedCheckedRecordDocumentation } from "./owned-checked-record-documentation.mjs";
 import { ownedCheckedRecordHostedRoutes } from "./owned-checked-record-hosted-contracts.mjs";
 import { assertOwnedCheckedRecordMatrixIndexes } from "./owned-checked-record-hosted-matrix.mjs";
-import {
-	ownedCheckedRecordPromotionArchiveReferences, ownedCheckedRecordPromotionLimit
-	, ownedCheckedRecordPromotionPath, ownedCheckedRecordPromotionProfiles
-	, ownedCheckedRecordPromotionSelectionPath, renderOwnedCheckedRecordPromotion
-} from "./owned-checked-record-promotion.mjs";
 import { gitSourceBytes } from "./source-history-stream.mjs";
-import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import { bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import { moduleAtProducerWithSourceReads } from "./producer-module.mjs";
 import { readPromotionInventory } from "./type-surface-promotion-io.mjs";
-import { ownedCheckedRecordMatrixPublicationImplementation } from "./owned-checked-record-matrix-publication-source-history.mjs";
+import { ownedCheckedAlignedPublicationImplementation } from "./owned-checked-record-aligned-publication-source-history.mjs";
 import { ownedSubtypeMatrixPublicationImplementation } from "./owned-subtype-matrix-publication-source-history.mjs";
 
 const predecessor = "a9cad3b18a244d7e74918e6e8964455e073e2453";
@@ -37,39 +32,62 @@ const hostTypes = {
 	, "callback-result": "checked host Claim reply or proof-free returned Lean closure result with the Ticket owner retained"
 };
 let loaded;
+/**
+ * Load the functions that rendered and checked a publication at that revision.
+ *
+ * @param revision - Exact publication commit.
+ */
+const publicationProducer = async revision => {
+	const [surface, typeDocs, documentation, promotion] = await Promise.all([
+		"src/adoption/type-surface.mjs"
+		, "scripts/generate-type-docs.mjs"
+		, "tests/helpers/owned-checked-record-documentation.mjs"
+		, "tests/helpers/owned-checked-record-promotion.mjs"
+	].map(path => moduleAtProducerWithSourceReads(revision, path)));
+	return {
+		typeSurfaceCells: surface.typeSurfaceCells
+		, matrixReference: typeDocs.ownedCheckedRecordMatrixReference
+		, renderTypeDocuments: typeDocs.renderTypeDocuments
+		, documentationPaths: documentation.ownedCheckedRecordDocumentationPaths
+		, renderDocumentation: documentation.renderOwnedCheckedRecordDocumentation
+		, promotion
+	};
+};
 const current = () => loaded ??= (async () => {
-	const contracts = typeSurfaceContractsAtProducer(
-		ownedCheckedRecordMatrixPublicationImplementation
-	);
+	// The aligned selection was published with the aligned inventory (60eb342). The
+	// earlier 098df87 publication still names the superseded 20261024 native capture.
+	const milestone = ownedCheckedAlignedPublicationImplementation;
+	const contracts = typeSurfaceContractsAtProducer(milestone);
+	const producer = await publicationProducer(milestone);
+	const { promotion } = producer;
 	const { document } = await readPromotionInventory(gitSourceBytes(
-		ownedCheckedRecordMatrixPublicationImplementation, "docs/type-surface.v1.json"
+		milestone, "docs/type-surface.v1.json"
 	), contracts);
 	const { document: before } = await readPromotionInventory(gitSourceBytes(predecessor, "docs/type-surface.v1.json"), contracts);
 	// Owned checked-record changes still compare with their original baseline.
 	// Other observations must preserve the separately authenticated Subtype publication.
 	const { document: independent } = await readPromotionInventory(gitSourceBytes(
 		ownedSubtypeMatrixPublicationImplementation, "docs/type-surface.v1.json"), contracts);
-	const selected = await readFile(ownedCheckedRecordPromotionSelectionPath);
+	const selected = bytesAtProducer(milestone, promotion.ownedCheckedRecordPromotionSelectionPath);
 	assert.equal(sha256(selected), selectionSha256);
 	const selection = JSON.parse(selected); assert.equal(selected.toString(), canonicalJson(selection));
-	const bytes = [];
-	for(const entry of selection.archives) bytes.push(await readFile(entry.index.path));
+	const bytes = selection.archives.map(entry => bytesAtProducer(milestone, entry.index.path));
 	const indexes = assertOwnedCheckedRecordMatrixIndexes(selection, bytes);
 	const references = indexes.map((index, number) => ({
 		lane: index.lane
-		, profiles: [...ownedCheckedRecordPromotionProfiles[index.lane]]
+		, profiles: [...promotion.ownedCheckedRecordPromotionProfiles[index.lane]]
 		, routes: [...ownedCheckedRecordHostedRoutes]
 		, id: `owned-checked-record-${index.lane}-hosted-installed`
 		, kind: "installed", revision: index.producerCommit
-		, command: `node scripts/check-owned-checked-record-matrix.mjs --selection ${ownedCheckedRecordPromotionSelectionPath}`
+		, command: `node scripts/check-owned-checked-record-matrix.mjs --selection ${promotion.ownedCheckedRecordPromotionSelectionPath}`
 		, scope: `GitHub Actions run ${index.hostedRun.runId}, job ${index.hostedRun.job.id}, artifact ${index.hostedRun.artifact.id}: complete committed ${index.lane} archive and four installed package routes independently replayed. ${index.limitations.join(" ")}`
-		, ...ownedCheckedRecordPromotionArchiveReferences(index
+		, ...promotion.ownedCheckedRecordPromotionArchiveReferences(index
 			, dirname(selection.archives[number].index.path), bytes[number])
 	}));
-	return { document, before, independent, contracts, references };
+	return { document, before, independent, contracts, references, producer };
 })();
 
-const assertPublished = (document, before, contracts, references, independent) => {
+const assertPublished = (document, before, contracts, references, independent, producer) => {
 	assert.equal(references.length, 11);
 	assert.deepEqual(document.evidence.filter(entry => ownedId(entry.id)).map(entry => entry.id), references.map(entry => entry.id));
 	for(const reference of references)
@@ -88,7 +106,7 @@ const assertPublished = (document, before, contracts, references, independent) =
 					assert.ok(!targets.has(id)); targets.set(id, reference.id);
 				}
 	assert.equal(targets.size, 170);
-	const cells = typeSurfaceCells(document, contracts, cell => targets.has(cell.id));
+	const cells = producer.typeSurfaceCells(document, contracts, cell => targets.has(cell.id));
 	assert.equal(cells.length, 170);
 	for(const cell of cells)
 		for(const stage of Object.values(cell.stages))
@@ -109,7 +127,7 @@ const assertPublished = (document, before, contracts, references, independent) =
 		changed++; count += observation.profiles.length * observation.positions.length;
 		for(const field of ["id", "profiles", "positions", "path", "shapes"]) assert.deepEqual(observation[field], prior[field]);
 		assert.deepEqual(observation.shapes, ["checked-record"]);
-		assert.deepEqual(observation.limitations, [...prior.limitations, ownedCheckedRecordPromotionLimit]);
+		assert.deepEqual(observation.limitations, [...prior.limitations, producer.promotion.ownedCheckedRecordPromotionLimit]);
 		assert.ok(observation.scope.startsWith(prior.scope + " "));
 		assert.ok(observation.conversionNotes["checked-record"].startsWith(prior.conversionNotes["checked-record"] + " "));
 		for(const position of observation.positions)
@@ -123,26 +141,26 @@ const assertPublished = (document, before, contracts, references, independent) =
 		}
 	}
 	assert.equal(changed, 114); assert.equal(count, 170);
-	assert.match(ownedCheckedRecordMatrixReference(document), /exactly 170 cells/u);
+	assert.match(producer.matrixReference(document), /exactly 170 cells/u);
 	return true;
 };
 
 test("published owned checked-record support binds eleven captures to exactly 170 cells", async () => {
-	const { document, before, independent, contracts, references } = await current();
-	assert.equal(assertPublished(document, before, contracts, references, independent), true);
+	const { document, before, independent, contracts, references, producer } = await current();
+	assert.equal(assertPublished(document, before, contracts, references, independent, producer), true);
 });
 
 test("published owned checked-record support rejects missing, substituted and widened claims", async () => {
-	const { document, before, independent, contracts, references } = await current();
+	const { document, before, independent, contracts, references, producer } = await current();
 	const first = references[0].id;
 	for(const change of [
 		entry => ({ ...entry, revision: "0".repeat(40) })
 		, entry => ({ ...entry, files: [{ ...entry.files[0], sha256: "0".repeat(64) }] })
 	]) {
 		const evidence = document.evidence.map(entry => entry.id === first ? change(entry) : entry);
-		assert.throws(() => assertPublished({ ...document, evidence }, before, contracts, references, independent));
+		assert.throws(() => assertPublished({ ...document, evidence }, before, contracts, references, independent, producer));
 	}
-	assert.throws(() => assertPublished({ ...document, evidence: document.evidence.filter(entry => entry.id !== first) }, before, contracts, references, independent));
+	assert.throws(() => assertPublished({ ...document, evidence: document.evidence.filter(entry => entry.id !== first) }, before, contracts, references, independent, producer));
 	const selected = document.observations.find(entry => entry.id === "checked-record-c-ordinary-source-parameter"); assert.ok(selected);
 	for(const mutate of [
 		entry => { entry.profiles.push("php-wasm"); }
@@ -154,12 +172,12 @@ test("published owned checked-record support rejects missing, substituted and wi
 	]) {
 		const altered = structuredClone(selected); mutate(altered);
 		const observations = document.observations.map(entry => entry === selected ? altered : entry);
-		assert.throws(() => assertPublished({ ...document, observations }, before, contracts, references, independent));
+		assert.throws(() => assertPublished({ ...document, observations }, before, contracts, references, independent, producer));
 	}
 });
 
 test("published owned checked-record support preserves independently accepted and unrelated observations", async () => {
-	const { document, before, independent, contracts, references } = await current();
+	const { document, before, independent, contracts, references, producer } = await current();
 	const subtypeId = id => /^owned-subtype-[a-z-]+-hosted-installed$/u.test(id);
 	const selected = independent.observations.filter(observation =>
 		Object.values(observation.stages).some(stage => stage.evidence.some(subtypeId)));
@@ -179,19 +197,23 @@ test("published owned checked-record support preserves independently accepted an
 			const altered = structuredClone(original); mutate(altered);
 			const observations = document.observations.map(entry => entry.id === id ? altered : entry);
 			assert.throws(() => assertPublished({ ...document, observations }
-				, before, contracts, references, independent), assert.AssertionError, id);
+				, before, contracts, references, independent, producer), assert.AssertionError, id);
 		}
 	}
 });
 
-test("published owned checked-record guides and generated references match the current inventory", async () => {
-	const { document, contracts, references } = await current();
-	const generated = await renderReferenceDocuments({ root: process.cwd(), inventory: { document, ...contracts } });
-	for(const [path, expected] of Object.entries(generated)) assert.equal(sha256(await readFile(path)), sha256(expected), path);
-	const sources = {}, originals = {};
-	for(const [name, path] of Object.entries(ownedCheckedRecordDocumentationPaths))
+/**
+ * Require each guide's owned checked-record section to be exactly the rendered one.
+ *
+ * @param originals - Complete guide text by documentation name.
+ * @param paths - Guide paths by documentation name.
+ * @param render - Owned checked-record documentation renderer of the same revision.
+ */
+const assertOwnedCheckedRecordGuides = (originals, paths, render) => {
+	const sources = {};
+	for(const [name, path] of Object.entries(paths))
 	{
-		const source = await readFile(path, "utf8"); originals[name] = source;
+		const source = originals[name];
 		const heading = "## Owned checked records\n"; assert.equal(source.split(heading).length, 2, path);
 		const marker = name === "existingPackage" ? "## Choose downstream languages\n"
 			: name === "exportDecisions" ? "## Check each consumer representation\n" : "## Start from a raw Lean package\n";
@@ -202,7 +224,42 @@ test("published owned checked-record guides and generated references match the c
 			, "owned and unarchived combinations remain separate |"
 		);
 	}
-	const expected = renderOwnedCheckedRecordDocumentation(sources);
+	const expected = render(sources);
 	for(const name of Object.keys(originals)) assert.equal(sha256(originals[name]), sha256(expected[name]), name);
-	assert.equal(await readFile(ownedCheckedRecordPromotionPath, "utf8"), renderOwnedCheckedRecordPromotion(references));
+};
+
+test("published owned checked-record guides and generated references match their aligned publication", async () => {
+	const { document, contracts, references, producer } = await current();
+	const milestone = ownedCheckedAlignedPublicationImplementation;
+	// The publication's renderer, inventory and guide bytes all come from its own revision.
+	const { documents, reference } = await producer.renderTypeDocuments({
+		root: process.cwd(), inventory: { document, ...contracts } });
+	assert.ok(Object.keys(documents).length > 0);
+	for(const [path, expected] of Object.entries(documents))
+		assert.equal(sha256(bytesAtProducer(milestone, path)), sha256(expected), path);
+	assert.equal(sourceAtProducer(milestone, "docs/reference/types.md").split(reference).length, 2);
+	assertOwnedCheckedRecordGuides(Object.fromEntries(Object.entries(producer.documentationPaths)
+		.map(([name, path]) => [name, sourceAtProducer(milestone, path)]))
+	, producer.documentationPaths, producer.renderDocumentation);
+	assert.equal(sourceAtProducer(milestone, producer.promotion.ownedCheckedRecordPromotionPath)
+		, producer.promotion.renderOwnedCheckedRecordPromotion(references));
+});
+
+test("current owned checked-record guides and generated references match the current inventory", async () => {
+	const contracts = {
+		irSchema: JSON.parse(await readFile("schema/binding-ir.schema.json", "utf8"))
+		, consumers: JSON.parse(await readFile("docs/consumer-support.v1.json", "utf8"))
+	};
+	const { document } = await readPromotionInventory(createReadStream("docs/type-surface.v1.json"), contracts);
+	const { documents, reference } = await renderTypeDocuments({
+		root: process.cwd(), inventory: { document, ...contracts } });
+	assert.ok(Object.keys(documents).length > 0);
+	for(const [path, expected] of Object.entries(documents))
+		assert.equal(sha256(await readFile(path)), sha256(expected), path);
+	assert.equal((await readFile("docs/reference/types.md", "utf8")).split(reference).length, 2);
+	const originals = {};
+	for(const [name, path] of Object.entries(ownedCheckedRecordDocumentationPaths))
+		originals[name] = await readFile(path, "utf8");
+	assertOwnedCheckedRecordGuides(originals, ownedCheckedRecordDocumentationPaths
+		, renderOwnedCheckedRecordDocumentation);
 });
