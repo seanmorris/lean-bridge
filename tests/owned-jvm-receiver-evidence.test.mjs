@@ -20,6 +20,46 @@ import { ownedJvmReceiverPath, ownedJvmReceiverBaseline, ownedJvmReceiverPreviou
 
 const read = async () => JSON.parse(await readFile(ownedJvmReceiverPath, "utf8"));
 
+// The receiver record authenticates the sources its .NET predecessor recorded plus its
+// own additions. Its milestone inventory also pins 854 files (1,627 occurrences) that
+// neither record ever owned; that set is closed, and their pins must stay unchanged.
+const ownedJvmReceiverUnownedInventory = Object.freeze({
+	paths: 854
+	, sha256: "0de30b1254976b9a588bcff7d677802ee09c4368685de494f1996843ff1c7323"
+});
+
+/**
+ * Restore the record's authenticated pins and return the inventory paths it does not own.
+ *
+ * @param prior - Reconstructed predecessor inventory, updated in place.
+ * @param sources - Record-owned source digests.
+ */
+const restoreOwnedJvmReceiverPins = (prior, sources) => {
+	const unowned = new Set();
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		const digest = sources[file.path];
+		if(digest === undefined)
+		{
+			unowned.add(file.path);
+			continue;
+		}
+		assert.equal(typeof digest, "string", file.path);
+		file.sha256 = digest;
+	}
+	return [...unowned].sort();
+};
+
+/**
+ * Require exactly the closed set of inventory paths that neither receiver record owns.
+ *
+ * @param paths - Sorted unowned inventory paths.
+ */
+const assertOwnedJvmReceiverUnownedInventory = paths => {
+	assert.equal(paths.length, ownedJvmReceiverUnownedInventory.paths);
+	assert.equal(sha256(paths.join("\n")), ownedJvmReceiverUnownedInventory.sha256);
+};
+
 test("JVM receiver evidence binds exact sources and preserves historical support cells", async () => {
 	const record = await read();
 	assert.equal(record.kind, "owned-jvm-receivers"); assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
@@ -50,16 +90,23 @@ test("JVM receiver evidence binds exact sources and preserves historical support
 	const current = (await bytesAtFinHistoryRecordSource(
 		ownedJvmReceiverPath, path)).toString();
 	const prior = JSON.parse(beforeOwnedJvmReceiver(path, current, previous.sources[path]));
-	for(const evidence of prior.evidence) for(const file of evidence.files)
-	{
-		const digest = record.sources[file.path];
-		if(digest !== undefined)
-		{
-			assert.equal(typeof digest, "string", file.path);
-			file.sha256 = digest;
-		}
-	}
+	const pristine = structuredClone(prior);
+	const unowned = restoreOwnedJvmReceiverPins(prior, record.sources);
+	assertOwnedJvmReceiverUnownedInventory(unowned);
+	assert.ok(unowned.every(item => !Object.hasOwn(previous.sources, item)));
+	// Unowned pins are not rewritten, so this also proves every one of them is unchanged.
 	assert.deepEqual(JSON.parse(current), prior);
+	// Any other unowned inventory file, or an owned source dropped from the record, fails.
+	const added = structuredClone(pristine);
+	added.evidence[0].files.push({ path: "docs/evidence/unowned-probe.json", sha256: "0".repeat(64) });
+	assert.throws(() => assertOwnedJvmReceiverUnownedInventory(
+		restoreOwnedJvmReceiverPins(added, record.sources)), assert.AssertionError);
+	const owned = Object.keys(record.sources).find(item => prior.evidence.some(
+		evidence => evidence.files.some(file => file.path === item)));
+	assert.ok(owned);
+	const dropped = { ...record.sources }; delete dropped[owned];
+	assert.throws(() => assertOwnedJvmReceiverUnownedInventory(
+		restoreOwnedJvmReceiverPins(structuredClone(pristine), dropped)), assert.AssertionError);
 	for(const name of ["core", "plain", "unanchored", "packaging", "resource-packaging", "evidence"])
 		assert.equal(classifyRepositoryTest(`tests/owned-jvm-receiver-${name}.test.mjs`), "contract");
 });
