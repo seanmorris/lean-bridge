@@ -1,0 +1,194 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "compareSeconds": 6198,
+    "minutesFromJobStartToFinalStep": 122,
+    "partialFinalVerificationSeconds": 3514,
+    "refreshedPins": 13,
+    "runtimeSemanticChanges": 0,
+    "setupSeconds": 1100,
+    "timeoutMinutes": 240
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "candidate": "d6a4044154d4e998d31b7ad24ad245d5e5b93347",
+    "compareCompletedAt": "2026-11-07T08:29:04Z",
+    "compareStartedAt": "2026-11-07T06:45:46Z",
+    "finalVerificationCancelledAt": "2026-11-07T09:27:38Z",
+    "finalVerificationStartedAt": "2026-11-07T08:29:04Z",
+    "job": 128323854103,
+    "jobCancelledAt": "2026-11-07T09:27:45Z",
+    "jobStartedAt": "2026-11-07T06:27:26Z",
+    "run": 42344727501
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-perl-xs-budget-timing-clarification-source-history.mjs",
+      "sha256": "a982f17f9e84b590be8a3a73c07806af4acb1f856e7ad4616069232c1283864d"
+    },
+    {
+      "path": "tests/helpers/perl-xs-budget-timing-clarification-source-history-tests.mjs",
+      "sha256": "84cf70489f1c01d5da38f8b0f8f17abb800a084737b317fe8f1c1446a8a9a912"
+    },
+    {
+      "path": "tests/helpers/perl-xs-budget-timing-clarification-source-history.mjs",
+      "sha256": "8776a58a3dc4d739c27d3276fe2213bee00e9ab50d4a5dabd54f4d0d962f871d"
+    }
+  ],
+  "implementationCommit": "3e478ac826c9e532cc7de01cc279d914159f116b",
+  "integrationCommit": "bc3feaa570ef889d0732d47e6136daf46292c275",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a25731abc9b8b16ec54919908440848520cb5b409281227d481f2ecc7145643a",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 55493
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 266699
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 307962
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 408043
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 459122
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 512962
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 602163
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 814213
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 823835
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 844831
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 1125842
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 1285127
+        },
+        {
+          "current": "          \"sha256\": \"bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048\"\n",
+          "previous": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "start": 1324928
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "12cf51db661e441a57fde9b8237444e670bfd6b8f85368282893d3e02eba4bbd"
+    },
+    {
+      "currentSha256": "6308a5b723cfcb00d0ad3a8ba301ac60da4acae6be159a23ce74326bf8c9e99b",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-xs-budget-timing-clarification-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 183
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "668ecc1b8fd127c253c489518dad64710be9062e0a2d2de0ae61f9ad0e855e18"
+    },
+    {
+      "currentSha256": "dc3195c11a19fc7e46ddbd2caddf34be16afa88a281d699f3693e5d2a2d07bad",
+      "edits": [
+        {
+          "current": "import {\n\tbeforePerlXsBudgetTimingClarificationSource\n\t, perlXsBudgetTimingClarificationNormalizationPaths\n} from \"./perl-xs-budget-timing-clarification-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...perlXsBudgetTimingClarificationNormalizationPaths\n\t, ...perlXsFinalBudgetNormalizationPaths\n",
+          "previous": "\t...perlXsFinalBudgetNormalizationPaths\n",
+          "start": 240728
+        },
+        {
+          "current": "\tlet stage = beforePerlXsBudgetTimingClarificationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlXsFinalBudgetSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforePerlXsFinalBudgetSource(path, text, expected);\n",
+          "start": 302804
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e11671028d0de8cb1aef502ee476a8be8e22d5dadef05896c2393ca2471712cd"
+    }
+  ],
+  "milestone": "perl-xs-budget-timing-clarification-v1",
+  "predecessorCommit": "f85aa8bd4337c62559bfb1ae0d4c720cce866aa8",
+  "refreshed": {
+    "count": 13,
+    "current": "bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048",
+    "path": ".github/workflows/perl-consumer.yml",
+    "previous": "3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa"
+  },
+  "repair": "State the measured boundary precisely as 122 minutes after job start. Keep the 240-minute budget, commands, steps, matrix, artifacts, support observations and runtime semantics unchanged.",
+  "rootCause": "The first budget repair described 122 minutes as Compare/Verify work. The hosted timestamps show 18 minutes 20 seconds of setup, 103 minutes 18 seconds in Compare, and final verification beginning 121 minutes 38 seconds after job start. The timeout diagnosis and 240-minute repair were correct, but the explanatory label was imprecise.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "bf209445a99582425f5df222dc202a967ffc0452ddbfa3e4c3156e3b3041b048",
+      "edits": [
+        {
+          "current": "    # complete threaded 5.36.3 lane reached final archive verification\n    # 122 minutes after job start and exhausted the 180-minute job cap.\n",
+          "previous": "    # complete threaded 5.36.3 lane reached final archive verification after\n    # 122 minutes of Compare/Verify work and exhausted the 180-minute job cap.\n",
+          "start": 10145
+        }
+      ],
+      "path": ".github/workflows/perl-consumer.yml",
+      "previousSha256": "3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa"
+    }
+  ],
+  "validation": {
+    "completePinPreflight": {
+      "affectedPaths": 1,
+      "liveFiles": 2661,
+      "refreshedPins": 13
+    },
+    "focused": {
+      "cancelled": 0,
+      "fail": 0,
+      "pass": 5,
+      "skipped": 0,
+      "tests": 5
+    }
+  }
+}

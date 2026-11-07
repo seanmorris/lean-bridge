@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/perl-refinement-result-projection-repair-source-history-tests.mjs";
+import "./helpers/perl-xs-budget-timing-clarification-source-history-tests.mjs";
 import "./helpers/perl-xs-final-budget-source-history-tests.mjs";
 import "./helpers/reviewed-subtype-live-expectation-source-history-tests.mjs";
 import "./helpers/fin-history-rolling-repair-source-history-tests.mjs";
