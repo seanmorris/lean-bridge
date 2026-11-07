@@ -33,7 +33,7 @@ export const finContainerEntryCiSelections = Object.freeze([
 	, { job: "managed-consumers", profiles: ["dotnet"], counted: ["dotnet"], step: "type_corpus_dotnet", timeout: "240", gdb: true }
 	, { job: "managed-consumers", profiles: ["java", "kotlin"], counted: ["java", "kotlin"], step: "type_corpus_jvm", timeout: "240", gdb: true }
 	, { job: "managed-consumers", profiles: ["ruby"], counted: ["ruby"], step: "type_corpus_ruby", timeout: "240", gdb: true }
-	, { job: "wasi-consumer", profiles: ["wit-wasi"], counted: ["wit-wasi"], step: "ordinary_wit", timeout: "240", gdb: false }
+	, { job: "wasi-consumer", profiles: ["wit-wasi"], counted: ["wit-wasi"], step: "ordinary_wit", timeout: "300", gdb: false }
 ].map(selection => Object.freeze({ ...selection, report: selection.profiles.join("-") })));
 // Container selections whose dispatch stays outside these counters: C counts its own package, Python and Rust
 // count inside their own host processes.

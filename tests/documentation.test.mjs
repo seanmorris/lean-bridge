@@ -86,7 +86,7 @@ const expectedNixJobs = [
 	, "php-wasm-consumers", "php-wasm-corpus", "php-multi-profile"
 	, "native-c-family-values", "native-consumers", "managed-consumers"
 	, "owned-jvm-values", "host-null-systems", "owned-wit-receivers"
-	, "wasi-consumer", "docker-engine"
+	, "wasi-consumer", "docker-engine", "wasi-qualifications"
 ];
 const diskBudgetedNixJobs = expectedNixJobs.filter(id => id !== "nix-cache");
 const callbackDiskCleanupName
@@ -901,9 +901,12 @@ test("consumer CI history preserves every consumer and pinned build path", async
   const nativeJob = workflow.split("  native-consumers:\n")[1].split("\n  managed-consumers:\n")[0];
   assert.match(nativeJob, /^ {4}timeout-minutes: \$\{\{ matrix\.profile == 'c-family' && 360 \|\| 240 \}\}$/m);
   const wasiJob = workflow.split("  wasi-consumer:\n")[1].split("\n  docker-engine:\n")[0];
-  assert.match(wasiJob, /^ {4}timeout-minutes: 240$/m);
+  assert.match(wasiJob, /^ {4}timeout-minutes: 300$/m);
   assert.match(wasiJob, /npm run test:owned-wit-transfers/);
   assert.match(wasiJob, /npm run test:owned-wit-borrows/);
+  const wasiQualifications = workflow.match(/^ {2}wasi-qualifications:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
+  assert.ok(wasiQualifications);
+  assert.match(wasiQualifications, /^ {4}timeout-minutes: 330$/m);
   const phpJob = workflow.match(/^ {2}php-consumers:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
   assert.ok(phpJob);
   assert.match(phpJob, /^ {4}timeout-minutes: 240$/m);

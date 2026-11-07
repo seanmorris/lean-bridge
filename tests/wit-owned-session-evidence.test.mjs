@@ -125,8 +125,8 @@ test("owned WIT public session CI rejects hidden failures and disabled or missin
 		, ["          path: build/wit-owned-session.log\n", ""]
 		, ["      - name: Preserve owned WIT public session execution\n        if: always()", "      - name: Preserve owned WIT public session execution\n        if: false"]
 		, ["steps.owned_wit_session.outcome != 'success'", "false"]
-		, ["      - perl-consumer\n      - wasi-consumer\n      - owned-wit-receivers\n"
-			, "      - perl-consumer\n      - owned-wit-receivers\n"]
+		, ["      - perl-consumer\n      - wasi-consumer\n      - wasi-consumer-finalize\n      - owned-wit-receivers\n"
+			, "      - perl-consumer\n      - wasi-consumer-finalize\n      - owned-wit-receivers\n"]
 	]) {
 		const changed = source.replace(before, after); assert.notEqual(changed, source);
 		assert.throws(() => assertOwnedWitSessionCi(changed), before);

@@ -15,7 +15,9 @@ import { assertNominalSubtypeJvmWorkflow } from "./nominal-subtype-jvm-ci-workfl
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 const path = ".github/workflows/consumer-matrix.yml";
-const bodyOf = source => /^ {2}wasi-consumer:\n[\s\S]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu.exec(source)[0];
+const bodyOf = (source, job) => new RegExp(
+	`^ {2}${job}:\\n[\\s\\S]*?(?=^ {2}[a-z][a-z0-9-]*:\\n)`, "mu"
+).exec(source)[0];
 
 test("nominal WIT CI preserves every previous job and enforces all four component selections", async () => {
 	const source = await readFile(path, "utf8"); assertNominalSubtypeWitWorkflow(source);
@@ -25,7 +27,8 @@ test("nominal WIT CI preserves every previous job and enforces all four componen
 	);
 	assert.equal(disableNominalSubtypeWitWorkflow(checkpoint), previous);
 	assert.equal(enableNominalSubtypeWitWorkflow(previous), checkpoint);
-	assert.equal(checkpoint.replace(bodyOf(checkpoint), ""), previous.replace(bodyOf(previous), ""));
+	assert.equal(checkpoint.replace(bodyOf(checkpoint, "wasi-consumer"), "")
+		, previous.replace(bodyOf(previous, "wasi-consumer"), ""));
 	assertNominalSubtypePhpWorkflow(source); assertNominalSubtypeJvmWorkflow(source);
 	assertStructuralSubtypeWorkflow(source, "consumer-matrix.yml");
 });
@@ -45,10 +48,11 @@ test("nominal WIT CI refuses dropped gates, partial uploads and weakened bootstr
 		, [block, block.replace('"$PWD/build/wasmtime-c-api"\n', '"$PWD/build/wasmtime-c-api" || true\n')]
 		, [block, block.replace("timeout-minutes: 45", "timeout-minutes: 1")]
 		, [block, block.replace("set -euo pipefail", "set +e")]
-		, ["  wasi-consumer:\n", "  wasi-consumer:\n    if: false\n"]
-		, ["  wasi-consumer:\n", "  wasi-consumer:\n    continue-on-error: true\n"]
-		, ["steps.nominal_wit.outcome == 'success' && ", ""]
-		, [" || steps.nominal_wit.outcome != 'success'", ""]
+		, ["  wasi-qualifications:\n", "  wasi-qualifications:\n    if: false\n"]
+		, ["  wasi-qualifications:\n", "  wasi-qualifications:\n    continue-on-error: true\n"]
+		, ["        continue-on-error: true\n        timeout-minutes: 45", "        timeout-minutes: 45"]
+		, ["        if: ${{ !cancelled() }}\n", ""]
+		, ["steps.nominal_wit.outcome != 'success' || ", ""]
 		, [block, block.replace("-attempt-${{ github.run_attempt }}", "")]
 		, [block, block.replace("overwrite: false", "overwrite: true")]
 		, ...["LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR", "LEAN_BRIDGE_NOMINAL_SUBTYPE_WIT_ROUTES", "LEAN_BRIDGE_NOMINAL_SUBTYPE_WIT_MODES"].map(name =>
@@ -64,37 +68,117 @@ test("nominal WIT CI refuses dropped gates, partial uploads and weakened bootstr
 	assert.throws(() => assertNominalSubtypeWitWorkflow(
 		`${beforeSummary}\n  support-summary:\n${withoutWasi}`
 	), assert.AssertionError); controls++;
-	const body = bodyOf(source);
+	const withoutFinalizer = supportSummary.replace(
+		"      - wasi-consumer-finalize\n", ""
+	);
+	assert.notEqual(withoutFinalizer, supportSummary);
+	assert.throws(() => assertNominalSubtypeWitWorkflow(
+		`${beforeSummary}\n  support-summary:\n${withoutFinalizer}`
+	), assert.AssertionError); controls++;
+	const withoutFinalizerGate = supportSummary.replace(
+		"      - name: Enforce combined WIT and WASI acceptance\n        if: needs.wasi-consumer-finalize.result != 'success'\n        run: exit 1\n", ""
+	);
+	assert.notEqual(withoutFinalizerGate, supportSummary);
+	assert.throws(() => assertNominalSubtypeWitWorkflow(
+		`${beforeSummary}\n  support-summary:\n${withoutFinalizerGate}`
+	), assert.AssertionError); controls++;
+	const body = bodyOf(source, "wasi-qualifications");
 	for(const [from, to] of [["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]
-		, ["timeout-minutes: 240", "timeout-minutes: 1"]
+		, ["timeout-minutes: 330", "timeout-minutes: 1"]
 		, ["build-essential cmake pkg-config zstd ripgrep", "pkg-config ripgrep"]
 		, ["          bash scripts/bootstrap-toolchains.sh --lean-only\n", ""]
 		, ["          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\n", ""]
 		, ["sha256sum --check --status", "true"]
-		, ["if: always() && (steps.consumer.outcome", "if: (steps.consumer.outcome"]
+		, ["if: always() && (steps.nominal_wit.outcome", "if: (steps.nominal_wit.outcome"]
 	]) {
 		const changed = source.replace(body, () => body.replace(from, () => to)); assert.notEqual(changed, source);
 		assert.throws(() => assertNominalSubtypeWitWorkflow(changed), assert.AssertionError); controls++;
 	}
-	assert.equal(controls, 30); t.diagnostic(`${controls} weakened workflow controls`);
+	assert.equal(controls, 33); t.diagnostic(`${controls} weakened workflow controls`);
 });
 
 test("nominal WIT final gate and observations reject unsuccessful required outcomes", async t => {
-	const body = bodyOf(await readFile(path, "utf8")); let controls = 0;
-	const expression = body.split("      - name: Enforce WIT and WASI support\n")[1].split("\n")[0].trim().slice("if: ".length);
-	const ids = [...nominalSubtypeWitRequiredSteps, "nominal_wit"
-		, "direct_proof_wit", "optional_parameters_wit"];
-	const run = (expression, overrides) => runInNewContext(expression, { always: () => true
-		, steps: Object.fromEntries(ids.map(id => [id, { outcome: overrides[id] ?? "success" }])) }, { timeout: 100 });
-	assert.equal(run(expression, {}), false);
-	const summaries = [...body.matchAll(/^ {10}(test_result|executed)="\$\{\{ (.+) \}\}"$/gmu)]; assert.equal(summaries.length, 2);
-	for(const [,, value] of summaries) assert.ok(["passed", "true"].includes(run(value, {})));
-	for(const id of ids) for(const outcome of ["failure", "skipped", "cancelled"])
+	const source = await readFile(path, "utf8"), controlsExpected = 135;
+	const base = bodyOf(source, "wasi-consumer");
+	const qualifications = bodyOf(source, "wasi-qualifications");
+	const finalize = bodyOf(source, "wasi-consumer-finalize");
+	let controls = 0;
+	const runSteps = (expression, ids, overrides) => runInNewContext(
+		expression
+		, { always: () => true
+		, steps: Object.fromEntries(ids.map(
+			id => [id, { outcome: overrides[id] ?? "success" }]
+		)) }, { timeout: 100 }
+	);
+	const baseExpression = base.split(
+		"      - name: Enforce WIT and WASI support\n"
+	)[1].split("\n")[0].trim().slice("if: ".length);
+	const baseSummaries = [...base.matchAll(
+		/^ {10}(test_result|executed)="\$\{\{ (.+) \}\}"$/gmu
+	)];
+	assert.equal(baseSummaries.length, 2);
+	assert.equal(runSteps(baseExpression, nominalSubtypeWitRequiredSteps, {}), false);
+	for(const [,, value] of baseSummaries)
+		assert.ok(["passed", "true"].includes(runSteps(
+			value, nominalSubtypeWitRequiredSteps, {}
+		)));
+	for(const id of nominalSubtypeWitRequiredSteps)
+		for(const outcome of ["failure", "skipped", "cancelled"])
+		{
+			const override = { [id]: outcome };
+			assert.equal(runSteps(baseExpression
+				, nominalSubtypeWitRequiredSteps, override), true); controls++;
+			for(const [, name, value] of baseSummaries)
+			{
+				assert.equal(runSteps(value, nominalSubtypeWitRequiredSteps, override)
+					, name === "test_result" ? "failed" : "false"); controls++;
+			}
+		}
+	const qualificationIds = [
+		"nominal_wit", "direct_proof_wit", "optional_parameters_wit"
+	];
+	const qualificationExpression = qualifications.split(
+		"      - name: Enforce all three WIT qualifications\n"
+	)[1].split("\n")[0].trim().slice("if: ".length);
+	assert.equal(runSteps(qualificationExpression, qualificationIds, {}), false);
+	for(const id of qualificationIds)
+		for(const outcome of ["failure", "skipped", "cancelled"])
+		{
+			assert.equal(runSteps(qualificationExpression, qualificationIds
+				, { [id]: outcome }), true); controls++;
+		}
+	const finalJobs = ["wasi-consumer", "wasi-qualifications"];
+	const runNeeds = (expression, overrides) => runInNewContext(
+		expression.replaceAll("needs.wasi-consumer", 'needs["wasi-consumer"]')
+			.replaceAll("needs.wasi-qualifications"
+				, 'needs["wasi-qualifications"]')
+		, { always: () => true
+		, needs: Object.fromEntries(finalJobs.map(
+			job => [job, { result: overrides[job] ?? "success" }]
+		)) }, { timeout: 100 }
+	);
+	const finalExpression = finalize.split(
+		"      - name: Enforce the combined WIT and WASI result\n"
+	)[1].split("\n")[0].trim().slice("if: ".length);
+	const finalSummaries = [...finalize.matchAll(
+		/^ {10}(test_result|executed)="\$\{\{ (.+) \}\}"$/gmu
+	)];
+	assert.equal(finalSummaries.length, 2);
+	assert.equal(runNeeds(finalExpression, {}), false);
+	for(const [,, value] of finalSummaries)
+		assert.ok(["passed", "true"].includes(runNeeds(value, {})));
+	for(const job of finalJobs)
+		for(const outcome of ["failure", "skipped", "cancelled"])
 	{
-		const override = { [id]: outcome }; assert.equal(run(expression, override), true); controls++;
-		for(const [, name, value] of summaries)
-		{ assert.equal(run(value, override), name === "test_result" ? "failed" : "false"); controls++; }
+		const override = { [job]: outcome };
+		assert.equal(runNeeds(finalExpression, override), true); controls++;
+		for(const [, name, value] of finalSummaries)
+		{
+			assert.equal(runNeeds(value, override)
+				, name === "test_result" ? "failed" : "false"); controls++;
+		}
 	}
-	assert.equal(controls, 135); t.diagnostic(`${controls} failed, skipped and cancelled gate/observation controls`);
+	assert.equal(controls, controlsExpected);
+	t.diagnostic(`${controls} failed, skipped and cancelled gate/observation controls`);
 });

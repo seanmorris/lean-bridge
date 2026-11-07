@@ -5980,9 +5980,10 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
-    # Copied, recursive, owned and original-owner installed-package gates
-    # share this job. The full sequence exceeds two hours on hosted runners.
-    timeout-minutes: 240
+    # Keep the ordinary, recursive and owned WIT package gates together. The
+    # independent late qualification sequence runs in parallel below so
+    # neither job approaches the hosted runner's six-hour hard ceiling.
+    timeout-minutes: 300
     steps:
       - name: Free hosted runner disk before Nix-backed builds
         shell: bash
@@ -6019,8 +6020,6 @@ jobs:
         uses: cachix/install-nix-action@v31
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
-      - name: Verify frozen direct WIT callback-result acceptance
-        run: npm run test:owned-wit-callback-evidence
       - name: Install the archive and invoke the component through Wasmtime
         id: consumer
         continue-on-error: true
@@ -6329,62 +6328,12 @@ jobs:
           LEAN_BRIDGE_WORD_PROFILES=wit-wasi node --test tests/native-words.test.mjs
           test -s build/type-corpus/wit-wasi.json
           test -s build/type-corpus/reviewed-native-wit-wasi.json
-      - name: Require nominal WIT packages
-        id: nominal_wit
-        timeout-minutes: 45
-        run: |
-          set -euo pipefail
-          source scripts/env.sh
-          bash scripts/run-nominal-subtype-wit-ci.sh "/usr/bin/cc" "$PWD/.toolchains/wasm-tools/bin/wasm-tools" "$PWD/build/wasmtime-c-api"
-      - name: Preserve complete and partial nominal WIT records
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: nominal-subtype-wit-${{ github.sha }}-attempt-${{ github.run_attempt }}
-          path: build/nominal-subtype-wit-ci/
-          if-no-files-found: error
-          overwrite: false
-          retention-days: 30
-      - name: Qualify optional parameters in the prepared WIT package
-        id: optional_parameters_wit
-        continue-on-error: true
-        timeout-minutes: 100
-        run: |
-          export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
-          source scripts/env.sh
-          bash scripts/run-optional-parameter-wit-ci.sh
-      - name: Preserve optional-parameter WIT acceptance
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: optional-parameter-wit-${{ github.sha }}
-          path: build/optional-parameter-wit-ci/
-          if-no-files-found: error
-          overwrite: true
-          retention-days: 30
-      - name: Qualify direct proof erasure in the prepared WIT package
-        id: direct_proof_wit
-        continue-on-error: true
-        timeout-minutes: 100
-        run: |
-          export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
-          source scripts/env.sh
-          bash scripts/run-direct-proof-erasure-wit-ci.sh
-      - name: Preserve direct proof-erasure WIT acceptance
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: direct-proof-erasure-wit-${{ github.sha }}
-          path: build/direct-proof-erasure-wit-ci/
-          if-no-files-found: error
-          overwrite: true
-          retention-days: 30
       - name: Record WIT and WASI observations
         if: always()
         shell: bash
         run: |
-          test_result="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && steps.optional_parameters_wit.outcome == 'success' && 'passed' || 'failed' }}"
-          executed="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && steps.nominal_wit.outcome == 'success' && steps.direct_proof_wit.outcome == 'success' && steps.optional_parameters_wit.outcome == 'success' && 'true' || 'false' }}"
+          test_result="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && 'passed' || 'failed' }}"
+          executed="${{ steps.consumer.outcome == 'success' && steps.ordinary_wit.outcome == 'success' && steps.structured_wit.outcome == 'success' && steps.recursive_wit.outcome == 'success' && steps.type_corpus_wit.outcome == 'success' && steps.owned_wit_projection.outcome == 'success' && steps.owned_wit_native.outcome == 'success' && steps.owned_wit_session.outcome == 'success' && steps.owned_wit_package.outcome == 'success' && steps.owned_wit_callback_packages.outcome == 'success' && steps.owned_wit_transfers.outcome == 'success' && steps.owned_wit_borrows.outcome == 'success' && 'true' || 'false' }}"
           node scripts/consumer-ci.mjs record --consumer wit-wasi --output build/consumer-ci/results/wit-wasi.json --performance build/consumer-ci/performance/wit-wasi.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:wasi && LEAN_BRIDGE_NATIVE_WIT_TEST=1 node --test tests/native-wit.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_COMPONENT_TEST=1 node --test tests/wit-callable-contract.test.mjs && LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs && LEAN_BRIDGE_WIT_COMPOUND_TEST=1 node --test tests/wit-compounds.test.mjs tests/wit-compound-contract.test.mjs tests/wit-compound-conversions.test.mjs && LEAN_BRIDGE_WIT_LIST_TEST=1 node --test tests/wit-lists.test.mjs tests/wit-list-contract.test.mjs tests/wit-list-conversions.test.mjs && LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs && LEAN_BRIDGE_WIT_FIN_TEST=1 node --test tests/wit-fin.test.mjs && LEAN_BRIDGE_SPECIALIZATION_PROFILES=wit-wasi node --test tests/native-specializations.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_PROFILES=wit-wasi node --test --test-name-pattern='relocated source-free native packages construct' tests/generic-records.test.mjs && LEAN_BRIDGE_GENERIC_RECORD_ARRAY_PROFILES=wit-wasi node --test --test-concurrency=1 tests/generic-record-arrays.test.mjs && LEAN_BRIDGE_DEPENDENT_FIN_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_DEPENDENT_FIN_PROFILES=wit-wasi node --test tests/managed-dependent-fin.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_ENTRY_COUNTERS=1 LEAN_BRIDGE_FIN_CONTAINER_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=wit-wasi node --test tests/native-fin-containers.test.mjs && LEAN_BRIDGE_FIN_CONTAINER_EDGE_PROFILES=wit-wasi LEAN_BRIDGE_FIN_CONTAINER_EDGE_DISPATCH=1 LEAN_BRIDGE_FIN_CONTAINER_EDGE_REPORT=build/native-fin-container-edges/edges-wit-wasi.json node --test --test-concurrency=1 --test-name-pattern='^installed source-free native packages execute zero-bound and nested-position Fin edge cases$' tests/fin-container-edges.test.mjs && node scripts/check-fin-container-foreign-report.mjs wit-wasi build/native-fin-container-edges/edges-wit-wasi.json && LEAN_BRIDGE_FIN_PRODUCT_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=wit-wasi node --test tests/native-fin-products.test.mjs && bash scripts/run-fin-late-wit-ci.sh && LEAN_BRIDGE_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_ARRAY_PROFILES=wit-wasi node --test tests/native-fin-product-arrays.test.mjs && LEAN_BRIDGE_FIN_RECORD_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_PROFILES=wit-wasi node --test tests/native-fin-records.test.mjs && LEAN_BRIDGE_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_PROFILES=wit-wasi LEAN_BRIDGE_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/wit-wasi.json LEAN_BRIDGE_REVIEWED_FIN_RECORD_ZERO_REPORT=build/native-fin-record-zero/reviewed-wit-wasi.json node --test --test-concurrency=1 tests/native-fin-record-zero.test.mjs && node scripts/check-fin-record-zero-report.mjs wit-wasi build/native-fin-record-zero/wit-wasi.json build/native-fin-record-zero/reviewed-wit-wasi.json && LEAN_BRIDGE_SUBTYPE_PROFILES=wit-wasi node --test tests/native-subtype.test.mjs && bash scripts/run-reviewed-subtype-host-ci.sh wit-wasi && bash scripts/run-checked-record-host-ci.sh wit-wasi && bash scripts/run-structural-subtype-ci.sh wit-wasi && LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 tests/wit-variants.test.mjs tests/wit-variant-contract.test.mjs tests/wit-variant-conversions.test.mjs && LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs && LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs && LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_GRAPH_REPRO_TEST=1 node --test tests/wit-copied-graph-package.test.mjs && LEAN_BRIDGE_WIT_HOST_TEST=1 node --test tests/wit-host-evidence.test.mjs && LEAN_BRIDGE_WIT_HOST_PACKAGES_TEST=1 node --test tests/wit-host-packages.test.mjs && LEAN_BRIDGE_WIT_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_WIT_MIXED_PACKAGES_TEST=1 node --test tests/wit-graph-composition.test.mjs && npm run test:type-corpus:wit-wasi && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/native-callback-alias-contract.test.mjs tests/wit-structured-callable-contract.test.mjs tests/wit-structured-callable-faults.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs && npm run test:wit-recursive-generated && npm run test:wit-recursive-packages && npm run test:owned-wit-transfers && npm run test:owned-wit-borrows && npm run test:owned-wit-callback-packages && bash scripts/run-nominal-subtype-wit-ci.sh \"/usr/bin/cc\" \"$PWD/.toolchains/wasm-tools/bin/wasm-tools\" \"$PWD/build/wasmtime-c-api\" && bash scripts/run-direct-proof-erasure-wit-ci.sh && bash scripts/run-optional-parameter-wit-ci.sh"
       - name: Upload WIT shared corpus evidence
         if: always()
@@ -6459,17 +6408,19 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
-      - name: Upload WIT and WASI observations
+      - name: Preserve base WIT and WASI observation inputs
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-wasi-${{ github.sha }}
-          path: build/consumer-ci/results/*.json
+          name: wasi-consumer-base-${{ github.sha }}
+          path: |
+            build/consumer-ci/results/wit-wasi.json
+            build/consumer-ci/performance/wit-wasi.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
       - name: Enforce WIT and WASI support
-        if: always() && (steps.consumer.outcome != 'success' || steps.ordinary_wit.outcome != 'success' || steps.structured_wit.outcome != 'success' || steps.recursive_wit.outcome != 'success' || steps.type_corpus_wit.outcome != 'success' || steps.owned_wit_projection.outcome != 'success' || steps.owned_wit_native.outcome != 'success' || steps.owned_wit_session.outcome != 'success' || steps.owned_wit_package.outcome != 'success' || steps.owned_wit_callback_packages.outcome != 'success' || steps.owned_wit_transfers.outcome != 'success' || steps.owned_wit_borrows.outcome != 'success' || steps.nominal_wit.outcome != 'success' || steps.direct_proof_wit.outcome != 'success' || steps.optional_parameters_wit.outcome != 'success')
+        if: always() && (steps.consumer.outcome != 'success' || steps.ordinary_wit.outcome != 'success' || steps.structured_wit.outcome != 'success' || steps.recursive_wit.outcome != 'success' || steps.type_corpus_wit.outcome != 'success' || steps.owned_wit_projection.outcome != 'success' || steps.owned_wit_native.outcome != 'success' || steps.owned_wit_session.outcome != 'success' || steps.owned_wit_package.outcome != 'success' || steps.owned_wit_callback_packages.outcome != 'success' || steps.owned_wit_transfers.outcome != 'success' || steps.owned_wit_borrows.outcome != 'success')
         run: exit 1
 
   docker-engine:
@@ -6550,6 +6501,189 @@ jobs:
     needs: type-surface-authentication
     uses: ./.github/workflows/perl-consumer.yml
 
+  wasi-qualifications:
+    name: WIT nominal, optional and proof-erasure qualifications
+    needs: type-surface-authentication
+    runs-on: ubuntu-24.04
+    timeout-minutes: 330
+    env:
+      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
+    steps:
+      - name: Free hosted runner disk before Nix-backed builds
+        shell: bash
+        run: |
+          set -euo pipefail
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h /
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Confirm the Nix consumer source closure is sparse and bounded
+        run: bash scripts/check-consumer-source-closure.sh
+      - name: Restore the authenticated type-surface receipt
+        uses: actions/download-artifact@v8
+        with:
+          name: consumer-type-surface-${{ github.sha }}
+          path: build/consumer-type-surface
+      - name: Bind the authenticated type-surface receipt
+        run: echo "LEAN_BRIDGE_TYPE_SURFACE_EVIDENCE_RECEIPT=$GITHUB_WORKSPACE/build/consumer-type-surface/receipt.json" >> "$GITHUB_ENV"
+      - name: Require source history before WIT qualification builds
+        run: test "$(git rev-parse --is-shallow-repository)" = false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install WIT qualification build dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep
+      - name: Prepare Lean, wasm-tools and Wasmtime
+        timeout-minutes: 30
+        run: |
+          bash scripts/bootstrap-toolchains.sh --lean-only
+          bash scripts/bootstrap-toolchains.sh --wasm-tools-only
+          (
+            set -euo pipefail
+            test "$(uname -sm)" = 'Linux x86_64'
+            mkdir -p build
+            test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
+            WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)
+            trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT
+            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \
+              --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \
+              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'
+            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
+            mkdir "$WASMTIME_CAPI_STAGING/unpacked"
+            tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so"
+            test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a"
+            mv -T "$WASMTIME_CAPI_STAGING/unpacked" build/wasmtime-c-api
+          )
+      - name: Require nominal WIT packages
+        id: nominal_wit
+        continue-on-error: true
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-nominal-subtype-wit-ci.sh "/usr/bin/cc" "$PWD/.toolchains/wasm-tools/bin/wasm-tools" "$PWD/build/wasmtime-c-api"
+      - name: Preserve complete and partial nominal WIT records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nominal-subtype-wit-${{ github.sha }}-attempt-${{ github.run_attempt }}
+          path: build/nominal-subtype-wit-ci/
+          if-no-files-found: error
+          overwrite: false
+          retention-days: 30
+      - name: Qualify optional parameters in the prepared WIT package
+        id: optional_parameters_wit
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        timeout-minutes: 100
+        run: |
+          export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+          source scripts/env.sh
+          bash scripts/run-optional-parameter-wit-ci.sh
+      - name: Preserve optional-parameter WIT acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: optional-parameter-wit-${{ github.sha }}
+          path: build/optional-parameter-wit-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Qualify direct proof erasure in the prepared WIT package
+        id: direct_proof_wit
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        timeout-minutes: 100
+        run: |
+          export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+          source scripts/env.sh
+          bash scripts/run-direct-proof-erasure-wit-ci.sh
+      - name: Preserve direct proof-erasure WIT acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-proof-erasure-wit-${{ github.sha }}
+          path: build/direct-proof-erasure-wit-ci/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce all three WIT qualifications
+        if: always() && (steps.nominal_wit.outcome != 'success' || steps.optional_parameters_wit.outcome != 'success' || steps.direct_proof_wit.outcome != 'success')
+        run: exit 1
+
+  wasi-consumer-finalize:
+    name: Finalize WIT and WASI support observation
+    if: always()
+    needs:
+      - wasi-consumer
+      - wasi-qualifications
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out the exact observation writer
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_CONSUMER_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Restore base WIT and WASI observation inputs
+        uses: actions/download-artifact@v8
+        with:
+          name: wasi-consumer-base-${{ github.sha }}
+          path: build/wasi-consumer-base
+      - name: Finalize the combined WIT and WASI observation
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/wasi-consumer-base/results/wit-wasi.json
+          performance=build/wasi-consumer-base/performance/wit-wasi.json
+          command="$(node -e 'const fs = require("node:fs"); process.stdout.write(JSON.parse(fs.readFileSync(process.argv[1], "utf8")).command);' "$base")"
+          test_result="${{ needs.wasi-consumer.result == 'success' && needs.wasi-qualifications.result == 'success' && 'passed' || 'failed' }}"
+          executed="${{ needs.wasi-consumer.result == 'success' && needs.wasi-qualifications.result == 'success' && 'true' || 'false' }}"
+          node scripts/consumer-ci.mjs record --consumer wit-wasi \
+            --output build/consumer-ci/results/wit-wasi.json \
+            --performance "$performance" --test-result "$test_result" \
+            --package-installation "$executed" --real-lean-execution "$executed" \
+            --command "$command"
+      - name: Upload final WIT and WASI observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: consumer-results-wasi-${{ github.sha }}
+          path: build/consumer-ci/results/*.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30
+      - name: Enforce the combined WIT and WASI result
+        if: always() && (needs.wasi-consumer.result != 'success' || needs.wasi-qualifications.result != 'success')
+        run: exit 1
+
   optional-parameter-matrix:
     name: Reconcile optional-parameter package matrix
     if: always()
@@ -6560,6 +6694,7 @@ jobs:
       - managed-consumers
       - perl-consumer
       - wasi-consumer
+      - wasi-consumer-finalize
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -6634,6 +6769,7 @@ jobs:
       - owned-jvm-values
       - perl-consumer
       - wasi-consumer
+      - wasi-consumer-finalize
       - owned-wit-receivers
       - docker-engine
       - optional-parameter-matrix
@@ -6732,6 +6868,9 @@ jobs:
         run: exit 1
       - name: Enforce WIT receiver acceptance
         if: needs.owned-wit-receivers.result != 'success'
+        run: exit 1
+      - name: Enforce combined WIT and WASI acceptance
+        if: needs.wasi-consumer-finalize.result != 'success'
         run: exit 1
       - name: Enforce reviewed Fin Wasm entry acceptance
         if: needs.reviewed-fin-wasm-entry.result != 'success'

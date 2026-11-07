@@ -50,7 +50,7 @@ test("the workflow gate refuses a missing flag, recorded command, profile, route
 		, value => value.replace("          sudo apt-get install -y python3-venv pkg-config gdb\n", "          sudo apt-get install -y python3-venv pkg-config\n")
 		, value => value.replace("steps.type_corpus_jvm.outcome != 'success'", "steps.type_corpus_jvm.outcome == 'skipped'")
 		, value => value.replace("        id: type_corpus_ruby\n", "        id: type_corpus_ruby_counted\n")
-		, value => value.replace(/(\n {2}wasi-consumer:\n(?:.*\n)*? {4}timeout-minutes: )240\n/u, "$1300\n")
+		, value => value.replace(/(\n {2}wasi-consumer:\n(?:.*\n)*? {4}timeout-minutes: )300\n/u, "$11\n")
 		, value => value.replace(finContainerEntryCiBlock(cpp), `          set +e\n${finContainerEntryCiBlock(cpp)}`)
 		// Counting widened to an unselected host.
 		, value => value.replace("&& LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=python", `&& ${finContainerEntryCiFlag} LEAN_BRIDGE_FIN_CONTAINER_PROFILES=python LEAN_BRIDGE_REVIEWED_FIN_CONTAINER_PROFILES=python`)

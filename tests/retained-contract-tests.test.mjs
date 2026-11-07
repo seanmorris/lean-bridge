@@ -50,12 +50,12 @@ test("sparse consumers defer retained contracts while Core requires them", async
 		, readFile(".github/workflows/perl-consumer.yml", "utf8")
 		, readFile(".github/workflows/quality.yml", "utf8")
 	]);
-	for(const job of ["node-consumers", "php-consumers", "native-consumers", "managed-consumers", "wasi-consumer"])
-	{
+	for(const job of ["node-consumers", "php-consumers", "native-consumers"
+		, "managed-consumers", "wasi-consumer", "wasi-qualifications"]) {
 		const source = workflowJob(consumers, job);
 		assert.ok(source, job);
 		assert.equal(source.match(/LEAN_BRIDGE_RETAINED_CONTRACTS: deferred/gu)?.length, 1, job);
-	}
+		}
 	assert.equal(workflowJob(perl, "perl").match(/LEAN_BRIDGE_RETAINED_CONTRACTS: deferred/gu)?.length, 1);
 	assert.equal(workflowJob(quality, "contract").match(/LEAN_BRIDGE_RETAINED_CONTRACTS: required/gu)?.length, 1);
 });
