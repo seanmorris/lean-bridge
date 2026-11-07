@@ -154,7 +154,7 @@ try
 			coreRun: 42378749844, downstreamRun: 42378752007
 			, performanceRun: 42379009604
 			, completeCoreShards: 12
-			, corePasses: 1315
+			, shard12Passes: 1315
 		}
 		, rootCause: "The exact candidate cohort exposed a finite set of behavior defects, producer-era JVM evidence compared against current fixture bytes, and Core history aggregators whose eager side-effect imports duplicated registrations or exceeded runner time and memory ceilings. Several workflows also repeated expensive Lean bootstrap work or scheduled late qualifications without bounded topology."
 		, repair: "Correct each observed behavior contract, bind archived JVM values to their producer fixtures, centralize the dependent-Fin adapter guard, retry only transient Lean bootstrap failures, preserve late qualifications in explicit workflow topology, and replace the two eager history aggregators with independently owned balanced Core partitions. Refresh only exact current-source pins after all implementation bytes are fixed."

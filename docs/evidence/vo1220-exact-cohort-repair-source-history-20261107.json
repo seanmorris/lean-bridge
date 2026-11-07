@@ -206,10 +206,10 @@
   ],
   "discovery": {
     "completeCoreShards": 12,
-    "corePasses": 1315,
     "coreRun": 42378749844,
     "downstreamRun": 42378752007,
-    "performanceRun": 42379009604
+    "performanceRun": 42379009604,
+    "shard12Passes": 1315
   },
   "exactModel": {
     "bytes": 16916757,
@@ -220,7 +220,7 @@
   "historyAdditions": [
     {
       "path": "scripts/update-vo1220-exact-cohort-repair-source-history.mjs",
-      "sha256": "d477d9522bfd8959ba08fa36e16e78c1f6a509ce6bb1268e8e7946d06e0cde80"
+      "sha256": "f3404e531a03e634b74b151f587576bb63daee63ee3ebc72e4888d17fa758fa8"
     },
     {
       "path": "tests/helpers/vo1220-exact-cohort-repair-source-history-tests.mjs",
