@@ -1,0 +1,756 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "currentSourcePaths": 6,
+    "implementationPaths": 8,
+    "refreshedPins": 95,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [
+    {
+      "count": 18,
+      "current": "84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce",
+      "path": "config/checked-javascript.json",
+      "previous": "37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04"
+    },
+    {
+      "count": 21,
+      "current": "d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff",
+      "path": "config/cli-package.v1.json",
+      "previous": "800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85"
+    },
+    {
+      "count": 5,
+      "current": "c0d7109e0e5e595b171f20a9e5495ea0339e6b118d9f443b1ad65f16b4b57f81",
+      "path": "nix/component-engine-source-boundary.json",
+      "previous": "b35bac053939aae9c68e834e69cf0be9d422c50faf38611fc884e45c8898bb64"
+    },
+    {
+      "count": 25,
+      "current": "bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516",
+      "path": "package.json",
+      "previous": "829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817"
+    },
+    {
+      "count": 1,
+      "current": "b012462eaaf8095e2b4e79601b14279cc17f51fb54f9db1fad6c74d086baaa65",
+      "path": "tests/cli-npm-package.test.mjs",
+      "previous": "1f2d3a3dd17eacba1ba97c92f96842141eadf75228c2fc16807d5225d8b5a983"
+    },
+    {
+      "count": 25,
+      "current": "d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a",
+      "path": "tests/documentation.test.mjs",
+      "previous": "4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522"
+    }
+  ],
+  "discovery": {
+    "coreRun": 42421648293,
+    "downstreamRun": 42423177647,
+    "historicalModelFailures": 1,
+    "sharedPackageClosureFailures": 8,
+    "terminalFailuresAtRepair": 9
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-successor-contract-repair-source-history.mjs",
+      "sha256": "aa06d022516c3b4b8e6e846cfbe9203e96009b762c7989b8d268fde56300cd77"
+    },
+    {
+      "path": "tests/helpers/vo1220-successor-contract-repair-source-history-tests.mjs",
+      "sha256": "fdf25404a8ec3d77b9e9d3e235d6f99948a0aede3a05596536871f9e2dd31566"
+    },
+    {
+      "path": "tests/helpers/vo1220-successor-contract-repair-source-history.mjs",
+      "sha256": "835ef5850dbd83be4c1928d5bc348fad7b05af4ae2b32212773e23c59a0d018e"
+    }
+  ],
+  "implementationCommit": "fa53424418e59add18d92a2bd8a46af9abd64015",
+  "implementationCommits": [
+    "fa53424418e59add18d92a2bd8a46af9abd64015"
+  ],
+  "integrationCommit": "b9db25c114cbec47599ee9bfe6f851e2b6c7ac10",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b1d7d45d2efc6ddb2dfe7aa558d114e4e91cd0e40d36530974276c9bdeffd57e",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 55653
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 55809
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 56845
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 78211
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 78367
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 79403
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 95406
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 95562
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 96606
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 111707
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 111863
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 112899
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 135753
+        },
+        {
+          "current": "          \"sha256\": \"c0d7109e0e5e595b171f20a9e5495ea0339e6b118d9f443b1ad65f16b4b57f81\"\n",
+          "previous": "          \"sha256\": \"b35bac053939aae9c68e834e69cf0be9d422c50faf38611fc884e45c8898bb64\"\n",
+          "start": 136637
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 432739
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 432895
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 433545
+        },
+        {
+          "current": "          \"sha256\": \"b012462eaaf8095e2b4e79601b14279cc17f51fb54f9db1fad6c74d086baaa65\"\n",
+          "previous": "          \"sha256\": \"1f2d3a3dd17eacba1ba97c92f96842141eadf75228c2fc16807d5225d8b5a983\"\n",
+          "start": 436164
+        },
+        {
+          "current": "          \"sha256\": \"c0d7109e0e5e595b171f20a9e5495ea0339e6b118d9f443b1ad65f16b4b57f81\"\n",
+          "previous": "          \"sha256\": \"b35bac053939aae9c68e834e69cf0be9d422c50faf38611fc884e45c8898bb64\"\n",
+          "start": 665213
+        },
+        {
+          "current": "          \"sha256\": \"c0d7109e0e5e595b171f20a9e5495ea0339e6b118d9f443b1ad65f16b4b57f81\"\n",
+          "previous": "          \"sha256\": \"b35bac053939aae9c68e834e69cf0be9d422c50faf38611fc884e45c8898bb64\"\n",
+          "start": 674428
+        },
+        {
+          "current": "          \"sha256\": \"c0d7109e0e5e595b171f20a9e5495ea0339e6b118d9f443b1ad65f16b4b57f81\"\n",
+          "previous": "          \"sha256\": \"b35bac053939aae9c68e834e69cf0be9d422c50faf38611fc884e45c8898bb64\"\n",
+          "start": 681766
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 813888
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 832263
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1012229
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1012385
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1013432
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1058470
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1075587
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1083361
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1088793
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1095894
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1103060
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1110117
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1118369
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1127832
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1137861
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1138017
+        },
+        {
+          "current": "          \"sha256\": \"c0d7109e0e5e595b171f20a9e5495ea0339e6b118d9f443b1ad65f16b4b57f81\"\n",
+          "previous": "          \"sha256\": \"b35bac053939aae9c68e834e69cf0be9d422c50faf38611fc884e45c8898bb64\"\n",
+          "start": 1139369
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1139511
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1144843
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1151918
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1159815
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1167421
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1167577
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1168909
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1170695
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1177535
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1177691
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1179169
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1182857
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1189296
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1189452
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1193262
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1206383
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1221857
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1222013
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1225806
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1237738
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1252136
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1252292
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1256088
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1270538
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1285287
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1285443
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1289051
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1305638
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1325088
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1325244
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1330603
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1336484
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1351658
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1351814
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1356155
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1359781
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1374036
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1374192
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1378692
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1381672
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1393703
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1393859
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1398384
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1401745
+        },
+        {
+          "current": "          \"sha256\": \"84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce\"\n",
+          "previous": "          \"sha256\": \"37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04\"\n",
+          "start": 1417091
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 1417247
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1418874
+        },
+        {
+          "current": "          \"sha256\": \"d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a\"\n",
+          "previous": "          \"sha256\": \"4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522\"\n",
+          "start": 1421525
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 1429367
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 75698621
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 75698763
+        },
+        {
+          "current": "          \"sha256\": \"d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff\"\n",
+          "previous": "          \"sha256\": \"800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85\"\n",
+          "start": 75703456
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 75703598
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 75708427
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 75715301
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 75722186
+        },
+        {
+          "current": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "previous": "          \"sha256\": \"829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817\"\n",
+          "start": 75729112
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "12c5547471408ab0aaa82c83f8694b39bd1194790d672be0ac57771912b99128"
+    },
+    {
+      "currentSha256": "9a812d1d387c0e01b8e08603a60f380a3d12430ab0653750bc6858a11cb4c112",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-successor-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 168
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "824a18e6abc139edab9767325c4907d94a8e29191c63f1f2997c92637894c695"
+    },
+    {
+      "currentSha256": "831adc8e5aeaa164795b365b7da4c8afc1d8c9d1d8f8595ef18deb6037e17117",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220SuccessorContractRepairSource\n\t, vo1220SuccessorContractRepairNormalizationPaths\n} from \"./vo1220-successor-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220SuccessorContractRepairNormalizationPaths\n\t, ...vo1220ExactCohortRepairNormalizationPaths\n",
+          "previous": "\t...vo1220ExactCohortRepairNormalizationPaths\n",
+          "start": 241502
+        },
+        {
+          "current": "\tlet stage = beforeVo1220SuccessorContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ExactCohortRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeVo1220ExactCohortRepairSource(path, text, expected);\n",
+          "start": 303828
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "da95e6864bf92537ac38c9686451e7967e19ae123832a9c75e86fa61dc5cd57b"
+    }
+  ],
+  "inventorySha256": {
+    "after": "b1d7d45d2efc6ddb2dfe7aa558d114e4e91cd0e40d36530974276c9bdeffd57e",
+    "before": "12c5547471408ab0aaa82c83f8694b39bd1194790d672be0ac57771912b99128"
+  },
+  "milestone": "vo1220-successor-contract-repair-source-v1",
+  "predecessorCommit": "462f05adbcec50e33bec9c24f9fe493f79cae7b1",
+  "repair": "Close every applicable source/package registry, scan the entire shipped CLI relative import graph, and pass exact historical timeout expectations without weakening live defaults.",
+  "rootCause": "The dependent-Fin helper entered six shipped adapter graphs without entering the explicit CLI, Nix and checked-JavaScript registries. Separately, a live timeout expectation was reused while validating an authentic older workflow snapshot.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "84825ad742c09575b44aa7018045558feeb049745ebda7fe26852c7d71979fce",
+      "edits": [
+        {
+          "current": "\t\t{ \"path\": \"src/build/component-dependent-fin.mjs\", \"classification\": \"strict-migration-backlog\" },\n",
+          "previous": "",
+          "start": 22760
+        }
+      ],
+      "path": "config/checked-javascript.json",
+      "previousSha256": "37c0b10f643332742cefe632ed78b83e1e28e6374324a4976f64439ec8bbad04"
+    },
+    {
+      "currentSha256": "d5d0e8ed9d42902f440b4caa9e72a7a2f997939dc3100308a35cc746ed1517ff",
+      "edits": [
+        {
+          "current": "    \"src/build/component-dependent-fin.mjs\",\n",
+          "previous": "",
+          "start": 24395
+        }
+      ],
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "800567283db20a45dcc094f0b57a15b60f70fb77fbfa1f9298f20f748f241e85"
+    },
+    {
+      "currentSha256": "c0d7109e0e5e595b171f20a9e5495ea0339e6b118d9f443b1ad65f16b4b57f81",
+      "edits": [
+        {
+          "current": "    \"src/build/component-dependent-fin.mjs\",\n",
+          "previous": "",
+          "start": 2606
+        }
+      ],
+      "path": "nix/component-engine-source-boundary.json",
+      "previousSha256": "b35bac053939aae9c68e834e69cf0be9d422c50faf38611fc884e45c8898bb64"
+    },
+    {
+      "currentSha256": "bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516",
+      "edits": [
+        {
+          "current": "    \"src/build/component-dependent-fin.mjs\",\n",
+          "previous": "",
+          "start": 24274
+        }
+      ],
+      "path": "package.json",
+      "previousSha256": "829bfad1606cc9661bf6c9852ffeec929328e62f27726c65990b990e03697817"
+    },
+    {
+      "currentSha256": "b012462eaaf8095e2b4e79601b14279cc17f51fb54f9db1fad6c74d086baaa65",
+      "edits": [
+        {
+          "current": "import { dirname, extname, join, normalize, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 407
+        },
+        {
+          "current": "import { moduleSpecifiers } from \"./helpers/module-closure.mjs\";\n",
+          "previous": "",
+          "start": 775
+        },
+        {
+          "current": "test(\"the CLI source allowlist contains every relative module dependency\", async () => {\n\tconst included = new Set(config.files);\n\tfor(const path of config.files.filter(path => path.endsWith(\".mjs\")))\n\t{\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tfor(const specifier of moduleSpecifiers(source, path))\n\t\t{\n\t\t\tconst dependency = normalize(join(dirname(path)\n\t\t\t\t, extname(specifier) === \"\" ? `${specifier}.mjs` : specifier));\n\t\t\tassert.ok(included.has(dependency), `${path}: ${specifier} resolves outside the CLI source allowlist`);\n\t\t}\n\t}\n});\n\n",
+          "previous": "",
+          "start": 2793
+        }
+      ],
+      "path": "tests/cli-npm-package.test.mjs",
+      "previousSha256": "1f2d3a3dd17eacba1ba97c92f96842141eadf75228c2fc16807d5225d8b5a983"
+    },
+    {
+      "currentSha256": "d2d53ea0cffe54e232a4596e5cd0a95009cad486e0a52de09621d67f1a213f9a",
+      "edits": [
+        {
+          "current": "const historicalFinContainerTimeouts = Object.freeze({\n\t\"managed-consumers\": \"240\", \"wasi-consumer\": \"240\"\n});\n",
+          "previous": "",
+          "start": 5358
+        },
+        {
+          "current": "  assertFinLateWorkflow(splitWorkflow, historicalFinContainerTimeouts);\n",
+          "previous": "  assertFinLateWorkflow(splitWorkflow);\n",
+          "start": 46393
+        },
+        {
+          "current": "  assertFinContainerEdgeWorkflow(currentWorkflow, historicalFinContainerTimeouts);\n",
+          "previous": "  assertFinContainerEdgeWorkflow(currentWorkflow);\n",
+          "start": 46996
+        }
+      ],
+      "path": "tests/documentation.test.mjs",
+      "previousSha256": "4b4f8b935f7707c7af22651429e9ba9d527cbd880b1f140516ceed9f04f80522"
+    },
+    {
+      "currentSha256": "2857802f15de27d08702f602f0a0bfc626b34399a0997114e215543633ac5ba9",
+      "edits": [
+        {
+          "current": " * @param expectedTimeouts - Historical per-job timeout overrides.\n",
+          "previous": "",
+          "start": 6059
+        },
+        {
+          "current": "export const assertFinContainerEdgeWorkflow = (workflow, expectedTimeouts = {}) => {\n",
+          "previous": "export const assertFinContainerEdgeWorkflow = workflow => {\n",
+          "start": 6130
+        },
+        {
+          "current": "\t\tconst timeout = expectedTimeouts[item.job] ?? item.timeout;\n\t\tassert.ok(header.includes(`\\n    timeout-minutes: ${timeout}\\n`), `${item.label} budget`);\n",
+          "previous": "\t\tassert.ok(header.includes(`\\n    timeout-minutes: ${item.timeout}\\n`), `${item.label} budget`);\n",
+          "start": 7019
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-ci.mjs",
+      "previousSha256": "f6c940de23fbddbebba9f4abc9b6d1e87d5465ede6fd4ed81f9ac852ab1f1549"
+    },
+    {
+      "currentSha256": "1ad3fc0717f8ced101dabe9d459a5007b5ff697d90fbc47b8a305b6bce2c65de",
+      "edits": [
+        {
+          "current": " * @param expectedTimeouts - Historical per-job timeout overrides.\n",
+          "previous": "",
+          "start": 2978
+        },
+        {
+          "current": "export const assertFinLateWorkflow = (workflow, expectedTimeouts = {}) => {\n\tassertFinContainerEdgeWorkflow(workflow, expectedTimeouts);\n",
+          "previous": "export const assertFinLateWorkflow = workflow => {\n\tassertFinContainerEdgeWorkflow(workflow);\n",
+          "start": 3049
+        },
+        {
+          "current": "\tassertFinContainerEdgeWorkflow(previous, expectedTimeouts); assert.equal(enableFinLateWorkflow(previous), workflow);\n",
+          "previous": "\tassertFinContainerEdgeWorkflow(previous); assert.equal(enableFinLateWorkflow(previous), workflow);\n",
+          "start": 3238
+        }
+      ],
+      "path": "tests/helpers/fin-container-late-ci-workflow.mjs",
+      "previousSha256": "25cbc601aa7a66acaaa0cb35a910f65ee895fb9f853744a10a8e3951c0511e08"
+    }
+  ],
+  "validation": {
+    "checkedJavaScriptInventory": "passed",
+    "cliArchiveInstall": "passed",
+    "cliModuleClosure": "passed",
+    "componentEngineClosure": "passed before history rewind",
+    "historicalDocumentation": "passed",
+    "lint": "passed",
+    "liveWorkflowMutationsRejected": 65,
+    "typecheck": "passed"
+  }
+}
