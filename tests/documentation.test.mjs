@@ -801,6 +801,8 @@ test("consumer CI history preserves every consumer and pinned build path", async
     , readFile("scripts/bootstrap-toolchains.sh", "utf8")
     , readFile("tests/type-corpus-reviewed.test.mjs", "utf8")
   ]);
+  const livePerlJob = livePerlWorkflow.split("  perl:\n")[1].split("\n  perl-receivers:\n")[0];
+  assert.match(livePerlJob, /^ {4}timeout-minutes: 240$/m);
   // Partition transforms authenticate their own epochs; later workflow additions are checked above.
   const path = ".github/workflows/consumer-matrix.yml";
   const partitionWorkflow = sourceAtHistoryMilestone(phpWasmCorpusPartitionHistoryPath, path);
@@ -883,7 +885,7 @@ test("consumer CI history preserves every consumer and pinned build path", async
   assert.match(jvmDependencies, /^ {10}cat \/proc\/sys\/kernel\/yama\/ptrace_scope$/mu);
   assert.equal(workflow.split('consumer_command="$consumer_command && LEAN_BRIDGE_GDB=/usr/bin/gdb LEAN_BRIDGE_JVM_FIN_TEST=1 node --test tests/jvm-fin.test.mjs"').length, 2);
   assert.doesNotMatch(workflow, /(?<!LEAN_BRIDGE_GDB=\/usr\/bin\/gdb )LEAN_BRIDGE_JVM_FIN_TEST=1/u);
-  // Each Perl ABI runs the installed Compare and Verify chain in one job; 120 minutes was exhausted.
+  // This reconstructed milestone predates the final 240-minute live budget.
   const perlJob = perlWorkflow.split("  perl:\n")[1].split("\n  perl-receivers:\n")[0];
   assert.match(perlJob, /^ {4}timeout-minutes: 180$/m);
   for(const step of ["Compare installed Perl corpus packages with fresh Lean results", "Verify owned Perl values and installed CPAN archives"])
