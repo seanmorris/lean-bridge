@@ -60,7 +60,7 @@ test("nominal Ruby CI rejects skipped gates, wrong interpreters and narrowed ori
 		assert.throws(() => assertNominalSubtypeRubyWorkflow(changed), assert.AssertionError, `workflow mutation ${index}`);
 	}
 	const rubyJob = source.split("\n  managed-consumers:\n")[1].split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
-	for(const [from, to] of [["fetch-depth: 0", "fetch-depth: 1"], ["ruby-version: '3.3.12'", "ruby-version: '3.2.0'"], ["timeout-minutes: 240", "timeout-minutes: 1"]])
+	for(const [from, to] of [["fetch-depth: 0", "fetch-depth: 1"], ["ruby-version: '3.3.12'", "ruby-version: '3.2.0'"], ["timeout-minutes: 360", "timeout-minutes: 1"]])
 	{
 		const changed = source.replace(rubyJob, () => rubyJob.replaceAll(from, to)); assert.notEqual(changed, source);
 		assert.throws(() => assertNominalSubtypeRubyWorkflow(changed), assert.AssertionError);

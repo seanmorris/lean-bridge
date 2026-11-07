@@ -4600,7 +4600,10 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
-    timeout-minutes: 240
+    # Ruby completed its corpus and nominal package gates after 238 minutes in
+    # run 42344727501/job 128323854052; 240 minutes cancelled the first late
+    # qualification. Keep the complete matrix below GitHub's six-hour ceiling.
+    timeout-minutes: 360
     strategy:
       fail-fast: false
       matrix:

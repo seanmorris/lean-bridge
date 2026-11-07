@@ -30,9 +30,9 @@ const rawCaller = "C raw-adapter probe of the same verified installed libraries;
 export const finContainerEntryCiSelections = Object.freeze([
 	{ job: "php-consumers", profiles: ["php-native"], counted: ["php-native"], step: "type_corpus_php_native", timeout: "240", gdb: false }
 	, { job: "native-consumers", profiles: ["c", "cpp"], counted: ["cpp"], step: "type_corpus_c_family", timeout: "${{ matrix.profile == 'c-family' && 360 || 240 }}", gdb: false }
-	, { job: "managed-consumers", profiles: ["dotnet"], counted: ["dotnet"], step: "type_corpus_dotnet", timeout: "240", gdb: true }
-	, { job: "managed-consumers", profiles: ["java", "kotlin"], counted: ["java", "kotlin"], step: "type_corpus_jvm", timeout: "240", gdb: true }
-	, { job: "managed-consumers", profiles: ["ruby"], counted: ["ruby"], step: "type_corpus_ruby", timeout: "240", gdb: true }
+	, { job: "managed-consumers", profiles: ["dotnet"], counted: ["dotnet"], step: "type_corpus_dotnet", timeout: "360", gdb: true }
+	, { job: "managed-consumers", profiles: ["java", "kotlin"], counted: ["java", "kotlin"], step: "type_corpus_jvm", timeout: "360", gdb: true }
+	, { job: "managed-consumers", profiles: ["ruby"], counted: ["ruby"], step: "type_corpus_ruby", timeout: "360", gdb: true }
 	, { job: "wasi-consumer", profiles: ["wit-wasi"], counted: ["wit-wasi"], step: "ordinary_wit", timeout: "300", gdb: false }
 ].map(selection => Object.freeze({ ...selection, report: selection.profiles.join("-") })));
 // Container selections whose dispatch stays outside these counters: C counts its own package, Python and Rust

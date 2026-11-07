@@ -83,7 +83,8 @@ export const assertManagedCiIsolation = (workflow, previous = null, additionalPr
 	}
 	const evaluateForProfile = (condition, profile, overrides) => evaluate(condition, profile, overrides, additionalProfileSteps);
 	let selectedOutcomeCases = 0;
-	assert.match(body, /^ {4}timeout-minutes: 240$/mu);
+	assert.match(body, /run 42344727501\/job 128323854052/u);
+	assert.match(body, /^ {4}timeout-minutes: 360$/mu);
 	assert.match(body, /^ {4}strategy:\n {6}fail-fast: false\n {6}matrix:\n {8}profile: \[dotnet, jvm, ruby\]$/mu);
 	const prepare = named("Prepare the pinned native compiler");
 	assert.equal(prepare.condition, undefined);
@@ -168,7 +169,7 @@ export const assertManagedCiIsolation = (workflow, previous = null, additionalPr
 			.replace("build/consumer-ci/results/${{ matrix.profile }}.json", "build/consumer-ci/results/*.json"),
 		old.find(step => step.name === upload.name).text, "only the selected observation changes artifact identity");
 	}
-	return { profiles, timeoutMinutesPerProfile: 240, failFast: false
+	return { profiles, timeoutMinutesPerProfile: 360, failFast: false
 		, selectedOutcomeCases, artifactNamesIncludeProfile: true
 		, commandsCompared: previous === null ? 0 : 6 };
 };

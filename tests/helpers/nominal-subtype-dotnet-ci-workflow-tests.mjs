@@ -63,7 +63,7 @@ test("nominal C# CI rejects skipped gates, shared tool selection and narrowed ev
 		assert.throws(() => assertNominalSubtypeDotnetWorkflow(changed), assert.AssertionError, `workflow mutation ${index}`);
 	}
 	const body = source.split("\n  managed-consumers:\n")[1].split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
-	for(const [from, to] of [["fetch-depth: 0", "fetch-depth: 1"], ["persist-credentials: false", "persist-credentials: true"], ["timeout-minutes: 240", "timeout-minutes: 1"]])
+	for(const [from, to] of [["fetch-depth: 0", "fetch-depth: 1"], ["persist-credentials: false", "persist-credentials: true"], ["timeout-minutes: 360", "timeout-minutes: 1"]])
 	{
 		const changed = source.replace(body, () => body.replaceAll(from, to)); assert.notEqual(changed, source);
 		assert.throws(() => assertNominalSubtypeDotnetWorkflow(changed), assert.AssertionError);

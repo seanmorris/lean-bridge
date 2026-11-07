@@ -62,7 +62,7 @@ test("nominal JVM CI rejects omitted gates, narrowed artifacts and false success
 	const body = source.split("\n  managed-consumers:\n")[1].split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
 	const bodyChanges = [["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]
-		, ["timeout-minutes: 240", "timeout-minutes: 1"]
+		, ["timeout-minutes: 360", "timeout-minutes: 1"]
 		, ["java-version: '22.0.2'", "java-version: '22.0.3'"]
 		, ["1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932", "0".repeat(64)]];
 	for(const [from, to] of bodyChanges)

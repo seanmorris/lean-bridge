@@ -60,7 +60,7 @@ test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => 
 
 test("managed CI isolates timeout budgets, profile gates and artifact names", async () => {
 	assert.deepEqual(checkCurrent(await workflow()), {
-		profiles: ["dotnet", "jvm", "ruby"], timeoutMinutesPerProfile: 240
+		profiles: ["dotnet", "jvm", "ruby"], timeoutMinutesPerProfile: 360
 		, failFast: false, selectedOutcomeCases: 54
 		, artifactNamesIncludeProfile: true, commandsCompared: 0
 	});
@@ -74,6 +74,7 @@ test("managed CI rejects dropped gates, shared artifacts and incomplete bootstra
 	for(const [before, after] of [
 		["profile: [dotnet, jvm, ruby]", "profile: [dotnet, jvm]"]
 		, ["fail-fast: false", "fail-fast: true"]
+		, ["timeout-minutes: 360", "timeout-minutes: 240"]
 		, ["if: matrix.profile == 'jvm'", "if: matrix.profile == 'dotnet'"]
 		, ["if: always() && matrix.profile == 'ruby'", "if: always()"]
 		, ["for consumer in ${{ matrix.profile }}; do", "for consumer in dotnet jvm ruby; do"]

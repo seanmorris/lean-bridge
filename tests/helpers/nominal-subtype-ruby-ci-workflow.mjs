@@ -66,7 +66,7 @@ export const assertNominalSubtypeRubyWorkflow = source => {
 	const body = source.split("\n  managed-consumers:\n")[1]?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
 	assert.equal(typeof body, "string");
 	assert.match(body, /^ {4}runs-on: ubuntu-24\.04$/mu);
-	assert.match(body, /^ {4}timeout-minutes: 240$/mu);
+	assert.match(body, /^ {4}timeout-minutes: 360$/mu);
 	assert.match(body, /^ {8}profile: \[dotnet, jvm, ruby\]$/mu);
 	assert.match(body, /^ {10}fetch-depth: 0$/mu);
 	assert.doesNotMatch(body, /^ {4}(?:if:|continue-on-error:)|LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR|LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_/mu);
