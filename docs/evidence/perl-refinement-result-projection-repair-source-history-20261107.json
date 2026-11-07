@@ -1,0 +1,151 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "livePinRefreshes": 0,
+    "projectedResults": 1,
+    "regressionAssertions": 2,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "candidate": "56eb7eccc9fdb014ed6f6beb097e16c36b47c5be",
+    "event": "workflow_dispatch",
+    "failingTest": "relocated source-free CPAN packages check an unboxed word subtype and nested Fin 0 shapes",
+    "jobs": [
+      128269443717,
+      128269443747
+    ],
+    "profiles": [
+      "Perl / Perl XS (5.36.3-unthreaded)",
+      "Perl / Perl XS (5.36.3-threaded)"
+    ],
+    "run": 42326602590
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-perl-refinement-result-projection-repair-source-history.mjs",
+      "sha256": "f368092f82b4be5e4a6b114f3da7b753b760fa5a65e73a4e9f9b086749cba3eb"
+    },
+    {
+      "path": "tests/helpers/perl-refinement-result-projection-repair-source-history-tests.mjs",
+      "sha256": "83629177acf4b03152cda25a42d5af08309819d3619025f6a4b610fdeae49fd9"
+    },
+    {
+      "path": "tests/helpers/perl-refinement-result-projection-repair-source-history.mjs",
+      "sha256": "0cd59661e4e51f45396e95c7475f3f92428555cf4051f9321a5c97a533533c68"
+    }
+  ],
+  "implementationCommit": "5a61df8dca4cff28190a77159ab4f301dd981c61",
+  "integrationCommit": "45c9c2769c5197697f6a7c1b7150fe048f112211",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6a97c9166f027ff89dff9a2358cef111eee65805a2ff1cc4b82dc90b4b94d1e9",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-refinement-result-projection-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "57ee8a5a03fe8eb43223810d8459ffbddd973c56ae4c2b0207ec95de1e9ae674"
+    },
+    {
+      "currentSha256": "acf44252f2ff15f69bd6d6be79ae7404b513d1a9e9e002bb80462ff179a06538",
+      "edits": [
+        {
+          "current": "import {\n\tbeforePerlRefinementResultProjectionRepairSource\n\t, perlRefinementResultProjectionRepairNormalizationPaths\n} from \"./perl-refinement-result-projection-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...perlRefinementResultProjectionRepairNormalizationPaths\n\t, ...reviewedSubtypeLiveExpectationNormalizationPaths\n",
+          "previous": "\t...reviewedSubtypeLiveExpectationNormalizationPaths\n",
+          "start": 240423
+        },
+        {
+          "current": "\tlet stage = beforePerlRefinementResultProjectionRepairSource(\n",
+          "previous": "\tlet stage = beforeReviewedSubtypeLiveExpectationSource(\n",
+          "start": 302401
+        },
+        {
+          "current": "\t\treturn stage;\n\ttext = stage;\n\tstage = beforeReviewedSubtypeLiveExpectationSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n",
+          "previous": "",
+          "start": 302547
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3f8502009d005e172f3d7cbc815463c285e58698470cd634ecb63f5dc36c3c91"
+    }
+  ],
+  "inventorySha256": {
+    "after": "f533b7e2b6299d01b2cb1f5848c162f42e75b74f9fa0d9ac2fd1de7c50300573",
+    "before": "f533b7e2b6299d01b2cb1f5848c162f42e75b74f9fa0d9ac2fd1de7c50300573"
+  },
+  "milestone": "perl-refinement-result-projection-repair-v1",
+  "predecessorCommit": "56eb7eccc9fdb014ed6f6beb097e16c36b47c5be",
+  "refreshed": {},
+  "repair": "Make wrap32's live result contract constructor-free, represent its produced Subtype refinement with constructor:null, and add a cheap assertion that binds both directions. A full source inventory classifies the remaining constructor-bearing result examples as deliberate rejection cases or immutable producer-era fixtures.",
+  "rootCause": "The earlier directional native Subtype repair corrected the shared native fixture but missed the separate Perl supplemental fixture. Its wrap32 result still selected checkedDigit32 as though Lean-produced output were host input, so native model validation rejected that positive fixture with `invalid Subtype refinement: {}`.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "310ba81eef35d41d71ba484e4421d4499a08cd8b7dc1887d87fcc2e3873c1ec0",
+      "edits": [
+        {
+          "current": "const projected = { ownership: \"copy\", lifetime: null };\n",
+          "previous": "",
+          "start": 1645
+        },
+        {
+          "current": "/** Export contracts: inputs select the checked word; Lean-produced results project its base value. */\n",
+          "previous": "/** Export contracts: the checked word at parameter and result sites; container exports carry compiler bounds. */\n",
+          "start": 1897
+        },
+        {
+          "current": "\t, \"PerlRefinements.wrap32\": { parameters: [plain], result: projected }\n",
+          "previous": "\t, \"PerlRefinements.wrap32\": { parameters: [plain], result: site(\"PerlRefinements.checkedDigit32\") }\n",
+          "start": 2153
+        },
+        {
+          "current": "\t, \"PerlRefinements.wrap32\": { parameters: [null], result: { ...checked, constructor: null } }\n",
+          "previous": "\t, \"PerlRefinements.wrap32\": { parameters: [null], result: checked }\n",
+          "start": 2690
+        },
+        {
+          "current": "test(\"Lean-produced Perl Subtype results project their base without an input constructor\", () => {\n\tassert.deepEqual(perlRefinementContracts[\"PerlRefinements.wrap32\"].result, projected);\n\tassert.deepEqual(perlRefinementRefinements[\"PerlRefinements.wrap32\"].result, { kind: \"subtype\", constructor: null });\n});\n\n",
+          "previous": "",
+          "start": 3299
+        }
+      ],
+      "path": "tests/perl-refinements.test.mjs",
+      "previousSha256": "3d57120efadc06778771cd46e0c08657f8f089706eb07f1d7eaacf8428700497"
+    }
+  ],
+  "validation": {
+    "focusedRegression": {
+      "fail": 0,
+      "pass": 1,
+      "tests": 1
+    },
+    "hostedPreFix": "Both Perl 5.36.3 jobs failed at the same positive supplemental fixture after the reviewed-Subtype 2025-check assertion passed.",
+    "localPostFix": "Model construction crosses the exact former failure; the local glibc 2.36 host then cannot install packages requiring hosted glibc 2.38.",
+    "nativeDirection": {
+      "fail": 0,
+      "pass": 2,
+      "tests": 2
+    },
+    "priorProjectionHistory": {
+      "fail": 0,
+      "pass": 5,
+      "tests": 5
+    }
+  }
+}
