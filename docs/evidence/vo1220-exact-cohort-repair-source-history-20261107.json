@@ -220,7 +220,7 @@
   "historyAdditions": [
     {
       "path": "scripts/update-vo1220-exact-cohort-repair-source-history.mjs",
-      "sha256": "f3404e531a03e634b74b151f587576bb63daee63ee3ebc72e4888d17fa758fa8"
+      "sha256": "4bbcf79045831d5f22a19217bfe4a6bb5086096fcf3375c46d05ceb6a61b343a"
     },
     {
       "path": "tests/helpers/vo1220-exact-cohort-repair-source-history-tests.mjs",
@@ -3939,8 +3939,19 @@
     }
   ],
   "validation": {
+    "candidateSourceHistory": {
+      "durationSeconds": 16,
+      "fail": 0,
+      "pass": 4,
+      "tests": 4
+    },
     "componentNestedFinHistory": {
-      "durationSeconds": 307
+      "durationSeconds": 313
+    },
+    "componentOwnershipAudit": {
+      "fail": 0,
+      "pass": 1,
+      "tests": 1
     },
     "componentParent": {
       "fail": 0,
@@ -3948,12 +3959,34 @@
       "tests": 10
     },
     "componentSubtypeHistory": {
-      "durationSeconds": 317
+      "durationSeconds": 318
     },
     "coreShard12": {
       "fail": 0,
       "pass": 1315,
       "tests": 1315
+    },
+    "exactCohortSourceHistory": {
+      "durationSeconds": 11,
+      "fail": 0,
+      "pass": 6,
+      "tests": 6
+    },
+    "nestedOwnershipAudit": {
+      "fail": 0,
+      "pass": 1,
+      "tests": 1
+    },
+    "nestedParent": {
+      "fail": 0,
+      "pass": 2,
+      "skipped": 2,
+      "tests": 4
+    },
+    "profileTopology": {
+      "fail": 0,
+      "pass": 4,
+      "tests": 4
     },
     "touchedLint": "passed",
     "typecheck": "passed",

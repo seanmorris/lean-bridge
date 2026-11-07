@@ -169,10 +169,20 @@ try
 			before: sha256(beforeInventorySource), after: sha256(afterInventorySource)
 		}
 		, validation: {
-			coreShard12: { tests: 1315, pass: 1315, fail: 0 }
+			exactCohortSourceHistory: {
+				tests: 6, pass: 6, fail: 0, durationSeconds: 11
+			}
+			, candidateSourceHistory: {
+				tests: 4, pass: 4, fail: 0, durationSeconds: 16
+			}
+			, coreShard12: { tests: 1315, pass: 1315, fail: 0 }
 			, componentParent: { tests: 10, pass: 10, fail: 0 }
-			, componentSubtypeHistory: { durationSeconds: 317 }
-			, componentNestedFinHistory: { durationSeconds: 307 }
+			, nestedParent: { tests: 4, pass: 2, fail: 0, skipped: 2 }
+			, componentOwnershipAudit: { tests: 1, pass: 1, fail: 0 }
+			, nestedOwnershipAudit: { tests: 1, pass: 1, fail: 0 }
+			, componentSubtypeHistory: { durationSeconds: 318 }
+			, componentNestedFinHistory: { durationSeconds: 313 }
+			, profileTopology: { tests: 4, pass: 4, fail: 0 }
 			, workflowLint: "passed", typecheck: "passed", touchedLint: "passed"
 		}
 		, updates, implementationAdditions: implementationAdditionRecords
