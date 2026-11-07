@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/core-final-runtime-budget-source-history-tests.mjs";
+import "./helpers/vo1220-exact-cohort-repair-source-history-tests.mjs";
 import "./helpers/candidate-acceptance-repair-source-history-tests.mjs";
 import "./helpers/core-historical-reader-repair-source-history-tests.mjs";
 import "./helpers/perl-refinement-result-projection-repair-source-history-tests.mjs";
