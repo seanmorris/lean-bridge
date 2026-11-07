@@ -108,8 +108,9 @@ export const disableFinContainerEdgeWorkflow = workflow => {
  * Reject missing hosts, observations, floor bindings, uploads, budgets or enforced producer outcomes.
  *
  * @param workflow - Consumer workflow with the measured edge gates.
+ * @param expectedTimeouts - Historical per-job timeout overrides.
  */
-export const assertFinContainerEdgeWorkflow = workflow => {
+export const assertFinContainerEdgeWorkflow = (workflow, expectedTimeouts = {}) => {
 	assert.deepEqual(finContainerEdgeCiSelections.flatMap(item => item.profiles.split(",")).sort(), [...finContainerEdgeProfiles, "python"].sort());
 	assert.equal(count(workflow, finContainerEdgeCiFlag), 2 * finContainerEdgeCiSelections.length);
 	assert.equal(count(workflow, "scripts/check-fin-container-foreign-report.mjs"), 2 * finContainerEdgeCiSelections.length);
@@ -120,7 +121,8 @@ export const assertFinContainerEdgeWorkflow = workflow => {
 		const start = workflow.indexOf(`\n  ${item.job}:\n`), after = workflow.slice(start + 1).search(/\n {2}[a-z][a-z0-9-]*:\n/u);
 		const job = workflow.slice(start, after < 0 ? undefined : start + 1 + after);
 		const header = job.slice(0, job.indexOf("\n    steps:\n") + 1);
-		assert.ok(header.includes(`\n    timeout-minutes: ${item.timeout}\n`), `${item.label} budget`);
+		const timeout = expectedTimeouts[item.job] ?? item.timeout;
+		assert.ok(header.includes(`\n    timeout-minutes: ${timeout}\n`), `${item.label} budget`);
 		const step = workflow.slice(workflow.lastIndexOf("\n      - name: ", index), workflow.indexOf("\n      - name: ", index));
 		assert.ok(step.includes(`\n        id: ${item.step}\n`));
 		assert.doesNotMatch(step, /set \+e|\|\| true/u);

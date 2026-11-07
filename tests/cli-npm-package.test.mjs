@@ -9,13 +9,14 @@ import { execFile } from "node:child_process";
 import { createHash, generateKeyPairSync } from "node:crypto";
 import { chmod, cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, extname, join, normalize, resolve } from "node:path";
 import { promisify } from "node:util";
 import test from "node:test";
 
 import { buildCliNpmPackage } from "../src/release/cli-npm-package.mjs";
 import { identifyBuildEngine } from "../src/build/engine-execution-request.mjs";
 import { readBuilderManifest } from "../src/build/canonical-build.mjs";
+import { moduleSpecifiers } from "./helpers/module-closure.mjs";
 import "./helpers/cli-import-repair-tests.mjs";
 import "./helpers/cli-import-repair-history-tests.mjs";
 
@@ -61,6 +62,20 @@ test("the development package has the same explicit safe source allowlist", asyn
 	const { stdout } = await execute("npm", ["pack", "--dry-run", "--json", "--ignore-scripts"]);
 	const packed = JSON.parse(stdout)[0].files.map(file => file.path).sort();
 	assert.deepEqual(packed, [...config.files, "package.json", "README.md"].sort());
+});
+
+test("the CLI source allowlist contains every relative module dependency", async () => {
+	const included = new Set(config.files);
+	for(const path of config.files.filter(path => path.endsWith(".mjs")))
+	{
+		const source = await readFile(path, "utf8");
+		for(const specifier of moduleSpecifiers(source, path))
+		{
+			const dependency = normalize(join(dirname(path)
+				, extname(specifier) === "" ? `${specifier}.mjs` : specifier));
+			assert.ok(included.has(dependency), `${path}: ${specifier} resolves outside the CLI source allowlist`);
+		}
+	}
 });
 
 test("CLI archives are deterministic, dependency-free, and contain the complete pinned engine", async () => {

@@ -87,6 +87,9 @@ const nixDiskCleanupCommand = "sudo rm -rf /usr/share/dotnet /usr/local/lib/andr
 const callbackDiskCleanupName
 	= "Free hosted runner disk before callback package builds";
 const callbackDiskCleanupCommand = nixDiskCleanupCommand;
+const historicalFinContainerTimeouts = Object.freeze({
+	"managed-consumers": "240", "wasi-consumer": "240"
+});
 const expectedCallbackDiskJobs = [
 	"owned-dotnet-callback-results", "owned-perl-callback-results"
 	, "owned-jvm-callback-results", "owned-ruby-callback-results"
@@ -826,7 +829,7 @@ test("consumer CI history preserves every consumer and pinned build path", async
   const currentPerlWorkflow = disableStructuralSubtypeWorkflow(structuralPerlWorkflow, "perl-consumer.yml");
   // Check the actual recording split and measured gates before earlier layout comparisons.
   assertWorkflowRunBudget(splitWorkflow);
-  assertFinLateWorkflow(splitWorkflow);
+  assertFinLateWorkflow(splitWorkflow, historicalFinContainerTimeouts);
   const packageWorkflow = disableFinLateWorkflow(joinNativeObservations(splitWorkflow));
   assertCheckedRecordHostWorkflow(packageWorkflow);
   const withoutCheckedRecords = disableCheckedRecordHostWorkflow(packageWorkflow);
@@ -834,7 +837,7 @@ test("consumer CI history preserves every consumer and pinned build path", async
   const currentWorkflow = disableReviewedSubtypePackageWorkflow(withoutCheckedRecords);
   assertReviewedSubtypeHostWorkflow(currentWorkflow, "consumer-matrix.yml");
   assertReviewedSubtypeHostWorkflow(currentPerlWorkflow, "perl-consumer.yml");
-  assertFinContainerEdgeWorkflow(currentWorkflow);
+  assertFinContainerEdgeWorkflow(currentWorkflow, historicalFinContainerTimeouts);
   assertFinRecordZeroWorkflow(currentWorkflow, "consumer-matrix.yml");
   assertPhpWasmEntryWorkflow(currentWorkflow);
   const withoutEntry = disablePhpWasmEntryWorkflow(disableReviewedSubtypeHostWorkflow(currentWorkflow, "consumer-matrix.yml"));

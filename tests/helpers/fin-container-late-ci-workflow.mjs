@@ -57,11 +57,12 @@ export const disableFinLateWorkflow = workflow => {
  * Require every supplemented lane in its enforced producer and always-upload step.
  *
  * @param workflow - Actual proposed workflow bytes.
+ * @param expectedTimeouts - Historical per-job timeout overrides.
  */
-export const assertFinLateWorkflow = workflow => {
-	assertFinContainerEdgeWorkflow(workflow);
+export const assertFinLateWorkflow = (workflow, expectedTimeouts = {}) => {
+	assertFinContainerEdgeWorkflow(workflow, expectedTimeouts);
 	const previous = disableFinLateWorkflow(workflow);
-	assertFinContainerEdgeWorkflow(previous); assert.equal(enableFinLateWorkflow(previous), workflow);
+	assertFinContainerEdgeWorkflow(previous, expectedTimeouts); assert.equal(enableFinLateWorkflow(previous), workflow);
 	assert.equal(workflow.split("scripts/run-fin-late-native-ci.sh").length - 1, 16);
 	assert.equal(workflow.split("scripts/run-fin-late-wit-ci.sh").length - 1, 2);
 	for(const item of finContainerEdgeCiSelections)
