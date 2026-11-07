@@ -4,6 +4,7 @@
  * @file
  */
 import { assertComponentCopiedAbi, componentArrayShape } from "../abi/component-copied.mjs";
+import { componentDependentFinGuard } from "./component-dependent-fin.mjs";
 
 const object = type => type.kind === "apply" || ["unit", "nat", "int", "string", "bytes"].includes(type.name);
 const cType = type => object(type) ? "lean_object *" : ["usize", "isize"].includes(type.name) ? "size_t"
@@ -44,11 +45,14 @@ export const generateComponentCopiedAdapters = (abi, exports = []) => {
 			lines.push(`  ${cType(type)} a${index} = ${object(type) ? `boxed${index}` : `(${cType(type)})lean_unbox${suffix(type)}(boxed${index})`};`);
 			if(!object(type)) lines.push(`  lean_dec(boxed${index});`);
 		}
-		// A dependent Fin is checked by the complete Lean wrapper against its live bound
-		// argument; compiler-adapters.mjs exports no unary validator for it.
+		// The complete Lean wrapper still constructs the proof, while the adapter owns
+		// the observable raw-call refusal. No unary validator exists for a dynamic bound.
 		for(const [index, refinement] of refinements.entries())
 		{
-			if(refinement && refinement.kind !== "fin-parameter")
+			const dependent = componentDependentFinGuard(
+				refinement, index, item.parameters, rejectionCleanup, 5);
+			if(dependent) lines.push(dependent);
+			else if(refinement)
 			{
 				if(object(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
 				lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 5; }`);

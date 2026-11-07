@@ -9,27 +9,6 @@ import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import "./helpers/promotion-doc-milestone-replay-repair-source-history-tests.mjs";
-import "./helpers/nested-promotion-doc-milestone-repair-source-history-tests.mjs";
-import "./helpers/nested-checked-record-npm-installed-tests.mjs";
-import "./helpers/nested-checked-record-browser-ci-tests.mjs";
-import "./helpers/nested-checked-record-browser-ci-workflow-tests.mjs";
-import "./helpers/nested-checked-record-browser-promotion-tests.mjs";
-import "./helpers/nested-checked-record-browser-promotion-history-tests.mjs";
-import "./helpers/nested-checked-record-archive-gap-history-tests.mjs";
-import "./helpers/nested-checked-record-native-correction-source-history-tests.mjs";
-import "./helpers/nested-checked-record-native-archive-tests.mjs";
-import "./helpers/nested-checked-record-native-ci-policy-tests.mjs";
-import "./helpers/nested-checked-record-native-ci-shell-tests.mjs";
-import "./helpers/nested-checked-record-native-ci-workflow-tests.mjs";
-import "./helpers/nested-checked-record-native-promotion-tests.mjs";
-import "./helpers/nested-checked-record-native-promotion-history-tests.mjs";
-import "./helpers/nested-checked-record-python-tests.mjs";
-import "./helpers/inherited-checked-record-promotion-tests.mjs";
-import "./helpers/inherited-checked-record-promotion-source-history-tests.mjs";
-import "./helpers/recursive-checked-record-promotion-tests.mjs";
-import "./helpers/recursive-checked-record-promotion-source-history-tests.mjs";
-import "./helpers/recursive-checked-record-documentation-closure-source-history-tests.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { inspectLeanProject } from "../src/analyze/lean-project.mjs";
@@ -54,6 +33,10 @@ import {
 	nestedCheckedRecordNpmRoutes,
 	nestedCheckedRecordNpmSelection
 } from "./helpers/nested-checked-record-npm-fixture.mjs";
+
+// Retained acceptance and history suites are distributed across the twelve
+// nested-checked-record-history-partition files so this behavior file cannot
+// accumulate every suite's memory in one hosted process.
 
 const enabled = process.env.LEAN_BRIDGE_NESTED_CHECKED_RECORD_LEAN_TEST === "1";
 const leanPrefix = join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");

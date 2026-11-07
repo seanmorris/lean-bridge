@@ -8,6 +8,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentScalarTypes, scalarCopyLimit, scalarSlotBytes } from "../abi/component-scalars.mjs";
 import { assertComponentRecordAbi, componentCompoundAbi, componentNominalAbi } from "../abi/component-records.mjs";
 import { componentRefinedCall, componentRefinementGuards, componentRefinementConversion } from "./component-refinements.mjs";
+import { componentDependentFinGuard } from "./component-dependent-fin.mjs";
 
 const key = id => sha256(id).slice(0, 20);
 const prefix = (abi, id) => `${abi.exports[0].symbol}_record_${key(id)}`;
@@ -149,7 +150,7 @@ export const componentRecordLeanSource = (abi, exports, leanType, nominalRefinem
 	{
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
 		const parameters = signature.parameters.map((type, index) => `(${item.parameters[index].name} : ${transportType(type)})`).join(" ");
-		for(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement)
+		for(const [index, refinement] of (item.refinements?.parameters ?? []).entries()) if(refinement && refinement.kind !== "fin-parameter")
 		{
 			lines.push(`@[export ${item.symbol}_refinement_${index}]`);
 			lines.push(`def ${item.wrapper}_refinement_${index} (value : ${transportType(signature.parameters[index])}) : _root_.UInt8 :=`);
@@ -323,6 +324,7 @@ export const generateComponentRecordAdapters = (abi, exports = []) => {
 		const rejectionCleanup = item.parameters.flatMap((type, index) => object(type) ? [`lean_dec(a${index});`] : []).join(" ");
 		lines.push(`extern ${cType(item.result)} ${item.symbol}_lean(${item.parameters.length ? item.parameters.map(cType).join(", ") : "lean_object *"});`
 			, ...refinements.flatMap((refinement, index) => refinement
+				&& refinement.kind !== "fin-parameter"
 				? [`extern uint8_t ${item.symbol}_refinement_${index}(${cType(item.parameters[index])});`] : [])
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`, `  uint32_t status = bridge_${mode}_frame_validate(frame, ${item.parameters.length});`
 			, "  if (status) return status;", `  if (bridge_${mode}_abi() != 1) return 6;`, "  uint32_t budget = 16u * 1024u * 1024u;");
@@ -330,8 +332,14 @@ export const generateComponentRecordAdapters = (abi, exports = []) => {
 		for(const [index, type] of item.parameters.entries()) lines.push(...decode(type, `&frame->args[${index}]`, `a${index}`));
 		for(const [index, refinement] of refinements.entries()) if(refinement)
 		{
-			if(object(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
-			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 5; }`);
+			const dependent = componentDependentFinGuard(
+				refinement, index, item.parameters, rejectionCleanup, 5);
+			if(dependent) lines.push(dependent);
+			else
+			{
+				if(object(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
+				lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 5; }`);
+			}
 		}
 		lines.push(`  ${cType(item.result)} result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`
 			, `  lean_object *boxed = ${box(item.result, "result")};`, "  if (budget < 16) { lean_dec(boxed); return 4; }", "  budget -= 16;"

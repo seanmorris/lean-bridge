@@ -25,7 +25,19 @@ for(const route of selected)
 	test(`installed ${route} JavaScript-family packages check the live dependent bound`, {
 		timeout: 2_400_000
 	}, async t => {
-		const report = await checkDependentFinJavascriptRoute(t, route);
+		let report;
+		try
+		{
+			report = await checkDependentFinJavascriptRoute(t, route);
+		} catch(error)
+		{
+			t.diagnostic(canonicalJson({
+				message: String(error?.message ?? error)
+				, code: error?.code ?? null
+				, details: error?.details ?? null
+			}));
+			throw error;
+		}
 		const configured = process.env.LEAN_BRIDGE_DEPENDENT_FIN_JAVASCRIPT_REPORT;
 		if(configured)
 		{

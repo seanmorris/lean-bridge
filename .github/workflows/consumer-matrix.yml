@@ -2013,7 +2013,7 @@ jobs:
         run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the locked engine and prepared runtime
         run: |
-          nix build .#universal-core-artifacts --out-link build/consumer-ci-runtime
+          bash scripts/retry-lean-bootstrap-ci.sh nix build .#universal-core-artifacts --out-link build/consumer-ci-runtime
           nix build .#component-build-engine --out-link build/locked-lake-engine
       - name: Account installed Wasm adapter and Lean source entry in Node and every browser context
         shell: bash
@@ -3492,7 +3492,7 @@ jobs:
           bash scripts/build-lean-runtime.sh
       - name: Combine PHP-Wasm with native PHP and JavaScript from one captured API
         run: |
-          nix build .#universal-core-artifacts --out-link build/php-multi-runtime
+          bash scripts/retry-lean-bootstrap-ci.sh nix build .#universal-core-artifacts --out-link build/php-multi-runtime
           nix build .#component-build-engine --out-link build/php-multi-engine
           source scripts/env.sh
           node --test tests/php-wasm-multi-profile.test.mjs
@@ -6268,7 +6268,7 @@ jobs:
           export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
           source scripts/env.sh
           npm run test:owned-wit-transfers 2>&1 | tee build/wit-owned-transfers.log
-          rg '^# pass 5$' build/wit-owned-transfers.log
+          rg '^# pass 6$' build/wit-owned-transfers.log
           rg '^# fail 0$' build/wit-owned-transfers.log
           rg '^# skipped 0$' build/wit-owned-transfers.log
           test -s build/owned-wit-transfers/ordinary.json

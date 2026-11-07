@@ -11,10 +11,13 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
+import { consumerMatrixSortedNixJobs as expectedNixJobs }
+	from "./helpers/consumer-matrix-live-topology.mjs";
 
 const execute = promisify(execFile);
 const workflowPath = ".github/workflows/consumer-matrix.yml";
 const runnerPath = "scripts/test-docker-consumer-ci.sh";
+const retryPath = "scripts/retry-lean-bootstrap-ci.sh";
 const sourceClosurePath = "scripts/check-consumer-source-closure.sh";
 
 const fakeNpm = `#!/usr/bin/env bash
@@ -69,6 +72,32 @@ const runFixture = async mode => {
 	}
 };
 
+const runStandaloneRetryFixture = async mode => {
+	const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-bootstrap-retry-"));
+	try
+	{
+		const command = join(scratch, "consumer");
+		const count = join(scratch, "count");
+		await writeFile(command, fakeNpm);
+		await chmod(command, 0o755);
+		try
+		{
+			const result = await execute("bash", [retryPath, command], {
+				cwd: process.cwd()
+				, env: { ...process.env, LEAN_BRIDGE_RETRY_COUNT: count, LEAN_BRIDGE_RETRY_MODE: mode }
+			});
+			return { code: 0, ...result, attempts: Number(await readFile(count, "utf8")) };
+		} catch(error)
+		{
+			return { code: error.code, stdout: error.stdout, stderr: error.stderr
+				, attempts: Number(await readFile(count, "utf8")) };
+		}
+	} finally
+	{
+		await rm(scratch, { recursive: true, force: true });
+	}
+};
+
 test("Docker consumer CI retries the exact transient Lean bootstrap failure", async () => {
 	const result = await runFixture("transient");
 	assert.equal(result.code, 0);
@@ -81,6 +110,29 @@ test("Docker consumer CI does not retry an unrelated failure", async () => {
 	assert.equal(result.code, 7);
 	assert.equal(result.attempts, 1);
 	assert.doesNotMatch(result.stderr, /Retrying/);
+});
+
+test("standalone Nix bootstrap retry accepts only the exact transient diagnostic", async () => {
+	const transient = await runStandaloneRetryFixture("transient");
+	assert.equal(transient.code, 0);
+	assert.equal(transient.attempts, 2);
+	assert.match(transient.stderr, /Retrying the exact command once/);
+	const permanent = await runStandaloneRetryFixture("permanent");
+	assert.equal(permanent.code, 7);
+	assert.equal(permanent.attempts, 1);
+	assert.doesNotMatch(permanent.stderr, /Retrying/);
+});
+
+test("every direct universal-core CI build uses the exact transient retry", async () => {
+	for(const path of [workflowPath, ".github/workflows/reviewed-fin-wasm-entry.yml"])
+	{
+		const source = await readFile(path, "utf8");
+		const lines = source.split("\n").filter(line => line.includes(
+			"nix build .#universal-core-artifacts --out-link"));
+		assert.ok(lines.length > 0, path);
+		assert.ok(lines.every(line => line.trimStart().startsWith(
+			"bash scripts/retry-lean-bootstrap-ci.sh nix build ")), path);
+	}
 });
 
 const dockerJob = source => source.split("  docker-engine:\n")[1]
@@ -149,15 +201,6 @@ const metadataSparsePatterns = [
 
 const genericRecordArchive
 	= "docs/evidence/php-wasm-generic-records-20261007";
-
-const expectedNixJobs = [
-	"browser-consumer", "docker-engine", "host-null-systems"
-	, "managed-consumers", "native-c-family-values", "native-consumers"
-	, "nix-cache", "node-consumers", "owned-jvm-values", "owned-wit-receivers"
-	, "php-consumers", "php-multi-profile", "php-wasm-callback-results"
-	, "php-wasm-consumers", "php-wasm-corpus", "php-wasm-receivers"
-	, "reviewed-fin-wasm-entry", "wasi-consumer"
-];
 
 const assertNixSourceClosures = source => {
 	const jobs = workflowJobs(source);

@@ -9,6 +9,10 @@ import { consumerToolExportLines } from "./helpers/consumer-tool-lookups.mjs";
 import { access, readFile, readdir, stat } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
+import {
+	consumerMatrixDiskBudgetedNixJobs as diskBudgetedNixJobs
+	, consumerMatrixNixJobs as expectedNixJobs
+} from "./helpers/consumer-matrix-live-topology.mjs";
 import { isDeepStrictEqual } from "node:util";
 import "./helpers/node-consumer-budget-ci-tests.mjs";
 import "./helpers/node-consumer-budget-source-history-tests.mjs";
@@ -80,15 +84,6 @@ const assertDependencyStep = (workflow, id, command, condition) => {
 
 const nixDiskCleanupName = "Free hosted runner disk before Nix-backed builds";
 const nixDiskCleanupCommand = "sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL";
-const expectedNixJobs = [
-	"nix-cache", "node-consumers", "reviewed-fin-wasm-entry", "browser-consumer"
-	, "php-wasm-receivers", "php-wasm-callback-results", "php-consumers"
-	, "php-wasm-consumers", "php-wasm-corpus", "php-multi-profile"
-	, "native-c-family-values", "native-consumers", "managed-consumers"
-	, "owned-jvm-values", "host-null-systems", "owned-wit-receivers"
-	, "wasi-consumer", "docker-engine", "wasi-qualifications"
-];
-const diskBudgetedNixJobs = expectedNixJobs.filter(id => id !== "nix-cache");
 const callbackDiskCleanupName
 	= "Free hosted runner disk before callback package builds";
 const callbackDiskCleanupCommand = nixDiskCleanupCommand;
@@ -901,10 +896,14 @@ test("consumer CI history preserves every consumer and pinned build path", async
   const nativeJob = workflow.split("  native-consumers:\n")[1].split("\n  managed-consumers:\n")[0];
   assert.match(nativeJob, /^ {4}timeout-minutes: \$\{\{ matrix\.profile == 'c-family' && 360 \|\| 240 \}\}$/m);
   const wasiJob = workflow.split("  wasi-consumer:\n")[1].split("\n  docker-engine:\n")[0];
-  assert.match(wasiJob, /^ {4}timeout-minutes: 300$/m);
+  assert.match(wasiJob, /^ {4}timeout-minutes: 240$/m);
   assert.match(wasiJob, /npm run test:owned-wit-transfers/);
   assert.match(wasiJob, /npm run test:owned-wit-borrows/);
-  const wasiQualifications = workflow.match(/^ {2}wasi-qualifications:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
+  assert.doesNotMatch(workflow, /^ {2}wasi-qualifications:/mu);
+  const liveWasiJob = liveWorkflow.match(/^ {2}wasi-consumer:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
+  assert.ok(liveWasiJob);
+  assert.match(liveWasiJob, /^ {4}timeout-minutes: 300$/m);
+  const wasiQualifications = liveWorkflow.match(/^ {2}wasi-qualifications:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
   assert.ok(wasiQualifications);
   assert.match(wasiQualifications, /^ {4}timeout-minutes: 330$/m);
   const phpJob = workflow.match(/^ {2}php-consumers:\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
@@ -1474,7 +1473,23 @@ test("consumer CI history preserves every consumer and pinned build path", async
   assert.match(perlWorkflow, /nix shell --inputs-from \. nixpkgs#perl/);
   const consumerWorkflows = `${workflow}\n${perlWorkflow}`;
   const contract = await readConsumerSupport();
-  const managed = assertManagedCiIsolation(workflow);
+  const managed = assertManagedCiIsolation(liveWorkflow, null, {
+    dotnet: [
+      { id: "direct_proof_managed", continueOnError: true }
+      , { id: "optional_parameters_managed", continueOnError: true }
+      , { id: "host_null_managed", continueOnError: true }
+    ]
+    , jvm: [
+      "nominal_jvm"
+      , { id: "direct_proof_managed", continueOnError: true }
+      , { id: "optional_parameters_managed", continueOnError: true }
+      , { id: "host_null_managed", continueOnError: true }
+    ]
+    , ruby: [
+      { id: "direct_proof_language", continueOnError: true }
+      , { id: "optional_parameters_language", continueOnError: true }
+    ]
+  });
   // The historical verifier needs the complete workflow identity before exact rewinds.
   const native = assertNativeCiIsolation(structuralWorkflow, JSON.parse(await readFile("tests/fixtures/ci/native-acceptance-before-isolation.json")));
   for(const consumer of contract.consumers)

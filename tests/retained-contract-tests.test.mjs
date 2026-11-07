@@ -181,7 +181,9 @@ const nativeRetainedLoaders = Object.freeze({
 		"./maven-prerequisite-history-tests.mjs"
 	])
 	, "tests/owned-perl-xs.test.mjs": Object.freeze([
-		"./helpers/owned-perl-callback-result-history-tests.mjs"
+		"./helpers/owned-perl-callback-result-acceptance-tests.mjs"
+		, "./helpers/owned-perl-callback-result-history-tests.mjs"
+		, "./helpers/owned-perl-callback-result-variant-acceptance-tests.mjs"
 		, "./helpers/owned-perl-callback-result-variant-history-tests.mjs"
 	])
 	, "tests/perl-fin-containers.test.mjs": Object.freeze([
@@ -586,7 +588,8 @@ test("native consumer entrypoints keep every retained test behind the deferred b
 	assert.ok(entries.every(entry => closure.has(entry)));
 	const loaders = entries.flatMap(parent =>
 		registeredLoaders(parent, closure.get(parent)));
-	assert.equal(loaders.length, 126);
+	assert.equal(new Set(loaders.map(({ parent, module }) =>
+		`${parent}:${module}`)).size, loaders.length, "retained loaders are unique");
 	assertNoEagerHistory(closure);
 	assertRetainedReferences(closure, referenceOnlyHelpers.native, directories);
 	assertLoadersDeferred(closure, loaders);

@@ -109,7 +109,7 @@ test("WIT transfer CI rejects disabled checks and hidden failures", async () => 
 		[execute, execute + "        if: false\n"]
 		, [execute, execute + "        continue-on-error: true\n"]
 		, ["tee build/wit-owned-transfers.log\n", "tee build/wit-owned-transfers.log || true\n"]
-		, ...["pass 5", "fail 0", "skipped 0"].map(value => [`          rg '^# ${value}$' build/wit-owned-transfers.log\n`, ""])
+		, ...["pass 6", "fail 0", "skipped 0"].map(value => [`          rg '^# ${value}$' build/wit-owned-transfers.log\n`, ""])
 		, ["          test -s build/owned-wit-transfers/reviewed-package.json\n", ""]
 		, ["            build/owned-wit-transfers/ordinary.json\n", ""]
 		, ["      - name: Preserve consuming WIT execution\n        if: always()", "      - name: Preserve consuming WIT execution\n        if: false"]

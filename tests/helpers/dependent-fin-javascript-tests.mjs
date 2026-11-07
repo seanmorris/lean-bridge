@@ -17,11 +17,11 @@ const faithful = () => {
 		if(name === "mirror")
 		{
 			const [bound, value] = args;
-			if(value >= bound) throw new Error("component call failed (6)");
+			if(value >= bound) throw new Error("Component scalar call failed (6)");
 			return bound - 1n - value;
 		}
 		const [start, bound, value, name_] = args;
-		if(value >= bound) throw new Error("component call failed (6)");
+		if(value >= bound) throw new Error("Component scalar call failed (6)");
 		return `${name_}:${start + value}`;
 	};
 	const checked = (name, args) => {

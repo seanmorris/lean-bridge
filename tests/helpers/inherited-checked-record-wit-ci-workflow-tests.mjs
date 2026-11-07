@@ -6,10 +6,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { assertIsolatedWasmtimeCapiBootstraps } from "./wasmtime-capi-bootstrap.mjs";
+import { assertConsumerMatrixWasmtimeCapiBootstraps } from "./wasmtime-capi-bootstrap.mjs";
 import { assertInheritedCheckedRecordWitWorkflow } from "./inherited-checked-record-wit-ci-workflow.mjs";
 
-test("inherited checked-record WIT workflow requires four source/API selections on the pinned wasm-tools and Wasmtime C API", async () => {
+test("inherited checked-record WIT workflow requires four source/API selections and every consumer-matrix Wasmtime installer", async () => {
 	const source = await readFile(".github/workflows/inherited-checked-record-wit.yml", "utf8");
 	assertInheritedCheckedRecordWitWorkflow(source);
 	const shell = await readFile("scripts/run-inherited-checked-record-wit-ci.sh", "utf8");
@@ -26,7 +26,7 @@ test("inherited checked-record WIT workflow requires four source/API selections 
 	assert.ok(shell.indexOf('mkdir "$output_root"') < shell.indexOf("export LEAN_BRIDGE_INHERITED_CHECKED_RECORD_WIT_TEST=1"));
 	// The same pinned SDK bytes and isolated installer as the consumer matrix.
 	const consumer = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	assertIsolatedWasmtimeCapiBootstraps(consumer, 4);
+	assertConsumerMatrixWasmtimeCapiBootstraps(consumer);
 	assert.ok(consumer.includes("          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\n"));
 });
 

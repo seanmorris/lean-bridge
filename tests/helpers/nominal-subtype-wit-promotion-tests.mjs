@@ -14,7 +14,7 @@ import { nominalSubtypeWitArchive, nominalSubtypeWitReferences, promoteNominalSu
 import { nominalSubtypeWitPromotionHistoryPath, nominalSubtypeWitPromotionPredecessor } from "./nominal-subtype-wit-promotion-history.mjs";
 import { beforeNominalSubtypeBrowserPromotionSource, beforeNominalSubtypeBrowserPromotionPins, nominalSubtypeBrowserPromotionHistoryPath } from "./nominal-subtype-browser-promotion-history.mjs";
 import { beforeNominalSubtypePhpWasmPromotionPins, beforeNominalSubtypePhpWasmPromotionSource, nominalSubtypePhpWasmPromotionHistoryPath } from "./nominal-subtype-php-wasm-promotion-history.mjs";
-import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { sourceBeforeFinHistoryRecord, sourceReaderAtEvidencePins } from "./source-at-fin-history-milestone.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
 import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
@@ -123,10 +123,16 @@ test("nominal WIT promotion refuses missing originals, invented claims and overl
 
 test("nominal WIT promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeWitReferences();
+	const promotionDocument = JSON.parse(sourceAtHistoryMilestone(
+		nominalSubtypeWitPromotionHistoryPath, "docs/type-surface.v1.json"
+	));
+	const readAtPromotion = sourceReaderAtEvidencePins(promotionDocument
+		, entry => entry.id.startsWith("nominal-subtype-wit-")
+		, nominalSubtypeWitPromotionHistoryPath);
 	const proposed = beforeNominalSubtypeBrowserPromotionPins(
 		beforeNominalSubtypePhpWasmPromotionPins(beforeCiContractRepairPins(
 			beforeCheckedJavaScriptDispositionPins(
-				await promoteNominalSubtypeWit(original, references)
+				await promoteNominalSubtypeWit(original, references, readAtPromotion)
 			)
 		))
 	);

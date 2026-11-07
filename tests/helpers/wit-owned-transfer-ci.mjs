@@ -29,7 +29,7 @@ export const assertOwnedWitTransferCi = (workflow, manifest) => {
 		, 'export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"'
 		, "source scripts/env.sh"
 		, "npm run test:owned-wit-transfers 2>&1 | tee build/wit-owned-transfers.log"
-		, ...["pass 5", "fail 0", "skipped 0"].map(value => `rg '^# ${value}$' build/wit-owned-transfers.log`)
+		, ...["pass 6", "fail 0", "skipped 0"].map(value => `rg '^# ${value}$' build/wit-owned-transfers.log`)
 		, ...ownedWitTransferReports.map(path => "test -s " + path)
 	].join("\n"));
 	const upload = job.split("      - name: Preserve consuming WIT execution\n")[1]?.split("      - name: ")[0];

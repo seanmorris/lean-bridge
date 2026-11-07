@@ -307,6 +307,10 @@ test("semantic projection and compiler adapters preserve the dynamic bound", asy
 	const component = generateComponentScalarAdapters(
 		generated.plan.privateAbi, generated.plan.exports);
 	assert.doesNotMatch(component, /_refinement_1/u);
+	assert.match(component
+		, /if \(!lean_nat_dec_lt\(a1, a0\)\) \{ lean_dec\(a0\); lean_dec\(a1\); return 6; \}/u);
+	assert.ok(component.indexOf("lean_nat_dec_lt(a1, a0)")
+		< component.indexOf("_lean(a0, a1)"));
 	assert.match(component, /lean_bridge_[0-9a-f]{24}_lean\(a0, a1\)/u);
 	const javascript = generateJavaScriptPackage(semantic);
 	assert.match(javascript["index.mjs"]

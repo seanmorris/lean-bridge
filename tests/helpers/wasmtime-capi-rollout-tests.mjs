@@ -8,8 +8,10 @@ import { execFileSync } from "node:child_process";
 import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 import {
-	assertIsolatedWasmtimeCapiBootstraps, checkWasmtimeCapiBootstrap
-	, isolatedWasmtimeCapiBootstrap
+	assertConsumerMatrixWasmtimeCapiBootstraps
+	, assertIsolatedWasmtimeCapiBootstrapJobs
+	, assertIsolatedWasmtimeCapiBootstraps, checkWasmtimeCapiBootstrap
+	, consumerMatrixWasmtimeCapiJobs, isolatedWasmtimeCapiBootstrap
 } from "./wasmtime-capi-bootstrap.mjs";
 import {
 	beforeWasmtimeCapiRolloutSource, wasmtimeCapiRolloutHistoryPath
@@ -28,6 +30,26 @@ const predecessor = "9b6cd8048433479b5f09eeb328afb301fa1ad9b2";
 const block = isolatedWasmtimeCapiBootstrap.trimEnd().split("\n")
 	.map(line => "          " + line + "\n").join("");
 const command = "nix build .#wasmtime-c-api --out-link build/wasmtime-c-api";
+const currentWasmtimeCapiJobs = new Map([
+	["callback-checked-record-remaining"
+		, ["callback-checked-record-remaining", "callback-fin-remaining"]]
+	, ["callback-subtype-remaining", ["callback-subtype-remaining"]]
+	, ["checked-record-value-index-wit", ["checked-record-value-index-wit"]]
+	, ["consumer-matrix", consumerMatrixWasmtimeCapiJobs]
+	, ["dependent-checked-record-wit", ["dependent-checked-record-wit"]]
+	, ["generic-subtype-managed-wit", ["wit"]]
+	, ["inherited-checked-record-wit", ["inherited-checked-record-wit"]]
+	, ["nested-checked-record-wit", ["nested-checked-record-wit"]]
+	, ["nominal-primitive-subtype-wit", ["nominal-primitive-subtype-wit"]]
+	, ["owned-subtype-remaining", ["owned-subtype-remaining"]]
+	, ["recursive-checked-record-wit", ["recursive-checked-record-wit"]]
+	, ["zero-payload-checked-record-wit", ["zero-payload-checked-record-wit"]]
+].map(([name, jobs]) => [".github/workflows/" + name + ".yml", jobs]));
+const assertCurrentBootstrapLayout = (source, path) => {
+	const jobs = currentWasmtimeCapiJobs.get(path);
+	assert.ok(jobs, path);
+	assertIsolatedWasmtimeCapiBootstrapJobs(source, jobs);
+};
 
 test("Wasmtime C API rollout preserves all twelve workflows outside SDK setup and strict tool discovery", async () => {
 	let sites = 0;
@@ -91,14 +113,45 @@ test("Wasmtime C API rollout refuses altered and duplicate installers", async ()
 	for(const path of wasmtimeCapiRolloutWorkflows)
 	{
 		const source = await readFile(path, "utf8");
-		const count = path.endsWith("/consumer-matrix.yml") ? 3 : 1;
+		assertCurrentBootstrapLayout(source, path);
 		for(const [before, after] of mutations)
 		{
 			const changed = source.replace(before, after);
 			assert.notEqual(changed, source, `${path}: ${before}`);
-			assert.throws(() => assertIsolatedWasmtimeCapiBootstraps(changed, count));
+			assert.throws(() => assertCurrentBootstrapLayout(changed, path));
 		}
-		assert.throws(() => assertIsolatedWasmtimeCapiBootstraps(source + block, count));
+		assert.throws(() => assertCurrentBootstrapLayout(source + block, path));
+	}
+});
+
+test("consumer matrix binds each Wasmtime installer to its exact job", async () => {
+	const source = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	assertConsumerMatrixWasmtimeCapiBootstraps(source);
+	const span = id => {
+		const marker = "\n  " + id + ":\n";
+		const start = source.indexOf(marker); assert.ok(start >= 0, id);
+		const next = source.slice(start + marker.length)
+			.search(/\n {2}[a-z][a-z0-9-]*:\n/u);
+		return { start
+			, end: next < 0 ? source.length
+				: start + marker.length + next
+			, marker };
+	};
+	for(const [index, id] of consumerMatrixWasmtimeCapiJobs.entries())
+	{
+		const { start, end } = span(id);
+		const job = source.slice(start, end);
+		assert.equal(job.split(block).length - 1, 1, id);
+		const without = source.slice(0, start)
+			+ job.replace(block, "") + source.slice(end);
+		assert.throws(() => assertConsumerMatrixWasmtimeCapiBootstraps(without));
+		const target = consumerMatrixWasmtimeCapiJobs[
+			(index + 1) % consumerMatrixWasmtimeCapiJobs.length];
+		const moved = without.replace(span(target).marker
+			, span(target).marker + block);
+		assertIsolatedWasmtimeCapiBootstraps(
+			moved, consumerMatrixWasmtimeCapiJobs.length);
+		assert.throws(() => assertConsumerMatrixWasmtimeCapiBootstraps(moved));
 	}
 });
 

@@ -4,6 +4,7 @@
  * @file
  */
 import { assertComponentSignature, componentScalarTypes } from "../abi/component-scalars.mjs";
+import { componentDependentFinGuard } from "./component-dependent-fin.mjs";
 
 const objectType = type => new Set(["unit", "nat", "int", "string", "bytes"]).has(type);
 const cType = type => objectType(type) ? "lean_object *"
@@ -49,7 +50,10 @@ export const generateComponentScalarAdapters = (abi, exports = []) => {
 		}
 		for(const [index, refinement] of refinements.entries())
 		{
-			if(refinement && refinement.kind !== "fin-parameter")
+			const dependent = componentDependentFinGuard(
+				refinement, index, item.parameters, rejectionCleanup, 6);
+			if(dependent) lines.push(dependent);
+			else if(refinement)
 			{
 				if(objectType(types[index])) lines.push(`  lean_inc(a${index});`);
 				lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 6; }`);

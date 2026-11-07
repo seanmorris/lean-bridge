@@ -13,6 +13,7 @@ import { componentRecordAbi, componentRecordDispatch, componentCompoundAbi, comp
 import { componentRecursiveAbi, componentRecursiveDispatch, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
 import { componentStructuredCallableAbi, componentStructuredCallableDispatch, componentStructuredCallableSignatureText, assertComponentStructuredCallableBindings } from "../abi/component-structured-callables.mjs";
 import { hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
+import { componentDependentFinGuard } from "./component-dependent-fin.mjs";
 
 /**
  * Derive private scalar, copied-value or copied-payload callable protocols.
@@ -207,7 +208,10 @@ export const generateComponentCallableAdapters = (abi, exports = []) => {
 			else lines.push(...decode(`frame->args[${index}]`, type, `a${index}`));
 		for(const [index, refinement] of refinements.entries())
 		{
-			if(refinement && refinement.kind !== "fin-parameter")
+			const dependent = componentDependentFinGuard(
+				refinement, index, item.parameters, rejectionCleanup, 6);
+			if(dependent) lines.push(dependent);
+			else if(refinement)
 			{
 				if(owned(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
 				lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 6; }`);

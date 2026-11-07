@@ -147,13 +147,16 @@ test("closed nominal plan validators reject changed members, input projections a
 });
 
 test("public component generation refuses missing choices and conflicts with shared bounds", () => {
-	for(const mutate of [
-		document => { named(document, "first").source.extensions[key].parameters[0] = null; }
-		, document => { delete named(document, "first").source.extensions[key]; }
-		, document => { named(document, "first").source.extensions[key].parameters[0].fields[1].refinement.bound = "4"; }
+	for(const [mutate, expected] of [
+		[document => { named(document, "first").source.extensions[key].parameters[0] = null; }
+			, /Invalid declaration refinement metadata/u]
+		, [document => { delete named(document, "first").source.extensions[key]; }
+			, /Invalid component refinement mirrors|Conflicting nominal refinement layouts/u]
+		, [document => { named(document, "first").source.extensions[key].parameters[0].fields[1].refinement.bound = "4"; }
+			, /Invalid component refinement mirrors|Conflicting nominal refinement layouts/u]
 	]) {
 		const document = nominalSubtypeReviewedFixture(); mutate(document);
-		assert.throws(() => generate(document), /Invalid component refinement mirrors|Conflicting nominal refinement layouts/u);
+		assert.throws(() => generate(document), expected);
 	}
 });
 
@@ -257,10 +260,12 @@ test("JavaScript validates constructor-free results without reconstructing them"
 });
 
 test("unaffected JavaScript fixtures remain byte-identical and empty records stay exact", () => {
-	// Unaffected hashes are from aca7821. The record package changed deliberately
-	// at 5035456 when Empty became an exact empty-object type.
+	// The array package moved at 66c64fd when authenticated parameter-default
+	// fields became part of the canonical Binding IR digest in generated headers.
+	// The record package changed deliberately at 5035456 when Empty became an
+	// exact empty-object type; the remaining package bytes stay pinned.
 	for(const [fixture, expected] of [
-		[arrayReviewedIr, "d2b6ec008c1b1fd2175373ce64b25d2a032b3e6617cc5cc894e89c272e4179f7"]
+		[arrayReviewedIr, "50f9e59d18dd50dd44aade6bb8d953b648478be9a02fe0fde27d8800c6433ee4"]
 		, [recordReviewedIr, "524d11b29c3d13ccfbe2d74c687700bef6895dcba7c0b1d8b26210e3cc920168"]
 		, [variantReviewedIr, "4397961c788e66da6f33ee5de871d97e949976130303b97f531654d8936d5b2c"]
 		, [compoundReviewedIr, "24ee4d7c93bfa0ab1e7ba3cf5983724e211372197b2bc743d135182e1b9a51e7"]

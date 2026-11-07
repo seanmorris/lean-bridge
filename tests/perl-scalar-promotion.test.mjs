@@ -101,8 +101,18 @@ test("Perl scalar inventory reconciles ordinary coverage and supplements reviewe
 	assert.ok(ordinary.conversionNotes.fin.startsWith(oldOrdinary.conversionNotes.fin));
 	assert.throws(() => promotePerlScalarObservations(current.observations), /already recorded/u);
 	assert.throws(() => promotePerlScalarObservations(previous.observations.filter(item => item.id !== perlScalarReviewedId)));
-	for(const entry of current.evidence) for(const file of entry.files)
-		assert.equal(sha256(await read(file.path)), file.sha256, file.path);
+	// assertPerlScalarPromotion already proves every predecessor evidence row is
+	// unchanged. Re-read only the two entries introduced by this promotion;
+	// walking the whole inherited inventory duplicates the authenticated
+	// type-surface receipt and makes sparse Core shards discover unrelated
+	// archives one ENOENT at a time.
+	for(const id of perlScalarEvidenceIds)
+	{
+		const entry = current.evidence.find(item => item.id === id);
+		assert.ok(entry, id);
+		for(const file of entry.files)
+			assert.equal(sha256(await read(file.path)), file.sha256, file.path);
+	}
 });
 
 test("Perl scalar evidence binds both routes, four ABIs and original binary ZIP identities", async () => {

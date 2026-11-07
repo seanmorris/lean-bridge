@@ -50,6 +50,28 @@ test("callable packages reject checked scalar inputs and release decoded closure
 	assert.ok(c.indexOf(`${item.symbol}_refinement_0(a0)`) < c.indexOf(`${item.symbol}_lean(a0, a1)`));
 });
 
+test("callable packages reject dependent Fin before dispatch and release decoded closures", () => {
+	const ir = source();
+	const declaration = ir.declarations.find(item => item.id === "lean:Callables.callNat");
+	const value = structuredClone(declaration.parameters[0]);
+	value.name = "value1";
+	declaration.parameters.splice(1, 0, value);
+	declaration.parameters[2].name = "value2";
+	declaration.source.extensions["lean-lang.org/refinements"] = {
+		parameters: [null, { kind: "fin-parameter", parameter: 0 }, null]
+		, result: null
+	};
+	const generated = plan(ir);
+	const item = generated.plan.exports.find(value => value.bindingId === declaration.id);
+	assert.equal(generated.plan.privateAbi.version, 3);
+	const c = generateComponentCallableAdapters(
+		generated.plan.privateAbi, generated.plan.exports);
+	assert.doesNotMatch(c, new RegExp(`${item.symbol}_refinement_1`, "u"));
+	assert.match(c, /if \(!lean_nat_dec_lt\(a1, a0\)\) \{ lean_dec\(a0\); lean_dec\(a1\); lean_dec\(a2\); return 6; \}/u);
+	assert.ok(c.indexOf("lean_nat_dec_lt(a1, a0)")
+		< c.indexOf(`${item.symbol}_lean(a0, a1, a2)`));
+});
+
 test("callable admission rejects changed semantics and preserves the scalar-only ABI contract", () => {
 	const ir = source(), abi = createComponentPrivateAbi(ir);
 	assertComponentCallableBindings(abi, ir);

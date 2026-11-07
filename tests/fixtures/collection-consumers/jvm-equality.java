@@ -81,9 +81,12 @@ public final class Equality {
         equal(new org.leanbridge.variants.SignalIdle(), new org.leanbridge.variants.SignalIdle());
         different(new org.leanbridge.variants.SignalIdle(), new org.leanbridge.variants.SignalStopped());
         different(new org.leanbridge.variants.SignalIdle(), new org.leanbridge.variants.SignalMarker(org.leanbridge.variants.Unit.INSTANCE));
-        rejects(NullPointerException.class, () -> Option.some(null)); rejects(NullPointerException.class, () -> Result.ok(null));
-        rejects(NullPointerException.class, () -> Result.err(null)); rejects(NullPointerException.class, () -> new Pair<>(null, 1));
-        rejects(NullPointerException.class, () -> new Pair<>(1, null)); rejects(IllegalStateException.class, () -> Option.none().value());
+        equal(Option.some(null), Option.some(null)); different(Option.none(), Option.some(null));
+        equal(Result.ok(null), Result.ok(null)); equal(Result.err(null), Result.err(null));
+        different(Result.ok(null), Result.err(null));
+        equal(new Pair<>(null, 1), new Pair<>(null, 1)); equal(new Pair<>(1, null), new Pair<>(1, null));
+        different(new Pair<>(null, 1), new Pair<>(1, null));
+        rejects(IllegalStateException.class, () -> Option.none().value());
         rejects(IllegalStateException.class, () -> Result.ok(1).error()); rejects(IllegalStateException.class, () -> Result.err(1).value());
         Object deepA = new long[] {1, 2}, deepB = new long[] {1, 2};
         for (int level = 1; level < 24; level++) {

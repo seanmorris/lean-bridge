@@ -229,7 +229,7 @@ jobs:
             curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \
               --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \
               'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'
-            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082  '"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
+            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
             mkdir "$WASMTIME_CAPI_STAGING/unpacked"
             tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
             test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"

@@ -4,8 +4,8 @@
  * @file
  */
 import assert from "node:assert/strict";
-import test from "node:test";
 import { readFile } from "node:fs/promises";
+import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { assertComponentCopiedBindings } from "../src/abi/component-copied.mjs";
@@ -16,144 +16,12 @@ import { compileComponentCopiedCall } from "../src/release/component-copied-runt
 import { createComponentRuntime } from "../src/release/component-runtime.mjs";
 import { arrayReviewedIr } from "./helpers/array-fixture.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
-import { beforeSubtypeComponentSource, reverseSubtypeComponentUpdate, subtypeComponentChangedPaths, subtypeComponentHistoryPath } from "./helpers/subtype-component-source-history.mjs";
-import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { assertRefinement } from "../src/abi/refinements.mjs";
 import { componentRefinedCall } from "../src/build/component-refinements.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
-import { beforeNestedFinSource, reverseNestedFinUpdate, nestedFinChangedPaths, nestedFinHistoryPath } from "./helpers/nested-fin-source-history.mjs";
-import { beforeRefinementClosureSource } from "./helpers/refinement-closure-source-history.mjs";
-import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
-import "./helpers/type-surface-current-pin-repair-source-history-tests.mjs";
-import "./helpers/php-wasm-callback-entry-form-repair-source-history-tests.mjs";
-import "./helpers/php-wasm-entry-oracle-integration-source-history-tests.mjs";
-import "./helpers/php-wasm-entry-oracle-repair-source-history-tests.mjs";
-import "./helpers/php-wasm-entry-oracle-closure-source-history-tests.mjs";
-import "./helpers/php-wasm-entry-structural-equality-repair-source-history-tests.mjs";
-import "./helpers/generic-subtype-evidence-source-closure-repair-source-history-tests.mjs";
-import "./helpers/generic-subtype-artifact-prefix-repair-source-history-tests.mjs";
-import "./helpers/owned-subtype-wit-host-namespace-repair-source-history-tests.mjs";
-import "./helpers/checked-refinement-gate-repair-source-history-tests.mjs";
-import "./helpers/value-index-matrix-historical-inventory-repair-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-promotion-source-history-tests.mjs";
-import "./helpers/owned-subtype-perl-source-path-repair-source-history-tests.mjs";
-import "./helpers/generic-subtype-documentation-source-history-tests.mjs";
-import "./helpers/generic-subtype-promotion-source-history-tests.mjs";
-import "./helpers/generic-subtype-hosted-archive-source-history-tests.mjs";
-import "./helpers/recursive-checked-record-documentation-closure-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-documentation-closure-source-history-tests.mjs";
-import "./helpers/value-index-browser-promotion-closure-repair-source-history-tests.mjs";
-import "./helpers/core-residual-ledger-pointer-replay-repair-source-history-tests.mjs";
-import "./helpers/dependent-record-authority-replay-repair-source-history-tests.mjs";
-import "./helpers/pre-fin-type-surface-history-repair-source-history-tests.mjs";
-import "./helpers/value-index-promotion-memory-repair-source-history-tests.mjs";
-import "./helpers/callback-checked-record-promotion-refresh-source-history-tests.mjs";
-import "./helpers/callback-checked-record-archive-commit-provenance-source-history-tests.mjs";
-import "./helpers/callback-checked-record-archive-provenance-repair-source-history-tests.mjs";
-import "./helpers/callback-checked-record-retained-archive-rollover-source-history-tests.mjs";
-import "./helpers/php-wasm-callback-entry-trace-plan-repair-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-browser-reviewed-route-repair-source-history-tests.mjs";
-import "./helpers/callback-php-wasm-static-quality-repair-source-history-tests.mjs";
-import "./helpers/php-wasm-callback-entry-suite-split-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-promotion-contract-source-history-tests.mjs";
-import "./helpers/hosted-refinement-verifier-repair-source-history-tests.mjs";
-import "./helpers/callback-fin-php-wasm-nominal-refusal-repair-source-history-tests.mjs";
-import "./helpers/dependent-checked-record-php-space-path-repair-source-history-tests.mjs";
-import "./helpers/callback-fin-php-wasm-validator-repair-source-history-tests.mjs";
-import "./helpers/callback-compiler-identity-tests.mjs";
-import "./helpers/refinement-closure-source-history-tests.mjs";
-import "./helpers/projected-checked-record-mirror-source-history-tests.mjs";
-import "./helpers/nominal-fin-contract-tests.mjs";
-import "./helpers/nominal-fin-source-history-tests.mjs";
-import "./helpers/callback-fin-source-history-tests.mjs";
-import "./helpers/perl-evidence-repair-source-history-tests.mjs";
-import "./helpers/native-fin-source-history-tests.mjs";
-import "./helpers/npm-fin-diagnostics-source-history-tests.mjs";
-import "./helpers/cli-package-config-history-tests.mjs";
-import "./helpers/diagnostic-followup-source-history-tests.mjs";
-import "./helpers/combined-lineage-source-history-tests.mjs";
-import "./helpers/test-profile-registration-source-history-tests.mjs";
-import "./helpers/test-profiles-registration-gap-source-history-tests.mjs";
-import "./helpers/value-index-test-profile-live-read-repair-source-history-tests.mjs";
-import "./helpers/callback-checked-record-wit-diagnostic-repair-source-history-tests.mjs";
-import "./helpers/structured-callback-public-fallback-repair-source-history-tests.mjs";
-import "./helpers/runtime-receipt-source-history-tests.mjs";
-import "./helpers/cpan-cli-control-source-history-tests.mjs";
-import "./helpers/python-fin-source-history-tests.mjs";
-import "./helpers/rust-fin-source-history-tests.mjs";
-import "./helpers/ruby-fin-source-history-tests.mjs";
-import "./helpers/dotnet-fin-source-history-tests.mjs";
-import "./helpers/jvm-fin-source-history-tests.mjs";
-import "./helpers/php-fin-source-history-tests.mjs";
-import "./helpers/wit-fin-source-history-tests.mjs";
-import "./helpers/fin-distribution-source-history-tests.mjs";
-import "./helpers/perl-fin-source-history-tests.mjs";
-import "./helpers/host-fin-evidence-source-history-tests.mjs";
-import "./helpers/native-specializations-source-history-tests.mjs";
-import "./helpers/native-fin-containers-source-history-tests.mjs";
-import "./helpers/native-subtype-source-history-tests.mjs";
-import "./helpers/refinement-audit-source-history-tests.mjs";
-import "./helpers/browser-refinements-source-history-tests.mjs";
-import "./helpers/scalar-fin-rejection-source-history-tests.mjs";
-import "./helpers/scalar-fin-wording-source-history-tests.mjs";
-import "./helpers/perl-refinements-source-history-tests.mjs";
-import "./helpers/perl-indexed-errors-source-history-tests.mjs";
-import "./helpers/refinement-ci-repair-source-history-tests.mjs";
-import "./helpers/python-refinement-evidence-tests.mjs";
-import "./helpers/python-refinement-evidence-source-history-tests.mjs";
-import "./helpers/structural-subtype-core-ci-tests.mjs";
-import "./helpers/structural-subtype-core-ci-history-tests.mjs";
-import "./helpers/core-quality-budget-tests.mjs";
-import "./helpers/core-evidence-tracking-test-registration-source-history-tests.mjs";
-import "./helpers/owned-subtype-remaining-hosts-tap-repair-source-history-tests.mjs";
-import "./helpers/structured-callable-recovery-gate-repair-source-history-tests.mjs";
-import "./helpers/generic-subtype-managed-tap-escape-repair-source-history-tests.mjs";
-import "./helpers/managed-result-only-fixture-repair-source-history-tests.mjs";
-import "./helpers/php-wasm-nullary-entry-form-source-history-tests.mjs";
-import "./helpers/nominal-subtype-entry-export-surface-source-history-tests.mjs";
-import "./helpers/nominal-subtype-entry-report-link-source-history-tests.mjs";
-import "./helpers/nominal-subtype-entry-hosted-summary-tests.mjs";
-import "./helpers/nominal-subtype-entry-hosted-evidence-tests.mjs";
-import "./helpers/nominal-subtype-entry-promotion-tests.mjs";
-import "./helpers/nominal-subtype-entry-publication-source-history-tests.mjs";
-import "./helpers/nominal-subtype-entry-live-pin-repair-source-history-tests.mjs";
-import "./helpers/php-wasm-entry-call-path-source-history-tests.mjs";
-import "./helpers/php-wasm-entry-unreached-source-source-history-tests.mjs";
-import "./helpers/php-wasm-entry-flat-position-source-history-tests.mjs";
-import "./helpers/core-contract-runtime-budget-source-history-tests.mjs";
-import "./helpers/core-runner-headroom-source-history-tests.mjs";
-import "./helpers/core-runner-resilience-source-history-tests.mjs";
-import "./helpers/core-historical-evidence-replay-source-history-tests.mjs";
-import "./helpers/generic-subtype-npm-browser-source-history-tests.mjs";
-import "./helpers/structural-subtype-partition-validator-source-history-tests.mjs";
-import "./helpers/owned-subtype-core-registration-source-history-tests.mjs";
-import "./helpers/owned-subtype-native-transfer-acceptance-source-history-tests.mjs";
-import "./helpers/callback-subtype-remaining-php-repair-source-history-tests.mjs";
-import "./helpers/callback-subtype-remaining-runtime-repair-source-history-tests.mjs";
-import "./helpers/core-quality-budget-history-tests.mjs";
-import "./helpers/core-quality-sharding-source-history-tests.mjs";
-import "./helpers/core-first-run-repair-source-history-tests.mjs";
-import "./helpers/core-first-run-pin-replay-repair-source-history-tests.mjs";
-import "./helpers/core-first-run-residual-repair-source-history-tests.mjs";
-import "./helpers/core-second-run-residual-repair-source-history-tests.mjs";
-import "./helpers/core-third-run-residual-repair-source-history-tests.mjs";
-import "./helpers/core-terminal-reachability-source-history-tests.mjs";
-import "./helpers/owned-dotnet-span-runtime-history-tests.mjs";
-import "./helpers/checked-record-value-index-foundation-source-history-tests.mjs";
-import "./helpers/value-index-core-lineage-repair-source-history-tests.mjs";
-import "./helpers/value-index-test-profile-gap-source-history-tests.mjs";
-import "./helpers/value-index-browser-lint-source-history-tests.mjs";
-import "./helpers/checked-record-value-index-dotnet-source-history-tests.mjs";
-import "./helpers/checked-record-value-index-dotnet-installed-source-history-tests.mjs";
-import "./helpers/source-history-milestone-assertion-repair-tests.mjs";
-import "./helpers/checked-record-value-index-dotnet-ci-source-history-tests.mjs";
-import "./helpers/checked-record-value-index-dotnet-evidence-tests.mjs";
-import "./helpers/checked-record-value-index-dotnet-hosted-repair-source-history-tests.mjs";
-import "./helpers/checked-record-value-index-native-dotnet-verifier-repair-source-history-tests.mjs";
-import "./helpers/checked-record-value-index-dotnet-result-only-core-repair-source-history-tests.mjs";
-import "./helpers/checked-record-value-index-jvm-source-history-tests.mjs";
-import "./helpers/checked-record-value-index-dotnet-archive-source-history-tests.mjs";
-import "./helpers/checked-record-value-index-jvm-native-repair-source-history-tests.mjs";
+
+// Retained-history suites are distributed across the twelve adjacent
+// component-array-history-partition files so this file remains a behavior gate.
 
 test("nested Fin constraints match their full erased shape and emit checked Lean construction", async () => {
 	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.echo", parameters: [{ array: { array: "nat" } }], result: { array: { array: "nat" } } }]);
@@ -183,19 +51,26 @@ test("nested Fin constraints match their full erased shape and emit checked Lean
 		, { kind: "array", arguments: [{ kind: "array", arguments: [{ kind: "fin", bound: "01" }] }] }
 		, { kind: "array", arguments: [{ kind: "array", arguments: [{ kind: "subtype", constructor: "Refinements.checked!" }] }] }
 	]) assert.throws(() => assertRefinement(bad, ir.declarations[0].parameters[0].type));
-	const nestedSubtype = { kind: "array", arguments: [{ kind: "array", arguments: [{ kind: "subtype", constructor: "Refinements.checked" }] }] };
+	const nestedSubtypeTree = constructor => ({
+		kind: "array"
+		, arguments: [
+			{ kind: "array", arguments: [{ kind: "subtype", constructor }] }
+		]
+	});
+	const nestedSubtype = nestedSubtypeTree("Refinements.checked");
+	const nestedSubtypeResult = nestedSubtypeTree(null);
 	assert.doesNotThrow(() => assertRefinement(nestedSubtype, ir.declarations[0].parameters[0].type));
 	// The same tree remains forbidden through a nominal-field or callback edge.
 	assert.throws(() => assertRefinement(nestedSubtype, ir.declarations[0].parameters[0].type, 1), /transport type/u);
 	const subtypeIr = structuredClone(ir);
-	subtypeIr.declarations[0].source.extensions["lean-lang.org/refinements"] = { parameters: [nestedSubtype], result: nestedSubtype };
+	subtypeIr.declarations[0].source.extensions["lean-lang.org/refinements"] = { parameters: [nestedSubtype], result: nestedSubtypeResult };
 	const subtypeGenerated = generateCompilerAdapters({ analysis: {
 		bindingIr: { origin: "lean-elaborated", document: subtypeIr, semanticSha256: "3".repeat(64) }
 		, exportCandidates: [{ declaration: "Refinements.echo", sourceModule: "Refinements", status: "exportable" }]
 	}
 	, componentPlan: { sha256: "4".repeat(64), document: { bindingIr: { semanticSha256: "3".repeat(64) } } } });
 	await assertJsonSchema("compiler-adapter-plan", subtypeGenerated.plan);
-	assert.deepEqual(subtypeGenerated.plan.exports[0].refinements, { parameters: [nestedSubtype], result: nestedSubtype });
+	assert.deepEqual(subtypeGenerated.plan.exports[0].refinements, { parameters: [nestedSubtype], result: nestedSubtypeResult });
 	assert.match(subtypeGenerated.files["LeanBridgeGenerated.lean"], /_root_\.Refinements\.checked/u);
 	assert.doesNotMatch(subtypeGenerated.files["LeanBridgeGenerated.lean"], /sorry|unsafeCast|axiom/u);
 	const forged = structuredClone(generated.plan);
@@ -246,47 +121,6 @@ test("copied-array packages retain and clean checked scalar refinements before d
 	assert.match(c, new RegExp(`extern uint8_t ${source.symbol}_refinement_0\\(lean_object \\*\\);`));
 	assert.match(c, new RegExp(`lean_inc\\(a0\\);\\n {2}if \\(!${source.symbol}_refinement_0\\(a0\\)\\) \\{ lean_dec\\(a0\\); lean_dec\\(a1\\); return 5; \\}`));
 	assert.ok(c.indexOf(`${source.symbol}_refinement_0(a0)`) < c.indexOf(`${source.symbol}_lean(a0, a1)`));
-});
-
-test("Subtype component history preserves predecessors and rejects altered source spans", async () => {
-	const history = JSON.parse(await readFile(subtypeComponentHistoryPath, "utf8"));
-	assert.equal(history.schemaVersion, 1);
-	assert.equal(history.predecessorCommit, "8daefcd2ececf2e7d2aefc70245848305c2bf33a");
-	assert.deepEqual(history.updates.map(item => item.path), subtypeComponentChangedPaths);
-	for(const update of history.updates)
-	{
-		const source = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforeNestedFinSource
-		);
-		assert.equal(sha256(reverseSubtypeComponentUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeSubtypeComponentSource(update.path, source)), update.previousSha256);
-		assert.equal(beforeSubtypeComponentSource(update.path, source, update.currentSha256), source);
-		const bytes = Buffer.from(source);
-		assert.equal(beforeFinRefinementSource(update.path, bytes, update.currentSha256), bytes);
-		assert.throws(() => reverseSubtypeComponentUpdate(source + "\nunreviewed\n", update));
-		assert.throws(() => reverseSubtypeComponentUpdate(source, { ...update, edits: [] }));
-		assert.throws(() => reverseSubtypeComponentUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
-	}
-	const unknown = Buffer.from([0, 255, 128, 192]);
-	assert.equal(beforeFinRefinementSource("unknown.bin", unknown), unknown);
-});
-
-test("nested Fin history authenticates complete source transitions and stopping points", async () => {
-	const history = JSON.parse(await readFile(nestedFinHistoryPath, "utf8"));
-	assert.equal(history.predecessorCommit, "4b07413e43a6a3cd72cf738659f8e78ee5a00028");
-	assert.deepEqual(history.updates.map(item => item.path), nestedFinChangedPaths);
-	for(const update of history.updates)
-	{
-		const source = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforeRefinementClosureSource
-		);
-		assert.equal(sha256(reverseNestedFinUpdate(source, update)), update.previousSha256);
-		assert.equal(sha256(beforeNestedFinSource(update.path, source)), update.previousSha256);
-		const bytes = Buffer.from(source);
-		assert.equal(beforeFinRefinementSource(update.path, bytes, update.currentSha256), bytes);
-		assert.throws(() => reverseNestedFinUpdate(source + "\nunreviewed\n", update));
-		assert.throws(() => reverseNestedFinUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
-	}
 });
 
 test("array admission rejects changed types, ownership, effects and unsupported compounds", () => {

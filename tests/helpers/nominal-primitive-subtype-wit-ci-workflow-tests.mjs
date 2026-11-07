@@ -6,10 +6,10 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { assertIsolatedWasmtimeCapiBootstraps } from "./wasmtime-capi-bootstrap.mjs";
+import { assertConsumerMatrixWasmtimeCapiBootstraps } from "./wasmtime-capi-bootstrap.mjs";
 import { assertNominalPrimitiveSubtypeWitWorkflow } from "./nominal-primitive-subtype-wit-ci-workflow.mjs";
 
-test("primitive-base WIT workflow requires four source/API selections on the pinned wasm-tools and Wasmtime C API", async () => {
+test("primitive-base WIT workflow requires four source/API selections and every consumer-matrix Wasmtime installer", async () => {
 	const source = await readFile(".github/workflows/nominal-primitive-subtype-wit.yml", "utf8");
 	assertNominalPrimitiveSubtypeWitWorkflow(source);
 	const shell = await readFile("scripts/run-nominal-primitive-subtype-wit-ci.sh", "utf8");
@@ -26,7 +26,7 @@ test("primitive-base WIT workflow requires four source/API selections on the pin
 	assert.ok(shell.indexOf('mkdir "$output_root"') < shell.indexOf("export LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_WIT_TEST=1"));
 	// The same pinned SDK bytes and isolated installer as the consumer matrix.
 	const consumer = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	assertIsolatedWasmtimeCapiBootstraps(consumer, 4);
+	assertConsumerMatrixWasmtimeCapiBootstraps(consumer);
 	assert.ok(consumer.includes("          bash scripts/bootstrap-toolchains.sh --wasm-tools-only\n"));
 });
 

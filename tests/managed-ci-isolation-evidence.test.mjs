@@ -30,6 +30,7 @@ test("managed CI evidence rejects dropped profiles, commands and manufactured ex
 		, record => { record.scope.failFast = true; }
 		, record => { record.previous.sha256 = "0".repeat(64); }
 		, record => { delete record.sources[".github/workflows/consumer-matrix.yml"]; }
+		, record => { record.sources["tests/helpers/managed-ci-isolation.mjs"] = "0".repeat(64); }
 		, record => { record.updates[0].previousSha256 = "0".repeat(64); }
 		, record => { record.updates[0].edits[0].previous += "unrecorded"; }
 		, record => { record.routing.commandsCompared = 5; }

@@ -54,6 +54,42 @@ export const assertIsolatedWasmtimeCapiBootstraps = (source, count = 1) => {
 	assert.doesNotMatch(source, /nix build \.#wasmtime-c-api/u);
 };
 
+export const consumerMatrixWasmtimeCapiJobs = Object.freeze([
+	"node-consumers", "host-null-systems", "owned-wit-receivers"
+	, "wasi-consumer", "wasi-qualifications"
+]);
+
+/**
+ * Require one exact, isolated Wasmtime installer in every named workflow job.
+ * Checking the named topology as well as the total keeps a moved or duplicated
+ * installer from satisfying a stale repository-wide count.
+ *
+ * @param source - Complete workflow source.
+ * @param expectedJobs - Exact job IDs that install the C API.
+ */
+export const assertIsolatedWasmtimeCapiBootstrapJobs = (source, expectedJobs) => {
+	assert.ok(expectedJobs.length > 0);
+	assert.equal(new Set(expectedJobs).size, expectedJobs.length);
+	const starts = [...source.matchAll(/^ {2}([a-z][a-z0-9-]*):\n/gmu)]
+		.map(match => ({ id: match[1], index: match.index }));
+	const jobs = new Map(starts.map((start, index) => [start.id
+		, source.slice(start.index, starts[index + 1]?.index ?? source.length)]));
+	assertIsolatedWasmtimeCapiBootstraps(source, expectedJobs.length);
+	for(const id of expectedJobs)
+	{
+		const job = jobs.get(id); assert.ok(job, "workflow job " + id);
+		assertIsolatedWasmtimeCapiBootstraps(job);
+	}
+};
+
+/**
+ * Require the exact current consumer-matrix Wasmtime installer topology.
+ *
+ * @param source - Complete current consumer-matrix workflow source.
+ */
+export const assertConsumerMatrixWasmtimeCapiBootstraps = source =>
+	assertIsolatedWasmtimeCapiBootstrapJobs(source, consumerMatrixWasmtimeCapiJobs);
+
 /**
  * Run the real bootstrap control flow with small inert archive bytes and a
  * local curl stand-in. The fixture hash substitution is test-only; production

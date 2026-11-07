@@ -90,12 +90,15 @@ export const nominalSubtypeBrowserReferences = async (read = readFile) => {
  *
  * @param original - Exact inventory before this milestone.
  * @param references - Four independently authenticated installed selections.
+ * @param read - Source reader bound to this promotion milestone.
  */
-export const promoteNominalSubtypeBrowser = async (original, references) => {
+export const promoteNominalSubtypeBrowser = async (
+	original, references, read = readFile
+) => {
 	assert.deepEqual(references, await nominalSubtypeBrowserReferences());
 	const inventory = structuredClone(original), validators = [];
 	for(const path of ["tests/helpers/nominal-subtype-browser-report.mjs", "tests/helpers/nominal-subtype-browser-promotion.mjs", "tests/helpers/nominal-subtype-browser-promotion-tests.mjs", "docs/evidence/nominal-subtype-browser-promotion-20261014.md"])
-		validators.push({ path, sha256: sha256(await readFile(path)) });
+		validators.push({ path, sha256: sha256(await read(path)) });
 	for(const reference of references)
 	{
 		assert.ok(!inventory.evidence.some(item => item.id === reference.id), "Already promoted: " + reference.id);

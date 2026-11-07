@@ -263,6 +263,73 @@ test("recursive and structured packages reject refinements before dispatch with 
 	}
 });
 
+test("recursive and structured packages reject dependent Fin pairs before dispatch", () => {
+	for(const version of [8, 9])
+	{
+		const ir = structuredCallableReviewedIr({ recursive: true });
+		const declaration = ir.declarations.find(item => item.name === "afterFailure");
+		if(version === 8)
+		{
+			ir.declarations = [declaration];
+			ir.types = ir.types.filter(type => type.name === "Tree");
+			Object.assign(declaration.parameters[1], {
+				type: { kind: "named", id: "lean:Structured.Tree" }
+				, ownership: "copy", lifetime: null
+			});
+			declaration.effects = [];
+			ir.errors = [];
+			declaration.failure = {
+				mode: "none", errors: [], unexpected: "poison-runtime"
+			};
+		}
+		const forcing = structuredClone(declaration.parameters[1]);
+		const scalar = name => ({
+			...structuredClone(declaration.parameters[0]), name
+			, type: { kind: "primitive", name: "nat" }
+			, ownership: "copy", lifetime: null, default: null
+			, optional: false, mutability: "immutable"
+		});
+		forcing.name = "forcing";
+		declaration.parameters = [
+			scalar("bound"), scalar("value"), forcing
+		];
+		declaration.source.extensions["lean-lang.org/refinements"] = {
+			parameters: [null, { kind: "fin-parameter", parameter: 0 }, null]
+			, result: null
+		};
+		const generated = plan(ir);
+		const item = generated.plan.exports.find(value => value.bindingId === declaration.id);
+		assert.equal(generated.plan.privateAbi.version, version);
+		const lean = generated.files["LeanBridgeGenerated.lean"];
+		const c = version === 8
+			? generateComponentRecursiveAdapters(generated.plan.privateAbi, {
+				exports: generated.plan.exports
+			})
+			: generateComponentStructuredCallableAdapters(
+				generated.plan.privateAbi, generated.plan.exports);
+		assert.match(lean, /if _bridgeFin1 : \(a1\) < a0 then/u);
+		assert.doesNotMatch(lean, new RegExp(`${item.symbol}_refinement_1`, "u"));
+		assert.doesNotMatch(c, new RegExp(`${item.symbol}_refinement_1`, "u"));
+		// ABI8 and ABI9 recursive walkers retain one-element carriers even when
+		// this site has no nominal layout refinement; the native pairwise guard
+		// must compare the projected Nat values rather than the Array objects.
+		assert.match(c, /lean_object \*value = lean_alloc_array\(1, 1\);/u);
+		const check = "lean_nat_dec_lt(lean_array_get_core(a1, 0), lean_array_get_core(a0, 0))";
+		assert.ok(c.includes(check));
+		assert.ok(!c.includes(
+			"lean_nat_dec_lt(lean_array_get_core(a0, 0), lean_array_get_core(a1, 0))"));
+		assert.ok(c.indexOf(check)
+			< c.indexOf(`${item.symbol}_lean(a0, a1, a2)`));
+		assert.match(c, /lean_dec\(a0\); lean_dec\(a1\); lean_dec\(a2\); bridge_recursive_frame_clear\(frame\); frame->status = 5; return 5;/u);
+		const exported = new Set([...lean.matchAll(
+			/^@\[export (\S+_refinement_\d+)\]$/gmu
+		)].map(match => match[1]));
+		for(const match of c.matchAll(
+			/^extern uint8_t (\S+_refinement_\d+)\(/gmu
+		)) assert.ok(exported.has(match[1]), match[1]);
+	}
+});
+
 test("structured array-only callbacks keep an explicit empty nominal table", async () => {
 	const ir = structuredCallableReviewedIr();
 	ir.declarations = ir.declarations.filter(item => /(?:call|twice|make)Array$/.test(item.name));

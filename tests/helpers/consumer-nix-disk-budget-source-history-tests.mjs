@@ -12,6 +12,7 @@ import { authenticateSourceHistoryReverse, gitSourceBytes }
 import { sourceAtFinHistoryMilestone }
 	from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { consumerMatrixNixJobs } from "./consumer-matrix-live-topology.mjs";
 import {
 	beforeConsumerNixDiskBudgetSource
 	, consumerNixDiskBudgetHistoryAdditions
@@ -113,7 +114,8 @@ test("Consumer Matrix disk budget closes every Nix-backed build job"
 				, starts[index + 1]?.index ?? workflow.length)]);
 		const nix = jobs.filter(([, body]) =>
 			body.includes("cachix/install-nix-action@v31"));
-		assert.equal(nix.length, 18);
+		assert.equal(nix.length, consumerMatrixNixJobs.length);
+		assert.deepEqual(nix.map(([id]) => id), consumerMatrixNixJobs);
 		const cleanup = "Free hosted runner disk before Nix-backed builds";
 		for(const [id, body] of nix)
 		{

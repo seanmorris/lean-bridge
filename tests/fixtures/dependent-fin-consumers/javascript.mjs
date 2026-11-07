@@ -43,7 +43,7 @@ export const executeDependentFin = (request, api) => {
 		rejected(() => api[name](...args), `${name} public bound`
 			, new RegExp(`${name}\\.${parameter} must be bigint below ${bound}`, "u"));
 		rejected(() => api.raw(name, args), `${name} raw bound`
-			, /component call failed \(6\)/u, true);
+			, /Component scalar call failed \(6\)/u, true);
 	};
 	const huge = 2n ** 70n, word = 2n ** 32n;
 	for(const value of [0n, 1n]) rejectedPair("mirror", [0n, value], "arg1", 0n);

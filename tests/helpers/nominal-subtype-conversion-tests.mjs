@@ -142,11 +142,7 @@ test("fresh Lean compiles distinct nominal conversions, active variants and resu
 		await writeFile(join(directory, "Generated.lean"), text);
 		const result = await run(["Generated.lean"]);
 		assert.equal(result.stderr, "");
-		// Preserve the generator's existing nullary helper bytes and their two known binder warnings.
-		const warnings = [...result.stdout.matchAll(/^Generated\.lean:\d+:\d+: warning: (.+)$/gmu)].map(match => match[1]);
-		assert.equal(warnings.length, 4);
-		assert.ok(warnings.every(warning => warning === "Variable name `unit` is not explicitly referenced."
-			|| warning === "Local variable 'unit' resembles constructor 'PUnit.unit' - write '.unit' (with a dot) or 'PUnit.unit' to use the constructor."));
+		assert.equal(result.stdout, "");
 		observations.push({ route, checks: checks.length, sourceSha256: sha256(text), stdout: result.stdout, stderr: result.stderr });
 		if(reports) await writeFile(join(reports, `${route}.lean`), text, { flag: "wx" });
 	}

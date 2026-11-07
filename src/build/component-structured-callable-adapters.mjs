@@ -12,6 +12,7 @@ import {
 	componentStructuredCallableMirrors, componentStructuredCallablePrefix
 	, componentStructuredCopiedView, componentStructuredRuntimeRefinements
 } from "./component-structured-callable-lean.mjs";
+import { componentDependentFinGuard } from "./component-dependent-fin.mjs";
 
 const budget = `  recursive_budget budget = { .bytes = 16u * 1024u * 1024u, .nodes = ${componentRecursiveLimits.valueNodes}, .owner = NULL, .path = {0} };`;
 const parameters = count => Array(Math.max(1, count)).fill("lean_object *").join(", ");
@@ -59,7 +60,7 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 		const refinements = closure && direction === null ? callbackRefinements.get(signature.id)?.parameters ?? []
 			: runtimeRefinements(signature, exports.find(value => value.bindingId === signature.bindingId)?.refinements)?.parameters ?? [];
 		const cleanup = [...(closure ? ["lean_dec(closure);"] : []), ...names.map(name => `lean_dec(${name});`)].join(" ");
-		for(const [index, refinement] of refinements.entries()) if(refinement && (constrained || refinement.kind !== "fin"))
+		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin-parameter" && (constrained || refinement.kind !== "fin"))
 			lines.push(`extern uint8_t ${name}_refinement_${index}(lean_object *);`);
 		lines.push(closure ? `static uint32_t ${name}(lean_object *closure, bridge_scalar_frame *frame) {`
 			: `LEAN_EXPORT uint32_t ${name}(bridge_scalar_frame *frame) {`
@@ -82,7 +83,17 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 				? `${prefix(callbacks.get(type.id))}_wrap((size_t)frame->args[${index}].bits)`
 				: `${walker(type)}_decode(&frame->args[${index}])`};`);
 		if(constrained) for(const name of names) lines.push(`  if (!lean_is_array(${name}) || lean_array_size(${name}) != 1) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
-		for(const [index, refinement] of refinements.entries()) if(refinement && (constrained || refinement.kind !== "fin"))
+		for(const [index, refinement] of refinements.entries())
+		{
+			// Structured callables reuse recursive walkers, whose decoded leaves are
+			// always one-element Array carriers, independently of `constrained`.
+			const dependent = componentDependentFinGuard(
+				refinement, index, signature.parameters
+				, `${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5;`
+				, 5, position => `lean_array_get_core(a${position}, 0)`);
+			if(dependent) lines.push(dependent);
+		}
+		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin-parameter" && (constrained || refinement.kind !== "fin"))
 			lines.push(`  lean_inc(a${index});`
 				, `  if (!${name}_refinement_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
 		lines.push(`  lean_object *result = ${target}(${[...(closure ? ["closure"] : []), ...names].join(", ") || "lean_box(0)"});`);

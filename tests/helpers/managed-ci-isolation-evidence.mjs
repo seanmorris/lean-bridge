@@ -9,9 +9,17 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurfaceContracts } from "./type-surface-contracts.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { nativeForkRepairPath } from "./native-fork-repair-history.mjs";
-import { assertManagedCiIsolation } from "./managed-ci-isolation.mjs";
 import { managedCiIsolationBaseline, managedCiIsolationChangedPaths, managedCiIsolationAddedPaths, reverseManagedCiIsolation } from "./managed-ci-isolation-history.mjs";
 import { beforeOwnedJvmPackages, ownedJvmHistoricalBytes } from "./owned-jvm-source-history.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
+
+const managedCiIsolationProducer
+	= "c9a99b15536778bc76bf834d8a57c998fd240e4f";
+let producerPromise;
+const producer = () => producerPromise ??= moduleAtProducer(
+	managedCiIsolationProducer, "tests/helpers/managed-ci-isolation.mjs"
+);
 
 export const managedCiIsolationCommand = "node --test tests/managed-ci-isolation.test.mjs";
 export const managedCiIsolationScope = {
@@ -31,6 +39,10 @@ export const assertManagedCiIsolationEvidence = async record => {
 	assert.equal(record.kind, "managed-ci-isolation");
 	assert.equal(record.baselineRevision, managedCiIsolationBaseline);
 	assert.deepEqual(record.scope, managedCiIsolationScope);
+	const producerPath = "tests/helpers/managed-ci-isolation.mjs";
+	assert.equal(sha256(bytesAtProducer(managedCiIsolationProducer, producerPath))
+		, record.sources[producerPath]);
+	const { assertManagedCiIsolation } = await producer();
 	assert.deepEqual(record.previous, { path: nativeForkRepairPath
 		, sha256: "15837265b34832aa5515fa3420922fefd2d9459e41dc39f3d7f58098bfb84fe5" });
 	const previousBytes = await readFile(record.previous.path);

@@ -10,6 +10,7 @@ import { compileComponentCopiedGraph, componentRecursiveLimits } from "../abi/co
 import { componentRecursiveHelper, componentRecursiveTypes } from "./component-recursive-lean.mjs";
 import { hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
 import { componentRecursiveDiagnostics } from "./component-recursive-diagnostics.mjs";
+import { componentDependentFinGuard } from "./component-dependent-fin.mjs";
 
 /**
  * Identify a shared copied-value walker after resolving transparent aliases.
@@ -227,7 +228,7 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 		const refinements = exports.find(value => value.bindingId === item.bindingId)?.refinements?.parameters ?? [];
 		if(nominal) item.parameters.forEach((_, index) => lines.push(`extern uint8_t ${item.symbol}_fin_guard_${index}(lean_object *);`));
 		const cleanup = item.parameters.map((_, index) => `lean_dec(a${index});`).join(" ");
-		for(const [index, refinement] of refinements.entries()) if(refinement && (nominalRefinements.length || refinement.kind !== "fin"))
+		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin-parameter" && (nominalRefinements.length || refinement.kind !== "fin"))
 			lines.push(`extern uint8_t ${item.symbol}_refinement_${index}(lean_object *);`);
 		const diagnosticPasses = diagnostics?.calls.get(item.bindingId) ?? [];
 		const diagnostic = (mode, index) => {
@@ -258,6 +259,17 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 		item.parameters.forEach((type, index) => lines.push(`  lean_object *a${index} = ${walker(type)}_decode(&frame->args[${index}]);`));
 		if(nominalRefinements.length) item.parameters.forEach((_, index) => lines.push(
 			`  if (!lean_is_array(a${index}) || lean_array_size(a${index}) != 1) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`));
+		for(const [index, refinement] of refinements.entries())
+		{
+			// Recursive walkers decode every leaf into a one-element Array carrier,
+			// even when no nominal refinement is present (see the primitive decoder
+			// above). The dependent comparison therefore projects both Nat values.
+			const dependent = componentDependentFinGuard(
+				refinement, index, item.parameters
+				, `${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5;`
+				, 5, position => `lean_array_get_core(a${position}, 0)`);
+			if(dependent) lines.push(dependent);
+		}
 		// Validate bounds across every argument before any parameter's constructor validator.
 		if(nominal) item.parameters.forEach((_, index) => {
 			const details = diagnostic("fin", index);
@@ -266,7 +278,7 @@ export const generateComponentRecursiveAdapters = (abi, { exportFrames = true, e
 					, ...details, "  }"].join("\n")
 				: `  if (!${item.symbol}_fin_guard_${index}(a${index})) { ${cleanup} bridge_recursive_frame_clear(frame); frame->status = 5; return 5; }`);
 		});
-		for(const [index, refinement] of refinements.entries()) if(refinement && (nominalRefinements.length || refinement.kind !== "fin"))
+		for(const [index, refinement] of refinements.entries()) if(refinement && refinement.kind !== "fin-parameter" && (nominalRefinements.length || refinement.kind !== "fin"))
 		{
 			const details = diagnostic("constructor", index);
 			lines.push(`  lean_inc(a${index});`, details

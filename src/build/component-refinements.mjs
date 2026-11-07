@@ -300,7 +300,11 @@ export const componentRefinementGuards = (guards, success, rejected) => {
  * @param inputGuard - Optional Fin-only predicate, evaluated before any selected constructor.
  */
 export const componentCarrierRefinementValidators = (item, includeFin = false, inputGuard) => (item.refinements?.parameters ?? []).flatMap((refinement, index) => {
-	if(!refinement || (!includeFin && ["fin", "fin-parameter"].includes(refinement.kind))) return [];
+	// A dependent Fin needs two live arguments and cannot have a unary validator.
+	// Its component adapter performs the observable pairwise refusal before the
+	// complete Lean wrapper constructs the proof.
+	if(!refinement || refinement.kind === "fin-parameter"
+		|| (!includeFin && refinement.kind === "fin")) return [];
 	const carrier = item.parameters?.[index]?.leanType;
 	if(typeof carrier !== "string" || carrier.length === 0)
 		throw new TypeError(`Refinement validator ${index} has no carrier Lean type`);

@@ -71,7 +71,7 @@ jobs:
         run: bash scripts/install-playwright-browsers.sh chromium firefox webkit
       - name: Build the locked engine and prepared runtime once
         run: |
-          nix build .#universal-core-artifacts --out-link build/consumer-ci-runtime
+          bash scripts/retry-lean-bootstrap-ci.sh nix build .#universal-core-artifacts --out-link build/consumer-ci-runtime
           nix build .#component-build-engine --out-link build/locked-lake-engine
       - name: Account original adapters and Lean entry
         id: original

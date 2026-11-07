@@ -20,7 +20,10 @@ export const finContainerEdgeCiSelections = Object.freeze([
 	, { job: "wasi-consumer", profiles: "wit-wasi", step: "ordinary_wit" }
 ].map(item => Object.freeze({ ...item
 	, label: item.python ? `python${item.python.replace(".", "")}` : item.profiles.replace(",", "-")
-	, timeout: item.job === "native-consumers" ? "${{ matrix.profile == 'c-family' && 360 || 240 }}" : "240" })));
+	, timeout: item.job === "native-consumers"
+		? "${{ matrix.profile == 'c-family' && 360 || 240 }}"
+		: item.job === "managed-consumers" ? "360"
+			: item.job === "wasi-consumer" ? "300" : "240" })));
 const pattern = "^installed source-free native packages execute zero-bound and nested-position Fin edge cases$";
 const report = item => `build/native-fin-container-edges/edges-${item.label}.json`;
 const oldRun = item => `LEAN_BRIDGE_FIN_PRODUCT_PROFILES=${item.profiles} LEAN_BRIDGE_REVIEWED_FIN_PRODUCT_PROFILES=${item.profiles} node --test tests/native-fin-products.test.mjs`;

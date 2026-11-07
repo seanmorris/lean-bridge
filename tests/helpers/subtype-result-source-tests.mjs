@@ -157,11 +157,7 @@ test("fresh Lean projects constructor-free native Subtype results and retains in
 		await saveLakeFile(directory, "ResultAdapters.lean", adapter);
 		const compiled = await run(["ResultAdapters.lean"]);
 		assert.equal(compiled.stderr, "");
-		assert.doesNotMatch(compiled.stdout, /error:|sorry/u);
-		const warnings = [...compiled.stdout.matchAll(/^ResultAdapters\.lean:\d+:\d+: warning: (.+)$/gmu)].map(match => match[1]);
-		assert.equal(warnings.length, 8);
-		assert.ok(warnings.every(warning => warning === "Variable name `unit` is not explicitly referenced."
-			|| warning === "Local variable 'unit' resembles constructor 'PUnit.unit' - write '.unit' (with a dot) or 'PUnit.unit' to use the constructor."));
+		assert.equal(compiled.stdout, "");
 		for(const [path, value] of Object.entries({ ...generateCBindingPackage(model.bindingIr), ...generateCppBindingPackage(model.bindingIr), ...boostSources() })) await saveLakeFile(directory, path, value);
 		await saveLakeFile(directory, "component.h", generated.header);
 		await saveLakeFile(directory, "lean_bridge_native_runtime.h", brokerHeader + nativeCallbackHeader);
@@ -178,9 +174,25 @@ test("fresh Lean projects constructor-free native Subtype results and retains in
 			, context, directory, reports, route: componentRoute, run, review, expected
 			, assertions: call => resultComponentAssertions(call, mixed) }));
 	}
-	const refusedNames = ["uncheckedInput", "uncheckedEnvelope", "callbackResult", "genericResult", "checkedResult"];
+	const refusedNames = ["uncheckedInput", "uncheckedEnvelope", "genericResult"];
 	const refused = await extract("refusals", { exports: refusedNames.map(name => `NominalResults.${name}`), arities: [["NominalResults.callbackResult", 1]] });
 	for(const [name, projection] of refused.projections) assert.equal(projection.status, "unsupported", `${name}: ${canonicalJson(projection)}`);
+	const resultOnlyNames = ["callbackResult", "checkedResult"];
+	const assertResultOnly = projections => {
+		assert.deepEqual([...projections.keys()].sort(), resultOnlyNames.map(name => `NominalResults.${name}`).sort());
+		for(const projection of projections.values())
+		{
+			assert.equal(projection.status, "supported", canonicalJson(projection));
+			assert.equal(projectionCheckedSelection(projection.result), null);
+		}
+		assert.equal(projections.get("NominalResults.callbackResult").result.kind, "callback");
+		assert.deepEqual(projections.get("NominalResults.checkedResult").result.erased, ["positive"]);
+	};
+	const resultOnly = await extract("result-only-controls", {
+		exports: resultOnlyNames.map(name => `NominalResults.${name}`)
+		, arities: [["NominalResults.callbackResult", 1]]
+	});
+	assertResultOnly(resultOnly.projections);
 	const control = await extract("controls", { exports: ["NominalResults.plainRecursive", "NominalResults.finOnly", "NominalResults.recursiveResult"] });
 	assert.ok([...control.projections.values()].every(projection => projection.status === "supported"));
 	assert.equal(control.projections.get("NominalResults.plainRecursive").result.kind, "graph");
@@ -190,6 +202,12 @@ test("fresh Lean projects constructor-free native Subtype results and retains in
 	assert.equal(projectionCheckedSelection(recursiveResult), null);
 	const component = await extract("component-refusals", { profile: "component-scalars-v1", exports: refusedNames.map(name => `NominalResults.${name}`), arities: [["NominalResults.callbackResult", 1]] });
 	assert.ok([...component.projections.values()].every(projection => projection.status === "unsupported"));
+	const componentResultOnly = await extract("component-result-only-controls", {
+		profile: "component-scalars-v1"
+		, exports: resultOnlyNames.map(name => `NominalResults.${name}`)
+		, arities: [["NominalResults.callbackResult", 1]]
+	});
+	assertResultOnly(componentResultOnly.projections);
 	const componentRecursive = await extract("component-recursive-control", { profile: "component-scalars-v1", exports: ["NominalResults.recursiveResult"] });
 	const componentResult = componentRecursive.projections.get("NominalResults.recursiveResult");
 	assert.equal(componentResult.status, "supported", componentResult.expression);

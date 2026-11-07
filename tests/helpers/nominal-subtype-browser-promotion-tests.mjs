@@ -13,7 +13,7 @@ import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypeBrowserArchive, nominalSubtypeBrowserReferences, promoteNominalSubtypeBrowser, nominalSubtypeBrowserProfiles, nominalSubtypeBrowserConversion, nominalSubtypeBrowserLimit } from "./nominal-subtype-browser-promotion.mjs";
 import { nominalSubtypeBrowserPromotionHistoryPath, nominalSubtypeBrowserPromotionPredecessor } from "./nominal-subtype-browser-promotion-history.mjs";
 import { beforeNominalSubtypePhpWasmPromotionSource, beforeNominalSubtypePhpWasmPromotionPins, nominalSubtypePhpWasmPromotionHistoryPath } from "./nominal-subtype-php-wasm-promotion-history.mjs";
-import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { sourceBeforeFinHistoryRecord, sourceReaderAtEvidencePins } from "./source-at-fin-history-milestone.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeNominalPrimitiveSubtypeBrowserPromotionPins } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
 import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
@@ -122,10 +122,16 @@ test("nominal browser promotion refuses missing originals, invented scope and ov
 
 test("nominal browser promotion changes exactly eighteen Subtype cells and adds six field cells", async () => {
 	const original = predecessor(), references = await nominalSubtypeBrowserReferences();
+	const promotionDocument = JSON.parse(sourceAtHistoryMilestone(
+		nominalSubtypeBrowserPromotionHistoryPath, "docs/type-surface.v1.json"
+	));
+	const readAtPromotion = sourceReaderAtEvidencePins(promotionDocument
+		, entry => entry.id.startsWith("nominal-subtype-browser-")
+		, nominalSubtypeBrowserPromotionHistoryPath);
 	const proposed = beforeNominalSubtypePhpWasmPromotionPins(
 		beforeNominalPrimitiveSubtypeBrowserPromotionPins(
 			beforeCiContractRepairPins(beforeCheckedJavaScriptDispositionPins(
-				await promoteNominalSubtypeBrowser(original, references)
+				await promoteNominalSubtypeBrowser(original, references, readAtPromotion)
 			))
 		)
 	);

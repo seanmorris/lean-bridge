@@ -223,7 +223,7 @@ test("checked scalar Fin bounds fail the call before dispatch on every parameter
 	assert.doesNotMatch(source, /refined_pair_refinement_2/u);
 });
 
-test("dependent scalar Fin stays in the complete Lean wrapper", () => {
+test("dependent scalar Fin refuses raw calls before the complete Lean wrapper", () => {
 	const abi = { exports: [{
 		bindingId: "lean:Library.dependent"
 		, symbol: "dependent"
@@ -242,11 +242,15 @@ test("dependent scalar Fin stays in the complete Lean wrapper", () => {
 	assert.match(source
 		, /extern uint8_t dependent_refinement_1\(lean_object \*\);/u);
 	assert.doesNotMatch(source, /dependent_refinement_2/u);
+	assert.match(source
+		, /if \(!lean_nat_dec_lt\(a2, a0\)\) \{ lean_dec\(a0\); lean_dec\(a1\); lean_dec\(a2\); return 6; \}/u);
 	assert.ok(source.indexOf("dependent_refinement_1(a1)")
+		< source.indexOf("lean_nat_dec_lt(a2, a0)"));
+	assert.ok(source.indexOf("lean_nat_dec_lt(a2, a0)")
 		< source.indexOf("dependent_lean(a0, a1, a2)"));
 });
 
-test("dependent Fin on copied-array exports stays in the complete Lean wrapper", async () => {
+test("dependent Fin on copied-array exports refuses raw calls before the complete Lean wrapper", async () => {
 	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.pick"
 		, parameters: ["nat", { array: "nat" }, "nat"], result: "nat" }]);
 	ir.declarations[0].source.extensions["lean-lang.org/refinements"] = {
@@ -278,8 +282,13 @@ test("dependent Fin on copied-array exports stays in the complete Lean wrapper",
 	assert.deepEqual(imported, [`${symbol}_refinement_0`]);
 	assert.doesNotMatch(c, new RegExp(`${symbol}_refinement_2`, "u"));
 	assert.ok(c.indexOf(`${symbol}_refinement_0(a0)`)
+		< c.indexOf("lean_nat_dec_lt(a2, a0)"));
+	assert.match(c
+		, /if \(!lean_nat_dec_lt\(a2, a0\)\) \{ lean_dec\(a0\); lean_dec\(a1\); lean_dec\(a2\); return 5; \}/u);
+	assert.ok(c.indexOf("lean_nat_dec_lt(a2, a0)")
 		< c.indexOf(`${symbol}_lean(a0, a1, a2)`));
-	// The complete wrapper checks the live bound and refuses an out-of-bound argument.
+	// The complete wrapper independently checks the live bound and constructs the proof;
+	// the component adapter above owns the observable raw-call refusal.
 	const guard = lean.indexOf("if _bridgeFin2 : (value2) < value0 then");
 	const call = lean.indexOf("_root_.Refinements.pick ⟨value0, _bridgeFin0⟩ value1 ⟨value2, _bridgeFin2⟩");
 	const refusal = lean.indexOf(

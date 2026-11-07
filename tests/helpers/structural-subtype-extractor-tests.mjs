@@ -29,6 +29,9 @@ const choice = name => ({ constructor: `StructuralSubtypes.${name}` });
 const copied = refinement => ({ ownership: "copy", lifetime: null, ...(refinement ? { refinement } : {}) });
 const group = name => tree("array", tree("option", choice(name)));
 const positive = choice("checkedPositive"), word = choice("checkedWord");
+const resultSelection = selection => selection === null ? null
+	: Object.hasOwn(selection, "constructor") ? { constructor: null }
+		: tree(selection.kind, ...selection.arguments.map(resultSelection));
 const selections = {
 	scalar: positive
 	, arrays: tree("array", positive)
@@ -164,15 +167,20 @@ test("fresh Lean extracts structural Subtypes with exact per-site choices and re
 	{
 		const contracts = Object.fromEntries(Object.entries(selections).map(([name, selection]) => [
 			`StructuralSubtypes.${name}`
-			, { parameters: [copied(selection)], result: copied(name === "nested" ? null : selection) }
+			, { parameters: [copied(selection)], result: copied() }
 		]));
-		contracts["StructuralSubtypes.aliasArguments"] = { parameters: [copied(group("checkedPositive")), copied(group("normalizePositive"))], result: copied(group("checkedPositive")) };
-		contracts["StructuralSubtypes.plainFin"] = { parameters: [copied(null)], result: copied(null) };
-		contracts["StructuralSubtypes.specialized"] = { parameters: [copied(tree("list", positive))], result: copied(tree("list", positive)) };
+		contracts["StructuralSubtypes.aliasArguments"] = { parameters: [copied(group("checkedPositive")), copied(group("normalizePositive"))], result: copied() };
+		contracts["StructuralSubtypes.plainFin"] = { parameters: [copied(null)], result: copied() };
+		contracts["StructuralSubtypes.specialized"] = { parameters: [copied(tree("list", positive))], result: copied() };
 		const specialized = { specializations: [{ name: "StructuralSubtypes.specialized", declaration: "StructuralSubtypes.generic", types: ["StructuralSubtypes.Positive"] }] };
 		await extract(profile, contracts, specialized, true);
-		const refusedNames = ["field", "callback", "callbackAlias", "callbackReply"];
-		for(const name of refusedNames) contracts[`StructuralSubtypes.${name}`] = {
+		const refused = {
+			field: /Subtype refinements require a top-level or structural-container/
+			, callback: /checked refinement constructor does not match the compiler-checked Subtype/
+			, callbackAlias: /checked refinement constructor does not match the compiler-checked Subtype/
+			, callbackReply: /Subtype refinements require a configured checked constructor/
+		};
+		for(const name of Object.keys(refused)) contracts[`StructuralSubtypes.${name}`] = {
 			parameters: [name === "field" ? copied(positive)
 				: { ownership: "borrow", lifetime: { scope: "call", anchor: null }, refinement: positive }]
 		};
@@ -189,7 +197,7 @@ test("fresh Lean extracts structural Subtypes with exact per-site choices and re
 			, tooDeep: deep, tooWide: wide
 		};
 		for(const [name, selection] of Object.entries(invalid)) contracts[`StructuralSubtypes.${name}`] = {
-			parameters: [copied(selection)], result: copied(tree("array", positive))
+			parameters: [copied(selection)], result: copied()
 		};
 		const projections = await extract(profile, contracts, specialized);
 		for(const [name, selection] of Object.entries(selections))
@@ -197,24 +205,30 @@ test("fresh Lean extracts structural Subtypes with exact per-site choices and re
 			const projection = projections.get(name);
 			assert.equal(projection.status, "supported", `${profile}/${name}: ${projection.expression}`);
 			assert.deepEqual(selectionsIn(projection.parameters[0].type), predicate(selection));
-			if(name !== "nested") assert.deepEqual(selectionsIn(projection.result), predicate(selection));
+			if(name !== "nested") assert.deepEqual(selectionsIn(projection.result), predicate(resultSelection(selection)));
 		}
 		const aliases = projections.get("aliasArguments");
 		assert.equal(aliases.status, "supported", aliases.expression);
 		assert.deepEqual(aliases.parameters.map(item => selectionsIn(item.type)), [predicate(group("checkedPositive")), predicate(group("normalizePositive"))]);
 		assert.equal(projections.get("plainFin").status, "supported");
 		assert.equal(projections.get("specialized").status, "supported", projections.get("specialized").expression);
-		for(const name of refusedNames)
+		for(const [name, diagnostic] of Object.entries(refused))
 		{
 			const projection = projections.get(name);
 			assert.equal(projection.status, "unsupported");
-			assert.match(projection.expression, /Subtype refinements require a top-level or structural-container/);
+			assert.match(projection.expression, diagnostic);
 		}
 		for(const name of Object.keys(invalid)) assert.equal(projections.get(name).status, "unsupported", name);
 		assert.match(projections.get("wrongInput").expression, /input must equal/);
 		assert.match(projections.get("wrongResult").expression, /exact subtype/);
 		assert.match(projections.get("unsafeChoice").expression, /unsafe/);
-		assert.match(projections.get("missingChoice").expression, /configured checked constructor/);
+		if(profile === "native-library-v1")
+			assert.match(projections.get("missingChoice").expression, /configured checked constructor/);
+		else
+		{
+			assert.equal(projections.get("missingChoice").reason, "unsupported-parameter-type");
+			assert.equal(projections.get("missingChoice").expression, "Array.{0} StructuralSubtypes.Positive");
+		}
 		for(const name of ["tooDeep", "tooWide"]) assert.match(projections.get(name).expression, /depth or node limit/);
 	}
 	complete = true;

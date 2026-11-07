@@ -88,6 +88,32 @@ test("compound ABI agrees with schemas and retains helper symbols after canonica
 	}
 });
 
+test("compound exports reject dependent Fin pairs before dispatch", () => {
+	const ir = compoundReviewedIr(), declaration = ir.declarations[0];
+	const parameter = name => ({
+		...structuredClone(declaration.parameters[0]), name
+		, type: { kind: "primitive", name: "nat" }
+	});
+	declaration.parameters.push(parameter("bound"), parameter("value"));
+	declaration.source.extensions["lean-lang.org/refinements"] = {
+		parameters: [null, null, { kind: "fin-parameter", parameter: 1 }]
+		, result: null
+	};
+	const generated = plan(ir), item = generated.plan.exports.find(
+		value => value.bindingId === declaration.id);
+	assert.equal(generated.plan.privateAbi.version, 6);
+	const lean = generated.files["LeanBridgeGenerated.lean"];
+	const c = generateComponentRecordAdapters(
+		generated.plan.privateAbi, generated.plan.exports);
+	assert.match(lean, /if _bridgeFin2 : \(value\) < bound then/u);
+	assert.doesNotMatch(lean, new RegExp(`${item.symbol}_refinement_2`, "u"));
+	assert.doesNotMatch(c, new RegExp(`${item.symbol}_refinement_2`, "u"));
+	assert.match(c
+		, /if \(!lean_nat_dec_lt\(a2, a1\)\) \{ lean_dec\(a0\); lean_dec\(a1\); lean_dec\(a2\); return 5; \}/u);
+	assert.ok(c.indexOf("lean_nat_dec_lt(a2, a1)")
+		< c.indexOf(`${item.symbol}_lean(a0, a1, a2)`));
+});
+
 test("compound descriptors bind result order, product nesting and exact pure copied semantics", () => {
 	const ir = compoundReviewedIr(), abi = createComponentPrivateAbi(ir);
 	for(const mutate of [

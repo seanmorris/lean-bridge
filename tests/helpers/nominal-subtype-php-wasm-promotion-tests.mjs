@@ -13,7 +13,7 @@ import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypePhpWasmArchive, nominalSubtypePhpWasmReferences, promoteNominalSubtypePhpWasm, nominalSubtypePhpWasmProfiles, nominalSubtypePhpWasmConversion, nominalSubtypePhpWasmLimit } from "./nominal-subtype-php-wasm-promotion.mjs";
 import { nominalSubtypePhpWasmPromotionHistoryPath, nominalSubtypePhpWasmPromotionPredecessor } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeNpmPromotionSource, beforeNominalPrimitiveSubtypeNpmPromotionPins, nominalPrimitiveSubtypeNpmPromotionHistoryPath } from "./nominal-primitive-subtype-npm-promotion-history.mjs";
-import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { sourceBeforeFinHistoryRecord, sourceReaderAtEvidencePins } from "./source-at-fin-history-milestone.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
 import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
@@ -125,9 +125,15 @@ test("nominal PHP-Wasm promotion refuses missing originals, invented scope and o
 
 test("nominal PHP-Wasm promotion changes exactly six Subtype cells and adds two field cells", async () => {
 	const original = predecessor(), references = await nominalSubtypePhpWasmReferences();
+	const promotionDocument = JSON.parse(sourceAtHistoryMilestone(
+		nominalSubtypePhpWasmPromotionHistoryPath, "docs/type-surface.v1.json"
+	));
+	const readAtPromotion = sourceReaderAtEvidencePins(promotionDocument
+		, entry => entry.id.startsWith("nominal-subtype-php-wasm-")
+		, nominalSubtypePhpWasmPromotionHistoryPath);
 	const proposed = beforeNominalPrimitiveSubtypeNpmPromotionPins(
 		beforeCiContractRepairPins(beforeCheckedJavaScriptDispositionPins(
-			await promoteNominalSubtypePhpWasm(original, references)
+			await promoteNominalSubtypePhpWasm(original, references, readAtPromotion)
 		))
 	);
 	const contracts = typeSurfaceContractsAtProducer(
