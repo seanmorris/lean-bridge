@@ -17,6 +17,7 @@ import { nativeVariantReviewedIr } from "./helpers/native-variant-fixture.mjs";
 import { nativeAliasReviewedIr } from "./helpers/native-alias-fixture.mjs";
 import { listReviewedIr } from "./helpers/list-fixture.mjs";
 import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
+import { cVariantReviewedIr } from "./helpers/c-variant-fixture.mjs";
 
 test("Maven packaging rejects missing or altered Kotlin compiler metadata", () => {
 	const evidence = { namespace: "org.leanbridge.collections.kotlin"
@@ -163,3 +164,50 @@ for(const [name, fixture] of Object.entries({
 			assert.match(source, /new org\.leanbridge\.compounds\.kotlin\.Pair<>/);
 		}
 	});
+
+/**
+ * Require a consumer fixture to see a copied record constructor's own null
+ * refusal, and to build every null-field record inside that refusal.
+ *
+ * @param source - Java or Kotlin consumer fixture.
+ * @param kotlin - Whether the fixture is Kotlin.
+ */
+const assertSurfacedNullRefusals = (source, kotlin) => {
+	assert.match(source, kotlin
+		? /catch \(error: java\.lang\.reflect\.InvocationTargetException\) \{ throw error\.targetException \}/u
+		: /catch \(java\.lang\.reflect\.InvocationTargetException error\) \{\n[^\n]*\n\s+if \(error\.getCause\(\) instanceof RuntimeException refused\) throw refused;/u);
+	const nulls = source.split("\n").filter(line => /\bchange\([^;]*,\s*null\)/u.test(line));
+	assert.ok(nulls.length > 0);
+	for(const line of nulls)
+	{
+		const refusal = line.search(/\breject\(NullPointerException/u);
+		assert.ok(refusal >= 0 && refusal < line.search(/\bchange\([^;]*,\s*null\)/u), line.trim());
+	}
+};
+
+test("JVM consumer fixtures surface copied-record constructor null refusals", async () => {
+	// Copied records refuse a null reference field in their own constructor, so a
+	// reflective helper must not hide that refusal behind InvocationTargetException.
+	const variants = generateCopiedJvmPackage(cVariantReviewedIr());
+	assert.match(variants["src/main/java/org/leanbridge/variants/ScalarsAll.java"]
+		, /java\.util\.Objects\.requireNonNull\(bytes\);/u);
+	for(const [path, kotlin] of [
+		["tests/fixtures/variant-consumers/java.java", false]
+		, ["tests/fixtures/variant-consumers/kotlin.kt", true]
+		, ["tests/fixtures/collection-consumers/java.java", false]
+		, ["tests/fixtures/collection-consumers/kotlin.kt", true]
+	]) assertSurfacedNullRefusals(await readFile(path, "utf8"), kotlin);
+	// The pre-repair helper and an eagerly built null record are both refused.
+	const java = await readFile("tests/fixtures/collection-consumers/java.java", "utf8");
+	const hidden = java.replace(/ {8}\} catch \(java\.lang\.reflect\.InvocationTargetException error\) \{\n(?:[^\n]*\n){3}/u, "");
+	assert.notEqual(hidden, java);
+	assert.throws(() => assertSurfacedNullRefusals(hidden, false), assert.AssertionError);
+	const eager = java.replace("final int field = i; reject(NullPointerException.class, () -> call(() -> Api.recordReverse(new Primitives[] {scalar, change(scalar, field, null)})));"
+		, "var invalid = change(scalar, i, null); reject(NullPointerException.class, () -> call(() -> Api.recordReverse(new Primitives[] {scalar, invalid})));");
+	assert.notEqual(eager, java);
+	assert.throws(() => assertSurfacedNullRefusals(eager, false), assert.AssertionError);
+	const kotlin = await readFile("tests/fixtures/variant-consumers/kotlin.kt", "utf8");
+	const unwrapped = kotlin.replace(/ {4}catch \(error: java\.lang\.reflect\.InvocationTargetException\) \{ throw error\.targetException \}\n/u, "");
+	assert.notEqual(unwrapped, kotlin);
+	assert.throws(() => assertSurfacedNullRefusals(unwrapped, true), assert.AssertionError);
+});
