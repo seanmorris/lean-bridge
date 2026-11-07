@@ -74,7 +74,7 @@ test("reviewed Ruby and JVM reports refuse weakened isolation, changed receipts 
 				const changed = new Map(base);
 				changed.set("report.json", Buffer.from(canonicalJson(report)));
 				changed.set(profile + ".json", Buffer.from(canonicalJson(report.reports[index])));
-				await assert.rejects(() => assertReviewedSubtypeRubyJvmRecords({ profiles, read: path => changed.get(path) }));
+				await assert.rejects(() => assertReviewedSubtypeRubyJvmRecords({ profiles, expectation: "2026-10-10", read: path => changed.get(path) }));
 				controls++;
 			}
 		}

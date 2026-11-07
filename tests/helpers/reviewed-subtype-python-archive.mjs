@@ -49,7 +49,7 @@ export const readReviewedSubtypePythonArchive = async (read = readFile) => {
 	const reports = [];
 	for(const [floor, version] of [["3.11", "3.11.16"], ["3.12", "3.12.14"]])
 	{
-		const report = await assertReviewedSubtypeHostRecords({ profiles: ["python"], python: floor, read: path => files.get(`${floor}/${path}`) });
+		const report = await assertReviewedSubtypeHostRecords({ profiles: ["python"], python: floor, expectation: "2026-10-10", read: path => files.get(`${floor}/${path}`) });
 		assert.equal(report.reports[0].pythonEnvironment.python, version);
 		const start = JSON.parse(files.get(`${floor}/run.start.json`)), end = JSON.parse(files.get(`${floor}/run.end.json`));
 		assert.equal(start.revision, index.revision);

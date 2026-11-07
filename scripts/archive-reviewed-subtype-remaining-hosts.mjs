@@ -36,7 +36,7 @@ const original = async (path, source) => preserve(path, await readFile(source), 
 for(const [group, profile, label, revision, runnerVersion] of definitions)
 {
 	const prefix = `build/vo1444-host-${label}-${revision.slice(0, 7)}`, root = prefix + "-records";
-	await assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], read: path => readFile(join(root, path)) });
+	await assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], expectation: "2026-10-10", read: path => readFile(join(root, path)) });
 	const start = JSON.parse(await readFile(prefix + ".start.json")), end = JSON.parse(await readFile(prefix + ".end.json"));
 	const runner = runnerVersion === 1 ? "build/run-reviewed-subtype-hosts.mjs" : `build/run-reviewed-subtype-hosts-v${runnerVersion}.mjs`;
 	assert.equal(start.revision, revision); assert.equal(end.code, 0); assert.equal(end.signal, null);

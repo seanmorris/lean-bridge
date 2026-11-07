@@ -26,7 +26,7 @@ const runner = await readFile("build/run-reviewed-subtype-hosts.mjs");
 for(const [group, profiles] of [["ruby", ["ruby"]], ["jvm", ["java", "kotlin"]]])
 {
 	const prefix = `build/vo1444-host-${group}-r1-274b868`, root = prefix + "-records";
-	await assertReviewedSubtypeRubyJvmRecords({ profiles, read: path => readFile(join(root, path)) });
+	await assertReviewedSubtypeRubyJvmRecords({ profiles, expectation: "2026-10-10", read: path => readFile(join(root, path)) });
 	const start = JSON.parse(await readFile(prefix + ".start.json")), end = JSON.parse(await readFile(prefix + ".end.json"));
 	assert.equal(start.revision, revision); assert.equal(end.code, 0); assert.equal(end.signal, null);
 	assert.equal(end.stoppedForDisk, false); assert.ok(start.initialFreeMiB >= 2048); assert.ok(end.minimumFreeMiB >= 768);

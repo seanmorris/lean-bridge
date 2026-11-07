@@ -67,7 +67,7 @@ test("reviewed Python report semantics refuse changed APIs, missing executions a
 			const changed = new Map(base);
 			changed.set("report.json", Buffer.from(canonicalJson(report)));
 			if(report.reports.length) changed.set("python.json", Buffer.from(canonicalJson(report.reports[0])));
-			await assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: ["python"], python: floor, read: path => changed.get(path) }));
+			await assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: ["python"], python: floor, expectation: "2026-10-10", read: path => changed.get(path) }));
 		}
 		// Updating the report hashes as well must not disguise a different checked constructor.
 		const changed = new Map(base), report = structuredClone(original);
@@ -81,9 +81,9 @@ test("reviewed Python report semantics refuse changed APIs, missing executions a
 		report.reports[0].modelSha256 = report.builds[0].modelSha256;
 		changed.set("report.json", Buffer.from(canonicalJson(report)));
 		changed.set("python.json", Buffer.from(canonicalJson(report.reports[0])));
-		await assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: ["python"], python: floor, read: path => changed.get(path) }));
-		await assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: ["python"], python: floor === "3.11" ? "3.12" : "3.11", read: path => base.get(path) }));
+		await assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: ["python"], python: floor, expectation: "2026-10-10", read: path => changed.get(path) }));
+		await assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: ["python"], python: floor === "3.11" ? "3.12" : "3.11", expectation: "2026-10-10", read: path => base.get(path) }));
 	}
 	for(const profiles of [[], ["unknown"], ["python", "python"], ["ruby", "python"]])
-		await assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles, read: () => assert.fail("Invalid selection must not read records") }));
+		await assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles, expectation: "2026-10-10", read: () => assert.fail("Invalid selection must not read records") }));
 });

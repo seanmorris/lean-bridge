@@ -32,7 +32,7 @@ const snapshot = async (path, producer = revision, prefix = "sources/") => {
 for(const [floor, label, expectedVersion] of [["3.11", "python311-r2", "3.11.16"], ["3.12", "python312-r1", "3.12.14"]])
 {
 	const prefix = `build/vo1444-host-${label}-274b868`, root = prefix + "-records";
-	const report = await assertReviewedSubtypeHostRecords({ profiles: ["python"], python: floor, read: path => readFile(join(root, path)) });
+	const report = await assertReviewedSubtypeHostRecords({ profiles: ["python"], python: floor, expectation: "2026-10-10", read: path => readFile(join(root, path)) });
 	assert.equal(report.reports[0].pythonEnvironment.python, expectedVersion);
 	const start = JSON.parse(await readFile(prefix + ".start.json")), end = JSON.parse(await readFile(prefix + ".end.json"));
 	assert.equal(start.revision, revision); assert.equal(end.code, 0); assert.equal(end.signal, null);

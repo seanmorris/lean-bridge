@@ -47,7 +47,7 @@ export const readReviewedSubtypeRubyJvmArchive = async (read = readFile) => {
 	const reports = [];
 	for(const [group, profiles] of [["ruby", ["ruby"]], ["jvm", ["java", "kotlin"]]])
 	{
-		const report = await assertReviewedSubtypeRubyJvmRecords({ profiles, read: path => files.get(`${group}/${path}`) });
+		const report = await assertReviewedSubtypeRubyJvmRecords({ profiles, expectation: "2026-10-10", read: path => files.get(`${group}/${path}`) });
 		const start = JSON.parse(files.get(`${group}/run.start.json`)), end = JSON.parse(files.get(`${group}/run.end.json`));
 		assert.equal(start.revision, index.revision);
 		assert.equal(start.environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR, "2.36");

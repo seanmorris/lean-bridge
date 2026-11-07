@@ -77,7 +77,7 @@ test("remaining reviewed Subtype reports reject weakened isolation, changed runt
 			const changed = new Map(base);
 			changed.set("report.json", Buffer.from(canonicalJson(report)));
 			changed.set(profile + ".json", Buffer.from(canonicalJson(report.reports[0])));
-			await assert.rejects(() => assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], read: path => changed.get(path) }));
+			await assert.rejects(() => assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], expectation: "2026-10-10", read: path => changed.get(path) }));
 			controls++;
 		}
 	}

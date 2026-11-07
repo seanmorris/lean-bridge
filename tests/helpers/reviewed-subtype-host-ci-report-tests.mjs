@@ -23,9 +23,10 @@ const samples = [
 const args = sample => [
 	"--profiles", sample.profiles.join(","), "--directory", sample.root
 	, "--tap", join(sample.root, "run.tap"), "--glibc", "2.36"
+	, "--expectation", "2026-10-10"
 	, ...sample.python ? ["--python", sample.python] : []
 	, ...sample.perl ? ["--perl", sample.perl] : []];
-const input = async sample => ({ ...sample, glibc: "2.36", tap: await readFile(join(sample.root, "run.tap"), "utf8"), read: path => readFile(join(sample.root, path)) });
+const input = async sample => ({ ...sample, glibc: "2.36", expectation: "2026-10-10", tap: await readFile(join(sample.root, "run.tap"), "utf8"), read: path => readFile(join(sample.root, path)) });
 const cli = values => spawnSync(process.execPath, ["scripts/check-reviewed-subtype-host-reports.mjs", ...values], { encoding: "utf8" });
 
 test("reviewed native CI checker accepts all twelve original runs and checks every lane", async () => {
@@ -39,6 +40,15 @@ test("reviewed native CI checker accepts all twelve original runs and checks eve
 		const executed = cli(args(sample));
 		assert.equal(executed.status, 0, executed.stderr);
 		for(const item of report.reports) assert.ok(executed.stdout.includes(`${item.profile} ${item.checks} checks`));
+	}
+});
+
+test("current and frozen reviewed Subtype producer contracts are never interchangeable", async () => {
+	for(const sample of [samples[0], samples[4], samples.at(-1)])
+	{
+		const historical = await input(sample);
+		await assert.rejects(() => assertReviewedSubtypeHostCiRecords({ ...historical, expectation: "current" }));
+		await assert.rejects(() => assertReviewedSubtypeHostCiRecords({ ...historical, expectation: "unknown" }));
 	}
 });
 
@@ -71,6 +81,8 @@ test("reviewed native CI selection rejects unknown lanes, versions, missing opti
 		, base.map(value => value === "python" ? "rust,python" : value)
 		, base.map(value => value === "3.11" ? "3.13" : value)
 		, base.map(value => value === "2.36" ? "2.0" : value)
+		, base.map(value => value === "2026-10-10" ? "unknown" : value)
+		, base.slice(0, base.indexOf("--expectation")).concat(base.slice(base.indexOf("--expectation") + 2))
 		, [...args(samples[4]), "--python", "3.11"]
 		, args(samples.at(-1)).slice(0, -2)
 		, [...args(samples[4]), "--perl", "5.36.3-threaded"]
@@ -78,7 +90,7 @@ test("reviewed native CI selection rejects unknown lanes, versions, missing opti
 		, base.slice(0, -1), base.map(value => value === "3.11" ? "" : value)
 		, base.map(value => value === samples[0].root ? "--directory" : value)
 	]) assert.throws(() => parseReviewedSubtypeHostCiArgs(changed));
-	const result = cli(["--profiles", "unknown", "--directory", "missing", "--tap", "missing", "--glibc", "2.38"]);
+	const result = cli(["--profiles", "unknown", "--directory", "missing", "--tap", "missing", "--glibc", "2.38", "--expectation", "current"]);
 	assert.equal(result.status, 1); assert.match(result.stderr, /Usage:/u); assert.doesNotMatch(result.stderr, /ENOENT/u);
 });
 

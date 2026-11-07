@@ -33,4 +33,5 @@ LEAN_BRIDGE_REVIEWED_SUBTYPE_HOSTS="$profiles" LEAN_BRIDGE_REVIEWED_SUBTYPE_HOST
   --test-name-pattern='^installed reviewed native Subtype hosts reproduce and relocate the complete checked corpus$' \
   tests/helpers/reviewed-subtype-host-installed-tests.mjs 2>&1 | tee "$output/run.tap"
 node scripts/check-reviewed-subtype-host-reports.mjs --profiles "$profiles" \
-  --directory "$output/records" --tap "$output/run.tap" --glibc 2.38 "${extra[@]}"
+  --directory "$output/records" --tap "$output/run.tap" --glibc 2.38 \
+  --expectation current "${extra[@]}"

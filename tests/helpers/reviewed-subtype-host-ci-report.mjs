@@ -37,8 +37,8 @@ export const assertReviewedSubtypeHostCiTap = source => {
  * @param args - Arguments after the script name.
  */
 export const parseReviewedSubtypeHostCiArgs = args => {
-	const usage = "Usage: check-reviewed-subtype-host-reports.mjs --profiles <lane> --directory <records> --tap <original-tap> --glibc 2.36|2.38 [--python 3.11|3.12] [--perl <version>-threaded|unthreaded]";
-	const allowed = ["profiles", "directory", "tap", "glibc", "python", "perl"], parsed = {};
+	const usage = "Usage: check-reviewed-subtype-host-reports.mjs --profiles <lane> --directory <records> --tap <original-tap> --glibc 2.36|2.38 --expectation current|2026-10-10 [--python 3.11|3.12] [--perl <version>-threaded|unthreaded]";
+	const allowed = ["profiles", "directory", "tap", "glibc", "expectation", "python", "perl"], parsed = {};
 	assert.ok(Array.isArray(args) && args.length % 2 === 0, usage);
 	for(let index = 0; index < args.length; index += 2)
 	{
@@ -48,9 +48,10 @@ export const parseReviewedSubtypeHostCiArgs = args => {
 		assert.ok(!Object.hasOwn(parsed, key) && typeof value === "string" && value.length > 0 && !value.startsWith("--"), usage);
 		parsed[key] = value;
 	}
-	for(const key of ["profiles", "directory", "tap", "glibc"]) assert.ok(Object.hasOwn(parsed, key), usage);
+	for(const key of ["profiles", "directory", "tap", "glibc", "expectation"]) assert.ok(Object.hasOwn(parsed, key), usage);
 	assert.ok(reviewedSubtypeHostCiLanes.includes(parsed.profiles), usage);
 	assert.ok(["2.36", "2.38"].includes(parsed.glibc), usage);
+	assert.ok(["current", "2026-10-10"].includes(parsed.expectation), usage);
 	assert.equal(Object.hasOwn(parsed, "python"), parsed.profiles === "python", usage);
 	assert.equal(Object.hasOwn(parsed, "perl"), parsed.profiles === "perl", usage);
 	if(parsed.python) assert.ok(["3.11", "3.12"].includes(parsed.python), usage);
@@ -68,6 +69,7 @@ export const assertReviewedSubtypeHostCiRecords = async options => {
 	const selected = parseReviewedSubtypeHostCiArgs([
 		"--profiles", options.profiles.join(",")
 		, "--directory", "records", "--tap", "run.tap", "--glibc", options.glibc
+		, "--expectation", options.expectation
 		, ...options.python === undefined ? [] : ["--python", options.python]
 		, ...options.perl === undefined ? [] : ["--perl", options.perl]
 	]);

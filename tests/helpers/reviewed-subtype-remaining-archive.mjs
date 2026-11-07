@@ -53,7 +53,7 @@ export const readReviewedSubtypeRemainingArchive = async (read = readFile) => {
 	const reports = [];
 	for(const { group, profile, revision, runner } of index.runs)
 	{
-		const report = await assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], read: path => files.get(`${group}/${path}`) });
+		const report = await assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], expectation: "2026-10-10", read: path => files.get(`${group}/${path}`) });
 		const start = JSON.parse(files.get(`${group}/run.start.json`)), end = JSON.parse(files.get(`${group}/run.end.json`));
 		assert.equal(start.revision, revision);
 		assert.equal(start.environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR, "2.36");

@@ -8,10 +8,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
-import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
+import { reviewedContractDifference, reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { nativeSubtypeTargets } from "./native-subtype-install.mjs";
-import { reviewedSubtypeHistoricalHostIr, reviewedSubtypeHostConsumer, reviewedSubtypeHostProfiles, reviewedSubtypeHostSource } from "./reviewed-subtype-host-fixture.mjs";
+import { reviewedSubtypeHistoricalHostIr, reviewedSubtypeHostConsumer, reviewedSubtypeHostIr, reviewedSubtypeHostProfiles, reviewedSubtypeHostSource } from "./reviewed-subtype-host-fixture.mjs";
 import { reviewedSubtypeHostChecks } from "./reviewed-subtype-host-install.mjs";
 
 const hash = value => assert.match(value, /^[a-f0-9]{64}$/u);
@@ -58,18 +58,21 @@ const historicalReviewedSelection = (identity, review) => {
  * @param options.profiles - Sorted, unique native profiles expected by the caller.
  * @param options.read - Read one original relative producer record as bytes.
  * @param options.python - Optional exact Python minor floor.
+ * @param options.expectation - Exact producer contract: current output or the frozen 2026-10-10 archive.
  */
-export const assertReviewedSubtypeHostRecords = async ({ profiles, read, python }) => {
+export const assertReviewedSubtypeHostRecords = async ({ profiles, read, python, expectation }) => {
 	assert.ok(Array.isArray(profiles) && profiles.length > 0);
 	assert.deepEqual(profiles, [...new Set(profiles)].sort());
 	assert.ok(profiles.every(profile => reviewedSubtypeHostProfiles.includes(profile)));
 	if(python !== undefined) assert.ok(profiles.includes("python") && ["3.11", "3.12"].includes(python));
+	assert.ok(["current", "2026-10-10"].includes(expectation), "Unknown reviewed Subtype producer contract");
 	const json = async path => {
 		const bytes = await read(path), value = JSON.parse(bytes);
 		assert.equal(Buffer.from(bytes).toString(), canonicalJson(value), `Noncanonical producer record: ${path}`);
 		return value;
 	};
-	const report = await json("report.json"), review = reviewedSubtypeHistoricalHostIr();
+	const report = await json("report.json");
+	const review = expectation === "current" ? reviewedSubtypeHostIr() : reviewedSubtypeHistoricalHostIr();
 	assert.deepEqual(Object.keys(report).sort(), ["builds", "profiles", "reports", "reproducible", "schemaVersion"]);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.reproducible, true);
 	assert.deepEqual(report.profiles, profiles);
@@ -95,7 +98,9 @@ export const assertReviewedSubtypeHostRecords = async ({ profiles, read, python 
 		assert.equal(identity.reviewedBindingIr.source, canonicalJson(review));
 		assert.equal(identity.reviewedBindingIr.sourceSha256, sha256(canonicalJson(review)));
 		assert.equal(identity.reviewedBindingIr.semanticSha256, hashBindingIr(review));
-		const selection = historicalReviewedSelection(identity.reviewedBindingIr, review);
+		const selection = expectation === "current"
+			? reviewedSourceSelection(identity.reviewedBindingIr)
+			: historicalReviewedSelection(identity.reviewedBindingIr, review);
 		for(const key of ["contracts", "exports", "specializations"])
 			assert.deepEqual(identity.request[key], selection[key]);
 		for(const key of ["arities", "resources"]) assert.deepEqual(identity.request[key], []);

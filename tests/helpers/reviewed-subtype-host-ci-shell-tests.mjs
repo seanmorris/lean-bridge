@@ -47,7 +47,8 @@ if (producer) {
 }
 assert.deepEqual(args, ['scripts/check-reviewed-subtype-host-reports.mjs',
   '--profiles', process.env.FAKE_PROFILES, '--directory', output + '/records',
-  '--tap', output + '/run.tap', '--glibc', '2.38', ...JSON.parse(process.env.FAKE_EXTRA)]);
+  '--tap', output + '/run.tap', '--glibc', '2.38', '--expectation', 'current',
+  ...JSON.parse(process.env.FAKE_EXTRA)]);
 process.exit(Number(process.env.FAKE_CHECKER_EXIT));
 `;
 	await writeFile(join(bin, "node"), fakeNode); await chmod(join(bin, "node"), 0o755);
