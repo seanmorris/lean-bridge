@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/reviewed-subtype-live-expectation-source-history-tests.mjs";
 import "./helpers/fin-history-rolling-repair-source-history-tests.mjs";
 import "./helpers/core-evidence-repair-integration-source-history-tests.mjs";
 import "./helpers/perl-promotion-live-pin-repair-source-history-tests.mjs";

@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeReviewedSubtypeLiveExpectationSource
+	, reviewedSubtypeLiveExpectationNormalizationPaths
+} from "./reviewed-subtype-live-expectation-source-history.mjs";
+import {
 	beforeNominalGuardDispatchMarkerSource
 	, nominalGuardDispatchMarkerNormalizationPaths
 } from "./nominal-guard-dispatch-marker-source-history.mjs";
@@ -2675,7 +2679,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...nominalGuardDispatchMarkerNormalizationPaths
+	...reviewedSubtypeLiveExpectationNormalizationPaths
+	, ...nominalGuardDispatchMarkerNormalizationPaths
 	, ...nativeSubtypeArchivePinRestorationNormalizationPaths
 	, ...foldedHistoryStateReconstructionRepairNormalizationPaths
 	, ...phpWasmFinLocalIdentifierNormalizationPaths
@@ -3916,7 +3921,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeNominalGuardDispatchMarkerSource(path, text, expected);
+	let stage = beforeReviewedSubtypeLiveExpectationSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeNominalGuardDispatchMarkerSource(path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
 	text = stage;

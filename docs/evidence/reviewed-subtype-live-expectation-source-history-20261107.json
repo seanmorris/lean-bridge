@@ -1,0 +1,622 @@
+{
+  "behavior": {
+    "archivedLanes": 12,
+    "archivedSelectedContracts": 12,
+    "changedSupportCells": 0,
+    "currentSelectedContracts": 10,
+    "declarations": 12,
+    "producerContracts": {
+      "archived": "2026-10-10",
+      "current": "current"
+    },
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "actual": "current reviewed result projections use constructor null",
+    "expected": "the checker reconstructed the 2026-10-10 result constructors",
+    "firstJob": 128206501326,
+    "firstLane": "Perl / Perl XS (5.38.2-threaded)",
+    "run": 42307044361,
+    "step": "Compare installed Perl corpus packages with fresh Lean results"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-reviewed-subtype-live-expectation-source-history.mjs",
+      "sha256": "b7134d8fa69e46bfd68e2f7a3a60a1dc699eff869c7df12287b022fe5ed1fe4d"
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-live-expectation-source-history-tests.mjs",
+      "sha256": "6ac6e1631ef8cb064d946509a72a78c9807b1a9c7830cc61fe57e7ee8b0e9b2a"
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-live-expectation-source-history.mjs",
+      "sha256": "6ae07ee30ea03647ab0f3b4111f229bde807ed48b21e4fc519f5c276f9af840f"
+    }
+  ],
+  "implementationCommit": "ae3cc4d0ec8d4a79f2aeabe90525d62aa3d6a25a",
+  "integrationCommit": "05fd7ae46710030469b9e3963bc69dc81289a473",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f533b7e2b6299d01b2cb1f5848c162f42e75b74f9fa0d9ac2fd1de7c50300573",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3423402
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3423583
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3423765
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3423941
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3434029
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3434210
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3434392
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3434568
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3444630
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3444811
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3444993
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3445169
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3456498
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3456679
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3456861
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3457037
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3468694
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3468875
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3469057
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3469233
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3482412
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3482593
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3482775
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3482951
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3496262
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3496443
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3496625
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3496801
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3510117
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3510298
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3510480
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3510656
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3524128
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3524309
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3524491
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3524667
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3538880
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3539061
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3539243
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3539419
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3553662
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3553843
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3554025
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3554201
+        },
+        {
+          "current": "          \"sha256\": \"20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a\"\n",
+          "previous": "          \"sha256\": \"968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9\"\n",
+          "start": 3568414
+        },
+        {
+          "current": "          \"sha256\": \"e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c\"\n",
+          "previous": "          \"sha256\": \"54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21\"\n",
+          "start": 3568595
+        },
+        {
+          "current": "          \"sha256\": \"775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7\"\n",
+          "previous": "          \"sha256\": \"b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352\"\n",
+          "start": 3568777
+        },
+        {
+          "current": "          \"sha256\": \"02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7\"\n",
+          "previous": "          \"sha256\": \"eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18\"\n",
+          "start": 3568953
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "79438e8d13d015fe083343cc225c6fcbb6876337bbc2687636daca0d0d4d8c64"
+    },
+    {
+      "currentSha256": "57ee8a5a03fe8eb43223810d8459ffbddd973c56ae4c2b0207ec95de1e9ae674",
+      "edits": [
+        {
+          "current": "import \"./helpers/reviewed-subtype-live-expectation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "f9119499b9d65b3e0d6505f37eb1ae2c4d6fd73cbd03b4f77fb7fd9125498834"
+    },
+    {
+      "currentSha256": "3f8502009d005e172f3d7cbc815463c285e58698470cd634ecb63f5dc36c3c91",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeReviewedSubtypeLiveExpectationSource\n\t, reviewedSubtypeLiveExpectationNormalizationPaths\n} from \"./reviewed-subtype-live-expectation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...reviewedSubtypeLiveExpectationNormalizationPaths\n\t, ...nominalGuardDispatchMarkerNormalizationPaths\n",
+          "previous": "\t...nominalGuardDispatchMarkerNormalizationPaths\n",
+          "start": 240234
+        },
+        {
+          "current": "\tlet stage = beforeReviewedSubtypeLiveExpectationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNominalGuardDispatchMarkerSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeNominalGuardDispatchMarkerSource(path, text, expected);\n",
+          "start": 302151
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "443d61d2bcd80fe8a10f0e7004f878ea49839f68ce3d560f0ea65f6553615fa6"
+    }
+  ],
+  "milestone": "reviewed-subtype-live-expectation-v1",
+  "predecessorCommit": "9be38cfab7402a03be96e34be38befd2385bdd50",
+  "refreshed": {
+    "tests/helpers/reviewed-subtype-host-report.mjs": {
+      "currentSha256": "02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7",
+      "occurrences": 12,
+      "previousSha256": "eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18"
+    },
+    "tests/helpers/reviewed-subtype-python-archive.mjs": {
+      "currentSha256": "20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a",
+      "occurrences": 12,
+      "previousSha256": "968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9"
+    },
+    "tests/helpers/reviewed-subtype-remaining-archive.mjs": {
+      "currentSha256": "775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7",
+      "occurrences": 12,
+      "previousSha256": "b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352"
+    },
+    "tests/helpers/reviewed-subtype-ruby-jvm-archive.mjs": {
+      "currentSha256": "e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c",
+      "occurrences": 12,
+      "previousSha256": "54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21"
+    }
+  },
+  "repair": "Require every report check to declare current or 2026-10-10 explicitly. Derive current compiler selection with reviewedSourceSelection, retain the frozen reconstruction only for archived evidence, pass current from the hosted shell, and reject cross-epoch substitution in focused tests.",
+  "rootCause": "The 0976959 historical-reader repair replaced the shared checker fixture with the frozen 2026-10-10 reviewed contract. Immutable archive replay became correct, but the same implicit expectation also judged freshly produced host records. Current output projects result refinements and selects ten input contracts; the frozen records retain twelve contracts with seven historical result constructors.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "8e1377bf66a985062b7562ebdf7a524faa0ce85bb11ccb688d1bd7e42499053d",
+      "edits": [
+        {
+          "current": "\tconst report = await assertReviewedSubtypeHostRecords({ profiles: [\"python\"], python: floor, expectation: \"2026-10-10\", read: path => readFile(join(root, path)) });\n",
+          "previous": "\tconst report = await assertReviewedSubtypeHostRecords({ profiles: [\"python\"], python: floor, read: path => readFile(join(root, path)) });\n",
+          "start": 1894
+        }
+      ],
+      "path": "scripts/archive-reviewed-subtype-python-hosts.mjs",
+      "previousSha256": "3b82fca9bc6deb74b319a33867d39a58d07d3512b7257a204bf9f0650c11844e"
+    },
+    {
+      "currentSha256": "e3d44404fd2c638990f766442dc65c40cf43806a2ac051680cc11029b691823e",
+      "edits": [
+        {
+          "current": "\tawait assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], expectation: \"2026-10-10\", read: path => readFile(join(root, path)) });\n",
+          "previous": "\tawait assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], read: path => readFile(join(root, path)) });\n",
+          "start": 2215
+        }
+      ],
+      "path": "scripts/archive-reviewed-subtype-remaining-hosts.mjs",
+      "previousSha256": "ab9a5dd12ae33d5eed385b16393af27f0ba4a4bd1617168a6a9ffb64f1ce3a72"
+    },
+    {
+      "currentSha256": "146fa9883b7c14ee46d417665f8d009fffeb00ecc7f342cdbec5db588783d9dc",
+      "edits": [
+        {
+          "current": "\tawait assertReviewedSubtypeRubyJvmRecords({ profiles, expectation: \"2026-10-10\", read: path => readFile(join(root, path)) });\n",
+          "previous": "\tawait assertReviewedSubtypeRubyJvmRecords({ profiles, read: path => readFile(join(root, path)) });\n",
+          "start": 1535
+        }
+      ],
+      "path": "scripts/archive-reviewed-subtype-ruby-jvm-hosts.mjs",
+      "previousSha256": "594787180ab9bc9070e1587c50a4d2665a9de1eac4894c2dd62c4a36e84a3874"
+    },
+    {
+      "currentSha256": "4f56177136522a3d13538650d780fa0add1ef804657d49be82c56834dc1e6aa1",
+      "edits": [
+        {
+          "current": "  --directory \"$output/records\" --tap \"$output/run.tap\" --glibc 2.38 \\\n  --expectation current \"${extra[@]}\"\n",
+          "previous": "  --directory \"$output/records\" --tap \"$output/run.tap\" --glibc 2.38 \"${extra[@]}\"\n",
+          "start": 1600
+        }
+      ],
+      "path": "scripts/run-reviewed-subtype-host-ci.sh",
+      "previousSha256": "77432464d046bbaff552dfa1f6416df4d9cca2e364765aac1389b74adca6f32b"
+    },
+    {
+      "currentSha256": "4588f863335d25d695b4b6c1e895dcf67afd9276b915d2e0abc3936bfff94cbe",
+      "edits": [
+        {
+          "current": "\t, \"--expectation\", \"2026-10-10\"\n",
+          "previous": "",
+          "start": 1609
+        },
+        {
+          "current": "const input = async sample => ({ ...sample, glibc: \"2.36\", expectation: \"2026-10-10\", tap: await readFile(join(sample.root, \"run.tap\"), \"utf8\"), read: path => readFile(join(sample.root, path)) });\n",
+          "previous": "const input = async sample => ({ ...sample, glibc: \"2.36\", tap: await readFile(join(sample.root, \"run.tap\"), \"utf8\"), read: path => readFile(join(sample.root, path)) });\n",
+          "start": 1748
+        },
+        {
+          "current": "test(\"current and frozen reviewed Subtype producer contracts are never interchangeable\", async () => {\n\tfor(const sample of [samples[0], samples[4], samples.at(-1)])\n\t{\n\t\tconst historical = await input(sample);\n\t\tawait assert.rejects(() => assertReviewedSubtypeHostCiRecords({ ...historical, expectation: \"current\" }));\n\t\tawait assert.rejects(() => assertReviewedSubtypeHostCiRecords({ ...historical, expectation: \"unknown\" }));\n\t}\n});\n\n",
+          "previous": "",
+          "start": 2824
+        },
+        {
+          "current": "\t\t, base.map(value => value === \"2026-10-10\" ? \"unknown\" : value)\n\t\t, base.slice(0, base.indexOf(\"--expectation\")).concat(base.slice(base.indexOf(\"--expectation\") + 2))\n",
+          "previous": "",
+          "start": 4819
+        },
+        {
+          "current": "\tconst result = cli([\"--profiles\", \"unknown\", \"--directory\", \"missing\", \"--tap\", \"missing\", \"--glibc\", \"2.38\", \"--expectation\", \"current\"]);\n",
+          "previous": "\tconst result = cli([\"--profiles\", \"unknown\", \"--directory\", \"missing\", \"--tap\", \"missing\", \"--glibc\", \"2.38\"]);\n",
+          "start": 5435
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-ci-report-tests.mjs",
+      "previousSha256": "45e003754bc9f0b2cb873cc0c88c780c7127f655c5fe1d826155ea64e9090164"
+    },
+    {
+      "currentSha256": "27cb8dfd35c6555bbee202992f4bee3cb7b8481b44ba7fb6a09dea6cc1538257",
+      "edits": [
+        {
+          "current": "\tconst usage = \"Usage: check-reviewed-subtype-host-reports.mjs --profiles <lane> --directory <records> --tap <original-tap> --glibc 2.36|2.38 --expectation current|2026-10-10 [--python 3.11|3.12] [--perl <version>-threaded|unthreaded]\";\n\tconst allowed = [\"profiles\", \"directory\", \"tap\", \"glibc\", \"expectation\", \"python\", \"perl\"], parsed = {};\n",
+          "previous": "\tconst usage = \"Usage: check-reviewed-subtype-host-reports.mjs --profiles <lane> --directory <records> --tap <original-tap> --glibc 2.36|2.38 [--python 3.11|3.12] [--perl <version>-threaded|unthreaded]\";\n\tconst allowed = [\"profiles\", \"directory\", \"tap\", \"glibc\", \"python\", \"perl\"], parsed = {};\n",
+          "start": 2088
+        },
+        {
+          "current": "\tfor(const key of [\"profiles\", \"directory\", \"tap\", \"glibc\", \"expectation\"]) assert.ok(Object.hasOwn(parsed, key), usage);\n",
+          "previous": "\tfor(const key of [\"profiles\", \"directory\", \"tap\", \"glibc\"]) assert.ok(Object.hasOwn(parsed, key), usage);\n",
+          "start": 2891
+        },
+        {
+          "current": "\tassert.ok([\"current\", \"2026-10-10\"].includes(parsed.expectation), usage);\n",
+          "previous": "",
+          "start": 3146
+        },
+        {
+          "current": "\t\t, \"--expectation\", options.expectation\n",
+          "previous": "",
+          "start": 4094
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-ci-report.mjs",
+      "previousSha256": "b03d3422a67c276a47c5ab5ac823ffc3586589bdcb13dcd959604e66dfa9ed09"
+    },
+    {
+      "currentSha256": "3e6616673719052341d19a9f0682c6f8fac5925627c574c7722db34aa87f862f",
+      "edits": [
+        {
+          "current": "  '--tap', output + '/run.tap', '--glibc', '2.38', '--expectation', 'current',\n  ...JSON.parse(process.env.FAKE_EXTRA)]);\n",
+          "previous": "  '--tap', output + '/run.tap', '--glibc', '2.38', ...JSON.parse(process.env.FAKE_EXTRA)]);\n",
+          "start": 2689
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-ci-shell-tests.mjs",
+      "previousSha256": "897572b5c9dd75089bbbbbfc03c0e7e2ba68b94a1051625b132d2868ec3a7a7f"
+    },
+    {
+      "currentSha256": "02dcedc4f6d4fa38c17bfd11cdb1e2d03aebf84390a8c9197dd3c1fd95b39ba7",
+      "edits": [
+        {
+          "current": "import { reviewedContractDifference, reviewedSourceSelection } from \"../../src/analyze/reviewed-source.mjs\";\n",
+          "previous": "import { reviewedContractDifference } from \"../../src/analyze/reviewed-source.mjs\";\n",
+          "start": 437
+        },
+        {
+          "current": "import { reviewedSubtypeHistoricalHostIr, reviewedSubtypeHostConsumer, reviewedSubtypeHostIr, reviewedSubtypeHostProfiles, reviewedSubtypeHostSource } from \"./reviewed-subtype-host-fixture.mjs\";\n",
+          "previous": "import { reviewedSubtypeHistoricalHostIr, reviewedSubtypeHostConsumer, reviewedSubtypeHostProfiles, reviewedSubtypeHostSource } from \"./reviewed-subtype-host-fixture.mjs\";\n",
+          "start": 702
+        },
+        {
+          "current": " * @param options.expectation - Exact producer contract: current output or the frozen 2026-10-10 archive.\n",
+          "previous": "",
+          "start": 2883
+        },
+        {
+          "current": "export const assertReviewedSubtypeHostRecords = async ({ profiles, read, python, expectation }) => {\n",
+          "previous": "export const assertReviewedSubtypeHostRecords = async ({ profiles, read, python }) => {\n",
+          "start": 2993
+        },
+        {
+          "current": "\tassert.ok([\"current\", \"2026-10-10\"].includes(expectation), \"Unknown reviewed Subtype producer contract\");\n",
+          "previous": "",
+          "start": 3403
+        },
+        {
+          "current": "\tconst report = await json(\"report.json\");\n\tconst review = expectation === \"current\" ? reviewedSubtypeHostIr() : reviewedSubtypeHistoricalHostIr();\n",
+          "previous": "\tconst report = await json(\"report.json\"), review = reviewedSubtypeHistoricalHostIr();\n",
+          "start": 3731
+        },
+        {
+          "current": "\t\tconst selection = expectation === \"current\"\n\t\t\t? reviewedSourceSelection(identity.reviewedBindingIr)\n\t\t\t: historicalReviewedSelection(identity.reviewedBindingIr, review);\n",
+          "previous": "\t\tconst selection = historicalReviewedSelection(identity.reviewedBindingIr, review);\n",
+          "start": 5552
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-report.mjs",
+      "previousSha256": "eb9485eff80fab3e870072a830bf52ee55b70c8c20ddd5dca91f17b009513e18"
+    },
+    {
+      "currentSha256": "e3de629d9d49b4683ac509eb9584da6c14b0ccab1434e718b2b10d469084a995",
+      "edits": [
+        {
+          "current": "\t\t\tawait assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: [\"python\"], python: floor, expectation: \"2026-10-10\", read: path => changed.get(path) }));\n",
+          "previous": "\t\t\tawait assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: [\"python\"], python: floor, read: path => changed.get(path) }));\n",
+          "start": 4006
+        },
+        {
+          "current": "\t\tawait assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: [\"python\"], python: floor, expectation: \"2026-10-10\", read: path => changed.get(path) }));\n\t\tawait assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: [\"python\"], python: floor === \"3.11\" ? \"3.12\" : \"3.11\", expectation: \"2026-10-10\", read: path => base.get(path) }));\n",
+          "previous": "\t\tawait assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: [\"python\"], python: floor, read: path => changed.get(path) }));\n\t\tawait assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles: [\"python\"], python: floor === \"3.11\" ? \"3.12\" : \"3.11\", read: path => base.get(path) }));\n",
+          "start": 4922
+        },
+        {
+          "current": "\t\tawait assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles, expectation: \"2026-10-10\", read: () => assert.fail(\"Invalid selection must not read records\") }));\n",
+          "previous": "\t\tawait assert.rejects(() => assertReviewedSubtypeHostRecords({ profiles, read: () => assert.fail(\"Invalid selection must not read records\") }));\n",
+          "start": 5365
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-python-archive-tests.mjs",
+      "previousSha256": "8577d9ff8fc373c41c613bd363c282da9ebc7272185fb203d50f0344f642392b"
+    },
+    {
+      "currentSha256": "20463c0dbb086a1bbd9c9ccee295e59eb34117c8365c5104c1a5a0ef7b73507a",
+      "edits": [
+        {
+          "current": "\t\tconst report = await assertReviewedSubtypeHostRecords({ profiles: [\"python\"], python: floor, expectation: \"2026-10-10\", read: path => files.get(`${floor}/${path}`) });\n",
+          "previous": "\t\tconst report = await assertReviewedSubtypeHostRecords({ profiles: [\"python\"], python: floor, read: path => files.get(`${floor}/${path}`) });\n",
+          "start": 2427
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-python-archive.mjs",
+      "previousSha256": "968552f1e3fa79165e07caaa786a47c9962dce0bac00d9218d083b0615695bb9"
+    },
+    {
+      "currentSha256": "d6f593792a1e5a9df14c21e4b9acb55f8bdb2ecc2c041316d987af46ba4523e8",
+      "edits": [
+        {
+          "current": "\t\t\tawait assert.rejects(() => assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], expectation: \"2026-10-10\", read: path => changed.get(path) }));\n",
+          "previous": "\t\t\tawait assert.rejects(() => assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], read: path => changed.get(path) }));\n",
+          "start": 4553
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-remaining-archive-tests.mjs",
+      "previousSha256": "46b96bb6f8cc728b5ca6b8c377d7017234b242119a7df2cf6d2331c846ec9524"
+    },
+    {
+      "currentSha256": "775b34ce6589b7ce02b8f2c2edf94700aafe0f3fbadc951cfc31b224717c60d7",
+      "edits": [
+        {
+          "current": "\t\tconst report = await assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], expectation: \"2026-10-10\", read: path => files.get(`${group}/${path}`) });\n",
+          "previous": "\t\tconst report = await assertReviewedSubtypeRemainingHostRecords({ profiles: [profile], read: path => files.get(`${group}/${path}`) });\n",
+          "start": 2918
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-remaining-archive.mjs",
+      "previousSha256": "b152cf05d02abdb3782615406ccfb20e708a9f435845092a78d3a65bbe3e9352"
+    },
+    {
+      "currentSha256": "227747fbf407c842a955cb0391dd71ee25bcca909e3b061d355281ae95b2e67e",
+      "edits": [
+        {
+          "current": "\t\t\t\tawait assert.rejects(() => assertReviewedSubtypeRubyJvmRecords({ profiles, expectation: \"2026-10-10\", read: path => changed.get(path) }));\n",
+          "previous": "\t\t\t\tawait assert.rejects(() => assertReviewedSubtypeRubyJvmRecords({ profiles, read: path => changed.get(path) }));\n",
+          "start": 4579
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-ruby-jvm-archive-tests.mjs",
+      "previousSha256": "4500048ca225172a37aa8779c530a21a50274b25e0aff1b06fd77ebf74bc3fdc"
+    },
+    {
+      "currentSha256": "e4b8dc2113661e955be9912b97d58e8332542876e03ca6c1ba8d0e680b7b364c",
+      "edits": [
+        {
+          "current": "\t\tconst report = await assertReviewedSubtypeRubyJvmRecords({ profiles, expectation: \"2026-10-10\", read: path => files.get(`${group}/${path}`) });\n",
+          "previous": "\t\tconst report = await assertReviewedSubtypeRubyJvmRecords({ profiles, read: path => files.get(`${group}/${path}`) });\n",
+          "start": 2262
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-ruby-jvm-archive.mjs",
+      "previousSha256": "54a37dbe7724c4001047c57b455df8781cc289ae45168a153f5bfcf2b0f07c21"
+    }
+  ],
+  "validation": {
+    "archiveFamilies": {
+      "fail": 0,
+      "pass": 9,
+      "tests": 9
+    },
+    "archivedLanes": {
+      "fail": 0,
+      "pass": 2,
+      "tests": 2
+    },
+    "diffCheck": true,
+    "hostedArtifact": {
+      "checks": 2025,
+      "expectation": "current",
+      "lane": "perl-5.38.2-threaded",
+      "pass": true
+    },
+    "lint": true,
+    "typecheck": true
+  }
+}
