@@ -28,24 +28,30 @@ await registerRetainedContractTests([
 
 const site = constructor => ({ ownership: "copy", lifetime: null, refinement: { constructor } });
 const plain = { ownership: "copy", lifetime: null, refinement: "reject" };
+const projected = { ownership: "copy", lifetime: null };
 const fin = bound => ({ kind: "fin", bound });
 const inside = (kind, child) => ({ kind, arguments: [child] });
 const checked = { kind: "subtype", constructor: "PerlRefinements.checkedDigit32" };
-/** Export contracts: the checked word at parameter and result sites; container exports carry compiler bounds. */
+/** Export contracts: inputs select the checked word; Lean-produced results project its base value. */
 export const perlRefinementContracts = Object.freeze({
 	"PerlRefinements.twice": { parameters: [site("PerlRefinements.checkedDigit32")], result: plain }
-	, "PerlRefinements.wrap32": { parameters: [plain], result: site("PerlRefinements.checkedDigit32") }
+	, "PerlRefinements.wrap32": { parameters: [plain], result: projected }
 	, "PerlRefinements.tag": { parameters: [plain, site("PerlRefinements.checkedDigit32")], result: plain } });
 const names = [...Object.keys(perlRefinementContracts), "PerlRefinements.countAbsent", "PerlRefinements.emptyRows", "PerlRefinements.nestedEmpty", "PerlRefinements.nestedDigits"];
 /** Refinement trees the native model must carry. */
 export const perlRefinementRefinements = Object.freeze({
 	"PerlRefinements.twice": { parameters: [checked], result: null }
-	, "PerlRefinements.wrap32": { parameters: [null], result: checked }
+	, "PerlRefinements.wrap32": { parameters: [null], result: { ...checked, constructor: null } }
 	, "PerlRefinements.tag": { parameters: [null, checked], result: null }
 	, "PerlRefinements.countAbsent": { parameters: [inside("array", inside("option", fin("0")))], result: null }
 	, "PerlRefinements.emptyRows": { parameters: [inside("option", inside("array", fin("0")))], result: null }
 	, "PerlRefinements.nestedEmpty": { parameters: [inside("array", inside("array", fin("0")))], result: null }
 	, "PerlRefinements.nestedDigits": { parameters: [inside("list", inside("option", fin("3")))], result: null } });
+
+test("Lean-produced Perl Subtype results project their base without an input constructor", () => {
+	assert.deepEqual(perlRefinementContracts["PerlRefinements.wrap32"].result, projected);
+	assert.deepEqual(perlRefinementRefinements["PerlRefinements.wrap32"].result, { kind: "subtype", constructor: null });
+});
 
 /** Public API cases: the unboxed checked word and the nested Fin 0 controls. */
 const consumer = () => `use strict;
