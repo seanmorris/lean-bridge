@@ -46,6 +46,10 @@ public final class Consumer {
             Object[] values = new Object[fields.length];
             for (int i = 0; i < values.length; i++) values[i] = fields[i].getAccessor().invoke(value);
             values[index] = replacement; return Primitives.class.getConstructor(types).newInstance(values);
+        } catch (java.lang.reflect.InvocationTargetException error) {
+            // Copied records refuse a null field in their own constructor.
+            if (error.getCause() instanceof RuntimeException refused) throw refused;
+            throw new AssertionError(error);
         } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
     }
     public static void main(String[] args) throws Exception {
@@ -87,7 +91,7 @@ public final class Consumer {
         }
 /* DEEP */
         for (int i = 0; i < 19; i++) if (!Primitives.class.getRecordComponents()[i].getType().isPrimitive()) {
-            var invalid = change(scalar, i, null); reject(NullPointerException.class, () -> call(() -> Api.recordReverse(new Primitives[] {scalar, invalid})));
+            final int field = i; reject(NullPointerException.class, () -> call(() -> Api.recordReverse(new Primitives[] {scalar, change(scalar, field, null)})));
         }
         for (int field : new int[] {2, 3, 16}) for (int value : field == 2 ? new int[] {-1, 256} : field == 3 ? new int[] {-1, 65536} : new int[] {-1, 0xd800, 0xdfff, 0x110000})
             reject(IllegalArgumentException.class, () -> call(() -> Api.recordReverse(new Primitives[] {scalar, change(scalar, field, value)})));

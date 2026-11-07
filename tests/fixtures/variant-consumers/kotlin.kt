@@ -34,7 +34,9 @@ private fun change(value: ScalarsAll, index: Int, replacement: Any?): ScalarsAll
     val types = components.map { it.type }.toTypedArray()
     val values = components.map { it.accessor.invoke(value) }.toTypedArray()
     values[index] = replacement
-    return ScalarsAll::class.java.getConstructor(*types).newInstance(*values)
+    // Copied records refuse a null field in their own constructor.
+    try { return ScalarsAll::class.java.getConstructor(*types).newInstance(*values) }
+    catch (error: java.lang.reflect.InvocationTargetException) { throw error.targetException }
 }
 private fun describe(value: Signal): String = when (value) {
     is SignalIdle -> "idle"

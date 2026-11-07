@@ -39,6 +39,10 @@ public final class Consumer {
             for (int i = 0; i < values.length; ++i) values[i] = components[i].getAccessor().invoke(value);
             values[index] = replacement;
             return ScalarsAll.class.getConstructor(types).newInstance(values);
+        } catch (java.lang.reflect.InvocationTargetException error) {
+            // Copied records refuse a null field in their own constructor.
+            if (error.getCause() instanceof RuntimeException refused) throw refused;
+            throw new AssertionError(error);
         } catch (ReflectiveOperationException error) { throw new AssertionError(error); }
     }
     static String describe(Signal value) {
