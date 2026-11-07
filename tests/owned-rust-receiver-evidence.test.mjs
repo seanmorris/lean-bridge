@@ -17,6 +17,47 @@ import { ownedRustReceiverPath, ownedRustReceiverBaseline, ownedRustReceiverPrev
 
 const read = async () => JSON.parse(await readFile(ownedRustReceiverPath, "utf8"));
 
+// The receiver record authenticates the sources its predecessor recorded plus its own
+// additions. Its milestone inventory also pins 854 files (1,627 occurrences) that
+// neither record ever owned; that set is closed, and their pins must stay unchanged.
+const ownedRustReceiverUnownedInventory = Object.freeze({
+	paths: 854
+	, sha256: "0de30b1254976b9a588bcff7d677802ee09c4368685de494f1996843ff1c7323"
+});
+
+/**
+ * Restore the record's authenticated pins and return inventory paths it does not own.
+ *
+ * @param prior - Reconstructed predecessor inventory, updated in place.
+ * @param sources - Record-owned source digests.
+ */
+const restoreOwnedRustReceiverPins = (prior, sources) => {
+	const unowned = new Set();
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+	{
+		const digest = sources[file.path];
+		if(digest === undefined)
+		{
+			unowned.add(file.path);
+			continue;
+		}
+		assert.equal(typeof digest, "string", file.path);
+		file.sha256 = digest;
+	}
+	return [...unowned].sort();
+};
+
+/**
+ * Require exactly the closed set of inventory paths neither receiver record owns.
+ *
+ * @param paths - Sorted unowned inventory paths.
+ */
+const assertOwnedRustReceiverUnownedInventory = paths => {
+	assert.equal(paths.length, ownedRustReceiverUnownedInventory.paths);
+	assert.equal(sha256(paths.join("\n"))
+		, ownedRustReceiverUnownedInventory.sha256);
+};
+
 test("Rust receiver evidence binds complete sources without changing historical receipts or support cells", async () => {
 	const record = await read();
 	assert.equal(record.acceptance, "passed"); assert.equal(record.kind, "owned-rust-receivers");
@@ -50,12 +91,26 @@ test("Rust receiver evidence binds complete sources without changing historical 
 	const current = (await bytesAtFinHistoryRecordSource(
 		ownedRustReceiverPath, path)).toString();
 	const prior = JSON.parse(beforeOwnedRustReceiver(path, current, previous.sources[path]));
-	for(const evidence of prior.evidence) for(const file of evidence.files)
-	{
-		assert.equal(typeof record.sources[file.path], "string", file.path);
-		file.sha256 = record.sources[file.path];
-	}
+	const pristine = structuredClone(prior);
+	const unowned = restoreOwnedRustReceiverPins(prior, record.sources);
+	assertOwnedRustReceiverUnownedInventory(unowned);
+	assert.ok(unowned.every(item => !Object.hasOwn(previous.sources, item)));
+	// Unowned pins are not rewritten, proving every one remains unchanged.
 	assert.deepEqual(JSON.parse(current), prior);
+	// Any other unowned inventory file, or an owned source dropped from the record, fails.
+	const added = structuredClone(pristine);
+	added.evidence[0].files.push({
+		path: "docs/evidence/unowned-probe.json", sha256: "0".repeat(64)
+	});
+	assert.throws(() => assertOwnedRustReceiverUnownedInventory(
+		restoreOwnedRustReceiverPins(added, record.sources)), assert.AssertionError);
+	const owned = Object.keys(record.sources).find(item => prior.evidence.some(
+		evidence => evidence.files.some(file => file.path === item)));
+	assert.ok(owned);
+	const dropped = { ...record.sources }; delete dropped[owned];
+	assert.throws(() => assertOwnedRustReceiverUnownedInventory(
+		restoreOwnedRustReceiverPins(structuredClone(pristine), dropped))
+	, assert.AssertionError);
 	for(const name of ["owned-rust-receivers", "owned-rust-receiver-packaging"
 		, "owned-rust-receiver-plain", "owned-rust-receiver-contract"
 		, "owned-rust-receiver-evidence"])
