@@ -1,0 +1,373 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "compareVerifyMinutesBeforeFinalStep": 122,
+    "currentTimeoutMinutes": 240,
+    "livePinRefreshes": {
+      ".github/workflows/perl-consumer.yml": 13,
+      "tests/documentation.test.mjs": 25,
+      "tests/dotnet-recursive-callable-evidence.test.mjs": 2
+    },
+    "previousTimeoutMinutes": 180,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "cancelledAt": "2026-11-07T09:27:45Z",
+    "candidate": "d6a4044154d4e998d31b7ad24ad245d5e5b93347",
+    "event": "workflow_dispatch",
+    "job": 128323854103,
+    "run": 42344727501,
+    "startedAt": "2026-11-07T06:27:26Z",
+    "terminalStep": "Verify owned Perl values and installed CPAN archives"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-perl-xs-final-budget-source-history.mjs",
+      "sha256": "5e5c390e90482d6130f42eb9373f8ad8d6c1f54f1db5d3651d9b4c8f68f4f709"
+    },
+    {
+      "path": "tests/helpers/perl-xs-final-budget-source-history-tests.mjs",
+      "sha256": "6dc5fa78ee06b823307c2c14f1aabdd358e09dab61cdf5d1c215b66f1721f3dd"
+    },
+    {
+      "path": "tests/helpers/perl-xs-final-budget-source-history.mjs",
+      "sha256": "d3c3fb493ead230cccd5c9a4d3ba0f807a7f8ae884027224a9fbe1dc42ae0b49"
+    }
+  ],
+  "implementationCommit": "f3cf52d5940662fbf1909d4bc0e6786e189cb820",
+  "integrationCommit": "c8a5fa081011a313b18ad558be02910adffa5d37",
+  "integrationUpdates": [
+    {
+      "currentSha256": "12cf51db661e441a57fde9b8237444e670bfd6b8f85368282893d3e02eba4bbd",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 55493
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 266699
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 307962
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 408043
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 459122
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 512962
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 602163
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 813888
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 814213
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 823835
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 832263
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 844831
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1058470
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1075587
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1083361
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1088793
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1095894
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1103060
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1110117
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1118369
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 1125842
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1127832
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1144843
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1151918
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1159815
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1170695
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1182857
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1206383
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1237738
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1270538
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 1285127
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1305638
+        },
+        {
+          "current": "          \"sha256\": \"3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa\"\n",
+          "previous": "          \"sha256\": \"0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c\"\n",
+          "start": 1324928
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1336484
+        },
+        {
+          "current": "          \"sha256\": \"2189634c9444fd662f5e929edf15549135208501a045f441f03cad75840c1a18\"\n",
+          "previous": "          \"sha256\": \"2e038edcbcbf765e51f27ddd8c9bdd937efcb8e5f0b1c544f00e7f6351e96d50\"\n",
+          "start": 1337516
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1359781
+        },
+        {
+          "current": "          \"sha256\": \"2189634c9444fd662f5e929edf15549135208501a045f441f03cad75840c1a18\"\n",
+          "previous": "          \"sha256\": \"2e038edcbcbf765e51f27ddd8c9bdd937efcb8e5f0b1c544f00e7f6351e96d50\"\n",
+          "start": 1360139
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1381672
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1401745
+        },
+        {
+          "current": "          \"sha256\": \"34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95\"\n",
+          "previous": "          \"sha256\": \"5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e\"\n",
+          "start": 1421525
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "f533b7e2b6299d01b2cb1f5848c162f42e75b74f9fa0d9ac2fd1de7c50300573"
+    },
+    {
+      "currentSha256": "668ecc1b8fd127c253c489518dad64710be9062e0a2d2de0ae61f9ad0e855e18",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-xs-final-budget-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 183
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "6a97c9166f027ff89dff9a2358cef111eee65805a2ff1cc4b82dc90b4b94d1e9"
+    },
+    {
+      "currentSha256": "e11671028d0de8cb1aef502ee476a8be8e22d5dadef05896c2393ca2471712cd",
+      "edits": [
+        {
+          "current": "import {\n\tbeforePerlXsFinalBudgetSource\n\t, perlXsFinalBudgetNormalizationPaths\n} from \"./perl-xs-final-budget-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...perlXsFinalBudgetNormalizationPaths\n\t, ...perlRefinementResultProjectionRepairNormalizationPaths\n",
+          "previous": "\t...perlRefinementResultProjectionRepairNormalizationPaths\n",
+          "start": 240554
+        },
+        {
+          "current": "\tlet stage = beforePerlXsFinalBudgetSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlRefinementResultProjectionRepairSource(\n",
+          "previous": "\tlet stage = beforePerlRefinementResultProjectionRepairSource(\n",
+          "start": 302574
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "acf44252f2ff15f69bd6d6be79ae7404b513d1a9e9e002bb80462ff179a06538"
+    }
+  ],
+  "inventorySha256": {
+    "after": "12cf51db661e441a57fde9b8237444e670bfd6b8f85368282893d3e02eba4bbd",
+    "before": "f533b7e2b6299d01b2cb1f5848c162f42e75b74f9fa0d9ac2fd1de7c50300573"
+  },
+  "milestone": "perl-xs-final-budget-v1",
+  "predecessorCommit": "d6a4044154d4e998d31b7ad24ad245d5e5b93347",
+  "refreshed": {
+    ".github/workflows/perl-consumer.yml": {
+      "count": 13,
+      "current": "3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa",
+      "previous": "0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c"
+    },
+    "tests/documentation.test.mjs": {
+      "count": 25,
+      "current": "34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95",
+      "previous": "5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e"
+    },
+    "tests/dotnet-recursive-callable-evidence.test.mjs": {
+      "count": 2,
+      "current": "2189634c9444fd662f5e929edf15549135208501a045f441f03cad75840c1a18",
+      "previous": "2e038edcbcbf765e51f27ddd8c9bdd937efcb8e5f0b1c544f00e7f6351e96d50"
+    }
+  },
+  "repair": "Raise only the four complete Perl XS matrix jobs to 240 minutes, matching the established long installed-package budget class. Keep every command, assertion, artifact and support observation unchanged. Require the exact budget in both live workflow readers and refresh only their forty live source pins.",
+  "rootCause": "The complete threaded Perl 5.36.3 lane passed the repaired corpus comparison and entered final owned-value/archive verification, but the reusable workflow still capped the entire job at 180 minutes. GitHub cancelled it at exactly that boundary. The earlier 180-minute repair measured only the then-current installed Compare/Verify chain and no longer bounded the expanded complete lane.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "3b4727d0f18f5642ec457ba4765627bb8ab258e2e5d7b6649b4d32080134dbaa",
+      "edits": [
+        {
+          "current": "    # Copied and owned package families run sequentially on each Perl ABI. The\n    # complete threaded 5.36.3 lane reached final archive verification after\n    # 122 minutes of Compare/Verify work and exhausted the 180-minute job cap.\n    timeout-minutes: 240\n",
+          "previous": "    # Copied and owned package families run sequentially on each Perl ABI; the\n    # installed Compare and Verify chain alone took up to about 105 minutes.\n    timeout-minutes: 180\n",
+          "start": 10066
+        }
+      ],
+      "path": ".github/workflows/perl-consumer.yml",
+      "previousSha256": "0fee0ff4d337cc71f649b6fb7dcc2d76b4b95ca5ceb021b0caeae8613252043c"
+    },
+    {
+      "currentSha256": "34075acfb8e3b3876f91a22c8a01e55cd123fe8618c6694d3b42e7b0d9b65e95",
+      "edits": [
+        {
+          "current": "  const livePerlJob = livePerlWorkflow.split(\"  perl:\\n\")[1].split(\"\\n  perl-receivers:\\n\")[0];\n  assert.match(livePerlJob, /^ {4}timeout-minutes: 240$/m);\n",
+          "previous": "",
+          "start": 43796
+        },
+        {
+          "current": "  // This reconstructed milestone predates the final 240-minute live budget.\n",
+          "previous": "  // Each Perl ABI runs the installed Compare and Verify chain in one job; 120 minutes was exhausted.\n",
+          "start": 51700
+        }
+      ],
+      "path": "tests/documentation.test.mjs",
+      "previousSha256": "5f76105a1c9d8b55fba2d75d47fdf4384c3ee926dc687a96be7de2593eafce1e"
+    },
+    {
+      "currentSha256": "2189634c9444fd662f5e929edf15549135208501a045f441f03cad75840c1a18",
+      "edits": [
+        {
+          "current": "\tassert.match(perl, /^ {4}timeout-minutes: 240$/mu);\n",
+          "previous": "\tassert.match(perl, /^ {4}timeout-minutes: 180$/mu);\n",
+          "start": 7474
+        }
+      ],
+      "path": "tests/dotnet-recursive-callable-evidence.test.mjs",
+      "previousSha256": "2e038edcbcbf765e51f27ddd8c9bdd937efcb8e5f0b1c544f00e7f6351e96d50"
+    }
+  ],
+  "validation": {
+    "completePinPreflight": {
+      "affectedPaths": 3,
+      "liveFiles": 2661,
+      "refreshedPins": 40
+    },
+    "focused": {
+      "cancelled": 0,
+      "fail": 0,
+      "pass": 5,
+      "skipped": 0,
+      "tests": 5
+    }
+  }
+}
