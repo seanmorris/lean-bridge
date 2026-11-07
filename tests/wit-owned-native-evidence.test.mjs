@@ -122,7 +122,8 @@ test("owned WIT native CI rejects hidden failures and disabled or missing checks
 		, ["          path: build/wit-owned-native.log\n", ""]
 		, ["      - name: Preserve owned WIT native execution\n        if: always()", "      - name: Preserve owned WIT native execution\n        if: false"]
 		, ["steps.owned_wit_native.outcome != 'success'", "false"]
-		, ["      - wasi-consumer\n", ""]
+		, ["      - perl-consumer\n      - wasi-consumer\n      - owned-wit-receivers\n"
+			, "      - perl-consumer\n      - owned-wit-receivers\n"]
 	]) {
 		const changed = source.replace(before, after); assert.notEqual(changed, source);
 		assert.throws(() => assertOwnedWitNativeCi(changed), before);

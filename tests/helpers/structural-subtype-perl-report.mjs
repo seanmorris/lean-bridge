@@ -6,13 +6,11 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
-import { reviewedContractDifference, reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { checkedRecordPerlConfigurations, checkedRecordPerlModes, assertCheckedRecordPerlIdentity } from "./checked-record-perl-install.mjs";
-import { structuralSubtypePerlCaller, structuralSubtypePerlConfiguration, structuralSubtypePerlCounts, parseStructuralSubtypePerlResult } from "./structural-subtype-perl-fixture.mjs";
+import { structuralSubtypePerlCaller, structuralSubtypePerlCounts, parseStructuralSubtypePerlResult } from "./structural-subtype-perl-fixture.mjs";
 import { assertStructuralSubtypePerlPackageIdentity } from "./structural-subtype-perl-install.mjs";
-import { structuralSubtypeReview } from "./structural-subtype-installed-fixture.mjs";
+import { structuralSubtypeFixtureAtProducer } from "./structural-subtype-producer-fixture.mjs";
 
 const hash = value => assert.match(value, /^[a-f0-9]{64}$/u);
 // Perl's installed manual-page names may contain namespace colons.
@@ -45,7 +43,14 @@ export const structuralSubtypePerlRecords = route => {
  * @param options.producerCommit - Frozen Git revision of the actual producer.
  */
 export const assertStructuralSubtypePerlRecords = async ({ route, read, producerCommit }) => {
-	const selection = { configuration: structuralSubtypePerlConfiguration(route), expected: structuralSubtypeReview(), reviewed: route === "reviewed" };
+	const fixture = await structuralSubtypeFixtureAtProducer(producerCommit, "perl");
+	const { hashBindingIr, reviewedContractDifference
+		, reviewedSourceSelection } = fixture.producerContracts;
+	const selection = {
+		configuration: fixture.structuralSubtypePerlConfiguration(route)
+		, expected: fixture.structuralSubtypeReview()
+		, reviewed: route === "reviewed"
+	};
 	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
 	const original = path => execFileSync("git", ["show", `${producerCommit}:${path}`], { maxBuffer: 16 * 1024 * 1024 });
 	const json = async path => {

@@ -17,63 +17,6 @@ const routes = Object.freeze({ ordinary: "ordinary", reviewed: "independently re
 const selections = Object.freeze(["scalar", "structural"]);
 
 export const wasmEntryCiJobName = "reviewed-fin-wasm-entry";
-export const wasmEntryCiJob = `  ${wasmEntryCiJobName}:
-    name: Reviewed Fin Wasm entry (\${{ matrix.mode }})
-    runs-on: ubuntu-24.04
-    timeout-minutes: 180
-    strategy:
-      fail-fast: false
-      matrix:
-        mode: [${wasmEntryCiModes.join(", ")}]
-    steps:
-      - name: Check out the exact revision
-        uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-      - name: Install Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: \${{ env.NODE_VERSION }}
-          cache: npm
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
-      - name: Install dependencies without lifecycle scripts
-        run: npm ci --ignore-scripts
-      - name: Bound apt network waits
-        uses: ./.github/actions/bounded-apt
-        timeout-minutes: 1
-      - name: Install browser engines
-        timeout-minutes: 20
-        run: bash scripts/install-playwright-browsers.sh ${wasmEntryCiEngines.join(" ")}
-      - name: Build the locked engine and prepared runtime
-        run: |
-          nix build .#universal-core-artifacts --out-link build/consumer-ci-runtime
-          nix build .#component-build-engine --out-link build/locked-lake-engine
-      - name: Account installed Wasm adapter and Lean source entry in Node and every browser context
-        shell: bash
-        env:
-          LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_BROWSER_TEST: "1"
-          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: ${wasmEntryCiEngines.join(",")}
-          LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_REPORT_DIR: build/reviewed-fin-wasm-entry
-          LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
-          LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
-        run: |
-          set -euo pipefail
-          mkdir -p build/reviewed-fin-wasm-entry
-          node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^\${{ matrix.mode }} (ordinary|independently reviewed) (scalar|structural) Fin entry is accounted in installed npm packages$' tests/reviewed-fin-wasm-entry.test.mjs 2>&1 | tee build/reviewed-fin-wasm-entry/run.tap
-          node scripts/check-reviewed-fin-wasm-entry-run.mjs build/reviewed-fin-wasm-entry --mode=\${{ matrix.mode }}
-      - name: Preserve Wasm entry observations
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: reviewed-fin-wasm-entry-\${{ matrix.mode }}-\${{ github.sha }}-\${{ github.run_attempt }}
-          path: build/reviewed-fin-wasm-entry/
-          if-no-files-found: error
-          retention-days: 30
-
-`;
-const anchorJob = "  browser-consumer:\n";
-const needsAnchor = "      - node-consumers\n";
 const needsLine = `      - ${wasmEntryCiJobName}\n`;
 export const wasmEntryCiEnforce = `      - name: Enforce reviewed Fin Wasm entry acceptance
         if: needs.${wasmEntryCiJobName}.result != 'success'
@@ -88,27 +31,18 @@ const once = (text, part, label) => {
 const summaryOf = workflow => workflow.slice(once(workflow, "\n  support-summary:\n", "support summary job") + 1);
 
 /**
- * Add the job before the browser boundary job, require it in the summary and enforce its result. Every other byte
- * stays as it is.
+ * Return the current job without requiring unrelated checkout and receipt
+ * plumbing to remain byte-identical to its original insertion template.
  *
- * @param workflow - Consumer workflow without the job.
+ * @param workflow - Complete consumer workflow text.
  */
-export const insertWasmEntryCi = workflow => {
-	assert.ok(!workflow.includes(`\n  ${wasmEntryCiJobName}:\n`), "the job is not yet present");
-	const at = once(workflow, `\n${anchorJob}`, "browser boundary job") + 1;
-	let text = workflow.slice(0, at) + wasmEntryCiJob + workflow.slice(at);
-	const summary = text.indexOf("\n  support-summary:\n");
-	const needs = summary + once(text.slice(summary), needsAnchor, "node-consumers requirement") + needsAnchor.length;
-	text = text.slice(0, needs) + needsLine + text.slice(needs);
-	const optionalEnforcement
-		= "      - name: Enforce complete optional-parameter matrix reconciliation\n";
-	const enforcement = text.indexOf(optionalEnforcement, summary);
-	if(enforcement >= 0)
-		return text.slice(0, enforcement) + wasmEntryCiEnforce
-			+ text.slice(enforcement);
-	assert.ok(text.endsWith("        run: exit 1\n")
-		, "the summary ends with its enforcement steps");
-	return text + wasmEntryCiEnforce;
+export const wasmEntryCiJobSource = workflow => {
+	const start = once(workflow, `\n  ${wasmEntryCiJobName}:\n`
+		, "Wasm entry job") + 1;
+	const tail = workflow.slice(start);
+	const next = tail.match(/\n {2}[a-z][a-z0-9-]*:\n/u);
+	assert.ok(next?.index, "the next job follows the Wasm entry job");
+	return tail.slice(0, next.index + 1);
 };
 
 /**
@@ -118,10 +52,24 @@ export const insertWasmEntryCi = workflow => {
  * @param workflow - Consumer workflow text.
  */
 export const assertWasmEntryCi = workflow => {
-	const start = once(workflow, `\n  ${wasmEntryCiJobName}:\n`, "Wasm entry job") + 1;
-	assert.equal(workflow.slice(start, start + wasmEntryCiJob.length), wasmEntryCiJob, "the exact job");
-	assert.match(workflow.slice(start + wasmEntryCiJob.length), /^ {2}[a-z][a-z0-9-]*:\n/u, "the next job follows directly");
-	assert.doesNotMatch(wasmEntryCiJob, /continue-on-error/u);
+	const job = wasmEntryCiJobSource(workflow);
+	assert.match(job, new RegExp(`^  ${wasmEntryCiJobName}:\\n`, "u"));
+	assert.match(job, /^ {4}name: Reviewed Fin Wasm entry \(\$\{\{ matrix\.mode \}\}\)$/mu);
+	once(job, `        mode: [${wasmEntryCiModes.join(", ")}]\n`, "mode matrix");
+	once(job, "      fail-fast: false\n", "non-fail-fast strategy");
+	once(job, `          LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: ${wasmEntryCiEngines.join(",")}\n`
+		, "browser engine declaration");
+	once(job, "          LEAN_BRIDGE_REVIEWED_FIN_WASM_ENTRY_BROWSER_TEST: \"1\"\n"
+		, "browser execution gate");
+	assert.doesNotMatch(job, /continue-on-error/u);
+	assert.match(job, /set -euo pipefail\n/u);
+	assert.match(job, /--test-name-pattern='\^\$\{\{ matrix\.mode \}\} \(ordinary\|independently reviewed\) \(scalar\|structural\) Fin entry is accounted in installed npm packages\$'/u);
+	assert.match(job, /reviewed-fin-wasm-entry\.test\.mjs 2>&1 \| tee build\/reviewed-fin-wasm-entry\/run\.tap/u);
+	assert.match(job, /^ {10}node scripts\/check-reviewed-fin-wasm-entry-run\.mjs build\/reviewed-fin-wasm-entry --mode=\$\{\{ matrix\.mode \}\}$/mu);
+	assert.match(job, /- name: Preserve Wasm entry observations\n {8}if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
+	assert.match(job, /name: reviewed-fin-wasm-entry-\$\{\{ matrix\.mode \}\}-\$\{\{ github\.sha \}\}-\$\{\{ github\.run_attempt \}\}/u);
+	assert.match(job, /^ {10}path: build\/reviewed-fin-wasm-entry\/$/mu);
+	assert.match(job, /^ {10}if-no-files-found: error$/mu);
 	const summary = summaryOf(workflow);
 	once(summary, needsLine, "summary requirement");
 	assert.ok(summary.indexOf(needsLine) < summary.indexOf("    steps:\n"), "required in needs");

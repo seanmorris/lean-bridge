@@ -196,6 +196,7 @@ export const generateComponentCallableAdapters = (abi, exports = []) => {
 		const rejectionCleanup = item.parameters.flatMap((type, index) => owned(type) ? [`lean_dec(a${index});`] : []).join(" ");
 		lines.push(`extern ${cType(item.result)} ${item.symbol}_lean(${item.parameters.length ? item.parameters.map(cType).join(", ") : "lean_object *"});`
 			, ...refinements.flatMap((refinement, index) => refinement
+				&& refinement.kind !== "fin-parameter"
 				? [`extern uint8_t ${item.symbol}_refinement_${index}(${cType(item.parameters[index])});`] : [])
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`
 			, `  uint32_t status = bridge_scalar_frame_validate(frame, ${item.parameters.length});`
@@ -204,10 +205,13 @@ export const generateComponentCallableAdapters = (abi, exports = []) => {
 		for(const [index, type] of item.parameters.entries())
 			if(type.kind === "named") lines.push(`  lean_object *a${index} = ${prefix(abi, signatures.get(type.id))}_wrap((size_t)frame->args[${index}].bits);`);
 			else lines.push(...decode(`frame->args[${index}]`, type, `a${index}`));
-		for(const [index, refinement] of refinements.entries()) if(refinement)
+		for(const [index, refinement] of refinements.entries())
 		{
-			if(owned(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
-			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 6; }`);
+			if(refinement && refinement.kind !== "fin-parameter")
+			{
+				if(owned(item.parameters[index])) lines.push(`  lean_inc(a${index});`);
+				lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 6; }`);
+			}
 		}
 		lines.push(`  ${cType(item.result)} result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`);
 		if(item.result.kind === "named")

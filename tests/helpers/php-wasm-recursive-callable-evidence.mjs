@@ -6,7 +6,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { assertPhpWasmRecursiveProbes } from "./php-wasm-recursive-callable-probes.mjs";
 import { assertPhpWasmRecursivePackages } from "./php-wasm-recursive-callable-receipt.mjs";
@@ -14,13 +13,17 @@ import { assertPhpWasmGraphPackageEvidence } from "./php-wasm-graph-receipt.mjs"
 import { assertPhpWasmStructuredCallableExecution, phpWasmStructuredCallableExecutionPath } from "./php-wasm-structured-callable-evidence.mjs";
 import { assertPhpRecursiveCallableIntegration } from "./php-recursive-callable-evidence.mjs";
 import { phpRecursiveCallableHistoryPath } from "./php-recursive-callable-source-history.mjs";
-import { phpWasmRecursiveCallableChangedPaths, reversePhpWasmRecursiveCallableUpdate } from "./php-wasm-recursive-callable-source-history.mjs";
+import { phpWasmRecursiveCallableChangedPaths, phpWasmRecursiveCallableHistoryPath, reversePhpWasmRecursiveCallableUpdate } from "./php-wasm-recursive-callable-source-history.mjs";
+import { authenticateProducerSources, typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 import { beforeWitRecursiveCallables } from "./wit-recursive-callable-source-history.mjs";
 
-const priorSource = async (path, expected) => beforeWitRecursiveCallables(
-	path, await readFile(path, "utf8"), expected);
+const priorSource = (path, expected) => sourceAtFinHistoryRecordSource(
+	phpWasmRecursiveCallableHistoryPath, path, expected
+	, beforeWitRecursiveCallables);
 
 export const phpWasmRecursiveCallableBaseline = "0af020b28bc69bb97f678a814b7b567eac13c559";
+export const phpWasmRecursiveCallableProducer = "7daacb859a45f3c90ba8739bd9396fa5d970813d";
 export const phpWasmRecursiveCallableExecutionPath = "docs/evidence/php-wasm-recursive-callables-20260926.json";
 export const phpWasmRecursiveCopiedExecutionPath = "docs/evidence/php-wasm-recursive-packages-20260924.json";
 export const phpWasmRecursiveCallableScope = {
@@ -65,8 +68,8 @@ export const assertPhpWasmRecursiveCallableExecution = async record => {
 	passing(record.installed, "npm run test:php-wasm-recursive-packages", 2);
 	passing(record.regressions, "LEAN_BRIDGE_PHP_WASM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 --test-name-pattern='offline installation|preserve eight copied shapes' tests/php-wasm-graph-package.test.mjs tests/php-wasm-structured-callables.test.mjs", 2);
 	assert.deepEqual(Object.keys(record.projectionSources).sort(), phpWasmRecursiveCallableProjectionPaths);
-	for(const [path, digest] of Object.entries(record.projectionSources))
-		assert.equal(sha256(await priorSource(path, digest)), digest, path);
+	authenticateProducerSources(
+		phpWasmRecursiveCallableProducer, record.projectionSources);
 	await assertPhpWasmRecursiveProbes(record.generated.report);
 	assert.deepEqual(Object.keys(record.installed.reports).sort(), ["mixed", "recursive"]);
 	for(const [kind, mixed] of [["recursive", false], ["mixed", true]])
@@ -98,8 +101,8 @@ export const assertPhpWasmRecursiveCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), phpWasmRecursiveCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...phpWasmRecursiveCallableChangedPaths, ...phpWasmRecursiveCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(
-		path, record.sourceHashes[path])), record.sourceHashes[path], path);
+	authenticateProducerSources(
+		phpWasmRecursiveCallableProducer, record.sourceHashes);
 	const restored = {};
 	for(const update of record.updates)
 	{
@@ -109,8 +112,9 @@ export const assertPhpWasmRecursiveCallableIntegration = async record => {
 			await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
-	const { document: current, ...contracts } = await readTypeSurface(), old = JSON.parse(restored["docs/type-surface.v1.json"]);
-	assert.ok(current.contractVersion);
+	const contracts = typeSurfaceContractsAtProducer(
+		phpWasmRecursiveCallableProducer);
+	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"
 		, record.sourceHashes["docs/type-surface.v1.json"]));
 	assert.equal(document.contractVersion, "0.106.0"); assert.equal(old.contractVersion, "0.105.0");

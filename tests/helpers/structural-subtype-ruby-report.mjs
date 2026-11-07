@@ -6,11 +6,9 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
-import { structuralSubtypeReview } from "./structural-subtype-installed-fixture.mjs";
-import { structuralSubtypeRubyConfiguration, structuralSubtypeRubyCounts, parseStructuralSubtypeRubyResult } from "./structural-subtype-ruby-fixture.mjs";
+import { structuralSubtypeRubyCounts, parseStructuralSubtypeRubyResult } from "./structural-subtype-ruby-fixture.mjs";
+import { structuralSubtypeFixtureAtProducer } from "./structural-subtype-producer-fixture.mjs";
 
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 export const structuralSubtypeRubyRecords = Object.freeze([
@@ -36,7 +34,11 @@ export const checkStructuralSubtypeRubyReport = async (read, { route, producerCo
 		return value;
 	};
 	const original = path => execFileSync("git", ["show", `${producerCommit}:${path}`], { maxBuffer: 16 * 1024 * 1024 });
-	const expected = structuralSubtypeReview(), configuration = structuralSubtypeRubyConfiguration(route), report = await json("report.json");
+	const fixture = await structuralSubtypeFixtureAtProducer(producerCommit, "ruby");
+	const { hashBindingIr, reviewedContractDifference } = fixture.producerContracts;
+	const expected = fixture.structuralSubtypeReview()
+		, configuration = fixture.structuralSubtypeRubyConfiguration(route)
+		, report = await json("report.json");
 	assert.equal(report.schemaVersion, 1); assert.equal(report.route, route);
 	assert.equal(report.producerCommit, producerCommit);
 	assert.deepEqual(report.configuration, configuration); assert.deepEqual(await json("configuration.json"), configuration);

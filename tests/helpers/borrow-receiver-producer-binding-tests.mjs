@@ -10,9 +10,10 @@ import test from "node:test";
 import ts from "typescript";
 import { beforeOwnedDotnetBorrow } from "./owned-dotnet-borrow-history.mjs";
 import {
-	ownedRubyBorrowCiPath, reverseOwnedRubyBorrowCiUpdate
+	beforeOwnedRubyBorrowCi, ownedRubyBorrowCiPath, reverseOwnedRubyBorrowCiUpdate
 } from "./owned-ruby-borrow-ci-history.mjs";
 import { bytesAtProducer, sourceAtProducer } from "./producer-source.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const rubyProfileProducer = "1211baf52e92dd4012d075948ca6bf95bda81282";
@@ -139,13 +140,16 @@ test("Ruby borrow profile reversals name their authenticated current endpoints",
 	const record = JSON.parse(bytes);
 	assert.equal(record.updates.length, 5);
 	for(const update of record.updates)
+	{
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-	const source = await readFile("tests/owned-ruby-borrow-evidence.test.mjs", "utf8");
-	const calls = [...source.matchAll(/beforeOwnedDotnetBorrow\([^\n;]+/gu)]
-		.map(match => match[0]);
-	assert.equal(calls.length, 4);
-	for(const call of calls)
-		assert.match(call, /, (?:update\.currentSha256|record\.sources\[(?:path|indexPath)\])\)/u);
+		const current = await sourceAtFinHistoryRecordSource(
+			ownedRubyBorrowCiPath, update.path, update.currentSha256
+			, beforeOwnedRubyBorrowCi
+		);
+		assert.equal(sha256(current), update.currentSha256, update.path);
+		assert.equal(sha256(reverseOwnedRubyBorrowCiUpdate(current, update))
+			, update.previousSha256, update.path);
+	}
 });
 
 test("Ruby borrow exact stops retain the small original sources and reject altered spans", async () => {

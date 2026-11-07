@@ -219,3 +219,26 @@ test("checked scalar Fin bounds fail the call before dispatch on every parameter
 	assert.ok(source.indexOf("refined_pair_refinement_1(a1)") < source.indexOf("refined_pair_lean(a0, a1, a2)"));
 	assert.doesNotMatch(source, /refined_pair_refinement_2/u);
 });
+
+test("dependent scalar Fin stays in the complete Lean wrapper", () => {
+	const abi = { exports: [{
+		bindingId: "lean:Library.dependent"
+		, symbol: "dependent"
+		, parameters: [scalar("nat"), scalar("nat"), scalar("nat")]
+		, result: scalar("nat")
+		, resultMode: "value" }] };
+	const exports = [{
+		bindingId: "lean:Library.dependent"
+		, refinements: {
+			parameters: [null, { kind: "fin", bound: "10" }
+				, { kind: "fin-parameter", parameter: 0 }]
+			, result: null
+		}
+	}];
+	const source = generateComponentScalarAdapters(abi, exports);
+	assert.match(source
+		, /extern uint8_t dependent_refinement_1\(lean_object \*\);/u);
+	assert.doesNotMatch(source, /dependent_refinement_2/u);
+	assert.ok(source.indexOf("dependent_refinement_1(a1)")
+		< source.indexOf("dependent_lean(a0, a1, a2)"));
+});

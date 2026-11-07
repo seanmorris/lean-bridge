@@ -7,11 +7,9 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validateKotlinCompilation } from "../../src/build/compile-jvm-sources.mjs";
-import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
-import { structuralSubtypeReview } from "./structural-subtype-installed-fixture.mjs";
-import { structuralSubtypeJvmConfiguration, structuralSubtypeJvmCounts, parseStructuralSubtypeJvmResult } from "./structural-subtype-jvm-fixture.mjs";
+import { structuralSubtypeJvmCounts, parseStructuralSubtypeJvmResult } from "./structural-subtype-jvm-fixture.mjs";
+import { structuralSubtypeFixtureAtProducer } from "./structural-subtype-producer-fixture.mjs";
 
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 export const structuralSubtypeJvmRecords = Object.freeze([
@@ -38,7 +36,11 @@ export const checkStructuralSubtypeJvmReport = async (read, { route, producerCom
 		return value;
 	};
 	const original = path => execFileSync("git", ["show", `${producerCommit}:${path}`], { maxBuffer: 16 * 1024 * 1024 });
-	const expected = structuralSubtypeReview(), configuration = structuralSubtypeJvmConfiguration(route), report = await json("report.json");
+	const fixture = await structuralSubtypeFixtureAtProducer(producerCommit, "jvm");
+	const { hashBindingIr, reviewedContractDifference } = fixture.producerContracts;
+	const expected = fixture.structuralSubtypeReview()
+		, configuration = fixture.structuralSubtypeJvmConfiguration(route)
+		, report = await json("report.json");
 	assert.equal(report.schemaVersion, 1); assert.equal(report.route, route);
 	assert.equal(report.producerCommit, producerCommit);
 	assert.deepEqual(report.configuration, configuration); assert.deepEqual(await json("configuration.json"), configuration);

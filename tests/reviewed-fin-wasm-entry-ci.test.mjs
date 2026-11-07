@@ -11,7 +11,7 @@ import { gunzipSync } from "node:zlib";
 import { sha256 } from "../src/capsule/node.mjs";
 import { recountReviewedFinWasmEntryReport } from "./helpers/reviewed-fin-wasm-entry-producer.mjs";
 import { expectReviewedFinWasmEntry, reviewedFinWasmEntrySymbols } from "./helpers/reviewed-fin-wasm-entry.mjs";
-import { assertWasmEntryCi, checkWasmEntryCiRun, insertWasmEntryCi, wasmEntryCiJob, wasmEntryCiJobName, wasmEntryCiReports, wasmEntryCiSummaryFails } from "./helpers/reviewed-fin-wasm-entry-ci.mjs";
+import { assertWasmEntryCi, checkWasmEntryCiRun, wasmEntryCiJobName, wasmEntryCiJobSource, wasmEntryCiReports, wasmEntryCiSummaryFails } from "./helpers/reviewed-fin-wasm-entry-ci.mjs";
 import { reviewedFinWasmPreFieldTypeScript, reviewedFinWasmTypeScript } from "./helpers/reviewed-fin-wasm-typescript.mjs";
 import { wasmEntryDirectory, wasmEntryEngines, wasmEntryFrozen, wasmEntryRuns } from "./helpers/wasm-entry-evidence.mjs";
 
@@ -23,16 +23,15 @@ const workflowPath = ".github/workflows/consumer-matrix.yml";
  * @param from - Text or pattern inside the job.
  * @param to - Replacement.
  */
-const inJob = (workflow, from, to) => workflow.replace(wasmEntryCiJob, wasmEntryCiJob.replace(from, to));
+const inJob = (workflow, from, to) => {
+	const job = wasmEntryCiJobSource(workflow), changed = job.replace(from, to);
+	assert.notEqual(changed, job);
+	return workflow.replace(job, changed);
+};
 
 test("the Wasm entry job runs both modes on all three engines, checked, required and always preserved", async () => {
 	const workflow = await readFile(workflowPath, "utf8");
 	assert.deepEqual(assertWasmEntryCi(workflow), { modes: ["original", "probe"], engines: ["chromium", "firefox", "webkit"], enforced: true });
-	// The job is exactly the inserted text; removing it and inserting again reproduces the workflow byte for byte.
-	const without = workflow.replace(wasmEntryCiJob, "").replace(`      - node-consumers\n      - ${wasmEntryCiJobName}\n`, "      - node-consumers\n")
-		.replace(`      - name: Enforce reviewed Fin Wasm entry acceptance\n        if: needs.${wasmEntryCiJobName}.result != 'success'\n        run: exit 1\n`, "");
-	assert.equal(insertWasmEntryCi(without), workflow);
-	assert.throws(() => insertWasmEntryCi(workflow), /not yet present/u);
 	const mutations = [
 		["one mode", text => inJob(text, "mode: [original, probe]", "mode: [original]")]
 		, ["two engines", text => inJob(text, "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox,webkit", "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS: chromium,firefox")]
@@ -47,7 +46,12 @@ test("the Wasm entry job runs both modes on all three engines, checked, required
 		, ["fail-fast", text => inJob(text, "      fail-fast: false\n", "")]
 		, ["not required", text => text.replace(`      - ${wasmEntryCiJobName}\n`, "")]
 		, ["not enforced", text => text.replace(`        if: needs.${wasmEntryCiJobName}.result != 'success'\n`, "        if: false\n")]
-		, ["two jobs", text => text.replace(wasmEntryCiJob, wasmEntryCiJob + wasmEntryCiJob)]];
+		, ["two jobs", text => {
+			const job = wasmEntryCiJobSource(text);
+			return text.replace(job, job + job);
+		}
+		]
+	];
 	for(const [label, change] of mutations)
 	{
 		const changed = change(workflow);

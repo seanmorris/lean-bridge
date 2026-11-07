@@ -10,8 +10,8 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { structuralSubtypeArchives, structuralSubtypeProfiles, structuralSubtypeArchiveReferences, structuralSubtypeReferences, assertStructuralSubtypeOriginalTap, promoteStructuralSubtypes, structuralSubtypeConversion } from "./structural-subtype-promotion.mjs";
-import { structuralSubtypeConfiguration } from "./structural-subtype-installed-fixture.mjs";
 import { structuralSubtypePromotionPredecessor } from "./structural-subtype-promotion-history.mjs";
+import { structuralSubtypeFixtureAtProducer } from "./structural-subtype-producer-fixture.mjs";
 import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${structuralSubtypePromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
@@ -62,7 +62,10 @@ test("structural Subtype guides describe the installed scope and use the actual 
 	const fixture = await readFile("tests/fixtures/onboarding/structural-subtypes/StructuralSubtypes.lean", "utf8");
 	for(const block of example.split("\n\n")) assert.ok(fixture.includes(block), block);
 	const configuration = JSON.parse(section.match(/```json\n([\s\S]*?)\n```/u)[1]);
-	const full = structuralSubtypeConfiguration("ordinary", ["npm"]);
+	const producerFixture = await structuralSubtypeFixtureAtProducer(
+		structuralGuideCommit, "common");
+	const full = producerFixture.structuralSubtypeConfiguration(
+		"ordinary", ["npm"]);
 	assert.deepEqual(configuration, { schemaVersion: full.schemaVersion
 		, modules: full.modules
 		, targets: full.targets

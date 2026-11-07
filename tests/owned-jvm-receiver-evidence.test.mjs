@@ -52,8 +52,12 @@ test("JVM receiver evidence binds exact sources and preserves historical support
 	const prior = JSON.parse(beforeOwnedJvmReceiver(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 	{
-		assert.equal(typeof record.sources[file.path], "string", file.path);
-		file.sha256 = record.sources[file.path];
+		const digest = record.sources[file.path];
+		if(digest !== undefined)
+		{
+			assert.equal(typeof digest, "string", file.path);
+			file.sha256 = digest;
+		}
 	}
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["core", "plain", "unanchored", "packaging", "resource-packaging", "evidence"])

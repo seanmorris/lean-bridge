@@ -7,15 +7,12 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
-import { compilerExportSelection } from "../../src/analyze/export-configuration.mjs";
-import { reviewedContractDifference, reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { structuralSubtypePhpGenerators } from "./structural-subtype-php-generators.mjs";
 import { bundledBrickMath } from "../../src/backends/php/brick-math.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
-import { structuralSubtypeReview } from "./structural-subtype-installed-fixture.mjs";
-import { structuralSubtypePhpWasmConfiguration, structuralSubtypePhpWasmSettings, structuralSubtypePhpWasmExpected, adaptStructuralSubtypePhpWasm, structuralSubtypePhpWasmRequest, checkStructuralSubtypePhpWasmExecutions } from "./structural-subtype-php-wasm-fixture.mjs";
+import { structuralSubtypePhpWasmSettings, structuralSubtypePhpWasmExpected, adaptStructuralSubtypePhpWasm, structuralSubtypePhpWasmRequest, checkStructuralSubtypePhpWasmExecutions } from "./structural-subtype-php-wasm-fixture.mjs";
+import { structuralSubtypeFixtureAtProducer } from "./structural-subtype-producer-fixture.mjs";
 import { assertPhpWasmRefinementPackage } from "./php-wasm-fin-direct-report.mjs";
 import { phpWasmDriverHashes, phpWasmIsolationFlags } from "./type-corpus-php-wasm-evidence.mjs";
 
@@ -62,7 +59,13 @@ export const checkStructuralSubtypePhpWasmReport = async (read, { route, produce
 	const text = path => files.get(path).toString();
 	const json = path => { const value = JSON.parse(text(path)); assert.equal(text(path), canonicalJson(value), path); return value; };
 	const original = path => execFileSync("git", ["show", `${producerCommit}:${path}`], { maxBuffer: 16 * 1024 * 1024 });
-	const expected = structuralSubtypeReview(), configuration = structuralSubtypePhpWasmConfiguration(route), report = json("report.json");
+	const producerFixture = await structuralSubtypeFixtureAtProducer(
+		producerCommit, "php-wasm");
+	const { compilerExportSelection, hashBindingIr, reviewedContractDifference
+		, reviewedSourceSelection } = producerFixture.producerContracts;
+	const expected = producerFixture.structuralSubtypeReview()
+		, configuration = producerFixture.structuralSubtypePhpWasmConfiguration(route)
+		, report = json("report.json");
 	assert.equal(report.schemaVersion, 1); assert.equal(report.route, route); assert.equal(report.producerCommit, producerCommit);
 	assert.deepEqual(json("configuration.json"), configuration); assert.deepEqual(report.configuration, configuration);
 	assert.deepEqual(json("expected.binding-ir.json"), expected); assert.equal(report.expectedBindingIrSha256, hashBindingIr(expected));

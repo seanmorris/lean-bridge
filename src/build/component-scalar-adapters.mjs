@@ -32,7 +32,8 @@ export const generateComponentScalarAdapters = (abi, exports = []) => {
 		const arguments_ = types.map((type, index) => `a${index}`);
 		const rejectionCleanup = types.flatMap((type, index) => objectType(type) ? [`lean_dec(a${index});`] : []).join(" ");
 		lines.push(`extern ${cType(result)} ${item.symbol}_lean(${types.length ? types.map(cType).join(", ") : "lean_object *"});`);
-		for(const [index, refinement] of refinements.entries()) if(refinement)
+		for(const [index, refinement] of refinements.entries())
+			if(refinement && refinement.kind !== "fin-parameter")
 			lines.push(`extern uint8_t ${item.symbol}_refinement_${index}(${cType(types[index])});`);
 		lines.push(`LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`);
 		lines.push(`  uint32_t status = bridge_scalar_frame_validate(frame, ${types.length});`, "  if (status) return status;");
@@ -46,10 +47,13 @@ export const generateComponentScalarAdapters = (abi, exports = []) => {
 			else if(type.startsWith("float")) lines.push(`  ${cType(type)} a${index}; memcpy(&a${index}, &${source}.bits, sizeof(a${index}));`);
 			else lines.push(`  ${cType(type)} a${index} = (${cType(type)})${source}.bits;`);
 		}
-		for(const [index, refinement] of refinements.entries()) if(refinement)
+		for(const [index, refinement] of refinements.entries())
 		{
-			if(objectType(types[index])) lines.push(`  lean_inc(a${index});`);
-			lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 6; }`);
+			if(refinement && refinement.kind !== "fin-parameter")
+			{
+				if(objectType(types[index])) lines.push(`  lean_inc(a${index});`);
+				lines.push(`  if (!${item.symbol}_refinement_${index}(a${index})) { ${rejectionCleanup} return 6; }`);
+			}
 		}
 		lines.push(`  ${cType(result)} result = ${item.symbol}_lean(${types.length ? arguments_.join(", ") : "lean_box(0)"});`);
 		if(objectType(result)) lines.push(`  return bridge_scalar_encode_object(&frame->result, ${componentScalarTypes.indexOf(result)}, result);`);

@@ -20,6 +20,7 @@ import { nativeFinSummary } from "../../src/backends/native/fin-refinements.mjs"
 import { generatePerlBindingPackage } from "../../src/backends/perl/generate.mjs";
 import { componentRefinedCall, componentRefinementGuards } from "../../src/build/component-refinements.mjs";
 import { generateCompilerAdapters } from "../../src/build/compiler-adapters.mjs";
+import { generateComponentScalarAdapters } from "../../src/build/component-scalar-adapters.mjs";
 import { createNativeModel } from "../../src/build/native-model.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
 import { nativeMetadataFixture } from "./native-metadata.mjs";
@@ -303,6 +304,10 @@ test("semantic projection and compiler adapters preserve the dynamic bound", asy
 		, /Sample\.dependent arg0 ⟨arg1, _bridgeFin1⟩/u);
 	assert.doesNotMatch(generated.files["LeanBridgeGenerated.lean"]
 		, /axiom|unsafeCast|sorry/u);
+	const component = generateComponentScalarAdapters(
+		generated.plan.privateAbi, generated.plan.exports);
+	assert.doesNotMatch(component, /_refinement_1/u);
+	assert.match(component, /lean_bridge_[0-9a-f]{24}_lean\(a0, a1\)/u);
 	const javascript = generateJavaScriptPackage(semantic);
 	assert.match(javascript["index.mjs"]
 		, /validate\.assertNat\(arg0, "dependent\.arg0"\);[\s\S]*validate\.assertNat\(arg1, "dependent\.arg1"\);[\s\S]*validate\.assertFin\(arg1, arg0, "dependent\.arg1"\);[\s\S]*runtime\.call\("lean:Sample\.dependent", \[arg0, arg1\]\)/u);

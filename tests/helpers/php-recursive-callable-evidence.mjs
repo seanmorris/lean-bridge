@@ -9,11 +9,11 @@ import { readFile } from 'node:fs/promises';
 import { posix } from 'node:path';
 import { canonicalJson, sha256 } from '../../src/capsule/node.mjs';
 import { hashBindingIr } from '../../src/binding-ir/canonical.mjs';
-import { readTypeSurface } from '../../src/adoption/type-surface.mjs';
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { moduleSpecifiers } from './module-closure.mjs';
 import { moduleAtProducer } from './producer-module.mjs';
-import { bytesAtProducer } from './producer-source.mjs';
+import { authenticateProducerSources, bytesAtProducer, sourceAtProducer, typeSurfaceContractsAtProducer } from './producer-source.mjs';
+import { sourceAtFinHistoryRecordSource } from './source-at-fin-history-milestone.mjs';
 import { phpIsolationFlags, composerProbe } from './type-corpus-php.mjs';
 import { validateBrickMathInstall } from './brick-math.mjs';
 import { assertPhpStructuredCallableExecution, phpStructuredCallableExecutionPath } from './php-structured-callable-evidence.mjs';
@@ -27,7 +27,9 @@ import { jvmRecursiveCallableHistoryPath } from './jvm-recursive-callable-source
 import { phpRecursiveCallableChangedPaths, phpRecursiveCallableHistoryPath, reversePhpRecursiveCallableUpdate } from './php-recursive-callable-source-history.mjs';
 import { beforePhpWasmRecursiveCallables } from './php-wasm-recursive-callable-source-history.mjs';
 
-const priorSource = async (path, expected) => beforePhpWasmRecursiveCallables(path, await readFile(path, 'utf8'), expected);
+const priorSource = (path, expected) => sourceAtFinHistoryRecordSource(
+	phpRecursiveCallableHistoryPath, path, expected
+	, beforePhpWasmRecursiveCallables);
 let inventorySha256;
 
 // The integration records every relative import used by these producer modules.
@@ -152,7 +154,11 @@ export const assertPhpRecursiveInspection = async report => {
 	const fixtureNames = ['host-faults.php', 'native-faults.php', 'lifetimes.php', 'ownership.php', 'retirement-mutant.php', 'forward.c'];
 	assert.deepEqual(Object.keys(probes.sourceHashes).sort(), fixtureNames.map(name => 'php-recursive-' + name).sort());
 	for(const [name, digest] of Object.entries(probes.sourceHashes))
-		assert.equal(digest, sha256(await readFile('tests/fixtures/structured-callable-consumers/' + name)));
+	{
+		const path = 'tests/fixtures/structured-callable-consumers/' + name;
+		assert.equal(digest, sha256(sourceAtProducer(
+			phpRecursiveCallableProducer, path, digest)));
+	}
 	assertPhpRecursiveFaults(probes.host, 'host'); assertPhpRecursiveFaults(probes.native, 'native');
 	assertPhpRecursiveLifetimes(probes.lifetimes);
 	assert.deepEqual(probes.ownership.map(run => run.mode), ['baseline', 'reply-scope']);
@@ -214,7 +220,8 @@ export const assertPhpRecursiveCallableExecution = async record => {
 	assert.equal(regressions.structured.installed.command, 'LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test tests/php-structured-callables.test.mjs');
 	assert.equal(regressions.copied.installed.command, "LEAN_BRIDGE_PHP_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PHP_GRAPH_INSTALLED_TEST=1 LEAN_BRIDGE_PHP_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_PHP_GRAPH_LOADING_TEST=1 node --test --test-skip-pattern='recursive Composer evidence' tests/php-graph-package.test.mjs");
 	assert.deepEqual(Object.keys(regressions.projectionSources).sort(), phpRecursiveCallableProjectionPaths);
-	for(const [path, digest] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await priorSource(path, digest)), digest, path);
+	authenticateProducerSources(
+		phpRecursiveCallableProducer, regressions.projectionSources);
 	const previous = await authenticated(record.previousPhpExecution, phpStructuredCallableExecutionPath);
 	await assertPhpStructuredCallableExecution({
 		...previous
@@ -317,7 +324,7 @@ export const assertPhpRecursiveCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), phpRecursiveCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...phpRecursiveCallableChangedPaths, ...phpRecursiveCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path, record.sourceHashes[path])), record.sourceHashes[path], path);
+	authenticateProducerSources(phpRecursiveCallableProducer, record.sourceHashes);
 	const restored = {};
 	for(const update of record.updates)
 	{
@@ -326,10 +333,13 @@ export const assertPhpRecursiveCallableIntegration = async record => {
 		restored[update.path] = reversePhpRecursiveCallableUpdate(await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
-	const { document: current, ...contracts } = await readTypeSurface(), old = JSON.parse(restored['docs/type-surface.v1.json']);
-	assert.ok(current.contractVersion);
+	const contracts = typeSurfaceContractsAtProducer(phpRecursiveCallableProducer);
+	const old = JSON.parse(restored['docs/type-surface.v1.json']);
 	// History authenticates file bytes, including whitespace, before JSON parsing.
-	const document = phpRecursiveTypeSurface(await readFile('docs/type-surface.v1.json', 'utf8'));
+	const document = JSON.parse(await priorSource(
+		'docs/type-surface.v1.json'
+		, record.sourceHashes['docs/type-surface.v1.json']
+	));
 	assert.equal(document.contractVersion, '0.105.0'); assert.equal(old.contractVersion, '0.104.0');
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
 	const count = values => values.filter(cell => cell.stages.installedExecution.state === 'passed').length;

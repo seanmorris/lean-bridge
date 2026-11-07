@@ -10,6 +10,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertFinForeignReport } from "./fin-container-foreign-report.mjs";
+import { finContainerEdgeJvmExpectedBeforeOptionNullEntry } from "./fin-container-edge-jvm.mjs";
 
 const directory = "docs/evidence/fin-container-foreign-measured-20261010";
 const indexSha256 = "e92626c5485297165da79fa6203426ac28e2d8cd171f91c6e4f037dfcf269212";
@@ -95,7 +96,11 @@ test("all archived foreign-carrier selections pass the strict raw, public and fo
 		assert.ok(Date.parse(end.endedAt) <= Date.parse(verified.verifiedAt));
 		for(const [name, expected] of [["tests", 1], ["pass", 1], ["fail", 0], ["skipped", 0]])
 			assert.equal(Number(tap.toString().match(new RegExp(`^# ${name} (\\d+)$`, "m"))?.[1]), expected);
-		await assertFinForeignReport(report, run.profiles, { python: run.python });
+		await assertFinForeignReport(report, run.profiles, {
+			python: run.python
+			, jvmExpected: run.profiles.some(profile => ["java", "kotlin"].includes(profile))
+				? finContainerEdgeJvmExpectedBeforeOptionNullEntry : undefined
+		});
 		assert.deepEqual(run.observations, report.reports.map(item => ({
 			profile: item.profile, checks: item.checks
 			, sourceTreeSha256: item.sourceTreeSha256
