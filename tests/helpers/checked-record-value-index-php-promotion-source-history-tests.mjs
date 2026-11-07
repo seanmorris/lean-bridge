@@ -23,7 +23,7 @@ import {
 } from "./checked-record-value-index-php-promotion-source-history.mjs";
 import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 128 * 1024 * 1024
@@ -117,7 +117,10 @@ test("hosted native-PHP value-index promotion closes every added source"
 		));
 		for(const addition of record.additions)
 		{
-			assert.equal(sha256(await readFile(addition.path))
+			assert.equal(sha256(await sourceAtFinHistoryRecordSource(
+				checkedRecordValueIndexPhpPromotionHistoryPath
+				, addition.path, addition.currentSha256
+			))
 				, addition.currentSha256, addition.path);
 			assert.notEqual(spawnSync("git", ["cat-file", "-e"
 				, `${checkedRecordValueIndexPhpPromotionPredecessor}:${addition.path}`]

@@ -379,6 +379,48 @@ export const sourceAtFinHistoryMilestone = async (
 };
 
 /**
+ * Build a repository-relative byte reader from the source pins carried by a
+ * historical type-surface document. This keeps a replay from silently hashing
+ * today's validator beside an older evidence row.
+ *
+ * @param document - Historical type-surface document.
+ * @param accept - Select the evidence rows whose source closure is replayed.
+ * @param historyPath - Optional immutable ledger that introduced the sources.
+ */
+export const sourceReaderAtEvidencePins = (
+	document, accept = () => true, historyPath = undefined
+) => {
+	assert.ok(document && typeof document === "object"
+		&& Array.isArray(document.evidence));
+	assert.equal(typeof accept, "function");
+	const pins = new Map();
+	for(const evidence of document.evidence.filter(accept))
+	{
+		assert.ok(Array.isArray(evidence.files));
+		for(const file of evidence.files)
+		{
+			assert.equal(typeof file.path, "string");
+			assert.match(file.sha256, digestPattern);
+			const previous = pins.get(file.path);
+			assert.ok(previous === undefined || previous === file.sha256
+				, `Conflicting historical source pins for ${file.path}`);
+			pins.set(file.path, file.sha256);
+		}
+	}
+	assert.ok(pins.size > 0);
+	return async path => {
+		const expected = pins.get(path);
+		if(expected === undefined) return readFile(path);
+		return Buffer.from(historyPath === undefined
+			? await sourceAtFinHistoryMilestone(path, expected)
+			: await sourceAtFinHistoryRecordSource(
+				historyPath, path, expected
+			)
+		);
+	};
+};
+
+/**
  * Reconstruct the update for one path from a named immutable history record.
  * Records are cached, while reconstructed sources remain owned by the caller.
  *

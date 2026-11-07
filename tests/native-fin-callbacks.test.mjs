@@ -528,8 +528,8 @@ test("fresh Lean refuses a host callback's result without a Fin-free failure val
 			, error => /a host callback result needs a Fin-free failure value: scalar Fin, a Fin in its selected default, Subtype and checked records are refused/u.test(JSON.stringify(error.details ?? error.message)), name);
 	}
 	// Extraction itself refuses a Subtype or checked record inside a host reply. Its diagnostic names the
-	// rejected type for the one selected export; a checked constructor configured on the callback
-	// parameter never reaches the reply.
+	// rejected type for the one selected export. A host reply has no nested constructor selection, while
+	// a checked constructor configured on the callback parameter never reaches the reply.
 	const interval = "structure Interval where\n  lo : Nat\n  hi : Nat\n  ordered : lo ≤ hi\ndef mkInterval (lo hi : Nat) : Option Interval := if ordered : lo ≤ hi then some ⟨lo, hi, ordered⟩ else none\n";
 	const site = refinement => ({ ownership: "copy", lifetime: null, ...refinement });
 	const configured = { "FinCallbacks.replyConfigured": { parameters: [site({ refinement: { constructor: "FinCallbacks.mkInterval" } })], result: site({}) } };
@@ -538,19 +538,19 @@ test("fresh Lean refuses a host callback's result without a Fin-free failure val
 			name: "replySubtype"
 			, definition: "def replySubtype (host : Nat → Option { n : Nat // n < 5 }) : Nat := match host 0 with | none => 0 | some value => value.val"
 			, configuration: {}
-			, pattern: /Subtype refinements require a top-level or structural-container parameter or result: /u
+			, pattern: /Subtype refinements require a configured checked constructor: /u
 		}
 		, {
 			name: "replyInterval"
 			, definition: `${interval}def replyInterval (host : Nat → Option Interval) : Nat := match host 0 with | none => 0 | some value => value.hi`
 			, configuration: {}
-			, pattern: /checked records currently require a top-level parameter or result: [^"]*Interval/u
+			, pattern: /nested checked records require an exact checked-record selection: [^"]*Interval/u
 		}
 		, {
 			name: "replyConfigured"
 			, definition: `${interval}def replyConfigured (host : Nat → Interval) : Nat := (host 0).hi`
 			, configuration: { contracts: configured }
-			, pattern: /checked records currently require a top-level parameter or result: [^"]*Interval/u
+			, pattern: /nested checked records require an exact checked-record selection: [^"]*Interval/u
 		}
 	];
 	for(const { name, definition, configuration, pattern } of extracted)

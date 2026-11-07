@@ -12,7 +12,7 @@ import { nominalSubtypePhpArchive, nominalSubtypePhpReferences, promoteNominalSu
 import { nominalSubtypePhpPromotionHistoryPath, nominalSubtypePhpPromotionPredecessor } from "./nominal-subtype-php-promotion-history.mjs";
 import { beforeNominalSubtypeWitPromotionSource, beforeNominalSubtypeWitPromotionPins, nominalSubtypeWitPromotionHistoryPath } from "./nominal-subtype-wit-promotion-history.mjs";
 import { beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
-import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { sourceBeforeFinHistoryRecord, sourceReaderAtEvidencePins } from "./source-at-fin-history-milestone.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
 import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
@@ -109,20 +109,25 @@ test("nominal PHP promotion refuses missing originals, invented claims and overl
 
 test("nominal PHP promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypePhpReferences();
+	const document = JSON.parse(await sourceBeforeFinHistoryRecord(
+		nominalSubtypeWitPromotionHistoryPath, "docs/type-surface.v1.json"
+		, beforeNominalSubtypeWitPromotionSource
+	));
+	const readAtPromotion = sourceReaderAtEvidencePins(document
+		, entry => entry.id.startsWith("nominal-subtype-php-")
+		, nominalSubtypePhpPromotionHistoryPath);
 	const proposed = beforeNominalSubtypeWitPromotionPins(
 		beforeNominalSubtypePhpWasmPromotionPins(beforeCiContractRepairPins(
 			beforeCheckedJavaScriptDispositionPins(
-				await promoteNominalSubtypePhp(original, references)
+				await promoteNominalSubtypePhp(
+					original, references, readAtPromotion
+				)
 			)
 		))
 	);
 	const contracts = typeSurfaceContractsAtProducer(
 		nominalSubtypePhpPromotionPredecessor
 	);
-	const document = JSON.parse(await sourceBeforeFinHistoryRecord(
-		nominalSubtypeWitPromotionHistoryPath, "docs/type-surface.v1.json"
-		, beforeNominalSubtypeWitPromotionSource
-	));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 504); assert.equal(proposed.evidence.length, 508);
 	assert.equal(original.observations.length, 587); assert.equal(proposed.observations.length, 589);

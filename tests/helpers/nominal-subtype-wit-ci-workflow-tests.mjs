@@ -47,7 +47,6 @@ test("nominal WIT CI refuses dropped gates, partial uploads and weakened bootstr
 		, [block, block.replace("set -euo pipefail", "set +e")]
 		, ["  wasi-consumer:\n", "  wasi-consumer:\n    if: false\n"]
 		, ["  wasi-consumer:\n", "  wasi-consumer:\n    continue-on-error: true\n"]
-		, ["      - wasi-consumer\n", ""]
 		, ["steps.nominal_wit.outcome == 'success' && ", ""]
 		, [" || steps.nominal_wit.outcome != 'success'", ""]
 		, [block, block.replace("-attempt-${{ github.run_attempt }}", "")]
@@ -58,6 +57,13 @@ test("nominal WIT CI refuses dropped gates, partial uploads and weakened bootstr
 		const changed = source.replace(from, () => to); assert.notEqual(changed, source);
 		assert.throws(() => assertNominalSubtypeWitWorkflow(changed), assert.AssertionError); controls++;
 	}
+	const [beforeSummary, supportSummary] = source.split("\n  support-summary:\n");
+	assert.equal(typeof supportSummary, "string");
+	const withoutWasi = supportSummary.replace("      - wasi-consumer\n", "");
+	assert.notEqual(withoutWasi, supportSummary);
+	assert.throws(() => assertNominalSubtypeWitWorkflow(
+		`${beforeSummary}\n  support-summary:\n${withoutWasi}`
+	), assert.AssertionError); controls++;
 	const body = bodyOf(source);
 	for(const [from, to] of [["fetch-depth: 0", "fetch-depth: 1"]
 		, ["persist-credentials: false", "persist-credentials: true"]
@@ -77,7 +83,8 @@ test("nominal WIT CI refuses dropped gates, partial uploads and weakened bootstr
 test("nominal WIT final gate and observations reject unsuccessful required outcomes", async t => {
 	const body = bodyOf(await readFile(path, "utf8")); let controls = 0;
 	const expression = body.split("      - name: Enforce WIT and WASI support\n")[1].split("\n")[0].trim().slice("if: ".length);
-	const ids = [...nominalSubtypeWitRequiredSteps, "nominal_wit"];
+	const ids = [...nominalSubtypeWitRequiredSteps, "nominal_wit"
+		, "direct_proof_wit", "optional_parameters_wit"];
 	const run = (expression, overrides) => runInNewContext(expression, { always: () => true
 		, steps: Object.fromEntries(ids.map(id => [id, { outcome: overrides[id] ?? "success" }])) }, { timeout: 100 });
 	assert.equal(run(expression, {}), false);
@@ -89,5 +96,5 @@ test("nominal WIT final gate and observations reject unsuccessful required outco
 		for(const [, name, value] of summaries)
 		{ assert.equal(run(value, override), name === "test_result" ? "failed" : "false"); controls++; }
 	}
-	assert.equal(controls, 117); t.diagnostic(`${controls} failed, skipped and cancelled gate/observation controls`);
+	assert.equal(controls, 135); t.diagnostic(`${controls} failed, skipped and cancelled gate/observation controls`);
 });

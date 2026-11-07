@@ -20,6 +20,7 @@ import { beforePrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-sub
 import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
 import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
 import { typeSurfaceContractsAtProducer } from "./producer-source.mjs";
+import { sourceReaderAtEvidencePins } from "./source-at-fin-history-milestone.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeRubyPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 const beforeHistoryTransition = async (historyPath, path) => {
@@ -98,10 +99,18 @@ test("nominal Ruby promotion refuses missing originals and substituted scope or 
 
 test("nominal Ruby promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeRubyReferences();
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalSubtypeRubyPromotionHistoryPath, "docs/type-surface.v1.json"
+	));
+	const readAtPromotion = sourceReaderAtEvidencePins(document
+		, entry => entry.id.startsWith("nominal-subtype-ruby-")
+		, nominalSubtypeRubyPromotionHistoryPath);
 	const proposed = beforeNominalSubtypeJvmPromotionPins(
 		beforePrimitiveSubtypeRustPromotionPins(beforeCiContractRepairPins(
 			beforeCheckedJavaScriptDispositionPins(
-				await promoteNominalSubtypeRuby(original, references)
+				await promoteNominalSubtypeRuby(
+					original, references, readAtPromotion
+				)
 			)
 		))
 	);
@@ -109,9 +118,6 @@ test("nominal Ruby promotion adds two field cells and supplements four existing 
 	const contracts = typeSurfaceContractsAtProducer(
 		nominalSubtypeRubyPromotionPredecessor
 	);
-	const document = JSON.parse(sourceAtHistoryMilestone(
-		nominalSubtypeRubyPromotionHistoryPath, "docs/type-surface.v1.json"
-	));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath])
 	{

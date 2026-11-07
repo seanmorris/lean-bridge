@@ -125,7 +125,7 @@ test("nominal primitive result and width-query mutations cannot invent hidden in
 	const original = reviewedFixture(true);
 	const document = structuredClone(original);
 	leaves(trees(exportNamed(document, "produce")).result)[0].constructor = `${moduleName}.unitA`;
-	assert.notEqual(reviewedSubtypeContracts(document), undefined);
+	assert.throws(() => reviewedSubtypeContracts(document));
 	const empty = structuredClone(original);
 	exportNamed(empty, "wordBits").source.extensions["lean-lang.org/refinements"] = { parameters: [], result: null };
 	assert.throws(() => reviewedSubtypeContracts(empty));

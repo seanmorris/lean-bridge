@@ -19,7 +19,12 @@ import { ownedPerlCallbackHistoryPath, ownedPerlCallbackHistorySha256
 import { bytesAtProducer, sourceAtProducer } from "./producer-source.mjs";
 
 test("Perl callback source history authenticates complete transitions and rejects drift", async () => {
-	assert.match(await readFile("tests/owned-perl-xs.test.mjs", "utf8")
+	const entrypoint = await readFile("tests/owned-perl-xs.test.mjs", "utf8");
+	const loader = '() => import("./helpers/owned-perl-callback-result-history-tests.mjs")';
+	assert.equal(entrypoint.split(loader).length, 2);
+	assert.ok(entrypoint.indexOf(loader)
+		> entrypoint.indexOf("await registerRetainedContractTests(["));
+	assert.doesNotMatch(entrypoint
 		, /^import "\.\/helpers\/owned-perl-callback-result-history-tests\.mjs";$/mu);
 	const bytes = await readFile(ownedPerlCallbackHistoryPath);
 	assert.equal(sha256(bytes), ownedPerlCallbackHistorySha256);
