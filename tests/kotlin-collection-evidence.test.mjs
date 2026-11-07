@@ -22,6 +22,7 @@ import { assertCurrentKotlinCollectionSources } from "./helpers/current-collecti
 import { beforeJvmStructuredCallables } from "./helpers/jvm-structured-callable-source-history.mjs";
 import { beforeOwnedJvmGenerated } from "./helpers/owned-jvm-source-history.mjs";
 import { moduleAtProducerWithSourceReads } from "./helpers/producer-module.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 const receipt = async () => JSON.parse(await readFile("docs/evidence/kotlin-collections-20260922.json"));
 const digest = value => sha256(canonicalJson(value));
@@ -35,6 +36,32 @@ const executionOrder = ["ordinary-source/java", "ordinary-source/kotlin", "revie
 // Compiler-owned IR orders definitions by identity, unlike the independent fixture.
 /** The commit whose complete source tree every digest in the Kotlin collection record names. */
 const kotlinCollectionProducer = "7e9d8a24c9d8eb0baea8b068ca3983bf561e7a46";
+/** The helper and fixtures whose transformed output each run's consumer digest names. */
+const kotlinCollectionConsumerSources = Object.freeze([
+	"tests/helpers/jvm-collection-fixture.mjs"
+	, "tests/fixtures/collection-consumers/java.java"
+	, "tests/fixtures/collection-consumers/kotlin.kt"
+]);
+
+/**
+ * Require consumer source bytes to be exactly the ones the record names.
+ *
+ * @param record - Kotlin collection receipt.
+ * @param sources - Bytes for each consumer source path.
+ */
+const assertRecordedConsumerSources = (record, sources) => {
+	assert.deepEqual(Object.keys(sources), kotlinCollectionConsumerSources);
+	for(const [path, bytes] of Object.entries(sources)) assert.equal(sha256(bytes), record.sourceHashes[path], path);
+};
+
+/**
+ * Require an archived run's consumer digest to name this consumer's exact output.
+ *
+ * @param run - Archived execution.
+ * @param consumer - Consumer renderer for a JVM profile.
+ */
+const assertRecordedConsumer = (run, consumer) =>
+	assert.equal(run.jvm.consumerSourceSha256, sha256(consumer(run.profile)), `${run.path}/${run.profile}`);
 // Installed sources are regenerated with the producer's generator; later generator changes never reach back.
 const generatedSources = async fixture => {
 	const { generateCopiedJvmKotlinPackage } = await moduleAtProducerWithSourceReads(
@@ -72,8 +99,15 @@ const assertInstalled = run => {
 	assert.equal(artifacts.find(item => item.path.endsWith(".pom")).sha256, jvm.pomSha256);
 };
 
-test("Kotlin collections bind current sources to both original installed source paths", async () => {
+test("Kotlin collections bind current sources to both original installed source paths", async t => {
 	const record = await receipt();
+	// Each consumer digest names the producer helper's transform of the producer fixtures. Rebuild them there,
+	// bound to the record's own source digests, so later fixture and helper changes never reach back.
+	const producerSources = Object.fromEntries(kotlinCollectionConsumerSources.map(path => [path, bytesAtProducer(kotlinCollectionProducer, path)]));
+	assertRecordedConsumerSources(record, producerSources);
+	const { jvmCollectionConsumer: producerConsumer } = await moduleAtProducerWithSourceReads(
+		kotlinCollectionProducer, "tests/helpers/jvm-collection-fixture.mjs"
+	);
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.profiles, ["java", "kotlin"]);
 	assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
@@ -94,7 +128,7 @@ test("Kotlin collections bind current sources to both original installed source 
 		assertInstalled(run);
 		assert.equal(run.checks, run.profile === "java" ? 158171 : 158334);
 		assert.equal(run.calls, 4435); assert.equal(run.rejected, 30);
-		assert.equal(run.jvm.consumerSourceSha256, sha256(jvmCollectionConsumer(run.profile)));
+		assertRecordedConsumer(run, producerConsumer);
 		assert.equal(run.jvm.signaturesSha256, sha256(jvmCollectionPublicChecks(run.profile)));
 		for(const key of ["publicApiOnly", "exactPublicSignatures", "runtimeOverridesDisabled", "handoffRemovedBeforeExecution"]) assert.equal(run.jvm[key], true);
 		assert.equal(Object.keys(run.installedFiles).length, 77);
@@ -135,6 +169,29 @@ test("Kotlin collections bind current sources to both original installed source 
 		const other = record.executions.find(item => item.path === run.path && item.profile !== run.profile);
 		assert.deepEqual(run.packages, other.packages); assert.deepEqual(run.installedFiles, other.installedFiles);
 	}
+	// Substituting a current helper or fixture, or changing a consumer in any other way, is refused.
+	let substitutions = 0;
+	for(const path of kotlinCollectionConsumerSources)
+	{
+		const current = await readFile(path);
+		if(!current.equals(producerSources[path]))
+		{
+			substitutions++;
+			assert.throws(() => assertRecordedConsumerSources(record, { ...producerSources, [path]: current }), assert.AssertionError, path);
+		}
+		const changed = Buffer.concat([producerSources[path], Buffer.from("\n")]);
+		assert.throws(() => assertRecordedConsumerSources(record, { ...producerSources, [path]: changed }), assert.AssertionError, path);
+	}
+	for(const run of record.executions)
+	{
+		if(sha256(jvmCollectionConsumer(run.profile)) !== run.jvm.consumerSourceSha256)
+		{
+			substitutions++;
+			assert.throws(() => assertRecordedConsumer(run, jvmCollectionConsumer), assert.AssertionError, `${run.path}/${run.profile}`);
+		}
+		assert.throws(() => assertRecordedConsumer(run, profile => `${producerConsumer(profile)}\n`), assert.AssertionError, `${run.path}/${run.profile}`);
+	}
+	t.diagnostic(`${substitutions} current consumer substitutions refused`);
 });
 
 test("Kotlin collection archives, installed files and observations reproduce independently", async () => {

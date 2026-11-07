@@ -11,9 +11,47 @@ import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.
 import { cVariantReviewedIr, cVariantSignatures } from "./helpers/c-variant-fixture.mjs";
 import { jvmVariantConsumer, jvmVariantRejections } from "./helpers/jvm-variant-fixture.mjs";
 import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
+import { moduleAtProducerWithSourceReads } from "./helpers/producer-module.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
-test("Maven variant evidence binds both languages to original archives and independent checks", async () => {
+/** The commit whose source tree the Maven variant record's consumer digests name. */
+const jvmVariantProducer = "1ff88cb44fbcc9472333c9a747dc40e82f4c131a";
+/** The helper and fixtures whose output each run's consumer digest names. */
+const jvmVariantConsumerSources = Object.freeze([
+	"tests/helpers/jvm-variant-fixture.mjs"
+	, "tests/fixtures/variant-consumers/java.java"
+	, "tests/fixtures/variant-consumers/kotlin.kt"
+]);
+
+/**
+ * Require consumer source bytes to be exactly the ones the record names.
+ *
+ * @param record - Maven variant receipt.
+ * @param sources - Bytes for each consumer source path.
+ */
+const assertRecordedConsumerSources = (record, sources) => {
+	assert.deepEqual(Object.keys(sources), jvmVariantConsumerSources);
+	for(const [path, bytes] of Object.entries(sources)) assert.equal(sha256(bytes), record.sourceHashes[path], path);
+};
+
+/**
+ * Require an archived run's consumer digest to name this consumer's exact output.
+ *
+ * @param run - Archived execution.
+ * @param consumer - Consumer renderer for a JVM profile.
+ */
+const assertRecordedConsumer = (run, consumer) =>
+	assert.equal(run.jvm.consumerSourceSha256, sha256(consumer(run.profile)), `${run.path}/${run.profile}`);
+
+test("Maven variant evidence binds both languages to original archives and independent checks", async t => {
 	const record = await readJvmHistoricalEvidence("jvm-variants-20260921");
+	// Each consumer digest names the producer's fixture as its helper read it. Rebuild it there, bound to
+	// the record's own source digests, so later fixture and helper changes never reach back.
+	const producerSources = Object.fromEntries(jvmVariantConsumerSources.map(path => [path, bytesAtProducer(jvmVariantProducer, path)]));
+	assertRecordedConsumerSources(record, producerSources);
+	const { jvmVariantConsumer: producerConsumer } = await moduleAtProducerWithSourceReads(
+		jvmVariantProducer, "tests/helpers/jvm-variant-fixture.mjs"
+	);
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64);
 	assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
 	assert.deepEqual(record.profiles, ["java", "kotlin"]);
@@ -29,7 +67,7 @@ test("Maven variant evidence binds both languages to original archives and indep
 		assert.equal(run.sourceRemovedBeforeInstallation, true);
 		for(const key of ["bindingIrSha256", "sourceTreeSha256", "sourceApiSha256", "modelSha256", "receiptSha256", "observationSha256"]) assert.match(run[key], /^[a-f0-9]{64}$/);
 		const jvm = run.jvm, files = record.installations[run.path];
-		assert.equal(jvm.consumerSourceSha256, sha256(jvmVariantConsumer(run.profile)));
+		assertRecordedConsumer(run, producerConsumer);
 		for(const key of ["offline", "emptyRepository", "emptyUserHome", "resolvedClasspathOnly", "installedSourcesRemoved", "compilerFreeExecution", "runtimeOnlyExecution", "normalExitCleanup", "repeatExecution", "localLibraries", "publicApiOnly", "exactPublicSignatures", "runtimeOverridesDisabled", "handoffRemovedBeforeExecution"]) assert.equal(jvm[key], true, key);
 		assert.deepEqual(jvm.runtimeModules, ["java.base@22.0.2"]);
 		assert.equal(jvm.deployment["package.jar"].sha256, jvm.archiveSha256);
@@ -75,6 +113,29 @@ test("Maven variant evidence binds both languages to original archives and indep
 	assert.match(record.reproduction.firstReportSha256, /^[a-f0-9]{64}$/);
 	assert.equal(record.reproduction.executions, 4); assert.equal(record.reproduction.archivesIdentical, true);
 	assert.equal(record.reproduction.installedFilesIdentical, true); assert.equal(record.reproduction.generatedSourcesIdentical, true);
+	// Substituting a current helper or fixture, or changing a consumer in any other way, is refused.
+	let substitutions = 0;
+	for(const path of jvmVariantConsumerSources)
+	{
+		const current = await readFile(path);
+		if(!current.equals(producerSources[path]))
+		{
+			substitutions++;
+			assert.throws(() => assertRecordedConsumerSources(record, { ...producerSources, [path]: current }), assert.AssertionError, path);
+		}
+		const changed = Buffer.concat([producerSources[path], Buffer.from("\n")]);
+		assert.throws(() => assertRecordedConsumerSources(record, { ...producerSources, [path]: changed }), assert.AssertionError, path);
+	}
+	for(const run of record.executions)
+	{
+		if(sha256(jvmVariantConsumer(run.profile)) !== run.jvm.consumerSourceSha256)
+		{
+			substitutions++;
+			assert.throws(() => assertRecordedConsumer(run, jvmVariantConsumer), assert.AssertionError, `${run.path}/${run.profile}`);
+		}
+		assert.throws(() => assertRecordedConsumer(run, profile => `${producerConsumer(profile)}\n`), assert.AssertionError, `${run.path}/${run.profile}`);
+	}
+	t.diagnostic(`${substitutions} current consumer substitutions refused`);
 });
 
 test("Maven variants promote exactly twelve copied cells and require installed CI receipts", async () => {

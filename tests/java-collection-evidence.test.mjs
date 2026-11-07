@@ -17,10 +17,33 @@ import { nativeVariantReviewedIr } from "./helpers/native-variant-fixture.mjs";
 import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 import { beforeOwnedJvmGenerated } from "./helpers/owned-jvm-source-history.mjs";
 import { moduleAtProducerWithSourceReads } from "./helpers/producer-module.mjs";
+import { bytesAtProducer } from "./helpers/producer-source.mjs";
 
 const receipt = () => readJvmHistoricalEvidence("java-collections-20260922");
 /** The commit whose complete source tree every digest in the Java collection record names. */
 const javaCollectionProducer = "5f7e67a03b560e27ef1af19849a125821c9b6fa2";
+/** The helper and fixture whose transformed output the record's consumer digest names. */
+const javaCollectionConsumerSources = Object.freeze(["tests/helpers/jvm-collection-fixture.mjs", "tests/fixtures/collection-consumers/java.java"]);
+
+/**
+ * Require consumer source bytes to be exactly the ones the record names.
+ *
+ * @param record - Java collection receipt.
+ * @param sources - Bytes for each consumer source path.
+ */
+const assertRecordedConsumerSources = (record, sources) => {
+	assert.deepEqual(Object.keys(sources), javaCollectionConsumerSources);
+	for(const [path, bytes] of Object.entries(sources)) assert.equal(sha256(bytes), record.sourceHashes[path], path);
+};
+
+/**
+ * Require an archived run's consumer digest to name this consumer's exact output.
+ *
+ * @param run - Archived execution.
+ * @param consumer - Consumer renderer for a JVM profile.
+ */
+const assertRecordedConsumer = (run, consumer) =>
+	assert.equal(run.jvm.consumerSourceSha256, sha256(consumer(run.profile)), `${run.path}/${run.profile}`);
 const observations = run => ({ checks: run.checks
 	, calls: run.calls
 	, rejected: run.rejected
@@ -28,8 +51,15 @@ const observations = run => ({ checks: run.checks
 	, faults: run.faults
 	, documentation: run.documentation });
 
-test("Java collections retain original archives, typed callers and source-free documentation execution", async () => {
+test("Java collections retain original archives, typed callers and source-free documentation execution", async t => {
 	const record = await receipt();
+	// The consumer digest names the producer helper's transform of the producer fixture. Rebuild it there,
+	// bound to the record's own source digests, so later fixture and helper changes never reach back.
+	const producerSources = Object.fromEntries(javaCollectionConsumerSources.map(path => [path, bytesAtProducer(javaCollectionProducer, path)]));
+	assertRecordedConsumerSources(record, producerSources);
+	const { jvmCollectionConsumer: producerConsumer } = await moduleAtProducerWithSourceReads(
+		javaCollectionProducer, "tests/helpers/jvm-collection-fixture.mjs"
+	);
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.profiles, ["java"]);
 	assert.equal(record.jdk, "22.0.2"); assert.equal(record.hostGlibc, "2.36"); assert.equal(record.packageGlibcFloor, "2.36");
@@ -54,7 +84,7 @@ test("Java collections retain original archives, typed callers and source-free d
 		for(const key of ["offline", "emptyRepository", "emptyUserHome", "resolvedClasspathOnly", "installedSourcesRemoved", "compilerFreeExecution", "runtimeOnlyExecution", "normalExitCleanup", "repeatExecution", "localLibraries", "publicApiOnly", "exactPublicSignatures", "runtimeOverridesDisabled", "handoffRemovedBeforeExecution"])
 			assert.equal(jvm[key], true, key);
 		assert.deepEqual(jvm.runtimeModules, ["java.base@22.0.2"]);
-		assert.equal(jvm.consumerSourceSha256, sha256(jvmCollectionConsumer("java")));
+		assertRecordedConsumer(run, producerConsumer);
 		assert.equal(jvm.signaturesSha256, sha256(jvmCollectionPublicChecks("java")));
 		assert.equal(jvm.deployment["package.jar"].sha256, jvm.archiveSha256);
 		assert.ok(jvm.deployment["classes/Example.class"]);
@@ -115,6 +145,29 @@ test("Java collections retain original archives, typed callers and source-free d
 		for(const path of ["ordinary-source", "reviewed-ir"]) assert.ok(log.text.includes(`${path}/java: 158171 assertions, 4435 calls, 30 rejected inputs, 679 injected failures`));
 	}
 	assert.doesNotMatch(jvmCollectionConsumer("java"), /MemorySegment|MethodHandles|ValueLayout|setAccessible/);
+	// Substituting a current helper or fixture, or changing the consumer in any other way, is refused.
+	let substitutions = 0;
+	for(const path of javaCollectionConsumerSources)
+	{
+		const current = await readFile(path);
+		if(!current.equals(producerSources[path]))
+		{
+			substitutions++;
+			assert.throws(() => assertRecordedConsumerSources(record, { ...producerSources, [path]: current }), assert.AssertionError, path);
+		}
+		const changed = Buffer.concat([producerSources[path], Buffer.from("\n")]);
+		assert.throws(() => assertRecordedConsumerSources(record, { ...producerSources, [path]: changed }), assert.AssertionError, path);
+	}
+	for(const run of record.executions)
+	{
+		if(sha256(jvmCollectionConsumer(run.profile)) !== run.jvm.consumerSourceSha256)
+		{
+			substitutions++;
+			assert.throws(() => assertRecordedConsumer(run, jvmCollectionConsumer), assert.AssertionError, run.path);
+		}
+		assert.throws(() => assertRecordedConsumer(run, profile => `${producerConsumer(profile)}\n`), assert.AssertionError, run.path);
+	}
+	t.diagnostic(`${substitutions} current consumer substitutions refused`);
 });
 
 test("JVM conversion and equality evidence distinguishes host checks from installed Lean execution", async () => {
