@@ -240,8 +240,8 @@ jobs:
     env:
       LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
     # Copied and owned package families run sequentially on each Perl ABI. The
-    # complete threaded 5.36.3 lane reached final archive verification after
-    # 122 minutes of Compare/Verify work and exhausted the 180-minute job cap.
+    # complete threaded 5.36.3 lane reached final archive verification
+    # 122 minutes after job start and exhausted the 180-minute job cap.
     timeout-minutes: 240
     strategy:
       fail-fast: false
