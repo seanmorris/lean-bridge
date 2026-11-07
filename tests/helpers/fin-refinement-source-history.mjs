@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeCoreFinalRuntimeBudgetSource
+	, coreFinalRuntimeBudgetNormalizationPaths
+} from "./core-final-runtime-budget-source-history.mjs";
+import {
 	beforePerlXsBudgetTimingClarificationSource
 	, perlXsBudgetTimingClarificationNormalizationPaths
 } from "./perl-xs-budget-timing-clarification-source-history.mjs";
@@ -2691,7 +2695,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...perlXsBudgetTimingClarificationNormalizationPaths
+	...coreFinalRuntimeBudgetNormalizationPaths
+	, ...perlXsBudgetTimingClarificationNormalizationPaths
 	, ...perlXsFinalBudgetNormalizationPaths
 	, ...perlRefinementResultProjectionRepairNormalizationPaths
 	, ...reviewedSubtypeLiveExpectationNormalizationPaths
@@ -3936,7 +3941,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforePerlXsBudgetTimingClarificationSource(
+	let stage = beforeCoreFinalRuntimeBudgetSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforePerlXsBudgetTimingClarificationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

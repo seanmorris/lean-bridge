@@ -85,7 +85,8 @@ test("Core runtime budget reverses every authenticated source", async () => {
 });
 
 test("Core runtime budget preserves coverage and raises only measured headroom", async () => {
-	const workflow = await readFile(".github/workflows/quality.yml", "utf8");
+	const workflow = git(["show"
+		, `${coreContractRuntimeBudgetImplementation}:.github/workflows/quality.yml`]);
 	assert.match(workflow, /timeout-minutes: 240/u);
 	assert.match(workflow, /max-parallel: 6/u);
 	assert.match(workflow

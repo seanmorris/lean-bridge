@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/core-final-runtime-budget-source-history-tests.mjs";
 import "./helpers/perl-refinement-result-projection-repair-source-history-tests.mjs";
 import "./helpers/perl-xs-budget-timing-clarification-source-history-tests.mjs";
 import "./helpers/perl-xs-final-budget-source-history-tests.mjs";

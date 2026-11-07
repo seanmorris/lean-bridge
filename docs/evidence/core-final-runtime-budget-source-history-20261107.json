@@ -1,0 +1,164 @@
+{
+  "behavior": {
+    "cancelledAfterJobMinutes": 240,
+    "changedSupportCells": 0,
+    "completedTestsAtCancellation": 414,
+    "currentTimeoutMinutes": 360,
+    "livePinRefreshes": {
+      ".github/workflows/quality.yml": 1
+    },
+    "previousTimeoutMinutes": 240,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "candidate": "b6a07b21843913006d2b404403dea30abf7809ed",
+    "contractCancelledAt": "2026-11-07T10:31:52Z",
+    "contractStartedAt": "2026-11-07T06:38:54Z",
+    "job": 128325268374,
+    "jobCancelledAt": "2026-11-07T10:31:55Z",
+    "jobStartedAt": "2026-11-07T06:31:39Z",
+    "run": 42344725453,
+    "terminalTestCount": 414
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-core-final-runtime-budget-source-history.mjs",
+      "sha256": "bd7341c1b4194606ee74cc37a51fc2bc8dd387b1e4a9c90dec3f962de18fa2a9"
+    },
+    {
+      "path": "tests/helpers/core-final-runtime-budget-source-history-tests.mjs",
+      "sha256": "f1b63ad7951791bd5f879625620a56c5fff2908e7d7e4952355caa6aba738543"
+    },
+    {
+      "path": "tests/helpers/core-final-runtime-budget-source-history.mjs",
+      "sha256": "9bd39145881fa35ade1dbc82810f7dbce82ed8adfac70edd3aa3651f65603fa5"
+    }
+  ],
+  "implementationCommit": "13097dc472bf6cc00f0b9a934bc24d4979bc6767",
+  "integrationCommit": "244212ef858d53a5b65095e8d33e5d27937cd748",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b24b14b9d1c37a710e1af52b0d3d35eafc6d68fafd2f4c34d1c2f8c8bc400ab8",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"d6d370a4c5dd85d1eb0c6ca405be1655c87ace412a4c22be174da73264845c63\"\n",
+          "previous": "          \"sha256\": \"d0e743d6d10bb47f5ba24d821f4f9e07302daa5e9b73e1fd3a5b84e84adda16b\"\n",
+          "start": 1351498
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a25731abc9b8b16ec54919908440848520cb5b409281227d481f2ecc7145643a"
+    },
+    {
+      "currentSha256": "a3ebb6df39b38f3dee2229d7e34c6b8376091504d605192a7b7a1ef810486e8a",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-final-runtime-budget-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "6308a5b723cfcb00d0ad3a8ba301ac60da4acae6be159a23ce74326bf8c9e99b"
+    },
+    {
+      "currentSha256": "f1e5a3ba33309309e7f9def1f3333d3813d4b106436ca604ff2aabb5d913b160",
+      "edits": [
+        {
+          "current": "\tconst workflow = git([\"show\"\n\t\t, `${coreContractRuntimeBudgetImplementation}:.github/workflows/quality.yml`]);\n",
+          "previous": "\tconst workflow = await readFile(\".github/workflows/quality.yml\", \"utf8\");\n",
+          "start": 3734
+        }
+      ],
+      "path": "tests/helpers/core-contract-runtime-budget-source-history-tests.mjs",
+      "previousSha256": "f7abb5a1d85a1ea3176ec0e5693cefd041b539ea5f84eb15ebfac085058ff059"
+    },
+    {
+      "currentSha256": "16a449be7f4ffa3f31c99d8d0b674c3ca1366b86782eb23817695c814872f819",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCoreFinalRuntimeBudgetSource\n\t, coreFinalRuntimeBudgetNormalizationPaths\n} from \"./core-final-runtime-budget-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...coreFinalRuntimeBudgetNormalizationPaths\n\t, ...perlXsBudgetTimingClarificationNormalizationPaths\n",
+          "previous": "\t...perlXsBudgetTimingClarificationNormalizationPaths\n",
+          "start": 240874
+        },
+        {
+          "current": "\tlet stage = beforeCoreFinalRuntimeBudgetSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePerlXsBudgetTimingClarificationSource(\n",
+          "previous": "\tlet stage = beforePerlXsBudgetTimingClarificationSource(\n",
+          "start": 302997
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "dc3195c11a19fc7e46ddbd2caddf34be16afa88a281d699f3693e5d2a2d07bad"
+    }
+  ],
+  "inventorySha256": {
+    "after": "b24b14b9d1c37a710e1af52b0d3d35eafc6d68fafd2f4c34d1c2f8c8bc400ab8",
+    "before": "a25731abc9b8b16ec54919908440848520cb5b409281227d481f2ecc7145643a"
+  },
+  "milestone": "core-final-runtime-budget-v1",
+  "predecessorCommit": "b6a07b21843913006d2b404403dea30abf7809ed",
+  "refreshed": {
+    "count": 1,
+    "current": "d6d370a4c5dd85d1eb0c6ca405be1655c87ace412a4c22be174da73264845c63",
+    "path": ".github/workflows/quality.yml",
+    "previous": "d0e743d6d10bb47f5ba24d821f4f9e07302daa5e9b73e1fd3a5b84e84adda16b"
+  },
+  "repair": "Raise only the twelve complete Core contract-shard jobs from 240 to 360 minutes. Preserve the exact test selection, twelve disjoint manifests, six-job concurrency, commands, assertions, artifacts, source-history checks, runtime behavior and support observations. Refresh only the workflow's one live source citation.",
+  "rootCause": "The complete Core shard 6 passed 414 contract checks and was still advancing through the authenticated history replay when GitHub cancelled the whole job at the exact 240-minute budget. The shard had already passed checkout and evidence materialization; the measured history-heavy component-array process remained live with bounded memory. Earlier candidates were superseded before this boundary was observed, so their cancellations never qualified the complete shard runtime.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "d6d370a4c5dd85d1eb0c6ca405be1655c87ace412a4c22be174da73264845c63",
+      "edits": [
+        {
+          "current": "    # Run 42344725453 showed that the complete shard-6 history replay was still\n    # making passing progress after 414 tests when the 240-minute whole-job\n    # budget cancelled it. Keep the shard bounded while allowing the two\n    # measured history-heavy hubs to finish after checkout and materialization.\n    timeout-minutes: 360\n",
+          "previous": "    # Run 40306481801 showed that a 20–25 minute full-history checkout left\n    # shard 5 only 156 minutes; its complete, still-passing evidence replay was\n    # then cancelled by the job budget. Keep the shard bounded while leaving\n    # enough time for the authenticated test selection after checkout.\n    timeout-minutes: 240\n",
+          "start": 4111
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "d0e743d6d10bb47f5ba24d821f4f9e07302daa5e9b73e1fd3a5b84e84adda16b"
+    },
+    {
+      "currentSha256": "750ef1818db20e54fbe82c52980117a1490bf75375d060085f37ba5d06878112",
+      "edits": [
+        {
+          "current": "\tassert.deepEqual(timeouts, [30, 90, 360, 10]\n",
+          "previous": "\tassert.deepEqual(timeouts, [30, 90, 240, 10]\n",
+          "start": 938
+        },
+        {
+          "current": "\t\tsource.replace(\"timeout-minutes: 360\", \"timeout-minutes: 90\")\n",
+          "previous": "\t\tsource.replace(\"timeout-minutes: 240\", \"timeout-minutes: 90\")\n",
+          "start": 19500
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "336b3f575768718ade0f6cd0afe8793d3372eff64ec4c9b18be5d64518f93f73"
+    }
+  ],
+  "validation": {
+    "focusedAssertion": {
+      "fail": 0,
+      "pass": 1,
+      "tests": 1
+    },
+    "hostedDiscovery": {
+      "completedTests": 414,
+      "processMemoryBoundMiB": 4096
+    }
+  }
+}
