@@ -134,11 +134,11 @@ jobs:
     name: Contract shard ${{ matrix.shard }}/12
     needs: [static, type_surface]
     runs-on: ubuntu-24.04
-    # Run 40306481801 showed that a 20–25 minute full-history checkout left
-    # shard 5 only 156 minutes; its complete, still-passing evidence replay was
-    # then cancelled by the job budget. Keep the shard bounded while leaving
-    # enough time for the authenticated test selection after checkout.
-    timeout-minutes: 240
+    # Run 42344725453 showed that the complete shard-6 history replay was still
+    # making passing progress after 414 tests when the 240-minute whole-job
+    # budget cancelled it. Keep the shard bounded while allowing the two
+    # measured history-heavy hubs to finish after checkout and materialization.
+    timeout-minutes: 360
     strategy:
       fail-fast: false
       max-parallel: 6

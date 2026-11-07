@@ -22,7 +22,7 @@ import {
 const assertCoreQualityBudget = source => {
 	const timeouts = [...source.matchAll(/^\s+timeout-minutes:\s*(\d+)\s*$/gmu)]
 		.map(match => Number(match[1]));
-	assert.deepEqual(timeouts, [30, 90, 240, 10]
+	assert.deepEqual(timeouts, [30, 90, 360, 10]
 		, "Static, type-surface, contract-shard, and aggregate jobs retain explicit bounds");
 	assert.match(source
 		, /strategy:\n {6}fail-fast: false\n {6}max-parallel: 6\n {6}matrix:\n {8}shard: \[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\]/u
@@ -295,7 +295,7 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 	const source = await readFile(".github/workflows/quality.yml", "utf8");
 	assertCoreQualityBudget(source);
 	for(const [index, changed] of [
-		source.replace("timeout-minutes: 240", "timeout-minutes: 90")
+		source.replace("timeout-minutes: 360", "timeout-minutes: 90")
 		, source.replace("shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]", "shard: [1, 2, 3, 4, 5, 6]")
 		, source.replace("shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]", "shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11]")
 		, source.replace("${{ matrix.shard }}/12", "${{ matrix.shard }}/11")
