@@ -61,11 +61,15 @@ test("structural PHP replay keeps original result documentation and rejects subs
 		const api = (await read("package/src/Api.php")).toString();
 		const generated = original.generateCopiedPhpPackage(model.bindingIr);
 		assert.equal(generated["src/Api.php"], api);
-		const current = generateCopiedPhpPackage(model.bindingIr)["src/Api.php"];
-		assert.notEqual(current, api);
+		// Today's directional rule refuses the archived produced-result constructors, so
+		// this archive is replayed only through its recorded producer above.
+		assert.throws(() => generateCopiedPhpPackage(model.bindingIr)
+			, { name: "TypeError", message: "Invalid declaration refinement metadata" });
 		assert.match(api, /result\[\*\] checked by StructuralSubtypes.checkedPositive/u);
-		assert.match(current, /result\[\*\] projects the Subtype base value/u);
-		for(const replacement of [current
+		// Today's projected-result documentation substituted into the recorded API.
+		const projected = api.replaceAll("result[*] checked by StructuralSubtypes.checkedPositive"
+			, "result[*] projects the Subtype base value");
+		for(const replacement of [projected
 			, api.replace("return Internal\\Native::call0", "return Internal\\Native::call1")
 			, api.replace("StructuralSubtypes.checkedPositive", "StructuralSubtypes.wrongConstructor")]) {
 			assert.notEqual(replacement, api);

@@ -15,6 +15,8 @@ import { reconcileReviewedSource } from "../src/analyze/reviewed-source.mjs";
 import { callComponentScalar } from "../src/release/component-runtime.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { generateComponentScalarAdapters } from "../src/build/component-scalar-adapters.mjs";
+import { generateComponentCopiedAdapters } from "../src/build/component-copied-adapters.mjs";
+import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
 import { copiedPhpPublicSource } from "../src/backends/php/copied-values.mjs";
@@ -24,6 +26,7 @@ import { compileCopiedDotnetModel } from "../src/backends/dotnet/copied-model.mj
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { wordNativeSignatures, wordReviewedIr } from "./helpers/word-fixture.mjs";
+import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 
 const scalar = name => ({ kind: "primitive", name });
 const compiled = wordReviewedIr(wordNativeSignatures);
@@ -241,4 +244,47 @@ test("dependent scalar Fin stays in the complete Lean wrapper", () => {
 	assert.doesNotMatch(source, /dependent_refinement_2/u);
 	assert.ok(source.indexOf("dependent_refinement_1(a1)")
 		< source.indexOf("dependent_lean(a0, a1, a2)"));
+});
+
+test("dependent Fin on copied-array exports stays in the complete Lean wrapper", async () => {
+	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.pick"
+		, parameters: ["nat", { array: "nat" }, "nat"], result: "nat" }]);
+	ir.declarations[0].source.extensions["lean-lang.org/refinements"] = {
+		parameters: [{ kind: "fin", bound: "10" }, null
+			, { kind: "fin-parameter", parameter: 0 }]
+		, result: null
+	};
+	const generated = generateCompilerAdapters({ analysis: {
+		bindingIr: { origin: "lean-elaborated", document: ir, semanticSha256: "1".repeat(64) }
+		, exportCandidates: [{ declaration: "Refinements.pick"
+			, sourceModule: "Refinements", status: "exportable" }]
+	}
+	, componentPlan: { sha256: "2".repeat(64)
+		, document: { bindingIr: { semanticSha256: "1".repeat(64) } } } });
+	await assertJsonSchema("compiler-adapter-plan", generated.plan);
+	assert.equal(generated.plan.privateAbi.version, 4);
+	const { symbol } = generated.plan.exports[0];
+	const lean = generated.files["LeanBridgeGenerated.lean"];
+	const c = generateComponentCopiedAdapters(
+		generated.plan.privateAbi, generated.plan.exports);
+	// Every unary validator the side module imports must be a Lean export, or
+	// packaging refuses the unresolved env import.
+	const exported = [...lean.matchAll(/^@\[export (\S+_refinement_\d+)\]$/gmu)]
+		.map(match => match[1]).sort();
+	const imported = [...c.matchAll(/^extern uint8_t (\S+_refinement_\d+)\(/gmu)]
+		.map(match => match[1]).sort();
+	assert.deepEqual(imported, exported);
+	// The static Fin keeps its unary validator; the dependent Fin has none.
+	assert.deepEqual(imported, [`${symbol}_refinement_0`]);
+	assert.doesNotMatch(c, new RegExp(`${symbol}_refinement_2`, "u"));
+	assert.ok(c.indexOf(`${symbol}_refinement_0(a0)`)
+		< c.indexOf(`${symbol}_lean(a0, a1, a2)`));
+	// The complete wrapper checks the live bound and refuses an out-of-bound argument.
+	const guard = lean.indexOf("if _bridgeFin2 : (value2) < value0 then");
+	const call = lean.indexOf("_root_.Refinements.pick ⟨value0, _bridgeFin0⟩ value1 ⟨value2, _bridgeFin2⟩");
+	const refusal = lean.indexOf(
+		"panic! \"Lean Bridge rejected an invalid refined value\"", call);
+	assert.notEqual(guard, -1); assert.notEqual(call, -1); assert.notEqual(refusal, -1);
+	assert.ok(guard < call && call < refusal);
+	assert.doesNotMatch(lean, /sorry|unsafeCast|axiom/u);
 });
