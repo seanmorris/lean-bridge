@@ -52,9 +52,18 @@ test("closed generic checked-record correction has an exact reversible source tr
 		assert.equal(beforeTestProfileBacklogRepairSource(
 			update.path, previous
 		), repositoryPrevious, update.path);
+		// The record's predecessor side is its exact pre-correction state. Only the
+		// inventory's differs from its Git predecessor blob, by exactly the
+		// test-profile backlog repair checked above.
 		assert.equal(await sourceBeforeFinHistoryRecord(
 			closedGenericCheckedRecordHistoryPath, update.path
 			, beforeFinRefinementSource
+		), previous, update.path);
+		assert.equal(sha256(repositoryPrevious) === update.previousSha256
+			, update.path !== "docs/type-surface.v1.json", update.path);
+		// The complete hub still reaches the Git predecessor from the current side.
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, sha256(repositoryPrevious)
 		), repositoryPrevious, update.path);
 		assert.equal(beforeClosedGenericCheckedRecordSource(
 			update.path, `${current}\n`, update.previousSha256
