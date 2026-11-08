@@ -125,25 +125,24 @@ test("nominal PHP-Wasm promotion refuses missing originals, invented scope and o
 
 test("nominal PHP-Wasm promotion changes exactly six Subtype cells and adds two field cells", async () => {
 	const original = predecessor(), references = await nominalSubtypePhpWasmReferences();
-	const promotionDocument = JSON.parse(sourceAtHistoryMilestone(
-		nominalSubtypePhpWasmPromotionHistoryPath, "docs/type-surface.v1.json"
-	));
-	const readAtPromotion = sourceReaderAtEvidencePins(promotionDocument
-		, entry => entry.id.startsWith("nominal-subtype-php-wasm-")
-		, nominalSubtypePhpWasmPromotionHistoryPath);
-	const proposed = beforeNominalPrimitiveSubtypeNpmPromotionPins(
-		beforeCiContractRepairPins(beforeCheckedJavaScriptDispositionPins(
-			await promoteNominalSubtypePhpWasm(original, references, readAtPromotion)
-		))
-	);
-	const contracts = typeSurfaceContractsAtProducer(
-		nominalSubtypePhpWasmPromotionPredecessor
-	);
 	const document = JSON.parse(await sourceBeforeFinHistoryRecord(
 		nominalPrimitiveSubtypeNpmPromotionHistoryPath
 		, "docs/type-surface.v1.json"
 		, beforeNominalPrimitiveSubtypeNpmPromotionSource
 	));
+	// The comparison epoch follows the authenticated PHP-Wasm path repair, so
+	// reconstruct its evidence pins through the ordered history hub instead of
+	// silently mixing the original promotion epoch with the later document.
+	const readAtComparison = sourceReaderAtEvidencePins(document
+		, entry => entry.id.startsWith("nominal-subtype-php-wasm-"));
+	const proposed = beforeNominalPrimitiveSubtypeNpmPromotionPins(
+		beforeCiContractRepairPins(beforeCheckedJavaScriptDispositionPins(
+			await promoteNominalSubtypePhpWasm(original, references, readAtComparison)
+		))
+	);
+	const contracts = typeSurfaceContractsAtProducer(
+		nominalSubtypePhpWasmPromotionPredecessor
+	);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 516); assert.equal(proposed.evidence.length, 520);
 	assert.equal(original.observations.length, 593); assert.equal(proposed.observations.length, 595);

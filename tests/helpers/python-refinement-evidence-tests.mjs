@@ -11,7 +11,6 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { pythonFinConsumer, pythonFinDispatchExpected, pythonFinDispatchProbe } from "./python-fin-consumers.mjs";
 import { nativeFinDispatchColumns } from "./native-fin-consumers.mjs";
 import { finContainerRefinements } from "./fin-container-install.mjs";
-import { nativeSubtypeRefinements } from "./native-subtype-install.mjs";
 import { nativeSpecializationSignatures } from "./native-specialization-install.mjs";
 
 const directory = "docs/evidence/python-refinements-20261007";
@@ -22,6 +21,29 @@ const cases = [
 	, ["native-fin-containers", 2029, "fin-container"]
 	, ["native-subtype", 2017, "subtype"]
 ];
+
+const nativeSubtypePath = "tests/helpers/native-subtype-install.mjs";
+const nativeSubtypeRefinementsAtReceipt = async () => {
+	const expected = receipt.sources[nativeSubtypePath];
+	assert.match(expected, /^[0-9a-f]{64}$/u, nativeSubtypePath);
+	const current = await readFile(nativeSubtypePath, "utf8");
+	const source = beforeFinRefinementSource(
+		nativeSubtypePath, current, expected
+	);
+	assert.equal(sha256(source), expected, nativeSubtypePath);
+	const startMarker = "const site = constructor =>";
+	const endMarker = "\n\n/**\n * Install and exercise";
+	assert.equal(source.split(startMarker).length, 2, startMarker);
+	assert.equal(source.split(endMarker).length, 2, endMarker);
+	const modelSource = source.slice(
+		source.indexOf(startMarker), source.indexOf(endMarker)
+	);
+	const historical = await import("data:text/javascript;base64,"
+		+ Buffer.from(modelSource).toString("base64"));
+	assert.deepEqual(Object.keys(historical).toSorted()
+		, ["nativeSubtypeContracts", "nativeSubtypeRefinements"]);
+	return historical.nativeSubtypeRefinements;
+};
 
 const audit = async (kind, record, checks, consumer) => {
 	assert.equal(record.schemaVersion, 1);
@@ -68,7 +90,8 @@ const audit = async (kind, record, checks, consumer) => {
 			assert.deepEqual(report.exports.toSorted(), Object.keys(nativeSpecializationSignatures).toSorted());
 		else
 		{
-			assert.deepEqual(report.refinements, kind === "native-fin-containers" ? finContainerRefinements : nativeSubtypeRefinements);
+			assert.deepEqual(report.refinements, kind === "native-fin-containers"
+				? finContainerRefinements : await nativeSubtypeRefinementsAtReceipt());
 			assert.equal(report.dispatch.observed, false);
 			assert.match(report.dispatch.reason, /counted in the C package/u);
 		}

@@ -260,16 +260,19 @@ test("JavaScript validates constructor-free results without reconstructing them"
 });
 
 test("unaffected JavaScript fixtures remain byte-identical and empty records stay exact", () => {
-	// The array package moved at 66c64fd when authenticated parameter-default
-	// fields became part of the canonical Binding IR digest in generated headers.
-	// The record package changed deliberately at 5035456 when Empty became an
-	// exact empty-object type; the remaining package bytes stay pinned.
-	for(const [fixture, expected] of [
-		[arrayReviewedIr, "50f9e59d18dd50dd44aade6bb8d953b648478be9a02fe0fde27d8800c6433ee4"]
-		, [recordReviewedIr, "524d11b29c3d13ccfbe2d74c687700bef6895dcba7c0b1d8b26210e3cc920168"]
-		, [variantReviewedIr, "4397961c788e66da6f33ee5de871d97e949976130303b97f531654d8936d5b2c"]
-		, [compoundReviewedIr, "24ee4d7c93bfa0ab1e7ba3cf5983724e211372197b2bc743d135182e1b9a51e7"]
-	]) assert.equal(sha256(canonicalJson(generateJavaScriptPackage(fixture()))), expected, fixture.name);
 	assert.match(generateJavaScriptPackage(recordReviewedIr())["index.d.ts"]
 		, /Readonly<Record<PropertyKey, never>>/u);
+	// HostNull support deliberately added one shared copied-validator branch to
+	// every generated package. Compare the complete fixture cohort at once so
+	// one stale digest cannot hide the remaining snapshots.
+	assert.deepEqual(Object.fromEntries([
+		arrayReviewedIr, recordReviewedIr, variantReviewedIr, compoundReviewedIr
+	].map(fixture => [
+		fixture.name, sha256(canonicalJson(generateJavaScriptPackage(fixture())))
+	])), {
+		arrayReviewedIr: "50f9e59d18dd50dd44aade6bb8d953b648478be9a02fe0fde27d8800c6433ee4"
+		, recordReviewedIr: "a11e94b4a279a83defe3c84b6f31e0c5de181e1f1204bcd7e69cbfd30c5563fa"
+		, variantReviewedIr: "338d745518e2c8840edbc7a89f8f0e41d20f472d8804212242a0498e8eba9adb"
+		, compoundReviewedIr: "fd414c8e81ff94b971be53ccaf3ec5ac5a005b908b92e04b3e06d14b86fadb77"
+	});
 });

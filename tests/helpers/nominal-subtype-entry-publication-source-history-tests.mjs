@@ -3,6 +3,11 @@
  *
  * @file
  */
+// Both archive roots are selected dynamically from the authenticated history
+// record. Name their dated directory prefixes so sparse Core shards retain the
+// complete payloads rather than only the baseline index.json files.
+// core-evidence-prefix: nominal-subtype-entry-native-hosted-
+// core-evidence-prefix: nominal-subtype-entry-browser-hosted-
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
