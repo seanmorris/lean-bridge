@@ -142,18 +142,41 @@ test("nested native promotion changes twelve exact C/C++ cells", async () => {
 	assert.equal(promoted.observations.length, 609);
 	assert.deepEqual(promoted.evidence.slice(0, original.evidence.length)
 		, original.evidence);
-	const changedExisting = promoted.observations.slice(0, original.observations.length)
-		.filter((item, index) => JSON.stringify(item)
-			!== JSON.stringify(original.observations[index]));
+	const stableSurface = document => Object.fromEntries(
+		Object.entries(document).filter(([key]) =>
+			!["evidence", "observations"].includes(key))
+	);
+	assert.deepEqual(stableSurface(promoted), stableSurface(original));
+	const changedExistingIndexes = original.observations.flatMap((item, index) =>
+		JSON.stringify(item) === JSON.stringify(promoted.observations[index])
+			? [] : [index]);
+	const changedExisting = changedExistingIndexes.map(index =>
+		promoted.observations[index]);
 	assert.deepEqual(changedExisting.map(item => item.id).sort()
 		, nestedCheckedRecordNativeProfiles.flatMap(profile =>
 			["ordinary-source", "reviewed-ir"].flatMap(path =>
 				["parameter", "result"].map(position =>
 					`checked-record-${profile}-${path}-${position}`))).sort());
-	assert.deepEqual(promoted.observations.slice(original.observations.length)
-		.map(item => item.id).sort(), nestedCheckedRecordNativeProfiles.flatMap(profile =>
-			["ordinary-source", "reviewed-ir"].map(path =>
-				`nested-checked-record-native-${profile}-${path}-field`)).sort());
+	const addedObservations = promoted.observations.slice(
+		original.observations.length);
+	assert.deepEqual(addedObservations.map(item => item.id).sort()
+		, nestedCheckedRecordNativeProfiles.flatMap(profile =>
+		["ordinary-source", "reviewed-ir"].map(path =>
+			`nested-checked-record-native-${profile}-${path}-field`)).sort());
+	const affectedObservations = [
+		...changedExistingIndexes.flatMap(index => [
+			original.observations[index], promoted.observations[index]
+		])
+		, ...addedObservations
+	];
+	assert.ok(affectedObservations.every(item =>
+		item.shapes.length > 0 && item.shapes.every(shape =>
+			shape === "checked-record")
+		&& item.profiles.length > 0 && item.profiles.every(profile =>
+			nestedCheckedRecordNativeProfiles.includes(profile))
+		&& ["ordinary-source", "reviewed-ir"].includes(item.path)
+		&& item.positions.length > 0 && item.positions.every(position =>
+			["parameter", "result", "field"].includes(position))));
 	const selected = cell => cell.shape === "checked-record"
 		&& nestedCheckedRecordNativeProfiles.includes(cell.profile)
 		&& ["ordinary-source", "reviewed-ir"].includes(cell.path);

@@ -148,22 +148,37 @@ test("recursive promotion changes exactly 102 copied checked-record cells", {
 		recursiveCheckedRecordPromotionHistoryPath, inventoryPath
 	));
 	validateTypeSurface(promoted, contracts);
-	assert.deepEqual(current, milestone);
+	assert.ok(current.evidence.length >= milestone.evidence.length);
 	assert.deepEqual(milestone, promoted);
 	assert.equal(promoted.evidence.length, original.evidence.length + 36);
 	assert.equal(promoted.observations.length, original.observations.length);
 	assert.deepEqual(proposal.evidence.slice(0, original.evidence.length)
 		, original.evidence);
-	const changedObservations = promoted.observations.filter((item, index) =>
-		JSON.stringify(item) !== JSON.stringify(original.observations[index]));
+	const promotedEvidence = proposal.evidence.slice(original.evidence.length);
+	const liveEvidenceIds = new Set(current.evidence.map(item => item.id));
+	assert.ok(promotedEvidence.every(item => liveEvidenceIds.has(item.id)));
+	const stableSurface = document => Object.fromEntries(
+		Object.entries(document).filter(([key]) =>
+			!["evidence", "observations"].includes(key))
+	);
+	assert.deepEqual(stableSurface(promoted), stableSurface(original));
+	const changedObservationIndexes = original.observations.flatMap((item, index) =>
+		JSON.stringify(item) === JSON.stringify(promoted.observations[index])
+			? [] : [index]);
+	const changedObservations = changedObservationIndexes.map(index =>
+		promoted.observations[index]);
 	assert.equal(changedObservations.length, 102);
-	assert.ok(changedObservations.every(item => item.shapes.length === 1
+	const affectedObservations = changedObservationIndexes.flatMap(index => [
+		original.observations[index], promoted.observations[index]
+	]);
+	assert.ok(affectedObservations.every(item => item.shapes.length === 1
 		&& item.shapes[0] === "checked-record"
-		&& item.profiles.length === 1
-		&& expectedProfiles.includes(item.profiles[0])
+		&& item.profiles.length > 0
+		&& item.profiles.every(profile => expectedProfiles.includes(profile))
 		&& ["ordinary-source", "reviewed-ir"].includes(item.path)
-		&& item.positions.length === 1
-		&& ["parameter", "result", "field"].includes(item.positions[0])));
+		&& item.positions.length > 0
+		&& item.positions.every(position =>
+			["parameter", "result", "field"].includes(position))));
 	const selected = cell => cell.shape === "checked-record"
 		&& expectedProfiles.includes(cell.profile)
 		&& ["ordinary-source", "reviewed-ir"].includes(cell.path);

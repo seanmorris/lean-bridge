@@ -146,21 +146,42 @@ test("nested checked-record Python promotion supplements six cells only", async 
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length)
 		, proposed.evidence.slice(original.evidence.length));
-	const changedExisting = proposed.observations.slice(0, original.observations.length)
-		.filter((item, index) => JSON.stringify(item)
-			!== JSON.stringify(original.observations[index]));
+	const stableSurface = value => Object.fromEntries(
+		Object.entries(value).filter(([key]) =>
+			!["evidence", "observations"].includes(key))
+	);
+	assert.deepEqual(stableSurface(proposed), stableSurface(original));
+	const changedExistingIndexes = original.observations.flatMap((item, index) =>
+		JSON.stringify(item) === JSON.stringify(proposed.observations[index])
+			? [] : [index]);
+	const changedExisting = changedExistingIndexes.map(index =>
+		proposed.observations[index]);
 	assert.deepEqual(changedExisting.map(item => item.id).sort(), [
 		"checked-record-native-python-ordinary-source-parameter"
 		, "checked-record-native-python-ordinary-source-result"
 		, "checked-record-native-python-reviewed-ir-parameter"
 		, "checked-record-native-python-reviewed-ir-result"
 	]);
-	const added = proposed.observations.slice(original.observations.length)
-		.map(item => item.id).sort();
-	assert.deepEqual(added, [
+	const addedObservations = proposed.observations.slice(
+		original.observations.length);
+	assert.deepEqual(addedObservations.map(item => item.id).sort(), [
 		"nested-checked-record-python-ordinary-source-field"
 		, "nested-checked-record-python-reviewed-ir-field"
 	]);
+	const affectedObservations = [
+		...changedExistingIndexes.flatMap(index => [
+			original.observations[index], proposed.observations[index]
+		])
+		, ...addedObservations
+	];
+	assert.ok(affectedObservations.every(item =>
+		item.shapes.length > 0 && item.shapes.every(shape =>
+			shape === "checked-record")
+		&& item.profiles.length > 0 && item.profiles.every(profile =>
+			profile === "python")
+		&& ["ordinary-source", "reviewed-ir"].includes(item.path)
+		&& item.positions.length > 0 && item.positions.every(position =>
+			["parameter", "result", "field"].includes(position))));
 	const selected = cell => cell.profile === "python"
 		&& cell.shape === "checked-record"
 		&& ["ordinary-source", "reviewed-ir"].includes(cell.path);

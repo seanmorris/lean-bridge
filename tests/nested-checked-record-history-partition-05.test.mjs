@@ -53,6 +53,8 @@ test("nested checked-record history partitions retain every original suite exact
 	{
 		assert.equal(source.split("typeSurfaceCells(").length - 1, 2, path);
 		assert.equal(source.split(", contracts, selected)").length - 1, 2, path);
+		assert.match(source, /const stableSurface = /u, path);
+		assert.match(source, /const affectedObservations = /u, path);
 	}
 
 	const owners = await testRegistrationRootOwners(
