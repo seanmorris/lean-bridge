@@ -88,7 +88,9 @@ const callbackDiskCleanupName
 	= "Free hosted runner disk before callback package builds";
 const callbackDiskCleanupCommand = nixDiskCleanupCommand;
 const historicalFinContainerTimeouts = Object.freeze({
-	"managed-consumers": "240", "wasi-consumer": "240"
+	"managed-consumers": "240"
+	, "native-consumers": "${{ matrix.profile == 'c-family' && 360 || 240 }}"
+	, "wasi-consumer": "240"
 });
 const expectedCallbackDiskJobs = [
 	"owned-dotnet-callback-results", "owned-perl-callback-results"

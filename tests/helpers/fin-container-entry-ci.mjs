@@ -29,7 +29,7 @@ const rawCaller = "C raw-adapter probe of the same verified installed libraries;
  */
 export const finContainerEntryCiSelections = Object.freeze([
 	{ job: "php-consumers", profiles: ["php-native"], counted: ["php-native"], step: "type_corpus_php_native", timeout: "240", gdb: false }
-	, { job: "native-consumers", profiles: ["c", "cpp"], counted: ["cpp"], step: "type_corpus_c_family", timeout: "${{ matrix.profile == 'c-family' && 360 || 240 }}", gdb: false }
+	, { job: "native-consumers", profiles: ["c", "cpp"], counted: ["cpp"], step: "type_corpus_c_family", timeout: "${{ (matrix.profile == 'c-family' || matrix.profile == 'python') && 360 || 240 }}", gdb: false }
 	, { job: "managed-consumers", profiles: ["dotnet"], counted: ["dotnet"], step: "type_corpus_dotnet", timeout: "360", gdb: true }
 	, { job: "managed-consumers", profiles: ["java", "kotlin"], counted: ["java", "kotlin"], step: "type_corpus_jvm", timeout: "360", gdb: true }
 	, { job: "managed-consumers", profiles: ["ruby"], counted: ["ruby"], step: "type_corpus_ruby", timeout: "360", gdb: true }

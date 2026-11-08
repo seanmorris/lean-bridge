@@ -21,7 +21,7 @@ export const finContainerEdgeCiSelections = Object.freeze([
 ].map(item => Object.freeze({ ...item
 	, label: item.python ? `python${item.python.replace(".", "")}` : item.profiles.replace(",", "-")
 	, timeout: item.job === "native-consumers"
-		? "${{ matrix.profile == 'c-family' && 360 || 240 }}"
+		? "${{ (matrix.profile == 'c-family' || matrix.profile == 'python') && 360 || 240 }}"
 		: item.job === "managed-consumers" ? "360"
 			: item.job === "wasi-consumer" ? "300" : "240" })));
 const pattern = "^installed source-free native packages execute zero-bound and nested-position Fin edge cases$";
