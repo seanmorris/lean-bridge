@@ -161,8 +161,11 @@ test("nested checked-record Python promotion supplements six cells only", async 
 		"nested-checked-record-python-ordinary-source-field"
 		, "nested-checked-record-python-reviewed-ir-field"
 	]);
-	const before = typeSurfaceCells(original, contracts);
-	const after = typeSurfaceCells(proposed, contracts), changed = [];
+	const selected = cell => cell.profile === "python"
+		&& cell.shape === "checked-record"
+		&& ["ordinary-source", "reviewed-ir"].includes(cell.path);
+	const before = typeSurfaceCells(original, contracts, selected);
+	const after = typeSurfaceCells(proposed, contracts, selected), changed = [];
 	for(const [index, cell] of after.entries())
 	{
 		if(JSON.stringify(cell) === JSON.stringify(before[index])) continue;

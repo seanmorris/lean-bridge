@@ -142,8 +142,23 @@ test("nested native promotion changes twelve exact C/C++ cells", async () => {
 	assert.equal(promoted.observations.length, 609);
 	assert.deepEqual(promoted.evidence.slice(0, original.evidence.length)
 		, original.evidence);
-	const before = typeSurfaceCells(original, contracts);
-	const after = typeSurfaceCells(promoted, contracts), changed = [];
+	const changedExisting = promoted.observations.slice(0, original.observations.length)
+		.filter((item, index) => JSON.stringify(item)
+			!== JSON.stringify(original.observations[index]));
+	assert.deepEqual(changedExisting.map(item => item.id).sort()
+		, nestedCheckedRecordNativeProfiles.flatMap(profile =>
+			["ordinary-source", "reviewed-ir"].flatMap(path =>
+				["parameter", "result"].map(position =>
+					`checked-record-${profile}-${path}-${position}`))).sort());
+	assert.deepEqual(promoted.observations.slice(original.observations.length)
+		.map(item => item.id).sort(), nestedCheckedRecordNativeProfiles.flatMap(profile =>
+			["ordinary-source", "reviewed-ir"].map(path =>
+				`nested-checked-record-native-${profile}-${path}-field`)).sort());
+	const selected = cell => cell.shape === "checked-record"
+		&& nestedCheckedRecordNativeProfiles.includes(cell.profile)
+		&& ["ordinary-source", "reviewed-ir"].includes(cell.path);
+	const before = typeSurfaceCells(original, contracts, selected);
+	const after = typeSurfaceCells(promoted, contracts, selected), changed = [];
 	for(const [index, cell] of after.entries())
 	{
 		if(JSON.stringify(cell) === JSON.stringify(before[index])) continue;

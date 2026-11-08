@@ -16,13 +16,21 @@ import { testRegistrationRootOwners }
 const partitionPaths = Array.from({ length: 12 }, (_, index) =>
 	new URL(`nested-checked-record-history-partition-${String(index + 1).padStart(2, "0")}.test.mjs`, import.meta.url));
 const parentPath = new URL("nested-checked-records.test.mjs", import.meta.url);
+const boundedCellExpansionPaths = [
+	"helpers/nested-checked-record-native-promotion-tests.mjs"
+	, "helpers/nested-checked-record-python-promotion-tests.mjs"
+	, "helpers/recursive-checked-record-promotion-tests.mjs"
+];
 const strictImport = /^import "([.]\/helpers\/[^"\r\n]+)";$/gmu;
 const broadSideEffectLoad = /(?:^\s*import\s*["'][.]\/helpers\/|\bimport\s*\(\s*["'][.]\/helpers\/|\bregisterRetainedContractTests\s*\()/mu;
 
 test("nested checked-record history partitions retain every original suite exactly once", async () => {
-	const [sources, parent] = await Promise.all([
+	const [sources, parent, boundedCellExpansions] = await Promise.all([
 		Promise.all(partitionPaths.map(path => readFile(path, "utf8")))
 		, readFile(parentPath, "utf8")
+		, Promise.all(boundedCellExpansionPaths.map(async path => [
+			path, await readFile(new URL(path, import.meta.url), "utf8")
+		]))
 	]);
 	const entries = sources.flatMap((source, index) =>
 		[...source.matchAll(strictImport)].map(match => [index + 1, match[1]]));
@@ -41,6 +49,11 @@ test("nested checked-record history partitions retain every original suite exact
 	assert.equal(sha256(canonicalJson(entries.toSorted((left, right) =>
 		canonicalJson(left).localeCompare(canonicalJson(right)))))
 		, "ed859382293d9887370a905592501dcdb40c100ffcc7db04ae33cd3e3c4b3a5d");
+	for(const [path, source] of boundedCellExpansions)
+	{
+		assert.equal(source.split("typeSurfaceCells(").length - 1, 2, path);
+		assert.equal(source.split(", contracts, selected)").length - 1, 2, path);
+	}
 
 	const owners = await testRegistrationRootOwners(
 		await collectCoreContractTestPaths(), imports);

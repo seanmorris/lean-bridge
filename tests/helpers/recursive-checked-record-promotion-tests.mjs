@@ -154,8 +154,21 @@ test("recursive promotion changes exactly 102 copied checked-record cells", {
 	assert.equal(promoted.observations.length, original.observations.length);
 	assert.deepEqual(proposal.evidence.slice(0, original.evidence.length)
 		, original.evidence);
-	const before = typeSurfaceCells(original, contracts);
-	const after = typeSurfaceCells(promoted, contracts), changed = [];
+	const changedObservations = promoted.observations.filter((item, index) =>
+		JSON.stringify(item) !== JSON.stringify(original.observations[index]));
+	assert.equal(changedObservations.length, 102);
+	assert.ok(changedObservations.every(item => item.shapes.length === 1
+		&& item.shapes[0] === "checked-record"
+		&& item.profiles.length === 1
+		&& expectedProfiles.includes(item.profiles[0])
+		&& ["ordinary-source", "reviewed-ir"].includes(item.path)
+		&& item.positions.length === 1
+		&& ["parameter", "result", "field"].includes(item.positions[0])));
+	const selected = cell => cell.shape === "checked-record"
+		&& expectedProfiles.includes(cell.profile)
+		&& ["ordinary-source", "reviewed-ir"].includes(cell.path);
+	const before = typeSurfaceCells(original, contracts, selected);
+	const after = typeSurfaceCells(promoted, contracts, selected), changed = [];
 	for(const [index, cell] of after.entries())
 	{
 		if(JSON.stringify(cell) === JSON.stringify(before[index])) continue;
