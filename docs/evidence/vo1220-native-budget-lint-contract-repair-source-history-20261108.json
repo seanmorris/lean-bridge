@@ -1,0 +1,109 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "currentSourcePaths": 0,
+    "lintErrors": 2,
+    "refreshedPins": 0,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [],
+  "discovery": {
+    "candidate": "fff14150f6d2f8ad38b7072253dc8e8827dd558a",
+    "coreRun": 42491748283,
+    "lintErrors": 2,
+    "rule": "sm-no-saccade-style/leading-comma-lists",
+    "staticJob": 128765430921
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-native-budget-lint-contract-repair-source-history.mjs",
+      "sha256": "da1302b582368ac7c6eb5359b88e5aa52773c71e9e48a23d898e55bccb90a7a9"
+    },
+    {
+      "path": "tests/helpers/vo1220-native-budget-lint-contract-repair-source-history-tests.mjs",
+      "sha256": "2457f262893466fb7bfc0787370f95bc08c2530981e9904f3b43207b6d5d9951"
+    },
+    {
+      "path": "tests/helpers/vo1220-native-budget-lint-contract-repair-source-history.mjs",
+      "sha256": "6f74842608f7546da66a56fb7881f96bb09940aad7c21d5333166b3acbbc0942"
+    }
+  ],
+  "implementationCommit": "eeff2a3bfa1da8aac4e06995f6ff4f22908ad0e5",
+  "integrationCommit": "9fee56dc174834c64841b93b8d4ad458f5794a9e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "418491db47cb41161915056ced8e0cf01cf1f1d90228d286c195f71538f577f7",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-native-budget-lint-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 190
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "3fbfb9375ef495f0198c0c5a2a950cb5cc858df8883f6c6bf782889eb7ad97e0"
+    },
+    {
+      "currentSha256": "ebafed01e4c05bb045e26778a89ef45f30af74a4474b2327db8a78f507038656",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220NativeBudgetLintContractRepairSource\n\t, vo1220NativeBudgetLintContractRepairNormalizationPaths\n} from \"./vo1220-native-budget-lint-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220NativeBudgetLintContractRepairNormalizationPaths\n\t, ...vo1220NestedPromotionMemoryBoundPinRepairNormalizationPaths\n",
+          "previous": "\t...vo1220NestedPromotionMemoryBoundPinRepairNormalizationPaths\n",
+          "start": 242852
+        },
+        {
+          "current": "\tlet stage = beforeVo1220NativeBudgetLintContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220NestedPromotionMemoryBoundPinRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220NestedPromotionMemoryBoundPinRepairSource(\n",
+          "start": 305612
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5bc4de45ffdedb05649edd9574c7b3d1b96f5a252ecd3148592ccb0d21cf0b78"
+    }
+  ],
+  "inventorySha256": {
+    "after": "68f377a7e719aeef63823ec946b9e25be3a6c2d65dc98967ab1536e2ecd52dc8",
+    "before": "68f377a7e719aeef63823ec946b9e25be3a6c2d65dc98967ab1536e2ecd52dc8"
+  },
+  "milestone": "vo1220-native-budget-lint-contract-repair-source-v1",
+  "predecessorCommit": "fff14150f6d2f8ad38b7072253dc8e8827dd558a",
+  "repair": "Move the multiline list comma to the start of the continuation line, preserve the exact three-profile budget map, and register the formatting-only transition without changing inventory pins, support cells, or runtime semantics.",
+  "rootCause": "The Python-budget contract split an array entry after its comma, violating the repository's leading-comma rule; focused behavior tests passed, but the exact Core lint gate correctly rejected the candidate before shard fan-out.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "8549d230fbcec609778f9d0c288a8b77052e39fcff95044a49201e289e1726aa",
+      "edits": [
+        {
+          "current": "\treturn Object.fromEntries(profiles.map(profile => [profile\n\t\t, Number(profile === \"c-family\" || profile === \"python\"\n\t\t\t? expression[1] : expression[2])\n\t]));\n",
+          "previous": "\treturn Object.fromEntries(profiles.map(profile => [profile, Number(\n\t\tprofile === \"c-family\" || profile === \"python\"\n\t\t\t? expression[1] : expression[2]\n\t)]));\n",
+          "start": 2397
+        }
+      ],
+      "path": "tests/helpers/native-consumer-budget-tests.mjs",
+      "previousSha256": "928c988101490512ea7f07b49fa2d73841d36f0153275d15597799d80495da87"
+    }
+  ],
+  "validation": {
+    "budgetBehaviorTests": "passed",
+    "focusedEslint": "passed",
+    "nativeBudgetMap": {
+      "c-family": 360,
+      "python": 360,
+      "rust": 240
+    }
+  }
+}
