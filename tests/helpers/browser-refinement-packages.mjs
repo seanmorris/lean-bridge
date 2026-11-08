@@ -82,7 +82,7 @@ export const checkBrowserRefinementPackages = async (t, { fixture, build, runtim
 	const refined = constructor => ({ ...copy, refinement: { constructor: `OnboardingSmall.${constructor}` } });
 	const exports = ["mirror", "rows", "empty", "huge", "nested", "echo", "use"].map(name => `OnboardingSmall.${name}`);
 	const contracts = {
-		"OnboardingSmall.echo": { parameters: [refined("checkedText")], result: refined("checkedText") }
+		"OnboardingSmall.echo": { parameters: [refined("checkedText")], result: copy }
 		, "OnboardingSmall.use": { parameters: [refined("checkedText"), refined("checkedSmall"), copy] } };
 	await saveLakeFile(root, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["OnboardingSmall"], exports, contracts }));
 	const moved = join(directory, "moved"), releases = [];
@@ -93,7 +93,9 @@ export const checkBrowserRefinementPackages = async (t, { fixture, build, runtim
 		await build(projectRoot, outputRoot).catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 		const plan = await json(join(outputRoot, "bundle/locks/compiler-adapters.json"));
 		assert.equal(plan.exports.find(item => item.sourceDeclaration === "OnboardingSmall.nested").refinements.parameters[0].kind, "list");
-		assert.equal(plan.exports.find(item => item.sourceDeclaration === "OnboardingSmall.echo").refinements.parameters[0].kind, "subtype");
+		const echo = plan.exports.find(item => item.sourceDeclaration === "OnboardingSmall.echo");
+		assert.equal(echo.refinements.parameters[0].kind, "subtype");
+		assert.deepEqual(echo.refinements.result, { kind: "subtype", constructor: null });
 		releases.push(await buildComponentNpmPackages({ bundleRoot: join(outputRoot, "bundle"), runtimeRoot, outputRoot: join(directory, `npm-${index}`) }));
 		await verifyComponentPackageReceipt({ receiptPath: join(releases[index].output, "component-package-receipt.json") });
 		assert.deepEqual(await lakeInputState(projectRoot), before);
@@ -124,7 +126,8 @@ export const checkBrowserRefinementPackages = async (t, { fixture, build, runtim
 		const deployments = [];
 		for(const variant of variants)
 		{
-			const output = await processBuildRunner.capture({ command: process.execPath, args: [join(repository, "tests/helpers/type-corpus-browser-build.mjs"), consumer, variant], cwd: consumer, timeoutMs: 120_000 });
+			const output = await processBuildRunner.capture({ command: process.execPath, args: [join(repository, "tests/helpers/type-corpus-browser-build.mjs"), consumer, variant], cwd: consumer, timeoutMs: 120_000 })
+				.catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));
 			deployments.push(JSON.parse(output.stdout));
 		}
 		// Only the static deployments survive: no sources, unpacked installation or bundler remain.
