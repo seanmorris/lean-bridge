@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeVo1220PythonCorpusRuntimeBudgetClosureSource
+	, vo1220PythonCorpusRuntimeBudgetClosureNormalizationPaths
+} from "./vo1220-python-corpus-runtime-budget-closure-source-history.mjs";
+import {
 	beforeVo1220PythonCorpusRuntimeBudgetSource
 	, vo1220PythonCorpusRuntimeBudgetNormalizationPaths
 } from "./vo1220-python-corpus-runtime-budget-source-history.mjs";
@@ -2723,7 +2727,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220PythonCorpusRuntimeBudgetNormalizationPaths
+	...vo1220PythonCorpusRuntimeBudgetClosureNormalizationPaths
+	, ...vo1220PythonCorpusRuntimeBudgetNormalizationPaths
 	, ...vo1220BrowserRefinementResultDirectionRepairNormalizationPaths
 	, ...vo1220ExactHeadRetainedContractRepairNormalizationPaths
 	, ...vo1220SuccessorContractRepairNormalizationPaths
@@ -3976,7 +3981,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220PythonCorpusRuntimeBudgetSource(
+	let stage = beforeVo1220PythonCorpusRuntimeBudgetClosureSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220PythonCorpusRuntimeBudgetSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
