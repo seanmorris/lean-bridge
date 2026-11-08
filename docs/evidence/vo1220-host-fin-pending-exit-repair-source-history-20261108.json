@@ -1,0 +1,371 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "currentSourcePaths": 1,
+    "kernelExitControls": 20,
+    "measurementSemanticChanges": 1,
+    "refreshedPins": 1,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [
+    {
+      "count": 1,
+      "current": "4514388a4f0047f0a69debe47f13106a30f11150f9edf3f556190ab56cf4d67e",
+      "path": "tests/ruby-fin.test.mjs",
+      "previous": "85e2317fc13874191d7631eb9f1747ae6d98900e36f102e50e5df623b990e0ef"
+    }
+  ],
+  "discovery": {
+    "diagnostic": "No unwaited-for children left",
+    "downstreamRun": 42491758784,
+    "job": 128769573430,
+    "observedExit": 72,
+    "priorJvmRepair": "616dd5ee55dfe8ca1adbb126f448e6af25ec27ba",
+    "profile": "managed-dotnet",
+    "step": "type_corpus_dotnet"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-host-fin-pending-exit-repair-source-history.mjs",
+      "sha256": "0f164435cefe5b1175241dc90e77e0e5156dea032f741aac9f949dd4b81bb728"
+    },
+    {
+      "path": "tests/helpers/vo1220-host-fin-pending-exit-repair-source-history-tests.mjs",
+      "sha256": "b5cf928bd3c3b8b72f52d5af08c31ea7fe381c2231b33dc2c869063d040c9320"
+    },
+    {
+      "path": "tests/helpers/vo1220-host-fin-pending-exit-repair-source-history.mjs",
+      "sha256": "20e3ff4553fa47109c944fd4516f54d346ca32fbb85d478ce6d2ea09e0ccda1e"
+    }
+  ],
+  "implementationCommit": "91d1b0ecc211409f9e21918e473eb25b76dd40a2",
+  "integrationCommit": "a48bc3860557fbb8b167618d0eec71444ac2f57b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "031bf4063b78e1dbded102c8214e2a7b166961e7c68503280cb050f7895d8cc9",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"4514388a4f0047f0a69debe47f13106a30f11150f9edf3f556190ab56cf4d67e\"\n",
+          "previous": "          \"sha256\": \"85e2317fc13874191d7631eb9f1747ae6d98900e36f102e50e5df623b990e0ef\"\n",
+          "start": 1503314
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "68f377a7e719aeef63823ec946b9e25be3a6c2d65dc98967ab1536e2ecd52dc8"
+    },
+    {
+      "currentSha256": "d7a170383d027458c16bd0f71ada833795262930b5c2e6a6dec92c378c285b0b",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-host-fin-pending-exit-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "418491db47cb41161915056ced8e0cf01cf1f1d90228d286c195f71538f577f7"
+    },
+    {
+      "currentSha256": "f95168cd2726761b1c02b3c75c50ab039bb62162dfac68dc9343d04cd4e0b9ef",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220HostFinPendingExitRepairSource\n\t, vo1220HostFinPendingExitRepairNormalizationPaths\n} from \"./vo1220-host-fin-pending-exit-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220HostFinPendingExitRepairNormalizationPaths\n\t, ...vo1220NativeBudgetLintContractRepairNormalizationPaths\n",
+          "previous": "\t...vo1220NativeBudgetLintContractRepairNormalizationPaths\n",
+          "start": 243024
+        },
+        {
+          "current": "\tlet stage = beforeVo1220HostFinPendingExitRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220NativeBudgetLintContractRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220NativeBudgetLintContractRepairSource(\n",
+          "start": 305839
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ebafed01e4c05bb045e26778a89ef45f30af74a4474b2327db8a78f507038656"
+    }
+  ],
+  "inventorySha256": {
+    "after": "031bf4063b78e1dbded102c8214e2a7b166961e7c68503280cb050f7895d8cc9",
+    "before": "68f377a7e719aeef63823ec946b9e25be3a6c2d65dc98967ab1536e2ecd52dc8"
+  },
+  "milestone": "vo1220-host-fin-pending-exit-repair-source-v1",
+  "predecessorCommit": "8c16b68f552a785c4adf0b22513927de683bd916",
+  "repair": "Preserve the raw scalar, container and JVM-specialized templates, then wrap ordinary fixed-root host probes with the existing exact-child design under host-neutral names. Bind a pidfd while the inferior is stopped; accept the unchanged GDB normal-exit path; recover only an otherwise empty debugger state through waitid(P_PIDFD, WEXITED|WNOHANG|WNOWAIT); require CLD_EXITED and matching PID/UID; save and independently validate processExit in the armed manifest. Signals, live children, stale or consumed status, wrong handles, nonzero exits and instrumentation failures still fail closed.",
+  "rootCause": "The non-extracting scalar and container GDB observers still trusted only GDB convenience variables at process exit. A managed .NET consumer completed with valid output and counters, but the known GDB Linux lost-last-thread race omitted its normal exit event, so the measurement returned 72 after the product behavior had passed. The JVM-specific observer already recovered the same race with an exact-child pidfd, but that mechanism had not been applied to ordinary host probes.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "e610bf3617e316e37c408cb2b107ed13653c9071638d292e23028180ac5df3d2",
+      "edits": [
+        {
+          "current": "import { assertFinHostProcessExit } from \"./fin-container-edge-jvm-wait.mjs\";\n",
+          "previous": "",
+          "start": 1123
+        },
+        {
+          "current": "import { withFinHostProcessWait } from \"./fin-container-jvm-entry-wait.mjs\";\n",
+          "previous": "",
+          "start": 1280
+        },
+        {
+          "current": "export const finContainerGdbBaseScript = String.raw`# Count actual entries of the ten FinContainers columns by address breakpoints in one inferior.\n",
+          "previous": "export const finContainerGdbScript = String.raw`# Count actual entries of the ten FinContainers columns by address breakpoints in one inferior.\n",
+          "start": 5899
+        },
+        {
+          "current": "/** The ordinary fixed-root observer adds exact-child exit recovery without changing the raw template. */\nexport const finContainerGdbScript = withFinHostProcessWait(finContainerGdbBaseScript);\n\n",
+          "previous": "",
+          "start": 12816
+        },
+        {
+          "current": "\tassertFinHostProcessExit(manifest.processExit, manifest.pid);\n",
+          "previous": "",
+          "start": 19575
+        }
+      ],
+      "path": "tests/helpers/fin-container-dispatch-gdb.mjs",
+      "previousSha256": "a392dc47bb0334e0896539ccbf616d4a88547de283df9c84601d7bd29d631ff7"
+    },
+    {
+      "currentSha256": "a61758eacc737fcc98db1e536be82931f8d297e38dbb4a48a4cbe65e284e8fe8",
+      "edits": [
+        {
+          "current": "import { finContainerGdbBaseScript, finContainerGdbCommand } from \"./fin-container-dispatch-gdb.mjs\";\n",
+          "previous": "import { finContainerGdbScript, finContainerGdbCommand } from \"./fin-container-dispatch-gdb.mjs\";\n",
+          "start": 526
+        },
+        {
+          "current": "import { assertFinHostProcessExit } from \"./fin-container-edge-jvm-wait.mjs\";\n",
+          "previous": "",
+          "start": 705
+        },
+        {
+          "current": "import { withFinHostProcessWait } from \"./fin-container-jvm-entry-wait.mjs\";\n",
+          "previous": "",
+          "start": 872
+        },
+        {
+          "current": "export const finContainerEdgeGdbBaseScript = substitutions.reduce((source, [before, after]) => {\n",
+          "previous": "export const finContainerEdgeGdbScript = substitutions.reduce((source, [before, after]) => {\n",
+          "start": 1476
+        },
+        {
+          "current": "}, finContainerGdbBaseScript);\n\n/** Ordinary fixed-root edge probes use the host-neutral exact-child exit observer. */\nexport const finContainerEdgeGdbScript = withFinHostProcessWait(finContainerEdgeGdbBaseScript);\n",
+          "previous": "}, finContainerGdbScript);\n",
+          "start": 1712
+        },
+        {
+          "current": "\tassertFinHostProcessExit(manifest.processExit, manifest.pid);\n",
+          "previous": "",
+          "start": 8268
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-gdb.mjs",
+      "previousSha256": "cb00e4c4b4e8f8815da4f51b49c82284c67a90e2732aad0bccde688121a020fa"
+    },
+    {
+      "currentSha256": "c7c4c9b9dab158e6ead4a941a0facd964ba359e093c4b71ea9c6d667b3549e22",
+      "edits": [
+        {
+          "current": "import { assertFinContainerEdgeGdbRun, finContainerEdgeGdbBaseScript, prepareFinContainerEdgeGdb } from \"./fin-container-edge-gdb.mjs\";\n",
+          "previous": "import { assertFinContainerEdgeGdbRun, finContainerEdgeGdbScript, prepareFinContainerEdgeGdb } from \"./fin-container-edge-gdb.mjs\";\n",
+          "start": 414
+        },
+        {
+          "current": "\tlet source = replace(finContainerEdgeGdbBaseScript, \"def write():\\n\", helpers + \"\\ndef write():\\n\");\n",
+          "previous": "\tlet source = replace(finContainerEdgeGdbScript, \"def write():\\n\", helpers + \"\\ndef write():\\n\");\n",
+          "start": 5328
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-jvm-gdb.mjs",
+      "previousSha256": "5747e1c579eed721cb067d9ead5e7dec51d5ac534982f0e467e014f3e8bdf6df"
+    },
+    {
+      "currentSha256": "3db7918fab5bd807c94b717c5777795a7f596a10cad16231c12da4641027383e",
+      "edits": [
+        {
+          "current": "import { assertFinContainerEdgeJvmExit, assertFinHostProcessExit, finContainerEdgeJvmWaitSupport, withFinContainerEdgeJvmWait } from \"./fin-container-edge-jvm-wait.mjs\";\nimport { withFinHostProcessWait } from \"./fin-container-jvm-entry-wait.mjs\";\n",
+          "previous": "import { assertFinContainerEdgeJvmExit, finContainerEdgeJvmWaitSupport, withFinContainerEdgeJvmWait } from \"./fin-container-edge-jvm-wait.mjs\";\n",
+          "start": 409
+        },
+        {
+          "current": "\t\tassertFinHostProcessExit(record, 42);\n",
+          "previous": "",
+          "start": 6769
+        },
+        {
+          "current": "\t\t\tassert.throws(() => assertFinHostProcessExit(changed, 42));\n",
+          "previous": "",
+          "start": 7191
+        },
+        {
+          "current": "\t\tassert.throws(() => assertFinHostProcessExit(changed, 42));\n",
+          "previous": "",
+          "start": 7727
+        },
+        {
+          "current": "\t{\n",
+          "previous": "",
+          "start": 7870
+        },
+        {
+          "current": "\t\tassert.throws(() => assertFinHostProcessExit(value, 42));\n\t}\n});\n\ntest(\"the host-neutral wrapper preserves exact-child recovery without JVM-labelled receipts\", () => {\n\tconst end = `signal, code = gdb.convenience_variable(\"_exitsignal\"), gdb.convenience_variable(\"_exitcode\")\nif signal is not None or code is None or gdb.selected_inferior().pid != 0:\n    stop(72, \"the inferior did not exit normally\")\ngdb.execute(\"quit \" + str(int(code)))`;\n\tconst original = `def write():\\n    pass\\n\\ngdb.events.new_objfile.connect(on_new_objfile)\\n${end}`;\n\tconst source = withFinHostProcessWait(original);\n\tassert.ok(source.indexOf(\"    process_watch_exit()\") < source.indexOf(\"gdb.events.new_objfile.connect(on_new_objfile)\"));\n\tassert.match(source, /os\\.pidfd_open\\(process_exit_pid, 0\\)/u);\n\tassert.match(source, /os\\.waitid\\(os\\.P_PIDFD, process_exit_pidfd, flags\\)/u);\n\tassert.match(source, /manifest\\[\"processExit\"\\] = observed/u);\n\tassert.match(source, /fin host process kernel exit/u);\n\tassert.doesNotMatch(source, /jvm_|jvmExit|fin JVM/u);\n\tassert.throws(() => withFinHostProcessWait(source));\n",
+          "previous": "",
+          "start": 7938
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-jvm-wait-tests.mjs",
+      "previousSha256": "6afec99684c19bb7732be3f3f034c4e662f04647791aeffca42ae76d2ec4c3fc"
+    },
+    {
+      "currentSha256": "6c4b68b9df089a8c7eca8d07546a0dfb0fd37a6cdaa50d75f29e1001b818f747",
+      "edits": [
+        {
+          "current": " * @param label - Runtime name used only in assertion diagnostics.\n",
+          "previous": "",
+          "start": 4996
+        },
+        {
+          "current": "const assertFinProcessExit = (record, pid, label) => {\n\tassert.ok(record && typeof record === \"object\", `a ${label} process-exit receipt is required`);\n",
+          "previous": "export const assertFinContainerEdgeJvmExit = (record, pid) => {\n\tassert.ok(record && typeof record === \"object\", \"a JVM process-exit receipt is required\");\n",
+          "start": 5067
+        },
+        {
+          "current": "\tassert.equal(record.code, 0, `the ${label} process must actually exit successfully`);\n",
+          "previous": "\tassert.equal(record.code, 0, \"the JVM process must actually exit successfully\");\n",
+          "start": 5556
+        },
+        {
+          "current": "\n/**\n * Require an exact successful exit receipt for any host process.\n *\n * @param record - Parsed manifest's processExit member.\n * @param pid - PID authenticated by the counter record and breakpoint manifest.\n */\nexport const assertFinHostProcessExit = (record, pid) => assertFinProcessExit(record, pid, \"host\");\n\n/**\n * Backwards-compatible JVM-specific spelling used by the archived JVM evidence.\n *\n * @param record - Parsed manifest's jvmExit member.\n * @param pid - PID authenticated by the counter record and breakpoint manifest.\n */\nexport const assertFinContainerEdgeJvmExit = (record, pid) => assertFinProcessExit(record, pid, \"JVM\");\n",
+          "previous": "",
+          "start": 6109
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-jvm-wait.mjs",
+      "previousSha256": "dc8f711539050c9231ec83c7ce46b97bc0e27d015f08079d6932546605442034"
+    },
+    {
+      "currentSha256": "808eddfed8febbd6215ce732c5a88fa534c747cce43c1eceadbe6c56a353c19d",
+      "edits": [
+        {
+          "current": "\nconst hostProcess = source => source\n\t.replaceAll(\"jvm_\", \"process_\")\n\t.replaceAll(\"JVM\", \"host process\")\n\t.replaceAll('\"jvmExit\"', '\"processExit\"');\n\nconst hostProcessWaitSupport = hostProcess(finContainerEdgeJvmWaitSupport);\nconst hostProcessExitDiagnostics = hostProcess(finContainerEdgeJvmExitDiagnostics);\nconst hostProcessObservedEnd = hostProcess(observedEnd);\n\n/**\n * Apply the same exact-child Linux exit observation to the non-extracting host probes used by .NET,\n * Ruby and the ordinary FinContainers entry checks. The original JVM implementation is process-neutral;\n * this spelling keeps its manifest and diagnostics honest for other runtimes.\n *\n * @param source - Complete non-extracting scalar or container GDB observer.\n */\nexport const withFinHostProcessWait = source => {\n\tfor(const [before, after] of [\n\t\t[\"def write():\\n\", hostProcessWaitSupport + \"\\ndef write():\\n\"]\n\t\t, [\"gdb.events.new_objfile.connect(on_new_objfile)\"\n\t\t\t, `try:\n    process_watch_exit()\nexcept Exception as error:\n    stop(71, \"cannot bind host process exit identity: \" + str(error))\ngdb.events.new_objfile.connect(on_new_objfile)\n` + hostProcessExitDiagnostics]\n\t\t, [originalEnd, hostProcessObservedEnd]\n\t]) {\n\t\tassert.equal(source.split(before).length, 2, \"one exact host process exit observation site\");\n\t\tsource = source.replace(before, after);\n\t}\n\treturn source;\n};\n",
+          "previous": "",
+          "start": 2082
+        }
+      ],
+      "path": "tests/helpers/fin-container-jvm-entry-wait.mjs",
+      "previousSha256": "6900adc096393fd3530a5ac5dec2a297159c619f2ae41c75ca15abb3da1524b2"
+    },
+    {
+      "currentSha256": "fb6aa5364544b8bbe604a8b7d3cede6218ed3e319f00b2287c6f3b81095e249b",
+      "edits": [
+        {
+          "current": "import { assertFinHostProcessExit } from \"./fin-container-edge-jvm-wait.mjs\";\n",
+          "previous": "",
+          "start": 623
+        },
+        {
+          "current": "\tassertFinHostProcessExit(manifest.processExit, manifest.pid);\n",
+          "previous": "",
+          "start": 6487
+        }
+      ],
+      "path": "tests/helpers/native-fin-dispatch-gdb-run.mjs",
+      "previousSha256": "edbbfc38de53667bbd09b435ee5d1c73fdf9ce247625f139abe2dcf4b10c4690"
+    },
+    {
+      "currentSha256": "3708ab6a7b0720d92c30288293059210528f2599059202a1d8ccf02348c284d2",
+      "edits": [
+        {
+          "current": "\tassert.ok(script.indexOf(\"    process_watch_exit()\") > starti && script.indexOf(\"    process_watch_exit()\") < resume);\n",
+          "previous": "",
+          "start": 3420
+        },
+        {
+          "current": "\t\t, \"process_exit_pidfd = os.pidfd_open(process_exit_pid, 0)\"\n\t\t, \"os.WEXITED | os.WNOHANG | os.WNOWAIT\"\n\t\t, \"gdb.events.exited.connect(process_record_exit)\"\n\t\t, 'manifest[\"processExit\"] = observed'\n\t\t, 'gdb.execute(\"quit \" + str(process_exit[\"code\"]))'\n",
+          "previous": "",
+          "start": 4182
+        },
+        {
+          "current": "\t// Start, bind, continue, receipt and sticky callback failures end with the instrumentation status.\n\tfor(const message of [\"cannot start the inferior under ptrace\", \"cannot bind host process exit identity\", \"cannot record host process exit\"])\n\t\tassert.ok(script.includes(`stop(${nativeFinGdbExit.instrumentation}, \"${message}`), message);\n",
+          "previous": "\t// Start or continue errors and any sticky callback failure end with the instrumentation status.\n\tassert.equal(script.split(`stop(${nativeFinGdbExit.instrumentation}, `).length, 4);\n",
+          "start": 4579
+        },
+        {
+          "current": "\tassert.match(script, /stop\\(72, \"the inferior did not exit normally: \" \\+ str\\(error\\)\\)/u);\n",
+          "previous": "\t// Both callbacks catch every error and turn it into a sticky, fatal failure.\n\tassert.equal(script.split(\"except Exception as error:\\n\").length, 3);\n",
+          "start": 4995
+        }
+      ],
+      "path": "tests/helpers/native-fin-dispatch-gdb-tests.mjs",
+      "previousSha256": "cda3667177fda437c1a8b9af01349ca1399ed3264b31691ed4c5f0a7b92710e7"
+    },
+    {
+      "currentSha256": "4b6b24448403bb703ea48d5a991a9c1fc1aadb8e71030ef72ebd25225f05b737",
+      "edits": [
+        {
+          "current": "import { withFinHostProcessWait } from \"./fin-container-jvm-entry-wait.mjs\";\n",
+          "previous": "",
+          "start": 614
+        },
+        {
+          "current": "export const nativeFinGdbScript = withFinHostProcessWait(String.raw`# Count actual entries of the six Fin dispatch columns by address breakpoints in one inferior.\n",
+          "previous": "export const nativeFinGdbScript = String.raw`# Count actual entries of the six Fin dispatch columns by address breakpoints in one inferior.\n",
+          "start": 4983
+        },
+        {
+          "current": "`);\n",
+          "previous": "`;\n",
+          "start": 11536
+        }
+      ],
+      "path": "tests/helpers/native-fin-dispatch-gdb.mjs",
+      "previousSha256": "71905e87090421e3346652b49ef2a35528e96568e605b84c5e8649a1dd773792"
+    },
+    {
+      "currentSha256": "4514388a4f0047f0a69debe47f13106a30f11150f9edf3f556190ab56cf4d67e",
+      "edits": [
+        {
+          "current": "import { assertFinHostProcessExit } from \"./helpers/fin-container-edge-jvm-wait.mjs\";\n",
+          "previous": "",
+          "start": 1776
+        },
+        {
+          "current": "\tassertFinHostProcessExit(manifest.processExit, manifest.pid);\n",
+          "previous": "",
+          "start": 14104
+        }
+      ],
+      "path": "tests/ruby-fin.test.mjs",
+      "previousSha256": "85e2317fc13874191d7631eb9f1747ae6d98900e36f102e50e5df623b990e0ef"
+    }
+  ],
+  "validation": {
+    "checkedJavaScriptTypecheck": "passed",
+    "focusedEslint": "passed",
+    "jvmSpecializedLayering": "passed",
+    "kernelExitControls": {
+      "fail": 0,
+      "pass": 20,
+      "tests": 20
+    },
+    "nativeObserverTests": {
+      "fail": 0,
+      "pass": 4,
+      "tests": 4
+    },
+    "scalarContainerEquivalence": "passed"
+  }
+}

@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeVo1220HostFinPendingExitRepairSource
+	, vo1220HostFinPendingExitRepairNormalizationPaths
+} from "./vo1220-host-fin-pending-exit-repair-source-history.mjs";
+import {
 	beforeVo1220NativeBudgetLintContractRepairSource
 	, vo1220NativeBudgetLintContractRepairNormalizationPaths
 } from "./vo1220-native-budget-lint-contract-repair-source-history.mjs";
@@ -2739,7 +2743,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220NativeBudgetLintContractRepairNormalizationPaths
+	...vo1220HostFinPendingExitRepairNormalizationPaths
+	, ...vo1220NativeBudgetLintContractRepairNormalizationPaths
 	, ...vo1220NestedPromotionMemoryBoundPinRepairNormalizationPaths
 	, ...vo1220NestedPromotionMemoryBoundNormalizationPaths
 	, ...vo1220PythonCorpusRuntimeBudgetClosureNormalizationPaths
@@ -3996,7 +4001,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220NativeBudgetLintContractRepairSource(
+	let stage = beforeVo1220HostFinPendingExitRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220NativeBudgetLintContractRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
