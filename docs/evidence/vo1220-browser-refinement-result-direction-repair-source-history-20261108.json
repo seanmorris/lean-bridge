@@ -1,0 +1,139 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "currentSourcePaths": 1,
+    "diagnosticBoundaries": 1,
+    "directionalAssertions": 1,
+    "downstreamFailures": 1,
+    "refreshedPins": 1,
+    "runtimeSemanticChanges": 0,
+    "staleResultConstructorSelections": 1
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [
+    {
+      "count": 1,
+      "current": "fed72870ebed3f1742db4c76954c50a4b81574c47e5d1017ec767231cb58bb56",
+      "path": "tests/helpers/browser-refinement-packages.mjs",
+      "previous": "4127331837d92646a2f17c8a549eea40c11e9cb2cd82775bb5c19c07fba85a6f"
+    }
+  ],
+  "discovery": {
+    "assertionFailureJob": 128594836393,
+    "candidate": "99053bf8318bf1d8f05b5abcfabeb21f0f4ba6b1",
+    "downstreamRun": 42435025687
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-browser-refinement-result-direction-repair-source-history.mjs",
+      "sha256": "40a72a86d2a7e8b595e964ce0d04e75fc12b96e872fd72d6a81cff8d9b53303a"
+    },
+    {
+      "path": "tests/helpers/vo1220-browser-refinement-result-direction-repair-source-history-tests.mjs",
+      "sha256": "29a4049d835027f4e5b0b18a0aa76487003b6e1512069b10c193b8bca9d96f38"
+    },
+    {
+      "path": "tests/helpers/vo1220-browser-refinement-result-direction-repair-source-history.mjs",
+      "sha256": "d23946801937b2919ced8cb3171a72271b4fcce65b9dda0691f3410532bee9a0"
+    }
+  ],
+  "implementationCommit": "273d242af68f43f42601d33624c25f1ce2cbc8d7",
+  "implementationCommits": [
+    "273d242af68f43f42601d33624c25f1ce2cbc8d7"
+  ],
+  "integrationCommit": "222b5ead41906acd1489112a75398d7ea1fc5903",
+  "integrationUpdates": [
+    {
+      "currentSha256": "abe79503cb64b1ce9bfe45cd6be73a687dbbc127ded02cbd3c2c3a77f5768a4d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"fed72870ebed3f1742db4c76954c50a4b81574c47e5d1017ec767231cb58bb56\"\n",
+          "previous": "          \"sha256\": \"4127331837d92646a2f17c8a549eea40c11e9cb2cd82775bb5c19c07fba85a6f\"\n",
+          "start": 1452531
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "9b7cd38be4234895df26baef014cc48e46514416cb297b97247f2461c6a25f41"
+    },
+    {
+      "currentSha256": "9df21c1e0352397f456d9ed59d53a75405a756ddbb76704205d4549c82c62542",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-browser-refinement-result-direction-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 168
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "78953fe8314900d1b077efd568f48c0c6834318fa8c496ec07dae2a7d76462eb"
+    },
+    {
+      "currentSha256": "bd60c346202f39f317ab518a1f0810f315f5227debd1c3e187eb7f795b3fde2f",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220BrowserRefinementResultDirectionRepairSource\n\t, vo1220BrowserRefinementResultDirectionRepairNormalizationPaths\n} from \"./vo1220-browser-refinement-result-direction-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220BrowserRefinementResultDirectionRepairNormalizationPaths\n\t, ...vo1220ExactHeadRetainedContractRepairNormalizationPaths\n",
+          "previous": "\t...vo1220ExactHeadRetainedContractRepairNormalizationPaths\n",
+          "start": 241909
+        },
+        {
+          "current": "\tlet stage = beforeVo1220BrowserRefinementResultDirectionRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ExactHeadRetainedContractRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220ExactHeadRetainedContractRepairSource(\n",
+          "start": 304366
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8f2ce75cc48db9a9e386db6fea19898b9b5d47dd7361c5306fc06fd81e19b630"
+    }
+  ],
+  "inventorySha256": {
+    "after": "abe79503cb64b1ce9bfe45cd6be73a687dbbc127ded02cbd3c2c3a77f5768a4d",
+    "before": "9b7cd38be4234895df26baef014cc48e46514416cb297b97247f2461c6a25f41"
+  },
+  "milestone": "vo1220-browser-refinement-result-direction-repair-source-v1",
+  "predecessorCommit": "99053bf8318bf1d8f05b5abcfabeb21f0f4ba6b1",
+  "repair": "Keep checkedText on the host-produced input, request only copied ownership for the Lean-produced result, assert its compiler projection has a null constructor, and preserve actionable child-process diagnostics.",
+  "rootCause": "The browser-refinement fixture retained a pre-directional contract that selected checkedText for a Lean-produced Subtype result. Current analysis correctly refuses a result constructor because Lean already owns its proof.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "fed72870ebed3f1742db4c76954c50a4b81574c47e5d1017ec767231cb58bb56",
+      "edits": [
+        {
+          "current": "\t\t\"OnboardingSmall.echo\": { parameters: [refined(\"checkedText\")], result: copy }\n",
+          "previous": "\t\t\"OnboardingSmall.echo\": { parameters: [refined(\"checkedText\")], result: refined(\"checkedText\") }\n",
+          "start": 4630
+        },
+        {
+          "current": "\t\tconst echo = plan.exports.find(item => item.sourceDeclaration === \"OnboardingSmall.echo\");\n\t\tassert.equal(echo.refinements.parameters[0].kind, \"subtype\");\n\t\tassert.deepEqual(echo.refinements.result, { kind: \"subtype\", constructor: null });\n",
+          "previous": "\t\tassert.equal(plan.exports.find(item => item.sourceDeclaration === \"OnboardingSmall.echo\").refinements.parameters[0].kind, \"subtype\");\n",
+          "start": 5560
+        },
+        {
+          "current": "\t\t\tconst output = await processBuildRunner.capture({ command: process.execPath, args: [join(repository, \"tests/helpers/type-corpus-browser-build.mjs\"), consumer, variant], cwd: consumer, timeoutMs: 120_000 })\n\t\t\t\t.catch(error => assert.fail(`${error.message}: ${JSON.stringify(error.details)}`));\n",
+          "previous": "\t\t\tconst output = await processBuildRunner.capture({ command: process.execPath, args: [join(repository, \"tests/helpers/type-corpus-browser-build.mjs\"), consumer, variant], cwd: consumer, timeoutMs: 120_000 });\n",
+          "start": 8748
+        }
+      ],
+      "path": "tests/helpers/browser-refinement-packages.mjs",
+      "previousSha256": "4127331837d92646a2f17c8a549eea40c11e9cb2cd82775bb5c19c07fba85a6f"
+    }
+  ],
+  "validation": {
+    "chromiumInstalledBrowserRefinements": "1/1 passed",
+    "eslint": "passed",
+    "harnessRejectionControl": "1/1 passed",
+    "sourceDiff": "passed"
+  }
+}
