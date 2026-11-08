@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/vo1220-nested-promotion-memory-bound-pin-repair-source-history-tests.mjs";
 import "./helpers/vo1220-nested-promotion-memory-bound-source-history-tests.mjs";
 import "./helpers/core-final-runtime-budget-source-history-tests.mjs";
 import "./helpers/vo1220-python-corpus-runtime-budget-closure-source-history-tests.mjs";
