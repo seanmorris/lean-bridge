@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeVo1220NestedPromotionMemoryBoundSource
+	, vo1220NestedPromotionMemoryBoundNormalizationPaths
+} from "./vo1220-nested-promotion-memory-bound-source-history.mjs";
+import {
 	beforeVo1220PythonCorpusRuntimeBudgetClosureSource
 	, vo1220PythonCorpusRuntimeBudgetClosureNormalizationPaths
 } from "./vo1220-python-corpus-runtime-budget-closure-source-history.mjs";
@@ -2727,7 +2731,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220PythonCorpusRuntimeBudgetClosureNormalizationPaths
+	...vo1220NestedPromotionMemoryBoundNormalizationPaths
+	, ...vo1220PythonCorpusRuntimeBudgetClosureNormalizationPaths
 	, ...vo1220PythonCorpusRuntimeBudgetNormalizationPaths
 	, ...vo1220BrowserRefinementResultDirectionRepairNormalizationPaths
 	, ...vo1220ExactHeadRetainedContractRepairNormalizationPaths
@@ -3981,7 +3986,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220PythonCorpusRuntimeBudgetClosureSource(
+	let stage = beforeVo1220NestedPromotionMemoryBoundSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220PythonCorpusRuntimeBudgetClosureSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

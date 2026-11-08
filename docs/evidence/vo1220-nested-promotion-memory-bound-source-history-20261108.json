@@ -1,0 +1,173 @@
+{
+  "behavior": {
+    "boundedCellExpansions": 6,
+    "changedSupportCells": 0,
+    "promotionSuites": 3,
+    "runtimeSemanticChanges": 0,
+    "selectedCells": 200,
+    "wholeObservationGuards": 3
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "boardMessage": 6330,
+    "candidate": "0f0f168cacfa0b939bcaed09a158906456c279d4",
+    "failedJob": 128669455408,
+    "peakHelperRssKiB": 13598932
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-nested-promotion-memory-bound-source-history.mjs",
+      "sha256": "c2ea2cda16326c90f4ee2443901aa555fa725a66c62f0280f853221b53977641"
+    },
+    {
+      "path": "tests/helpers/vo1220-nested-promotion-memory-bound-source-history-tests.mjs",
+      "sha256": "2cb7911bbb2435d7fa57d38c08a79c0fa023d8c00f45747313f4e621a81a59ef"
+    },
+    {
+      "path": "tests/helpers/vo1220-nested-promotion-memory-bound-source-history.mjs",
+      "sha256": "95b3dc698af22a6ed5ded4bb425bc02e71a5fefa1155ed47315c07d8eeea9f2e"
+    }
+  ],
+  "implementationCommit": "f41031c5492311c7ae8c8a109486d8a74dad2ae5",
+  "implementationCommits": [
+    "427504ed6f2c6d15ce2df316b3245d741d37f61c",
+    "f41031c5492311c7ae8c8a109486d8a74dad2ae5"
+  ],
+  "integrationCommit": "e09d6fe11ea3324b68c085312eabcea5b751dd3c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "08c8b7154fa8862a746a078309421879c87ebbfac7cd8d8d58778a4516afb1a2",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-nested-promotion-memory-bound-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "3bfa358dc43d98245fda7a9654c55b1b1fbfb2ff1bcd45a0c376579c55c34b48"
+    },
+    {
+      "currentSha256": "0dad40da0ab8b75d0ad92d4e16847cc6c2ad118d980b4b1831bee53b164dfeb8",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220NestedPromotionMemoryBoundSource\n\t, vo1220NestedPromotionMemoryBoundNormalizationPaths\n} from \"./vo1220-nested-promotion-memory-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220NestedPromotionMemoryBoundNormalizationPaths\n\t, ...vo1220PythonCorpusRuntimeBudgetClosureNormalizationPaths\n",
+          "previous": "\t...vo1220PythonCorpusRuntimeBudgetClosureNormalizationPaths\n",
+          "start": 242456
+        },
+        {
+          "current": "\tlet stage = beforeVo1220NestedPromotionMemoryBoundSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220PythonCorpusRuntimeBudgetClosureSource(\n",
+          "previous": "\tlet stage = beforeVo1220PythonCorpusRuntimeBudgetClosureSource(\n",
+          "start": 305089
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "74c50c3299c5d5a4bc9daafebe51c207ba02665fb410d7af83ce37fe2c967cb5"
+    }
+  ],
+  "inventorySha256": "e0e004a56af8ffaa5d17ec43e4e84e1218b786d023c0154e6827eba3c8cb7d1a",
+  "milestone": "vo1220-nested-promotion-memory-bound-source-v1",
+  "predecessorCommit": "0f0f168cacfa0b939bcaed09a158906456c279d4",
+  "repair": "Select only the checked-record profiles and source paths each promotion can change before expanding cells, then retain exact whole-observation guards so the bounded comparison cannot hide an out-of-scope mutation.",
+  "rootCause": "Three promotion contracts expanded the complete 103 MB type-surface model twice while retaining both expanded inventories. The nested native helper reached 13.6 GB RSS and the hosted runner shut down before the shard could report assertions.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "b3273551122290ffe0937328958cbbace37e192e038442ac029308a18ac12b78",
+      "edits": [
+        {
+          "current": "\tconst stableSurface = document => Object.fromEntries(\n\t\tObject.entries(document).filter(([key]) =>\n\t\t\t![\"evidence\", \"observations\"].includes(key))\n\t);\n\tassert.deepEqual(stableSurface(promoted), stableSurface(original));\n\tconst changedExistingIndexes = original.observations.flatMap((item, index) =>\n\t\tJSON.stringify(item) === JSON.stringify(promoted.observations[index])\n\t\t\t? [] : [index]);\n\tconst changedExisting = changedExistingIndexes.map(index =>\n\t\tpromoted.observations[index]);\n\tassert.deepEqual(changedExisting.map(item => item.id).sort()\n\t\t, nestedCheckedRecordNativeProfiles.flatMap(profile =>\n\t\t\t[\"ordinary-source\", \"reviewed-ir\"].flatMap(path =>\n\t\t\t\t[\"parameter\", \"result\"].map(position =>\n\t\t\t\t\t`checked-record-${profile}-${path}-${position}`))).sort());\n\tconst addedObservations = promoted.observations.slice(\n\t\toriginal.observations.length);\n\tassert.deepEqual(addedObservations.map(item => item.id).sort()\n\t\t, nestedCheckedRecordNativeProfiles.flatMap(profile =>\n\t\t[\"ordinary-source\", \"reviewed-ir\"].map(path =>\n\t\t\t`nested-checked-record-native-${profile}-${path}-field`)).sort());\n\tconst affectedObservations = [\n\t\t...changedExistingIndexes.flatMap(index => [\n\t\t\toriginal.observations[index], promoted.observations[index]\n\t\t])\n\t\t, ...addedObservations\n\t];\n\tassert.ok(affectedObservations.every(item =>\n\t\titem.shapes.length > 0 && item.shapes.every(shape =>\n\t\t\tshape === \"checked-record\")\n\t\t&& item.profiles.length > 0 && item.profiles.every(profile =>\n\t\t\tnestedCheckedRecordNativeProfiles.includes(profile))\n\t\t&& [\"ordinary-source\", \"reviewed-ir\"].includes(item.path)\n\t\t&& item.positions.length > 0 && item.positions.every(position =>\n\t\t\t[\"parameter\", \"result\", \"field\"].includes(position))));\n\tconst selected = cell => cell.shape === \"checked-record\"\n\t\t&& nestedCheckedRecordNativeProfiles.includes(cell.profile)\n\t\t&& [\"ordinary-source\", \"reviewed-ir\"].includes(cell.path);\n\tconst before = typeSurfaceCells(original, contracts, selected);\n\tconst after = typeSurfaceCells(promoted, contracts, selected), changed = [];\n",
+          "previous": "\tconst before = typeSurfaceCells(original, contracts);\n\tconst after = typeSurfaceCells(promoted, contracts), changed = [];\n",
+          "start": 6530
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-native-promotion-tests.mjs",
+      "previousSha256": "55619fccdccd590eab06e007ab279d42b7350d11aed97f01c9bbfd543d70c3cf"
+    },
+    {
+      "currentSha256": "2a9ed23d4ba9df1d7e229ca4dfa7591eed6e09ef8a20d618cb6586a85a921e83",
+      "edits": [
+        {
+          "current": "\tconst stableSurface = value => Object.fromEntries(\n\t\tObject.entries(value).filter(([key]) =>\n\t\t\t![\"evidence\", \"observations\"].includes(key))\n\t);\n\tassert.deepEqual(stableSurface(proposed), stableSurface(original));\n\tconst changedExistingIndexes = original.observations.flatMap((item, index) =>\n\t\tJSON.stringify(item) === JSON.stringify(proposed.observations[index])\n\t\t\t? [] : [index]);\n\tconst changedExisting = changedExistingIndexes.map(index =>\n\t\tproposed.observations[index]);\n",
+          "previous": "\tconst changedExisting = proposed.observations.slice(0, original.observations.length)\n\t\t.filter((item, index) => JSON.stringify(item)\n\t\t\t!== JSON.stringify(original.observations[index]));\n",
+          "start": 7022
+        },
+        {
+          "current": "\tconst addedObservations = proposed.observations.slice(\n\t\toriginal.observations.length);\n\tassert.deepEqual(addedObservations.map(item => item.id).sort(), [\n",
+          "previous": "\tconst added = proposed.observations.slice(original.observations.length)\n\t\t.map(item => item.id).sort();\n\tassert.deepEqual(added, [\n",
+          "start": 7800
+        },
+        {
+          "current": "\tconst affectedObservations = [\n\t\t...changedExistingIndexes.flatMap(index => [\n\t\t\toriginal.observations[index], proposed.observations[index]\n\t\t])\n\t\t, ...addedObservations\n\t];\n\tassert.ok(affectedObservations.every(item =>\n\t\titem.shapes.length > 0 && item.shapes.every(shape =>\n\t\t\tshape === \"checked-record\")\n\t\t&& item.profiles.length > 0 && item.profiles.every(profile =>\n\t\t\tprofile === \"python\")\n\t\t&& [\"ordinary-source\", \"reviewed-ir\"].includes(item.path)\n\t\t&& item.positions.length > 0 && item.positions.every(position =>\n\t\t\t[\"parameter\", \"result\", \"field\"].includes(position))));\n\tconst selected = cell => cell.profile === \"python\"\n\t\t&& cell.shape === \"checked-record\"\n\t\t&& [\"ordinary-source\", \"reviewed-ir\"].includes(cell.path);\n\tconst before = typeSurfaceCells(original, contracts, selected);\n\tconst after = typeSurfaceCells(proposed, contracts, selected), changed = [];\n",
+          "previous": "\tconst before = typeSurfaceCells(original, contracts);\n\tconst after = typeSurfaceCells(proposed, contracts), changed = [];\n",
+          "start": 8069
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-python-promotion-tests.mjs",
+      "previousSha256": "045c1ff59322989192797b8d19df2f370e5926601d8f2d575d48ed6a56aa24d4"
+    },
+    {
+      "currentSha256": "1a30eaf43f1c3f9c3c61fd5c6182394c43977464092903e3875e93229aefedc7",
+      "edits": [
+        {
+          "current": "\tassert.ok(current.evidence.length >= milestone.evidence.length);\n",
+          "previous": "\tassert.deepEqual(current, milestone);\n",
+          "start": 6554
+        },
+        {
+          "current": "\tconst promotedEvidence = proposal.evidence.slice(original.evidence.length);\n\tconst liveEvidenceIds = new Set(current.evidence.map(item => item.id));\n\tassert.ok(promotedEvidence.every(item => liveEvidenceIds.has(item.id)));\n\tconst stableSurface = document => Object.fromEntries(\n\t\tObject.entries(document).filter(([key]) =>\n\t\t\t![\"evidence\", \"observations\"].includes(key))\n\t);\n\tassert.deepEqual(stableSurface(promoted), stableSurface(original));\n\tconst changedObservationIndexes = original.observations.flatMap((item, index) =>\n\t\tJSON.stringify(item) === JSON.stringify(promoted.observations[index])\n\t\t\t? [] : [index]);\n\tconst changedObservations = changedObservationIndexes.map(index =>\n\t\tpromoted.observations[index]);\n\tassert.equal(changedObservations.length, 102);\n\tconst affectedObservations = changedObservationIndexes.flatMap(index => [\n\t\toriginal.observations[index], promoted.observations[index]\n\t]);\n\tassert.ok(affectedObservations.every(item => item.shapes.length === 1\n\t\t&& item.shapes[0] === \"checked-record\"\n\t\t&& item.profiles.length > 0\n\t\t&& item.profiles.every(profile => expectedProfiles.includes(profile))\n\t\t&& [\"ordinary-source\", \"reviewed-ir\"].includes(item.path)\n\t\t&& item.positions.length > 0\n\t\t&& item.positions.every(position =>\n\t\t\t[\"parameter\", \"result\", \"field\"].includes(position))));\n\tconst selected = cell => cell.shape === \"checked-record\"\n\t\t&& expectedProfiles.includes(cell.profile)\n\t\t&& [\"ordinary-source\", \"reviewed-ir\"].includes(cell.path);\n\tconst before = typeSurfaceCells(original, contracts, selected);\n\tconst after = typeSurfaceCells(promoted, contracts, selected), changed = [];\n",
+          "previous": "\tconst before = typeSurfaceCells(original, contracts);\n\tconst after = typeSurfaceCells(promoted, contracts), changed = [];\n",
+          "start": 6902
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-promotion-tests.mjs",
+      "previousSha256": "8913fc9845f13552084f83988253db731a7a4af18da4727f4157a197adead0a8"
+    },
+    {
+      "currentSha256": "72e58958784804f8dcf309feff2038a3aad7982e6b4a2d0b60635af65c999c9c",
+      "edits": [
+        {
+          "current": "const boundedCellExpansionPaths = [\n\t\"helpers/nested-checked-record-native-promotion-tests.mjs\"\n\t, \"helpers/nested-checked-record-python-promotion-tests.mjs\"\n\t, \"helpers/recursive-checked-record-promotion-tests.mjs\"\n];\n",
+          "previous": "",
+          "start": 788
+        },
+        {
+          "current": "\tconst [sources, parent, boundedCellExpansions] = await Promise.all([\n",
+          "previous": "\tconst [sources, parent] = await Promise.all([\n",
+          "start": 1318
+        },
+        {
+          "current": "\t\t, Promise.all(boundedCellExpansionPaths.map(async path => [\n\t\t\tpath, await readFile(new URL(path, import.meta.url), \"utf8\")\n\t\t]))\n",
+          "previous": "",
+          "start": 1487
+        },
+        {
+          "current": "\tfor(const [path, source] of boundedCellExpansions)\n\t{\n\t\tassert.equal(source.split(\"typeSurfaceCells(\").length - 1, 2, path);\n\t\tassert.equal(source.split(\", contracts, selected)\").length - 1, 2, path);\n\t\tassert.match(source, /const stableSurface = /u, path);\n\t\tassert.match(source, /const affectedObservations = /u, path);\n\t}\n",
+          "previous": "",
+          "start": 2541
+        }
+      ],
+      "path": "tests/nested-checked-record-history-partition-05.test.mjs",
+      "previousSha256": "5fd439ca2c5e125c03cc68263b0befd88b78c3ecba4300274eba5800f03fe7de"
+    }
+  ],
+  "validation": {
+    "auditContract": "1/1 passed",
+    "boundedSelection": "200 cells across three promotion suites",
+    "fullPromotionPartition": "14 passed / 1 skipped",
+    "localPeakRss": "below 450 MiB in focused selector probe",
+    "sourceDiff": "passed"
+  }
+}
