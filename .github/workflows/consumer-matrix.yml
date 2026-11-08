@@ -3740,8 +3740,10 @@ jobs:
     env:
       LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
     # Run 37873560469 cut the c-family Compare step off at 240 minutes while it was still
-    # passing tests. Python and Rust keep their 240-minute budget.
-    timeout-minutes: ${{ matrix.profile == 'c-family' && 360 || 240 }}
+    # passing tests. Run 42435025687 then cut Python off at the same whole-job ceiling
+    # after every completed corpus stage had passed. Give both history-heavy profiles
+    # the six-hour budget while keeping Rust at 240 minutes.
+    timeout-minutes: ${{ (matrix.profile == 'c-family' || matrix.profile == 'python') && 360 || 240 }}
     strategy:
       fail-fast: false
       matrix:
