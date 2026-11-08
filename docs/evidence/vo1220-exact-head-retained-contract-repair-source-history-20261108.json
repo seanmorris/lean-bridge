@@ -1,0 +1,248 @@
+{
+  "behavior": {
+    "assertionFailures": 4,
+    "changedSupportCells": 0,
+    "currentSourcePaths": 2,
+    "generatedPackageSnapshots": 4,
+    "producerEpochModels": 1,
+    "refreshedPins": 8,
+    "repairedCoreShards": 3,
+    "retainedArchiveRoots": 2,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [
+    {
+      "count": 4,
+      "current": "7ec2cb3a01212a61e11f357b8ad4dd13f72e5a95b3ad45b5ea640dd807334005",
+      "path": "tests/helpers/nominal-subtype-php-wasm-promotion-tests.mjs",
+      "previous": "fcc6333092a241c9bcddcf3d7341bc34dec81e82cc2d2d2f573f29d774262e93"
+    },
+    {
+      "count": 4,
+      "current": "f8806f5d60afb1f301f5dc0f33cef8f8b45fd8d0ff0494641b407600759fd369",
+      "path": "tests/helpers/python-refinement-evidence-tests.mjs",
+      "previous": "c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de"
+    }
+  ],
+  "discovery": {
+    "assertionFailureJobs": [
+      128591750755,
+      128591750828,
+      128591750958
+    ],
+    "candidate": "54369ce867af22ab56849801875bc26323293a67",
+    "coreRun": 42432764367,
+    "downstreamRun": 42435025687,
+    "runnerLossJobs": [
+      128591750845,
+      128591750858
+    ]
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-exact-head-retained-contract-repair-source-history.mjs",
+      "sha256": "506f48fc2a4fe5633b64b7a8997243113c8179a11873cfaeaccf920e43683d53"
+    },
+    {
+      "path": "tests/helpers/vo1220-exact-head-retained-contract-repair-source-history-tests.mjs",
+      "sha256": "e417c34170b3c9ac592c1998a80f842137713916fd0e6e026581422db2869ab2"
+    },
+    {
+      "path": "tests/helpers/vo1220-exact-head-retained-contract-repair-source-history.mjs",
+      "sha256": "93efb3a7a6e2fe2027cd8178678e103a3c493ff1e167014d307ea398ecd9fa01"
+    }
+  ],
+  "implementationCommit": "0022e5a14c6f6359d56ad163832a6ca488e19f75",
+  "implementationCommits": [
+    "0022e5a14c6f6359d56ad163832a6ca488e19f75"
+  ],
+  "integrationCommit": "4927b752665f699d89a5a827ef30eba35e24b144",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9b7cd38be4234895df26baef014cc48e46514416cb297b97247f2461c6a25f41",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"f8806f5d60afb1f301f5dc0f33cef8f8b45fd8d0ff0494641b407600759fd369\"\n",
+          "previous": "          \"sha256\": \"c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de\"\n",
+          "start": 33900
+        },
+        {
+          "current": "          \"sha256\": \"f8806f5d60afb1f301f5dc0f33cef8f8b45fd8d0ff0494641b407600759fd369\"\n",
+          "previous": "          \"sha256\": \"c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de\"\n",
+          "start": 37317
+        },
+        {
+          "current": "          \"sha256\": \"f8806f5d60afb1f301f5dc0f33cef8f8b45fd8d0ff0494641b407600759fd369\"\n",
+          "previous": "          \"sha256\": \"c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de\"\n",
+          "start": 41375
+        },
+        {
+          "current": "          \"sha256\": \"f8806f5d60afb1f301f5dc0f33cef8f8b45fd8d0ff0494641b407600759fd369\"\n",
+          "previous": "          \"sha256\": \"c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de\"\n",
+          "start": 45526
+        },
+        {
+          "current": "          \"sha256\": \"7ec2cb3a01212a61e11f357b8ad4dd13f72e5a95b3ad45b5ea640dd807334005\"\n",
+          "previous": "          \"sha256\": \"fcc6333092a241c9bcddcf3d7341bc34dec81e82cc2d2d2f573f29d774262e93\"\n",
+          "start": 6669081
+        },
+        {
+          "current": "          \"sha256\": \"7ec2cb3a01212a61e11f357b8ad4dd13f72e5a95b3ad45b5ea640dd807334005\"\n",
+          "previous": "          \"sha256\": \"fcc6333092a241c9bcddcf3d7341bc34dec81e82cc2d2d2f573f29d774262e93\"\n",
+          "start": 6698702
+        },
+        {
+          "current": "          \"sha256\": \"7ec2cb3a01212a61e11f357b8ad4dd13f72e5a95b3ad45b5ea640dd807334005\"\n",
+          "previous": "          \"sha256\": \"fcc6333092a241c9bcddcf3d7341bc34dec81e82cc2d2d2f573f29d774262e93\"\n",
+          "start": 6728740
+        },
+        {
+          "current": "          \"sha256\": \"7ec2cb3a01212a61e11f357b8ad4dd13f72e5a95b3ad45b5ea640dd807334005\"\n",
+          "previous": "          \"sha256\": \"fcc6333092a241c9bcddcf3d7341bc34dec81e82cc2d2d2f573f29d774262e93\"\n",
+          "start": 6758815
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "b1d7d45d2efc6ddb2dfe7aa558d114e4e91cd0e40d36530974276c9bdeffd57e"
+    },
+    {
+      "currentSha256": "78953fe8314900d1b077efd568f48c0c6834318fa8c496ec07dae2a7d76462eb",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-exact-head-retained-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 168
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "9a812d1d387c0e01b8e08603a60f380a3d12430ab0653750bc6858a11cb4c112"
+    },
+    {
+      "currentSha256": "8f2ce75cc48db9a9e386db6fea19898b9b5d47dd7361c5306fc06fd81e19b630",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ExactHeadRetainedContractRepairSource\n\t, vo1220ExactHeadRetainedContractRepairNormalizationPaths\n} from \"./vo1220-exact-head-retained-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ExactHeadRetainedContractRepairNormalizationPaths\n\t, ...vo1220SuccessorContractRepairNormalizationPaths\n",
+          "previous": "\t...vo1220SuccessorContractRepairNormalizationPaths\n",
+          "start": 241695
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ExactHeadRetainedContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220SuccessorContractRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220SuccessorContractRepairSource(\n",
+          "start": 304083
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "831adc8e5aeaa164795b365b7da4c8afc1d8c9d1d8f8595ef18deb6037e17117"
+    }
+  ],
+  "inventorySha256": {
+    "after": "9b7cd38be4234895df26baef014cc48e46514416cb297b97247f2461c6a25f41",
+    "before": "b1d7d45d2efc6ddb2dfe7aa558d114e4e91cd0e40d36530974276c9bdeffd57e"
+  },
+  "milestone": "vo1220-exact-head-retained-contract-repair-source-v1",
+  "predecessorCommit": "54369ce867af22ab56849801875bc26323293a67",
+  "repair": "Reconstruct the complete comparison epoch through the ordered history hub, compare all generated-package snapshots together, name both retained archive prefixes, and derive the Python expectation from the exact receipt-bound producer source.",
+  "rootCause": "Three exact-head Core shards exposed four retained-contract defects: a comparison assembled from different authenticated epochs, a fail-fast generated-package digest loop, two dynamically selected archives omitted from a split sparse shard, and immutable Python evidence judged with a newer live refinement model.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "ba65f55f22d9a81279db52bb4b0aad323f80bb53c5a6931fefa0674f30f55118",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t// The array package moved at 66c64fd when authenticated parameter-default\n\t// fields became part of the canonical Binding IR digest in generated headers.\n\t// The record package changed deliberately at 5035456 when Empty became an\n\t// exact empty-object type; the remaining package bytes stay pinned.\n\tfor(const [fixture, expected] of [\n\t\t[arrayReviewedIr, \"50f9e59d18dd50dd44aade6bb8d953b648478be9a02fe0fde27d8800c6433ee4\"]\n\t\t, [recordReviewedIr, \"524d11b29c3d13ccfbe2d74c687700bef6895dcba7c0b1d8b26210e3cc920168\"]\n\t\t, [variantReviewedIr, \"4397961c788e66da6f33ee5de871d97e949976130303b97f531654d8936d5b2c\"]\n\t\t, [compoundReviewedIr, \"24ee4d7c93bfa0ab1e7ba3cf5983724e211372197b2bc743d135182e1b9a51e7\"]\n\t]) assert.equal(sha256(canonicalJson(generateJavaScriptPackage(fixture()))), expected, fixture.name);\n",
+          "start": 15421
+        },
+        {
+          "current": "\t// HostNull support deliberately added one shared copied-validator branch to\n\t// every generated package. Compare the complete fixture cohort at once so\n\t// one stale digest cannot hide the remaining snapshots.\n\tassert.deepEqual(Object.fromEntries([\n\t\tarrayReviewedIr, recordReviewedIr, variantReviewedIr, compoundReviewedIr\n\t].map(fixture => [\n\t\tfixture.name, sha256(canonicalJson(generateJavaScriptPackage(fixture())))\n\t])), {\n\t\tarrayReviewedIr: \"50f9e59d18dd50dd44aade6bb8d953b648478be9a02fe0fde27d8800c6433ee4\"\n\t\t, recordReviewedIr: \"a11e94b4a279a83defe3c84b6f31e0c5de181e1f1204bcd7e69cbfd30c5563fa\"\n\t\t, variantReviewedIr: \"338d745518e2c8840edbc7a89f8f0e41d20f472d8804212242a0498e8eba9adb\"\n\t\t, compoundReviewedIr: \"fd414c8e81ff94b971be53ccaf3ec5ac5a005b908b92e04b3e06d14b86fadb77\"\n\t});\n",
+          "previous": "",
+          "start": 15541
+        }
+      ],
+      "path": "tests/helpers/component-nominal-subtype-tests.mjs",
+      "previousSha256": "8e3d95e4249eed4462c08e7ecf06bcdc5c94cfe5e587aa092354331a8176bcf0"
+    },
+    {
+      "currentSha256": "9b82f99d019eaf88cd2167c3936a3a42aebfcf25a39de7a9493f03880f1657c0",
+      "edits": [
+        {
+          "current": "// Both archive roots are selected dynamically from the authenticated history\n// record. Name their dated directory prefixes so sparse Core shards retain the\n// complete payloads rather than only the baseline index.json files.\n// core-evidence-prefix: nominal-subtype-entry-native-hosted-\n// core-evidence-prefix: nominal-subtype-entry-browser-hosted-\n",
+          "previous": "",
+          "start": 98
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-publication-source-history-tests.mjs",
+      "previousSha256": "2a4ddb1ed19935d63f75cd60e19efcd972f7738db2914b6ad7317ba8a897ae00"
+    },
+    {
+      "currentSha256": "7ec2cb3a01212a61e11f357b8ad4dd13f72e5a95b3ad45b5ea640dd807334005",
+      "edits": [
+        {
+          "current": "\tconst document = JSON.parse(await sourceBeforeFinHistoryRecord(\n\t\tnominalPrimitiveSubtypeNpmPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t\t, beforeNominalPrimitiveSubtypeNpmPromotionSource\n",
+          "previous": "\tconst promotionDocument = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalSubtypePhpWasmPromotionHistoryPath, \"docs/type-surface.v1.json\"\n",
+          "start": 8080
+        },
+        {
+          "current": "\t// The comparison epoch follows the authenticated PHP-Wasm path repair, so\n\t// reconstruct its evidence pins through the ordered history hub instead of\n\t// silently mixing the original promotion epoch with the later document.\n\tconst readAtComparison = sourceReaderAtEvidencePins(document\n\t\t, entry => entry.id.startsWith(\"nominal-subtype-php-wasm-\"));\n",
+          "previous": "\tconst readAtPromotion = sourceReaderAtEvidencePins(promotionDocument\n\t\t, entry => entry.id.startsWith(\"nominal-subtype-php-wasm-\")\n\t\t, nominalSubtypePhpWasmPromotionHistoryPath);\n",
+          "start": 8283
+        },
+        {
+          "current": "\t\t\tawait promoteNominalSubtypePhpWasm(original, references, readAtComparison)\n",
+          "previous": "\t\t\tawait promoteNominalSubtypePhpWasm(original, references, readAtPromotion)\n",
+          "start": 8770
+        },
+        {
+          "current": "",
+          "previous": "\tconst document = JSON.parse(await sourceBeforeFinHistoryRecord(\n\t\tnominalPrimitiveSubtypeNpmPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t\t, beforeNominalPrimitiveSubtypeNpmPromotionSource\n\t));\n",
+          "start": 8956
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-wasm-promotion-tests.mjs",
+      "previousSha256": "fcc6333092a241c9bcddcf3d7341bc34dec81e82cc2d2d2f573f29d774262e93"
+    },
+    {
+      "currentSha256": "f8806f5d60afb1f301f5dc0f33cef8f8b45fd8d0ff0494641b407600759fd369",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { nativeSubtypeRefinements } from \"./native-subtype-install.mjs\";\n",
+          "start": 629
+        },
+        {
+          "current": "const nativeSubtypePath = \"tests/helpers/native-subtype-install.mjs\";\nconst nativeSubtypeRefinementsAtReceipt = async () => {\n\tconst expected = receipt.sources[nativeSubtypePath];\n\tassert.match(expected, /^[0-9a-f]{64}$/u, nativeSubtypePath);\n\tconst current = await readFile(nativeSubtypePath, \"utf8\");\n\tconst source = beforeFinRefinementSource(\n\t\tnativeSubtypePath, current, expected\n\t);\n\tassert.equal(sha256(source), expected, nativeSubtypePath);\n\tconst startMarker = \"const site = constructor =>\";\n\tconst endMarker = \"\\n\\n/**\\n * Install and exercise\";\n\tassert.equal(source.split(startMarker).length, 2, startMarker);\n\tassert.equal(source.split(endMarker).length, 2, endMarker);\n\tconst modelSource = source.slice(\n\t\tsource.indexOf(startMarker), source.indexOf(endMarker)\n\t);\n\tconst historical = await import(\"data:text/javascript;base64,\"\n\t\t+ Buffer.from(modelSource).toString(\"base64\"));\n\tassert.deepEqual(Object.keys(historical).toSorted()\n\t\t, [\"nativeSubtypeContracts\", \"nativeSubtypeRefinements\"]);\n\treturn historical.nativeSubtypeRefinements;\n};\n\n",
+          "previous": "",
+          "start": 1053
+        },
+        {
+          "current": "\t\t\tassert.deepEqual(report.refinements, kind === \"native-fin-containers\"\n\t\t\t\t? finContainerRefinements : await nativeSubtypeRefinementsAtReceipt());\n",
+          "previous": "\t\t\tassert.deepEqual(report.refinements, kind === \"native-fin-containers\" ? finContainerRefinements : nativeSubtypeRefinements);\n",
+          "start": 4234
+        }
+      ],
+      "path": "tests/helpers/python-refinement-evidence-tests.mjs",
+      "previousSha256": "c8e0f74c652f1966c2feef7c8ccaf2ac90fbaf959a75e0cd8d9f7f32341de8de"
+    }
+  ],
+  "validation": {
+    "generatedPackageSnapshot": "1/1 targeted passed",
+    "lint": "passed",
+    "phpWasmPromotion": "5/5 passed",
+    "pythonRefinementEvidence": "5/5 passed",
+    "shardSevenSparsePlan": "two complete archive roots selected",
+    "sourceDiff": "passed"
+  }
+}
