@@ -11,6 +11,7 @@ import { existsSync } from "node:fs";
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { assertFinHostProcessExit } from "./fin-container-edge-jvm-wait.mjs";
 import { nativeFinDefiners, nativeFinGdbIdentity, nativeFinGdbRecord, nativeFinGdbScript, readNativeFinGdbRecord } from "./native-fin-dispatch-gdb.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
@@ -99,6 +100,7 @@ export const assertNativeFinGdbRun = async (observer, { record, nonce, armed }, 
 	assert.deepEqual([manifest.configSha256, manifest.nonce], [observer.configSha256, nonce]);
 	assert.ok(Number.isSafeInteger(manifest.pid) && manifest.pid > 0);
 	assert.equal(mapped.pid, manifest.pid, "the record belongs to the instrumented inferior");
+	assertFinHostProcessExit(manifest.processExit, manifest.pid);
 	// Each breakpoint sits exactly on its symbol's nm definition in the configured library.
 	const breakpoints = manifest.breakpoints.map(({ symbol, library, offset }) => ({ symbol, library, offset }));
 	assert.deepEqual(breakpoints.map(item => [item.symbol, item.library]), identity.columns.map((symbol, k) => [symbol, identity.definers[k]]));

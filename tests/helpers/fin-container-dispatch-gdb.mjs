@@ -16,7 +16,9 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
+import { assertFinHostProcessExit } from "./fin-container-edge-jvm-wait.mjs";
 import { finContainerEntrySymbols } from "./fin-container-entry-dispatch.mjs";
+import { withFinHostProcessWait } from "./fin-container-jvm-entry-wait.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 const width = 10;
@@ -96,7 +98,7 @@ export const readFinContainerGdbRecord = bytes => {
  * with 70 when the record cannot be freshly created, 71 on an instrumentation error and 72 when the
  * inferior ends by a signal or does not end.
  */
-export const finContainerGdbScript = String.raw`# Count actual entries of the ten FinContainers columns by address breakpoints in one inferior.
+export const finContainerGdbBaseScript = String.raw`# Count actual entries of the ten FinContainers columns by address breakpoints in one inferior.
 import json
 import os
 import re
@@ -268,6 +270,9 @@ if signal is not None or code is None or gdb.selected_inferior().pid != 0:
 gdb.execute("quit " + str(int(code)))
 `;
 
+/** The ordinary fixed-root observer adds exact-child exit recovery without changing the raw template. */
+export const finContainerGdbScript = withFinHostProcessWait(finContainerGdbBaseScript);
+
 export const finContainerGdbCommand = process.env.LEAN_BRIDGE_GDB ?? "/usr/bin/gdb";
 
 /**
@@ -366,6 +371,7 @@ export const assertFinContainerGdbRun = async (observer, { record, nonce, armed 
 	assert.deepEqual([manifest.configSha256, manifest.nonce], [observer.configSha256, nonce]);
 	assert.ok(Number.isSafeInteger(manifest.pid) && manifest.pid > 0);
 	assert.equal(mapped.pid, manifest.pid, "the record belongs to the instrumented inferior");
+	assertFinHostProcessExit(manifest.processExit, manifest.pid);
 	// Each breakpoint sits exactly on its symbol's nm definition in the configured library.
 	const breakpoints = manifest.breakpoints.map(({ symbol, library, offset }) => ({ symbol, library, offset }));
 	assert.deepEqual(breakpoints.map(item => [item.symbol, item.library]), identity.columns.map((symbol, k) => [symbol, identity.definers[k]]));

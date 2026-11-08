@@ -44,6 +44,7 @@ test("the GDB script records before the inferior runs and arms only exact verifi
 	// The record is created exclusively after starti stops at the first instruction and before continue.
 	const [starti, record, resume] = order("gdb.execute(\"starti \"", "os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW", "gdb.execute(\"continue\")");
 	assert.ok(starti > 0 && starti < record && record < resume);
+	assert.ok(script.indexOf("    process_watch_exit()") > starti && script.indexOf("    process_watch_exit()") < resume);
 	for(const needle of [
 		"if len(found) != 1:"
 		, "os.path.realpath(solib) != expected"
@@ -56,14 +57,19 @@ test("the GDB script records before the inferior runs and arms only exact verifi
 		, "if state[\"failure\"] is not None:\n    stop(71, state[\"failure\"])"
 		, "json.dump({\"pid\": state[\"pid\"], \"configSha256\": config[\"configSha256\"], \"nonce\": config[\"nonce\"], \"breakpoints\": armed}, out)"
 		, "handle all nostop noprint pass"
+		, "process_exit_pidfd = os.pidfd_open(process_exit_pid, 0)"
+		, "os.WEXITED | os.WNOHANG | os.WNOWAIT"
+		, "gdb.events.exited.connect(process_record_exit)"
+		, 'manifest["processExit"] = observed'
+		, 'gdb.execute("quit " + str(process_exit["code"]))'
 	])
 		assert.equal(script.split(needle).length, 2, needle);
 	assert.equal(script.split(`stop(${nativeFinGdbExit.refusedRecord}, `).length, 2);
-	// Start or continue errors and any sticky callback failure end with the instrumentation status.
-	assert.equal(script.split(`stop(${nativeFinGdbExit.instrumentation}, `).length, 4);
+	// Start, bind, continue, receipt and sticky callback failures end with the instrumentation status.
+	for(const message of ["cannot start the inferior under ptrace", "cannot bind host process exit identity", "cannot record host process exit"])
+		assert.ok(script.includes(`stop(${nativeFinGdbExit.instrumentation}, "${message}`), message);
 	assert.equal(script.split(`stop(${nativeFinGdbExit.signal}, `).length, 2);
-	// Both callbacks catch every error and turn it into a sticky, fatal failure.
-	assert.equal(script.split("except Exception as error:\n").length, 3);
+	assert.match(script, /stop\(72, "the inferior did not exit normally: " \+ str\(error\)\)/u);
 	assert.match(script, /struct\.pack\("<8sII64s32sqIIII6Q6i6I6Q", b"LBFINGDB", 1, 6,/u);
 	assert.doesNotMatch(script, /LD_PRELOAD|LD_AUDIT|dlsym/u);
 });

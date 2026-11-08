@@ -8,6 +8,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { withFinHostProcessWait } from "./fin-container-jvm-entry-wait.mjs";
 import { nativeFinDispatchSymbols } from "./native-fin-dispatch.mjs";
 
 /** Fixed record layout shared by the GDB script, host probes and this reader; little-endian x86_64. */
@@ -84,7 +85,7 @@ export const readNativeFinGdbRecord = bytes => {
  * with 70 when the record cannot be freshly created, 71 on an instrumentation error and 72 when the
  * inferior ends by a signal or does not end.
  */
-export const nativeFinGdbScript = String.raw`# Count actual entries of the six Fin dispatch columns by address breakpoints in one inferior.
+export const nativeFinGdbScript = withFinHostProcessWait(String.raw`# Count actual entries of the six Fin dispatch columns by address breakpoints in one inferior.
 import json
 import os
 import re
@@ -249,4 +250,4 @@ signal, code = gdb.convenience_variable("_exitsignal"), gdb.convenience_variable
 if signal is not None or code is None or gdb.selected_inferior().pid != 0:
     stop(72, "the inferior did not exit normally")
 gdb.execute("quit " + str(int(code)))
-`;
+`);

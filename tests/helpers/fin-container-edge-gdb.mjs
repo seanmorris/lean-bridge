@@ -10,9 +10,11 @@ import { mkdir, readFile, readdir, realpath } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
-import { finContainerGdbScript, finContainerGdbCommand } from "./fin-container-dispatch-gdb.mjs";
+import { finContainerGdbBaseScript, finContainerGdbCommand } from "./fin-container-dispatch-gdb.mjs";
 import { finContainerEdgeColumns } from "./fin-container-edge-dispatch.mjs";
+import { assertFinHostProcessExit } from "./fin-container-edge-jvm-wait.mjs";
 import { assertFinContainerEdgeProbeLocation } from "./fin-container-edge-observer.mjs";
+import { withFinHostProcessWait } from "./fin-container-jvm-entry-wait.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 const substitutions = [
@@ -25,10 +27,13 @@ const substitutions = [
 	, ["not ten distinct columns", "not eight distinct columns"]
 ];
 /** Only layout and identity change; every original observer failure path remains. */
-export const finContainerEdgeGdbScript = substitutions.reduce((source, [before, after]) => {
+export const finContainerEdgeGdbBaseScript = substitutions.reduce((source, [before, after]) => {
 	assert.equal(source.split(before).length, 2, `one edge instrumentation template site: ${before}`);
 	return source.replace(before, after);
-}, finContainerGdbScript);
+}, finContainerGdbBaseScript);
+
+/** Ordinary fixed-root edge probes use the host-neutral exact-child exit observer. */
+export const finContainerEdgeGdbScript = withFinHostProcessWait(finContainerEdgeGdbBaseScript);
 
 /**
  * Prepare an observer of exact native bytes. No preloading or loader changes are used.
@@ -138,6 +143,7 @@ export const assertFinContainerEdgeGdbRun = async (observer, run, rows) => {
 	assert.equal(manifest.configSha256, observer.configSha256); assert.equal(manifest.nonce, run.nonce);
 	assert.ok(Number.isSafeInteger(manifest.pid) && manifest.pid > 0);
 	assert.equal(Number(bytes.readBigInt64LE(112)), manifest.pid);
+	assertFinHostProcessExit(manifest.processExit, manifest.pid);
 	assert.deepEqual(manifest.breakpoints.map(item => [item.symbol, item.library]), observer.identity.columns.map((symbol, index) => [symbol, observer.identity.definers[index]]));
 	const bases = new Map();
 	for(const item of manifest.breakpoints)

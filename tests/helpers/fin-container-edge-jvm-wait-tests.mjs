@@ -8,7 +8,8 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 import { finContainerEdgeJvmGdbScript, finContainerEdgeJvmWaitGdbScript } from "./fin-container-edge-jvm-gdb.mjs";
-import { assertFinContainerEdgeJvmExit, finContainerEdgeJvmWaitSupport, withFinContainerEdgeJvmWait } from "./fin-container-edge-jvm-wait.mjs";
+import { assertFinContainerEdgeJvmExit, assertFinHostProcessExit, finContainerEdgeJvmWaitSupport, withFinContainerEdgeJvmWait } from "./fin-container-edge-jvm-wait.mjs";
+import { withFinHostProcessWait } from "./fin-container-jvm-entry-wait.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertFinContainerEdgeReport } from "./fin-container-edge-report.mjs";
 import { syntheticFinContainerEdgeReport } from "./fin-container-edge-report-fixtures.mjs";
@@ -173,6 +174,7 @@ test("JVM exit receipts require exact successful process identity and CLD_EXITED
 	for(const record of [direct, kernel])
 	{
 		assertFinContainerEdgeJvmExit(record, 42);
+		assertFinHostProcessExit(record, 42);
 		for(const change of [value => { value.pid = 43; }
 			, value => { value.code = 7; }
 			, value => { delete value.code; }
@@ -181,6 +183,7 @@ test("JVM exit receipts require exact successful process identity and CLD_EXITED
 			, value => { value.kind = "unobserved"; }]) {
 			const changed = structuredClone(record); change(changed);
 			assert.throws(() => assertFinContainerEdgeJvmExit(changed, 42));
+			assert.throws(() => assertFinHostProcessExit(changed, 42));
 			}
 	}
 	for(const change of [value => { delete value.wait; }
@@ -192,9 +195,29 @@ test("JVM exit receipts require exact successful process identity and CLD_EXITED
 		, ...[0, 2, 3, 4, 5, 6].map(reason => value => { value.wait.reason = reason; })]) {
 		const changed = structuredClone(kernel); change(changed);
 		assert.throws(() => assertFinContainerEdgeJvmExit(changed, 42));
+		assert.throws(() => assertFinHostProcessExit(changed, 42));
 		}
 	for(const value of [null, undefined, {}, { ...direct, wait: kernel.wait }])
+	{
 		assert.throws(() => assertFinContainerEdgeJvmExit(value, 42));
+		assert.throws(() => assertFinHostProcessExit(value, 42));
+	}
+});
+
+test("the host-neutral wrapper preserves exact-child recovery without JVM-labelled receipts", () => {
+	const end = `signal, code = gdb.convenience_variable("_exitsignal"), gdb.convenience_variable("_exitcode")
+if signal is not None or code is None or gdb.selected_inferior().pid != 0:
+    stop(72, "the inferior did not exit normally")
+gdb.execute("quit " + str(int(code)))`;
+	const original = `def write():\n    pass\n\ngdb.events.new_objfile.connect(on_new_objfile)\n${end}`;
+	const source = withFinHostProcessWait(original);
+	assert.ok(source.indexOf("    process_watch_exit()") < source.indexOf("gdb.events.new_objfile.connect(on_new_objfile)"));
+	assert.match(source, /os\.pidfd_open\(process_exit_pid, 0\)/u);
+	assert.match(source, /os\.waitid\(os\.P_PIDFD, process_exit_pidfd, flags\)/u);
+	assert.match(source, /manifest\["processExit"\] = observed/u);
+	assert.match(source, /fin host process kernel exit/u);
+	assert.doesNotMatch(source, /jvm_|jvmExit|fin JVM/u);
+	assert.throws(() => withFinHostProcessWait(source));
 });
 
 test("the pending-exit observer binds its child before continuing and retains refusal paths", () => {

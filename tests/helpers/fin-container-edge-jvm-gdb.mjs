@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, readdir } from "node:fs/promises";
 import { isAbsolute, join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { assertFinContainerEdgeGdbRun, finContainerEdgeGdbScript, prepareFinContainerEdgeGdb } from "./fin-container-edge-gdb.mjs";
+import { assertFinContainerEdgeGdbRun, finContainerEdgeGdbBaseScript, prepareFinContainerEdgeGdb } from "./fin-container-edge-gdb.mjs";
 import { finContainerEdgeJvmExitDiagnostics } from "./fin-container-edge-jvm-exit.mjs";
 import { assertFinContainerEdgeJvmExit, withFinContainerEdgeJvmWait } from "./fin-container-edge-jvm-wait.mjs";
 
@@ -112,7 +112,7 @@ def jvm_finished():
         json.dump(manifest, out)
 
 `;
-	let source = replace(finContainerEdgeGdbScript, "def write():\n", helpers + "\ndef write():\n");
+	let source = replace(finContainerEdgeGdbBaseScript, "def write():\n", helpers + "\ndef write():\n");
 	source = replace(source, "gdb.events.new_objfile.connect(on_new_objfile)", "gdb.events.new_objfile.connect(on_new_objfile)\n" + finContainerEdgeJvmExitDiagnostics);
 	source = replace(source, '    stop(72, "the inferior did not exit normally")', '    jvm_log_exit_state()\n    stop(72, "the inferior did not exit normally")');
 	source = replace(source, "def loaded(event):\n    path = os.path.realpath(event.new_objfile.filename)", "def loaded(event):\n    jvm_discover(event.new_objfile.filename)\n    path = os.path.realpath(event.new_objfile.filename)");

@@ -119,14 +119,15 @@ gdb.events.new_objfile.connect(on_new_objfile)`]
  *
  * @param record - Parsed manifest's jvmExit member.
  * @param pid - PID authenticated by the counter record and breakpoint manifest.
+ * @param label - Runtime name used only in assertion diagnostics.
  */
-export const assertFinContainerEdgeJvmExit = (record, pid) => {
-	assert.ok(record && typeof record === "object", "a JVM process-exit receipt is required");
+const assertFinProcessExit = (record, pid, label) => {
+	assert.ok(record && typeof record === "object", `a ${label} process-exit receipt is required`);
 	assert.ok(["gdb-exit", "linux-pidfd-waitid"].includes(record.kind));
 	assert.deepEqual(Object.keys(record).sort(), ["code", "kind", "pid", "schemaVersion", ...record.kind === "linux-pidfd-waitid" ? ["wait"] : []]);
 	assert.equal(record.schemaVersion, 1);
 	assert.ok(Number.isSafeInteger(pid) && pid > 0); assert.equal(record.pid, pid);
-	assert.equal(record.code, 0, "the JVM process must actually exit successfully");
+	assert.equal(record.code, 0, `the ${label} process must actually exit successfully`);
 	if(record.kind === "linux-pidfd-waitid")
 	{
 		assert.deepEqual(Object.keys(record.wait).sort(), ["pid", "reason", "signal", "status", "uid"]);
@@ -136,3 +137,19 @@ export const assertFinContainerEdgeJvmExit = (record, pid) => {
 		assert.ok(Number.isSafeInteger(record.wait.uid) && record.wait.uid >= 0);
 	}
 };
+
+/**
+ * Require an exact successful exit receipt for any host process.
+ *
+ * @param record - Parsed manifest's processExit member.
+ * @param pid - PID authenticated by the counter record and breakpoint manifest.
+ */
+export const assertFinHostProcessExit = (record, pid) => assertFinProcessExit(record, pid, "host");
+
+/**
+ * Backwards-compatible JVM-specific spelling used by the archived JVM evidence.
+ *
+ * @param record - Parsed manifest's jvmExit member.
+ * @param pid - PID authenticated by the counter record and breakpoint manifest.
+ */
+export const assertFinContainerEdgeJvmExit = (record, pid) => assertFinProcessExit(record, pid, "JVM");

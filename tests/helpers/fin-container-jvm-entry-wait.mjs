@@ -50,3 +50,37 @@ gdb.events.new_objfile.connect(on_new_objfile)
 	}
 	return source;
 };
+
+const hostProcess = source => source
+	.replaceAll("jvm_", "process_")
+	.replaceAll("JVM", "host process")
+	.replaceAll('"jvmExit"', '"processExit"');
+
+const hostProcessWaitSupport = hostProcess(finContainerEdgeJvmWaitSupport);
+const hostProcessExitDiagnostics = hostProcess(finContainerEdgeJvmExitDiagnostics);
+const hostProcessObservedEnd = hostProcess(observedEnd);
+
+/**
+ * Apply the same exact-child Linux exit observation to the non-extracting host probes used by .NET,
+ * Ruby and the ordinary FinContainers entry checks. The original JVM implementation is process-neutral;
+ * this spelling keeps its manifest and diagnostics honest for other runtimes.
+ *
+ * @param source - Complete non-extracting scalar or container GDB observer.
+ */
+export const withFinHostProcessWait = source => {
+	for(const [before, after] of [
+		["def write():\n", hostProcessWaitSupport + "\ndef write():\n"]
+		, ["gdb.events.new_objfile.connect(on_new_objfile)"
+			, `try:
+    process_watch_exit()
+except Exception as error:
+    stop(71, "cannot bind host process exit identity: " + str(error))
+gdb.events.new_objfile.connect(on_new_objfile)
+` + hostProcessExitDiagnostics]
+		, [originalEnd, hostProcessObservedEnd]
+	]) {
+		assert.equal(source.split(before).length, 2, "one exact host process exit observation site");
+		source = source.replace(before, after);
+	}
+	return source;
+};

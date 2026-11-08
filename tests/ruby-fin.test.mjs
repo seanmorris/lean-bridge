@@ -25,6 +25,7 @@ import { reviewedScalarHostIr } from "./helpers/reviewed-scalar-host-fixture.mjs
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { nativeFinAdapterSymbol, nativeFinDispatchExpected, nativeFinDispatchSteps, nativeFinDispatchSymbols, readNativeFinDispatch } from "./helpers/native-fin-dispatch.mjs";
 import { nativeFinDefiners, nativeFinGdbExit, nativeFinGdbIdentity, nativeFinGdbRecord, nativeFinGdbScript, readNativeFinGdbRecord } from "./helpers/native-fin-dispatch-gdb.mjs";
+import { assertFinHostProcessExit } from "./helpers/fin-container-edge-jvm-wait.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import "./helpers/native-fin-dispatch-gdb-tests.mjs";
 
@@ -236,6 +237,7 @@ const assertRubyDispatchRecord = async (observer, { record, nonce, armed }, obse
 	assert.deepEqual([manifest.configSha256, manifest.nonce], [observer.configSha256, nonce]);
 	assert.ok(Number.isSafeInteger(manifest.pid) && manifest.pid > 0);
 	assert.equal(mapped.pid, manifest.pid, "the record belongs to the instrumented inferior");
+	assertFinHostProcessExit(manifest.processExit, manifest.pid);
 	// Each breakpoint sits exactly on its symbol's nm definition in the configured library.
 	const breakpoints = manifest.breakpoints.map(({ symbol, library, offset }) => ({ symbol, library, offset }));
 	assert.deepEqual(breakpoints.map(item => [item.symbol, item.library]), identity.columns.map((symbol, k) => [symbol, identity.definers[k]]));
