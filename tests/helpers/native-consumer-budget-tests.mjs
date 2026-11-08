@@ -33,10 +33,10 @@ export const nativeConsumerBudgets = job => {
 	const expression = /^\$\{\{ \(matrix\.profile == 'c-family' \|\| matrix\.profile == 'python'\) && ([0-9]+) \|\| ([0-9]+) \}\}$/u.exec(lines[0][1]);
 	assert.ok(expression, "the budget is the reviewed per-profile expression");
 	const profiles = /^ {6}matrix:\n {8}profile: \[([a-z, -]+)\]$/mu.exec(job)[1].split(", ");
-	return Object.fromEntries(profiles.map(profile => [profile, Number(
-		profile === "c-family" || profile === "python"
-			? expression[1] : expression[2]
-	)]));
+	return Object.fromEntries(profiles.map(profile => [profile
+		, Number(profile === "c-family" || profile === "python"
+			? expression[1] : expression[2])
+	]));
 };
 
 /**
