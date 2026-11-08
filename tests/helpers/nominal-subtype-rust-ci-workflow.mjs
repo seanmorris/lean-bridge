@@ -69,7 +69,7 @@ export const assertNominalSubtypeRustWorkflow = source => {
 	const body = source.split("\n  native-consumers:\n")[1]?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0];
 	assert.equal(typeof body, "string");
 	assert.match(body, /^ {4}runs-on: ubuntu-24\.04$/mu);
-	assert.ok(body.includes("    timeout-minutes: ${{ matrix.profile == 'c-family' && 360 || 240 }}\n"));
+	assert.ok(body.includes("    timeout-minutes: ${{ (matrix.profile == 'c-family' || matrix.profile == 'python') && 360 || 240 }}\n"));
 	assert.match(body, /^ {8}profile: \[c-family, python, rust\]$/mu);
 	assert.match(body, /^ {10}fetch-depth: 0$/mu);
 	assert.doesNotMatch(body, /^ {4}(?:if:|continue-on-error:)|LEAN_BRIDGE_NOMINAL_SUBTYPE_RUST_/mu);
