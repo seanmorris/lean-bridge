@@ -786,8 +786,7 @@ jobs:
           python3 -m venv build/python-collection-typecheck
           build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
           mkdir -p build
-          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
-          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          bash scripts/download-pinned-release-asset.sh kotlin-compiler "build/kotlin-compiler.zip"
           unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
       - name: Restore the four checksummed Perl ABIs
         uses: actions/cache@v4
@@ -954,8 +953,7 @@ jobs:
           python3 -m venv build/python-collection-typecheck
           build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
           mkdir -p build
-          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
-          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          bash scripts/download-pinned-release-asset.sh kotlin-compiler "build/kotlin-compiler.zip"
           unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
       - name: Install all callback browser engines
         timeout-minutes: 20
@@ -1890,10 +1888,7 @@ jobs:
             test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
             WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)
             trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT
-            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \
-              --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \
-              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'
-            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
+            bash scripts/download-pinned-release-asset.sh wasmtime-c-api "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz"
             mkdir "$WASMTIME_CAPI_STAGING/unpacked"
             tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
             test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"
@@ -1903,8 +1898,7 @@ jobs:
             mv -T "$WASMTIME_CAPI_STAGING/unpacked" build/wasmtime-c-api
           )
           export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
-          curl -fL --retry 3 --output build/combined-kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
-          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/combined-kotlin-compiler.zip' | sha256sum --check
+          bash scripts/download-pinned-release-asset.sh kotlin-compiler "build/combined-kotlin-compiler.zip"
           unzip -q build/combined-kotlin-compiler.zip -d build/combined-kotlin-tools
           export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
           export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
@@ -4947,8 +4941,7 @@ jobs:
           LEAN_BRIDGE_NATIVE_JVM_TEST: "1"
         run: |
           mkdir -p build
-          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
-          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          bash scripts/download-pinned-release-asset.sh kotlin-compiler "build/kotlin-compiler.zip"
           unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
           export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
           export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
@@ -5641,8 +5634,7 @@ jobs:
       - name: Install the pinned Kotlin compiler
         run: |
           mkdir -p build
-          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
-          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          bash scripts/download-pinned-release-asset.sh kotlin-compiler "build/kotlin-compiler.zip"
           unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
       - name: Verify owned JVM values, transfers, borrows and receivers
         run: |
@@ -5822,10 +5814,7 @@ jobs:
             test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
             WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)
             trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT
-            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \
-              --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \
-              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'
-            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
+            bash scripts/download-pinned-release-asset.sh wasmtime-c-api "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz"
             mkdir "$WASMTIME_CAPI_STAGING/unpacked"
             tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
             test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"
@@ -5913,10 +5902,7 @@ jobs:
             test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
             WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)
             trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT
-            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \
-              --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \
-              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'
-            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
+            bash scripts/download-pinned-release-asset.sh wasmtime-c-api "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz"
             mkdir "$WASMTIME_CAPI_STAGING/unpacked"
             tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
             test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"
@@ -6051,10 +6037,7 @@ jobs:
             test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
             WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)
             trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT
-            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \
-              --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \
-              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'
-            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
+            bash scripts/download-pinned-release-asset.sh wasmtime-c-api "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz"
             mkdir "$WASMTIME_CAPI_STAGING/unpacked"
             tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
             test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"
@@ -6568,10 +6551,7 @@ jobs:
             test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
             WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)
             trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT
-            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \
-              --output "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" \
-              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'
-            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz" | sha256sum --check --status
+            bash scripts/download-pinned-release-asset.sh wasmtime-c-api "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz"
             mkdir "$WASMTIME_CAPI_STAGING/unpacked"
             tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
             test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"

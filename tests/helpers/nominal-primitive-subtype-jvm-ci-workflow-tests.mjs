@@ -25,7 +25,9 @@ test("primitive-base JVM workflow requires four source/API selections on the pin
 	assert.ok(shell.indexOf('mkdir "$output_root"') < shell.indexOf("export LEAN_BRIDGE_NOMINAL_PRIMITIVE_SUBTYPE_JVM_TEST=1"));
 	// The same checksummed Kotlin compiler and Java 22.0.2 as the managed JVM consumer job.
 	const consumer = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
-	assert.ok(consumer.includes(`          echo '${nominalPrimitiveSubtypeJvmKotlinZipSha256}  build/kotlin-compiler.zip' | sha256sum --check\n`));
+	assert.ok(consumer.includes("          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n"));
+	const downloader = await readFile("scripts/download-pinned-release-asset.sh", "utf8");
+	assert.ok(downloader.includes(nominalPrimitiveSubtypeJvmKotlinZipSha256));
 	assert.ok(consumer.includes("          java-version: '22.0.2'\n"));
 });
 
@@ -42,9 +44,9 @@ test("primitive-base JVM workflow rejects unpinned tools and acceptance bypasses
 		, ["bash scripts/bootstrap-toolchains.sh --lean-only", "true missing-lean"]
 		, ["java-version: '22.0.2'", "java-version: '22'"]
 		, ["distribution: temurin", "distribution: zulu"]
-		, [nominalPrimitiveSubtypeJvmKotlinZipSha256, "0".repeat(64)]
-		, ["kotlin-compiler-2.2.0.zip", "kotlin-compiler-2.3.0.zip"]
-		, ["| sha256sum --check\n", "\n"]
+		, ["download-pinned-release-asset.sh", "missing-release-asset.sh"]
+		, ["kotlin-compiler \"build/kotlin-compiler.zip\"", "unknown-compiler \"build/kotlin-compiler.zip\""]
+		, ["bash scripts/download-pinned-release-asset.sh", "true #"]
 		, ["        id: acceptance\n", "        id: acceptance\n        if: false\n"]
 		, ["        id: acceptance\n", "        id: acceptance\n        continue-on-error: true\n"]
 		, ["run-nominal-primitive-subtype-jvm-ci.sh", "missing-matrix.sh"]

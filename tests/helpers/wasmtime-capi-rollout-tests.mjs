@@ -11,7 +11,8 @@ import {
 	assertConsumerMatrixWasmtimeCapiBootstraps
 	, assertIsolatedWasmtimeCapiBootstrapJobs
 	, assertIsolatedWasmtimeCapiBootstraps, checkWasmtimeCapiBootstrap
-	, consumerMatrixWasmtimeCapiJobs, isolatedWasmtimeCapiBootstrap
+	, consumerMatrixWasmtimeCapiJobs, historicalIsolatedWasmtimeCapiBootstrap
+	, isolatedWasmtimeCapiBootstrap
 } from "./wasmtime-capi-bootstrap.mjs";
 import {
 	beforeWasmtimeCapiRolloutSource, wasmtimeCapiRolloutHistoryPath
@@ -29,6 +30,8 @@ export const wasmtimeCapiRolloutWorkflows = [
 const predecessor = "9b6cd8048433479b5f09eeb328afb301fa1ad9b2";
 const block = isolatedWasmtimeCapiBootstrap.trimEnd().split("\n")
 	.map(line => "          " + line + "\n").join("");
+const historicalBlock = historicalIsolatedWasmtimeCapiBootstrap.trimEnd()
+	.split("\n").map(line => "          " + line + "\n").join("");
 const command = "nix build .#wasmtime-c-api --out-link build/wasmtime-c-api";
 const currentWasmtimeCapiJobs = new Map([
 	["callback-checked-record-remaining"
@@ -62,10 +65,12 @@ test("Wasmtime C API rollout preserves all twelve workflows outside SDK setup an
 		const previous = execFileSync("git", ["show", `${predecessor}:${path}`]
 			, { encoding: "utf8", maxBuffer: 2 * 1024 ** 2 });
 		const count = path.endsWith("/consumer-matrix.yml") ? 3 : 1;
-		assertIsolatedWasmtimeCapiBootstraps(current, count);
+		assert.equal(current.split(historicalBlock).length - 1, count);
 		assert.equal(previous.split(command).length - 1, count);
 		sites += count;
-		let restored = current.replaceAll(block, "          " + command + "\n");
+		let restored = current.replaceAll(
+			historicalBlock, "          " + command + "\n"
+		);
 		if(previous.includes("        run: " + command + "\n"))
 			restored = restored.replace("        run: |\n          " + command + "\n"
 				, "        run: " + command + "\n");
@@ -103,9 +108,12 @@ test("Wasmtime C API rollout confines shell options and cleanup in six offline s
 
 test("Wasmtime C API rollout refuses altered and duplicate installers", async () => {
 	const mutations = [
-		["wasmtime-v42.0.1", "wasmtime-v42.0.2"]
-		, ["sha256sum --check --status", "true"]
-		, ["--max-time 300", "--max-time 30000"]
+		["bash scripts/download-pinned-release-asset.sh wasmtime-c-api"
+			, "bash scripts/missing-release-asset.sh wasmtime-c-api"]
+		, ["download-pinned-release-asset.sh wasmtime-c-api"
+			, "download-pinned-release-asset.sh unknown-wasmtime-c-api"]
+		, ["wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\""
+			, "wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.zip\""]
 		, ["mv -T", "cp -r"]
 		, ["trap 'rm -rf --", "trap 'echo"]
 		, ["test ! -e build/wasmtime-c-api", "true"]

@@ -108,7 +108,9 @@ export const assertNominalSubtypeJvmWorkflow = source => {
 	assert.match(body, /^ {10}persist-credentials: false$/mu);
 	assert.doesNotMatch(body, /^ {4}(?:if:|continue-on-error:)|LEAN_BRIDGE_NOMINAL_SUBTYPE_JVM_/mu);
 	assert.ok(body.includes("          java-version: '22.0.2'\n"));
-	assert.ok(body.includes("echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check"));
+	assert.ok(body.includes(
+		"bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\""
+	));
 	const previous = "          test -s build/type-corpus/reviewed-native-java-kotlin.json\n";
 	assert.ok(body.includes(previous) && body.indexOf(previous) < body.indexOf(nominalSubtypeJvmCiBlock));
 	assert.ok(body.includes(command + afterCommand + updatedSummary)); assert.ok(body.includes(updatedGate));

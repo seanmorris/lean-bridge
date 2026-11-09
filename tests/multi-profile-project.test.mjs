@@ -33,9 +33,11 @@ const environment = { ...process.env, LEAN_BRIDGE_BUILD_BACKEND: "nix"
 test("combined Maven CI selects the pinned Kotlin compiler instead of the runner default", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const step = workflow.split("- name: Build one captured API for npm,")[1].split("- name:")[0];
-	assert.match(step, /kotlin-compiler-2\.2\.0\.zip/);
-	assert.match(step, /1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932/);
-	assert.match(step, /sha256sum --check/);
+	assert.match(step, /download-pinned-release-asset\.sh kotlin-compiler "build\/combined-kotlin-compiler\.zip"/u);
+	const downloader = await readFile("scripts/download-pinned-release-asset.sh", "utf8");
+	assert.match(downloader, /kotlin-compiler-2\.2\.0\.zip/u);
+	assert.match(downloader, /1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932/u);
+	assert.match(downloader, /sha256sum --check --status/u);
 	assert.match(step, /LEAN_BRIDGE_KOTLINC="\$PWD\/build\/combined-kotlin-tools\/kotlinc\/bin\/kotlinc"/);
 	assert.match(step, /LEAN_BRIDGE_JAVAC="\$JAVA_HOME\/bin\/javac"/);
 	assert.ok(step.indexOf("export LEAN_BRIDGE_KOTLINC=") < step.indexOf("node --test tests/multi-profile-project.test.mjs"));

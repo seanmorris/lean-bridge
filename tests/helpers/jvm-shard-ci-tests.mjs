@@ -175,7 +175,6 @@ test("a skipped or failure-tolerant owned JVM verifier is rejected by both contr
 test("the owned JVM job installs every toolchain the former JVM step relied on", async () => {
 	const lines = (await readFile(".github/workflows/consumer-matrix.yml", "utf8")).split("\n");
 	const owned = jobLines(lines, "owned-jvm-values").join("\n");
-	const kotlin = "1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip";
 	const fragments = ["uses: actions/checkout@v6", "fetch-depth: 0"
 		, "uses: cachix/install-nix-action@v31", "npm ci --ignore-scripts"
 		, "uses: ./.github/actions/bounded-apt"
@@ -185,7 +184,7 @@ test("the owned JVM job installs every toolchain the former JVM step relied on",
 		, "ruby-version: '3.3.12'", "distribution: temurin"
 		, "java-version: '22.0.2'"
 		, "sudo apt-get install -y maven unzip python3-venv pkg-config"
-		, `echo '${kotlin}' | sha256sum --check`
+		, "bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\""
 		, "unzip -q build/kotlin-compiler.zip -d build/kotlin-tools"
 		, "bash scripts/bootstrap-rust-ci.sh"];
 	for(const fragment of fragments)

@@ -11,8 +11,9 @@ import {
 
 export const inheritedCheckedRecordJvmKotlinZipSha256
 	= "1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932";
-const kotlinInstall = "set -euo pipefail\nmkdir -p build\ncurl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n"
-	+ `echo '${inheritedCheckedRecordJvmKotlinZipSha256}  build/kotlin-compiler.zip' | sha256sum --check\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools`;
+const kotlinInstall = "set -euo pipefail\nmkdir -p build\n"
+	+ "bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n"
+	+ "unzip -q build/kotlin-compiler.zip -d build/kotlin-tools";
 
 /**
  * Check the workflow without weakening the managed JVM consumer job.

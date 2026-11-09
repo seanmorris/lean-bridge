@@ -64,7 +64,8 @@ test("nominal JVM CI rejects omitted gates, narrowed artifacts and false success
 		, ["persist-credentials: false", "persist-credentials: true"]
 		, ["timeout-minutes: 360", "timeout-minutes: 1"]
 		, ["java-version: '22.0.2'", "java-version: '22.0.3'"]
-		, ["1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932", "0".repeat(64)]];
+		, ["download-pinned-release-asset.sh kotlin-compiler"
+			, "download-pinned-release-asset.sh unknown-compiler"]];
 	for(const [from, to] of bodyChanges)
 	{
 		const changed = source.replace(body, () => body.replaceAll(from, to)); assert.notEqual(changed, source);

@@ -24,8 +24,8 @@ test("dependent checked-record JVM workflow is complete and pinned", async t => 
 		, ["if-no-files-found: error", "if-no-files-found: warn"]
 		, ["npm ci --ignore-scripts --no-audit --no-fund", "npm install"]
 		, ["source scripts/env.sh", "true"]
-		, ["1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932"
-			, "0".repeat(64)]
+		, ["download-pinned-release-asset.sh kotlin-compiler"
+			, "download-pinned-release-asset.sh unknown-compiler"]
 	];
 	for(const [before, after] of replacements)
 	{

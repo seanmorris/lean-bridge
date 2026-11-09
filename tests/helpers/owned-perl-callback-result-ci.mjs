@@ -37,7 +37,8 @@ const tools = ["build-essential", "cmake", "libgmp-dev", "libuv1-dev"
 	, "mypy==2.3.1", "typing_extensions==4.6.0", "typing_extensions==4.16.0"];
 const setup = ["java-version: '22.0.2'", "python-version: \"3.11\""
 	, "python-version: \"3.12\"", "ruby-version: '3.3.12'"
-	, "dotnet-version: '8.0.424'", "kotlin-compiler-2.2.0.zip"
+	, "dotnet-version: '8.0.424'"
+	, "download-pinned-release-asset.sh kotlin-compiler"
 	, "bash scripts/bootstrap-toolchains.sh", "bash scripts/bootstrap-rust-ci.sh"
 	, "bash scripts/build-lean-link-spike.sh"];
 

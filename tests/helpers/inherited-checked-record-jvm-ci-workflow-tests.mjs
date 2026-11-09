@@ -42,8 +42,12 @@ test("inherited JVM workflow requires four selections and pinned tools"
 			".github/workflows/consumer-matrix.yml", "utf8"
 		);
 		assert.ok(consumer.includes(
-			`          echo '${inheritedCheckedRecordJvmKotlinZipSha256}  build/kotlin-compiler.zip' | sha256sum --check\n`
+			"          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n"
 		));
+		const downloader = await readFile(
+			"scripts/download-pinned-release-asset.sh", "utf8"
+		);
+		assert.ok(downloader.includes(inheritedCheckedRecordJvmKotlinZipSha256));
 		assert.ok(consumer.includes("          java-version: '22.0.2'\n"));
 	}
 );
@@ -63,9 +67,10 @@ test("inherited JVM workflow rejects tool and acceptance bypasses", async t => {
 		, ["bash scripts/bootstrap-toolchains.sh --lean-only", "true missing-lean"]
 		, ["java-version: '22.0.2'", "java-version: '22'"]
 		, ["distribution: temurin", "distribution: zulu"]
-		, [inheritedCheckedRecordJvmKotlinZipSha256, "0".repeat(64)]
-		, ["kotlin-compiler-2.2.0.zip", "kotlin-compiler-2.3.0.zip"]
-		, ["| sha256sum --check\n", "\n"]
+		, ["download-pinned-release-asset.sh", "missing-release-asset.sh"]
+		, ["kotlin-compiler \"build/kotlin-compiler.zip\""
+			, "unknown-compiler \"build/kotlin-compiler.zip\""]
+		, ["bash scripts/download-pinned-release-asset.sh", "true #"]
 		, ["        id: acceptance\n"
 			, "        id: acceptance\n        if: false\n"]
 		, ["        id: acceptance\n"

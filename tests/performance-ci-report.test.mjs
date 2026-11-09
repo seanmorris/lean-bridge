@@ -6,7 +6,7 @@
 
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { access, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { access, copyFile, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
@@ -322,6 +322,34 @@ test("shell and Nix toolchain downloads retain a pinned GitHub API route", async
     , /curlOptsList = \[ "-H" "Accept: application\/octet-stream" \];/u);
   assert.match(nix
     , /hash = "sha256-XyBp5vXbc3gPN0zLSc6OpkmqIKDOvwEWgWdEyZnOcqo=";/u);
+});
+
+test("every direct workflow release asset uses one checksummed API failover", async () => {
+  const helper = await readFile("scripts/download-pinned-release-asset.sh", "utf8");
+  const workflowDirectory = ".github/workflows";
+  const workflowSources = await Promise.all((await readdir(workflowDirectory))
+    .filter(name => name.endsWith(".yml"))
+    .map(name => readFile(`${workflowDirectory}/${name}`, "utf8")));
+  const workflows = workflowSources.join("\n");
+  assert.doesNotMatch(workflows, /github\.com\/.+\/releases\/download\//u);
+  assert.equal(workflows.split(
+    "bash scripts/download-pinned-release-asset.sh kotlin-compiler"
+  ).length - 1, 17);
+  assert.equal(workflows.split(
+    "bash scripts/download-pinned-release-asset.sh wasmtime-c-api"
+  ).length - 1, 18);
+  for(const pin of [
+    "https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip"
+    , "https://api.github.com/repos/JetBrains/kotlin/releases/assets/266479493"
+    , "1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932"
+    , "https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz"
+    , "https://api.github.com/repos/bytecodealliance/wasmtime/releases/assets/362397783"
+    , "2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082"
+  ]) assert.ok(helper.includes(pin), pin);
+  assert.match(helper, /case "\$asset_name" in[\s\S]+kotlin-compiler\)[\s\S]+wasmtime-c-api\)/u);
+  assert.match(helper, /--header 'Accept: application\/octet-stream'/u);
+  assert.match(helper, /sha256sum --check --status/u);
+  assert.match(helper, /mv -f -- "\$partial" "\$destination"/u);
 });
 
 test("accepts one complete, artifact-bound record from every performance family", () => {

@@ -16,7 +16,7 @@ const { version, archiveSha256 } = wasmtimeCapiIdentity;
 const archive = `wasmtime-v${version}-x86_64-linux-c-api.tar.xz`;
 const url = `https://github.com/bytecodealliance/wasmtime/releases/download/v${version}/${archive}`;
 
-export const wasmtimeCapiBootstrap = `set -euo pipefail
+export const historicalWasmtimeCapiBootstrap = `set -euo pipefail
 test "$(uname -sm)" = 'Linux x86_64'
 mkdir -p build
 test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
@@ -34,6 +34,27 @@ test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so"
 test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a"
 mv -T "$WASMTIME_CAPI_STAGING/unpacked" build/wasmtime-c-api
 `;
+
+export const wasmtimeCapiBootstrap = `set -euo pipefail
+test "$(uname -sm)" = 'Linux x86_64'
+mkdir -p build
+test ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api
+WASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)
+trap 'rm -rf -- "$WASMTIME_CAPI_STAGING"' EXIT
+bash scripts/download-pinned-release-asset.sh wasmtime-c-api "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz"
+mkdir "$WASMTIME_CAPI_STAGING/unpacked"
+tar -xJf "$WASMTIME_CAPI_STAGING/wasmtime.tar.xz" --strip-components=1 -C "$WASMTIME_CAPI_STAGING/unpacked"
+test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h"
+test -s "$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h"
+test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so"
+test -s "$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a"
+mv -T "$WASMTIME_CAPI_STAGING/unpacked" build/wasmtime-c-api
+`;
+
+export const historicalIsolatedWasmtimeCapiBootstrap = "(\n"
+	+ historicalWasmtimeCapiBootstrap.trimEnd().split("\n")
+		.map(line => "  " + line).join("\n")
+	+ "\n)\n";
 
 // A subshell confines strict options and staging cleanup in combined CI steps.
 export const isolatedWasmtimeCapiBootstrap = "(\n"
@@ -106,6 +127,12 @@ export const checkWasmtimeCapiBootstrap = async (t, source, isolated = false) =>
 	assert.ok(flake.includes(`url = "${url}";`), "same Wasmtime archive as Nix");
 	assert.ok(flake.includes(`hash = "sha256-${Buffer.from(archiveSha256, "hex").toString("base64")}";`)
 		, "same Wasmtime SHA-256 as Nix");
+	const downloader = await readFile("scripts/download-pinned-release-asset.sh", "utf8");
+	assert.ok(downloader.includes(url));
+	assert.ok(downloader.includes(archiveSha256));
+	assert.ok(downloader.includes(
+		"https://api.github.com/repos/bytecodealliance/wasmtime/releases/assets/362397783"
+	));
 	const root = await mkdtemp(join(tmpdir(), "lean-wasmtime-bootstrap-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const files = ["include/wasmtime.h", "include/wasm.h"
@@ -115,24 +142,39 @@ export const checkWasmtimeCapiBootstrap = async (t, source, isolated = false) =>
 	execFileSync("/usr/bin/tar", ["-cJf", compressed, "sdk"], { cwd: join(root, "fixture") });
 	const bytes = await readFile(compressed), fixtureHash = sha256(bytes);
 	assert.notEqual(fixtureHash, archiveSha256);
-	assert.equal(source.split(archiveSha256).length, 2);
-	const fixtureSource = source.replace(archiveSha256, fixtureHash);
+	const fixtureSource = source;
+	const fixtureDownloader = downloader.replace(archiveSha256, fixtureHash);
 	const fakeCurl = `#!/usr/bin/env bash
 set -euo pipefail
-test "$#" = 13
 test "$1 $2 $3 $4 $5 $6 $7 $8 $9" = '--fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time'
-test "\${10}" = 300 && test "\${11}" = --output
-test "\${13}" = '${url}'
-cp "$BOOTSTRAP_FIXTURE_ARCHIVE" "\${12}"
+test "\${10}" = 300
+if test "$#" = 13; then
+  test "\${11}" = --output && test "\${13}" = '${url}'
+  destination=\${12}
+elif test "$#" = 15; then
+  test "\${11}" = --header && test "\${12}" = 'Accept: application/octet-stream'
+  test "\${13}" = --output
+  test "\${15}" = 'https://api.github.com/repos/bytecodealliance/wasmtime/releases/assets/362397783'
+  destination=\${14}
+else
+  exit 64
+fi
+cp "$BOOTSTRAP_FIXTURE_ARCHIVE" "$destination"
 exit "\${BOOTSTRAP_CURL_STATUS:-0}"
 `;
 	await saveLakeFile(root, "bin/curl", fakeCurl);
 	await chmod(join(root, "bin/curl"), 0o755);
-	for(const tool of ["uname", "mkdir", "mktemp", "rm", "cp", "sha256sum", "tar", "xz", "mv", "bash"])
+	for(const tool of ["uname", "dirname", "mkdir", "mktemp", "rm", "cp"
+		, "sha256sum", "tar", "xz", "mv", "bash"])
 		await symlink(`/usr/bin/${tool}`, join(root, "bin", tool));
-	const run = async (name, script = fixtureSource, status = "0", prepare = async () => {}) => {
+	const run = async (
+		name, script = fixtureSource, status = "0", prepare = async () => {}
+		, downloaderSource = fixtureDownloader
+	) => {
 		const directory = join(root, name);
 		await saveLakeFile(directory, "sentinel", "preserve\n");
+		await saveLakeFile(directory
+			, "scripts/download-pinned-release-asset.sh", downloaderSource);
 		await prepare(directory);
 		const guarded = isolated
 			? "set -e\nset +u\nBOOTSTRAP_CALLER_FLAGS=$-\ntrap 'printf retained > parent-exit' EXIT\n"
@@ -157,7 +199,8 @@ exit "\${BOOTSTRAP_CURL_STATUS:-0}"
 	for(const [name, script, status] of [
 		["wrong-hash", source, "0"], ["failed-download", fixtureSource, "22"]
 	]) {
-		const refused = await run(name, script, status);
+		const refused = await run(name, script, status, async () => {}
+			, name === "wrong-hash" ? downloader : fixtureDownloader);
 		assert.notEqual(refused.result.status, 0, name);
 		assert.deepEqual(await readdir(join(refused.directory, "build")), [], name);
 	}
@@ -174,7 +217,9 @@ exit "\${BOOTSTRAP_CURL_STATUS:-0}"
 	assert.equal(await readFile(join(link.directory, "target/sentinel"), "utf8"), "keep\n");
 	await rm(join(root, "fixture/sdk/lib/libwasmtime.so"));
 	execFileSync("/usr/bin/tar", ["-cJf", compressed, "sdk"], { cwd: join(root, "fixture") });
-	const incomplete = await run("incomplete", source.replace(archiveSha256, sha256(await readFile(compressed))));
+	const incompleteHash = sha256(await readFile(compressed));
+	const incomplete = await run("incomplete", source, "0", async () => {}
+		, downloader.replace(archiveSha256, incompleteHash));
 	assert.notEqual(incomplete.result.status, 0);
 	assert.deepEqual(await readdir(join(incomplete.directory, "build")), []);
 	t.diagnostic("Wasmtime bootstrap: exact Nix/runtime pin; valid install, wrong hash, failed download, existing target, symlink and incomplete archive checked offline.");

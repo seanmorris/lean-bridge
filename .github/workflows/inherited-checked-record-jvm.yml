@@ -58,8 +58,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build
-          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
-          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          bash scripts/download-pinned-release-asset.sh kotlin-compiler "build/kotlin-compiler.zip"
           unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
       - name: Require both source routes and API modes in Java and Kotlin
         id: acceptance

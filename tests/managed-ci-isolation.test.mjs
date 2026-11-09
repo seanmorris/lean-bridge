@@ -4,12 +4,8 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { pathToFileURL } from "node:url";
-import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import { disableNominalSubtypeJvmWorkflow, nominalSubtypeJvmCiBlock } from "./helpers/nominal-subtype-jvm-ci-workflow.mjs";
 import "./helpers/managed-nominal-gate-history-tests.mjs";
@@ -36,11 +32,7 @@ const checkCurrent = source => assertManagedCiIsolation(source, null, {
 		, optionalLanguage]
 });
 
-test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => {
-	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-jvm-bootstrap-"));
-	t.after(() => rm(directory, { recursive: true, force: true }));
-	const archive = join(directory, "fixture.zip"), content = "local compiler archive fixture\n";
-	await writeFile(archive, content);
+test("managed JVM bootstrap uses the shared pinned Kotlin downloader", async () => {
 	const source = await workflow();
 	const step = source.split("      - name: Compile ordinary Lean APIs and install Maven packages in Java and Kotlin\n")[1]?.split("      - name: ")[0];
 	assert.ok(step);
@@ -48,14 +40,19 @@ test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => 
 	assert.ok(dependencies);
 	assert.ok(dependencies.includes("sudo apt-get install -y maven unzip\n"));
 	assert.ok(dependencies.includes("if: matrix.profile == 'jvm'\n"));
-	const commands = step.split("        run: |\n")[1]?.split("          echo '")[0];
-	assert.ok(commands);
-	const download = "https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip";
-	assert.ok(commands.includes(download));
-	await processBuildRunner.capture({ command: "bash"
-		, args: ["-e", "-c", commands.replace(download, pathToFileURL(archive).href)]
-		, cwd: directory, timeoutMs: 30000 });
-	assert.equal(await readFile(join(directory, "build/kotlin-compiler.zip"), "utf8"), content);
+	assert.ok(step.includes(
+		"bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\""
+	));
+	const downloader = await readFile("scripts/download-pinned-release-asset.sh", "utf8");
+	assert.ok(downloader.includes(
+		"https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip"
+	));
+	assert.ok(downloader.includes(
+		"https://api.github.com/repos/JetBrains/kotlin/releases/assets/266479493"
+	));
+	assert.ok(downloader.includes(
+		"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932"
+	));
 });
 
 test("managed CI isolates timeout budgets, profile gates and artifact names", async () => {

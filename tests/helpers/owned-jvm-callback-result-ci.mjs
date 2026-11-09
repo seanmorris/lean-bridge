@@ -53,7 +53,8 @@ export const assertOwnedJvmCallbackResultCi = (workflow, manifest) => {
 		assert.ok(job.includes(dependency), dependency);
 	for(const setup of ["java-version: '22.0.2'", "python-version: \"3.11\""
 		, "python-version: \"3.12\"", "ruby-version: '3.3.12'"
-		, "dotnet-version: '8.0.424'", "kotlin-compiler-2.2.0.zip"
+		, "dotnet-version: '8.0.424'"
+		, "download-pinned-release-asset.sh kotlin-compiler"
 		, "bash scripts/bootstrap-toolchains.sh", "bash scripts/bootstrap-rust-ci.sh"
 		, "bash scripts/build-lean-link-spike.sh"
 		, "bash scripts/install-playwright-browsers.sh chromium firefox webkit"])

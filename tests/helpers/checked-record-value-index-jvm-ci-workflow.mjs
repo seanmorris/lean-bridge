@@ -83,7 +83,7 @@ export const assertCheckedRecordValueIndexJvmWorkflow = source => {
           java-version: '22.0.2'
 `);
 	assert.ok(step(names[6]).includes(
-		"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip"
+		"bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\""
 	));
 	assert.ok(step(names[7]).startsWith(
 		"        id: acceptance\n        timeout-minutes: 120\n        shell: bash\n"
@@ -103,7 +103,7 @@ export const assertCheckedRecordValueIndexJvmWorkflow = source => {
 	assert.deepEqual(commands, [
 		"sudo apt-get update\nsudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep unzip xz-utils zstd"
 		, "set -euo pipefail\nnpm ci --ignore-scripts --no-audit --no-fund\nmkdir -p build\nbash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/checked-record-value-index-jvm-toolchain.log"
-		, "set -euo pipefail\nmkdir -p build\ncurl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\necho '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools"
+		, "set -euo pipefail\nmkdir -p build\nbash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools"
 		, `set -euo pipefail
 source scripts/env.sh
 bash scripts/run-checked-record-value-index-jvm-ci.sh "$JAVA_HOME/bin/java" "$JAVA_HOME/bin/javac" "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc" "${"${{ inputs.max-load || '6' }}"}"`
