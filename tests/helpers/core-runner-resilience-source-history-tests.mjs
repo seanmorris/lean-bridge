@@ -10,8 +10,9 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
-	collectCoreContractTestPaths, coreContractShardLabels
-	, coreContractShardManifest, verifyCoreContractShardManifests
+	collectCoreContractTestPaths, coreContractCosts, coreContractCostsSha256
+	, coreContractShardLabels, coreContractShardManifest
+	, verifyCoreContractShardManifests
 } from "../../scripts/core-contract-shards.mjs";
 import {
 	beforeCoreRunnerResilienceSource
@@ -100,11 +101,16 @@ test("Core runner resilience keeps the complete contract in bounded jobs", async
 	assert.equal(manifests.length, 12);
 	const counts = manifests.map(item => item.selection.count);
 	assert.equal(counts.reduce((total, count) => total + count, 0), paths.length);
-	assert.ok(Math.max(...counts) - Math.min(...counts) <= 1);
+	// Shards balance recorded cost rather than file count: the spread between
+	// the heaviest and lightest shard never exceeds the heaviest single file.
+	const loads = manifests.map(item => Math.round(item.costs.minutes * 100));
+	assert.ok(Math.max(...loads) - Math.min(...loads)
+		<= Math.max(...coreContractCosts(paths).values()));
 	assert.deepEqual(verifyCoreContractShardManifests(paths, manifests), {
-		schemaVersion: 1, partition: "sorted-index-modulo-v1", shards: 12
+		schemaVersion: 1, partition: "cost-balanced-lpt-v1", shards: 12
 		, contractFiles: paths.length
 		, contractSha256: manifests[0].contract.sha256
+		, costsSha256: coreContractCostsSha256
 	});
 	const workflow = await readFile(".github/workflows/quality.yml", "utf8");
 	assert.match(workflow, /max-parallel: 6/u);

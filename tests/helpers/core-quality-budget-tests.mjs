@@ -12,8 +12,10 @@ import test from "node:test";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
 	collectCoreContractTestPaths, collectRepositoryTestPaths
-	, coreContractShardLabels
-	, coreContractShardManifest, verifyCoreContractShardManifests
+	, coreContractCostManifest, coreContractCosts, coreContractCostsPath
+	, coreContractCostsSha256, coreContractPartition, coreContractShardLabels
+	, coreContractShardManifest, planCostBalancedShards
+	, verifyCoreContractShardManifests
 } from "../../scripts/core-contract-shards.mjs";
 import {
 	coreContractToolchainPlan, coreContractToolchainTests
@@ -665,22 +667,86 @@ test("Core shard manifests cover every contract file exactly once", async () => 
 		coreContractShardManifest(paths, label));
 	const accepted = verifyCoreContractShardManifests(paths, manifests);
 	assert.deepEqual(accepted, {
-		schemaVersion: 1, partition: "sorted-index-modulo-v1", shards: 12
+		schemaVersion: 1, partition: "cost-balanced-lpt-v1", shards: 12
 		, contractFiles: paths.length, contractSha256: manifests[0].contract.sha256
+		, costsSha256: coreContractCostsSha256
 	});
-	assert.deepEqual(manifests.map(item => item.selection.count)
-		, Array.from({ length: 12 }, (_, index) =>
-			Math.ceil((paths.length - index) / 12)));
+	assert.equal(coreContractPartition, "cost-balanced-lpt-v1");
+	const costs = coreContractCosts(paths);
+	const loads = manifests.map(item => item.costs.minutes);
+	for(const manifest of manifests)
+	{
+		assert.equal(manifest.costs.sha256, coreContractCostsSha256);
+		assert.equal(manifest.costs.minutes, manifest.selection.files
+			.reduce((sum, path) => sum + costs.get(path), 0) / 100);
+		assert.deepEqual(manifest.selection.files, manifest.selection.files.toSorted());
+	}
+	// Greedy longest-first placement never spreads loads further than one item.
+	const heaviest = Math.max(...costs.values()) / 100;
+	assert.ok(Math.max(...loads) - Math.min(...loads) <= heaviest
+		, `shard loads ${loads.join(", ")} differ by more than the heaviest file ${heaviest}`);
 	for(const mutate of [
 		values => values.pop()
 		, values => { values[11] = structuredClone(values[10]); }
 		, values => { values[0].selection.files[0] = values[1].selection.files[0]; }
 		, values => { values[0].contract.sha256 = "0".repeat(64); }
+		, values => { values[0].costs.sha256 = "0".repeat(64); }
+		, values => { values[0].costs.minutes += 0.01; }
 		, values => { values[0].unexpected = true; }
 	]) {
 		const changed = structuredClone(manifests); mutate(changed);
 		assert.throws(() => verifyCoreContractShardManifests(paths, changed));
 	}
+});
+
+test("Core cost manifest is canonical, provenance-bearing and closed over the contract profile", async () => {
+	const paths = await collectCoreContractTestPaths();
+	const source = await readFile(coreContractCostsPath, "utf8");
+	assert.equal(source, canonicalJson(coreContractCostManifest));
+	assert.equal(coreContractCostManifest.partition, coreContractPartition);
+	assert.deepEqual(Object.keys(coreContractCostManifest.costs).toSorted(), paths);
+	const { provenance } = coreContractCostManifest;
+	assert.match(provenance.headSha, /^[a-f0-9]{40}$/u);
+	assert.ok(provenance.run > 0 && provenance.attempt > 0);
+	assert.ok(provenance.method.includes("etime"));
+	const bases = new Map();
+	for(const entry of Object.values(coreContractCostManifest.costs))
+		bases.set(entry.basis, (bases.get(entry.basis) ?? 0) + 1);
+	assert.ok(bases.get("sampler-max-etime") > 0, "at least one measured file");
+	// Unknown and stale paths fail closed rather than planning with a default.
+	assert.throws(() => coreContractCosts([...paths, "tests/zz-unrecorded.test.mjs"].toSorted())
+		, /lacks 1 contract paths: tests\/zz-unrecorded\.test\.mjs/u);
+	assert.throws(() => coreContractCosts(paths.slice(0, -1))
+		, /cites 1 paths outside the contract profile/u);
+	const broken = structuredClone(coreContractCostManifest);
+	broken.costs[paths[0]].minutes = 0;
+	assert.throws(() => coreContractCosts(paths, broken), /must be positive/u);
+});
+
+test("cost-balanced planning is deterministic with explicit tie-breaking", () => {
+	const costs = new Map([
+		["tests/d.test.mjs", 500]
+		, ["tests/a.test.mjs", 500]
+		, ["tests/c.test.mjs", 300]
+		, ["tests/b.test.mjs", 300]
+		, ["tests/e.test.mjs", 100]
+		, ["tests/f.test.mjs", 100]
+	]);
+	const plan = planCostBalancedShards(costs, 3);
+	// Heaviest first, equal costs by path; least-loaded shard, equal loads by index.
+	assert.deepEqual(plan.map(shard => shard.index), [1, 2, 3]);
+	assert.deepEqual(plan.map(shard => shard.centiminutes), [600, 600, 600]);
+	// a→1, d→2, b→3, c→3 (least loaded), then e→1 and f→2 by lowest index.
+	assert.deepEqual(plan.map(shard => [...shard.files]), [
+		["tests/a.test.mjs", "tests/e.test.mjs"]
+		, ["tests/d.test.mjs", "tests/f.test.mjs"]
+		, ["tests/b.test.mjs", "tests/c.test.mjs"]
+	]);
+	assert.deepEqual(planCostBalancedShards(costs, 3), plan);
+	assert.deepEqual(planCostBalancedShards(new Map([...costs].reverse()), 3), plan);
+	const everyFile = plan.flatMap(shard => shard.files).toSorted();
+	assert.deepEqual(everyFile, [...costs.keys()].toSorted());
+	assert.throws(() => planCostBalancedShards(new Map(), 3));
 });
 
 test("Core aggregate authenticates every manifest from an evidence-free sparse checkout", async t => {
