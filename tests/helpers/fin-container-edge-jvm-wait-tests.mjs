@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 import { finContainerEdgeJvmGdbScript, finContainerEdgeJvmWaitGdbScript } from "./fin-container-edge-jvm-gdb.mjs";
-import { assertFinContainerEdgeJvmExit, assertFinHostProcessExit, finContainerEdgeJvmWaitSupport, withFinContainerEdgeJvmWait } from "./fin-container-edge-jvm-wait.mjs";
+import { assertFinContainerEdgeJvmExit, assertFinContainerEdgeObservedExit, assertFinHostProcessExit, finContainerEdgeJvmWaitSupport, withFinContainerEdgeJvmWait } from "./fin-container-edge-jvm-wait.mjs";
 import { withFinHostProcessWait } from "./fin-container-jvm-entry-wait.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertFinContainerEdgeReport } from "./fin-container-edge-report.mjs";
@@ -202,6 +202,19 @@ test("JVM exit receipts require exact successful process identity and CLD_EXITED
 		assert.throws(() => assertFinContainerEdgeJvmExit(value, 42));
 		assert.throws(() => assertFinHostProcessExit(value, 42));
 	}
+});
+
+test("edge observers require exactly their own host or JVM exit receipt", () => {
+	const receipt = { schemaVersion: 1, kind: "gdb-exit", pid: 42, code: 0 };
+	assertFinContainerEdgeObservedExit({ processExit: receipt }, 42, "host");
+	assertFinContainerEdgeObservedExit({ jvmExit: receipt }, 42, "jvm");
+	assert.throws(() => assertFinContainerEdgeObservedExit({ jvmExit: receipt }, 42, "host"), /host process-exit receipt/u);
+	assert.throws(() => assertFinContainerEdgeObservedExit({ processExit: receipt }, 42, "jvm"), /JVM process-exit receipt/u);
+	for(const observer of [undefined, null, "", "none", "host-or-jvm"])
+		assert.throws(() => assertFinContainerEdgeObservedExit({}, 42, observer), /observer must be host or jvm/u);
+	const both = { processExit: receipt, jvmExit: { ...receipt, code: 7 } };
+	assertFinContainerEdgeObservedExit(both, 42, "host");
+	assert.throws(() => assertFinContainerEdgeObservedExit(both, 42, "jvm"), /JVM process must actually exit successfully/u);
 });
 
 test("the host-neutral wrapper preserves exact-child recovery without JVM-labelled receipts", () => {

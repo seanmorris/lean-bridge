@@ -180,8 +180,7 @@ export const prepareFinContainerEdgeJvmGdb = async options => {
  * @param libraries - Original archive-derived shared library digests.
  */
 export const assertFinContainerEdgeJvmGdbRun = async (observer, run, rows, libraries) => {
-	const manifest = await assertFinContainerEdgeGdbRun(observer, run, rows);
-	if(Object.hasOwn(manifest, "jvmExit")) assertFinContainerEdgeJvmExit(manifest.jvmExit, manifest.pid);
+	const manifest = await assertFinContainerEdgeGdbRun(observer, run, rows, { exitObserver: "jvm" });
 	const extracted = manifest.jvmExtraction;
 	assert.deepEqual(Object.keys(extracted).sort(), ["afterExit", "libraries", "parent", "root"]);
 	assert.equal(extracted.parent, run.extractionRoot);

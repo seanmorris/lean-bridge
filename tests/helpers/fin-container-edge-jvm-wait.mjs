@@ -153,3 +153,19 @@ export const assertFinHostProcessExit = (record, pid) => assertFinProcessExit(re
  * @param pid - PID authenticated by the counter record and breakpoint manifest.
  */
 export const assertFinContainerEdgeJvmExit = (record, pid) => assertFinProcessExit(record, pid, "JVM");
+
+/**
+ * Select the one process-exit receipt owned by this observer kind.
+ * Ordinary fixed-root hosts and JVM-extracted hosts intentionally do not
+ * manufacture duplicate receipts for the same process.
+ *
+ * @param manifest - Parsed GDB manifest.
+ * @param pid - PID authenticated by the counter record and breakpoint manifest.
+ * @param observer - Closed observer kind; there is deliberately no unchecked mode.
+ */
+export const assertFinContainerEdgeObservedExit = (manifest, pid, observer) => {
+	assert.ok(["host", "jvm"].includes(observer), "edge exit observer must be host or jvm");
+	assert.ok(manifest && typeof manifest === "object", "an edge observer manifest is required");
+	if(observer === "host") assertFinHostProcessExit(manifest.processExit, pid);
+	else assertFinContainerEdgeJvmExit(manifest.jvmExit, pid);
+};

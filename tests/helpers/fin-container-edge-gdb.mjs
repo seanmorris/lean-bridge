@@ -12,7 +12,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { finContainerGdbBaseScript, finContainerGdbCommand } from "./fin-container-dispatch-gdb.mjs";
 import { finContainerEdgeColumns } from "./fin-container-edge-dispatch.mjs";
-import { assertFinHostProcessExit } from "./fin-container-edge-jvm-wait.mjs";
+import { assertFinContainerEdgeObservedExit } from "./fin-container-edge-jvm-wait.mjs";
 import { assertFinContainerEdgeProbeLocation } from "./fin-container-edge-observer.mjs";
 import { withFinHostProcessWait } from "./fin-container-jvm-entry-wait.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
@@ -126,8 +126,10 @@ export const prepareFinContainerEdgeGdb = async ({ model, component, nativeDirec
  * @param observer - Prepared observer.
  * @param run - Completed process result.
  * @param rows - Complete validated Ruby transcript.
+ * @param options - Exact process-exit observer selected by the caller.
+ * @param options.exitObserver - Ordinary fixed-root host or JVM-extracted host.
  */
-export const assertFinContainerEdgeGdbRun = async (observer, run, rows) => {
+export const assertFinContainerEdgeGdbRun = async (observer, run, rows, { exitObserver = "host" } = {}) => {
 	assert.equal(run.code, 0, run.output); assert.equal(run.stderr, "");
 	const bytes = await readFile(run.record); assert.equal(bytes.length, 328);
 	assert.equal(bytes.toString("ascii", 0, 8), "LBFEDGDB");
@@ -143,7 +145,7 @@ export const assertFinContainerEdgeGdbRun = async (observer, run, rows) => {
 	assert.equal(manifest.configSha256, observer.configSha256); assert.equal(manifest.nonce, run.nonce);
 	assert.ok(Number.isSafeInteger(manifest.pid) && manifest.pid > 0);
 	assert.equal(Number(bytes.readBigInt64LE(112)), manifest.pid);
-	assertFinHostProcessExit(manifest.processExit, manifest.pid);
+	assertFinContainerEdgeObservedExit(manifest, manifest.pid, exitObserver);
 	assert.deepEqual(manifest.breakpoints.map(item => [item.symbol, item.library]), observer.identity.columns.map((symbol, index) => [symbol, observer.identity.definers[index]]));
 	const bases = new Map();
 	for(const item of manifest.breakpoints)
