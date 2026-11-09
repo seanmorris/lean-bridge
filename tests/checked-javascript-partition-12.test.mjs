@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/vo1220-host-fin-pending-exit-repair-source-history-tests.mjs";
+import "./helpers/vo1220-bounded-history-comparison-source-history-tests.mjs";
 import "./helpers/bounded-json-equality-tests.mjs";
 import "./helpers/vo1220-perl-contract-replay-memory-bound-source-history-tests.mjs";
 import "./helpers/vo1220-workflow-release-asset-pin-refresh-source-history-tests.mjs";

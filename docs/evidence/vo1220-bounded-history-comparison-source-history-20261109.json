@@ -1,0 +1,2922 @@
+{
+  "behavior": {
+    "addedFiles": 2,
+    "boundedComparatorTests": 3,
+    "directRevisionReader": true,
+    "mechanicallyMigratedAssertions": 161,
+    "mechanicallyMigratedFiles": 160,
+    "modifiedFiles": 164,
+    "packageFilesChanged": 0,
+    "productionFilesChanged": 0,
+    "remainingDangerousWholeDocumentAssertions": 0,
+    "sharedComparatorCallSites": 162,
+    "sharedComparatorConsumerFiles": 161,
+    "sharedPerlComparator": true
+  },
+  "gates": {
+    "diffCheck": "pass",
+    "eslint": "pass",
+    "focusedDirectRevision": "8/8",
+    "focusedPerlContract": "3/3",
+    "partition12": "186/186",
+    "typecheck": "pass"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-bounded-history-comparison-source-history.mjs",
+      "sha256": "80a127cc4f5cc74b2c06e025e30cd45d5c3cb35e3bce82dc18b4653112c2410c"
+    },
+    {
+      "path": "tests/helpers/vo1220-bounded-history-comparison-source-history-tests.mjs",
+      "sha256": "2dbacad0df0a83137d1f8398cf5301081e504820b5fcf9f4aa5cf76a9b641f46"
+    },
+    {
+      "path": "tests/helpers/vo1220-bounded-history-comparison-source-history.mjs",
+      "sha256": "e14ea7acad25b3b7a38a6a72a6b55755d6238fe0de878deb438c1966f2176e45"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "tests/helpers/bounded-json-equality-tests.mjs",
+      "sha256": "25b206a8f01d98c321d4b35132bd843a21a0573134924962905c96e3059be6cc"
+    },
+    {
+      "path": "tests/helpers/bounded-json-equality.mjs",
+      "sha256": "7aab54c3d7872cab12bc124d7a8a440c0966545ed8303ca27bf95a00dcdf01cb"
+    }
+  ],
+  "implementationCommit": "b53baf273788c6dc9198a6d673a43f10944c7921",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0c25ec66f88cfba42f72d7ecbdd97013bda69482a471737cd13e4dd3c5b80ddd",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-bounded-history-comparison-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 178
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "15def32fbb1c250b0fb169beeeb974e7faf267fe13958dd250908c8d7e36874f"
+    },
+    {
+      "currentSha256": "e2042a6b5c994608387f3de2d51c1392527490eebbee4b5b02cbfde7f2d62f23",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220BoundedHistoryComparisonSource\n\t, vo1220BoundedHistoryComparisonNormalizationPaths\n} from \"./vo1220-bounded-history-comparison-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220BoundedHistoryComparisonNormalizationPaths\n\t, ...vo1220PerlContractReplayMemoryBoundNormalizationPaths\n",
+          "previous": "\t...vo1220PerlContractReplayMemoryBoundNormalizationPaths\n",
+          "start": 244812
+        },
+        {
+          "current": "\tlet stage = beforeVo1220BoundedHistoryComparisonSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220PerlContractReplayMemoryBoundSource(\n",
+          "previous": "\tlet stage = beforeVo1220PerlContractReplayMemoryBoundSource(\n",
+          "start": 308202
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ce170c4da784f0cbddc168d954c0b1aa418f9ab97a85293b87d24b1532141810"
+    }
+  ],
+  "measurements": {
+    "checkedJavascriptPartition12": {
+      "afterMs": 968891.904086,
+      "beforeMs": 1322739.069698,
+      "failed": 0,
+      "passed": 186,
+      "savedMs": 353847.165612,
+      "savedPercent": 26.7510935238942,
+      "skipped": 0,
+      "tests": 186
+    },
+    "focusedDirectRevision": {
+      "afterMs": 5828.481,
+      "beforeMs": 612342.186,
+      "savedMs": 606513.705,
+      "speedup": 105.06033836260254
+    }
+  },
+  "milestone": "vo1220-bounded-history-comparison-source-v1",
+  "predecessorCommit": "24041d6b9d9ce7728881919d058393e98fb1e5cd",
+  "schemaVersion": 1,
+  "scope": "Bound failure diagnostics for large JSON history documents, share that comparator with the Perl contract replay, and read already-authenticated merge parents directly from their exact immutable revisions. Preserve JSON equality semantics, every source-history transition, the complete type surface, runtime/package behavior and all acceptance claims while eliminating assertion rendering that can exhaust a Core runner.",
+  "typeSurface": {
+    "changed": false,
+    "path": "docs/type-surface.v1.json",
+    "sha256": "f663617f77c02f75428791fccd30dac8eba8dc7b809b254671c2db07c815d36f"
+  },
+  "updates": [
+    {
+      "currentSha256": "15def32fbb1c250b0fb169beeeb974e7faf267fe13958dd250908c8d7e36874f",
+      "edits": [
+        {
+          "current": "import \"./helpers/bounded-json-equality-tests.mjs\";\n",
+          "previous": "",
+          "start": 178
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "5fc448335f22cb1d77ddacad919877c4532ca439003a0974aec03ae7645a414d"
+    },
+    {
+      "currentSha256": "59b66fbedb941e1eb8462a07cf4f5878b06462d86bf8c636eacebd28766fab4f",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 138
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 6649
+        }
+      ],
+      "path": "tests/copied-fixture-source-history.test.mjs",
+      "previousSha256": "9548a3e2bac638fa0916c6d0eb2d825a2d52322e60958553eb1b7416b2625053"
+    },
+    {
+      "currentSha256": "89119579767d5759e0d26d84f38c73e89d5d5950d03261ff975751a53261f337",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3011
+        }
+      ],
+      "path": "tests/core-history-performance-evidence.test.mjs",
+      "previousSha256": "fb89fbbf8d006b6e206e85a35189bac550730beb3d7f3b6b16d4ad4760b28dce"
+    },
+    {
+      "currentSha256": "e753de775f19856dee77ca265e848f9f0799b89fffccccec9b272d1e80b57fdf",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 151
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 4772
+        }
+      ],
+      "path": "tests/fin-container-edge-integration-history.test.mjs",
+      "previousSha256": "86d8fc1e7fc9f836c050d7343588a15f11b7032721da383a4787f38d66fd52f8"
+    },
+    {
+      "currentSha256": "5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 150
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 4702
+        }
+      ],
+      "path": "tests/fin-scalar-dispatch-inventory.test.mjs",
+      "previousSha256": "de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4"
+    },
+    {
+      "currentSha256": "8b3c526823b9892e5d60f99ad730bb327e7ed8e48de1e2e39bbdf7350b83079d",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 165
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 4395
+        }
+      ],
+      "path": "tests/generic-record-array-rollout-history.test.mjs",
+      "previousSha256": "63d2f1c91eeda1d8a38222b10735ce7cb08c38b9eb1ccfad4d7d78427e5ff60f"
+    },
+    {
+      "currentSha256": "9e9bed8d5628837d8c3f31fe778f8550d937555207beca2194d85036ba5ad71e",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 163
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 3612
+        }
+      ],
+      "path": "tests/helpers/author-refinement-docs-source-history-tests.mjs",
+      "previousSha256": "2cd6ea7fde2d2bf93363583cfb79ed21100f9e5af02eaf20f0f1a261c83b0555"
+    },
+    {
+      "currentSha256": "6d8ddaeaff5eb412018d0e5a5a2c278d1387a53d2845e10199bddfb583aa8a47",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous\n",
+          "previous": "\tassert.deepEqual(current, previous\n",
+          "start": 5959
+        }
+      ],
+      "path": "tests/helpers/candidate-acceptance-repair-source-history-tests.mjs",
+      "previousSha256": "5aa5c4977bdceceed17d604e9f9b3eb07497a33ee09f8136676ae08d79b9de45"
+    },
+    {
+      "currentSha256": "cabe4a37b173cab20111141d5f47753b51a63edf5bbba5a495804c80fc955f3f",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 146
+        },
+        {
+          "current": "\tassert.equal(pins, 133); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.equal(pins, 133); assert.deepEqual(current, expected);\n",
+          "start": 3495
+        }
+      ],
+      "path": "tests/helpers/checked-record-host-ci-history-tests.mjs",
+      "previousSha256": "297b5b645095975beee28e0eda8ae09988b3caae4b8d7ee6999a59700af896af"
+    },
+    {
+      "currentSha256": "4d6b1f3a1de32babd6ddc78c3cb18083e2d380cd728ca70ca63d5d393a9856fb",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 149
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3460
+        }
+      ],
+      "path": "tests/helpers/checked-record-native-host-history-tests.mjs",
+      "previousSha256": "a0f6a6fd0a0505213c9f7cb8948d8abf61b8e32125e7dde5833a569477fcb2eb"
+    },
+    {
+      "currentSha256": "01fc1a7c3b50fe6cc41ec4500632f18c4fa8f17ee22f82509c5d3129277dc27a",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 152
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3564
+        }
+      ],
+      "path": "tests/helpers/checked-record-native-installed-history-tests.mjs",
+      "previousSha256": "5a6dcd3cadc27b7181f1c27ee38529a99fc82be0b529a81767a7c02abb118b97"
+    },
+    {
+      "currentSha256": "104ab28757675a4ee699790911b7d13bb5b7f774b81882c2ab64c193ce5105c9",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 147
+        },
+        {
+          "current": "\tassert.equal(pins, 31); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.equal(pins, 31); assert.deepEqual(current, expected);\n",
+          "start": 3442
+        }
+      ],
+      "path": "tests/helpers/checked-record-perl-history-tests.mjs",
+      "previousSha256": "b54780ed8160b8617a56eb0cf3d99bc9fde5294fcb088e2b49dac5775c555757"
+    },
+    {
+      "currentSha256": "2fe780991b82d2e0dd94d380de878ef0404760c433a6875defe2b66ecfdbacef",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 158
+        },
+        {
+          "current": "\tassert.equal(pins, 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.equal(pins, 0); assert.deepEqual(current, expected);\n",
+          "start": 3710
+        }
+      ],
+      "path": "tests/helpers/checked-record-perl-installed-history-tests.mjs",
+      "previousSha256": "b3b457817ea0e8707d0171a22463bdcf83c4837a982f813a4f127a585327f868"
+    },
+    {
+      "currentSha256": "42830b9cc19d94cc233a26fa1a8a8b71bcacd019356804ae13853518d30f3c56",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassert.equal(pins, 18); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.equal(pins, 18); assert.deepEqual(current, expected);\n",
+          "start": 3600
+        }
+      ],
+      "path": "tests/helpers/checked-record-python-history-tests.mjs",
+      "previousSha256": "c8e74d23abdc289deeba34295310254209bad2844d3462614e5c0e2a85963349"
+    },
+    {
+      "currentSha256": "170ac87fa352d8eebcc3a18060385a2169062783e109b1938ce5a48b0b44bc0b",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 158
+        },
+        {
+          "current": "\tassert.equal(pins, 18); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.equal(pins, 18); assert.deepEqual(current, expected);\n",
+          "start": 3802
+        }
+      ],
+      "path": "tests/helpers/checked-record-remaining-hosts-history-tests.mjs",
+      "previousSha256": "983550db98db82a116d0a98ecb2f5f01948d86a846aae731d0d28dbd9f81ae0c"
+    },
+    {
+      "currentSha256": "022cc87de20bc76d514551228e914fa4299154acab9129a2b2daac8f7d06c331",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\tassert.equal(pins, 18); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.equal(pins, 18); assert.deepEqual(current, expected);\n",
+          "start": 3627
+        }
+      ],
+      "path": "tests/helpers/checked-record-ruby-jvm-history-tests.mjs",
+      "previousSha256": "19aac2b4cada3b099251f4bed7daec3e0362544a2d6da5120c39d73abf9321d5"
+    },
+    {
+      "currentSha256": "cf6d519f59e49c8345d5d89b5b985a211d9a73cbcdfd921e8df7cf4d36645657",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 149
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 2957
+        }
+      ],
+      "path": "tests/helpers/copied-graph-repair-source-history-tests.mjs",
+      "previousSha256": "a45df1688c407928509615a4028b3718b96b35bd7511eb111584d538102a20f6"
+    },
+    {
+      "currentSha256": "0d6e93ee23f5b25b7105cb8654013fcda380f2ea12df86dbba02d5a5165ae308",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 119
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous\n",
+          "previous": "\tassert.deepEqual(current, previous\n",
+          "start": 5679
+        }
+      ],
+      "path": "tests/helpers/core-evidence-memory-repair-source-history-tests.mjs",
+      "previousSha256": "182bef2fd6b8d488aab54f98d9b017951b6ede53d4dffca35a8136ce74fcc635"
+    },
+    {
+      "currentSha256": "f4abf427750de9cfb21c0c165ae4265b2d1f320d8a65e94543c4dac667ccc6e8",
+      "edits": [
+        {
+          "current": "import {\n\tsourceAtFinHistoryMilestone, sourceAtFinHistoryRevision\n} from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 1065
+        },
+        {
+          "current": "\tassert.equal(await sourceAtFinHistoryRevision(\n\t\tcoreEvidenceRepairIntegrationLeftParent, path, sha256(left)\n\t), left, path);\n",
+          "previous": "\tassert.equal(await sourceAtFinHistoryMilestone(path, sha256(left)), left, path);\n",
+          "start": 1728
+        },
+        {
+          "current": "\tassert.equal(await sourceAtFinHistoryRevision(\n\t\tcoreEvidenceRepairIntegrationRightParent, path, sha256(right)\n\t), right, path);\n",
+          "previous": "\tassert.equal(await sourceAtFinHistoryMilestone(path, sha256(right)), right, path);\n",
+          "start": 1928
+        },
+        {
+          "current": "test(\"direct revision reads reject unauthenticated history coordinates\", async () => {\n\tconst path = coreEvidenceRepairIntegrationRetainedPaths.find(\n\t\titem => item !== inventoryPath\n\t);\n\tconst source = sourceAt(coreEvidenceRepairIntegrationLeftParent, path);\n\tconst expected = sha256(source);\n\tawait assert.rejects(sourceAtFinHistoryRevision(\n\t\tcoreEvidenceRepairIntegrationLeftParent, path, \"0\".repeat(64)\n\t), error => {\n\t\tassert.equal(error.actual, expected);\n\t\tassert.equal(error.expected, \"0\".repeat(64));\n\t\treturn true;\n\t});\n\tawait assert.rejects(sourceAtFinHistoryRevision(\n\t\tcoreEvidenceRepairIntegrationLeftParent, \"missing.mjs\", expected\n\t), /missing missing\\.mjs/u);\n\tawait assert.rejects(sourceAtFinHistoryRevision(\n\t\tcoreEvidenceRepairIntegrationLeftParent, path, expected, () => \"wrong\"\n\t), /exact revision stop/u);\n\tawait assert.rejects(sourceAtFinHistoryRevision(\n\t\t\"not-a-revision\", path, expected\n\t), /regular expression/u);\n\tawait assert.rejects(sourceAtFinHistoryRevision(\n\t\tcoreEvidenceRepairIntegrationLeftParent, path, expected, \"reader\"\n\t), error => {\n\t\tassert.equal(error.actual, \"string\");\n\t\tassert.equal(error.expected, \"function\");\n\t\treturn true;\n\t});\n});\n\n",
+          "previous": "",
+          "start": 4705
+        }
+      ],
+      "path": "tests/helpers/core-evidence-repair-integration-source-history-tests.mjs",
+      "previousSha256": "392a0ccbfdb5461a864e2b720e862db8f74c57814a47e3b0039bb11fe6d1e0e3"
+    },
+    {
+      "currentSha256": "17147edc28008fb9c74e9b36233f98d3cceaf7c11a13f78dc4fe3124b68a7c62",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\t\t\tassertJsonEqual(JSON.parse(current), expected\n",
+          "previous": "\t\t\tassert.deepEqual(JSON.parse(current), expected\n",
+          "start": 8861
+        }
+      ],
+      "path": "tests/helpers/core-inventory-followup-endpoint-tests.mjs",
+      "previousSha256": "ffcb7d0a9d250aad3633f4f5bbedc26ea832ab3392f817930bdc4d8dff081a38"
+    },
+    {
+      "currentSha256": "7c2bf3b92b308e082c63b324209c0228982a9fc3d774c0b1ca0faa7ce9aeb142",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 120
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous\n",
+          "previous": "\tassert.deepEqual(current, previous\n",
+          "start": 5535
+        }
+      ],
+      "path": "tests/helpers/core-milestone-replay-repair-source-history-tests.mjs",
+      "previousSha256": "f3711b793f3143c4a42d4b923c83594296172a582394dc5346e33c03f1e8f04c"
+    },
+    {
+      "currentSha256": "d4a8a93c0f6219b2371f0aab88ac2dc08df21d29a7ef249d37f47d7e29215552",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 132
+        },
+        {
+          "current": "\t\tassertJsonEqual(JSON.parse(current), expected\n",
+          "previous": "\t\tassert.deepEqual(JSON.parse(current), expected\n",
+          "start": 7264
+        }
+      ],
+      "path": "tests/helpers/core-perl-consumer-endpoint-tests.mjs",
+      "previousSha256": "1203bddcb48b66705167bee66f6aa04f5d035f475396678065a2b363f6a1e3e7"
+    },
+    {
+      "currentSha256": "2d9a0e9b058079e3700a674045337fd65f7d1465f10f6748b556cf9f80238f2d",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 133
+        },
+        {
+          "current": "\t\tassertJsonEqual(JSON.parse(current), expected\n",
+          "previous": "\t\tassert.deepEqual(JSON.parse(current), expected\n",
+          "start": 4443
+        }
+      ],
+      "path": "tests/helpers/core-receiver-endpoint-tests.mjs",
+      "previousSha256": "648c034d5f9ba1c3f7a91256d23fab2afadf9335f308c2645bf25045682a9510"
+    },
+    {
+      "currentSha256": "9c84d25704c8cf822fe29b4660ffa2579af571f21459e49c35f0dd6d6739955e",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 147
+        },
+        {
+          "current": "\tassert.equal(pins, 2); assertJsonEqual(current, previous);\n",
+          "previous": "\tassert.equal(pins, 2); assert.deepEqual(current, previous);\n",
+          "start": 3713
+        }
+      ],
+      "path": "tests/helpers/cpp-fin-dispatch-integration-tests.mjs",
+      "previousSha256": "c1695446015f2308f776b73132ed5139a18f2a53aed73193c1c0a6a5e4bb5a67"
+    },
+    {
+      "currentSha256": "5bb61b6e99810fd165664252849ca7e2fd94e2157631076ac2f00fe00ac73296",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 121
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous\n",
+          "previous": "\tassert.deepEqual(current, previous\n",
+          "start": 5648
+        }
+      ],
+      "path": "tests/helpers/documentation-workflow-repair-source-history-tests.mjs",
+      "previousSha256": "bde8abe6858fb476f18d87119170960ccff0654b7d37df1184722abc7577ac4e"
+    },
+    {
+      "currentSha256": "4e3135e79f832379e4d21b8bf6f65e9d7daad93d19e90cf989f5f1351a393d19",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 166
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4036
+        }
+      ],
+      "path": "tests/helpers/dotnet-dispatch-integration-source-history-tests.mjs",
+      "previousSha256": "f5b87b8dfb53ac089b7fb7b4e8543142b5f6ef1d561ab6c64a83a0b413157ab5"
+    },
+    {
+      "currentSha256": "2224d13fbb476f1790dc1e10715dd809aa3115237c2554ded3303c0db9b4e7a2",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 6198
+        }
+      ],
+      "path": "tests/helpers/fin-alias-closure-history-tests.mjs",
+      "previousSha256": "a9fcc339aa082a10c748f540c10e6d4339fc2ce4b5138ab4302ed4fe8873be95"
+    },
+    {
+      "currentSha256": "98ddd69af00771a0c64c14cf6c43a7aac70b4de8c821a9f17365faa767924476",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 3725
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-ci-history-tests.mjs",
+      "previousSha256": "02ad43a7ed3df157e1924fda6f1fd642e6a248e541da79d32604159f687df4bb"
+    },
+    {
+      "currentSha256": "328bf2d788180f796077638dca8724b6f0260f4890804b128ed00a1a0794e2f3",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 152
+        },
+        {
+          "current": "\tassert.equal(pins, 211); assertJsonEqual(current, previous);\n",
+          "previous": "\tassert.equal(pins, 211); assert.deepEqual(current, previous);\n",
+          "start": 3501
+        }
+      ],
+      "path": "tests/helpers/fin-container-evidence-ci-tests.mjs",
+      "previousSha256": "72a32762e93bbe0babab1805dd9fb78de485072a9ea5d95a458753aba72c0769"
+    },
+    {
+      "currentSha256": "ed5e6f7649ad103de083b61cc8df7ecebb0aae8d4b42225c7b91fb5b893a8e1f",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 3768
+        }
+      ],
+      "path": "tests/helpers/fin-container-foreign-history-tests.mjs",
+      "previousSha256": "3c260ec8b35e7bd11f17a4ab614898fb95e2c587519d8b5b44522d81e994065e"
+    },
+    {
+      "currentSha256": "88b6da3060ce8aeb2f85b2d878345da38cfbe2e112fb1e55da20c3b2ebe7bdb3",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 146
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 6521
+        }
+      ],
+      "path": "tests/helpers/fin-core-repair-history-tests.mjs",
+      "previousSha256": "5fea6966317d24232c5ec3b9fa0d82960546acd4ef7cb8165f7a8a6e7698dc2b"
+    },
+    {
+      "currentSha256": "fca322cb7544f9e6d5a958cd8c21e36fbec17b378ee543a287089a907337c867",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 157
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 6186
+        }
+      ],
+      "path": "tests/helpers/fin-dotnet-sdk-history-tests.mjs",
+      "previousSha256": "e53f35e1213b7aabd382e5304221246ded1a0fb7619e777d05d8cc81586711a2"
+    },
+    {
+      "currentSha256": "be71f487dc87c68da1d529333187066e613fb6050553c940ca982d05b03a43ff",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "\tassert.equal(pins, 103); assertJsonEqual(current, previous);\n",
+          "previous": "\tassert.equal(pins, 103); assert.deepEqual(current, previous);\n",
+          "start": 3407
+        }
+      ],
+      "path": "tests/helpers/fin-entry-integration-tests.mjs",
+      "previousSha256": "add588bd1bdc93792802bb54f6b10dc722232508a8ba14bda38523c80950eca9"
+    },
+    {
+      "currentSha256": "b3110c24c5662a355674c4b3315ce7cb9d52a9768ca65e8151e83cfef2880b14",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 162
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 6460
+        }
+      ],
+      "path": "tests/helpers/fin-jvm-diagnostics-history-tests.mjs",
+      "previousSha256": "c840472ee4ab30311eac9408a2a0285d76cd008e5d2eaa519f2dcb3ce0a159a9"
+    },
+    {
+      "currentSha256": "c19f97f541a999c0711c100aa74b921580d54a58ec2ae8dba5c4aa538f9d7a06",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 6118
+        }
+      ],
+      "path": "tests/helpers/fin-nominal-refusal-history-tests.mjs",
+      "previousSha256": "95aae06f28ee37bdc0a8db187a2089b97e3f6e41129815083e52c7a8b7b17234"
+    },
+    {
+      "currentSha256": "372f1d648574677c73d10ce7ea2a14fab0770e1c20441f7b2bba3b6ef5058123",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 7340
+        }
+      ],
+      "path": "tests/helpers/fin-record-zero-ci-history-tests.mjs",
+      "previousSha256": "8675877bd6ce0a03af5273fec16b0f896a0ed827ab897165eacdcbfb4e127b05"
+    },
+    {
+      "currentSha256": "e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 150
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected, \"Only the authenticated scalar supplement and exact old source-pin updates may change\");\n",
+          "previous": "\tassert.deepEqual(current, expected, \"Only the authenticated scalar supplement and exact old source-pin updates may change\");\n",
+          "start": 9485
+        }
+      ],
+      "path": "tests/helpers/fin-scalar-dispatch-inventory.mjs",
+      "previousSha256": "c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0"
+    },
+    {
+      "currentSha256": "7c62fc6fc0359de1ae5e18a0d1f349573358b26e455d9bad46ab8ff2e6586a4b",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 153
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 3738
+        }
+      ],
+      "path": "tests/helpers/generic-refusal-fix-source-history-tests.mjs",
+      "previousSha256": "42cf92f68b7235d1db6d9eb0c53aa1b4ec86e10932e0e53c557da65a626abedc"
+    },
+    {
+      "currentSha256": "a1049fbfeec937bf6da6ad6c3f5352fd214fbe5fc6cf256ad7cfbb681f9cdceb",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 156
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected, \"Only the hosted container supplement and exact old source-pin refreshes may change\");\n",
+          "previous": "\tassert.deepEqual(current, expected, \"Only the hosted container supplement and exact old source-pin refreshes may change\");\n",
+          "start": 9411
+        }
+      ],
+      "path": "tests/helpers/hosted-container-inventory.mjs",
+      "previousSha256": "4dc02939d9efe21f5609bbd728e25436e0b2ed1f32fa4b7840a9d8b4d1cd6bf5"
+    },
+    {
+      "currentSha256": "5a077242e3c768ed93cbcf08fe4e6b18610b908199247b2a068adff10d0da3f9",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 163
+        },
+        {
+          "current": "\tassert.equal(pins, 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.equal(pins, 0); assert.deepEqual(current, expected);\n",
+          "start": 3584
+        }
+      ],
+      "path": "tests/helpers/jvm-container-entry-exit-history-tests.mjs",
+      "previousSha256": "94c3f2b1ae75f40bc7eb091da7fc21041d5eb6f69fe094bf09cfccdae4a048a8"
+    },
+    {
+      "currentSha256": "f86b2968a01ce6341c5ef456e8ec43cdf14f34abd9c3563e9bb20d05e1da961e",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 165
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4081
+        }
+      ],
+      "path": "tests/helpers/jvm-dispatch-integration-source-history-tests.mjs",
+      "previousSha256": "b24b4fc876b680ebebf7f4496225cd633b8f8078e2284eacd7d5d6f52b2c46d8"
+    },
+    {
+      "currentSha256": "f22275724479f695c12dcb0a9edafe9878408eb70af887933585c86332d47549",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 146
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3296
+        }
+      ],
+      "path": "tests/helpers/maven-prerequisite-history-tests.mjs",
+      "previousSha256": "076ccc3df7a586cf13e72375bf3569465a689dc4756bcfa065c353d56a18727c"
+    },
+    {
+      "currentSha256": "5fd9be75d21f4bc89b8e3876975695b79565e56b151456328db8673b33aa14d8",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4388
+        }
+      ],
+      "path": "tests/helpers/mutual-checked-record-npm-source-history-tests.mjs",
+      "previousSha256": "7edef6b404b908725c97374aafd25176917e10c93f68dfe1a3c5eb1b4af1538c"
+    },
+    {
+      "currentSha256": "87e0e4f1a0fa8c1b950b52971ae19ed5bc25bf365b2c84c61399f8bc9cce8ea6",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 3904
+        }
+      ],
+      "path": "tests/helpers/mutual-checked-record-source-history-tests.mjs",
+      "previousSha256": "ac06b6d74911ad15b428e7cef1dab9cf1f9313382945b8bc29a822d62fd59706"
+    },
+    {
+      "currentSha256": "485199663bc41798b8f03c522382dce9533bfa6dc7cc839709c4df2429638a06",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 159
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 3458
+        }
+      ],
+      "path": "tests/helpers/native-fin-diagnostic-ci-tests.mjs",
+      "previousSha256": "1c67cb1a301462b44be54804612762ae24a9b8e754087258f103c72486f043a0"
+    },
+    {
+      "currentSha256": "baa16fe9356baf22ee1b26390d22bd9cec739b42abc557b916c33d8bd83c9fa1",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 151
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 3481
+        }
+      ],
+      "path": "tests/helpers/native-fin-diagnostic-source-history-tests.mjs",
+      "previousSha256": "d55e8a8d0d181f1682d3c14d9925e7c05e6dd61d920e3bb75dd8874cacdc4dac"
+    },
+    {
+      "currentSha256": "770b30f69285e918d464085cb95ed5ed3b3bb247824efcc2fe5e12cc1a150072",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 131
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 4465
+        }
+      ],
+      "path": "tests/helpers/native-fin-nix-boundary-history-tests.mjs",
+      "previousSha256": "be93eb64b52513858f07f6b08342ee43acd27415a7d7d87a4418d91c8fbf8738"
+    },
+    {
+      "currentSha256": "a6e16cec399baf965253aab36579cd4003c3af3ce3f2572620dbc9e4b4ecff0e",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 137
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4183
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-matrix-closure-source-history-tests.mjs",
+      "previousSha256": "c2fad049f5c42c2473a63b5296663cc62f48c47d95785c400cfaf4fb0b409720"
+    },
+    {
+      "currentSha256": "900e6b27ea0cee8612b8ae24ba18f1688ce0a6daded3ec3c6e1ee7dbc74c61c4",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 152
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4819
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-native-correction-source-history-tests.mjs",
+      "previousSha256": "3b7bef7cc46138804b9b0089ba560ab34df65a4b717a58ab73a1a32c5c7280c6"
+    },
+    {
+      "currentSha256": "e7f935fe50c0aee33aef40dd53d5c7d6cb1d1e4dfffac94365a4eb1494ca19fe",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 138
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4050
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-quality-source-history-tests.mjs",
+      "previousSha256": "ef5e91c6d6be693ef78cb92318cb6b87d11b3f5bacaa5fd127e94eabe0068ae2"
+    },
+    {
+      "currentSha256": "a9f17349dd9345bd7839c7ef151b750525292147864885d468b11541a99718fc",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3574
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dotnet-ci-history-tests.mjs",
+      "previousSha256": "e9f8575cfcf592a85ce41c8f687ef2ed6b24bf2bfa86aeeebf50cc8d5bc2dbfc"
+    },
+    {
+      "currentSha256": "ed8447e75705de36abd74e9ff00948691a309a6ccfff063dce5c157d347481ff",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(current, prior);\n",
+          "previous": "\tassert.deepEqual(current, prior);\n",
+          "start": 3555
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-borrow-ci-evidence.mjs",
+      "previousSha256": "64c09db902153811857dc4c7a73c035c5a3644adc6089dcf09e0e251b05dc84d"
+    },
+    {
+      "currentSha256": "38c2da5b38d58b762fc615366550f32d90195b791856dd08d00c2641f1368626",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 136
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), previous);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), previous);\n",
+          "start": 4617
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-history-tests.mjs",
+      "previousSha256": "df73fc4aca93f74fccc4d8beb19c6200f4422c334f0990d346b5f57c44841c03"
+    },
+    {
+      "currentSha256": "0206acea2e6f7aec4a19a09aaa4872cedde381d360028626e08326ec075ea04b",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 9484
+        }
+      ],
+      "path": "tests/helpers/owned-receipt-producer-replay-tests.mjs",
+      "previousSha256": "d2eba294a03d8ba185bb2adab8fb8060782573b604b54679dd9802318d2682a8"
+    },
+    {
+      "currentSha256": "dd10db5819f7b7920c04e5444503b2653ff8d7e4043ce5ae856115cdc44fa7c2",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 125
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous\n",
+          "previous": "\tassert.deepEqual(current, previous\n",
+          "start": 5523
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-test-profile-pin-repair-source-history-tests.mjs",
+      "previousSha256": "fc14b149bb37b8044f051b2b8959c23d2177c1d43365de8dab4e8408a510be5c"
+    },
+    {
+      "currentSha256": "4ea4b689d7aaef3328976898f1cb4b62733459678ffc06a690d610056a8e4cd3",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 156
+        },
+        {
+          "current": "\tassert.equal(pins, 146); assertJsonEqual(current, previous);\n",
+          "previous": "\tassert.equal(pins, 146); assert.deepEqual(current, previous);\n",
+          "start": 3603
+        }
+      ],
+      "path": "tests/helpers/perl-closure-native-budget-tests.mjs",
+      "previousSha256": "1243ac5b7dbb98afedc2211021c25f6578671540152769d03c2fc34b1d9091d1"
+    },
+    {
+      "currentSha256": "2d1daf1775a41cc1bf68e589de42c3387abd2a12d6e8bb2079706c3a5e4d693d",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 160
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 3685
+        }
+      ],
+      "path": "tests/helpers/perl-refinement-hosted-source-history-tests.mjs",
+      "previousSha256": "9fb7c2ac8a930a7f73d2f1c9bec419bd561dc3c8ad4c56f11ced274cdc039a2a"
+    },
+    {
+      "currentSha256": "f221788608918331ef0d4c838da3eeaee50524433c4a30c983d99cca9b398cfc",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 156
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 3547
+        }
+      ],
+      "path": "tests/helpers/perl-relocated-consumer-source-history-tests.mjs",
+      "previousSha256": "0c41dc947ce78514767e080701e97a5f5f147c02859fe74196913bca601ea2f4"
+    },
+    {
+      "currentSha256": "8f1f78ad84e1f6307fb9ac26b55b92d551102954bb05786ffde916a1b4eebcae",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 152
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected, \"Only the measured Perl scalar promotion and exact predecessor source pins may change\");\n",
+          "previous": "\tassert.deepEqual(current, expected, \"Only the measured Perl scalar promotion and exact predecessor source pins may change\");\n",
+          "start": 9484
+        }
+      ],
+      "path": "tests/helpers/perl-scalar-promotion.mjs",
+      "previousSha256": "c869ae2dd68dd4a6918aaf90ba47f8df2c2c5b426143695a03a19d3d879fe748"
+    },
+    {
+      "currentSha256": "cfa796955ea63a5fbb59f11e1cb954bc497c75d191448036718f06be1f43480f",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 163
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 3667
+        }
+      ],
+      "path": "tests/helpers/perl-scalar-relocation-source-history-tests.mjs",
+      "previousSha256": "a02967c7c25005d481d8636c0211c299db7591df49faa3b31a62d6b9bc5e18ef"
+    },
+    {
+      "currentSha256": "c78bbe046bafc5d1efc2323dc247724b232377e5d5dcdc1f8f26cd576bf8a93a",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 155
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 3573
+        }
+      ],
+      "path": "tests/helpers/perl-xs-budget-source-history-tests.mjs",
+      "previousSha256": "9a6f1212b057905e570585fb32296fecc9d37b688a39b0be2598b091d211256f"
+    },
+    {
+      "currentSha256": "38f9398bada87663d6b604c68058b878631b8921cec6e992b61752e2e2c17e4e",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous, \"Only authenticated source identities changed in the inventory\");\n",
+          "previous": "\tassert.deepEqual(current, previous, \"Only authenticated source identities changed in the inventory\");\n",
+          "start": 6160
+        }
+      ],
+      "path": "tests/helpers/php-callback-acceptance-history-tests.mjs",
+      "previousSha256": "cdb811354bfa99c5413650eabcefb88c858a4dfcf1f3f9e180eeb0d7cf6b55f7"
+    },
+    {
+      "currentSha256": "6e0794cec1b04b4869b2b2b43558c29872079d67364f74869fd8b0b94d8b37fb",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4364
+        }
+      ],
+      "path": "tests/helpers/php-graph-diagnostic-source-history-tests.mjs",
+      "previousSha256": "f62e029c32fee018a1c39bec1243bfa2df31d2c1d96a5fdf09b447d788b2f170"
+    },
+    {
+      "currentSha256": "59a3da7cffdb71eb94fc32ab5848c53b0adb1c3682c1e6dfeae03ee8f2005dd6",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 166
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 6925
+        }
+      ],
+      "path": "tests/helpers/php-wasm-entry-ci-history-tests.mjs",
+      "previousSha256": "e166c231a333a24626792af0457a83f79ea491145bcb5448a6d994b7a77666fa"
+    },
+    {
+      "currentSha256": "d485f1d1bfe5e415bb6b215e43ec4514b48959fb808c6e93c27a1d2432b1a606",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 171
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 6913
+        }
+      ],
+      "path": "tests/helpers/php-wasm-entry-harness-history-tests.mjs",
+      "previousSha256": "8bb89ca1e07b239a6227b0fd6eb058cc0036b2b85452d464f48533986ef54d21"
+    },
+    {
+      "currentSha256": "46cced4633b8cc93a870d8e7c333e6934dee1b124f0411418c8e3f8e61d43499",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 155
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3642
+        }
+      ],
+      "path": "tests/helpers/php-wasm-failure-diagnostics-history-tests.mjs",
+      "previousSha256": "b798e38666aa63607f3f6cc6da86b641cf962d004bc7fe91d8f0b4bb80c0a141"
+    },
+    {
+      "currentSha256": "6678da5b0d3b107036048ac617984c271d18176956a5cefe3fe25e56961a445e",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 150
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 6480
+        }
+      ],
+      "path": "tests/helpers/php-wasm-fin-direct-history-tests.mjs",
+      "previousSha256": "3c1832e7604f053700e90c2e5617d221954d7a2d348089f07dceb73610a0276d"
+    },
+    {
+      "currentSha256": "d6c6618bb3245b9b21fa20a183d68c6a5f1ac748701dab05dfdc999190b19a47",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 124
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 5563
+        }
+      ],
+      "path": "tests/helpers/php-wasm-recursive-evidence-replay-repair-source-history-tests.mjs",
+      "previousSha256": "086cf44dc1b514a00fd012e8e6e8995075ad90a5b25ec91bde7a0ff425d24590"
+    },
+    {
+      "currentSha256": "855fb977c0c62ed49220bfc7b0dcbefdbd7fbc1463267021e1694d04a1b7331f",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 158
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 7262
+        }
+      ],
+      "path": "tests/helpers/php-wasm-subtype-acceptance-history-tests.mjs",
+      "previousSha256": "8d7c87c00a7659e7f5a0fca2025bab50d8f12fc04daffba225deb410eac3d43f"
+    },
+    {
+      "currentSha256": "06a58e61ab0cf130e34a4fa115335b919e77a56791f2b437deb1752b569c5818",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 159
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 6723
+        }
+      ],
+      "path": "tests/helpers/php-wasm-subtype-entry-history-tests.mjs",
+      "previousSha256": "6a63b2e007195e064e627bcca9133ae95ad83d04a61364e28d80659551e7fc88"
+    },
+    {
+      "currentSha256": "33df43843c69016ce3ebbd942fc19164c931d009474ebc19e58dfb82ac8d82e8",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 147
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 6829
+        }
+      ],
+      "path": "tests/helpers/php-wasm-subtype-history-tests.mjs",
+      "previousSha256": "90cd5073430ea23c8845f6ee1c544ad403b95ec6a95a240e64f45c4e9d9dcfd3"
+    },
+    {
+      "currentSha256": "6c99a9f216c7f7224414abc8ac276a5fc7550ff0a1a35139e687c661a9385843",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 146
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4196
+        }
+      ],
+      "path": "tests/helpers/python-graph-diagnostic-source-history-tests.mjs",
+      "previousSha256": "04a01a8e62004b969f32f1a4d0afaba067ea5fbd6c492027fb47cc3ce68a4aea"
+    },
+    {
+      "currentSha256": "fd4a60109a669c05dfac2d964aa4237cae6bf833ad427b8eb33a778f0dbf5005",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "\tassert.equal(pins, 5); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.equal(pins, 5); assert.deepEqual(current, expected);\n",
+          "start": 3442
+        }
+      ],
+      "path": "tests/helpers/refinement-core-ci-history-tests.mjs",
+      "previousSha256": "7b04df1c68c7730f387dc0c10c711b16776985d35fba66e7f1f92f4a3030a895"
+    },
+    {
+      "currentSha256": "85688c2eaee4521d66cd2007c32624270a51ccafa79597658d2d884edf86334d",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 145
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 3555
+        }
+      ],
+      "path": "tests/helpers/refinement-followup-history-tests.mjs",
+      "previousSha256": "da4015648b22c033f353cf84cc54b386cc026f8c258e4b09970eeed15c485e14"
+    },
+    {
+      "currentSha256": "f3696bce9e9f2229764cb4b5ddd6f91bb764f7602a32e8e95f47f01fe6114e56",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 158
+        },
+        {
+          "current": "\tassert.equal(pins, 117); assertJsonEqual(current, previous);\n",
+          "previous": "\tassert.equal(pins, 117); assert.deepEqual(current, previous);\n",
+          "start": 8716
+        }
+      ],
+      "path": "tests/helpers/reviewed-fin-refusal-ci-tests.mjs",
+      "previousSha256": "e727f1d234cfb9492f6ad2b1243961a615495abfd09bc1e32826e0c38303114c"
+    },
+    {
+      "currentSha256": "fb520f3d7cb3927a54eeacb97954b170186ec4403ca7f905cbb1548ba69f67c0",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 149
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 3704
+        }
+      ],
+      "path": "tests/helpers/reviewed-perl-diagnostic-history-tests.mjs",
+      "previousSha256": "dce03a1cdcd5de63fecc62c2accccf265ebeef85386518114540601bcb232e49"
+    },
+    {
+      "currentSha256": "57a2b8ee373705957d8c57b879374595f6906e1977f2a78220be5710922119cd",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 132
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3428
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-browser-ci-history-tests.mjs",
+      "previousSha256": "b63d1f2dc0de20a21af84ef9c2eb0d689bdd90c2d1fe9089cee2476e81a7ecfb"
+    },
+    {
+      "currentSha256": "04d0c2108ec4bc231fa1064739eb045d811aa5066aa360d63bef5ac687d26503",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 129
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3372
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-browser-history-tests.mjs",
+      "previousSha256": "34ff2a8e4407016bfed3e928018294c8448731c061786cbb8082c919aa129ee3"
+    },
+    {
+      "currentSha256": "8a40daac066e3f12445e7682bd992b49e2d86b724293df11902e5f9e4b43feae",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3388
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-ci-history-tests.mjs",
+      "previousSha256": "b454b53e58f083893586dbf70850f912c1157e658a4df78df249db15ded912b2"
+    },
+    {
+      "currentSha256": "0d797bf5cacd35eeff3c93ca1a472ca6154a44868967db5f15b8d9d6a2bb36cc",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 138
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3498
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-ci-report-history-tests.mjs",
+      "previousSha256": "73920a0e75c1054b7b07a354996a397d8d9fa5402f463d804a3e71bdfc4b682c"
+    },
+    {
+      "currentSha256": "45e128a4acc6effb267f11713c59c83169d08b4be518c1f66bc67be7087acc39",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 159
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected);\n",
+          "previous": "\tassert.deepEqual(current, expected);\n",
+          "start": 7054
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-host-history-tests.mjs",
+      "previousSha256": "74e721d80398b38ee1746e8bbbb552313ad93ad2aaece94df4ec9138938990a4"
+    },
+    {
+      "currentSha256": "d476593cbcbe4843926ee1d68af28d163500d9e9142eb20f7900feb5b8334754",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 132
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3421
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-package-ci-history-tests.mjs",
+      "previousSha256": "e1515de1f285e874b25240ae04a84911c77204648dfbb6ba37f4a2d12d856751"
+    },
+    {
+      "currentSha256": "6676407a991e00c092d7bd4657f7d2dcc830cfe12192c8196c9b267387e9b98b",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\tassert.ok(pins > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(pins > 0); assert.deepEqual(current, expected);\n",
+          "start": 3537
+        }
+      ],
+      "path": "tests/helpers/reviewed-subtype-package-record-history-tests.mjs",
+      "previousSha256": "d3e2330f7112bd88c32ec15401080b98da2c6802beadbe624134f0b0b08252c1"
+    },
+    {
+      "currentSha256": "5424d558e90c5f0b572f962fbca2a91ea3fcfac5f87d3c116ceb42d73f90e7f9",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 166
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4160
+        }
+      ],
+      "path": "tests/helpers/ruby-dispatch-integration-source-history-tests.mjs",
+      "previousSha256": "d54ba2f1e5ae005c17b9e07b1d450f8d0aa713ed8d0bb573cc510159fa4620ad"
+    },
+    {
+      "currentSha256": "f196abd0877a8fade644157ada24fd4776b7c12b81d81ee3efa72b59208807fb",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 154
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 3358
+        }
+      ],
+      "path": "tests/helpers/ruby-gdb-ci-source-history-tests.mjs",
+      "previousSha256": "6c635ef053536b7305fa1441835b474a4fa51aee4a149e11bcf387f7ab727e36"
+    },
+    {
+      "currentSha256": "bcbde9deea4bd71c3e1506c7e1e05960ab2d891f0d8f8638897891040f7d5bcf",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 3949
+        }
+      ],
+      "path": "tests/helpers/ruby-graph-diagnostic-source-history-tests.mjs",
+      "previousSha256": "55e33c8bf0e89ad18a60659ebf4754b622d5ac2ce72da125d13197f2fa4ee3e1"
+    },
+    {
+      "currentSha256": "bdb41879c0152ebf7dbda093dbc6698487564e8de4bba92eeadbfa069816c229",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4151
+        }
+      ],
+      "path": "tests/helpers/ruby-graph-keyword-field-source-history-tests.mjs",
+      "previousSha256": "fb494cf4632c5a65dce358466b389e2908c0bbe52322b869df39efbc166fb3d2"
+    },
+    {
+      "currentSha256": "0ae0911775c0bdc3db5223832fefdab1ab6670300c424d24889dab8e0cc8f1c5",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4022
+        }
+      ],
+      "path": "tests/helpers/ruby-member-escape-source-history-tests.mjs",
+      "previousSha256": "e8e0eefde913a3643ff03a98b9dd6921588bfca1f2fecc1b39169c3800d9c72f"
+    },
+    {
+      "currentSha256": "50fc68441b75fd597783c0391f2ef34df30bf19838b80dd3c6979cc7ecd71ebf",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 138
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4030
+        }
+      ],
+      "path": "tests/helpers/rust-graph-diagnostic-source-history-tests.mjs",
+      "previousSha256": "16274bcc9cd19820919fd6bcb60004e75570d9aa997d96c1452a6d1b67f860d5"
+    },
+    {
+      "currentSha256": "b586234145b700905dcae9f93e9b59262c9f8bad8e27e2c612691f8237e46f19",
+      "edits": [
+        {
+          "current": "\tif(reader !== undefined) assert.equal(typeof reader, \"function\");\n",
+          "previous": "",
+          "start": 4667
+        },
+        {
+          "current": "",
+          "previous": "\t\t\tassert.equal(typeof reader, \"function\");\n",
+          "start": 5371
+        },
+        {
+          "current": "/**\n * Read one exact source directly from a known immutable revision. Callers that\n * already authenticate a producer or parent commit must not replay the entire\n * evolving history hub merely to rediscover those same bytes.\n *\n * @param revision - Exact Git commit containing the source.\n * @param path - Repository-relative source path at that revision.\n * @param expected - Exact authenticated source SHA-256.\n * @param reader - Optional milestone-specific source reader.\n */\nexport const sourceAtFinHistoryRevision = async (\n\trevision, path, expected, reader = undefined\n) => {\n\tassert.match(revision, revisionPattern);\n\tassert.equal(typeof path, \"string\");\n\tassert.match(expected, digestPattern);\n\tif(reader !== undefined) assert.equal(typeof reader, \"function\");\n\tif(reader !== undefined && !readerIds.has(reader))\n\t\treaderIds.set(reader, nextReaderId++);\n\tconst key = JSON.stringify([\n\t\t\"revision-source\", revision, path, expected\n\t\t, reader === undefined ? 0 : readerIds.get(reader)\n\t]);\n\treturn cachedHistorySource(key, () => {\n\t\tconst source = sourceAtRevision(revision, path);\n\t\tassert.equal(typeof source, \"string\", `${revision}: missing ${path}`);\n\t\tassert.equal(sha256(source), expected, path);\n\t\tif(reader !== undefined)\n\t\t{\n\t\t\tassert.equal(reader(path, source, expected), source\n\t\t\t\t, `${path} exact revision stop`);\n\t\t}\n\t\treturn source;\n\t});\n};\n\n",
+          "previous": "",
+          "start": 5502
+        }
+      ],
+      "path": "tests/helpers/source-at-fin-history-milestone.mjs",
+      "previousSha256": "677b9a6a9d70805d2042b1030b27db78799392ccd99cc4a762444e1421ed8f9e"
+    },
+    {
+      "currentSha256": "827251693dcb0d535fbf8d9fddc8995ff650dad0de7abfed2a41ea2431d06fe4",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 130
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous\n",
+          "previous": "\tassert.deepEqual(current, previous\n",
+          "start": 6517
+        }
+      ],
+      "path": "tests/helpers/value-index-promotion-milestone-repair-source-history-tests.mjs",
+      "previousSha256": "58e51be40d9359c1033da47d87c413277972f2fc03bef9a21d298e9ab76e9aaf"
+    },
+    {
+      "currentSha256": "948d58d1fdf90dcaf135b9d370f84ef48e53e78cc5e870b4980be2a6b040778d",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\t\tassertJsonEqual(current, previous\n",
+          "previous": "\t\tassert.deepEqual(current, previous\n",
+          "start": 6952
+        }
+      ],
+      "path": "tests/helpers/vo1220-exact-cohort-repair-source-history-tests.mjs",
+      "previousSha256": "4e1be012b5f49e5849dcbdffdbe572b436064f8c923061eb50f5c3d1140871b0"
+    },
+    {
+      "currentSha256": "9550764f41bc73e79e849b9c6dac830d005e6799187418c0acee4b23acd6a74b",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4091
+        }
+      ],
+      "path": "tests/helpers/wit-graph-diagnostic-source-history-tests.mjs",
+      "previousSha256": "17d8cff21af5bb8f33ff671bdb7ad5f5994163d152a28bc4b74aeb8221756c93"
+    },
+    {
+      "currentSha256": "1cc1d3fe48843153124717237a2705ee8440f62aa5c676d309da194a925f6a66",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 137
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3722
+        }
+      ],
+      "path": "tests/jvm-thread-exit-repair-evidence.test.mjs",
+      "previousSha256": "2261a7562db5d47bbf9d7532739459ab6c4a29149d48a6189ffe6e8336f0eafd"
+    },
+    {
+      "currentSha256": "f73811ac99ea70fd99dc3a54268456a9592e8f4eec8751272d0956a512c6bb13",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3275
+        }
+      ],
+      "path": "tests/managed-close-evidence.test.mjs",
+      "previousSha256": "5668d17d1e3f2ae3c452be310b8f8a2ff070c73d7c77bc66266c655ab00401fc"
+    },
+    {
+      "currentSha256": "537d4b8a36b01bd63820c30e2465415443b99d458e328e98cc58d5f08737c7f6",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 130
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4229
+        }
+      ],
+      "path": "tests/mutual-checked-record-dotnet-source-history.test.mjs",
+      "previousSha256": "1dfbe4c443b9bb4f085ca7878705815984d260066268f5b6dda0cd78d12cf2c3"
+    },
+    {
+      "currentSha256": "91d45b8ae19f96574618bcf2cda8bd7d7898995120f3450f63dc439101bcd9dd",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 129
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4236
+        }
+      ],
+      "path": "tests/mutual-checked-record-jvm-source-history.test.mjs",
+      "previousSha256": "8d1ddaf959745f710c7c26801cf3d4cd8e14868d6f45f3618beb2a20ec3b6319"
+    },
+    {
+      "currentSha256": "d9292e71a065bbcbc26b3d063172933332c9815b0677f573a6023c9c0afe1f04",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 137
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 4350
+        }
+      ],
+      "path": "tests/mutual-checked-record-npm-archive-source-history.test.mjs",
+      "previousSha256": "0bbef388d6bd11ed06dcfa8ee0fc1844b8385eb29c9e32a215303767a37bded0"
+    },
+    {
+      "currentSha256": "3bdf97260e72d7f14114c6d00f5072da7bc0e8020a2a3b7f016dce4eb21a23dc",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 152
+        },
+        {
+          "current": "\tassert.equal(pins, 94); assertJsonEqual(current, previous);\n",
+          "previous": "\tassert.equal(pins, 94); assert.deepEqual(current, previous);\n",
+          "start": 3587
+        }
+      ],
+      "path": "tests/native-edge-array-harness-history.test.mjs",
+      "previousSha256": "c18a0c23204b23fdf8802f435798fb39e2e6dbe9775833b3356920eb0259ee5b"
+    },
+    {
+      "currentSha256": "301fc6d1bc18588085aed2809bcd1c68af68a0ca85e4553670538aeee4b85aa1",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Compiler analysis must not promote untested installed support\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Compiler analysis must not promote untested installed support\");\n",
+          "start": 3772
+        }
+      ],
+      "path": "tests/owned-analysis-evidence.test.mjs",
+      "previousSha256": "8838663b77b0ac1b73d4cdbcea63b28c92e38546ddb227e91f56e7b1cc7f70ce"
+    },
+    {
+      "currentSha256": "ff1627408243eedfa08701e3738d1e39eb5b76bb3b3649d3636a59cd23be62b9",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3687
+        }
+      ],
+      "path": "tests/owned-borrow-evidence.test.mjs",
+      "previousSha256": "8929aa794b72ba41b53b1940989c0a49eaac5b308d3e087e8c514a7e065e2aae"
+    },
+    {
+      "currentSha256": "b61441ef4eadecd7016004ca581f72e23517497b85ed408c574723f428b86ef0",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(current, prior);\n",
+          "previous": "\tassert.deepEqual(current, prior);\n",
+          "start": 3178
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 4209
+        }
+      ],
+      "path": "tests/owned-callback-inventory-repair.test.mjs",
+      "previousSha256": "57a319546b457a301bd16f6b81e05214d80cc9b23dc420bdd6e8c9f02cdfa38f"
+    },
+    {
+      "currentSha256": "b3997796d52c93e1308f450aef4aa5fe7cbda90707f0de8cda736050b963d5ca",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), previous);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), previous);\n",
+          "start": 3653
+        }
+      ],
+      "path": "tests/owned-callback-result-history.test.mjs",
+      "previousSha256": "3d759c9b7ff8b6ee1694c6c93af13cfd1299f5640cd47921665886c2b18c2d01"
+    },
+    {
+      "currentSha256": "e6c619efc31dd3dab21bed53edc47fb1edb3ac07f53808044ce266fc5977d889",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3548
+        }
+      ],
+      "path": "tests/owned-cpp-borrow-evidence.test.mjs",
+      "previousSha256": "13f19f87221fa88dc4e9520a8f4461f08c16bd15f51483b6421a975ddc5b67eb"
+    },
+    {
+      "currentSha256": "77c6d26a668016253d4259ca73ccb320dabc48e79f0f739e95e6d17848038873",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), previous);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), previous);\n",
+          "start": 3597
+        }
+      ],
+      "path": "tests/owned-cpp-callback-result-history.test.mjs",
+      "previousSha256": "43f525ed2845a05348c716978d1a427b1ff1aa99029fda1bdb4fdbed6b7cea70"
+    },
+    {
+      "currentSha256": "8953d3d33d8d48bdf9b962cca451f3cb29db3c059350568d6da52bd609d21dee",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3408
+        }
+      ],
+      "path": "tests/owned-cpp-receiver-evidence.test.mjs",
+      "previousSha256": "70247df85a3fe68762cff0cc90aa1e25f1b05496e1e81f7275f5a4a51f13ed0a"
+    },
+    {
+      "currentSha256": "cfe986d8b4020fa5f712d2f57d20209891b0fcac4a8c2aa71a6cbd93b628f38f",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3406
+        }
+      ],
+      "path": "tests/owned-dotnet-borrow-evidence.test.mjs",
+      "previousSha256": "913e69a841f834496a0001fc2f7cbf8652896bb45a3e9b77947b41fbb6276d0e"
+    },
+    {
+      "currentSha256": "814b038ff0b3a54c6e5ebc5c6f6e9c729b87d642e5135e6075e783d6380d0f38",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3617
+        }
+      ],
+      "path": "tests/owned-dotnet-lifetime-evidence.test.mjs",
+      "previousSha256": "7bd2ac556218ffac9b4ee796bd6eedcee2d21d4ab9e01ae142f867068e75b896"
+    },
+    {
+      "currentSha256": "3cfa0a64fa4c148e1c6f226ffcb838cdb9e78cb78997eb9fffc16add89b431ac",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3460
+        }
+      ],
+      "path": "tests/owned-dotnet-receiver-evidence.test.mjs",
+      "previousSha256": "a32072e33efc9a1fff373356b2f810497fb649055b9725100cc4b35f777045af"
+    },
+    {
+      "currentSha256": "b37bd9ddbff165900daae27267476fddff1b701ffd965fce36ad30dd640a679c",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Source refresh must not promote unrelated support cells\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Source refresh must not promote unrelated support cells\");\n",
+          "start": 3560
+        }
+      ],
+      "path": "tests/owned-javascript-borrow-evidence.test.mjs",
+      "previousSha256": "e0119abcdeb5cec4156996f72dd53118281dc6027fcd8c078c5977d97e51e6ea"
+    },
+    {
+      "currentSha256": "5b0adb1036c1670673a9a9621d63259ba4d5b57424292a6c4bf766805f22a3a7",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"No type-surface support cells are promoted\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"No type-surface support cells are promoted\");\n",
+          "start": 4150
+        }
+      ],
+      "path": "tests/owned-javascript-coexistence-evidence.test.mjs",
+      "previousSha256": "ff90914fcc9da2864114ebd49c50932fbdd70143c0caf0d8a9c7566ed81d7cbb"
+    },
+    {
+      "currentSha256": "51e7169c040ac4ae6181d25da3907a47a28044cd9311bdcdd19f36498da56b2e",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Engine acceptance must not promote unverified isolated or installed support\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Engine acceptance must not promote unverified isolated or installed support\");\n",
+          "start": 3833
+        }
+      ],
+      "path": "tests/owned-javascript-engine-evidence.test.mjs",
+      "previousSha256": "072c7e403ed625c9c348678e2f7fdcbbf193c8434203d5b1125789f90c472f6f"
+    },
+    {
+      "currentSha256": "4f19ea8ad06466565e0b458e6346941f0ce3c058c9941e1135e1716f7bac754b",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3053
+        }
+      ],
+      "path": "tests/owned-javascript-nix-evidence.test.mjs",
+      "previousSha256": "175e34abd29dd75c6c13435182e5927a99ee76a5833de9535c109511578624a6"
+    },
+    {
+      "currentSha256": "47b34cfb957a27182cc334bf8299d9dbb8b991c64ca8c65f744cec31285d1ffe",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Only current file identities change; support cells are not promoted\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Only current file identities change; support cells are not promoted\");\n",
+          "start": 4151
+        }
+      ],
+      "path": "tests/owned-javascript-npm-evidence.test.mjs",
+      "previousSha256": "16c2c971864e0bd442927b8213300b0655a7af03abf4857cd317e600ad5e6cd4"
+    },
+    {
+      "currentSha256": "0455b6a9b9eac87dafc4d4d61ba4000d67d1958a02ec50cccb6f66f4b501dab8",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Publication must not promote unverified isolated or cross-language support\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Publication must not promote unverified isolated or cross-language support\");\n",
+          "start": 4383
+        }
+      ],
+      "path": "tests/owned-javascript-publication-evidence.test.mjs",
+      "previousSha256": "58fdfd51564a11c6e2707234ea1a584a6e8dc30ea1c143af0f93c81451c9b333"
+    },
+    {
+      "currentSha256": "ae1455c2371ca899437c548b835271aa3a1a7539f30203bfa8414b2893a2670e",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3603
+        }
+      ],
+      "path": "tests/owned-javascript-receiver-evidence.test.mjs",
+      "previousSha256": "0d392c5c0e273c455994088842923e815acc17afe5da08f46ab7abd9e6f1eba8"
+    },
+    {
+      "currentSha256": "50107b8917cbc19a51b49e387740a546e5c4f7729fe6f0721273a1f1f4a3e574",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 146
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3312
+        }
+      ],
+      "path": "tests/owned-javascript-transfer-evidence.test.mjs",
+      "previousSha256": "355403ad1648b4a438f9db0245351a07967012122fd38dae02ad1178bcfff600"
+    },
+    {
+      "currentSha256": "73f75a581e8f2636c205f6390569740a234f46a0f86ab79922faee2db0a20431",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Only source hashes change; support classifications stay unchanged\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Only source hashes change; support classifications stay unchanged\");\n",
+          "start": 5779
+        }
+      ],
+      "path": "tests/owned-javascript-wasm-evidence.test.mjs",
+      "previousSha256": "ac46eff9d89986004d4763ca1132efd2f613a009264bff209314a60b2601eff4"
+    },
+    {
+      "currentSha256": "90ee4276c960535319b70c50ce9730a2d721e5e5e2c1a8f54615c4b69d63136a",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 145
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3776
+        }
+      ],
+      "path": "tests/owned-jvm-borrow-evidence.test.mjs",
+      "previousSha256": "d7d6515e71d1e72e24a83f1d1771b183187c51fa39eeda8bb896d350104a9939"
+    },
+    {
+      "currentSha256": "0025cab5c45df02a84ae9f49e01cb7e908ba523a3d3876b663f870e132c502a8",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), previous);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), previous);\n",
+          "start": 4800
+        }
+      ],
+      "path": "tests/owned-jvm-callback-result-history.test.mjs",
+      "previousSha256": "dae7ed45407c5f6c42ca8494c296a1d28cce8f3540e15e5b40929779d6949cce"
+    },
+    {
+      "currentSha256": "d23755cc82c9ec393dbce55a051fe4123f478d22d26e6423b04b0539769f70fb",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 5023
+        }
+      ],
+      "path": "tests/owned-jvm-receiver-evidence.test.mjs",
+      "previousSha256": "069cf5c3792a722892e531224412105806ba09298ff88b716a7266c8effb838e"
+    },
+    {
+      "currentSha256": "cd729cb97156b4f0a468e9a5b9d1325a840c81a3602b81b66634e0fd466fec76",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 145
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3254
+        }
+      ],
+      "path": "tests/owned-jvm-receiver-gc-evidence.test.mjs",
+      "previousSha256": "ea2e2616bde1d4b8d9da7914449c0b5cba573ce1b936d967a2907a23355788ec"
+    },
+    {
+      "currentSha256": "76d11480de3dbd97c743234d51e9bf88a26e0bae0b559d51220b392eeae62cb9",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 4011
+        }
+      ],
+      "path": "tests/owned-perl-borrow-evidence.test.mjs",
+      "previousSha256": "293f7b75add95a5b26c895d0aa9fe9ff639fcbda07d1d5f66df41d2fc5c5a3bd"
+    },
+    {
+      "currentSha256": "e526bee4bfbfd809863b3c18ea7e7ab5216176eeb0adcb0a0357d7fc11fd3ab6",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), expected);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), expected);\n",
+          "start": 3664
+        }
+      ],
+      "path": "tests/owned-perl-package-evidence.test.mjs",
+      "previousSha256": "054723f321876f1ff359688b78bfdb8e8be07d1ab4047ba64b7e495b6b6ef1e0"
+    },
+    {
+      "currentSha256": "2253eb0be9d8a851ed5844b4be3a2ed899b82cb2afed163ce1f6758fb2340a6a",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 5451
+        }
+      ],
+      "path": "tests/owned-perl-receiver-ci.test.mjs",
+      "previousSha256": "8bc81ee7cecce103363d0f56c4d83591fc0263594529967aca4bf7fe17db4ebc"
+    },
+    {
+      "currentSha256": "1ed0520c923da74a82af3615c7984511e4c7cf25569429d687a270dc5488ab8f",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3366
+        }
+      ],
+      "path": "tests/owned-perl-receiver-evidence.test.mjs",
+      "previousSha256": "03f32a9c7f90905b41daf8ed22dd2fc04f6d0ee7c0d5a5bb9ebd2d3229df8bbc"
+    },
+    {
+      "currentSha256": "6aa70384cca78eefc43258aabc84d900e2336b09431e07492118a39551b95a8d",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 4446
+        }
+      ],
+      "path": "tests/owned-perl-transfer-evidence.test.mjs",
+      "previousSha256": "62d6f1e1d3c3d7f36289768e37593ea2fbab8db3ab413a35a6e688eb15777e67"
+    },
+    {
+      "currentSha256": "8f40a6e2a79c2300323324000d9eaef090ba23a695aa239c8b3a5f58f1971cff",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3415
+        }
+      ],
+      "path": "tests/owned-php-borrow-evidence.test.mjs",
+      "previousSha256": "b7bfe2e5ea0be5941363872e922e3e11121663839e2a15c5f1d179eebe7c284e"
+    },
+    {
+      "currentSha256": "2236c82be91664d600fb0b5c862408d57be0379f540c3611c7fe6f496178fcc9",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3792
+        }
+      ],
+      "path": "tests/owned-php-package-evidence.test.mjs",
+      "previousSha256": "ade1227b320176850d5344f51109cdf8ed14ccf27e1fd85d1813383cd10bee06"
+    },
+    {
+      "currentSha256": "2c2d7f1a5c3b9c68a0ac8fa565600b56b8069edae918cfe82bf3ac123e85332d",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3388
+        }
+      ],
+      "path": "tests/owned-php-receiver-evidence.test.mjs",
+      "previousSha256": "81cd4763fb868ae66be6ba1e10991e9acc28de23383855b933a0338cecb7a6f3"
+    },
+    {
+      "currentSha256": "1929b53181bb3a8a0185d717eb7eae90427bcedb8006834b1f9e44be5ec21427",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3001
+        }
+      ],
+      "path": "tests/owned-php-transfer-evidence.test.mjs",
+      "previousSha256": "274ba9c6c9534fad964b28d276fabdd22546f0ef9c1b993757bce1b60ca96575"
+    },
+    {
+      "currentSha256": "15daeafaf7524bc96234313a2f5d5d4ff5779e3656cc4b026ddf57b1b58d90e4",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Source refresh must not promote unrelated support cells\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Source refresh must not promote unrelated support cells\");\n",
+          "start": 3668
+        }
+      ],
+      "path": "tests/owned-php-wasm-borrow-evidence.test.mjs",
+      "previousSha256": "e6d8550d1c6527923139c266be6fb2ca7502739a5504763fb00de4c9226be91d"
+    },
+    {
+      "currentSha256": "60883b8148a8440bfc523fec60ede3e70d5112170c5580b54bc414f41e90796f",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 138
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 6655
+        }
+      ],
+      "path": "tests/owned-php-wasm-evidence.test.mjs",
+      "previousSha256": "3a355cbf63a029931349463081956e1322db03b0b1e081b83e7fafb428c4f349"
+    },
+    {
+      "currentSha256": "807a54f7273b38be5da6abb8e51fc0b8959ae4fdc3940856e7ed970dcfa14787",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3477
+        }
+      ],
+      "path": "tests/owned-php-wasm-receiver-evidence.test.mjs",
+      "previousSha256": "60f853bc876251f3439d785812668bd7349bd817fb921d8600aeaef7360ce8ac"
+    },
+    {
+      "currentSha256": "65ab8f289ca7bfa8ea27942530b1920b8ac5c8623488aa002a6a5104dd9323f0",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 137
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3018
+        }
+      ],
+      "path": "tests/owned-php-wasm-transfer-evidence.test.mjs",
+      "previousSha256": "0c5f5c68b2924c3ab5d630f3be67b2eeb8f2f975536f158d7c8a098cb8f617da"
+    },
+    {
+      "currentSha256": "4bc17b542fa8d92e85ad99a8ec2c9c51ebedbd772ca8b7ff925d43c396fc0a74",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 145
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3402
+        }
+      ],
+      "path": "tests/owned-python-borrow-evidence.test.mjs",
+      "previousSha256": "13b2b3b346cecf2a4024d885f39d74afd0dca3fd922cfc5bd93e913834f986d7"
+    },
+    {
+      "currentSha256": "df530ba42f588d5fc2e49444109f6825190cbcbf2235c88785d6dc77dc1a9ea7",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), previous);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), previous);\n",
+          "start": 3294
+        }
+      ],
+      "path": "tests/owned-python-callback-result-history.test.mjs",
+      "previousSha256": "c2f64b93074f0288a695da6dfe8ec1fc009e53cd5ad4cc97b940bc203a712feb"
+    },
+    {
+      "currentSha256": "d3cf748c1a5a3ff4ed27589f9c2a0d2492da2b33f608a9cc842f716ac6772bbe",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3550
+        }
+      ],
+      "path": "tests/owned-python-receiver-evidence.test.mjs",
+      "previousSha256": "5e19d72a7cbcac76907fc3bd62308a006217f0a7716c3cfab5fbd4ac0db3f882"
+    },
+    {
+      "currentSha256": "5f415edec720bebada92c8bccc927d2d3afb8f75eb33b057926094d359d89ab6",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3406
+        }
+      ],
+      "path": "tests/owned-receiver-evidence.test.mjs",
+      "previousSha256": "5db109c35c67306212c3b7795d9b8bb8491034523a0215c416f7e6ccf75d2154"
+    },
+    {
+      "currentSha256": "8eb4e9d5ceea3c1649f4ac0bf17d5abb1770e8ffdf3027d604de33ba3fee2c89",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 143
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3691
+        }
+      ],
+      "path": "tests/owned-ruby-borrow-evidence.test.mjs",
+      "previousSha256": "020080afd2c489882569e3a717cb0cf849a9dd29f2ed77bc674455529c9b3aa9"
+    },
+    {
+      "currentSha256": "946e48d42c2959e7a479d3f013589240cfb01fa43a1721c1e84f5c90c5a3cbcb",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), previous);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), previous);\n",
+          "start": 5067
+        }
+      ],
+      "path": "tests/owned-ruby-callback-result-history.test.mjs",
+      "previousSha256": "b937eb016f76d11fddd3602a146c467b30db509fc6045343212708b967216e9a"
+    },
+    {
+      "currentSha256": "8e4ea97a93b0a6a6bbc91b23e194a9d27fcb4182139271e124274baf1c51c7da",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3439
+        }
+      ],
+      "path": "tests/owned-ruby-receiver-evidence.test.mjs",
+      "previousSha256": "f1aec5ecdaad3adf7f34245651d9c37ab69f5593e6d26dc0d09a441234ad19d9"
+    },
+    {
+      "currentSha256": "63bf7f284394384379a9ea9565f93d981325ca993508413097fb4f15e23086f3",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3687
+        }
+      ],
+      "path": "tests/owned-rust-borrow-evidence.test.mjs",
+      "previousSha256": "89abdb0cd61054503bb087d606dbde10b2f5277b5ecfde395d324274df22f955"
+    },
+    {
+      "currentSha256": "3ad0f4b01c28a38d7fe955aa997b15a2fc61bc02d8ed52df54a4f830beb97d00",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), previous);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), previous);\n",
+          "start": 3646
+        }
+      ],
+      "path": "tests/owned-rust-callback-result-history.test.mjs",
+      "previousSha256": "56a2c4548202f22c1a6c9fea3f5ca3631731c2c0bbbe72d653ab71f2c8cd965e"
+    },
+    {
+      "currentSha256": "1dc1f7dc7b8e422e4ccfae3b7247b7c486030cc5b2351bf9405035f26f6cddd0",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 139
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 4872
+        }
+      ],
+      "path": "tests/owned-rust-receiver-evidence.test.mjs",
+      "previousSha256": "21db3dada7b4f46b15849989de985026b961200cc0ae5e6987eeb8af93709e0a"
+    },
+    {
+      "currentSha256": "5683b3f5abbd62196ce3e15c8b67fad49dbdb5de635b0a774822d59a2179e590",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Staged C transfer execution does not promote installed support\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Staged C transfer execution does not promote installed support\");\n",
+          "start": 4169
+        }
+      ],
+      "path": "tests/owned-transfer-c-evidence.test.mjs",
+      "previousSha256": "5612831c60c2546e03017809038b62aab48bd4723db5f3e3cca71650b5de9709"
+    },
+    {
+      "currentSha256": "b1739334b23979c35a366ff78f995fe2898a2a2c4e19d79f8d760a39a19dad2f",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 138
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"C transfer acceptance does not promote unrelated type-table cells\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"C transfer acceptance does not promote unrelated type-table cells\");\n",
+          "start": 3301
+        }
+      ],
+      "path": "tests/owned-transfer-package-evidence.test.mjs",
+      "previousSha256": "42e5acb6b271598cb4d26ce707e5369a6749d81e040f014968cd6b404e820e83"
+    },
+    {
+      "currentSha256": "275c1775ea7b5e3f72308b1eff30e5e19fb162a2a57363eec6aa68fe44f8b58d",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 137
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 4142
+        }
+      ],
+      "path": "tests/owned-wasm32-evidence.test.mjs",
+      "previousSha256": "144423c0adc5272f58defda7589d0d73c47ee9089454ee765e574e4cebb36b61"
+    },
+    {
+      "currentSha256": "fb2a35adebf2cd1db039258bf76fd0d38decc47080d2b29b55ad4ab0c06e8cf3",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 138
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"The repair must not promote installed support\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"The repair must not promote installed support\");\n",
+          "start": 4281
+        }
+      ],
+      "path": "tests/owned-zend-bailout-repair.test.mjs",
+      "previousSha256": "d8457a604e251f9e98fc8b8b3ea07e270939b14c0dab93d438ee93a6ec1811ee"
+    },
+    {
+      "currentSha256": "6ab0b577cc69e2fe52bdddf06dc68066236f89eb97dd42c31da8569ccf6d2a8a",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 269
+        },
+        {
+          "current": "",
+          "previous": "const describeJson = value => typeof value === \"string\"\n\t? `string(${value.length} bytes, ${JSON.stringify(value.slice(0, 80))})`\n\t: JSON.stringify(value);\nconst firstJsonDifference = (actual, expected) => {\n\tconst stack = [{ actual, expected, path: \"$\" }];\n\twhile(stack.length > 0)\n\t{\n\t\tconst item = stack.pop();\n\t\tif(Object.is(item.actual, item.expected)) continue;\n\t\tif(item.actual === null || item.expected === null\n\t\t\t|| typeof item.actual !== \"object\"\n\t\t\t|| typeof item.expected !== \"object\")\n\t\t\treturn `${item.path}: ${describeJson(item.actual)} !== ${describeJson(item.expected)}`;\n\t\tconst actualArray = Array.isArray(item.actual);\n\t\tif(actualArray !== Array.isArray(item.expected))\n\t\t\treturn `${item.path}: array/object kind differs`;\n\t\tif(actualArray && item.actual.length !== item.expected.length)\n\t\t\treturn `${item.path}: length ${item.actual.length} !== ${item.expected.length}`;\n\t\tconst actualKeys = Object.keys(item.actual);\n\t\tconst expectedKeys = Object.keys(item.expected);\n\t\tif(actualKeys.length !== expectedKeys.length)\n\t\t\treturn `${item.path}: key count ${actualKeys.length} !== ${expectedKeys.length}`;\n\t\tfor(const key of actualKeys)\n\t\t\tif(!Object.hasOwn(item.expected, key))\n\t\t\t\treturn `${item.path}: unexpected key ${JSON.stringify(key)}`;\n\t\tfor(let index = actualKeys.length - 1; index >= 0; index--)\n\t\t{\n\t\t\tconst key = actualKeys[index];\n\t\t\tstack.push({ actual: item.actual[key], expected: item.expected[key]\n\t\t\t\t, path: actualArray ? `${item.path}[${key}]`\n\t\t\t\t\t: `${item.path}.${key}` });\n\t\t}\n\t}\n};\n",
+          "start": 1327
+        },
+        {
+          "current": "\tassertJsonEqual(current, prior\n\t\t, \"Perl contract repair must preserve the type-surface inventory\");\n",
+          "previous": "\tconst difference = firstJsonDifference(current, prior);\n\tassert.equal(difference, undefined, difference);\n",
+          "start": 3990
+        }
+      ],
+      "path": "tests/perl-contract-repair-evidence.test.mjs",
+      "previousSha256": "e92bc85df533647e71e292ff87aa559eac729d631d2f251c2fd226123227f7f4"
+    },
+    {
+      "currentSha256": "7d8c16839ba2003e0cfaf13bbe5c5c15abe042b12152a57bda14a7f544677967",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 153
+        },
+        {
+          "current": "\tassertJsonEqual(current, expected, \"No other claim, artifact or source pin may change\");\n",
+          "previous": "\tassert.deepEqual(current, expected, \"No other claim, artifact or source pin may change\");\n",
+          "start": 4601
+        }
+      ],
+      "path": "tests/perl-relocated-promotion.test.mjs",
+      "previousSha256": "09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4"
+    },
+    {
+      "currentSha256": "8dc063c0e16464f7b2092cec51428d29f2426a307356f294a970774e9d4bac38",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 136
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous);\n",
+          "previous": "\tassert.deepEqual(current, previous);\n",
+          "start": 5606
+        }
+      ],
+      "path": "tests/recursive-checked-record-perl-diagnostic-source-history.test.mjs",
+      "previousSha256": "156dc0bd9a608e06bbb7f2a766666c71bd92586a17998cf28eeddc46c5469413"
+    },
+    {
+      "currentSha256": "8437aa638d5a6d6fae913b3b5329693aa5658a57f0952d3f92ac44029b11c963",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 159
+        },
+        {
+          "current": "\tassertJsonEqual(current, previous, \"no observation, support state or evidence claim changes\");\n",
+          "previous": "\tassert.deepEqual(current, previous, \"no observation, support state or evidence claim changes\");\n",
+          "start": 4250
+        }
+      ],
+      "path": "tests/reviewed-fin-refusal-history.test.mjs",
+      "previousSha256": "359f093872cf26679310ead84336e4cf4f86875f82d1d1d2e8c965c3b4cade79"
+    },
+    {
+      "currentSha256": "962505e86e06fc8cfa138d5c42d74da9c0c1b2fbe1b2aa4ef338c928e209e239",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3456
+        }
+      ],
+      "path": "tests/structured-docs-ci-evidence.test.mjs",
+      "previousSha256": "3a27aac29b99092a9b89031e208cce9ac5a352594475dc2d832cf560b8cae0e0"
+    },
+    {
+      "currentSha256": "5a0f3bf0b00a7e87737c1c5afb2035a6459617228205258768a981b03119aff0",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 152
+        },
+        {
+          "current": "\tassert.equal(pins, 186); assertJsonEqual(current, previous);\n",
+          "previous": "\tassert.equal(pins, 186); assert.deepEqual(current, previous);\n",
+          "start": 3355
+        }
+      ],
+      "path": "tests/wasm-ci-array-history.test.mjs",
+      "previousSha256": "f157f65a1ea25b21f5b210a72f054839bf03df7d950568102a220f7e6085a472"
+    },
+    {
+      "currentSha256": "cfeb2ec1681b8e7764ee07a3db6987f08c3ac99ccc01139b0e7065dfcfde657a",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 145
+        },
+        {
+          "current": "\tassert.equal(pins, 94); assertJsonEqual(current, previous);\n",
+          "previous": "\tassert.equal(pins, 94); assert.deepEqual(current, previous);\n",
+          "start": 3412
+        }
+      ],
+      "path": "tests/wasm-entry-archive-history.test.mjs",
+      "previousSha256": "ba44784f2984ccdd8a6478f96f14a4271b976f2a7866f6aa7a959d0e5cc7184e"
+    },
+    {
+      "currentSha256": "84274aab9eb04eb552ab8098b2ce0f473f8e4f353c1f8e0124c509343b5ba691",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 146
+        },
+        {
+          "current": "\tassert.equal(pins, 98); assertJsonEqual(current, previous);\n",
+          "previous": "\tassert.equal(pins, 98); assert.deepEqual(current, previous);\n",
+          "start": 3457
+        }
+      ],
+      "path": "tests/wasm-entry-controls-history.test.mjs",
+      "previousSha256": "930485be50d9e0564c67933190928017aea5c71d155e79508e963f6b9e99c732"
+    },
+    {
+      "currentSha256": "b6d509dcef6293b514ee4a5425a1692dd093a3742b2769bfdfcd19a696fe2ea0",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 145
+        },
+        {
+          "current": "\tassert.equal(pins, 96); assertJsonEqual(current, previous);\n",
+          "previous": "\tassert.equal(pins, 96); assert.deepEqual(current, previous);\n",
+          "start": 3457
+        }
+      ],
+      "path": "tests/wasm-entry-harness-history.test.mjs",
+      "previousSha256": "40fd1906ff9313119635cf31f83e1c2a1bc01373bece6da7e3ca17510639b8e9"
+    },
+    {
+      "currentSha256": "321a78cfc10f2d00dd62f5778bf0e28678a505eadcb7ff3d577b9863bf98846d",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 154
+        },
+        {
+          "current": "\tassert.ok(refreshed > 0); assertJsonEqual(current, expected);\n",
+          "previous": "\tassert.ok(refreshed > 0); assert.deepEqual(current, expected);\n",
+          "start": 4895
+        }
+      ],
+      "path": "tests/wasm-entry-supplement-history.test.mjs",
+      "previousSha256": "e12efc359447318369df7f46f624761baa1e8fdee020a902c3efdd9ee97c704e"
+    },
+    {
+      "currentSha256": "4cbeceff50c80d0ee768b4aa8c058014157d78d84926c72c9446077ac1a25cb3",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Source refresh must not promote unrelated support cells\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Source refresh must not promote unrelated support cells\");\n",
+          "start": 3468
+        }
+      ],
+      "path": "tests/wit-owned-borrow-evidence.test.mjs",
+      "previousSha256": "623ee94d71b791525c4179f61b772a1a5ede7022f3e7b46dfd1ef8273c92cc6a"
+    },
+    {
+      "currentSha256": "e540250883be1fdb14731ed878dfc2e429ebb45b303410e3152237c4515fc3d7",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 146
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Regression repair does not promote installed support\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Regression repair does not promote installed support\");\n",
+          "start": 3184
+        }
+      ],
+      "path": "tests/wit-owned-build-repair-evidence.test.mjs",
+      "previousSha256": "8a19e35ca3dbfdfe14fc2b502f9123e32f41b55069cb8da3211cf8e4c1c50c0f"
+    },
+    {
+      "currentSha256": "b21a22fb16c6a660bbf22afed3745b0d8deb23dfbfdda48e2eb625dec9dd4a83",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 136
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior, \"Projection tests cannot promote installed support\");\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior, \"Projection tests cannot promote installed support\");\n",
+          "start": 3398
+        }
+      ],
+      "path": "tests/wit-owned-projection-evidence.test.mjs",
+      "previousSha256": "a4374ad7e7d7038e58e1aa0a345ca4187496a9af8edd1a90322dfc3c58986475"
+    },
+    {
+      "currentSha256": "ef5d39fbec5a9c692007a644cdd34441fdb806ddc6fa9118563d8ded7a521b5e",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 138
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3450
+        }
+      ],
+      "path": "tests/wit-owned-receiver-evidence.test.mjs",
+      "previousSha256": "af0f219bbcde488ffac0356a5693e76e0dd019ca5bcab4e6904a59b17a4d4767"
+    },
+    {
+      "currentSha256": "e21eb4c8041d8fd33a628f6065a0c32abd1b2e9946fead69091b7e638287de6c",
+      "edits": [
+        {
+          "current": "import { assertJsonEqual } from \"./helpers/bounded-json-equality.mjs\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "\tassertJsonEqual(JSON.parse(current), prior);\n",
+          "previous": "\tassert.deepEqual(JSON.parse(current), prior);\n",
+          "start": 3123
+        }
+      ],
+      "path": "tests/wit-owned-transfer-evidence.test.mjs",
+      "previousSha256": "0799f492c37a58735a04dbbf319a3f816a5116c65645c6a0c22d037b09bb63a3"
+    }
+  ]
+}
