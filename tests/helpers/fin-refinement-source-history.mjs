@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeVo1220PerlContractReplayMemoryBoundSource
+	, vo1220PerlContractReplayMemoryBoundNormalizationPaths
+} from "./vo1220-perl-contract-replay-memory-bound-source-history.mjs";
+import {
 	beforeVo1220WorkflowReleaseAssetPinRefreshSource
 	, vo1220WorkflowReleaseAssetPinRefreshNormalizationPaths
 } from "./vo1220-workflow-release-asset-pin-refresh-source-history.mjs";
@@ -2775,7 +2779,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220WorkflowReleaseAssetPinRefreshNormalizationPaths
+	...vo1220PerlContractReplayMemoryBoundNormalizationPaths
+	, ...vo1220WorkflowReleaseAssetPinRefreshNormalizationPaths
 	, ...vo1220WorkflowReleaseAssetFailoverNormalizationPaths
 	, ...vo1220ReleaseAssetApiFailoverNormalizationPaths
 	, ...vo1220ProducerContractLivePinRepairNormalizationPaths
@@ -4041,7 +4046,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220WorkflowReleaseAssetPinRefreshSource(
+	let stage = beforeVo1220PerlContractReplayMemoryBoundSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220WorkflowReleaseAssetPinRefreshSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
