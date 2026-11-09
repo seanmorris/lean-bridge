@@ -50,6 +50,9 @@ const gdb = (host, serial = 0, jvm = false) => {
 				, libraries: Object.fromEntries(Object.entries(host.libraries).map(([name, sha256]) => [name, { sha256, bytes: 32, device: 1, inode: 1 }]))
 				, afterExit: Object.fromEntries(Object.entries(host.libraries).map(([name, sha256]) => [name, { sha256, linksAfterExit: 0 }])) };
 		}
+		else manifest.processExit = {
+			schemaVersion: 1, kind: "gdb-exit", pid, code: 0
+		};
 		return run;
 	});
 	return { configIdentity, configSha256, runs };

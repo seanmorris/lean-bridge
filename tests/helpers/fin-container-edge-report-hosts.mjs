@@ -17,10 +17,10 @@ import { finContainerEdgeDotnetProbe } from "./fin-container-edge-dotnet.mjs";
 import { finContainerEdgeJvmProbe } from "./fin-container-edge-jvm.mjs";
 import { finContainerEdgePhpProbe } from "./fin-container-edge-php.mjs";
 import { finContainerEdgeWitProbe } from "./fin-container-edge-wit.mjs";
-import { finContainerEdgeGdbScript } from "./fin-container-edge-gdb.mjs";
+import { finContainerEdgeGdbBaseScript, finContainerEdgeGdbScript } from "./fin-container-edge-gdb.mjs";
 import { finContainerEdgeJvmGdbScript, finContainerEdgeJvmWaitGdbScript } from "./fin-container-edge-jvm-gdb.mjs";
 import { withoutFinContainerEdgeJvmExitDiagnostics } from "./fin-container-edge-jvm-exit.mjs";
-import { assertFinContainerEdgeJvmExit } from "./fin-container-edge-jvm-wait.mjs";
+import { assertFinContainerEdgeJvmExit, assertFinHostProcessExit } from "./fin-container-edge-jvm-wait.mjs";
 
 const digest = /^[a-f0-9]{64}$/u;
 const positive = value => assert.ok(Number.isSafeInteger(value) && value > 0);
@@ -46,7 +46,8 @@ const environment = (value, item, names) => {
 	assert.equal(value.packageFileSetSha256, item.packageFileSetSha256);
 };
 
-const gdbRuns = (host, observation, jvm = false) => {
+const gdbRuns = (host, observation, { jvm = false, strictHostObserver = "current" } = {}) => {
+	assert.ok(["current", "historical-base"].includes(strictHostObserver));
 	const expected = { schemaVersion: 1, kind: "fin-container-edge"
 		, platform: "x86_64-linux-gnu", instrument: "gdb-breakpoints"
 		, componentId: host.componentId, columns: host.columns
@@ -99,9 +100,14 @@ const gdbRuns = (host, observation, jvm = false) => {
 				assert.deepEqual(extracted.afterExit[name], { sha256: hash, linksAfterExit: 0 });
 			}
 		}
+		else if(strictHostObserver === "current")
+			assertFinHostProcessExit(manifest.processExit, manifest.pid);
+		else assert.equal(Object.hasOwn(manifest, "processExit"), false
+			, "historical base observers cannot acquire new exit observations");
 	}
 	if(jvm) assert.notEqual(observation.runs[0].extractionRoot, observation.runs[1].extractionRoot);
-	else assert.equal(host.scriptSha256, sha256(finContainerEdgeGdbScript));
+	else assert.equal(host.scriptSha256, sha256(strictHostObserver === "current"
+		? finContainerEdgeGdbScript : finContainerEdgeGdbBaseScript));
 	assert.match(host.gdb, /^GNU gdb /u); assert.match(host.gdbSha256, digest);
 };
 
@@ -110,8 +116,10 @@ const gdbRuns = (host, observation, jvm = false) => {
  *
  * @param item - One installed host result, already checked against the fixture and expected rows.
  * @param model - Independent expected signatures for reconstructing the probe.
+ * @param options - Explicit strict-root observer epoch for current or authenticated historical reports.
+ * @param options.strictHostObserver - Current exact-child observer or the pre-repair base observer.
  */
-export const assertFinContainerEdgeHostReport = async (item, model) => {
+export const assertFinContainerEdgeHostReport = async (item, model, { strictHostObserver = "current" } = {}) => {
 	const host = item.dispatch.publicHost, profile = item.profile, component = model.component;
 	const definitions = paths(host, host.publicSymbols);
 	let source;
@@ -169,7 +177,7 @@ export const assertFinContainerEdgeHostReport = async (item, model) => {
 		flags(host, ["loadedModulesChecked"]);
 		assert.match(host.ruby, /^ruby 3\.3\.[0-9]+ x86_64-linux/u); assert.match(host.rubySha256, digest);
 		assert.equal(host.instrument, "GDB address breakpoints; normal deep-binding loader unchanged");
-		gdbRuns(host, host);
+		gdbRuns(host, host, { strictHostObserver });
 	}
 	else if(profile === "dotnet")
 	{
@@ -191,7 +199,7 @@ export const assertFinContainerEdgeHostReport = async (item, model) => {
 		assert.equal(host.probeEnvironment.packageFileSetSha256, host.dotnetEnvironment.packageFileSetSha256);
 		flags(host, ["sameOriginalArchive", "loadedAssemblyChecked"]);
 		assert.equal(host.instrument, "GDB address breakpoints; production managed and native loaders unchanged");
-		gdbRuns(host, host);
+		gdbRuns(host, host, { strictHostObserver });
 	}
 	else if(["java", "kotlin"].includes(profile))
 	{
@@ -211,7 +219,7 @@ export const assertFinContainerEdgeHostReport = async (item, model) => {
 		flags(host, ["loadedClassesChecked", "nativeExtractionCheckedBeforeAndAfterExit"]);
 		assert.match(host.java, /^openjdk 22\./u);
 		assert.equal(host.instrument, "GDB address breakpoints over authenticated JVM-extracted libraries; production loader unchanged");
-		gdbRuns(host, host, true);
+		gdbRuns(host, host, { jvm: true, strictHostObserver });
 	}
 	else if(profile === "php-native")
 	{
@@ -220,7 +228,8 @@ export const assertFinContainerEdgeHostReport = async (item, model) => {
 		for(const mode of host.modes)
 		{
 			const probe = await finContainerEdgePhpProbe(model, component, options, mode.mode);
-			assert.equal(mode.probeSha256, sha256(probe)); gdbRuns(host, mode);
+			assert.equal(mode.probeSha256, sha256(probe));
+			gdbRuns(host, mode, { strictHostObserver });
 		}
 		assert.deepEqual(host.phpEnvironment, item.phpEnvironment);
 		environment(host.phpEnvironment, item, ["dependencyFilesSha256", "generatedFilesSha256", "vendorFilesSha256", "toolsSha256"]);

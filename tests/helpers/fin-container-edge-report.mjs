@@ -119,11 +119,13 @@ const observationIdentity = (value, item, model, publicSymbols = []) => {
  * @param options - Optional exact Python floor required by this job.
  * @param options.python - Expected Python major/minor, when selected.
  * @param options.jvmExpected - Exact retained JVM observation model, when checking a historical Java or Kotlin report.
+ * @param options.strictHostObserver - Exact strict-root observer epoch; current by default.
  */
-export const assertFinContainerEdgeReport = async (report, profiles, { python, jvmExpected } = {}) => {
+export const assertFinContainerEdgeReport = async (report, profiles, { python, jvmExpected, strictHostObserver = "current" } = {}) => {
 	if(python !== undefined) assert.ok(["3.11", "3.12"].includes(python) && profiles.includes("python"));
 	if(jvmExpected !== undefined)
 		assert.ok(Array.isArray(jvmExpected) && profiles.some(profile => ["java", "kotlin"].includes(profile)));
+	assert.ok(["current", "historical-base"].includes(strictHostObserver));
 	assert.ok(Array.isArray(profiles) && profiles.length > 0);
 	assert.deepEqual(profiles, [...new Set(profiles)].sort());
 	assert.ok(profiles.every(profile => finContainerEdgeProfiles.includes(profile)));
@@ -210,7 +212,8 @@ export const assertFinContainerEdgeReport = async (report, profiles, { python, j
 		else assert.equal(host.stdoutSha256, transcriptSha256);
 		if(!["c", "cpp"].includes(profile)) flags(host, ["repeatedColdProcess"]);
 		if(profile === "python") assert.equal(host.python, item.python);
-		await assertFinContainerEdgeHostReport(item, model);
+		await assertFinContainerEdgeHostReport(item, model
+			, { strictHostObserver });
 	}
 	assert.deepEqual(report.archives, archives, "no missing, extra or relabelled archive");
 };

@@ -14,6 +14,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { finContainerEdgeProfiles } from "./helpers/fin-container-edges.mjs";
 import { assertFinContainerEdgeReport } from "./helpers/fin-container-edge-report.mjs";
 import { syntheticFinContainerEdgeReport } from "./helpers/fin-container-edge-report-fixtures.mjs";
+import { finContainerEdgeGdbBaseScript } from "./helpers/fin-container-edge-gdb.mjs";
 import "./helpers/fin-container-edge-ci-tests.mjs";
 import "./helpers/fin-container-edge-ci-history-tests.mjs";
 import "./helpers/fin-container-edge-sdk-tests.mjs";
@@ -112,6 +113,50 @@ test("host-specific checks reject stale probes, broken debugger bindings and mis
 		}
 	}
 	t.diagnostic(`${rejected} host-specific false acceptance claims rejected`);
+});
+
+test("strict hosts require current exit receipts or an explicit receipt-free historical observer", async t => {
+	let checked = 0;
+	for(const profile of ["ruby", "dotnet", "php-native"])
+	{
+		const current = await syntheticFinContainerEdgeReport([profile]);
+		const host = current.reports[0].dispatch.publicHost;
+		const observations = profile === "php-native" ? host.modes : [host];
+		await assertFinContainerEdgeReport(current, [profile]);
+		const missing = structuredClone(current);
+		const missingHost = missing.reports[0].dispatch.publicHost;
+		for(const observation of profile === "php-native" ? missingHost.modes : [missingHost])
+			for(const run of observation.runs) delete run.manifest.processExit;
+		await assert.rejects(assertFinContainerEdgeReport(missing, [profile])
+			, /host process-exit receipt/u);
+		await assert.rejects(assertFinContainerEdgeReport(missing, [profile]
+			, { strictHostObserver: "historical-base" }), assert.AssertionError);
+		const staleCurrent = structuredClone(current);
+		staleCurrent.reports[0].dispatch.publicHost.scriptSha256
+			= sha256(finContainerEdgeGdbBaseScript);
+		await assert.rejects(assertFinContainerEdgeReport(staleCurrent, [profile])
+			, assert.AssertionError);
+		const historical = structuredClone(missing);
+		historical.reports[0].dispatch.publicHost.scriptSha256
+			= sha256(finContainerEdgeGdbBaseScript);
+		await assertFinContainerEdgeReport(historical, [profile]
+			, { strictHostObserver: "historical-base" });
+		await assert.rejects(assertFinContainerEdgeReport(historical, [profile]));
+		const forged = structuredClone(historical);
+		const forgedHost = forged.reports[0].dispatch.publicHost;
+		for(const observation of profile === "php-native" ? forgedHost.modes : [forgedHost])
+			for(const [index, run] of observation.runs.entries())
+				run.manifest.processExit = observations[0].runs[index].manifest.processExit;
+		await assert.rejects(assertFinContainerEdgeReport(forged, [profile]
+			, { strictHostObserver: "historical-base" })
+			, /historical base observers cannot acquire/u);
+		checked++;
+	}
+	const report = await syntheticFinContainerEdgeReport(["ruby"]);
+	for(const strictHostObserver of [null, "", "none", "current-or-historical"])
+		await assert.rejects(assertFinContainerEdgeReport(report, ["ruby"]
+			, { strictHostObserver }), assert.AssertionError);
+	assert.equal(checked, 3); t.diagnostic("three strict-root host families and four invalid modes refused");
 });
 
 test("coordinated missing environment identities cannot pass by comparing two absent values", async () => {

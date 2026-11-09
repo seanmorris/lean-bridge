@@ -11,6 +11,7 @@ import { assertFinLateReport, assertFinLateTap } from "./fin-container-late-repo
 import { assertFinLateWitRecords, assertFinLateWitTap } from "./fin-container-late-wit-report.mjs";
 import { finHostedJobs, finHostedRevision, finHostedRoot, finHostedRun, finHostedSelections } from "./fin-container-hosted-selections.mjs";
 import { readFinHostedMembers } from "./fin-container-hosted-zip.mjs";
+import { finContainerEdgeJvmExpectedBeforeOptionNullEntry } from "./fin-container-edge-jvm.mjs";
 
 export const finHostedIndexSha256 = "20a16bc7de3c60a87874c8814816a9fd60e9fa2257b082b7d3aee621b3a9d78b";
 const steps = {
@@ -94,7 +95,12 @@ export const assertFinHostedReports = async (members, lane) => {
 	{
 		const edgePath = `native-fin-container-edges/edges-${selection.edge}.json`;
 		const edge = JSON.parse(await retained(edgePath));
-		await assertFinForeignReport(edge, selection.profiles, { python: selection.python });
+		await assertFinForeignReport(edge, selection.profiles, {
+			python: selection.python
+			, strictHostObserver: "historical-base"
+			, jvmExpected: selection.lane === "jvm"
+				? finContainerEdgeJvmExpectedBeforeOptionNullEntry : undefined
+		});
 		let late;
 		if(lane === "wit-wasi")
 		{

@@ -92,6 +92,7 @@ test("all archived native edge selections pass the strict raw and public report 
 			assert.equal(Number(tap.toString().match(new RegExp(`^# ${name} (\\d+)$`, "m"))?.[1]), expected);
 		await assertFinContainerEdgeReport(report, run.profiles, {
 			python: run.python
+			, strictHostObserver: "historical-base"
 			, jvmExpected: run.profiles.some(profile => ["java", "kotlin"].includes(profile))
 				? finContainerEdgeJvmExpectedBeforeOptionNullEntry : undefined
 		});
