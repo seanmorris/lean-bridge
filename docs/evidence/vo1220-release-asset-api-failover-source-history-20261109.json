@@ -1,0 +1,214 @@
+{
+  "behavior": {
+    "acquisitionLayers": 2,
+    "changedSupportCells": 0,
+    "checksummedAssets": 4,
+    "measurementSemanticChanges": 0,
+    "packageSemanticChanges": 0,
+    "releaseAssets": 4,
+    "runtimeSemanticChanges": 0,
+    "testContractChanges": 1,
+    "uncheckedAssets": 0
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [],
+  "discovery": {
+    "browserReleaseRoute": "HTTP 504",
+    "downstreamRun": 42566901971,
+    "observedFailedJobs": 10,
+    "publicAssetApiRoute": "exact pinned bytes available",
+    "sharedFailure": "HTTP 504 before consumer execution"
+  },
+  "exactModelSha256": {
+    "after": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "before": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-release-asset-api-failover-source-history.mjs",
+      "sha256": "d70cdfaccabc8ac628de12fd91bc4ec917fca9ac06e9a79213fdf97ab6ec794d"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-asset-api-failover-source-history-tests.mjs",
+      "sha256": "ac92b945b4b19970d6f47bbee7ca49ceb712a04dc8b8de598002b6255064e430"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-asset-api-failover-source-history.mjs",
+      "sha256": "b7174e9e9706b3dbdfe813e6285f1f9098c538dfe621642fa3e9f7c05011585d"
+    }
+  ],
+  "implementationCommit": "37f46868613e15c0f45a343ad930741ed1c5eded",
+  "integrationCommit": "421e84b20989b3f57fb47e5e1447d3a8badaf189",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f4fc12651d10c51670787b0f00f05f58679c6c0e8e010f50aba063f8465b8a80",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-release-asset-api-failover-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 178
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "722044a94527855786aa60969678808ecf9421d97c0b5848f05fec3ad1ae910c"
+    },
+    {
+      "currentSha256": "b83a6d73a6d89818260ea5a5a1bffe600d1c4c45a2dcf136c093b361fd4dd7a3",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ReleaseAssetApiFailoverSource\n\t, vo1220ReleaseAssetApiFailoverNormalizationPaths\n} from \"./vo1220-release-asset-api-failover-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ReleaseAssetApiFailoverNormalizationPaths\n\t, ...vo1220ProducerContractLivePinRepairNormalizationPaths\n",
+          "previous": "\t...vo1220ProducerContractLivePinRepairNormalizationPaths\n",
+          "start": 244082
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ReleaseAssetApiFailoverSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ProducerContractLivePinRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220ProducerContractLivePinRepairSource(\n",
+          "start": 307237
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c77aa048dd35268900e8acfaf192c8e66adabb042dbbf45adbbc9b42a1adf977"
+    }
+  ],
+  "inventorySha256": {
+    "after": "5f2c3872a1cc128c7e334a5707bff0a866270beccb9ff41eccb74cce2be88dfd",
+    "before": "5f2c3872a1cc128c7e334a5707bff0a866270beccb9ff41eccb74cce2be88dfd"
+  },
+  "milestone": "vo1220-release-asset-api-failover-source-v1",
+  "predecessorCommit": "b3aff46e311a306a52d1476b40f350c90c46f8fa",
+  "repair": "Retain every existing primary URL, digest and compiler identity. On primary transport failure, fetch the exact pinned GitHub asset identity with the octet-stream API contract and apply the existing SHA-256 gate. Give the Nix Lean fetch the same ordered pair of routes and unchanged fixed-output hash.",
+  "rootCause": "The exact-head push preflight reached ten independent Downstream jobs while GitHub's ordinary release browser route and Lean's primary release route returned HTTP 504. Shell, Nix and Docker acquisition failed before product behavior ran, even though GitHub's public immutable release-asset API served the same bytes.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "3b1bba4998055607eb941425fc2f47a1f958c67eadf921800d3cf58135e907d2",
+      "edits": [
+        {
+          "current": "    urls = [\n      \"https://github.com/leanprover/lean4/releases/download/v${leanVersion}/lean-${leanVersion}-linux.tar.zst\"\n      \"https://api.github.com/repos/leanprover/lean4/releases/assets/492935897\"\n    ];\n    curlOptsList = [ \"-H\" \"Accept: application/octet-stream\" ];\n",
+          "previous": "    url = \"https://github.com/leanprover/lean4/releases/download/v${leanVersion}/lean-${leanVersion}-linux.tar.zst\";\n",
+          "start": 398
+        }
+      ],
+      "path": "nix/wasm-toolchain.nix",
+      "previousSha256": "b2905a8b95355906bf3edfc5fd9143651ce8c1d1c9bc4f6f196354fb3461e5bb"
+    },
+    {
+      "currentSha256": "a80b5b4ee250967cdc33cc94e78bc82e3c063201a0f70a84acad472a01cb1e06",
+      "edits": [
+        {
+          "current": "ELAN_API_URL=https://api.github.com/repos/leanprover/elan/releases/assets/441516216\n",
+          "previous": "",
+          "start": 388
+        },
+        {
+          "current": "LEAN_ARCHIVE_API_URL=https://api.github.com/repos/leanprover/lean4/releases/assets/492935897\n",
+          "previous": "",
+          "start": 776
+        },
+        {
+          "current": "WASM_TOOLS_API_URL=https://api.github.com/repos/bytecodealliance/wasm-tools/releases/assets/355005589\n",
+          "previous": "",
+          "start": 1248
+        },
+        {
+          "current": "WABT_API_URL=https://api.github.com/repos/WebAssembly/wabt/releases/assets/414470153\n",
+          "previous": "",
+          "start": 1595
+        },
+        {
+          "current": "  local api_url=\"$2\"\n  local destination=\"$3\"\n",
+          "previous": "  local destination=\"$2\"\n",
+          "start": 1974
+        },
+        {
+          "current": "  if ! curl --fail --location --silent --show-error \\\n      --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 300 \\\n      --connect-timeout 30 --max-time 600 --remove-on-error \\\n      \"$url\" -o \"$partial\"; then\n    echo \"Primary release URL failed; trying the pinned GitHub asset API route\" >&2\n    curl --fail --location --silent --show-error \\\n      --header 'Accept: application/octet-stream' \\\n      --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 300 \\\n      --connect-timeout 30 --max-time 600 --remove-on-error \\\n      \"$api_url\" -o \"$partial\"\n  fi\n",
+          "previous": "  curl --fail --location --silent --show-error \\\n    --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 300 \\\n    --connect-timeout 30 --max-time 600 --remove-on-error \\\n    \"$url\" -o \"$partial\"\n",
+          "start": 2056
+        },
+        {
+          "current": "    download_archive \"$WASM_TOOLS_URL\" \"$WASM_TOOLS_API_URL\" \\\n      \"$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE\"\n",
+          "previous": "    download_archive \"$WASM_TOOLS_URL\" \"$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE\"\n",
+          "start": 2760
+        },
+        {
+          "current": "  download_archive \"$ELAN_URL\" \"$ELAN_API_URL\" \\\n    \"$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE\"\n",
+          "previous": "  download_archive \"$ELAN_URL\" \"$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE\"\n",
+          "start": 3614
+        },
+        {
+          "current": "    download_archive \"$LEAN_ARCHIVE_URL\" \"$LEAN_ARCHIVE_API_URL\" \"$archive\"\n",
+          "previous": "    download_archive \"$LEAN_ARCHIVE_URL\" \"$archive\"\n",
+          "start": 4354
+        },
+        {
+          "current": "  download_archive \"$WABT_URL\" \"$WABT_API_URL\" \\\n    \"$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE\"\n",
+          "previous": "  download_archive \"$WABT_URL\" \"$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE\"\n",
+          "start": 7751
+        }
+      ],
+      "path": "scripts/bootstrap-toolchains.sh",
+      "previousSha256": "03d44c0192eb1c7a65d584749a9244fc4b4b7426cf854ac4d2f68d234b0fd435"
+    },
+    {
+      "currentSha256": "4a6e682b16e220a607b6bc882b32df9a048a4843f636908dbba64dbaa9186e5e",
+      "edits": [
+        {
+          "current": "  assert.match(bootstrap\n    , /^WASM_TOOLS_API_URL=https:\\/\\/api\\.github\\.com\\/repos\\/bytecodealliance\\/wasm-tools\\/releases\\/assets\\/355005589$/m);\n  assert.match(bootstrap\n    , /^WABT_API_URL=https:\\/\\/api\\.github\\.com\\/repos\\/WebAssembly\\/wabt\\/releases\\/assets\\/414470153$/m);\n",
+          "previous": "",
+          "start": 11141
+        },
+        {
+          "current": "  assert.match(bootstrap, /--header 'Accept: application\\/octet-stream'/u);\n",
+          "previous": "",
+          "start": 11499
+        },
+        {
+          "current": "  assert.match(bootstrap\n    , /^ELAN_API_URL=https:\\/\\/api\\.github\\.com\\/repos\\/leanprover\\/elan\\/releases\\/assets\\/441516216$/m);\n  assert.match(bootstrap\n    , /^LEAN_ARCHIVE_API_URL=https:\\/\\/api\\.github\\.com\\/repos\\/leanprover\\/lean4\\/releases\\/assets\\/492935897$/m);\n",
+          "previous": "",
+          "start": 12074
+        },
+        {
+          "current": "  assert.match(bootstrap\n    , /download_archive \"\\$LEAN_ARCHIVE_URL\" \"\\$LEAN_ARCHIVE_API_URL\" \"\\$archive\"/u);\n",
+          "previous": "",
+          "start": 12470
+        },
+        {
+          "current": "test(\"shell and Nix toolchain downloads retain a pinned GitHub API route\", async () => {\n  const bootstrap = await readFile(\"scripts/bootstrap-toolchains.sh\", \"utf8\");\n  const nix = await readFile(\"nix/wasm-toolchain.nix\", \"utf8\");\n  assert.equal([...bootstrap.matchAll(/^\\w+_API_URL=https:\\/\\/api\\.github\\.com\\/repos\\/.+\\/releases\\/assets\\/[1-9][0-9]*$/gmu)].length, 4);\n  assert.match(bootstrap\n    , /if ! curl[\\s\\S]+Primary release URL failed; trying the pinned GitHub asset API route[\\s\\S]+--header 'Accept: application\\/octet-stream'[\\s\\S]+\"\\$api_url\" -o \"\\$partial\"/u);\n  assert.match(nix\n    , /urls = \\[[\\s\\S]+leanprover\\/lean4\\/releases\\/download\\/v\\$\\{leanVersion\\}[\\s\\S]+api\\.github\\.com\\/repos\\/leanprover\\/lean4\\/releases\\/assets\\/492935897[\\s\\S]+\\];/u);\n  assert.match(nix\n    , /curlOptsList = \\[ \"-H\" \"Accept: application\\/octet-stream\" \\];/u);\n  assert.match(nix\n    , /hash = \"sha256-XyBp5vXbc3gPN0zLSc6OpkmqIKDOvwEWgWdEyZnOcqo=\";/u);\n});\n\n",
+          "previous": "",
+          "start": 12831
+        }
+      ],
+      "path": "tests/performance-ci-report.test.mjs",
+      "previousSha256": "5c681cf838410e9c978918a14f36748ac4c5361cc66aee3c865451f3baeaa9aa"
+    }
+  ],
+  "validation": {
+    "completePerformanceContracts": {
+      "fail": 0,
+      "pass": 11,
+      "tests": 11
+    },
+    "currentSourcePinPreflight": {
+      "findings": 0,
+      "paths": 2661
+    },
+    "documentationContract": {
+      "fail": 0,
+      "pass": 1,
+      "tests": 1
+    },
+    "focusedContracts": {
+      "fail": 0,
+      "pass": 3,
+      "tests": 3
+    },
+    "liveElanApiSha256": "df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2",
+    "shellcheck": "passed with existing dynamic-source informational note"
+  }
+}
