@@ -4,6 +4,7 @@
  * @file
  */
 import "./helpers/vo1220-host-fin-pending-exit-repair-source-history-tests.mjs";
+import "./helpers/vo1220-workflow-release-asset-pin-refresh-source-history-tests.mjs";
 import "./helpers/vo1220-workflow-release-asset-failover-source-history-tests.mjs";
 import "./helpers/vo1220-release-asset-api-failover-source-history-tests.mjs";
 import "./helpers/vo1220-fin-observer-fixture-repair-source-history-tests.mjs";
