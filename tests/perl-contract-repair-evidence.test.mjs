@@ -7,8 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeOwnedPhpPackages, ownedPhpHistoricalBytes } from "./helpers/owned-php-source-history.mjs";
-import { beforePerlContractRepair, perlContractRepairBaseline, perlContractRepairPath
+import { sourceAtFinHistoryRecordSource }
+	from "./helpers/source-at-fin-history-milestone.mjs";
+import { perlContractRepairBaseline, perlContractRepairPath
 	, perlContractRepairPrevious, perlContractRepairChangedPaths
 	, perlContractRepairAddedPaths, perlContractRepairBytes
 	, reversePerlContractRepair } from "./helpers/perl-contract-repair-history.mjs";
@@ -18,6 +19,48 @@ const commands = [
 	"node --test --test-name-pattern='CI requires recursive' tests/dotnet-recursive-callable-evidence.test.mjs"
 	, "node --test --test-name-pattern='owned C# callback evidence preserves' tests/owned-dotnet-callback-evidence.test.mjs"
 ];
+const historicalSources = new Map();
+const historicalSource = async (path, expected) => {
+	const key = `${path}\0${expected}`;
+	if(!historicalSources.has(key)) historicalSources.set(key
+		, sourceAtFinHistoryRecordSource(
+			perlContractRepairPath, path, expected));
+	return historicalSources.get(key);
+};
+const describeJson = value => typeof value === "string"
+	? `string(${value.length} bytes, ${JSON.stringify(value.slice(0, 80))})`
+	: JSON.stringify(value);
+const firstJsonDifference = (actual, expected) => {
+	const stack = [{ actual, expected, path: "$" }];
+	while(stack.length > 0)
+	{
+		const item = stack.pop();
+		if(Object.is(item.actual, item.expected)) continue;
+		if(item.actual === null || item.expected === null
+			|| typeof item.actual !== "object"
+			|| typeof item.expected !== "object")
+			return `${item.path}: ${describeJson(item.actual)} !== ${describeJson(item.expected)}`;
+		const actualArray = Array.isArray(item.actual);
+		if(actualArray !== Array.isArray(item.expected))
+			return `${item.path}: array/object kind differs`;
+		if(actualArray && item.actual.length !== item.expected.length)
+			return `${item.path}: length ${item.actual.length} !== ${item.expected.length}`;
+		const actualKeys = Object.keys(item.actual);
+		const expectedKeys = Object.keys(item.expected);
+		if(actualKeys.length !== expectedKeys.length)
+			return `${item.path}: key count ${actualKeys.length} !== ${expectedKeys.length}`;
+		for(const key of actualKeys)
+			if(!Object.hasOwn(item.expected, key))
+				return `${item.path}: unexpected key ${JSON.stringify(key)}`;
+		for(let index = actualKeys.length - 1; index >= 0; index--)
+		{
+			const key = actualKeys[index];
+			stack.push({ actual: item.actual[key], expected: item.expected[key]
+				, path: actualArray ? `${item.path}[${key}]`
+					: `${item.path}.${key}` });
+		}
+	}
+};
 const verify = async record => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "post-perl-contract-repair");
@@ -28,12 +71,13 @@ const verify = async record => {
 	assert.equal(sha256(previousBytes), record.previous.sha256);
 	assert.deepEqual(record.updates.map(update => update.path), perlContractRepairChangedPaths);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...perlContractRepairChangedPaths, ...perlContractRepairAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedPhpHistoricalBytes(path, await readFile(path), hash)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources))
+		assert.equal(sha256(await historicalSource(path, hash)), hash, path);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const source = beforeOwnedPhpPackages(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = await historicalSource(update.path, update.currentSha256);
 		assert.equal(sha256(reversePerlContractRepair(source, update)), update.previousSha256);
 	}
 	for(const [kind, code] of [["reproductions", 1], ["acceptance", 0]])
@@ -53,13 +97,17 @@ const verify = async record => {
 	assert.match(record.reproductions[0].output, /timeout-minutes: 120/u);
 	assert.match(record.reproductions[1].output, /src\/build\/elaborated-component\.mjs/u);
 	const inventoryPath = "docs/type-surface.v1.json";
-	const inventory = ownedPhpHistoricalBytes(inventoryPath, await readFile(inventoryPath)
-		, record.sources[inventoryPath]).toString("utf8");
+	const inventory = (await historicalSource(inventoryPath
+		, record.sources[inventoryPath])).toString("utf8");
 	const current = JSON.parse(inventory);
-	const prior = JSON.parse(beforePerlContractRepair(inventoryPath, inventory));
+	const inventoryUpdate = record.updates.find(update =>
+		update.path === inventoryPath);
+	const prior = JSON.parse(reversePerlContractRepair(
+		inventory, inventoryUpdate));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
-	assert.deepEqual(current, prior);
+	const difference = firstJsonDifference(current, prior);
+	assert.equal(difference, undefined, difference);
 };
 
 test("post-Perl contract repair preserves the frozen receipt and binds both reproduced fixes", async () => {
@@ -69,13 +117,10 @@ test("post-Perl contract repair preserves the frozen receipt and binds both repr
 test("post-Perl contract history rejects unknown bytes and forged predecessor edits", async () => {
 	for(const update of (await json(perlContractRepairPath)).updates)
 	{
-		const source = beforeOwnedPhpPackages(update.path, await readFile(update.path, "utf8"), update.currentSha256);
-		const previous = beforePerlContractRepair(update.path, source);
+		const source = await historicalSource(update.path, update.currentSha256);
+		const previous = reversePerlContractRepair(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
-		assert.equal(beforePerlContractRepair(update.path, source, update.currentSha256), source);
-		assert.equal(beforePerlContractRepair(update.path, previous), previous);
 		const changed = source + "\n/* unrecorded source change */\n";
-		assert.equal(beforePerlContractRepair(update.path, changed), changed);
 		assert.throws(() => reversePerlContractRepair(changed, update));
 		assert.throws(() => reversePerlContractRepair(source, { ...update, previousSha256: "0".repeat(64) }));
 		assert.throws(() => reversePerlContractRepair(source, { ...update, path: "unrecorded.mjs" }));
