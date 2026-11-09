@@ -9,21 +9,25 @@ LEAN_WASM_DOWNLOADS="$LEAN_WASM_TOOLCHAINS/downloads"
 ELAN_VERSION=v4.2.3
 ELAN_ARCHIVE=elan-x86_64-unknown-linux-gnu.tar.gz
 ELAN_URL="https://github.com/leanprover/elan/releases/download/$ELAN_VERSION/$ELAN_ARCHIVE"
+ELAN_API_URL=https://api.github.com/repos/leanprover/elan/releases/assets/441516216
 ELAN_SHA256=df0b2b3a439961ffcbb3985214365ffe40f49bc871df04dff268c7d8e21ca8b2
 LEAN_TOOLCHAIN=leanprover/lean4:v4.32.2
 LEAN_COMMIT=f3b06c705e6c85f5314019d5d3baab0fec5b580c
 LEAN_ARCHIVE=lean-4.32.2-linux.tar.zst
 LEAN_ARCHIVE_URL="https://github.com/leanprover/lean4/releases/download/v4.32.2/$LEAN_ARCHIVE"
+LEAN_ARCHIVE_API_URL=https://api.github.com/repos/leanprover/lean4/releases/assets/492935897
 LEAN_ARCHIVE_SHA256=5f2069e6f5db73780f374ccb49ce8ea649aa20a0cebf0116816744c999ce72aa
 EMSDK_VERSION=6.0.6
 EMSDK_COMMIT=9981799f744be74ac67b1c1813ff172f63be0630
 WASM_TOOLS_VERSION=1.245.1
 WASM_TOOLS_ARCHIVE=wasm-tools-$WASM_TOOLS_VERSION-x86_64-linux.tar.gz
 WASM_TOOLS_URL="https://github.com/bytecodealliance/wasm-tools/releases/download/v$WASM_TOOLS_VERSION/$WASM_TOOLS_ARCHIVE"
+WASM_TOOLS_API_URL=https://api.github.com/repos/bytecodealliance/wasm-tools/releases/assets/355005589
 WASM_TOOLS_SHA256=b171e20fd107e63e89ef6c936b5581597666a086af677d7818de92b7cdd5a86d
 WABT_VERSION=1.0.41
 WABT_ARCHIVE=wabt-$WABT_VERSION-linux-x64.tar.gz
 WABT_URL="https://github.com/WebAssembly/wabt/releases/download/$WABT_VERSION/$WABT_ARCHIVE"
+WABT_API_URL=https://api.github.com/repos/WebAssembly/wabt/releases/assets/414470153
 WABT_SHA256=83f8122e924745fcd70636e3594bc01c4c47f2d4c8f3c63b5d70d3f83a482677
 LEAN_SOURCE_URL=https://github.com/leanprover/lean4.git
 LEAN_SOURCE_DIR="$LEAN_WASM_TOOLCHAINS/lean4-src"
@@ -32,18 +36,27 @@ mkdir -p "$LEAN_WASM_DOWNLOADS" "$LEAN_WASM_TOOLCHAINS/elan-installer"
 
 download_archive() {
   local url="$1"
-  local destination="$2"
+  local api_url="$2"
+  local destination="$3"
   local partial="$destination.part"
-  curl --fail --location --silent --show-error \
-    --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 300 \
-    --connect-timeout 30 --max-time 600 --remove-on-error \
-    "$url" -o "$partial"
+  if ! curl --fail --location --silent --show-error \
+      --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 300 \
+      --connect-timeout 30 --max-time 600 --remove-on-error \
+      "$url" -o "$partial"; then
+    echo "Primary release URL failed; trying the pinned GitHub asset API route" >&2
+    curl --fail --location --silent --show-error \
+      --header 'Accept: application/octet-stream' \
+      --retry 5 --retry-all-errors --retry-delay 2 --retry-max-time 300 \
+      --connect-timeout 30 --max-time 600 --remove-on-error \
+      "$api_url" -o "$partial"
+  fi
   mv "$partial" "$destination"
 }
 
 install_wasm_tools() {
   if [[ ! -f "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE" ]]; then
-    download_archive "$WASM_TOOLS_URL" "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE"
+    download_archive "$WASM_TOOLS_URL" "$WASM_TOOLS_API_URL" \
+      "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE"
   fi
   printf '%s  %s\n' "$WASM_TOOLS_SHA256" "$LEAN_WASM_DOWNLOADS/$WASM_TOOLS_ARCHIVE" | sha256sum -c -
   if [[ ! -x "$LEAN_WASM_TOOLCHAINS/wasm-tools/bin/wasm-tools" ]] || \
@@ -63,7 +76,8 @@ if [[ "${1:-}" == "--wasm-tools-only" ]]; then
 fi
 
 if [[ ! -f "$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE" ]]; then
-  download_archive "$ELAN_URL" "$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE"
+  download_archive "$ELAN_URL" "$ELAN_API_URL" \
+    "$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE"
 fi
 printf '%s  %s\n' "$ELAN_SHA256" "$LEAN_WASM_DOWNLOADS/$ELAN_ARCHIVE" | sha256sum -c -
 
@@ -81,7 +95,7 @@ install_lean_release_fallback() {
   local destination="$ELAN_HOME/toolchains/leanprover--lean4---v4.32.2"
   local staging
   if [[ ! -f "$archive" ]]; then
-    download_archive "$LEAN_ARCHIVE_URL" "$archive"
+    download_archive "$LEAN_ARCHIVE_URL" "$LEAN_ARCHIVE_API_URL" "$archive"
   fi
   printf '%s  %s\n' "$LEAN_ARCHIVE_SHA256" "$archive" | sha256sum -c -
   mkdir -p "$ELAN_HOME/toolchains"
@@ -172,7 +186,8 @@ fi
 install_wasm_tools
 
 if [[ ! -f "$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE" ]]; then
-  download_archive "$WABT_URL" "$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE"
+  download_archive "$WABT_URL" "$WABT_API_URL" \
+    "$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE"
 fi
 printf '%s  %s\n' "$WABT_SHA256" "$LEAN_WASM_DOWNLOADS/$WABT_ARCHIVE" | sha256sum -c -
 if [[ ! -x "$LEAN_WASM_TOOLCHAINS/wabt/bin/wasm-objdump" ]] || \

@@ -10,7 +10,11 @@ let
   nodeVersion = "24.19.0";
 
   leanArchive = pkgs.fetchurl {
-    url = "https://github.com/leanprover/lean4/releases/download/v${leanVersion}/lean-${leanVersion}-linux.tar.zst";
+    urls = [
+      "https://github.com/leanprover/lean4/releases/download/v${leanVersion}/lean-${leanVersion}-linux.tar.zst"
+      "https://api.github.com/repos/leanprover/lean4/releases/assets/492935897"
+    ];
+    curlOptsList = [ "-H" "Accept: application/octet-stream" ];
     hash = "sha256-XyBp5vXbc3gPN0zLSc6OpkmqIKDOvwEWgWdEyZnOcqo=";
   };
 

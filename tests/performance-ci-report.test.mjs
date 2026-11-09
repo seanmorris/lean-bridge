@@ -280,7 +280,12 @@ test("bootstrap pins the Wasm audit tools absent from clean GitHub runners", asy
   assert.match(bootstrap, /^WASM_TOOLS_SHA256=[a-f0-9]{64}$/m);
   assert.match(bootstrap, /^WABT_VERSION=1\.0\.41$/m);
   assert.match(bootstrap, /^WABT_SHA256=[a-f0-9]{64}$/m);
+  assert.match(bootstrap
+    , /^WASM_TOOLS_API_URL=https:\/\/api\.github\.com\/repos\/bytecodealliance\/wasm-tools\/releases\/assets\/355005589$/m);
+  assert.match(bootstrap
+    , /^WABT_API_URL=https:\/\/api\.github\.com\/repos\/WebAssembly\/wabt\/releases\/assets\/414470153$/m);
   assert.match(bootstrap, /toolchain list \| cut -d' ' -f1 \| grep -Fxq/);
+  assert.match(bootstrap, /--header 'Accept: application\/octet-stream'/u);
   assert.match(environment, /\.toolchains\/wasm-tools\/bin/);
   assert.match(environment, /\.toolchains\/wabt\/bin/);
 });
@@ -291,12 +296,32 @@ test("bootstrap retains a checksummed Lean release fallback", async () => {
   assert.match(bootstrap
     , /^LEAN_ARCHIVE_URL="https:\/\/github\.com\/leanprover\/lean4\/releases\/download\/v4\.32\.2\/\$LEAN_ARCHIVE"$/m);
   assert.match(bootstrap
+    , /^ELAN_API_URL=https:\/\/api\.github\.com\/repos\/leanprover\/elan\/releases\/assets\/441516216$/m);
+  assert.match(bootstrap
+    , /^LEAN_ARCHIVE_API_URL=https:\/\/api\.github\.com\/repos\/leanprover\/lean4\/releases\/assets\/492935897$/m);
+  assert.match(bootstrap
     , /^LEAN_ARCHIVE_SHA256=5f2069e6f5db73780f374ccb49ce8ea649aa20a0cebf0116816744c999ce72aa$/m);
+  assert.match(bootstrap
+    , /download_archive "\$LEAN_ARCHIVE_URL" "\$LEAN_ARCHIVE_API_URL" "\$archive"/u);
   assert.match(bootstrap, /install_lean_release_fallback/u);
   assert.match(bootstrap
     , /tar --use-compress-program=unzstd -xf "\$archive"/u);
   assert.match(bootstrap
     , /Lean release fallback commit mismatch: expected \$LEAN_COMMIT/u);
+});
+
+test("shell and Nix toolchain downloads retain a pinned GitHub API route", async () => {
+  const bootstrap = await readFile("scripts/bootstrap-toolchains.sh", "utf8");
+  const nix = await readFile("nix/wasm-toolchain.nix", "utf8");
+  assert.equal([...bootstrap.matchAll(/^\w+_API_URL=https:\/\/api\.github\.com\/repos\/.+\/releases\/assets\/[1-9][0-9]*$/gmu)].length, 4);
+  assert.match(bootstrap
+    , /if ! curl[\s\S]+Primary release URL failed; trying the pinned GitHub asset API route[\s\S]+--header 'Accept: application\/octet-stream'[\s\S]+"\$api_url" -o "\$partial"/u);
+  assert.match(nix
+    , /urls = \[[\s\S]+leanprover\/lean4\/releases\/download\/v\$\{leanVersion\}[\s\S]+api\.github\.com\/repos\/leanprover\/lean4\/releases\/assets\/492935897[\s\S]+\];/u);
+  assert.match(nix
+    , /curlOptsList = \[ "-H" "Accept: application\/octet-stream" \];/u);
+  assert.match(nix
+    , /hash = "sha256-XyBp5vXbc3gPN0zLSc6OpkmqIKDOvwEWgWdEyZnOcqo=";/u);
 });
 
 test("accepts one complete, artifact-bound record from every performance family", () => {
