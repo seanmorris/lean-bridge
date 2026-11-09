@@ -28,8 +28,8 @@ const assertCoreQualityBudget = source => {
 	assert.deepEqual(timeouts, [30, 90, 360, 10]
 		, "Static, type-surface, contract-shard, and aggregate jobs retain explicit bounds");
 	assert.match(source
-		, /strategy:\n {6}fail-fast: false\n {6}max-parallel: 6\n {6}matrix:\n {8}shard: \[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\]/u
-		, "Core must run one closed twelve-shard matrix with at most six concurrent jobs and without cancelling siblings");
+		, /strategy:\n {6}fail-fast: false\n(?: {6}#[^\n]*\n){3} {6}max-parallel: 12\n {6}matrix:\n {8}shard: \[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\]/u
+		, "Core must run its complete twelve-shard matrix concurrently and without cancelling siblings");
 	assert.match(source, /name: Contract shard \$\{\{ matrix\.shard \}\}\/12/u
 		, "Every shard must expose its fixed denominator in the hosted job name");
 	assert.equal([...source.matchAll(/^\s+npm run env:check:core\s*$/gmu)].length, 1
@@ -307,7 +307,7 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 		, source.replace("shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]", "shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11]")
 		, source.replace("${{ matrix.shard }}/12", "${{ matrix.shard }}/11")
 		, source.replace("fail-fast: false", "fail-fast: true")
-		, source.replace("max-parallel: 6", "max-parallel: 12")
+		, source.replace("max-parallel: 12", "max-parallel: 6")
 		, source.replace("npm run env:check:core", "npm run lint")
 		, source.replace("npm run typecheck", "npm run lint")
 		, source.replace('--shard "${{ matrix.shard }}/12"'

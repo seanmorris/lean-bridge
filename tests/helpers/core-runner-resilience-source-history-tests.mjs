@@ -113,7 +113,7 @@ test("Core runner resilience keeps the complete contract in bounded jobs", async
 		, costsSha256: coreContractCostsSha256
 	});
 	const workflow = await readFile(".github/workflows/quality.yml", "utf8");
-	assert.match(workflow, /max-parallel: 6/u);
+	assert.match(workflow, /max-parallel: 12/u);
 	assert.match(workflow, /shard: \[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\]/u);
 	assert.match(workflow, /--shard "\$\{\{ matrix\.shard \}\}\/12"/u);
 	const runner = await readFile("scripts/run-test-profile.mjs", "utf8");
