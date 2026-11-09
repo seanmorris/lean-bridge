@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import "./helpers/ci-dependency-timeout-source-history-tests.mjs";
@@ -98,7 +99,7 @@ test("JavaScript ownership authenticates every source change without rewriting P
 		current, inventoryUpdate));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
-	assert.deepEqual(JSON.parse(current), prior, "Only source hashes change; support classifications stay unchanged");
+	assertJsonEqual(JSON.parse(current), prior, "Only source hashes change; support classifications stay unchanged");
 });
 
 test("JavaScript ownership evidence requires fresh Lean, production heaps and typed public APIs", async () => {

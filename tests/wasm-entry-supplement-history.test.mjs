@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -80,7 +81,7 @@ test("Wasm entry inventory adds sixteen reports, preserves older claims and auth
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}
-	assert.ok(refreshed > 0); assert.deepEqual(current, expected);
+	assert.ok(refreshed > 0); assertJsonEqual(current, expected);
 	assert.equal(previous.evidence.length, 294); assert.equal(current.evidence.length, 310);
 	assert.equal(current.observations.length, 499); assert.equal(previous.observations.length, 499);
 	assert.deepEqual(current.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(previous.observations[index])).map(item => item.id).sort(), [...wasmEntrySupplementObservations].sort());

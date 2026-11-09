@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -61,7 +62,7 @@ test("owned publication binds exact source changes without rewriting engine evid
 		assert.ok(pins.has(file.path), file.path);
 		file.sha256 = pins.get(file.path);
 	}
-	assert.deepEqual(JSON.parse(current), prior, "Publication must not promote unverified isolated or cross-language support");
+	assertJsonEqual(JSON.parse(current), prior, "Publication must not promote unverified isolated or cross-language support");
 });
 
 test("owned publication evidence requires two clean builds, signed receipts and relocated consumers", async () => {

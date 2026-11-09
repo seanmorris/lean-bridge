@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -135,7 +136,7 @@ test("Core evidence memory repair refreshes exactly 25 pins only", async () => {
 		}
 	}
 	assert.deepEqual(counts, expected);
-	assert.deepEqual(current, previous
+	assertJsonEqual(current, previous
 		, "No support claim or observation may change with this source-pin repair");
 });
 

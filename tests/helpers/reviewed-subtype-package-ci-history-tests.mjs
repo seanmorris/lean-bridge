@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -56,7 +57,7 @@ test("Reviewed package CI gate changes source pins without adding or changing in
 		if(update)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.ok(pins > 0); assert.deepEqual(current, expected);
+	assert.ok(pins > 0); assertJsonEqual(current, expected);
 	assert.equal(current.evidence.length, 419); assert.equal(current.observations.length, 518);
 	assert.deepEqual(current.observations, previous.observations);
 	await assertHistoricalTypeSurfaceEvidence(current);

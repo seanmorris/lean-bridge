@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -45,7 +46,7 @@ test("owned npm engine integration authenticates source changes without rewritin
 	const current = beforeOwnedJavaScriptPublication("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
 	const prior = JSON.parse(beforeOwnedJavaScriptEngine("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptPublicationHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
-	assert.deepEqual(JSON.parse(current), prior, "Engine acceptance must not promote unverified isolated or installed support");
+	assertJsonEqual(JSON.parse(current), prior, "Engine acceptance must not promote unverified isolated or installed support");
 });
 
 test("owned npm engine evidence requires compiled source, archive SDKs and installed consumers", async () => {

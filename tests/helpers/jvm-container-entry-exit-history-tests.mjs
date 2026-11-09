@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -69,7 +70,7 @@ test("JVM container-entry exit observation preserves exact original sources and 
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.equal(pins, 0); assert.deepEqual(current, expected);
+	assert.equal(pins, 0); assertJsonEqual(current, expected);
 });
 
 test("JVM container-entry exit observation history writer refuses an unrelated checkout before writing", async t => {

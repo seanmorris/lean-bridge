@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -55,7 +56,7 @@ test("owned Perl preserves published sources and rejects unrecorded edits", asyn
 	const expected = JSON.parse(beforeOwnedPerlPackages(inventoryPath, current, transition.previousSha256));
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
-	assert.deepEqual(JSON.parse(current), expected);
+	assertJsonEqual(JSON.parse(current), expected);
 });
 
 test("owned Perl evidence binds CLI, installed APIs, authentication and independent reproduction", async () => {

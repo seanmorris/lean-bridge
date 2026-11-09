@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
@@ -108,7 +109,7 @@ test("PHP-Wasm ownership preserves predecessor receipts and authenticates each s
 		current, inventoryUpdate));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });
 
 test("PHP-Wasm evidence binds installed CLI releases, browser coexistence, cleanup and documentation", async () => {

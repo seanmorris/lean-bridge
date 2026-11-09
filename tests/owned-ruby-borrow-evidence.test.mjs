@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -66,7 +67,7 @@ test("Ruby borrow evidence authenticates complete source changes without rewriti
 		file.sha256 = sha256(await bytesAtFinHistoryRecordSource(
 			ownedRubyBorrowPath, file.path
 		));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	const module = "src/backends/ruby/owned-borrows.mjs";
 	const historical = async path_ => JSON.parse(await bytesAtFinHistoryRecordSource(
 		ownedRubyBorrowPath, path_

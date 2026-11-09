@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -59,7 +60,7 @@ test("C++ Fin dispatch integration refreshes source pins without changing any ob
 		if(update && update.previousSha256 === file.sha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.equal(pins, 2); assert.deepEqual(current, previous);
+	assert.equal(pins, 2); assertJsonEqual(current, previous);
 	await readTypeSurface();
 });
 

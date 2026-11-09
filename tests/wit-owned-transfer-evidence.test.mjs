@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -41,7 +42,7 @@ test("WIT transfers preserve predecessor receipts without promoting unrelated su
 	const prior = JSON.parse(beforeOwnedWitTransfer(path, current, previous.sources[path]));
 	const pins = new Map(JSON.parse(current).evidence.flatMap(evidence => evidence.files.map(file => [file.path, file.sha256])));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path] ?? pins.get(file.path)));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });
 
 test("WIT transfer history rejects unknown edits and forged history", async () => {

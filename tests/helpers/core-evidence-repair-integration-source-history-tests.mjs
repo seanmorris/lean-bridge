@@ -25,7 +25,9 @@ import {
 	, reverseCoreEvidenceRepairIntegrationUpdate
 } from "./core-evidence-repair-integration-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+import {
+	sourceAtFinHistoryMilestone, sourceAtFinHistoryRevision
+} from "./source-at-fin-history-milestone.mjs";
 
 const inventoryPath = "docs/type-surface.v1.json";
 const git = arguments_ => execFileSync("git", arguments_, {
@@ -39,9 +41,13 @@ const readRecord = async () => JSON.parse(await readFile(
 const assertRetainedParents = async path => {
 	const left = sourceAt(coreEvidenceRepairIntegrationLeftParent, path);
 	assert.equal(sourceAt(coreEvidenceRepairIntegrationCommit, path), left, path);
-	assert.equal(await sourceAtFinHistoryMilestone(path, sha256(left)), left, path);
+	assert.equal(await sourceAtFinHistoryRevision(
+		coreEvidenceRepairIntegrationLeftParent, path, sha256(left)
+	), left, path);
 	const right = sourceAt(coreEvidenceRepairIntegrationRightParent, path);
-	assert.equal(await sourceAtFinHistoryMilestone(path, sha256(right)), right, path);
+	assert.equal(await sourceAtFinHistoryRevision(
+		coreEvidenceRepairIntegrationRightParent, path, sha256(right)
+	), right, path);
 };
 
 const assertParents = async update => {
@@ -98,6 +104,37 @@ test("Core evidence repair integration restores both inventory parents", async (
 	assert.ok(record.retainedPaths.includes(inventoryPath));
 	assert.ok(!record.updates.some(item => item.path === inventoryPath));
 	await assertRetainedParents(inventoryPath);
+});
+
+test("direct revision reads reject unauthenticated history coordinates", async () => {
+	const path = coreEvidenceRepairIntegrationRetainedPaths.find(
+		item => item !== inventoryPath
+	);
+	const source = sourceAt(coreEvidenceRepairIntegrationLeftParent, path);
+	const expected = sha256(source);
+	await assert.rejects(sourceAtFinHistoryRevision(
+		coreEvidenceRepairIntegrationLeftParent, path, "0".repeat(64)
+	), error => {
+		assert.equal(error.actual, expected);
+		assert.equal(error.expected, "0".repeat(64));
+		return true;
+	});
+	await assert.rejects(sourceAtFinHistoryRevision(
+		coreEvidenceRepairIntegrationLeftParent, "missing.mjs", expected
+	), /missing missing\.mjs/u);
+	await assert.rejects(sourceAtFinHistoryRevision(
+		coreEvidenceRepairIntegrationLeftParent, path, expected, () => "wrong"
+	), /exact revision stop/u);
+	await assert.rejects(sourceAtFinHistoryRevision(
+		"not-a-revision", path, expected
+	), /regular expression/u);
+	await assert.rejects(sourceAtFinHistoryRevision(
+		coreEvidenceRepairIntegrationLeftParent, path, expected, "reader"
+	), error => {
+		assert.equal(error.actual, "string");
+		assert.equal(error.expected, "function");
+		return true;
+	});
 });
 
 test("Core evidence repair integration retains exact merge lineage", async () => {

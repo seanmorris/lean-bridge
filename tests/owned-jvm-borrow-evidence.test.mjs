@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -69,7 +70,7 @@ test("JVM borrow evidence authenticates complete source changes without rewritin
 		file.sha256 = record.sources[file.path] ?? sha256(
 			await referenceAt(file.path));
 	}
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	const module = "src/backends/jvm/owned-borrows.mjs";
 	const files = JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files;
 	assert.deepEqual(JSON.parse(await readFile("package.json", "utf8")).files, files);

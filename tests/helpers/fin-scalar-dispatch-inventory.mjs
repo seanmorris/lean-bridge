@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertFinDispatchReferences, finDispatchArchives } from "./fin-dispatch-references.mjs";
@@ -147,5 +148,5 @@ export const assertFinScalarDispatchInventory = async (current, previous, refere
 		const update = updates.find(update => update.path === file.path && update.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	assert.deepEqual(current, expected, "Only the authenticated scalar supplement and exact old source-pin updates may change");
+	assertJsonEqual(current, expected, "Only the authenticated scalar supplement and exact old source-pin updates may change");
 };

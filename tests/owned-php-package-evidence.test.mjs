@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -56,7 +57,7 @@ test("owned PHP preserves complete predecessor identities and rejects unrecorded
 	const prior = JSON.parse(beforeOwnedPhpPackages("docs/type-surface.v1.json", current, baseline["docs/type-surface.v1.json"]));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = sha256(await source(file.path, record.sources[file.path]));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });
 
 test("owned PHP evidence binds CLI releases, source-free execution, cleanup and documentation", async () => {

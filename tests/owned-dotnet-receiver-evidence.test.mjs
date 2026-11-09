@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -44,7 +45,7 @@ test("C# receiver evidence binds exact sources without changing historical recei
 	const path = "docs/type-surface.v1.json", current = beforeOwnedJvmReceiver(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedDotnetReceiver(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJvmReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	for(const name of ["owned-dotnet-receivers", "owned-dotnet-receiver-packaging"
 		, "owned-dotnet-receiver-plain", "owned-dotnet-receiver-contract"
 		, "owned-dotnet-receiver-evidence"])

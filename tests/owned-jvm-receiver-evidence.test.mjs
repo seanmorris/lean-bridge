@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -95,7 +96,7 @@ test("JVM receiver evidence binds exact sources and preserves historical support
 	assertOwnedJvmReceiverUnownedInventory(unowned);
 	assert.ok(unowned.every(item => !Object.hasOwn(previous.sources, item)));
 	// Unowned pins are not rewritten, so this also proves every one of them is unchanged.
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	// Any other unowned inventory file, or an owned source dropped from the record, fails.
 	const added = structuredClone(pristine);
 	added.evidence[0].files.push({ path: "docs/evidence/unowned-probe.json", sha256: "0".repeat(64) });

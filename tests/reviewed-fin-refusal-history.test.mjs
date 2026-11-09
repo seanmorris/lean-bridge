@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -76,7 +77,7 @@ test("reviewed Fin refusal integration changes only exact inventory source pins"
 		}
 	}
 	assert.equal(pins, 122);
-	assert.deepEqual(current, previous, "no observation, support state or evidence claim changes");
+	assertJsonEqual(current, previous, "no observation, support state or evidence claim changes");
 	await readTypeSurface();
 	assert.equal(current.observations.length, 497); assert.equal(current.evidence.length, 284);
 	assert.equal(classifyRepositoryTest("tests/reviewed-fin-refusals.test.mjs"), "component");

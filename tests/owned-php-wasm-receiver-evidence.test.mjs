@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -45,7 +46,7 @@ test("PHP-Wasm receiver history authenticates exact sources and preserves prior 
 	const path = "docs/type-surface.v1.json", current = beforeOwnedJavaScriptReceiver(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedPhpWasmReceiver(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	for(const name of ["model", "resource", "packaging", "resource-packaging", "documentation", "ci", "evidence"])
 		assert.equal(classifyRepositoryTest(`tests/owned-php-wasm-receiver-${name}.test.mjs`), "contract");
 	assert.equal(classifyRepositoryTest("tests/owned-php-wasm-receivers.test.mjs"), "contract");

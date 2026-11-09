@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -94,7 +95,7 @@ test("PHP-Wasm Subtype source admission refreshes source pins without promoting 
 		if(update)
 		{ file.sha256 = update.currentSha256; refreshed++; }
 	}
-	assert.ok(refreshed > 0); assert.deepEqual(current, expected);
+	assert.ok(refreshed > 0); assertJsonEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
 	await assertHistoricalTypeSurfaceEvidence(current);
 });

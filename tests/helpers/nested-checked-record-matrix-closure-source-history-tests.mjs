@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -94,7 +95,7 @@ test("matrix closure refreshes only immediately preceding source pins", async ()
 		}
 	}
 	assert.equal(refreshed, record.pinCount);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("matrix-closure history updater refuses another checkout before writing", async t => {

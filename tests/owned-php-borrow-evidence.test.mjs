@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -47,7 +48,7 @@ test("PHP borrowed-result evidence preserves complete authenticated predecessor 
 	const path = "docs/type-surface.v1.json", current = beforeOwnedPhpWasmBorrow(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedPhpBorrow(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPhpWasmBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	for(const name of ["owned-php-borrow-evidence", "owned-php-borrows"
 		, "owned-php-borrow-packaging", "owned-php-borrow-documentation"])
 		assert.equal(classifyRepositoryTest(`tests/${name}.test.mjs`), "contract");

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -44,7 +45,7 @@ test("Ruby receiver evidence binds exact sources without changing historical rec
 	const path = "docs/type-surface.v1.json", current = beforeOwnedDotnetReceiver(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedRubyReceiver(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedDotnetReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	for(const name of ["owned-ruby-receivers", "owned-ruby-receiver-packaging"
 		, "owned-ruby-receiver-plain", "owned-ruby-receiver-contract"
 		, "owned-ruby-receiver-evidence"])

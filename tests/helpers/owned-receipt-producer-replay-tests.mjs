@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
@@ -185,5 +186,5 @@ test("Native PHP transfer receipt preserves all original transitions and invento
 	for(const evidence of previous.evidence) for(const file of evidence.files)
 		file.sha256 = sha256(bytesAtProducer(phpProducer, file.path
 			, record.sources[file.path] ?? file.sha256));
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });

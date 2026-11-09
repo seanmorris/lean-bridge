@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -92,5 +93,5 @@ test("receiver CI repair preserves frozen receipts and rejects unrelated source 
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = record.sources[file.path]
 			?? sha256(bytesAtProducer(producer, file.path));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });

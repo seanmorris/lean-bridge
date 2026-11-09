@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -77,7 +78,7 @@ test("Perl borrowed-result evidence preserves complete authenticated predecessor
 			file.path, await referenceAt(file.path)
 		));
 	}
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	assert.equal(classifyRepositoryTest("tests/owned-perl-borrow-evidence.test.mjs"), "contract");
 	for(const name of ["owned-perl-borrows", "owned-perl-borrow-packaging", "owned-perl-borrow-documentation"])
 		assert.equal(classifyRepositoryTest(`tests/${name}.test.mjs`), "contract");

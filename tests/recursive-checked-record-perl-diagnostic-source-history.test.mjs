@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -133,7 +134,7 @@ test("the recursive Perl diagnostic history refreshes only predecessor source pi
 		}
 	}
 	assert.equal(refreshed, record.pinCount);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("the recursive Perl diagnostic history updater refuses another checkout", async t => {

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -73,7 +74,7 @@ test("Perl inventory adds only two ordinary observations and reviewed-container 
 		const update = history.updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	assert.deepEqual(current, expected, "No other claim, artifact or source pin may change");
+	assertJsonEqual(current, expected, "No other claim, artifact or source pin may change");
 	assert.equal(current.observations.length, previous.observations.length + 2);
 	assert.equal(current.evidence.length, previous.evidence.length + 4);
 	for(const observation of previous.observations)

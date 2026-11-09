@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -50,7 +51,7 @@ test("C# lifetime repair authenticates exact source transitions without rewritin
 	const prior = JSON.parse(beforeOwnedDotnetLifetime(path, current, record.updates.find(update => update.path === path)?.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedDotnetLifetimeProducer, file.path));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	assert.equal(classifyRepositoryTest("tests/owned-dotnet-lifetime-evidence.test.mjs"), "contract");
 });
 

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -127,7 +128,7 @@ test("owned Subtype test-profile repair refreshes exactly 98 live pins"
 		}
 	}
 	assert.equal(count, 98);
-	assert.deepEqual(current, previous
+	assertJsonEqual(current, previous
 		, "No support claim may change with a live source-pin repair");
 	}
 );

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -57,7 +58,7 @@ test("Fin entry integration refreshes source pins without changing any observati
 		if(update)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.equal(pins, 103); assert.deepEqual(current, previous);
+	assert.equal(pins, 103); assertJsonEqual(current, previous);
 	await readTypeSurface();
 });
 

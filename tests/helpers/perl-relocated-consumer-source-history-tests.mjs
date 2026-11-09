@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -54,7 +55,7 @@ test("Perl relocation integration refreshes exactly 17 source pins without promo
 		}
 	}
 	assert.equal(pins, 17);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("the Perl relocation updater refuses another HEAD before any write", async t => {

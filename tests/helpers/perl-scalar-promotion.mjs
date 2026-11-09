@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertPerlScalarArchive, perlScalarConfigurations, perlScalarDirectory, perlScalarRevision } from "./perl-scalar-hosted-evidence.mjs";
@@ -124,5 +125,5 @@ export const assertPerlScalarPromotion = async (current, previous, updates, read
 		const update = updates.find(item => item.path === file.path && item.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	assert.deepEqual(current, expected, "Only the measured Perl scalar promotion and exact predecessor source pins may change");
+	assertJsonEqual(current, expected, "Only the measured Perl scalar promotion and exact predecessor source pins may change");
 };

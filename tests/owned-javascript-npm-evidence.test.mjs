@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -52,7 +53,7 @@ test("installed owned npm evidence binds exact sources without rewriting runtime
 	const prior = JSON.parse(beforeOwnedJavaScriptNpm(inventoryPath, current, transition.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
-	assert.deepEqual(JSON.parse(current), prior, "Only current file identities change; support cells are not promoted");
+	assertJsonEqual(JSON.parse(current), prior, "Only current file identities change; support cells are not promoted");
 });
 
 test("installed owned npm evidence requires both author paths and all browser contexts", async () => {

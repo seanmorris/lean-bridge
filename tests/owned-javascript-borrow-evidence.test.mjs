@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -46,7 +47,7 @@ test("JavaScript borrowed results preserve every predecessor receipt and support
 	const path = "docs/type-surface.v1.json", current = sourceAtProducer(ownedJavaScriptBorrowProducer, path, record.sources[path]);
 	const prior = JSON.parse(beforeOwnedJavaScriptBorrow(path, current, record.updates.find(update => update.path === path)?.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedJavaScriptBorrowProducer, file.path));
-	assert.deepEqual(JSON.parse(current), prior, "Source refresh must not promote unrelated support cells");
+	assertJsonEqual(JSON.parse(current), prior, "Source refresh must not promote unrelated support cells");
 	for(const name of ["owned-javascript-borrows"
 		, "owned-javascript-borrow-evidence"
 		, "owned-javascript-borrow-package", "owned-javascript-borrow-packaging"

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -65,7 +66,7 @@ test("owned wasm32 history preserves the exact native PHP receipt and all source
 		assert.ok(pins.has(file.path), file.path);
 		file.sha256 = pins.get(file.path);
 	}
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });
 
 test("owned wasm32 evidence binds executed scalars, recursion, failures and native compatibility", async () => {

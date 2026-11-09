@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -60,7 +61,7 @@ test("refinement follow-ups preserve every support claim and authenticate all cu
 		if(update)
 		{ file.sha256 = update.currentSha256; refreshed++; }
 	}
-	assert.ok(refreshed > 0); assert.deepEqual(current, expected);
+	assert.ok(refreshed > 0); assertJsonEqual(current, expected);
 	assert.equal(current.evidence.length, 407); assert.equal(current.observations.length, 509);
 	await assertHistoricalTypeSurfaceEvidence(current);
 	assert.equal(sha256(await readFile("docs/evidence/reviewed-perl-diagnostic-source-history-20261010.json")), "1c821561a9b0d01814756047618f930292311e58eb03b5043ad492b8d6dfc4eb");

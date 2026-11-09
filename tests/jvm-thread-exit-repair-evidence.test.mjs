@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -51,7 +52,7 @@ test("JVM cleanup repair preserves exact wasm32, PHP and JVM source histories", 
 	const current = (await source("docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"])).toString();
 	const prior = JSON.parse(beforeJvmThreadExitRepair("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await source(file.path, record.sources[file.path]));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });
 
 test("JVM cleanup repair binds both source paths, unchanged generated adapters and failing mutants", async () => {

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -62,7 +63,7 @@ test("Perl XS budget refreshes exactly 40 source pins without changing coverage"
 		}
 	}
 	assert.equal(pins, 40);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("the Perl XS workflow changes only its job budget and explanation", async () => {

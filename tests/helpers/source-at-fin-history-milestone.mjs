@@ -152,6 +152,7 @@ export const sourceAtFinHistoryRecordSource = async (
 	assert.equal(typeof historyPath, "string");
 	assert.equal(typeof path, "string");
 	assert.match(expected, digestPattern);
+	if(reader !== undefined) assert.equal(typeof reader, "function");
 	if(reader !== undefined && !readerIds.has(reader))
 		readerIds.set(reader, nextReaderId++);
 	const key = JSON.stringify([
@@ -167,9 +168,44 @@ export const sourceAtFinHistoryRecordSource = async (
 		assert.equal(sha256(source), expected, path);
 		if(reader !== undefined)
 		{
-			assert.equal(typeof reader, "function");
 			assert.equal(reader(path, source, expected), source
 				, `${path} exact immutable-record stop`);
+		}
+		return source;
+	});
+};
+
+/**
+ * Read one exact source directly from a known immutable revision. Callers that
+ * already authenticate a producer or parent commit must not replay the entire
+ * evolving history hub merely to rediscover those same bytes.
+ *
+ * @param revision - Exact Git commit containing the source.
+ * @param path - Repository-relative source path at that revision.
+ * @param expected - Exact authenticated source SHA-256.
+ * @param reader - Optional milestone-specific source reader.
+ */
+export const sourceAtFinHistoryRevision = async (
+	revision, path, expected, reader = undefined
+) => {
+	assert.match(revision, revisionPattern);
+	assert.equal(typeof path, "string");
+	assert.match(expected, digestPattern);
+	if(reader !== undefined) assert.equal(typeof reader, "function");
+	if(reader !== undefined && !readerIds.has(reader))
+		readerIds.set(reader, nextReaderId++);
+	const key = JSON.stringify([
+		"revision-source", revision, path, expected
+		, reader === undefined ? 0 : readerIds.get(reader)
+	]);
+	return cachedHistorySource(key, () => {
+		const source = sourceAtRevision(revision, path);
+		assert.equal(typeof source, "string", `${revision}: missing ${path}`);
+		assert.equal(sha256(source), expected, path);
+		if(reader !== undefined)
+		{
+			assert.equal(reader(path, source, expected), source
+				, `${path} exact revision stop`);
 		}
 		return source;
 	});

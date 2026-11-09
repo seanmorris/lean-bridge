@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -69,7 +70,7 @@ test("nominal C# CI preserves exact original sources and support claims", async 
 	const current = JSON.parse(beforeFinRefinementSource(
 		path, currentSource, sha256(expectedSource)
 	));
-	assert.ok(pins > 0); assert.deepEqual(current, expected);
+	assert.ok(pins > 0); assertJsonEqual(current, expected);
 });
 
 test("nominal C# CI history writer refuses an unrelated checkout before writing", async t => {

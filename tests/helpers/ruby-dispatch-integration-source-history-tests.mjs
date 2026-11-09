@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -72,7 +73,7 @@ test("Ruby dispatch integration refreshes exactly 96 source pins without promoti
 		}
 	}
 	assert.equal(pins, 96);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("Ruby history preserves its installed producer only at an explicit exact digest", async () => {

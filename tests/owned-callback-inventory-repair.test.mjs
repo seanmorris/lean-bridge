@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -49,7 +50,7 @@ test("callback inventory repair preserves complete source and acceptance identit
 	const current = JSON.parse(beforeOwnedCppCallbackResults("package.json", await readFile("package.json"), packageUpdate.currentSha256));
 	const prior = JSON.parse(beforeCallbackInventoryRepair("package.json", await readFile("package.json"), packageUpdate.previousSha256));
 	prior.files.push("src/analyze/callback-signature.mjs"); prior.files.sort();
-	assert.deepEqual(current, prior);
+	assertJsonEqual(current, prior);
 	const configuration = beforeOwnedCppCallbackResults("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), accepted.sources["config/cli-package.v1.json"]);
 	assert.deepEqual(current.files, JSON.parse(configuration).files);
 });
@@ -64,7 +65,7 @@ test("callback inventory repair refreshes source identities without changing sup
 		const expected = history.updates.find(item => item.path === file.path)?.currentSha256 ?? file.sha256;
 		file.sha256 = sha256(beforeOwnedCppCallbackResults(file.path, await readFile(file.path), expected));
 	}
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });
 
 test("callback inventory repair rejects substituted historical compiler identities", async () => {

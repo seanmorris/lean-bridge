@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { beforeCopiedFixtureReaders } from "./helpers/copied-fixture-source-history.mjs";
@@ -46,7 +47,7 @@ test("JVM receiver GC history authenticates sources without changing support cel
 	const prior = JSON.parse(beforeOwnedJvmReceiverGc(path, current, previous.sources[path]));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });
 
 test("JVM receiver GC evidence requires optimized Java and Kotlin calls from both author paths", async () => {

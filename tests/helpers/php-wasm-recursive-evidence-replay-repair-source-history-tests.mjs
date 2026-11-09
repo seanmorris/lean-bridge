@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -127,7 +128,7 @@ test("PHP-Wasm recursive evidence replay repair refreshes exact live pins"
 		}
 	}
 	assert.equal(pins, 9);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 	}
 );
 

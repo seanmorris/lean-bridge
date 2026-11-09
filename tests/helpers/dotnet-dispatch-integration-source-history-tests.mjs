@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -72,7 +73,7 @@ test(".NET dispatch integration refreshes exactly 218 source pins without promot
 		}
 	}
 	assert.equal(pins, 218);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("the .NET dispatch integration retains the reviewed source and managed CI handoffs", async () => {

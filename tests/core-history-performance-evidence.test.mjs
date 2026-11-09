@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -41,7 +42,7 @@ test("history optimization authenticates every verifier edit and keeps installed
 	const current = sourceAtProducer(coreHistoryProducer, path, record.sources[path]);
 	const prior = JSON.parse(beforeCoreHistoryPerformance(path, current, transition.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(coreHistoryProducer, file.path));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });
 
 test("optimized history still rejects unknown text, altered predecessors and overlapping edits", async () => {

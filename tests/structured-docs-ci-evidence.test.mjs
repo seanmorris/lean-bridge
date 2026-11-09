@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -63,7 +64,7 @@ test("structured documentation repair preserves exact predecessor source identit
 		file.sha256 = sha256(await bytesAtFinHistoryRecordSource(
 			structuredDocsCiPath, file.path
 		));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	for(const name of ["component-structured-callable-documentation", "structured-docs-ci-evidence"])
 		assert.equal(classifyRepositoryTest(`tests/${name}.test.mjs`), "contract");
 });

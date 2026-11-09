@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -126,7 +127,7 @@ test("candidate acceptance repair preserves the exact model and refreshes only 1
 			file.sha256 = pin.previous;
 			counts.set(file.path, (counts.get(file.path) ?? 0) + 1);
 		}
-	assert.deepEqual(current, previous
+	assertJsonEqual(current, previous
 		, "Only the exact named current-source pins may change");
 	for(const pin of pins.values())
 	{

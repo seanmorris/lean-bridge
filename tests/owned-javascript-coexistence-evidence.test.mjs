@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -53,7 +54,7 @@ test("coexistence receipt binds every current source without rewriting installed
 		, record.updates.find(update => update.path === inventoryPath)?.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
-	assert.deepEqual(JSON.parse(current), prior, "No type-surface support cells are promoted");
+	assertJsonEqual(JSON.parse(current), prior, "No type-surface support cells are promoted");
 });
 
 test("installed coexistence requires repaired archives, all load orders and every browser context", async () => {

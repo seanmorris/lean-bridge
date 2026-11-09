@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -55,5 +56,5 @@ test("copied-graph repair updates source identities without changing observed co
 		file.sha256 = update.currentSha256; pins++;
 	}
 	assert.ok(pins > 0);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });

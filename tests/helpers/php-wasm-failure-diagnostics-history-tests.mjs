@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -68,7 +69,7 @@ test("PHP-Wasm failure diagnostics preserves exact original sources and support 
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.ok(pins > 0); assert.deepEqual(current, expected);
+	assert.ok(pins > 0); assertJsonEqual(current, expected);
 });
 
 test("PHP-Wasm failure diagnostics history writer refuses an unrelated checkout before writing", async t => {

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -41,7 +42,7 @@ test("real Nix successor authenticates every change without promoting type cover
 	assert.ok(transition, "Nix evidence records an explicit type-surface predecessor");
 	const prior = JSON.parse(beforeOwnedJavaScriptNix(path, current, transition.previousSha256));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = record.sources[file.path] ?? sha256(bytesAtProducer(ownedJavaScriptNixProducer, file.path));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });
 
 test("real Nix history rejects unknown text, altered predecessors and overlapping spans", async () => {

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -59,7 +60,7 @@ test("Zend bailout repair binds all current sources and leaves production and pr
 		assert.ok(pins.has(file.path), file.path);
 		file.sha256 = pins.get(file.path);
 	}
-	assert.deepEqual(JSON.parse(current), prior, "The repair must not promote installed support");
+	assertJsonEqual(JSON.parse(current), prior, "The repair must not promote installed support");
 });
 
 test("Zend bailout repair requires native GCC12/GCC13 and actual wasm32 cleanup execution", async () => {

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -64,6 +65,6 @@ test("Nix Fin boundary refreshes exactly eighteen source pins without changing s
 		assert.equal(file.sha256, previousDigest); file.sha256 = currentDigest; count++;
 	}
 	assert.equal(count, 18);
-	assert.deepEqual(current, expected);
+	assertJsonEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
 });

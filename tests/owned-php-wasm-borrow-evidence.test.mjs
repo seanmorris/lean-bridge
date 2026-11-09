@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -48,7 +49,7 @@ test("PHP-Wasm borrowed-result history preserves authenticated predecessor versi
 	const prior = JSON.parse(beforeOwnedPhpWasmBorrow(path, current, previous.sources[path]));
 	const pins = new Map(JSON.parse(current).evidence.flatMap(evidence => evidence.files.map(file => [file.path, file.sha256])));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path] ?? pins.get(file.path)));
-	assert.deepEqual(JSON.parse(current), prior, "Source refresh must not promote unrelated support cells");
+	assertJsonEqual(JSON.parse(current), prior, "Source refresh must not promote unrelated support cells");
 	for(const name of ["owned-php-wasm-borrows", "owned-php-wasm-borrow-evidence"
 		, "owned-php-wasm-borrow-packaging", "owned-php-wasm-borrow-documentation"])
 		assert.equal(classifyRepositoryTest(`tests/${name}.test.mjs`), "contract");

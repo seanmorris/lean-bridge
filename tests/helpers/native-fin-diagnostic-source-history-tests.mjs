@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -56,7 +57,7 @@ test("native Fin diagnostic inventory refreshes only current source pins, not ob
 		{ file.sha256 = update.currentSha256; refreshed++; }
 	}
 	assert.equal(refreshed, 246);
-	assert.deepEqual(current, expected);
+	assertJsonEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
 	await assertHistoricalTypeSurfaceEvidence(current);
 });

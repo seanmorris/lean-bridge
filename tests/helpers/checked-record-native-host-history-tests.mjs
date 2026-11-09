@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -57,7 +58,7 @@ test("Checked-record native host admission gate changes source pins without addi
 		if(update)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.ok(pins > 0); assert.deepEqual(current, expected);
+	assert.ok(pins > 0); assertJsonEqual(current, expected);
 	assert.equal(current.evidence.length, 420); assert.equal(current.observations.length, 519);
 	assert.deepEqual(current.observations, previous.observations);
 	await assertHistoricalTypeSurfaceEvidence(current

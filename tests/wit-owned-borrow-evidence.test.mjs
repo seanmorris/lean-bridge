@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -60,7 +61,7 @@ test("WIT borrowed results preserve predecessor sources without support promotio
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = record.sources[file.path]
 			?? sha256(bytesAtProducer(producer, file.path));
-	assert.deepEqual(JSON.parse(current), prior, "Source refresh must not promote unrelated support cells");
+	assertJsonEqual(JSON.parse(current), prior, "Source refresh must not promote unrelated support cells");
 	for(const name of ["wit-owned-borrows", "wit-owned-borrow-packaging", "wit-owned-borrow-evidence"])
 		assert.equal(classifyRepositoryTest(`tests/${name}.test.mjs`), "contract");
 });

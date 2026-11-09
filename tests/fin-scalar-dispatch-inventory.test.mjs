@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -73,7 +74,7 @@ test("scalar dispatch inventory authenticates every complete predecessor and ref
 
 test("twelve scalar entries supplement exactly eleven observations without changing older evidence claims", async () => {
 	const { current, previous, expected, references, pins } = await snapshot();
-	assert.deepEqual(current, expected);
+	assertJsonEqual(current, expected);
 	assert.equal(previous.evidence.length, 272); assert.equal(current.evidence.length, 284);
 	assert.equal(previous.observations.length, 497); assert.equal(current.observations.length, 497);
 	assert.equal(pins, 129);

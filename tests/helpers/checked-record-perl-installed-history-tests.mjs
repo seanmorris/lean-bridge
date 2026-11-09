@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -62,7 +63,7 @@ test("Perl checked-record installed harness changes only source pins and preserv
 		if(update)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.equal(pins, 0); assert.deepEqual(current, expected);
+	assert.equal(pins, 0); assertJsonEqual(current, expected);
 	assert.equal(current.evidence.length, 436); assert.equal(current.observations.length, 551);
 	assert.deepEqual(current.observations, previous.observations);
 	await assertHistoricalTypeSurfaceEvidence(current);

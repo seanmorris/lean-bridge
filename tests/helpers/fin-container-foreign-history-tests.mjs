@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -62,7 +63,7 @@ test("foreign-carrier integration refreshes exact source pins without changing s
 		{ file.sha256 = update.currentSha256; refreshed++; }
 	}
 	assert.equal(refreshed, 186);
-	assert.deepEqual(current, expected);
+	assertJsonEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
 	await assertHistoricalTypeSurfaceEvidence(current);
 	for(const [path, digest] of [

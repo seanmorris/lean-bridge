@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -59,7 +60,7 @@ test("Perl transfers bind current sources without promoting unrelated type cells
 	const current = beforeOwnedPerlProfile("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
 	const prior = JSON.parse(beforeOwnedPerlTransfer("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPerlProfileHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 });
 
 test("Perl transfer history rejects unrelated edits and invalid reversal spans", async () => {

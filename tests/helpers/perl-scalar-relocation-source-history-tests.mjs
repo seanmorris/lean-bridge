@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -58,7 +59,7 @@ test("Perl scalar relocation preserves the inventory without refreshing pins or 
 		}
 	}
 	assert.equal(pins, 0);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("Perl scalar relocation authenticates the reviewed handoff and retains the three-source counter scope", async () => {

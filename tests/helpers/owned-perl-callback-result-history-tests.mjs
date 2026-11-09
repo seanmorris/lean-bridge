@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -84,7 +85,7 @@ test("staged Perl source identities do not promote type-surface support", async 
 		file.sha256 = sha256(bytesAtProducer(
 			ownedPerlCallbackProducer, file.path
 		));
-	assert.deepEqual(JSON.parse(current), previous);
+	assertJsonEqual(JSON.parse(current), previous);
 });
 
 test("frozen JVM CLI reports reject current Perl source inventories without rewriting originals", async () => {

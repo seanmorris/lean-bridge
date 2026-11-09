@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -38,7 +39,7 @@ test("owned WIT build repair authenticates sources without changing earlier inst
 	const current = beforeOwnedTransferC("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
 	const prior = JSON.parse(beforeOwnedWitBuildRepair("docs/type-surface.v1.json", current, previous.sources["docs/type-surface.v1.json"]));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedTransferCHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
-	assert.deepEqual(JSON.parse(current), prior, "Regression repair does not promote installed support");
+	assertJsonEqual(JSON.parse(current), prior, "Regression repair does not promote installed support");
 });
 
 test("owned WIT build repair history rejects unknown text, forged ancestors and overlapping spans", async () => {

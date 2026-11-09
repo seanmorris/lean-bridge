@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -65,7 +66,7 @@ test("Rust borrow evidence authenticates exact source transitions without rewrit
 		));
 		assert.equal(file.sha256, expected, file.path);
 	}
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	const historical = async path_ => JSON.parse(await sourceAtFinHistoryRecordSource(
 		ownedRustBorrowPath, path_, record.sources[path_]
 	));

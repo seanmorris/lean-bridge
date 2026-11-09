@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -58,7 +59,7 @@ test("WIT receiver history authenticates sources without inflating support", asy
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = sha256(bytesAtProducer(ownedWitReceiverProducer
 			, file.path, record.sources[file.path] ?? file.sha256));
-	assert.deepEqual(JSON.parse(current), prior);
+	assertJsonEqual(JSON.parse(current), prior);
 	for(const name of ["model", "resource", "packaging", "resource-packaging", "ci", "evidence"])
 		assert.equal(classifyRepositoryTest(`tests/wit-owned-receiver-${name}.test.mjs`), "contract");
 	assert.equal(classifyRepositoryTest("tests/wit-owned-receivers.test.mjs"), "contract");

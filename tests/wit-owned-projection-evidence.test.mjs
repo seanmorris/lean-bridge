@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -53,7 +54,7 @@ test("owned WIT successor authenticates changes and preserves installed classifi
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		file.sha256 = sha256(bytesAtProducer(ownedWitProjectionProducer
 			, file.path, record.sources[file.path] ?? file.sha256));
-	assert.deepEqual(JSON.parse(current), prior, "Projection tests cannot promote installed support");
+	assertJsonEqual(JSON.parse(current), prior, "Projection tests cannot promote installed support");
 });
 
 test("owned WIT history rejects unknown edits, altered ancestors and overlapping spans", async () => {

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
@@ -160,6 +161,6 @@ for(const item of cases)
 			}
 		}
 		assert.ok(changedPins > 0);
-		assert.deepEqual(JSON.parse(current), expected
+		assertJsonEqual(JSON.parse(current), expected
 			, "Consumer CI repair changes source pins without changing support");
 	});

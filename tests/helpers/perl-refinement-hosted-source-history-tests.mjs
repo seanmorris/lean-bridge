@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -59,7 +60,7 @@ test("Perl archive registration refreshes exactly 95 source pins without promoti
 		}
 	}
 	assert.equal(pins, 95);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("the hosted Perl archive updater refuses another HEAD before any write", async t => {

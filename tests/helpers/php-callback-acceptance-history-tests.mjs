@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -110,5 +111,5 @@ test("PHP callback acceptance history preserves the receipt without promoting su
 		const priorFile = prior.files.find(item => item.path === file.path);
 		file.sha256 = priorFile.sha256;
 	}
-	assert.deepEqual(current, previous, "Only authenticated source identities changed in the inventory");
+	assertJsonEqual(current, previous, "Only authenticated source identities changed in the inventory");
 });

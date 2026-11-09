@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { sourceAtFinHistoryRecordSource }
 	from "./helpers/source-at-fin-history-milestone.mjs";
 import { perlContractRepairBaseline, perlContractRepairPath
@@ -26,40 +27,6 @@ const historicalSource = async (path, expected) => {
 		, sourceAtFinHistoryRecordSource(
 			perlContractRepairPath, path, expected));
 	return historicalSources.get(key);
-};
-const describeJson = value => typeof value === "string"
-	? `string(${value.length} bytes, ${JSON.stringify(value.slice(0, 80))})`
-	: JSON.stringify(value);
-const firstJsonDifference = (actual, expected) => {
-	const stack = [{ actual, expected, path: "$" }];
-	while(stack.length > 0)
-	{
-		const item = stack.pop();
-		if(Object.is(item.actual, item.expected)) continue;
-		if(item.actual === null || item.expected === null
-			|| typeof item.actual !== "object"
-			|| typeof item.expected !== "object")
-			return `${item.path}: ${describeJson(item.actual)} !== ${describeJson(item.expected)}`;
-		const actualArray = Array.isArray(item.actual);
-		if(actualArray !== Array.isArray(item.expected))
-			return `${item.path}: array/object kind differs`;
-		if(actualArray && item.actual.length !== item.expected.length)
-			return `${item.path}: length ${item.actual.length} !== ${item.expected.length}`;
-		const actualKeys = Object.keys(item.actual);
-		const expectedKeys = Object.keys(item.expected);
-		if(actualKeys.length !== expectedKeys.length)
-			return `${item.path}: key count ${actualKeys.length} !== ${expectedKeys.length}`;
-		for(const key of actualKeys)
-			if(!Object.hasOwn(item.expected, key))
-				return `${item.path}: unexpected key ${JSON.stringify(key)}`;
-		for(let index = actualKeys.length - 1; index >= 0; index--)
-		{
-			const key = actualKeys[index];
-			stack.push({ actual: item.actual[key], expected: item.expected[key]
-				, path: actualArray ? `${item.path}[${key}]`
-					: `${item.path}.${key}` });
-		}
-	}
 };
 const verify = async record => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
@@ -106,8 +73,8 @@ const verify = async record => {
 		inventory, inventoryUpdate));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
 		if(record.sources[file.path]) file.sha256 = record.sources[file.path];
-	const difference = firstJsonDifference(current, prior);
-	assert.equal(difference, undefined, difference);
+	assertJsonEqual(current, prior
+		, "Perl contract repair must preserve the type-surface inventory");
 };
 
 test("post-Perl contract repair preserves the frozen receipt and binds both reproduced fixes", async () => {

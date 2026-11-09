@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -77,7 +78,7 @@ test("staged C transfers authenticate every source and preserve installed suppor
 		file.sha256 = sha256(await bytesAtFinHistoryRecordSource(
 			ownedTransferCPath, file.path
 		));
-	assert.deepEqual(JSON.parse(current), prior, "Staged C transfer execution does not promote installed support");
+	assertJsonEqual(JSON.parse(current), prior, "Staged C transfer execution does not promote installed support");
 });
 
 test("staged C transfer history rejects unknown edits and forged ancestors", async () => {

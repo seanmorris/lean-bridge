@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertHostedContainerArchive, hostedContainerDirectory, hostedContainerOriginals, hostedContainerRevision, hostedContainerRun } from "./hosted-container-dispatch-evidence.mjs";
@@ -154,5 +155,5 @@ export const assertHostedContainerInventory = async (
 		const update = updates.find(update => update.path === file.path && update.previousSha256 === file.sha256);
 		if(update) file.sha256 = update.currentSha256;
 	}
-	assert.deepEqual(current, expected, "Only the hosted container supplement and exact old source-pin refreshes may change");
+	assertJsonEqual(current, expected, "Only the hosted container supplement and exact old source-pin refreshes may change");
 };

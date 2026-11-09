@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -95,7 +96,7 @@ test("Python graph diagnostic history refreshes only predecessor source pins", a
 		}
 	}
 	assert.equal(refreshed, record.pinCount);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("Python graph diagnostic history updater refuses another checkout before writing", async t => {

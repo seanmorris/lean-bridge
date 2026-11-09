@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeOwnedRustBorrow, ownedRustBorrowHistoricalBytes } from "./owned-rust-borrow-history.mjs";
@@ -46,6 +47,6 @@ export const assertOwnedCppBorrowCiRepair = async record => {
 	const index = "docs/type-surface.v1.json", source = beforeOwnedRustBorrow(index, await readFile(index, "utf8"), record.sources[index]), current = JSON.parse(source);
 	const prior = JSON.parse(reverseOwnedCppBorrowCiUpdate(source, record.updates.find(item => item.path === index)));
 	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRustBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
-	assert.deepEqual(current, prior);
+	assertJsonEqual(current, prior);
 	await assertOwnedCppBorrowExecution(previous);
 };

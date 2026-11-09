@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -112,7 +113,7 @@ test("the reader repair refreshes source identities without changing support cla
 			previousFiles[fileIndex].sha256 = currentFiles[fileIndex].sha256;
 		}
 	}
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 	const binary = Buffer.from([0, 255, 128, 192]);
 	assert.equal(copiedFixtureHistoricalBytes("unrelated.bin", binary), binary);
 });

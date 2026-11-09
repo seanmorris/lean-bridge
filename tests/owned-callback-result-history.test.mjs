@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -62,7 +63,7 @@ test("callback source upgrades refresh hashes without claiming new support cells
 		assert.ok(pins.has(file.path), file.path);
 		file.sha256 = pins.get(file.path);
 	}
-	assert.deepEqual(JSON.parse(current), previous);
+	assertJsonEqual(JSON.parse(current), previous);
 	const bytes = Buffer.from([0, 255, 128, 192]);
 	assert.equal(beforeOwnedCallbackResults("unrelated.bin", bytes), bytes);
 });

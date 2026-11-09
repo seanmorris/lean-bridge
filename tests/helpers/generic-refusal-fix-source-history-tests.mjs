@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -60,7 +61,7 @@ test("Generic refusal fix refreshes exactly 11 source pins without changing cove
 		}
 	}
 	assert.equal(pins, 11);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("the generic refusal correction authenticates the reviewed handoff and retains lazy registration", async () => {

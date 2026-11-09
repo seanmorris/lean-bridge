@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./helpers/bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -53,7 +54,7 @@ test("Python callback source identities do not promote unrelated type-surface ce
 		const expected = updates.get(file.path)?.currentSha256 ?? file.sha256;
 		file.sha256 = sha256(beforeOwnedRubyCallbackResults(file.path, await readFile(file.path), expected));
 	}
-	assert.deepEqual(JSON.parse(current), previous);
+	assertJsonEqual(JSON.parse(current), previous);
 	const binary = Buffer.from([0, 255, 128, 192]);
 	assert.equal(beforeOwnedPythonCallbackResults("unrelated.bin", binary), binary);
 });

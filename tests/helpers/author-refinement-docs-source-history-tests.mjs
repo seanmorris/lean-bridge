@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -60,7 +61,7 @@ test("Author refinement docs refreshes exactly 18 source pins without promoting 
 		}
 	}
 	assert.equal(pins, 18);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("the Author refinement docs updater refuses another HEAD before any write", async t => {

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -82,7 +83,7 @@ test("Native Fin .NET SDK repair changes source pins without changing any suppor
 		{ file.sha256 = update.currentSha256; refreshed++; }
 	}
 	assert.equal(refreshed, 6);
-	assert.deepEqual(current, expected);
+	assertJsonEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
 	assert.equal(current.evidence.length, 407); assert.equal(current.observations.length, 509);
 	await assertHistoricalTypeSurfaceEvidence(current);

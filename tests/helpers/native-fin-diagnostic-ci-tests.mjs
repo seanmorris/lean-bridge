@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -50,7 +51,7 @@ test("diagnostic CI repair changes source pins only and preserves earlier ledger
 		{ file.sha256 = update.currentSha256; refreshed++; }
 	}
 	assert.equal(refreshed, 12);
-	assert.deepEqual(current, expected);
+	assertJsonEqual(current, expected);
 	assert.deepEqual(current.observations, previous.observations);
 	await assertHistoricalTypeSurfaceEvidence(current);
 	assert.equal(sha256(await readFile("docs/evidence/native-fin-diagnostic-source-history-20261010.json")), "2bc3b1217601bb0eb0c19b9f1496d00ab5df831e3a1bd1881a4429b28fd210ab");

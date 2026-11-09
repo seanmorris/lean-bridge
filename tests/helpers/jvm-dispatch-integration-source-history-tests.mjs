@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertJsonEqual } from "./bounded-json-equality.mjs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -72,7 +73,7 @@ test("JVM dispatch integration refreshes exactly 132 source pins without promoti
 		}
 	}
 	assert.equal(pins, 132);
-	assert.deepEqual(current, previous);
+	assertJsonEqual(current, previous);
 });
 
 test("JVM dispatch integration retains its producer source and runs archived evidence in core contracts", async () => {
