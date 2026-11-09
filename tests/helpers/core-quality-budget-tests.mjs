@@ -7,9 +7,9 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { access, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
-import { canonicalJson } from "../../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	collectCoreContractTestPaths, collectRepositoryTestPaths
 	, coreContractCostManifest, coreContractCosts, coreContractCostsPath
@@ -20,6 +20,7 @@ import {
 import {
 	coreContractToolchainPlan, coreContractToolchainTests
 } from "../../scripts/core-contract-toolchains.mjs";
+import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 
 const assertCoreQualityBudget = source => {
 	const timeouts = [...source.matchAll(/^\s+timeout-minutes:\s*(\d+)\s*$/gmu)]
@@ -867,4 +868,121 @@ test("recursive checked-record whitespace rules stay inside each archive", async
 		, { encoding: "utf8" }).trim().split("\n");
 	assert.deepEqual(output, paths.map((path, index) =>
 		`${path}: whitespace: ${values[index]}`));
+});
+
+/** The four Core roots that replaced one umbrella, each owning one former entrypoint. */
+const componentMirrorRoots = Object.freeze({
+	"tests/component-refinement-mirrors.test.mjs": "./helpers/component-refinement-mirrors-source-tests.mjs"
+	, "tests/component-nominal-subtype.test.mjs": "./helpers/component-nominal-subtype-tests.mjs"
+	, "tests/component-nominal-subtype-history.test.mjs": "./helpers/component-nominal-subtype-history-tests.mjs"
+	, "tests/nominal-primitive-subtype.test.mjs": "./helpers/nominal-primitive-subtype-tests.mjs"
+});
+
+const sideEffectImports = source =>
+	[...source.matchAll(/^import "([^"]+)";$/gmu)].map(match => match[1]);
+
+/**
+ * Walk every static relative import below a root, recording which modules
+ * register tests at import.
+ *
+ * @param root - Repository-relative test root.
+ */
+const staticImportClosure = async root => {
+	const modules = new Map([[root, false]]);
+	const pending = [root];
+	while(pending.length > 0)
+	{
+		const path = pending.pop();
+		let source;
+		try
+		{
+			source = await readFile(path, "utf8");
+		}
+		catch(error)
+		{
+			// Generated-source templates quote imports of files that never exist here.
+			if(error.code !== "ENOENT") throw error;
+			modules.delete(path); continue;
+		}
+		modules.set(path, /^test\(/mu.test(source));
+		for(const match of source.matchAll(
+			/^(?:import|export)[^;]*?from\s+"(\.{1,2}\/[^"]+\.mjs)";|^import\s+"(\.{1,2}\/[^"]+\.mjs)";/gmu
+		)) {
+			const target = join(dirname(path), match[1] ?? match[2]);
+			// Only repository tests register node:test cases.
+			if(!target.startsWith("tests/") || modules.has(target)) continue;
+			modules.set(target, false); pending.push(target);
+		}
+	}
+	return modules;
+};
+
+test("four Core roots execute the former umbrella's entrypoints exactly once", async () => {
+	const former = [
+		"./helpers/component-refinement-mirrors-source-tests.mjs"
+		, "./helpers/component-nominal-subtype-tests.mjs"
+		, "./helpers/component-nominal-subtype-history-tests.mjs"
+		, "./helpers/nominal-primitive-subtype-tests.mjs"
+	];
+	const umbrella = "tests/component-refinement-mirrors.test.mjs";
+	const owners = new Map(), entrypoints = [];
+	for(const [root, entrypoint] of Object.entries(componentMirrorRoots))
+	{
+		const source = await readFile(root, "utf8");
+		assert.equal(classifyRepositoryTest(root), "contract", root);
+		assert.deepEqual(sideEffectImports(source), [entrypoint], root);
+		assert.doesNotMatch(source, /\.test\.mjs"/u, `${root} must not import another root`);
+		assert.equal([...source.matchAll(/^test\(/gmu)].length, root === umbrella ? 16 : 0
+			, `${root} direct tests`);
+		entrypoints.push(entrypoint);
+		for(const [module, registers] of await staticImportClosure(root))
+		{
+			if(!registers || module === root) continue;
+			assert.ok(!owners.has(module), `${module} runs from ${owners.get(module)} and ${root}`);
+			owners.set(module, root);
+		}
+	}
+	assert.deepEqual(entrypoints.toSorted(), former.toSorted());
+	assert.equal(new Set(entrypoints).size, former.length);
+	const reached = root => [...owners].filter(([, owner]) => owner === root).length;
+	assert.ok(reached("tests/component-nominal-subtype.test.mjs") > 100);
+	assert.ok(reached("tests/nominal-primitive-subtype.test.mjs") > 100);
+	// The registration contract follows the primitive entrypoint to its root.
+	const registration = await readFile("tests/helpers/nominal-primitive-subtype-npm-tests.mjs", "utf8");
+	assert.ok(registration.includes('readFile("tests/nominal-primitive-subtype.test.mjs", "utf8")'));
+	assert.ok(!registration.includes('readFile("tests/component-refinement-mirrors.test.mjs"'));
+});
+
+test("the split closed set is the recorded predecessor plus three roots", async () => {
+	const paths = await collectCoreContractTestPaths();
+	const previous = coreContractCostManifest.provenance.previousContract;
+	assert.deepEqual(previous, {
+		added: [
+			"tests/component-nominal-subtype-history.test.mjs"
+			, "tests/component-nominal-subtype.test.mjs"
+			, "tests/nominal-primitive-subtype.test.mjs"
+		]
+		, count: 1120, removed: []
+		, sha256: "a1da1f6b28803108861cffeff14eab88a0c8008a17e69386b6510eaa5ddc9c04"
+	});
+	assert.equal(paths.length, previous.count + previous.added.length - previous.removed.length);
+	assert.ok(previous.added.every(path => paths.includes(path)));
+	assert.deepEqual(previous.added.toSorted(), Object.keys(componentMirrorRoots)
+		.filter(root => root !== "tests/component-refinement-mirrors.test.mjs").toSorted());
+	const restored = [...paths.filter(path => !previous.added.includes(path)), ...previous.removed].toSorted();
+	assert.equal(sha256(canonicalJson(restored)), previous.sha256);
+	assert.equal(coreContractShardManifest(paths, "1/12").contract.count, 1123);
+	// The umbrella's measured minutes were redistributed, not invented.
+	const { costs } = coreContractCostManifest;
+	const umbrella = costs["tests/component-refinement-mirrors.test.mjs"];
+	assert.equal(umbrella.basis, "sampler-max-etime-less-attributed");
+	assert.deepEqual(umbrella.attributedAway, previous.added);
+	const redistributed = previous.added.reduce((total, path) => {
+		assert.equal(costs[path].basis, "tap-duration-attributed");
+		assert.equal(costs[path].attributedFrom, "tests/component-refinement-mirrors.test.mjs");
+		assert.ok(costs[path].measured && costs[path].tapTests > 0);
+		return total + Math.round(costs[path].minutes * 100);
+	}, 0);
+	assert.equal(redistributed, Math.round(umbrella.attributedMinutes * 100));
+	assert.equal(Math.round(umbrella.minutes * 100) + redistributed, 26747);
 });

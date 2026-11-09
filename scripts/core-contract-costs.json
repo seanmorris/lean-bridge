@@ -1024,6 +1024,26 @@
       "minutes": 0.25,
       "sampledInShard": 1
     },
+    "tests/component-nominal-subtype-history.test.mjs": {
+      "attributedFrom": "tests/component-refinement-mirrors.test.mjs",
+      "basis": "tap-duration-attributed",
+      "entrypoint": "tests/helpers/component-nominal-subtype-history-tests.mjs",
+      "job": 129026259176,
+      "measured": true,
+      "minutes": 3.75,
+      "sampledInShard": 3,
+      "tapTests": 2
+    },
+    "tests/component-nominal-subtype.test.mjs": {
+      "attributedFrom": "tests/component-refinement-mirrors.test.mjs",
+      "basis": "tap-duration-attributed",
+      "entrypoint": "tests/helpers/component-nominal-subtype-tests.mjs",
+      "job": 129026259176,
+      "measured": true,
+      "minutes": 121.44,
+      "sampledInShard": 3,
+      "tapTests": 334
+    },
     "tests/component-record-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
       "job": 129026259348,
@@ -1032,11 +1052,17 @@
       "sampledInShard": 2
     },
     "tests/component-refinement-mirrors.test.mjs": {
-      "basis": "sampler-max-etime",
+      "attributedAway": [
+        "tests/component-nominal-subtype-history.test.mjs",
+        "tests/component-nominal-subtype.test.mjs",
+        "tests/nominal-primitive-subtype.test.mjs"
+      ],
+      "attributedMinutes": 255.26,
+      "basis": "sampler-max-etime-less-attributed",
       "etimeSeconds": 16048,
       "job": 129026259176,
       "measured": true,
-      "minutes": 267.47,
+      "minutes": 12.21,
       "peakRssGb": 3.4,
       "sampledInShard": 3
     },
@@ -2944,6 +2970,16 @@
       "measured": false,
       "minutes": 0.25,
       "sampledInShard": 3
+    },
+    "tests/nominal-primitive-subtype.test.mjs": {
+      "attributedFrom": "tests/component-refinement-mirrors.test.mjs",
+      "basis": "tap-duration-attributed",
+      "entrypoint": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "job": 129026259176,
+      "measured": true,
+      "minutes": 130.07,
+      "sampledInShard": 3,
+      "tapTests": 331
     },
     "tests/nominal-subtype-entry-hosted-evidence.test.mjs": {
       "basis": "unobserved-shard-4-no-completed-run",
@@ -8437,8 +8473,18 @@
       "11": 129026259312,
       "12": 129026259172
     },
-    "measuredRows": 334,
-    "method": "For every completed 'Run one closed contract shard' step, the 30 s core-memory sampler prints `ps -eo pid,rss,etime,args --sort=-rss | head -n 6`; each line naming `node --test --test-concurrency=2 tests/<file>.test.mjs` was attributed to that file. A measured row's minutes is the maximum etime seen for the file (etimeSeconds, rounded up to at least 0.01 min) and peakRssGb its maximum RSS; it is a lower bound of the file's wall time within one sampling interval. The flattened TAP names tests, not files, so files that completed inside one sampling interval were never observed; they are not measurements and carry defaultMinutes with measured=false and basis unobserved-under-sampling-interval. Shard 4 had no completed hosted run at this head (runner lost) and its files carry defaultMinutes with measured=false and basis unobserved-shard-4-no-completed-run.",
+    "measuredRows": 337,
+    "method": "For every completed 'Run one closed contract shard' step, the 30 s core-memory sampler prints `ps -eo pid,rss,etime,args --sort=-rss | head -n 6`; each line naming `node --test --test-concurrency=2 tests/<file>.test.mjs` was attributed to that file. A measured row's minutes is the maximum etime seen for the file (etimeSeconds, rounded up to at least 0.01 min) and peakRssGb its maximum RSS; it is a lower bound of the file's wall time within one sampling interval. The flattened TAP names tests, not files, so files that completed inside one sampling interval were never observed; they are not measurements and carry defaultMinutes with measured=false and basis unobserved-under-sampling-interval. Shard 4 had no completed hosted run at this head (runner lost) and its files carry defaultMinutes with measured=false and basis unobserved-shard-4-no-completed-run. Split rows: when tests/component-refinement-mirrors.test.mjs stopped executing three former entrypoints, each new root received the sum of the shard-3 TAP durations (job 129026259176, same run) of the tests reachable from its entrypoint (tap-duration-attributed, tapTests counts them), and the umbrella kept its sampler maximum less the attributed minutes (sampler-max-etime-less-attributed), so the four rows still sum to the one measured 267.47 min. previousContract records the closed set these rows extend.",
+    "previousContract": {
+      "added": [
+        "tests/component-nominal-subtype-history.test.mjs",
+        "tests/component-nominal-subtype.test.mjs",
+        "tests/nominal-primitive-subtype.test.mjs"
+      ],
+      "count": 1120,
+      "removed": [],
+      "sha256": "a1da1f6b28803108861cffeff14eab88a0c8008a17e69386b6510eaa5ddc9c04"
+    },
     "run": 42574824120,
     "samplingIntervalSeconds": 30,
     "workflow": ".github/workflows/quality.yml"

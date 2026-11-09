@@ -1,6 +1,9 @@
 /**
  * Component mirror normalization and generated-source checks. Compiler and installed acceptance are separate gates.
  *
+ * One of four Core roots: the nominal Subtype, nominal Subtype history and
+ * primitive Subtype entrypoints run from their own root files.
+ *
  * @file
  */
 import assert from "node:assert/strict";
@@ -20,9 +23,6 @@ import {
 } from "./helpers/component-refinement-mirrors-fixture.mjs";
 import { nominalFinConversionFixture, nominalSubtypeConversionFixture } from "./helpers/nominal-subtype-conversion-fixture.mjs";
 import "./helpers/component-refinement-mirrors-source-tests.mjs";
-import "./helpers/component-nominal-subtype-tests.mjs";
-import "./helpers/component-nominal-subtype-history-tests.mjs";
-import "./helpers/nominal-primitive-subtype-tests.mjs";
 
 const render = type => {
 	assert.equal(type.kind, "primitive"); assert.equal(type.name, "nat");

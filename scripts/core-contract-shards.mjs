@@ -26,11 +26,16 @@ export const coreContractCostsPath = "scripts/core-contract-costs.json";
 const partition = coreContractPartition;
 const costSource = readFileSync(
 	new URL("./core-contract-costs.json", import.meta.url), "utf8");
-const costBases = Object.freeze([
+const measuredBases = Object.freeze([
 	"sampler-max-etime"
-	, "unobserved-under-sampling-interval"
+	, "tap-duration-attributed"
+	, "sampler-max-etime-less-attributed"
+]);
+const floorBases = Object.freeze([
+	"unobserved-under-sampling-interval"
 	, "unobserved-shard-4-no-completed-run"
 ]);
+const costBases = Object.freeze([...measuredBases, ...floorBases]);
 
 const assertPaths = paths => {
 	assert.ok(Array.isArray(paths) && paths.length > 0);
@@ -67,6 +72,19 @@ const assertCostManifest = (source, manifest) => {
 	assert.ok(Number.isSafeInteger(provenance.attempt) && provenance.attempt > 0);
 	assert.ok(typeof provenance.method === "string" && provenance.method.length > 0);
 	assert.ok(provenance.jobs && typeof provenance.jobs === "object");
+	const { previousContract } = provenance;
+	if(previousContract !== undefined)
+	{
+		// A recorded predecessor ties this closed set to the one before it.
+		assert.ok(Number.isSafeInteger(previousContract.count) && previousContract.count > 0);
+		assert.match(previousContract.sha256, /^[a-f0-9]{64}$/u);
+		for(const paths of [previousContract.added, previousContract.removed])
+		{
+			assert.ok(Array.isArray(paths));
+			assert.deepEqual(paths, paths.toSorted());
+			assert.equal(new Set(paths).size, paths.length);
+		}
+	}
 	assert.ok(manifest.costs && typeof manifest.costs === "object");
 	for(const [path, entry] of Object.entries(manifest.costs))
 	{
@@ -74,7 +92,7 @@ const assertCostManifest = (source, manifest) => {
 		assert.ok(costBases.includes(entry.basis), `${path}: unknown cost basis ${entry.basis}`);
 		centiminutes(entry.minutes);
 		// Every row says whether it is a measurement or the declared floor.
-		assert.equal(entry.measured, entry.basis === "sampler-max-etime"
+		assert.equal(entry.measured, measuredBases.includes(entry.basis)
 			, `${path}: measured must agree with the cost basis`);
 		if(!entry.measured)
 			assert.equal(entry.minutes, manifest.defaultMinutes

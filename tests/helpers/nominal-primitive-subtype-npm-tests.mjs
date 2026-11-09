@@ -53,7 +53,7 @@ test("primitive npm test registration keeps caller, package and installed checks
 	const entry = await readFile("tests/helpers/nominal-primitive-subtype-tests.mjs", "utf8");
 	for(const name of ["caller-tests", "npm-tests", "npm-installed-tests"])
 		assert.ok(entry.includes(`import "./nominal-primitive-subtype-${name}.mjs";`));
-	const root = await readFile("tests/component-refinement-mirrors.test.mjs", "utf8");
+	const root = await readFile("tests/nominal-primitive-subtype.test.mjs", "utf8");
 	assert.ok(root.includes('import "./helpers/nominal-primitive-subtype-tests.mjs";'));
 });
 
