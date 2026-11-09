@@ -23,9 +23,10 @@ export const coreContractToolchainTests = Object.freeze({
  *
  * @param paths - Every sorted Core contract test path.
  * @param label - One-based Core shard label.
+ * @param costs - Cost manifest; the committed one by default.
  */
-export const coreContractToolchainPlan = (paths, label) => {
-	const manifest = coreContractShardManifest(paths, label);
+export const coreContractToolchainPlan = (paths, label, costs = undefined) => {
+	const manifest = coreContractShardManifest(paths, label, costs);
 	const selected = new Set(manifest.selection.files), toolchains = {};
 	for(const [name, requirements] of Object.entries(coreContractToolchainTests))
 	{

@@ -14,7 +14,7 @@ import {
 	collectCoreContractTestPaths, collectRepositoryTestPaths
 	, coreContractCostManifest, coreContractCosts, coreContractCostsPath
 	, coreContractCostsSha256, coreContractPartition, coreContractShardLabels
-	, coreContractShardManifest, planCostBalancedShards
+	, coreContractShardManifest, coreContractShardPlan, planCostBalancedShards
 	, verifyCoreContractShardManifests
 } from "../../scripts/core-contract-shards.mjs";
 import {
@@ -186,7 +186,11 @@ const assertCoreProcessBudget = (source, shards) => {
 		, "The runner must execute the exact authenticated selection");
 	assert.match(source, /await writeFile\(shardManifestPath, canonicalJson\(manifest\)\)/u);
 	assert.match(shards, /export const coreContractShardCount = 12;/u);
-	assert.match(shards, /position % coreContractShardCount === index - 1/u);
+	assert.match(shards, /export const coreContractPartition = "cost-balanced-lpt-v1";/u);
+	assert.match(shards, /if\(loads\[candidate\] < loads\[index\]\) index = candidate;/u
+		, "Equal loads must stay with the lowest shard index");
+	assert.match(shards, /export const coreContractCostManifest = deepFreeze\(JSON\.parse\(costSource\)\);/u
+		, "The authenticated cost manifest must be deeply immutable");
 	assert.match(shards, /assert\.deepEqual\(files\.toSorted\(\), paths\)/u
 		, "The aggregate must require a disjoint full-file union");
 	assert.equal([...source.matchAll(/"--max-old-space-size=4096"/gu)].length, 1
@@ -450,14 +454,48 @@ test("Core compiler prerequisites follow the selected behavior tests", async () 
 		assert.deepEqual(plan.toolchains.component.files, []);
 
 	const shifted = ["tests/000-core-shard-shift.test.mjs", ...paths].toSorted();
-	const shiftedPlans = coreContractShardLabels.map(label =>
-		coreContractToolchainPlan(shifted, label));
-	const shiftedComponent = shiftedPlans.filter(plan =>
+	assert.throws(() => coreContractToolchainPlan(shifted, "1/12")
+		, /lacks 1 contract paths: tests\/000-core-shard-shift\.test\.mjs/u
+		, "An uncosted file fails closed instead of shifting the partition");
+	// Re-costing HostNull moves it between shards; the requirement follows it.
+	const moved = structuredClone(coreContractCostManifest);
+	moved.costs["tests/host-null-npm-installed.test.mjs"].minutes = 300;
+	const movedPlans = coreContractShardLabels.map(label =>
+		coreContractToolchainPlan(paths, label, moved));
+	const movedComponent = movedPlans.filter(plan =>
 		plan.toolchains.component.required);
-	assert.equal(shiftedComponent.length, 1
+	assert.equal(movedComponent.length, 1
 		, "Repartitioning preserves the file-derived component-build requirement");
-	assert.notDeepEqual(shiftedComponent[0].shard, requiringComponent[0].shard
+	assert.notDeepEqual(movedComponent[0].shard, requiringComponent[0].shard
 		, "The test-file requirement follows HostNull into its new shard");
+	assert.notEqual(movedComponent[0].selectionSha256, requiringComponent[0].selectionSha256);
+});
+
+test("the authenticated cost manifest is deeply immutable", async () => {
+	const paths = await collectCoreContractTestPaths();
+	const path = "tests/host-null-npm-installed.test.mjs";
+	const manifest = coreContractCostManifest;
+	for(const value of [manifest, manifest.provenance, manifest.provenance.jobs
+		, manifest.costs, manifest.costs[path]])
+		assert.ok(Object.isFrozen(value));
+	const before = coreContractShardPlan(paths);
+	assert.throws(() => { manifest.costs[path].minutes = 300; }, TypeError);
+	assert.throws(() => { manifest.costs["tests/zz-injected.test.mjs"] = {
+		basis: "sampler-max-etime", measured: true, minutes: 1
+	}; }, TypeError);
+	assert.throws(() => { delete manifest.costs[path]; }, TypeError);
+	assert.throws(() => { manifest.defaultMinutes = 0.01; }, TypeError);
+	assert.deepEqual(coreContractShardPlan(paths), before);
+	assert.deepEqual(coreContractShardManifest(paths, "1/12").costs.sha256
+		, coreContractCostsSha256);
+	// Control: the same edit on a thawed copy does move files between shards.
+	const thawed = structuredClone(manifest);
+	thawed.costs[path].minutes = 300;
+	const after = coreContractShardPlan(paths, thawed);
+	assert.notDeepEqual(after, before);
+	assert.ok(after[0].files.includes(path) && !before[0].files.includes(path));
+	assert.notEqual(coreContractShardManifest(paths, "1/12", thawed).costs.sha256
+		, coreContractCostsSha256);
 });
 
 test("history inventory checks reuse the authenticated type-surface pass", async () => {

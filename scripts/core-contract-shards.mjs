@@ -82,10 +82,32 @@ const assertCostManifest = (source, manifest) => {
 	}
 };
 
-/** The committed cost manifest, authenticated once at import. */
-export const coreContractCostManifest = Object.freeze(JSON.parse(costSource));
+/**
+ * Freeze a parsed JSON document at every level so no caller can alter it.
+ *
+ * @param value - Parsed JSON value; JSON carries no cycles.
+ */
+const deepFreeze = value => {
+	if(value !== null && typeof value === "object" && !Object.isFrozen(value))
+	{
+		Object.freeze(value);
+		for(const entry of Object.values(value)) deepFreeze(entry);
+	}
+	return value;
+};
+
+/** The committed cost manifest, authenticated once at import and deeply frozen. */
+export const coreContractCostManifest = deepFreeze(JSON.parse(costSource));
 assertCostManifest(costSource, coreContractCostManifest);
 export const coreContractCostsSha256 = sha256(costSource);
+
+/**
+ * Digest of the cost manifest a plan was drawn from.
+ *
+ * @param manifest - Cost manifest; the committed one by default.
+ */
+const costsSha256 = manifest => manifest === coreContractCostManifest
+	? coreContractCostsSha256 : sha256(canonicalJson(manifest));
 
 /**
  * Resolve every contract path to its recorded cost in centiminutes.
@@ -172,31 +194,35 @@ export const collectCoreContractTestPaths = async (root = resolve(".")) => {
 };
 
 /**
- * Plan every shard of the complete contract profile from the committed costs.
+ * Plan every shard of the complete contract profile from recorded costs.
  *
  * @param paths - Every sorted Core contract test path.
+ * @param manifest - Cost manifest; the committed one by default.
  */
-export const coreContractShardPlan = paths =>
-	planCostBalancedShards(coreContractCosts(paths), coreContractShardCount);
+export const coreContractShardPlan = (paths, manifest = coreContractCostManifest) =>
+	planCostBalancedShards(coreContractCosts(paths, manifest), coreContractShardCount);
 
 /**
  * Construct one exact shard manifest from the complete contract profile.
  *
  * @param paths - Every sorted Core contract test path.
  * @param label - One-based shard label `k/12`.
+ * @param manifest - Cost manifest; the committed one by default.
  */
-export const coreContractShardManifest = (paths, label) => {
+export const coreContractShardManifest = (
+	paths, label, manifest = coreContractCostManifest
+) => {
 	assertPaths(paths);
 	assert.ok(coreContractShardLabels.includes(label), `Unknown Core shard ${label}`);
 	const index = Number(label.split("/")[0]);
-	const shard = coreContractShardPlan(paths)[index - 1];
+	const shard = coreContractShardPlan(paths, manifest)[index - 1];
 	const files = [...shard.files];
 	assert.ok(files.length > 0);
 	return {
 		schemaVersion: 1, partition
 		, shard: { index, total: coreContractShardCount }
 		, contract: { count: paths.length, sha256: sha256(canonicalJson(paths)) }
-		, costs: { sha256: coreContractCostsSha256, minutes: shard.centiminutes / 100 }
+		, costs: { sha256: costsSha256(manifest), minutes: shard.centiminutes / 100 }
 		, selection: {
 			count: files.length, sha256: sha256(canonicalJson(files)), files
 		}
