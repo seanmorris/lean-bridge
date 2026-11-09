@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeVo1220CoreCandidateThroughputSource
+	, vo1220CoreCandidateThroughputNormalizationPaths
+} from "./vo1220-core-candidate-throughput-source-history.mjs";
+import {
 	beforeVo1220BoundedHistoryComparisonSource
 	, vo1220BoundedHistoryComparisonNormalizationPaths
 } from "./vo1220-bounded-history-comparison-source-history.mjs";
@@ -2783,7 +2787,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220BoundedHistoryComparisonNormalizationPaths
+	...vo1220CoreCandidateThroughputNormalizationPaths
+	, ...vo1220BoundedHistoryComparisonNormalizationPaths
 	, ...vo1220PerlContractReplayMemoryBoundNormalizationPaths
 	, ...vo1220WorkflowReleaseAssetPinRefreshNormalizationPaths
 	, ...vo1220WorkflowReleaseAssetFailoverNormalizationPaths
@@ -4051,7 +4056,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220BoundedHistoryComparisonSource(
+	let stage = beforeVo1220CoreCandidateThroughputSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220BoundedHistoryComparisonSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

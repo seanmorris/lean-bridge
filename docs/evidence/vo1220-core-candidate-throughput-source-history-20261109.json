@@ -1,0 +1,1818 @@
+{
+  "behavior": {
+    "addedFiles": 4,
+    "changedSupportCells": 0,
+    "currentRoots": 1123,
+    "maxParallel": 12,
+    "modifiedFiles": 11,
+    "priorRoots": 1120,
+    "refreshedPins": 133,
+    "runtimeSemanticChanges": 0,
+    "splitRoots": 4
+  },
+  "costModel": {
+    "floorRoots": 786,
+    "kind": "core-contract-costs",
+    "maximumLoadMinutes": 258.12,
+    "measuredRoots": 337,
+    "minimumLoadMinutes": 258.11,
+    "partition": "cost-balanced-lpt-v1",
+    "provenance": {
+      "attempt": 1,
+      "extractedAt": "2026-11-09T21:50:00Z",
+      "extractedBy": "Claude (read-only audit of the hosted job logs)",
+      "floorRows": 786,
+      "headSha": "39af98acc76410d47c65f0f85baf3c7f443fb6b3",
+      "jobs": {
+        "1": 129026259161,
+        "2": 129026259348,
+        "3": 129026259176,
+        "5": 129026259295,
+        "6": 129026259249,
+        "7": 129026259277,
+        "8": 129026259207,
+        "9": 129026259239,
+        "10": 129026259183,
+        "11": 129026259312,
+        "12": 129026259172
+      },
+      "measuredRows": 337,
+      "method": "For every completed 'Run one closed contract shard' step, the 30 s core-memory sampler prints `ps -eo pid,rss,etime,args --sort=-rss | head -n 6`; each line naming `node --test --test-concurrency=2 tests/<file>.test.mjs` was attributed to that file. A measured row's minutes is the maximum etime seen for the file (etimeSeconds, rounded up to at least 0.01 min) and peakRssGb its maximum RSS; it is a lower bound of the file's wall time within one sampling interval. The flattened TAP names tests, not files, so files that completed inside one sampling interval were never observed; they are not measurements and carry defaultMinutes with measured=false and basis unobserved-under-sampling-interval. Shard 4 had no completed hosted run at this head (runner lost) and its files carry defaultMinutes with measured=false and basis unobserved-shard-4-no-completed-run. Split rows: when tests/component-refinement-mirrors.test.mjs stopped executing three former entrypoints, each new root received the sum of the shard-3 TAP durations (job 129026259176, same run) of the tests reachable from its entrypoint (tap-duration-attributed, tapTests counts them), and the umbrella kept its sampler maximum less the attributed minutes (sampler-max-etime-less-attributed), so the four rows still sum to the one measured 267.47 min. previousContract records the closed set these rows extend.",
+      "previousContract": {
+        "added": [
+          "tests/component-nominal-subtype-history.test.mjs",
+          "tests/component-nominal-subtype.test.mjs",
+          "tests/nominal-primitive-subtype.test.mjs"
+        ],
+        "count": 1120,
+        "removed": [],
+        "sha256": "a1da1f6b28803108861cffeff14eab88a0c8008a17e69386b6510eaa5ddc9c04"
+      },
+      "run": 42574824120,
+      "samplingIntervalSeconds": 30,
+      "workflow": ".github/workflows/quality.yml"
+    },
+    "roots": 1123,
+    "shards": 12
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-core-candidate-throughput-source-history.mjs",
+      "sha256": "3599a92c0a53fa4d36c5bc1d7991282f0a84fa4709dfff5a8a2dc82fa31de1e5"
+    },
+    {
+      "path": "tests/helpers/vo1220-core-candidate-throughput-source-history-tests.mjs",
+      "sha256": "255896c2f02d10976a29f315e3e1e3a64a490516357b8f5ff3bcaccccc045594"
+    },
+    {
+      "path": "tests/helpers/vo1220-core-candidate-throughput-source-history.mjs",
+      "sha256": "47ea805b6044182a000f2ec685a73296e3b8c45a1e0c5a71ef67bbc0683371c0"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "scripts/core-contract-costs.json",
+      "sha256": "7a44754b45d5438ba7cc77942cf9f9db4b8e35a048161f631be3659ac697638f"
+    },
+    {
+      "path": "tests/component-nominal-subtype-history.test.mjs",
+      "sha256": "965da49fdd28d993b2a5c9341b9fa5e30463663566620f6523798d0070aa87ac"
+    },
+    {
+      "path": "tests/component-nominal-subtype.test.mjs",
+      "sha256": "65b6fb91b3179fa8e8ebe84f0bc12aad24a5adca4c7a8923d884824db62f631f"
+    },
+    {
+      "path": "tests/nominal-primitive-subtype.test.mjs",
+      "sha256": "54c5f01a241595da63b556a781433b06e60a1dd99cd40f65e6edf4d362274bfd"
+    }
+  ],
+  "implementationCommit": "50314df3b1ac0e0e7f0cdf4be99519685da24d22",
+  "implementationCommits": [
+    "9341d68a6ad60e2374d9adb8aafc56ae804e2809",
+    "ea00e64f9731f35a2df14f0efe4b3fc0505535dc",
+    "2278c943a0010a4ec09673cef56e92dfde92487e",
+    "4f0d3a7730e6c1bd54d4c3ac9bc31d2dd635c277",
+    "8a90d3876787853a925a7ee92c1e9a2db720ad63",
+    "50314df3b1ac0e0e7f0cdf4be99519685da24d22"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "06ecb97e2c672a47246f1fb02607fe873fea17b30aa4740839183f7a3ea6ad6b",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-core-candidate-throughput-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 178
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "0c25ec66f88cfba42f72d7ecbdd97013bda69482a471737cd13e4dd3c5b80ddd"
+    },
+    {
+      "currentSha256": "2cb475bb454775b65aef0460d7a8914825e9285b2079efb51c5c38729920a184",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220CoreCandidateThroughputSource\n\t, vo1220CoreCandidateThroughputNormalizationPaths\n} from \"./vo1220-core-candidate-throughput-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220CoreCandidateThroughputNormalizationPaths\n\t, ...vo1220BoundedHistoryComparisonNormalizationPaths\n",
+          "previous": "\t...vo1220BoundedHistoryComparisonNormalizationPaths\n",
+          "start": 244979
+        },
+        {
+          "current": "\tlet stage = beforeVo1220CoreCandidateThroughputSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220BoundedHistoryComparisonSource(\n",
+          "previous": "\tlet stage = beforeVo1220BoundedHistoryComparisonSource(\n",
+          "start": 308423
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e2042a6b5c994608387f3de2d51c1392527490eebbee4b5b02cbfde7f2d62f23"
+    }
+  ],
+  "measurements": {
+    "componentArrayHistoryPartition03": {
+      "failed": 0,
+      "optimizedDurationMs": 1129342.603212,
+      "passed": 159,
+      "recordedCostMinutes": 82.62,
+      "tests": 159
+    },
+    "hostedWallModel": {
+      "afterMinutes": 140,
+      "beforeMinutes": 357,
+      "savedMinutes": 217,
+      "savedPercent": 60.78431372549019
+    }
+  },
+  "milestone": "vo1220-core-candidate-throughput-source-v1",
+  "pinTransitions": [
+    {
+      "count": 1,
+      "currentSha256": "97006ebbe1166a885dd1207c9712d730e615bf7253cdd8e8f92d391c3869729a",
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "d6d370a4c5dd85d1eb0c6ca405be1655c87ace412a4c22be174da73264845c63"
+    },
+    {
+      "count": 98,
+      "currentSha256": "d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f",
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53"
+    },
+    {
+      "count": 12,
+      "currentSha256": "5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef",
+      "path": "tests/fin-scalar-dispatch-inventory.test.mjs",
+      "previousSha256": "de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4"
+    },
+    {
+      "count": 12,
+      "currentSha256": "e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946",
+      "path": "tests/helpers/fin-scalar-dispatch-inventory.mjs",
+      "previousSha256": "c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0"
+    },
+    {
+      "count": 4,
+      "currentSha256": "a1049fbfeec937bf6da6ad6c3f5352fd214fbe5fc6cf256ad7cfbb681f9cdceb",
+      "path": "tests/helpers/hosted-container-inventory.mjs",
+      "previousSha256": "4dc02939d9efe21f5609bbd728e25436e0b2ed1f32fa4b7840a9d8b4d1cd6bf5"
+    },
+    {
+      "count": 2,
+      "currentSha256": "8f1f78ad84e1f6307fb9ac26b55b92d551102954bb05786ffde916a1b4eebcae",
+      "path": "tests/helpers/perl-scalar-promotion.mjs",
+      "previousSha256": "c869ae2dd68dd4a6918aaf90ba47f8df2c2c5b426143695a03a19d3d879fe748"
+    },
+    {
+      "count": 4,
+      "currentSha256": "7d8c16839ba2003e0cfaf13bbe5c5c15abe042b12152a57bda14a7f544677967",
+      "path": "tests/perl-relocated-promotion.test.mjs",
+      "previousSha256": "09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4"
+    }
+  ],
+  "predecessorCommit": "063869612311ac528b521d6281a5e7012d4c5ee0",
+  "schemaVersion": 1,
+  "scope": "Replace repeated whole-history scans with exact authenticated revision reads, balance the closed Core contract by observed root cost, split one side-effect umbrella into four independently schedulable roots, run all twelve balanced shards concurrently, and refresh every affected live source citation. Preserve runtime and package semantics, all 1,054 support cells, all 5,270 stage entries, immutable archives and every prior source-history milestone.",
+  "updates": [
+    {
+      "currentSha256": "97006ebbe1166a885dd1207c9712d730e615bf7253cdd8e8f92d391c3869729a",
+      "edits": [
+        {
+          "current": "      # The measured-cost planner balances all twelve shards to the same\n      # critical path. Run the complete matrix together so a second wave\n      # cannot double the hosted wall time while runners sit available.\n      max-parallel: 12\n",
+          "previous": "      max-parallel: 6\n",
+          "start": 4482
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "d6d370a4c5dd85d1eb0c6ca405be1655c87ace412a4c22be174da73264845c63"
+    },
+    {
+      "currentSha256": "e729e987b908c6af6a4dad89914bd0739e0691739f537613f580bcd8350a6f70",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 57331
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 79889
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 97092
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 113385
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 146035
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 169264
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 182230
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 197129
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 210062
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 223281
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 231819
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 240250
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 249264
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 257930
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 267505
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 276606
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 286455
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 298594
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 308628
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 317180
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 326474
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 339163
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 348414
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 357701
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 366824
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 375687
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 383072
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 391006
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 401656
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 408541
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 415750
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 422846
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 433705
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 440821
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 447199
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 453362
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 460121
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 466963
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 473805
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 483109
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 494343
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 504032
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 513625
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 525155
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 533718
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 544732
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 577262
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 583258
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 593521
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 602834
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 614382
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 622903
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 633859
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 683275
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 693377
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 700237
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 708209
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 722240
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 733453
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 747673
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 759127
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 771198
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 782486
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 791069
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 797527
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 805913
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 814048
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 826020
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 845158
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 900676
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1016251
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1073453
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1081197
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1087647
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1094907
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1102252
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1109305
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1116906
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1127186
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1140348
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1150606
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1158492
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1169229
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1179489
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1193908
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1226452
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1256734
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1289697
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1330923
+        },
+        {
+          "current": "          \"sha256\": \"97006ebbe1166a885dd1207c9712d730e615bf7253cdd8e8f92d391c3869729a\"\n",
+          "previous": "          \"sha256\": \"d6d370a4c5dd85d1eb0c6ca405be1655c87ace412a4c22be174da73264845c63\"\n",
+          "start": 1351498
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1356475
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1379012
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1398704
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1419347
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 1451865
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 1956227
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 1956404
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 1960873
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 1961050
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 1965628
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 1965805
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 1971487
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 1971664
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 1977221
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 1977398
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 1982771
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 1982948
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 1988466
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 1988643
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 1994164
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 1994341
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 1999979
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 2000156
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 2006604
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 2006781
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 2013237
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 2013414
+        },
+        {
+          "current": "          \"sha256\": \"5f916a4bfe49d2b3f32b9815b4098ca4c4a9e84651aedf672e63c0af261c89ef\"\n",
+          "previous": "          \"sha256\": \"de3ac1fca23f30bffafb94fb4df2ad93b839d12d1e70f66d54ed1305dee24ee4\"\n",
+          "start": 2019872
+        },
+        {
+          "current": "          \"sha256\": \"e6d3daa848a9a288213a5b74e40fb8ebd398a4d8b2d6e3a3707e873191460946\"\n",
+          "previous": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n",
+          "start": 2020049
+        },
+        {
+          "current": "          \"sha256\": \"7d8c16839ba2003e0cfaf13bbe5c5c15abe042b12152a57bda14a7f544677967\"\n",
+          "previous": "          \"sha256\": \"09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4\"\n",
+          "start": 2027351
+        },
+        {
+          "current": "          \"sha256\": \"7d8c16839ba2003e0cfaf13bbe5c5c15abe042b12152a57bda14a7f544677967\"\n",
+          "previous": "          \"sha256\": \"09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4\"\n",
+          "start": 2049501
+        },
+        {
+          "current": "          \"sha256\": \"7d8c16839ba2003e0cfaf13bbe5c5c15abe042b12152a57bda14a7f544677967\"\n",
+          "previous": "          \"sha256\": \"09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4\"\n",
+          "start": 2071715
+        },
+        {
+          "current": "          \"sha256\": \"7d8c16839ba2003e0cfaf13bbe5c5c15abe042b12152a57bda14a7f544677967\"\n",
+          "previous": "          \"sha256\": \"09686bb466f4b89c62fc5fb5df7b11542ae40d8f90b8c5897f2e0ba1ebe78fb4\"\n",
+          "start": 2093742
+        },
+        {
+          "current": "          \"sha256\": \"a1049fbfeec937bf6da6ad6c3f5352fd214fbe5fc6cf256ad7cfbb681f9cdceb\"\n",
+          "previous": "          \"sha256\": \"4dc02939d9efe21f5609bbd728e25436e0b2ed1f32fa4b7840a9d8b4d1cd6bf5\"\n",
+          "start": 2115118
+        },
+        {
+          "current": "          \"sha256\": \"a1049fbfeec937bf6da6ad6c3f5352fd214fbe5fc6cf256ad7cfbb681f9cdceb\"\n",
+          "previous": "          \"sha256\": \"4dc02939d9efe21f5609bbd728e25436e0b2ed1f32fa4b7840a9d8b4d1cd6bf5\"\n",
+          "start": 2125951
+        },
+        {
+          "current": "          \"sha256\": \"a1049fbfeec937bf6da6ad6c3f5352fd214fbe5fc6cf256ad7cfbb681f9cdceb\"\n",
+          "previous": "          \"sha256\": \"4dc02939d9efe21f5609bbd728e25436e0b2ed1f32fa4b7840a9d8b4d1cd6bf5\"\n",
+          "start": 2136801
+        },
+        {
+          "current": "          \"sha256\": \"a1049fbfeec937bf6da6ad6c3f5352fd214fbe5fc6cf256ad7cfbb681f9cdceb\"\n",
+          "previous": "          \"sha256\": \"4dc02939d9efe21f5609bbd728e25436e0b2ed1f32fa4b7840a9d8b4d1cd6bf5\"\n",
+          "start": 2147616
+        },
+        {
+          "current": "          \"sha256\": \"8f1f78ad84e1f6307fb9ac26b55b92d551102954bb05786ffde916a1b4eebcae\"\n",
+          "previous": "          \"sha256\": \"c869ae2dd68dd4a6918aaf90ba47f8df2c2c5b426143695a03a19d3d879fe748\"\n",
+          "start": 2159044
+        },
+        {
+          "current": "          \"sha256\": \"8f1f78ad84e1f6307fb9ac26b55b92d551102954bb05786ffde916a1b4eebcae\"\n",
+          "previous": "          \"sha256\": \"c869ae2dd68dd4a6918aaf90ba47f8df2c2c5b426143695a03a19d3d879fe748\"\n",
+          "start": 2175562
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 75709264
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 75716138
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 75723023
+        },
+        {
+          "current": "          \"sha256\": \"d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f\"\n",
+          "previous": "          \"sha256\": \"47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53\"\n",
+          "start": 75729949
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "f663617f77c02f75428791fccd30dac8eba8dc7b809b254671c2db07c815d36f"
+    },
+    {
+      "currentSha256": "93a9831100e3399c36ea84c93334873b54c68c46bf1eb11b2b53883223e8454f",
+      "edits": [
+        {
+          "current": " * Shards are balanced by measured cost. Every contract file carries a cost in\n * scripts/core-contract-costs.json, whose provenance names the exact hosted\n * run, jobs and extraction method, and a longest-processing-time assignment\n * places each file, heaviest first, into the least-loaded shard. A path\n * missing from the manifest, or a manifest path outside the profile, fails\n * closed instead of receiving a silent default.\n *\n",
+          "previous": "",
+          "start": 87
+        },
+        {
+          "current": "import { readFileSync } from \"node:fs\";\n",
+          "previous": "",
+          "start": 575
+        },
+        {
+          "current": "export const coreContractPartition = \"cost-balanced-lpt-v1\";\nexport const coreContractCostsPath = \"scripts/core-contract-costs.json\";\nconst partition = coreContractPartition;\nconst costSource = readFileSync(\n\tnew URL(\"./core-contract-costs.json\", import.meta.url), \"utf8\");\nconst measuredBases = Object.freeze([\n\t\"sampler-max-etime\"\n\t, \"tap-duration-attributed\"\n\t, \"sampler-max-etime-less-attributed\"\n]);\nconst floorBases = Object.freeze([\n\t\"unobserved-under-sampling-interval\"\n\t, \"unobserved-shard-4-no-completed-run\"\n]);\nconst costBases = Object.freeze([...measuredBases, ...floorBases]);\n",
+          "previous": "const partition = \"sorted-index-modulo-v1\";\n",
+          "start": 1051
+        },
+        {
+          "current": "/**\n * Convert a recorded cost to whole centiminutes so shard loads add exactly.\n *\n * @param minutes - Positive cost with at most two decimals.\n */\nconst centiminutes = minutes => {\n\tassert.ok(Number.isFinite(minutes) && minutes > 0, \"cost minutes must be positive\");\n\tconst value = Math.round(minutes * 100);\n\tassert.equal(value / 100, minutes, \"cost minutes carry at most two decimals\");\n\treturn value;\n};\n\nconst assertCostManifest = (source, manifest) => {\n\tassert.equal(source, canonicalJson(manifest), `${coreContractCostsPath} must be canonical`);\n\tassert.equal(manifest.schemaVersion, 1);\n\tassert.equal(manifest.kind, \"core-contract-costs\");\n\tassert.equal(manifest.partition, partition);\n\tassert.equal(manifest.shards, coreContractShardCount);\n\tassert.equal(manifest.units, \"minutes\");\n\tcentiminutes(manifest.defaultMinutes);\n\tconst { provenance } = manifest;\n\tassert.ok(provenance && typeof provenance === \"object\");\n\tassert.match(provenance.headSha, /^[a-f0-9]{40}$/u);\n\tassert.ok(Number.isSafeInteger(provenance.run) && provenance.run > 0);\n\tassert.ok(Number.isSafeInteger(provenance.attempt) && provenance.attempt > 0);\n\tassert.ok(typeof provenance.method === \"string\" && provenance.method.length > 0);\n\tassert.ok(provenance.jobs && typeof provenance.jobs === \"object\");\n\tconst { previousContract } = provenance;\n\tif(previousContract !== undefined)\n\t{\n\t\t// A recorded predecessor ties this closed set to the one before it.\n\t\tassert.ok(Number.isSafeInteger(previousContract.count) && previousContract.count > 0);\n\t\tassert.match(previousContract.sha256, /^[a-f0-9]{64}$/u);\n\t\tfor(const paths of [previousContract.added, previousContract.removed])\n\t\t{\n\t\t\tassert.ok(Array.isArray(paths));\n\t\t\tassert.deepEqual(paths, paths.toSorted());\n\t\t\tassert.equal(new Set(paths).size, paths.length);\n\t\t}\n\t}\n\tassert.ok(manifest.costs && typeof manifest.costs === \"object\");\n\tfor(const [path, entry] of Object.entries(manifest.costs))\n\t{\n\t\tassert.match(path, /^tests\\/(?:[^/]+\\/)*[^/]+\\.test\\.mjs$/u);\n\t\tassert.ok(costBases.includes(entry.basis), `${path}: unknown cost basis ${entry.basis}`);\n\t\tcentiminutes(entry.minutes);\n\t\t// Every row says whether it is a measurement or the declared floor.\n\t\tassert.equal(entry.measured, measuredBases.includes(entry.basis)\n\t\t\t, `${path}: measured must agree with the cost basis`);\n\t\tif(!entry.measured)\n\t\t\tassert.equal(entry.minutes, manifest.defaultMinutes\n\t\t\t\t, `${path}: unobserved files carry the declared default`);\n\t}\n};\n\n/**\n * Freeze a parsed JSON document at every level so no caller can alter it.\n *\n * @param value - Parsed JSON value; JSON carries no cycles.\n */\nconst deepFreeze = value => {\n\tif(value !== null && typeof value === \"object\" && !Object.isFrozen(value))\n\t{\n\t\tObject.freeze(value);\n\t\tfor(const entry of Object.values(value)) deepFreeze(entry);\n\t}\n\treturn value;\n};\n\n/** The committed cost manifest, authenticated once at import and deeply frozen. */\nexport const coreContractCostManifest = deepFreeze(JSON.parse(costSource));\nassertCostManifest(costSource, coreContractCostManifest);\nexport const coreContractCostsSha256 = sha256(costSource);\n\n/**\n * Digest of the cost manifest a plan was drawn from.\n *\n * @param manifest - Cost manifest; the committed one by default.\n */\nconst costsSha256 = manifest => manifest === coreContractCostManifest\n\t? coreContractCostsSha256 : sha256(canonicalJson(manifest));\n\n/**\n * Resolve every contract path to its recorded cost in centiminutes.\n *\n * Fails closed: a contract path absent from the manifest, or a manifest path\n * no longer in the profile, is a planning error rather than a zero cost.\n *\n * @param paths - Every sorted Core contract test path.\n * @param manifest - Cost manifest; the committed one by default.\n */\nexport const coreContractCosts = (paths, manifest = coreContractCostManifest) => {\n\tassertPaths(paths);\n\tconst known = new Set(Object.keys(manifest.costs)), profile = new Set(paths);\n\tconst missing = paths.filter(path => !known.has(path));\n\tassert.deepEqual(missing, []\n\t\t, `${coreContractCostsPath} lacks ${missing.length} contract paths: ${missing.slice(0, 5).join(\", \")}`);\n\tconst stale = [...known].filter(path => !profile.has(path)).toSorted();\n\tassert.deepEqual(stale, []\n\t\t, `${coreContractCostsPath} cites ${stale.length} paths outside the contract profile: ${stale.slice(0, 5).join(\", \")}`);\n\treturn new Map(paths.map(path => [path, centiminutes(manifest.costs[path].minutes)]));\n};\n\n/**\n * Longest-processing-time assignment with explicit, total tie-breaking.\n *\n * Items are placed heaviest first, equal costs in ascending path order, each\n * into the shard with the smallest load so far, equal loads to the lowest\n * shard index. The result depends only on the cost map, so any checkout can\n * reproduce it.\n *\n * @param costs - Path to centiminutes.\n * @param count - Number of shards.\n */\nexport const planCostBalancedShards = (costs, count = coreContractShardCount) => {\n\tassert.ok(costs instanceof Map && costs.size > 0);\n\tassert.ok(Number.isSafeInteger(count) && count > 0);\n\tconst order = [...costs.keys()].sort((left, right) =>\n\t\tcosts.get(right) - costs.get(left) || (left < right ? -1 : left > right ? 1 : 0));\n\tconst loads = Array.from({ length: count }, () => 0);\n\tconst files = Array.from({ length: count }, () => []);\n\tfor(const path of order)\n\t{\n\t\tlet index = 0;\n\t\tfor(let candidate = 1; candidate < count; candidate++)\n\t\t\tif(loads[candidate] < loads[index]) index = candidate;\n\t\tfiles[index].push(path); loads[index] += costs.get(path);\n\t}\n\treturn files.map((selection, index) => Object.freeze({\n\t\tindex: index + 1\n\t\t, files: Object.freeze(selection.toSorted())\n\t\t, centiminutes: loads[index]\n\t}));\n};\n\n",
+          "previous": "",
+          "start": 1942
+        },
+        {
+          "current": "/**\n * Plan every shard of the complete contract profile from recorded costs.\n *\n * @param paths - Every sorted Core contract test path.\n * @param manifest - Cost manifest; the committed one by default.\n */\nexport const coreContractShardPlan = (paths, manifest = coreContractCostManifest) =>\n\tplanCostBalancedShards(coreContractCosts(paths, manifest), coreContractShardCount);\n\n",
+          "previous": "",
+          "start": 8612
+        },
+        {
+          "current": " * @param manifest - Cost manifest; the committed one by default.\n",
+          "previous": "",
+          "start": 9175
+        },
+        {
+          "current": "export const coreContractShardManifest = (\n\tpaths, label, manifest = coreContractCostManifest\n) => {\n",
+          "previous": "export const coreContractShardManifest = (paths, label) => {\n",
+          "start": 9245
+        },
+        {
+          "current": "\tconst shard = coreContractShardPlan(paths, manifest)[index - 1];\n\tconst files = [...shard.files];\n",
+          "previous": "\tconst files = paths.filter((_, position) =>\n\t\tposition % coreContractShardCount === index - 1);\n",
+          "start": 9495
+        },
+        {
+          "current": "\t\t, costs: { sha256: costsSha256(manifest), minutes: shard.centiminutes / 100 }\n",
+          "previous": "",
+          "start": 9792
+        },
+        {
+          "current": "\t\t, costsSha256: coreContractCostsSha256\n",
+          "previous": "",
+          "start": 11170
+        }
+      ],
+      "path": "scripts/core-contract-shards.mjs",
+      "previousSha256": "30fa4b85d7b10364980a733eb8fb38f3a8c8e66a295f3206ca3aec17dfadd9f1"
+    },
+    {
+      "currentSha256": "8ba43b0dbc17a37330bd25b19b41f6e9f94fa7e24004bccc9470e4213a2c0ea4",
+      "edits": [
+        {
+          "current": " * @param costs - Cost manifest; the committed one by default.\n",
+          "previous": "",
+          "start": 824
+        },
+        {
+          "current": "export const coreContractToolchainPlan = (paths, label, costs = undefined) => {\n\tconst manifest = coreContractShardManifest(paths, label, costs);\n",
+          "previous": "export const coreContractToolchainPlan = (paths, label) => {\n\tconst manifest = coreContractShardManifest(paths, label);\n",
+          "start": 891
+        }
+      ],
+      "path": "scripts/core-contract-toolchains.mjs",
+      "previousSha256": "bc94e2b39706fc9f509fcef38e68923c065ccdce2a48af8fab40911254114ce8"
+    },
+    {
+      "currentSha256": "d7cf69185f8fec08d59486337ef06eb2c4aecec0c5c0f96f23c69bdee0b2782f",
+      "edits": [
+        {
+          "current": "\t\t, \"component-nominal-subtype\"\n\t\t, \"component-nominal-subtype-history\"\n\t\t, \"nominal-primitive-subtype\"\n",
+          "previous": "",
+          "start": 23821
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "47aa2c0716d74cb2ec4c331ef1c1a3ee69f1b0e0447b628d13da6f5565726d53"
+    },
+    {
+      "currentSha256": "6d4ba0e1fdb96590c125d2828454f47abff2d3b184795e5ee21c463db42e7155",
+      "edits": [
+        {
+          "current": " * One of four Core roots: the nominal Subtype, nominal Subtype history and\n * primitive Subtype entrypoints run from their own root files.\n *\n",
+          "previous": "",
+          "start": 124
+        },
+        {
+          "current": "",
+          "previous": "import \"./helpers/component-nominal-subtype-tests.mjs\";\nimport \"./helpers/component-nominal-subtype-history-tests.mjs\";\nimport \"./helpers/nominal-primitive-subtype-tests.mjs\";\n",
+          "start": 1382
+        }
+      ],
+      "path": "tests/component-refinement-mirrors.test.mjs",
+      "previousSha256": "429d0e0d260f8cfa07f2f758374ccc6c81db6886fc218719b644bc27806501dc"
+    },
+    {
+      "currentSha256": "eb305ef4e05d7fac16be4dce7cf812ca625492d928c700ecdcf25ccad0376b8c",
+      "edits": [
+        {
+          "current": "import {\n\tsourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource\n\t, sourceAtFinHistoryRevision\n} from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 17929
+        },
+        {
+          "current": "const historyPathByRecord = new WeakMap();\nconst readerByEndpoint = new WeakMap();\nconst readHistoryRecord = async path => {\n\tconst record = JSON.parse(await readFile(path, \"utf8\"));\n\thistoryPathByRecord.set(record, path);\n\treturn record;\n};\nconst sourceAtRecordedCurrent = (record, endpoint, reader = undefined) => {\n\tassert.equal(typeof historyPathByRecord.get(record), \"string\");\n\tif(reader !== undefined) readerByEndpoint.set(endpoint, reader);\n\tconst implemented = record.updates?.includes(endpoint)\n\t\t|| record.implementationAdditions?.includes(endpoint);\n\treturn implemented\n\t\t? sourceAtFinHistoryRevision(record.implementationCommit\n\t\t\t, endpoint.path, endpoint.currentSha256, reader)\n\t\t: sourceAtFinHistoryRecordSource(historyPathByRecord.get(record)\n\t\t\t, endpoint.path, endpoint.currentSha256, reader);\n};\nconst beforeRecordedCurrent = (record, endpoint, current, expected) => {\n\tassert.ok(record.updates?.includes(endpoint)\n\t\t|| record.integrationUpdates?.includes(endpoint));\n\tconst normalize = readerByEndpoint.get(endpoint);\n\tassert.equal(typeof normalize, \"function\");\n\treturn normalize(endpoint.path, current, expected);\n};\nconst reader = path => () => readHistoryRecord(path);\nconst readCoreHistoricalEvidenceReuse = reader(coreHistoricalEvidenceReuseHistoryPath);\nconst readCoreHistoricalEvidenceReuseLivePinRepair = reader(coreHistoricalEvidenceReuseLivePinRepairHistoryPath);\nconst readCoreExactHeadMatrixRepair = reader(coreExactHeadMatrixRepairHistoryPath);\nconst readCoreExactHeadHostedStaticRepair = reader(coreExactHeadHostedStaticRepairHistoryPath);\nconst readCoreExactHeadHostedReplayRepair = reader(coreExactHeadHostedReplayRepairHistoryPath);\nconst readCoreInheritedRecordTypeSurfaceBatch = reader(coreInheritedRecordTypeSurfaceBatchHistoryPath);\nconst readCoreRecursiveCallableEvidencePinRepair = reader(coreRecursiveCallableEvidencePinRepairHistoryPath);\nconst readCoreRecursiveCallableReplayBound = reader(coreRecursiveCallableReplayBoundHistoryPath);\nconst readCoreLegacyOwnedEvidenceReplayBound = reader(coreLegacyOwnedEvidenceReplayBoundHistoryPath);\nconst readCoreCallbackEvidenceReplayBound = reader(coreCallbackEvidenceReplayBoundHistoryPath);\nconst readCoreInheritedRecordReplayBound = reader(coreInheritedRecordReplayBoundHistoryPath);\nconst readCoreReplayIntegrationEndpointRepair = reader(coreReplayIntegrationEndpointRepairHistoryPath);\nconst readCoreExactHeadReplayRepair = reader(coreExactHeadReplayRepairHistoryPath);\nconst readRecurringAcceptanceDocumentation = reader(recurringAcceptanceDocumentationHistoryPath);\nconst readBoundedRecurringAcceptanceSweep = reader(boundedRecurringAcceptanceSweepHistoryPath);\nconst readCoreExactHeadValidationRepair = reader(coreExactHeadValidationRepairHistoryPath);\nconst readDefaultBranchCiTriggerBudget = reader(defaultBranchCiTriggerBudgetHistoryPath);\nconst readCoreUniqueTypeSurfaceAuthentication = reader(coreUniqueTypeSurfaceAuthenticationHistoryPath);\nconst readCoreHistoricalAdditionCheckoutRepair = reader(coreHistoricalAdditionCheckoutRepairHistoryPath);\nconst readCoreTypeSurfaceSinglePass = reader(coreTypeSurfaceSinglePassHistoryPath);\nconst readCoreDocumentationEvidenceClosureRepair = reader(coreDocumentationEvidenceClosureRepairHistoryPath);\nconst readCoreBrowserWorkflowEvidencePinRepair = reader(coreBrowserWorkflowEvidencePinRepairHistoryPath);\nconst readCoreTypeSurfaceEvidenceClosureRepair = reader(coreTypeSurfaceEvidenceClosureRepairHistoryPath);\nconst readCoreSparseConeModeRepair = reader(coreSparseConeModeRepairHistoryPath);\nconst readCoreContractEvidenceCheckout = reader(coreContractEvidenceCheckoutHistoryPath);\nconst readNominalPrimitiveSubtypeSparseCheckout = reader(nominalPrimitiveSubtypeSparseCheckoutHistoryPath);\nconst readStaticSparseCheckout = reader(coreStaticSparseCheckoutHistoryPath);\nconst readStaticHistoryDeferral = reader(coreStaticHistoryDeferralHistoryPath);\nconst readOwnedReviewedExactStopRepair = reader(coreOwnedReviewedExactStopRepairHistoryPath);\nconst readWitExactStopRepair = reader(coreWitExactStopRepairHistoryPath);\nconst read = reader(coreHistoricalEvidenceReplayHistoryPath);\nconst readRuntimeBudgetLivePinRepair = reader(coreRuntimeBudgetLivePinRepairHistoryPath);\nconst readLivePinRepair = reader(coreExactHeadLivePinRepairHistoryPath);\nconst readWitBorrowProducerReplay = reader(coreWitBorrowProducerReplayHistoryPath);\nconst readReceiverCiProducerReplay = reader(coreReceiverCiProducerReplayHistoryPath);\nconst readWitBorrowStopBoundary = reader(coreWitBorrowStopBoundaryHistoryPath);\nconst readReceiverCiStopBoundary = reader(coreReceiverCiStopBoundaryHistoryPath);\n",
+          "previous": "const readCoreHistoricalEvidenceReuse = async () => JSON.parse(\n\tawait readFile(coreHistoricalEvidenceReuseHistoryPath, \"utf8\")\n);\nconst readCoreHistoricalEvidenceReuseLivePinRepair = async () => JSON.parse(\n\tawait readFile(coreHistoricalEvidenceReuseLivePinRepairHistoryPath, \"utf8\")\n);\nconst readCoreExactHeadMatrixRepair = async () => JSON.parse(\n\tawait readFile(coreExactHeadMatrixRepairHistoryPath, \"utf8\")\n);\nconst readCoreExactHeadHostedStaticRepair = async () => JSON.parse(\n\tawait readFile(coreExactHeadHostedStaticRepairHistoryPath, \"utf8\")\n);\nconst readCoreExactHeadHostedReplayRepair = async () => JSON.parse(\n\tawait readFile(coreExactHeadHostedReplayRepairHistoryPath, \"utf8\")\n);\nconst readCoreInheritedRecordTypeSurfaceBatch = async () => JSON.parse(\n\tawait readFile(coreInheritedRecordTypeSurfaceBatchHistoryPath, \"utf8\")\n);\nconst readCoreRecursiveCallableEvidencePinRepair = async () => JSON.parse(\n\tawait readFile(coreRecursiveCallableEvidencePinRepairHistoryPath, \"utf8\")\n);\nconst readCoreRecursiveCallableReplayBound = async () => JSON.parse(\n\tawait readFile(coreRecursiveCallableReplayBoundHistoryPath, \"utf8\")\n);\nconst readCoreLegacyOwnedEvidenceReplayBound = async () => JSON.parse(\n\tawait readFile(coreLegacyOwnedEvidenceReplayBoundHistoryPath, \"utf8\")\n);\nconst readCoreCallbackEvidenceReplayBound = async () => JSON.parse(\n\tawait readFile(coreCallbackEvidenceReplayBoundHistoryPath, \"utf8\")\n);\nconst readCoreInheritedRecordReplayBound = async () => JSON.parse(\n\tawait readFile(coreInheritedRecordReplayBoundHistoryPath, \"utf8\")\n);\nconst readCoreReplayIntegrationEndpointRepair = async () => JSON.parse(\n\tawait readFile(coreReplayIntegrationEndpointRepairHistoryPath, \"utf8\")\n);\nconst readCoreExactHeadReplayRepair = async () => JSON.parse(\n\tawait readFile(coreExactHeadReplayRepairHistoryPath, \"utf8\")\n);\nconst readRecurringAcceptanceDocumentation = async () => JSON.parse(\n\tawait readFile(recurringAcceptanceDocumentationHistoryPath, \"utf8\")\n);\nconst readBoundedRecurringAcceptanceSweep = async () => JSON.parse(\n\tawait readFile(boundedRecurringAcceptanceSweepHistoryPath, \"utf8\")\n);\nconst readCoreExactHeadValidationRepair = async () => JSON.parse(\n\tawait readFile(coreExactHeadValidationRepairHistoryPath, \"utf8\")\n);\nconst readDefaultBranchCiTriggerBudget = async () => JSON.parse(\n\tawait readFile(defaultBranchCiTriggerBudgetHistoryPath, \"utf8\")\n);\nconst readCoreUniqueTypeSurfaceAuthentication = async () => JSON.parse(\n\tawait readFile(coreUniqueTypeSurfaceAuthenticationHistoryPath, \"utf8\")\n);\nconst readCoreHistoricalAdditionCheckoutRepair = async () => JSON.parse(\n\tawait readFile(coreHistoricalAdditionCheckoutRepairHistoryPath, \"utf8\")\n);\nconst readCoreTypeSurfaceSinglePass = async () => JSON.parse(\n\tawait readFile(coreTypeSurfaceSinglePassHistoryPath, \"utf8\")\n);\nconst readCoreDocumentationEvidenceClosureRepair = async () => JSON.parse(\n\tawait readFile(coreDocumentationEvidenceClosureRepairHistoryPath, \"utf8\")\n);\nconst readCoreBrowserWorkflowEvidencePinRepair = async () => JSON.parse(\n\tawait readFile(coreBrowserWorkflowEvidencePinRepairHistoryPath, \"utf8\")\n);\nconst readCoreTypeSurfaceEvidenceClosureRepair = async () => JSON.parse(\n\tawait readFile(coreTypeSurfaceEvidenceClosureRepairHistoryPath, \"utf8\")\n);\nconst readCoreSparseConeModeRepair = async () => JSON.parse(await readFile(\n\tcoreSparseConeModeRepairHistoryPath, \"utf8\"));\nconst readCoreContractEvidenceCheckout = async () => JSON.parse(await readFile(\n\tcoreContractEvidenceCheckoutHistoryPath, \"utf8\"));\nconst readNominalPrimitiveSubtypeSparseCheckout = async () =>\n\tJSON.parse(await readFile(\n\t\tnominalPrimitiveSubtypeSparseCheckoutHistoryPath, \"utf8\"));\nconst readStaticSparseCheckout = async () => JSON.parse(await readFile(\n\tcoreStaticSparseCheckoutHistoryPath, \"utf8\"\n));\nconst readStaticHistoryDeferral = async () => JSON.parse(await readFile(\n\tcoreStaticHistoryDeferralHistoryPath, \"utf8\"\n));\nconst readOwnedReviewedExactStopRepair = async () => JSON.parse(await readFile(\n\tcoreOwnedReviewedExactStopRepairHistoryPath, \"utf8\"\n));\nconst readWitExactStopRepair = async () => JSON.parse(await readFile(\n\tcoreWitExactStopRepairHistoryPath, \"utf8\"\n));\nconst read = async () => JSON.parse(await readFile(\n\tcoreHistoricalEvidenceReplayHistoryPath, \"utf8\"\n));\nconst readRuntimeBudgetLivePinRepair = async () => JSON.parse(await readFile(\n\tcoreRuntimeBudgetLivePinRepairHistoryPath, \"utf8\"\n));\nconst readLivePinRepair = async () => JSON.parse(await readFile(\n\tcoreExactHeadLivePinRepairHistoryPath, \"utf8\"\n));\nconst readWitBorrowProducerReplay = async () => JSON.parse(await readFile(\n\tcoreWitBorrowProducerReplayHistoryPath, \"utf8\"\n));\nconst readReceiverCiProducerReplay = async () => JSON.parse(await readFile(\n\tcoreReceiverCiProducerReplayHistoryPath, \"utf8\"\n));\nconst readWitBorrowStopBoundary = async () => JSON.parse(await readFile(\n\tcoreWitBorrowStopBoundaryHistoryPath, \"utf8\"\n));\nconst readReceiverCiStopBoundary = async () => JSON.parse(await readFile(\n\tcoreReceiverCiStopBoundaryHistoryPath, \"utf8\"\n));\n",
+          "start": 18188
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReuseLivePinRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreHistoricalEvidenceReuseLivePinRepairSource);\n",
+          "start": 25369
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 25839
+        },
+        {
+          "current": "\tconst record = await readCoreHistoricalEvidenceReuseLivePinRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReuseLivePinRepairSource);\n",
+          "previous": "\tconst update = (await readCoreHistoricalEvidenceReuseLivePinRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreHistoricalEvidenceReuseLivePinRepairSource);\n",
+          "start": 26113
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReuseSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreHistoricalEvidenceReuseSource);\n",
+          "start": 28727
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 29145
+        },
+        {
+          "current": "\tconst record = await readCoreHistoricalEvidenceReuse();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReuseSource);\n",
+          "previous": "\tconst update = (await readCoreHistoricalEvidenceReuse()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreHistoricalEvidenceReuseSource);\n",
+          "start": 29412
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadMatrixRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreExactHeadMatrixRepairSource);\n",
+          "start": 31924
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 32334
+        },
+        {
+          "current": "\tconst record = await readCoreExactHeadMatrixRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadMatrixRepairSource);\n",
+          "previous": "\tconst update = (await readCoreExactHeadMatrixRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreExactHeadMatrixRepairSource);\n",
+          "start": 32600
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreExactHeadHostedStaticRepairSource);\n",
+          "previous": "\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreExactHeadHostedStaticRepairHistoryPath, update.path\n\t\t\t\t\t, update.currentSha256\n\t\t\t\t\t, beforeCoreExactHeadHostedStaticRepairSource)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreExactHeadHostedStaticRepairHistoryPath, update.path\n\t\t\t\t\t, beforeCoreExactHeadHostedStaticRepairSource);\n",
+          "start": 34873
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 35279
+        },
+        {
+          "current": "\tconst record = await readCoreExactHeadHostedStaticRepair();\n\tconst update = record.updates[0];\n",
+          "previous": "\tconst update = (await readCoreExactHeadHostedStaticRepair()).updates[0];\n",
+          "start": 35552
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreExactHeadHostedReplayRepairSource);\n",
+          "previous": "\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreExactHeadHostedReplayRepairHistoryPath, update.path\n\t\t\t\t\t, update.currentSha256\n\t\t\t\t\t, beforeCoreExactHeadHostedReplayRepairSource)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreExactHeadHostedReplayRepairHistoryPath, update.path\n\t\t\t\t\t, beforeCoreExactHeadHostedReplayRepairSource);\n",
+          "start": 38129
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 38535
+        },
+        {
+          "current": "\tconst record = await readCoreExactHeadHostedReplayRepair();\n\tconst update = record.updates[0];\n",
+          "previous": "\tconst update = (await readCoreExactHeadHostedReplayRepair()).updates[0];\n",
+          "start": 39084
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreInheritedRecordTypeSurfaceBatchSource);\n",
+          "previous": "\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreInheritedRecordTypeSurfaceBatchHistoryPath, update.path\n\t\t\t\t\t, update.currentSha256\n\t\t\t\t\t, beforeCoreInheritedRecordTypeSurfaceBatchSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreInheritedRecordTypeSurfaceBatchHistoryPath, update.path\n\t\t\t\t\t, beforeCoreInheritedRecordTypeSurfaceBatchSource\n\t\t\t);\n",
+          "start": 41911
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 42333
+        },
+        {
+          "current": "\tconst record = await readCoreInheritedRecordTypeSurfaceBatch();\n\tconst update = record.updates[0];\n",
+          "previous": "\tconst update = (await readCoreInheritedRecordTypeSurfaceBatch()).updates[0];\n",
+          "start": 42860
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreRecursiveCallableEvidencePinRepairSource);\n",
+          "previous": "\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreRecursiveCallableEvidencePinRepairHistoryPath, update.path\n\t\t\t\t\t, update.currentSha256\n\t\t\t\t\t, beforeCoreRecursiveCallableEvidencePinRepairSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreRecursiveCallableEvidencePinRepairHistoryPath, update.path\n\t\t\t\t\t, beforeCoreRecursiveCallableEvidencePinRepairSource\n\t\t\t);\n",
+          "start": 45770
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 46204
+        },
+        {
+          "current": "\tconst record = await readCoreRecursiveCallableEvidencePinRepair();\n\tconst update = record.updates[0];\n",
+          "previous": "\tconst update = (await readCoreRecursiveCallableEvidencePinRepair()).updates[0];\n",
+          "start": 46734
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreRecursiveCallableReplayBoundSource);\n",
+          "previous": "\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreRecursiveCallableReplayBoundHistoryPath, update.path\n\t\t\t\t, update.currentSha256\n\t\t\t\t, beforeCoreRecursiveCallableReplayBoundSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreRecursiveCallableReplayBoundHistoryPath, update.path\n\t\t\t\t, beforeCoreRecursiveCallableReplayBoundSource\n\t\t\t);\n",
+          "start": 49563
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 49973
+        },
+        {
+          "current": "\tconst record = await readCoreRecursiveCallableReplayBound();\n\tconst update = record.updates[0];\n",
+          "previous": "\tconst update = (await readCoreRecursiveCallableReplayBound()).updates[0];\n",
+          "start": 50490
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreLegacyOwnedEvidenceReplayBoundSource);\n",
+          "previous": "\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreLegacyOwnedEvidenceReplayBoundHistoryPath, update.path\n\t\t\t\t, update.currentSha256\n\t\t\t\t, beforeCoreLegacyOwnedEvidenceReplayBoundSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreLegacyOwnedEvidenceReplayBoundHistoryPath, update.path\n\t\t\t\t, beforeCoreLegacyOwnedEvidenceReplayBoundSource\n\t\t\t);\n",
+          "start": 53309
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 53727
+        },
+        {
+          "current": "\tconst record = await readCoreLegacyOwnedEvidenceReplayBound();\n\tconst update = record.updates[0];\n",
+          "previous": "\tconst update = (await readCoreLegacyOwnedEvidenceReplayBound()).updates[0];\n",
+          "start": 54249
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreCallbackEvidenceReplayBoundSource);\n",
+          "previous": "\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreCallbackEvidenceReplayBoundHistoryPath, update.path\n\t\t\t\t, update.currentSha256\n\t\t\t\t, beforeCoreCallbackEvidenceReplayBoundSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreCallbackEvidenceReplayBoundHistoryPath, update.path\n\t\t\t\t, beforeCoreCallbackEvidenceReplayBoundSource\n\t\t\t);\n",
+          "start": 57032
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 57438
+        },
+        {
+          "current": "\tconst record = await readCoreCallbackEvidenceReplayBound();\n\tconst update = record.updates[0];\n",
+          "previous": "\tconst update = (await readCoreCallbackEvidenceReplayBound()).updates[0];\n",
+          "start": 57953
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreInheritedRecordReplayBoundSource);\n",
+          "previous": "\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreInheritedRecordReplayBoundHistoryPath, update.path\n\t\t\t\t, update.currentSha256\n\t\t\t\t, beforeCoreInheritedRecordReplayBoundSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreInheritedRecordReplayBoundHistoryPath, update.path\n\t\t\t\t, beforeCoreInheritedRecordReplayBoundSource\n\t\t\t);\n",
+          "start": 60701
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 61103
+        },
+        {
+          "current": "\tconst record = await readCoreInheritedRecordReplayBound();\n\tconst update = record.updates[0];\n",
+          "previous": "\tconst update = (await readCoreInheritedRecordReplayBound()).updates[0];\n",
+          "start": 61616
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreReplayIntegrationEndpointRepairSource);\n",
+          "previous": "\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreReplayIntegrationEndpointRepairHistoryPath, update.path\n\t\t\t\t, update.currentSha256\n\t\t\t\t, beforeCoreReplayIntegrationEndpointRepairSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreReplayIntegrationEndpointRepairHistoryPath, update.path\n\t\t\t\t, beforeCoreReplayIntegrationEndpointRepairSource\n\t\t\t);\n",
+          "start": 64433
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 64855
+        },
+        {
+          "current": "\tconst record = await readCoreReplayIntegrationEndpointRepair();\n\tconst update = record.updates[0];\n",
+          "previous": "\tconst update = (await readCoreReplayIntegrationEndpointRepair()).updates[0];\n",
+          "start": 65378
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreExactHeadReplayRepairSource);\n",
+          "previous": "\t\tconst current = integration\n\t\t\t? await sourceAtFinHistoryRecordSource(\n\t\t\t\tcoreExactHeadReplayRepairHistoryPath, update.path\n\t\t\t\t, update.currentSha256, beforeCoreExactHeadReplayRepairSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryRecord(\n\t\t\t\tcoreExactHeadReplayRepairHistoryPath, update.path\n\t\t\t\t, beforeCoreExactHeadReplayRepairSource\n\t\t\t);\n",
+          "start": 68195
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 68577
+        },
+        {
+          "current": "\tconst record = await readCoreExactHeadReplayRepair();\n\tconst update = record.updates[0];\n",
+          "previous": "\tconst update = (await readCoreExactHeadReplayRepair()).updates[0];\n",
+          "start": 69086
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeRecurringAcceptanceDocumentationSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeRecurringAcceptanceDocumentationSource);\n",
+          "start": 71911
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 72349
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 72578
+        },
+        {
+          "current": "\tconst record = await readRecurringAcceptanceDocumentation();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeRecurringAcceptanceDocumentationSource);\n",
+          "previous": "\tconst update = (await readRecurringAcceptanceDocumentation()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeRecurringAcceptanceDocumentationSource);\n",
+          "start": 72783
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeBoundedRecurringAcceptanceSweepSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeBoundedRecurringAcceptanceSweepSource);\n",
+          "start": 75736
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 76170
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 76399
+        },
+        {
+          "current": "\tconst record = await readBoundedRecurringAcceptanceSweep();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeBoundedRecurringAcceptanceSweepSource);\n",
+          "previous": "\tconst update = (await readBoundedRecurringAcceptanceSweep()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeBoundedRecurringAcceptanceSweepSource);\n",
+          "start": 76604
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadValidationRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreExactHeadValidationRepairSource);\n",
+          "start": 79333
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 79759
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 79988
+        },
+        {
+          "current": "\tconst record = await readCoreExactHeadValidationRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadValidationRepairSource);\n",
+          "previous": "\tconst update = (await readCoreExactHeadValidationRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreExactHeadValidationRepairSource);\n",
+          "start": 80192
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeDefaultBranchCiTriggerBudgetSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeDefaultBranchCiTriggerBudgetSource);\n",
+          "start": 83403
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 83825
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 84080
+        },
+        {
+          "current": "\tconst record = await readDefaultBranchCiTriggerBudget();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeDefaultBranchCiTriggerBudgetSource);\n",
+          "previous": "\tconst update = (await readDefaultBranchCiTriggerBudget()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeDefaultBranchCiTriggerBudgetSource);\n",
+          "start": 84283
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreUniqueTypeSurfaceAuthenticationSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreUniqueTypeSurfaceAuthenticationSource);\n",
+          "start": 87116
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 87566
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 87788
+        },
+        {
+          "current": "\tconst record = await readCoreUniqueTypeSurfaceAuthentication();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreUniqueTypeSurfaceAuthenticationSource);\n",
+          "previous": "\tconst update = (await readCoreUniqueTypeSurfaceAuthentication()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreUniqueTypeSurfaceAuthenticationSource);\n",
+          "start": 87990
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalAdditionCheckoutRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreHistoricalAdditionCheckoutRepairSource);\n",
+          "start": 90676
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 91130
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 91352
+        },
+        {
+          "current": "\tconst record = await readCoreHistoricalAdditionCheckoutRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalAdditionCheckoutRepairSource);\n",
+          "previous": "\tconst update = (await readCoreHistoricalAdditionCheckoutRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreHistoricalAdditionCheckoutRepairSource);\n",
+          "start": 91555
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReplaySource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreHistoricalEvidenceReplaySource);\n",
+          "start": 94073
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 94495
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 94717
+        },
+        {
+          "current": "\tconst record = await read();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReplaySource);\n",
+          "previous": "\tconst update = (await read()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreHistoricalEvidenceReplaySource);\n",
+          "start": 95791
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadLivePinRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreExactHeadLivePinRepairSource);\n",
+          "start": 98593
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 99007
+        },
+        {
+          "current": "\tconst record = await readLivePinRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadLivePinRepairSource);\n",
+          "previous": "\tconst update = (await readLivePinRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreExactHeadLivePinRepairSource);\n",
+          "start": 99275
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreTypeSurfaceSinglePassSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreTypeSurfaceSinglePassSource);\n",
+          "start": 102107
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 102517
+        },
+        {
+          "current": "\t]) assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t]) assert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\taddition.path, addition.currentSha256))\n",
+          "start": 102780
+        },
+        {
+          "current": "\tconst record = await readCoreTypeSurfaceSinglePass();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreTypeSurfaceSinglePassSource);\n",
+          "previous": "\tconst update = (await readCoreTypeSurfaceSinglePass()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreTypeSurfaceSinglePassSource);\n",
+          "start": 102981
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreDocumentationEvidenceClosureRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreDocumentationEvidenceClosureRepairSource);\n",
+          "start": 105655
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 106117
+        },
+        {
+          "current": "\tconst record = await readCoreDocumentationEvidenceClosureRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreDocumentationEvidenceClosureRepairSource);\n",
+          "previous": "\tconst update\n\t\t= (await readCoreDocumentationEvidenceClosureRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreDocumentationEvidenceClosureRepairSource);\n",
+          "start": 106389
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreBrowserWorkflowEvidencePinRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreBrowserWorkflowEvidencePinRepairSource);\n",
+          "start": 109098
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 109552
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 109774
+        },
+        {
+          "current": "\tconst record = await readCoreBrowserWorkflowEvidencePinRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreBrowserWorkflowEvidencePinRepairSource);\n",
+          "previous": "\tconst update\n\t\t= (await readCoreBrowserWorkflowEvidencePinRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreBrowserWorkflowEvidencePinRepairSource);\n",
+          "start": 109970
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreTypeSurfaceEvidenceClosureRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreTypeSurfaceEvidenceClosureRepairSource);\n",
+          "start": 112650
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 113104
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 113326
+        },
+        {
+          "current": "\tconst record = await readCoreTypeSurfaceEvidenceClosureRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreTypeSurfaceEvidenceClosureRepairSource);\n",
+          "previous": "\tconst update = (await readCoreTypeSurfaceEvidenceClosureRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreTypeSurfaceEvidenceClosureRepairSource);\n",
+          "start": 113522
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreSparseConeModeRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreSparseConeModeRepairSource);\n",
+          "start": 116051
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 116457
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 116679
+        },
+        {
+          "current": "\tconst record = await readCoreSparseConeModeRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreSparseConeModeRepairSource);\n",
+          "previous": "\tconst update = (await readCoreSparseConeModeRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreSparseConeModeRepairSource);\n",
+          "start": 116878
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreContractEvidenceCheckoutSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreContractEvidenceCheckoutSource);\n",
+          "start": 119774
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 120196
+        },
+        {
+          "current": "\t]) assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t]) assert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\taddition.path, addition.currentSha256))\n",
+          "start": 120459
+        },
+        {
+          "current": "\tconst record = await readCoreContractEvidenceCheckout();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreContractEvidenceCheckoutSource);\n",
+          "previous": "\tconst update = (await readCoreContractEvidenceCheckout()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreContractEvidenceCheckoutSource);\n",
+          "start": 120653
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeNominalPrimitiveSubtypeSparseCheckoutSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeNominalPrimitiveSubtypeSparseCheckoutSource);\n",
+          "start": 123738
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 124196
+        },
+        {
+          "current": "\t]) assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t]) assert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\taddition.path, addition.currentSha256))\n",
+          "start": 124459
+        },
+        {
+          "current": "\tconst record = await readNominalPrimitiveSubtypeSparseCheckout();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeNominalPrimitiveSubtypeSparseCheckoutSource);\n",
+          "previous": "\tconst update\n\t\t= (await readNominalPrimitiveSubtypeSparseCheckout()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeNominalPrimitiveSubtypeSparseCheckoutSource);\n",
+          "start": 125658
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreStaticSparseCheckoutSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreStaticSparseCheckoutSource);\n",
+          "start": 128173
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 128579
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 128801
+        },
+        {
+          "current": "\tconst record = await readStaticSparseCheckout();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreStaticSparseCheckoutSource);\n",
+          "previous": "\tconst update = (await readStaticSparseCheckout()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeCoreStaticSparseCheckoutSource);\n",
+          "start": 130123
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreStaticHistoryDeferralSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreStaticHistoryDeferralSource);\n",
+          "start": 132563
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 132973
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 133195
+        },
+        {
+          "current": "\tconst record = await readStaticHistoryDeferral();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreStaticHistoryDeferralSource);\n",
+          "previous": "\tconst update = (await readStaticHistoryDeferral()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeCoreStaticHistoryDeferralSource);\n",
+          "start": 134421
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreOwnedReviewedExactStopRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreOwnedReviewedExactStopRepairSource);\n",
+          "start": 136968
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 137406
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 137628
+        },
+        {
+          "current": "\tconst record = await readOwnedReviewedExactStopRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreOwnedReviewedExactStopRepairSource);\n",
+          "previous": "\tconst update = (await readOwnedReviewedExactStopRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreOwnedReviewedExactStopRepairSource);\n",
+          "start": 138224
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreWitExactStopRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreWitExactStopRepairSource);\n",
+          "start": 140701
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 141099
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 141321
+        },
+        {
+          "current": "\tconst record = await readWitExactStopRepair();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreWitExactStopRepairSource);\n",
+          "previous": "\tconst update = (await readWitExactStopRepair()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreWitExactStopRepairSource);\n",
+          "start": 141924
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreRuntimeBudgetLivePinRepairSource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreRuntimeBudgetLivePinRepairSource);\n",
+          "start": 145368
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 145686
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtRecordedCurrent(record, addition))\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "start": 145908
+        },
+        {
+          "current": "\tconst record = await readRuntimeBudgetLivePinRepair();\n\tconst update = record.integrationUpdates[0];\n\tconst current = await sourceAtRecordedCurrent(\n\t\trecord, update, beforeCoreRuntimeBudgetLivePinRepairSource);\n",
+          "previous": "\tconst update = (await readRuntimeBudgetLivePinRepair())\n\t\t.integrationUpdates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreRuntimeBudgetLivePinRepairSource);\n",
+          "start": 146105
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreWitBorrowProducerReplaySource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreWitBorrowProducerReplaySource);\n",
+          "start": 148420
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 148838
+        },
+        {
+          "current": "\tconst record = await readWitBorrowProducerReplay();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreWitBorrowProducerReplaySource);\n",
+          "previous": "\tconst update = (await readWitBorrowProducerReplay()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreWitBorrowProducerReplaySource);\n",
+          "start": 149695
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreReceiverCiProducerReplaySource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreReceiverCiProducerReplaySource);\n",
+          "start": 151980
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 152402
+        },
+        {
+          "current": "\tconst record = await readReceiverCiProducerReplay();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreReceiverCiProducerReplaySource);\n",
+          "previous": "\tconst update = (await readReceiverCiProducerReplay()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreReceiverCiProducerReplaySource);\n",
+          "start": 153283
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreWitBorrowStopBoundarySource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreWitBorrowStopBoundarySource);\n",
+          "start": 155543
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 155953
+        },
+        {
+          "current": "\tconst record = await readWitBorrowStopBoundary();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreWitBorrowStopBoundarySource);\n",
+          "previous": "\tconst update = (await readWitBorrowStopBoundary()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreWitBorrowStopBoundarySource);\n",
+          "start": 156769
+        },
+        {
+          "current": "\t\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreReceiverCiStopBoundarySource);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCoreReceiverCiStopBoundarySource);\n",
+          "start": 159038
+        },
+        {
+          "current": "\t\tassert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);\n",
+          "previous": "\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n",
+          "start": 159452
+        },
+        {
+          "current": "\tconst record = await readReceiverCiStopBoundary();\n\tconst update = record.updates[0];\n\tconst current = await sourceAtRecordedCurrent(record, update, beforeCoreReceiverCiStopBoundarySource);\n",
+          "previous": "\tconst update = (await readReceiverCiStopBoundary()).updates[0];\n\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256\n\t\t, beforeCoreReceiverCiStopBoundarySource);\n",
+          "start": 160296
+        }
+      ],
+      "path": "tests/helpers/core-historical-evidence-replay-source-history-tests.mjs",
+      "previousSha256": "eaa79857ab59f20c75e6904304104b8a84585ccade21e7994b3d83dd6f462e48"
+    },
+    {
+      "currentSha256": "b190306cd0beabbad8a9e9fc8271b2a3ae6eed7a4fcedc75336b3aa717d1d743",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 324
+        },
+        {
+          "current": "import { canonicalJson, sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "import { canonicalJson } from \"../../src/capsule/node.mjs\";\n",
+          "start": 406
+        },
+        {
+          "current": "\t, coreContractCostManifest, coreContractCosts, coreContractCostsPath\n\t, coreContractCostsSha256, coreContractPartition, coreContractShardLabels\n\t, coreContractShardManifest, coreContractShardPlan, planCostBalancedShards\n\t, verifyCoreContractShardManifests\n",
+          "previous": "\t, coreContractShardLabels\n\t, coreContractShardManifest, verifyCoreContractShardManifests\n",
+          "start": 541
+        },
+        {
+          "current": "import { classifyRepositoryTest } from \"../../src/adoption/test-profiles.mjs\";\n",
+          "previous": "",
+          "start": 964
+        },
+        {
+          "current": "\t\t, /strategy:\\n {6}fail-fast: false\\n(?: {6}#[^\\n]*\\n){3} {6}max-parallel: 12\\n {6}matrix:\\n {8}shard: \\[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\\]/u\n\t\t, \"Core must run its complete twelve-shard matrix concurrently and without cancelling siblings\");\n",
+          "previous": "\t\t, /strategy:\\n {6}fail-fast: false\\n {6}max-parallel: 6\\n {6}matrix:\\n {8}shard: \\[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\\]/u\n\t\t, \"Core must run one closed twelve-shard matrix with at most six concurrent jobs and without cancelling siblings\");\n",
+          "start": 1356
+        },
+        {
+          "current": "\tassert.match(shards, /export const coreContractPartition = \"cost-balanced-lpt-v1\";/u);\n\tassert.match(shards, /if\\(loads\\[candidate\\] < loads\\[index\\]\\) index = candidate;/u\n\t\t, \"Equal loads must stay with the lowest shard index\");\n\tassert.match(shards, /export const coreContractCostManifest = deepFreeze\\(JSON\\.parse\\(costSource\\)\\);/u\n\t\t, \"The authenticated cost manifest must be deeply immutable\");\n",
+          "previous": "\tassert.match(shards, /position % coreContractShardCount === index - 1/u);\n",
+          "start": 14226
+        },
+        {
+          "current": "\t\t, source.replace(\"max-parallel: 12\", \"max-parallel: 6\")\n",
+          "previous": "\t\t, source.replace(\"max-parallel: 6\", \"max-parallel: 12\")\n",
+          "start": 20504
+        },
+        {
+          "current": "\tassert.throws(() => coreContractToolchainPlan(shifted, \"1/12\")\n\t\t, /lacks 1 contract paths: tests\\/000-core-shard-shift\\.test\\.mjs/u\n\t\t, \"An uncosted file fails closed instead of shifting the partition\");\n\t// Re-costing HostNull moves it between shards; the requirement follows it.\n\tconst moved = structuredClone(coreContractCostManifest);\n\tmoved.costs[\"tests/host-null-npm-installed.test.mjs\"].minutes = 300;\n\tconst movedPlans = coreContractShardLabels.map(label =>\n\t\tcoreContractToolchainPlan(paths, label, moved));\n\tconst movedComponent = movedPlans.filter(plan =>\n",
+          "previous": "\tconst shiftedPlans = coreContractShardLabels.map(label =>\n\t\tcoreContractToolchainPlan(shifted, label));\n\tconst shiftedComponent = shiftedPlans.filter(plan =>\n",
+          "start": 28463
+        },
+        {
+          "current": "\tassert.equal(movedComponent.length, 1\n",
+          "previous": "\tassert.equal(shiftedComponent.length, 1\n",
+          "start": 29071
+        },
+        {
+          "current": "\tassert.notDeepEqual(movedComponent[0].shard, requiringComponent[0].shard\n",
+          "previous": "\tassert.notDeepEqual(shiftedComponent[0].shard, requiringComponent[0].shard\n",
+          "start": 29188
+        },
+        {
+          "current": "\tassert.notEqual(movedComponent[0].selectionSha256, requiringComponent[0].selectionSha256);\n});\n\ntest(\"the authenticated cost manifest is deeply immutable\", async () => {\n\tconst paths = await collectCoreContractTestPaths();\n\tconst path = \"tests/host-null-npm-installed.test.mjs\";\n\tconst manifest = coreContractCostManifest;\n\tfor(const value of [manifest, manifest.provenance, manifest.provenance.jobs\n\t\t, manifest.costs, manifest.costs[path]])\n\t\tassert.ok(Object.isFrozen(value));\n\tconst before = coreContractShardPlan(paths);\n\tassert.throws(() => { manifest.costs[path].minutes = 300; }, TypeError);\n\tassert.throws(() => { manifest.costs[\"tests/zz-injected.test.mjs\"] = {\n\t\tbasis: \"sampler-max-etime\", measured: true, minutes: 1\n\t}; }, TypeError);\n\tassert.throws(() => { delete manifest.costs[path]; }, TypeError);\n\tassert.throws(() => { manifest.defaultMinutes = 0.01; }, TypeError);\n\tassert.deepEqual(coreContractShardPlan(paths), before);\n\tassert.deepEqual(coreContractShardManifest(paths, \"1/12\").costs.sha256\n\t\t, coreContractCostsSha256);\n\t// Control: the same edit on a thawed copy does move files between shards.\n\tconst thawed = structuredClone(manifest);\n\tthawed.costs[path].minutes = 300;\n\tconst after = coreContractShardPlan(paths, thawed);\n\tassert.notDeepEqual(after, before);\n\tassert.ok(after[0].files.includes(path) && !before[0].files.includes(path));\n\tassert.notEqual(coreContractShardManifest(paths, \"1/12\", thawed).costs.sha256\n\t\t, coreContractCostsSha256);\n",
+          "previous": "",
+          "start": 29332
+        },
+        {
+          "current": "\t\tschemaVersion: 1, partition: \"cost-balanced-lpt-v1\", shards: 12\n",
+          "previous": "\t\tschemaVersion: 1, partition: \"sorted-index-modulo-v1\", shards: 12\n",
+          "start": 40322
+        },
+        {
+          "current": "\t\t, costsSha256: coreContractCostsSha256\n",
+          "previous": "",
+          "start": 40466
+        },
+        {
+          "current": "\tassert.equal(coreContractPartition, \"cost-balanced-lpt-v1\");\n\tconst costs = coreContractCosts(paths);\n\tconst loads = manifests.map(item => item.costs.minutes);\n\tfor(const manifest of manifests)\n\t{\n\t\tassert.equal(manifest.costs.sha256, coreContractCostsSha256);\n\t\tassert.equal(manifest.costs.minutes, manifest.selection.files\n\t\t\t.reduce((sum, path) => sum + costs.get(path), 0) / 100);\n\t\tassert.deepEqual(manifest.selection.files, manifest.selection.files.toSorted());\n\t}\n\t// Greedy longest-first placement never spreads loads further than one item.\n\tconst heaviest = Math.max(...costs.values()) / 100;\n\tassert.ok(Math.max(...loads) - Math.min(...loads) <= heaviest\n\t\t, `shard loads ${loads.join(\", \")} differ by more than the heaviest file ${heaviest}`);\n",
+          "previous": "\tassert.deepEqual(manifests.map(item => item.selection.count)\n\t\t, Array.from({ length: 12 }, (_, index) =>\n\t\t\tMath.ceil((paths.length - index) / 12)));\n",
+          "start": 40512
+        },
+        {
+          "current": "\t\t, values => { values[0].costs.sha256 = \"0\".repeat(64); }\n\t\t, values => { values[0].costs.minutes += 0.01; }\n",
+          "previous": "",
+          "start": 41517
+        },
+        {
+          "current": "test(\"Core cost manifest is canonical, provenance-bearing and closed over the contract profile\", async () => {\n\tconst paths = await collectCoreContractTestPaths();\n\tconst source = await readFile(coreContractCostsPath, \"utf8\");\n\tassert.equal(source, canonicalJson(coreContractCostManifest));\n\tassert.equal(coreContractCostManifest.partition, coreContractPartition);\n\tassert.deepEqual(Object.keys(coreContractCostManifest.costs).toSorted(), paths);\n\tconst { provenance } = coreContractCostManifest;\n\tassert.match(provenance.headSha, /^[a-f0-9]{40}$/u);\n\tassert.ok(provenance.run > 0 && provenance.attempt > 0);\n\tassert.ok(provenance.method.includes(\"etime\"));\n\tconst bases = new Map();\n\tfor(const entry of Object.values(coreContractCostManifest.costs))\n\t\tbases.set(entry.basis, (bases.get(entry.basis) ?? 0) + 1);\n\tassert.ok(bases.get(\"sampler-max-etime\") > 0, \"at least one measured file\");\n\t// Unknown and stale paths fail closed rather than planning with a default.\n\tassert.throws(() => coreContractCosts([...paths, \"tests/zz-unrecorded.test.mjs\"].toSorted())\n\t\t, /lacks 1 contract paths: tests\\/zz-unrecorded\\.test\\.mjs/u);\n\tassert.throws(() => coreContractCosts(paths.slice(0, -1))\n\t\t, /cites 1 paths outside the contract profile/u);\n\tconst broken = structuredClone(coreContractCostManifest);\n\tbroken.costs[paths[0]].minutes = 0;\n\tassert.throws(() => coreContractCosts(paths, broken), /must be positive/u);\n});\n\ntest(\"cost-balanced planning is deterministic with explicit tie-breaking\", () => {\n\tconst costs = new Map([\n\t\t[\"tests/d.test.mjs\", 500]\n\t\t, [\"tests/a.test.mjs\", 500]\n\t\t, [\"tests/c.test.mjs\", 300]\n\t\t, [\"tests/b.test.mjs\", 300]\n\t\t, [\"tests/e.test.mjs\", 100]\n\t\t, [\"tests/f.test.mjs\", 100]\n\t]);\n\tconst plan = planCostBalancedShards(costs, 3);\n\t// Heaviest first, equal costs by path; least-loaded shard, equal loads by index.\n\tassert.deepEqual(plan.map(shard => shard.index), [1, 2, 3]);\n\tassert.deepEqual(plan.map(shard => shard.centiminutes), [600, 600, 600]);\n\t// a→1, d→2, b→3, c→3 (least loaded), then e→1 and f→2 by lowest index.\n\tassert.deepEqual(plan.map(shard => [...shard.files]), [\n\t\t[\"tests/a.test.mjs\", \"tests/e.test.mjs\"]\n\t\t, [\"tests/d.test.mjs\", \"tests/f.test.mjs\"]\n\t\t, [\"tests/b.test.mjs\", \"tests/c.test.mjs\"]\n\t]);\n\tassert.deepEqual(planCostBalancedShards(costs, 3), plan);\n\tassert.deepEqual(planCostBalancedShards(new Map([...costs].reverse()), 3), plan);\n\tconst everyFile = plan.flatMap(shard => shard.files).toSorted();\n\tassert.deepEqual(everyFile, [...costs.keys()].toSorted());\n\tassert.throws(() => planCostBalancedShards(new Map(), 3));\n});\n\n",
+          "previous": "",
+          "start": 41824
+        },
+        {
+          "current": "\n/** The four Core roots that replaced one umbrella, each owning one former entrypoint. */\nconst componentMirrorRoots = Object.freeze({\n\t\"tests/component-refinement-mirrors.test.mjs\": \"./helpers/component-refinement-mirrors-source-tests.mjs\"\n\t, \"tests/component-nominal-subtype.test.mjs\": \"./helpers/component-nominal-subtype-tests.mjs\"\n\t, \"tests/component-nominal-subtype-history.test.mjs\": \"./helpers/component-nominal-subtype-history-tests.mjs\"\n\t, \"tests/nominal-primitive-subtype.test.mjs\": \"./helpers/nominal-primitive-subtype-tests.mjs\"\n});\n\nconst sideEffectImports = source =>\n\t[...source.matchAll(/^import \"([^\"]+)\";$/gmu)].map(match => match[1]);\n\n/**\n * Walk every static relative import below a root, recording which modules\n * register tests at import.\n *\n * @param root - Repository-relative test root.\n */\nconst staticImportClosure = async root => {\n\tconst modules = new Map([[root, false]]);\n\tconst pending = [root];\n\twhile(pending.length > 0)\n\t{\n\t\tconst path = pending.pop();\n\t\tlet source;\n\t\ttry\n\t\t{\n\t\t\tsource = await readFile(path, \"utf8\");\n\t\t}\n\t\tcatch(error)\n\t\t{\n\t\t\t// Generated-source templates quote imports of files that never exist here.\n\t\t\tif(error.code !== \"ENOENT\") throw error;\n\t\t\tmodules.delete(path); continue;\n\t\t}\n\t\tmodules.set(path, /^test\\(/mu.test(source));\n\t\tfor(const match of source.matchAll(\n\t\t\t/^(?:import|export)[^;]*?from\\s+\"(\\.{1,2}\\/[^\"]+\\.mjs)\";|^import\\s+\"(\\.{1,2}\\/[^\"]+\\.mjs)\";/gmu\n\t\t)) {\n\t\t\tconst target = join(dirname(path), match[1] ?? match[2]);\n\t\t\t// Only repository tests register node:test cases.\n\t\t\tif(!target.startsWith(\"tests/\") || modules.has(target)) continue;\n\t\t\tmodules.set(target, false); pending.push(target);\n\t\t}\n\t}\n\treturn modules;\n};\n\ntest(\"four Core roots execute the former umbrella's entrypoints exactly once\", async () => {\n\tconst former = [\n\t\t\"./helpers/component-refinement-mirrors-source-tests.mjs\"\n\t\t, \"./helpers/component-nominal-subtype-tests.mjs\"\n\t\t, \"./helpers/component-nominal-subtype-history-tests.mjs\"\n\t\t, \"./helpers/nominal-primitive-subtype-tests.mjs\"\n\t];\n\tconst umbrella = \"tests/component-refinement-mirrors.test.mjs\";\n\tconst owners = new Map(), entrypoints = [];\n\tfor(const [root, entrypoint] of Object.entries(componentMirrorRoots))\n\t{\n\t\tconst source = await readFile(root, \"utf8\");\n\t\tassert.equal(classifyRepositoryTest(root), \"contract\", root);\n\t\tassert.deepEqual(sideEffectImports(source), [entrypoint], root);\n\t\tassert.doesNotMatch(source, /\\.test\\.mjs\"/u, `${root} must not import another root`);\n\t\tassert.equal([...source.matchAll(/^test\\(/gmu)].length, root === umbrella ? 16 : 0\n\t\t\t, `${root} direct tests`);\n\t\tentrypoints.push(entrypoint);\n\t\tfor(const [module, registers] of await staticImportClosure(root))\n\t\t{\n\t\t\tif(!registers || module === root) continue;\n\t\t\tassert.ok(!owners.has(module), `${module} runs from ${owners.get(module)} and ${root}`);\n\t\t\towners.set(module, root);\n\t\t}\n\t}\n\tassert.deepEqual(entrypoints.toSorted(), former.toSorted());\n\tassert.equal(new Set(entrypoints).size, former.length);\n\tconst reached = root => [...owners].filter(([, owner]) => owner === root).length;\n\tassert.ok(reached(\"tests/component-nominal-subtype.test.mjs\") > 100);\n\tassert.ok(reached(\"tests/nominal-primitive-subtype.test.mjs\") > 100);\n\t// The registration contract follows the primitive entrypoint to its root.\n\tconst registration = await readFile(\"tests/helpers/nominal-primitive-subtype-npm-tests.mjs\", \"utf8\");\n\tassert.ok(registration.includes('readFile(\"tests/nominal-primitive-subtype.test.mjs\", \"utf8\")'));\n\tassert.ok(!registration.includes('readFile(\"tests/component-refinement-mirrors.test.mjs\"'));\n});\n\ntest(\"the split closed set is the recorded predecessor plus three roots\", async () => {\n\tconst paths = await collectCoreContractTestPaths();\n\tconst previous = coreContractCostManifest.provenance.previousContract;\n\tassert.deepEqual(previous, {\n\t\tadded: [\n\t\t\t\"tests/component-nominal-subtype-history.test.mjs\"\n\t\t\t, \"tests/component-nominal-subtype.test.mjs\"\n\t\t\t, \"tests/nominal-primitive-subtype.test.mjs\"\n\t\t]\n\t\t, count: 1120, removed: []\n\t\t, sha256: \"a1da1f6b28803108861cffeff14eab88a0c8008a17e69386b6510eaa5ddc9c04\"\n\t});\n\tassert.equal(paths.length, previous.count + previous.added.length - previous.removed.length);\n\tassert.ok(previous.added.every(path => paths.includes(path)));\n\tassert.deepEqual(previous.added.toSorted(), Object.keys(componentMirrorRoots)\n\t\t.filter(root => root !== \"tests/component-refinement-mirrors.test.mjs\").toSorted());\n\tconst restored = [...paths.filter(path => !previous.added.includes(path)), ...previous.removed].toSorted();\n\tassert.equal(sha256(canonicalJson(restored)), previous.sha256);\n\tassert.equal(coreContractShardManifest(paths, \"1/12\").contract.count, 1123);\n\t// The umbrella's measured minutes were redistributed, not invented.\n\tconst { costs } = coreContractCostManifest;\n\tconst umbrella = costs[\"tests/component-refinement-mirrors.test.mjs\"];\n\tassert.equal(umbrella.basis, \"sampler-max-etime-less-attributed\");\n\tassert.deepEqual(umbrella.attributedAway, previous.added);\n\tconst redistributed = previous.added.reduce((total, path) => {\n\t\tassert.equal(costs[path].basis, \"tap-duration-attributed\");\n\t\tassert.equal(costs[path].attributedFrom, \"tests/component-refinement-mirrors.test.mjs\");\n\t\tassert.ok(costs[path].measured && costs[path].tapTests > 0);\n\t\treturn total + Math.round(costs[path].minutes * 100);\n\t}, 0);\n\tassert.equal(redistributed, Math.round(umbrella.attributedMinutes * 100));\n\tassert.equal(Math.round(umbrella.minutes * 100) + redistributed, 26747);\n});\n",
+          "previous": "",
+          "start": 50157
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "074bbcfcdf172fbe7238026d902437825a873fcf2d8d5a31639cc2da8643cad8"
+    },
+    {
+      "currentSha256": "34bf469bf990420bdf23d234c5bfb5f0d589b0ba3f632ec6e5850f3700542c9a",
+      "edits": [
+        {
+          "current": "\tcollectCoreContractTestPaths, coreContractCosts, coreContractCostsSha256\n\t, coreContractShardLabels, coreContractShardManifest\n\t, verifyCoreContractShardManifests\n",
+          "previous": "\tcollectCoreContractTestPaths, coreContractShardLabels\n\t, coreContractShardManifest, verifyCoreContractShardManifests\n",
+          "start": 381
+        },
+        {
+          "current": "\t// Shards balance recorded cost rather than file count: the spread between\n\t// the heaviest and lightest shard never exceeds the heaviest single file.\n\tconst loads = manifests.map(item => Math.round(item.costs.minutes * 100));\n\tassert.ok(Math.max(...loads) - Math.min(...loads)\n\t\t<= Math.max(...coreContractCosts(paths).values()));\n",
+          "previous": "\tassert.ok(Math.max(...counts) - Math.min(...counts) <= 1);\n",
+          "start": 4540
+        },
+        {
+          "current": "\t\tschemaVersion: 1, partition: \"cost-balanced-lpt-v1\", shards: 12\n",
+          "previous": "\t\tschemaVersion: 1, partition: \"sorted-index-modulo-v1\", shards: 12\n",
+          "start": 4945
+        },
+        {
+          "current": "\t\t, costsSha256: coreContractCostsSha256\n",
+          "previous": "",
+          "start": 5092
+        },
+        {
+          "current": "\tassert.match(workflow, /max-parallel: 12/u);\n",
+          "previous": "\tassert.match(workflow, /max-parallel: 6/u);\n",
+          "start": 5213
+        }
+      ],
+      "path": "tests/helpers/core-runner-resilience-source-history-tests.mjs",
+      "previousSha256": "6973ee625f1563ff64ebcef3b1dfccb19883267e82e0b6436bccd03719ada0ff"
+    },
+    {
+      "currentSha256": "665e0600251faf7a8ebc3dd848f7beb62b8513701eea6d2d4105731b2ea182ad",
+      "edits": [
+        {
+          "current": "\tconst root = await readFile(\"tests/nominal-primitive-subtype.test.mjs\", \"utf8\");\n",
+          "previous": "\tconst root = await readFile(\"tests/component-refinement-mirrors.test.mjs\", \"utf8\");\n",
+          "start": 3139
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-npm-tests.mjs",
+      "previousSha256": "39d607cf1f4080fa970142eb6d93e18df8daf8bd34d41188f8f85ba4099e3980"
+    },
+    {
+      "currentSha256": "d35a7322b6a19fceb9fbc32ccbd226fc1ac9b1825d798b32b67a02529c1b23f2",
+      "edits": [
+        {
+          "current": "import { execFileSync, spawn } from \"node:child_process\";\n",
+          "previous": "import { execFileSync } from \"node:child_process\";\n",
+          "start": 207
+        },
+        {
+          "current": "let revisionBatch;\nlet revisionBatchTail = Promise.resolve();\n\nconst setRevisionBatchReferenced = (batch, referenced) => {\n\tconst method = referenced ? \"ref\" : \"unref\";\n\tfor(const handle of [batch.child, batch.child.stdin\n\t\t, batch.child.stdout, batch.child.stderr])\n\t\thandle[method]?.();\n};\n\nconst createRevisionBatch = () => {\n\tconst child = spawn(\"git\", [\"-c\", \"core.deltaBaseCacheLimit=512m\"\n\t\t, \"cat-file\", \"--batch\"], { stdio: [\"pipe\", \"pipe\", \"pipe\"] });\n\tconst output = child.stdout[Symbol.asyncIterator]();\n\tconst batch = {\n\t\tbuffer: Buffer.alloc(0), child, closed: false, error: \"\", output\n\t};\n\tchild.stderr.on(\"data\", chunk => {\n\t\tif(batch.error.length < 16 * 1024) batch.error += chunk.toString();\n\t});\n\tchild.once(\"exit\", () => { batch.closed = true; });\n\tchild.once(\"error\", error => {\n\t\tbatch.closed = true; batch.error += error.message;\n\t});\n\tsetRevisionBatchReferenced(batch, false);\n\treturn batch;\n};\n\nconst appendRevisionBatchOutput = async batch => {\n\tconst next = await batch.output.next();\n\tassert.equal(next.done, false\n\t\t, `git cat-file ended before its response: ${batch.error.trim()}`);\n\tbatch.buffer = batch.buffer.length === 0\n\t\t? next.value : Buffer.concat([batch.buffer, next.value]);\n};\n\nconst revisionBatchLine = async batch => {\n\tlet newline = batch.buffer.indexOf(10);\n\twhile(newline < 0)\n\t{\n\t\tawait appendRevisionBatchOutput(batch);\n\t\tnewline = batch.buffer.indexOf(10);\n\t}\n\tconst line = batch.buffer.subarray(0, newline).toString(\"utf8\");\n\tbatch.buffer = batch.buffer.subarray(newline + 1);\n\treturn line;\n};\n\nconst revisionBatchBytes = async (batch, length) => {\n\twhile(batch.buffer.length < length + 1)\n\t\tawait appendRevisionBatchOutput(batch);\n\tconst value = batch.buffer.subarray(0, length);\n\tassert.equal(batch.buffer[length], 10, \"git cat-file response delimiter\");\n\tbatch.buffer = batch.buffer.subarray(length + 1);\n\treturn value;\n};\n\nconst sourceAtRevisionBatch = (revision, path) => {\n\tconst request = async () => {\n\t\tif(revisionBatch?.closed) revisionBatch = undefined;\n\t\trevisionBatch ??= createRevisionBatch();\n\t\tconst batch = revisionBatch;\n\t\tsetRevisionBatchReferenced(batch, true);\n\t\ttry\n\t\t{\n\t\t\tconst object = `${revision}:${path}`;\n\t\t\tassert.doesNotMatch(object, /[\\0\\r\\n]/u);\n\t\t\tawait new Promise((resolve, reject) => batch.child.stdin.write(\n\t\t\t\t`${object}\\n`, error => error ? reject(error) : resolve()\n\t\t\t));\n\t\t\tconst header = await revisionBatchLine(batch);\n\t\t\tif(header === `${object} missing`) return undefined;\n\t\t\tconst match = /^([0-9a-f]{40,64}) blob ([0-9]+)$/u.exec(header);\n\t\t\tassert.ok(match, `Unexpected git cat-file response: ${header}`);\n\t\t\tconst length = Number(match[2]);\n\t\t\tassert.ok(Number.isSafeInteger(length) && length >= 0);\n\t\t\treturn (await revisionBatchBytes(batch, length)).toString(\"utf8\");\n\t\t}\n\t\tfinally\n\t\t{\n\t\t\tsetRevisionBatchReferenced(batch, false);\n\t\t}\n\t};\n\tconst result = revisionBatchTail.then(request, request);\n\trevisionBatchTail = result.then(() => undefined, () => undefined);\n\treturn result;\n};\n",
+          "previous": "",
+          "start": 956
+        },
+        {
+          "current": "\t\t\t: await sourceAtRevisionBatch(recordCommit, path);\n",
+          "previous": "\t\t\t: sourceAtRevision(recordCommit, path);\n",
+          "start": 8167
+        },
+        {
+          "current": "\treturn cachedHistorySource(key, async () => {\n\t\tconst source = await sourceAtRevisionBatch(revision, path);\n",
+          "previous": "\treturn cachedHistorySource(key, () => {\n\t\tconst source = sourceAtRevision(revision, path);\n",
+          "start": 9504
+        }
+      ],
+      "path": "tests/helpers/source-at-fin-history-milestone.mjs",
+      "previousSha256": "b586234145b700905dcae9f93e9b59262c9f8bad8e27e2c612691f8237e46f19"
+    }
+  ]
+}
