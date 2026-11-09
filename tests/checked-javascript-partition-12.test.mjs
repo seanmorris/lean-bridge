@@ -7,6 +7,7 @@ import "./helpers/vo1220-host-fin-pending-exit-repair-source-history-tests.mjs";
 import "./helpers/vo1220-fin-observer-fixture-repair-source-history-tests.mjs";
 import "./helpers/vo1220-fin-exit-receipt-layering-repair-source-history-tests.mjs";
 import "./helpers/vo1220-fin-observer-epoch-repair-source-history-tests.mjs";
+import "./helpers/vo1220-producer-contract-budget-repair-source-history-tests.mjs";
 import "./helpers/vo1220-nested-promotion-memory-bound-pin-repair-source-history-tests.mjs";
 import "./helpers/vo1220-native-budget-lint-contract-repair-source-history-tests.mjs";
 import "./helpers/vo1220-nested-promotion-memory-bound-source-history-tests.mjs";

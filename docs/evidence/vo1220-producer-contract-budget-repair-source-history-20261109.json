@@ -1,0 +1,143 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "liveContractReaders": 12,
+    "measurementSemanticChanges": 0,
+    "producerContractReaders": 1,
+    "runtimeSemanticChanges": 0,
+    "testContractChanges": 1,
+    "uncheckedContractReaders": 0
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [],
+  "discovery": {
+    "coreRun": 42539104695,
+    "failedAssertion": "hosted container history must call live readTypeSurface",
+    "failedTests": 1,
+    "job": 128918184481,
+    "shard": "8/12"
+  },
+  "exactModelSha256": {
+    "after": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "before": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-producer-contract-budget-repair-source-history.mjs",
+      "sha256": "e78bd9a36dad1c6e7c47de05050e56c0ddb43136b22e090cb2a98b1482401010"
+    },
+    {
+      "path": "tests/helpers/vo1220-producer-contract-budget-repair-source-history-tests.mjs",
+      "sha256": "6d281dd3c6725524f637836e87fc8bb872bc96f823dd90e6636425f77ecbcdda"
+    },
+    {
+      "path": "tests/helpers/vo1220-producer-contract-budget-repair-source-history.mjs",
+      "sha256": "14b25602d07a0ca782138253c39339ade481790a44d2d2fe7671756c76fdcac7"
+    }
+  ],
+  "implementationCommit": "b38eb67e52db14d328aeb297d660c97489155829",
+  "integrationCommit": "38431a99f01b0857ba35977e4756874a1729e097",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a1a1cfb0d367c3035a87fe2880d7e9295fe143c854988450047ec0af80518bda",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-producer-contract-budget-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 421
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "4f7328401f0ac4ab309731a8c20e8524c7a44cead914bdfd61e2184935a0fa79"
+    },
+    {
+      "currentSha256": "282cdfae064a414cc1098c26fc8db86f3301a22919b358902ed6756363a4fbcf",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ProducerContractBudgetRepairSource\n\t, vo1220ProducerContractBudgetRepairNormalizationPaths\n} from \"./vo1220-producer-contract-budget-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ProducerContractBudgetRepairNormalizationPaths\n\t, ...vo1220FinObserverEpochRepairNormalizationPaths\n",
+          "previous": "\t...vo1220FinObserverEpochRepairNormalizationPaths\n",
+          "start": 243727
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ProducerContractBudgetRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220FinObserverEpochRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220FinObserverEpochRepairSource(\n",
+          "start": 306768
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ff5b8ce606cd510bba30d4bf7b8f94cd3f6ef1ba3d3cdf8ae704419e600198a3"
+    }
+  ],
+  "inventorySha256": {
+    "after": "031bf4063b78e1dbded102c8214e2a7b166961e7c68503280cb050f7895d8cc9",
+    "before": "031bf4063b78e1dbded102c8214e2a7b166961e7c68503280cb050f7895d8cc9"
+  },
+  "milestone": "vo1220-producer-contract-budget-repair-source-v1",
+  "predecessorCommit": "c157725e75f2d6a00e84b01e0e82cb241df83181",
+  "repair": "Keep the twelve current-history readers on the authenticated live type-surface pass. Treat hosted-container history as the one producer-era reader, require the shared authenticated producer-contract helper and its exact predecessor, and forbid both a live-contract read and a duplicated raw Git reader.",
+  "rootCause": "Commit 8f5e50a intentionally changed hosted-container history classification to use the contracts at its immutable producer epoch, but the later Core single-pass budget continued to classify that reader with twelve live-contract readers. The stale assertion was latent because the long shard had not reached a terminal result in the preceding exact cohorts.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "074bbcfcdf172fbe7238026d902437825a873fcf2d8d5a31639cc2da8643cad8",
+      "edits": [
+        {
+          "current": "\t\t\"tests/native-edge-array-harness-history.test.mjs\"\n",
+          "previous": "\t\t\"tests/hosted-container-inventory.test.mjs\"\n\t\t, \"tests/native-edge-array-harness-history.test.mjs\"\n",
+          "start": 28443
+        },
+        {
+          "current": "\n\tconst producerPath = \"tests/hosted-container-inventory.test.mjs\";\n\tconst producerSource = await readFile(producerPath, \"utf8\");\n\tassert.match(producerSource\n\t\t, /import \\{ typeSurfaceContractsAtProducer \\} from \"[.]\\/helpers\\/producer-source[.]mjs\";/u\n\t\t, `${producerPath}: reuse the shared authenticated producer reader`);\n\tassert.match(producerSource\n\t\t, /typeSurfaceContractsAtProducer\\(\\s*hostedContainerInventoryPredecessor\\s*\\)/u\n\t\t, `${producerPath}: historical classification uses producer contracts`);\n\tassert.doesNotMatch(producerSource, /await readTypeSurface\\(\\)/u\n\t\t, `${producerPath}: historical classification must not use live contracts`);\n\tassert.doesNotMatch(producerSource\n\t\t, /git\", \\[\"show\", `\\$\\{revision\\}:/u\n\t\t, `${producerPath}: do not duplicate the producer reader`);\n\tassert.doesNotMatch(producerSource\n\t\t, /sha256\\(await readFile\\(file[.]path\\)\\), file[.]sha256/u\n\t\t, `${producerPath}: do not rehash the complete live corpus`);\n",
+          "previous": "",
+          "start": 29350
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "750ef1818db20e54fbe82c52980117a1490bf75375d060085f37ba5d06878112"
+    },
+    {
+      "currentSha256": "27fb73f08fc9cb2d947be8113ee5a1b8325f641eba74b4afa6e1d17f79e76bf7",
+      "edits": [
+        {
+          "current": "import { typeSurfaceContractsAtProducer } from \"./helpers/producer-source.mjs\";\n",
+          "previous": "",
+          "start": 1320
+        },
+        {
+          "current": "",
+          "previous": "const contractsAt = revision => ({\n\tirSchema: JSON.parse(execFileSync(\"git\", [\"show\"\n\t\t, `${revision}:schema/binding-ir.schema.json`], { encoding: \"utf8\" }))\n\t, consumers: JSON.parse(execFileSync(\"git\", [\"show\"\n\t\t, `${revision}:docs/consumer-support.v1.json`], { encoding: \"utf8\" }))\n});\n\n",
+          "start": 1523
+        },
+        {
+          "current": "\tconst contracts = typeSurfaceContractsAtProducer(\n\t\thostedContainerInventoryPredecessor);\n",
+          "previous": "\tconst contracts = contractsAt(hostedContainerInventoryPredecessor);\n",
+          "start": 5968
+        }
+      ],
+      "path": "tests/hosted-container-inventory.test.mjs",
+      "previousSha256": "17aef10b9acd76d68d1927bad0286d457283a87cc8ce96a9f9706a8a3d5c5072"
+    }
+  ],
+  "validation": {
+    "checkedJavaScriptTypecheck": "passed",
+    "completeBudgetHelper": {
+      "fail": 1,
+      "pass": 13,
+      "tests": 14,
+      "unrelatedSparseEvidenceMissing": 1
+    },
+    "focusedBudgetContract": {
+      "fail": 0,
+      "pass": 1,
+      "tests": 1
+    },
+    "focusedEslint": "passed",
+    "producerHelperEquivalence": "passed"
+  }
+}
