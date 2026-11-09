@@ -1,0 +1,918 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "checksummedAssets": 2,
+    "directBrowserUrlsAfter": 0,
+    "measurementSemanticChanges": 0,
+    "packageSemanticChanges": 0,
+    "pinnedApiRoutes": 2,
+    "releaseAssets": 2,
+    "runtimeSemanticChanges": 0,
+    "uncheckedAssets": 0,
+    "workflowCallSites": 35,
+    "workflowFiles": 19
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [],
+  "discovery": {
+    "directReleaseAssetClasses": [
+      "kotlin-compiler",
+      "wasmtime-c-api"
+    ],
+    "downstreamRun": 42566901971,
+    "observedFailedJobsAtAudit": 13,
+    "sharedFailure": "HTTP 504 before consumer execution",
+    "uncoveredWorkflowCallSites": 35
+  },
+  "exactModelSha256": {
+    "after": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "before": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-workflow-release-asset-failover-source-history.mjs",
+      "sha256": "99d73701471e59064ad9d17932de34537f2b8e4b8c1f136444f71c7517c14810"
+    },
+    {
+      "path": "tests/helpers/vo1220-workflow-release-asset-failover-source-history-tests.mjs",
+      "sha256": "69b6dd65a105b4a329668cede9edfe8abb409852e7235e8c036a5e05d218cc2b"
+    },
+    {
+      "path": "tests/helpers/vo1220-workflow-release-asset-failover-source-history.mjs",
+      "sha256": "fc902e3228f368f24bde9ddc91343f1d02609d5ad2aec246271337ccfe5f6205"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "path": "scripts/download-pinned-release-asset.sh",
+      "sha256": "f0a65dacb3baf9a394189cb3fb390026a56bfbd04986b4be1178125f4ba9b7ba"
+    }
+  ],
+  "implementationCommit": "260b2399fe7bc1c42ec0301a5e892e7a8fc20e5d",
+  "integrationCommit": "58343cbe16b007f63b18f4def9ab03ee2585ea23",
+  "integrationUpdates": [
+    {
+      "currentSha256": "19d8c37cf298b75aa597a2928f75137787dcce28d42efa5d54478d94c9080fd7",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-workflow-release-asset-failover-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 178
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "f4fc12651d10c51670787b0f00f05f58679c6c0e8e010f50aba063f8465b8a80"
+    },
+    {
+      "currentSha256": "3bb3579eb8b5d6d6b58236f6dc48311cbecc01ee01bfc172965fb1d87e89082e",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220WorkflowReleaseAssetFailoverSource\n\t, vo1220WorkflowReleaseAssetFailoverNormalizationPaths\n} from \"./vo1220-workflow-release-asset-failover-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220WorkflowReleaseAssetFailoverNormalizationPaths\n\t, ...vo1220ReleaseAssetApiFailoverNormalizationPaths\n",
+          "previous": "\t...vo1220ReleaseAssetApiFailoverNormalizationPaths\n",
+          "start": 244265
+        },
+        {
+          "current": "\tlet stage = beforeVo1220WorkflowReleaseAssetFailoverSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ReleaseAssetApiFailoverSource(\n",
+          "previous": "\tlet stage = beforeVo1220ReleaseAssetApiFailoverSource(\n",
+          "start": 307479
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b83a6d73a6d89818260ea5a5a1bffe600d1c4c45a2dcf136c093b361fd4dd7a3"
+    }
+  ],
+  "inventorySha256": {
+    "after": "5f2c3872a1cc128c7e334a5707bff0a866270beccb9ff41eccb74cce2be88dfd",
+    "before": "5f2c3872a1cc128c7e334a5707bff0a866270beccb9ff41eccb74cce2be88dfd"
+  },
+  "milestone": "vo1220-workflow-release-asset-failover-source-v1",
+  "predecessorCommit": "6665af649f7e78bda200ce8fa5454e63cefab5cb",
+  "repair": "Route all 17 Kotlin and 18 Wasmtime workflow acquisitions through one fail-closed helper. Retain each browser URL, immutable public asset API identity and SHA-256 digest; accept bytes only after the digest gate and publish the destination atomically.",
+  "rootCause": "The first failover covered shared bootstrap and Nix Lean acquisition, but the complete workflow inventory found 35 direct browser-release downloads for two additional checksummed assets. Those jobs could still fail before product execution when GitHub's browser route returned HTTP 504.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "5b108c7ada202f78cbf97a4e3638be6520d142feb2a09dca5962086692f18c2c",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 1562
+        },
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 3502
+        },
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 7093
+        },
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 9011
+        }
+      ],
+      "path": ".github/workflows/callback-checked-record-remaining.yml",
+      "previousSha256": "4759ed4b0d9d784612c14b3028b0f61c1b6dd4f7d288aaecf36307b48daacac6"
+    },
+    {
+      "currentSha256": "5d4094fba546c39bc01eb5dd0027352f0e4e171b45d2cf73ead285e609ebb4c0",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 1528
+        },
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 3454
+        }
+      ],
+      "path": ".github/workflows/callback-subtype-remaining.yml",
+      "previousSha256": "695ab579cab2f581d7a6ced0802ac6c7a4a53edbbd43061da4d9fcb242ae3c72"
+    },
+    {
+      "currentSha256": "3f325332b6abeab7857cc4e5371d241b4565b0c0a18ecbcebe3e21dd4f555204",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 2122
+        }
+      ],
+      "path": ".github/workflows/checked-record-value-index-jvm.yml",
+      "previousSha256": "ea726a4e4875fc590ade1483ade8632cb13012cf42fac69be4eaf782a91db337"
+    },
+    {
+      "currentSha256": "49e6e9355b0d39284facb47cd6b1cb77ca6fe42709c88ad22ee73df06924f977",
+      "edits": [
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 2179
+        }
+      ],
+      "path": ".github/workflows/checked-record-value-index-wit.yml",
+      "previousSha256": "72606611440b4eb6054f61aaa245b4b5ddd0b1fba265479e53e2edd5ed9d0f73"
+    },
+    {
+      "currentSha256": "b659de64e69d2b99a5472e902a80ffdd2f09f64c23288ec435910c6bcb3f58dd",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 36384
+        },
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 44875
+        },
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 91962
+        },
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/combined-kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/combined-kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/combined-kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 92692
+        },
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 298483
+        },
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 354373
+        },
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 363945
+        },
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 367936
+        },
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 374732
+        },
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 408334
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "d93bc06cb5946df8201431bdeae7a33b59ad897f827a605db7ad8aab93fc0064"
+    },
+    {
+      "currentSha256": "57fdf0c51e1ddc7af565e5f87ef4aa04e950374d08a2d74cb7005d2fbd1dc75f",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 3254
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-jvm.yml",
+      "previousSha256": "727167d048e482343ec81bac7b0bb37fa5e5a2993d5b7d848376a1e3ff2184f7"
+    },
+    {
+      "currentSha256": "5f1e11dc588b0cca149dd942b9590cafd25eb4581b973e08bad3aba95eff9651",
+      "edits": [
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 3182
+        }
+      ],
+      "path": ".github/workflows/dependent-checked-record-wit.yml",
+      "previousSha256": "092cabc7d1d6b0de808df4f3e9480c2bbc26d38d1c5b0b2a5cccbd2d3da07cc6"
+    },
+    {
+      "currentSha256": "68cd0d2fa2340aa99884101fe22e51f1aa1656ab95f033bedcd4109e22d2f661",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 8059
+        },
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 16615
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-managed-wit.yml",
+      "previousSha256": "1f945a8e62f9d86c6e0e62e7bdcdf162813817939a4f0a42ddd35dadf6238dff"
+    },
+    {
+      "currentSha256": "89118151cb3d8c259bccc5499fde493aefdd36ee2f21ef918cb1537816aa06fe",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 1881
+        }
+      ],
+      "path": ".github/workflows/inherited-checked-record-jvm.yml",
+      "previousSha256": "640aa8c6b3ed80451444562c8252bb544b4f263b41771fb814558cceb880103e"
+    },
+    {
+      "currentSha256": "028962d9e940a8a336ec5e6a8d36075bcb31f6418bba834aa267639ae9a85ca2",
+      "edits": [
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 2166
+        }
+      ],
+      "path": ".github/workflows/inherited-checked-record-wit.yml",
+      "previousSha256": "bb390d4fbbe2f918e979b67568adfe1803183f6a868def903212db1d6d3d062d"
+    },
+    {
+      "currentSha256": "30380a0cc5e436aec1a18837ba26b513bb9ede2e5c4917144583c024440bacfd",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 1865
+        }
+      ],
+      "path": ".github/workflows/nested-checked-record-jvm.yml",
+      "previousSha256": "42561be5bfe9f723efd09c00964fce8f8647a2448f8a2308ce555e921674d47b"
+    },
+    {
+      "currentSha256": "8c26730c9a866c2ed2b0fd5c40cfff98fee1c20499e45a576fcb19676b9b5d61",
+      "edits": [
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 2149
+        }
+      ],
+      "path": ".github/workflows/nested-checked-record-wit.yml",
+      "previousSha256": "7e3f83d56af569ebdeacc2066e89057cf3ea6f5622c4fb76351f758012d2a94b"
+    },
+    {
+      "currentSha256": "a2c4375790c654100fb74568d23261af0cca0bc0f3d3bb85b6eb1eecae5f215e",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 2838
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-jvm.yml",
+      "previousSha256": "e4c8cda22decada9811c3101453327a96d60aa523ce8fcc53773f1dcc2c6afe8"
+    },
+    {
+      "currentSha256": "354da4a8119f2a969110513520976eb908d4e85a22f5897090a3e787050e24be",
+      "edits": [
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 3126
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-wit.yml",
+      "previousSha256": "a5747e9e5572188efa02d6c80c4743290aa07cff462b4a0a38cbc63fe7ef2c93"
+    },
+    {
+      "currentSha256": "1a644002fe5a6d382cf732ef3a70cc32bcb56b40d0a35609007d80a4ae384f43",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 1870
+        },
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "          curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n            --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n            'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n          echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 3756
+        }
+      ],
+      "path": ".github/workflows/owned-checked-record-managed.yml",
+      "previousSha256": "2cd9f64be1277a6a66907eb77d545cbff330555c07ce33a44fe87a47b2a5337e"
+    },
+    {
+      "currentSha256": "984acfa2b66039361a19b081d295641522a614f448889c33643570fc6e0edc24",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 1548
+        },
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 3461
+        }
+      ],
+      "path": ".github/workflows/owned-subtype-remaining.yml",
+      "previousSha256": "50330864005f9967eeddb4ded13530933b9ecb91184954afd4b8d450ff1ddc50"
+    },
+    {
+      "currentSha256": "1158b75c08b5ddce4c0332f30d9f35d95d65b9d55c1553a8426153b739cd3070",
+      "edits": [
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 2166
+        }
+      ],
+      "path": ".github/workflows/recursive-checked-record-wit.yml",
+      "previousSha256": "15621144de7a43284a0e48a65f40c63bc0d35ada3c5ee2cbf22014f450973ca4"
+    },
+    {
+      "currentSha256": "c2ba49cb36735311116f4c7e943bde6b7386c0b70e42bc44e31731d9b4270fb6",
+      "edits": [
+        {
+          "current": "          bash scripts/download-pinned-release-asset.sh kotlin-compiler \"build/kotlin-compiler.zip\"\n",
+          "previous": "          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\n          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\n",
+          "start": 2128
+        }
+      ],
+      "path": ".github/workflows/zero-payload-checked-record-jvm.yml",
+      "previousSha256": "f07d5ecd25d4857258a3d77858b749ffc89d4978d5a160115d20a6c5db07f264"
+    },
+    {
+      "currentSha256": "4bac13420f0de1ad468c7c4e651eeb2937798a6342e41bf51921429b87d7f54f",
+      "edits": [
+        {
+          "current": "            bash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\n",
+          "previous": "            curl --fail --location --retry 3 --retry-delay 2 --connect-timeout 20 --max-time 300 \\\n              --output \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" \\\n              'https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz'\n            echo '2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082'\"  $WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" | sha256sum --check --status\n",
+          "start": 2171
+        }
+      ],
+      "path": ".github/workflows/zero-payload-checked-record-wit.yml",
+      "previousSha256": "e876d802799418da80a430630c886cc7f291bf93f17fe956f88d02704271b910"
+    },
+    {
+      "currentSha256": "e78146ef835a5ba2c6197ff6af01eab29b3ede4cc4942cf0ef316c3683ce6973",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh kotlin-compiler\"\n\t\t\t, \"download-pinned-release-asset.sh unknown-compiler\"]\n",
+          "previous": "\t\t, [\"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932\"\n\t\t\t, \"0\".repeat(64)]\n",
+          "start": 1030
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-jvm-ci-workflow-tests.mjs",
+      "previousSha256": "929268f8760e20dd7a6890ac10536efe48b0a2f8da65ff948bd0b0e5c25139df"
+    },
+    {
+      "currentSha256": "95cf10f9215e2b245cee1afbc9e2cf1abc5d26bf2eacf0fda02eae2f76c31078",
+      "edits": [
+        {
+          "current": "\t\t\"bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\"\n",
+          "previous": "\t\t\"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip\"\n",
+          "start": 3122
+        },
+        {
+          "current": "\t\t, \"set -euo pipefail\\nmkdir -p build\\nbash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools\"\n",
+          "previous": "\t\t, \"set -euo pipefail\\nmkdir -p build\\ncurl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\\necho '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools\"\n",
+          "start": 4208
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-jvm-ci-workflow.mjs",
+      "previousSha256": "e04ce3fbb49f1a1a89f872358328aa5fea61b3975ce54344d7224ef54520a4b0"
+    },
+    {
+      "currentSha256": "60bd044a79472180d6cd62d98e9e4158acef7f3fa234f8077768eb14adcfdf4b",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh\", \"missing-release-asset.sh\"]\n\t\t, [\"wasmtime-c-api\", \"unknown-wasmtime-c-api\"]\n",
+          "previous": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n",
+          "start": 2783
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-wit-ci-workflow-tests.mjs",
+      "previousSha256": "dc39981b2dbb1ab91f412d955b3e120ff0756d5d62ce4f5aad9108f082a46a69"
+    },
+    {
+      "currentSha256": "8b53959ed66f2e864e2781f961756b066b5a33da3ee0ef24a650db52e4ece185",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh kotlin-compiler\"\n\t\t\t, \"download-pinned-release-asset.sh unknown-compiler\"]\n",
+          "previous": "\t\t, [\"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932\"\n\t\t\t, \"0\".repeat(64)]\n",
+          "start": 1050
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-workflow-tests.mjs",
+      "previousSha256": "cf34b1bcc6fc977cbf6b2e85eb03b8ea85885892be970b77b16eb3a78df5cd74"
+    },
+    {
+      "currentSha256": "4753826f7918b85831509ec7d57318e5e5f28faca6bd169abebb89940bcdeb29",
+      "edits": [
+        {
+          "current": "\t\t\"bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\"\n",
+          "previous": "\t\t\"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip\"\n",
+          "start": 3309
+        },
+        {
+          "current": "\t\t, \"set -euo pipefail\\nmkdir -p build\\nbash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools\"\n",
+          "previous": "\t\t, \"set -euo pipefail\\nmkdir -p build\\ncurl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\\necho '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools\"\n",
+          "start": 4387
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-workflow.mjs",
+      "previousSha256": "405cff5fb0f37ff49c6ee05909c2918930a21269ec0961c8b6c12a0bcf1283b0"
+    },
+    {
+      "currentSha256": "663ae0d54ffc84b8d887104bfd82f70470cfd6d2849275034d615c26ffb2f936",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh\", \"missing-release-asset.sh\"]\n\t\t, [\"wasmtime-c-api\", \"unknown-wasmtime-c-api\"]\n",
+          "previous": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n",
+          "start": 2843
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "800dac5c7f86664d7105276c68c29e5cb2a541dc438d0b6bfba451ccca7fd5d6"
+    },
+    {
+      "currentSha256": "5e58249f21597f00f68ac5a81bee760ce821a2d239a780073d6d67db323e17a6",
+      "edits": [
+        {
+          "current": "\t\t\t\"          bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\\n\"\n",
+          "previous": "\t\t\t`          echo '${inheritedCheckedRecordJvmKotlinZipSha256}  build/kotlin-compiler.zip' | sha256sum --check\\n`\n",
+          "start": 1687
+        },
+        {
+          "current": "\t\tconst downloader = await readFile(\n\t\t\t\"scripts/download-pinned-release-asset.sh\", \"utf8\"\n\t\t);\n\t\tassert.ok(downloader.includes(inheritedCheckedRecordJvmKotlinZipSha256));\n",
+          "previous": "",
+          "start": 1802
+        },
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh\", \"missing-release-asset.sh\"]\n\t\t, [\"kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\"\n\t\t\t, \"unknown-compiler \\\"build/kotlin-compiler.zip\\\"\"]\n\t\t, [\"bash scripts/download-pinned-release-asset.sh\", \"true #\"]\n",
+          "previous": "\t\t, [inheritedCheckedRecordJvmKotlinZipSha256, \"0\".repeat(64)]\n\t\t, [\"kotlin-compiler-2.2.0.zip\", \"kotlin-compiler-2.3.0.zip\"]\n\t\t, [\"| sha256sum --check\\n\", \"\\n\"]\n",
+          "start": 2823
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-jvm-ci-workflow-tests.mjs",
+      "previousSha256": "39927508e8353affcc700c0ecb6973f07a8d85f7d4a2bd13dd99da16147801da"
+    },
+    {
+      "currentSha256": "69cb94c91087ee1bb2ce983f33fdd4362b8793d28e97899301d034abb1f8f505",
+      "edits": [
+        {
+          "current": "const kotlinInstall = \"set -euo pipefail\\nmkdir -p build\\n\"\n\t+ \"bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\\n\"\n\t+ \"unzip -q build/kotlin-compiler.zip -d build/kotlin-tools\";\n",
+          "previous": "const kotlinInstall = \"set -euo pipefail\\nmkdir -p build\\ncurl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\\n\"\n\t+ `echo '${inheritedCheckedRecordJvmKotlinZipSha256}  build/kotlin-compiler.zip' | sha256sum --check\\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools`;\n",
+          "start": 410
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-jvm-ci-workflow.mjs",
+      "previousSha256": "7c6fec9db996717cad56d257da511f8dde1831fa2313d490b0cbd41d69c988dd"
+    },
+    {
+      "currentSha256": "6d24b2214b5480bd2ae39ec2365eb3d7a8e08058c6346d613e135a72d35cb979",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh\", \"missing-release-asset.sh\"]\n\t\t, [\"wasmtime-c-api\", \"unknown-wasmtime-c-api\"]\n",
+          "previous": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n",
+          "start": 2763
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "ea69f4f37c8802543a70d07792bad51dca9c81feba0076de1bcf3280b55d4b44"
+    },
+    {
+      "currentSha256": "171bb43d754b640d779b554e28fd92b2fa05565e93c8d2b684318223799b2d60",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\tconst kotlin = \"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip\";\n",
+          "start": 10745
+        },
+        {
+          "current": "\t\t, \"bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\"\n",
+          "previous": "\t\t, `echo '${kotlin}' | sha256sum --check`\n",
+          "start": 11270
+        }
+      ],
+      "path": "tests/helpers/jvm-shard-ci-tests.mjs",
+      "previousSha256": "8bfb22110da3281c1fcda814e72c07e4b0caf2201d8663fe290d5b50b7e5ad50"
+    },
+    {
+      "currentSha256": "e0c7c451a447818ed1fb58723965e5349987ad1162ab1e2c05366f2675344467",
+      "edits": [
+        {
+          "current": "\tassert.ok(consumer.includes(\"          bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\\n\"));\n\tconst downloader = await readFile(\"scripts/download-pinned-release-asset.sh\", \"utf8\");\n\tassert.ok(downloader.includes(nestedCheckedRecordJvmKotlinZipSha256));\n",
+          "previous": "\tassert.ok(consumer.includes(`          echo '${nestedCheckedRecordJvmKotlinZipSha256}  build/kotlin-compiler.zip' | sha256sum --check\\n`));\n",
+          "start": 1780
+        },
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh\", \"missing-release-asset.sh\"]\n\t\t, [\"kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\", \"unknown-compiler \\\"build/kotlin-compiler.zip\\\"\"]\n\t\t, [\"bash scripts/download-pinned-release-asset.sh\", \"true #\"]\n",
+          "previous": "\t\t, [nestedCheckedRecordJvmKotlinZipSha256, \"0\".repeat(64)]\n\t\t, [\"kotlin-compiler-2.2.0.zip\", \"kotlin-compiler-2.3.0.zip\"]\n\t\t, [\"| sha256sum --check\\n\", \"\\n\"]\n",
+          "start": 2938
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-jvm-ci-workflow-tests.mjs",
+      "previousSha256": "4596ccb981e8b74eea0060e55cdd449d868fa84800cebe70152307a652af0c98"
+    },
+    {
+      "currentSha256": "3293d008cf224fcd595f79dfdd44211bfe2301f7bc74f9e54b43832446cd2945",
+      "edits": [
+        {
+          "current": "const kotlinInstall = \"set -euo pipefail\\nmkdir -p build\\n\"\n\t+ \"bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\\n\"\n\t+ \"unzip -q build/kotlin-compiler.zip -d build/kotlin-tools\";\n",
+          "previous": "const kotlinInstall = \"set -euo pipefail\\nmkdir -p build\\ncurl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\\n\"\n\t+ `echo '${nestedCheckedRecordJvmKotlinZipSha256}  build/kotlin-compiler.zip' | sha256sum --check\\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools`;\n",
+          "start": 399
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-jvm-ci-workflow.mjs",
+      "previousSha256": "b9a17c957e9a4cbb66a809bf6b43a8881cfbac8d91bc6ade81b061c240433b30"
+    },
+    {
+      "currentSha256": "26cedf5ef535e0d8985949908df1e438d68da7d38c535bf2e35bff0ddffb57d0",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh\", \"missing-release-asset.sh\"]\n\t\t, [\"wasmtime-c-api\", \"unknown-wasmtime-c-api\"]\n",
+          "previous": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n",
+          "start": 2724
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "c4fac8eaefbabe053a1fd597444265e38a9086aca8a7cd736e66464dc5293805"
+    },
+    {
+      "currentSha256": "0bedb4035c6ae30327ad80aefa1a021ec0fe1f6c803fd9e058b6b6eb16a8aaa0",
+      "edits": [
+        {
+          "current": "\tassert.ok(consumer.includes(\"          bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\\n\"));\n\tconst downloader = await readFile(\"scripts/download-pinned-release-asset.sh\", \"utf8\");\n\tassert.ok(downloader.includes(nominalPrimitiveSubtypeJvmKotlinZipSha256));\n",
+          "previous": "\tassert.ok(consumer.includes(`          echo '${nominalPrimitiveSubtypeJvmKotlinZipSha256}  build/kotlin-compiler.zip' | sha256sum --check\\n`));\n",
+          "start": 1829
+        },
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh\", \"missing-release-asset.sh\"]\n\t\t, [\"kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\", \"unknown-compiler \\\"build/kotlin-compiler.zip\\\"\"]\n\t\t, [\"bash scripts/download-pinned-release-asset.sh\", \"true #\"]\n",
+          "previous": "\t\t, [nominalPrimitiveSubtypeJvmKotlinZipSha256, \"0\".repeat(64)]\n\t\t, [\"kotlin-compiler-2.2.0.zip\", \"kotlin-compiler-2.3.0.zip\"]\n\t\t, [\"| sha256sum --check\\n\", \"\\n\"]\n",
+          "start": 2988
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-jvm-ci-workflow-tests.mjs",
+      "previousSha256": "90c0b302006f4ea051a93716cfd5d2cdcdc1ef51b3520e3bb6a0f3394e050079"
+    },
+    {
+      "currentSha256": "9e31f309fd4664157c5b0635be8d2a4efaf75b5494c9164d180ebc2b6b07b272",
+      "edits": [
+        {
+          "current": "const kotlinInstall = \"set -euo pipefail\\nmkdir -p build\\n\"\n\t+ \"bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\\n\"\n\t+ \"unzip -q build/kotlin-compiler.zip -d build/kotlin-tools\";\n",
+          "previous": "const kotlinInstall = \"set -euo pipefail\\nmkdir -p build\\ncurl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\\n\"\n\t+ `echo '${nominalPrimitiveSubtypeJvmKotlinZipSha256}  build/kotlin-compiler.zip' | sha256sum --check\\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools`;\n",
+          "start": 508
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-jvm-ci-workflow.mjs",
+      "previousSha256": "07e0c5237c54e1705c9879df8444534e283003e9725c8461e4222f24fefdd16f"
+    },
+    {
+      "currentSha256": "b40796c18dc935e035e173f250794949d91784f92c81544146da6542b157f554",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh\", \"missing-release-asset.sh\"]\n\t\t, [\"wasmtime-c-api\", \"unknown-wasmtime-c-api\"]\n",
+          "previous": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n",
+          "start": 2754
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-wit-ci-workflow-tests.mjs",
+      "previousSha256": "b985cfa6952af0f4633a076505c85c51644bdcd028ffe10d273af3a2497f31be"
+    },
+    {
+      "currentSha256": "d8279f2c3714a49655b226f0332cb52eb442a06703a82f573db071c998668af9",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh kotlin-compiler\"\n\t\t\t, \"download-pinned-release-asset.sh unknown-compiler\"]];\n",
+          "previous": "\t\t, [\"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932\", \"0\".repeat(64)]];\n",
+          "start": 4649
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-ci-workflow-tests.mjs",
+      "previousSha256": "1f0eea3110797b7ad80d1d05f8e76b078714fce682e73be7e195089706958dfb"
+    },
+    {
+      "currentSha256": "c0f581f5867455c7f2e416de24d9d2ec773c34e99bdb3a751d9885eee96a58d0",
+      "edits": [
+        {
+          "current": "\tassert.ok(body.includes(\n\t\t\"bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\"\n\t));\n",
+          "previous": "\tassert.ok(body.includes(\"echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\"));\n",
+          "start": 7523
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-ci-workflow.mjs",
+      "previousSha256": "3bf1b6a918b99f8f028c9c068c6858127e272fd56b0563ad00509128c4db66eb"
+    },
+    {
+      "currentSha256": "96f1c3fa49d1a06588409fe9229940b694399b408023df529beec000e8b74e45",
+      "edits": [
+        {
+          "current": "\t\t, [\"wasmtime-c-api\", \"unknown-wasmtime-c-api\"]\n",
+          "previous": "\t\t, [\"sha256sum --check --status\", \"true\"]\n",
+          "start": 5687
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-wit-ci-workflow-tests.mjs",
+      "previousSha256": "ca834ae60dcdd29cec09ba8013350358c3e0070235235ac3e1a311ecc20f0c28"
+    },
+    {
+      "currentSha256": "6c38ce35c2946c2e26547b91353497537665a612f1b00a46d776034ac81a30a4",
+      "edits": [
+        {
+          "current": "\t\t, \"dotnet-version: '8.0.424'\"\n\t\t, \"download-pinned-release-asset.sh kotlin-compiler\"\n",
+          "previous": "\t\t, \"dotnet-version: '8.0.424'\", \"kotlin-compiler-2.2.0.zip\"\n",
+          "start": 3182
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-callback-result-ci.mjs",
+      "previousSha256": "c5489eaf41df8455a84ddab0473e8c28f67ab4817aa75785bc260383f7e9c90b"
+    },
+    {
+      "currentSha256": "d57ba1295b58d2a0ebebdcf6986aa97edc59fc532717e08a37bdb1b0b4b9d0c4",
+      "edits": [
+        {
+          "current": "\t, \"dotnet-version: '8.0.424'\"\n\t, \"download-pinned-release-asset.sh kotlin-compiler\"\n",
+          "previous": "\t, \"dotnet-version: '8.0.424'\", \"kotlin-compiler-2.2.0.zip\"\n",
+          "start": 2275
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-ci.mjs",
+      "previousSha256": "19ab023b53992cc76e4cd95f36188946d6ed0751bf771a1a5f74ede395f4ba03"
+    },
+    {
+      "currentSha256": "ead8ebd34581c68e8e6f909adfe7d4404bb8af75ab8fe0b68d759e93b833480c",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh\", \"missing-release-asset.sh\"]\n\t\t, [\"wasmtime-c-api\", \"unknown-wasmtime-c-api\"]\n",
+          "previous": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n",
+          "start": 2769
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "425e4e26ee47a5b9546b489f18993140baf8bf2cc240e6e98e2178fab599e3c5"
+    },
+    {
+      "currentSha256": "2f6c41731a3c2ceaf558f2f58ef6bddc639e1ae2dae3c12286d549324cba73f9",
+      "edits": [
+        {
+          "current": "export const historicalWasmtimeCapiBootstrap = `set -euo pipefail\n",
+          "previous": "export const wasmtimeCapiBootstrap = `set -euo pipefail\n",
+          "start": 779
+        },
+        {
+          "current": "export const wasmtimeCapiBootstrap = `set -euo pipefail\ntest \"$(uname -sm)\" = 'Linux x86_64'\nmkdir -p build\ntest ! -e build/wasmtime-c-api && test ! -L build/wasmtime-c-api\nWASMTIME_CAPI_STAGING=$(mktemp -d build/wasmtime-c-api.XXXXXX)\ntrap 'rm -rf -- \"$WASMTIME_CAPI_STAGING\"' EXIT\nbash scripts/download-pinned-release-asset.sh wasmtime-c-api \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\"\nmkdir \"$WASMTIME_CAPI_STAGING/unpacked\"\ntar -xJf \"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\" --strip-components=1 -C \"$WASMTIME_CAPI_STAGING/unpacked\"\ntest -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasmtime.h\"\ntest -s \"$WASMTIME_CAPI_STAGING/unpacked/include/wasm.h\"\ntest -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.so\"\ntest -s \"$WASMTIME_CAPI_STAGING/unpacked/lib/libwasmtime.a\"\nmv -T \"$WASMTIME_CAPI_STAGING/unpacked\" build/wasmtime-c-api\n`;\n\nexport const historicalIsolatedWasmtimeCapiBootstrap = \"(\\n\"\n\t+ historicalWasmtimeCapiBootstrap.trimEnd().split(\"\\n\")\n\t\t.map(line => \"  \" + line).join(\"\\n\")\n\t+ \"\\n)\\n\";\n\n",
+          "previous": "",
+          "start": 1773
+        },
+        {
+          "current": "\tconst downloader = await readFile(\"scripts/download-pinned-release-asset.sh\", \"utf8\");\n\tassert.ok(downloader.includes(url));\n\tassert.ok(downloader.includes(archiveSha256));\n\tassert.ok(downloader.includes(\n\t\t\"https://api.github.com/repos/bytecodealliance/wasmtime/releases/assets/362397783\"\n\t));\n",
+          "previous": "",
+          "start": 6072
+        },
+        {
+          "current": "\tconst fixtureSource = source;\n\tconst fixtureDownloader = downloader.replace(archiveSha256, fixtureHash);\n",
+          "previous": "\tassert.equal(source.split(archiveSha256).length, 2);\n\tconst fixtureSource = source.replace(archiveSha256, fixtureHash);\n",
+          "start": 6954
+        },
+        {
+          "current": "",
+          "previous": "test \"$#\" = 13\n",
+          "start": 7117
+        },
+        {
+          "current": "test \"\\${10}\" = 300\nif test \"$#\" = 13; then\n  test \"\\${11}\" = --output && test \"\\${13}\" = '${url}'\n  destination=\\${12}\nelif test \"$#\" = 15; then\n  test \"\\${11}\" = --header && test \"\\${12}\" = 'Accept: application/octet-stream'\n  test \"\\${13}\" = --output\n  test \"\\${15}\" = 'https://api.github.com/repos/bytecodealliance/wasmtime/releases/assets/362397783'\n  destination=\\${14}\nelse\n  exit 64\nfi\ncp \"$BOOTSTRAP_FIXTURE_ARCHIVE\" \"$destination\"\n",
+          "previous": "test \"\\${10}\" = 300 && test \"\\${11}\" = --output\ntest \"\\${13}\" = '${url}'\ncp \"$BOOTSTRAP_FIXTURE_ARCHIVE\" \"\\${12}\"\n",
+          "start": 7231
+        },
+        {
+          "current": "\tfor(const tool of [\"uname\", \"dirname\", \"mkdir\", \"mktemp\", \"rm\", \"cp\"\n\t\t, \"sha256sum\", \"tar\", \"xz\", \"mv\", \"bash\"])\n",
+          "previous": "\tfor(const tool of [\"uname\", \"mkdir\", \"mktemp\", \"rm\", \"cp\", \"sha256sum\", \"tar\", \"xz\", \"mv\", \"bash\"])\n",
+          "start": 7805
+        },
+        {
+          "current": "\tconst run = async (\n\t\tname, script = fixtureSource, status = \"0\", prepare = async () => {}\n\t\t, downloaderSource = fixtureDownloader\n\t) => {\n",
+          "previous": "\tconst run = async (name, script = fixtureSource, status = \"0\", prepare = async () => {}) => {\n",
+          "start": 7982
+        },
+        {
+          "current": "\t\tawait saveLakeFile(directory\n\t\t\t, \"scripts/download-pinned-release-asset.sh\", downloaderSource);\n",
+          "previous": "",
+          "start": 8220
+        },
+        {
+          "current": "\t\tconst refused = await run(name, script, status, async () => {}\n\t\t\t, name === \"wrong-hash\" ? downloader : fixtureDownloader);\n",
+          "previous": "\t\tconst refused = await run(name, script, status);\n",
+          "start": 9554
+        },
+        {
+          "current": "\tconst incompleteHash = sha256(await readFile(compressed));\n\tconst incomplete = await run(\"incomplete\", source, \"0\", async () => {}\n\t\t, downloader.replace(archiveSha256, incompleteHash));\n",
+          "previous": "\tconst incomplete = await run(\"incomplete\", source.replace(archiveSha256, sha256(await readFile(compressed))));\n",
+          "start": 10683
+        }
+      ],
+      "path": "tests/helpers/wasmtime-capi-bootstrap.mjs",
+      "previousSha256": "458a45691756ca328417b2010179ed3f770f7e99bc8fcd9d578041f149505415"
+    },
+    {
+      "currentSha256": "ecc3a7c2249b8f3849e970e67b24ceee7ad229bd98a376133dde25c74cc7128a",
+      "edits": [
+        {
+          "current": "\t, consumerMatrixWasmtimeCapiJobs, historicalIsolatedWasmtimeCapiBootstrap\n\t, isolatedWasmtimeCapiBootstrap\n",
+          "previous": "\t, consumerMatrixWasmtimeCapiJobs, isolatedWasmtimeCapiBootstrap\n",
+          "start": 436
+        },
+        {
+          "current": "const historicalBlock = historicalIsolatedWasmtimeCapiBootstrap.trimEnd()\n\t.split(\"\\n\").map(line => \"          \" + line + \"\\n\").join(\"\");\n",
+          "previous": "",
+          "start": 1454
+        },
+        {
+          "current": "\t\tassert.equal(current.split(historicalBlock).length - 1, count);\n",
+          "previous": "\t\tassertIsolatedWasmtimeCapiBootstraps(current, count);\n",
+          "start": 3313
+        },
+        {
+          "current": "\t\tlet restored = current.replaceAll(\n\t\t\thistoricalBlock, \"          \" + command + \"\\n\"\n\t\t);\n",
+          "previous": "\t\tlet restored = current.replaceAll(block, \"          \" + command + \"\\n\");\n",
+          "start": 3456
+        },
+        {
+          "current": "\t\t[\"bash scripts/download-pinned-release-asset.sh wasmtime-c-api\"\n\t\t\t, \"bash scripts/missing-release-asset.sh wasmtime-c-api\"]\n\t\t, [\"download-pinned-release-asset.sh wasmtime-c-api\"\n\t\t\t, \"download-pinned-release-asset.sh unknown-wasmtime-c-api\"]\n\t\t, [\"wasmtime-c-api \\\"$WASMTIME_CAPI_STAGING/wasmtime.tar.xz\\\"\"\n\t\t\t, \"wasmtime-c-api \\\"$WASMTIME_CAPI_STAGING/wasmtime.zip\\\"\"]\n",
+          "previous": "\t\t[\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n\t\t, [\"--max-time 300\", \"--max-time 30000\"]\n",
+          "start": 5389
+        }
+      ],
+      "path": "tests/helpers/wasmtime-capi-rollout-tests.mjs",
+      "previousSha256": "75c12de0b0a290f9bafcd2f21eeaabfcc2e3149a92a5a4f6ad3ae4ddbe792fbf"
+    },
+    {
+      "currentSha256": "ffdf29bee0bbc5a242f66d963c90adcba04f486d3eaa2c5cb7316430f7685034",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh kotlin-compiler\"\n\t\t\t, \"download-pinned-release-asset.sh unknown-compiler\"]\n",
+          "previous": "\t\t, [\"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932\"\n\t\t\t, \"0\".repeat(64)]\n",
+          "start": 1010
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-jvm-ci-workflow-tests.mjs",
+      "previousSha256": "7327578b8e693db64b8debf905aaebf15a9568a2b36f6f143195166628b47695"
+    },
+    {
+      "currentSha256": "bc368da7462c590796c25d48b1066730f51f58b39fbc08c4b2ed010b18aae6df",
+      "edits": [
+        {
+          "current": "\t\t\"bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\"\n",
+          "previous": "\t\t\"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip\"\n",
+          "start": 3116
+        },
+        {
+          "current": "\t\t, \"set -euo pipefail\\nmkdir -p build\\nbash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools\"\n",
+          "previous": "\t\t, \"set -euo pipefail\\nmkdir -p build\\ncurl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\\necho '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check\\nunzip -q build/kotlin-compiler.zip -d build/kotlin-tools\"\n",
+          "start": 4206
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-jvm-ci-workflow.mjs",
+      "previousSha256": "67d3a07386d9e098e86216ae59f596e2c3192e991556ecd9845ed39591fa872d"
+    },
+    {
+      "currentSha256": "0abaf2b6863bdbbe2a3fe9174519bda694e3bc2523260d7de09b44510be07319",
+      "edits": [
+        {
+          "current": "\t\t, [\"download-pinned-release-asset.sh\", \"missing-release-asset.sh\"]\n\t\t, [\"wasmtime-c-api\", \"unknown-wasmtime-c-api\"]\n",
+          "previous": "\t\t, [\"wasmtime-v42.0.1\", \"wasmtime-v42.0.2\"]\n\t\t, [\"sha256sum --check --status\", \"true\"]\n",
+          "start": 2770
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-wit-ci-workflow-tests.mjs",
+      "previousSha256": "ecc64839babf8d86595baf12dbae3de8f0f3643fa3d715b1073023d169f40d63"
+    },
+    {
+      "currentSha256": "63c165944c6b33ef80870c414f844863155cbb1b90cfbc4d576003b11cb7389a",
+      "edits": [
+        {
+          "current": "import { readFile } from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join } from \"node:path\";\n",
+          "start": 138
+        },
+        {
+          "current": "",
+          "previous": "import { pathToFileURL } from \"node:url\";\nimport { processBuildRunner } from \"../src/build/process-runner.mjs\";\n",
+          "start": 213
+        },
+        {
+          "current": "test(\"managed JVM bootstrap uses the shared pinned Kotlin downloader\", async () => {\n",
+          "previous": "test(\"managed JVM bootstrap downloads Kotlin into a fresh checkout\", async t => {\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-bridge-jvm-bootstrap-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst archive = join(directory, \"fixture.zip\"), content = \"local compiler archive fixture\\n\";\n\tawait writeFile(archive, content);\n",
+          "start": 1457
+        },
+        {
+          "current": "\tassert.ok(step.includes(\n\t\t\"bash scripts/download-pinned-release-asset.sh kotlin-compiler \\\"build/kotlin-compiler.zip\\\"\"\n\t));\n\tconst downloader = await readFile(\"scripts/download-pinned-release-asset.sh\", \"utf8\");\n\tassert.ok(downloader.includes(\n\t\t\"https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\"\n\t));\n\tassert.ok(downloader.includes(\n\t\t\"https://api.github.com/repos/JetBrains/kotlin/releases/assets/266479493\"\n\t));\n\tassert.ok(downloader.includes(\n\t\t\"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932\"\n\t));\n",
+          "previous": "\tconst commands = step.split(\"        run: |\\n\")[1]?.split(\"          echo '\")[0];\n\tassert.ok(commands);\n\tconst download = \"https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\";\n\tassert.ok(commands.includes(download));\n\tawait processBuildRunner.capture({ command: \"bash\"\n\t\t, args: [\"-e\", \"-c\", commands.replace(download, pathToFileURL(archive).href)]\n\t\t, cwd: directory, timeoutMs: 30000 });\n\tassert.equal(await readFile(join(directory, \"build/kotlin-compiler.zip\"), \"utf8\"), content);\n",
+          "start": 2039
+        }
+      ],
+      "path": "tests/managed-ci-isolation.test.mjs",
+      "previousSha256": "46c20d5166eaa4ceb860ddc081201b78fdeffbefd98a93a450341a96930d23ab"
+    },
+    {
+      "currentSha256": "b8ae9bf69d63c8002ca2277ae7bcd0a2b9f396baf5d0e36e0c6a6ada6551880f",
+      "edits": [
+        {
+          "current": "\tassert.match(step, /download-pinned-release-asset\\.sh kotlin-compiler \"build\\/combined-kotlin-compiler\\.zip\"/u);\n\tconst downloader = await readFile(\"scripts/download-pinned-release-asset.sh\", \"utf8\");\n\tassert.match(downloader, /kotlin-compiler-2\\.2\\.0\\.zip/u);\n\tassert.match(downloader, /1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932/u);\n\tassert.match(downloader, /sha256sum --check --status/u);\n",
+          "previous": "\tassert.match(step, /kotlin-compiler-2\\.2\\.0\\.zip/);\n\tassert.match(step, /1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932/);\n\tassert.match(step, /sha256sum --check/);\n",
+          "start": 2247
+        }
+      ],
+      "path": "tests/multi-profile-project.test.mjs",
+      "previousSha256": "cf341c9ed64d7741bd553858f918e47dfaab7c589e68a0128452902532decfd5"
+    },
+    {
+      "currentSha256": "7615e79b0c4accb2fc848bfefc3f00afd864bb87772d840f7efc3f72a917ef13",
+      "edits": [
+        {
+          "current": "import { access, copyFile, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from \"node:fs/promises\";\n",
+          "previous": "import { access, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\n",
+          "start": 149
+        },
+        {
+          "current": "test(\"every direct workflow release asset uses one checksummed API failover\", async () => {\n  const helper = await readFile(\"scripts/download-pinned-release-asset.sh\", \"utf8\");\n  const workflowDirectory = \".github/workflows\";\n  const workflowSources = await Promise.all((await readdir(workflowDirectory))\n    .filter(name => name.endsWith(\".yml\"))\n    .map(name => readFile(`${workflowDirectory}/${name}`, \"utf8\")));\n  const workflows = workflowSources.join(\"\\n\");\n  assert.doesNotMatch(workflows, /github\\.com\\/.+\\/releases\\/download\\//u);\n  assert.equal(workflows.split(\n    \"bash scripts/download-pinned-release-asset.sh kotlin-compiler\"\n  ).length - 1, 17);\n  assert.equal(workflows.split(\n    \"bash scripts/download-pinned-release-asset.sh wasmtime-c-api\"\n  ).length - 1, 18);\n  for(const pin of [\n    \"https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip\"\n    , \"https://api.github.com/repos/JetBrains/kotlin/releases/assets/266479493\"\n    , \"1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932\"\n    , \"https://github.com/bytecodealliance/wasmtime/releases/download/v42.0.1/wasmtime-v42.0.1-x86_64-linux-c-api.tar.xz\"\n    , \"https://api.github.com/repos/bytecodealliance/wasmtime/releases/assets/362397783\"\n    , \"2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082\"\n  ]) assert.ok(helper.includes(pin), pin);\n  assert.match(helper, /case \"\\$asset_name\" in[\\s\\S]+kotlin-compiler\\)[\\s\\S]+wasmtime-c-api\\)/u);\n  assert.match(helper, /--header 'Accept: application\\/octet-stream'/u);\n  assert.match(helper, /sha256sum --check --status/u);\n  assert.match(helper, /mv -f -- \"\\$partial\" \"\\$destination\"/u);\n});\n\n",
+          "previous": "",
+          "start": 13799
+        }
+      ],
+      "path": "tests/performance-ci-report.test.mjs",
+      "previousSha256": "4a6e682b16e220a607b6bc882b32df9a048a4843f636908dbba64dbaa9186e5e"
+    }
+  ],
+  "validation": {
+    "completePerformanceContracts": {
+      "fail": 0,
+      "pass": 12,
+      "tests": 12
+    },
+    "eslint": "passed",
+    "focusedWorkflowContracts": {
+      "fail": 0,
+      "pass": 8,
+      "tests": 8
+    },
+    "liveWasmtimeApiBytes": 13113104,
+    "liveWasmtimeApiSha256": "2097a47351918a446b26c7e65f487278f63bc947591b71897db547cd90c05082",
+    "shellcheck": "passed",
+    "typecheck": "passed",
+    "workflowBrowserReleaseUrls": 0,
+    "workflowYamlParse": "passed"
+  }
+}
