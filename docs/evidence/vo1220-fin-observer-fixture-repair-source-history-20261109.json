@@ -1,0 +1,122 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "currentSourcePaths": 0,
+    "measurementSemanticChanges": 0,
+    "refreshedPins": 0,
+    "runtimeSemanticChanges": 0,
+    "testContractChanges": 1
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [],
+  "discovery": {
+    "archivedStrictScriptSha256": "3fb03752e58215696c3e738abbe08fa9e7253aa30f1b546ddcf88ec243781486",
+    "coreRun": 42522935896,
+    "currentStrictScriptSha256": "43fd0badcc5126ed7ff194dedae410cbc4166d8e414df2ae1096bc4bd8d4d4c3",
+    "failedTests": 3,
+    "job": 128865281681,
+    "repeatedRootCauses": 1,
+    "shard": "6/12"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-fin-observer-fixture-repair-source-history.mjs",
+      "sha256": "8f4e11ae69b9e943a8da7870211d263ecc916e604cbce67712049cdb4695b571"
+    },
+    {
+      "path": "tests/helpers/vo1220-fin-observer-fixture-repair-source-history-tests.mjs",
+      "sha256": "863d1b39f9877ea260a8adc9acadfbc1b9156c0ebf766715e4801581d1ceebd7"
+    },
+    {
+      "path": "tests/helpers/vo1220-fin-observer-fixture-repair-source-history.mjs",
+      "sha256": "ab922294c41b0e9ae609772d7a330eef8206b0191c6107a3ca7504c9136ebcad"
+    }
+  ],
+  "implementationCommit": "d20d3e0515f31f283dc6716bf58d3bf3f68fae14",
+  "integrationCommit": "6db43b8e369a97d41c2c04311ec7edf539febdf1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b6a64bc37a9c7a837a2bc30ee0a032da2412c697a7f372eb1c4df4d36047b6bb",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-fin-observer-fixture-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 178
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "d7a170383d027458c16bd0f71ada833795262930b5c2e6a6dec92c378c285b0b"
+    },
+    {
+      "currentSha256": "42abb9f628feecbe10132ae2d5087b80f1b181427a66ff4c9d5d40d70bc099d3",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220FinObserverFixtureRepairSource\n\t, vo1220FinObserverFixtureRepairNormalizationPaths\n} from \"./vo1220-fin-observer-fixture-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220FinObserverFixtureRepairNormalizationPaths\n\t, ...vo1220HostFinPendingExitRepairNormalizationPaths\n",
+          "previous": "\t...vo1220HostFinPendingExitRepairNormalizationPaths\n",
+          "start": 243195
+        },
+        {
+          "current": "\tlet stage = beforeVo1220FinObserverFixtureRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220HostFinPendingExitRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220HostFinPendingExitRepairSource(\n",
+          "start": 306065
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f95168cd2726761b1c02b3c75c50ab039bb62162dfac68dc9343d04cd4e0b9ef"
+    }
+  ],
+  "inventorySha256": {
+    "after": "031bf4063b78e1dbded102c8214e2a7b166961e7c68503280cb050f7895d8cc9",
+    "before": "031bf4063b78e1dbded102c8214e2a7b166961e7c68503280cb050f7895d8cc9"
+  },
+  "milestone": "vo1220-fin-observer-fixture-repair-source-v1",
+  "predecessorCommit": "16f009557062127c683c45d002cc5c43b301f5d7",
+  "repair": "Refresh generated debugger identity by the report's instrument kind: strict-root Ruby and .NET bind the current strict script, extracted-root Java and Kotlin bind the current extracted script, and LD_PRELOAD hosts remain unchanged. Preserve original archive bytes and their historical verifier.",
+  "rootCause": "The synthetic-current FinContainers entry fixture refreshed current host probe hashes, rows and the JVM extracted-root observer identity, but retained the immutable archived strict-root observer identity for Ruby and .NET. The host pending-exit repair intentionally changed that generated strict script, so the positive fixture failed before its negative controls could exercise the live report contract.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "811123e1c760a9bfbbe5358a4adecaea6d2b25fb227d5baca4794221a886b232",
+      "edits": [
+        {
+          "current": "\tconst scripts = { \"gdb-breakpoints\": sources.strictScript\n\t\t, \"gdb-breakpoints-extracted-root\": sources.extractedScript };\n",
+          "previous": "",
+          "start": 7999
+        },
+        {
+          "current": "\t\tconst host = report.dispatch.public;\n\t\thost.probeSha256 = probes[report.profile];\n\t\thost.observed = structuredClone(finContainerEntryExpected);\n\t\tif(Object.hasOwn(scripts, host.instrument)) host.scriptSha256 = scripts[host.instrument];\n",
+          "previous": "\t\treport.dispatch.public.probeSha256 = probes[report.profile];\n\t\treport.dispatch.public.observed = structuredClone(finContainerEntryExpected);\n",
+          "start": 8203
+        },
+        {
+          "current": "\t\t\thost.processId = 42;\n\t\t\thost.jvmExit = { schemaVersion: 1, kind: \"gdb-exit\", pid: 42, code: 0 };\n",
+          "previous": "\t\t\treport.dispatch.public.scriptSha256 = sources.extractedScript;\n\t\t\treport.dispatch.public.processId = 42;\n\t\t\treport.dispatch.public.jvmExit = { schemaVersion: 1, kind: \"gdb-exit\", pid: 42, code: 0 };\n",
+          "start": 8495
+        }
+      ],
+      "path": "tests/fin-container-entry-ci.test.mjs",
+      "previousSha256": "f943ecad5b258a2acdb3fb7d8842e47bd8fd9fb6370089f2cb12bf4cff3b237f"
+    }
+  ],
+  "validation": {
+    "checkedJavaScriptTypecheck": "passed",
+    "finContainerEntryCi": {
+      "fail": 0,
+      "pass": 7,
+      "tests": 7
+    },
+    "focusedEslint": "passed"
+  }
+}
