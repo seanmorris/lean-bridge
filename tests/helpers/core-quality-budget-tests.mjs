@@ -460,8 +460,7 @@ test("Core compiler prerequisites follow the selected behavior tests", async () 
 
 test("history inventory checks reuse the authenticated type-surface pass", async () => {
 	const paths = [
-		"tests/hosted-container-inventory.test.mjs"
-		, "tests/native-edge-array-harness-history.test.mjs"
+		"tests/native-edge-array-harness-history.test.mjs"
 		, "tests/perl-relocated-promotion.test.mjs"
 		, "tests/reviewed-fin-refusal-history.test.mjs"
 		, "tests/wasm-ci-array-history.test.mjs"
@@ -482,6 +481,23 @@ test("history inventory checks reuse the authenticated type-surface pass", async
 			, /sha256\(await readFile\(file[.]path\)\), file[.]sha256/u
 			, `${path}: do not rehash the complete live corpus`);
 	}
+
+	const producerPath = "tests/hosted-container-inventory.test.mjs";
+	const producerSource = await readFile(producerPath, "utf8");
+	assert.match(producerSource
+		, /import \{ typeSurfaceContractsAtProducer \} from "[.]\/helpers\/producer-source[.]mjs";/u
+		, `${producerPath}: reuse the shared authenticated producer reader`);
+	assert.match(producerSource
+		, /typeSurfaceContractsAtProducer\(\s*hostedContainerInventoryPredecessor\s*\)/u
+		, `${producerPath}: historical classification uses producer contracts`);
+	assert.doesNotMatch(producerSource, /await readTypeSurface\(\)/u
+		, `${producerPath}: historical classification must not use live contracts`);
+	assert.doesNotMatch(producerSource
+		, /git", \["show", `\$\{revision\}:/u
+		, `${producerPath}: do not duplicate the producer reader`);
+	assert.doesNotMatch(producerSource
+		, /sha256\(await readFile\(file[.]path\)\), file[.]sha256/u
+		, `${producerPath}: do not rehash the complete live corpus`);
 });
 
 test("inherited-record history reads its immutable record endpoint", async () => {

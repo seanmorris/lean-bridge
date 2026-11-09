@@ -16,14 +16,8 @@ import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-histo
 import { beforeWasmEntryControlsSource } from "./helpers/wasm-entry-controls-source-history.mjs";
 import { assertHostedContainerInventory, assertHostedContainerReferences, hostedContainerCounterScope, hostedContainerObservationIds, hostedContainerReferences, hostedContainerSelectionIds, supplementHostedContainerInventory } from "./helpers/hosted-container-inventory.mjs";
 import { beforeHostedContainerInventorySource, hostedContainerInventoryChangedPaths, hostedContainerInventoryHistoryPath, hostedContainerInventoryPredecessor, reverseHostedContainerInventoryUpdate } from "./helpers/hosted-container-inventory-source-history.mjs";
+import { typeSurfaceContractsAtProducer } from "./helpers/producer-source.mjs";
 import { sourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource } from "./helpers/source-at-fin-history-milestone.mjs";
-
-const contractsAt = revision => ({
-	irSchema: JSON.parse(execFileSync("git", ["show"
-		, `${revision}:schema/binding-ir.schema.json`], { encoding: "utf8" }))
-	, consumers: JSON.parse(execFileSync("git", ["show"
-		, `${revision}:docs/consumer-support.v1.json`], { encoding: "utf8" }))
-});
 
 const snapshot = async () => {
 	const history = JSON.parse(await readFile(hostedContainerInventoryHistoryPath));
@@ -110,7 +104,8 @@ test("hosted container inventory supplements exactly four existing observations 
 		}
 		assert.deepEqual(item.limitations, [...old.limitations, hostedContainerCounterScope]);
 	}
-	const contracts = contractsAt(hostedContainerInventoryPredecessor);
+	const contracts = typeSurfaceContractsAtProducer(
+		hostedContainerInventoryPredecessor);
 	const states = inventory => typeSurfaceCells(inventory, contracts).map(cell => [cell.id, Object.fromEntries(Object.entries(cell.stages).map(([key, value]) => [key, value.state]))]);
 	assert.deepEqual(states(current), states(previous));
 	assert.equal(classifyRepositoryTest("tests/hosted-container-inventory.test.mjs"), "contract");
