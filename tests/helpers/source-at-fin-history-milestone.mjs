@@ -5,7 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { authenticateProducerSources } from "./producer-source.mjs";
@@ -23,6 +23,93 @@ const maxHistorySourceBytes = 64 * 1024 * 1024;
 let nextReaderId = 1;
 let retainedHistorySourceBytes = 0;
 let retainedRevisionSourceBytes = 0;
+let revisionBatch;
+let revisionBatchTail = Promise.resolve();
+
+const setRevisionBatchReferenced = (batch, referenced) => {
+	const method = referenced ? "ref" : "unref";
+	for(const handle of [batch.child, batch.child.stdin
+		, batch.child.stdout, batch.child.stderr])
+		handle[method]?.();
+};
+
+const createRevisionBatch = () => {
+	const child = spawn("git", ["-c", "core.deltaBaseCacheLimit=512m"
+		, "cat-file", "--batch"], { stdio: ["pipe", "pipe", "pipe"] });
+	const output = child.stdout[Symbol.asyncIterator]();
+	const batch = {
+		buffer: Buffer.alloc(0), child, closed: false, error: "", output
+	};
+	child.stderr.on("data", chunk => {
+		if(batch.error.length < 16 * 1024) batch.error += chunk.toString();
+	});
+	child.once("exit", () => { batch.closed = true; });
+	child.once("error", error => {
+		batch.closed = true; batch.error += error.message;
+	});
+	setRevisionBatchReferenced(batch, false);
+	return batch;
+};
+
+const appendRevisionBatchOutput = async batch => {
+	const next = await batch.output.next();
+	assert.equal(next.done, false
+		, `git cat-file ended before its response: ${batch.error.trim()}`);
+	batch.buffer = batch.buffer.length === 0
+		? next.value : Buffer.concat([batch.buffer, next.value]);
+};
+
+const revisionBatchLine = async batch => {
+	let newline = batch.buffer.indexOf(10);
+	while(newline < 0)
+	{
+		await appendRevisionBatchOutput(batch);
+		newline = batch.buffer.indexOf(10);
+	}
+	const line = batch.buffer.subarray(0, newline).toString("utf8");
+	batch.buffer = batch.buffer.subarray(newline + 1);
+	return line;
+};
+
+const revisionBatchBytes = async (batch, length) => {
+	while(batch.buffer.length < length + 1)
+		await appendRevisionBatchOutput(batch);
+	const value = batch.buffer.subarray(0, length);
+	assert.equal(batch.buffer[length], 10, "git cat-file response delimiter");
+	batch.buffer = batch.buffer.subarray(length + 1);
+	return value;
+};
+
+const sourceAtRevisionBatch = (revision, path) => {
+	const request = async () => {
+		if(revisionBatch?.closed) revisionBatch = undefined;
+		revisionBatch ??= createRevisionBatch();
+		const batch = revisionBatch;
+		setRevisionBatchReferenced(batch, true);
+		try
+		{
+			const object = `${revision}:${path}`;
+			assert.doesNotMatch(object, /[\0\r\n]/u);
+			await new Promise((resolve, reject) => batch.child.stdin.write(
+				`${object}\n`, error => error ? reject(error) : resolve()
+			));
+			const header = await revisionBatchLine(batch);
+			if(header === `${object} missing`) return undefined;
+			const match = /^([0-9a-f]{40,64}) blob ([0-9]+)$/u.exec(header);
+			assert.ok(match, `Unexpected git cat-file response: ${header}`);
+			const length = Number(match[2]);
+			assert.ok(Number.isSafeInteger(length) && length >= 0);
+			return (await revisionBatchBytes(batch, length)).toString("utf8");
+		}
+		finally
+		{
+			setRevisionBatchReferenced(batch, false);
+		}
+	};
+	const result = revisionBatchTail.then(request, request);
+	revisionBatchTail = result.then(() => undefined, () => undefined);
+	return result;
+};
 
 const historyRecordCommit = historyPath => {
 	if(!historyRecordCommits.has(historyPath))
@@ -163,7 +250,7 @@ export const sourceAtFinHistoryRecordSource = async (
 		const recordCommit = historyRecordCommit(historyPath);
 		const source = recordCommit === undefined
 			? await sourceAtFinHistoryMilestone(path, expected, reader)
-			: sourceAtRevision(recordCommit, path);
+			: await sourceAtRevisionBatch(recordCommit, path);
 		assert.equal(typeof source, "string", `${historyPath}: missing ${path}`);
 		assert.equal(sha256(source), expected, path);
 		if(reader !== undefined)
@@ -198,8 +285,8 @@ export const sourceAtFinHistoryRevision = async (
 		"revision-source", revision, path, expected
 		, reader === undefined ? 0 : readerIds.get(reader)
 	]);
-	return cachedHistorySource(key, () => {
-		const source = sourceAtRevision(revision, path);
+	return cachedHistorySource(key, async () => {
+		const source = await sourceAtRevisionBatch(revision, path);
 		assert.equal(typeof source, "string", `${revision}: missing ${path}`);
 		assert.equal(sha256(source), expected, path);
 		if(reader !== undefined)

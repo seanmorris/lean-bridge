@@ -392,119 +392,76 @@ import {
 } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { gitSourceHistoryTransition } from "./source-history-stream.mjs";
-import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
+import {
+	sourceAtFinHistoryRecord, sourceAtFinHistoryRecordSource
+	, sourceAtFinHistoryRevision
+} from "./source-at-fin-history-milestone.mjs";
 
 const git = arguments_ => execFileSync("git", arguments_
 	, { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 });
-const readCoreHistoricalEvidenceReuse = async () => JSON.parse(
-	await readFile(coreHistoricalEvidenceReuseHistoryPath, "utf8")
-);
-const readCoreHistoricalEvidenceReuseLivePinRepair = async () => JSON.parse(
-	await readFile(coreHistoricalEvidenceReuseLivePinRepairHistoryPath, "utf8")
-);
-const readCoreExactHeadMatrixRepair = async () => JSON.parse(
-	await readFile(coreExactHeadMatrixRepairHistoryPath, "utf8")
-);
-const readCoreExactHeadHostedStaticRepair = async () => JSON.parse(
-	await readFile(coreExactHeadHostedStaticRepairHistoryPath, "utf8")
-);
-const readCoreExactHeadHostedReplayRepair = async () => JSON.parse(
-	await readFile(coreExactHeadHostedReplayRepairHistoryPath, "utf8")
-);
-const readCoreInheritedRecordTypeSurfaceBatch = async () => JSON.parse(
-	await readFile(coreInheritedRecordTypeSurfaceBatchHistoryPath, "utf8")
-);
-const readCoreRecursiveCallableEvidencePinRepair = async () => JSON.parse(
-	await readFile(coreRecursiveCallableEvidencePinRepairHistoryPath, "utf8")
-);
-const readCoreRecursiveCallableReplayBound = async () => JSON.parse(
-	await readFile(coreRecursiveCallableReplayBoundHistoryPath, "utf8")
-);
-const readCoreLegacyOwnedEvidenceReplayBound = async () => JSON.parse(
-	await readFile(coreLegacyOwnedEvidenceReplayBoundHistoryPath, "utf8")
-);
-const readCoreCallbackEvidenceReplayBound = async () => JSON.parse(
-	await readFile(coreCallbackEvidenceReplayBoundHistoryPath, "utf8")
-);
-const readCoreInheritedRecordReplayBound = async () => JSON.parse(
-	await readFile(coreInheritedRecordReplayBoundHistoryPath, "utf8")
-);
-const readCoreReplayIntegrationEndpointRepair = async () => JSON.parse(
-	await readFile(coreReplayIntegrationEndpointRepairHistoryPath, "utf8")
-);
-const readCoreExactHeadReplayRepair = async () => JSON.parse(
-	await readFile(coreExactHeadReplayRepairHistoryPath, "utf8")
-);
-const readRecurringAcceptanceDocumentation = async () => JSON.parse(
-	await readFile(recurringAcceptanceDocumentationHistoryPath, "utf8")
-);
-const readBoundedRecurringAcceptanceSweep = async () => JSON.parse(
-	await readFile(boundedRecurringAcceptanceSweepHistoryPath, "utf8")
-);
-const readCoreExactHeadValidationRepair = async () => JSON.parse(
-	await readFile(coreExactHeadValidationRepairHistoryPath, "utf8")
-);
-const readDefaultBranchCiTriggerBudget = async () => JSON.parse(
-	await readFile(defaultBranchCiTriggerBudgetHistoryPath, "utf8")
-);
-const readCoreUniqueTypeSurfaceAuthentication = async () => JSON.parse(
-	await readFile(coreUniqueTypeSurfaceAuthenticationHistoryPath, "utf8")
-);
-const readCoreHistoricalAdditionCheckoutRepair = async () => JSON.parse(
-	await readFile(coreHistoricalAdditionCheckoutRepairHistoryPath, "utf8")
-);
-const readCoreTypeSurfaceSinglePass = async () => JSON.parse(
-	await readFile(coreTypeSurfaceSinglePassHistoryPath, "utf8")
-);
-const readCoreDocumentationEvidenceClosureRepair = async () => JSON.parse(
-	await readFile(coreDocumentationEvidenceClosureRepairHistoryPath, "utf8")
-);
-const readCoreBrowserWorkflowEvidencePinRepair = async () => JSON.parse(
-	await readFile(coreBrowserWorkflowEvidencePinRepairHistoryPath, "utf8")
-);
-const readCoreTypeSurfaceEvidenceClosureRepair = async () => JSON.parse(
-	await readFile(coreTypeSurfaceEvidenceClosureRepairHistoryPath, "utf8")
-);
-const readCoreSparseConeModeRepair = async () => JSON.parse(await readFile(
-	coreSparseConeModeRepairHistoryPath, "utf8"));
-const readCoreContractEvidenceCheckout = async () => JSON.parse(await readFile(
-	coreContractEvidenceCheckoutHistoryPath, "utf8"));
-const readNominalPrimitiveSubtypeSparseCheckout = async () =>
-	JSON.parse(await readFile(
-		nominalPrimitiveSubtypeSparseCheckoutHistoryPath, "utf8"));
-const readStaticSparseCheckout = async () => JSON.parse(await readFile(
-	coreStaticSparseCheckoutHistoryPath, "utf8"
-));
-const readStaticHistoryDeferral = async () => JSON.parse(await readFile(
-	coreStaticHistoryDeferralHistoryPath, "utf8"
-));
-const readOwnedReviewedExactStopRepair = async () => JSON.parse(await readFile(
-	coreOwnedReviewedExactStopRepairHistoryPath, "utf8"
-));
-const readWitExactStopRepair = async () => JSON.parse(await readFile(
-	coreWitExactStopRepairHistoryPath, "utf8"
-));
-const read = async () => JSON.parse(await readFile(
-	coreHistoricalEvidenceReplayHistoryPath, "utf8"
-));
-const readRuntimeBudgetLivePinRepair = async () => JSON.parse(await readFile(
-	coreRuntimeBudgetLivePinRepairHistoryPath, "utf8"
-));
-const readLivePinRepair = async () => JSON.parse(await readFile(
-	coreExactHeadLivePinRepairHistoryPath, "utf8"
-));
-const readWitBorrowProducerReplay = async () => JSON.parse(await readFile(
-	coreWitBorrowProducerReplayHistoryPath, "utf8"
-));
-const readReceiverCiProducerReplay = async () => JSON.parse(await readFile(
-	coreReceiverCiProducerReplayHistoryPath, "utf8"
-));
-const readWitBorrowStopBoundary = async () => JSON.parse(await readFile(
-	coreWitBorrowStopBoundaryHistoryPath, "utf8"
-));
-const readReceiverCiStopBoundary = async () => JSON.parse(await readFile(
-	coreReceiverCiStopBoundaryHistoryPath, "utf8"
-));
+const historyPathByRecord = new WeakMap();
+const readerByEndpoint = new WeakMap();
+const readHistoryRecord = async path => {
+	const record = JSON.parse(await readFile(path, "utf8"));
+	historyPathByRecord.set(record, path);
+	return record;
+};
+const sourceAtRecordedCurrent = (record, endpoint, reader = undefined) => {
+	assert.equal(typeof historyPathByRecord.get(record), "string");
+	if(reader !== undefined) readerByEndpoint.set(endpoint, reader);
+	const implemented = record.updates?.includes(endpoint)
+		|| record.implementationAdditions?.includes(endpoint);
+	return implemented
+		? sourceAtFinHistoryRevision(record.implementationCommit
+			, endpoint.path, endpoint.currentSha256, reader)
+		: sourceAtFinHistoryRecordSource(historyPathByRecord.get(record)
+			, endpoint.path, endpoint.currentSha256, reader);
+};
+const beforeRecordedCurrent = (record, endpoint, current, expected) => {
+	assert.ok(record.updates?.includes(endpoint)
+		|| record.integrationUpdates?.includes(endpoint));
+	const normalize = readerByEndpoint.get(endpoint);
+	assert.equal(typeof normalize, "function");
+	return normalize(endpoint.path, current, expected);
+};
+const reader = path => () => readHistoryRecord(path);
+const readCoreHistoricalEvidenceReuse = reader(coreHistoricalEvidenceReuseHistoryPath);
+const readCoreHistoricalEvidenceReuseLivePinRepair = reader(coreHistoricalEvidenceReuseLivePinRepairHistoryPath);
+const readCoreExactHeadMatrixRepair = reader(coreExactHeadMatrixRepairHistoryPath);
+const readCoreExactHeadHostedStaticRepair = reader(coreExactHeadHostedStaticRepairHistoryPath);
+const readCoreExactHeadHostedReplayRepair = reader(coreExactHeadHostedReplayRepairHistoryPath);
+const readCoreInheritedRecordTypeSurfaceBatch = reader(coreInheritedRecordTypeSurfaceBatchHistoryPath);
+const readCoreRecursiveCallableEvidencePinRepair = reader(coreRecursiveCallableEvidencePinRepairHistoryPath);
+const readCoreRecursiveCallableReplayBound = reader(coreRecursiveCallableReplayBoundHistoryPath);
+const readCoreLegacyOwnedEvidenceReplayBound = reader(coreLegacyOwnedEvidenceReplayBoundHistoryPath);
+const readCoreCallbackEvidenceReplayBound = reader(coreCallbackEvidenceReplayBoundHistoryPath);
+const readCoreInheritedRecordReplayBound = reader(coreInheritedRecordReplayBoundHistoryPath);
+const readCoreReplayIntegrationEndpointRepair = reader(coreReplayIntegrationEndpointRepairHistoryPath);
+const readCoreExactHeadReplayRepair = reader(coreExactHeadReplayRepairHistoryPath);
+const readRecurringAcceptanceDocumentation = reader(recurringAcceptanceDocumentationHistoryPath);
+const readBoundedRecurringAcceptanceSweep = reader(boundedRecurringAcceptanceSweepHistoryPath);
+const readCoreExactHeadValidationRepair = reader(coreExactHeadValidationRepairHistoryPath);
+const readDefaultBranchCiTriggerBudget = reader(defaultBranchCiTriggerBudgetHistoryPath);
+const readCoreUniqueTypeSurfaceAuthentication = reader(coreUniqueTypeSurfaceAuthenticationHistoryPath);
+const readCoreHistoricalAdditionCheckoutRepair = reader(coreHistoricalAdditionCheckoutRepairHistoryPath);
+const readCoreTypeSurfaceSinglePass = reader(coreTypeSurfaceSinglePassHistoryPath);
+const readCoreDocumentationEvidenceClosureRepair = reader(coreDocumentationEvidenceClosureRepairHistoryPath);
+const readCoreBrowserWorkflowEvidencePinRepair = reader(coreBrowserWorkflowEvidencePinRepairHistoryPath);
+const readCoreTypeSurfaceEvidenceClosureRepair = reader(coreTypeSurfaceEvidenceClosureRepairHistoryPath);
+const readCoreSparseConeModeRepair = reader(coreSparseConeModeRepairHistoryPath);
+const readCoreContractEvidenceCheckout = reader(coreContractEvidenceCheckoutHistoryPath);
+const readNominalPrimitiveSubtypeSparseCheckout = reader(nominalPrimitiveSubtypeSparseCheckoutHistoryPath);
+const readStaticSparseCheckout = reader(coreStaticSparseCheckoutHistoryPath);
+const readStaticHistoryDeferral = reader(coreStaticHistoryDeferralHistoryPath);
+const readOwnedReviewedExactStopRepair = reader(coreOwnedReviewedExactStopRepairHistoryPath);
+const readWitExactStopRepair = reader(coreWitExactStopRepairHistoryPath);
+const read = reader(coreHistoricalEvidenceReplayHistoryPath);
+const readRuntimeBudgetLivePinRepair = reader(coreRuntimeBudgetLivePinRepairHistoryPath);
+const readLivePinRepair = reader(coreExactHeadLivePinRepairHistoryPath);
+const readWitBorrowProducerReplay = reader(coreWitBorrowProducerReplayHistoryPath);
+const readReceiverCiProducerReplay = reader(coreReceiverCiProducerReplayHistoryPath);
+const readWitBorrowStopBoundary = reader(coreWitBorrowStopBoundaryHistoryPath);
+const readReceiverCiStopBoundary = reader(coreReceiverCiStopBoundaryHistoryPath);
 
 test("Core historical-reuse live-pin repair records its exact change", async () => {
 	const record = await readCoreHistoricalEvidenceReuseLivePinRepair();
@@ -558,26 +515,22 @@ test("Core historical-reuse live-pin repair reverses every transition", async ()
 	const record = await readCoreHistoricalEvidenceReuseLivePinRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreHistoricalEvidenceReuseLivePinRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReuseLivePinRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreHistoricalEvidenceReuseLivePinRepairImplementation
 			: coreHistoricalEvidenceReuseLivePinRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreHistoricalEvidenceReuseLivePinRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 });
 
 test("Core historical-reuse live-pin repair rejects altered transitions", async () => {
-	const update = (await readCoreHistoricalEvidenceReuseLivePinRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreHistoricalEvidenceReuseLivePinRepairSource);
+	const record = await readCoreHistoricalEvidenceReuseLivePinRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReuseLivePinRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -631,26 +584,22 @@ test("Core historical-evidence reuse reverses every transition", async () => {
 	const record = await readCoreHistoricalEvidenceReuse();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreHistoricalEvidenceReuseSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReuseSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreHistoricalEvidenceReuseImplementation
 			: coreHistoricalEvidenceReusePredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreHistoricalEvidenceReuseUpdate(current, update)
 			, previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 });
 
 test("Core historical-evidence reuse rejects altered transitions", async () => {
-	const update = (await readCoreHistoricalEvidenceReuse()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreHistoricalEvidenceReuseSource);
+	const record = await readCoreHistoricalEvidenceReuse();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReuseSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -704,26 +653,22 @@ test("Core exact-head matrix repair reverses every transition", async () => {
 	const record = await readCoreExactHeadMatrixRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreExactHeadMatrixRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadMatrixRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreExactHeadMatrixRepairImplementation
 			: coreExactHeadMatrixRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreExactHeadMatrixRepairUpdate(current, update)
 			, previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 });
 
 test("Core exact-head matrix repair rejects altered transitions", async () => {
-	const update = (await readCoreExactHeadMatrixRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreExactHeadMatrixRepairSource);
+	const record = await readCoreExactHeadMatrixRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadMatrixRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -770,28 +715,22 @@ test("Core exact-head hosted static repair reverses every transition", async () 
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
 		const integration = record.integrationUpdates.includes(update);
-		const current = integration
-			? await sourceAtFinHistoryRecordSource(
-				coreExactHeadHostedStaticRepairHistoryPath, update.path
-					, update.currentSha256
-					, beforeCoreExactHeadHostedStaticRepairSource)
-			: await sourceAtFinHistoryRecord(
-				coreExactHeadHostedStaticRepairHistoryPath, update.path
-					, beforeCoreExactHeadHostedStaticRepairSource);
+		const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreExactHeadHostedStaticRepairSource);
 		const base = integration
 			? coreExactHeadHostedStaticRepairImplementation
 			: coreExactHeadHostedStaticRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreExactHeadHostedStaticRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 });
 
 test("Core exact-head hosted static repair rejects altered transitions", async () => {
-	const update = (await readCoreExactHeadHostedStaticRepair()).updates[0];
+	const record = await readCoreExactHeadHostedStaticRepair();
+	const update = record.updates[0];
 	const current = await sourceAtFinHistoryRecord(
 		coreExactHeadHostedStaticRepairHistoryPath, update.path
 		, beforeCoreExactHeadHostedStaticRepairSource);
@@ -844,22 +783,15 @@ test("Core exact-head hosted replay reverses every source transition", async () 
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
 		const integration = record.integrationUpdates.includes(update);
-		const current = integration
-			? await sourceAtFinHistoryRecordSource(
-				coreExactHeadHostedReplayRepairHistoryPath, update.path
-					, update.currentSha256
-					, beforeCoreExactHeadHostedReplayRepairSource)
-			: await sourceAtFinHistoryRecord(
-				coreExactHeadHostedReplayRepairHistoryPath, update.path
-					, beforeCoreExactHeadHostedReplayRepairSource);
+		const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreExactHeadHostedReplayRepairSource);
 		const base = integration
 			? coreExactHeadHostedReplayRepairImplementation
 			: coreExactHeadHostedReplayRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreExactHeadHostedReplayRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of [
@@ -871,7 +803,8 @@ test("Core exact-head hosted replay reverses every source transition", async () 
 });
 
 test("Core exact-head hosted replay rejects altered transitions", async () => {
-	const update = (await readCoreExactHeadHostedReplayRepair()).updates[0];
+	const record = await readCoreExactHeadHostedReplayRepair();
+	const update = record.updates[0];
 	const current = await sourceAtFinHistoryRecord(
 		coreExactHeadHostedReplayRepairHistoryPath, update.path
 		, beforeCoreExactHeadHostedReplayRepairSource);
@@ -928,24 +861,15 @@ test("Core inherited-record type-surface batching reverses every transition", as
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
 		const integration = record.integrationUpdates.includes(update);
-		const current = integration
-			? await sourceAtFinHistoryRecordSource(
-				coreInheritedRecordTypeSurfaceBatchHistoryPath, update.path
-					, update.currentSha256
-					, beforeCoreInheritedRecordTypeSurfaceBatchSource
-			)
-			: await sourceAtFinHistoryRecord(
-				coreInheritedRecordTypeSurfaceBatchHistoryPath, update.path
-					, beforeCoreInheritedRecordTypeSurfaceBatchSource
-			);
+		const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreInheritedRecordTypeSurfaceBatchSource);
 		const base = integration
 			? coreInheritedRecordTypeSurfaceBatchImplementation
 			: coreInheritedRecordTypeSurfaceBatchPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreInheritedRecordTypeSurfaceBatchUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
@@ -956,7 +880,8 @@ test("Core inherited-record type-surface batching reverses every transition", as
 });
 
 test("Core inherited-record type-surface batching rejects altered transitions", async () => {
-	const update = (await readCoreInheritedRecordTypeSurfaceBatch()).updates[0];
+	const record = await readCoreInheritedRecordTypeSurfaceBatch();
+	const update = record.updates[0];
 	const current = await sourceAtFinHistoryRecord(
 		coreInheritedRecordTypeSurfaceBatchHistoryPath, update.path
 		, beforeCoreInheritedRecordTypeSurfaceBatchSource
@@ -1014,24 +939,15 @@ test("Core recursive-callable evidence-pin repair reverses every transition", as
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
 		const integration = record.integrationUpdates.includes(update);
-		const current = integration
-			? await sourceAtFinHistoryRecordSource(
-				coreRecursiveCallableEvidencePinRepairHistoryPath, update.path
-					, update.currentSha256
-					, beforeCoreRecursiveCallableEvidencePinRepairSource
-			)
-			: await sourceAtFinHistoryRecord(
-				coreRecursiveCallableEvidencePinRepairHistoryPath, update.path
-					, beforeCoreRecursiveCallableEvidencePinRepairSource
-			);
+		const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreRecursiveCallableEvidencePinRepairSource);
 		const base = integration
 			? coreRecursiveCallableEvidencePinRepairImplementation
 			: coreRecursiveCallableEvidencePinRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreRecursiveCallableEvidencePinRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
@@ -1042,7 +958,8 @@ test("Core recursive-callable evidence-pin repair reverses every transition", as
 });
 
 test("Core recursive-callable evidence-pin repair rejects altered transitions", async () => {
-	const update = (await readCoreRecursiveCallableEvidencePinRepair()).updates[0];
+	const record = await readCoreRecursiveCallableEvidencePinRepair();
+	const update = record.updates[0];
 	const current = await sourceAtFinHistoryRecord(
 		coreRecursiveCallableEvidencePinRepairHistoryPath, update.path
 		, beforeCoreRecursiveCallableEvidencePinRepairSource
@@ -1100,24 +1017,15 @@ test("Core recursive-callable replay bound reverses every transition", async () 
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
 		const integration = record.integrationUpdates.includes(update);
-		const current = integration
-			? await sourceAtFinHistoryRecordSource(
-				coreRecursiveCallableReplayBoundHistoryPath, update.path
-				, update.currentSha256
-				, beforeCoreRecursiveCallableReplayBoundSource
-			)
-			: await sourceAtFinHistoryRecord(
-				coreRecursiveCallableReplayBoundHistoryPath, update.path
-				, beforeCoreRecursiveCallableReplayBoundSource
-			);
+		const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreRecursiveCallableReplayBoundSource);
 		const base = integration
 			? coreRecursiveCallableReplayBoundImplementation
 			: coreRecursiveCallableReplayBoundPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreRecursiveCallableReplayBoundUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
@@ -1128,7 +1036,8 @@ test("Core recursive-callable replay bound reverses every transition", async () 
 });
 
 test("Core recursive-callable replay bound rejects altered transitions", async () => {
-	const update = (await readCoreRecursiveCallableReplayBound()).updates[0];
+	const record = await readCoreRecursiveCallableReplayBound();
+	const update = record.updates[0];
 	const current = await sourceAtFinHistoryRecord(
 		coreRecursiveCallableReplayBoundHistoryPath, update.path
 		, beforeCoreRecursiveCallableReplayBoundSource
@@ -1186,24 +1095,15 @@ test("Core legacy owned-evidence replay bound reverses every transition", async 
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
 		const integration = record.integrationUpdates.includes(update);
-		const current = integration
-			? await sourceAtFinHistoryRecordSource(
-				coreLegacyOwnedEvidenceReplayBoundHistoryPath, update.path
-				, update.currentSha256
-				, beforeCoreLegacyOwnedEvidenceReplayBoundSource
-			)
-			: await sourceAtFinHistoryRecord(
-				coreLegacyOwnedEvidenceReplayBoundHistoryPath, update.path
-				, beforeCoreLegacyOwnedEvidenceReplayBoundSource
-			);
+		const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreLegacyOwnedEvidenceReplayBoundSource);
 		const base = integration
 			? coreLegacyOwnedEvidenceReplayBoundImplementation
 			: coreLegacyOwnedEvidenceReplayBoundPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreLegacyOwnedEvidenceReplayBoundUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
@@ -1214,7 +1114,8 @@ test("Core legacy owned-evidence replay bound reverses every transition", async 
 });
 
 test("Core legacy owned-evidence replay bound rejects altered transitions", async () => {
-	const update = (await readCoreLegacyOwnedEvidenceReplayBound()).updates[0];
+	const record = await readCoreLegacyOwnedEvidenceReplayBound();
+	const update = record.updates[0];
 	const current = await sourceAtFinHistoryRecord(
 		coreLegacyOwnedEvidenceReplayBoundHistoryPath, update.path
 		, beforeCoreLegacyOwnedEvidenceReplayBoundSource
@@ -1272,24 +1173,15 @@ test("Core callback-evidence replay bound reverses every transition", async () =
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
 		const integration = record.integrationUpdates.includes(update);
-		const current = integration
-			? await sourceAtFinHistoryRecordSource(
-				coreCallbackEvidenceReplayBoundHistoryPath, update.path
-				, update.currentSha256
-				, beforeCoreCallbackEvidenceReplayBoundSource
-			)
-			: await sourceAtFinHistoryRecord(
-				coreCallbackEvidenceReplayBoundHistoryPath, update.path
-				, beforeCoreCallbackEvidenceReplayBoundSource
-			);
+		const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreCallbackEvidenceReplayBoundSource);
 		const base = integration
 			? coreCallbackEvidenceReplayBoundImplementation
 			: coreCallbackEvidenceReplayBoundPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreCallbackEvidenceReplayBoundUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
@@ -1300,7 +1192,8 @@ test("Core callback-evidence replay bound reverses every transition", async () =
 });
 
 test("Core callback-evidence replay bound rejects altered transitions", async () => {
-	const update = (await readCoreCallbackEvidenceReplayBound()).updates[0];
+	const record = await readCoreCallbackEvidenceReplayBound();
+	const update = record.updates[0];
 	const current = await sourceAtFinHistoryRecord(
 		coreCallbackEvidenceReplayBoundHistoryPath, update.path
 		, beforeCoreCallbackEvidenceReplayBoundSource
@@ -1358,24 +1251,15 @@ test("Core inherited-record replay bound reverses every transition", async () =>
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
 		const integration = record.integrationUpdates.includes(update);
-		const current = integration
-			? await sourceAtFinHistoryRecordSource(
-				coreInheritedRecordReplayBoundHistoryPath, update.path
-				, update.currentSha256
-				, beforeCoreInheritedRecordReplayBoundSource
-			)
-			: await sourceAtFinHistoryRecord(
-				coreInheritedRecordReplayBoundHistoryPath, update.path
-				, beforeCoreInheritedRecordReplayBoundSource
-			);
+		const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreInheritedRecordReplayBoundSource);
 		const base = integration
 			? coreInheritedRecordReplayBoundImplementation
 			: coreInheritedRecordReplayBoundPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreInheritedRecordReplayBoundUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
@@ -1386,7 +1270,8 @@ test("Core inherited-record replay bound reverses every transition", async () =>
 });
 
 test("Core inherited-record replay bound rejects altered transitions", async () => {
-	const update = (await readCoreInheritedRecordReplayBound()).updates[0];
+	const record = await readCoreInheritedRecordReplayBound();
+	const update = record.updates[0];
 	const current = await sourceAtFinHistoryRecord(
 		coreInheritedRecordReplayBoundHistoryPath, update.path
 		, beforeCoreInheritedRecordReplayBoundSource
@@ -1444,24 +1329,15 @@ test("Core replay integration endpoint repair reverses every transition", async 
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
 		const integration = record.integrationUpdates.includes(update);
-		const current = integration
-			? await sourceAtFinHistoryRecordSource(
-				coreReplayIntegrationEndpointRepairHistoryPath, update.path
-				, update.currentSha256
-				, beforeCoreReplayIntegrationEndpointRepairSource
-			)
-			: await sourceAtFinHistoryRecord(
-				coreReplayIntegrationEndpointRepairHistoryPath, update.path
-				, beforeCoreReplayIntegrationEndpointRepairSource
-			);
+		const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreReplayIntegrationEndpointRepairSource);
 		const base = integration
 			? coreReplayIntegrationEndpointRepairImplementation
 			: coreReplayIntegrationEndpointRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreReplayIntegrationEndpointRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
@@ -1472,7 +1348,8 @@ test("Core replay integration endpoint repair reverses every transition", async 
 });
 
 test("Core replay integration endpoint repair rejects altered transitions", async () => {
-	const update = (await readCoreReplayIntegrationEndpointRepair()).updates[0];
+	const record = await readCoreReplayIntegrationEndpointRepair();
+	const update = record.updates[0];
 	const current = await sourceAtFinHistoryRecord(
 		coreReplayIntegrationEndpointRepairHistoryPath, update.path
 		, beforeCoreReplayIntegrationEndpointRepairSource
@@ -1532,23 +1409,15 @@ test("exact-head historical replay repair reverses every transition", async () =
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
 		const integration = record.integrationUpdates.includes(update);
-		const current = integration
-			? await sourceAtFinHistoryRecordSource(
-				coreExactHeadReplayRepairHistoryPath, update.path
-				, update.currentSha256, beforeCoreExactHeadReplayRepairSource
-			)
-			: await sourceAtFinHistoryRecord(
-				coreExactHeadReplayRepairHistoryPath, update.path
-				, beforeCoreExactHeadReplayRepairSource
-			);
+		const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreExactHeadReplayRepairSource);
 		const base = integration
 			? coreExactHeadReplayRepairImplementation
 			: coreExactHeadReplayRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreExactHeadReplayRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
@@ -1559,7 +1428,8 @@ test("exact-head historical replay repair reverses every transition", async () =
 });
 
 test("exact-head historical replay repair rejects altered transitions", async () => {
-	const update = (await readCoreExactHeadReplayRepair()).updates[0];
+	const record = await readCoreExactHeadReplayRepair();
+	const update = record.updates[0];
 	const current = await sourceAtFinHistoryRecord(
 		coreExactHeadReplayRepairHistoryPath, update.path
 		, beforeCoreExactHeadReplayRepairSource
@@ -1619,30 +1489,25 @@ test("recurring acceptance documentation reverses every transition", async () =>
 	const record = await readRecurringAcceptanceDocumentation();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeRecurringAcceptanceDocumentationSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeRecurringAcceptanceDocumentationSource);
 		const base = record.integrationUpdates.includes(update)
 			? recurringAcceptanceDocumentationImplementation
 			: recurringAcceptanceDocumentationPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseRecurringAcceptanceDocumentationUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
 test("recurring acceptance documentation rejects altered transitions", async () => {
-	const update = (await readRecurringAcceptanceDocumentation()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeRecurringAcceptanceDocumentationSource);
+	const record = await readRecurringAcceptanceDocumentation();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeRecurringAcceptanceDocumentationSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -1701,30 +1566,25 @@ test("bounded recurring acceptance sweep reverses every transition", async () =>
 	const record = await readBoundedRecurringAcceptanceSweep();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeBoundedRecurringAcceptanceSweepSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeBoundedRecurringAcceptanceSweepSource);
 		const base = record.integrationUpdates.includes(update)
 			? boundedRecurringAcceptanceSweepImplementation
 			: boundedRecurringAcceptanceSweepPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseBoundedRecurringAcceptanceSweepUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
 test("bounded recurring acceptance sweep rejects altered transitions", async () => {
-	const update = (await readBoundedRecurringAcceptanceSweep()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeBoundedRecurringAcceptanceSweepSource);
+	const record = await readBoundedRecurringAcceptanceSweep();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeBoundedRecurringAcceptanceSweepSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -1779,30 +1639,25 @@ test("exact-head Core validation repair reverses every transition", async () => 
 	const record = await readCoreExactHeadValidationRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreExactHeadValidationRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadValidationRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreExactHeadValidationRepairImplementation
 			: coreExactHeadValidationRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreExactHeadValidationRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.historyAdditions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
 test("exact-head Core validation repair rejects altered transitions", async () => {
-	const update = (await readCoreExactHeadValidationRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreExactHeadValidationRepairSource);
+	const record = await readCoreExactHeadValidationRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadValidationRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -1867,30 +1722,25 @@ test("default-branch CI trigger budget reverses every transition", async () => {
 	const record = await readDefaultBranchCiTriggerBudget();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeDefaultBranchCiTriggerBudgetSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeDefaultBranchCiTriggerBudgetSource);
 		const base = record.integrationUpdates.includes(update)
 			? defaultBranchCiTriggerBudgetImplementation
 			: defaultBranchCiTriggerBudgetPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseDefaultBranchCiTriggerBudgetUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of [...record.additions, ...record.historyAdditions])
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
 test("default-branch CI trigger budget rejects altered transitions", async () => {
-	const update = (await readDefaultBranchCiTriggerBudget()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeDefaultBranchCiTriggerBudgetSource);
+	const record = await readDefaultBranchCiTriggerBudget();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeDefaultBranchCiTriggerBudgetSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -1946,30 +1796,25 @@ test("Core unique type-surface authentication reverses transitions", async () =>
 	const record = await readCoreUniqueTypeSurfaceAuthentication();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreUniqueTypeSurfaceAuthenticationSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreUniqueTypeSurfaceAuthenticationSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreUniqueTypeSurfaceAuthenticationImplementation
 			: coreUniqueTypeSurfaceAuthenticationPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreUniqueTypeSurfaceAuthenticationUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
 test("Core unique type-surface authentication rejects alterations", async () => {
-	const update = (await readCoreUniqueTypeSurfaceAuthentication()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreUniqueTypeSurfaceAuthenticationSource);
+	const record = await readCoreUniqueTypeSurfaceAuthentication();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreUniqueTypeSurfaceAuthenticationSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2023,30 +1868,25 @@ test("Core historical-addition checkout repair reverses transitions", async () =
 	const record = await readCoreHistoricalAdditionCheckoutRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreHistoricalAdditionCheckoutRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalAdditionCheckoutRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreHistoricalAdditionCheckoutRepairImplementation
 			: coreHistoricalAdditionCheckoutRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreHistoricalAdditionCheckoutRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
 test("Core historical-addition checkout repair rejects alterations", async () => {
-	const update = (await readCoreHistoricalAdditionCheckoutRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreHistoricalAdditionCheckoutRepairSource);
+	const record = await readCoreHistoricalAdditionCheckoutRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalAdditionCheckoutRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2099,22 +1939,18 @@ test("Core historical replay reverses every source transition", async () => {
 	const record = await read();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreHistoricalEvidenceReplaySource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReplaySource);
 		const base = record.integrationUpdates.includes(update)
 			? coreHistoricalEvidenceReplayImplementation
 			: coreHistoricalEvidenceReplayPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreHistoricalEvidenceReplayUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
@@ -2137,10 +1973,9 @@ test("Core historical replay binds the immutable producer parents", async () => 
 });
 
 test("Core historical replay rejects altered transitions", async () => {
-	const update = (await read()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreHistoricalEvidenceReplaySource);
+	const record = await read();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreHistoricalEvidenceReplaySource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2200,26 +2035,22 @@ test("exact-head Core live-pin repair records and reverses its range", async () 
 		, coreExactHeadLivePinRepairAddedPaths);
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreExactHeadLivePinRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadLivePinRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreExactHeadLivePinRepairImplementation
 			: coreExactHeadLivePinRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreExactHeadLivePinRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 });
 
 test("exact-head Core live-pin repair rejects altered transitions", async () => {
-	const update = (await readLivePinRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreExactHeadLivePinRepairSource);
+	const record = await readLivePinRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreExactHeadLivePinRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2275,31 +2106,26 @@ test("Core type-surface single-pass reverses every transition", async () => {
 	const record = await readCoreTypeSurfaceSinglePass();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreTypeSurfaceSinglePassSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreTypeSurfaceSinglePassSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreTypeSurfaceSinglePassImplementation
 			: coreTypeSurfaceSinglePassPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreTypeSurfaceSinglePassUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of [
 		...record.implementationAdditions, ...record.additions
-	]) assert.equal(sha256(await sourceAtFinHistoryMilestone(
-		addition.path, addition.currentSha256))
+	]) assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 	, addition.currentSha256, addition.path);
 });
 
 test("Core type-surface single-pass rejects altered transitions", async () => {
-	const update = (await readCoreTypeSurfaceSinglePass()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreTypeSurfaceSinglePassSource);
+	const record = await readCoreTypeSurfaceSinglePass();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreTypeSurfaceSinglePassSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2353,27 +2179,23 @@ test("Core documentation evidence closure reverses every transition", async () =
 	const record = await readCoreDocumentationEvidenceClosureRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreDocumentationEvidenceClosureRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreDocumentationEvidenceClosureRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreDocumentationEvidenceClosureRepairImplementation
 			: coreDocumentationEvidenceClosureRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreDocumentationEvidenceClosureRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 });
 
 test("Core documentation evidence closure rejects altered transitions", async () => {
-	const update
-		= (await readCoreDocumentationEvidenceClosureRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreDocumentationEvidenceClosureRepairSource);
+	const record = await readCoreDocumentationEvidenceClosureRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreDocumentationEvidenceClosureRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2427,31 +2249,26 @@ test("Core browser workflow pin reverses every transition", async () => {
 	const record = await readCoreBrowserWorkflowEvidencePinRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreBrowserWorkflowEvidencePinRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreBrowserWorkflowEvidencePinRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreBrowserWorkflowEvidencePinRepairImplementation
 			: coreBrowserWorkflowEvidencePinRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreBrowserWorkflowEvidencePinRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
 test("Core browser workflow pin rejects altered transitions", async () => {
-	const update
-		= (await readCoreBrowserWorkflowEvidencePinRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreBrowserWorkflowEvidencePinRepairSource);
+	const record = await readCoreBrowserWorkflowEvidencePinRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreBrowserWorkflowEvidencePinRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2505,30 +2322,25 @@ test("Core type-surface closure reverses every transition", async () => {
 	const record = await readCoreTypeSurfaceEvidenceClosureRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreTypeSurfaceEvidenceClosureRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreTypeSurfaceEvidenceClosureRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreTypeSurfaceEvidenceClosureRepairImplementation
 			: coreTypeSurfaceEvidenceClosureRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreTypeSurfaceEvidenceClosureRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
 test("Core type-surface closure rejects altered transitions", async () => {
-	const update = (await readCoreTypeSurfaceEvidenceClosureRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreTypeSurfaceEvidenceClosureRepairSource);
+	const record = await readCoreTypeSurfaceEvidenceClosureRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreTypeSurfaceEvidenceClosureRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2581,30 +2393,25 @@ test("Core sparse cone-mode repair reverses every transition", async () => {
 	const record = await readCoreSparseConeModeRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreSparseConeModeRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreSparseConeModeRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreSparseConeModeRepairImplementation
 			: coreSparseConeModeRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreSparseConeModeRepairUpdate(current, update)
 			, previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
 test("Core sparse cone-mode repair rejects altered transitions", async () => {
-	const update = (await readCoreSparseConeModeRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreSparseConeModeRepairSource);
+	const record = await readCoreSparseConeModeRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreSparseConeModeRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2665,31 +2472,26 @@ test("Core evidence checkout reverses every source transition", async () => {
 	const record = await readCoreContractEvidenceCheckout();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreContractEvidenceCheckoutSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreContractEvidenceCheckoutSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreContractEvidenceCheckoutImplementation
 			: coreContractEvidenceCheckoutPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreContractEvidenceCheckoutUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of [
 		...record.implementationAdditions, ...record.additions
-	]) assert.equal(sha256(await sourceAtFinHistoryMilestone(
-		addition.path, addition.currentSha256))
+	]) assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 	, addition.currentSha256, addition.path);
 });
 
 test("Core evidence checkout rejects altered transitions", async () => {
-	const update = (await readCoreContractEvidenceCheckout()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreContractEvidenceCheckoutSource);
+	const record = await readCoreContractEvidenceCheckout();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreContractEvidenceCheckoutSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2750,23 +2552,19 @@ test("primitive Subtype sparse checkout reverses every transition", async () => 
 	const record = await readNominalPrimitiveSubtypeSparseCheckout();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeNominalPrimitiveSubtypeSparseCheckoutSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeNominalPrimitiveSubtypeSparseCheckoutSource);
 		const base = record.integrationUpdates.includes(update)
 			? nominalPrimitiveSubtypeSparseCheckoutImplementation
 			: nominalPrimitiveSubtypeSparseCheckoutPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseNominalPrimitiveSubtypeSparseCheckoutUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of [
 		...record.implementationAdditions, ...record.additions
-	]) assert.equal(sha256(await sourceAtFinHistoryMilestone(
-		addition.path, addition.currentSha256))
+	]) assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 	, addition.currentSha256, addition.path);
 });
 
@@ -2794,11 +2592,10 @@ test("primitive Subtype acceptance uses one exact bounded history checkout", asy
 });
 
 test("primitive Subtype sparse checkout rejects alteration", async () => {
-	const update
-		= (await readNominalPrimitiveSubtypeSparseCheckout()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeNominalPrimitiveSubtypeSparseCheckoutSource);
+	const record = await readNominalPrimitiveSubtypeSparseCheckout();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(
+		record, update, beforeNominalPrimitiveSubtypeSparseCheckoutSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2848,22 +2645,18 @@ test("Core static sparse checkout reverses every transition", async () => {
 	const record = await readStaticSparseCheckout();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreStaticSparseCheckoutSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreStaticSparseCheckoutSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreStaticSparseCheckoutImplementation
 			: coreStaticSparseCheckoutPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreStaticSparseCheckoutUpdate(current, update)
 			, previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
@@ -2891,9 +2684,10 @@ test("Core static sparse checkout preserves every static source root", () => {
 });
 
 test("Core static sparse checkout rejects alteration", async () => {
-	const update = (await readStaticSparseCheckout()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256, beforeCoreStaticSparseCheckoutSource);
+	const record = await readStaticSparseCheckout();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreStaticSparseCheckoutSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -2940,22 +2734,18 @@ test("Core static-history deferral reverses every transition", async () => {
 	const record = await readStaticHistoryDeferral();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreStaticHistoryDeferralSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreStaticHistoryDeferralSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreStaticHistoryDeferralImplementation
 			: coreStaticHistoryDeferralPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreStaticHistoryDeferralUpdate(current, update)
 			, previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
@@ -2981,9 +2771,10 @@ test("Core static-history deferral preserves the closed contract", () => {
 });
 
 test("Core static-history deferral rejects alteration", async () => {
-	const update = (await readStaticHistoryDeferral()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256, beforeCoreStaticHistoryDeferralSource);
+	const record = await readStaticHistoryDeferral();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreStaticHistoryDeferralSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -3033,22 +2824,18 @@ test("Core owned-reviewed exact-stop reverses every transition", async () => {
 	const record = await readOwnedReviewedExactStopRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreOwnedReviewedExactStopRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreOwnedReviewedExactStopRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreOwnedReviewedExactStopRepairImplementation
 			: coreOwnedReviewedExactStopRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreOwnedReviewedExactStopRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
@@ -3063,10 +2850,9 @@ test("Core owned-reviewed exact-stop selects requested endpoints", () => {
 });
 
 test("Core owned-reviewed exact-stop rejects alteration", async () => {
-	const update = (await readOwnedReviewedExactStopRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreOwnedReviewedExactStopRepairSource);
+	const record = await readOwnedReviewedExactStopRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreOwnedReviewedExactStopRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -3119,22 +2905,18 @@ test("Core WIT exact-stop repair reverses every source transition", async () => 
 	const record = await readWitExactStopRepair();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreWitExactStopRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreWitExactStopRepairSource);
 		const base = record.integrationUpdates.includes(update)
 			? coreWitExactStopRepairImplementation
 			: coreWitExactStopRepairPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreWitExactStopRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
@@ -3150,10 +2932,9 @@ test("Core WIT exact-stop repair selects requested endpoints", () => {
 });
 
 test("Core WIT exact-stop repair rejects alteration", async () => {
-	const update = (await readWitExactStopRepair()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreWitExactStopRepairSource);
+	const record = await readWitExactStopRepair();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreWitExactStopRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -3224,29 +3005,24 @@ test("Core runtime-budget live-pin repair records and reverses its range", async
 		, coreRuntimeBudgetLivePinRepairImplementation), record.updates[0]);
 	for(const update of record.integrationUpdates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreRuntimeBudgetLivePinRepairSource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreRuntimeBudgetLivePinRepairSource);
 		const previous = git(["show"
 			, `${coreRuntimeBudgetLivePinRepairImplementation}:${update.path}`]);
 		assert.equal(reverseCoreRuntimeBudgetLivePinRepairUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256))
+		assert.equal(sha256(await sourceAtRecordedCurrent(record, addition))
 		, addition.currentSha256, addition.path);
 });
 
 test("Core runtime-budget live-pin repair rejects alteration", async () => {
-	const update = (await readRuntimeBudgetLivePinRepair())
-		.integrationUpdates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreRuntimeBudgetLivePinRepairSource);
+	const record = await readRuntimeBudgetLivePinRepair();
+	const update = record.integrationUpdates[0];
+	const current = await sourceAtRecordedCurrent(
+		record, update, beforeCoreRuntimeBudgetLivePinRepairSource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -3295,17 +3071,14 @@ test("Core WIT borrow replay reverses every source transition", async () => {
 	const record = await readWitBorrowProducerReplay();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreWitBorrowProducerReplaySource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreWitBorrowProducerReplaySource);
 		const base = record.integrationUpdates.includes(update)
 			? coreWitBorrowProducerReplayImplementation
 			: coreWitBorrowProducerReplayPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreWitBorrowProducerReplayUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 });
@@ -3323,10 +3096,9 @@ test("Core WIT borrow replay binds the immutable producer", () => {
 });
 
 test("Core WIT borrow replay rejects altered transitions", async () => {
-	const update = (await readWitBorrowProducerReplay()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreWitBorrowProducerReplaySource);
+	const record = await readWitBorrowProducerReplay();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreWitBorrowProducerReplaySource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -3375,17 +3147,14 @@ test("Core receiver-CI replay reverses every source transition", async () => {
 	const record = await readReceiverCiProducerReplay();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreReceiverCiProducerReplaySource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreReceiverCiProducerReplaySource);
 		const base = record.integrationUpdates.includes(update)
 			? coreReceiverCiProducerReplayImplementation
 			: coreReceiverCiProducerReplayPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreReceiverCiProducerReplayUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 });
@@ -3404,10 +3173,9 @@ test("Core receiver-CI replay binds the immutable producer", () => {
 });
 
 test("Core receiver-CI replay rejects altered transitions", async () => {
-	const update = (await readReceiverCiProducerReplay()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreReceiverCiProducerReplaySource);
+	const record = await readReceiverCiProducerReplay();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreReceiverCiProducerReplaySource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -3456,17 +3224,14 @@ test("Core WIT stop boundary reverses every source transition", async () => {
 	const record = await readWitBorrowStopBoundary();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreWitBorrowStopBoundarySource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreWitBorrowStopBoundarySource);
 		const base = record.integrationUpdates.includes(update)
 			? coreWitBorrowStopBoundaryImplementation
 			: coreWitBorrowStopBoundaryPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreWitBorrowStopBoundaryUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 });
@@ -3485,10 +3250,9 @@ test("Core WIT stop boundary selects exact transition endpoints", () => {
 });
 
 test("Core WIT stop boundary rejects altered transitions", async () => {
-	const update = (await readWitBorrowStopBoundary()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreWitBorrowStopBoundarySource);
+	const record = await readWitBorrowStopBoundary();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreWitBorrowStopBoundarySource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
@@ -3537,17 +3301,14 @@ test("Core receiver-CI stop boundary reverses every source transition", async ()
 	const record = await readReceiverCiStopBoundary();
 	for(const update of [...record.updates, ...record.integrationUpdates])
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256
-			, beforeCoreReceiverCiStopBoundarySource);
+		const current = await sourceAtRecordedCurrent(record, update, beforeCoreReceiverCiStopBoundarySource);
 		const base = record.integrationUpdates.includes(update)
 			? coreReceiverCiStopBoundaryImplementation
 			: coreReceiverCiStopBoundaryPredecessor;
 		const previous = git(["show", `${base}:${update.path}`]);
 		assert.equal(reverseCoreReceiverCiStopBoundaryUpdate(
 			current, update), previous, update.path);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous, update.path);
+		assert.equal(beforeRecordedCurrent(record, update, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 });
@@ -3566,10 +3327,9 @@ test("Core receiver-CI stop boundary selects exact transition endpoints", () => 
 });
 
 test("Core receiver-CI stop boundary rejects altered transitions", async () => {
-	const update = (await readReceiverCiStopBoundary()).updates[0];
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256
-		, beforeCoreReceiverCiStopBoundarySource);
+	const record = await readReceiverCiStopBoundary();
+	const update = record.updates[0];
+	const current = await sourceAtRecordedCurrent(record, update, beforeCoreReceiverCiStopBoundarySource);
 	for(const forged of [{ ...update, currentSha256: "0".repeat(64) }
 		, { ...update, previousSha256: "0".repeat(64) }
 		, { ...update, path: "unrelated.mjs" }
