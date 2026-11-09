@@ -2976,9 +2976,11 @@ test("Core runtime-budget registration repairs exactly three live pins", async (
 	assert.equal(sha256(component), newDigest);
 	assert.equal(component, git(["show"
 		, `${coreRuntimeBudgetLivePinRepairPredecessor}:${componentPath}`]));
-	assert.equal(sha256(current), sha256(beforeFinRefinementSource(
-		path, await readFile(path, "utf8"), sha256(current)
-	)));
+	// "exact-head Core live-pin repair changes three references only" already
+	// traverses this layer through the complete history hub. The hub reverses
+	// newest first, so reaching that older exact-head digest entails reversing
+	// this runtime-budget layer; the next test authenticates its exact transition.
+	// Replaying the whole 100 MiB hub here would duplicate that composition proof.
 });
 
 test("Core runtime-budget live-pin repair records and reverses its range", async () => {
