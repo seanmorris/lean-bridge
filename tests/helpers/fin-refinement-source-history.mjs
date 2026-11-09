@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeVo1220FinExitReceiptLayeringRepairSource
+	, vo1220FinExitReceiptLayeringRepairNormalizationPaths
+} from "./vo1220-fin-exit-receipt-layering-repair-source-history.mjs";
+import {
 	beforeVo1220FinObserverFixtureRepairSource
 	, vo1220FinObserverFixtureRepairNormalizationPaths
 } from "./vo1220-fin-observer-fixture-repair-source-history.mjs";
@@ -2747,7 +2751,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220FinObserverFixtureRepairNormalizationPaths
+	...vo1220FinExitReceiptLayeringRepairNormalizationPaths
+	, ...vo1220FinObserverFixtureRepairNormalizationPaths
 	, ...vo1220HostFinPendingExitRepairNormalizationPaths
 	, ...vo1220NativeBudgetLintContractRepairNormalizationPaths
 	, ...vo1220NestedPromotionMemoryBoundPinRepairNormalizationPaths
@@ -4006,7 +4011,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220FinObserverFixtureRepairSource(
+	let stage = beforeVo1220FinExitReceiptLayeringRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220FinObserverFixtureRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

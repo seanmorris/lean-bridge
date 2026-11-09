@@ -1,0 +1,171 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "exitObserverKinds": 2,
+    "measurementSemanticChanges": 0,
+    "runtimeSemanticChanges": 0,
+    "testContractChanges": 1,
+    "uncheckedExitObserverKinds": 0
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [],
+  "discovery": {
+    "downstreamRun": 42522948040,
+    "failedAssertion": "a host process-exit receipt is required",
+    "failedTests": 1,
+    "job": 128864267149,
+    "profile": "jvm"
+  },
+  "exactModel": {
+    "bytes": 16916757,
+    "cells": 1054,
+    "sha256": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "stageEntries": 5270
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-fin-exit-receipt-layering-repair-source-history.mjs",
+      "sha256": "b820e1947e75adef65f1a39ae0414ce93eb2fb5e6b80c0444038b0ea130206ce"
+    },
+    {
+      "path": "tests/helpers/vo1220-fin-exit-receipt-layering-repair-source-history-tests.mjs",
+      "sha256": "b3c4af0ed5499d3413e9ce1464dfac8532f11223d4fd405b0f22756a7b5f9781"
+    },
+    {
+      "path": "tests/helpers/vo1220-fin-exit-receipt-layering-repair-source-history.mjs",
+      "sha256": "550f4cc0bd66fc0629885cb478aa58486ab7047d5e22e857a24bc8ec1526df32"
+    }
+  ],
+  "implementationCommit": "b502a65c1a14fd20ca02ac5dbe7ff80625394616",
+  "integrationCommit": "13d56cf504223906032dabfcc3905f04a33cdd88",
+  "integrationUpdates": [
+    {
+      "currentSha256": "fe04bda0c051508d9dd28a1567ecccb0d8d3678d333311e867adbba046774579",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-fin-exit-receipt-layering-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 258
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "b6a64bc37a9c7a837a2bc30ee0a032da2412c697a7f372eb1c4df4d36047b6bb"
+    },
+    {
+      "currentSha256": "3517d82e3aab8aac5786be711478571a880ee64235540005d5cab27df53d4d1f",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220FinExitReceiptLayeringRepairSource\n\t, vo1220FinExitReceiptLayeringRepairNormalizationPaths\n} from \"./vo1220-fin-exit-receipt-layering-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220FinExitReceiptLayeringRepairNormalizationPaths\n\t, ...vo1220FinObserverFixtureRepairNormalizationPaths\n",
+          "previous": "\t...vo1220FinObserverFixtureRepairNormalizationPaths\n",
+          "start": 243379
+        },
+        {
+          "current": "\tlet stage = beforeVo1220FinExitReceiptLayeringRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220FinObserverFixtureRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220FinObserverFixtureRepairSource(\n",
+          "start": 306308
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "42abb9f628feecbe10132ae2d5087b80f1b181427a66ff4c9d5d40d70bc099d3"
+    }
+  ],
+  "inventorySha256": {
+    "after": "031bf4063b78e1dbded102c8214e2a7b166961e7c68503280cb050f7895d8cc9",
+    "before": "031bf4063b78e1dbded102c8214e2a7b166961e7c68503280cb050f7895d8cc9"
+  },
+  "milestone": "vo1220-fin-exit-receipt-layering-repair-source-v1",
+  "predecessorCommit": "ad5a06a6cbbd03af13349ef99f09c4b4f5806782",
+  "repair": "Make the shared edge assertion select one closed host or JVM exit observer, default ordinary callers to host, require JVM callers to select jvm explicitly, and reject every unknown or unchecked mode. Preserve independent receipt validation, archive bytes, runtime behavior and support claims.",
+  "rootCause": "The JVM-specialized edge observer correctly authenticated jvmExit, then delegated to the shared edge assertion after that assertion had acquired an unconditional ordinary-host processExit requirement. JVM manifests intentionally retain one jvmExit receipt for the extracted process and do not manufacture a duplicate ordinary-host receipt.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "0feac531377d864981dd97df3eb95c1f9f0f86348bc444296093cdcb32cbb8c0",
+      "edits": [
+        {
+          "current": "import { assertFinContainerEdgeObservedExit } from \"./fin-container-edge-jvm-wait.mjs\";\n",
+          "previous": "import { assertFinHostProcessExit } from \"./fin-container-edge-jvm-wait.mjs\";\n",
+          "start": 705
+        },
+        {
+          "current": " * @param options - Exact process-exit observer selected by the caller.\n * @param options.exitObserver - Ordinary fixed-root host or JVM-extracted host.\n",
+          "previous": "",
+          "start": 6904
+        },
+        {
+          "current": "export const assertFinContainerEdgeGdbRun = async (observer, run, rows, { exitObserver = \"host\" } = {}) => {\n",
+          "previous": "export const assertFinContainerEdgeGdbRun = async (observer, run, rows) => {\n",
+          "start": 7061
+        },
+        {
+          "current": "\tassertFinContainerEdgeObservedExit(manifest, manifest.pid, exitObserver);\n",
+          "previous": "\tassertFinHostProcessExit(manifest.processExit, manifest.pid);\n",
+          "start": 8463
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-gdb.mjs",
+      "previousSha256": "a61758eacc737fcc98db1e536be82931f8d297e38dbb4a48a4cbe65e284e8fe8"
+    },
+    {
+      "currentSha256": "b3062c693bf036a9de67dd785815c2c529d9b512376b2273c070b436b0302707",
+      "edits": [
+        {
+          "current": "\tconst manifest = await assertFinContainerEdgeGdbRun(observer, run, rows, { exitObserver: \"jvm\" });\n",
+          "previous": "\tconst manifest = await assertFinContainerEdgeGdbRun(observer, run, rows);\n\tif(Object.hasOwn(manifest, \"jvmExit\")) assertFinContainerEdgeJvmExit(manifest.jvmExit, manifest.pid);\n",
+          "start": 8931
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-jvm-gdb.mjs",
+      "previousSha256": "c7c4c9b9dab158e6ead4a941a0facd964ba359e093c4b71ea9c6d667b3549e22"
+    },
+    {
+      "currentSha256": "9a8ff5fe991447b9af90cd9a1d634b8666c8e57ad5e30b191e3b6050161c5c69",
+      "edits": [
+        {
+          "current": "import { assertFinContainerEdgeJvmExit, assertFinContainerEdgeObservedExit, assertFinHostProcessExit, finContainerEdgeJvmWaitSupport, withFinContainerEdgeJvmWait } from \"./fin-container-edge-jvm-wait.mjs\";\n",
+          "previous": "import { assertFinContainerEdgeJvmExit, assertFinHostProcessExit, finContainerEdgeJvmWaitSupport, withFinContainerEdgeJvmWait } from \"./fin-container-edge-jvm-wait.mjs\";\n",
+          "start": 409
+        },
+        {
+          "current": "test(\"edge observers require exactly their own host or JVM exit receipt\", () => {\n\tconst receipt = { schemaVersion: 1, kind: \"gdb-exit\", pid: 42, code: 0 };\n\tassertFinContainerEdgeObservedExit({ processExit: receipt }, 42, \"host\");\n\tassertFinContainerEdgeObservedExit({ jvmExit: receipt }, 42, \"jvm\");\n\tassert.throws(() => assertFinContainerEdgeObservedExit({ jvmExit: receipt }, 42, \"host\"), /host process-exit receipt/u);\n\tassert.throws(() => assertFinContainerEdgeObservedExit({ processExit: receipt }, 42, \"jvm\"), /JVM process-exit receipt/u);\n\tfor(const observer of [undefined, null, \"\", \"none\", \"host-or-jvm\"])\n\t\tassert.throws(() => assertFinContainerEdgeObservedExit({}, 42, observer), /observer must be host or jvm/u);\n\tconst both = { processExit: receipt, jvmExit: { ...receipt, code: 7 } };\n\tassertFinContainerEdgeObservedExit(both, 42, \"host\");\n\tassert.throws(() => assertFinContainerEdgeObservedExit(both, 42, \"jvm\"), /JVM process must actually exit successfully/u);\n});\n\n",
+          "previous": "",
+          "start": 8042
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-jvm-wait-tests.mjs",
+      "previousSha256": "3db7918fab5bd807c94b717c5777795a7f596a10cad16231c12da4641027383e"
+    },
+    {
+      "currentSha256": "18055bdc3643cb273f36347d2480443a5cb5a726b4030a9f5b98ce3baf3cbabf",
+      "edits": [
+        {
+          "current": "\n/**\n * Select the one process-exit receipt owned by this observer kind.\n * Ordinary fixed-root hosts and JVM-extracted hosts intentionally do not\n * manufacture duplicate receipts for the same process.\n *\n * @param manifest - Parsed GDB manifest.\n * @param pid - PID authenticated by the counter record and breakpoint manifest.\n * @param observer - Closed observer kind; there is deliberately no unchecked mode.\n */\nexport const assertFinContainerEdgeObservedExit = (manifest, pid, observer) => {\n\tassert.ok([\"host\", \"jvm\"].includes(observer), \"edge exit observer must be host or jvm\");\n\tassert.ok(manifest && typeof manifest === \"object\", \"an edge observer manifest is required\");\n\tif(observer === \"host\") assertFinHostProcessExit(manifest.processExit, pid);\n\telse assertFinContainerEdgeJvmExit(manifest.jvmExit, pid);\n};\n",
+          "previous": "",
+          "start": 6756
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-jvm-wait.mjs",
+      "previousSha256": "6c4b68b9df089a8c7eca8d07546a0dfb0fd37a6cdaa50d75f29e1001b818f747"
+    }
+  ],
+  "validation": {
+    "checkedJavaScriptTypecheck": "passed",
+    "finContainerEdgeJvmWait": {
+      "fail": 0,
+      "pass": 10,
+      "tests": 10
+    },
+    "focusedEslint": "passed",
+    "jvmPendingExitArchive": {
+      "fail": 0,
+      "pass": 2,
+      "tests": 2
+    }
+  }
+}
