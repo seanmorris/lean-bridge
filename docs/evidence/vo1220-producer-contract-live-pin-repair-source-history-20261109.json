@@ -1,0 +1,131 @@
+{
+  "behavior": {
+    "changedSourcePaths": 1,
+    "changedSupportCells": 0,
+    "measurementSemanticChanges": 0,
+    "refreshedCitations": 4,
+    "runtimeSemanticChanges": 0,
+    "staleCitations": 0,
+    "testContractChanges": 0
+  },
+  "changedSupportCells": 0,
+  "currentSourcePins": [
+    {
+      "citations": 4,
+      "path": "tests/hosted-container-inventory.test.mjs"
+    }
+  ],
+  "discovery": {
+    "localGate": "all current live-source pins match in one complete pass",
+    "mismatches": 1,
+    "paths": [
+      "tests/hosted-container-inventory.test.mjs"
+    ]
+  },
+  "exactModelSha256": {
+    "after": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "before": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-producer-contract-live-pin-repair-source-history.mjs",
+      "sha256": "c3aea2b5ac20c2f621eb56f169ba0846a38c37869dd231564a135cff8d514721"
+    },
+    {
+      "path": "tests/helpers/vo1220-producer-contract-live-pin-repair-source-history-tests.mjs",
+      "sha256": "6e44cc6ca13d48fc99a33e52666b663e1cbc7c74ce5ea31ad92c4ecbbc497b54"
+    },
+    {
+      "path": "tests/helpers/vo1220-producer-contract-live-pin-repair-source-history.mjs",
+      "sha256": "bbf3da1216e464f3f03b264171d129efff7c903f4b2d1e43308892de4d550dbd"
+    }
+  ],
+  "implementationCommit": "af677126739a1cc1c0714c7dafdab97f282d5589",
+  "integrationCommit": "72b0541e6708ff842074416d85b3af88472b6ef1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "722044a94527855786aa60969678808ecf9421d97c0b5848f05fec3ad1ae910c",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-producer-contract-live-pin-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 505
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "a1a1cfb0d367c3035a87fe2880d7e9295fe143c854988450047ec0af80518bda"
+    },
+    {
+      "currentSha256": "c77aa048dd35268900e8acfaf192c8e66adabb042dbbf45adbbc9b42a1adf977",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ProducerContractLivePinRepairSource\n\t, vo1220ProducerContractLivePinRepairNormalizationPaths\n} from \"./vo1220-producer-contract-live-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ProducerContractLivePinRepairNormalizationPaths\n\t, ...vo1220ProducerContractBudgetRepairNormalizationPaths\n",
+          "previous": "\t...vo1220ProducerContractBudgetRepairNormalizationPaths\n",
+          "start": 243914
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ProducerContractLivePinRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ProducerContractBudgetRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220ProducerContractBudgetRepairSource(\n",
+          "start": 307015
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "282cdfae064a414cc1098c26fc8db86f3301a22919b358902ed6756363a4fbcf"
+    }
+  ],
+  "inventorySha256": {
+    "after": "5f2c3872a1cc128c7e334a5707bff0a866270beccb9ff41eccb74cce2be88dfd",
+    "before": "031bf4063b78e1dbded102c8214e2a7b166961e7c68503280cb050f7895d8cc9"
+  },
+  "milestone": "vo1220-producer-contract-live-pin-repair-source-v1",
+  "predecessorCommit": "bb9a0c343d0d18635be5c7474d7b330c4cd83b76",
+  "repair": "Refresh all four and only those four existing citations to the authenticated implementation digest. Preserve every observation, support state, stage, evidence identity, immutable archive and exact #1220 model.",
+  "rootCause": "The producer-era reader repair changed the authenticated current bytes of hosted-container-inventory.test.mjs. Four existing evidence entries still cited its preceding digest, so the complete aggregated current-source audit correctly refused the candidate.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "5f2c3872a1cc128c7e334a5707bff0a866270beccb9ff41eccb74cce2be88dfd",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"27fb73f08fc9cb2d947be8113ee5a1b8325f641eba74b4afa6e1d17f79e76bf7\"\n",
+          "previous": "          \"sha256\": \"17aef10b9acd76d68d1927bad0286d457283a87cc8ce96a9f9706a8a3d5c5072\"\n",
+          "start": 2114944
+        },
+        {
+          "current": "          \"sha256\": \"27fb73f08fc9cb2d947be8113ee5a1b8325f641eba74b4afa6e1d17f79e76bf7\"\n",
+          "previous": "          \"sha256\": \"17aef10b9acd76d68d1927bad0286d457283a87cc8ce96a9f9706a8a3d5c5072\"\n",
+          "start": 2125777
+        },
+        {
+          "current": "          \"sha256\": \"27fb73f08fc9cb2d947be8113ee5a1b8325f641eba74b4afa6e1d17f79e76bf7\"\n",
+          "previous": "          \"sha256\": \"17aef10b9acd76d68d1927bad0286d457283a87cc8ce96a9f9706a8a3d5c5072\"\n",
+          "start": 2136627
+        },
+        {
+          "current": "          \"sha256\": \"27fb73f08fc9cb2d947be8113ee5a1b8325f641eba74b4afa6e1d17f79e76bf7\"\n",
+          "previous": "          \"sha256\": \"17aef10b9acd76d68d1927bad0286d457283a87cc8ce96a9f9706a8a3d5c5072\"\n",
+          "start": 2147442
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "031bf4063b78e1dbded102c8214e2a7b166961e7c68503280cb050f7895d8cc9"
+    }
+  ],
+  "validation": {
+    "checkedJavaScriptTypecheck": "pending seal",
+    "completeLiveSourceAudit": {
+      "mismatches": 0,
+      "paths": 2661
+    },
+    "exactCitationReplacement": {
+      "citations": 4,
+      "paths": 1
+    }
+  }
+}
