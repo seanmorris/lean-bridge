@@ -116,15 +116,18 @@ const fixture = async (profiles, route) => {
 	const probes = { cpp: sha256(cppFinContainerEntryProbe())
 		, "php-native": sources.php, "wit-wasi": sources.wit, ruby: sources.ruby
 		, dotnet: sources.dotnet, java: sources.java, kotlin: sources.kotlin };
+	const scripts = { "gdb-breakpoints": sources.strictScript
+		, "gdb-breakpoints-extracted-root": sources.extractedScript };
 	for(const report of value.reports.filter(report => report.profile !== "c"))
 	{
-		report.dispatch.public.probeSha256 = probes[report.profile];
-		report.dispatch.public.observed = structuredClone(finContainerEntryExpected);
+		const host = report.dispatch.public;
+		host.probeSha256 = probes[report.profile];
+		host.observed = structuredClone(finContainerEntryExpected);
+		if(Object.hasOwn(scripts, host.instrument)) host.scriptSha256 = scripts[host.instrument];
 		if(["java", "kotlin"].includes(report.profile))
 		{
-			report.dispatch.public.scriptSha256 = sources.extractedScript;
-			report.dispatch.public.processId = 42;
-			report.dispatch.public.jvmExit = { schemaVersion: 1, kind: "gdb-exit", pid: 42, code: 0 };
+			host.processId = 42;
+			host.jvmExit = { schemaVersion: 1, kind: "gdb-exit", pid: 42, code: 0 };
 		}
 	}
 	return value;
