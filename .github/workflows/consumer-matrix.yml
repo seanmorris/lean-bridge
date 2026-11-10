@@ -1511,9 +1511,10 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
-    # Run 37805067353 hit three hours during the corpus. Leave time for the
-    # remaining multi-profile, installed CLI and registry/browser gates.
-    timeout-minutes: 330
+    # Exact run 42760217472 reached 330 minutes and was cancelled in its final
+    # registry check after every completed gate passed. Keep 90 minutes of
+    # runner-variance headroom without weakening or skipping any gate.
+    timeout-minutes: 420
     steps:
       - name: Free hosted runner disk before Nix-backed builds
         shell: bash
