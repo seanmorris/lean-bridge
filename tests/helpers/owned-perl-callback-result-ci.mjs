@@ -38,7 +38,6 @@ const tools = ["build-essential", "cmake", "libgmp-dev", "libuv1-dev"
 const setup = ["java-version: '22.0.2'", "python-version: \"3.11\""
 	, "python-version: \"3.12\"", "ruby-version: '3.3.12'"
 	, "dotnet-version: '8.0.424'"
-	, "download-pinned-release-asset.sh kotlin-compiler"
 	, "bash scripts/bootstrap-toolchains.sh", "bash scripts/bootstrap-rust-ci.sh"
 	, "bash scripts/build-lean-link-spike.sh"];
 
@@ -67,7 +66,10 @@ export const assertOwnedPerlCallbackResultCi = (workflow, manifest, legacy = fal
 	// The hash-checked archived workflow predates the bounded installer; current CI must use it.
 	const browsers = legacy ? "npx playwright install --with-deps chromium firefox webkit"
 		: "bash scripts/install-playwright-browsers.sh chromium firefox webkit";
-	for(const value of [...tools, ...setup, browsers]) assert.ok(job.includes(value), value);
+	const kotlin = legacy ? "kotlin-compiler-2.2.0.zip"
+		: "download-pinned-release-asset.sh kotlin-compiler";
+	for(const value of [...tools, ...setup, kotlin, browsers])
+		assert.ok(job.includes(value), value);
 	const abi = job.split("      - name: Build every pinned Perl ABI\n")[1]?.split("      - name: ")[0];
 	assert.ok(abi); assert.doesNotMatch(abi, /^ {8}(?:if|continue-on-error):/mu);
 	assert.match(abi, /^ {8}shell: bash$/mu);
