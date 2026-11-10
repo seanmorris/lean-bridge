@@ -7,9 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { coreContractShardLabels, coreContractShardManifest
-	, verifyCoreContractShardManifests }
-	from "../../scripts/core-contract-shards.mjs";
+import { canonicalJson } from "../../src/capsule/node.mjs";
 import { authenticateSourceHistoryReverse, gitSourceBytes }
 	from "./source-history-stream.mjs";
 import { sourceAtFinHistoryMilestone }
@@ -105,10 +103,10 @@ test("final-audit registration closes its profile, preflight and live pins", asy
 	assert.equal(paths.length, history.contractFiles);
 	assert.ok(paths.includes(
 		`tests/${coreFinalAuditRegistrationTest}.test.mjs`));
-	assert.equal(verifyCoreContractShardManifests(paths
-		, coreContractShardLabels.map(label =>
-			coreContractShardManifest(paths, label))).contractSha256
-	, history.contractSha256);
+	// This evidence predates the cost-balanced planner. Authenticate the
+	// historical closed set recorded by the milestone without applying the
+	// current checkout's cost manifest to that older profile.
+	assert.equal(sha256(canonicalJson(paths)), history.contractSha256);
 	const packageDocument = JSON.parse(await readFile("package.json", "utf8"));
 	assert.match(packageDocument.scripts["env:check:core"]
 		, /inventory\.sh --profile core.*test-profiles\.test\.mjs/u);

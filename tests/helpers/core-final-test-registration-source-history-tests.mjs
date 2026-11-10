@@ -7,9 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { coreContractShardLabels, coreContractShardManifest
-	, verifyCoreContractShardManifests }
-	from "../../scripts/core-contract-shards.mjs";
+import { canonicalJson } from "../../src/capsule/node.mjs";
 import { authenticateSourceHistoryReverse, gitSourceBytes }
 	from "./source-history-stream.mjs";
 import { sourceAtFinHistoryMilestone }
@@ -107,10 +105,10 @@ test("final Core test repair closes all nine registrations and 102 pins", async 
 	assert.equal(paths.length, history.contractFiles);
 	for(const name of coreFinalTestRegistrationTests)
 		assert.ok(paths.includes(`tests/${name}.test.mjs`), name);
-	assert.equal(verifyCoreContractShardManifests(paths
-		, coreContractShardLabels.map(label =>
-			coreContractShardManifest(paths, label))).contractSha256
-	, history.contractSha256);
+	// This evidence predates the cost-balanced planner. Authenticate the
+	// historical closed set recorded by the milestone without applying the
+	// current checkout's cost manifest to that older profile.
+	assert.equal(sha256(canonicalJson(paths)), history.contractSha256);
 });
 
 test("final Core test repair rejects forged transitions", async () => {
