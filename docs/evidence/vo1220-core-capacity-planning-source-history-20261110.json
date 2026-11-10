@@ -1,0 +1,2318 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "contractRoots": 1123,
+    "floorRoots": 754,
+    "measuredRoots": 369,
+    "modeledSavedMinutes": 102.04303990453332,
+    "modeledSavedPercent": 38.994900067562824,
+    "modeledSpeedup": 1.63920721563852,
+    "modeledTestMinutes": 159.64,
+    "packageSemanticChanges": 0,
+    "parallelWorkers": 2,
+    "priorFloorRoots": 786,
+    "priorMeasuredRoots": 337,
+    "priorObservedTestMinutes": 261.6830399045333,
+    "productionCodeChanges": 0,
+    "runtimeSemanticChanges": 0,
+    "serialShard": 4,
+    "serialWorkers": 1
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "attributedRows": 3,
+    "coreRun": 42760203921,
+    "jobs": {
+      "1": 129651120931,
+      "2": 129651120950,
+      "3": 129651120957,
+      "4": 129651120992,
+      "5": 129651120927,
+      "6": 129651120926,
+      "7": 129651120911,
+      "8": 129651120938,
+      "9": 129651120874,
+      "10": 129651120958,
+      "11": 129651120933,
+      "12": 129651120975
+    },
+    "newlyMeasuredRows": 32,
+    "observedRows": 361,
+    "priorCriticalDurationMs": 15700982.394272,
+    "priorCriticalJob": 129651120992,
+    "priorCriticalShard": 4,
+    "raisedRows": 149,
+    "retainedHighWaterRows": 177
+  },
+  "exactModelSha256": {
+    "after": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "before": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-core-capacity-planning-source-history.mjs",
+      "sha256": "0f6b1e01396c5ecedcbfb4b4d467bd03f7cffc0ef0d3b43ecc5deff14d8bbeba"
+    },
+    {
+      "path": "tests/helpers/vo1220-core-capacity-planning-source-history-tests.mjs",
+      "sha256": "578a3eb827a0b2b659f077f74384ca7f70272494e23febfb1970bf036ee7d1e3"
+    },
+    {
+      "path": "tests/helpers/vo1220-core-capacity-planning-source-history.mjs",
+      "sha256": "58f4fd4498c4863baf5b5448e28a624b249676e7acce6472a8ba30cbffed9ee2"
+    }
+  ],
+  "implementationCommit": "08abcec3314c1f0ad8db52265adeb7f62f17a934",
+  "integrationCommit": "3726f543f1517f060226a92b802e441b9bc04d53",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b8e8fdc6dcb9f3e4e487e0a4154427a07de15e16ec6ad3aafdd4195ce6fd7d0d",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-core-capacity-planning-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "7e1c54639c7998b23bbd484858efb3562c705a56a893fe8069b2951dd4bc5fd5"
+    },
+    {
+      "currentSha256": "0eca10f6b561c2ddf10e3f49d8fd1d362cd95ffbc113018fb17626e49f8d4b0f",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220CoreCapacityPlanningSource\n\t, vo1220CoreCapacityPlanningNormalizationPaths\n} from \"./vo1220-core-capacity-planning-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220CoreCapacityPlanningNormalizationPaths\n\t, ...vo1220HistoricalCoreProfileIsolationNormalizationPaths\n",
+          "previous": "\t...vo1220HistoricalCoreProfileIsolationNormalizationPaths\n",
+          "start": 245528
+        },
+        {
+          "current": "\tlet stage = beforeVo1220CoreCapacityPlanningSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220HistoricalCoreProfileIsolationSource(\n",
+          "previous": "\tlet stage = beforeVo1220HistoricalCoreProfileIsolationSource(\n",
+          "start": 309149
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "04390efa6eb762359c7356e16c5a7d543df8afbba81cdd1b89447a8c20e5d0c4"
+    }
+  ],
+  "milestone": "vo1220-core-capacity-planning-source-v1",
+  "plan": [
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 95,
+      "first": "tests/owned-perl-xs.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "df62cbf1141e923d434190e46caf3f70a55a1d9d7fe61fd98bd19c802543bc0a",
+      "shard": 1
+    },
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 96,
+      "first": "tests/nominal-primitive-subtype.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "226cc9075e34344950e8f15ab0c080a8ffe4078965f485c45cd337b846430cb4",
+      "shard": 2
+    },
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 97,
+      "first": "tests/component-nominal-subtype.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "101eb173338e73f7f8db49a386146e7962b9cc19fc829a8128be6f65914ebe73",
+      "shard": 3
+    },
+    {
+      "concurrency": 1,
+      "costMinutes": 159.64,
+      "files": 46,
+      "first": "tests/checked-javascript-partition-11.test.mjs",
+      "modeledWallMinutes": 159.64,
+      "selectionSha256": "de4cf4a3ba5a3f38b2bdcb2b949527470caf5a1b6229f2f6cdd8b7a1f919b1db",
+      "shard": 4
+    },
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 97,
+      "first": "tests/component-array-history-partition-03.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "6541999375545ee964902f2ba1cccec9c19c7545b5dd49e1101d18627277d7b7",
+      "shard": 5
+    },
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 99,
+      "first": "tests/component-array-history-partition-04.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "f5542ae665e63c69b6ebc2267dd7e9afb4a1b9bb0c5e7e4b1b91e876eb6c6314",
+      "shard": 6
+    },
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 98,
+      "first": "tests/component-array-history-partition-09.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "a3a8d450b792d4f7660001b65c0c10fccd5c00712f7f53cb8b10d2fddc176fba",
+      "shard": 7
+    },
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 99,
+      "first": "tests/component-array-history-partition-08.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "acd79746641462f5ed372566d19b8f6b86f6cb19b90725f288b7895b3cd215bb",
+      "shard": 8
+    },
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 99,
+      "first": "tests/component-array-history-partition-01.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "23febfc4801a80598a14749a651e10d828e018f9e69530af3dcf06414ba8c3cb",
+      "shard": 9
+    },
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 99,
+      "first": "tests/checked-javascript-partition-10.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "d133837508ffadb3f7cced865e5e20cbc2a7d9e8f0369ae4eb82fe4f3b30b9cc",
+      "shard": 10
+    },
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 99,
+      "first": "tests/component-array-history-partition-12.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "989db97da847722ba9f74775bc5b378fbac4ab9529c1e513d6e97704d5051699",
+      "shard": 11
+    },
+    {
+      "concurrency": 2,
+      "costMinutes": 319.2,
+      "files": 99,
+      "first": "tests/component-array-history-partition-02.test.mjs",
+      "modeledWallMinutes": 159.6,
+      "selectionSha256": "028ee7ef8f65b784f3bdd608436e55c9df125ebee69df99df76f4118c8f637ef",
+      "shard": 12
+    }
+  ],
+  "predecessorCommit": "1b737a87f47730d5c6182c485159fcefe4183078",
+  "repair": "Authenticate worker capacity and the serial-only root in every shard manifest, place files by cost per worker, preserve longest-first execution order, and derive runner concurrency only from the manifest. Refresh costs from all twelve exact-candidate logs as a conservative high-water union: never lower a prior measurement or the safety floor, and preserve the exact TAP-attributed split.",
+  "rootCause": "The planner assigned every shard the same raw cost even though shard 4 intentionally ran with one Node worker while the other eleven used two. It also sorted each shard alphabetically before execution, delaying dominant roots, and 786 roots still carried an unmeasured floor despite a completed twelve-shard sampler corpus.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "e2573d5660e967afd8530cd2211a7b5035af14b566ac2e8c864e7179f87c6276",
+      "edits": [
+        {
+          "current": "      \"etimeSeconds\": 687,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 597,\n      \"job\": 129026259183,\n",
+          "start": 4460
+        },
+        {
+          "current": "      \"minutes\": 11.45,\n      \"peakRssGb\": 1.5,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 9.95,\n      \"peakRssGb\": 2.5,\n      \"sampledInShard\": 10\n",
+          "start": 4538
+        },
+        {
+          "current": "      \"etimeSeconds\": 27,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 25,\n      \"job\": 129026259172,\n",
+          "start": 4944
+        },
+        {
+          "current": "      \"minutes\": 0.45,\n",
+          "previous": "      \"minutes\": 0.42,\n",
+          "start": 5021
+        },
+        {
+          "current": "      \"sampledInShard\": 7\n",
+          "previous": "      \"sampledInShard\": 12\n",
+          "start": 5068
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 955,\n      \"job\": 129651120992,\n      \"measured\": true,\n      \"minutes\": 15.92,\n      \"peakRssGb\": 2.1,\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n",
+          "start": 5829
+        },
+        {
+          "current": "      \"etimeSeconds\": 446,\n      \"job\": 129651120958,\n",
+          "previous": "      \"etimeSeconds\": 357,\n      \"job\": 129026259239,\n",
+          "start": 7056
+        },
+        {
+          "current": "      \"minutes\": 7.43,\n      \"peakRssGb\": 1.9,\n      \"sampledInShard\": 10\n",
+          "previous": "      \"minutes\": 5.95,\n      \"peakRssGb\": 2.1,\n      \"sampledInShard\": 9\n",
+          "start": 7134
+        },
+        {
+          "current": "      \"etimeSeconds\": 231,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 147,\n      \"job\": 129026259239,\n",
+          "start": 9641
+        },
+        {
+          "current": "      \"minutes\": 3.85,\n      \"peakRssGb\": 1,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 2.45,\n      \"peakRssGb\": 1.8,\n      \"sampledInShard\": 9\n",
+          "start": 9719
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 17,\n      \"job\": 129651120911,\n      \"measured\": true,\n      \"minutes\": 0.28,\n      \"peakRssGb\": 0.5,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"basis\": \"unobserved-under-sampling-interval\",\n      \"job\": 129026259161,\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 1\n",
+          "start": 10470
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 25,\n      \"job\": 129651120975,\n      \"measured\": true,\n      \"minutes\": 0.42,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 12\n",
+          "previous": "      \"basis\": \"unobserved-under-sampling-interval\",\n      \"job\": 129026259348,\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 2\n",
+          "start": 10715
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 17,\n      \"job\": 129651120931,\n      \"measured\": true,\n      \"minutes\": 0.28,\n      \"peakRssGb\": 0.2,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 11183
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 26,\n      \"job\": 129651120938,\n      \"measured\": true,\n      \"minutes\": 0.43,\n      \"peakRssGb\": 0.5,\n",
+          "previous": "      \"basis\": \"unobserved-under-sampling-interval\",\n      \"job\": 129026259207,\n      \"measured\": false,\n      \"minutes\": 0.25,\n",
+          "start": 12081
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 1956,\n      \"job\": 129651120911,\n      \"measured\": true,\n      \"minutes\": 32.6,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 13923
+        },
+        {
+          "current": "      \"etimeSeconds\": 555,\n      \"job\": 129651120931,\n",
+          "previous": "      \"etimeSeconds\": 440,\n      \"job\": 129026259249,\n",
+          "start": 14461
+        },
+        {
+          "current": "      \"minutes\": 9.25,\n      \"peakRssGb\": 3,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"minutes\": 7.33,\n      \"peakRssGb\": 2.9,\n      \"sampledInShard\": 6\n",
+          "start": 14539
+        },
+        {
+          "current": "      \"etimeSeconds\": 506,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 470,\n      \"job\": 129026259277,\n",
+          "start": 14709
+        },
+        {
+          "current": "      \"minutes\": 8.43,\n      \"peakRssGb\": 2.3,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 7.83,\n      \"peakRssGb\": 2.9,\n      \"sampledInShard\": 7\n",
+          "start": 14787
+        },
+        {
+          "current": "      \"etimeSeconds\": 1342,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 1051,\n      \"job\": 129026259239,\n",
+          "start": 15209
+        },
+        {
+          "current": "      \"minutes\": 22.37,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 12\n",
+          "previous": "      \"minutes\": 17.52,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 9\n",
+          "start": 15288
+        },
+        {
+          "current": "      \"etimeSeconds\": 5079,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 4695,\n      \"job\": 129026259161,\n",
+          "start": 16217
+        },
+        {
+          "current": "      \"minutes\": 84.65,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 78.25,\n      \"peakRssGb\": 3.5,\n      \"sampledInShard\": 1\n",
+          "start": 16296
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 286,\n      \"job\": 129651120874,\n      \"measured\": true,\n      \"minutes\": 4.77,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 9\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 16902
+        },
+        {
+          "current": "      \"etimeSeconds\": 341,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 315,\n      \"job\": 129026259249,\n",
+          "start": 17432
+        },
+        {
+          "current": "      \"minutes\": 5.68,\n",
+          "previous": "      \"minutes\": 5.25,\n",
+          "start": 17510
+        },
+        {
+          "current": "      \"sampledInShard\": 5\n",
+          "previous": "      \"sampledInShard\": 6\n",
+          "start": 17555
+        },
+        {
+          "current": "      \"etimeSeconds\": 38,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 10,\n      \"job\": 129026259277,\n",
+          "start": 17681
+        },
+        {
+          "current": "      \"minutes\": 0.63,\n      \"peakRssGb\": 0.4,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 0.17,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 7\n",
+          "start": 17758
+        },
+        {
+          "current": "      \"etimeSeconds\": 35,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 12,\n      \"job\": 129026259207,\n",
+          "start": 17929
+        },
+        {
+          "current": "      \"minutes\": 0.58,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 0.2,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 8\n",
+          "start": 18006
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 19,\n      \"job\": 129651120931,\n      \"measured\": true,\n      \"minutes\": 0.32,\n      \"peakRssGb\": 1.3,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"basis\": \"unobserved-under-sampling-interval\",\n      \"job\": 129026259183,\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 10\n",
+          "start": 18380
+        },
+        {
+          "current": "      \"etimeSeconds\": 2127,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 1977,\n      \"job\": 129026259312,\n",
+          "start": 18664
+        },
+        {
+          "current": "      \"minutes\": 35.45,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 32.95,\n      \"peakRssGb\": 2.1,\n      \"sampledInShard\": 11\n",
+          "start": 18743
+        },
+        {
+          "current": "      \"etimeSeconds\": 42,\n      \"job\": 129651120933,\n",
+          "previous": "      \"etimeSeconds\": 38,\n      \"job\": 129026259172,\n",
+          "start": 18920
+        },
+        {
+          "current": "      \"minutes\": 0.7,\n",
+          "previous": "      \"minutes\": 0.63,\n",
+          "start": 18997
+        },
+        {
+          "current": "      \"sampledInShard\": 11\n",
+          "previous": "      \"sampledInShard\": 12\n",
+          "start": 19043
+        },
+        {
+          "current": "      \"etimeSeconds\": 36,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 20,\n      \"job\": 129026259348,\n",
+          "start": 19391
+        },
+        {
+          "current": "      \"minutes\": 0.6,\n      \"peakRssGb\": 0.7,\n      \"sampledInShard\": 12\n",
+          "previous": "      \"minutes\": 0.33,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 2\n",
+          "start": 19468
+        },
+        {
+          "current": "      \"etimeSeconds\": 290,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 244,\n      \"job\": 129026259176,\n",
+          "start": 19643
+        },
+        {
+          "current": "      \"minutes\": 4.83,\n      \"peakRssGb\": 2.3,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 4.07,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 3\n",
+          "start": 19721
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 25,\n      \"job\": 129651120933,\n      \"measured\": true,\n      \"minutes\": 0.42,\n      \"peakRssGb\": 0.9,\n      \"sampledInShard\": 11\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 19868
+        },
+        {
+          "current": "      \"etimeSeconds\": 1191,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 716,\n      \"job\": 129026259239,\n",
+          "start": 21108
+        },
+        {
+          "current": "      \"minutes\": 19.85,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 11.93,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 9\n",
+          "start": 21187
+        },
+        {
+          "current": "      \"etimeSeconds\": 40,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 39,\n      \"job\": 129026259183,\n",
+          "start": 21371
+        },
+        {
+          "current": "      \"minutes\": 0.67,\n",
+          "previous": "      \"minutes\": 0.65,\n",
+          "start": 21448
+        },
+        {
+          "current": "      \"sampledInShard\": 6\n",
+          "previous": "      \"sampledInShard\": 10\n",
+          "start": 21493
+        },
+        {
+          "current": "      \"etimeSeconds\": 766,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 592,\n      \"job\": 129026259172,\n",
+          "start": 21838
+        },
+        {
+          "current": "      \"minutes\": 12.77,\n",
+          "previous": "      \"minutes\": 9.87,\n",
+          "start": 21916
+        },
+        {
+          "current": "      \"sampledInShard\": 5\n",
+          "previous": "      \"sampledInShard\": 12\n",
+          "start": 21962
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 201,\n      \"job\": 129651120958,\n      \"measured\": true,\n      \"minutes\": 3.35,\n      \"peakRssGb\": 2.9,\n      \"sampledInShard\": 10\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 22816
+        },
+        {
+          "current": "      \"etimeSeconds\": 242,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 226,\n      \"job\": 129026259295,\n",
+          "start": 23103
+        },
+        {
+          "current": "      \"minutes\": 4.03,\n      \"peakRssGb\": 2.2,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 3.77,\n      \"peakRssGb\": 2.4,\n      \"sampledInShard\": 5\n",
+          "start": 23181
+        },
+        {
+          "current": "      \"etimeSeconds\": 30,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 7,\n      \"job\": 129026259183,\n",
+          "start": 24235
+        },
+        {
+          "current": "      \"minutes\": 0.5,\n      \"peakRssGb\": 0.4,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 0.12,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 10\n",
+          "start": 24312
+        },
+        {
+          "current": "      \"etimeSeconds\": 207,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 184,\n      \"job\": 129026259172,\n",
+          "start": 24699
+        },
+        {
+          "current": "      \"minutes\": 3.45,\n      \"peakRssGb\": 2.5,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 3.07,\n      \"peakRssGb\": 2,\n      \"sampledInShard\": 12\n",
+          "start": 24777
+        },
+        {
+          "current": "      \"etimeSeconds\": 3432,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 3390,\n      \"job\": 129026259277,\n",
+          "start": 26181
+        },
+        {
+          "current": "      \"minutes\": 57.2,\n      \"peakRssGb\": 3.4,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 56.5,\n      \"peakRssGb\": 3.1,\n      \"sampledInShard\": 7\n",
+          "start": 26260
+        },
+        {
+          "current": "      \"etimeSeconds\": 4156,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 3645,\n      \"job\": 129026259183,\n",
+          "start": 26951
+        },
+        {
+          "current": "      \"minutes\": 69.27,\n      \"peakRssGb\": 2.5,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 60.75,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 10\n",
+          "start": 27030
+        },
+        {
+          "current": "      \"etimeSeconds\": 506,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 427,\n      \"job\": 129026259312,\n",
+          "start": 27208
+        },
+        {
+          "current": "      \"minutes\": 8.43,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 7.12,\n      \"peakRssGb\": 2.9,\n      \"sampledInShard\": 11\n",
+          "start": 27286
+        },
+        {
+          "current": "      \"etimeSeconds\": 4073,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 3449,\n      \"job\": 129026259348,\n",
+          "start": 27941
+        },
+        {
+          "current": "      \"minutes\": 67.88,\n      \"peakRssGb\": 3.1,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 57.48,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 2\n",
+          "start": 28020
+        },
+        {
+          "current": "      \"etimeSeconds\": 4110,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 3689,\n      \"job\": 129026259176,\n",
+          "start": 28198
+        },
+        {
+          "current": "      \"minutes\": 68.5,\n      \"peakRssGb\": 3.4,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 61.48,\n      \"peakRssGb\": 3.5,\n      \"sampledInShard\": 3\n",
+          "start": 28277
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 1442,\n      \"job\": 129651120927,\n      \"measured\": true,\n      \"minutes\": 24.03,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 28418
+        },
+        {
+          "current": "      \"etimeSeconds\": 2284,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 2234,\n      \"job\": 129026259295,\n",
+          "start": 28711
+        },
+        {
+          "current": "      \"minutes\": 38.07,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 12\n",
+          "previous": "      \"minutes\": 37.23,\n      \"peakRssGb\": 3.4,\n      \"sampledInShard\": 5\n",
+          "start": 28790
+        },
+        {
+          "current": "      \"etimeSeconds\": 445,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 328,\n      \"job\": 129026259312,\n",
+          "start": 33695
+        },
+        {
+          "current": "      \"minutes\": 7.42,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 5.47,\n      \"peakRssGb\": 2.4,\n      \"sampledInShard\": 11\n",
+          "start": 33773
+        },
+        {
+          "current": "      \"etimeSeconds\": 45,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 36,\n      \"job\": 129026259172,\n",
+          "start": 36587
+        },
+        {
+          "current": "      \"minutes\": 0.75,\n",
+          "previous": "      \"minutes\": 0.6,\n",
+          "start": 36664
+        },
+        {
+          "current": "      \"sampledInShard\": 5\n",
+          "previous": "      \"sampledInShard\": 12\n",
+          "start": 36711
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 56,\n      \"job\": 129651120958,\n      \"measured\": true,\n      \"minutes\": 0.93,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 10\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 37471
+        },
+        {
+          "current": "      \"etimeSeconds\": 527,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 327,\n      \"job\": 129026259183,\n",
+          "start": 38896
+        },
+        {
+          "current": "      \"minutes\": 8.78,\n      \"peakRssGb\": 1.3,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 5.45,\n      \"peakRssGb\": 1.6,\n      \"sampledInShard\": 10\n",
+          "start": 38974
+        },
+        {
+          "current": "      \"etimeSeconds\": 61,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 5,\n      \"job\": 129026259312,\n",
+          "start": 39157
+        },
+        {
+          "current": "      \"minutes\": 1.02,\n",
+          "previous": "      \"minutes\": 0.08,\n",
+          "start": 39234
+        },
+        {
+          "current": "      \"sampledInShard\": 4\n",
+          "previous": "      \"sampledInShard\": 11\n",
+          "start": 39281
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 60,\n      \"job\": 129651120931,\n      \"measured\": true,\n      \"minutes\": 1,\n      \"peakRssGb\": 1.2,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 40343
+        },
+        {
+          "current": "      \"etimeSeconds\": 510,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 427,\n      \"job\": 129026259161,\n",
+          "start": 44967
+        },
+        {
+          "current": "      \"minutes\": 8.5,\n      \"peakRssGb\": 1.6,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 7.12,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 1\n",
+          "start": 45045
+        },
+        {
+          "current": "      \"etimeSeconds\": 895,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 771,\n      \"job\": 129026259249,\n",
+          "start": 46036
+        },
+        {
+          "current": "      \"minutes\": 14.92,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 12.85,\n      \"peakRssGb\": 1.1,\n      \"sampledInShard\": 6\n",
+          "start": 46114
+        },
+        {
+          "current": "      \"etimeSeconds\": 500,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 385,\n      \"job\": 129026259183,\n",
+          "start": 46935
+        },
+        {
+          "current": "      \"minutes\": 8.33,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 6.42,\n      \"peakRssGb\": 1.9,\n      \"sampledInShard\": 10\n",
+          "start": 47013
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 186,\n      \"job\": 129651120958,\n      \"measured\": true,\n      \"minutes\": 3.1,\n      \"peakRssGb\": 2.4,\n      \"sampledInShard\": 10\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 48200
+        },
+        {
+          "current": "      \"etimeSeconds\": 58,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 54,\n      \"job\": 129026259295,\n",
+          "start": 48480
+        },
+        {
+          "current": "      \"minutes\": 0.97,\n      \"peakRssGb\": 1.5,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 0.9,\n      \"peakRssGb\": 1.4,\n      \"sampledInShard\": 5\n",
+          "start": 48557
+        },
+        {
+          "current": "      \"etimeSeconds\": 12,\n      \"job\": 129651120933,\n",
+          "previous": "      \"etimeSeconds\": 6,\n      \"job\": 129026259207,\n",
+          "start": 49176
+        },
+        {
+          "current": "      \"minutes\": 0.2,\n      \"peakRssGb\": 0.9,\n      \"sampledInShard\": 11\n",
+          "previous": "      \"minutes\": 0.1,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 8\n",
+          "start": 49253
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 26,\n      \"job\": 129651120957,\n      \"measured\": true,\n      \"minutes\": 0.43,\n      \"peakRssGb\": 0.9,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"basis\": \"unobserved-under-sampling-interval\",\n      \"job\": 129026259239,\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 9\n",
+          "start": 49386
+        },
+        {
+          "current": "      \"etimeSeconds\": 15,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 9,\n      \"job\": 129026259172,\n",
+          "start": 50077
+        },
+        {
+          "current": "      \"minutes\": 0.25,\n      \"peakRssGb\": 0.9,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 0.15,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 12\n",
+          "start": 50154
+        },
+        {
+          "current": "    \"tests/generic-inheritance-installed.test.mjs\": {\n      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 205,\n      \"job\": 129651120931,\n      \"measured\": true,\n      \"minutes\": 3.42,\n      \"peakRssGb\": 2.4,\n      \"sampledInShard\": 1\n    },\n",
+          "previous": "    \"tests/generic-inheritance-installed.test.mjs\": {\n      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n    },\n",
+          "start": 50933
+        },
+        {
+          "current": "      \"etimeSeconds\": 258,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 170,\n      \"job\": 129026259295,\n",
+          "start": 51261
+        },
+        {
+          "current": "      \"minutes\": 4.3,\n      \"peakRssGb\": 1.9,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 2.83,\n      \"peakRssGb\": 2.5,\n      \"sampledInShard\": 5\n",
+          "start": 51339
+        },
+        {
+          "current": "      \"etimeSeconds\": 809,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 701,\n      \"job\": 129026259348,\n",
+          "start": 53307
+        },
+        {
+          "current": "      \"minutes\": 13.48,\n      \"peakRssGb\": 2.1,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 11.68,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 2\n",
+          "start": 53385
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 404,\n      \"job\": 129651120950,\n      \"measured\": true,\n      \"minutes\": 6.73,\n      \"peakRssGb\": 2.3,\n      \"sampledInShard\": 2\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 53729
+        },
+        {
+          "current": "      \"etimeSeconds\": 1850,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 1630,\n      \"job\": 129026259295,\n",
+          "start": 54011
+        },
+        {
+          "current": "      \"minutes\": 30.83,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 27.17,\n      \"peakRssGb\": 2.4,\n      \"sampledInShard\": 5\n",
+          "start": 54090
+        },
+        {
+          "current": "      \"etimeSeconds\": 65,\n      \"job\": 129651120931,\n",
+          "previous": "      \"etimeSeconds\": 28,\n      \"job\": 129026259277,\n",
+          "start": 54479
+        },
+        {
+          "current": "      \"minutes\": 1.08,\n      \"peakRssGb\": 1.2,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"minutes\": 0.47,\n      \"peakRssGb\": 1.1,\n      \"sampledInShard\": 7\n",
+          "start": 54556
+        },
+        {
+          "current": "      \"etimeSeconds\": 15,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 5,\n      \"job\": 129026259348,\n",
+          "start": 56038
+        },
+        {
+          "current": "      \"minutes\": 0.25,\n      \"peakRssGb\": 0.5,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 0.08,\n      \"peakRssGb\": 0.4,\n      \"sampledInShard\": 2\n",
+          "start": 56115
+        },
+        {
+          "current": "      \"etimeSeconds\": 424,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 287,\n      \"job\": 129026259239,\n",
+          "start": 57604
+        },
+        {
+          "current": "      \"minutes\": 7.07,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 4.78,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 9\n",
+          "start": 57682
+        },
+        {
+          "current": "      \"etimeSeconds\": 32,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 20,\n      \"job\": 129026259183,\n",
+          "start": 57854
+        },
+        {
+          "current": "      \"minutes\": 0.53,\n",
+          "previous": "      \"minutes\": 0.33,\n",
+          "start": 57931
+        },
+        {
+          "current": "      \"sampledInShard\": 8\n",
+          "previous": "      \"sampledInShard\": 10\n",
+          "start": 57978
+        },
+        {
+          "current": "      \"etimeSeconds\": 27,\n      \"job\": 129651120931,\n",
+          "previous": "      \"etimeSeconds\": 6,\n      \"job\": 129026259172,\n",
+          "start": 58344
+        },
+        {
+          "current": "      \"minutes\": 0.45,\n      \"peakRssGb\": 0.5,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"minutes\": 0.1,\n      \"peakRssGb\": 0.2,\n      \"sampledInShard\": 12\n",
+          "start": 58421
+        },
+        {
+          "current": "      \"etimeSeconds\": 143,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 130,\n      \"job\": 129026259176,\n",
+          "start": 59036
+        },
+        {
+          "current": "      \"minutes\": 2.38,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 2.17,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 3\n",
+          "start": 59114
+        },
+        {
+          "current": "      \"etimeSeconds\": 33,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 21,\n      \"job\": 129026259295,\n",
+          "start": 59488
+        },
+        {
+          "current": "      \"minutes\": 0.55,\n",
+          "previous": "      \"minutes\": 0.35,\n",
+          "start": 59565
+        },
+        {
+          "current": "      \"sampledInShard\": 3\n",
+          "previous": "      \"sampledInShard\": 5\n",
+          "start": 59612
+        },
+        {
+          "current": "      \"etimeSeconds\": 2,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 0,\n      \"job\": 129026259277,\n",
+          "start": 59998
+        },
+        {
+          "current": "      \"minutes\": 0.03,\n      \"peakRssGb\": 0.2,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 0.01,\n      \"peakRssGb\": 0.1,\n      \"sampledInShard\": 7\n",
+          "start": 60074
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 20,\n      \"job\": 129651120926,\n      \"measured\": true,\n      \"minutes\": 0.33,\n      \"peakRssGb\": 0.5,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"basis\": \"unobserved-under-sampling-interval\",\n      \"job\": 129026259312,\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 11\n",
+          "start": 60950
+        },
+        {
+          "current": "      \"etimeSeconds\": 442,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 356,\n      \"job\": 129026259295,\n",
+          "start": 62379
+        },
+        {
+          "current": "      \"minutes\": 7.37,\n      \"peakRssGb\": 2.4,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 5.93,\n      \"peakRssGb\": 2.9,\n      \"sampledInShard\": 5\n",
+          "start": 62457
+        },
+        {
+          "current": "      \"etimeSeconds\": 708,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 568,\n      \"job\": 129026259249,\n",
+          "start": 67730
+        },
+        {
+          "current": "      \"minutes\": 11.8,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 9.47,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 6\n",
+          "start": 67808
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 392,\n      \"job\": 129651120874,\n      \"measured\": true,\n      \"minutes\": 6.53,\n      \"peakRssGb\": 1.1,\n      \"sampledInShard\": 9\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 69904
+        },
+        {
+          "current": "      \"etimeSeconds\": 600,\n      \"job\": 129651120958,\n",
+          "previous": "      \"etimeSeconds\": 598,\n      \"job\": 129026259295,\n",
+          "start": 70190
+        },
+        {
+          "current": "      \"minutes\": 10,\n      \"peakRssGb\": 3,\n      \"sampledInShard\": 10\n",
+          "previous": "      \"minutes\": 9.97,\n      \"peakRssGb\": 3.1,\n      \"sampledInShard\": 5\n",
+          "start": 70268
+        },
+        {
+          "current": "      \"etimeSeconds\": 790,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 671,\n      \"job\": 129026259207,\n",
+          "start": 70844
+        },
+        {
+          "current": "      \"minutes\": 13.17,\n      \"peakRssGb\": 2,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 11.18,\n      \"peakRssGb\": 2.1,\n      \"sampledInShard\": 8\n",
+          "start": 70922
+        },
+        {
+          "current": "      \"etimeSeconds\": 1336,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 1330,\n      \"job\": 129026259295,\n",
+          "start": 72815
+        },
+        {
+          "current": "      \"minutes\": 22.27,\n      \"peakRssGb\": 3.9,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 22.17,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 5\n",
+          "start": 72894
+        },
+        {
+          "current": "      \"etimeSeconds\": 221,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 169,\n      \"job\": 129026259249,\n",
+          "start": 73056
+        },
+        {
+          "current": "      \"minutes\": 3.68,\n",
+          "previous": "      \"minutes\": 2.82,\n",
+          "start": 73134
+        },
+        {
+          "current": "      \"sampledInShard\": 8\n",
+          "previous": "      \"sampledInShard\": 6\n",
+          "start": 73181
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 31,\n      \"job\": 129651120874,\n      \"measured\": true,\n      \"minutes\": 0.52,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 9\n",
+          "previous": "      \"basis\": \"unobserved-under-sampling-interval\",\n      \"job\": 129026259312,\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 11\n",
+          "start": 74156
+        },
+        {
+          "current": "      \"etimeSeconds\": 1009,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 883,\n      \"job\": 129026259277,\n",
+          "start": 76030
+        },
+        {
+          "current": "      \"minutes\": 16.82,\n",
+          "previous": "      \"minutes\": 14.72,\n",
+          "start": 76109
+        },
+        {
+          "current": "      \"sampledInShard\": 6\n",
+          "previous": "      \"sampledInShard\": 7\n",
+          "start": 76157
+        },
+        {
+          "current": "      \"etimeSeconds\": 1317,\n      \"job\": 129651120933,\n",
+          "previous": "      \"etimeSeconds\": 1049,\n      \"job\": 129026259183,\n",
+          "start": 79263
+        },
+        {
+          "current": "      \"minutes\": 21.95,\n",
+          "previous": "      \"minutes\": 17.48,\n",
+          "start": 79342
+        },
+        {
+          "current": "      \"sampledInShard\": 11\n",
+          "previous": "      \"sampledInShard\": 10\n",
+          "start": 79388
+        },
+        {
+          "current": "      \"etimeSeconds\": 893,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 698,\n      \"job\": 129026259172,\n",
+          "start": 79740
+        },
+        {
+          "current": "      \"minutes\": 14.88,\n      \"peakRssGb\": 2,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 11.63,\n      \"peakRssGb\": 2.1,\n      \"sampledInShard\": 12\n",
+          "start": 79818
+        },
+        {
+          "current": "      \"etimeSeconds\": 492,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 355,\n      \"job\": 129026259249,\n",
+          "start": 83513
+        },
+        {
+          "current": "      \"minutes\": 8.2,\n      \"peakRssGb\": 2.7,\n",
+          "previous": "      \"minutes\": 5.92,\n      \"peakRssGb\": 2.3,\n",
+          "start": 83591
+        },
+        {
+          "current": "      \"etimeSeconds\": 57,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 36,\n      \"job\": 129026259277,\n",
+          "start": 83773
+        },
+        {
+          "current": "      \"minutes\": 0.95,\n",
+          "previous": "      \"minutes\": 0.6,\n",
+          "start": 83850
+        },
+        {
+          "current": "      \"etimeSeconds\": 581,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 477,\n      \"job\": 129026259207,\n",
+          "start": 84033
+        },
+        {
+          "current": "      \"minutes\": 9.68,\n",
+          "previous": "      \"minutes\": 7.95,\n",
+          "start": 84111
+        },
+        {
+          "current": "      \"sampledInShard\": 3\n",
+          "previous": "      \"sampledInShard\": 8\n",
+          "start": 84158
+        },
+        {
+          "current": "      \"etimeSeconds\": 1579,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 1142,\n      \"job\": 129026259239,\n",
+          "start": 84294
+        },
+        {
+          "current": "      \"minutes\": 26.32,\n      \"peakRssGb\": 3,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 19.03,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 9\n",
+          "start": 84373
+        },
+        {
+          "current": "      \"etimeSeconds\": 53,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 23,\n      \"job\": 129026259295,\n",
+          "start": 86288
+        },
+        {
+          "current": "      \"minutes\": 0.88,\n",
+          "previous": "      \"minutes\": 0.38,\n",
+          "start": 86365
+        },
+        {
+          "current": "      \"sampledInShard\": 4\n",
+          "previous": "      \"sampledInShard\": 5\n",
+          "start": 86412
+        },
+        {
+          "current": "      \"etimeSeconds\": 38,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 30,\n      \"job\": 129026259249,\n",
+          "start": 86548
+        },
+        {
+          "current": "      \"minutes\": 0.63,\n      \"peakRssGb\": 0.9,\n      \"sampledInShard\": 12\n",
+          "previous": "      \"minutes\": 0.5,\n      \"peakRssGb\": 0.5,\n      \"sampledInShard\": 6\n",
+          "start": 86625
+        },
+        {
+          "current": "      \"etimeSeconds\": 40,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 11,\n      \"job\": 129026259277,\n",
+          "start": 86792
+        },
+        {
+          "current": "      \"minutes\": 0.67,\n      \"peakRssGb\": 0.4,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 0.18,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 7\n",
+          "start": 86869
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 48,\n      \"job\": 129651120927,\n      \"measured\": true,\n      \"minutes\": 0.8,\n      \"peakRssGb\": 0.2,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 89160
+        },
+        {
+          "current": "      \"etimeSeconds\": 63,\n      \"job\": 129651120931,\n",
+          "previous": "      \"etimeSeconds\": 59,\n      \"job\": 129026259239,\n",
+          "start": 90290
+        },
+        {
+          "current": "      \"minutes\": 1.05,\n      \"peakRssGb\": 1.2,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"minutes\": 0.98,\n      \"peakRssGb\": 1.1,\n      \"sampledInShard\": 9\n",
+          "start": 90367
+        },
+        {
+          "current": "      \"etimeSeconds\": 241,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 213,\n      \"job\": 129026259176,\n",
+          "start": 94241
+        },
+        {
+          "current": "      \"minutes\": 4.02,\n      \"peakRssGb\": 1.6,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 3.55,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 3\n",
+          "start": 94319
+        },
+        {
+          "current": "      \"etimeSeconds\": 573,\n      \"job\": 129651120958,\n",
+          "previous": "      \"etimeSeconds\": 572,\n      \"job\": 129026259249,\n",
+          "start": 94881
+        },
+        {
+          "current": "      \"minutes\": 9.55,\n",
+          "previous": "      \"minutes\": 9.53,\n",
+          "start": 94959
+        },
+        {
+          "current": "      \"sampledInShard\": 10\n",
+          "previous": "      \"sampledInShard\": 6\n",
+          "start": 95006
+        },
+        {
+          "current": "      \"etimeSeconds\": 270,\n      \"job\": 129651120958,\n",
+          "previous": "      \"etimeSeconds\": 267,\n      \"job\": 129026259312,\n",
+          "start": 95971
+        },
+        {
+          "current": "      \"minutes\": 4.5,\n      \"peakRssGb\": 3,\n      \"sampledInShard\": 10\n",
+          "previous": "      \"minutes\": 4.45,\n      \"peakRssGb\": 2.3,\n      \"sampledInShard\": 11\n",
+          "start": 96049
+        },
+        {
+          "current": "      \"etimeSeconds\": 553,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 523,\n      \"job\": 129026259176,\n",
+          "start": 96826
+        },
+        {
+          "current": "      \"minutes\": 9.22,\n      \"peakRssGb\": 2.3,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 8.72,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 3\n",
+          "start": 96904
+        },
+        {
+          "current": "      \"etimeSeconds\": 453,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 337,\n      \"job\": 129026259239,\n",
+          "start": 98140
+        },
+        {
+          "current": "      \"minutes\": 7.55,\n      \"peakRssGb\": 0.7,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 5.62,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 9\n",
+          "start": 98218
+        },
+        {
+          "current": "      \"etimeSeconds\": 145,\n      \"job\": 129651120958,\n",
+          "previous": "      \"etimeSeconds\": 94,\n      \"job\": 129026259277,\n",
+          "start": 100393
+        },
+        {
+          "current": "      \"minutes\": 2.42,\n      \"peakRssGb\": 0.4,\n      \"sampledInShard\": 10\n",
+          "previous": "      \"minutes\": 1.57,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 7\n",
+          "start": 100471
+        },
+        {
+          "current": "      \"etimeSeconds\": 13,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 8,\n      \"job\": 129026259207,\n",
+          "start": 100656
+        },
+        {
+          "current": "      \"minutes\": 0.22,\n",
+          "previous": "      \"minutes\": 0.13,\n",
+          "start": 100733
+        },
+        {
+          "current": "      \"etimeSeconds\": 79,\n      \"job\": 129651120931,\n",
+          "previous": "      \"etimeSeconds\": 44,\n      \"job\": 129026259312,\n",
+          "start": 101440
+        },
+        {
+          "current": "      \"minutes\": 1.32,\n",
+          "previous": "      \"minutes\": 0.73,\n",
+          "start": 101517
+        },
+        {
+          "current": "      \"sampledInShard\": 1\n",
+          "previous": "      \"sampledInShard\": 11\n",
+          "start": 101564
+        },
+        {
+          "current": "      \"etimeSeconds\": 72,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 32,\n      \"job\": 129026259172,\n",
+          "start": 101699
+        },
+        {
+          "current": "      \"minutes\": 1.2,\n",
+          "previous": "      \"minutes\": 0.53,\n",
+          "start": 101776
+        },
+        {
+          "current": "      \"sampledInShard\": 8\n",
+          "previous": "      \"sampledInShard\": 12\n",
+          "start": 101822
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 19,\n      \"job\": 129651120931,\n      \"measured\": true,\n      \"minutes\": 0.32,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 102639
+        },
+        {
+          "current": "      \"etimeSeconds\": 24,\n      \"job\": 129651120931,\n",
+          "previous": "      \"etimeSeconds\": 22,\n      \"job\": 129026259249,\n",
+          "start": 103160
+        },
+        {
+          "current": "      \"minutes\": 0.4,\n",
+          "previous": "      \"minutes\": 0.37,\n",
+          "start": 103237
+        },
+        {
+          "current": "      \"sampledInShard\": 1\n",
+          "previous": "      \"sampledInShard\": 6\n",
+          "start": 103283
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 1365,\n      \"job\": 129651120975,\n      \"measured\": true,\n      \"minutes\": 22.75,\n      \"peakRssGb\": 3.8,\n      \"sampledInShard\": 12\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 105389
+        },
+        {
+          "current": "      \"etimeSeconds\": 1626,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 1585,\n      \"job\": 129026259183,\n",
+          "start": 106745
+        },
+        {
+          "current": "      \"minutes\": 27.1,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 26.42,\n      \"peakRssGb\": 3.6,\n      \"sampledInShard\": 10\n",
+          "start": 106824
+        },
+        {
+          "current": "      \"etimeSeconds\": 388,\n      \"job\": 129651120931,\n",
+          "previous": "      \"etimeSeconds\": 379,\n      \"job\": 129026259312,\n",
+          "start": 106998
+        },
+        {
+          "current": "      \"minutes\": 6.47,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"minutes\": 6.32,\n      \"peakRssGb\": 1.7,\n      \"sampledInShard\": 11\n",
+          "start": 107076
+        },
+        {
+          "current": "      \"etimeSeconds\": 854,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 630,\n      \"job\": 129026259295,\n",
+          "start": 108339
+        },
+        {
+          "current": "      \"minutes\": 14.23,\n      \"peakRssGb\": 2.3,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 10.5,\n      \"peakRssGb\": 3.4,\n      \"sampledInShard\": 5\n",
+          "start": 108417
+        },
+        {
+          "current": "      \"etimeSeconds\": 1010,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 878,\n      \"job\": 129026259183,\n",
+          "start": 109418
+        },
+        {
+          "current": "      \"minutes\": 16.83,\n      \"peakRssGb\": 3.5,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 14.63,\n      \"peakRssGb\": 3.9,\n      \"sampledInShard\": 10\n",
+          "start": 109497
+        },
+        {
+          "current": "      \"etimeSeconds\": 520,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 310,\n      \"job\": 129026259239,\n",
+          "start": 114484
+        },
+        {
+          "current": "      \"minutes\": 8.67,\n      \"peakRssGb\": 2.9,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 5.17,\n      \"peakRssGb\": 3.6,\n      \"sampledInShard\": 9\n",
+          "start": 114562
+        },
+        {
+          "current": "      \"etimeSeconds\": 372,\n      \"job\": 129651120931,\n",
+          "previous": "      \"etimeSeconds\": 189,\n      \"job\": 129026259312,\n",
+          "start": 114939
+        },
+        {
+          "current": "      \"minutes\": 6.2,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"minutes\": 3.15,\n      \"peakRssGb\": 0.9,\n      \"sampledInShard\": 11\n",
+          "start": 115017
+        },
+        {
+          "current": "      \"etimeSeconds\": 638,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 604,\n      \"job\": 129026259295,\n",
+          "start": 116256
+        },
+        {
+          "current": "      \"minutes\": 10.63,\n",
+          "previous": "      \"minutes\": 10.07,\n",
+          "start": 116334
+        },
+        {
+          "current": "      \"sampledInShard\": 3\n",
+          "previous": "      \"sampledInShard\": 5\n",
+          "start": 116382
+        },
+        {
+          "current": "      \"etimeSeconds\": 666,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 426,\n      \"job\": 129026259239,\n",
+          "start": 122423
+        },
+        {
+          "current": "      \"minutes\": 11.1,\n      \"peakRssGb\": 3.4,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 7.1,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 9\n",
+          "start": 122501
+        },
+        {
+          "current": "      \"etimeSeconds\": 295,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 145,\n      \"job\": 129026259172,\n",
+          "start": 125781
+        },
+        {
+          "current": "      \"minutes\": 4.92,\n",
+          "previous": "      \"minutes\": 2.42,\n",
+          "start": 125859
+        },
+        {
+          "current": "      \"etimeSeconds\": 1867,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 1624,\n      \"job\": 129026259277,\n",
+          "start": 127324
+        },
+        {
+          "current": "      \"minutes\": 31.12,\n",
+          "previous": "      \"minutes\": 27.07,\n",
+          "start": 127403
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 19,\n      \"job\": 129651120911,\n      \"measured\": true,\n      \"minutes\": 0.32,\n      \"peakRssGb\": 0.4,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"basis\": \"unobserved-under-sampling-interval\",\n      \"job\": 129026259295,\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 5\n",
+          "start": 129451
+        },
+        {
+          "current": "      \"etimeSeconds\": 1287,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 846,\n      \"job\": 129026259172,\n",
+          "start": 131066
+        },
+        {
+          "current": "      \"minutes\": 21.45,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 14.1,\n      \"peakRssGb\": 2.6,\n      \"sampledInShard\": 12\n",
+          "start": 131145
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 1426,\n      \"job\": 129651120958,\n      \"measured\": true,\n      \"minutes\": 23.77,\n      \"peakRssGb\": 4.2,\n      \"sampledInShard\": 10\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 134485
+        },
+        {
+          "current": "      \"etimeSeconds\": 305,\n      \"job\": 129651120874,\n",
+          "previous": "      \"etimeSeconds\": 304,\n      \"job\": 129026259207,\n",
+          "start": 135387
+        },
+        {
+          "current": "      \"minutes\": 5.08,\n      \"peakRssGb\": 2.5,\n      \"sampledInShard\": 9\n",
+          "previous": "      \"minutes\": 5.07,\n      \"peakRssGb\": 2.4,\n      \"sampledInShard\": 8\n",
+          "start": 135465
+        },
+        {
+          "current": "      \"etimeSeconds\": 646,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 576,\n      \"job\": 129026259312,\n",
+          "start": 141185
+        },
+        {
+          "current": "      \"minutes\": 10.77,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 9.6,\n      \"peakRssGb\": 2.1,\n      \"sampledInShard\": 11\n",
+          "start": 141263
+        },
+        {
+          "current": "      \"etimeSeconds\": 701,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 606,\n      \"job\": 129026259295,\n",
+          "start": 142496
+        },
+        {
+          "current": "      \"minutes\": 11.68,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 10.1,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 5\n",
+          "start": 142574
+        },
+        {
+          "current": "      \"etimeSeconds\": 2207,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 1710,\n      \"job\": 129026259172,\n",
+          "start": 144020
+        },
+        {
+          "current": "      \"minutes\": 36.78,\n      \"peakRssGb\": 3.7,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 28.5,\n      \"peakRssGb\": 3.9,\n      \"sampledInShard\": 12\n",
+          "start": 144099
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 8330,\n      \"job\": 129651120911,\n      \"measured\": true,\n      \"minutes\": 138.83,\n      \"peakRssGb\": 1.5,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 144842
+        },
+        {
+          "current": "      \"etimeSeconds\": 233,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 226,\n      \"job\": 129026259239,\n",
+          "start": 146012
+        },
+        {
+          "current": "      \"minutes\": 3.88,\n      \"peakRssGb\": 0.7,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 3.77,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 9\n",
+          "start": 146090
+        },
+        {
+          "current": "      \"etimeSeconds\": 710,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 595,\n      \"job\": 129026259249,\n",
+          "start": 147917
+        },
+        {
+          "current": "      \"minutes\": 11.83,\n      \"peakRssGb\": 3.6,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 9.92,\n      \"peakRssGb\": 3,\n      \"sampledInShard\": 6\n",
+          "start": 147995
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 977,\n      \"job\": 129651120927,\n      \"measured\": true,\n      \"minutes\": 16.28,\n      \"peakRssGb\": 3.7,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 150056
+        },
+        {
+          "current": "      \"etimeSeconds\": 760,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 443,\n      \"job\": 129026259239,\n",
+          "start": 151184
+        },
+        {
+          "current": "      \"minutes\": 12.67,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 7.38,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 9\n",
+          "start": 151262
+        },
+        {
+          "current": "      \"etimeSeconds\": 3,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 1,\n      \"job\": 129026259312,\n",
+          "start": 151644
+        },
+        {
+          "current": "      \"minutes\": 0.05,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 0.02,\n      \"peakRssGb\": 0.2,\n      \"sampledInShard\": 11\n",
+          "start": 151720
+        },
+        {
+          "current": "      \"etimeSeconds\": 439,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 398,\n      \"job\": 129026259172,\n",
+          "start": 151900
+        },
+        {
+          "current": "      \"minutes\": 7.32,\n      \"peakRssGb\": 2.1,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 6.63,\n      \"peakRssGb\": 2.6,\n      \"sampledInShard\": 12\n",
+          "start": 151978
+        },
+        {
+          "current": "      \"etimeSeconds\": 233,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 114,\n      \"job\": 129026259172,\n",
+          "start": 157168
+        },
+        {
+          "current": "      \"minutes\": 3.88,\n      \"peakRssGb\": 1,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 1.9,\n      \"peakRssGb\": 1.2,\n      \"sampledInShard\": 12\n",
+          "start": 157246
+        },
+        {
+          "current": "      \"etimeSeconds\": 1431,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 1421,\n      \"job\": 129026259295,\n",
+          "start": 158267
+        },
+        {
+          "current": "      \"minutes\": 23.85,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 12\n",
+          "previous": "      \"minutes\": 23.68,\n      \"peakRssGb\": 3.1,\n      \"sampledInShard\": 5\n",
+          "start": 158346
+        },
+        {
+          "current": "      \"etimeSeconds\": 72,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 48,\n      \"job\": 129026259183,\n",
+          "start": 159426
+        },
+        {
+          "current": "      \"minutes\": 1.2,\n",
+          "previous": "      \"minutes\": 0.8,\n",
+          "start": 159503
+        },
+        {
+          "current": "      \"sampledInShard\": 5\n",
+          "previous": "      \"sampledInShard\": 10\n",
+          "start": 159549
+        },
+        {
+          "current": "      \"etimeSeconds\": 798,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 763,\n      \"job\": 129026259207,\n",
+          "start": 161587
+        },
+        {
+          "current": "      \"minutes\": 13.3,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 12.72,\n      \"peakRssGb\": 3.1,\n      \"sampledInShard\": 8\n",
+          "start": 161665
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 411,\n      \"job\": 129651120933,\n      \"measured\": true,\n      \"minutes\": 6.85,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 11\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 163293
+        },
+        {
+          "current": "      \"etimeSeconds\": 177,\n      \"job\": 129651120933,\n",
+          "previous": "      \"etimeSeconds\": 160,\n      \"job\": 129026259183,\n",
+          "start": 164694
+        },
+        {
+          "current": "      \"minutes\": 2.95,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 11\n",
+          "previous": "      \"minutes\": 2.67,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 10\n",
+          "start": 164772
+        },
+        {
+          "current": "      \"etimeSeconds\": 418,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 394,\n      \"job\": 129026259249,\n",
+          "start": 166449
+        },
+        {
+          "current": "      \"minutes\": 6.97,\n      \"peakRssGb\": 4,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 6.57,\n      \"peakRssGb\": 3.1,\n      \"sampledInShard\": 6\n",
+          "start": 166527
+        },
+        {
+          "current": "      \"etimeSeconds\": 818,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 626,\n      \"job\": 129026259172,\n",
+          "start": 167723
+        },
+        {
+          "current": "      \"minutes\": 13.63,\n      \"peakRssGb\": 3.1,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 10.43,\n      \"peakRssGb\": 3,\n      \"sampledInShard\": 12\n",
+          "start": 167801
+        },
+        {
+          "current": "      \"etimeSeconds\": 787,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 778,\n      \"job\": 129026259295,\n",
+          "start": 168781
+        },
+        {
+          "current": "      \"minutes\": 13.12,\n      \"peakRssGb\": 3.7,\n      \"sampledInShard\": 12\n",
+          "previous": "      \"minutes\": 12.97,\n      \"peakRssGb\": 3.6,\n      \"sampledInShard\": 5\n",
+          "start": 168859
+        },
+        {
+          "current": "      \"etimeSeconds\": 566,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 540,\n      \"job\": 129026259239,\n",
+          "start": 169652
+        },
+        {
+          "current": "      \"minutes\": 9.43,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 9,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 9\n",
+          "start": 169730
+        },
+        {
+          "current": "      \"etimeSeconds\": 495,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 430,\n      \"job\": 129026259176,\n",
+          "start": 171027
+        },
+        {
+          "current": "      \"minutes\": 8.25,\n",
+          "previous": "      \"minutes\": 7.17,\n",
+          "start": 171105
+        },
+        {
+          "current": "      \"sampledInShard\": 6\n",
+          "previous": "      \"sampledInShard\": 3\n",
+          "start": 171152
+        },
+        {
+          "current": "      \"etimeSeconds\": 85,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 68,\n      \"job\": 129026259183,\n",
+          "start": 172561
+        },
+        {
+          "current": "      \"minutes\": 1.42,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 1.13,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 10\n",
+          "start": 172638
+        },
+        {
+          "current": "      \"etimeSeconds\": 1448,\n      \"job\": 129651120874,\n",
+          "previous": "      \"etimeSeconds\": 1272,\n      \"job\": 129026259207,\n",
+          "start": 174710
+        },
+        {
+          "current": "      \"minutes\": 24.13,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 9\n",
+          "previous": "      \"minutes\": 21.2,\n      \"peakRssGb\": 3,\n      \"sampledInShard\": 8\n",
+          "start": 174789
+        },
+        {
+          "current": "      \"etimeSeconds\": 126,\n      \"job\": 129651120958,\n",
+          "previous": "      \"etimeSeconds\": 27,\n      \"job\": 129026259312,\n",
+          "start": 175430
+        },
+        {
+          "current": "      \"minutes\": 2.1,\n",
+          "previous": "      \"minutes\": 0.45,\n",
+          "start": 175508
+        },
+        {
+          "current": "      \"sampledInShard\": 10\n",
+          "previous": "      \"sampledInShard\": 11\n",
+          "start": 175554
+        },
+        {
+          "current": "      \"etimeSeconds\": 27,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 24,\n      \"job\": 129026259295,\n",
+          "start": 189636
+        },
+        {
+          "current": "      \"minutes\": 0.45,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 0.4,\n      \"peakRssGb\": 0.5,\n      \"sampledInShard\": 5\n",
+          "start": 189713
+        },
+        {
+          "current": "      \"etimeSeconds\": 1652,\n      \"job\": 129651120958,\n",
+          "previous": "      \"etimeSeconds\": 1628,\n      \"job\": 129026259277,\n",
+          "start": 190102
+        },
+        {
+          "current": "      \"minutes\": 27.53,\n      \"peakRssGb\": 3.4,\n      \"sampledInShard\": 10\n",
+          "previous": "      \"minutes\": 27.13,\n      \"peakRssGb\": 2.6,\n      \"sampledInShard\": 7\n",
+          "start": 190181
+        },
+        {
+          "current": "      \"etimeSeconds\": 733,\n      \"job\": 129651120931,\n",
+          "previous": "      \"etimeSeconds\": 680,\n      \"job\": 129026259239,\n",
+          "start": 190574
+        },
+        {
+          "current": "      \"minutes\": 12.22,\n      \"peakRssGb\": 2.4,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"minutes\": 11.33,\n      \"peakRssGb\": 3,\n      \"sampledInShard\": 9\n",
+          "start": 190652
+        },
+        {
+          "current": "      \"etimeSeconds\": 16,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 15,\n      \"job\": 129026259312,\n",
+          "start": 193538
+        },
+        {
+          "current": "      \"minutes\": 0.27,\n      \"peakRssGb\": 1.1,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 0.25,\n      \"peakRssGb\": 1,\n      \"sampledInShard\": 11\n",
+          "start": 193615
+        },
+        {
+          "current": "      \"etimeSeconds\": 10,\n      \"job\": 129651120958,\n",
+          "previous": "      \"etimeSeconds\": 3,\n      \"job\": 129026259249,\n",
+          "start": 200219
+        },
+        {
+          "current": "      \"minutes\": 0.17,\n      \"peakRssGb\": 0.5,\n      \"sampledInShard\": 10\n",
+          "previous": "      \"minutes\": 0.05,\n      \"peakRssGb\": 0.2,\n      \"sampledInShard\": 6\n",
+          "start": 200296
+        },
+        {
+          "current": "      \"etimeSeconds\": 409,\n      \"job\": 129651120958,\n",
+          "previous": "      \"etimeSeconds\": 333,\n      \"job\": 129026259183,\n",
+          "start": 201120
+        },
+        {
+          "current": "      \"minutes\": 6.82,\n      \"peakRssGb\": 2.7,\n",
+          "previous": "      \"minutes\": 5.55,\n      \"peakRssGb\": 3.3,\n",
+          "start": 201198
+        },
+        {
+          "current": "      \"etimeSeconds\": 115,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 106,\n      \"job\": 129026259249,\n",
+          "start": 202987
+        },
+        {
+          "current": "      \"minutes\": 1.92,\n",
+          "previous": "      \"minutes\": 1.77,\n",
+          "start": 203065
+        },
+        {
+          "current": "      \"sampledInShard\": 8\n",
+          "previous": "      \"sampledInShard\": 6\n",
+          "start": 203112
+        },
+        {
+          "current": "      \"etimeSeconds\": 14,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 10,\n      \"job\": 129026259207,\n",
+          "start": 203466
+        },
+        {
+          "current": "      \"minutes\": 0.23,\n",
+          "previous": "      \"minutes\": 0.17,\n",
+          "start": 203543
+        },
+        {
+          "current": "      \"sampledInShard\": 12\n",
+          "previous": "      \"sampledInShard\": 8\n",
+          "start": 203590
+        },
+        {
+          "current": "      \"etimeSeconds\": 48,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 19,\n      \"job\": 129026259312,\n",
+          "start": 204159
+        },
+        {
+          "current": "      \"minutes\": 0.8,\n      \"peakRssGb\": 0.2,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 0.32,\n      \"peakRssGb\": 0.4,\n      \"sampledInShard\": 11\n",
+          "start": 204236
+        },
+        {
+          "current": "      \"etimeSeconds\": 19,\n      \"job\": 129651120950,\n",
+          "previous": "      \"etimeSeconds\": 2,\n      \"job\": 129026259249,\n",
+          "start": 205782
+        },
+        {
+          "current": "      \"minutes\": 0.32,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 2\n",
+          "previous": "      \"minutes\": 0.03,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 6\n",
+          "start": 205859
+        },
+        {
+          "current": "      \"etimeSeconds\": 45,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 36,\n      \"job\": 129026259249,\n",
+          "start": 208460
+        },
+        {
+          "current": "      \"minutes\": 0.75,\n",
+          "previous": "      \"minutes\": 0.6,\n",
+          "start": 208537
+        },
+        {
+          "current": "      \"sampledInShard\": 4\n",
+          "previous": "      \"sampledInShard\": 6\n",
+          "start": 208584
+        },
+        {
+          "current": "      \"etimeSeconds\": 59,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 28,\n      \"job\": 129026259312,\n",
+          "start": 209589
+        },
+        {
+          "current": "      \"minutes\": 0.98,\n",
+          "previous": "      \"minutes\": 0.47,\n",
+          "start": 209666
+        },
+        {
+          "current": "      \"sampledInShard\": 3\n",
+          "previous": "      \"sampledInShard\": 11\n",
+          "start": 209713
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 41,\n      \"job\": 129651120927,\n      \"measured\": true,\n      \"minutes\": 0.68,\n      \"peakRssGb\": 1.7,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 213209
+        },
+        {
+          "current": "      \"etimeSeconds\": 16,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 12,\n      \"job\": 129026259277,\n",
+          "start": 213934
+        },
+        {
+          "current": "      \"minutes\": 0.27,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 0.2,\n      \"peakRssGb\": 0.4,\n      \"sampledInShard\": 7\n",
+          "start": 214011
+        },
+        {
+          "current": "      \"etimeSeconds\": 408,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 354,\n      \"job\": 129026259183,\n",
+          "start": 214653
+        },
+        {
+          "current": "      \"minutes\": 6.8,\n      \"peakRssGb\": 2.5,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 5.9,\n      \"peakRssGb\": 3,\n      \"sampledInShard\": 10\n",
+          "start": 214731
+        },
+        {
+          "current": "      \"etimeSeconds\": 638,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 389,\n      \"job\": 129026259239,\n",
+          "start": 216953
+        },
+        {
+          "current": "      \"minutes\": 10.63,\n",
+          "previous": "      \"minutes\": 6.48,\n",
+          "start": 217031
+        },
+        {
+          "current": "      \"sampledInShard\": 5\n",
+          "previous": "      \"sampledInShard\": 9\n",
+          "start": 217077
+        },
+        {
+          "current": "      \"etimeSeconds\": 345,\n      \"job\": 129651120931,\n",
+          "previous": "      \"etimeSeconds\": 113,\n      \"job\": 129026259312,\n",
+          "start": 220051
+        },
+        {
+          "current": "      \"minutes\": 5.75,\n",
+          "previous": "      \"minutes\": 1.88,\n",
+          "start": 220129
+        },
+        {
+          "current": "      \"sampledInShard\": 1\n",
+          "previous": "      \"sampledInShard\": 11\n",
+          "start": 220176
+        },
+        {
+          "current": "      \"etimeSeconds\": 164,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 115,\n      \"job\": 129026259312,\n",
+          "start": 222647
+        },
+        {
+          "current": "      \"minutes\": 2.73,\n",
+          "previous": "      \"minutes\": 1.92,\n",
+          "start": 222725
+        },
+        {
+          "current": "      \"sampledInShard\": 6\n",
+          "previous": "      \"sampledInShard\": 11\n",
+          "start": 222772
+        },
+        {
+          "current": "      \"etimeSeconds\": 512,\n      \"job\": 129651120950,\n",
+          "previous": "      \"etimeSeconds\": 424,\n      \"job\": 129026259172,\n",
+          "start": 222893
+        },
+        {
+          "current": "      \"minutes\": 8.53,\n",
+          "previous": "      \"minutes\": 7.07,\n",
+          "start": 222971
+        },
+        {
+          "current": "      \"sampledInShard\": 2\n",
+          "previous": "      \"sampledInShard\": 12\n",
+          "start": 223018
+        },
+        {
+          "current": "      \"etimeSeconds\": 784,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 641,\n      \"job\": 129026259207,\n",
+          "start": 224581
+        },
+        {
+          "current": "      \"minutes\": 13.07,\n      \"peakRssGb\": 2.1,\n",
+          "previous": "      \"minutes\": 10.68,\n      \"peakRssGb\": 2.5,\n",
+          "start": 224659
+        },
+        {
+          "current": "      \"etimeSeconds\": 9,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 1,\n      \"job\": 129026259183,\n",
+          "start": 227609
+        },
+        {
+          "current": "      \"minutes\": 0.15,\n      \"peakRssGb\": 0.3,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 0.02,\n      \"peakRssGb\": 0.1,\n      \"sampledInShard\": 10\n",
+          "start": 227685
+        },
+        {
+          "current": "      \"etimeSeconds\": 16,\n      \"job\": 129651120933,\n",
+          "previous": "      \"etimeSeconds\": 6,\n      \"job\": 129026259161,\n",
+          "start": 228306
+        },
+        {
+          "current": "      \"minutes\": 0.27,\n      \"peakRssGb\": 0.8,\n      \"sampledInShard\": 11\n",
+          "previous": "      \"minutes\": 0.1,\n      \"peakRssGb\": 0.5,\n      \"sampledInShard\": 1\n",
+          "start": 228383
+        },
+        {
+          "current": "      \"etimeSeconds\": 427,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 373,\n      \"job\": 129026259207,\n",
+          "start": 232297
+        },
+        {
+          "current": "      \"minutes\": 7.12,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 6.22,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 8\n",
+          "start": 232375
+        },
+        {
+          "current": "      \"etimeSeconds\": 2181,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 1813,\n      \"job\": 129026259183,\n",
+          "start": 232749
+        },
+        {
+          "current": "      \"minutes\": 36.35,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 30.22,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 10\n",
+          "start": 232828
+        },
+        {
+          "current": "      \"etimeSeconds\": 453,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 387,\n      \"job\": 129026259161,\n",
+          "start": 233451
+        },
+        {
+          "current": "      \"minutes\": 7.55,\n      \"peakRssGb\": 2.9,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 6.45,\n      \"peakRssGb\": 3.2,\n      \"sampledInShard\": 1\n",
+          "start": 233529
+        },
+        {
+          "current": "      \"etimeSeconds\": 2178,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 1313,\n      \"job\": 129026259239,\n",
+          "start": 235196
+        },
+        {
+          "current": "      \"minutes\": 36.3,\n      \"peakRssGb\": 2.9,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 21.88,\n      \"peakRssGb\": 3.5,\n      \"sampledInShard\": 9\n",
+          "start": 235275
+        },
+        {
+          "current": "      \"etimeSeconds\": 906,\n      \"job\": 129651120938,\n",
+          "previous": "      \"etimeSeconds\": 566,\n      \"job\": 129026259239,\n",
+          "start": 237878
+        },
+        {
+          "current": "      \"minutes\": 15.1,\n      \"peakRssGb\": 3.4,\n      \"sampledInShard\": 8\n",
+          "previous": "      \"minutes\": 9.43,\n      \"peakRssGb\": 3.6,\n      \"sampledInShard\": 9\n",
+          "start": 237956
+        },
+        {
+          "current": "      \"etimeSeconds\": 296,\n      \"job\": 129651120958,\n",
+          "previous": "      \"etimeSeconds\": 118,\n      \"job\": 129026259312,\n",
+          "start": 238332
+        },
+        {
+          "current": "      \"minutes\": 4.93,\n",
+          "previous": "      \"minutes\": 1.97,\n",
+          "start": 238410
+        },
+        {
+          "current": "      \"sampledInShard\": 10\n",
+          "previous": "      \"sampledInShard\": 11\n",
+          "start": 238457
+        },
+        {
+          "current": "      \"etimeSeconds\": 760,\n      \"job\": 129651120957,\n",
+          "previous": "      \"etimeSeconds\": 575,\n      \"job\": 129026259239,\n",
+          "start": 240520
+        },
+        {
+          "current": "      \"minutes\": 12.67,\n      \"peakRssGb\": 3.6,\n      \"sampledInShard\": 3\n",
+          "previous": "      \"minutes\": 9.58,\n      \"peakRssGb\": 3.3,\n      \"sampledInShard\": 9\n",
+          "start": 240598
+        },
+        {
+          "current": "      \"etimeSeconds\": 759,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 591,\n      \"job\": 129026259172,\n",
+          "start": 241185
+        },
+        {
+          "current": "      \"minutes\": 12.65,\n      \"peakRssGb\": 2.6,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 9.85,\n      \"peakRssGb\": 2.8,\n      \"sampledInShard\": 12\n",
+          "start": 241263
+        },
+        {
+          "current": "      \"etimeSeconds\": 1728,\n      \"job\": 129651120926,\n",
+          "previous": "      \"etimeSeconds\": 1560,\n      \"job\": 129026259348,\n",
+          "start": 241686
+        },
+        {
+          "current": "      \"minutes\": 28.8,\n      \"peakRssGb\": 2.4,\n      \"sampledInShard\": 6\n",
+          "previous": "      \"minutes\": 26,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 2\n",
+          "start": 241765
+        },
+        {
+          "current": "      \"etimeSeconds\": 676,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 497,\n      \"job\": 129026259207,\n",
+          "start": 242988
+        },
+        {
+          "current": "      \"minutes\": 11.27,\n      \"peakRssGb\": 2.4,\n      \"sampledInShard\": 12\n",
+          "previous": "      \"minutes\": 8.28,\n      \"peakRssGb\": 2.7,\n      \"sampledInShard\": 8\n",
+          "start": 243066
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 98,\n      \"job\": 129651120911,\n      \"measured\": true,\n      \"minutes\": 1.63,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 244732
+        },
+        {
+          "current": "      \"etimeSeconds\": 112,\n      \"job\": 129651120927,\n",
+          "previous": "      \"etimeSeconds\": 109,\n      \"job\": 129026259207,\n",
+          "start": 245802
+        },
+        {
+          "current": "      \"minutes\": 1.87,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 5\n",
+          "previous": "      \"minutes\": 1.82,\n      \"peakRssGb\": 1,\n      \"sampledInShard\": 8\n",
+          "start": 245880
+        },
+        {
+          "current": "      \"etimeSeconds\": 108,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 102,\n      \"job\": 129026259239,\n",
+          "start": 246061
+        },
+        {
+          "current": "      \"minutes\": 1.8,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 4\n",
+          "previous": "      \"minutes\": 1.7,\n      \"peakRssGb\": 0.7,\n      \"sampledInShard\": 9\n",
+          "start": 246139
+        },
+        {
+          "current": "      \"etimeSeconds\": 597,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 470,\n      \"job\": 129026259312,\n",
+          "start": 246571
+        },
+        {
+          "current": "      \"minutes\": 9.95,\n      \"peakRssGb\": 2.5,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 7.83,\n      \"peakRssGb\": 1.7,\n      \"sampledInShard\": 11\n",
+          "start": 246649
+        },
+        {
+          "current": "      \"etimeSeconds\": 125,\n      \"job\": 129651120950,\n",
+          "previous": "      \"etimeSeconds\": 103,\n      \"job\": 129026259172,\n",
+          "start": 246833
+        },
+        {
+          "current": "      \"minutes\": 2.08,\n",
+          "previous": "      \"minutes\": 1.72,\n",
+          "start": 246911
+        },
+        {
+          "current": "      \"sampledInShard\": 2\n",
+          "previous": "      \"sampledInShard\": 12\n",
+          "start": 246958
+        },
+        {
+          "current": "      \"etimeSeconds\": 349,\n      \"job\": 129651120911,\n",
+          "previous": "      \"etimeSeconds\": 273,\n      \"job\": 129026259348,\n",
+          "start": 247356
+        },
+        {
+          "current": "      \"minutes\": 5.82,\n      \"peakRssGb\": 1.3,\n      \"sampledInShard\": 7\n",
+          "previous": "      \"minutes\": 4.55,\n      \"peakRssGb\": 3,\n      \"sampledInShard\": 2\n",
+          "start": 247434
+        },
+        {
+          "current": "      \"etimeSeconds\": 9,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 3,\n      \"job\": 129026259176,\n",
+          "start": 247607
+        },
+        {
+          "current": "      \"minutes\": 0.15,\n",
+          "previous": "      \"minutes\": 0.05,\n",
+          "start": 247683
+        },
+        {
+          "current": "      \"sampledInShard\": 12\n",
+          "previous": "      \"sampledInShard\": 3\n",
+          "start": 247730
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 238,\n      \"job\": 129651120975,\n      \"measured\": true,\n      \"minutes\": 3.97,\n      \"peakRssGb\": 2.2,\n      \"sampledInShard\": 12\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 247829
+        },
+        {
+          "current": "      \"etimeSeconds\": 154,\n      \"job\": 129651120992,\n",
+          "previous": "      \"etimeSeconds\": 129,\n      \"job\": 129026259295,\n",
+          "start": 248121
+        },
+        {
+          "current": "      \"minutes\": 2.57,\n",
+          "previous": "      \"minutes\": 2.15,\n",
+          "start": 248199
+        },
+        {
+          "current": "      \"sampledInShard\": 4\n",
+          "previous": "      \"sampledInShard\": 5\n",
+          "start": 248246
+        },
+        {
+          "current": "      \"etimeSeconds\": 75,\n      \"job\": 129651120950,\n",
+          "previous": "      \"etimeSeconds\": 55,\n      \"job\": 129026259239,\n",
+          "start": 249111
+        },
+        {
+          "current": "      \"minutes\": 1.25,\n      \"peakRssGb\": 0.6,\n      \"sampledInShard\": 2\n",
+          "previous": "      \"minutes\": 0.92,\n      \"peakRssGb\": 0.2,\n      \"sampledInShard\": 9\n",
+          "start": 249188
+        },
+        {
+          "current": "      \"etimeSeconds\": 53,\n      \"job\": 129651120933,\n",
+          "previous": "      \"etimeSeconds\": 14,\n      \"job\": 129026259312,\n",
+          "start": 249620
+        },
+        {
+          "current": "      \"minutes\": 0.88,\n      \"peakRssGb\": 0.6,\n",
+          "previous": "      \"minutes\": 0.23,\n      \"peakRssGb\": 0.2,\n",
+          "start": 249697
+        },
+        {
+          "current": "      \"etimeSeconds\": 361,\n      \"job\": 129651120975,\n",
+          "previous": "      \"etimeSeconds\": 347,\n      \"job\": 129026259172,\n",
+          "start": 249881
+        },
+        {
+          "current": "      \"minutes\": 6.02,\n      \"peakRssGb\": 1.9,\n",
+          "previous": "      \"minutes\": 5.78,\n      \"peakRssGb\": 3,\n",
+          "start": 249959
+        },
+        {
+          "current": "      \"basis\": \"sampler-max-etime\",\n      \"etimeSeconds\": 417,\n      \"job\": 129651120931,\n      \"measured\": true,\n      \"minutes\": 6.95,\n      \"peakRssGb\": 1.1,\n      \"sampledInShard\": 1\n",
+          "previous": "      \"basis\": \"unobserved-shard-4-no-completed-run\",\n      \"measured\": false,\n      \"minutes\": 0.25,\n      \"sampledInShard\": 4\n",
+          "start": 250851
+        },
+        {
+          "current": "  \"partition\": \"capacity-balanced-lpt-v2\",\n",
+          "previous": "  \"partition\": \"cost-balanced-lpt-v1\",\n",
+          "start": 251108
+        },
+        {
+          "current": "    \"extractedAt\": \"2026-11-10T13:37:02Z\",\n    \"extractedBy\": \"Codex (conservative high-water refresh from all exact-candidate Core shard logs)\",\n    \"floorRows\": 754,\n    \"headSha\": \"0d5103880ec0c998224cd141ca682722222d2c9b\",\n",
+          "previous": "    \"extractedAt\": \"2026-11-09T21:50:00Z\",\n    \"extractedBy\": \"Claude (read-only audit of the hosted job logs)\",\n    \"floorRows\": 786,\n    \"headSha\": \"39af98acc76410d47c65f0f85baf3c7f443fb6b3\",\n",
+          "start": 251187
+        },
+        {
+          "current": "      \"1\": 129651120931,\n      \"2\": 129651120950,\n      \"3\": 129651120957,\n      \"4\": 129651120992,\n      \"5\": 129651120927,\n      \"6\": 129651120926,\n      \"7\": 129651120911,\n      \"8\": 129651120938,\n      \"9\": 129651120874,\n      \"10\": 129651120958,\n      \"11\": 129651120933,\n      \"12\": 129651120975\n    },\n    \"measuredRows\": 369,\n    \"method\": \"The 30 s core-memory sampler from every one of the twelve exact-candidate Core shard jobs was parsed for child `node --test-concurrency=<n> tests/<file>.test.mjs` processes. Each observed file contributes its maximum ps etime and peak RSS. A prior authenticated measurement is retained when it is higher, making this manifest a conservative high-water union rather than treating runner variance as a speedup. The three TAP-attributed split roots and their sampler-minus-attribution source retain their exact allocation. Files never visible in either sampler retain the declared floor. Worker capacity and the serial-only root are authenticated by the capacity-balanced-lpt-v2 planner, not inferred from these costs.\",\n",
+          "previous": "      \"1\": 129026259161,\n      \"2\": 129026259348,\n      \"3\": 129026259176,\n      \"5\": 129026259295,\n      \"6\": 129026259249,\n      \"7\": 129026259277,\n      \"8\": 129026259207,\n      \"9\": 129026259239,\n      \"10\": 129026259183,\n      \"11\": 129026259312,\n      \"12\": 129026259172\n    },\n    \"measuredRows\": 337,\n    \"method\": \"For every completed 'Run one closed contract shard' step, the 30 s core-memory sampler prints `ps -eo pid,rss,etime,args --sort=-rss | head -n 6`; each line naming `node --test --test-concurrency=2 tests/<file>.test.mjs` was attributed to that file. A measured row's minutes is the maximum etime seen for the file (etimeSeconds, rounded up to at least 0.01 min) and peakRssGb its maximum RSS; it is a lower bound of the file's wall time within one sampling interval. The flattened TAP names tests, not files, so files that completed inside one sampling interval were never observed; they are not measurements and carry defaultMinutes with measured=false and basis unobserved-under-sampling-interval. Shard 4 had no completed hosted run at this head (runner lost) and its files carry defaultMinutes with measured=false and basis unobserved-shard-4-no-completed-run. Split rows: when tests/component-refinement-mirrors.test.mjs stopped executing three former entrypoints, each new root received the sum of the shard-3 TAP durations (job 129026259176, same run) of the tests reachable from its entrypoint (tap-duration-attributed, tapTests counts them), and the umbrella kept its sampler maximum less the attributed minutes (sampler-max-etime-less-attributed), so the four rows still sum to the one measured 267.47 min. previousContract records the closed set these rows extend.\",\n",
+          "start": 251428
+        },
+        {
+          "current": "    \"previousCostManifest\": {\n      \"attempt\": 1,\n      \"headSha\": \"39af98acc76410d47c65f0f85baf3c7f443fb6b3\",\n      \"run\": 42574824120,\n      \"sha256\": \"7a44754b45d5438ba7cc77942cf9f9db4b8e35a048161f631be3659ac697638f\"\n    },\n    \"run\": 42760203921,\n",
+          "previous": "    \"run\": 42574824120,\n",
+          "start": 252842
+        }
+      ],
+      "path": "scripts/core-contract-costs.json",
+      "previousSha256": "7a44754b45d5438ba7cc77942cf9f9db4b8e35a048161f631be3659ac697638f"
+    },
+    {
+      "currentSha256": "627765bce5ad23158b4b71ada4d4132eb644f88fdafe744d1ed54b8e5993a911",
+      "edits": [
+        {
+          "current": " * places each file, heaviest first, into the shard with the least work per\n * worker. The one file that requires serial execution is pinned to the one\n * single-worker shard; every other shard has two workers. A path missing from\n * the manifest, or a manifest path outside the profile, fails closed instead\n * of receiving a silent default.\n",
+          "previous": " * places each file, heaviest first, into the least-loaded shard. A path\n * missing from the manifest, or a manifest path outside the profile, fails\n * closed instead of receiving a silent default.\n",
+          "start": 320
+        },
+        {
+          "current": "export const coreContractPartition = \"capacity-balanced-lpt-v2\";\nexport const coreContractSerialPath\n\t= \"tests/checked-javascript-partition-11.test.mjs\";\nexport const coreContractShardConcurrency = Object.freeze(\n\tObject.fromEntries(coreContractShardLabels.map(label => [\n\t\tlabel, label === \"4/12\" ? 1 : 2\n\t]))\n);\nexport const coreContractPinnedFiles = Object.freeze({\n\t\"4/12\": Object.freeze([coreContractSerialPath])\n});\nconst coreContractPinnedIndexes = Object.freeze(Object.fromEntries(\n\tObject.entries(coreContractPinnedFiles).map(([label, files]) => [\n\t\tNumber(label.split(\"/\")[0]) - 1, files\n\t])\n));\nconst coreContractPlanningOptions = Object.freeze({\n\tcapacities: Object.freeze(coreContractShardLabels.map(label =>\n\t\tcoreContractShardConcurrency[label]))\n\t, pinned: coreContractPinnedIndexes\n});\n",
+          "previous": "export const coreContractPartition = \"cost-balanced-lpt-v1\";\n",
+          "start": 1196
+        },
+        {
+          "current": " * Capacity-aware longest-processing-time assignment with explicit, total\n * tie-breaking.\n",
+          "previous": " * Longest-processing-time assignment with explicit, total tie-breaking.\n",
+          "start": 7250
+        },
+        {
+          "current": " * into the shard with the smallest load per worker so far, equal normalized\n * loads to the lowest shard index. Pinned files are assigned first. Files\n * remain in longest-first execution order so each shard's Node workers start\n * the dominant work before short files. The result depends only on the cost\n * map and explicit options, so any checkout can reproduce it.\n",
+          "previous": " * into the shard with the smallest load so far, equal loads to the lowest\n * shard index. The result depends only on the cost map, so any checkout can\n * reproduce it.\n",
+          "start": 7422
+        },
+        {
+          "current": " * @param options - Per-shard worker capacities and pinned file assignments.\n * @param options.capacities - Positive worker count for each shard.\n * @param options.pinned - Zero-based shard index to pinned paths.\n",
+          "previous": "",
+          "start": 7871
+        },
+        {
+          "current": "export const planCostBalancedShards = (\n\tcosts, count = coreContractShardCount, options = {}\n) => {\n",
+          "previous": "export const planCostBalancedShards = (costs, count = coreContractShardCount) => {\n",
+          "start": 8088
+        },
+        {
+          "current": "\tassert.ok([...costs.values()].every(cost =>\n\t\tNumber.isSafeInteger(cost) && cost > 0));\n\tconst capacities = options.capacities ?? Array.from(\n\t\t{ length: count }, () => 1);\n\tconst pinned = options.pinned ?? {};\n\tassert.ok(Array.isArray(capacities) && capacities.length === count);\n\tassert.ok(capacities.every(capacity =>\n\t\tNumber.isSafeInteger(capacity) && capacity > 0));\n\tassert.ok(pinned && typeof pinned === \"object\" && !Array.isArray(pinned));\n",
+          "previous": "\tconst order = [...costs.keys()].sort((left, right) =>\n\t\tcosts.get(right) - costs.get(left) || (left < right ? -1 : left > right ? 1 : 0));\n",
+          "start": 8294
+        },
+        {
+          "current": "\tconst assigned = new Set();\n\tfor(const [key, paths] of Object.entries(pinned))\n\t{\n\t\tconst index = Number(key);\n\t\tassert.ok(Number.isSafeInteger(index) && index >= 0 && index < count);\n\t\tassert.ok(Array.isArray(paths));\n\t\tfor(const path of paths)\n\t\t{\n\t\t\tassert.ok(costs.has(path), `Pinned Core path is not in the cost map: ${path}`);\n\t\t\tassert.ok(!assigned.has(path), `Core path is pinned more than once: ${path}`);\n\t\t\tassigned.add(path); files[index].push(path); loads[index] += costs.get(path);\n\t\t}\n\t}\n\tconst order = [...costs.keys()].sort((left, right) =>\n\t\tcosts.get(right) - costs.get(left)\n\t\t\t|| (left < right ? -1 : left > right ? 1 : 0))\n\t\t.filter(path => !assigned.has(path));\n",
+          "previous": "",
+          "start": 8855
+        },
+        {
+          "current": "\t\t\tif(loads[candidate] * capacities[index]\n\t\t\t\t< loads[index] * capacities[candidate]) index = candidate;\n",
+          "previous": "\t\t\tif(loads[candidate] < loads[index]) index = candidate;\n",
+          "start": 9644
+        },
+        {
+          "current": "\t\t, files: Object.freeze(selection)\n",
+          "previous": "\t\t, files: Object.freeze(selection.toSorted())\n",
+          "start": 9888
+        },
+        {
+          "current": "\t\t, concurrency: capacities[index]\n",
+          "previous": "",
+          "start": 9955
+        },
+        {
+          "current": "\tplanCostBalancedShards(coreContractCosts(paths, manifest)\n\t\t, coreContractShardCount, coreContractPlanningOptions);\n",
+          "previous": "\tplanCostBalancedShards(coreContractCosts(paths, manifest), coreContractShardCount);\n",
+          "start": 11308
+        },
+        {
+          "current": "\t\t, costs: { sha256: costsSha256(manifest)\n\t\t\t, minutes: shard.centiminutes / 100\n\t\t\t, concurrency: shard.concurrency }\n",
+          "previous": "\t\t, costs: { sha256: costsSha256(manifest), minutes: shard.centiminutes / 100 }\n",
+          "start": 12228
+        }
+      ],
+      "path": "scripts/core-contract-shards.mjs",
+      "previousSha256": "93a9831100e3399c36ea84c93334873b54c68c46bf1eb11b2b53883223e8454f"
+    },
+    {
+      "currentSha256": "911bd1df7693b790019c35051b06e2514af806a79ac731680c092cf2d2c471ea",
+      "edits": [
+        {
+          "current": "const hostedCoreConcurrency\n\t= `--test-concurrency=${manifest?.costs.concurrency ?? 2}`;\n",
+          "previous": "// Shard 4 lost its hosted runner twice with two concurrent files; run it serially.\nconst hostedCoreConcurrency = shard === \"4/12\" ? \"--test-concurrency=1\" : \"--test-concurrency=2\";\n",
+          "start": 2685
+        }
+      ],
+      "path": "scripts/run-test-profile.mjs",
+      "previousSha256": "9cbceab675754268ab9725754c598b3df94d9d764bc021213fd51d9db3374d9e"
+    },
+    {
+      "currentSha256": "175675a32d6f797a59904d178a589bcca582d62144eb4b630ed5029e6135648c",
+      "edits": [
+        {
+          "current": "\t, coreContractCostsSha256, coreContractPartition, coreContractPinnedFiles\n\t, coreContractSerialPath, coreContractShardConcurrency\n\t, coreContractShardLabels, coreContractShardManifest, coreContractShardPlan\n\t, planCostBalancedShards\n",
+          "previous": "\t, coreContractCostsSha256, coreContractPartition, coreContractShardLabels\n\t, coreContractShardManifest, coreContractShardPlan, planCostBalancedShards\n",
+          "start": 611
+        },
+        {
+          "current": "\tassert.match(source\n\t\t, /const hostedCoreConcurrency\\s*= `--test-concurrency=\\$\\{manifest\\?\\.costs\\.concurrency \\?\\? 2\\}`;/u\n\t\t, \"Hosted Core concurrency must come from the authenticated shard manifest\");\n\tassert.doesNotMatch(source, /shard === \"4\\/12\"/u\n\t\t, \"The runner must not carry a second, unauthenticated shard-capacity rule\");\n",
+          "previous": "\tassert.equal([...source.matchAll(/\"--test-concurrency=2\"/gu)].length, 1\n\t\t, \"Hosted Core must run at most two contract files concurrently\");\n",
+          "start": 13501
+        },
+        {
+          "current": "\tassert.match(shards, /export const coreContractPartition = \"capacity-balanced-lpt-v2\";/u);\n\tassert.match(shards\n\t\t, /loads\\[candidate\\] \\* capacities\\[index\\]\\n\\t\\t\\t\\t< loads\\[index\\] \\* capacities\\[candidate\\]/u\n\t\t, \"Placement must compare work per authenticated worker capacity\");\n\tassert.match(shards\n\t\t, /label === \"4\\/12\" \\? 1 : 2/u\n\t\t, \"Only shard 4 may use one worker\");\n\tassert.match(shards\n\t\t, /\"4\\/12\": Object\\.freeze\\(\\[coreContractSerialPath\\]\\)/u\n\t\t, \"The serial-only root must remain pinned to the serial shard\");\n",
+          "previous": "\tassert.match(shards, /export const coreContractPartition = \"cost-balanced-lpt-v1\";/u);\n\tassert.match(shards, /if\\(loads\\[candidate\\] < loads\\[index\\]\\) index = candidate;/u\n\t\t, \"Equal loads must stay with the lowest shard index\");\n",
+          "start": 14503
+        },
+        {
+          "current": "",
+          "previous": "\tassert.equal([...source.matchAll(/\"--test-concurrency=1\"/gu)].length, 1\n\t\t, \"Only one hosted Core shard may run its files serially\");\n\tassert.match(source, /const hostedCoreConcurrency = shard === \"4\\/12\" \\? \"--test-concurrency=1\" : \"--test-concurrency=2\";/u\n\t\t, \"Shard 4 must run one file at a time while every other shard keeps two\");\n",
+          "start": 15900
+        },
+        {
+          "current": "\t\tsource.replace(\"manifest?.costs.concurrency ?? 2\"\n\t\t\t, \"manifest?.costs.concurrency ?? 3\")\n",
+          "previous": "\t\tsource.replace(\"--test-concurrency=2\", \"--test-concurrency=3\")\n",
+          "start": 26296
+        },
+        {
+          "current": "\t\t, shards.replace('label === \"4/12\" ? 1 : 2'\n\t\t\t, 'label === \"5/12\" ? 1 : 2')\n\t\t, shards.replace('\"4/12\": Object.freeze([coreContractSerialPath])'\n\t\t\t, '\"5/12\": Object.freeze([coreContractSerialPath])')\n",
+          "previous": "\t\t, source.replace(\"shard === \\\"4/12\\\" ?\", \"shard === \\\"5/12\\\" ?\")\n\t\t, source.replace(\"? \\\"--test-concurrency=1\\\" :\", \"? \\\"--test-concurrency=2\\\" :\")\n\t\t, source.replace(\"\\\"--test-concurrency=1\\\" : \\\"--test-concurrency=2\\\"\"\n\t\t\t, \"\\\"--test-concurrency=2\\\" : \\\"--test-concurrency=1\\\"\")\n",
+          "start": 27389
+        },
+        {
+          "current": "\t\tconst changedRunner = index < 13 ? changed : source;\n\t\tconst changedShards = index < 13 ? shards : changed;\n\t\tassert.ok(changedRunner !== source || changedShards !== shards\n\t\t\t, `runner mutation ${index}`);\n\t\tassert.throws(() => assertCoreProcessBudget(changedRunner, changedShards), undefined\n",
+          "previous": "\t\tassert.notEqual(changed, source, `runner mutation ${index}`);\n\t\tassert.throws(() => assertCoreProcessBudget(changed, shards), undefined\n",
+          "start": 27609
+        },
+        {
+          "current": "\t\tschemaVersion: 1, partition: \"capacity-balanced-lpt-v2\", shards: 12\n",
+          "previous": "\t\tschemaVersion: 1, partition: \"cost-balanced-lpt-v1\", shards: 12\n",
+          "start": 40666
+        },
+        {
+          "current": "\tassert.equal(coreContractPartition, \"capacity-balanced-lpt-v2\");\n\tassert.deepEqual(coreContractShardConcurrency, Object.fromEntries(\n\t\tcoreContractShardLabels.map(label => [label, label === \"4/12\" ? 1 : 2])));\n\tassert.deepEqual(coreContractPinnedFiles, {\n\t\t\"4/12\": [coreContractSerialPath]\n\t});\n",
+          "previous": "\tassert.equal(coreContractPartition, \"cost-balanced-lpt-v1\");\n",
+          "start": 40860
+        },
+        {
+          "current": "\tconst normalizedLoads = manifests.map(item =>\n\t\titem.costs.minutes / item.costs.concurrency);\n",
+          "previous": "\tconst loads = manifests.map(item => item.costs.minutes);\n",
+          "start": 41197
+        },
+        {
+          "current": "\t\tconst label = `${manifest.shard.index}/${manifest.shard.total}`;\n",
+          "previous": "",
+          "start": 41329
+        },
+        {
+          "current": "\t\tassert.equal(manifest.costs.concurrency, coreContractShardConcurrency[label]);\n\t\tconst ordered = manifest.selection.files.slice(label === \"4/12\" ? 1 : 0);\n\t\tassert.deepEqual(ordered, ordered.toSorted((left, right) =>\n\t\t\tcosts.get(right) - costs.get(left)\n\t\t\t\t|| (left < right ? -1 : left > right ? 1 : 0)));\n",
+          "previous": "\t\tassert.deepEqual(manifest.selection.files, manifest.selection.files.toSorted());\n",
+          "start": 41584
+        },
+        {
+          "current": "\tassert.equal(manifests[3].selection.files[0], coreContractSerialPath);\n\tassert.ok(manifests.every((manifest, index) => index === 3\n\t\t|| !manifest.selection.files.includes(coreContractSerialPath)));\n\t// Capacity-aware greedy placement keeps modeled wall times within one item.\n\tconst heaviestNormalized = Math.max(...[...costs.values()].map(cost => cost / 100));\n\tassert.ok(Math.max(...normalizedLoads) - Math.min(...normalizedLoads)\n\t\t<= heaviestNormalized\n\t\t, `normalized shard loads ${normalizedLoads.join(\", \")} differ by more than the heaviest file ${heaviestNormalized}`);\n",
+          "previous": "\t// Greedy longest-first placement never spreads loads further than one item.\n\tconst heaviest = Math.max(...costs.values()) / 100;\n\tassert.ok(Math.max(...loads) - Math.min(...loads) <= heaviest\n\t\t, `shard loads ${loads.join(\", \")} differ by more than the heaviest file ${heaviest}`);\n",
+          "start": 41897
+        },
+        {
+          "current": "\t\t, values => { values[0].costs.concurrency = 1; }\n",
+          "previous": "",
+          "start": 42835
+        },
+        {
+          "current": "\tassert.ok(provenance.method.includes(\"core-memory sampler\"));\n\tassert.ok(provenance.method.includes(\"conservative high-water\"));\n",
+          "previous": "\tassert.ok(provenance.method.includes(\"etime\"));\n",
+          "start": 43692
+        },
+        {
+          "current": "\tassert.equal(provenance.measuredRows, Object.values(coreContractCostManifest.costs)\n\t\t.filter(entry => entry.measured).length);\n\tassert.equal(provenance.floorRows, Object.values(coreContractCostManifest.costs)\n\t\t.filter(entry => !entry.measured).length);\n\tassert.deepEqual(Object.keys(provenance.jobs).map(Number).toSorted((a, b) => a - b)\n\t\t, Array.from({ length: 12 }, (_, index) => index + 1));\n\tassert.match(provenance.previousCostManifest.sha256, /^[a-f0-9]{64}$/u);\n",
+          "previous": "",
+          "start": 44054
+        },
+        {
+          "current": "\tconst capacityPlan = planCostBalancedShards(costs, 3, {\n\t\tcapacities: [2, 1, 2], pinned: { 1: [\"tests/a.test.mjs\"] }\n\t});\n\tassert.deepEqual(capacityPlan.map(shard => ({\n\t\tcentiminutes: shard.centiminutes, concurrency: shard.concurrency\n\t\t, files: [...shard.files]\n\t})), [\n\t\t{ centiminutes: 700, concurrency: 2\n\t\t\t, files: [\"tests/d.test.mjs\", \"tests/e.test.mjs\", \"tests/f.test.mjs\"] }\n\t\t, { centiminutes: 500, concurrency: 1, files: [\"tests/a.test.mjs\"] }\n\t\t, { centiminutes: 600, concurrency: 2\n\t\t\t, files: [\"tests/b.test.mjs\", \"tests/c.test.mjs\"] }\n\t]);\n",
+          "previous": "",
+          "start": 46021
+        },
+        {
+          "current": "\tassert.throws(() => planCostBalancedShards(costs, 3\n\t\t, { capacities: [2, 1] }));\n\tassert.throws(() => planCostBalancedShards(costs, 3\n\t\t, { capacities: [2, 0, 2] }));\n\tassert.throws(() => planCostBalancedShards(costs, 3\n\t\t, { pinned: { 3: [\"tests/a.test.mjs\"] } }));\n\tassert.throws(() => planCostBalancedShards(costs, 3\n\t\t, { pinned: { 1: [\"tests/missing.test.mjs\"] } }));\n\tassert.throws(() => planCostBalancedShards(costs, 3\n\t\t, { pinned: { 0: [\"tests/a.test.mjs\"], 1: [\"tests/a.test.mjs\"] } }));\n",
+          "previous": "",
+          "start": 46764
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "b190306cd0beabbad8a9e9fc8271b2a3ae6eed7a4fcedc75336b3aa717d1d743"
+    },
+    {
+      "currentSha256": "4299557d3af0b49c980955291066bada1da7f7d5ad9379b32d219d92a4a36c3a",
+      "edits": [
+        {
+          "current": "\t, coreContractPartition, coreContractSerialPath, coreContractShardConcurrency\n",
+          "previous": "",
+          "start": 455
+        },
+        {
+          "current": "\t// Shards balance recorded cost per worker rather than raw file count: the\n\t// normalized spread never exceeds the heaviest single file.\n\tconst loads = manifests.map(item => Math.round(\n\t\titem.costs.minutes * 100 / item.costs.concurrency));\n",
+          "previous": "\t// Shards balance recorded cost rather than file count: the spread between\n\t// the heaviest and lightest shard never exceeds the heaviest single file.\n\tconst loads = manifests.map(item => Math.round(item.costs.minutes * 100));\n",
+          "start": 4619
+        },
+        {
+          "current": "\t\tschemaVersion: 1, partition: coreContractPartition, shards: 12\n",
+          "previous": "\t\tschemaVersion: 1, partition: \"cost-balanced-lpt-v1\", shards: 12\n",
+          "start": 5038
+        },
+        {
+          "current": "\tassert.equal(manifests[3].selection.files[0], coreContractSerialPath);\n\tfor(const [index, manifest] of manifests.entries())\n\t\tassert.equal(manifest.costs.concurrency\n\t\t\t, coreContractShardConcurrency[`${index + 1}/12`]);\n",
+          "previous": "",
+          "start": 5230
+        },
+        {
+          "current": "\tassert.match(runner\n\t\t, /manifest\\?\\.costs\\.concurrency \\?\\? 2/u);\n",
+          "previous": "\tassert.match(runner, /\"--test-concurrency=2\"/u);\n",
+          "start": 5792
+        }
+      ],
+      "path": "tests/helpers/core-runner-resilience-source-history-tests.mjs",
+      "previousSha256": "34bf469bf990420bdf23d234c5bfb5f0d589b0ba3f632ec6e5850f3700542c9a"
+    },
+    {
+      "currentSha256": "a8b0204a80c3fc438e46bd40e8d3726889572f44a58e5a033b8958e9cd85eca7",
+      "edits": [
+        {
+          "current": "\tcollectCoreContractTestPaths, coreContractCosts, coreContractShardLabels\n\t, planCostBalancedShards\n",
+          "previous": "\tcollectCoreContractTestPaths, coreContractShardLabels\n\t, coreContractShardManifest\n",
+          "start": 316
+        },
+        {
+          "current": "\t\tconst plan = planCostBalancedShards(\n\t\t\tcoreContractCosts(paths, costManifest), coreContractShardLabels.length);\n\t\tconst loads = plan.map(item => item.centiminutes / 100);\n\t\tassert.equal(plan.length, 12);\n",
+          "previous": "\t\tconst manifests = coreContractShardLabels.map(label =>\n\t\t\tcoreContractShardManifest(paths, label, costManifest));\n\t\tconst loads = manifests.map(item => item.costs.minutes);\n\t\tassert.equal(manifests.length, 12);\n",
+          "start": 5574
+        }
+      ],
+      "path": "tests/helpers/vo1220-core-candidate-throughput-source-history-tests.mjs",
+      "previousSha256": "e1e199895e70d896c7c71ca9d94285069f7d92daae3fbedb1b4da9f8725d985e"
+    }
+  ],
+  "validation": {
+    "diffCheck": "passed",
+    "eslint": "passed",
+    "focusedPlanning": {
+      "failed": 0,
+      "passed": 5,
+      "tests": 5
+    },
+    "historicalEpochs": {
+      "failed": 0,
+      "passed": 11,
+      "tests": 11
+    },
+    "sparseAggregate": {
+      "failed": 0,
+      "passed": 1,
+      "tests": 1
+    },
+    "syntax": "passed"
+  }
+}

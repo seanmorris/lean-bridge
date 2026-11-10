@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeVo1220CoreCapacityPlanningSource
+	, vo1220CoreCapacityPlanningNormalizationPaths
+} from "./vo1220-core-capacity-planning-source-history.mjs";
+import {
 	beforeVo1220HistoricalCoreProfileIsolationSource
 	, vo1220HistoricalCoreProfileIsolationNormalizationPaths
 } from "./vo1220-historical-core-profile-isolation-source-history.mjs";
@@ -2795,7 +2799,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220HistoricalCoreProfileIsolationNormalizationPaths
+	...vo1220CoreCapacityPlanningNormalizationPaths
+	, ...vo1220HistoricalCoreProfileIsolationNormalizationPaths
 	, ...vo1220PerlCallbackAssetExpectationRepairNormalizationPaths
 	, ...vo1220CoreCandidateThroughputNormalizationPaths
 	, ...vo1220BoundedHistoryComparisonNormalizationPaths
@@ -4066,7 +4071,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220HistoricalCoreProfileIsolationSource(
+	let stage = beforeVo1220CoreCapacityPlanningSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220HistoricalCoreProfileIsolationSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;
