@@ -1,0 +1,224 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "currentSourcePaths": 1,
+    "packageSemanticChanges": 0,
+    "productionCodeChanges": 0,
+    "refreshedPins": 25,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "exactModelSha256": {
+    "after": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "before": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-node-consumer-timeout-pin-completion-source-history.mjs",
+      "sha256": "4e9676b1c5d687448db8e2eff3034d350fc2262aa8193abacbbe45bcd2c7cdde"
+    },
+    {
+      "path": "tests/helpers/vo1220-node-consumer-timeout-pin-completion-source-history-tests.mjs",
+      "sha256": "0eee23c9ae39eff6364dbf84890ce1ba3fda1fc67a9c074ca99a80c3440dd4ce"
+    },
+    {
+      "path": "tests/helpers/vo1220-node-consumer-timeout-pin-completion-source-history.mjs",
+      "sha256": "4ec646c710c4eb143227507b2435f3041c6da10febd1e0cf1207c358b109f11a"
+    }
+  ],
+  "implementationCommit": "fdce9d0c1f8b05203c7d68e4fa6da3cbf47edefe",
+  "implementationCommits": [
+    "fdce9d0c1f8b05203c7d68e4fa6da3cbf47edefe"
+  ],
+  "integrationCommit": "7d1ad02d214e7d20aa867b5121cad615f63edd71",
+  "integrationUpdates": [
+    {
+      "currentSha256": "1087a9940f5012044cdbfdaac83ec0bc483dc137a938d713cd598f87a985c199",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-node-consumer-timeout-pin-completion-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "6e2162450d719e7bf256a3bbac47c1350d8af7d9734968984b4c4db0cbbb7e89"
+    },
+    {
+      "currentSha256": "13462b68069a9766376068f34538c513b8c291e8a674e4b6056b604e2887d3b8",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220NodeConsumerTimeoutPinCompletionSource\n\t, vo1220NodeConsumerTimeoutPinCompletionNormalizationPaths\n} from \"./vo1220-node-consumer-timeout-pin-completion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220NodeConsumerTimeoutPinCompletionNormalizationPaths\n\t, ...vo1220NodeConsumerTimeoutHeadroomNormalizationPaths\n",
+          "previous": "\t...vo1220NodeConsumerTimeoutHeadroomNormalizationPaths\n",
+          "start": 245904
+        },
+        {
+          "current": "\tlet stage = beforeVo1220NodeConsumerTimeoutPinCompletionSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220NodeConsumerTimeoutHeadroomSource(\n",
+          "previous": "\tlet stage = beforeVo1220NodeConsumerTimeoutHeadroomSource(\n",
+          "start": 309646
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5637aa30d5bfedf182f4ecf8a045637ee779127e8a8387c40e9461f0396d5bb9"
+    }
+  ],
+  "milestone": "vo1220-node-consumer-timeout-pin-completion-source-v1",
+  "predecessorCommit": "8c8a60ebfe39d7944db3605799c3194ad7947753",
+  "repair": "Refresh only the 25 existing documentation.test.mjs current-source citations. Preserve every support cell, immutable archive, exact #1220 model, product source and runtime behavior.",
+  "rootCause": "The live-vs-historical timeout assertion changed documentation.test.mjs after consumer-matrix.yml pins were refreshed, leaving 25 current-source citations at the preceding documentation digest.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "07fcf1e686e3c1f4bda47ca986c1e4e184a8c981d1566f1158e34d7d5f12782c",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 813888
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 832263
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1058470
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1075587
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1083361
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1088793
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1095894
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1103060
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1110117
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1118369
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1127832
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1144843
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1151918
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1159815
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1170695
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1182857
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1206383
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1237738
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1270538
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1305638
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1336484
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1359781
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1381672
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1401745
+        },
+        {
+          "current": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "previous": "          \"sha256\": \"bb27632995ffa69c1cf3ad2809ce4254033db7ecdf85717f47f46a9bb7a26891\"\n",
+          "start": 1421525
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "18dfbe9b62d5678c5e09c7e0f9d83e2286e0658d80a682b8e6d9726e407bbd15"
+    }
+  ],
+  "validation": {
+    "currentSourcePreflight": {
+      "findings": 0,
+      "occurrences": 16326,
+      "paths": 2661
+    },
+    "diffCheck": "passed",
+    "documentationContract": "passed",
+    "inventoryPins": {
+      "expected": 25,
+      "refreshed": 25,
+      "unrelatedChanges": 0
+    }
+  }
+}
