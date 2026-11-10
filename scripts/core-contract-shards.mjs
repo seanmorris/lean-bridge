@@ -4,9 +4,11 @@
  * Shards are balanced by measured cost. Every contract file carries a cost in
  * scripts/core-contract-costs.json, whose provenance names the exact hosted
  * run, jobs and extraction method, and a longest-processing-time assignment
- * places each file, heaviest first, into the least-loaded shard. A path
- * missing from the manifest, or a manifest path outside the profile, fails
- * closed instead of receiving a silent default.
+ * places each file, heaviest first, into the shard with the least work per
+ * worker. The one file that requires serial execution is pinned to the one
+ * single-worker shard; every other shard has two workers. A path missing from
+ * the manifest, or a manifest path outside the profile, fails closed instead
+ * of receiving a silent default.
  *
  * @file
  */
@@ -21,7 +23,27 @@ export const coreContractShardCount = 12;
 export const coreContractShardLabels = Object.freeze(
 	Array.from({ length: coreContractShardCount }
 		, (_, index) => `${index + 1}/${coreContractShardCount}`));
-export const coreContractPartition = "cost-balanced-lpt-v1";
+export const coreContractPartition = "capacity-balanced-lpt-v2";
+export const coreContractSerialPath
+	= "tests/checked-javascript-partition-11.test.mjs";
+export const coreContractShardConcurrency = Object.freeze(
+	Object.fromEntries(coreContractShardLabels.map(label => [
+		label, label === "4/12" ? 1 : 2
+	]))
+);
+export const coreContractPinnedFiles = Object.freeze({
+	"4/12": Object.freeze([coreContractSerialPath])
+});
+const coreContractPinnedIndexes = Object.freeze(Object.fromEntries(
+	Object.entries(coreContractPinnedFiles).map(([label, files]) => [
+		Number(label.split("/")[0]) - 1, files
+	])
+));
+const coreContractPlanningOptions = Object.freeze({
+	capacities: Object.freeze(coreContractShardLabels.map(label =>
+		coreContractShardConcurrency[label]))
+	, pinned: coreContractPinnedIndexes
+});
 export const coreContractCostsPath = "scripts/core-contract-costs.json";
 const partition = coreContractPartition;
 const costSource = readFileSync(
@@ -149,34 +171,68 @@ export const coreContractCosts = (paths, manifest = coreContractCostManifest) =>
 };
 
 /**
- * Longest-processing-time assignment with explicit, total tie-breaking.
+ * Capacity-aware longest-processing-time assignment with explicit, total
+ * tie-breaking.
  *
  * Items are placed heaviest first, equal costs in ascending path order, each
- * into the shard with the smallest load so far, equal loads to the lowest
- * shard index. The result depends only on the cost map, so any checkout can
- * reproduce it.
+ * into the shard with the smallest load per worker so far, equal normalized
+ * loads to the lowest shard index. Pinned files are assigned first. Files
+ * remain in longest-first execution order so each shard's Node workers start
+ * the dominant work before short files. The result depends only on the cost
+ * map and explicit options, so any checkout can reproduce it.
  *
  * @param costs - Path to centiminutes.
  * @param count - Number of shards.
+ * @param options - Per-shard worker capacities and pinned file assignments.
+ * @param options.capacities - Positive worker count for each shard.
+ * @param options.pinned - Zero-based shard index to pinned paths.
  */
-export const planCostBalancedShards = (costs, count = coreContractShardCount) => {
+export const planCostBalancedShards = (
+	costs, count = coreContractShardCount, options = {}
+) => {
 	assert.ok(costs instanceof Map && costs.size > 0);
 	assert.ok(Number.isSafeInteger(count) && count > 0);
-	const order = [...costs.keys()].sort((left, right) =>
-		costs.get(right) - costs.get(left) || (left < right ? -1 : left > right ? 1 : 0));
+	assert.ok([...costs.values()].every(cost =>
+		Number.isSafeInteger(cost) && cost > 0));
+	const capacities = options.capacities ?? Array.from(
+		{ length: count }, () => 1);
+	const pinned = options.pinned ?? {};
+	assert.ok(Array.isArray(capacities) && capacities.length === count);
+	assert.ok(capacities.every(capacity =>
+		Number.isSafeInteger(capacity) && capacity > 0));
+	assert.ok(pinned && typeof pinned === "object" && !Array.isArray(pinned));
 	const loads = Array.from({ length: count }, () => 0);
 	const files = Array.from({ length: count }, () => []);
+	const assigned = new Set();
+	for(const [key, paths] of Object.entries(pinned))
+	{
+		const index = Number(key);
+		assert.ok(Number.isSafeInteger(index) && index >= 0 && index < count);
+		assert.ok(Array.isArray(paths));
+		for(const path of paths)
+		{
+			assert.ok(costs.has(path), `Pinned Core path is not in the cost map: ${path}`);
+			assert.ok(!assigned.has(path), `Core path is pinned more than once: ${path}`);
+			assigned.add(path); files[index].push(path); loads[index] += costs.get(path);
+		}
+	}
+	const order = [...costs.keys()].sort((left, right) =>
+		costs.get(right) - costs.get(left)
+			|| (left < right ? -1 : left > right ? 1 : 0))
+		.filter(path => !assigned.has(path));
 	for(const path of order)
 	{
 		let index = 0;
 		for(let candidate = 1; candidate < count; candidate++)
-			if(loads[candidate] < loads[index]) index = candidate;
+			if(loads[candidate] * capacities[index]
+				< loads[index] * capacities[candidate]) index = candidate;
 		files[index].push(path); loads[index] += costs.get(path);
 	}
 	return files.map((selection, index) => Object.freeze({
 		index: index + 1
-		, files: Object.freeze(selection.toSorted())
+		, files: Object.freeze(selection)
 		, centiminutes: loads[index]
+		, concurrency: capacities[index]
 	}));
 };
 
@@ -218,7 +274,8 @@ export const collectCoreContractTestPaths = async (root = resolve(".")) => {
  * @param manifest - Cost manifest; the committed one by default.
  */
 export const coreContractShardPlan = (paths, manifest = coreContractCostManifest) =>
-	planCostBalancedShards(coreContractCosts(paths, manifest), coreContractShardCount);
+	planCostBalancedShards(coreContractCosts(paths, manifest)
+		, coreContractShardCount, coreContractPlanningOptions);
 
 /**
  * Construct one exact shard manifest from the complete contract profile.
@@ -240,7 +297,9 @@ export const coreContractShardManifest = (
 		schemaVersion: 1, partition
 		, shard: { index, total: coreContractShardCount }
 		, contract: { count: paths.length, sha256: sha256(canonicalJson(paths)) }
-		, costs: { sha256: costsSha256(manifest), minutes: shard.centiminutes / 100 }
+		, costs: { sha256: costsSha256(manifest)
+			, minutes: shard.centiminutes / 100
+			, concurrency: shard.concurrency }
 		, selection: {
 			count: files.length, sha256: sha256(canonicalJson(files)), files
 		}

@@ -9,8 +9,8 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
-	collectCoreContractTestPaths, coreContractShardLabels
-	, coreContractShardManifest
+	collectCoreContractTestPaths, coreContractCosts, coreContractShardLabels
+	, planCostBalancedShards
 } from "../../scripts/core-contract-shards.mjs";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 import { typeSurfaceEvidenceFiles }
@@ -129,10 +129,10 @@ test("Core candidate throughput closes and balances all 1,123 roots"
 		// Authenticate the cost model sealed by this milestone, not whichever
 		// newer measurements happen to be live in the current checkout.
 		const costManifest = implementationCostManifest();
-		const manifests = coreContractShardLabels.map(label =>
-			coreContractShardManifest(paths, label, costManifest));
-		const loads = manifests.map(item => item.costs.minutes);
-		assert.equal(manifests.length, 12);
+		const plan = planCostBalancedShards(
+			coreContractCosts(paths, costManifest), coreContractShardLabels.length);
+		const loads = plan.map(item => item.centiminutes / 100);
+		assert.equal(plan.length, 12);
 		assert.ok(Math.max(...loads) - Math.min(...loads) < 0.02);
 		assert.equal(Object.values(costManifest.costs)
 			.filter(item => item.measured).length, 337);

@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import {
 	collectCoreContractTestPaths, coreContractCosts, coreContractCostsSha256
+	, coreContractPartition, coreContractSerialPath, coreContractShardConcurrency
 	, coreContractShardLabels, coreContractShardManifest
 	, verifyCoreContractShardManifests
 } from "../../scripts/core-contract-shards.mjs";
@@ -101,23 +102,29 @@ test("Core runner resilience keeps the complete contract in bounded jobs", async
 	assert.equal(manifests.length, 12);
 	const counts = manifests.map(item => item.selection.count);
 	assert.equal(counts.reduce((total, count) => total + count, 0), paths.length);
-	// Shards balance recorded cost rather than file count: the spread between
-	// the heaviest and lightest shard never exceeds the heaviest single file.
-	const loads = manifests.map(item => Math.round(item.costs.minutes * 100));
+	// Shards balance recorded cost per worker rather than raw file count: the
+	// normalized spread never exceeds the heaviest single file.
+	const loads = manifests.map(item => Math.round(
+		item.costs.minutes * 100 / item.costs.concurrency));
 	assert.ok(Math.max(...loads) - Math.min(...loads)
 		<= Math.max(...coreContractCosts(paths).values()));
 	assert.deepEqual(verifyCoreContractShardManifests(paths, manifests), {
-		schemaVersion: 1, partition: "cost-balanced-lpt-v1", shards: 12
+		schemaVersion: 1, partition: coreContractPartition, shards: 12
 		, contractFiles: paths.length
 		, contractSha256: manifests[0].contract.sha256
 		, costsSha256: coreContractCostsSha256
 	});
+	assert.equal(manifests[3].selection.files[0], coreContractSerialPath);
+	for(const [index, manifest] of manifests.entries())
+		assert.equal(manifest.costs.concurrency
+			, coreContractShardConcurrency[`${index + 1}/12`]);
 	const workflow = await readFile(".github/workflows/quality.yml", "utf8");
 	assert.match(workflow, /max-parallel: 12/u);
 	assert.match(workflow, /shard: \[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\]/u);
 	assert.match(workflow, /--shard "\$\{\{ matrix\.shard \}\}\/12"/u);
 	const runner = await readFile("scripts/run-test-profile.mjs", "utf8");
-	assert.match(runner, /"--test-concurrency=2"/u);
+	assert.match(runner
+		, /manifest\?\.costs\.concurrency \?\? 2/u);
 	assert.match(runner, /"--max-old-space-size=4096"/u);
 	for(const path of ["src", "site", "docs/consume", "docs/lean"
 		, "docs/publish", "package.json", "package-lock.json", "lean-toolchain"])

@@ -62,8 +62,8 @@ if(manifest)
 process.stderr.write(`test_profile=${requested}\ncontract_test_count=${complete.length}\ntest_count=${selected.length}\ntest_shard=${shard ?? "all"}\n`);
 
 const boundedHostedCore = requested === "contract" && process.env.CI === "true";
-// Shard 4 lost its hosted runner twice with two concurrent files; run it serially.
-const hostedCoreConcurrency = shard === "4/12" ? "--test-concurrency=1" : "--test-concurrency=2";
+const hostedCoreConcurrency
+	= `--test-concurrency=${manifest?.costs.concurrency ?? 2}`;
 const childEnvironment = boundedHostedCore ? {
 	...process.env
 	, NODE_OPTIONS: [process.env.NODE_OPTIONS, "--max-old-space-size=4096"]

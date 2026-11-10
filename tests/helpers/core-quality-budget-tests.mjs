@@ -13,8 +13,10 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	collectCoreContractTestPaths, collectRepositoryTestPaths
 	, coreContractCostManifest, coreContractCosts, coreContractCostsPath
-	, coreContractCostsSha256, coreContractPartition, coreContractShardLabels
-	, coreContractShardManifest, coreContractShardPlan, planCostBalancedShards
+	, coreContractCostsSha256, coreContractPartition, coreContractPinnedFiles
+	, coreContractSerialPath, coreContractShardConcurrency
+	, coreContractShardLabels, coreContractShardManifest, coreContractShardPlan
+	, planCostBalancedShards
 	, verifyCoreContractShardManifests
 } from "../../scripts/core-contract-shards.mjs";
 import {
@@ -177,8 +179,11 @@ const assertCoreQualityBudget = source => {
 const assertCoreProcessBudget = (source, shards) => {
 	assert.equal([...source.matchAll(/requested === "contract" && process\.env\.CI === "true"/gu)].length, 1
 		, "Only the hosted Core profile must use the resource bound");
-	assert.equal([...source.matchAll(/"--test-concurrency=2"/gu)].length, 1
-		, "Hosted Core must run at most two contract files concurrently");
+	assert.match(source
+		, /const hostedCoreConcurrency\s*= `--test-concurrency=\$\{manifest\?\.costs\.concurrency \?\? 2\}`;/u
+		, "Hosted Core concurrency must come from the authenticated shard manifest");
+	assert.doesNotMatch(source, /shard === "4\/12"/u
+		, "The runner must not carry a second, unauthenticated shard-capacity rule");
 	assert.match(source, /arguments_\.length !== 4 \|\| arguments_\[0\] !== "--shard"/u);
 	assert.match(source, /arguments_\[2\] !== "--shard-manifest" \|\| requested !== "contract"/u
 		, "Only the complete contract profile may emit a shard manifest");
@@ -187,9 +192,16 @@ const assertCoreProcessBudget = (source, shards) => {
 		, "The runner must execute the exact authenticated selection");
 	assert.match(source, /await writeFile\(shardManifestPath, canonicalJson\(manifest\)\)/u);
 	assert.match(shards, /export const coreContractShardCount = 12;/u);
-	assert.match(shards, /export const coreContractPartition = "cost-balanced-lpt-v1";/u);
-	assert.match(shards, /if\(loads\[candidate\] < loads\[index\]\) index = candidate;/u
-		, "Equal loads must stay with the lowest shard index");
+	assert.match(shards, /export const coreContractPartition = "capacity-balanced-lpt-v2";/u);
+	assert.match(shards
+		, /loads\[candidate\] \* capacities\[index\]\n\t\t\t\t< loads\[index\] \* capacities\[candidate\]/u
+		, "Placement must compare work per authenticated worker capacity");
+	assert.match(shards
+		, /label === "4\/12" \? 1 : 2/u
+		, "Only shard 4 may use one worker");
+	assert.match(shards
+		, /"4\/12": Object\.freeze\(\[coreContractSerialPath\]\)/u
+		, "The serial-only root must remain pinned to the serial shard");
 	assert.match(shards, /export const coreContractCostManifest = deepFreeze\(JSON\.parse\(costSource\)\);/u
 		, "The authenticated cost manifest must be deeply immutable");
 	assert.match(shards, /assert\.deepEqual\(files\.toSorted\(\), paths\)/u
@@ -200,10 +212,6 @@ const assertCoreProcessBudget = (source, shards) => {
 		, "Hosted Core must bound only the hosted contract environment");
 	assert.match(source, /NODE_OPTIONS: \[process\.env\.NODE_OPTIONS, "--max-old-space-size=4096"\]\s*\.filter\(Boolean\)\.join\(" "\)/u
 		, "Hosted Core must preserve prior Node options and append its reviewed heap bound");
-	assert.equal([...source.matchAll(/"--test-concurrency=1"/gu)].length, 1
-		, "Only one hosted Core shard may run its files serially");
-	assert.match(source, /const hostedCoreConcurrency = shard === "4\/12" \? "--test-concurrency=1" : "--test-concurrency=2";/u
-		, "Shard 4 must run one file at a time while every other shard keeps two");
 	assert.match(source, /"--test", \.\.\.boundedHostedCore \? \[hostedCoreConcurrency\] : \[\], \.\.\.selected\n\]/u
 		, "Hosted Core must pass every explicitly selected shard file to Node");
 	assert.match(source, /\], \{ cwd: root, env: childEnvironment, stdio: "inherit" \}\);/u
@@ -411,7 +419,8 @@ test("Hosted Core bounds each closed shard without truncating the profile", asyn
 	]);
 	assertCoreProcessBudget(source, shards);
 	for(const [index, changed] of [
-		source.replace("--test-concurrency=2", "--test-concurrency=3")
+		source.replace("manifest?.costs.concurrency ?? 2"
+			, "manifest?.costs.concurrency ?? 3")
 		, source.replace("--max-old-space-size=4096", "--max-old-space-size=8192")
 		, source.replace('arguments_[2] !== "--shard-manifest"', 'arguments_[2] !== "--optional-manifest"')
 		, source.replace('requested !== "contract"', 'requested !== "all"')
@@ -426,13 +435,16 @@ test("Hosted Core bounds each closed shard without truncating the profile", asyn
 		, source.replace("...boundedHostedCore ? [hostedCoreConcurrency] : []", "...[]")
 		, source.replace("...boundedHostedCore ? [hostedCoreConcurrency] : []"
 			, "...boundedHostedCore ? [\"--test-concurrency=2\"] : []")
-		, source.replace("shard === \"4/12\" ?", "shard === \"5/12\" ?")
-		, source.replace("? \"--test-concurrency=1\" :", "? \"--test-concurrency=2\" :")
-		, source.replace("\"--test-concurrency=1\" : \"--test-concurrency=2\""
-			, "\"--test-concurrency=2\" : \"--test-concurrency=1\"")
+		, shards.replace('label === "4/12" ? 1 : 2'
+			, 'label === "5/12" ? 1 : 2')
+		, shards.replace('"4/12": Object.freeze([coreContractSerialPath])'
+			, '"5/12": Object.freeze([coreContractSerialPath])')
 	].entries()) {
-		assert.notEqual(changed, source, `runner mutation ${index}`);
-		assert.throws(() => assertCoreProcessBudget(changed, shards), undefined
+		const changedRunner = index < 13 ? changed : source;
+		const changedShards = index < 13 ? shards : changed;
+		assert.ok(changedRunner !== source || changedShards !== shards
+			, `runner mutation ${index}`);
+		assert.throws(() => assertCoreProcessBudget(changedRunner, changedShards), undefined
 			, `runner mutation ${index}`);
 	}
 });
@@ -706,24 +718,39 @@ test("Core shard manifests cover every contract file exactly once", async () => 
 		coreContractShardManifest(paths, label));
 	const accepted = verifyCoreContractShardManifests(paths, manifests);
 	assert.deepEqual(accepted, {
-		schemaVersion: 1, partition: "cost-balanced-lpt-v1", shards: 12
+		schemaVersion: 1, partition: "capacity-balanced-lpt-v2", shards: 12
 		, contractFiles: paths.length, contractSha256: manifests[0].contract.sha256
 		, costsSha256: coreContractCostsSha256
 	});
-	assert.equal(coreContractPartition, "cost-balanced-lpt-v1");
+	assert.equal(coreContractPartition, "capacity-balanced-lpt-v2");
+	assert.deepEqual(coreContractShardConcurrency, Object.fromEntries(
+		coreContractShardLabels.map(label => [label, label === "4/12" ? 1 : 2])));
+	assert.deepEqual(coreContractPinnedFiles, {
+		"4/12": [coreContractSerialPath]
+	});
 	const costs = coreContractCosts(paths);
-	const loads = manifests.map(item => item.costs.minutes);
+	const normalizedLoads = manifests.map(item =>
+		item.costs.minutes / item.costs.concurrency);
 	for(const manifest of manifests)
 	{
+		const label = `${manifest.shard.index}/${manifest.shard.total}`;
 		assert.equal(manifest.costs.sha256, coreContractCostsSha256);
 		assert.equal(manifest.costs.minutes, manifest.selection.files
 			.reduce((sum, path) => sum + costs.get(path), 0) / 100);
-		assert.deepEqual(manifest.selection.files, manifest.selection.files.toSorted());
+		assert.equal(manifest.costs.concurrency, coreContractShardConcurrency[label]);
+		const ordered = manifest.selection.files.slice(label === "4/12" ? 1 : 0);
+		assert.deepEqual(ordered, ordered.toSorted((left, right) =>
+			costs.get(right) - costs.get(left)
+				|| (left < right ? -1 : left > right ? 1 : 0)));
 	}
-	// Greedy longest-first placement never spreads loads further than one item.
-	const heaviest = Math.max(...costs.values()) / 100;
-	assert.ok(Math.max(...loads) - Math.min(...loads) <= heaviest
-		, `shard loads ${loads.join(", ")} differ by more than the heaviest file ${heaviest}`);
+	assert.equal(manifests[3].selection.files[0], coreContractSerialPath);
+	assert.ok(manifests.every((manifest, index) => index === 3
+		|| !manifest.selection.files.includes(coreContractSerialPath)));
+	// Capacity-aware greedy placement keeps modeled wall times within one item.
+	const heaviestNormalized = Math.max(...[...costs.values()].map(cost => cost / 100));
+	assert.ok(Math.max(...normalizedLoads) - Math.min(...normalizedLoads)
+		<= heaviestNormalized
+		, `normalized shard loads ${normalizedLoads.join(", ")} differ by more than the heaviest file ${heaviestNormalized}`);
 	for(const mutate of [
 		values => values.pop()
 		, values => { values[11] = structuredClone(values[10]); }
@@ -731,6 +758,7 @@ test("Core shard manifests cover every contract file exactly once", async () => 
 		, values => { values[0].contract.sha256 = "0".repeat(64); }
 		, values => { values[0].costs.sha256 = "0".repeat(64); }
 		, values => { values[0].costs.minutes += 0.01; }
+		, values => { values[0].costs.concurrency = 1; }
 		, values => { values[0].unexpected = true; }
 	]) {
 		const changed = structuredClone(manifests); mutate(changed);
@@ -747,11 +775,19 @@ test("Core cost manifest is canonical, provenance-bearing and closed over the co
 	const { provenance } = coreContractCostManifest;
 	assert.match(provenance.headSha, /^[a-f0-9]{40}$/u);
 	assert.ok(provenance.run > 0 && provenance.attempt > 0);
-	assert.ok(provenance.method.includes("etime"));
+	assert.ok(provenance.method.includes("core-memory sampler"));
+	assert.ok(provenance.method.includes("conservative high-water"));
 	const bases = new Map();
 	for(const entry of Object.values(coreContractCostManifest.costs))
 		bases.set(entry.basis, (bases.get(entry.basis) ?? 0) + 1);
 	assert.ok(bases.get("sampler-max-etime") > 0, "at least one measured file");
+	assert.equal(provenance.measuredRows, Object.values(coreContractCostManifest.costs)
+		.filter(entry => entry.measured).length);
+	assert.equal(provenance.floorRows, Object.values(coreContractCostManifest.costs)
+		.filter(entry => !entry.measured).length);
+	assert.deepEqual(Object.keys(provenance.jobs).map(Number).toSorted((a, b) => a - b)
+		, Array.from({ length: 12 }, (_, index) => index + 1));
+	assert.match(provenance.previousCostManifest.sha256, /^[a-f0-9]{64}$/u);
 	// Unknown and stale paths fail closed rather than planning with a default.
 	assert.throws(() => coreContractCosts([...paths, "tests/zz-unrecorded.test.mjs"].toSorted())
 		, /lacks 1 contract paths: tests\/zz-unrecorded\.test\.mjs/u);
@@ -783,9 +819,32 @@ test("cost-balanced planning is deterministic with explicit tie-breaking", () =>
 	]);
 	assert.deepEqual(planCostBalancedShards(costs, 3), plan);
 	assert.deepEqual(planCostBalancedShards(new Map([...costs].reverse()), 3), plan);
+	const capacityPlan = planCostBalancedShards(costs, 3, {
+		capacities: [2, 1, 2], pinned: { 1: ["tests/a.test.mjs"] }
+	});
+	assert.deepEqual(capacityPlan.map(shard => ({
+		centiminutes: shard.centiminutes, concurrency: shard.concurrency
+		, files: [...shard.files]
+	})), [
+		{ centiminutes: 700, concurrency: 2
+			, files: ["tests/d.test.mjs", "tests/e.test.mjs", "tests/f.test.mjs"] }
+		, { centiminutes: 500, concurrency: 1, files: ["tests/a.test.mjs"] }
+		, { centiminutes: 600, concurrency: 2
+			, files: ["tests/b.test.mjs", "tests/c.test.mjs"] }
+	]);
 	const everyFile = plan.flatMap(shard => shard.files).toSorted();
 	assert.deepEqual(everyFile, [...costs.keys()].toSorted());
 	assert.throws(() => planCostBalancedShards(new Map(), 3));
+	assert.throws(() => planCostBalancedShards(costs, 3
+		, { capacities: [2, 1] }));
+	assert.throws(() => planCostBalancedShards(costs, 3
+		, { capacities: [2, 0, 2] }));
+	assert.throws(() => planCostBalancedShards(costs, 3
+		, { pinned: { 3: ["tests/a.test.mjs"] } }));
+	assert.throws(() => planCostBalancedShards(costs, 3
+		, { pinned: { 1: ["tests/missing.test.mjs"] } }));
+	assert.throws(() => planCostBalancedShards(costs, 3
+		, { pinned: { 0: ["tests/a.test.mjs"], 1: ["tests/a.test.mjs"] } }));
 });
 
 test("Core aggregate authenticates every manifest from an evidence-free sparse checkout", async t => {

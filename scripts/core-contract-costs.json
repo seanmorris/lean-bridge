@@ -149,12 +149,12 @@
     },
     "tests/callback-checked-record-foundation.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 597,
-      "job": 129026259183,
+      "etimeSeconds": 687,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 9.95,
-      "peakRssGb": 2.5,
-      "sampledInShard": 10
+      "minutes": 11.45,
+      "peakRssGb": 1.5,
+      "sampledInShard": 7
     },
     "tests/callback-checked-record-hosted-archive.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -165,12 +165,12 @@
     },
     "tests/callback-checked-record-hosted-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 25,
-      "job": 129026259172,
+      "etimeSeconds": 27,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 0.42,
+      "minutes": 0.45,
       "peakRssGb": 0.2,
-      "sampledInShard": 12
+      "sampledInShard": 7
     },
     "tests/callback-checked-record-language-installed.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -194,9 +194,12 @@
       "sampledInShard": 3
     },
     "tests/callback-checked-record-native.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 955,
+      "job": 129651120992,
+      "measured": true,
+      "minutes": 15.92,
+      "peakRssGb": 2.1,
       "sampledInShard": 4
     },
     "tests/callback-checked-record-npm-browser.test.mjs": {
@@ -231,12 +234,12 @@
     },
     "tests/callback-dependent-integration-source-history.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 357,
-      "job": 129026259239,
+      "etimeSeconds": 446,
+      "job": 129651120958,
       "measured": true,
-      "minutes": 5.95,
-      "peakRssGb": 2.1,
-      "sampledInShard": 9
+      "minutes": 7.43,
+      "peakRssGb": 1.9,
+      "sampledInShard": 10
     },
     "tests/callback-fin-evidence.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -316,12 +319,12 @@
     },
     "tests/callback-refinements-php-wasm.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 147,
-      "job": 129026259239,
+      "etimeSeconds": 231,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 2.45,
-      "peakRssGb": 1.8,
-      "sampledInShard": 9
+      "minutes": 3.85,
+      "peakRssGb": 1,
+      "sampledInShard": 5
     },
     "tests/callback-runtime.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -345,18 +348,22 @@
       "sampledInShard": 12
     },
     "tests/callback-subtype-extractor.test.mjs": {
-      "basis": "unobserved-under-sampling-interval",
-      "job": 129026259161,
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 1
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 17,
+      "job": 129651120911,
+      "measured": true,
+      "minutes": 0.28,
+      "peakRssGb": 0.5,
+      "sampledInShard": 7
     },
     "tests/callback-subtype-foundation.test.mjs": {
-      "basis": "unobserved-under-sampling-interval",
-      "job": 129026259348,
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 2
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 25,
+      "job": 129651120975,
+      "measured": true,
+      "minutes": 0.42,
+      "peakRssGb": 0.8,
+      "sampledInShard": 12
     },
     "tests/callback-subtype-hosted-archive.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -366,10 +373,13 @@
       "sampledInShard": 3
     },
     "tests/callback-subtype-hosted-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 17,
+      "job": 129651120931,
+      "measured": true,
+      "minutes": 0.28,
+      "peakRssGb": 0.2,
+      "sampledInShard": 1
     },
     "tests/callback-subtype-language-installed.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -393,10 +403,12 @@
       "sampledInShard": 7
     },
     "tests/callback-subtype-npm-browser.test.mjs": {
-      "basis": "unobserved-under-sampling-interval",
-      "job": 129026259207,
-      "measured": false,
-      "minutes": 0.25,
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 26,
+      "job": 129651120938,
+      "measured": true,
+      "minutes": 0.43,
+      "peakRssGb": 0.5,
       "sampledInShard": 8
     },
     "tests/callback-subtype-perl-installed.test.mjs": {
@@ -455,10 +467,13 @@
       "sampledInShard": 3
     },
     "tests/checked-javascript-partition-02.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 1956,
+      "job": 129651120911,
+      "measured": true,
+      "minutes": 32.6,
+      "peakRssGb": 2.7,
+      "sampledInShard": 7
     },
     "tests/checked-javascript-partition-03.test.mjs": {
       "basis": "sampler-max-etime",
@@ -471,21 +486,21 @@
     },
     "tests/checked-javascript-partition-04.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 440,
-      "job": 129026259249,
+      "etimeSeconds": 555,
+      "job": 129651120931,
       "measured": true,
-      "minutes": 7.33,
-      "peakRssGb": 2.9,
-      "sampledInShard": 6
+      "minutes": 9.25,
+      "peakRssGb": 3,
+      "sampledInShard": 1
     },
     "tests/checked-javascript-partition-05.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 470,
-      "job": 129026259277,
+      "etimeSeconds": 506,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 7.83,
-      "peakRssGb": 2.9,
-      "sampledInShard": 7
+      "minutes": 8.43,
+      "peakRssGb": 2.3,
+      "sampledInShard": 6
     },
     "tests/checked-javascript-partition-06.test.mjs": {
       "basis": "sampler-max-etime",
@@ -498,12 +513,12 @@
     },
     "tests/checked-javascript-partition-07.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1051,
-      "job": 129026259239,
+      "etimeSeconds": 1342,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 17.52,
-      "peakRssGb": 3.3,
-      "sampledInShard": 9
+      "minutes": 22.37,
+      "peakRssGb": 3.2,
+      "sampledInShard": 12
     },
     "tests/checked-javascript-partition-08.test.mjs": {
       "basis": "sampler-max-etime",
@@ -534,12 +549,12 @@
     },
     "tests/checked-javascript-partition-11.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 4695,
-      "job": 129026259161,
+      "etimeSeconds": 5079,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 78.25,
-      "peakRssGb": 3.5,
-      "sampledInShard": 1
+      "minutes": 84.65,
+      "peakRssGb": 3.3,
+      "sampledInShard": 4
     },
     "tests/checked-javascript-partition-12.test.mjs": {
       "basis": "sampler-max-etime",
@@ -558,10 +573,13 @@
       "sampledInShard": 3
     },
     "tests/checked-record-alias-admission-source-history.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 286,
+      "job": 129651120874,
+      "measured": true,
+      "minutes": 4.77,
+      "peakRssGb": 2.7,
+      "sampledInShard": 9
     },
     "tests/checked-record-browser-ci.test.mjs": {
       "basis": "sampler-max-etime",
@@ -574,30 +592,30 @@
     },
     "tests/checked-record-browser-foundation.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 315,
-      "job": 129026259249,
+      "etimeSeconds": 341,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 5.25,
+      "minutes": 5.68,
       "peakRssGb": 1,
-      "sampledInShard": 6
+      "sampledInShard": 5
     },
     "tests/checked-record-browser-promotion.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 10,
-      "job": 129026259277,
+      "etimeSeconds": 38,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 0.17,
-      "peakRssGb": 0.3,
-      "sampledInShard": 7
+      "minutes": 0.63,
+      "peakRssGb": 0.4,
+      "sampledInShard": 6
     },
     "tests/checked-record-native-archives.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 12,
-      "job": 129026259207,
+      "etimeSeconds": 35,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 0.2,
-      "peakRssGb": 0.3,
-      "sampledInShard": 8
+      "minutes": 0.58,
+      "peakRssGb": 0.8,
+      "sampledInShard": 4
     },
     "tests/checked-record-native-ci.test.mjs": {
       "basis": "sampler-max-etime",
@@ -609,29 +627,31 @@
       "sampledInShard": 9
     },
     "tests/checked-record-native-history.test.mjs": {
-      "basis": "unobserved-under-sampling-interval",
-      "job": 129026259183,
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 10
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 19,
+      "job": 129651120931,
+      "measured": true,
+      "minutes": 0.32,
+      "peakRssGb": 1.3,
+      "sampledInShard": 1
     },
     "tests/checked-record-perl-acceptance.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1977,
-      "job": 129026259312,
+      "etimeSeconds": 2127,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 32.95,
-      "peakRssGb": 2.1,
-      "sampledInShard": 11
+      "minutes": 35.45,
+      "peakRssGb": 3.3,
+      "sampledInShard": 8
     },
     "tests/checked-record-php-wasm-evidence-ci.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 38,
-      "job": 129026259172,
+      "etimeSeconds": 42,
+      "job": 129651120933,
       "measured": true,
-      "minutes": 0.63,
+      "minutes": 0.7,
       "peakRssGb": 0.3,
-      "sampledInShard": 12
+      "sampledInShard": 11
     },
     "tests/checked-record-php-wasm-foundation.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -642,27 +662,30 @@
     },
     "tests/checked-record-php-wasm-promotion.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 20,
-      "job": 129026259348,
+      "etimeSeconds": 36,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 0.33,
-      "peakRssGb": 0.8,
-      "sampledInShard": 2
+      "minutes": 0.6,
+      "peakRssGb": 0.7,
+      "sampledInShard": 12
     },
     "tests/checked-record-value-index-browser.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 244,
-      "job": 129026259176,
+      "etimeSeconds": 290,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 4.07,
-      "peakRssGb": 2.8,
-      "sampledInShard": 3
+      "minutes": 4.83,
+      "peakRssGb": 2.3,
+      "sampledInShard": 5
     },
     "tests/checked-record-value-index-dotnet-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 25,
+      "job": 129651120933,
+      "measured": true,
+      "minutes": 0.42,
+      "peakRssGb": 0.9,
+      "sampledInShard": 11
     },
     "tests/checked-record-value-index-dotnet.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -698,21 +721,21 @@
     },
     "tests/checked-record-value-index-matrix.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 716,
-      "job": 129026259239,
+      "etimeSeconds": 1191,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 11.93,
-      "peakRssGb": 3.3,
-      "sampledInShard": 9
+      "minutes": 19.85,
+      "peakRssGb": 2.8,
+      "sampledInShard": 6
     },
     "tests/checked-record-value-index-native-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 39,
-      "job": 129026259183,
+      "etimeSeconds": 40,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 0.65,
+      "minutes": 0.67,
       "peakRssGb": 1,
-      "sampledInShard": 10
+      "sampledInShard": 6
     },
     "tests/checked-record-value-index-native.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -723,12 +746,12 @@
     },
     "tests/checked-record-value-index-perl.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 592,
-      "job": 129026259172,
+      "etimeSeconds": 766,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 9.87,
+      "minutes": 12.77,
       "peakRssGb": 3,
-      "sampledInShard": 12
+      "sampledInShard": 5
     },
     "tests/checked-record-value-index-php-wasm-evidence.test.mjs": {
       "basis": "sampler-max-etime",
@@ -758,19 +781,22 @@
       "sampledInShard": 3
     },
     "tests/checked-record-value-index-python.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 201,
+      "job": 129651120958,
+      "measured": true,
+      "minutes": 3.35,
+      "peakRssGb": 2.9,
+      "sampledInShard": 10
     },
     "tests/checked-record-value-index-ruby.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 226,
-      "job": 129026259295,
+      "etimeSeconds": 242,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 3.77,
-      "peakRssGb": 2.4,
-      "sampledInShard": 5
+      "minutes": 4.03,
+      "peakRssGb": 2.2,
+      "sampledInShard": 3
     },
     "tests/checked-record-value-index-rust.test.mjs": {
       "basis": "sampler-max-etime",
@@ -806,12 +832,12 @@
     },
     "tests/cli-npm-package.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 7,
-      "job": 129026259183,
+      "etimeSeconds": 30,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 0.12,
-      "peakRssGb": 0.3,
-      "sampledInShard": 10
+      "minutes": 0.5,
+      "peakRssGb": 0.4,
+      "sampledInShard": 3
     },
     "tests/cli-verification.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -822,12 +848,12 @@
     },
     "tests/closed-generic-checked-record-source-history.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 184,
-      "job": 129026259172,
+      "etimeSeconds": 207,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 3.07,
-      "peakRssGb": 2,
-      "sampledInShard": 12
+      "minutes": 3.45,
+      "peakRssGb": 2.5,
+      "sampledInShard": 3
     },
     "tests/closure-thread-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -872,12 +898,12 @@
     },
     "tests/component-array-history-partition-01.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 3390,
-      "job": 129026259277,
+      "etimeSeconds": 3432,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 56.5,
-      "peakRssGb": 3.1,
-      "sampledInShard": 7
+      "minutes": 57.2,
+      "peakRssGb": 3.4,
+      "sampledInShard": 8
     },
     "tests/component-array-history-partition-02.test.mjs": {
       "basis": "sampler-max-etime",
@@ -899,21 +925,21 @@
     },
     "tests/component-array-history-partition-04.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 3645,
-      "job": 129026259183,
+      "etimeSeconds": 4156,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 60.75,
-      "peakRssGb": 3.3,
-      "sampledInShard": 10
+      "minutes": 69.27,
+      "peakRssGb": 2.5,
+      "sampledInShard": 6
     },
     "tests/component-array-history-partition-05.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 427,
-      "job": 129026259312,
+      "etimeSeconds": 506,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 7.12,
-      "peakRssGb": 2.9,
-      "sampledInShard": 11
+      "minutes": 8.43,
+      "peakRssGb": 2.7,
+      "sampledInShard": 5
     },
     "tests/component-array-history-partition-06.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -933,36 +959,39 @@
     },
     "tests/component-array-history-partition-08.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 3449,
-      "job": 129026259348,
+      "etimeSeconds": 4073,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 57.48,
-      "peakRssGb": 3.3,
-      "sampledInShard": 2
+      "minutes": 67.88,
+      "peakRssGb": 3.1,
+      "sampledInShard": 7
     },
     "tests/component-array-history-partition-09.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 3689,
-      "job": 129026259176,
+      "etimeSeconds": 4110,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 61.48,
-      "peakRssGb": 3.5,
-      "sampledInShard": 3
+      "minutes": 68.5,
+      "peakRssGb": 3.4,
+      "sampledInShard": 5
     },
     "tests/component-array-history-partition-10.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 1442,
+      "job": 129651120927,
+      "measured": true,
+      "minutes": 24.03,
+      "peakRssGb": 3.2,
+      "sampledInShard": 5
     },
     "tests/component-array-history-partition-11.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 2234,
-      "job": 129026259295,
+      "etimeSeconds": 2284,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 37.23,
-      "peakRssGb": 3.4,
-      "sampledInShard": 5
+      "minutes": 38.07,
+      "peakRssGb": 3.3,
+      "sampledInShard": 12
     },
     "tests/component-array-history-partition-12.test.mjs": {
       "basis": "sampler-max-etime",
@@ -1116,12 +1145,12 @@
     },
     "tests/component-structured-callable-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 328,
-      "job": 129026259312,
+      "etimeSeconds": 445,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 5.47,
-      "peakRssGb": 2.4,
-      "sampledInShard": 11
+      "minutes": 7.42,
+      "peakRssGb": 2.7,
+      "sampledInShard": 7
     },
     "tests/component-structured-callable-lean.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1216,12 +1245,12 @@
     },
     "tests/cpp-copied-graph-conversions.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 36,
-      "job": 129026259172,
+      "etimeSeconds": 45,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 0.6,
+      "minutes": 0.75,
       "peakRssGb": 0.1,
-      "sampledInShard": 12
+      "sampledInShard": 5
     },
     "tests/cpp-copied-graph-values.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1247,10 +1276,13 @@
       "sampledInShard": 3
     },
     "tests/cpp-structured-callable-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 56,
+      "job": 129651120958,
+      "measured": true,
+      "minutes": 0.93,
+      "peakRssGb": 0.3,
+      "sampledInShard": 10
     },
     "tests/cpp-variant-evidence.test.mjs": {
       "basis": "sampler-max-etime",
@@ -1293,21 +1325,21 @@
     },
     "tests/dependent-checked-record-matrix.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 327,
-      "job": 129026259183,
+      "etimeSeconds": 527,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 5.45,
-      "peakRssGb": 1.6,
-      "sampledInShard": 10
+      "minutes": 8.78,
+      "peakRssGb": 1.3,
+      "sampledInShard": 8
     },
     "tests/dependent-checked-record-native-foundation.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 5,
-      "job": 129026259312,
+      "etimeSeconds": 61,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 0.08,
+      "minutes": 1.02,
       "peakRssGb": 0.2,
-      "sampledInShard": 11
+      "sampledInShard": 4
     },
     "tests/dependent-checked-record-php-wasm.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1342,10 +1374,13 @@
       "sampledInShard": 3
     },
     "tests/direct-proof-erasure-complete-hosted-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 60,
+      "job": 129651120931,
+      "measured": true,
+      "minutes": 1,
+      "peakRssGb": 1.2,
+      "sampledInShard": 1
     },
     "tests/direct-proof-erasure-complete-promotion.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1494,12 +1529,12 @@
     },
     "tests/dotnet-fin-dispatch-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 427,
-      "job": 129026259161,
+      "etimeSeconds": 510,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 7.12,
-      "peakRssGb": 3.3,
-      "sampledInShard": 1
+      "minutes": 8.5,
+      "peakRssGb": 1.6,
+      "sampledInShard": 7
     },
     "tests/dotnet-graph-package.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1530,12 +1565,12 @@
     },
     "tests/dotnet-recursive-callable-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 771,
-      "job": 129026259249,
+      "etimeSeconds": 895,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 12.85,
-      "peakRssGb": 1.1,
-      "sampledInShard": 6
+      "minutes": 14.92,
+      "peakRssGb": 0.6,
+      "sampledInShard": 4
     },
     "tests/dotnet-repeat-observations.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1560,12 +1595,12 @@
     },
     "tests/dotnet-structured-callable-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 385,
-      "job": 129026259183,
+      "etimeSeconds": 500,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 6.42,
-      "peakRssGb": 1.9,
-      "sampledInShard": 10
+      "minutes": 8.33,
+      "peakRssGb": 3.2,
+      "sampledInShard": 8
     },
     "tests/dotnet-variant-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1603,19 +1638,22 @@
       "sampledInShard": 3
     },
     "tests/fin-container-edge-integration-history.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 186,
+      "job": 129651120958,
+      "measured": true,
+      "minutes": 3.1,
+      "peakRssGb": 2.4,
+      "sampledInShard": 10
     },
     "tests/fin-container-edge-report.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 54,
-      "job": 129026259295,
+      "etimeSeconds": 58,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 0.9,
-      "peakRssGb": 1.4,
-      "sampledInShard": 5
+      "minutes": 0.97,
+      "peakRssGb": 1.5,
+      "sampledInShard": 8
     },
     "tests/fin-container-entry-ci.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1635,19 +1673,21 @@
     },
     "tests/fin-container-evidence-ci.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 6,
-      "job": 129026259207,
+      "etimeSeconds": 12,
+      "job": 129651120933,
       "measured": true,
-      "minutes": 0.1,
-      "peakRssGb": 0.3,
-      "sampledInShard": 8
+      "minutes": 0.2,
+      "peakRssGb": 0.9,
+      "sampledInShard": 11
     },
     "tests/fin-container-foreign-report.test.mjs": {
-      "basis": "unobserved-under-sampling-interval",
-      "job": 129026259239,
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 9
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 26,
+      "job": 129651120957,
+      "measured": true,
+      "minutes": 0.43,
+      "peakRssGb": 0.9,
+      "sampledInShard": 3
     },
     "tests/fin-dispatch-guides.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1665,12 +1705,12 @@
     },
     "tests/fin-entry-integration.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 9,
-      "job": 129026259172,
+      "etimeSeconds": 15,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 0.15,
-      "peakRssGb": 0.3,
-      "sampledInShard": 12
+      "minutes": 0.25,
+      "peakRssGb": 0.9,
+      "sampledInShard": 6
     },
     "tests/fin-python-ruby-evidence.test.mjs": {
       "basis": "sampler-max-etime",
@@ -1698,19 +1738,22 @@
       "sampledInShard": 3
     },
     "tests/generic-inheritance-installed.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 205,
+      "job": 129651120931,
+      "measured": true,
+      "minutes": 3.42,
+      "peakRssGb": 2.4,
+      "sampledInShard": 1
     },
     "tests/generic-inheritance.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 170,
-      "job": 129026259295,
+      "etimeSeconds": 258,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 2.83,
-      "peakRssGb": 2.5,
-      "sampledInShard": 5
+      "minutes": 4.3,
+      "peakRssGb": 1.9,
+      "sampledInShard": 7
     },
     "tests/generic-record-array-ci.test.mjs": {
       "basis": "sampler-max-etime",
@@ -1776,12 +1819,12 @@
     },
     "tests/generic-records.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 701,
-      "job": 129026259348,
+      "etimeSeconds": 809,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 11.68,
-      "peakRssGb": 2.8,
-      "sampledInShard": 2
+      "minutes": 13.48,
+      "peakRssGb": 2.1,
+      "sampledInShard": 7
     },
     "tests/generic-subtype-languages.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1791,19 +1834,22 @@
       "sampledInShard": 3
     },
     "tests/generic-subtype-managed-wit.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 404,
+      "job": 129651120950,
+      "measured": true,
+      "minutes": 6.73,
+      "peakRssGb": 2.3,
+      "sampledInShard": 2
     },
     "tests/generic-subtype-native-perl.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1630,
-      "job": 129026259295,
+      "etimeSeconds": 1850,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 27.17,
-      "peakRssGb": 2.4,
-      "sampledInShard": 5
+      "minutes": 30.83,
+      "peakRssGb": 3.2,
+      "sampledInShard": 3
     },
     "tests/generic-subtype-npm-browser.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1814,12 +1860,12 @@
     },
     "tests/host-null-complete-hosted-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 28,
-      "job": 129026259277,
+      "etimeSeconds": 65,
+      "job": 129651120931,
       "measured": true,
-      "minutes": 0.47,
-      "peakRssGb": 1.1,
-      "sampledInShard": 7
+      "minutes": 1.08,
+      "peakRssGb": 1.2,
+      "sampledInShard": 1
     },
     "tests/host-null-complete-promotion.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1867,12 +1913,12 @@
     },
     "tests/hosted-container-inventory.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 5,
-      "job": 129026259348,
+      "etimeSeconds": 15,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 0.08,
-      "peakRssGb": 0.4,
-      "sampledInShard": 2
+      "minutes": 0.25,
+      "peakRssGb": 0.5,
+      "sampledInShard": 5
     },
     "tests/hosted-specialization-evidence.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1917,21 +1963,21 @@
     },
     "tests/inherited-checked-record-dotnet-source-history.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 287,
-      "job": 129026259239,
+      "etimeSeconds": 424,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 4.78,
-      "peakRssGb": 3.2,
-      "sampledInShard": 9
+      "minutes": 7.07,
+      "peakRssGb": 2.7,
+      "sampledInShard": 4
     },
     "tests/inherited-checked-record-dotnet.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 20,
-      "job": 129026259183,
+      "etimeSeconds": 32,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 0.33,
+      "minutes": 0.53,
       "peakRssGb": 0.2,
-      "sampledInShard": 10
+      "sampledInShard": 8
     },
     "tests/inherited-checked-record-hosted-evidence-history.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1942,12 +1988,12 @@
     },
     "tests/inherited-checked-record-jvm-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 6,
-      "job": 129026259172,
+      "etimeSeconds": 27,
+      "job": 129651120931,
       "measured": true,
-      "minutes": 0.1,
-      "peakRssGb": 0.2,
-      "sampledInShard": 12
+      "minutes": 0.45,
+      "peakRssGb": 0.5,
+      "sampledInShard": 1
     },
     "tests/inherited-checked-record-jvm-source-history.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -1965,12 +2011,12 @@
     },
     "tests/inherited-checked-record-native.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 130,
-      "job": 129026259176,
+      "etimeSeconds": 143,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 2.17,
-      "peakRssGb": 0.8,
-      "sampledInShard": 3
+      "minutes": 2.38,
+      "peakRssGb": 0.6,
+      "sampledInShard": 5
     },
     "tests/inherited-checked-record-npm-source.test.mjs": {
       "basis": "unobserved-shard-4-no-completed-run",
@@ -1980,12 +2026,12 @@
     },
     "tests/inherited-checked-record-perl-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 21,
-      "job": 129026259295,
+      "etimeSeconds": 33,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 0.35,
+      "minutes": 0.55,
       "peakRssGb": 0.2,
-      "sampledInShard": 5
+      "sampledInShard": 3
     },
     "tests/inherited-checked-record-perl-source-history.test.mjs": {
       "basis": "sampler-max-etime",
@@ -1998,12 +2044,12 @@
     },
     "tests/inherited-checked-record-perl.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 0,
-      "job": 129026259277,
+      "etimeSeconds": 2,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 0.01,
-      "peakRssGb": 0.1,
-      "sampledInShard": 7
+      "minutes": 0.03,
+      "peakRssGb": 0.2,
+      "sampledInShard": 8
     },
     "tests/inherited-checked-record-php-evidence.test.mjs": {
       "basis": "sampler-max-etime",
@@ -2031,11 +2077,13 @@
       "sampledInShard": 10
     },
     "tests/inherited-checked-record-python-evidence.test.mjs": {
-      "basis": "unobserved-under-sampling-interval",
-      "job": 129026259312,
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 11
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 20,
+      "job": 129651120926,
+      "measured": true,
+      "minutes": 0.33,
+      "peakRssGb": 0.5,
+      "sampledInShard": 6
     },
     "tests/inherited-checked-record-python-source-history.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -2075,12 +2123,12 @@
     },
     "tests/inherited-checked-record-test-registration-history.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 356,
-      "job": 129026259295,
+      "etimeSeconds": 442,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 5.93,
-      "peakRssGb": 2.9,
-      "sampledInShard": 5
+      "minutes": 7.37,
+      "peakRssGb": 2.4,
+      "sampledInShard": 8
     },
     "tests/inherited-checked-records.test.mjs": {
       "basis": "sampler-max-etime",
@@ -2254,12 +2302,12 @@
     },
     "tests/jvm-fin-dispatch-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 568,
-      "job": 129026259249,
+      "etimeSeconds": 708,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 9.47,
-      "peakRssGb": 2.8,
-      "sampledInShard": 6
+      "minutes": 11.8,
+      "peakRssGb": 3.3,
+      "sampledInShard": 5
     },
     "tests/jvm-graph-metadata-source.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -2329,19 +2377,22 @@
       "sampledInShard": 3
     },
     "tests/jvm-structured-callable-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 392,
+      "job": 129651120874,
+      "measured": true,
+      "minutes": 6.53,
+      "peakRssGb": 1.1,
+      "sampledInShard": 9
     },
     "tests/jvm-thread-exit-repair-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 598,
-      "job": 129026259295,
+      "etimeSeconds": 600,
+      "job": 129651120958,
       "measured": true,
-      "minutes": 9.97,
-      "peakRssGb": 3.1,
-      "sampledInShard": 5
+      "minutes": 10,
+      "peakRssGb": 3,
+      "sampledInShard": 10
     },
     "tests/jvm-variant-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -2359,12 +2410,12 @@
     },
     "tests/kotlin-collection-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 671,
-      "job": 129026259207,
+      "etimeSeconds": 790,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 11.18,
-      "peakRssGb": 2.1,
-      "sampledInShard": 8
+      "minutes": 13.17,
+      "peakRssGb": 2,
+      "sampledInShard": 4
     },
     "tests/lake-component-input.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -2427,21 +2478,21 @@
     },
     "tests/managed-ci-isolation-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1330,
-      "job": 129026259295,
+      "etimeSeconds": 1336,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 22.17,
-      "peakRssGb": 2.7,
-      "sampledInShard": 5
+      "minutes": 22.27,
+      "peakRssGb": 3.9,
+      "sampledInShard": 3
     },
     "tests/managed-ci-isolation.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 169,
-      "job": 129026259249,
+      "etimeSeconds": 221,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 2.82,
+      "minutes": 3.68,
       "peakRssGb": 2.8,
-      "sampledInShard": 6
+      "sampledInShard": 8
     },
     "tests/managed-close-evidence.test.mjs": {
       "basis": "sampler-max-etime",
@@ -2474,11 +2525,13 @@
       "sampledInShard": 10
     },
     "tests/mutual-checked-record-dotnet-evidence.test.mjs": {
-      "basis": "unobserved-under-sampling-interval",
-      "job": 129026259312,
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 11
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 31,
+      "job": 129651120874,
+      "measured": true,
+      "minutes": 0.52,
+      "peakRssGb": 0.3,
+      "sampledInShard": 9
     },
     "tests/mutual-checked-record-dotnet-source-history.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -2534,12 +2587,12 @@
     },
     "tests/mutual-checked-records.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 883,
-      "job": 129026259277,
+      "etimeSeconds": 1009,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 14.72,
+      "minutes": 16.82,
       "peakRssGb": 2.1,
-      "sampledInShard": 7
+      "sampledInShard": 6
     },
     "tests/native-alias-contract.test.mjs": {
       "basis": "sampler-max-etime",
@@ -2646,12 +2699,12 @@
     },
     "tests/native-fork-repair-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1049,
-      "job": 129026259183,
+      "etimeSeconds": 1317,
+      "job": 129651120933,
       "measured": true,
-      "minutes": 17.48,
+      "minutes": 21.95,
       "peakRssGb": 5,
-      "sampledInShard": 10
+      "sampledInShard": 11
     },
     "tests/native-graph-model.test.mjs": {
       "basis": "sampler-max-etime",
@@ -2664,12 +2717,12 @@
     },
     "tests/native-graph-package.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 698,
-      "job": 129026259172,
+      "etimeSeconds": 893,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 11.63,
-      "peakRssGb": 2.1,
-      "sampledInShard": 12
+      "minutes": 14.88,
+      "peakRssGb": 2,
+      "sampledInShard": 5
     },
     "tests/native-jvm.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -2792,39 +2845,39 @@
     },
     "tests/nested-checked-record-foundation.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 355,
-      "job": 129026259249,
+      "etimeSeconds": 492,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 5.92,
-      "peakRssGb": 2.3,
+      "minutes": 8.2,
+      "peakRssGb": 2.7,
       "sampledInShard": 6
     },
     "tests/nested-checked-record-history-partition-01.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 36,
-      "job": 129026259277,
+      "etimeSeconds": 57,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 0.6,
+      "minutes": 0.95,
       "peakRssGb": 0.2,
       "sampledInShard": 7
     },
     "tests/nested-checked-record-history-partition-02.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 477,
-      "job": 129026259207,
+      "etimeSeconds": 581,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 7.95,
+      "minutes": 9.68,
       "peakRssGb": 1.7,
-      "sampledInShard": 8
+      "sampledInShard": 3
     },
     "tests/nested-checked-record-history-partition-03.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1142,
-      "job": 129026259239,
+      "etimeSeconds": 1579,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 19.03,
-      "peakRssGb": 2.7,
-      "sampledInShard": 9
+      "minutes": 26.32,
+      "peakRssGb": 3,
+      "sampledInShard": 8
     },
     "tests/nested-checked-record-history-partition-04.test.mjs": {
       "basis": "sampler-max-etime",
@@ -2886,30 +2939,30 @@
     },
     "tests/nested-checked-record-history-partition-11.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 23,
-      "job": 129026259295,
+      "etimeSeconds": 53,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 0.38,
+      "minutes": 0.88,
       "peakRssGb": 0.6,
-      "sampledInShard": 5
+      "sampledInShard": 4
     },
     "tests/nested-checked-record-history-partition-12.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 30,
-      "job": 129026259249,
+      "etimeSeconds": 38,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 0.5,
-      "peakRssGb": 0.5,
-      "sampledInShard": 6
+      "minutes": 0.63,
+      "peakRssGb": 0.9,
+      "sampledInShard": 12
     },
     "tests/nested-checked-record-jvm.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 11,
-      "job": 129026259277,
+      "etimeSeconds": 40,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 0.18,
-      "peakRssGb": 0.3,
-      "sampledInShard": 7
+      "minutes": 0.67,
+      "peakRssGb": 0.4,
+      "sampledInShard": 8
     },
     "tests/nested-checked-record-native.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -2982,10 +3035,13 @@
       "tapTests": 331
     },
     "tests/nominal-subtype-entry-hosted-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 48,
+      "job": 129651120927,
+      "measured": true,
+      "minutes": 0.8,
+      "peakRssGb": 0.2,
+      "sampledInShard": 5
     },
     "tests/npm-registry-adapter.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3017,12 +3073,12 @@
     },
     "tests/optional-parameter-complete-hosted-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 59,
-      "job": 129026259239,
+      "etimeSeconds": 63,
+      "job": 129651120931,
       "measured": true,
-      "minutes": 0.98,
-      "peakRssGb": 1.1,
-      "sampledInShard": 9
+      "minutes": 1.05,
+      "peakRssGb": 1.2,
+      "sampledInShard": 1
     },
     "tests/optional-parameter-complete-promotion.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3148,12 +3204,12 @@
     },
     "tests/owned-aggregate-native.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 213,
-      "job": 129026259176,
+      "etimeSeconds": 241,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 3.55,
-      "peakRssGb": 2.8,
-      "sampledInShard": 3
+      "minutes": 4.02,
+      "peakRssGb": 1.6,
+      "sampledInShard": 6
     },
     "tests/owned-aggregate-transfers.test.mjs": {
       "basis": "unobserved-shard-4-no-completed-run",
@@ -3170,12 +3226,12 @@
     },
     "tests/owned-analysis-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 572,
-      "job": 129026259249,
+      "etimeSeconds": 573,
+      "job": 129651120958,
       "measured": true,
-      "minutes": 9.53,
+      "minutes": 9.55,
       "peakRssGb": 3.2,
-      "sampledInShard": 6
+      "sampledInShard": 10
     },
     "tests/owned-borrow-analysis.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3209,12 +3265,12 @@
     },
     "tests/owned-c-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 267,
-      "job": 129026259312,
+      "etimeSeconds": 270,
+      "job": 129651120958,
       "measured": true,
-      "minutes": 4.45,
-      "peakRssGb": 2.3,
-      "sampledInShard": 11
+      "minutes": 4.5,
+      "peakRssGb": 3,
+      "sampledInShard": 10
     },
     "tests/owned-c-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3239,12 +3295,12 @@
     },
     "tests/owned-callback-inventory-repair.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 523,
-      "job": 129026259176,
+      "etimeSeconds": 553,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 8.72,
-      "peakRssGb": 2.7,
-      "sampledInShard": 3
+      "minutes": 9.22,
+      "peakRssGb": 2.3,
+      "sampledInShard": 6
     },
     "tests/owned-callback-result-c-packaging.test.mjs": {
       "basis": "unobserved-shard-4-no-completed-run",
@@ -3282,12 +3338,12 @@
     },
     "tests/owned-callback-result-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 337,
-      "job": 129026259239,
+      "etimeSeconds": 453,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 5.62,
-      "peakRssGb": 0.6,
-      "sampledInShard": 9
+      "minutes": 7.55,
+      "peakRssGb": 0.7,
+      "sampledInShard": 4
     },
     "tests/owned-callback-result-history.test.mjs": {
       "basis": "sampler-max-etime",
@@ -3357,19 +3413,19 @@
     },
     "tests/owned-checked-record-hosted-archive.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 94,
-      "job": 129026259277,
+      "etimeSeconds": 145,
+      "job": 129651120958,
       "measured": true,
-      "minutes": 1.57,
-      "peakRssGb": 0.3,
-      "sampledInShard": 7
+      "minutes": 2.42,
+      "peakRssGb": 0.4,
+      "sampledInShard": 10
     },
     "tests/owned-checked-record-hosted-evidence-dotnet.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 8,
-      "job": 129026259207,
+      "etimeSeconds": 13,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 0.13,
+      "minutes": 0.22,
       "peakRssGb": 0.3,
       "sampledInShard": 8
     },
@@ -3393,21 +3449,21 @@
     },
     "tests/owned-checked-record-hosted-evidence-native.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 44,
-      "job": 129026259312,
+      "etimeSeconds": 79,
+      "job": 129651120931,
       "measured": true,
-      "minutes": 0.73,
+      "minutes": 1.32,
       "peakRssGb": 0.3,
-      "sampledInShard": 11
+      "sampledInShard": 1
     },
     "tests/owned-checked-record-hosted-evidence-perl.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 32,
-      "job": 129026259172,
+      "etimeSeconds": 72,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 0.53,
+      "minutes": 1.2,
       "peakRssGb": 0.3,
-      "sampledInShard": 12
+      "sampledInShard": 8
     },
     "tests/owned-checked-record-hosted-evidence-php-wasm.test.mjs": {
       "basis": "sampler-max-etime",
@@ -3433,10 +3489,13 @@
       "sampledInShard": 3
     },
     "tests/owned-checked-record-hosted-evidence-ruby.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 19,
+      "job": 129651120931,
+      "measured": true,
+      "minutes": 0.32,
+      "peakRssGb": 0.3,
+      "sampledInShard": 1
     },
     "tests/owned-checked-record-hosted-evidence-rust.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3447,12 +3506,12 @@
     },
     "tests/owned-checked-record-hosted-evidence-wit.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 22,
-      "job": 129026259249,
+      "etimeSeconds": 24,
+      "job": 129651120931,
       "measured": true,
-      "minutes": 0.37,
+      "minutes": 0.4,
       "peakRssGb": 0.3,
-      "sampledInShard": 6
+      "sampledInShard": 1
     },
     "tests/owned-checked-record-hosted-evidence.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3520,10 +3579,13 @@
       "sampledInShard": 3
     },
     "tests/owned-cpp-borrow-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 1365,
+      "job": 129651120975,
+      "measured": true,
+      "minutes": 22.75,
+      "peakRssGb": 3.8,
+      "sampledInShard": 12
     },
     "tests/owned-cpp-borrow-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3562,21 +3624,21 @@
     },
     "tests/owned-cpp-callback-result-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1585,
-      "job": 129026259183,
+      "etimeSeconds": 1626,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 26.42,
-      "peakRssGb": 3.6,
-      "sampledInShard": 10
+      "minutes": 27.1,
+      "peakRssGb": 2.8,
+      "sampledInShard": 8
     },
     "tests/owned-cpp-callback-result-history.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 379,
-      "job": 129026259312,
+      "etimeSeconds": 388,
+      "job": 129651120931,
       "measured": true,
-      "minutes": 6.32,
-      "peakRssGb": 1.7,
-      "sampledInShard": 11
+      "minutes": 6.47,
+      "peakRssGb": 2.8,
+      "sampledInShard": 1
     },
     "tests/owned-cpp-callback-result-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3618,12 +3680,12 @@
     },
     "tests/owned-cpp-receiver-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 630,
-      "job": 129026259295,
+      "etimeSeconds": 854,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 10.5,
-      "peakRssGb": 3.4,
-      "sampledInShard": 5
+      "minutes": 14.23,
+      "peakRssGb": 2.3,
+      "sampledInShard": 7
     },
     "tests/owned-cpp-receiver-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3655,12 +3717,12 @@
     },
     "tests/owned-cpp-transfer-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 878,
-      "job": 129026259183,
+      "etimeSeconds": 1010,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 14.63,
-      "peakRssGb": 3.9,
-      "sampledInShard": 10
+      "minutes": 16.83,
+      "peakRssGb": 3.5,
+      "sampledInShard": 5
     },
     "tests/owned-cpp-transfer-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3822,12 +3884,12 @@
     },
     "tests/owned-dotnet-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 310,
-      "job": 129026259239,
+      "etimeSeconds": 520,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 5.17,
-      "peakRssGb": 3.6,
-      "sampledInShard": 9
+      "minutes": 8.67,
+      "peakRssGb": 2.9,
+      "sampledInShard": 6
     },
     "tests/owned-dotnet-layout.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3838,12 +3900,12 @@
     },
     "tests/owned-dotnet-lifetime-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 189,
-      "job": 129026259312,
+      "etimeSeconds": 372,
+      "job": 129651120931,
       "measured": true,
-      "minutes": 3.15,
-      "peakRssGb": 0.9,
-      "sampledInShard": 11
+      "minutes": 6.2,
+      "peakRssGb": 0.8,
+      "sampledInShard": 1
     },
     "tests/owned-dotnet-loading-evidence.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -3883,12 +3945,12 @@
     },
     "tests/owned-dotnet-receiver-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 604,
-      "job": 129026259295,
+      "etimeSeconds": 638,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 10.07,
+      "minutes": 10.63,
       "peakRssGb": 3.2,
-      "sampledInShard": 5
+      "sampledInShard": 3
     },
     "tests/owned-dotnet-receiver-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4091,12 +4153,12 @@
     },
     "tests/owned-javascript-npm-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 426,
-      "job": 129026259239,
+      "etimeSeconds": 666,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 7.1,
-      "peakRssGb": 3.2,
-      "sampledInShard": 9
+      "minutes": 11.1,
+      "peakRssGb": 3.4,
+      "sampledInShard": 8
     },
     "tests/owned-javascript-package.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4201,10 +4263,10 @@
     },
     "tests/owned-javascript-transfer-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 145,
-      "job": 129026259172,
+      "etimeSeconds": 295,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 2.42,
+      "minutes": 4.92,
       "peakRssGb": 1,
       "sampledInShard": 12
     },
@@ -4253,10 +4315,10 @@
     },
     "tests/owned-javascript-wasm-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1624,
-      "job": 129026259277,
+      "etimeSeconds": 1867,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 27.07,
+      "minutes": 31.12,
       "peakRssGb": 2.2,
       "sampledInShard": 7
     },
@@ -4325,11 +4387,13 @@
       "sampledInShard": 4
     },
     "tests/owned-jvm-call-evidence.test.mjs": {
-      "basis": "unobserved-under-sampling-interval",
-      "job": 129026259295,
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 5
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 19,
+      "job": 129651120911,
+      "measured": true,
+      "minutes": 0.32,
+      "peakRssGb": 0.4,
+      "sampledInShard": 7
     },
     "tests/owned-jvm-callback-mixed-signatures.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4375,12 +4439,12 @@
     },
     "tests/owned-jvm-callback-result-history.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 846,
-      "job": 129026259172,
+      "etimeSeconds": 1287,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 14.1,
-      "peakRssGb": 2.6,
-      "sampledInShard": 12
+      "minutes": 21.45,
+      "peakRssGb": 2.8,
+      "sampledInShard": 7
     },
     "tests/owned-jvm-callback-result-lifetime-evidence.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4489,10 +4553,13 @@
       "sampledInShard": 3
     },
     "tests/owned-jvm-package-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 1426,
+      "job": 129651120958,
+      "measured": true,
+      "minutes": 23.77,
+      "peakRssGb": 4.2,
+      "sampledInShard": 10
     },
     "tests/owned-jvm-package.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4517,12 +4584,12 @@
     },
     "tests/owned-jvm-receiver-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 304,
-      "job": 129026259207,
+      "etimeSeconds": 305,
+      "job": 129651120874,
       "measured": true,
-      "minutes": 5.07,
-      "peakRssGb": 2.4,
-      "sampledInShard": 8
+      "minutes": 5.08,
+      "peakRssGb": 2.5,
+      "sampledInShard": 9
     },
     "tests/owned-jvm-receiver-gc-ci.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4714,12 +4781,12 @@
     },
     "tests/owned-perl-package-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 576,
-      "job": 129026259312,
+      "etimeSeconds": 646,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 9.6,
-      "peakRssGb": 2.1,
-      "sampledInShard": 11
+      "minutes": 10.77,
+      "peakRssGb": 3.2,
+      "sampledInShard": 4
     },
     "tests/owned-perl-package.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4759,12 +4826,12 @@
     },
     "tests/owned-perl-receiver-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 606,
-      "job": 129026259295,
+      "etimeSeconds": 701,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 10.1,
-      "peakRssGb": 2.7,
-      "sampledInShard": 5
+      "minutes": 11.68,
+      "peakRssGb": 3.2,
+      "sampledInShard": 4
     },
     "tests/owned-perl-receiver-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4810,12 +4877,12 @@
     },
     "tests/owned-perl-transfer-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1710,
-      "job": 129026259172,
+      "etimeSeconds": 2207,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 28.5,
-      "peakRssGb": 3.9,
-      "sampledInShard": 12
+      "minutes": 36.78,
+      "peakRssGb": 3.7,
+      "sampledInShard": 5
     },
     "tests/owned-perl-transfer-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4839,10 +4906,13 @@
       "sampledInShard": 3
     },
     "tests/owned-perl-xs.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 8330,
+      "job": 129651120911,
+      "measured": true,
+      "minutes": 138.83,
+      "peakRssGb": 1.5,
+      "sampledInShard": 7
     },
     "tests/owned-php-borrow-documentation.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4876,12 +4946,12 @@
     },
     "tests/owned-php-callback-result-acceptance.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 226,
-      "job": 129026259239,
+      "etimeSeconds": 233,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 3.77,
-      "peakRssGb": 0.6,
-      "sampledInShard": 9
+      "minutes": 3.88,
+      "peakRssGb": 0.7,
+      "sampledInShard": 7
     },
     "tests/owned-php-callback-result-package-evidence.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -4940,12 +5010,12 @@
     },
     "tests/owned-php-package-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 595,
-      "job": 129026259249,
+      "etimeSeconds": 710,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 9.92,
-      "peakRssGb": 3,
-      "sampledInShard": 6
+      "minutes": 11.83,
+      "peakRssGb": 3.6,
+      "sampledInShard": 8
     },
     "tests/owned-php-package.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5013,10 +5083,13 @@
       "sampledInShard": 3
     },
     "tests/owned-php-transfer-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 977,
+      "job": 129651120927,
+      "measured": true,
+      "minutes": 16.28,
+      "peakRssGb": 3.7,
+      "sampledInShard": 5
     },
     "tests/owned-php-transfer-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5048,12 +5121,12 @@
     },
     "tests/owned-php-wasm-borrow-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 443,
-      "job": 129026259239,
+      "etimeSeconds": 760,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 7.38,
-      "peakRssGb": 3.3,
-      "sampledInShard": 9
+      "minutes": 12.67,
+      "peakRssGb": 3.2,
+      "sampledInShard": 5
     },
     "tests/owned-php-wasm-borrow-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5064,21 +5137,21 @@
     },
     "tests/owned-php-wasm-borrows.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1,
-      "job": 129026259312,
+      "etimeSeconds": 3,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 0.02,
-      "peakRssGb": 0.2,
-      "sampledInShard": 11
+      "minutes": 0.05,
+      "peakRssGb": 0.3,
+      "sampledInShard": 3
     },
     "tests/owned-php-wasm-callback-result-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 398,
-      "job": 129026259172,
+      "etimeSeconds": 439,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 6.63,
-      "peakRssGb": 2.6,
-      "sampledInShard": 12
+      "minutes": 7.32,
+      "peakRssGb": 2.1,
+      "sampledInShard": 4
     },
     "tests/owned-php-wasm-callback-results.test.mjs": {
       "basis": "sampler-max-etime",
@@ -5251,12 +5324,12 @@
     },
     "tests/owned-python-borrow-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 114,
-      "job": 129026259172,
+      "etimeSeconds": 233,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 1.9,
-      "peakRssGb": 1.2,
-      "sampledInShard": 12
+      "minutes": 3.88,
+      "peakRssGb": 1,
+      "sampledInShard": 3
     },
     "tests/owned-python-borrow-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5287,12 +5360,12 @@
     },
     "tests/owned-python-callback-result-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1421,
-      "job": 129026259295,
+      "etimeSeconds": 1431,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 23.68,
-      "peakRssGb": 3.1,
-      "sampledInShard": 5
+      "minutes": 23.85,
+      "peakRssGb": 3.2,
+      "sampledInShard": 12
     },
     "tests/owned-python-callback-result-history.test.mjs": {
       "basis": "sampler-max-etime",
@@ -5326,12 +5399,12 @@
     },
     "tests/owned-python-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 48,
-      "job": 129026259183,
+      "etimeSeconds": 72,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 0.8,
+      "minutes": 1.2,
       "peakRssGb": 0.3,
-      "sampledInShard": 10
+      "sampledInShard": 5
     },
     "tests/owned-python-package.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5399,12 +5472,12 @@
     },
     "tests/owned-python-transfer-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 763,
-      "job": 129026259207,
+      "etimeSeconds": 798,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 12.72,
-      "peakRssGb": 3.1,
-      "sampledInShard": 8
+      "minutes": 13.3,
+      "peakRssGb": 3.3,
+      "sampledInShard": 3
     },
     "tests/owned-python-transfer-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5458,10 +5531,13 @@
       "sampledInShard": 3
     },
     "tests/owned-reviewed-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 411,
+      "job": 129651120933,
+      "measured": true,
+      "minutes": 6.85,
+      "peakRssGb": 3.2,
+      "sampledInShard": 11
     },
     "tests/owned-ruby-borrow-evidence.test.mjs": {
       "basis": "sampler-max-etime",
@@ -5502,12 +5578,12 @@
     },
     "tests/owned-ruby-callback-result-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 160,
-      "job": 129026259183,
+      "etimeSeconds": 177,
+      "job": 129651120933,
       "measured": true,
-      "minutes": 2.67,
-      "peakRssGb": 0.8,
-      "sampledInShard": 10
+      "minutes": 2.95,
+      "peakRssGb": 0.6,
+      "sampledInShard": 11
     },
     "tests/owned-ruby-callback-result-history.test.mjs": {
       "basis": "sampler-max-etime",
@@ -5561,12 +5637,12 @@
     },
     "tests/owned-ruby-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 394,
-      "job": 129026259249,
+      "etimeSeconds": 418,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 6.57,
-      "peakRssGb": 3.1,
-      "sampledInShard": 6
+      "minutes": 6.97,
+      "peakRssGb": 4,
+      "sampledInShard": 3
     },
     "tests/owned-ruby-gmp.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5605,12 +5681,12 @@
     },
     "tests/owned-ruby-receiver-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 626,
-      "job": 129026259172,
+      "etimeSeconds": 818,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 10.43,
-      "peakRssGb": 3,
-      "sampledInShard": 12
+      "minutes": 13.63,
+      "peakRssGb": 3.1,
+      "sampledInShard": 5
     },
     "tests/owned-ruby-receiver-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5641,12 +5717,12 @@
     },
     "tests/owned-ruby-transfer-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 778,
-      "job": 129026259295,
+      "etimeSeconds": 787,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 12.97,
-      "peakRssGb": 3.6,
-      "sampledInShard": 5
+      "minutes": 13.12,
+      "peakRssGb": 3.7,
+      "sampledInShard": 12
     },
     "tests/owned-ruby-transfer-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5671,12 +5747,12 @@
     },
     "tests/owned-rust-borrow-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 540,
-      "job": 129026259239,
+      "etimeSeconds": 566,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 9,
-      "peakRssGb": 0.8,
-      "sampledInShard": 9
+      "minutes": 9.43,
+      "peakRssGb": 0.6,
+      "sampledInShard": 7
     },
     "tests/owned-rust-borrow-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5717,12 +5793,12 @@
     },
     "tests/owned-rust-callback-result-history.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 430,
-      "job": 129026259176,
+      "etimeSeconds": 495,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 7.17,
+      "minutes": 8.25,
       "peakRssGb": 2.8,
-      "sampledInShard": 3
+      "sampledInShard": 6
     },
     "tests/owned-rust-callback-result-packaging.test.mjs": {
       "basis": "unobserved-shard-4-no-completed-run",
@@ -5769,12 +5845,12 @@
     },
     "tests/owned-rust-receiver-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 68,
-      "job": 129026259183,
+      "etimeSeconds": 85,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 1.13,
-      "peakRssGb": 0.6,
-      "sampledInShard": 10
+      "minutes": 1.42,
+      "peakRssGb": 0.8,
+      "sampledInShard": 3
     },
     "tests/owned-rust-receiver-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -5842,12 +5918,12 @@
     },
     "tests/owned-subtype-hosted-ci.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1272,
-      "job": 129026259207,
+      "etimeSeconds": 1448,
+      "job": 129651120874,
       "measured": true,
-      "minutes": 21.2,
-      "peakRssGb": 3,
-      "sampledInShard": 8
+      "minutes": 24.13,
+      "peakRssGb": 2.8,
+      "sampledInShard": 9
     },
     "tests/owned-subtype-hosted-promotion.test.mjs": {
       "basis": "sampler-max-etime",
@@ -5867,12 +5943,12 @@
     },
     "tests/owned-subtype-javascript-hosted.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 27,
-      "job": 129026259312,
+      "etimeSeconds": 126,
+      "job": 129651120958,
       "measured": true,
-      "minutes": 0.45,
+      "minutes": 2.1,
       "peakRssGb": 0.3,
-      "sampledInShard": 11
+      "sampledInShard": 10
     },
     "tests/owned-subtype-javascript-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -6355,12 +6431,12 @@
     },
     "tests/php-nix-boundary-repair-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 24,
-      "job": 129026259295,
+      "etimeSeconds": 27,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 0.4,
-      "peakRssGb": 0.5,
-      "sampledInShard": 5
+      "minutes": 0.45,
+      "peakRssGb": 0.6,
+      "sampledInShard": 8
     },
     "tests/php-recursive-callable-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -6371,12 +6447,12 @@
     },
     "tests/php-recursive-callable-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1628,
-      "job": 129026259277,
+      "etimeSeconds": 1652,
+      "job": 129651120958,
       "measured": true,
-      "minutes": 27.13,
-      "peakRssGb": 2.6,
-      "sampledInShard": 7
+      "minutes": 27.53,
+      "peakRssGb": 3.4,
+      "sampledInShard": 10
     },
     "tests/php-structured-callable-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -6387,12 +6463,12 @@
     },
     "tests/php-structured-callable-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 680,
-      "job": 129026259239,
+      "etimeSeconds": 733,
+      "job": 129651120931,
       "measured": true,
-      "minutes": 11.33,
-      "peakRssGb": 3,
-      "sampledInShard": 9
+      "minutes": 12.22,
+      "peakRssGb": 2.4,
+      "sampledInShard": 1
     },
     "tests/php-variant-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -6486,12 +6562,12 @@
     },
     "tests/php-wasm-graph-loading.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 15,
-      "job": 129026259312,
+      "etimeSeconds": 16,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 0.25,
-      "peakRssGb": 1,
-      "sampledInShard": 11
+      "minutes": 0.27,
+      "peakRssGb": 1.1,
+      "sampledInShard": 6
     },
     "tests/php-wasm-graph-package.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -6710,12 +6786,12 @@
     },
     "tests/python-graph-refinement-diagnostics.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 3,
-      "job": 129026259249,
+      "etimeSeconds": 10,
+      "job": 129651120958,
       "measured": true,
-      "minutes": 0.05,
-      "peakRssGb": 0.2,
-      "sampledInShard": 6
+      "minutes": 0.17,
+      "peakRssGb": 0.5,
+      "sampledInShard": 10
     },
     "tests/python-list-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -6740,11 +6816,11 @@
     },
     "tests/python-structured-callable-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 333,
-      "job": 129026259183,
+      "etimeSeconds": 409,
+      "job": 129651120958,
       "measured": true,
-      "minutes": 5.55,
-      "peakRssGb": 3.3,
+      "minutes": 6.82,
+      "peakRssGb": 2.7,
       "sampledInShard": 10
     },
     "tests/python-variant-contract.test.mjs": {
@@ -6803,12 +6879,12 @@
     },
     "tests/recursive-checked-record-php.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 106,
-      "job": 129026259249,
+      "etimeSeconds": 115,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 1.77,
+      "minutes": 1.92,
       "peakRssGb": 0.5,
-      "sampledInShard": 6
+      "sampledInShard": 8
     },
     "tests/recursive-checked-record-python-ci.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -6819,12 +6895,12 @@
     },
     "tests/recursive-checked-record-python-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 10,
-      "job": 129026259207,
+      "etimeSeconds": 14,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 0.17,
+      "minutes": 0.23,
       "peakRssGb": 0.2,
-      "sampledInShard": 8
+      "sampledInShard": 12
     },
     "tests/recursive-checked-record-python.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -6842,12 +6918,12 @@
     },
     "tests/recursive-checked-record-ruby-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 19,
-      "job": 129026259312,
+      "etimeSeconds": 48,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 0.32,
-      "peakRssGb": 0.4,
-      "sampledInShard": 11
+      "minutes": 0.8,
+      "peakRssGb": 0.2,
+      "sampledInShard": 4
     },
     "tests/recursive-checked-record-ruby.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -6898,12 +6974,12 @@
     },
     "tests/recursive-subtype-php-wasm.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 2,
-      "job": 129026259249,
+      "etimeSeconds": 19,
+      "job": 129651120950,
       "measured": true,
-      "minutes": 0.03,
-      "peakRssGb": 0.3,
-      "sampledInShard": 6
+      "minutes": 0.32,
+      "peakRssGb": 0.8,
+      "sampledInShard": 2
     },
     "tests/recursive-wit-test-registration-history.test.mjs": {
       "basis": "sampler-max-etime",
@@ -6991,12 +7067,12 @@
     },
     "tests/reviewed-fin-refusal-history.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 36,
-      "job": 129026259249,
+      "etimeSeconds": 45,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 0.6,
+      "minutes": 0.75,
       "peakRssGb": 0.7,
-      "sampledInShard": 6
+      "sampledInShard": 4
     },
     "tests/reviewed-fin-wasm-entry-ci.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -7028,12 +7104,12 @@
     },
     "tests/reviewed-fin-wasm-entry-hosted-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 28,
-      "job": 129026259312,
+      "etimeSeconds": 59,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 0.47,
+      "minutes": 0.98,
       "peakRssGb": 0.3,
-      "sampledInShard": 11
+      "sampledInShard": 3
     },
     "tests/reviewed-fin-wasm-entry-workflow.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -7153,10 +7229,13 @@
       "sampledInShard": 3
     },
     "tests/ruby-graph-package.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 41,
+      "job": 129651120927,
+      "measured": true,
+      "minutes": 0.68,
+      "peakRssGb": 1.7,
+      "sampledInShard": 5
     },
     "tests/ruby-graph-refinement-diagnostics.test.mjs": {
       "basis": "sampler-max-etime",
@@ -7176,12 +7255,12 @@
     },
     "tests/ruby-member-escape.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 12,
-      "job": 129026259277,
+      "etimeSeconds": 16,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 0.2,
-      "peakRssGb": 0.4,
-      "sampledInShard": 7
+      "minutes": 0.27,
+      "peakRssGb": 0.8,
+      "sampledInShard": 4
     },
     "tests/ruby-recursive-callable-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -7201,12 +7280,12 @@
     },
     "tests/ruby-structured-callable-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 354,
-      "job": 129026259183,
+      "etimeSeconds": 408,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 5.9,
-      "peakRssGb": 3,
-      "sampledInShard": 10
+      "minutes": 6.8,
+      "peakRssGb": 2.5,
+      "sampledInShard": 5
     },
     "tests/ruby-variant-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -7279,12 +7358,12 @@
     },
     "tests/rust-graph-package.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 389,
-      "job": 129026259239,
+      "etimeSeconds": 638,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 6.48,
+      "minutes": 10.63,
       "peakRssGb": 2,
-      "sampledInShard": 9
+      "sampledInShard": 5
     },
     "tests/rust-graph-refinement-diagnostics.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -7386,12 +7465,12 @@
     },
     "tests/signature-specialization-hosted-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 113,
-      "job": 129026259312,
+      "etimeSeconds": 345,
+      "job": 129651120931,
       "measured": true,
-      "minutes": 1.88,
+      "minutes": 5.75,
       "peakRssGb": 0.2,
-      "sampledInShard": 11
+      "sampledInShard": 1
     },
     "tests/source-history-memo.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -7473,21 +7552,21 @@
     },
     "tests/structural-subtype-npm.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 115,
-      "job": 129026259312,
+      "etimeSeconds": 164,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 1.92,
+      "minutes": 2.73,
       "peakRssGb": 0.4,
-      "sampledInShard": 11
+      "sampledInShard": 6
     },
     "tests/structured-docs-ci-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 424,
-      "job": 129026259172,
+      "etimeSeconds": 512,
+      "job": 129651120950,
       "measured": true,
-      "minutes": 7.07,
+      "minutes": 8.53,
       "peakRssGb": 0.5,
-      "sampledInShard": 12
+      "sampledInShard": 2
     },
     "tests/systems-host-null-ci.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -7541,11 +7620,11 @@
     },
     "tests/toolchain-preflight.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 641,
-      "job": 129026259207,
+      "etimeSeconds": 784,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 10.68,
-      "peakRssGb": 2.5,
+      "minutes": 13.07,
+      "peakRssGb": 2.1,
       "sampledInShard": 8
     },
     "tests/type-corpus-reviewed-native.test.mjs": {
@@ -7648,12 +7727,12 @@
     },
     "tests/wasm-entry-controls-history.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1,
-      "job": 129026259183,
+      "etimeSeconds": 9,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 0.02,
-      "peakRssGb": 0.1,
-      "sampledInShard": 10
+      "minutes": 0.15,
+      "peakRssGb": 0.3,
+      "sampledInShard": 7
     },
     "tests/wasm-entry-evidence.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -7673,12 +7752,12 @@
     },
     "tests/wasm-entry-supplement-history.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 6,
-      "job": 129026259161,
+      "etimeSeconds": 16,
+      "job": 129651120933,
       "measured": true,
-      "minutes": 0.1,
-      "peakRssGb": 0.5,
-      "sampledInShard": 1
+      "minutes": 0.27,
+      "peakRssGb": 0.8,
+      "sampledInShard": 11
     },
     "tests/wasm-entry-supplement.test.mjs": {
       "basis": "sampler-max-etime",
@@ -7810,12 +7889,12 @@
     },
     "tests/wit-fin-dispatch-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 373,
-      "job": 129026259207,
+      "etimeSeconds": 427,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 6.22,
-      "peakRssGb": 3.2,
-      "sampledInShard": 8
+      "minutes": 7.12,
+      "peakRssGb": 2.8,
+      "sampledInShard": 4
     },
     "tests/wit-graph-composition.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -7826,12 +7905,12 @@
     },
     "tests/wit-graph-package-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1813,
-      "job": 129026259183,
+      "etimeSeconds": 2181,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 30.22,
-      "peakRssGb": 3.3,
-      "sampledInShard": 10
+      "minutes": 36.35,
+      "peakRssGb": 3.2,
+      "sampledInShard": 7
     },
     "tests/wit-graph-refinement-diagnostics.test.mjs": {
       "basis": "sampler-max-etime",
@@ -7851,12 +7930,12 @@
     },
     "tests/wit-host-isolation-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 387,
-      "job": 129026259161,
+      "etimeSeconds": 453,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 6.45,
-      "peakRssGb": 3.2,
-      "sampledInShard": 1
+      "minutes": 7.55,
+      "peakRssGb": 2.9,
+      "sampledInShard": 7
     },
     "tests/wit-host-packages.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -7912,12 +7991,12 @@
     },
     "tests/wit-owned-callback-result-acceptance.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1313,
-      "job": 129026259239,
+      "etimeSeconds": 2178,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 21.88,
-      "peakRssGb": 3.5,
-      "sampledInShard": 9
+      "minutes": 36.3,
+      "peakRssGb": 2.9,
+      "sampledInShard": 5
     },
     "tests/wit-owned-callback-result-installed-acceptance.test.mjs": {
       "basis": "sampler-max-etime",
@@ -8003,12 +8082,12 @@
     },
     "tests/wit-owned-package-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 566,
-      "job": 129026259239,
+      "etimeSeconds": 906,
+      "job": 129651120938,
       "measured": true,
-      "minutes": 9.43,
-      "peakRssGb": 3.6,
-      "sampledInShard": 9
+      "minutes": 15.1,
+      "peakRssGb": 3.4,
+      "sampledInShard": 8
     },
     "tests/wit-owned-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -8019,12 +8098,12 @@
     },
     "tests/wit-owned-projection-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 118,
-      "job": 129026259312,
+      "etimeSeconds": 296,
+      "job": 129651120958,
       "measured": true,
-      "minutes": 1.97,
+      "minutes": 4.93,
       "peakRssGb": 0.6,
-      "sampledInShard": 11
+      "sampledInShard": 10
     },
     "tests/wit-owned-receiver-ci.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -8094,12 +8173,12 @@
     },
     "tests/wit-owned-transfer-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 575,
-      "job": 129026259239,
+      "etimeSeconds": 760,
+      "job": 129651120957,
       "measured": true,
-      "minutes": 9.58,
-      "peakRssGb": 3.3,
-      "sampledInShard": 9
+      "minutes": 12.67,
+      "peakRssGb": 3.6,
+      "sampledInShard": 3
     },
     "tests/wit-owned-transfer-packaging.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -8117,12 +8196,12 @@
     },
     "tests/wit-recursive-acceptance.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 591,
-      "job": 129026259172,
+      "etimeSeconds": 759,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 9.85,
-      "peakRssGb": 2.8,
-      "sampledInShard": 12
+      "minutes": 12.65,
+      "peakRssGb": 2.6,
+      "sampledInShard": 6
     },
     "tests/wit-recursive-callable-evidence.test.mjs": {
       "basis": "sampler-max-etime",
@@ -8135,12 +8214,12 @@
     },
     "tests/wit-recursive-callable-faults.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 1560,
-      "job": 129026259348,
+      "etimeSeconds": 1728,
+      "job": 129651120926,
       "measured": true,
-      "minutes": 26,
-      "peakRssGb": 2.7,
-      "sampledInShard": 2
+      "minutes": 28.8,
+      "peakRssGb": 2.4,
+      "sampledInShard": 6
     },
     "tests/wit-recursive-callable-host.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -8178,12 +8257,12 @@
     },
     "tests/wit-structured-callable-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 497,
-      "job": 129026259207,
+      "etimeSeconds": 676,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 8.28,
-      "peakRssGb": 2.7,
-      "sampledInShard": 8
+      "minutes": 11.27,
+      "peakRssGb": 2.4,
+      "sampledInShard": 12
     },
     "tests/wit-variant-contract.test.mjs": {
       "basis": "unobserved-under-sampling-interval",
@@ -8237,10 +8316,13 @@
       "sampledInShard": 3
     },
     "tests/zero-payload-checked-record-dotnet-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 98,
+      "job": 129651120911,
+      "measured": true,
+      "minutes": 1.63,
+      "peakRssGb": 0.6,
+      "sampledInShard": 7
     },
     "tests/zero-payload-checked-record-dotnet-promotion.test.mjs": {
       "basis": "sampler-max-etime",
@@ -8271,21 +8353,21 @@
     },
     "tests/zero-payload-checked-record-javascript.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 109,
-      "job": 129026259207,
+      "etimeSeconds": 112,
+      "job": 129651120927,
       "measured": true,
-      "minutes": 1.82,
-      "peakRssGb": 1,
-      "sampledInShard": 8
+      "minutes": 1.87,
+      "peakRssGb": 0.6,
+      "sampledInShard": 5
     },
     "tests/zero-payload-checked-record-jvm-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 102,
-      "job": 129026259239,
+      "etimeSeconds": 108,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 1.7,
-      "peakRssGb": 0.7,
-      "sampledInShard": 9
+      "minutes": 1.8,
+      "peakRssGb": 0.6,
+      "sampledInShard": 4
     },
     "tests/zero-payload-checked-record-jvm-promotion.test.mjs": {
       "basis": "sampler-max-etime",
@@ -8298,21 +8380,21 @@
     },
     "tests/zero-payload-checked-record-jvm.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 470,
-      "job": 129026259312,
+      "etimeSeconds": 597,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 7.83,
-      "peakRssGb": 1.7,
-      "sampledInShard": 11
+      "minutes": 9.95,
+      "peakRssGb": 2.5,
+      "sampledInShard": 7
     },
     "tests/zero-payload-checked-record-native-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 103,
-      "job": 129026259172,
+      "etimeSeconds": 125,
+      "job": 129651120950,
       "measured": true,
-      "minutes": 1.72,
+      "minutes": 2.08,
       "peakRssGb": 1.3,
-      "sampledInShard": 12
+      "sampledInShard": 2
     },
     "tests/zero-payload-checked-record-native-promotion.test.mjs": {
       "basis": "sampler-max-etime",
@@ -8325,36 +8407,39 @@
     },
     "tests/zero-payload-checked-record-perl-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 273,
-      "job": 129026259348,
+      "etimeSeconds": 349,
+      "job": 129651120911,
       "measured": true,
-      "minutes": 4.55,
-      "peakRssGb": 3,
-      "sampledInShard": 2
+      "minutes": 5.82,
+      "peakRssGb": 1.3,
+      "sampledInShard": 7
     },
     "tests/zero-payload-checked-record-perl.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 3,
-      "job": 129026259176,
+      "etimeSeconds": 9,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 0.05,
+      "minutes": 0.15,
       "peakRssGb": 0.1,
-      "sampledInShard": 3
+      "sampledInShard": 12
     },
     "tests/zero-payload-checked-record-php-evidence.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 238,
+      "job": 129651120975,
+      "measured": true,
+      "minutes": 3.97,
+      "peakRssGb": 2.2,
+      "sampledInShard": 12
     },
     "tests/zero-payload-checked-record-php-wasm.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 129,
-      "job": 129026259295,
+      "etimeSeconds": 154,
+      "job": 129651120992,
       "measured": true,
-      "minutes": 2.15,
+      "minutes": 2.57,
       "peakRssGb": 0.7,
-      "sampledInShard": 5
+      "sampledInShard": 4
     },
     "tests/zero-payload-checked-record-php.test.mjs": {
       "basis": "sampler-max-etime",
@@ -8383,12 +8468,12 @@
     },
     "tests/zero-payload-checked-record-ruby-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 55,
-      "job": 129026259239,
+      "etimeSeconds": 75,
+      "job": 129651120950,
       "measured": true,
-      "minutes": 0.92,
-      "peakRssGb": 0.2,
-      "sampledInShard": 9
+      "minutes": 1.25,
+      "peakRssGb": 0.6,
+      "sampledInShard": 2
     },
     "tests/zero-payload-checked-record-ruby.test.mjs": {
       "basis": "sampler-max-etime",
@@ -8401,20 +8486,20 @@
     },
     "tests/zero-payload-checked-record-rust-evidence.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 14,
-      "job": 129026259312,
+      "etimeSeconds": 53,
+      "job": 129651120933,
       "measured": true,
-      "minutes": 0.23,
-      "peakRssGb": 0.2,
+      "minutes": 0.88,
+      "peakRssGb": 0.6,
       "sampledInShard": 11
     },
     "tests/zero-payload-checked-record-rust-promotion.test.mjs": {
       "basis": "sampler-max-etime",
-      "etimeSeconds": 347,
-      "job": 129026259172,
+      "etimeSeconds": 361,
+      "job": 129651120975,
       "measured": true,
-      "minutes": 5.78,
-      "peakRssGb": 3,
+      "minutes": 6.02,
+      "peakRssGb": 1.9,
       "sampledInShard": 12
     },
     "tests/zero-payload-checked-record-rust.test.mjs": {
@@ -8445,36 +8530,40 @@
       "sampledInShard": 3
     },
     "tests/zero-payload-checked-records.test.mjs": {
-      "basis": "unobserved-shard-4-no-completed-run",
-      "measured": false,
-      "minutes": 0.25,
-      "sampledInShard": 4
+      "basis": "sampler-max-etime",
+      "etimeSeconds": 417,
+      "job": 129651120931,
+      "measured": true,
+      "minutes": 6.95,
+      "peakRssGb": 1.1,
+      "sampledInShard": 1
     }
   },
   "defaultMinutes": 0.25,
   "kind": "core-contract-costs",
-  "partition": "cost-balanced-lpt-v1",
+  "partition": "capacity-balanced-lpt-v2",
   "provenance": {
     "attempt": 1,
-    "extractedAt": "2026-11-09T21:50:00Z",
-    "extractedBy": "Claude (read-only audit of the hosted job logs)",
-    "floorRows": 786,
-    "headSha": "39af98acc76410d47c65f0f85baf3c7f443fb6b3",
+    "extractedAt": "2026-11-10T13:37:02Z",
+    "extractedBy": "Codex (conservative high-water refresh from all exact-candidate Core shard logs)",
+    "floorRows": 754,
+    "headSha": "0d5103880ec0c998224cd141ca682722222d2c9b",
     "jobs": {
-      "1": 129026259161,
-      "2": 129026259348,
-      "3": 129026259176,
-      "5": 129026259295,
-      "6": 129026259249,
-      "7": 129026259277,
-      "8": 129026259207,
-      "9": 129026259239,
-      "10": 129026259183,
-      "11": 129026259312,
-      "12": 129026259172
+      "1": 129651120931,
+      "2": 129651120950,
+      "3": 129651120957,
+      "4": 129651120992,
+      "5": 129651120927,
+      "6": 129651120926,
+      "7": 129651120911,
+      "8": 129651120938,
+      "9": 129651120874,
+      "10": 129651120958,
+      "11": 129651120933,
+      "12": 129651120975
     },
-    "measuredRows": 337,
-    "method": "For every completed 'Run one closed contract shard' step, the 30 s core-memory sampler prints `ps -eo pid,rss,etime,args --sort=-rss | head -n 6`; each line naming `node --test --test-concurrency=2 tests/<file>.test.mjs` was attributed to that file. A measured row's minutes is the maximum etime seen for the file (etimeSeconds, rounded up to at least 0.01 min) and peakRssGb its maximum RSS; it is a lower bound of the file's wall time within one sampling interval. The flattened TAP names tests, not files, so files that completed inside one sampling interval were never observed; they are not measurements and carry defaultMinutes with measured=false and basis unobserved-under-sampling-interval. Shard 4 had no completed hosted run at this head (runner lost) and its files carry defaultMinutes with measured=false and basis unobserved-shard-4-no-completed-run. Split rows: when tests/component-refinement-mirrors.test.mjs stopped executing three former entrypoints, each new root received the sum of the shard-3 TAP durations (job 129026259176, same run) of the tests reachable from its entrypoint (tap-duration-attributed, tapTests counts them), and the umbrella kept its sampler maximum less the attributed minutes (sampler-max-etime-less-attributed), so the four rows still sum to the one measured 267.47 min. previousContract records the closed set these rows extend.",
+    "measuredRows": 369,
+    "method": "The 30 s core-memory sampler from every one of the twelve exact-candidate Core shard jobs was parsed for child `node --test-concurrency=<n> tests/<file>.test.mjs` processes. Each observed file contributes its maximum ps etime and peak RSS. A prior authenticated measurement is retained when it is higher, making this manifest a conservative high-water union rather than treating runner variance as a speedup. The three TAP-attributed split roots and their sampler-minus-attribution source retain their exact allocation. Files never visible in either sampler retain the declared floor. Worker capacity and the serial-only root are authenticated by the capacity-balanced-lpt-v2 planner, not inferred from these costs.",
     "previousContract": {
       "added": [
         "tests/component-nominal-subtype-history.test.mjs",
@@ -8485,7 +8574,13 @@
       "removed": [],
       "sha256": "a1da1f6b28803108861cffeff14eab88a0c8008a17e69386b6510eaa5ddc9c04"
     },
-    "run": 42574824120,
+    "previousCostManifest": {
+      "attempt": 1,
+      "headSha": "39af98acc76410d47c65f0f85baf3c7f443fb6b3",
+      "run": 42574824120,
+      "sha256": "7a44754b45d5438ba7cc77942cf9f9db4b8e35a048161f631be3659ac697638f"
+    },
+    "run": 42760203921,
     "samplingIntervalSeconds": 30,
     "workflow": ".github/workflows/quality.yml"
   },
