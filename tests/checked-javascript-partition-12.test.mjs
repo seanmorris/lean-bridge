@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/vo1220-node-consumer-timeout-headroom-source-history-tests.mjs";
 import "./helpers/vo1220-core-capacity-planning-source-history-tests.mjs";
 import "./helpers/vo1220-historical-core-profile-isolation-source-history-tests.mjs";
 import "./helpers/vo1220-perl-callback-asset-expectation-repair-source-history-tests.mjs";
