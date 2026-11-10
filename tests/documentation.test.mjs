@@ -895,7 +895,9 @@ test("consumer CI history preserves every consumer and pinned build path", async
     assert.doesNotMatch(body, /timeout-minutes|continue-on-error|^ {8}if:/mu, step);
   }
   const nodeJob = workflow.split("  node-consumers:\n")[1].split("\n  browser-consumer:\n")[0];
-  assert.match(nodeJob, /^ {4}timeout-minutes: 420$/m);
+  assert.match(nodeJob, /^ {4}timeout-minutes: 330$/m);
+  const liveNodeJob = liveWorkflow.split("  node-consumers:\n")[1].split("\n  browser-consumer:\n")[0];
+  assert.match(liveNodeJob, /^ {4}timeout-minutes: 420$/m);
   assert.match(nodeJob, /node scripts\/check-local-npm-release\.mjs/);
   assert.match(nodeJob, /--backend nix --browsers chromium,firefox,webkit/);
   const nativeJob = workflow.split("  native-consumers:\n")[1].split("\n  managed-consumers:\n")[0];
