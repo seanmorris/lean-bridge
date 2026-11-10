@@ -1,0 +1,130 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "currentAssetContract": "download-pinned-release-asset.sh kotlin-compiler",
+    "currentEvidenceTests": 16,
+    "currentTests": 41,
+    "legacyAssetContract": "kotlin-compiler-2.2.0.zip",
+    "legacyEvidenceTests": 14,
+    "legacyTests": 37,
+    "packageSemanticChanges": 0,
+    "productionCodeChanges": 0,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "availableMemoryMiB": 13093,
+    "coreJob": 129447305943,
+    "coreRun": 42698245604,
+    "failed": 1,
+    "failedAssertion": "download-pinned-release-asset.sh kotlin-compiler",
+    "passed": 478,
+    "peakRssBytes": 1944088576,
+    "skipped": 156,
+    "test": "Perl acceptance reconstructs all 18 reports and complete executed probes",
+    "tests": 635
+  },
+  "exactModelSha256": {
+    "after": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "before": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-perl-callback-asset-expectation-repair-source-history.mjs",
+      "sha256": "f0ed9490cca20150be45c057b08aff051c6e6b2400b881c269a404c8ba1df552"
+    },
+    {
+      "path": "tests/helpers/vo1220-perl-callback-asset-expectation-repair-source-history-tests.mjs",
+      "sha256": "bead007ff1f71084e385d8ebcbe3a8a4642a97e461dc57e1ebf7ff6e07fe667b"
+    },
+    {
+      "path": "tests/helpers/vo1220-perl-callback-asset-expectation-repair-source-history.mjs",
+      "sha256": "e6eed5bfcd2598a35abd7232a5e0ca4471e1ba5b42d1231e7e5eb6777411ff40"
+    }
+  ],
+  "implementationCommit": "a96c894b2fb2e807d9ed41b4afdf1f109685b6f6",
+  "integrationCommit": "bcbebbf577b53a83053eae08e15b0966a1983450",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9d2a0aa3a3068cfdb1ee0096f24e0c6217c1f987194185f28e2df391527e7366",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-perl-callback-asset-expectation-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "06ecb97e2c672a47246f1fb02607fe873fea17b30aa4740839183f7a3ea6ad6b"
+    },
+    {
+      "currentSha256": "c7c0da874698bbe1fe52a5b496162c7938e8145c1ea33e40db8e200feb289776",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220PerlCallbackAssetExpectationRepairSource\n\t, vo1220PerlCallbackAssetExpectationRepairNormalizationPaths\n} from \"./vo1220-perl-callback-asset-expectation-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220PerlCallbackAssetExpectationRepairNormalizationPaths\n\t, ...vo1220CoreCandidateThroughputNormalizationPaths\n",
+          "previous": "\t...vo1220CoreCandidateThroughputNormalizationPaths\n",
+          "start": 245181
+        },
+        {
+          "current": "\tlet stage = beforeVo1220PerlCallbackAssetExpectationRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220CoreCandidateThroughputSource(\n",
+          "previous": "\tlet stage = beforeVo1220CoreCandidateThroughputSource(\n",
+          "start": 308690
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2cb475bb454775b65aef0460d7a8914825e9285b2079efb51c5c38729920a184"
+    }
+  ],
+  "milestone": "vo1220-perl-callback-asset-expectation-repair-source-v1",
+  "predecessorCommit": "2b5ab8f322c58a7710e8147504dc5fcbafa677cc",
+  "repair": "Select the exact Kotlin asset marker by the existing legacy flag: retain kotlin-compiler-2.2.0.zip for immutable historical workflows and require download-pinned-release-asset.sh kotlin-compiler for current CI. Preserve all execution, evidence, report, support, runtime and package contracts.",
+  "rootCause": "The pinned release-asset migration updated the shared Perl callback CI checker's Kotlin expectation without preserving its legacy branch. Immutable 2026-10 acceptance correctly retained the direct kotlin-compiler-2.2.0.zip download, while current CI correctly uses download-pinned-release-asset.sh. The checker incorrectly required the current command for both source epochs.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "1fdfeb485e1b8cd8e89c9a4348f6407b28969e8493d0da655a7235a422252f52",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t, \"download-pinned-release-asset.sh kotlin-compiler\"\n",
+          "start": 2306
+        },
+        {
+          "current": "\tconst kotlin = legacy ? \"kotlin-compiler-2.2.0.zip\"\n\t\t: \"download-pinned-release-asset.sh kotlin-compiler\";\n\tfor(const value of [...tools, ...setup, kotlin, browsers])\n\t\tassert.ok(job.includes(value), value);\n",
+          "previous": "\tfor(const value of [...tools, ...setup, browsers]) assert.ok(job.includes(value), value);\n",
+          "start": 4287
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-ci.mjs",
+      "previousSha256": "d57ba1295b58d2a0ebebdcf6986aa97edc59fc532717e08a37bdb1b0b4b9d0c4"
+    }
+  ],
+  "validation": {
+    "currentContract": {
+      "durationMs": 400.899587,
+      "failed": 0,
+      "passed": 1,
+      "tests": 1
+    },
+    "diffCheck": "passed",
+    "eslint": "passed",
+    "historicalAcceptance": {
+      "durationMs": 96221.874746,
+      "failed": 0,
+      "passed": 1,
+      "tests": 1
+    },
+    "hostedDiscovery": {
+      "durationMs": 13130520.129543,
+      "memoryHealthy": true,
+      "oom": false
+    },
+    "syntax": "passed"
+  }
+}

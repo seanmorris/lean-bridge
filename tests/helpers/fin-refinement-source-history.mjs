@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeVo1220PerlCallbackAssetExpectationRepairSource
+	, vo1220PerlCallbackAssetExpectationRepairNormalizationPaths
+} from "./vo1220-perl-callback-asset-expectation-repair-source-history.mjs";
+import {
 	beforeVo1220CoreCandidateThroughputSource
 	, vo1220CoreCandidateThroughputNormalizationPaths
 } from "./vo1220-core-candidate-throughput-source-history.mjs";
@@ -2787,7 +2791,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220CoreCandidateThroughputNormalizationPaths
+	...vo1220PerlCallbackAssetExpectationRepairNormalizationPaths
+	, ...vo1220CoreCandidateThroughputNormalizationPaths
 	, ...vo1220BoundedHistoryComparisonNormalizationPaths
 	, ...vo1220PerlContractReplayMemoryBoundNormalizationPaths
 	, ...vo1220WorkflowReleaseAssetPinRefreshNormalizationPaths
@@ -4056,7 +4061,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220CoreCandidateThroughputSource(
+	let stage = beforeVo1220PerlCallbackAssetExpectationRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220CoreCandidateThroughputSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

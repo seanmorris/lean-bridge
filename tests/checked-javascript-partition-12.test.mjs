@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/vo1220-perl-callback-asset-expectation-repair-source-history-tests.mjs";
 import "./helpers/vo1220-host-fin-pending-exit-repair-source-history-tests.mjs";
 import "./helpers/vo1220-core-candidate-throughput-source-history-tests.mjs";
 import "./helpers/vo1220-bounded-history-comparison-source-history-tests.mjs";
