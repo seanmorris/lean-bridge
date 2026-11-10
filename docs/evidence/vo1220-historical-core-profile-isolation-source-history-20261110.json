@@ -1,0 +1,141 @@
+{
+  "behavior": {
+    "changedSupportCells": 0,
+    "historicalContractFiles": [
+      1093,
+      1094
+    ],
+    "liveCostManifestDependencies": 0,
+    "packageSemanticChanges": 0,
+    "productionCodeChanges": 0,
+    "repairedHistoricalProfiles": 2,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "discovery": {
+    "coreJob": 129651120992,
+    "coreRun": 42760203921,
+    "failed": 2,
+    "failedTests": [
+      "final Core test repair closes all nine registrations and 102 pins",
+      "final-audit registration closes its profile, preflight and live pins"
+    ],
+    "passed": 1687,
+    "shardDurationMs": 15700982.394272,
+    "skipped": 141,
+    "staleCostRows": [
+      30,
+      29
+    ],
+    "tests": 1830
+  },
+  "exactModelSha256": {
+    "after": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f",
+    "before": "1cb3a48a20d25345634fdcab7007970efbef27427344be5a7028b3a033a8c82f"
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-historical-core-profile-isolation-source-history.mjs",
+      "sha256": "a323063e55bca0e5e80f098feb9d4f15bcc4c8955f948eba733103474acb6881"
+    },
+    {
+      "path": "tests/helpers/vo1220-historical-core-profile-isolation-source-history-tests.mjs",
+      "sha256": "da7eaf355b289bde92b670a050898d77f712b73a1c70b3da06a3364363e1948c"
+    },
+    {
+      "path": "tests/helpers/vo1220-historical-core-profile-isolation-source-history.mjs",
+      "sha256": "0682c6c9a925d478073a1259ddbc748caec48db4a3b98e5ad9d3d93c796eb162"
+    }
+  ],
+  "implementationCommit": "f8eb983121f2d158c53babf5cbc83b6d9b6a9a50",
+  "integrationCommit": "810bcba6006e7d04a768849ef7074137a79a76f7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7e1c54639c7998b23bbd484858efb3562c705a56a893fe8069b2951dd4bc5fd5",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-historical-core-profile-isolation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-12.test.mjs",
+      "previousSha256": "9d2a0aa3a3068cfdb1ee0096f24e0c6217c1f987194185f28e2df391527e7366"
+    },
+    {
+      "currentSha256": "04390efa6eb762359c7356e16c5a7d543df8afbba81cdd1b89447a8c20e5d0c4",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220HistoricalCoreProfileIsolationSource\n\t, vo1220HistoricalCoreProfileIsolationNormalizationPaths\n} from \"./vo1220-historical-core-profile-isolation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220HistoricalCoreProfileIsolationNormalizationPaths\n\t, ...vo1220PerlCallbackAssetExpectationRepairNormalizationPaths\n",
+          "previous": "\t...vo1220PerlCallbackAssetExpectationRepairNormalizationPaths\n",
+          "start": 245370
+        },
+        {
+          "current": "\tlet stage = beforeVo1220HistoricalCoreProfileIsolationSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220PerlCallbackAssetExpectationRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220PerlCallbackAssetExpectationRepairSource(\n",
+          "start": 308940
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c7c0da874698bbe1fe52a5b496162c7938e8145c1ea33e40db8e200feb289776"
+    }
+  ],
+  "milestone": "vo1220-historical-core-profile-isolation-source-v1",
+  "predecessorCommit": "0d5103880ec0c998224cd141ca682722222d2c9b",
+  "repair": "Hash each reconstructed historical profile with the same canonical contract-set representation recorded by its milestone. Do not apply the live checkout's cost manifest or current partition policy to historical profiles. Scan every helper that reconstructs a profile from git ls-tree and reject any remaining live-planner dependency.",
+  "rootCause": "Two historical registration checks reconstructed 1,093-file and 1,094-file Core profiles, then passed them to the current cost-balanced planner. The live 1,123-file cost manifest correctly rejected its 30 and 29 newer paths as outside those historical profiles. The evidence records store only the canonical historical contract-set digest and predate the cost-balanced planner.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "722804ecc7e415b802ea7784e4cae4141fb4a28b25f59e48a8f5eaa7d6840223",
+      "edits": [
+        {
+          "current": "import { canonicalJson } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "import { coreContractShardLabels, coreContractShardManifest\n\t, verifyCoreContractShardManifests }\n\tfrom \"../../scripts/core-contract-shards.mjs\";\n",
+          "start": 272
+        },
+        {
+          "current": "\t// This evidence predates the cost-balanced planner. Authenticate the\n\t// historical closed set recorded by the milestone without applying the\n\t// current checkout's cost manifest to that older profile.\n\tassert.equal(sha256(canonicalJson(paths)), history.contractSha256);\n",
+          "previous": "\tassert.equal(verifyCoreContractShardManifests(paths\n\t\t, coreContractShardLabels.map(label =>\n\t\t\tcoreContractShardManifest(paths, label))).contractSha256\n\t, history.contractSha256);\n",
+          "start": 4625
+        }
+      ],
+      "path": "tests/helpers/core-final-audit-registration-source-history-tests.mjs",
+      "previousSha256": "8b15f68f1a9f575fc19c6138336b186de358578959e7a9ae7b486180104b80ba"
+    },
+    {
+      "currentSha256": "296957d5100711f10f6f3943ea108b5f7960543d546b923f37ef2900d8fe2ab0",
+      "edits": [
+        {
+          "current": "import { canonicalJson } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "import { coreContractShardLabels, coreContractShardManifest\n\t, verifyCoreContractShardManifests }\n\tfrom \"../../scripts/core-contract-shards.mjs\";\n",
+          "start": 255
+        },
+        {
+          "current": "\t// This evidence predates the cost-balanced planner. Authenticate the\n\t// historical closed set recorded by the milestone without applying the\n\t// current checkout's cost manifest to that older profile.\n\tassert.equal(sha256(canonicalJson(paths)), history.contractSha256);\n",
+          "previous": "\tassert.equal(verifyCoreContractShardManifests(paths\n\t\t, coreContractShardLabels.map(label =>\n\t\t\tcoreContractShardManifest(paths, label))).contractSha256\n\t, history.contractSha256);\n",
+          "start": 4813
+        }
+      ],
+      "path": "tests/helpers/core-final-test-registration-source-history-tests.mjs",
+      "previousSha256": "aae94e7a0f96406adb8f7666d7051f96fc28005dea69f608be6bbb56d841e30e"
+    }
+  ],
+  "validation": {
+    "diffCheck": "passed",
+    "eslint": "passed",
+    "focusedHistoricalProfiles": {
+      "durationMs": 13145.122089,
+      "failed": 0,
+      "passed": 10,
+      "tests": 10
+    },
+    "syntax": "passed"
+  }
+}
