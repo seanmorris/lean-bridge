@@ -135,6 +135,8 @@ test("the native structured callable adapter constructs host replies and closure
 	assert.doesNotMatch(source, /«ordered»/u);
 	assert.match(source, /def LbErased\.Structured\.Interval\.erase \(value : _root_\.Structured\.Interval\)/u);
 	assert.match(source, /_root_\.Structured\.mkInterval a0 a1/u);
+	assert.match(source, /def callbackDefault_[a-f0-9]{20} : LbErased\.Structured\.Interval := \{ «lo» := 0, «hi» := 0 \}/u);
+	assert.doesNotMatch(source, /def callbackDefault_[a-f0-9]{20} : _root_\.Structured\.Interval/u);
 	const hostKey = descriptor.callbacks.find(type => type.id === host.id).key;
 	const closureKey = descriptor.callbacks.find(type => type.id === closure.id).key;
 	// The host reply is constructed and the Lean-produced argument erased; the closure

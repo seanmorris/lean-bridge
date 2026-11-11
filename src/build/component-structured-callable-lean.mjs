@@ -296,9 +296,32 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 	};
 	const carrier = type => `(_root_.Array ${wire(type)})`;
 	const constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);
-	// Failure defaults are returned by a source-level callback, so construct them in
-	// source types. The invoke carriers themselves continue to use erased mirrors.
-	const defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements, new Set(), hostProjection);
+	// Failure defaults are returned by a source-level callback, so ordinary refined
+	// records remain source values. A proof-erased record has no source inhabitant
+	// that this generator may invent, however. First derive the recipe dependency
+	// closure, then use payload mirrors only for that closure. Recipes outside the
+	// active mirror graph are unreachable and must not become eager invalid Lean.
+	const sourceDefaults = componentStructuredCallableDefaults(
+		abi.types, nominalRefinements, new Set(), hostProjection);
+	const unsafeDefaultSymbols = new Set(), unsafeDefaultIds = new Set();
+	const erased = new Set(abi.types.filter(type => type.kind === "record"
+		&& type.erased).map(type => type.id));
+	for(const recipe of sourceDefaults.recipes)
+		if(erased.has(recipe.id) || [...unsafeDefaultSymbols].some(symbol =>
+			recipe.body.includes(symbol))) {
+			unsafeDefaultSymbols.add(recipe.symbol);
+			unsafeDefaultIds.add(recipe.id);
+			}
+	const availableMirrorIds = new Set([...(conversion?.names ?? [])]
+		.map(name => `lean:${name}`));
+	const defaultMirrorIds = new Set([...unsafeDefaultIds]
+		.filter(id => availableMirrorIds.has(id)));
+	const completeDefaults = componentStructuredCallableDefaults(
+		abi.types, nominalRefinements, defaultMirrorIds, hostProjection);
+	const declarations = completeDefaults.recipes.flatMap((recipe, index) =>
+		unsafeDefaultSymbols.has(recipe.symbol) && !defaultMirrorIds.has(recipe.id)
+			? [] : completeDefaults.declarations.slice(index * 2, index * 2 + 2));
+	const defaults = { ...completeDefaults, declarations };
 	const lines = [
 		...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], structuredType
 			, nominalRefinements, { ...(conversion ? { conversion, emitSites: false } : {}), hostProjection })
@@ -345,6 +368,10 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 			signature.result
 			, runtimeRefinements(signature, signature.refinements)?.result
 		);
+		if([...unsafeDefaultSymbols].some(symbol => fallback.includes(symbol)))
+			throw Object.assign(new TypeError(
+				"Callback result has no proof-preserving source recovery value")
+			, { code: "uninhabited-callback-result" });
 		const validators = (symbol, parameters, selected) => componentCarrierRefinementValidators({
 			symbol
 			, wrapper: `checked_${key}_${symbol.endsWith("result") ? "result" : "frame"}`

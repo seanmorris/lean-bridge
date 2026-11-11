@@ -75,6 +75,20 @@ test("shared nominal recipes avoid exponential generated fallback source", () =>
 }
 });
 
+test("proof-erased recovery recipes use their payload mirrors", () => {
+  const type = {
+    kind: "record", id: "lean:Example.Checked", erased: ["valid"]
+    , fields: fields(uint32, uint32)
+  };
+  const defaults = componentStructuredCallableDefaults(
+    [type], [], new Set([type.id]));
+  assert.equal(defaults.recipes.length, 1);
+  assert.match(defaults.declarations[0]
+    , /: LbErased\.Example\.Checked := \{ «field0» := 0, «field1» := 0 \}/u);
+  assert.equal(defaults.expression(named("Example.Checked"))
+    , defaults.recipes[0].symbol);
+});
+
 test("invalid descriptors fail before recovery declarations can be emitted", () => {
   assert.throws(() => componentStructuredCallableDefaults([{ kind: "alias", id: "lean:Example.A", target: named("Example.A") }]), /cyclic alias/);
   assert.throws(() => componentStructuredCallableDefaults([{ kind: "record", id: "lean:Example.A", fields: fields(named("Example.Unknown")) }]), /unknown nominal/);
