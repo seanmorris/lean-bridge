@@ -1,0 +1,142 @@
+{
+  "behavior": {
+    "aggregatedInventoryFields": 5,
+    "changedSupportCells": 0,
+    "productionCodeChanges": 0,
+    "repairedPartitionAudits": 2,
+    "runtimeSemanticChanges": 0
+  },
+  "changedSupportCells": 0,
+  "historyAdditions": [
+    {
+      "path": "scripts/update-vo1220-partition-inventory-diagnostic-repair-source-history.mjs",
+      "sha256": "297125ccdf2f171113d7ef5fbbe2c0ee7c6cfc4fbfa9f03c8be13157133c5721"
+    },
+    {
+      "path": "tests/helpers/vo1220-partition-inventory-diagnostic-repair-source-history-tests.mjs",
+      "sha256": "c116c39ac75997dbc7eefb203dd6e67fe5ce3cfe03e20e2f0463da142e891f55"
+    },
+    {
+      "path": "tests/helpers/vo1220-partition-inventory-diagnostic-repair-source-history.mjs",
+      "sha256": "bce7f6b18794fdd02277e3638a97d53c46df64cc1ebf4b50e10d230a9e23b72b"
+    }
+  ],
+  "implementationCommit": "59730e76d369ce78a90537295669d6908e23c31f",
+  "integrationCommit": "1cd7eea6cf7f1c1a5d78f48b60a7bff46a158763",
+  "integrationUpdates": [
+    {
+      "currentSha256": "11a652daff4419c7a759a15523afee0fe0c2f9eda13002fd48b5d8d6f0129e94",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-partition-inventory-diagnostic-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 424
+        },
+        {
+          "current": "\tassignmentSha256: \"8f44ee54285e874b55e9391a679da17d4b4bee751d4d251adbd96cb20a93f2c4\"\n\t, helperSetSha256: \"fc81bf3a9757b0ecba952107afbcce14bc561b75feb6be50840ea444d7f1e95a\"\n\t, originalImports: 132\n\t, partitionImports: 129\n\t, retainedImports: 127\n",
+          "previous": "\tassignmentSha256: \"f9089d74ed0a5b3c0dc0204ae0b52607ffb5280854a7293167744ec3d4bdc5aa\"\n\t, helperSetSha256: \"8dc7505436d77a771ccd37c6eb1b88663d395c9ee4b15ba86c04b24af1cdd879\"\n\t, originalImports: 131\n\t, partitionImports: 128\n\t, retainedImports: 126\n",
+          "start": 3233
+        }
+      ],
+      "path": "tests/component-array-history-partition-01.test.mjs",
+      "previousSha256": "55a71a8b221952366eaf3a9ef7b1d57aa547d6c4b1a1993ff932c8fd016e9e3b"
+    },
+    {
+      "currentSha256": "a0ce5e9548c5f26a591948ef96b83b24fb30da11b35217ccbe71488f6475f402",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220PartitionInventoryDiagnosticRepairSource\n\t, vo1220PartitionInventoryDiagnosticRepairNormalizationPaths\n} from \"./vo1220-partition-inventory-diagnostic-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220PartitionInventoryDiagnosticRepairNormalizationPaths\n\t, ...phpWasmCallbackProofDefaultRepairNormalizationPaths\n",
+          "previous": "\t...phpWasmCallbackProofDefaultRepairNormalizationPaths\n",
+          "start": 246286
+        },
+        {
+          "current": "\tlet stage = beforeVo1220PartitionInventoryDiagnosticRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforePhpWasmCallbackProofDefaultRepairSource(\n",
+          "previous": "\tlet stage = beforePhpWasmCallbackProofDefaultRepairSource(\n",
+          "start": 310151
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cbee0966ebd43f6314cbe0626f93decd60b227d7d04d8f8eef789a448d866701"
+    }
+  ],
+  "milestone": "vo1220-partition-inventory-diagnostic-repair-source-v1",
+  "predecessorCommit": "ab49f595dd6d9641fe54ff722816d2fd3541e246",
+  "repair": "Remove redundant per-partition cardinality snapshots, report exact counts and both digests as one aggregate object, split structural and ownership checks into independent subtests, and apply the same complete diagnostic shape to the sibling retained-partition audit.",
+  "rootCause": "The component-array partition audit compared a redundant exact size vector before its membership and assignment contract. One intentional helper registration therefore hid every remaining stale expectation in the same finite inventory.",
+  "runtimeSemanticChanges": 0,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "55a71a8b221952366eaf3a9ef7b1d57aa547d6c4b1a1993ff932c8fd016e9e3b",
+      "edits": [
+        {
+          "current": "const expectedPartitionInventory = Object.freeze({\n\tassignmentSha256: \"f9089d74ed0a5b3c0dc0204ae0b52607ffb5280854a7293167744ec3d4bdc5aa\"\n\t, helperSetSha256: \"8dc7505436d77a771ccd37c6eb1b88663d395c9ee4b15ba86c04b24af1cdd879\"\n\t, originalImports: 131\n\t, partitionImports: 128\n\t, retainedImports: 126\n});\n",
+          "previous": "",
+          "start": 3092
+        },
+        {
+          "current": "test(\"array history partitions retain every original helper exactly once\", async context => {\n",
+          "previous": "test(\"array history partitions retain every original helper exactly once\", async () => {\n",
+          "start": 3563
+        },
+        {
+          "current": "",
+          "previous": "\tassert.deepEqual(loadedHelpers(parent), []);\n\tassert.doesNotMatch(parent, retainedRegistration);\n\tassert.deepEqual(sources.map(source =>\n\t\t[...source.matchAll(strictImport)].length)\n\t\t, [16, 17, 1, 15, 8, 8, 14, 16, 8, 8, 8, 8]);\n\tassert.ok(sources.every(source => {\n\t\tassert.doesNotMatch(source, retainedRegistration);\n\t\treturn loadedHelpers(source).length === [...source.matchAll(strictImport)].length;\n\t}));\n\tassert.equal(partitionImports.length, 127);\n\tassert.equal(new Set(partitionImports).size, partitionImports.length);\n\tassert.equal(imports.length, 125);\n",
+          "start": 4069
+        },
+        {
+          "current": "\tawait context.test(\"partitions contain only direct static helper loads\", () => {\n\t\tassert.deepEqual(loadedHelpers(parent), []);\n\t\tassert.doesNotMatch(parent, retainedRegistration);\n\t\tassert.ok(sources.every(source => {\n\t\t\tassert.doesNotMatch(source, retainedRegistration);\n\t\t\treturn loadedHelpers(source).length\n\t\t\t\t=== [...source.matchAll(strictImport)].length;\n\t\t}));\n\t\tassert.equal(new Set(partitionImports).size, partitionImports.length);\n\t\tassert.equal(new Set(originalImports).size, originalImports.length);\n\t});\n\tawait context.test(\"audited membership and assignment match together\", () => {\n\t\tassert.deepEqual({\n\t\t\tassignmentSha256: sha256(canonicalJson(entries.toSorted((left, right) =>\n\t\t\t\tcanonicalJson(left).localeCompare(canonicalJson(right)))))\n\t\t\t, helperSetSha256: sha256(canonicalJson(originalImports.toSorted()))\n\t\t\t, originalImports: originalImports.length\n\t\t\t, partitionImports: partitionImports.length\n\t\t\t, retainedImports: imports.length\n\t\t}, expectedPartitionInventory);\n\t});\n",
+          "previous": "\tassert.equal(originalImports.length, 130);\n\tassert.equal(new Set(originalImports).size, originalImports.length);\n\tassert.equal(sha256(canonicalJson(originalImports.toSorted()))\n\t\t, \"5eef538729dc79d6d6385d9b2ded489991bad4f19654f5d095d792b47a8ecfc7\");\n\tassert.equal(sha256(canonicalJson(entries.toSorted((left, right) =>\n\t\tcanonicalJson(left).localeCompare(canonicalJson(right)))))\n\t\t, \"0b806e9346e5a605ff8ff7c72c9a873f7aa7f584084de67943425d3558e7351b\");\n",
+          "start": 4130
+        },
+        {
+          "current": "\tawait context.test(\"every audited helper has exactly one Core owner\", async () => {\n\t\tconst owners = await testRegistrationRootOwners(\n\t\t\tawait collectCoreContractTestPaths(), ownedImports);\n\t\tfor(const [path, paths] of owners)\n\t\t{\n\t\t\tassert.equal(paths.length, 1, `${path}: ${paths.join(\", \")}`);\n\t\t\tconst owner = paths[0].replace(/^tests\\//u, \"\");\n\t\t\tif(exceptions.has(path)) assert.equal(owner, exceptions.get(path));\n\t\t\telse assert.match(owner\n\t\t\t\t, /^component-array-history-partition-\\d{2}[.]test[.]mjs$/u);\n\t\t}\n\t});\n",
+          "previous": "\tconst owners = await testRegistrationRootOwners(\n\t\tawait collectCoreContractTestPaths(), ownedImports);\n\tfor(const [path, paths] of owners)\n\t{\n\t\tassert.equal(paths.length, 1, `${path}: ${paths.join(\", \")}`);\n\t\tconst owner = paths[0].replace(/^tests\\//u, \"\");\n\t\tif(exceptions.has(path)) assert.equal(owner, exceptions.get(path));\n\t\telse assert.match(owner, /^component-array-history-partition-\\d{2}[.]test[.]mjs$/u);\n\t}\n",
+          "start": 5192
+        }
+      ],
+      "path": "tests/component-array-history-partition-01.test.mjs",
+      "previousSha256": "2c48aa2d08855f894b7c83131076813a48d3c294e8648d015dd5fbe977852fa2"
+    },
+    {
+      "currentSha256": "1404337c3a53c25c93780378039442c8a9a2d42a75c9ddd17281b28f57fe5c66",
+      "edits": [
+        {
+          "current": "const expectedPartitionInventory = Object.freeze({\n\tassignmentSha256: \"ed859382293d9887370a905592501dcdb40c100ffcc7db04ae33cd3e3c4b3a5d\"\n\t, helperSetSha256: \"791913e5307c475732a5f0397e4711c3784a1602a2460fe4b85ad59b4c9a55a0\"\n\t, partitionImports: 30\n});\n",
+          "previous": "",
+          "start": 1213
+        },
+        {
+          "current": "test(\"nested checked-record history partitions retain every original suite exactly once\", async context => {\n",
+          "previous": "test(\"nested checked-record history partitions retain every original suite exactly once\", async () => {\n",
+          "start": 1466
+        },
+        {
+          "current": "\tawait context.test(\"partitions contain only direct static helper loads\", () => {\n\t\tassert.doesNotMatch(parent, broadSideEffectLoad);\n\t\tassert.equal(entries.filter(([partition]) => partition === 5).length, 0);\n\t\tassert.ok(sources.every(source => {\n\t\t\tconst stripped = source.replace(strictImport, \"\");\n\t\t\treturn !broadSideEffectLoad.test(stripped);\n\t\t}));\n\t\tassert.equal(new Set(imports).size, imports.length);\n\t});\n\tawait context.test(\"audited membership and assignment match together\", () => {\n\t\tassert.deepEqual({\n\t\t\tassignmentSha256: sha256(canonicalJson(entries.toSorted((left, right) =>\n\t\t\t\tcanonicalJson(left).localeCompare(canonicalJson(right)))))\n\t\t\t, helperSetSha256: sha256(canonicalJson(imports.toSorted()))\n\t\t\t, partitionImports: imports.length\n\t\t}, expectedPartitionInventory);\n\t});\n\tawait context.test(\"bounded cell expansions remain paired\", () => {\n\t\tfor(const [path, source] of boundedCellExpansions)\n\t\t{\n\t\t\tassert.equal(source.split(\"typeSurfaceCells(\").length - 1, 2, path);\n\t\t\tassert.equal(source.split(\", contracts, selected)\").length - 1, 2, path);\n\t\t\tassert.match(source, /const stableSurface = /u, path);\n\t\t\tassert.match(source, /const affectedObservations = /u, path);\n\t\t}\n\t});\n",
+          "previous": "\tassert.doesNotMatch(parent, broadSideEffectLoad);\n\tassert.deepEqual(sources.map(source => [...source.matchAll(strictImport)].length)\n\t\t, [3, 3, 3, 3, 0, 3, 3, 3, 2, 2, 2, 3]);\n\tassert.ok(sources.every(source => {\n\t\tconst stripped = source.replace(strictImport, \"\");\n\t\treturn !broadSideEffectLoad.test(stripped);\n\t}));\n\tassert.equal(imports.length, 30);\n\tassert.equal(new Set(imports).size, imports.length);\n\tassert.equal(sha256(canonicalJson(imports.toSorted()))\n\t\t, \"791913e5307c475732a5f0397e4711c3784a1602a2460fe4b85ad59b4c9a55a0\");\n\tassert.equal(sha256(canonicalJson(entries.toSorted((left, right) =>\n\t\tcanonicalJson(left).localeCompare(canonicalJson(right)))))\n\t\t, \"ed859382293d9887370a905592501dcdb40c100ffcc7db04ae33cd3e3c4b3a5d\");\n\tfor(const [path, source] of boundedCellExpansions)\n\t{\n\t\tassert.equal(source.split(\"typeSurfaceCells(\").length - 1, 2, path);\n\t\tassert.equal(source.split(\", contracts, selected)\").length - 1, 2, path);\n\t\tassert.match(source, /const stableSurface = /u, path);\n\t\tassert.match(source, /const affectedObservations = /u, path);\n\t}\n",
+          "start": 2058
+        },
+        {
+          "current": "\tawait context.test(\"every audited helper has exactly one Core owner\", async () => {\n\t\tconst owners = await testRegistrationRootOwners(\n\t\t\tawait collectCoreContractTestPaths(), imports);\n\t\tfor(const [path, paths] of owners)\n\t\t\tassert.equal(paths.length, 1, `${path}: ${paths.join(\", \")}`);\n\t});\n",
+          "previous": "\tconst owners = await testRegistrationRootOwners(\n\t\tawait collectCoreContractTestPaths(), imports);\n\tfor(const [path, paths] of owners)\n\t\tassert.equal(paths.length, 1, `${path}: ${paths.join(\", \")}`);\n",
+          "start": 3263
+        }
+      ],
+      "path": "tests/nested-checked-record-history-partition-05.test.mjs",
+      "previousSha256": "72e58958784804f8dcf309feff2038a3aad7982e6b4a2d0b60635af65c999c9c"
+    }
+  ],
+  "validation": {
+    "componentPartitionAudit": "4/4 passed",
+    "diffCheck": "passed",
+    "exactCohortHistory": "6/6 passed",
+    "nestedPartitionAudit": "5/5 passed",
+    "nestedPromotionHistory": "4/4 passed",
+    "scopedLint": "passed"
+  }
+}

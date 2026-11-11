@@ -11,6 +11,7 @@ import { collectCoreContractTestPaths }
 	from "../scripts/core-contract-shards.mjs";
 import { testRegistrationRootOwners }
 	from "./helpers/test-registration-owners.mjs";
+import "./helpers/vo1220-partition-inventory-diagnostic-repair-source-history-tests.mjs";
 import "./helpers/nominal-subtype-entry-publication-source-history-tests.mjs";
 import "./helpers/core-contract-runtime-budget-source-history-tests.mjs";
 import "./helpers/core-first-run-residual-repair-source-history-tests.mjs";
@@ -52,11 +53,11 @@ const localHistory = new Set([
 	, "./helpers/component-array-subtype-source-history-tests.mjs"
 ]);
 const expectedPartitionInventory = Object.freeze({
-	assignmentSha256: "f9089d74ed0a5b3c0dc0204ae0b52607ffb5280854a7293167744ec3d4bdc5aa"
-	, helperSetSha256: "8dc7505436d77a771ccd37c6eb1b88663d395c9ee4b15ba86c04b24af1cdd879"
-	, originalImports: 131
-	, partitionImports: 128
-	, retainedImports: 126
+	assignmentSha256: "8f44ee54285e874b55e9391a679da17d4b4bee751d4d251adbd96cb20a93f2c4"
+	, helperSetSha256: "fc81bf3a9757b0ecba952107afbcce14bc561b75feb6be50840ea444d7f1e95a"
+	, originalImports: 132
+	, partitionImports: 129
+	, retainedImports: 127
 });
 const loadedHelpers = source => [
 	...[...source.matchAll(broadStaticImport)].map(match => match[1])
