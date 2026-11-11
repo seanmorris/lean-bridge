@@ -51,12 +51,19 @@ const localHistory = new Set([
 	"./helpers/component-array-nested-fin-source-history-tests.mjs"
 	, "./helpers/component-array-subtype-source-history-tests.mjs"
 ]);
+const expectedPartitionInventory = Object.freeze({
+	assignmentSha256: "f9089d74ed0a5b3c0dc0204ae0b52607ffb5280854a7293167744ec3d4bdc5aa"
+	, helperSetSha256: "8dc7505436d77a771ccd37c6eb1b88663d395c9ee4b15ba86c04b24af1cdd879"
+	, originalImports: 131
+	, partitionImports: 128
+	, retainedImports: 126
+});
 const loadedHelpers = source => [
 	...[...source.matchAll(broadStaticImport)].map(match => match[1])
 	, ...[...source.matchAll(dynamicImport)].map(match => match[1])
 ];
 
-test("array history partitions retain every original helper exactly once", async () => {
+test("array history partitions retain every original helper exactly once", async context => {
 	const [sources, parent] = await Promise.all([
 		Promise.all(partitionPaths.map(path => readFile(path, "utf8")))
 		, readFile(parentPath, "utf8")
@@ -65,35 +72,40 @@ test("array history partitions retain every original helper exactly once", async
 		[...source.matchAll(strictImport)].map(match => [index + 1, match[1]]));
 	const partitionImports = entries.map(([, path]) => path);
 	const imports = partitionImports.filter(path => !localHistory.has(path));
-	assert.deepEqual(loadedHelpers(parent), []);
-	assert.doesNotMatch(parent, retainedRegistration);
-	assert.deepEqual(sources.map(source =>
-		[...source.matchAll(strictImport)].length)
-		, [16, 17, 1, 15, 8, 8, 14, 16, 8, 8, 8, 8]);
-	assert.ok(sources.every(source => {
-		assert.doesNotMatch(source, retainedRegistration);
-		return loadedHelpers(source).length === [...source.matchAll(strictImport)].length;
-	}));
-	assert.equal(partitionImports.length, 127);
-	assert.equal(new Set(partitionImports).size, partitionImports.length);
-	assert.equal(imports.length, 125);
 	const originalImports = [...imports, ...exceptions.keys()];
-	assert.equal(originalImports.length, 130);
-	assert.equal(new Set(originalImports).size, originalImports.length);
-	assert.equal(sha256(canonicalJson(originalImports.toSorted()))
-		, "5eef538729dc79d6d6385d9b2ded489991bad4f19654f5d095d792b47a8ecfc7");
-	assert.equal(sha256(canonicalJson(entries.toSorted((left, right) =>
-		canonicalJson(left).localeCompare(canonicalJson(right)))))
-		, "0b806e9346e5a605ff8ff7c72c9a873f7aa7f584084de67943425d3558e7351b");
+	await context.test("partitions contain only direct static helper loads", () => {
+		assert.deepEqual(loadedHelpers(parent), []);
+		assert.doesNotMatch(parent, retainedRegistration);
+		assert.ok(sources.every(source => {
+			assert.doesNotMatch(source, retainedRegistration);
+			return loadedHelpers(source).length
+				=== [...source.matchAll(strictImport)].length;
+		}));
+		assert.equal(new Set(partitionImports).size, partitionImports.length);
+		assert.equal(new Set(originalImports).size, originalImports.length);
+	});
+	await context.test("audited membership and assignment match together", () => {
+		assert.deepEqual({
+			assignmentSha256: sha256(canonicalJson(entries.toSorted((left, right) =>
+				canonicalJson(left).localeCompare(canonicalJson(right)))))
+			, helperSetSha256: sha256(canonicalJson(originalImports.toSorted()))
+			, originalImports: originalImports.length
+			, partitionImports: partitionImports.length
+			, retainedImports: imports.length
+		}, expectedPartitionInventory);
+	});
 
 	const ownedImports = [...originalImports, ...localHistory];
-	const owners = await testRegistrationRootOwners(
-		await collectCoreContractTestPaths(), ownedImports);
-	for(const [path, paths] of owners)
-	{
-		assert.equal(paths.length, 1, `${path}: ${paths.join(", ")}`);
-		const owner = paths[0].replace(/^tests\//u, "");
-		if(exceptions.has(path)) assert.equal(owner, exceptions.get(path));
-		else assert.match(owner, /^component-array-history-partition-\d{2}[.]test[.]mjs$/u);
-	}
+	await context.test("every audited helper has exactly one Core owner", async () => {
+		const owners = await testRegistrationRootOwners(
+			await collectCoreContractTestPaths(), ownedImports);
+		for(const [path, paths] of owners)
+		{
+			assert.equal(paths.length, 1, `${path}: ${paths.join(", ")}`);
+			const owner = paths[0].replace(/^tests\//u, "");
+			if(exceptions.has(path)) assert.equal(owner, exceptions.get(path));
+			else assert.match(owner
+				, /^component-array-history-partition-\d{2}[.]test[.]mjs$/u);
+		}
+	});
 });
