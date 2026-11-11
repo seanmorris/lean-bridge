@@ -10,6 +10,7 @@ import "./helpers/core-terminal-reachability-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-jvm-source-history-tests.mjs";
 import "./helpers/core-quality-sharding-source-history-tests.mjs";
 import "./helpers/structured-callable-recovery-gate-repair-source-history-tests.mjs";
+import "./helpers/php-wasm-callback-proof-default-repair-source-history-tests.mjs";
 import "./helpers/nominal-subtype-entry-report-link-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-documentation-closure-source-history-tests.mjs";
 import "./helpers/callback-checked-record-retained-archive-rollover-source-history-tests.mjs";

@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforePhpWasmCallbackProofDefaultRepairSource
+	, phpWasmCallbackProofDefaultRepairNormalizationPaths
+} from "./php-wasm-callback-proof-default-repair-source-history.mjs";
+import {
 	beforeVo1220NodeConsumerTimeoutPinCompletionSource
 	, vo1220NodeConsumerTimeoutPinCompletionNormalizationPaths
 } from "./vo1220-node-consumer-timeout-pin-completion-source-history.mjs";
@@ -2807,7 +2811,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220NodeConsumerTimeoutPinCompletionNormalizationPaths
+	...phpWasmCallbackProofDefaultRepairNormalizationPaths
+	, ...vo1220NodeConsumerTimeoutPinCompletionNormalizationPaths
 	, ...vo1220NodeConsumerTimeoutHeadroomNormalizationPaths
 	, ...vo1220CoreCapacityPlanningNormalizationPaths
 	, ...vo1220HistoricalCoreProfileIsolationNormalizationPaths
@@ -4081,7 +4086,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220NodeConsumerTimeoutPinCompletionSource(
+	let stage = beforePhpWasmCallbackProofDefaultRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220NodeConsumerTimeoutPinCompletionSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

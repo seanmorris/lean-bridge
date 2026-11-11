@@ -1,0 +1,195 @@
+{
+  "behavior": {
+    "impossibleSourceFallbacks": "rejected",
+    "ordinaryRefinedDefaults": "source values",
+    "proofErasedDefaults": "authenticated payload mirrors",
+    "runtimeSemanticChanges": 0
+  },
+  "historyAdditions": [
+    {
+      "path": "scripts/update-php-wasm-callback-proof-default-repair-source-history.mjs",
+      "sha256": "0a52f8b34bb63ad54f0bbf46b1af94f9529d7d0572cc83dc68974bdb846b27d6"
+    },
+    {
+      "path": "tests/helpers/php-wasm-callback-proof-default-repair-source-history-tests.mjs",
+      "sha256": "52a15a613cd89fb1e5a9d11b7d1836550d941a911c32abdacc354727f38fb5a5"
+    },
+    {
+      "path": "tests/helpers/php-wasm-callback-proof-default-repair-source-history.mjs",
+      "sha256": "313f92d9e685d8f0c041b621f9c6e1e80eacfca5bbea6fec07d3878d584ae879"
+    }
+  ],
+  "implementationCommit": "f52648c546ab6f2b0bc45b7f1fb2943d036bd504",
+  "integrationCommit": "e5d6cca0d888227bcb06f93842833ad366a38653",
+  "integrationUpdates": [
+    {
+      "currentSha256": "aebbe9779858d89ade605ca9fb4e9c8e4935bb763e5c4b92dff10e0347fa125a",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"0681026c3240fb726b1998fe5e1dd0716460ee243e66ff8d96a941e3193e2985\"\n",
+          "previous": "          \"sha256\": \"135c10b660526ff0e3f3fa152be4c97603ae35bad2738005604b99984193c03f\"\n",
+          "start": 1141719
+        },
+        {
+          "current": "          \"sha256\": \"ad283fb4c6eff383d4c5dfe692e45dc5d88edaa1444db20e49c216620aea6817\"\n",
+          "previous": "          \"sha256\": \"a32724a4ee457acb93ae58443cbe7998f036f23eaaa1e61527e6bf06c6115a76\"\n",
+          "start": 1143798
+        },
+        {
+          "current": "          \"sha256\": \"0681026c3240fb726b1998fe5e1dd0716460ee243e66ff8d96a941e3193e2985\"\n",
+          "previous": "          \"sha256\": \"135c10b660526ff0e3f3fa152be4c97603ae35bad2738005604b99984193c03f\"\n",
+          "start": 1447198
+        },
+        {
+          "current": "          \"sha256\": \"0681026c3240fb726b1998fe5e1dd0716460ee243e66ff8d96a941e3193e2985\"\n",
+          "previous": "          \"sha256\": \"135c10b660526ff0e3f3fa152be4c97603ae35bad2738005604b99984193c03f\"\n",
+          "start": 1491961
+        },
+        {
+          "current": "          \"sha256\": \"ad283fb4c6eff383d4c5dfe692e45dc5d88edaa1444db20e49c216620aea6817\"\n",
+          "previous": "          \"sha256\": \"a32724a4ee457acb93ae58443cbe7998f036f23eaaa1e61527e6bf06c6115a76\"\n",
+          "start": 1492657
+        },
+        {
+          "current": "          \"sha256\": \"6393db70f9c625904e71d7541ac2be7730e5330955e72c0bab2f45fe6b23fd53\"\n",
+          "previous": "          \"sha256\": \"2949a42ffc6cf2a281ad308dac29336119fd8761d0a53a3b7f725d6bcdd50f30\"\n",
+          "start": 74242049
+        },
+        {
+          "current": "          \"sha256\": \"6393db70f9c625904e71d7541ac2be7730e5330955e72c0bab2f45fe6b23fd53\"\n",
+          "previous": "          \"sha256\": \"2949a42ffc6cf2a281ad308dac29336119fd8761d0a53a3b7f725d6bcdd50f30\"\n",
+          "start": 74244715
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "07fcf1e686e3c1f4bda47ca986c1e4e184a8c981d1566f1158e34d7d5f12782c"
+    },
+    {
+      "currentSha256": "29dd92a84be0e1b21bc0b9288f7b6568369ac2fc219247ef5b9818264bc11459",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-callback-proof-default-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 591
+        }
+      ],
+      "path": "tests/component-array-history-partition-04.test.mjs",
+      "previousSha256": "b1f77a6b9efc9b5a086857c67460ab875b282470ed3ba088f19bac9def1ab897"
+    },
+    {
+      "currentSha256": "cbee0966ebd43f6314cbe0626f93decd60b227d7d04d8f8eef789a448d866701",
+      "edits": [
+        {
+          "current": "import {\n\tbeforePhpWasmCallbackProofDefaultRepairSource\n\t, phpWasmCallbackProofDefaultRepairNormalizationPaths\n} from \"./php-wasm-callback-proof-default-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...phpWasmCallbackProofDefaultRepairNormalizationPaths\n\t, ...vo1220NodeConsumerTimeoutPinCompletionNormalizationPaths\n",
+          "previous": "\t...vo1220NodeConsumerTimeoutPinCompletionNormalizationPaths\n",
+          "start": 246085
+        },
+        {
+          "current": "\tlet stage = beforePhpWasmCallbackProofDefaultRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220NodeConsumerTimeoutPinCompletionSource(\n",
+          "previous": "\tlet stage = beforeVo1220NodeConsumerTimeoutPinCompletionSource(\n",
+          "start": 309885
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "13462b68069a9766376068f34538c513b8c291e8a674e4b6056b604e2887d3b8"
+    }
+  ],
+  "milestone": "php-wasm-callback-proof-default-repair-source-v1",
+  "pointerUpdates": [
+    {
+      "current": "0681026c3240fb726b1998fe5e1dd0716460ee243e66ff8d96a941e3193e2985",
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "previous": "135c10b660526ff0e3f3fa152be4c97603ae35bad2738005604b99984193c03f"
+    },
+    {
+      "current": "ad283fb4c6eff383d4c5dfe692e45dc5d88edaa1444db20e49c216620aea6817",
+      "path": "tests/component-structured-callable-defaults.test.mjs",
+      "previous": "a32724a4ee457acb93ae58443cbe7998f036f23eaaa1e61527e6bf06c6115a76"
+    },
+    {
+      "current": "0681026c3240fb726b1998fe5e1dd0716460ee243e66ff8d96a941e3193e2985",
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "previous": "135c10b660526ff0e3f3fa152be4c97603ae35bad2738005604b99984193c03f"
+    },
+    {
+      "current": "0681026c3240fb726b1998fe5e1dd0716460ee243e66ff8d96a941e3193e2985",
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "previous": "135c10b660526ff0e3f3fa152be4c97603ae35bad2738005604b99984193c03f"
+    },
+    {
+      "current": "ad283fb4c6eff383d4c5dfe692e45dc5d88edaa1444db20e49c216620aea6817",
+      "path": "tests/component-structured-callable-defaults.test.mjs",
+      "previous": "a32724a4ee457acb93ae58443cbe7998f036f23eaaa1e61527e6bf06c6115a76"
+    },
+    {
+      "current": "6393db70f9c625904e71d7541ac2be7730e5330955e72c0bab2f45fe6b23fd53",
+      "path": "tests/callback-checked-record-native.test.mjs",
+      "previous": "2949a42ffc6cf2a281ad308dac29336119fd8761d0a53a3b7f725d6bcdd50f30"
+    },
+    {
+      "current": "6393db70f9c625904e71d7541ac2be7730e5330955e72c0bab2f45fe6b23fd53",
+      "path": "tests/callback-checked-record-native.test.mjs",
+      "previous": "2949a42ffc6cf2a281ad308dac29336119fd8761d0a53a3b7f725d6bcdd50f30"
+    }
+  ],
+  "predecessorCommit": "7f09a73bd30a45feb41bc99d1cb53a897fa797e3",
+  "refreshedTypeSurfacePointers": 7,
+  "repair": "Compute the transitive recovery dependency closure rooted at proof-erased records, render only that closure through authenticated payload mirrors, omit unreachable unsafe recipes and reject any actual fallback without a proof-preserving source value.",
+  "rootCause": "Eager finite callback recovery recipes constructed proof-erased checked records as source values, requiring proof fields that are deliberately absent from the transport payload.",
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "0681026c3240fb726b1998fe5e1dd0716460ee243e66ff8d96a941e3193e2985",
+      "edits": [
+        {
+          "current": "\t// Failure defaults are returned by a source-level callback, so ordinary refined\n\t// records remain source values. A proof-erased record has no source inhabitant\n\t// that this generator may invent, however. First derive the recipe dependency\n\t// closure, then use payload mirrors only for that closure. Recipes outside the\n\t// active mirror graph are unreachable and must not become eager invalid Lean.\n\tconst sourceDefaults = componentStructuredCallableDefaults(\n\t\tabi.types, nominalRefinements, new Set(), hostProjection);\n\tconst unsafeDefaultSymbols = new Set(), unsafeDefaultIds = new Set();\n\tconst erased = new Set(abi.types.filter(type => type.kind === \"record\"\n\t\t&& type.erased).map(type => type.id));\n\tfor(const recipe of sourceDefaults.recipes)\n\t\tif(erased.has(recipe.id) || [...unsafeDefaultSymbols].some(symbol =>\n\t\t\trecipe.body.includes(symbol))) {\n\t\t\tunsafeDefaultSymbols.add(recipe.symbol);\n\t\t\tunsafeDefaultIds.add(recipe.id);\n\t\t\t}\n\tconst availableMirrorIds = new Set([...(conversion?.names ?? [])]\n\t\t.map(name => `lean:${name}`));\n\tconst defaultMirrorIds = new Set([...unsafeDefaultIds]\n\t\t.filter(id => availableMirrorIds.has(id)));\n\tconst completeDefaults = componentStructuredCallableDefaults(\n\t\tabi.types, nominalRefinements, defaultMirrorIds, hostProjection);\n\tconst declarations = completeDefaults.recipes.flatMap((recipe, index) =>\n\t\tunsafeDefaultSymbols.has(recipe.symbol) && !defaultMirrorIds.has(recipe.id)\n\t\t\t? [] : completeDefaults.declarations.slice(index * 2, index * 2 + 2));\n\tconst defaults = { ...completeDefaults, declarations };\n",
+          "previous": "\t// Failure defaults are returned by a source-level callback, so construct them in\n\t// source types. The invoke carriers themselves continue to use erased mirrors.\n\tconst defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements, new Set(), hostProjection);\n",
+          "start": 16852
+        },
+        {
+          "current": "\t\tif([...unsafeDefaultSymbols].some(symbol => fallback.includes(symbol)))\n\t\t\tthrow Object.assign(new TypeError(\n\t\t\t\t\"Callback result has no proof-preserving source recovery value\")\n\t\t\t, { code: \"uninhabited-callback-result\" });\n",
+          "previous": "",
+          "start": 20938
+        }
+      ],
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "previousSha256": "135c10b660526ff0e3f3fa152be4c97603ae35bad2738005604b99984193c03f"
+    },
+    {
+      "currentSha256": "6393db70f9c625904e71d7541ac2be7730e5330955e72c0bab2f45fe6b23fd53",
+      "edits": [
+        {
+          "current": "\tassert.match(source, /def callbackDefault_[a-f0-9]{20} : LbErased\\.Structured\\.Interval := \\{ «lo» := 0, «hi» := 0 \\}/u);\n\tassert.doesNotMatch(source, /def callbackDefault_[a-f0-9]{20} : _root_\\.Structured\\.Interval/u);\n",
+          "previous": "",
+          "start": 9488
+        }
+      ],
+      "path": "tests/callback-checked-record-native.test.mjs",
+      "previousSha256": "2949a42ffc6cf2a281ad308dac29336119fd8761d0a53a3b7f725d6bcdd50f30"
+    },
+    {
+      "currentSha256": "ad283fb4c6eff383d4c5dfe692e45dc5d88edaa1444db20e49c216620aea6817",
+      "edits": [
+        {
+          "current": "test(\"proof-erased recovery recipes use their payload mirrors\", () => {\n  const type = {\n    kind: \"record\", id: \"lean:Example.Checked\", erased: [\"valid\"]\n    , fields: fields(uint32, uint32)\n  };\n  const defaults = componentStructuredCallableDefaults(\n    [type], [], new Set([type.id]));\n  assert.equal(defaults.recipes.length, 1);\n  assert.match(defaults.declarations[0]\n    , /: LbErased\\.Example\\.Checked := \\{ «field0» := 0, «field1» := 0 \\}/u);\n  assert.equal(defaults.expression(named(\"Example.Checked\"))\n    , defaults.recipes[0].symbol);\n});\n\n",
+          "previous": "",
+          "start": 4378
+        }
+      ],
+      "path": "tests/component-structured-callable-defaults.test.mjs",
+      "previousSha256": "a32724a4ee457acb93ae58443cbe7998f036f23eaaa1e61527e6bf06c6115a76"
+    }
+  ],
+  "validation": {
+    "checkedRecordRegression": "passed",
+    "diffCheck": "passed",
+    "exactLeanAdapterReproduction": "passed",
+    "focusedGeneratorContracts": "24/24 passed",
+    "scopedLint": "passed"
+  }
+}
