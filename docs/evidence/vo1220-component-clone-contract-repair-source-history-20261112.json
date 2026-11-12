@@ -1,0 +1,102 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-component-clone-contract-repair-source-history.mjs",
+      "sha256": "0495c83bd4f7a00d6b2e887aa4f327e2ae4e8634c1f82fe23a3b3106d9490ef6"
+    },
+    {
+      "path": "tests/helpers/vo1220-component-clone-contract-repair-source-history-tests.mjs",
+      "sha256": "f786b01c4b9796e3013f5edb06ac3ad0139cd8fa7f3f1aa21f92366f6a3a8b23"
+    },
+    {
+      "path": "tests/helpers/vo1220-component-clone-contract-repair-source-history.mjs",
+      "sha256": "a203db5fe4a1a25e7f62abf6821549e5d036aace3492ec033fd7f59b2ed63331"
+    }
+  ],
+  "hostedFailure": {
+    "candidate": "af17be8e63f792f61d2f48e4e8b4e584d4097620",
+    "conclusion": "failure",
+    "job": 131463236381,
+    "run": 43298549752,
+    "test": 16
+  },
+  "implementationCommit": "51021c8133627528f11f0f2cb4cfd73c60def409",
+  "integrationCommit": "680fa2f099134fcce444b3129a11285e38ae08b0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0205ef3a207a9243cbba375477b5d996015da20b49895a19686397fc230fe770",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-component-clone-contract-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 267
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "769defb8d5a0af88e9347c55b273afed0c28572ba5531594a7f6ee94e6a747f7"
+    },
+    {
+      "currentSha256": "37d16b945150adea6273781711a793487d695d99e5579d2a02e8ee42d3649106",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ComponentCloneContractRepairSource\n\t, vo1220ComponentCloneContractRepairNormalizationPaths\n} from \"./vo1220-component-clone-contract-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ComponentCloneContractRepairNormalizationPaths\n\t, ...vo1220ComponentReproducibilityReviewClosureNormalizationPaths\n",
+          "previous": "\t...vo1220ComponentReproducibilityReviewClosureNormalizationPaths\n",
+          "start": 247535
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ComponentCloneContractRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ComponentReproducibilityReviewClosureSource(\n",
+          "previous": "\tlet stage = beforeVo1220ComponentReproducibilityReviewClosureSource(\n",
+          "start": 311802
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f86e2956753ac81bc37a3b9b469de4ba1bf2e8cb5c3047aaaa98287cef4bc3e7"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "localValidation": {
+    "releaseAuthorization": {
+      "failed": 0,
+      "passed": 24
+    },
+    "scopedLint": "passed"
+  },
+  "milestone": "vo1220-component-clone-contract-repair-v1",
+  "predecessorCommit": "af17be8e63f792f61d2f48e4e8b4e584d4097620",
+  "refreshedPins": 0,
+  "remainingMismatches": 0,
+  "review": {
+    "comment": 4555997123,
+    "commit": "af17be8e63f792f61d2f48e4e8b4e584d4097620",
+    "pullRequest": 10,
+    "severity": "high"
+  },
+  "rootCause": "The product correctly added --dissociate, but the complete release-authorization suite retained a source-token assertion for the prior --local --no-checkout sequence. The stale assertion stopped the gate before either release build.",
+  "schemaVersion": 1,
+  "scope": "Name the actual storage-lifetime contract and require --local --dissociate --no-checkout in the one current release-gate source assertion; preserve the immutable historical verifier at its original milestone; change no product source, artifact, support observation, proof, package contract, public citation or prior receipt.",
+  "updates": [
+    {
+      "currentSha256": "8f0466056b996af08afc640226132af57f9671a27a9c72ef35f950263b71004b",
+      "edits": [
+        {
+          "current": "test(\"both release gates use storage-safe Git object reuse for their source lifetimes\", async () => {\n",
+          "previous": "test(\"both release gates reuse immutable Git objects without duplicating the repository database\", async () => {\n",
+          "start": 11836
+        },
+        {
+          "current": "  assert.match(sources[1], /args: \\[\"clone\", \"--quiet\", \"--local\", \"--dissociate\", \"--no-checkout\"/u);\n",
+          "previous": "  assert.match(sources[1], /args: \\[\"clone\", \"--quiet\", \"--local\", \"--no-checkout\"/u);\n",
+          "start": 12465
+        }
+      ],
+      "path": "tests/reproducibility-gate.test.mjs",
+      "previousSha256": "9f6212b269e5d439bb8cb52f96bde95ef14bedf28f17cc94bcc4ec73fc4a7dba"
+    }
+  ]
+}
