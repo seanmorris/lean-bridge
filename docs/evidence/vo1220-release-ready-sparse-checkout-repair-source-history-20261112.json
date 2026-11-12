@@ -1,0 +1,118 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-release-ready-sparse-checkout-repair-source-history.mjs",
+      "sha256": "ed09df2093f799d334d3bda406f85aac2d3c88c8d0e69a6fe686cca15f6ac205"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-ready-sparse-checkout-repair-source-history-tests.mjs",
+      "sha256": "324f7299e03c2c614680619af42d579b40555058d2861cecf4d3571e7cac47f9"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-ready-sparse-checkout-repair-source-history.mjs",
+      "sha256": "ba59dc4c2a83b318d090b91ec0d55aa61fd26bd9d9cbf119b3f1aea2a6db0f1d"
+    }
+  ],
+  "checkoutContract": {
+    "action": "actions/checkout@v6",
+    "excludedPath": "docs/evidence/",
+    "filter": "blob:none",
+    "jobs": 2,
+    "sparseCheckoutConeMode": false
+  },
+  "implementationCommit": "096ff1e24aa748087abee7c804a890809dee3597",
+  "integrationCommit": "bcab88efdbf0d769d7419e9b3682c6fc00b311fd",
+  "integrationUpdates": [
+    {
+      "currentSha256": "842074f983cc21336183f6b592e8a0a68969bade3bb5d273cddb69801552d737",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-release-ready-sparse-checkout-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 267
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "3d835568e0a4c76774a9694672acaab6510d05c77f62c25fce992c94940a7e4a"
+    },
+    {
+      "currentSha256": "afbc9898ad44360abb9f2f57d25bb1afbca741cba81b7cee3d97748df92e811b",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ReleaseReadySparseCheckoutRepairSource\n\t, vo1220ReleaseReadySparseCheckoutRepairNormalizationPaths\n} from \"./vo1220-release-ready-sparse-checkout-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ReleaseReadySparseCheckoutRepairNormalizationPaths\n\t, ...vo1220ReleaseGateSparsePartialCheckoutRepairNormalizationPaths\n",
+          "previous": "\t...vo1220ReleaseGateSparsePartialCheckoutRepairNormalizationPaths\n",
+          "start": 248133
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ReleaseReadySparseCheckoutRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ReleaseGateSparsePartialCheckoutRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220ReleaseGateSparsePartialCheckoutRepairSource(\n",
+          "start": 312592
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ab1632978089607fa78b966b7d20c613294b8b650204a8a58547c4ec5efdbd59"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "localValidation": {
+    "checkedJavaScriptTypecheck": "passed",
+    "releaseAuthorization": {
+      "failed": 0,
+      "passed": 25
+    },
+    "scopedLint": "passed"
+  },
+  "milestone": "vo1220-release-ready-sparse-checkout-repair-v1",
+  "predecessorCommit": "a9c3bc662688c06aebfdf52ecc552b670702ae31",
+  "refreshedPins": 0,
+  "remainingMismatches": 0,
+  "rootCause": "The first release job had a storage-safe sparse partial checkout, but the dependent release-ready verifier used a second default checkout. That checkout still materialized the 27,250,476,050-byte retained-evidence current tree before it could verify the already-built artifact, recreating the same hosted-runner disk risk at the final handoff. The earlier workflow assertion matched only the first checkout and therefore could not detect this asymmetric contract.",
+  "schemaVersion": 1,
+  "scope": "Apply the same blob-filtered non-cone docs/evidence exclusion to the release-ready verifier. Replace the single-match workflow assertion with an exact two-checkout inventory and validate every checkout independently. Change no release artifact, verification semantics, runtime, proof, support observation, package contract, public citation, inventory or prior receipt.",
+  "sourceInventory": {
+    "bytes": 27250476050,
+    "evidence": 900,
+    "mismatches": 0,
+    "objects": 20975,
+    "occurrences": 369393,
+    "paths": 123815,
+    "revision": "a9c3bc662688c06aebfdf52ecc552b670702ae31"
+  },
+  "updates": [
+    {
+      "currentSha256": "bbc948fa10b5eb10efe5866315ac413fbfeccc9cfb1350eef775554aecce678e",
+      "edits": [
+        {
+          "current": "          # The verifier consumes the immutable artifact plus current source;\n          # retained evidence is neither an input nor safe to materialize on a\n          # hosted runner.\n          filter: blob:none\n          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 2001
+        }
+      ],
+      "path": ".github/workflows/reproducible-release.yml",
+      "previousSha256": "4aac77ff69f5023909c8ca07fff9033cd43912c4e936ad3d94a1075fdadab616"
+    },
+    {
+      "currentSha256": "8d0b8fec6cd422ddfcf553b7fcd64a8f8390a6dc6e654c49de6f044cd1afa416",
+      "edits": [
+        {
+          "current": "test(\"both release jobs exclude retained evidence before downloading the direct artifact\", async () => {\n",
+          "previous": "test(\"release workflow downloads the direct artifact by its filename\", async () => {\n",
+          "start": 21913
+        },
+        {
+          "current": "  const checkouts = [...workflow.matchAll(\n    /^ {6}- name: (?<name>[^\\n]+)\\n {8}uses: actions\\/checkout@v6\\n {8}with:\\n(?<options>(?: {10}.*\\n)+)/gmu\n  )].map(match => ({ name: match.groups.name, options: match.groups.options }));\n  assert.deepEqual(checkouts.map(checkout => checkout.name), [\n    \"Check out the exact candidate\"\n    , \"Check out authorization verifier\"\n  ]);\n  assert.match(checkouts[0].options, /fetch-depth: 0\\n/u);\n  for(const checkout of checkouts)\n  {\n    assert.match(checkout.options, /filter: blob:none\\n/u, checkout.name);\n    assert.match(checkout.options,\n      /sparse-checkout: \\|\\n\\s+\\/\\*\\n\\s+!\\/docs\\/evidence\\/\\n\\s+sparse-checkout-cone-mode: false\\n/u,\n      checkout.name);\n    assert.match(checkout.options, /persist-credentials: false\\n/u, checkout.name);\n  }\n",
+          "previous": "  assert.match(workflow, /fetch-depth: 0\\n\\s+#(?:.|\\n)*?filter: blob:none\\n\\s+sparse-checkout: \\|\\n\\s+\\/\\*\\n\\s+!\\/docs\\/evidence\\/\\n\\s+sparse-checkout-cone-mode: false\\n/u);\n",
+          "start": 22107
+        }
+      ],
+      "path": "tests/reproducibility-gate.test.mjs",
+      "previousSha256": "37af23bf4d484b3c2d5e767e3dedb277a378a535dd9fad15dea07ef53df89eda"
+    }
+  ]
+}
