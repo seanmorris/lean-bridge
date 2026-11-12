@@ -5,6 +5,7 @@
  */
 import "./helpers/vo1220-release-docker-git-mount-source-history-tests.mjs";
 import "./helpers/vo1220-component-reproducibility-review-closure-source-history-tests.mjs";
+import "./helpers/vo1220-release-gate-partial-clone-repair-source-history-tests.mjs";
 import "./helpers/vo1220-component-clone-contract-repair-source-history-tests.mjs";
 import "./helpers/vo1220-release-docker-log-bound-source-history-tests.mjs";
 import "./helpers/vo1220-release-gate-site-pin-source-history-tests.mjs";

@@ -1,0 +1,111 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-release-gate-partial-clone-repair-source-history.mjs",
+      "sha256": "fd5b8a3a22ccf0f2b5974eb50f561e591f3e32df156a7db895be5c5f9a35eec5"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-gate-partial-clone-repair-source-history-tests.mjs",
+      "sha256": "e26b98f48c3ef11bc895f229f871b046992c4a14d2526e3afa6c41e361d24252"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-gate-partial-clone-repair-source-history.mjs",
+      "sha256": "c46b99e885f9e175ddf5af578c630a2593de3f9dccafc97787ad446f275e0c06"
+    }
+  ],
+  "hostedFailure": {
+    "candidate": "2c9ab2d96f103ab5b807b745167f13602b3949aa",
+    "code": "build-command-failed",
+    "conclusion": "failure",
+    "diagnostic": "resource exhausted (error code: 28, no space left on device)",
+    "job": 131474757891,
+    "run": 43301840437,
+    "step": 6
+  },
+  "implementationCommit": "d9f2199a67ac9bcfc7c028b1c66a101259eb812d",
+  "integrationCommit": "c5c5114bad25f7295054c007f31d38efbd646984",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c80deb189474e71057bb286c321fa46f447595be5eabc76f101e1a712505d736",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-release-gate-partial-clone-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 267
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "0205ef3a207a9243cbba375477b5d996015da20b49895a19686397fc230fe770"
+    },
+    {
+      "currentSha256": "08fc9e959680d21cf3763473da3317d55acfd15f76798c83ca99108394903985",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ReleaseGatePartialCloneRepairSource\n\t, vo1220ReleaseGatePartialCloneRepairNormalizationPaths\n} from \"./vo1220-release-gate-partial-clone-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ReleaseGatePartialCloneRepairNormalizationPaths\n\t, ...vo1220ComponentCloneContractRepairNormalizationPaths\n",
+          "previous": "\t...vo1220ComponentCloneContractRepairNormalizationPaths\n",
+          "start": 247722
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ReleaseGatePartialCloneRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ComponentCloneContractRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220ComponentCloneContractRepairSource(\n",
+          "start": 312049
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "37d16b945150adea6273781711a793487d695d99e5579d2a02e8ee42d3649106"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "localValidation": {
+    "checkedJavaScriptTypecheck": "passed",
+    "releaseAuthorization": {
+      "failed": 0,
+      "passed": 25
+    },
+    "scopedLint": "passed"
+  },
+  "milestone": "vo1220-release-gate-partial-clone-repair-v1",
+  "predecessorCommit": "2c9ab2d96f103ab5b807b745167f13602b3949aa",
+  "refreshedPins": 0,
+  "remainingMismatches": 0,
+  "rootCause": "The release workflow fetched the complete repository history without a partial-clone filter. The local exact-candidate object database contains a 25.25 GiB historical pack, so the hosted checkout consumed the disk headroom needed to build the native Lean core in Nix. The build stopped at Init.Notation with ENOSPC before producing either release candidate.",
+  "schemaVersion": 1,
+  "scope": "Keep fetch-depth zero and the non-shallow complete commit graph, but use blob:none so historical payloads stay promised unless the exact release tree addresses them. Prove that a blob-filtered non-shallow clone whose origin is unavailable can still prepare both independent source trees. Change no release artifact, runtime, proof, support observation, package contract, public citation or prior receipt.",
+  "updates": [
+    {
+      "currentSha256": "2a12852d3c6d76f49edceff4ae0a9e0e0f7fc45ef0675240026fdcd618819f10",
+      "edits": [
+        {
+          "current": "          # The gate needs the complete commit graph, but historical release\n          # evidence blobs would consume most of a hosted runner before Nix\n          # starts. Materialize the current tree and fetch older blobs only if\n          # an exact build actually addresses them.\n          filter: blob:none\n",
+          "previous": "",
+          "start": 323
+        }
+      ],
+      "path": ".github/workflows/reproducible-release.yml",
+      "previousSha256": "4b2d4691bf43798979ea6577d896ce3bf603d9596cfccd2573ffdebc5a0422c7"
+    },
+    {
+      "currentSha256": "e0aa94d5a595d99fe8f6679cc71e6655b691d5dda2bcd63ede82365b495df97a",
+      "edits": [
+        {
+          "current": "test(\"source preparation accepts a blob-filtered complete commit graph\", async () => {\n  const root = await mkdtemp(join(tmpdir(), \"lean-bridge-filtered-source-\"));\n  const origin = join(root, \"origin\");\n  const repository = join(root, \"repository\");\n  const scratch = join(root, \"scratch\");\n  try\n  {\n    await mkdir(origin);\n    await execute(\"git\", [\"init\", \"--quiet\"], { cwd: origin });\n    await execute(\"git\", [\"config\", \"user.name\", \"Lean Bridge\"], { cwd: origin });\n    await execute(\"git\", [\"config\", \"user.email\", \"bridge@example.invalid\"], { cwd: origin });\n    await execute(\"git\", [\"config\", \"uploadpack.allowFilter\", \"true\"], { cwd: origin });\n    await Promise.all([\n      writeFile(join(origin, \"flake.lock\"), \"{}\\n\")\n      , writeFile(join(origin, \"historical.txt\"), \"historic-only\\n\")\n    ]);\n    await execute(\"git\", [\"add\", \".\"], { cwd: origin });\n    await execute(\"git\", [\"commit\", \"--quiet\", \"-m\", \"history\"], { cwd: origin });\n    const historicalBlob = (await execute(\"git\", [\"rev-parse\", \"HEAD:historical.txt\"], { cwd: origin })).stdout.trim();\n    await execute(\"git\", [\"rm\", \"--quiet\", \"historical.txt\"], { cwd: origin });\n    await writeFile(join(origin, \"Main.lean\"), \"def answer := 42\\n\");\n    await execute(\"git\", [\"add\", \".\"], { cwd: origin });\n    await execute(\"git\", [\"commit\", \"--quiet\", \"-m\", \"current\"], { cwd: origin });\n    await execute(\"git\", [\"clone\", \"--quiet\", \"--filter=blob:none\", `file://${origin}`, repository]);\n    assert.equal((await execute(\"git\", [\"rev-parse\", \"--is-shallow-repository\"], { cwd: repository })).stdout.trim(), \"false\");\n    await assert.rejects(execute(\"git\", [\"cat-file\", \"-e\", historicalBlob], {\n      cwd: repository\n      , env: { ...process.env, GIT_NO_LAZY_FETCH: \"1\" }\n    }));\n    await rm(origin, { recursive: true, force: true });\n    await mkdir(scratch);\n    const prepared = await prepareCleanGitSources({\n      projectRoot: repository\n      , scratchRoot: scratch\n    });\n    assert.equal(prepared.roots.length, 2);\n    assert.equal((await execute(\"git\", [\"status\", \"--porcelain\"], { cwd: prepared.roots[0] })).stdout, \"\");\n  } finally\n  {\n    await rm(root, { recursive: true, force: true });\n  }\n});\n\n",
+          "previous": "",
+          "start": 11836
+        },
+        {
+          "current": "  assert.match(workflow, /fetch-depth: 0\\n\\s+#(?:.|\\n)*?filter: blob:none\\n/u);\n",
+          "previous": "",
+          "start": 21564
+        }
+      ],
+      "path": "tests/reproducibility-gate.test.mjs",
+      "previousSha256": "8f0466056b996af08afc640226132af57f9671a27a9c72ef35f950263b71004b"
+    }
+  ]
+}
