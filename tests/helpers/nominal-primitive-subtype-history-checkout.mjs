@@ -6,13 +6,36 @@
  */
 import assert from "node:assert/strict";
 
+export const nominalPrimitiveSubtypeHistoryEvidencePaths = Object.freeze([
+	"docs/evidence/ci-contract-repair-source-history-20261017.json"
+	, "docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json"
+	, "docs/evidence/optional-parameter-focused-ci-source-history-20261029.json"
+	, "docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json"
+	, "docs/evidence/optional-parameter-source-history-20261028.json"
+	, "docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json"
+	, "docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json"
+	, "docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json"
+	, "docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json"
+	, "docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json"
+	, "docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json"
+	, "docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json"
+	, "docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json"
+	, "docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json"
+	, "docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json"
+	, "docs/evidence/core-exact-head-replay-repair-source-history-20261027.json"
+	, "docs/evidence/recurring-acceptance-documentation-source-history-20261027.json"
+	, "docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json"
+	, "docs/evidence/core-exact-head-validation-repair-source-history-20261027.json"
+	, "docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json"
+]);
+
 export const nominalPrimitiveSubtypeHistoryCheckout
 	= "        uses: actions/checkout@v6\n"
 	+ "        with:\n"
 	+ "          fetch-depth: 0\n"
 	+ "          persist-credentials: false\n"
 	+ "          # Retain every producer commit while materializing live source, the\n"
-	+ "          # authenticated transition record, and two immutable acceptance archives.\n"
+	+ "          # authenticated transition records, and two immutable acceptance archives.\n"
 	+ "          sparse-checkout: |\n"
 	+ "            /*\n"
 	+ "            !/*/\n"
@@ -36,7 +59,8 @@ export const nominalPrimitiveSubtypeHistoryCheckout
 	+ "            /docs/consumer-support.v1.json\n"
 	+ "            /docs/evidence/\n"
 	+ "            !/docs/evidence/*\n"
-	+ "            /docs/evidence/ci-contract-repair-source-history-20261017.json\n"
+	+ nominalPrimitiveSubtypeHistoryEvidencePaths.map(path =>
+		`            /${path}\n`).join("")
 	+ "            /docs/evidence/nominal-primitive-subtype-python-20261014/\n"
 	+ "            /docs/evidence/nominal-primitive-subtype-npm-20261014/\n"
 	+ "          sparse-checkout-cone-mode: false\n";

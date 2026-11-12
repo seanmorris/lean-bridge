@@ -7,12 +7,17 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
 	assertNominalPrimitiveSubtypeHistoryCheckout
+	, nominalPrimitiveSubtypeHistoryEvidencePaths
 	, nominalPrimitiveSubtypeHistoryCheckout
 } from "./nominal-primitive-subtype-history-checkout.mjs";
 
 test("primitive-base acceptance retains history through one bounded sparse checkout", () => {
 	assertNominalPrimitiveSubtypeHistoryCheckout(
 		nominalPrimitiveSubtypeHistoryCheckout);
+	assert.equal(nominalPrimitiveSubtypeHistoryEvidencePaths.length, 20);
+	for(const path of nominalPrimitiveSubtypeHistoryEvidencePaths)
+		assert.ok(nominalPrimitiveSubtypeHistoryCheckout
+			.includes(`            /${path}\n`), path);
 });
 
 test("primitive-base sparse checkout rejects narrowed history and broadened evidence", async t => {
@@ -22,6 +27,8 @@ test("primitive-base sparse checkout rejects narrowed history and broadened evid
 		, ["sparse-checkout-cone-mode: false", "sparse-checkout-cone-mode: true"]
 		, ["/docs/evidence/nominal-primitive-subtype-python-20261014/\n", ""]
 		, ["/docs/evidence/nominal-primitive-subtype-npm-20261014/\n", ""]
+		, ...nominalPrimitiveSubtypeHistoryEvidencePaths.map(path =>
+			[`/${path}\n`, ""])
 		, ["            !/docs/evidence/*\n", ""]
 		, ["          sparse-checkout: |\n", "          filter: blob:none\n          sparse-checkout: |\n"]
 	];
