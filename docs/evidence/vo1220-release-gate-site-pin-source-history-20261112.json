@@ -1,0 +1,97 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-release-gate-site-pin-source-history.mjs",
+      "sha256": "9a696e232616679f53c186179dc037f3158e5f0ccf7b108e86fa5fa11174facd"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-gate-site-pin-source-history-tests.mjs",
+      "sha256": "91d338daea66383abea1e135ecd74fbd4f32351f9f17da9058926aac79765522"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-gate-site-pin-source-history.mjs",
+      "sha256": "978ad168251e66bb004cd8c3c2fa1f2aa2ee6d902b3f1b60733fef8858bab309"
+    }
+  ],
+  "failedRun": {
+    "failure": "three stale public citations for site/workflows.test.mjs",
+    "job": 131407246879,
+    "workflow": 43282516514
+  },
+  "implementationCommit": "1e56c203f7b25d8ccf3a17f164faa942382dd000",
+  "integrationCommit": "b88c8bff8a030f8cff2dfd6fc3f53113734b6fa5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c3d3aac6b105e714705e5bd6c812e0fe0cbabc2c4f8aad3974ffada2cfb52c68",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-release-gate-site-pin-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "a439a45963d09b6f128550185ca32535503a5108a8da4a04f7e54605fb61eccc"
+    },
+    {
+      "currentSha256": "25e6038a5bac2180f4e54978322e0baa8ba7a1bc42a704738049ff3242706474",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ReleaseGateSitePinSource\n\t, vo1220ReleaseGateSitePinNormalizationPaths\n} from \"./vo1220-release-gate-site-pin-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ReleaseGateSitePinNormalizationPaths\n\t, ...vo1220ReleaseGateStorageRepairNormalizationPaths\n",
+          "previous": "\t...vo1220ReleaseGateStorageRepairNormalizationPaths\n",
+          "start": 246818
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ReleaseGateSitePinSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ReleaseGateStorageRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220ReleaseGateStorageRepairSource(\n",
+          "start": 310854
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "efedb5eadd91d07b28fbdf86c9c6cf9d5e27494fdc421e706c25cc03cac3ca51"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "milestone": "vo1220-release-gate-site-pin-v1",
+  "predecessorCommit": "029b27ff5b10a440595601a36fd3648dd0807732",
+  "refreshedPins": 3,
+  "remainingMismatches": 0,
+  "rootCause": "The repaired site assertion was authenticated, but its three public type-surface citations still named the predecessor digest. Full-checkout site generation therefore refused stale source evidence before executing the corrected assertion.",
+  "schemaVersion": 1,
+  "scope": "Advance exactly three citations for site/workflows.test.mjs, audit every current live-source citation in one pass, and preserve all support profiles, observations, exact-model cells, runtime behavior, proofs, packages and immutable prior receipts.",
+  "siteSource": {
+    "currentSha256": "9a956e1ae139d30a8456c11c6775f001c1b3cdf5ed1d75a3b440b019b5e0c167",
+    "path": "site/workflows.test.mjs",
+    "previousSha256": "7202a6992a392f38471b2a9815c47149a40e2adea0b0982756e83fce0dcbb208"
+  },
+  "updates": [
+    {
+      "currentSha256": "783a8bc2619eae28fcd9dfb8fe4f5182f7995a2eeb75fa8e85f2c375df07a912",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"9a956e1ae139d30a8456c11c6775f001c1b3cdf5ed1d75a3b440b019b5e0c167\"\n",
+          "previous": "          \"sha256\": \"7202a6992a392f38471b2a9815c47149a40e2adea0b0982756e83fce0dcbb208\"\n",
+          "start": 1081037
+        },
+        {
+          "current": "          \"sha256\": \"9a956e1ae139d30a8456c11c6775f001c1b3cdf5ed1d75a3b440b019b5e0c167\"\n",
+          "previous": "          \"sha256\": \"7202a6992a392f38471b2a9815c47149a40e2adea0b0982756e83fce0dcbb208\"\n",
+          "start": 1094747
+        },
+        {
+          "current": "          \"sha256\": \"9a956e1ae139d30a8456c11c6775f001c1b3cdf5ed1d75a3b440b019b5e0c167\"\n",
+          "previous": "          \"sha256\": \"7202a6992a392f38471b2a9815c47149a40e2adea0b0982756e83fce0dcbb208\"\n",
+          "start": 1419187
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "034097ebed4648ae58dc7c4abb1d825ed750c77b595fa47cee964b2d084d360d"
+    }
+  ]
+}
