@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+/**
+ * Refresh only the current-source citation changed by the demo site's explicit
+ * retained-contract scope.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { readFile, writeFile } from "node:fs/promises";
+import { sha256 } from "../src/capsule/node.mjs";
+import {
+	dependentCheckedRecordPromotionCurrentSourcePaths
+	, reconcileDependentCheckedRecordSourcePins
+} from "../tests/helpers/dependent-checked-record-promotion.mjs";
+
+const inventoryPath = "docs/type-surface.v1.json";
+const currentSourcePaths = Object.freeze([
+	"src/adoption/type-surface.mjs"
+]);
+assert.deepEqual(process.argv.slice(2), []
+	, "Usage: refresh-vo1220-demo-site-contract-scope-repair-pins.mjs");
+const inventory = JSON.parse(await readFile(inventoryPath, "utf8"));
+assert.deepEqual(dependentCheckedRecordPromotionCurrentSourcePaths(
+	inventory, currentSourcePaths), [...currentSourcePaths]);
+const digests = new Map();
+for(const path of currentSourcePaths)
+	digests.set(path, sha256(await readFile(path)));
+const reconciled = reconcileDependentCheckedRecordSourcePins(
+	inventory, digests);
+assert.equal(reconciled.refreshed, 1);
+assert.deepEqual(reconciled.inventory.profiles, inventory.profiles);
+assert.deepEqual(reconciled.inventory.shapes, inventory.shapes);
+assert.deepEqual(reconciled.inventory.families, inventory.families);
+assert.deepEqual(reconciled.inventory.observations, inventory.observations);
+assert.deepEqual(reconciled.inventory.stages, inventory.stages);
+assert.deepEqual(reconciled.inventory.evidence.map(item => item.id)
+	, inventory.evidence.map(item => item.id));
+await writeFile(inventoryPath
+	, `${JSON.stringify(reconciled.inventory, null, 2)}\n`);
+process.stdout.write("Refreshed one live citation across one current source path.\n");

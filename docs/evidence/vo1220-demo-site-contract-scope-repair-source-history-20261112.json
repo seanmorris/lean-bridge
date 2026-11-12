@@ -1,0 +1,223 @@
+{
+  "additions": [
+    {
+      "path": "scripts/refresh-vo1220-demo-site-contract-scope-repair-pins.mjs",
+      "sha256": "d0c413b8dfdeb4626406464dfea36268ad83dd641cefdd774c547598e8317167"
+    },
+    {
+      "path": "scripts/update-vo1220-demo-site-contract-scope-repair-source-history.mjs",
+      "sha256": "84e14ad48d7bfd1e09eeed7d6565a5a251009084a747c278086fda7eaa6b906e"
+    },
+    {
+      "path": "tests/helpers/vo1220-demo-site-contract-scope-repair-source-history-tests.mjs",
+      "sha256": "12dec41abefe7d73e8433a8024016cfa2fb3fefbef073b4c84bbcd3d941e84c2"
+    },
+    {
+      "path": "tests/helpers/vo1220-demo-site-contract-scope-repair-source-history.mjs",
+      "sha256": "da3b2012a4ba963eede8730dd2f3370290aa3900021d5cb23dc0aa6c531cd697"
+    }
+  ],
+  "checkoutContract": {
+    "action": "actions/checkout@v6",
+    "evidenceAuthority": [
+      "Core quality contract",
+      "Downstream consumer contract"
+    ],
+    "fetchDepth": 1,
+    "filter": "blob:none",
+    "manifestAuthority": ".github/workflows/demos-pages.yml",
+    "retainedContracts": "deferred",
+    "sparseCheckoutConeMode": false
+  },
+  "implementationCommit": "a2a897528b1a4b53748a3961e6790d34e963b760",
+  "integrationCommit": "bc0d3b31668d2bb0b28a12d4bcae91bd841f40f1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3203c49f161c7becbc6f31e28972c7b45df45f70e4ee9b2fe65f184aee59597b",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"a6063dde049bfee7a8caa876799d5b0c3405d29de5447d26bc3069a13812a13f\"\n",
+          "previous": "          \"sha256\": \"223c98c76ef33de1dff2dd222c32d8580d4f85eb48e60b4d1fadefcd3738f34e\"\n",
+          "start": 826179
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "0d29c661d48ef35f1c3607eeae45c310408bf726c369c4766ce88959e4b1e11d"
+    },
+    {
+      "currentSha256": "7b6d037fb083b33f2cf8e5aa7516d871828b13f429b7336b37213ee9dcd95019",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-demo-site-contract-scope-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 267
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "3e3a604cc617b493a8350c155d932d61151b02b99bcda409b905f7dafaf2afd6"
+    },
+    {
+      "currentSha256": "f3154e564f9928101569ae0b1e142ae0d03f2bba6aa9bc920f3415616886228c",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220DemoSiteContractScopeRepairSource\n\t, vo1220DemoSiteContractScopeRepairNormalizationPaths\n} from \"./vo1220-demo-site-contract-scope-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220DemoSiteContractScopeRepairNormalizationPaths\n\t, ...vo1220DemoDocumentationBoundaryRepairNormalizationPaths\n",
+          "previous": "\t...vo1220DemoDocumentationBoundaryRepairNormalizationPaths\n",
+          "start": 248506
+        },
+        {
+          "current": "\tlet stage = beforeVo1220DemoSiteContractScopeRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220DemoDocumentationBoundaryRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220DemoDocumentationBoundaryRepairSource(\n",
+          "start": 313085
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1ec107bd1985397fdebe3ce816bfd6072f99be34fe166f4e7cd2c5c4a667bdf4"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "localValidation": {
+    "checkedJavaScriptTypecheck": "passed",
+    "demoDocumentation": {
+      "failed": 0,
+      "passed": 78,
+      "skipped": 3
+    },
+    "modelAuthoritySeparation": {
+      "failed": 0,
+      "passed": 1
+    },
+    "scopedLint": "passed",
+    "siteTests": {
+      "failed": 0,
+      "passed": 112,
+      "skipped": 0
+    },
+    "siteTypecheck": "passed"
+  },
+  "milestone": "vo1220-demo-site-contract-scope-repair-v1",
+  "predecessorCommit": "40157412e4e77f74e84ee7b142385c1fa23a752b",
+  "refreshedPins": 1,
+  "refreshedSourcePaths": [
+    "src/adoption/type-surface.mjs"
+  ],
+  "remainingMismatches": 0,
+  "rootCause": "The bounded demo checkout correctly retained the current documentation model and its small receipt closure, but site generation still invoked the authoritative type-surface reader. That reader realpathed and hashed every retained evidence file, including omitted binary payloads, so the presentation lane failed before rendering even though its separately owned current-documentation contract was complete.",
+  "schemaVersion": 1,
+  "scope": "Split structural model validation from retained evidence-byte authority. Require an explicit deferred scope in the demo site step, validate the three governing type-surface documents, and pass that validated inventory into reference generation. Preserve required as the default, keep the authoritative reader strict, reject unknown scopes, and prove that an isolated sparse model succeeds while the full reader rejects its missing evidence. Change no support cell, observation, runtime, proof, package API, documentation content or retained evidence identity.",
+  "sourceInventory": {
+    "batches": 240,
+    "bytes": 27250476635,
+    "conflicts": 0,
+    "evidence": 900,
+    "mismatches": 0,
+    "missing": 0,
+    "objects": 20975,
+    "occurrences": 369393,
+    "paths": 123815,
+    "revision": "40157412e4e77f74e84ee7b142385c1fa23a752b",
+    "sha256": "0d29c661d48ef35f1c3607eeae45c310408bf726c369c4766ce88959e4b1e11d"
+  },
+  "updates": [
+    {
+      "currentSha256": "f973c7876316bb1ef8c6d14466b3c6fdc9b38669869eb342bd8b88d9843e73fe",
+      "edits": [
+        {
+          "current": "        env:\n          LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n",
+          "previous": "",
+          "start": 2563
+        }
+      ],
+      "path": ".github/workflows/demos-pages.yml",
+      "previousSha256": "1f7fb5fec13030899747caa0c0873d6f3423a85504d5d6d0512b958ca46f1abb"
+    },
+    {
+      "currentSha256": "2fc124986365b0fdef2b1ff2c6b0b821aa8c720310043387e6f71f1fb6d8848a",
+      "edits": [
+        {
+          "current": "import { readTypeSurfaceContract } from '../src/adoption/type-surface.mjs';\n",
+          "previous": "",
+          "start": 613
+        },
+        {
+          "current": " * @param options.inventory - Explicit already validated type-surface inventory.\n * @param options.retainedContracts - Whether retained evidence is required or deferred.\n",
+          "previous": "",
+          "start": 12124
+        },
+        {
+          "current": "\tconst retainedContracts = options.retainedContracts\n\t\t?? process.env.LEAN_BRIDGE_RETAINED_CONTRACTS ?? 'required';\n\tif(!['required', 'deferred'].includes(retainedContracts))\n\t{\n\t\tthrow new Error('LEAN_BRIDGE_RETAINED_CONTRACTS must be one of: required, deferred');\n\t}\n\tconst inventory = options.inventory ?? (retainedContracts === 'deferred'\n\t\t? await readTypeSurfaceContract({ repository: root }) : null);\n\tawait generateReferenceDocs({ root, inventory });\n",
+          "previous": "\tawait generateReferenceDocs({ root });\n",
+          "start": 12402
+        }
+      ],
+      "path": "scripts/generate-site-content.mjs",
+      "previousSha256": "cbdaa6641e1f198c07f80d8f547bf0ace78a8c73940859534763470aa95957b2"
+    },
+    {
+      "currentSha256": "11e1b6bc78eec6200f67a1644ce566794ad89f200f22023698f74afeda0d3bac",
+      "edits": [
+        {
+          "current": "import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';\n",
+          "previous": "import { mkdir, mkdtemp, readFile, readdir, rm } from 'node:fs/promises';\n",
+          "start": 192
+        },
+        {
+          "current": "import {\n\treadTypeSurface, readTypeSurfaceContract\n} from '../src/adoption/type-surface.mjs';\n",
+          "previous": "",
+          "start": 951
+        },
+        {
+          "current": "test('sparse site input validates the model without claiming retained evidence', async () => {\n\tconst isolated = await mkdtemp(path.join(root, 'build/site-inventory-test-'));\n\ttry\n\t{\n\t\tfor(const relative of [\n\t\t\t'docs/type-surface.v1.json', 'schema/binding-ir.schema.json'\n\t\t\t, 'docs/consumer-support.v1.json'\n\t\t]) {\n\t\t\tconst destination = path.join(isolated, relative);\n\t\t\tawait mkdir(path.dirname(destination), { recursive: true });\n\t\t\tawait writeFile(destination, await readFile(path.join(root, relative)));\n\t\t}\n\t\tconst inventory = await readTypeSurfaceContract({\n\t\t\trepository: isolated\n\t\t});\n\t\tassert.ok(inventory.document.evidence.length > 0);\n\t\tawait assert.rejects(readTypeSurface({ repository: isolated }), /ENOENT/u);\n\t}\n\tfinally\n\t{\n\t\tawait rm(isolated, { recursive: true, force: true });\n\t}\n});\n\n",
+          "previous": "",
+          "start": 9462
+        },
+        {
+          "current": "\t\tconst result = await generateSiteContent({\n\t\t\toutput, retainedContracts: 'deferred'\n\t\t});\n",
+          "previous": "\t\tconst result = await generateSiteContent({ output });\n",
+          "start": 10514
+        }
+      ],
+      "path": "site/content.test.mjs",
+      "previousSha256": "85e0a29cb5e6d0e44e0b77b60b979a7575080a6174b6dd9f090e5471a4c57ea3"
+    },
+    {
+      "currentSha256": "a6063dde049bfee7a8caa876799d5b0c3405d29de5447d26bc3069a13812a13f",
+      "edits": [
+        {
+          "current": "/**\n * Parse and structurally validate the three governing inventory documents.\n * Evidence-byte authority remains the responsibility of readTypeSurface.\n *\n * @param repository - Root containing the three governing documents.\n */\nconst readTypeSurfaceInputs = async repository => {\n\tconst sources = Object.fromEntries(await Promise.all(\n\t\ttypeSurfaceEvidenceSourcePaths.map(async relative => [\n\t\t\trelative, await readFile(path.join(repository, relative))\n\t\t])\n\t));\n\tconst [document, irSchema, consumers] = typeSurfaceEvidenceSourcePaths\n\t\t.map(relative => JSON.parse(sources[relative].toString(\"utf8\")));\n\tvalidateTypeSurface(document, { irSchema, consumers });\n\treturn { inventory: { document, irSchema, consumers }, sources };\n};\n\n/**\n * Load and validate the governing type-surface model without claiming that its\n * retained evidence bytes are present. Sparse presentation lanes use this\n * contract only after explicitly deferring evidence authority to Core.\n *\n * @param options - Source location for repository or isolated validation.\n * @param options.repository - Root containing the inventory and contracts.\n */\nexport async function readTypeSurfaceContract(options = {})\n{\n\tconst repository = path.resolve(options.repository ?? root);\n\treturn (await readTypeSurfaceInputs(repository)).inventory;\n}\n\n",
+          "previous": "",
+          "start": 11428
+        },
+        {
+          "current": "\tconst { inventory, sources } = await readTypeSurfaceInputs(repository);\n\tconst { document, irSchema, consumers } = inventory;\n",
+          "previous": "\tconst sources = Object.fromEntries(await Promise.all(\n\t\ttypeSurfaceEvidenceSourcePaths.map(async relative => [\n\t\t\trelative, await readFile(path.join(repository, relative))\n\t\t])\n\t));\n\tconst [document, irSchema, consumers] = typeSurfaceEvidenceSourcePaths\n\t\t.map(relative => JSON.parse(sources[relative].toString(\"utf8\")));\n\tvalidateTypeSurface(document, { irSchema, consumers });\n",
+          "start": 13334
+        },
+        {
+          "current": "\treturn inventory;\n",
+          "previous": "\treturn { document, irSchema, consumers };\n",
+          "start": 15043
+        }
+      ],
+      "path": "src/adoption/type-surface.mjs",
+      "previousSha256": "223c98c76ef33de1dff2dd222c32d8580d4f85eb48e60b4d1fadefcd3738f34e"
+    },
+    {
+      "currentSha256": "3930d5d0333c85c2202e717ea76d0be49de18c0854fef1a32772a98e22cb62c4",
+      "edits": [
+        {
+          "current": "\tassert.match(demos\n\t\t, /Check the React site and canonical documentation\\n {8}env:\\n {10}LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\\n {8}run: npm run site:typecheck && npm run site:test/u);\n",
+          "previous": "",
+          "start": 1514
+        }
+      ],
+      "path": "tests/documentation-demo-api.test.mjs",
+      "previousSha256": "ea6ba48f00a73608dcd1f7c7f87ec6b74031373a5b6f30281a6b85380fde8a8d"
+    }
+  ]
+}
