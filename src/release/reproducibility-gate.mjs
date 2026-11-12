@@ -63,6 +63,26 @@ export class ReproducibilityGateError extends Error
 	}
 }
 
+/**
+ * Retains only bounded process diagnostics when a gate wraps an external-command failure.
+ *
+ * @param error - Error raised by the canonical process runner.
+ */
+export const boundedCommandFailureDetails = error => {
+	const details = error?.details;
+	if(details === null || typeof details !== "object"
+		|| typeof details.command !== "string") return null;
+	return Object.freeze({
+		command: details.command.slice(0, 1024)
+		, args: Object.freeze((Array.isArray(details.args) ? details.args : [])
+			.slice(0, 100).map(value => String(value).slice(0, 1024)))
+		, exitCode: Number.isSafeInteger(details.exitCode) ? details.exitCode : null
+		, signal: typeof details.signal === "string" ? details.signal.slice(0, 128) : null
+		, stderr: typeof details.stderr === "string" ? details.stderr.slice(-8000) : ""
+		, stdout: typeof details.stdout === "string" ? details.stdout.slice(-8000) : ""
+	});
+};
+
 const fail = (code, message, options) => {
 	throw new ReproducibilityGateError(code, message, options);
 };
@@ -161,6 +181,17 @@ export const prepareCleanGitSources = async ({ projectRoot, scratchRoot, runner 
 	]);
 	const revision = revisionResult.stdout.trim();
 	const tree = treeResult.stdout.trim();
+	const shallow = (await capture(runner, {
+		command: "git"
+		, args: ["-C", project, "rev-parse", "--is-shallow-repository"]
+		, cwd: project
+	})).stdout.trim();
+	if(shallow === "true")
+	{
+		fail("shallow-source-repository", "The reproducibility gate requires complete committed history to share Git objects between clean builds", {
+			hint: "Fetch the complete repository history, then run the gate again."
+		});
+	}
 	let repositoryIdentity = portable(repositoryRoot);
 	try
 	{
@@ -179,7 +210,12 @@ export const prepareCleanGitSources = async ({ projectRoot, scratchRoot, runner 
 		const cloneRoot = join(scratchRoot, `source-${name}`);
 		await capture(runner, {
 			command: "git"
-			, args: ["clone", "--quiet", "--no-local", "--no-hardlinks", "--no-checkout", repositoryRoot, cloneRoot]
+			, args: ["clone", "--quiet", "--shared", "--no-checkout", repositoryRoot, cloneRoot]
+			, cwd: scratchRoot
+		});
+		await capture(runner, {
+			command: "git"
+			, args: ["-C", cloneRoot, "sparse-checkout", "set", "--no-cone", "/*", "!/docs/evidence/"]
 			, cwd: scratchRoot
 		});
 		await capture(runner, {
@@ -667,7 +703,12 @@ export const runReproducibilityGate = async ({
 		await rename(staging, output);
 		throw new ReproducibilityGateError(error.code ?? "reproducibility-gate-failed", error.message ?? String(error), {
 			hint: error.hint ?? null
-			, details: { output, report: join(output, "evidence", "reproducibility.json"), reportSha256: evidence.reportSha256 }
+			, details: {
+				output
+				, report: join(output, "evidence", "reproducibility.json")
+				, reportSha256: evidence.reportSha256
+				, cause: boundedCommandFailureDetails(error)
+			}
 		});
 	} finally
 	{

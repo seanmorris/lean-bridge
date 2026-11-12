@@ -40,7 +40,7 @@ test("source intake describes new and existing libraries without widening target
 	assert.match(exports, /`IO`, `Task` and unsupported collection constructors produce diagnostics that retain their elaborated types for inspection\./u);
 	assert.match(exports, /## Native Perl exports/);
 	assert.match(exports, /\[locked Lake dependencies\]\(\.\.\/publish\/cpan\.md#build-with-locked-lake-dependencies\)/);
-	assert.match(exports, /Open generics, dependent signatures, asynchronous operations and retained host callbacks require further work/);
+	assert.match(exports, /Open generics, dependent signatures outside the supported direct earlier-Nat `Fin` parameter form, asynchronous operations and retained host callbacks require further work/);
 	assert.match(exports, /Ordinary \[PHP-Wasm builds\][^\n]+\[recursive callables\]\(\.\.\/publish\/php\.md#export-recursive-callbacks\)/);
 	assert.match(exports, /installed recursive copied-value coverage across all seventeen profiles/);
 	assert.match(exports, /\[recursive callbacks\]\(\.\.\/publish\/wit-wasi\.md#export-recursive-callbacks\)/);

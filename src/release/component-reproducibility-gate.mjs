@@ -32,7 +32,9 @@ import {
 	compareReleaseInventories,
 	hashReleaseInventory,
 } from "./reproducibility.mjs";
-import { ReproducibilityGateError } from "./reproducibility-gate.mjs";
+import {
+	boundedCommandFailureDetails, ReproducibilityGateError
+} from "./reproducibility-gate.mjs";
 
 const installedEngineRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const sha256 = value => createHash("sha256").update(value).digest("hex");
@@ -135,7 +137,7 @@ export const prepareCleanComponentSources = async ({
 		const checkout = join(scratchRoot, `source-${name}`);
 		await capture(runner, {
 			command: "git"
-			, args: ["clone", "--quiet", "--no-local", "--no-hardlinks", "--no-checkout", repositoryRoot, checkout]
+			, args: ["clone", "--quiet", "--local", "--no-checkout", repositoryRoot, checkout]
 			, cwd: scratchRoot
 		});
 		await capture(runner, {
@@ -377,6 +379,7 @@ export const runComponentReproducibilityGate = async ({
 				output
 				, report: join(output, "evidence", "reproducibility.json")
 				, reportSha256: sha256(reportSource)
+				, cause: boundedCommandFailureDetails(error)
 			}
 		});
 	} finally

@@ -198,7 +198,7 @@ test("release inventory comparison reports modes and bounded text diagnostics", 
 }
 });
 
-test("source preparation creates two independent clean clones of one commit", async () => {
+test("source preparation creates two isolated sparse checkouts sharing one complete object store", async () => {
   const root = await mkdtemp(join(tmpdir(), "lean-bridge-clean-source-"));
   const repository = join(root, "repository");
   const scratch = join(root, "scratch");
@@ -208,7 +208,9 @@ test("source preparation creates two independent clean clones of one commit", as
     await Promise.all([
       writeFile(join(repository, "flake.lock"), "{}\n")
       , writeFile(join(repository, "Main.lean"), "def answer := 42\n")
+      , mkdir(join(repository, "docs", "evidence"), { recursive: true })
     ]);
+    await writeFile(join(repository, "docs", "evidence", "retained.json"), "{}\n");
     await execute("git", ["init", "--quiet"], { cwd: repository });
     await execute("git", ["add", "."], { cwd: repository });
     await execute("git", [
@@ -221,6 +223,13 @@ test("source preparation creates two independent clean clones of one commit", as
     assert.notEqual(prepared.roots[0], prepared.roots[1]);
     assert.match(prepared.source.revision, /^[0-9a-f]{40}$/);
     assert.equal((await execute("git", ["status", "--porcelain"], { cwd: prepared.roots[0] })).stdout, "");
+    await assert.rejects(readFile(join(prepared.roots[0], "docs", "evidence", "retained.json")), error => error.code === "ENOENT");
+    for(const source of prepared.roots)
+    {
+      const alternate = (await readFile(join(source, ".git", "objects", "info", "alternates"), "utf8")).trim();
+      assert.notEqual(alternate, "");
+      assert.equal((await execute("git", ["rev-parse", "HEAD"], { cwd: source })).stdout.trim(), prepared.source.revision);
+    }
 
     await writeFile(join(repository, "Main.lean"), "def answer := 43\n");
     await assert.rejects(
@@ -231,6 +240,77 @@ test("source preparation creates two independent clean clones of one commit", as
 {
     await rm(root, { recursive: true, force: true });
 }
+});
+
+test("source preparation rejects a shallow repository before sharing objects", async () => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-shallow-source-"));
+  const origin = join(root, "origin");
+  const repository = join(root, "repository");
+  try
+  {
+    await mkdir(origin);
+    await Promise.all([
+      writeFile(join(origin, "flake.lock"), "{}\n")
+      , writeFile(join(origin, "Main.lean"), "def answer := 42\n")
+    ]);
+    await execute("git", ["init", "--quiet"], { cwd: origin });
+    await execute("git", ["add", "."], { cwd: origin });
+    await execute("git", ["-c", "user.name=Lean Bridge", "-c", "user.email=bridge@example.invalid", "commit", "--quiet", "-m", "fixture"], { cwd: origin });
+    await execute("git", ["clone", "--quiet", "--depth=1", `file://${origin}`, repository]);
+    await assert.rejects(
+      prepareCleanGitSources({ projectRoot: repository, scratchRoot: join(root, "scratch") })
+      , error => error instanceof ReproducibilityGateError && error.code === "shallow-source-repository"
+    );
+  } finally
+  {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("both release gates reuse immutable Git objects without duplicating the repository database", async () => {
+  const sources = await Promise.all([
+    readFile("src/release/reproducibility-gate.mjs", "utf8")
+    , readFile("src/release/component-reproducibility-gate.mjs", "utf8")
+  ]);
+  for(const source of sources) assert.doesNotMatch(source, /--no-local|--no-hardlinks/u);
+  assert.match(sources[0], /args: \["clone", "--quiet", "--shared", "--no-checkout"/u);
+  assert.match(sources[0], /rev-parse", "--is-shallow-repository"/u);
+  assert.match(sources[0], /"sparse-checkout", "set", "--no-cone", "\/\*", "!\/docs\/evidence\/"/u);
+  assert.match(sources[1], /args: \["clone", "--quiet", "--local", "--no-checkout"/u);
+  assert.doesNotMatch(sources[1], /"objects", "info", "alternates"|--is-shallow-repository/u);
+});
+
+test("gate failures preserve bounded source-preparation command diagnostics", async () => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-source-diagnostic-"));
+  const output = join(root, "gate");
+  try
+  {
+    await assert.rejects(runReproducibilityGate({
+      projectRoot: process.cwd()
+      , outputRoot: output
+      , sourcePreparer: async () => {
+        throw new ReproducibilityGateError("build-command-failed", "git exited with status 128", {
+          details: {
+            command: "git"
+            , args: ["clone", "--shared"]
+            , exitCode: 128
+            , signal: null
+            , stderr: "fatal: fixture failure\n"
+            , stdout: ""
+          }
+        });
+      }
+    }), error => {
+      assert.equal(error.code, "build-command-failed");
+      assert.equal(error.details.cause.stderr, "fatal: fixture failure\n");
+      return true;
+    });
+    const report = JSON.parse(await readFile(join(output, "evidence", "reproducibility.json"), "utf8"));
+    assert.deepEqual(Object.keys(report.failure).sort(), ["code", "hint", "message"]);
+  } finally
+  {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 const createCoreFixture = async root => {
