@@ -1,0 +1,693 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-nominal-primitive-subtype-sparse-closure-repair-source-history.mjs",
+      "sha256": "0f2acf86f257f8bd648b247ba00dcb6bd236e4b2ca8f471325f746c79df32182"
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-sparse-closure-repair-source-history-tests.mjs",
+      "sha256": "fb3dafbfffe992ef630babfcdc603d646b470a46082333713a42c8b54c25c0be"
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-sparse-closure-repair-source-history.mjs",
+      "sha256": "f66c7c46e0d35610e12f05ec981eddc3df74c72608d17161063bd935adc33a7b"
+    }
+  ],
+  "currentSourcePins": [
+    {
+      "count": 4,
+      "current": "a3acef67706d7f23d2dc4c1eff5967409a3b42d3daca8ecf78d506c3c2368f17",
+      "path": ".github/workflows/nominal-primitive-subtype-browser.yml",
+      "previous": "695094c6e65d25073135eee15c063eb0e5f98902ea4f0b9582c0bca86af4fa55"
+    },
+    {
+      "count": 4,
+      "current": "7106214278dddf6c2406ac585eae96ab2c9432cb64dc7dc77ab89b1604c42a39",
+      "path": ".github/workflows/nominal-primitive-subtype-dotnet.yml",
+      "previous": "50f527414bfae610608755a316afc12639edb8685c8977b392dc2f5b828b8c48"
+    },
+    {
+      "count": 4,
+      "current": "5036d3ec0bb5ba476f4ed12c47993204d67af8169b4aacf42f5aebe3f25fa56e",
+      "path": ".github/workflows/nominal-primitive-subtype-jvm.yml",
+      "previous": "a2c4375790c654100fb74568d23261af0cca0bc0f3d3bb85b6eb1eecae5f215e"
+    },
+    {
+      "count": 4,
+      "current": "db53b1789a529964718c4f5d84f5344e7879be16d8186cbcf401fb859ffc1106",
+      "path": ".github/workflows/nominal-primitive-subtype-native.yml",
+      "previous": "6ccf8e07ff076abbe0cd49cbb9a3238829161e04c8c9e8135acac695eeb1f72e"
+    },
+    {
+      "count": 4,
+      "current": "e5d6d8b13b469206d08d5e125626a1fa3e61dcfedd20e2f300152330e072abf4",
+      "path": ".github/workflows/nominal-primitive-subtype-npm.yml",
+      "previous": "f64da4ebfa115761579739da2b759f7830024c53794c6895487789d072c25a41"
+    },
+    {
+      "count": 4,
+      "current": "eddd003d26d3cb9ad963823e6af354afca066095c9a6a2bc8db5e4fb7c8bf209",
+      "path": ".github/workflows/nominal-primitive-subtype-perl.yml",
+      "previous": "33329da3f710aa3df88b3ea34b406cb8a122ec5c26efb16df23877f69c08a74a"
+    },
+    {
+      "count": 4,
+      "current": "bbf18fa8c9d2ab56b5f1f4c401b65edf442981f250020a4ce648fb2ad0f04512",
+      "path": ".github/workflows/nominal-primitive-subtype-php-wasm.yml",
+      "previous": "c3d5c8441f74122ec3a8186325a80be2a5dd9d5c79bc920cb70e314471528d3d"
+    },
+    {
+      "count": 4,
+      "current": "6cbe838d2542070979639ee92424d8b35b5ee160545520d2a10c041b3da52ed2",
+      "path": ".github/workflows/nominal-primitive-subtype-php.yml",
+      "previous": "0abf95ba0c61532aeba3dc9169dcd30386822efe4fb645528bbf9ebf4d878f79"
+    },
+    {
+      "count": 4,
+      "current": "136fb2a5515afd42543ed653c828b6b9a2be321ab76e1bcc7543979e525b8a50",
+      "path": ".github/workflows/nominal-primitive-subtype-python.yml",
+      "previous": "d8743398a6e34539c498bc15e04cc78e6f51c5db78c03c1c8746e3cea6a1dab8"
+    },
+    {
+      "count": 4,
+      "current": "60c6b0a7496daa0a9357a9c2bbaaa45e1f527b435ba78037dd798e6633f026a5",
+      "path": ".github/workflows/nominal-primitive-subtype-ruby.yml",
+      "previous": "0a0b5f484b1dd27e7a54239ea8234e9a9e51ed837382e46fab95564949ab4624"
+    },
+    {
+      "count": 4,
+      "current": "91a6d42d97b873fdb7c1a7c7c047ae652a4e5b943a902445c3c10b54da22df5a",
+      "path": ".github/workflows/nominal-primitive-subtype-rust.yml",
+      "previous": "84872e05a8809feb1535c0aa2f09dd6cf63ba7f61b6c72b338b85b20cb31bc3f"
+    },
+    {
+      "count": 4,
+      "current": "892f857dd9dd5aa8dd6721018234e021081461dda2bcadd376611f6a5fe5e97c",
+      "path": ".github/workflows/nominal-primitive-subtype-wit.yml",
+      "previous": "354da4a8119f2a969110513520976eb908d4e85a22f5897090a3e787050e24be"
+    }
+  ],
+  "evidencePaths": [
+    "docs/evidence/ci-contract-repair-source-history-20261017.json",
+    "docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json",
+    "docs/evidence/optional-parameter-focused-ci-source-history-20261029.json",
+    "docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json",
+    "docs/evidence/optional-parameter-source-history-20261028.json",
+    "docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json",
+    "docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json",
+    "docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json",
+    "docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json",
+    "docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json",
+    "docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json",
+    "docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json",
+    "docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json",
+    "docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json",
+    "docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json",
+    "docs/evidence/core-exact-head-replay-repair-source-history-20261027.json",
+    "docs/evidence/recurring-acceptance-documentation-source-history-20261027.json",
+    "docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json",
+    "docs/evidence/core-exact-head-validation-repair-source-history-20261027.json",
+    "docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json"
+  ],
+  "failedHead": "a37850fde56e80ee54d75e55380de98fa40bbf5f",
+  "failedRuns": [
+    {
+      "job": 131359793444,
+      "lane": "browser",
+      "workflow": 43268892037
+    },
+    {
+      "job": 131360105292,
+      "lane": "npm",
+      "workflow": 43268982805
+    }
+  ],
+  "failureClass": "deterministic sparse-checkout ENOENT",
+  "firstMissingPath": "docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json",
+  "gotcha": "A filtered Node test still imports skipped top-level suites before applying its test-name pattern. Sparse input closure must cover the imported module graph, not only tests whose names will execute.",
+  "implementationCommit": "49460e3fbeb8f3d8378b02c36f397eb14f216c1c",
+  "integrationCommit": "4cff68cf1be8a9e723cc10c009c5020641957fa0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "76a123d890cf950087bf891d66ccc6e23229a70b8dae5d8780a4e1ea3a2915c5",
+      "edits": [
+        {
+          "current": "import \"./helpers/nominal-primitive-subtype-sparse-closure-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "f5e41f8c112249955cb29a979deb7711650e86c0e8f3bb3409f0f3e73270edf1"
+    },
+    {
+      "currentSha256": "6bd3f8590baad4c58b3546b1d8dba86279edfa8da1d1b2464e7121f49f3bd018",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeNominalPrimitiveSubtypeSparseClosureRepairSource\n\t, nominalPrimitiveSubtypeSparseClosureRepairNormalizationPaths\n} from \"./nominal-primitive-subtype-sparse-closure-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...nominalPrimitiveSubtypeSparseClosureRepairNormalizationPaths\n\t, ...vo1220PartitionInventoryDiagnosticRepairNormalizationPaths\n",
+          "previous": "\t...vo1220PartitionInventoryDiagnosticRepairNormalizationPaths\n",
+          "start": 246494
+        },
+        {
+          "current": "\tlet stage = beforeNominalPrimitiveSubtypeSparseClosureRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220PartitionInventoryDiagnosticRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220PartitionInventoryDiagnosticRepairSource(\n",
+          "start": 310426
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a0ce5e9548c5f26a591948ef96b83b24fb30da11b35217ccbe71488f6475f402"
+    }
+  ],
+  "milestone": "nominal-primitive-subtype-sparse-closure-repair-v1",
+  "pinRepairCommit": "208ea0ee2f89e2334c72ac1046802524959fc4fa",
+  "pinUpdates": [
+    {
+      "currentSha256": "034097ebed4648ae58dc7c4abb1d825ed750c77b595fa47cee964b2d084d360d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"e5d6d8b13b469206d08d5e125626a1fa3e61dcfedd20e2f300152330e072abf4\"\n",
+          "previous": "          \"sha256\": \"f64da4ebfa115761579739da2b759f7830024c53794c6895487789d072c25a41\"\n",
+          "start": 6789774
+        },
+        {
+          "current": "          \"sha256\": \"e5d6d8b13b469206d08d5e125626a1fa3e61dcfedd20e2f300152330e072abf4\"\n",
+          "previous": "          \"sha256\": \"f64da4ebfa115761579739da2b759f7830024c53794c6895487789d072c25a41\"\n",
+          "start": 6815294
+        },
+        {
+          "current": "          \"sha256\": \"e5d6d8b13b469206d08d5e125626a1fa3e61dcfedd20e2f300152330e072abf4\"\n",
+          "previous": "          \"sha256\": \"f64da4ebfa115761579739da2b759f7830024c53794c6895487789d072c25a41\"\n",
+          "start": 6840842
+        },
+        {
+          "current": "          \"sha256\": \"e5d6d8b13b469206d08d5e125626a1fa3e61dcfedd20e2f300152330e072abf4\"\n",
+          "previous": "          \"sha256\": \"f64da4ebfa115761579739da2b759f7830024c53794c6895487789d072c25a41\"\n",
+          "start": 6866362
+        },
+        {
+          "current": "          \"sha256\": \"136fb2a5515afd42543ed653c828b6b9a2be321ab76e1bcc7543979e525b8a50\"\n",
+          "previous": "          \"sha256\": \"d8743398a6e34539c498bc15e04cc78e6f51c5db78c03c1c8746e3cea6a1dab8\"\n",
+          "start": 6892044
+        },
+        {
+          "current": "          \"sha256\": \"136fb2a5515afd42543ed653c828b6b9a2be321ab76e1bcc7543979e525b8a50\"\n",
+          "previous": "          \"sha256\": \"d8743398a6e34539c498bc15e04cc78e6f51c5db78c03c1c8746e3cea6a1dab8\"\n",
+          "start": 6923757
+        },
+        {
+          "current": "          \"sha256\": \"136fb2a5515afd42543ed653c828b6b9a2be321ab76e1bcc7543979e525b8a50\"\n",
+          "previous": "          \"sha256\": \"d8743398a6e34539c498bc15e04cc78e6f51c5db78c03c1c8746e3cea6a1dab8\"\n",
+          "start": 6955944
+        },
+        {
+          "current": "          \"sha256\": \"136fb2a5515afd42543ed653c828b6b9a2be321ab76e1bcc7543979e525b8a50\"\n",
+          "previous": "          \"sha256\": \"d8743398a6e34539c498bc15e04cc78e6f51c5db78c03c1c8746e3cea6a1dab8\"\n",
+          "start": 6988127
+        },
+        {
+          "current": "          \"sha256\": \"a3acef67706d7f23d2dc4c1eff5967409a3b42d3daca8ecf78d506c3c2368f17\"\n",
+          "previous": "          \"sha256\": \"695094c6e65d25073135eee15c063eb0e5f98902ea4f0b9582c0bca86af4fa55\"\n",
+          "start": 7021299
+        },
+        {
+          "current": "          \"sha256\": \"a3acef67706d7f23d2dc4c1eff5967409a3b42d3daca8ecf78d506c3c2368f17\"\n",
+          "previous": "          \"sha256\": \"695094c6e65d25073135eee15c063eb0e5f98902ea4f0b9582c0bca86af4fa55\"\n",
+          "start": 7082946
+        },
+        {
+          "current": "          \"sha256\": \"a3acef67706d7f23d2dc4c1eff5967409a3b42d3daca8ecf78d506c3c2368f17\"\n",
+          "previous": "          \"sha256\": \"695094c6e65d25073135eee15c063eb0e5f98902ea4f0b9582c0bca86af4fa55\"\n",
+          "start": 7145009
+        },
+        {
+          "current": "          \"sha256\": \"a3acef67706d7f23d2dc4c1eff5967409a3b42d3daca8ecf78d506c3c2368f17\"\n",
+          "previous": "          \"sha256\": \"695094c6e65d25073135eee15c063eb0e5f98902ea4f0b9582c0bca86af4fa55\"\n",
+          "start": 7206656
+        },
+        {
+          "current": "          \"sha256\": \"db53b1789a529964718c4f5d84f5344e7879be16d8186cbcf401fb859ffc1106\"\n",
+          "previous": "          \"sha256\": \"6ccf8e07ff076abbe0cd49cbb9a3238829161e04c8c9e8135acac695eeb1f72e\"\n",
+          "start": 7268177
+        },
+        {
+          "current": "          \"sha256\": \"db53b1789a529964718c4f5d84f5344e7879be16d8186cbcf401fb859ffc1106\"\n",
+          "previous": "          \"sha256\": \"6ccf8e07ff076abbe0cd49cbb9a3238829161e04c8c9e8135acac695eeb1f72e\"\n",
+          "start": 7301925
+        },
+        {
+          "current": "          \"sha256\": \"db53b1789a529964718c4f5d84f5344e7879be16d8186cbcf401fb859ffc1106\"\n",
+          "previous": "          \"sha256\": \"6ccf8e07ff076abbe0cd49cbb9a3238829161e04c8c9e8135acac695eeb1f72e\"\n",
+          "start": 7335944
+        },
+        {
+          "current": "          \"sha256\": \"db53b1789a529964718c4f5d84f5344e7879be16d8186cbcf401fb859ffc1106\"\n",
+          "previous": "          \"sha256\": \"6ccf8e07ff076abbe0cd49cbb9a3238829161e04c8c9e8135acac695eeb1f72e\"\n",
+          "start": 7370162
+        },
+        {
+          "current": "          \"sha256\": \"eddd003d26d3cb9ad963823e6af354afca066095c9a6a2bc8db5e4fb7c8bf209\"\n",
+          "previous": "          \"sha256\": \"33329da3f710aa3df88b3ea34b406cb8a122ec5c26efb16df23877f69c08a74a\"\n",
+          "start": 7405382
+        },
+        {
+          "current": "          \"sha256\": \"eddd003d26d3cb9ad963823e6af354afca066095c9a6a2bc8db5e4fb7c8bf209\"\n",
+          "previous": "          \"sha256\": \"33329da3f710aa3df88b3ea34b406cb8a122ec5c26efb16df23877f69c08a74a\"\n",
+          "start": 7479578
+        },
+        {
+          "current": "          \"sha256\": \"eddd003d26d3cb9ad963823e6af354afca066095c9a6a2bc8db5e4fb7c8bf209\"\n",
+          "previous": "          \"sha256\": \"33329da3f710aa3df88b3ea34b406cb8a122ec5c26efb16df23877f69c08a74a\"\n",
+          "start": 7554738
+        },
+        {
+          "current": "          \"sha256\": \"eddd003d26d3cb9ad963823e6af354afca066095c9a6a2bc8db5e4fb7c8bf209\"\n",
+          "previous": "          \"sha256\": \"33329da3f710aa3df88b3ea34b406cb8a122ec5c26efb16df23877f69c08a74a\"\n",
+          "start": 7629185
+        },
+        {
+          "current": "          \"sha256\": \"60c6b0a7496daa0a9357a9c2bbaaa45e1f527b435ba78037dd798e6633f026a5\"\n",
+          "previous": "          \"sha256\": \"0a0b5f484b1dd27e7a54239ea8234e9a9e51ed837382e46fab95564949ab4624\"\n",
+          "start": 7704120
+        },
+        {
+          "current": "          \"sha256\": \"60c6b0a7496daa0a9357a9c2bbaaa45e1f527b435ba78037dd798e6633f026a5\"\n",
+          "previous": "          \"sha256\": \"0a0b5f484b1dd27e7a54239ea8234e9a9e51ed837382e46fab95564949ab4624\"\n",
+          "start": 7735252
+        },
+        {
+          "current": "          \"sha256\": \"60c6b0a7496daa0a9357a9c2bbaaa45e1f527b435ba78037dd798e6633f026a5\"\n",
+          "previous": "          \"sha256\": \"0a0b5f484b1dd27e7a54239ea8234e9a9e51ed837382e46fab95564949ab4624\"\n",
+          "start": 7766768
+        },
+        {
+          "current": "          \"sha256\": \"60c6b0a7496daa0a9357a9c2bbaaa45e1f527b435ba78037dd798e6633f026a5\"\n",
+          "previous": "          \"sha256\": \"0a0b5f484b1dd27e7a54239ea8234e9a9e51ed837382e46fab95564949ab4624\"\n",
+          "start": 7798366
+        },
+        {
+          "current": "          \"sha256\": \"91a6d42d97b873fdb7c1a7c7c047ae652a4e5b943a902445c3c10b54da22df5a\"\n",
+          "previous": "          \"sha256\": \"84872e05a8809feb1535c0aa2f09dd6cf63ba7f61b6c72b338b85b20cb31bc3f\"\n",
+          "start": 7830753
+        },
+        {
+          "current": "          \"sha256\": \"91a6d42d97b873fdb7c1a7c7c047ae652a4e5b943a902445c3c10b54da22df5a\"\n",
+          "previous": "          \"sha256\": \"84872e05a8809feb1535c0aa2f09dd6cf63ba7f61b6c72b338b85b20cb31bc3f\"\n",
+          "start": 7980033
+        },
+        {
+          "current": "          \"sha256\": \"91a6d42d97b873fdb7c1a7c7c047ae652a4e5b943a902445c3c10b54da22df5a\"\n",
+          "previous": "          \"sha256\": \"84872e05a8809feb1535c0aa2f09dd6cf63ba7f61b6c72b338b85b20cb31bc3f\"\n",
+          "start": 8129851
+        },
+        {
+          "current": "          \"sha256\": \"91a6d42d97b873fdb7c1a7c7c047ae652a4e5b943a902445c3c10b54da22df5a\"\n",
+          "previous": "          \"sha256\": \"84872e05a8809feb1535c0aa2f09dd6cf63ba7f61b6c72b338b85b20cb31bc3f\"\n",
+          "start": 8279597
+        },
+        {
+          "current": "          \"sha256\": \"7106214278dddf6c2406ac585eae96ab2c9432cb64dc7dc77ab89b1604c42a39\"\n",
+          "previous": "          \"sha256\": \"50f527414bfae610608755a316afc12639edb8685c8977b392dc2f5b828b8c48\"\n",
+          "start": 8429884
+        },
+        {
+          "current": "          \"sha256\": \"7106214278dddf6c2406ac585eae96ab2c9432cb64dc7dc77ab89b1604c42a39\"\n",
+          "previous": "          \"sha256\": \"50f527414bfae610608755a316afc12639edb8685c8977b392dc2f5b828b8c48\"\n",
+          "start": 8582559
+        },
+        {
+          "current": "          \"sha256\": \"7106214278dddf6c2406ac585eae96ab2c9432cb64dc7dc77ab89b1604c42a39\"\n",
+          "previous": "          \"sha256\": \"50f527414bfae610608755a316afc12639edb8685c8977b392dc2f5b828b8c48\"\n",
+          "start": 8735576
+        },
+        {
+          "current": "          \"sha256\": \"7106214278dddf6c2406ac585eae96ab2c9432cb64dc7dc77ab89b1604c42a39\"\n",
+          "previous": "          \"sha256\": \"50f527414bfae610608755a316afc12639edb8685c8977b392dc2f5b828b8c48\"\n",
+          "start": 8888721
+        },
+        {
+          "current": "          \"sha256\": \"6cbe838d2542070979639ee92424d8b35b5ee160545520d2a10c041b3da52ed2\"\n",
+          "previous": "          \"sha256\": \"0abf95ba0c61532aeba3dc9169dcd30386822efe4fb645528bbf9ebf4d878f79\"\n",
+          "start": 9042294
+        },
+        {
+          "current": "          \"sha256\": \"6cbe838d2542070979639ee92424d8b35b5ee160545520d2a10c041b3da52ed2\"\n",
+          "previous": "          \"sha256\": \"0abf95ba0c61532aeba3dc9169dcd30386822efe4fb645528bbf9ebf4d878f79\"\n",
+          "start": 9186025
+        },
+        {
+          "current": "          \"sha256\": \"6cbe838d2542070979639ee92424d8b35b5ee160545520d2a10c041b3da52ed2\"\n",
+          "previous": "          \"sha256\": \"0abf95ba0c61532aeba3dc9169dcd30386822efe4fb645528bbf9ebf4d878f79\"\n",
+          "start": 9330250
+        },
+        {
+          "current": "          \"sha256\": \"6cbe838d2542070979639ee92424d8b35b5ee160545520d2a10c041b3da52ed2\"\n",
+          "previous": "          \"sha256\": \"0abf95ba0c61532aeba3dc9169dcd30386822efe4fb645528bbf9ebf4d878f79\"\n",
+          "start": 9474445
+        },
+        {
+          "current": "          \"sha256\": \"bbf18fa8c9d2ab56b5f1f4c401b65edf442981f250020a4ce648fb2ad0f04512\"\n",
+          "previous": "          \"sha256\": \"c3d5c8441f74122ec3a8186325a80be2a5dd9d5c79bc920cb70e314471528d3d\"\n",
+          "start": 9619731
+        },
+        {
+          "current": "          \"sha256\": \"bbf18fa8c9d2ab56b5f1f4c401b65edf442981f250020a4ce648fb2ad0f04512\"\n",
+          "previous": "          \"sha256\": \"c3d5c8441f74122ec3a8186325a80be2a5dd9d5c79bc920cb70e314471528d3d\"\n",
+          "start": 9765087
+        },
+        {
+          "current": "          \"sha256\": \"bbf18fa8c9d2ab56b5f1f4c401b65edf442981f250020a4ce648fb2ad0f04512\"\n",
+          "previous": "          \"sha256\": \"c3d5c8441f74122ec3a8186325a80be2a5dd9d5c79bc920cb70e314471528d3d\"\n",
+          "start": 9910846
+        },
+        {
+          "current": "          \"sha256\": \"bbf18fa8c9d2ab56b5f1f4c401b65edf442981f250020a4ce648fb2ad0f04512\"\n",
+          "previous": "          \"sha256\": \"c3d5c8441f74122ec3a8186325a80be2a5dd9d5c79bc920cb70e314471528d3d\"\n",
+          "start": 10056676
+        },
+        {
+          "current": "          \"sha256\": \"892f857dd9dd5aa8dd6721018234e021081461dda2bcadd376611f6a5fe5e97c\"\n",
+          "previous": "          \"sha256\": \"354da4a8119f2a969110513520976eb908d4e85a22f5897090a3e787050e24be\"\n",
+          "start": 10384993
+        },
+        {
+          "current": "          \"sha256\": \"892f857dd9dd5aa8dd6721018234e021081461dda2bcadd376611f6a5fe5e97c\"\n",
+          "previous": "          \"sha256\": \"354da4a8119f2a969110513520976eb908d4e85a22f5897090a3e787050e24be\"\n",
+          "start": 10431211
+        },
+        {
+          "current": "          \"sha256\": \"892f857dd9dd5aa8dd6721018234e021081461dda2bcadd376611f6a5fe5e97c\"\n",
+          "previous": "          \"sha256\": \"354da4a8119f2a969110513520976eb908d4e85a22f5897090a3e787050e24be\"\n",
+          "start": 10478287
+        },
+        {
+          "current": "          \"sha256\": \"892f857dd9dd5aa8dd6721018234e021081461dda2bcadd376611f6a5fe5e97c\"\n",
+          "previous": "          \"sha256\": \"354da4a8119f2a969110513520976eb908d4e85a22f5897090a3e787050e24be\"\n",
+          "start": 10524969
+        },
+        {
+          "current": "          \"sha256\": \"5036d3ec0bb5ba476f4ed12c47993204d67af8169b4aacf42f5aebe3f25fa56e\"\n",
+          "previous": "          \"sha256\": \"a2c4375790c654100fb74568d23261af0cca0bc0f3d3bb85b6eb1eecae5f215e\"\n",
+          "start": 10572030
+        },
+        {
+          "current": "          \"sha256\": \"5036d3ec0bb5ba476f4ed12c47993204d67af8169b4aacf42f5aebe3f25fa56e\"\n",
+          "previous": "          \"sha256\": \"a2c4375790c654100fb74568d23261af0cca0bc0f3d3bb85b6eb1eecae5f215e\"\n",
+          "start": 10632049
+        },
+        {
+          "current": "          \"sha256\": \"5036d3ec0bb5ba476f4ed12c47993204d67af8169b4aacf42f5aebe3f25fa56e\"\n",
+          "previous": "          \"sha256\": \"a2c4375790c654100fb74568d23261af0cca0bc0f3d3bb85b6eb1eecae5f215e\"\n",
+          "start": 10692480
+        },
+        {
+          "current": "          \"sha256\": \"5036d3ec0bb5ba476f4ed12c47993204d67af8169b4aacf42f5aebe3f25fa56e\"\n",
+          "previous": "          \"sha256\": \"a2c4375790c654100fb74568d23261af0cca0bc0f3d3bb85b6eb1eecae5f215e\"\n",
+          "start": 10752963
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "aebbe9779858d89ade605ca9fb4e9c8e4935bb763e5c4b92dff10e0347fa125a"
+    }
+  ],
+  "predecessorCommit": "a37850fde56e80ee54d75e55380de98fa40bbf5f",
+  "rootCause": "The three filtered engine tests shared a module with retained historical suites. Node applied the name filter only after importing that complete module graph, while all thirteen nominal acceptance workflows still materialized the older three-record sparse contract. Browser and npm therefore failed before semantic execution on the first newly eager history record; adding only that first path would have exposed the next missing record.",
+  "schemaVersion": 1,
+  "scope": "Probe the exact sparse checkout until its filtered engine import graph closes; retain all twenty small authenticated history records in the one shared checkout used by every nominal workflow; reject removal of any record; advance exactly forty-eight live workflow citations; change no runtime, package, support cell, immutable archive, acceptance command or mathematical behavior.",
+  "sparseProbe": {
+    "filteredTests": 3,
+    "materializedBytes": 473634035,
+    "passed": 3
+  },
+  "updates": [
+    {
+      "currentSha256": "a3acef67706d7f23d2dc4c1eff5967409a3b42d3daca8ecf78d506c3c2368f17",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 979
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1673
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-browser.yml",
+      "previousSha256": "695094c6e65d25073135eee15c063eb0e5f98902ea4f0b9582c0bca86af4fa55"
+    },
+    {
+      "currentSha256": "7106214278dddf6c2406ac585eae96ab2c9432cb64dc7dc77ab89b1604c42a39",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 780
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1474
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-dotnet.yml",
+      "previousSha256": "50f527414bfae610608755a316afc12639edb8685c8977b392dc2f5b828b8c48"
+    },
+    {
+      "currentSha256": "5036d3ec0bb5ba476f4ed12c47993204d67af8169b4aacf42f5aebe3f25fa56e",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 795
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1489
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-jvm.yml",
+      "previousSha256": "a2c4375790c654100fb74568d23261af0cca0bc0f3d3bb85b6eb1eecae5f215e"
+    },
+    {
+      "currentSha256": "db53b1789a529964718c4f5d84f5344e7879be16d8186cbcf401fb859ffc1106",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 789
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1483
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-native.yml",
+      "previousSha256": "6ccf8e07ff076abbe0cd49cbb9a3238829161e04c8c9e8135acac695eeb1f72e"
+    },
+    {
+      "currentSha256": "e5d6d8b13b469206d08d5e125626a1fa3e61dcfedd20e2f300152330e072abf4",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 945
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1639
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-npm.yml",
+      "previousSha256": "f64da4ebfa115761579739da2b759f7830024c53794c6895487789d072c25a41"
+    },
+    {
+      "currentSha256": "eddd003d26d3cb9ad963823e6af354afca066095c9a6a2bc8db5e4fb7c8bf209",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 789
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1483
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-perl.yml",
+      "previousSha256": "33329da3f710aa3df88b3ea34b406cb8a122ec5c26efb16df23877f69c08a74a"
+    },
+    {
+      "currentSha256": "bbf18fa8c9d2ab56b5f1f4c401b65edf442981f250020a4ce648fb2ad0f04512",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 1038
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1732
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-php-wasm.yml",
+      "previousSha256": "c3d5c8441f74122ec3a8186325a80be2a5dd9d5c79bc920cb70e314471528d3d"
+    },
+    {
+      "currentSha256": "6cbe838d2542070979639ee92424d8b35b5ee160545520d2a10c041b3da52ed2",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 785
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1479
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-php.yml",
+      "previousSha256": "0abf95ba0c61532aeba3dc9169dcd30386822efe4fb645528bbf9ebf4d878f79"
+    },
+    {
+      "currentSha256": "136fb2a5515afd42543ed653c828b6b9a2be321ab76e1bcc7543979e525b8a50",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 884
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1578
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-python.yml",
+      "previousSha256": "d8743398a6e34539c498bc15e04cc78e6f51c5db78c03c1c8746e3cea6a1dab8"
+    },
+    {
+      "currentSha256": "60c6b0a7496daa0a9357a9c2bbaaa45e1f527b435ba78037dd798e6633f026a5",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 776
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1470
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-ruby.yml",
+      "previousSha256": "0a0b5f484b1dd27e7a54239ea8234e9a9e51ed837382e46fab95564949ab4624"
+    },
+    {
+      "currentSha256": "91a6d42d97b873fdb7c1a7c7c047ae652a4e5b943a902445c3c10b54da22df5a",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 776
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1470
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-rust.yml",
+      "previousSha256": "84872e05a8809feb1535c0aa2f09dd6cf63ba7f61b6c72b338b85b20cb31bc3f"
+    },
+    {
+      "currentSha256": "729a874e9ab8771cd18567d415afa353af0d6ce01bc8ec1471a74d9ab24ebfc1",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 783
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1477
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-supplement.yml",
+      "previousSha256": "96e81492cffc0d08a37f5670f6fb681cb78db4c1e2d6717f2e6e05867a8c5072"
+    },
+    {
+      "currentSha256": "892f857dd9dd5aa8dd6721018234e021081461dda2bcadd376611f6a5fe5e97c",
+      "edits": [
+        {
+          "current": "          # authenticated transition records, and two immutable acceptance archives.\n",
+          "previous": "          # authenticated transition record, and two immutable acceptance archives.\n",
+          "start": 802
+        },
+        {
+          "current": "            /docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\n            /docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\n            /docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\n            /docs/evidence/optional-parameter-source-history-20261028.json\n            /docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\n            /docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\n            /docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\n            /docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\n            /docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\n            /docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\n            /docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\n            /docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\n            /docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\n            /docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\n            /docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\n",
+          "previous": "",
+          "start": 1496
+        }
+      ],
+      "path": ".github/workflows/nominal-primitive-subtype-wit.yml",
+      "previousSha256": "354da4a8119f2a969110513520976eb908d4e85a22f5897090a3e787050e24be"
+    },
+    {
+      "currentSha256": "0917afc2bb74dfc4939222ba15944686290e66e46cf6d0b2f70112021aa9243a",
+      "edits": [
+        {
+          "current": "\t, nominalPrimitiveSubtypeHistoryEvidencePaths\n",
+          "previous": "",
+          "start": 227
+        },
+        {
+          "current": "\tassert.equal(nominalPrimitiveSubtypeHistoryEvidencePaths.length, 20);\n\tfor(const path of nominalPrimitiveSubtypeHistoryEvidencePaths)\n\t\tassert.ok(nominalPrimitiveSubtypeHistoryCheckout\n\t\t\t.includes(`            /${path}\\n`), path);\n",
+          "previous": "",
+          "start": 560
+        },
+        {
+          "current": "\t\t, ...nominalPrimitiveSubtypeHistoryEvidencePaths.map(path =>\n\t\t\t[`/${path}\\n`, \"\"])\n",
+          "previous": "",
+          "start": 1242
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-history-checkout-tests.mjs",
+      "previousSha256": "225a61c8d5a1aa105c46f198fb1c661e0233029d474a0848f00506551cbcd38d"
+    },
+    {
+      "currentSha256": "2366669b93c7ebc8409213abfaca22dd45f20fa58fc63e02bef4662b4b4a4b13",
+      "edits": [
+        {
+          "current": "export const nominalPrimitiveSubtypeHistoryEvidencePaths = Object.freeze([\n\t\"docs/evidence/ci-contract-repair-source-history-20261017.json\"\n\t, \"docs/evidence/optional-parameter-dispatch-bridge-source-history-20261029.json\"\n\t, \"docs/evidence/optional-parameter-focused-ci-source-history-20261029.json\"\n\t, \"docs/evidence/optional-parameter-current-line-integration-source-history-20261029.json\"\n\t, \"docs/evidence/optional-parameter-source-history-20261028.json\"\n\t, \"docs/evidence/core-historical-evidence-reuse-live-pin-repair-source-history-20261027.json\"\n\t, \"docs/evidence/core-exact-head-hosted-static-repair-source-history-20261027.json\"\n\t, \"docs/evidence/core-exact-head-hosted-replay-repair-source-history-20261027.json\"\n\t, \"docs/evidence/core-inherited-record-type-surface-batch-source-history-20261027.json\"\n\t, \"docs/evidence/core-recursive-callable-evidence-pin-repair-source-history-20261027.json\"\n\t, \"docs/evidence/core-recursive-callable-replay-bound-source-history-20261027.json\"\n\t, \"docs/evidence/core-legacy-owned-evidence-replay-bound-source-history-20261027.json\"\n\t, \"docs/evidence/core-callback-evidence-replay-bound-source-history-20261027.json\"\n\t, \"docs/evidence/core-inherited-record-replay-bound-source-history-20261027.json\"\n\t, \"docs/evidence/core-replay-integration-endpoint-repair-source-history-20261027.json\"\n\t, \"docs/evidence/core-exact-head-replay-repair-source-history-20261027.json\"\n\t, \"docs/evidence/recurring-acceptance-documentation-source-history-20261027.json\"\n\t, \"docs/evidence/bounded-recurring-acceptance-sweep-source-history-20261027.json\"\n\t, \"docs/evidence/core-exact-head-validation-repair-source-history-20261027.json\"\n\t, \"docs/evidence/default-branch-ci-trigger-budget-source-history-20261027.json\"\n]);\n\n",
+          "previous": "",
+          "start": 164
+        },
+        {
+          "current": "\t+ \"          # authenticated transition records, and two immutable acceptance archives.\\n\"\n",
+          "previous": "\t+ \"          # authenticated transition record, and two immutable acceptance archives.\\n\"\n",
+          "start": 2185
+        },
+        {
+          "current": "\t+ nominalPrimitiveSubtypeHistoryEvidencePaths.map(path =>\n\t\t`            /${path}\\n`).join(\"\")\n",
+          "previous": "\t+ \"            /docs/evidence/ci-contract-repair-source-history-20261017.json\\n\"\n",
+          "start": 2972
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-history-checkout.mjs",
+      "previousSha256": "a85f1301a186941b7d16488b47cd863761b1bd060237a6ebe180b668858e46be"
+    }
+  ]
+}
