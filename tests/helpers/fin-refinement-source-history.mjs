@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeVo1220DemoJobScopeRepairSource
+	, vo1220DemoJobScopeRepairNormalizationPaths
+} from "./vo1220-demo-job-scope-repair-source-history.mjs";
+import {
 	beforeVo1220DemoSiteContractScopeRepairSource
 	, vo1220DemoSiteContractScopeRepairNormalizationPaths
 } from "./vo1220-demo-site-contract-scope-repair-source-history.mjs";
@@ -2863,7 +2867,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220DemoSiteContractScopeRepairNormalizationPaths
+	...vo1220DemoJobScopeRepairNormalizationPaths
+	, ...vo1220DemoSiteContractScopeRepairNormalizationPaths
 	, ...vo1220DemoDocumentationBoundaryRepairNormalizationPaths
 	, ...vo1220ReleaseReadySparseCheckoutRepairNormalizationPaths
 	, ...vo1220ReleaseGateSparsePartialCheckoutRepairNormalizationPaths
@@ -4151,7 +4156,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220DemoSiteContractScopeRepairSource(
+	let stage = beforeVo1220DemoJobScopeRepairSource(path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220DemoSiteContractScopeRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

@@ -1,0 +1,137 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-demo-job-scope-repair-source-history.mjs",
+      "sha256": "a9847fc82dbca68e215e10805a66a63c6fd5f29de4471fb0c22b4f366aea1dc8"
+    },
+    {
+      "path": "tests/helpers/vo1220-demo-job-scope-repair-source-history-tests.mjs",
+      "sha256": "998a37c943a99291a39ef3093b4d89dd9ad75768316aa744669f1014a2355fd6"
+    },
+    {
+      "path": "tests/helpers/vo1220-demo-job-scope-repair-source-history.mjs",
+      "sha256": "4449fedcb53705823fc3531fb9cce614606faa20b5a9c28ca4453b2b4bf0e32e"
+    }
+  ],
+  "hostedFailure": {
+    "failedBoundary": "Build and verify demo artifacts",
+    "job": 131550980549,
+    "missingPath": "docs/evidence/callback-checked-record-browser-20261023/hosted/artifact.zip.parts/0000.part",
+    "passedBoundary": "Check the React site and canonical documentation",
+    "run": 43323785635
+  },
+  "implementationCommit": "d9460ac2d2a1768ecd4b51a036c8fa6f6b773fa8",
+  "integrationCommit": "0f2597d32c954cc159aa2c40da9652982490b024",
+  "integrationUpdates": [
+    {
+      "currentSha256": "17279a418d973f614f34a50aef139b81db304b4357ccde4a771dcd87e968f088",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-demo-job-scope-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 267
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "7b6d037fb083b33f2cf8e5aa7516d871828b13f429b7336b37213ee9dcd95019"
+    },
+    {
+      "currentSha256": "7dc208785a4a8b2d4b6a472e6fd7afe79e6ba686445607179cd752f6fe6b103c",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220DemoJobScopeRepairSource\n\t, vo1220DemoJobScopeRepairNormalizationPaths\n} from \"./vo1220-demo-job-scope-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220DemoJobScopeRepairNormalizationPaths\n\t, ...vo1220DemoSiteContractScopeRepairNormalizationPaths\n",
+          "previous": "\t...vo1220DemoSiteContractScopeRepairNormalizationPaths\n",
+          "start": 248659
+        },
+        {
+          "current": "\tlet stage = beforeVo1220DemoJobScopeRepairSource(path, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220DemoSiteContractScopeRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220DemoSiteContractScopeRepairSource(\n",
+          "start": 313287
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f3154e564f9928101569ae0b1e142ae0d03f2bba6aa9bc920f3415616886228c"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "localValidation": {
+    "checkedJavaScriptTypecheck": "passed",
+    "focusedWorkflowContract": {
+      "failed": 0,
+      "passed": 2
+    },
+    "nestedSiteGeneration": {
+      "compiledPages": 79,
+      "retainedEvidenceFailure": false
+    },
+    "scopedLint": "passed"
+  },
+  "milestone": "vo1220-demo-job-scope-repair-v1",
+  "predecessorCommit": "fc5cbe7482d1e6c68a06cd4a9651fddda7b7760f",
+  "refreshedPins": 0,
+  "refreshedSourcePaths": [],
+  "remainingMismatches": 0,
+  "rootCause": "The explicit deferred contract scope covered the named site and documentation test steps, but demos:verify launched demos:site and site:build as nested child processes. Those children inherited only the job environment, fell back to the strict required default, and correctly rejected omitted retained evidence after every demo proof had already compiled.",
+  "schemaVersion": 1,
+  "scope": "Move the already explicit deferred contract scope to the demo build job so every direct and nested site-generation entrypoint inherits one lane boundary. Keep strict required behavior as the library default and in every authority lane. Remove duplicate step bindings, change no sparse manifest, runtime, proof, support claim, package, documentation content, evidence identity or type-surface pin, and add a workflow contract that requires the job-level binding.",
+  "sourceInventory": {
+    "batches": 240,
+    "bytes": 27250477669,
+    "conflicts": 0,
+    "evidence": 900,
+    "mismatches": 0,
+    "missing": 0,
+    "objects": 20975,
+    "occurrences": 369393,
+    "paths": 123815,
+    "revision": "fc5cbe7482d1e6c68a06cd4a9651fddda7b7760f",
+    "sha256": "3203c49f161c7becbc6f31e28972c7b45df45f70e4ee9b2fe65f184aee59597b"
+  },
+  "updates": [
+    {
+      "currentSha256": "df412e240eee370af932f3dd32c787210fde2c3ea4ad66be4e8ae0c4d8437c28",
+      "edits": [
+        {
+          "current": "      LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n",
+          "previous": "",
+          "start": 1692
+        },
+        {
+          "current": "",
+          "previous": "        env:\n          LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n",
+          "start": 2610
+        },
+        {
+          "current": "",
+          "previous": "        env:\n          LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n",
+          "start": 2818
+        }
+      ],
+      "path": ".github/workflows/demos-pages.yml",
+      "previousSha256": "f973c7876316bb1ef8c6d14466b3c6fdc9b38669869eb342bd8b88d9843e73fe"
+    },
+    {
+      "currentSha256": "6821ab9ece3e77f0e9347fc546f7a61c99fb2b6dc2d7068d544ab04f5a2772fa",
+      "edits": [
+        {
+          "current": "\t\t, /jobs:\\n {2}build:\\n {4}runs-on: ubuntu-24\\.04\\n {4}timeout-minutes: 45\\n {4}env:\\n {6}LEAN_BRIDGE_RETAINED_CONTRACTS: deferred/u);\n",
+          "previous": "\t\t, /Check the React site and canonical documentation\\n {8}env:\\n {10}LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\\n {8}run: npm run site:typecheck && npm run site:test/u);\n",
+          "start": 1534
+        },
+        {
+          "current": "\t\t, /run: npm run site:typecheck && npm run site:test/u);\n\tassert.match(demos, /run: npm run test:docs:demo/u);\n",
+          "previous": "\t\t, /LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\\n {8}run: npm run test:docs:demo/u);\n",
+          "start": 1690
+        }
+      ],
+      "path": "tests/documentation-demo-api.test.mjs",
+      "previousSha256": "3930d5d0333c85c2202e717ea76d0be49de18c0854fef1a32772a98e22cb62c4"
+    }
+  ]
+}
