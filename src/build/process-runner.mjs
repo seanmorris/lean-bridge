@@ -8,19 +8,38 @@ import { spawn } from "node:child_process";
 
 import { CanonicalBuildError } from "./build-error.mjs";
 
-const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 1000, signal = undefined }) => new Promise((accept, reject) => {
+const outputPolicies = new Set(["fail", "bounded-tail"]);
+const defaultMaximumOutputBytes = 32 * 1024 * 1024;
+
+const capture = ({
+	command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 1000
+	, signal = undefined, outputPolicy = "fail"
+	, maximumOutputBytes = defaultMaximumOutputBytes
+}) => new Promise((accept, reject) => {
+	if(!outputPolicies.has(outputPolicy))
+	{
+		reject(new CanonicalBuildError("invalid-build-runner-output-policy"
+			, `Unsupported build output policy: ${outputPolicy}`));
+		return;
+	}
+	if(!Number.isSafeInteger(maximumOutputBytes) || maximumOutputBytes <= 0)
+	{
+		reject(new CanonicalBuildError("invalid-build-runner-output-limit"
+			, "The build output limit must be a positive safe integer"));
+		return;
+	}
 	if(signal?.aborted)
 	{
 		reject(new CanonicalBuildError("build-cancelled", signal.reason?.message ?? "Build cancelled before process start"));
 		return;
 	}
 	const child = spawn(command, args, { cwd, env, stdio: ["ignore", "pipe", "pipe"] });
-	const stdout = [];
-	const stderr = [];
+	const output = () => ({ chunks: [], retained: 0, observed: 0 });
+	const stdout = output();
+	const stderr = output();
 	let bytes = 0;
 	let settled = false;
 	let cancellation = null, cancellationTimer;
-	const maximum = 32 * 1024 * 1024;
 	const cleanup = () => {
 		clearTimeout(timer);
 		clearTimeout(cancellationTimer);
@@ -40,13 +59,34 @@ const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 
 	};
 	const collect = target => chunk => {
 		bytes += chunk.length;
-		if(bytes > maximum)
+		target.observed += chunk.length;
+		if(outputPolicy === "fail" && bytes > maximumOutputBytes)
 		{
 			child.kill("SIGKILL");
-			rejectOnce(new CanonicalBuildError("build-output-limit", `${command} exceeded the 32 MiB diagnostic limit`));
+			rejectOnce(new CanonicalBuildError("build-output-limit"
+				, `${command} exceeded the ${maximumOutputBytes}-byte diagnostic limit`));
 			return;
 		}
-		target.push(chunk);
+		target.chunks.push(chunk);
+		target.retained += chunk.length;
+		if(outputPolicy === "bounded-tail")
+		{
+			while(target.retained > maximumOutputBytes)
+			{
+				const overflow = target.retained - maximumOutputBytes;
+				const first = target.chunks[0];
+				if(first.length <= overflow)
+				{
+					target.chunks.shift();
+					target.retained -= first.length;
+				}
+				else
+				{
+					target.chunks[0] = first.subarray(overflow);
+					target.retained -= overflow;
+				}
+			}
+		}
 	};
 	child.stdout.on("data", collect(stdout));
 	child.stderr.on("data", collect(stderr));
@@ -70,8 +110,8 @@ const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 
 		{ rejectOnce(cancellation); return; }
     const result = {
       code
-      , stdout: Buffer.concat(stdout).toString("utf8")
-      , stderr: Buffer.concat(stderr).toString("utf8")
+      , stdout: Buffer.concat(stdout.chunks).toString("utf8")
+      , stderr: Buffer.concat(stderr.chunks).toString("utf8")
     };
     if(code === 0) acceptOnce(result);
 		else
@@ -81,7 +121,11 @@ const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 
 				: `exited with status ${code}`;
 			rejectOnce(new CanonicalBuildError("build-command-failed", `${command} ${reason}`, {
 				details: { command, args, exitCode: code, signal: terminationSignal
-					, stderr: result.stderr.slice(-8000), stdout: result.stdout.slice(-8000) }
+					, stderr: result.stderr.slice(-8000), stdout: result.stdout.slice(-8000)
+					, outputPolicy, stdoutBytes: stdout.observed
+					, stderrBytes: stderr.observed
+					, stdoutTruncated: stdout.observed > stdout.retained
+					, stderrTruncated: stderr.observed > stderr.retained }
 			}));
 		}
 	});

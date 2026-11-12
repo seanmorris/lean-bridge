@@ -222,6 +222,11 @@ test("a plain project runs the same closed request through separate Docker mount
     const copy = calls.find(call => call.command === "nix" && call.args.includes("copy"));
     assert.ok(calls.indexOf(realize) < calls.indexOf(copy));
     const run = calls.find(call => call.args[0] === "run");
+		const imageBuild = calls.find(call => call.args[0] === "build");
+		assert.equal(imageBuild.outputPolicy, "bounded-tail");
+		assert.equal(imageBuild.maximumOutputBytes, 1024 * 1024);
+		assert.equal(run.outputPolicy, "bounded-tail");
+		assert.equal(run.maximumOutputBytes, 1024 * 1024);
     const capturedComponent = sourceForMount(run.args, "/workspace/component");
     assert.ok(capturedComponent.startsWith(join(await realpath(tmpdir()), ".lean-bridge-component-work-")));
     assert.ok(!capturedComponent.startsWith(`${scratch}/`));
@@ -300,7 +305,11 @@ test("Docker orchestration returns one validated bundle and package projection c
   const progress = [];
   const runner = {
     capture: async request => {
-      calls.push({ command: request.command, args: [...request.args] });
+      calls.push({
+			command: request.command, args: [...request.args]
+			, outputPolicy: request.outputPolicy
+			, maximumOutputBytes: request.maximumOutputBytes
+      });
       if(request.command === "nix") throw unavailable("nix");
       if(request.args[0] === "info") return { code: 0, stdout: "24.0.9\n", stderr: "" };
       if(request.args[0] === "build") return { code: 0, stdout: "builder ready\n", stderr: "" };
@@ -357,6 +366,13 @@ test("Docker orchestration returns one validated bundle and package projection c
     assert.equal(result.componentBinariesRebuiltByProjection, false);
     assert.ok(calls.some(call => call.args.includes("--pull")));
     assert.ok(calls.some(call => call.args.includes("--no-cache")));
+		const boundedCalls = calls.filter(item => ["build", "run"]
+			.includes(item.args[0]));
+		for(const call of boundedCalls)
+		{
+      assert.equal(call.outputPolicy, "bounded-tail");
+      assert.equal(call.maximumOutputBytes, 1024 * 1024);
+		}
     assert.deepEqual(progress.map(item => `${item.phase}:${item.state}`), [
       "backend:started"
       , "backend:completed"

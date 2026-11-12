@@ -491,6 +491,8 @@ const runDockerNix = async ({ root, staging, selection, builder, runner, environ
 		]
 		, cwd: root
 		, timeoutMs: 60 * 60 * 1000
+		, outputPolicy: "bounded-tail"
+		, maximumOutputBytes: 1024 * 1024
 	});
 };
 
@@ -524,6 +526,8 @@ export const buildPinnedBuilderImage = async ({
 			, resolvedBuilder.directory
 		]
 		, cwd: root
+		, outputPolicy: "bounded-tail"
+		, maximumOutputBytes: 1024 * 1024
 	});
 	const inspected = await runner.capture({
 		command: dockerCommand
