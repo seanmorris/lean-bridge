@@ -31,6 +31,8 @@ test("the demo gallery uses the bounded current-documentation checkout", async (
 	assert.ok(demos.indexOf(cleanup)
 		< demos.indexOf("Check out the exact revision"));
 	assert.match(demos
+		, /Check the React site and canonical documentation\n {8}env:\n {10}LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n {8}run: npm run site:typecheck && npm run site:test/u);
+	assert.match(demos
 		, /LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n {8}run: npm run test:docs:demo/u);
 	assert.match(packageDocument.scripts["test:docs"], /type-surface-docs\.test\.mjs/u);
 	assert.doesNotMatch(packageDocument.scripts["test:docs:demo"]

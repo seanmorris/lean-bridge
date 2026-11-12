@@ -6,7 +6,7 @@
 
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { mkdir, mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import test from 'node:test';
@@ -20,6 +20,9 @@ import {
 	compileDocumentationPage, generateSiteContent
 	, rewriteDocumentationLink, validateDocumentationAnchors
 } from '../scripts/generate-site-content.mjs';
+import {
+	readTypeSurface, readTypeSurfaceContract
+} from '../src/adoption/type-surface.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const revision = '1234567890abcdef1234567890abcdef12345678';
@@ -189,12 +192,38 @@ test('broken local and cross-guide fragments fail the build', () => {
 	assert.throws(() => validateDocumentationAnchors(results), /Missing documentation heading/u);
 });
 
+test('sparse site input validates the model without claiming retained evidence', async () => {
+	const isolated = await mkdtemp(path.join(root, 'build/site-inventory-test-'));
+	try
+	{
+		for(const relative of [
+			'docs/type-surface.v1.json', 'schema/binding-ir.schema.json'
+			, 'docs/consumer-support.v1.json'
+		]) {
+			const destination = path.join(isolated, relative);
+			await mkdir(path.dirname(destination), { recursive: true });
+			await writeFile(destination, await readFile(path.join(root, relative)));
+		}
+		const inventory = await readTypeSurfaceContract({
+			repository: isolated
+		});
+		assert.ok(inventory.document.evidence.length > 0);
+		await assert.rejects(readTypeSurface({ repository: isolated }), /ENOENT/u);
+	}
+	finally
+	{
+		await rm(isolated, { recursive: true, force: true });
+	}
+});
+
 test('all generated modules render without browser runtimes and match source hashes', async () => {
 	await mkdir(path.join(root, 'build'), { recursive: true });
 	const output = await mkdtemp(path.join(root, 'build/site-content-test-'));
 	try
 	{
-		const result = await generateSiteContent({ output });
+		const result = await generateSiteContent({
+			output, retainedContracts: 'deferred'
+		});
 		const generated = await import(pathToFileURL(path.join(output, 'index.mjs')).href);
 		const index = await readFile(path.join(output, 'index.mjs'), 'utf8');
 		const metadata = await readFile(path.join(output, 'metadata.mjs'), 'utf8');

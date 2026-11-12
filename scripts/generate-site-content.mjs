@@ -14,6 +14,7 @@ import remarkGfm from 'remark-gfm';
 import { createHighlighter } from 'shiki';
 import { demos, docPages, documentationImages } from '../site/registry.mjs';
 import { generateReferenceDocs } from './generate-reference-docs.mjs';
+import { readTypeSurfaceContract } from '../src/adoption/type-surface.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 const repositoryUrl = 'https://github.com/seanmorris/lean-bridge';
@@ -382,11 +383,21 @@ export function validateDocumentationAnchors(results)
  * Builds only the registered documentation modules and their deferred search index.
  *
  * @param options - Optional repository root and generated-output directory for tests.
+ * @param options.inventory - Explicit already validated type-surface inventory.
+ * @param options.retainedContracts - Whether retained evidence is required or deferred.
  */
 export async function generateSiteContent(options = {})
 {
 	const root = options.root ?? repositoryRoot;
-	await generateReferenceDocs({ root });
+	const retainedContracts = options.retainedContracts
+		?? process.env.LEAN_BRIDGE_RETAINED_CONTRACTS ?? 'required';
+	if(!['required', 'deferred'].includes(retainedContracts))
+	{
+		throw new Error('LEAN_BRIDGE_RETAINED_CONTRACTS must be one of: required, deferred');
+	}
+	const inventory = options.inventory ?? (retainedContracts === 'deferred'
+		? await readTypeSurfaceContract({ repository: root }) : null);
+	await generateReferenceDocs({ root, inventory });
 	const output = options.output ?? path.join(root, 'build/site-content');
 	const revision = execFileSync('git', ['rev-parse', 'HEAD'], {
 		cwd: root, encoding: 'utf8'

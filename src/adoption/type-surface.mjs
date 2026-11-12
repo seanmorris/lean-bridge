@@ -230,6 +230,38 @@ export function validateTypeSurface(document, { irSchema, consumers })
 }
 
 /**
+ * Parse and structurally validate the three governing inventory documents.
+ * Evidence-byte authority remains the responsibility of readTypeSurface.
+ *
+ * @param repository - Root containing the three governing documents.
+ */
+const readTypeSurfaceInputs = async repository => {
+	const sources = Object.fromEntries(await Promise.all(
+		typeSurfaceEvidenceSourcePaths.map(async relative => [
+			relative, await readFile(path.join(repository, relative))
+		])
+	));
+	const [document, irSchema, consumers] = typeSurfaceEvidenceSourcePaths
+		.map(relative => JSON.parse(sources[relative].toString("utf8")));
+	validateTypeSurface(document, { irSchema, consumers });
+	return { inventory: { document, irSchema, consumers }, sources };
+};
+
+/**
+ * Load and validate the governing type-surface model without claiming that its
+ * retained evidence bytes are present. Sparse presentation lanes use this
+ * contract only after explicitly deferring evidence authority to Core.
+ *
+ * @param options - Source location for repository or isolated validation.
+ * @param options.repository - Root containing the inventory and contracts.
+ */
+export async function readTypeSurfaceContract(options = {})
+{
+	const repository = path.resolve(options.repository ?? root);
+	return (await readTypeSurfaceInputs(repository)).inventory;
+}
+
+/**
  * Load the inventory and verify every evidence source hash, without executing commands.
  *
  * @param options - Source location for repository or isolated validation.
@@ -241,14 +273,8 @@ export function validateTypeSurface(document, { irSchema, consumers })
 export async function readTypeSurface(options = {})
 {
 	const repository = path.resolve(options.repository ?? root);
-	const sources = Object.fromEntries(await Promise.all(
-		typeSurfaceEvidenceSourcePaths.map(async relative => [
-			relative, await readFile(path.join(repository, relative))
-		])
-	));
-	const [document, irSchema, consumers] = typeSurfaceEvidenceSourcePaths
-		.map(relative => JSON.parse(sources[relative].toString("utf8")));
-	validateTypeSurface(document, { irSchema, consumers });
+	const { inventory, sources } = await readTypeSurfaceInputs(repository);
+	const { document, irSchema, consumers } = inventory;
 	const canonicalRoot = await realpath(repository);
 	const evidenceReceipt = Object.hasOwn(options, "evidenceReceipt")
 		? options.evidenceReceipt : canonicalRoot === await realpath(root)
@@ -287,7 +313,7 @@ export async function readTypeSurface(options = {})
 				});
 	}
 	assert.deepEqual(mismatches, [], "stale source evidence");
-	return { document, irSchema, consumers };
+	return inventory;
 }
 
 /**
