@@ -1,0 +1,137 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-component-reproducibility-review-closure-source-history.mjs",
+      "sha256": "439e5053d1cbc16d382a645f9b118e65aa38b01d2647cfc0585cb30272d1e706"
+    },
+    {
+      "path": "tests/helpers/vo1220-component-reproducibility-review-closure-source-history-tests.mjs",
+      "sha256": "0f18307c1725ab37f5ff32208adbcd3ee0ff834bf7c243ecfa0aca008f3b2589"
+    },
+    {
+      "path": "tests/helpers/vo1220-component-reproducibility-review-closure-source-history.mjs",
+      "sha256": "f6a14e6ddbf954f2afeed0fa4941c500d2e92c0d7aa8868c980a9f9b8b8d75ab"
+    }
+  ],
+  "cloneFlags": [
+    "--local",
+    "--dissociate",
+    "--no-checkout"
+  ],
+  "implementationCommit": "982e37bd198f78b69811aa1c176ea71772996de7",
+  "independentAfterSourceRemoval": true,
+  "integrationCommit": "959aee26e5e12c12e05e078c194097d83720d9bf",
+  "integrationUpdates": [
+    {
+      "currentSha256": "769defb8d5a0af88e9347c55b273afed0c28572ba5531594a7f6ee94e6a747f7",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-component-reproducibility-review-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 174
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "eecf33e75fc34c797090b799158109153b83e04d42e11588b5da9598859c9284"
+    },
+    {
+      "currentSha256": "f86e2956753ac81bc37a3b9b469de4ba1bf2e8cb5c3047aaaa98287cef4bc3e7",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ComponentReproducibilityReviewClosureSource\n\t, vo1220ComponentReproducibilityReviewClosureNormalizationPaths\n} from \"./vo1220-component-reproducibility-review-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ComponentReproducibilityReviewClosureNormalizationPaths\n\t, ...vo1220ReleaseDockerGitMountNormalizationPaths\n",
+          "previous": "\t...vo1220ReleaseDockerGitMountNormalizationPaths\n",
+          "start": 247352
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ComponentReproducibilityReviewClosureSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ReleaseDockerGitMountSource(\n",
+          "previous": "\tlet stage = beforeVo1220ReleaseDockerGitMountSource(\n",
+          "start": 311560
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "eb1ac9e7f8d0609ead7f1456177dba1aee590330e8d22f8e119cb1c8784da28d"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "milestone": "vo1220-component-reproducibility-review-closure-v1",
+  "predecessorCommit": "340dca40d108471bf2f3eb7763321e0cb4c191f1",
+  "refreshedPins": 0,
+  "remainingMismatches": 0,
+  "removedInvalidAssertions": 2,
+  "review": {
+    "commit": "340dca40d108471bf2f3eb7763321e0cb4c191f1",
+    "findings": [
+      {
+        "comment": 4555380448,
+        "severity": "high"
+      },
+      {
+        "comment": 4555380527,
+        "severity": "medium"
+      }
+    ],
+    "pullRequest": 10
+  },
+  "rootCause": "The local reproducibility clones inherited an upstream alternate-object dependency, while one component-engine test asserted a universal-release output policy that the component engine does not request.",
+  "schemaVersion": 1,
+  "scope": "Dissociate both local reproducibility clones; prove each remains connected after the originating repository and borrowed object store are deleted; retain the builder-image bounded-output assertions; remove only the two invalid component-run assertions; change no release artifact, support observation, proof, package contract, public citation or immutable prior receipt.",
+  "updates": [
+    {
+      "currentSha256": "1f9b600a698f81237094aa4948e8e53dcaf8deb9ffe9b1fa3468f327b8db942b",
+      "edits": [
+        {
+          "current": "\t\t\t, args: [\"clone\", \"--quiet\", \"--local\", \"--dissociate\", \"--no-checkout\", repositoryRoot, checkout]\n",
+          "previous": "\t\t\t, args: [\"clone\", \"--quiet\", \"--local\", \"--no-checkout\", repositoryRoot, checkout]\n",
+          "start": 5070
+        }
+      ],
+      "path": "src/release/component-reproducibility-gate.mjs",
+      "previousSha256": "f7153c48d0b330f63bcd187ce9cd6ec7a2bff6ce16872f6f6eef68254ae568e3"
+    },
+    {
+      "currentSha256": "2491f96d1347991182c676876c2eb5d652fd3c2fbc3df8bce46402d6e41189e6",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t\tassert.equal(run.outputPolicy, \"bounded-tail\");\n\t\tassert.equal(run.maximumOutputBytes, 1024 * 1024);\n",
+          "start": 11021
+        }
+      ],
+      "path": "tests/canonical-build.test.mjs",
+      "previousSha256": "efeef15b79d626bbd0cf732630f9578333fc6e20f3adee84a53ddcf38b1ee40f"
+    },
+    {
+      "currentSha256": "56ec9bbadf6ac3339dcb345c11535dc57ea3eeda9486ee1b5f860d03595f883e",
+      "edits": [
+        {
+          "current": "test(\"clean release clones dissociate from borrowed Git objects and preserve verified immutable dependencies\", async t => {\n",
+          "previous": "test(\"clean release clones share verified immutable dependencies without copying Git caches or requiring their original paths\", async t => {\n",
+          "start": 9440
+        },
+        {
+          "current": "\tconst revision = await lakeGit(context.root, \"rev-parse\", \"HEAD\");\n\tconst borrowedObjects = join(context.directory, \"borrowed-objects\");\n\tawait cp(join(context.root, \".git/objects\"), borrowedObjects, { recursive: true });\n\tawait rm(join(context.root, \".git/objects\"), { recursive: true });\n\tawait saveLakeFile(join(context.root, \".git/objects\"), \"info/alternates\", `${borrowedObjects}\\n`);\n\tassert.equal(await lakeGit(context.root, \"rev-parse\", \"HEAD\"), revision);\n",
+          "previous": "",
+          "start": 9839
+        },
+        {
+          "current": "\tawait rm(borrowedObjects, { recursive: true });\n",
+          "previous": "",
+          "start": 10543
+        },
+        {
+          "current": "\t\tassert.equal(await lakeGit(projectRoot, \"rev-parse\", \"HEAD\"), revision);\n\t\tawait lakeGit(projectRoot, \"fsck\", \"--connectivity-only\");\n\t\tawait assert.rejects(readFile(join(projectRoot, \".git/objects/info/alternates\")), { code: \"ENOENT\" });\n",
+          "previous": "",
+          "start": 10656
+        }
+      ],
+      "path": "tests/lake-component-input.test.mjs",
+      "previousSha256": "594f7e6903e5bb92e034e75566935e8b7f64fd9eecf351ebb71d446aa8fd64dc"
+    }
+  ]
+}
