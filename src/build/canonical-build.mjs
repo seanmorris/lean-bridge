@@ -16,7 +16,15 @@ import {
 	stat,
 	writeFile,
 } from "node:fs/promises";
-import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import {
+	basename,
+	dirname,
+	isAbsolute,
+	join,
+	relative,
+	resolve,
+	sep,
+} from "node:path";
 import { homedir, tmpdir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -65,6 +73,155 @@ const componentEngineInstallable = async engineRoot => {
 
 const fail = (code, message, options) => {
 	throw new CanonicalBuildError(code, message, options);
+};
+
+const dockerSourceRoot = "/workspace/source";
+
+const optionalText = async path => {
+	try
+	{ return await readFile(path, "utf8"); }
+	catch(error)
+	{
+		if(error.code === "ENOENT") return null;
+		throw error;
+	}
+};
+
+const mappedTarget = (mapping, source) => {
+	const suffix = relative(mapping.source, source);
+	if(suffix === ".." || suffix.startsWith(`..${sep}`)) return null;
+	return resolve(mapping.target, suffix);
+};
+
+/**
+ * Finds Git administration and alternate-object directories referenced by a
+ * source checkout but not carried by its Docker source bind. Each returned
+ * directory must be mounted read-only at the path encoded in the checkout's
+ * Git metadata, otherwise a shared clone can be readable on the host and
+ * unreadable inside the builder container.
+ *
+ * @param root - Host source directory mounted at /workspace/source.
+ */
+export const resolveDockerGitMounts = async root => {
+	const source = resolve(root);
+	const dotGit = join(source, ".git");
+	let dotGitStatus;
+	try
+	{ dotGitStatus = await stat(dotGit); }
+	catch(error)
+	{
+		if(error.code === "ENOENT") return Object.freeze([]);
+		throw error;
+	}
+
+	const mappings = [{ source, target: dockerSourceRoot, emitted: false }];
+	const candidates = [];
+	const addMapping = (hostPath, targetPath) => {
+		const mapping = {
+			source: resolve(hostPath), target: resolve(targetPath), emitted: true
+		};
+		if([mapping.source, mapping.target].some(path => path.includes(",")))
+		{
+			fail("unsupported-docker-mount-path"
+				, "Docker Git object paths cannot contain commas");
+		}
+		const duplicate = mappings.find(item => item.source === mapping.source
+			&& item.target === mapping.target);
+		if(duplicate === undefined)
+		{
+			mappings.push(mapping);
+			candidates.push(mapping);
+		}
+		return mapping;
+	};
+
+	let gitDirectory, containerGitDirectory;
+	if(dotGitStatus.isDirectory())
+	{
+		gitDirectory = dotGit;
+		containerGitDirectory = join(dockerSourceRoot, ".git");
+	}
+	else if(dotGitStatus.isFile())
+	{
+		const match = /^gitdir: (.+)\n?$/u.exec(await readFile(dotGit, "utf8"));
+		if(match === null)
+		{
+			fail("unsupported-docker-git-layout"
+				, "The source .git file does not name one Git directory");
+		}
+		gitDirectory = resolve(source, match[1]);
+		containerGitDirectory = isAbsolute(match[1])
+			? resolve(match[1]) : resolve(dockerSourceRoot, match[1]);
+		addMapping(gitDirectory, containerGitDirectory);
+	}
+	else
+	{
+		fail("unsupported-docker-git-layout"
+			, "The source .git entry must be a file or directory");
+	}
+
+	const commonText = await optionalText(join(gitDirectory, "commondir"));
+	const commonDirectory = commonText === null
+		? gitDirectory : resolve(gitDirectory, commonText.trim());
+	const containerCommonDirectory = commonText === null
+		? containerGitDirectory
+		: resolve(containerGitDirectory, commonText.trim());
+	if(commonText !== null)
+	{ addMapping(commonDirectory, containerCommonDirectory); }
+
+	const visited = new Set();
+	const visitObjectDirectory = async (hostDirectory, containerDirectory) => {
+		const key = `${resolve(hostDirectory)}\0${resolve(containerDirectory)}`;
+		if(visited.has(key)) return;
+		visited.add(key);
+		if(visited.size > 64)
+		{
+			fail("unsupported-docker-git-layout"
+				, "The source Git alternate-object closure exceeds 64 directories");
+		}
+		const alternates = await optionalText(join(hostDirectory, "info", "alternates"));
+		if(alternates === null) return;
+		for(const entry of alternates.split("\n").filter(Boolean))
+		{
+			if(entry.includes("\0") || entry.includes("\r"))
+			{
+				fail("unsupported-docker-git-layout"
+					, "The source Git alternates file contains an invalid path");
+			}
+			const alternateSource = resolve(hostDirectory, entry);
+			const alternateTarget = isAbsolute(entry)
+				? resolve(entry) : resolve(containerDirectory, entry);
+			addMapping(alternateSource, alternateTarget);
+			await visitObjectDirectory(alternateSource, alternateTarget);
+		}
+	};
+	await visitObjectDirectory(join(commonDirectory, "objects")
+		, join(containerCommonDirectory, "objects"));
+
+	const normalized = candidates.filter(candidate => !mappings.some(other =>
+		other !== candidate
+		&& mappedTarget(other, candidate.source) === candidate.target
+		&& (other.source.length < candidate.source.length
+			|| (other.source === candidate.source && !other.emitted))));
+	for(const mapping of normalized)
+	{
+		let status;
+		try
+		{ status = await stat(mapping.source); }
+		catch(error)
+		{
+			fail("missing-docker-git-object-store"
+				, `Docker cannot mount Git object store ${mapping.source}`
+				, { details: { cause: error.code ?? error.message } });
+		}
+		if(!status.isDirectory())
+		{
+			fail("unsupported-docker-git-layout"
+				, `Docker Git path is not a directory: ${mapping.source}`);
+		}
+	}
+	return Object.freeze(normalized.map(({ source: source_, target }) =>
+		Object.freeze({ source: source_, target })));
 };
 
 const preflightReview = async (root, signal, ownedGraphs = false) => {
@@ -476,12 +633,17 @@ const runDockerNix = async ({ root, staging, selection, builder, runner, environ
 		, builder
 		, cachePolicy: cache.policy
 	})).image;
+	const gitMounts = await resolveDockerGitMounts(root);
 	if(root.includes(",") || staging.includes(",")) fail("unsupported-docker-mount-path", "Docker build paths cannot contain commas");
 	await runner.capture({
 		command: selection.command
 		, args: [
 			"run", "--rm", "--platform", builder.manifest.platform, "--network", "bridge"
 			, "--mount", `type=bind,source=${root},target=/workspace/source,readonly`
+			, ...gitMounts.flatMap(mount => [
+				"--mount"
+				, `type=bind,source=${mount.source},target=${mount.target},readonly`
+			])
 			, "--mount", `type=bind,source=${staging},target=/workspace/output`
 			, "--env"
 			, `LEAN_BRIDGE_OUTPUT_UID=${typeof process.getuid === "function" ? process.getuid() : 0}`

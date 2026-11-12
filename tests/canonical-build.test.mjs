@@ -19,6 +19,7 @@ import {
 	detectBuildBackend,
 	processBuildRunner,
 	readBuilderManifest,
+	resolveDockerGitMounts,
 } from "../src/build/canonical-build.mjs";
 import { executeComponentEngineRequest } from "../src/build/component-engine.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
@@ -68,6 +69,38 @@ test("backend selection prefers Docker, falls back to Nix, and honors explicit p
     detectBuildBackend({ runner: both, environment: { LEAN_BRIDGE_BUILD_BACKEND: "podman" } }),
     error => error.code === "invalid-build-backend",
   );
+});
+
+test("Docker mounts the complete shared Git alternate-object closure read-only", async () => {
+  const scratch = await mkdtemp(join(tmpdir(), "lean-bridge-docker-git-"));
+  const source = join(scratch, "source");
+  const first = join(scratch, "first-objects");
+  const second = join(scratch, "second-objects");
+  try
+{
+    await Promise.all([
+      mkdir(join(source, ".git", "objects", "info"), { recursive: true })
+      , mkdir(join(first, "info"), { recursive: true })
+      , mkdir(second, { recursive: true })
+    ]);
+    await Promise.all([
+      writeFile(join(source, ".git", "objects", "info", "alternates")
+        , `${first}\n`)
+      , writeFile(join(first, "info", "alternates"), "../second-objects\n")
+    ]);
+    assert.deepEqual(await resolveDockerGitMounts(source), [
+      { source: first, target: first }
+      , { source: second, target: second }
+    ]);
+
+    await rm(second, { recursive: true, force: true });
+    await assert.rejects(resolveDockerGitMounts(source), error =>
+      error instanceof CanonicalBuildError
+      && error.code === "missing-docker-git-object-store");
+} finally
+{
+    await rm(scratch, { recursive: true, force: true });
+}
 });
 
 test("missing build tools stop before creating the requested output", async () => {
