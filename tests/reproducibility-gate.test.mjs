@@ -267,7 +267,7 @@ test("source preparation rejects a shallow repository before sharing objects", a
   }
 });
 
-test("both release gates reuse immutable Git objects without duplicating the repository database", async () => {
+test("both release gates use storage-safe Git object reuse for their source lifetimes", async () => {
   const sources = await Promise.all([
     readFile("src/release/reproducibility-gate.mjs", "utf8")
     , readFile("src/release/component-reproducibility-gate.mjs", "utf8")
@@ -276,7 +276,7 @@ test("both release gates reuse immutable Git objects without duplicating the rep
   assert.match(sources[0], /args: \["clone", "--quiet", "--shared", "--no-checkout"/u);
   assert.match(sources[0], /rev-parse", "--is-shallow-repository"/u);
   assert.match(sources[0], /"sparse-checkout", "set", "--no-cone", "\/\*", "!\/docs\/evidence\/"/u);
-  assert.match(sources[1], /args: \["clone", "--quiet", "--local", "--no-checkout"/u);
+  assert.match(sources[1], /args: \["clone", "--quiet", "--local", "--dissociate", "--no-checkout"/u);
   assert.doesNotMatch(sources[1], /"objects", "info", "alternates"|--is-shallow-repository/u);
 });
 
