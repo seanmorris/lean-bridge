@@ -1,0 +1,474 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-demo-documentation-boundary-repair-source-history.mjs",
+      "sha256": "4c18ade8676a026d85197ccddae4e2bedcb97ba3c0befd8de458858a45c3d67f"
+    },
+    {
+      "path": "tests/helpers/vo1220-demo-documentation-boundary-repair-source-history-tests.mjs",
+      "sha256": "ddb4145b1376bbc3b1d1b1b0854303da44d6ec4f6e8ad43b70c487b4beb9e31f"
+    },
+    {
+      "path": "tests/helpers/vo1220-demo-documentation-boundary-repair-source-history.mjs",
+      "sha256": "2531182c43e7daa67fd2fc6a0cca5d52ff9f31780a8a1a6330952e769f7248ef"
+    }
+  ],
+  "checkoutContract": {
+    "action": "actions/checkout@v6",
+    "diskCleanupBeforeCheckout": true,
+    "fetchDepth": 1,
+    "filter": "blob:none",
+    "manifestAuthority": ".github/workflows/consumer-matrix.yml",
+    "retainedContracts": "deferred",
+    "sparseCheckoutConeMode": false
+  },
+  "implementationCommit": "938725363f63bab25be28b65de10aa1d243e9eae",
+  "integrationCommit": "81d4745b174c0e18920448907c8c1f69297bfa77",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0d29c661d48ef35f1c3607eeae45c310408bf726c369c4766ce88959e4b1e11d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 56845
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 79403
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 96606
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 112899
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 433545
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 813888
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 832263
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1013432
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1058470
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1075587
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1083361
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1088793
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1095894
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1103060
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1110117
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1118369
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1127832
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1139511
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1144843
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1151918
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1159815
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1168909
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1170695
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1179169
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1182857
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1193262
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1206383
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1225806
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1237738
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1256088
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1270538
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1289051
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1305638
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1330603
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1336484
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1356155
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1359781
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1378692
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1381672
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1398384
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1401745
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1418874
+        },
+        {
+          "current": "          \"sha256\": \"7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c\"\n",
+          "previous": "          \"sha256\": \"fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a\"\n",
+          "start": 1421525
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 1429367
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 75698763
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 75703598
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 75708427
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 75715301
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 75722186
+        },
+        {
+          "current": "          \"sha256\": \"f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c\"\n",
+          "previous": "          \"sha256\": \"bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516\"\n",
+          "start": 75729112
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "2da2563befa7fdb4e6dae44e8b0fc6ce5d169531b6661479b0f9277d65e9bb76"
+    },
+    {
+      "currentSha256": "3e3a604cc617b493a8350c155d932d61151b02b99bcda409b905f7dafaf2afd6",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-demo-documentation-boundary-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 267
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "842074f983cc21336183f6b592e8a0a68969bade3bb5d273cddb69801552d737"
+    },
+    {
+      "currentSha256": "1ec107bd1985397fdebe3ce816bfd6072f99be34fe166f4e7cd2c5c4a667bdf4",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220DemoDocumentationBoundaryRepairSource\n\t, vo1220DemoDocumentationBoundaryRepairNormalizationPaths\n} from \"./vo1220-demo-documentation-boundary-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220DemoDocumentationBoundaryRepairNormalizationPaths\n\t, ...vo1220ReleaseReadySparseCheckoutRepairNormalizationPaths\n",
+          "previous": "\t...vo1220ReleaseReadySparseCheckoutRepairNormalizationPaths\n",
+          "start": 248325
+        },
+        {
+          "current": "\tlet stage = beforeVo1220DemoDocumentationBoundaryRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ReleaseReadySparseCheckoutRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220ReleaseReadySparseCheckoutRepairSource(\n",
+          "start": 312846
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "afbc9898ad44360abb9f2f57d25bb1afbca741cba81b7cee3d97748df92e811b"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "localValidation": {
+    "checkedJavaScriptTypecheck": "passed",
+    "demoDocumentation": {
+      "failed": 0,
+      "passed": 78,
+      "skipped": 3
+    },
+    "focusedCheckout": {
+      "failed": 0,
+      "passed": 2
+    },
+    "scopedLint": "passed"
+  },
+  "milestone": "vo1220-demo-documentation-boundary-repair-v1",
+  "predecessorCommit": "60afe5b7f28d1093403554a4d0cd64c799cab55b",
+  "refreshedPins": 50,
+  "refreshedSourcePaths": [
+    "package.json",
+    "tests/documentation.test.mjs"
+  ],
+  "remainingMismatches": 0,
+  "rootCause": "The shallow demo checkout executed the complete retained-history documentation entrypoint. Nineteen failures were retained source-history or archived-evidence failures rather than current documentation or demo defects, and the default checkout also materialized the 27,250,476,050-byte retained-evidence current tree. The presentation lane was therefore pretending to be an authoritative retained-history lane while paying its full storage cost.",
+  "schemaVersion": 1,
+  "scope": "Reuse Consumer Matrix's authenticated bounded documentation manifest with a shallow blob-filtered sparse checkout and disk cleanup. Add a demo documentation entrypoint that checks every current documentation suite while deferring only the retained type-surface suite and the explicitly registered retained contracts. Keep the full documentation entrypoint unchanged and authoritative in Core and Consumer Matrix. Change no runtime, proof, support observation, package API, documentation content, type-surface inventory or prior receipt.",
+  "sourceInventory": {
+    "bytes": 27250476050,
+    "evidence": 900,
+    "mismatches": 0,
+    "objects": 20975,
+    "occurrences": 369393,
+    "paths": 123815,
+    "revision": "60afe5b7f28d1093403554a4d0cd64c799cab55b"
+  },
+  "updates": [
+    {
+      "currentSha256": "1f7fb5fec13030899747caa0c0873d6f3423a85504d5d6d0512b958ca46f1abb",
+      "edits": [
+        {
+          "current": "env:\n  # Keep this identical to Consumer Matrix's authenticated documentation input\n  # closure. The gallery checks current docs and defers retained-history replay\n  # to Core and Consumer Matrix.\n  LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT: |\n    /*\n    !/*/\n    /.github/\n    /acceptance/\n    /config/\n    /containers/\n    /demos/\n    /nix/\n    /notices/\n    /patches/\n    /poc/\n    /schema/\n    /scripts/\n    /site/\n    /src/\n    /tests/\n    /docs/\n    !/docs/evidence/*\n    /docs/evidence/*.json\n    /docs/evidence/*.md\n    /docs/evidence/*.xml\n    /docs/evidence/**/*.json\n    /docs/evidence/**/*.md\n    /docs/evidence/**/*.xml\n    /docs/evidence/checked-records-20261008/\n    /docs/evidence/checked-record-perl-installed-20261011/\n    /docs/evidence/checked-record-browser-20261011/\n    /docs/evidence/checked-record-php-wasm-20261011/\n    /docs/evidence/checked-record-python-hosts-20261010/\n    /docs/evidence/checked-record-ruby-jvm-20261010/\n    /docs/evidence/checked-record-remaining-hosts-20261010/\n    /docs/evidence/native-fin-callbacks-20261008/\n    /docs/evidence/browser-callback-fin-20261008/\n    /docs/evidence/reviewed-callback-fin-20261008/\n    /docs/evidence/reviewed-subtype-python-hosts-20261010/\n    /docs/evidence/reviewed-subtype-ruby-jvm-hosts-20261010/\n    /docs/evidence/reviewed-subtype-remaining-hosts-20261010/\n    /docs/evidence/php-wasm-subtype-installed-20261010/\n\n",
+          "previous": "",
+          "start": 216
+        },
+        {
+          "current": "      - name: Free hosted runner disk before bounded documentation checkout\n        run: |\n          df -h /\n          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL\n          df -h /\n",
+          "previous": "",
+          "start": 1746
+        },
+        {
+          "current": "          fetch-depth: 1\n          filter: blob:none\n",
+          "previous": "",
+          "start": 2082
+        },
+        {
+          "current": "          sparse-checkout: ${{ env.LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT }}\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 2172
+        },
+        {
+          "current": "        env:\n          LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\n        run: npm run test:docs:demo\n",
+          "previous": "        run: npm run test:docs\n",
+          "start": 2771
+        }
+      ],
+      "path": ".github/workflows/demos-pages.yml",
+      "previousSha256": "be82a65a42074bcc7ca184eb5ac5229279e7bb602fbc44b88639219ae4dc9294"
+    },
+    {
+      "currentSha256": "f357cd1cd0c04e9c8384f5adf6c7835f2c50386af3fa3a3d2a0b633e5107260c",
+      "edits": [
+        {
+          "current": "    \"test:docs:demo\": \"node --test tests/documentation.test.mjs tests/consumer-guide-docs.test.mjs tests/contributing-docs.test.mjs tests/lean-author-documentation.test.mjs tests/component-consumer-docs.test.mjs tests/documentation-demo-api.test.mjs tests/reference-documentation.test.mjs\",\n",
+          "previous": "",
+          "start": 45715
+        }
+      ],
+      "path": "package.json",
+      "previousSha256": "bebee05881467aea28743ad42b47d54f952037115f79762d4a24a2e8367c8516"
+    },
+    {
+      "currentSha256": "ea6ba48f00a73608dcd1f7c7f87ec6b74031373a5b6f30281a6b85380fde8a8d",
+      "edits": [
+        {
+          "current": "test(\"the demo gallery uses the bounded current-documentation checkout\", async () => {\n\tconst [demos, consumers, packageDocument] = await Promise.all([\n\t\treadFile(new URL(\"../.github/workflows/demos-pages.yml\", import.meta.url)\n\t\t\t, \"utf8\")\n\t\t, readFile(new URL(\"../.github/workflows/consumer-matrix.yml\"\n\t\t\t, import.meta.url), \"utf8\")\n\t\t, readFile(new URL(\"../package.json\", import.meta.url), \"utf8\")\n\t\t\t.then(JSON.parse)\n\t]);\n\tconst sparse = source => /^ {2}LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT: \\|\\n(?<body>(?: {4}.*\\n)+)/mu\n\t\t.exec(source)?.groups?.body;\n\tassert.ok(sparse(demos));\n\tassert.equal(sparse(demos), sparse(consumers));\n\tconst checkout = demos.split(\"      - name: Check out the exact revision\\n\")[1]\n\t\t?.split(\"      - name:\")[0];\n\tassert.match(checkout\n\t\t, /uses: actions\\/checkout@v6\\n {8}with:\\n {10}fetch-depth: 1\\n {10}filter: blob:none\\n {10}persist-credentials: false\\n {10}sparse-checkout: \\$\\{\\{ env\\.LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT \\}\\}\\n {10}sparse-checkout-cone-mode: false\\n/u);\n\tconst cleanup = \"Free hosted runner disk before bounded documentation checkout\";\n\tassert.equal(demos.split(cleanup).length - 1, 1);\n\tassert.ok(demos.indexOf(cleanup)\n\t\t< demos.indexOf(\"Check out the exact revision\"));\n\tassert.match(demos\n\t\t, /LEAN_BRIDGE_RETAINED_CONTRACTS: deferred\\n {8}run: npm run test:docs:demo/u);\n\tassert.match(packageDocument.scripts[\"test:docs\"], /type-surface-docs\\.test\\.mjs/u);\n\tassert.doesNotMatch(packageDocument.scripts[\"test:docs:demo\"]\n\t\t, /type-surface-docs\\.test\\.mjs/u);\n\tfor(const path of [\n\t\t\"documentation.test.mjs\", \"consumer-guide-docs.test.mjs\"\n\t\t, \"contributing-docs.test.mjs\", \"lean-author-documentation.test.mjs\"\n\t\t, \"component-consumer-docs.test.mjs\"\n\t\t, \"documentation-demo-api.test.mjs\", \"reference-documentation.test.mjs\"\n\t]) assert.match(packageDocument.scripts[\"test:docs:demo\"]\n\t\t, new RegExp(`tests/${path.replaceAll(\".\", \"\\\\.\")}`, \"u\"), path);\n});\n\n",
+          "previous": "",
+          "start": 272
+        }
+      ],
+      "path": "tests/documentation-demo-api.test.mjs",
+      "previousSha256": "3c3a2060a917c92094372d49375a4e4712cc23d53ecffd83239d10e570c81c5a"
+    },
+    {
+      "currentSha256": "7bd367be121a7c0bf3fb16b314e7cecf2bcd8b6bf742eebdc028420b2a33c91c",
+      "edits": [
+        {
+          "current": "import { registerRetainedContractTests }\n\tfrom \"./helpers/retained-contract-tests.mjs\";\n\nconst retainedRegistration = await registerRetainedContractTests([\n\t() => import(\"./helpers/node-consumer-budget-ci-tests.mjs\")\n\t, () => import(\"./helpers/node-consumer-budget-source-history-tests.mjs\")\n\t, () => import(\"./helpers/perl-xs-budget-source-history-tests.mjs\")\n\t, () => import(\"./helpers/ruby-gdb-ci-source-history-tests.mjs\")\n\t, () => import(\"./helpers/native-observation-split-tests.mjs\")\n]);\nconst retainedTest = retainedRegistration.scope === \"required\" ? test : test.skip;\n",
+          "previous": "import \"./helpers/node-consumer-budget-ci-tests.mjs\";\nimport \"./helpers/node-consumer-budget-source-history-tests.mjs\";\nimport \"./helpers/perl-xs-budget-source-history-tests.mjs\";\nimport \"./helpers/ruby-gdb-ci-source-history-tests.mjs\";\nimport \"./helpers/native-observation-split-tests.mjs\";\n",
+          "start": 534
+        },
+        {
+          "current": "retainedTest(\"consumer CI history preserves every consumer and pinned build path\", async () => {\n",
+          "previous": "test(\"consumer CI history preserves every consumer and pinned build path\", async () => {\n",
+          "start": 43508
+        }
+      ],
+      "path": "tests/documentation.test.mjs",
+      "previousSha256": "fc5bb2ed4b90385c8e96d2d96b84519e190ba62d913f75017f4b5e82c44efb4a"
+    },
+    {
+      "currentSha256": "2d2fe52e9bc023f77a5b24024d3c546eb46ac38a50a0fe02e410403f7ecc6a16",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./helpers/author-refinement-docs-source-history-tests.mjs\";\nimport \"./helpers/checked-record-perl-author-docs-history-tests.mjs\";\nimport \"./helpers/inherited-checked-record-docs-closure-source-history-tests.mjs\";\nimport \"./helpers/inherited-docs-replay-repair-source-history-tests.mjs\";\n",
+          "start": 149
+        },
+        {
+          "current": "import { registerRetainedContractTests }\n\tfrom \"./helpers/retained-contract-tests.mjs\";\n\nconst retainedRegistration = await registerRetainedContractTests([\n\t() => import(\"./helpers/author-refinement-docs-source-history-tests.mjs\")\n\t, () => import(\"./helpers/checked-record-perl-author-docs-history-tests.mjs\")\n\t, () => import(\"./helpers/inherited-checked-record-docs-closure-source-history-tests.mjs\")\n\t, () => import(\"./helpers/inherited-docs-replay-repair-source-history-tests.mjs\")\n]);\nconst retainedTest = retainedRegistration.scope === \"required\" ? test : test.skip;\n",
+          "previous": "",
+          "start": 1989
+        },
+        {
+          "current": "retainedTest(\"the checked-record author table agrees with all seventeen installed consumer profiles\", async () => {\n",
+          "previous": "test(\"the checked-record author table agrees with all seventeen installed consumer profiles\", async () => {\n",
+          "start": 14156
+        }
+      ],
+      "path": "tests/lean-author-documentation.test.mjs",
+      "previousSha256": "bf0310e07de09fc97d79b0f53590012b49d947a6b4be3e53ca163a9a482f0894"
+    },
+    {
+      "currentSha256": "c61ff899d876950d0ad38fa8434e5f7981daaec200105ec027212b86084aa89a",
+      "edits": [
+        {
+          "current": "import { retainedContractScope } from './helpers/retained-contract-tests.mjs';\n",
+          "previous": "",
+          "start": 1018
+        },
+        {
+          "current": "const retainedTest = retainedContractScope() === 'required' ? test : test.skip;\n",
+          "previous": "",
+          "start": 1392
+        },
+        {
+          "current": "retainedTest('generated references and consumer type sections match the current contracts exactly', async () => {\n",
+          "previous": "test('generated references and consumer type sections match the current contracts exactly', async () => {\n",
+          "start": 2348
+        }
+      ],
+      "path": "tests/reference-documentation.test.mjs",
+      "previousSha256": "9e3b26507dcfb53a64ba8dc5a894109f9b98aa473bab09b94131b1256611ee79"
+    }
+  ]
+}
