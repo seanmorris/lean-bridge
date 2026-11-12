@@ -21,6 +21,10 @@ jobs:
           # starts. Materialize the current tree and fetch older blobs only if
           # an exact build actually addresses them.
           filter: blob:none
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6
