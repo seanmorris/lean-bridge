@@ -141,18 +141,28 @@ test("locked plan validators and schemas reject unbound resolution claims", asyn
 	await assert.rejects(() => assertJsonSchema("component-build-plan", document));
 });
 
-test("clean release clones share verified immutable dependencies without copying Git caches or requiring their original paths", async t => {
+test("clean release clones dissociate from borrowed Git objects and preserve verified immutable dependencies", async t => {
 	const context = await lakeWorkspaceFixture(t);
 	await saveLakeFile(context.root, ".gitignore", ".lake/\n");
 	await lakeGit(context.root, "init", "--quiet");
 	await lakeGit(context.root, "add", ".");
 	await lakeGit(context.root, "commit", "--quiet", "-m", "Locked project");
+	const revision = await lakeGit(context.root, "rev-parse", "HEAD");
+	const borrowedObjects = join(context.directory, "borrowed-objects");
+	await cp(join(context.root, ".git/objects"), borrowedObjects, { recursive: true });
+	await rm(join(context.root, ".git/objects"), { recursive: true });
+	await saveLakeFile(join(context.root, ".git/objects"), "info/alternates", `${borrowedObjects}\n`);
+	assert.equal(await lakeGit(context.root, "rev-parse", "HEAD"), revision);
 	const scratchRoot = join(context.directory, "reproduction");
 	await mkdir(scratchRoot);
 	const prepared = await prepareCleanComponentSources({ projectRoot: context.root, scratchRoot });
 	await rm(context.workspace, { recursive: true });
+	await rm(borrowedObjects, { recursive: true });
 	for(const [index, projectRoot] of prepared.roots.entries())
 	{
+		assert.equal(await lakeGit(projectRoot, "rev-parse", "HEAD"), revision);
+		await lakeGit(projectRoot, "fsck", "--connectivity-only");
+		await assert.rejects(readFile(join(projectRoot, ".git/objects/info/alternates")), { code: "ENOENT" });
 		const analysis = await analyzeLeanProject(projectRoot);
 		const componentPlan = await prepareComponentBuildPlan({ projectRoot, engineRoot: process.cwd(), lakeSnapshot: prepared.lakeSnapshot });
 		assert.equal(componentPlan.document.source.lakeSnapshotSha256, prepared.lakeSnapshot.sha256);

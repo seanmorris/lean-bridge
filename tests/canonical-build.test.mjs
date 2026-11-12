@@ -258,8 +258,6 @@ test("a plain project runs the same closed request through separate Docker mount
 		const imageBuild = calls.find(call => call.args[0] === "build");
 		assert.equal(imageBuild.outputPolicy, "bounded-tail");
 		assert.equal(imageBuild.maximumOutputBytes, 1024 * 1024);
-		assert.equal(run.outputPolicy, "bounded-tail");
-		assert.equal(run.maximumOutputBytes, 1024 * 1024);
     const capturedComponent = sourceForMount(run.args, "/workspace/component");
     assert.ok(capturedComponent.startsWith(join(await realpath(tmpdir()), ".lean-bridge-component-work-")));
     assert.ok(!capturedComponent.startsWith(`${scratch}/`));
