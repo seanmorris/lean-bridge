@@ -16,6 +16,11 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          # The gate needs the complete commit graph, but historical release
+          # evidence blobs would consume most of a hosted runner before Nix
+          # starts. Materialize the current tree and fetch older blobs only if
+          # an exact build actually addresses them.
+          filter: blob:none
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6

@@ -267,6 +267,49 @@ test("source preparation rejects a shallow repository before sharing objects", a
   }
 });
 
+test("source preparation accepts a blob-filtered complete commit graph", async () => {
+  const root = await mkdtemp(join(tmpdir(), "lean-bridge-filtered-source-"));
+  const origin = join(root, "origin");
+  const repository = join(root, "repository");
+  const scratch = join(root, "scratch");
+  try
+  {
+    await mkdir(origin);
+    await execute("git", ["init", "--quiet"], { cwd: origin });
+    await execute("git", ["config", "user.name", "Lean Bridge"], { cwd: origin });
+    await execute("git", ["config", "user.email", "bridge@example.invalid"], { cwd: origin });
+    await execute("git", ["config", "uploadpack.allowFilter", "true"], { cwd: origin });
+    await Promise.all([
+      writeFile(join(origin, "flake.lock"), "{}\n")
+      , writeFile(join(origin, "historical.txt"), "historic-only\n")
+    ]);
+    await execute("git", ["add", "."], { cwd: origin });
+    await execute("git", ["commit", "--quiet", "-m", "history"], { cwd: origin });
+    const historicalBlob = (await execute("git", ["rev-parse", "HEAD:historical.txt"], { cwd: origin })).stdout.trim();
+    await execute("git", ["rm", "--quiet", "historical.txt"], { cwd: origin });
+    await writeFile(join(origin, "Main.lean"), "def answer := 42\n");
+    await execute("git", ["add", "."], { cwd: origin });
+    await execute("git", ["commit", "--quiet", "-m", "current"], { cwd: origin });
+    await execute("git", ["clone", "--quiet", "--filter=blob:none", `file://${origin}`, repository]);
+    assert.equal((await execute("git", ["rev-parse", "--is-shallow-repository"], { cwd: repository })).stdout.trim(), "false");
+    await assert.rejects(execute("git", ["cat-file", "-e", historicalBlob], {
+      cwd: repository
+      , env: { ...process.env, GIT_NO_LAZY_FETCH: "1" }
+    }));
+    await rm(origin, { recursive: true, force: true });
+    await mkdir(scratch);
+    const prepared = await prepareCleanGitSources({
+      projectRoot: repository
+      , scratchRoot: scratch
+    });
+    assert.equal(prepared.roots.length, 2);
+    assert.equal((await execute("git", ["status", "--porcelain"], { cwd: prepared.roots[0] })).stdout, "");
+  } finally
+  {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("both release gates use storage-safe Git object reuse for their source lifetimes", async () => {
   const sources = await Promise.all([
     readFile("src/release/reproducibility-gate.mjs", "utf8")
@@ -458,6 +501,7 @@ test("read-only build directories do not override a successful reproducibility r
 
 test("release workflow downloads the direct artifact by its filename", async () => {
   const workflow = await readFile(".github/workflows/reproducible-release.yml", "utf8");
+  assert.match(workflow, /fetch-depth: 0\n\s+#(?:.|\n)*?filter: blob:none\n/u);
   assert.match(workflow, /path: build\/reproducibility-gate\.tar\n\s+archive: false/);
   assert.match(workflow, /uses: actions\/download-artifact@v8\n\s+with:\n\s+name: reproducibility-gate\.tar\n\s+path: build/);
   assert.doesNotMatch(workflow, /name: reproducibility-gate-\$\{\{ github\.sha \}\}/);
