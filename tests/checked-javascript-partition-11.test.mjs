@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/vo1220-release-docker-git-mount-source-history-tests.mjs";
 import "./helpers/vo1220-release-docker-log-bound-source-history-tests.mjs";
 import "./helpers/vo1220-release-gate-site-pin-source-history-tests.mjs";
 import "./helpers/vo1220-release-gate-storage-repair-source-history-tests.mjs";

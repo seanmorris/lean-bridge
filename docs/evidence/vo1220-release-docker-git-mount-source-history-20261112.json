@@ -1,0 +1,211 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-release-docker-git-mount-source-history.mjs",
+      "sha256": "44f37a0a7b4d8257c84e0d667d55577e8629870e23a1b4320c84b39f5ee1f32d"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-docker-git-mount-source-history-tests.mjs",
+      "sha256": "2db940414159fb9c81034d064700a1403cfd0f541df5a74e2bde53f19ef529ca"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-docker-git-mount-source-history.mjs",
+      "sha256": "5d7e4b7164fea7e71b27e9305a395a9f05119218e49bdd3fb16e8774a5498c84"
+    }
+  ],
+  "dockerSourceRoot": "/workspace/source",
+  "implementationCommit": "b5dfc84dfa3e0ba08ccf62cc47a94d5069edf3c9",
+  "integrationCommit": "d85e4b4a1630eb4adfc2927bb527c633dcb73484",
+  "integrationUpdates": [
+    {
+      "currentSha256": "eecf33e75fc34c797090b799158109153b83e04d42e11588b5da9598859c9284",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-release-docker-git-mount-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "323a08e987131766d9e43ad24fb5bcc0806d02f9501aa32b2663556786004550"
+    },
+    {
+      "currentSha256": "eb1ac9e7f8d0609ead7f1456177dba1aee590330e8d22f8e119cb1c8784da28d",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ReleaseDockerGitMountSource\n\t, vo1220ReleaseDockerGitMountNormalizationPaths\n} from \"./vo1220-release-docker-git-mount-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ReleaseDockerGitMountNormalizationPaths\n\t, ...vo1220ReleaseDockerLogBoundNormalizationPaths\n",
+          "previous": "\t...vo1220ReleaseDockerLogBoundNormalizationPaths\n",
+          "start": 247142
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ReleaseDockerGitMountSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ReleaseDockerLogBoundSource(\n",
+          "previous": "\tlet stage = beforeVo1220ReleaseDockerLogBoundSource(\n",
+          "start": 311282
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "047a34cddc1f86647bd8f86f575d3dbb97c022249b5e7380a1f5ad8c901ad273"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "maximumAlternateDirectories": 64,
+  "milestone": "vo1220-release-docker-git-mount-v1",
+  "pinCounts": {
+    "src/build/canonical-build.mjs": 16
+  },
+  "pinRefreshCommit": "0d62c614b67eef91e12fc1688ea060734368fd41",
+  "pinUpdates": [
+    {
+      "currentSha256": "2da2563befa7fdb4e6dae44e8b0fc6ce5d169531b6661479b0f9277d65e9bb76",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 66144
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 87052
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 102902
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 118503
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 877746
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 888548
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 897400
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 914451
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 923267
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 932916
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 943944
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 1043601
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 1201627
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 1233304
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 1265631
+        },
+        {
+          "current": "          \"sha256\": \"aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf\"\n",
+          "previous": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "start": 1300411
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "91b3c4e505fb69f27cc62cd54b30bc4ff4dbe706adf74708c2f6447fbeccafb9"
+    }
+  ],
+  "predecessorCommit": "28ac1a34f8da75bb128467f0726cd2af45174ba7",
+  "readOnlyExternalMounts": true,
+  "refreshedPins": 16,
+  "remainingMismatches": 0,
+  "review": {
+    "comment": 4555023212,
+    "commit": "28ac1a34f8da75bb128467f0726cd2af45174ba7",
+    "pullRequest": 10,
+    "severity": "high"
+  },
+  "rootCause": "The storage-safe universal release checkouts use Git alternates, but the Docker backend mounted only the checkout at /workspace/source. The alternates file therefore named an absolute object-store path absent inside the container, so the same committed checkout was readable on the host and incomplete in Docker.",
+  "schemaVersion": 1,
+  "scope": "Resolve linked-worktree administration and the complete recursive alternate-object closure; bind only required external directories at the paths encoded by Git; keep every added mount read-only; fail closed on missing, malformed, oversized or Docker-inexpressible closure paths; retain shared-object storage and the strict source mount; refresh the complete sixteen-pin public citation cohort; change no release artifact, support observation, proof, package contract or immutable prior receipt.",
+  "updates": [
+    {
+      "currentSha256": "aaf5182db69b9ad1704f2d1f11b9619d3f27f3a67ae8701d0cb27f69246aefaf",
+      "edits": [
+        {
+          "current": "import {\n\tbasename,\n\tdirname,\n\tisAbsolute,\n\tjoin,\n\trelative,\n\tresolve,\n\tsep,\n} from \"node:path\";\n",
+          "previous": "import { basename, dirname, join, relative, resolve, sep } from \"node:path\";\n",
+          "start": 242
+        },
+        {
+          "current": "const dockerSourceRoot = \"/workspace/source\";\n\nconst optionalText = async path => {\n\ttry\n\t{ return await readFile(path, \"utf8\"); }\n\tcatch(error)\n\t{\n\t\tif(error.code === \"ENOENT\") return null;\n\t\tthrow error;\n\t}\n};\n\nconst mappedTarget = (mapping, source) => {\n\tconst suffix = relative(mapping.source, source);\n\tif(suffix === \"..\" || suffix.startsWith(`..${sep}`)) return null;\n\treturn resolve(mapping.target, suffix);\n};\n\n/**\n * Finds Git administration and alternate-object directories referenced by a\n * source checkout but not carried by its Docker source bind. Each returned\n * directory must be mounted read-only at the path encoded in the checkout's\n * Git metadata, otherwise a shared clone can be readable on the host and\n * unreadable inside the builder container.\n *\n * @param root - Host source directory mounted at /workspace/source.\n */\nexport const resolveDockerGitMounts = async root => {\n\tconst source = resolve(root);\n\tconst dotGit = join(source, \".git\");\n\tlet dotGitStatus;\n\ttry\n\t{ dotGitStatus = await stat(dotGit); }\n\tcatch(error)\n\t{\n\t\tif(error.code === \"ENOENT\") return Object.freeze([]);\n\t\tthrow error;\n\t}\n\n\tconst mappings = [{ source, target: dockerSourceRoot, emitted: false }];\n\tconst candidates = [];\n\tconst addMapping = (hostPath, targetPath) => {\n\t\tconst mapping = {\n\t\t\tsource: resolve(hostPath), target: resolve(targetPath), emitted: true\n\t\t};\n\t\tif([mapping.source, mapping.target].some(path => path.includes(\",\")))\n\t\t{\n\t\t\tfail(\"unsupported-docker-mount-path\"\n\t\t\t\t, \"Docker Git object paths cannot contain commas\");\n\t\t}\n\t\tconst duplicate = mappings.find(item => item.source === mapping.source\n\t\t\t&& item.target === mapping.target);\n\t\tif(duplicate === undefined)\n\t\t{\n\t\t\tmappings.push(mapping);\n\t\t\tcandidates.push(mapping);\n\t\t}\n\t\treturn mapping;\n\t};\n\n\tlet gitDirectory, containerGitDirectory;\n\tif(dotGitStatus.isDirectory())\n\t{\n\t\tgitDirectory = dotGit;\n\t\tcontainerGitDirectory = join(dockerSourceRoot, \".git\");\n\t}\n\telse if(dotGitStatus.isFile())\n\t{\n\t\tconst match = /^gitdir: (.+)\\n?$/u.exec(await readFile(dotGit, \"utf8\"));\n\t\tif(match === null)\n\t\t{\n\t\t\tfail(\"unsupported-docker-git-layout\"\n\t\t\t\t, \"The source .git file does not name one Git directory\");\n\t\t}\n\t\tgitDirectory = resolve(source, match[1]);\n\t\tcontainerGitDirectory = isAbsolute(match[1])\n\t\t\t? resolve(match[1]) : resolve(dockerSourceRoot, match[1]);\n\t\taddMapping(gitDirectory, containerGitDirectory);\n\t}\n\telse\n\t{\n\t\tfail(\"unsupported-docker-git-layout\"\n\t\t\t, \"The source .git entry must be a file or directory\");\n\t}\n\n\tconst commonText = await optionalText(join(gitDirectory, \"commondir\"));\n\tconst commonDirectory = commonText === null\n\t\t? gitDirectory : resolve(gitDirectory, commonText.trim());\n\tconst containerCommonDirectory = commonText === null\n\t\t? containerGitDirectory\n\t\t: resolve(containerGitDirectory, commonText.trim());\n\tif(commonText !== null)\n\t{ addMapping(commonDirectory, containerCommonDirectory); }\n\n\tconst visited = new Set();\n\tconst visitObjectDirectory = async (hostDirectory, containerDirectory) => {\n\t\tconst key = `${resolve(hostDirectory)}\\0${resolve(containerDirectory)}`;\n\t\tif(visited.has(key)) return;\n\t\tvisited.add(key);\n\t\tif(visited.size > 64)\n\t\t{\n\t\t\tfail(\"unsupported-docker-git-layout\"\n\t\t\t\t, \"The source Git alternate-object closure exceeds 64 directories\");\n\t\t}\n\t\tconst alternates = await optionalText(join(hostDirectory, \"info\", \"alternates\"));\n\t\tif(alternates === null) return;\n\t\tfor(const entry of alternates.split(\"\\n\").filter(Boolean))\n\t\t{\n\t\t\tif(entry.includes(\"\\0\") || entry.includes(\"\\r\"))\n\t\t\t{\n\t\t\t\tfail(\"unsupported-docker-git-layout\"\n\t\t\t\t\t, \"The source Git alternates file contains an invalid path\");\n\t\t\t}\n\t\t\tconst alternateSource = resolve(hostDirectory, entry);\n\t\t\tconst alternateTarget = isAbsolute(entry)\n\t\t\t\t? resolve(entry) : resolve(containerDirectory, entry);\n\t\t\taddMapping(alternateSource, alternateTarget);\n\t\t\tawait visitObjectDirectory(alternateSource, alternateTarget);\n\t\t}\n\t};\n\tawait visitObjectDirectory(join(commonDirectory, \"objects\")\n\t\t, join(containerCommonDirectory, \"objects\"));\n\n\tconst normalized = candidates.filter(candidate => !mappings.some(other =>\n\t\tother !== candidate\n\t\t&& mappedTarget(other, candidate.source) === candidate.target\n\t\t&& (other.source.length < candidate.source.length\n\t\t\t|| (other.source === candidate.source && !other.emitted))));\n\tfor(const mapping of normalized)\n\t{\n\t\tlet status;\n\t\ttry\n\t\t{ status = await stat(mapping.source); }\n\t\tcatch(error)\n\t\t{\n\t\t\tfail(\"missing-docker-git-object-store\"\n\t\t\t\t, `Docker cannot mount Git object store ${mapping.source}`\n\t\t\t\t, { details: { cause: error.code ?? error.message } });\n\t\t}\n\t\tif(!status.isDirectory())\n\t\t{\n\t\t\tfail(\"unsupported-docker-git-layout\"\n\t\t\t\t, `Docker Git path is not a directory: ${mapping.source}`);\n\t\t}\n\t}\n\treturn Object.freeze(normalized.map(({ source: source_, target }) =>\n\t\tObject.freeze({ source: source_, target })));\n};\n\n",
+          "previous": "",
+          "start": 2860
+        },
+        {
+          "current": "\tconst gitMounts = await resolveDockerGitMounts(root);\n",
+          "previous": "",
+          "start": 25321
+        },
+        {
+          "current": "\t\t\t, ...gitMounts.flatMap(mount => [\n\t\t\t\t\"--mount\"\n\t\t\t\t, `type=bind,source=${mount.source},target=${mount.target},readonly`\n\t\t\t])\n",
+          "previous": "",
+          "start": 25731
+        }
+      ],
+      "path": "src/build/canonical-build.mjs",
+      "previousSha256": "ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf"
+    },
+    {
+      "currentSha256": "efeef15b79d626bbd0cf732630f9578333fc6e20f3adee84a53ddcf38b1ee40f",
+      "edits": [
+        {
+          "current": "\tresolveDockerGitMounts,\n",
+          "previous": "",
+          "start": 570
+        },
+        {
+          "current": "test(\"Docker mounts the complete shared Git alternate-object closure read-only\", async () => {\n  const scratch = await mkdtemp(join(tmpdir(), \"lean-bridge-docker-git-\"));\n  const source = join(scratch, \"source\");\n  const first = join(scratch, \"first-objects\");\n  const second = join(scratch, \"second-objects\");\n  try\n{\n    await Promise.all([\n      mkdir(join(source, \".git\", \"objects\", \"info\"), { recursive: true })\n      , mkdir(join(first, \"info\"), { recursive: true })\n      , mkdir(second, { recursive: true })\n    ]);\n    await Promise.all([\n      writeFile(join(source, \".git\", \"objects\", \"info\", \"alternates\")\n        , `${first}\\n`)\n      , writeFile(join(first, \"info\", \"alternates\"), \"../second-objects\\n\")\n    ]);\n    assert.deepEqual(await resolveDockerGitMounts(source), [\n      { source: first, target: first }\n      , { source: second, target: second }\n    ]);\n\n    await rm(second, { recursive: true, force: true });\n    await assert.rejects(resolveDockerGitMounts(source), error =>\n      error instanceof CanonicalBuildError\n      && error.code === \"missing-docker-git-object-store\");\n} finally\n{\n    await rm(scratch, { recursive: true, force: true });\n}\n});\n\n",
+          "previous": "",
+          "start": 2822
+        }
+      ],
+      "path": "tests/canonical-build.test.mjs",
+      "previousSha256": "1e8b1c3ba250965b008c0231a545b2aa2fb7dac5153ad2aea7fab6fb068799ff"
+    }
+  ]
+}
