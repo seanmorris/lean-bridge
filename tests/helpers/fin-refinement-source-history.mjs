@@ -13,6 +13,10 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	beforeVo1220ReleaseGateSparsePartialCheckoutRepairSource
+	, vo1220ReleaseGateSparsePartialCheckoutRepairNormalizationPaths
+} from "./vo1220-release-gate-sparse-partial-checkout-repair-source-history.mjs";
+import {
 	beforeVo1220ReleaseGatePartialCloneRepairSource
 	, vo1220ReleaseGatePartialCloneRepairNormalizationPaths
 } from "./vo1220-release-gate-partial-clone-repair-source-history.mjs";
@@ -2847,7 +2851,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...vo1220ReleaseGatePartialCloneRepairNormalizationPaths
+	...vo1220ReleaseGateSparsePartialCheckoutRepairNormalizationPaths
+	, ...vo1220ReleaseGatePartialCloneRepairNormalizationPaths
 	, ...vo1220ComponentCloneContractRepairNormalizationPaths
 	, ...vo1220ComponentReproducibilityReviewClosureNormalizationPaths
 	, ...vo1220ReleaseDockerGitMountNormalizationPaths
@@ -4131,7 +4136,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let stage = beforeVo1220ReleaseGatePartialCloneRepairSource(
+	let stage = beforeVo1220ReleaseGateSparsePartialCheckoutRepairSource(
+		path, text, expected);
+	if(expected !== undefined && sha256(stage) === expected)
+		return stage;
+	text = stage;
+	stage = beforeVo1220ReleaseGatePartialCloneRepairSource(
 		path, text, expected);
 	if(expected !== undefined && sha256(stage) === expected)
 		return stage;

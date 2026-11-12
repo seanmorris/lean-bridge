@@ -1,0 +1,127 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-release-gate-sparse-partial-checkout-repair-source-history.mjs",
+      "sha256": "763674cb07db2eb2a746e5aa9636726464932d1cff2780cb8de7e095c9d7b5f2"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-gate-sparse-partial-checkout-repair-source-history-tests.mjs",
+      "sha256": "90196bbccc0d5e0a10338c304576d5b1c5d78e173b66ce5e774e08ee3376fd8b"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-gate-sparse-partial-checkout-repair-source-history.mjs",
+      "sha256": "ddcea687b154c11bf5a02e0a0b25651178c52d2c52995aff8f7f8282707a07aa"
+    }
+  ],
+  "checkoutContract": {
+    "action": "actions/checkout@v6",
+    "excludedPath": "docs/evidence/",
+    "filter": "blob:none",
+    "sparseCheckoutConeMode": false
+  },
+  "implementationCommit": "e318f012b299d49db37dcc1bdd8938c22e689f6d",
+  "integrationCommit": "847e0ea0898adac0c0a64215deb0d65d28135916",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3d835568e0a4c76774a9694672acaab6510d05c77f62c25fce992c94940a7e4a",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-release-gate-sparse-partial-checkout-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 267
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c80deb189474e71057bb286c321fa46f447595be5eabc76f101e1a712505d736"
+    },
+    {
+      "currentSha256": "ab1632978089607fa78b966b7d20c613294b8b650204a8a58547c4ec5efdbd59",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ReleaseGateSparsePartialCheckoutRepairSource\n\t, vo1220ReleaseGateSparsePartialCheckoutRepairNormalizationPaths\n} from \"./vo1220-release-gate-sparse-partial-checkout-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ReleaseGateSparsePartialCheckoutRepairNormalizationPaths\n\t, ...vo1220ReleaseGatePartialCloneRepairNormalizationPaths\n",
+          "previous": "\t...vo1220ReleaseGatePartialCloneRepairNormalizationPaths\n",
+          "start": 247937
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ReleaseGateSparsePartialCheckoutRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ReleaseGatePartialCloneRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220ReleaseGatePartialCloneRepairSource(\n",
+          "start": 312333
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "08fc9e959680d21cf3763473da3317d55acfd15f76798c83ca99108394903985"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "localValidation": {
+    "checkedJavaScriptTypecheck": "passed",
+    "releaseAuthorization": {
+      "failed": 0,
+      "passed": 25
+    },
+    "scopedLint": "passed"
+  },
+  "milestone": "vo1220-release-gate-sparse-partial-checkout-repair-v1",
+  "predecessorCommit": "823771b9a639f43413fdbe0437f8acd10a33b888",
+  "refreshedPins": 0,
+  "remainingMismatches": 0,
+  "rootCause": "A blob:none filter avoids historical-only blobs but, by itself, still materializes every blob in the current checkout. The exact current type-surface inventory addresses 27,250,476,050 bytes under 123,815 paths, overwhelmingly retained evidence that the release gate explicitly excludes from both clean source trees. The partial filter therefore needed the same non-cone docs/evidence exclusion at the initial hosted checkout boundary.",
+  "schemaVersion": 1,
+  "scope": "Combine fetch-depth zero and blob:none with a non-cone sparse checkout of the full current tree except docs/evidence. Extend the executable regression so the partial repository itself omits a current evidence file before it prepares both clean sources. Change no release artifact, runtime, proof, support observation, package contract, public citation, inventory or prior receipt.",
+  "sourceInventory": {
+    "bytes": 27250476050,
+    "evidence": 900,
+    "mismatches": 0,
+    "objects": 20975,
+    "occurrences": 369393,
+    "paths": 123815,
+    "revision": "823771b9a639f43413fdbe0437f8acd10a33b888"
+  },
+  "updates": [
+    {
+      "currentSha256": "4aac77ff69f5023909c8ca07fff9033cd43912c4e936ad3d94a1075fdadab616",
+      "edits": [
+        {
+          "current": "          sparse-checkout: |\n            /*\n            !/docs/evidence/\n          sparse-checkout-cone-mode: false\n",
+          "previous": "",
+          "start": 635
+        }
+      ],
+      "path": ".github/workflows/reproducible-release.yml",
+      "previousSha256": "2a12852d3c6d76f49edceff4ae0a9e0e0f7fc45ef0675240026fdcd618819f10"
+    },
+    {
+      "currentSha256": "37af23bf4d484b3c2d5e767e3dedb277a378a535dd9fad15dea07ef53df89eda",
+      "edits": [
+        {
+          "current": "    await mkdir(join(origin, \"docs\", \"evidence\"), { recursive: true });\n    await Promise.all([\n      writeFile(join(origin, \"Main.lean\"), \"def answer := 42\\n\")\n      , writeFile(join(origin, \"docs\", \"evidence\", \"current.txt\"), \"retained evidence\\n\")\n    ]);\n",
+          "previous": "    await writeFile(join(origin, \"Main.lean\"), \"def answer := 42\\n\");\n",
+          "start": 12987
+        },
+        {
+          "current": "    await execute(\"git\", [\"clone\", \"--quiet\", \"--filter=blob:none\", \"--no-checkout\", `file://${origin}`, repository]);\n    await execute(\"git\", [\"sparse-checkout\", \"set\", \"--no-cone\", \"/*\", \"!/docs/evidence/\"], { cwd: repository });\n    await execute(\"git\", [\"checkout\", \"--quiet\", \"HEAD\"], { cwd: repository });\n",
+          "previous": "    await execute(\"git\", [\"clone\", \"--quiet\", \"--filter=blob:none\", `file://${origin}`, repository]);\n",
+          "start": 13386
+        },
+        {
+          "current": "    await assert.rejects(readFile(join(repository, \"docs\", \"evidence\", \"current.txt\")), error => error.code === \"ENOENT\");\n",
+          "previous": "",
+          "start": 13827
+        },
+        {
+          "current": "  assert.match(workflow, /fetch-depth: 0\\n\\s+#(?:.|\\n)*?filter: blob:none\\n\\s+sparse-checkout: \\|\\n\\s+\\/\\*\\n\\s+!\\/docs\\/evidence\\/\\n\\s+sparse-checkout-cone-mode: false\\n/u);\n",
+          "previous": "  assert.match(workflow, /fetch-depth: 0\\n\\s+#(?:.|\\n)*?filter: blob:none\\n/u);\n",
+          "start": 22087
+        }
+      ],
+      "path": "tests/reproducibility-gate.test.mjs",
+      "previousSha256": "e0aa94d5a595d99fe8f6679cc71e6655b691d5dda2bcd63ede82365b495df97a"
+    }
+  ]
+}
