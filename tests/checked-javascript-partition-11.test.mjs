@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/nominal-primitive-subtype-sparse-closure-repair-source-history-tests.mjs";
 import "./helpers/nominal-guard-dispatch-marker-source-history-tests.mjs";
 import "./helpers/native-subtype-archive-pin-restoration-source-history-tests.mjs";
 import "./helpers/folded-history-state-reconstruction-repair-source-history-tests.mjs";
