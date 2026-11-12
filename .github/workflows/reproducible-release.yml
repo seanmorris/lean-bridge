@@ -58,6 +58,14 @@ jobs:
       - name: Check out authorization verifier
         uses: actions/checkout@v6
         with:
+          # The verifier consumes the immutable artifact plus current source;
+          # retained evidence is neither an input nor safe to materialize on a
+          # hosted runner.
+          filter: blob:none
+          sparse-checkout: |
+            /*
+            !/docs/evidence/
+          sparse-checkout-cone-mode: false
           persist-credentials: false
       - name: Install Node.js
         uses: actions/setup-node@v6

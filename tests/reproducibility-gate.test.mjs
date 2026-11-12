@@ -506,9 +506,24 @@ test("read-only build directories do not override a successful reproducibility r
 }
 });
 
-test("release workflow downloads the direct artifact by its filename", async () => {
+test("both release jobs exclude retained evidence before downloading the direct artifact", async () => {
   const workflow = await readFile(".github/workflows/reproducible-release.yml", "utf8");
-  assert.match(workflow, /fetch-depth: 0\n\s+#(?:.|\n)*?filter: blob:none\n\s+sparse-checkout: \|\n\s+\/\*\n\s+!\/docs\/evidence\/\n\s+sparse-checkout-cone-mode: false\n/u);
+  const checkouts = [...workflow.matchAll(
+    /^ {6}- name: (?<name>[^\n]+)\n {8}uses: actions\/checkout@v6\n {8}with:\n(?<options>(?: {10}.*\n)+)/gmu
+  )].map(match => ({ name: match.groups.name, options: match.groups.options }));
+  assert.deepEqual(checkouts.map(checkout => checkout.name), [
+    "Check out the exact candidate"
+    , "Check out authorization verifier"
+  ]);
+  assert.match(checkouts[0].options, /fetch-depth: 0\n/u);
+  for(const checkout of checkouts)
+  {
+    assert.match(checkout.options, /filter: blob:none\n/u, checkout.name);
+    assert.match(checkout.options,
+      /sparse-checkout: \|\n\s+\/\*\n\s+!\/docs\/evidence\/\n\s+sparse-checkout-cone-mode: false\n/u,
+      checkout.name);
+    assert.match(checkout.options, /persist-credentials: false\n/u, checkout.name);
+  }
   assert.match(workflow, /path: build\/reproducibility-gate\.tar\n\s+archive: false/);
   assert.match(workflow, /uses: actions\/download-artifact@v8\n\s+with:\n\s+name: reproducibility-gate\.tar\n\s+path: build/);
   assert.doesNotMatch(workflow, /name: reproducibility-gate-\$\{\{ github\.sha \}\}/);
