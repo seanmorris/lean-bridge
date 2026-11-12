@@ -1,0 +1,277 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-release-docker-log-bound-source-history.mjs",
+      "sha256": "049062b8bf5099767cf50266914b632fb87ab24e045b7421e554d4a9f595d7cc"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-docker-log-bound-source-history-tests.mjs",
+      "sha256": "b6768463cbf55f7a3e9b32228afa5ee695c492d00dadc0ec91c3602117e36333"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-docker-log-bound-source-history.mjs",
+      "sha256": "e42da9e73456e757b06673ff3e199c1277801850c716f8e48c2ed1e939c08ae9"
+    }
+  ],
+  "boundedCommands": 2,
+  "boundedPolicy": "bounded-tail",
+  "boundedTailBytesPerStream": 1048576,
+  "defaultPolicy": "fail",
+  "failedRun": {
+    "code": "build-output-limit",
+    "failure": "Docker exceeded the 32 MiB diagnostic limit",
+    "job": 131407244760,
+    "workflow": 43282516528
+  },
+  "implementationCommit": "436cd6fd3d40d17307d6e4cf597030930c0d8a00",
+  "integrationCommit": "50a4cc0848fc127d07c57f037d4a26f422e096c8",
+  "integrationUpdates": [
+    {
+      "currentSha256": "323a08e987131766d9e43ad24fb5bcc0806d02f9501aa32b2663556786004550",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-release-docker-log-bound-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "c3d3aac6b105e714705e5bd6c812e0fe0cbabc2c4f8aad3974ffada2cfb52c68"
+    },
+    {
+      "currentSha256": "047a34cddc1f86647bd8f86f575d3dbb97c022249b5e7380a1f5ad8c901ad273",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ReleaseDockerLogBoundSource\n\t, vo1220ReleaseDockerLogBoundNormalizationPaths\n} from \"./vo1220-release-docker-log-bound-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ReleaseDockerLogBoundNormalizationPaths\n\t, ...vo1220ReleaseGateSitePinNormalizationPaths\n",
+          "previous": "\t...vo1220ReleaseGateSitePinNormalizationPaths\n",
+          "start": 246980
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ReleaseDockerLogBoundSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ReleaseGateSitePinSource(\n",
+          "previous": "\tlet stage = beforeVo1220ReleaseGateSitePinSource(\n",
+          "start": 311068
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "25e6038a5bac2180f4e54978322e0baa8ba7a1bc42a704738049ff3242706474"
+    }
+  ],
+  "liveSourceOccurrences": 16326,
+  "liveSourcePaths": 2661,
+  "milestone": "vo1220-release-docker-log-bound-v1",
+  "pinCounts": {
+    "src/build/canonical-build.mjs": 16,
+    "src/build/process-runner.mjs": 2
+  },
+  "pinRefreshCommit": "7cd9444f8727f7044e185b2826483aaf2dd40547",
+  "pinUpdates": [
+    {
+      "currentSha256": "91b3c4e505fb69f27cc62cd54b30bc4ff4dbe706adf74708c2f6447fbeccafb9",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 66144
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 87052
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 102902
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 118503
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 877746
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 888548
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 897400
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 914451
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 923267
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 932916
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 943944
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 1043601
+        },
+        {
+          "current": "          \"sha256\": \"8a19507e49834ddb628ae022eeafb3ab696c30de953d779b81f6ad32165e236c\"\n",
+          "previous": "          \"sha256\": \"173a41bf2009d62c2040cb05d5720bf909907ab0e9a6f56167af751cb51e5b94\"\n",
+          "start": 1051802
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 1201627
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 1233304
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 1265631
+        },
+        {
+          "current": "          \"sha256\": \"ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf\"\n",
+          "previous": "          \"sha256\": \"b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06\"\n",
+          "start": 1300411
+        },
+        {
+          "current": "          \"sha256\": \"8a19507e49834ddb628ae022eeafb3ab696c30de953d779b81f6ad32165e236c\"\n",
+          "previous": "          \"sha256\": \"173a41bf2009d62c2040cb05d5720bf909907ab0e9a6f56167af751cb51e5b94\"\n",
+          "start": 1951675
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "783a8bc2619eae28fcd9dfb8fe4f5182f7995a2eeb75fa8e85f2c375df07a912"
+    }
+  ],
+  "predecessorCommit": "7dbe2ff990c3f6ad548285ac48a865e5901f19e0",
+  "refreshedPins": 18,
+  "remainingMismatches": 0,
+  "rootCause": "The generic process runner correctly bounded parsed command output, but the release path applied the same kill policy to Docker build and run logs that callers intentionally discard. A normal isolated Nix build exceeded 32 MiB and was killed before semantic release comparison.",
+  "schemaVersion": 1,
+  "scope": "Preserve the strict fail-closed output limit for every ordinary or parsed command; give only the two discard-only Docker build/run calls an explicit 1 MiB-per-stream bounded-tail policy; retain observed/truncated diagnostics on failure; refresh the complete 18-pin public citation cohort; change no release artifact, support observation, proof, package contract or immutable prior receipt.",
+  "updates": [
+    {
+      "currentSha256": "ddc0e8c14779a66a81324b52ded29a0a26e0c0199868e711aaddfb757fc5dfdf",
+      "edits": [
+        {
+          "current": "\t\t, outputPolicy: \"bounded-tail\"\n\t\t, maximumOutputBytes: 1024 * 1024\n",
+          "previous": "",
+          "start": 21156
+        },
+        {
+          "current": "\t\t, outputPolicy: \"bounded-tail\"\n\t\t, maximumOutputBytes: 1024 * 1024\n",
+          "previous": "",
+          "start": 22562
+        }
+      ],
+      "path": "src/build/canonical-build.mjs",
+      "previousSha256": "b138fc2f2bd26ed473cf98bb54ba81a14f47a7aa919209e48f9c81314f6d6c06"
+    },
+    {
+      "currentSha256": "8a19507e49834ddb628ae022eeafb3ab696c30de953d779b81f6ad32165e236c",
+      "edits": [
+        {
+          "current": "const outputPolicies = new Set([\"fail\", \"bounded-tail\"]);\nconst defaultMaximumOutputBytes = 32 * 1024 * 1024;\n\nconst capture = ({\n\tcommand, args, cwd, env = process.env, timeoutMs = 30 * 60 * 1000\n\t, signal = undefined, outputPolicy = \"fail\"\n\t, maximumOutputBytes = defaultMaximumOutputBytes\n}) => new Promise((accept, reject) => {\n\tif(!outputPolicies.has(outputPolicy))\n\t{\n\t\treject(new CanonicalBuildError(\"invalid-build-runner-output-policy\"\n\t\t\t, `Unsupported build output policy: ${outputPolicy}`));\n\t\treturn;\n\t}\n\tif(!Number.isSafeInteger(maximumOutputBytes) || maximumOutputBytes <= 0)\n\t{\n\t\treject(new CanonicalBuildError(\"invalid-build-runner-output-limit\"\n\t\t\t, \"The build output limit must be a positive safe integer\"));\n\t\treturn;\n\t}\n",
+          "previous": "const capture = ({ command, args, cwd, env = process.env, timeoutMs = 30 * 60 * 1000, signal = undefined }) => new Promise((accept, reject) => {\n",
+          "start": 188
+        },
+        {
+          "current": "\tconst output = () => ({ chunks: [], retained: 0, observed: 0 });\n\tconst stdout = output();\n\tconst stderr = output();\n",
+          "previous": "\tconst stdout = [];\n\tconst stderr = [];\n",
+          "start": 1171
+        },
+        {
+          "current": "",
+          "previous": "\tconst maximum = 32 * 1024 * 1024;\n",
+          "start": 1372
+        },
+        {
+          "current": "\t\ttarget.observed += chunk.length;\n\t\tif(outputPolicy === \"fail\" && bytes > maximumOutputBytes)\n",
+          "previous": "\t\tif(bytes > maximum)\n",
+          "start": 1779
+        },
+        {
+          "current": "\t\t\trejectOnce(new CanonicalBuildError(\"build-output-limit\"\n\t\t\t\t, `${command} exceeded the ${maximumOutputBytes}-byte diagnostic limit`));\n",
+          "previous": "\t\t\trejectOnce(new CanonicalBuildError(\"build-output-limit\", `${command} exceeded the 32 MiB diagnostic limit`));\n",
+          "start": 1904
+        },
+        {
+          "current": "\t\ttarget.chunks.push(chunk);\n\t\ttarget.retained += chunk.length;\n\t\tif(outputPolicy === \"bounded-tail\")\n\t\t{\n\t\t\twhile(target.retained > maximumOutputBytes)\n\t\t\t{\n\t\t\t\tconst overflow = target.retained - maximumOutputBytes;\n\t\t\t\tconst first = target.chunks[0];\n\t\t\t\tif(first.length <= overflow)\n\t\t\t\t{\n\t\t\t\t\ttarget.chunks.shift();\n\t\t\t\t\ttarget.retained -= first.length;\n\t\t\t\t}\n\t\t\t\telse\n\t\t\t\t{\n\t\t\t\t\ttarget.chunks[0] = first.subarray(overflow);\n\t\t\t\t\ttarget.retained -= overflow;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n",
+          "previous": "\t\ttarget.push(chunk);\n",
+          "start": 2057
+        },
+        {
+          "current": "      , stdout: Buffer.concat(stdout.chunks).toString(\"utf8\")\n      , stderr: Buffer.concat(stderr.chunks).toString(\"utf8\")\n",
+          "previous": "      , stdout: Buffer.concat(stdout).toString(\"utf8\")\n      , stderr: Buffer.concat(stderr).toString(\"utf8\")\n",
+          "start": 3428
+        },
+        {
+          "current": "\t\t\t\t\t, stderr: result.stderr.slice(-8000), stdout: result.stdout.slice(-8000)\n\t\t\t\t\t, outputPolicy, stdoutBytes: stdout.observed\n\t\t\t\t\t, stderrBytes: stderr.observed\n\t\t\t\t\t, stdoutTruncated: stdout.observed > stdout.retained\n\t\t\t\t\t, stderrTruncated: stderr.observed > stderr.retained }\n",
+          "previous": "\t\t\t\t\t, stderr: result.stderr.slice(-8000), stdout: result.stdout.slice(-8000) }\n",
+          "start": 3891
+        }
+      ],
+      "path": "src/build/process-runner.mjs",
+      "previousSha256": "173a41bf2009d62c2040cb05d5720bf909907ab0e9a6f56167af751cb51e5b94"
+    },
+    {
+      "currentSha256": "1e8b1c3ba250965b008c0231a545b2aa2fb7dac5153ad2aea7fab6fb068799ff",
+      "edits": [
+        {
+          "current": "\t\tconst imageBuild = calls.find(call => call.args[0] === \"build\");\n\t\tassert.equal(imageBuild.outputPolicy, \"bounded-tail\");\n\t\tassert.equal(imageBuild.maximumOutputBytes, 1024 * 1024);\n\t\tassert.equal(run.outputPolicy, \"bounded-tail\");\n\t\tassert.equal(run.maximumOutputBytes, 1024 * 1024);\n",
+          "previous": "",
+          "start": 9633
+        },
+        {
+          "current": "      calls.push({\n\t\t\tcommand: request.command, args: [...request.args]\n\t\t\t, outputPolicy: request.outputPolicy\n\t\t\t, maximumOutputBytes: request.maximumOutputBytes\n      });\n",
+          "previous": "      calls.push({ command: request.command, args: [...request.args] });\n",
+          "start": 14595
+        },
+        {
+          "current": "\t\tconst boundedCalls = calls.filter(item => [\"build\", \"run\"]\n\t\t\t.includes(item.args[0]));\n\t\tfor(const call of boundedCalls)\n\t\t{\n      assert.equal(call.outputPolicy, \"bounded-tail\");\n      assert.equal(call.maximumOutputBytes, 1024 * 1024);\n\t\t}\n",
+          "previous": "",
+          "start": 17366
+        }
+      ],
+      "path": "tests/canonical-build.test.mjs",
+      "previousSha256": "70947e7de725e547d9770c1abfba59f7d34a157a1520ceef79bf547f2ce1deac"
+    },
+    {
+      "currentSha256": "c0fa79497973231e925c3da3ec71ef534b902a47bc9acebb3eb84824c25917e8",
+      "edits": [
+        {
+          "current": "\ntest(\"process diagnostics fail closed when ordinary output exceeds its limit\"\n\t, async () => {\n\t\tawait assert.rejects(processBuildRunner.capture({\n\t\t\tcommand: process.execPath\n\t\t\t, args: [\"-e\", \"process.stdout.write('x'.repeat(65))\"]\n\t\t\t, cwd: process.cwd(), maximumOutputBytes: 64\n\t\t}), { code: \"build-output-limit\" });\n\t}\n);\n\ntest(\"discard-only commands retain bounded tails without killing the process\"\n\t, async () => {\n\t\tconst result = await processBuildRunner.capture({\n\t\t\tcommand: process.execPath\n\t\t\t, args: [\n\t\t\t\t\"-e\"\n\t\t\t\t, [\n\t\t\t\t\t\"process.stdout.write('a'.repeat(40) + 'TAIL-OUT')\"\n\t\t\t\t\t, \"process.stderr.write('b'.repeat(40) + 'TAIL-ERR')\"\n\t\t\t\t].join(\";\")\n\t\t\t]\n\t\t\t, cwd: process.cwd(), outputPolicy: \"bounded-tail\"\n\t\t\t, maximumOutputBytes: 16\n\t\t});\n\t\tassert.deepEqual(result, {\n\t\t\tcode: 0, stdout: \"aaaaaaaaTAIL-OUT\", stderr: \"bbbbbbbbTAIL-ERR\"\n\t\t});\n\t}\n);\n\ntest(\"bounded command failures report observed and truncated output\", async () => {\n\tawait assert.rejects(processBuildRunner.capture({\n\t\tcommand: process.execPath\n\t\t, args: [\"-e\", \"process.stderr.write('z'.repeat(80)); process.exit(9)\"]\n\t\t, cwd: process.cwd(), outputPolicy: \"bounded-tail\"\n\t\t, maximumOutputBytes: 16\n\t}), error => {\n\t\tassert.equal(error.code, \"build-command-failed\");\n\t\tassert.equal(error.details.outputPolicy, \"bounded-tail\");\n\t\tassert.equal(error.details.stderrBytes, 80);\n\t\tassert.equal(error.details.stderrTruncated, true);\n\t\tassert.equal(error.details.stderr, \"z\".repeat(16));\n\t\treturn true;\n\t});\n});\n",
+          "previous": "",
+          "start": 1699
+        }
+      ],
+      "path": "tests/helpers/process-failure-diagnostics-tests.mjs",
+      "previousSha256": "3a061cb46e8da3c94bf2e425cd70b6cbbf19fa6dfc120df87c2f691ba6c441e3"
+    }
+  ]
+}
