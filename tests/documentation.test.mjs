@@ -14,11 +14,17 @@ import {
 	, consumerMatrixNixJobs as expectedNixJobs
 } from "./helpers/consumer-matrix-live-topology.mjs";
 import { isDeepStrictEqual } from "node:util";
-import "./helpers/node-consumer-budget-ci-tests.mjs";
-import "./helpers/node-consumer-budget-source-history-tests.mjs";
-import "./helpers/perl-xs-budget-source-history-tests.mjs";
-import "./helpers/ruby-gdb-ci-source-history-tests.mjs";
-import "./helpers/native-observation-split-tests.mjs";
+import { registerRetainedContractTests }
+	from "./helpers/retained-contract-tests.mjs";
+
+const retainedRegistration = await registerRetainedContractTests([
+	() => import("./helpers/node-consumer-budget-ci-tests.mjs")
+	, () => import("./helpers/node-consumer-budget-source-history-tests.mjs")
+	, () => import("./helpers/perl-xs-budget-source-history-tests.mjs")
+	, () => import("./helpers/ruby-gdb-ci-source-history-tests.mjs")
+	, () => import("./helpers/native-observation-split-tests.mjs")
+]);
+const retainedTest = retainedRegistration.scope === "required" ? test : test.skip;
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
@@ -794,7 +800,7 @@ test("every callback-result package build reclaims hosted disk before checkout"
 	}
 );
 
-test("consumer CI history preserves every consumer and pinned build path", async () => {
+retainedTest("consumer CI history preserves every consumer and pinned build path", async () => {
   const [packageDocument, livePerlWorkflow, toolchainBootstrap, reviewedCorpusTest] = await Promise.all([
     readFile("package.json", "utf8").then(JSON.parse)
     , readFile(".github/workflows/perl-consumer.yml", "utf8")

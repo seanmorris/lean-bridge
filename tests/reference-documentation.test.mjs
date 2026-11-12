@@ -20,11 +20,13 @@ import { canonicalJson } from '../src/capsule/node.mjs';
 import {
 	adapterExports, algorithmReferences, generateReferenceDocs, packageReference, renderReferenceDocuments
 } from '../scripts/generate-reference-docs.mjs';
+import { retainedContractScope } from './helpers/retained-contract-tests.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const text = relative => readFile(path.join(root, relative), 'utf8');
 const blocks = (markdown, language) => [...markdown.matchAll(new RegExp(`^\`\`\`${language}\\n([\\s\\S]*?)^\`\`\`\\s*$`, 'gmu'))]
 	.map(match => match[1].trim());
+const retainedTest = retainedContractScope() === 'required' ? test : test.skip;
 
 test('compiler API captures ignore JSON member order and still detect changed source identities', async () => {
 	const capture = JSON.parse(await text('tests/fixtures/documentation/package-api/lean-author.json'));
@@ -37,7 +39,7 @@ test('compiler API captures ignore JSON member order and still detect changed so
 	assert.notEqual(renderReferenceApiCapture(analysis), canonicalJson(capture));
 });
 
-test('generated references and consumer type sections match the current contracts exactly', async () => {
+retainedTest('generated references and consumer type sections match the current contracts exactly', async () => {
 	const documents = await generateReferenceDocs();
 	assert.equal(Object.keys(documents).length, 4 + Object.keys(typeGuideProfiles).length);
 	assert.deepEqual(await renderReferenceDocuments(), documents, 'Generation is deterministic');

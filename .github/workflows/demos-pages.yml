@@ -13,6 +13,50 @@ concurrency:
   group: demos-pages-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Keep this identical to Consumer Matrix's authenticated documentation input
+  # closure. The gallery checks current docs and defers retained-history replay
+  # to Core and Consumer Matrix.
+  LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT: |
+    /*
+    !/*/
+    /.github/
+    /acceptance/
+    /config/
+    /containers/
+    /demos/
+    /nix/
+    /notices/
+    /patches/
+    /poc/
+    /schema/
+    /scripts/
+    /site/
+    /src/
+    /tests/
+    /docs/
+    !/docs/evidence/*
+    /docs/evidence/*.json
+    /docs/evidence/*.md
+    /docs/evidence/*.xml
+    /docs/evidence/**/*.json
+    /docs/evidence/**/*.md
+    /docs/evidence/**/*.xml
+    /docs/evidence/checked-records-20261008/
+    /docs/evidence/checked-record-perl-installed-20261011/
+    /docs/evidence/checked-record-browser-20261011/
+    /docs/evidence/checked-record-php-wasm-20261011/
+    /docs/evidence/checked-record-python-hosts-20261010/
+    /docs/evidence/checked-record-ruby-jvm-20261010/
+    /docs/evidence/checked-record-remaining-hosts-20261010/
+    /docs/evidence/native-fin-callbacks-20261008/
+    /docs/evidence/browser-callback-fin-20261008/
+    /docs/evidence/reviewed-callback-fin-20261008/
+    /docs/evidence/reviewed-subtype-python-hosts-20261010/
+    /docs/evidence/reviewed-subtype-ruby-jvm-hosts-20261010/
+    /docs/evidence/reviewed-subtype-remaining-hosts-20261010/
+    /docs/evidence/php-wasm-subtype-installed-20261010/
+
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -20,10 +64,19 @@ jobs:
     env:
       LEAN_BRIDGE_SITE_BASE: /lean-bridge/
     steps:
+      - name: Free hosted runner disk before bounded documentation checkout
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+          df -h /
       - name: Check out the exact revision
         uses: actions/checkout@v6
         with:
+          fetch-depth: 1
+          filter: blob:none
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_BRIDGE_DOCUMENTATION_SPARSE_CHECKOUT }}
+          sparse-checkout-cone-mode: false
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
@@ -36,7 +89,9 @@ jobs:
       - name: Bootstrap pinned Lean and Wasm toolchains
         run: npm run bootstrap
       - name: Check documentation snippets and author contracts
-        run: npm run test:docs
+        env:
+          LEAN_BRIDGE_RETAINED_CONTRACTS: deferred
+        run: npm run test:docs:demo
       - name: Check the tutorial proof and reject unsound variants
         run: npm run test:docs:proof
       - name: Build and verify demo artifacts

@@ -5,10 +5,6 @@
  */
 
 import assert from "node:assert/strict";
-import "./helpers/author-refinement-docs-source-history-tests.mjs";
-import "./helpers/checked-record-perl-author-docs-history-tests.mjs";
-import "./helpers/inherited-checked-record-docs-closure-source-history-tests.mjs";
-import "./helpers/inherited-docs-replay-repair-source-history-tests.mjs";
 import "./helpers/author-refinement-consistency-tests.mjs";
 import { createReadStream } from "node:fs";
 import { access, readFile } from "node:fs/promises";
@@ -32,6 +28,16 @@ import { finHostedReceiptSha256 } from "./helpers/fin-native-hosted-evidence.mjs
 import { phpWasmSubtypePromotionReferences } from "./helpers/php-wasm-subtype-promotion.mjs";
 import { reviewedSubtypeNativeReferences } from "./helpers/reviewed-subtype-native-promotion.mjs";
 import { readPromotionInventory } from "./helpers/type-surface-promotion-io.mjs";
+import { registerRetainedContractTests }
+	from "./helpers/retained-contract-tests.mjs";
+
+const retainedRegistration = await registerRetainedContractTests([
+	() => import("./helpers/author-refinement-docs-source-history-tests.mjs")
+	, () => import("./helpers/checked-record-perl-author-docs-history-tests.mjs")
+	, () => import("./helpers/inherited-checked-record-docs-closure-source-history-tests.mjs")
+	, () => import("./helpers/inherited-docs-replay-repair-source-history-tests.mjs")
+]);
+const retainedTest = retainedRegistration.scope === "required" ? test : test.skip;
 
 const fixture = "tests/fixtures/documentation/lean-author";
 const documents = [
@@ -186,7 +192,7 @@ test("checked-record guidance uses the tested payload and per-site constructor c
 	assert.match(await readFile("docs/lean/export-decisions.md", "utf8"), /existing-package.md#export-a-record-with-proof-fields/);
 });
 
-test("the checked-record author table agrees with all seventeen installed consumer profiles", async () => {
+retainedTest("the checked-record author table agrees with all seventeen installed consumer profiles", async () => {
 	const document = await readFile("docs/lean/existing-package.md", "utf8");
 	const row = document.split("\n").find(line => line.startsWith("| Record with erased proof fields"));
 	assert.equal(row, "| Record with erased proof fields and a checked input constructor | Node, browser, React and worker installed for the archived nested fields/containers, both source routes | C/C++, Python, Rust, Ruby, .NET, Java, Kotlin, native PHP and WIT/WASI installed for the archived nested fields/containers, both source routes | Installed for the archived nested fields/containers, both source routes on four ABIs | Installed for the archived nested fields/containers in Node/Chromium, both source routes | All seventeen profiles have installed nested parameter/result/field checks for the archived acyclic forms; separately archived synchronous callback parameter/result checks cover all seventeen profiles on both source routes; the separately archived owned Booking/Window and Ticket/Claim forms are documented below; unarchived combinations remain separate |");
