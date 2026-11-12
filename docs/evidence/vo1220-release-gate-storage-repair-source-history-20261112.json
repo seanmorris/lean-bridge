@@ -1,0 +1,172 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-release-gate-storage-repair-source-history.mjs",
+      "sha256": "80275da1d35843aeee2eba4b184bd01b628fa234bb1c68248635bb7e3fd61205"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-gate-storage-repair-source-history-tests.mjs",
+      "sha256": "1e0d4d7fc85d02ab8a696c3252daddc782421e3751efe80c2b19d2f9de47eabf"
+    },
+    {
+      "path": "tests/helpers/vo1220-release-gate-storage-repair-source-history.mjs",
+      "sha256": "1ea5991af90409272db81f75c2cd45776f0fb833b2fa7c7c53dc29db4fd75390"
+    }
+  ],
+  "failedRuns": [
+    {
+      "failure": "stale site capability assertion",
+      "job": 131374362438,
+      "workflow": 43273104746
+    },
+    {
+      "failure": "opaque full object-store clone exit 128",
+      "job": 131374361748,
+      "workflow": 43273104917
+    }
+  ],
+  "implementationCommit": "880fce13d74ce0e804edb80b6ae21b8671acd9b5",
+  "integrationCommit": "9134b4248bfc86c277f709b8ffdb1461d73b70e1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a439a45963d09b6f128550185ca32535503a5108a8da4a04f7e54605fb61eccc",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-release-gate-storage-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "76a123d890cf950087bf891d66ccc6e23229a70b8dae5d8780a4e1ea3a2915c5"
+    },
+    {
+      "currentSha256": "efedb5eadd91d07b28fbdf86c9c6cf9d5e27494fdc421e706c25cc03cac3ca51",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ReleaseGateStorageRepairSource\n\t, vo1220ReleaseGateStorageRepairNormalizationPaths\n} from \"./vo1220-release-gate-storage-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ReleaseGateStorageRepairNormalizationPaths\n\t, ...nominalPrimitiveSubtypeSparseClosureRepairNormalizationPaths\n",
+          "previous": "\t...nominalPrimitiveSubtypeSparseClosureRepairNormalizationPaths\n",
+          "start": 246665
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ReleaseGateStorageRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeNominalPrimitiveSubtypeSparseClosureRepairSource(\n",
+          "previous": "\tlet stage = beforeNominalPrimitiveSubtypeSparseClosureRepairSource(\n",
+          "start": 310652
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6bd3f8590baad4c58b3546b1d8dba86279edfa8da1d1b2464e7121f49f3bd018"
+    }
+  ],
+  "milestone": "vo1220-release-gate-storage-repair-v1",
+  "predecessorCommit": "b98cc4893e857a32d2b087b0b3acea9aa838bde5",
+  "rootCause": "The site contract still required the pre-dependent-Fin wording after the documentation had narrowed that boundary. Separately, both reproducibility source preparers forced two physical copies of a repository object database that has grown beyond 25 GiB; the universal workflow reached Git exit 128 before either semantic build and discarded the bounded Git stderr while wrapping the failure.",
+  "schemaVersion": 1,
+  "scope": "Match the site assertion to the exact current dependent-Fin boundary; keep two independent writable release trees while reusing immutable Git objects according to each lifetime contract; exclude retained evidence only from Lean Bridge's repository-owned universal working trees; refuse shallow universal sources; preserve bounded command diagnostics; retain self-contained component checkouts after author-source deletion; change no package bytes, type-surface support claim, runtime behavior, proof, or immutable prior receipt.",
+  "storageObservation": {
+    "currentPhysicalObjectCopies": 0,
+    "packedRepository": "greater than 25 GiB",
+    "priorPhysicalObjectCopies": 2,
+    "universalSparseCheckoutBytes": 246367667
+  },
+  "updates": [
+    {
+      "currentSha256": "9a956e1ae139d30a8456c11c6775f001c1b3cdf5ed1d75a3b440b019b5e0c167",
+      "edits": [
+        {
+          "current": "\tassert.match(exports, /Open generics, dependent signatures outside the supported direct earlier-Nat `Fin` parameter form, asynchronous operations and retained host callbacks require further work/);\n",
+          "previous": "\tassert.match(exports, /Open generics, dependent signatures, asynchronous operations and retained host callbacks require further work/);\n",
+          "start": 2542
+        }
+      ],
+      "path": "site/workflows.test.mjs",
+      "previousSha256": "7202a6992a392f38471b2a9815c47149a40e2adea0b0982756e83fce0dcbb208"
+    },
+    {
+      "currentSha256": "f7153c48d0b330f63bcd187ce9cd6ec7a2bff6ce16872f6f6eef68254ae568e3",
+      "edits": [
+        {
+          "current": "import {\n\tboundedCommandFailureDetails, ReproducibilityGateError\n} from \"./reproducibility-gate.mjs\";\n",
+          "previous": "import { ReproducibilityGateError } from \"./reproducibility-gate.mjs\";\n",
+          "start": 1267
+        },
+        {
+          "current": "\t\t\t, args: [\"clone\", \"--quiet\", \"--local\", \"--no-checkout\", repositoryRoot, checkout]\n",
+          "previous": "\t\t\t, args: [\"clone\", \"--quiet\", \"--no-local\", \"--no-hardlinks\", \"--no-checkout\", repositoryRoot, checkout]\n",
+          "start": 5070
+        },
+        {
+          "current": "\t\t\t\t, cause: boundedCommandFailureDetails(error)\n",
+          "previous": "",
+          "start": 16371
+        }
+      ],
+      "path": "src/release/component-reproducibility-gate.mjs",
+      "previousSha256": "7f0f047df5bad1dda71e67efb987b7236c64bfa29326e305cbc0cb61243564f0"
+    },
+    {
+      "currentSha256": "f6ad95a33fd531f93eeab296d26112a4550092db84dc60afcab120a8da9c0ad4",
+      "edits": [
+        {
+          "current": "/**\n * Retains only bounded process diagnostics when a gate wraps an external-command failure.\n *\n * @param error - Error raised by the canonical process runner.\n */\nexport const boundedCommandFailureDetails = error => {\n\tconst details = error?.details;\n\tif(details === null || typeof details !== \"object\"\n\t\t|| typeof details.command !== \"string\") return null;\n\treturn Object.freeze({\n\t\tcommand: details.command.slice(0, 1024)\n\t\t, args: Object.freeze((Array.isArray(details.args) ? details.args : [])\n\t\t\t.slice(0, 100).map(value => String(value).slice(0, 1024)))\n\t\t, exitCode: Number.isSafeInteger(details.exitCode) ? details.exitCode : null\n\t\t, signal: typeof details.signal === \"string\" ? details.signal.slice(0, 128) : null\n\t\t, stderr: typeof details.stderr === \"string\" ? details.stderr.slice(-8000) : \"\"\n\t\t, stdout: typeof details.stdout === \"string\" ? details.stdout.slice(-8000) : \"\"\n\t});\n};\n\n",
+          "previous": "",
+          "start": 2201
+        },
+        {
+          "current": "\tconst shallow = (await capture(runner, {\n\t\tcommand: \"git\"\n\t\t, args: [\"-C\", project, \"rev-parse\", \"--is-shallow-repository\"]\n\t\t, cwd: project\n\t})).stdout.trim();\n\tif(shallow === \"true\")\n\t{\n\t\tfail(\"shallow-source-repository\", \"The reproducibility gate requires complete committed history to share Git objects between clean builds\", {\n\t\t\thint: \"Fetch the complete repository history, then run the gate again.\"\n\t\t});\n\t}\n",
+          "previous": "",
+          "start": 6829
+        },
+        {
+          "current": "\t\t\t, args: [\"clone\", \"--quiet\", \"--shared\", \"--no-checkout\", repositoryRoot, cloneRoot]\n\t\t\t, cwd: scratchRoot\n\t\t});\n\t\tawait capture(runner, {\n\t\t\tcommand: \"git\"\n\t\t\t, args: [\"-C\", cloneRoot, \"sparse-checkout\", \"set\", \"--no-cone\", \"/*\", \"!/docs/evidence/\"]\n",
+          "previous": "\t\t\t, args: [\"clone\", \"--quiet\", \"--no-local\", \"--no-hardlinks\", \"--no-checkout\", repositoryRoot, cloneRoot]\n",
+          "start": 7736
+        },
+        {
+          "current": "\t\t\t, details: {\n\t\t\t\toutput\n\t\t\t\t, report: join(output, \"evidence\", \"reproducibility.json\")\n\t\t\t\t, reportSha256: evidence.reportSha256\n\t\t\t\t, cause: boundedCommandFailureDetails(error)\n\t\t\t}\n",
+          "previous": "\t\t\t, details: { output, report: join(output, \"evidence\", \"reproducibility.json\"), reportSha256: evidence.reportSha256 }\n",
+          "start": 28624
+        }
+      ],
+      "path": "src/release/reproducibility-gate.mjs",
+      "previousSha256": "e5cb8651dfa6968dfaf9b80cd8533bfc9f9213dac93715ac485fab8102a439d5"
+    },
+    {
+      "currentSha256": "9f6212b269e5d439bb8cb52f96bde95ef14bedf28f17cc94bcc4ec73fc4a7dba",
+      "edits": [
+        {
+          "current": "test(\"source preparation creates two isolated sparse checkouts sharing one complete object store\", async () => {\n",
+          "previous": "test(\"source preparation creates two independent clean clones of one commit\", async () => {\n",
+          "start": 8570
+        },
+        {
+          "current": "      , mkdir(join(repository, \"docs\", \"evidence\"), { recursive: true })\n",
+          "previous": "",
+          "start": 9065
+        },
+        {
+          "current": "    await writeFile(join(repository, \"docs\", \"evidence\", \"retained.json\"), \"{}\\n\");\n",
+          "previous": "",
+          "start": 9146
+        },
+        {
+          "current": "    await assert.rejects(readFile(join(prepared.roots[0], \"docs\", \"evidence\", \"retained.json\")), error => error.code === \"ENOENT\");\n    for(const source of prepared.roots)\n    {\n      const alternate = (await readFile(join(source, \".git\", \"objects\", \"info\", \"alternates\"), \"utf8\")).trim();\n      assert.notEqual(alternate, \"\");\n      assert.equal((await execute(\"git\", [\"rev-parse\", \"HEAD\"], { cwd: source })).stdout.trim(), prepared.source.revision);\n    }\n",
+          "previous": "",
+          "start": 9921
+        },
+        {
+          "current": "test(\"source preparation rejects a shallow repository before sharing objects\", async () => {\n  const root = await mkdtemp(join(tmpdir(), \"lean-bridge-shallow-source-\"));\n  const origin = join(root, \"origin\");\n  const repository = join(root, \"repository\");\n  try\n  {\n    await mkdir(origin);\n    await Promise.all([\n      writeFile(join(origin, \"flake.lock\"), \"{}\\n\")\n      , writeFile(join(origin, \"Main.lean\"), \"def answer := 42\\n\")\n    ]);\n    await execute(\"git\", [\"init\", \"--quiet\"], { cwd: origin });\n    await execute(\"git\", [\"add\", \".\"], { cwd: origin });\n    await execute(\"git\", [\"-c\", \"user.name=Lean Bridge\", \"-c\", \"user.email=bridge@example.invalid\", \"commit\", \"--quiet\", \"-m\", \"fixture\"], { cwd: origin });\n    await execute(\"git\", [\"clone\", \"--quiet\", \"--depth=1\", `file://${origin}`, repository]);\n    await assert.rejects(\n      prepareCleanGitSources({ projectRoot: repository, scratchRoot: join(root, \"scratch\") })\n      , error => error instanceof ReproducibilityGateError && error.code === \"shallow-source-repository\"\n    );\n  } finally\n  {\n    await rm(root, { recursive: true, force: true });\n  }\n});\n\ntest(\"both release gates reuse immutable Git objects without duplicating the repository database\", async () => {\n  const sources = await Promise.all([\n    readFile(\"src/release/reproducibility-gate.mjs\", \"utf8\")\n    , readFile(\"src/release/component-reproducibility-gate.mjs\", \"utf8\")\n  ]);\n  for(const source of sources) assert.doesNotMatch(source, /--no-local|--no-hardlinks/u);\n  assert.match(sources[0], /args: \\[\"clone\", \"--quiet\", \"--shared\", \"--no-checkout\"/u);\n  assert.match(sources[0], /rev-parse\", \"--is-shallow-repository\"/u);\n  assert.match(sources[0], /\"sparse-checkout\", \"set\", \"--no-cone\", \"\\/\\*\", \"!\\/docs\\/evidence\\/\"/u);\n  assert.match(sources[1], /args: \\[\"clone\", \"--quiet\", \"--local\", \"--no-checkout\"/u);\n  assert.doesNotMatch(sources[1], /\"objects\", \"info\", \"alternates\"|--is-shallow-repository/u);\n});\n\ntest(\"gate failures preserve bounded source-preparation command diagnostics\", async () => {\n  const root = await mkdtemp(join(tmpdir(), \"lean-bridge-source-diagnostic-\"));\n  const output = join(root, \"gate\");\n  try\n  {\n    await assert.rejects(runReproducibilityGate({\n      projectRoot: process.cwd()\n      , outputRoot: output\n      , sourcePreparer: async () => {\n        throw new ReproducibilityGateError(\"build-command-failed\", \"git exited with status 128\", {\n          details: {\n            command: \"git\"\n            , args: [\"clone\", \"--shared\"]\n            , exitCode: 128\n            , signal: null\n            , stderr: \"fatal: fixture failure\\n\"\n            , stdout: \"\"\n          }\n        });\n      }\n    }), error => {\n      assert.equal(error.code, \"build-command-failed\");\n      assert.equal(error.details.cause.stderr, \"fatal: fixture failure\\n\");\n      return true;\n    });\n    const report = JSON.parse(await readFile(join(output, \"evidence\", \"reproducibility.json\"), \"utf8\"));\n    assert.deepEqual(Object.keys(report.failure).sort(), [\"code\", \"hint\", \"message\"]);\n  } finally\n  {\n    await rm(root, { recursive: true, force: true });\n  }\n});\n\n",
+          "previous": "",
+          "start": 10712
+        }
+      ],
+      "path": "tests/reproducibility-gate.test.mjs",
+      "previousSha256": "22b1843583601fd055b8593f8c20d94b4af93ef6b7d3041047d747fadd2bc8fd"
+    }
+  ]
+}
