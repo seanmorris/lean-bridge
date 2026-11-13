@@ -78,6 +78,8 @@ test("recursive PHP-Wasm diagnostics retain original files and code or signal", 
 		assert.deepEqual(record.error.cause.details, {
 			command: process.execPath, args: ["-e", source]
 			, exitCode: code, signal, stdout: "", stderr: ""
+			, outputPolicy: "fail", stdoutBytes: 0, stderrBytes: 0
+			, stdoutTruncated: false, stderrTruncated: false
 		});
 		assert.equal(record.node.version, process.version);
 		assert.equal(record.node.sha256, sha256(await readFile(process.execPath)));
