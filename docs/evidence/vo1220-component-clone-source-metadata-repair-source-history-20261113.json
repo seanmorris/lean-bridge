@@ -1,0 +1,140 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-component-clone-source-metadata-repair-source-history.mjs",
+      "sha256": "a0af7ce7c6dd4a818aebf40d23b5d6cac211aa12991f5608967a936ee99e264f"
+    },
+    {
+      "path": "tests/helpers/vo1220-component-clone-source-metadata-repair-source-history-tests.mjs",
+      "sha256": "7aa9f7cb09ef3277b7d833bf9008d193efc6e670de705dc2f57421728e44b088"
+    },
+    {
+      "path": "tests/helpers/vo1220-component-clone-source-metadata-repair-source-history.mjs",
+      "sha256": "9f56a80dc10cfd7bcf6031199a273f886f3dfd2bb043511026c2809b42647782"
+    }
+  ],
+  "hostedFailure": {
+    "failingTest": "locked release dry run reproduces both clean clones and verifies publication evidence",
+    "failure": "Release gate changed author files or Git metadata",
+    "job": 131602330677,
+    "jobName": "Node and browser npm consumers",
+    "run": 43336952561,
+    "workflow": "Downstream package consumers"
+  },
+  "implementationCommit": "835bf1f5eca7495df8e180bb4c58e4d5beb050ba",
+  "integrationCommit": "4e6e5dc1d26ef970af6f24f172084a533a0c66d5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f991f8f2e3e9bc9a4ecc5450026f8d1118f5e34d0c5eba639737671b6b708c25",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-component-clone-source-metadata-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 867
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "17279a418d973f614f34a50aef139b81db304b4357ccde4a771dcd87e968f088"
+    },
+    {
+      "currentSha256": "84b96647014f607effa124db129f1a255c21e9001a9c666d0c369c1011358974",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220ComponentCloneSourceMetadataRepairSource\n\t, vo1220ComponentCloneSourceMetadataRepairNormalizationPaths\n} from \"./vo1220-component-clone-source-metadata-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220ComponentCloneSourceMetadataRepairNormalizationPaths\n\t, ...vo1220DemoJobScopeRepairNormalizationPaths\n",
+          "previous": "\t...vo1220DemoJobScopeRepairNormalizationPaths\n",
+          "start": 248861
+        },
+        {
+          "current": "\tlet stage = beforeVo1220ComponentCloneSourceMetadataRepairSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220DemoJobScopeRepairSource(path, text, expected);\n",
+          "previous": "\tlet stage = beforeVo1220DemoJobScopeRepairSource(path, text, expected);\n",
+          "start": 313554
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7dc208785a4a8b2d4b6a472e6fd7afe79e6ba686445607179cd752f6fe6b103c"
+    }
+  ],
+  "localValidation": {
+    "cloneContract": {
+      "failed": 0,
+      "passed": 1,
+      "tests": 1
+    },
+    "cloneOwnership": {
+      "failed": 0,
+      "passed": 1,
+      "tests": 1
+    },
+    "exactHostedTest": {
+      "durationSeconds": 110,
+      "failed": 0,
+      "passed": 1,
+      "tests": 1
+    },
+    "liveSourcePins": {
+      "mismatches": 0,
+      "occurrences": 16326,
+      "paths": 2661
+    },
+    "scopedLint": "passed"
+  },
+  "milestone": "vo1220-component-clone-source-metadata-repair-v1",
+  "predecessorCommit": "63cb5178f352d6b651073fbb651317ef7040045c",
+  "repair": "Use git clone --shared --dissociate so the temporary clone borrows source objects through an alternates file and immediately copies them into an independent object database without mutating source inodes. Preserve the existing post-source-deletion ownership test, add an exact source metadata snapshot around preparation, and bind the current clone contract to the shared-and-dissociated form.",
+  "rootCause": "The component release gate used git clone --local --dissociate. Git first hard-linked the source object database and then copied away from it, so link creation and removal changed source inode ctime and link metadata even though author bytes and release output remained unchanged. The strict release gate correctly rejected that source mutation.",
+  "schemaVersion": 1,
+  "semantics": {
+    "refreshedPins": 0,
+    "releaseOutputChanges": 0,
+    "sourceMutationRepairs": 1,
+    "typeSurfaceChanges": 0
+  },
+  "updates": [
+    {
+      "currentSha256": "d4af2bf604be94132c01afb614f2de3b67fcb604319bb3959c48092ad79701db",
+      "edits": [
+        {
+          "current": "\t\t\t, args: [\"clone\", \"--quiet\", \"--shared\", \"--dissociate\", \"--no-checkout\", repositoryRoot, checkout]\n",
+          "previous": "\t\t\t, args: [\"clone\", \"--quiet\", \"--local\", \"--dissociate\", \"--no-checkout\", repositoryRoot, checkout]\n",
+          "start": 5070
+        }
+      ],
+      "path": "src/release/component-reproducibility-gate.mjs",
+      "previousSha256": "1f9b600a698f81237094aa4948e8e53dcaf8deb9ffe9b1fa3468f327b8db942b"
+    },
+    {
+      "currentSha256": "e9a1ab79342e1d77aa3cd0c5864280850c7e8713e4f9ede3bafd68dc38e215be",
+      "edits": [
+        {
+          "current": "\tconst sourceBefore = await lakeInputState(context.workspace);\n",
+          "previous": "",
+          "start": 10305
+        },
+        {
+          "current": "\tassert.deepEqual(await lakeInputState(context.workspace), sourceBefore\n\t\t, \"Clean source preparation changed author files or Git metadata\");\n",
+          "previous": "",
+          "start": 10555
+        }
+      ],
+      "path": "tests/lake-component-input.test.mjs",
+      "previousSha256": "56ec9bbadf6ac3339dcb345c11535dc57ea3eeda9486ee1b5f860d03595f883e"
+    },
+    {
+      "currentSha256": "397416c405f3cc5ce83333042cfd13a1827b550ff8c194eabb343f0b4b8929b6",
+      "edits": [
+        {
+          "current": "  assert.match(sources[1], /args: \\[\"clone\", \"--quiet\", \"--shared\", \"--dissociate\", \"--no-checkout\"/u);\n",
+          "previous": "  assert.match(sources[1], /args: \\[\"clone\", \"--quiet\", \"--local\", \"--dissociate\", \"--no-checkout\"/u);\n",
+          "start": 15176
+        }
+      ],
+      "path": "tests/reproducibility-gate.test.mjs",
+      "previousSha256": "8d0b8fec6cd422ddfcf553b7fcd64a8f8390a6dc6e654c49de6f044cd1afa416"
+    }
+  ]
+}

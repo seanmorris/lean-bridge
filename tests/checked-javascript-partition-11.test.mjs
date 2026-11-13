@@ -12,6 +12,7 @@ import "./helpers/vo1220-release-ready-sparse-checkout-repair-source-history-tes
 import "./helpers/vo1220-release-gate-sparse-partial-checkout-repair-source-history-tests.mjs";
 import "./helpers/vo1220-release-gate-partial-clone-repair-source-history-tests.mjs";
 import "./helpers/vo1220-component-clone-contract-repair-source-history-tests.mjs";
+import "./helpers/vo1220-component-clone-source-metadata-repair-source-history-tests.mjs";
 import "./helpers/vo1220-release-docker-log-bound-source-history-tests.mjs";
 import "./helpers/vo1220-release-gate-site-pin-source-history-tests.mjs";
 import "./helpers/vo1220-release-gate-storage-repair-source-history-tests.mjs";
