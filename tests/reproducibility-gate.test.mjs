@@ -326,7 +326,7 @@ test("both release gates use storage-safe Git object reuse for their source life
   assert.match(sources[0], /args: \["clone", "--quiet", "--shared", "--no-checkout"/u);
   assert.match(sources[0], /rev-parse", "--is-shallow-repository"/u);
   assert.match(sources[0], /"sparse-checkout", "set", "--no-cone", "\/\*", "!\/docs\/evidence\/"/u);
-  assert.match(sources[1], /args: \["clone", "--quiet", "--local", "--dissociate", "--no-checkout"/u);
+  assert.match(sources[1], /args: \["clone", "--quiet", "--shared", "--dissociate", "--no-checkout"/u);
   assert.doesNotMatch(sources[1], /"objects", "info", "alternates"|--is-shallow-repository/u);
 });
 

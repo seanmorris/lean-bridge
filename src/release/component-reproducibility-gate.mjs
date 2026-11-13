@@ -137,7 +137,7 @@ export const prepareCleanComponentSources = async ({
 		const checkout = join(scratchRoot, `source-${name}`);
 		await capture(runner, {
 			command: "git"
-			, args: ["clone", "--quiet", "--local", "--dissociate", "--no-checkout", repositoryRoot, checkout]
+			, args: ["clone", "--quiet", "--shared", "--dissociate", "--no-checkout", repositoryRoot, checkout]
 			, cwd: scratchRoot
 		});
 		await capture(runner, {

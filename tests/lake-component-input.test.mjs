@@ -153,9 +153,12 @@ test("clean release clones dissociate from borrowed Git objects and preserve ver
 	await rm(join(context.root, ".git/objects"), { recursive: true });
 	await saveLakeFile(join(context.root, ".git/objects"), "info/alternates", `${borrowedObjects}\n`);
 	assert.equal(await lakeGit(context.root, "rev-parse", "HEAD"), revision);
+	const sourceBefore = await lakeInputState(context.workspace);
 	const scratchRoot = join(context.directory, "reproduction");
 	await mkdir(scratchRoot);
 	const prepared = await prepareCleanComponentSources({ projectRoot: context.root, scratchRoot });
+	assert.deepEqual(await lakeInputState(context.workspace), sourceBefore
+		, "Clean source preparation changed author files or Git metadata");
 	await rm(context.workspace, { recursive: true });
 	await rm(borrowedObjects, { recursive: true });
 	for(const [index, projectRoot] of prepared.roots.entries())
