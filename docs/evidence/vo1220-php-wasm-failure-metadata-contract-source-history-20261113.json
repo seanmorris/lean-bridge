@@ -1,0 +1,116 @@
+{
+  "additions": [
+    {
+      "path": "scripts/update-vo1220-php-wasm-failure-metadata-contract-source-history.mjs",
+      "sha256": "4755467c1ff6fbe0c5b8325d316c34e9881ec01d9fe83aeb8fea8eacd693086d"
+    },
+    {
+      "path": "tests/helpers/vo1220-php-wasm-failure-metadata-contract-source-history-tests.mjs",
+      "sha256": "5f87133459b2a40e6a099e71372766bc119e36ce11aae90976d8336138197fe8"
+    },
+    {
+      "path": "tests/helpers/vo1220-php-wasm-failure-metadata-contract-source-history.mjs",
+      "sha256": "6fe00c1ee3e2c3cc4d5e6261bd808dd742cb627e8ecefc574b77829fd0e38422"
+    }
+  ],
+  "hostedFailure": {
+    "failingTest": "recursive PHP-Wasm diagnostics retain original files and code or signal",
+    "failure": "Expected values to be strictly deep-equal",
+    "job": 131635980048,
+    "jobName": "Contract shard 3/12",
+    "run": 43346955036,
+    "workflow": "Core quality contract"
+  },
+  "implementationCommit": "6a459c991ba5934b5439a96dc75560aa84af0e2b",
+  "integrationCommit": "2e5d0becb245d3dde51c96103e16efdc21c2ef47",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e0a811505ae8d71b1e8dc0d8486f4dd074bfe740595b462c81ad297d8f53c482",
+      "edits": [
+        {
+          "current": "import \"./helpers/vo1220-php-wasm-failure-metadata-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 97
+        }
+      ],
+      "path": "tests/checked-javascript-partition-11.test.mjs",
+      "previousSha256": "f991f8f2e3e9bc9a4ecc5450026f8d1118f5e34d0c5eba639737671b6b708c25"
+    },
+    {
+      "currentSha256": "82d51f82b21ff3c5a2afb2645d3fc4723481094b71c9290a6442ae7bc378cc22",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeVo1220PhpWasmFailureMetadataContractSource\n\t, vo1220PhpWasmFailureMetadataContractNormalizationPaths\n} from \"./vo1220-php-wasm-failure-metadata-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 650
+        },
+        {
+          "current": "\t...vo1220PhpWasmFailureMetadataContractNormalizationPaths\n\t, ...vo1220ComponentCloneSourceMetadataRepairNormalizationPaths\n",
+          "previous": "\t...vo1220ComponentCloneSourceMetadataRepairNormalizationPaths\n",
+          "start": 249051
+        },
+        {
+          "current": "\tlet stage = beforeVo1220PhpWasmFailureMetadataContractSource(\n\t\tpath, text, expected);\n\tif(expected !== undefined && sha256(stage) === expected)\n\t\treturn stage;\n\ttext = stage;\n\tstage = beforeVo1220ComponentCloneSourceMetadataRepairSource(\n",
+          "previous": "\tlet stage = beforeVo1220ComponentCloneSourceMetadataRepairSource(\n",
+          "start": 313805
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "84b96647014f607effa124db129f1a255c21e9001a9c666d0c369c1011358974"
+    }
+  ],
+  "milestone": "vo1220-php-wasm-failure-metadata-contract-v1",
+  "predecessorCommit": "21fa588b683f2e2f57eb04e770ecbbd7573254e1",
+  "repair": "Require the complete current failure detail shape for both retained exit-code and signal probes: fail policy, empty output, zero observed bytes, and false truncation flags. Preserve exact equality so future field drift remains visible.",
+  "rootCause": "The bounded process runner correctly added outputPolicy, observed byte counts, and truncation flags to build-command-failed details. The retained PHP-Wasm failure diagnostic used an exact deep-equality assertion for the older six-field shape, so Core rejected the additional truthful metadata even though both exit-code and signal capture behavior remained correct.",
+  "schemaVersion": 1,
+  "semantics": {
+    "runtimeChanges": 0,
+    "supportCellChanges": 0,
+    "testContractRepairs": 1,
+    "typeSurfaceChanges": 0
+  },
+  "updates": [
+    {
+      "currentSha256": "5b73541fee978ba56d9b5b510dda2994a25f688af398caf6299b41f2af9de535",
+      "edits": [
+        {
+          "current": "\t\t\t, outputPolicy: \"fail\", stdoutBytes: 0, stderrBytes: 0\n\t\t\t, stdoutTruncated: false, stderrTruncated: false\n",
+          "previous": "",
+          "start": 3354
+        }
+      ],
+      "path": "tests/helpers/php-wasm-recursive-failure-evidence-tests.mjs",
+      "previousSha256": "d446698d0163dc9e92cce35bf320f31dcac8f3523f2cfa88d3de1eb92adaf40d"
+    }
+  ],
+  "validation": {
+    "directHelper": {
+      "failed": 0,
+      "passed": 8,
+      "tests": 8
+    },
+    "exactHistory": {
+      "failed": 0,
+      "passed": 5,
+      "tests": 5
+    },
+    "generatedRegistration": {
+      "failed": 0,
+      "passed": 8,
+      "skipped": 1,
+      "tests": 9
+    },
+    "partitionRegistration": {
+      "failed": 0,
+      "passed": 14,
+      "tests": 14
+    },
+    "repairHistory": {
+      "failed": 0,
+      "passed": 4,
+      "tests": 4
+    },
+    "scopedLint": "passed"
+  }
+}

@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/vo1220-php-wasm-failure-metadata-contract-source-history-tests.mjs";
 import "./helpers/vo1220-release-docker-git-mount-source-history-tests.mjs";
 import "./helpers/vo1220-component-reproducibility-review-closure-source-history-tests.mjs";
 import "./helpers/vo1220-demo-job-scope-repair-source-history-tests.mjs";
