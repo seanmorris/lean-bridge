@@ -22,6 +22,7 @@ import { traceCpanInstall } from "../src/release/cpan-install-trace.mjs";
 import { projectCpanPackages } from "../src/build/cpan-projection.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import "./helpers/reviewed-perl-resource-identity.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PERL_NATIVE_TEST === "1";
 const root = process.cwd();

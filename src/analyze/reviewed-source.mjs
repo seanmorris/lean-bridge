@@ -103,6 +103,7 @@ const checkReview = document => {
 	const callbacks = new Map(document.types.filter(type => type.kind === "callback").map(type => [type.id, type]));
 	const definitions = new Map(document.types.map(type => [type.id, type]));
 	const isCallback = type => type.kind === "named" && callbacks.has(type.id);
+	const isResource = type => type.kind === "named" && definitions.get(type.id)?.kind === "resource";
 	reject(!same(document.errors.map(({ documentation, ...error }) => { void documentation; return error; }), callbacks.size ? [{
 		id: "error:native-callback", name: "NativeCallbackFailure"
 		, category: "boundary", payload: null
@@ -146,17 +147,17 @@ const checkReview = document => {
 		reject(item.assurance.length, `${item.id}.assurance`);
 	};
 	const type = (value, path, copied = true) => {
-		reject(copied && isCallback(value), path);
+		reject(copied && (isCallback(value) || isResource(value)), path);
 		if(value.kind === "primitive" || value.kind === "named") return;
 		const arity = { array: 1, "host-null": 1, list: 1, option: 1, result: 2, tuple: 2 }[value.constructor];
 		reject(value.kind !== "apply" || !arity || value.arguments.length !== arity, path);
 		value.arguments.forEach((argument, index) => type(argument, `${path}.arguments[${index}]`));
 	};
 	const site = (value, path, result = false) => {
-		const identity = isCallback(value.type);
+		const identity = isCallback(value.type) || isResource(value.type);
 		reject(value.ownership !== (identity ? result ? "lease" : "borrow" : "copy")
 			|| !same(value.lifetime, identity ? { scope: result ? "explicit" : "call", anchor: null } : null), path);
-		if(identity)
+		if(isCallback(value.type))
 		{
 			const definition = callbacks.get(value.type.id), refinement = definition.source.extensions["lean-lang.org/refinements"];
 			if(refinement !== undefined)
@@ -201,6 +202,17 @@ const checkReview = document => {
 			continue;
 		}
 		source(definition);
+		if(definition.kind === "resource")
+		{
+			const policy = { kindId: `resource:${definition.source.declaration}`
+				, disposal: "required"
+				, fallback: "queued-finalizer"
+				, cycles: "explicit-cut" };
+			reject(definition.representation !== "identity" || definition.mutability !== "read"
+				|| definition.typeParameters.length || definition.target !== null || definition.fields.length || definition.cases.length
+				|| definition.callable !== null || definition.host !== null || !same(definition.resource, policy), definition.id);
+			continue;
+		}
 		if(definition.kind === "alias")
 		{
 			reject(definition.representation !== "copied" || definition.mutability !== "immutable"
@@ -325,7 +337,7 @@ export const validateReviewedSourceIdentity = review => {
 };
 
 /**
- * Validate the copied-value review without admitting ownership-aware schemas.
+ * Validate a v3 review. Owned aggregates still require their separate v4 schema.
  *
  * @param review - Versioned reviewed-source input retained in the receipt.
  */
@@ -342,13 +354,19 @@ export const validateReviewedSource = review => {
  * A reviewed specialization selects its closed type names, never its application.
  *
  * @param review - Captured, independently reviewed contract.
+ * @param options - Capabilities of the compiler/transport that will consume the selection.
+ * @param options.nativeResources - Admit standalone resources in the native identity adapter.
  */
-export const reviewedSourceSelection = review => {
+export const reviewedSourceSelection = (review, { nativeResources = false } = {}) => {
 	const document = validateReviewedSource(review);
+	const resources = document.types.filter(type => type.kind === "resource").map(type => type.source.declaration).sort();
+	if(resources.length && !nativeResources)
+		unsupported("Reviewed standalone resources require a native identity adapter", { resources });
 	const callbacks = new Set(document.types.filter(type => type.kind === "callback").map(type => type.id));
 	const specializations = reviewedSpecializations(document);
 	const contracts = reviewedSubtypeContracts(document);
 	return { exports: document.declarations.map(exportName).sort()
+		, ...(resources.length ? { resources } : {})
 		, arities: document.declarations.filter(item => item.result.type.kind === "named" && callbacks.has(item.result.type.id))
 			.map(item => [exportName(item), item.parameters.length]).sort(([a], [b]) => a.localeCompare(b))
 		// Only the closed choice reaches Lean; fresh elaboration computes the application.
@@ -443,12 +461,12 @@ export const reconcileReviewedSource = (review, compiled, sourceIdentity) => {
 	validateExportConfiguration(config);
 	assertReviewedSourceConfiguration(config);
 	const request = sourceIdentity.request;
-	const selection = reviewedSourceSelection(review);
+	const selection = reviewedSourceSelection(review, { nativeResources: request.profile === "native-library-v1" });
 	const configured = compilerExportSelection(config);
 	if(!config.modules?.length || sha256(canonicalJson(config)) !== sourceIdentity.exportConfigurationSha256
 		|| !same(ordered(config.modules), ordered(request.exportModules))
 		|| !same(ordered(request.exports), selection.exports)
-		|| request.resources.length || !same(request.arities, selection.arities)
+		|| !same(request.resources, selection.resources ?? []) || !same(request.arities, selection.arities)
 		|| !same(request.specializations ?? null, selection.specializations ?? null)
 		|| !same(request.hostProjections ?? null, configured.hostProjections ?? null)
 		|| !same(request.contracts ?? null, selection.contracts ?? null))

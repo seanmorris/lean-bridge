@@ -939,6 +939,18 @@ Float parameters accept integer or floating-point scalars. Native boolean scalar
 
 Arrays, records, options, results, products and finite recursive values are copied. Identity resources remain in the shared Lean runtime and retain their nominal type across components. Call `close` when finished; finalization is a fallback. Closing twice is harmless.
 
+For example, if two installed packages share the `Workshop.Counter` type, pass the object itself between them. When the second package returns the same Lean object, you get the original Perl wrapper back. Closing either reference closes both.
+
+```perl
+use LeanBridge::Workshop;
+use LeanBridge::Other;
+
+my $counter = LeanBridge::Workshop::new_counter(42);
+my $alias = LeanBridge::Other::same($counter);
+print LeanBridge::Other::value($alias), "\n";  # 42
+$counter->close;
+```
+
 Callbacks may reenter the generated API. A callback can close the resource or closure involved in its own call; the active call retains what it needs until it returns. Perl exceptions, including exception objects, are rethrown after native cleanup. Lean may not retain a host callback beyond that call. An expired callback fails safely when invoked later.
 
 Keep calls and handles in the creating process, Perl interpreter and thread.

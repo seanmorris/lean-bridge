@@ -107,7 +107,7 @@ its nested-null consumer example.
 
 ### Compile a reviewed contract
 
-Keep exactly one `.binding-ir.json` file in the source project: schema 3 for copied values, or schema 4 for explicit aggregate ownership. Select its source entry modules explicitly in `lean-bridge.exports.json`:
+Keep exactly one `.binding-ir.json` file in the source project. Schema 3 covers copied values, synchronous callables and standalone native resources; schema 4 adds explicit ownership inside aggregates. Select the source entry modules in `lean-bridge.exports.json`:
 
 ```json
 {
@@ -124,6 +124,8 @@ lean-bridge build --project . --target pypi --output ./build/reviewed-release
 ```
 
 The review selects exact Lean declarations through `source.declaration` and `lean:<declaration>` IDs. A finite specialization instead uses `lean:<specialization-name>` and keeps the generic declaration in `source.declaration`. Lake resolves the selected modules and their dependencies; a declaration's namespace does not determine its source module. Lean compiles fresh interfaces, and the builder compares the review with the resulting API before generating adapters. Component identity, declaration names, parameter and result types, nominal record identities, field order, ownership, effects and failure behavior must agree.
+
+For a standalone resource in a CPAN build, name the Lean type in the review. For example, `Workshop.Counter` has type ID `lean:Workshop.Counter`, kind `resource`, representation `identity`, and resource kind ID `resource:Workshop.Counter`. A function borrows the handle for the call; a returned handle is a lease with an explicit lifetime. Do not repeat `resources` in the export configuration. The native builder sends the reviewed names to Lean and checks the resulting signatures. A resource inside a record or collection needs an ownership-aware contract, not a copied field.
 
 For a schema-3 finite specialization, put the closed choice in the declaration's `source.extensions["lean-lang.org/specialization"]`:
 
