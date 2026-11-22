@@ -47,6 +47,7 @@ export const reconcileHostExports = options => {
 		|| canonicalJson(metadata.entries.map(e => e.declaration)) !== canonicalJson(selection.exports)) fail("Fresh Lean metadata did not cover the complete export selection");
 	const imports = ir ? hashBindingIr(ir) : null, types = resources(ir), members = importedMembers(ir, types);
 	const synchronous = selection.synchronousIO === true;
+	const immediate = synchronous || (!ir && (selection.taskExports?.length || selection.asyncIterators?.length));
 	if(synchronous && (!selection.nativeEffectPolicy || ir || !metadata.entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
 		|| selection.taskExports?.length || selection.asyncIterators?.length || metadata.entries.some(e => e.delivery || e.taskIO)))
 		fail("A standalone native IO package requires a checked IO, BaseIO or EIO entry and no host imports or async protocols");
@@ -141,14 +142,16 @@ export const reconcileHostExports = options => {
 	const entries = metadata.entries.map(e => {
 		const task = e.delivery === "task", stream = e.delivery === "async-iterator", async = task || stream;
 		const selected = selection.asyncIterators?.find(s => s.open === e.declaration);
-		if(Boolean(e.taskIO) !== Boolean(selection.taskIOErrors?.includes(e.declaration))
-			|| ((hasCallbacks(e) || e.taskIO) && (!task || !(selection.pythonTaskCallbacks || rust || cpp || c)))) fail("Unverified retained-callback or terminal IO selection");
+		if(Boolean(e.taskIO) !== Boolean(selection.taskIOErrors?.includes(e.declaration)) || (e.taskIO && !task))
+			fail("Unverified terminal IO selection");
+		if(hasCallbacks(e) && (!task || !(selection.pythonTaskCallbacks || rust || cpp || c)))
+			fail("Unverified retained-callback selection");
 		for(const p of e.parameters) if(isCallback(p.type)) callbackRef(p.type);
-		if(!["IO", "EIO", "pure", ...(async || synchronous ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
+		if(!["IO", "EIO", "pure", ...(async || immediate ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
 			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (async && e.hostMembers.length)
 			|| Boolean(selected) !== stream || (stream && canonicalJson(selected) !== canonicalJson(e.protocol))
 			|| (!stream && (e.stepError || e.protocol)) || (e.delivery !== undefined && !async)
-			|| (!async && e.effect === "pure" && ((!synchronous && e.result?.constructor !== "result") || e.hostMembers.length))
+			|| (!async && e.effect === "pure" && ((!immediate && e.result?.constructor !== "result") || e.hostMembers.length))
 			|| e.hostMembers.some(n => !selection.members.includes(n))) fail(`Unauthenticated effect or host member for ${e.declaration}`);
 		if(e.effect === "EIO") errors.push({
 			id: errorIds(e)[0], name: `EIO_${e.declaration.replaceAll(".", "_")}`

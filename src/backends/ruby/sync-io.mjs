@@ -8,6 +8,21 @@ import { copiedRubyRuntime, rubyLiteral } from "./copied-assets.mjs";
 import { isReservedRubyName } from "./copied-model.mjs";
 import { verifiedRubyAssets } from "./verified-assets.mjs";
 
+const bind = (name, params, result = "INT") => `::Fiddle::Function.new(LIBRARY[${rubyLiteral(name)}], [${params}], ::Fiddle::TYPE_${result})`;
+const literal = v => v == null ? "nil" : rubyLiteral(v);
+const asyncMethod = m => `      OPS${m.i} = {
+        start: ${bind(m.names.start, "P, P, P, P")}, take: ${bind(m.names.take, "P, P, P")},
+        poll: ${bind(m.names.poll, "P, P")}, close: ${bind(m.names.close, "P")},
+        pull: ${m.names.pull ? bind(m.names.pull, "P") : "nil"},
+        clear: CLEAR, open_wait: WAIT_OPEN, wake: WAIT_WAKE, end_wait: WAIT_CLOSE,
+        decl: ${literal(m.declaration)}, step: ${literal(m.stepDeclaration)},
+        args: ${literal(m.args)}, result: ${literal(m.result)}, error: ${literal(m.error)},
+        terminal: ${literal(m.terminal)}, depth: ${m.tagBytes}
+      }.freeze
+      def self.call${m.i}(${m.params})
+        TaskRuntimeV1.start(OPS${m.i}, [${m.params}])
+      end`;
+
 /**
  * Produce a private loader and a public module with distinct IO and EIO exceptions.
  *
@@ -15,10 +30,12 @@ import { verifiedRubyAssets } from "./verified-assets.mjs";
  */
 export const generateRubySyncSources = async options => {
 	const { name, wire, evidence } = options;
-	const slug = name.replaceAll("-", "_"), ns = slug.split("_").map(s => s[0].toUpperCase() + s.slice(1)).join("");
+	const slug = name.replaceAll("-", "_"), ns = slug.split("_").map(s => s[0]?.toUpperCase() + s.slice(1)).join("");
 	if(!/^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/u.test(slug) || isReservedRubyName(ns)
 		|| ["DeclaredError", "IOError", "BoundaryError", "WrongContext", "Unavailable", "Ok", "Err", "NativeSyncWireV1"].includes(ns))
 		throw new TypeError("Invalid or reserved Ruby component namespace");
+	if(wire.wait && ["Task", "PullStream", "TaskRuntimeV1", "Cancelled", "Busy", "StepError", "TaskIOError", "DeliveryOwner"].includes(ns))
+		throw new TypeError("Reserved Ruby task namespace");
 	const path = "lean_bridge/" + slug, seen = new Set();
 	const methods = wire.methods.map((m, i) => {
 		const field = isReservedRubyName(m.name) ? m.name + "_" : m.name;
@@ -60,18 +77,21 @@ LeanBridge::${ns}.private_constant :Native
 	const native = `# frozen_string_literal: true
 require "fiddle"
 require "digest/sha2"
-require_relative "sync_wire"
+require_relative "sync_wire"${wire.wait ? '\nrequire_relative "task_runtime"' : ""}
 module LeanBridge
   module ${ns}
     module Native
 ${verifiedRubyAssets(evidence)}
       P = ::Fiddle::TYPE_VOIDP
-      CLEAR = ::Fiddle::Function.new(LIBRARY[${rubyLiteral(wire.clear)}], [P], ::Fiddle::TYPE_VOID)
-${methods.map(m => `      CALL${m.i} = ::Fiddle::Function.new(LIBRARY[${rubyLiteral(m.symbol)}], [P, P, P], ::Fiddle::TYPE_INT)
+      CLEAR = ::Fiddle::Function.new(LIBRARY[${rubyLiteral(wire.clear)}], [P], ::Fiddle::TYPE_VOID)${wire.wait ? `
+      WAIT_OPEN = ${bind(wire.wait.open, "::Fiddle::TYPE_INT, P")}
+      WAIT_WAKE = ${bind(wire.wait.wake, "P", "VOID")}
+      WAIT_CLOSE = ${bind(wire.wait.close, "P", "VOID")}` : ""}
+${methods.map(m => m.delivery ? asyncMethod(m) : `      CALL${m.i} = ::Fiddle::Function.new(LIBRARY[${rubyLiteral(m.symbol)}], [P, P, P], ::Fiddle::TYPE_INT)
       def self.call${m.i}(${m.params})
         if (reason = NativeCopiedRuntimeV1.context_error)
           raise WrongContext, reason
-        end
+        end${wire.wait ? "\n        TaskRuntimeV1.drain" : ""}
         NativeSyncWireV1.call(::LeanBridge::${ns}, CALL${m.i}, CLEAR, ${rubyLiteral(m.declaration)}, ${rubyLiteral(m.args)}, ${rubyLiteral(m.result)}, ${m.error ? rubyLiteral(m.error) : "nil"}, ${rubyLiteral(m.effect)}, ${m.tagBytes}, [${m.params}])
       end`).join("\n")}
     end
@@ -79,8 +99,10 @@ ${methods.map(m => `      CALL${m.i} = ::Fiddle::Function.new(LIBRARY[${rubyLite
 end
 `;
 	const helper = (await readFile(new URL("sync-wire.rb", import.meta.url), "utf8")).replace("LeanBridge::GeneratedSyncComponent", "LeanBridge::" + ns);
+	const runtime = wire.wait && (await readFile(new URL("task-runtime.rb", import.meta.url), "utf8")).replaceAll("LeanBridge::GeneratedTaskComponent", "LeanBridge::" + ns);
 	return { namespace: "LeanBridge::" + ns, requirePath: path
 		, files: { [`lib/${path}.rb`]: pub, [`lib/${path}/native.rb`]: native
 			, "lib/lean_bridge/native_copied_runtime_v1.rb": copiedRubyRuntime
-			, [`lib/${path}/sync_wire.rb`]: helper } };
+			, [`lib/${path}/sync_wire.rb`]: helper
+			, ...runtime ? { [`lib/${path}/task_runtime.rb`]: runtime } : {} } };
 };

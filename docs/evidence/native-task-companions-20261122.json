@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-native-task-companion-acceptance",
+  "node": 1222,
+  "platform": "Linux x86-64, glibc 2.36",
+  "toolchains": {
+    "lean": "4.32.2",
+    "c": "GCC 12.2.0 / C11",
+    "cpp": "GCC 12.2.0 / C++20",
+    "python": "CPython 3.11",
+    "rust": "Rust/Cargo 1.90.0"
+  },
+  "acceptanceSha256": "dc2267d998344ce6159cb42d4e1ad344ec5b6304c43aee407f38aedd981c5ade",
+  "checks": [
+    "One ordinary Lean source exports a pure addition, a BaseIO state update, a real Task, and synchronous filesystem IO. Each profile must preserve the same source, Binding IR and runtime identity.",
+    "Each installed caller observes 42 from the pure function, 3 from the first state update, 42 from the actual task, and then 7 from the second state update. The IO call writes the expected bytes to a real file; the checker reads them after the caller exits.",
+    "CPython uses asyncio, C11 polls the task descriptor if pending, C++20 consumes the generated future, and Rust polls the generated Future with a standard waker. All other calls are direct in their normal host projection.",
+    "Install from the original local wheel/archives/crates and execute with producer tools off PATH. The Rust installation resolves its included runtime offline. The caller sources are retained with the handoffs and their hashes are checked on replay."
+  ],
+  "limits": [
+    "These four routes are ordinary-source only; they exercise UInt32, a path string and IO Unit. They do not extend the separately tested callback, resource or scheduler contracts. The Ruby ordinary and reviewed gem routes are recorded separately in ruby-fiber-tasks-20261122.json.",
+    "Installed local evidence only; no hosted CI, registry publication or cross-host matrix closure."
+  ],
+  "replayTiming": "The debug Rust binary verifies the bundled native assets before its first Lean call. Under a deliberate quarter-core cap on a busy host, two 45-second wall-clock attempts ended before the loader finished those checks. The same installed executable completed with the expected file contents and 9.73 seconds of user CPU in a separate timing check. All four installed callers then replayed against the recorded hashes under the quarter-core cap with the constrained-host allowance. This is a correctness replay, not a benchmark.",
+  "reproduce": {
+    "build": "CC=cc CXX=c++ LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_TASK_COMPANION_EVIDENCE=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/native-task-companions.mjs",
+    "replay": "LEAN_BRIDGE_TASK_COMPANION_REPLAY=/absolute/path/to/original-handoffs LEAN_BRIDGE_TASK_COMPANION_EXPECTED=docs/evidence/native-task-companions-20261122.json node --test --test-concurrency=1 tests/helpers/native-task-companions.mjs",
+    "tools": "Provide CC/CXX, pkg-config, CPython 3.11 with pip, Cargo/Rust 1.90 and its offline dependency cache. For a build also provide LEAN_BRIDGE_LEAN_PREFIX, the native packaging tools, and a matching glibc floor. Replay uses the original clients and six original archives.",
+    "constrainedHost": "If the test is already externally limited to a quarter CPU, set LEAN_BRIDGE_TASK_COMPANION_QUARTER_CPU=1. Only this Rust caller gets 180 wall-clock seconds instead of 45; all behavior, receipt and hash assertions are unchanged. The variable does not set a CPU limit itself."
+  },
+  "routes": [
+    {
+      "archives": [
+        {
+          "bytes": 51310803,
+          "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+          "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+        },
+        {
+          "bytes": 18387,
+          "path": "archives/lean_companions-1.0.0-cp311-cp311-linux_x86_64.whl",
+          "sha256": "2fae757fc3c1d7d56de9a14cecfeb6179688dad42e9a861abb1dd7332672e435"
+        }
+      ],
+      "bindingIrSha256": "2af32c2480741f7e8f0138d492537fc3d68db6028e8a4f213dd319fe26112fa0",
+      "consumerSha256": "f30ba1be344c2da70300c58ef3451ea24daac4c253c4a3eab75b68d11ebb584a",
+      "profile": "native-python-task-v1",
+      "receiptSha256": "01a5fe44eaccf5631f0d4563da824c493ab2389496bd120638edb5bad3e2b860",
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "087f34e5fc1d3bc0d02e44d71596dbf917b3122c71a2ede8117e25f183a85c69",
+      "target": "pypi"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51316449,
+          "path": "archives/companions-1.0.0-c.tar.gz",
+          "sha256": "6ceb88bacd467747447c960e9ccbfea54a787c5ac9552bebfd850723f665548d"
+        }
+      ],
+      "bindingIrSha256": "2af32c2480741f7e8f0138d492537fc3d68db6028e8a4f213dd319fe26112fa0",
+      "consumerSha256": "0fde0118fd33e0ecc3d884488a31bfa9d9457cff6d4df1b8b48cb3040f882e15",
+      "profile": "native-c-task-v1",
+      "receiptSha256": "731a3ab49ff7921ee85bfe16df95c524019b6fa7a43be837ad9d7de3265743ac",
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "087f34e5fc1d3bc0d02e44d71596dbf917b3122c71a2ede8117e25f183a85c69",
+      "target": "c"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51326028,
+          "path": "archives/companions-1.0.0-cpp.tar.gz",
+          "sha256": "05bdc75e9ae4f46719d7b385a5dd45e5bc23223fa42adccc97f2ad04ff424224"
+        }
+      ],
+      "bindingIrSha256": "2af32c2480741f7e8f0138d492537fc3d68db6028e8a4f213dd319fe26112fa0",
+      "consumerSha256": "489154c5d6993163bbb197bd0a267b46eb795377c51ea59ce2e54ac5c0e359fe",
+      "profile": "native-cpp-task-v1",
+      "receiptSha256": "6528c751acb5a3d5bc066e99f929ea780cf0d5798aedb32d34cf811986de4235",
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "087f34e5fc1d3bc0d02e44d71596dbf917b3122c71a2ede8117e25f183a85c69",
+      "target": "cpp"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 23504,
+          "path": "archives/companions-1.0.0.crate",
+          "sha256": "36ede1e271f3b5e5b6b3687ea85efc5f691c86d5531c648fe383d44ebcf1603d"
+        },
+        {
+          "bytes": 51312225,
+          "path": "archives/lean-bridge-task-runtime-1.0.0-rfc0e4783649c5e34788c1fabf424245172e72b9043b161e6843c9f388b1c4b95.crate",
+          "sha256": "2c3936f519b6d4f8101c34ffabded95f833bc2688b0717727aecdf52f1c148a5"
+        }
+      ],
+      "bindingIrSha256": "2af32c2480741f7e8f0138d492537fc3d68db6028e8a4f213dd319fe26112fa0",
+      "consumerSha256": "2b7fb2c80c921a285037e519aa35ec0e0661f9c8eba8d7132db85b600c3722d1",
+      "profile": "native-rust-task-v1",
+      "receiptSha256": "e2dd89559c2a7ee6c04b25b7c5b8104df3fa9b2334a172db04a380b19166fc7b",
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "087f34e5fc1d3bc0d02e44d71596dbf917b3122c71a2ede8117e25f183a85c69",
+      "target": "cargo"
+    }
+  ]
+}

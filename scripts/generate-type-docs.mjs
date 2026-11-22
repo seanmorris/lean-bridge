@@ -531,6 +531,8 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		, `Profiles: ${profiles.map(profile => names[profile]).join(", ")}. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.`
 		, ""
 		, `The [conversion rules](${reference}#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](${reference.replace(/reference\/types\.md$/u, "type-surface.v1.json")}) records commands, source hashes, limitations and implementation owners.`
+		, ...(profiles.length === 1 && profiles[0] === "ruby"
+			? ["", "For a compiled Ruby gem, check its package receipt: `native-ruby-io-v1` supports [synchronous IO and typed errors](#call-synchronous-io), and `native-ruby-task-v1` supports [tasks and pull streams](#await-a-task-or-read-a-stream). Those profiles have separate installed checks; the general audit rows below do not describe their delivery APIs."] : [])
 		, ...(zeroPayloadMatrix ? ["", zeroPayloadMatrix] : [])
 		, ...(dependentCheckedRecordMatrix
 			? ["", dependentCheckedRecordMatrix] : [])

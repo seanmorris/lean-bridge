@@ -172,6 +172,13 @@ Schema-3 reviewed builds reject resources and callbacks inside copied containers
 
 A task release is a separate profile. Select actual Lean `Task` factories with `taskExports`; add `taskIOErrors` only for an outer `Except IO.Error` that should reject the task. A task can retain a unary `α → IO β` callback over copied scalars on [C's main-thread polling loop](../publish/c.md#export-a-callback-taking-task), [C++'s main-thread dispatcher](../publish/cpp.md#export-a-callback-taking-task), [Rust's owning executor](../publish/cargo.md#export-a-callback-taking-task), or [Python's owning event loop](../publish/pypi.md#let-a-lean-task-call-python). The usual borrowed, synchronous callback profile is unchanged.
 
+The [Ruby task profile](../publish/rubygems.md#export-a-task-or-pull-stream)
+delivers copied results to a waiting fiber and exposes pull streams as
+`Enumerable`; it does not accept retained Ruby callbacks. In standalone task
+packages, list any direct functions alongside the task factories in `exports`.
+Only the selected task declarations go in `taskExports`. A neighboring
+pure, `BaseIO`, or synchronous `IO` function returns directly.
+
 ### Export optional parameters
 
 Lean Bridge retains a Lean-declared default in Binding IR while keeping the

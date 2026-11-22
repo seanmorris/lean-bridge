@@ -35,12 +35,18 @@ test("Ruby IO packages include their runtime in the CLI and keep native details 
 	for(const manifest of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
 	{
 		const m = await read(manifest), files = m.files ?? m.includedFiles;
-		for(const path of ["src/backends/c/sync-wire.mjs", "src/backends/ruby/sync-io.mjs", "src/backends/ruby/sync-wire.rb", "src/release/ruby-sync-package.mjs"])
+		for(const path of ["src/backends/c/sync-wire.mjs"
+			, "src/backends/c/task-wire.mjs"
+			, "src/backends/ruby/sync-io.mjs"
+			, "src/backends/ruby/sync-wire.rb"
+			, "src/backends/ruby/task-runtime.rb"
+			, "src/release/ruby-sync-package.mjs"])
 			assert.ok(files.includes(path), manifest + ": " + path);
 	}
 	const entry = { name: "dup", declaration: "A.dup", parameters: [], effect: "BaseIO", result: { kind: "primitive", name: "unit" } };
 	const make = (name, entries) => generateRubySyncSources({ name, wire: generateSyncWire("lbc_a", entries) });
 	const result = await make("sample", [entry]), publicAPI = result.files["lib/lean_bridge/sample.rb"];
+	assert.ok(!Object.keys(result.files).some(p => p.endsWith("/task_runtime.rb")));
 	assert.match(publicAPI, /def self\.dup_\(\)/u); assert.doesNotMatch(publicAPI, /Fiddle|lbwire_|Future|Promise/u);
 	assert.match(result.files["lib/lean_bridge/sample/native.rb"], /require_relative "sync_wire"/u);
 	assert.match(result.files["lib/lean_bridge/sample/sync_wire.rb"], /module LeanBridge::Sample/u);
@@ -75,7 +81,7 @@ test("a Ruby release refuses ungranted native IO before it emits a gem", { skip:
 	});
 	await assert.rejects(lstat(outputRoot), { code: "ENOENT" });
 	await writeFile(configPath, canonicalJson({ ...config, resources: ["Journal.Badge"] }));
-	await assert.rejects(buildCanonicalProject({ projectRoot: src, outputRoot, targets: ["rubygems"], environment: env }), /Ruby native IO requires synchronous copied exports/u);
+	await assert.rejects(buildCanonicalProject({ projectRoot: src, outputRoot, targets: ["rubygems"], environment: env }), /resource leases require another projection/u);
 	await assert.rejects(lstat(outputRoot), { code: "ENOENT" });
 });
 const install = async (work, root, route, review) => {

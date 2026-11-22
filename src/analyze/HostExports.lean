@@ -40,6 +40,11 @@ def Request.ownerTaskCallbacks (r : Request) : Bool :=
   r.pythonTaskCallbacks.getD false || r.rustTaskCallbacks.getD false ||
     r.cppTaskCallbacks.getD false || r.cTaskCallbacks.getD false
 
+/-- A task in a package does not change the delivery mode of adjacent exports. -/
+def Request.immediateValues (r : Request) : Bool :=
+  r.synchronousIO.getD false ||
+    (r.resources.isEmpty && (!r.taskExports.isEmpty || !r.asyncIterators.isEmpty))
+
 def primitives : List (Name × String) := [
   (``Unit, "unit"), (``Bool, "bool"), (``Char, "char"), (``String, "string"),
   (``ByteArray, "bytes"), (``Nat, "nat"), (``Int, "int"), (``Float, "float64"),
@@ -295,20 +300,21 @@ def extract (r : Request) : MetaM Json := do
         noWorkerHost r deps n
         let payload := task.getAppArgs[0]!
         let (value, terminal) ← if (r.taskIOErrors.getD #[]).contains publicName then do
-          unless r.ownerTaskCallbacks && payload.getAppFn.constName? == some ``Except && payload.getAppArgs.size == 2 &&
+          -- A typed terminal IO error does not require a callback dispatcher.
+          unless payload.getAppFn.constName? == some ``Except && payload.getAppArgs.size == 2 &&
               payload.getAppArgs[0]!.isConstOf ``IO.Error do
             throwError "taskIOErrors requires Task (Except IO.Error value): {n}"
           pure (payload.getAppArgs[1]!, [("taskIO", toJson true)])
         else pure (payload, [])
         pure <| [("effect", toJson effect), ("delivery", toJson "task"), ("result", ← delivered r value)] ++ extra ++ terminal
-      else if (head == ``IO || (head == ``BaseIO && r.synchronousIO.getD false)) && resultArgs.size == 1 then
+      else if (head == ``IO || (head == ``BaseIO && r.immediateValues)) && resultArgs.size == 1 then
         pure [("effect", toJson head.toString), ("result", ← returned r resultArgs[0]!)]
       else if head == ``EIO && resultArgs.size == 2 then
         pure [("effect", toJson "EIO"), ("error", ← delivered r resultArgs[0]!),
           ("result", ← returned r resultArgs[1]!)]
       else if head == ``Except && resultArgs.size == 2 then
         pure [("effect", toJson "pure"), ("result", ← returned r result)]
-      else if r.synchronousIO.getD false then
+      else if r.immediateValues then
         pure [("effect", toJson "pure"), ("result", ← returned r result)]
       else throwError "expected synchronous IO result, typed EIO or returned Except: {n}"
       return Json.mkObj <| fields ++ [("declaration", toJson publicName), ("module", toJson owner),

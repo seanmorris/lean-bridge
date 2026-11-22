@@ -4,6 +4,10 @@ Build an ordinary Lean project with `--target rubygems` to produce an installabl
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
+An unversioned local Lean project builds as gem version `0.0.0` so a normal
+`require` can load it. Set `targets.rubygems.version` to your intended
+release version before publishing.
+
 Build and validate the generated gem, then upload its exact bytes to a gem server controlled by your organization. Rehearse against a sandbox with credentials that cannot publish to production.
 
 ## Build an ordinary Lean project
@@ -59,6 +63,32 @@ including exact integers, and nested `Except` values in results and typed
 errors. It does not select task, iterator, or resource exports. Distribute
 the original archive using the same RubyGems workflow as the pure package.
 See [calling synchronous IO](../consume/ruby.md#call-synchronous-io).
+
+## Export a task or pull stream
+
+Select the real Lean factory in `taskExports`. To expose a cursor, list its
+factory, one-item pull, and close declarations under `asyncIterators`. A
+stream-only package needs no `taskExports`. For the
+[Pulse source](../../tests/fixtures/c-lean-tasks/Pulse.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "taskExports": ["Pulse.bytes"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"rubygems": {"name": "ruby-pulse", "version": "1.0.0"}}
+}
+```
+
+Build with `lean-bridge build --project . --target rubygems --output release`.
+Distribute the original `native-ruby-task-v1` gem; it embeds the matching
+runtime. See the [tested source and reviewed-IR handoffs](../evidence/ruby-fiber-tasks-20261122.json)
+for the package and client hashes. Use `taskIOErrors` only for a selected `Task (Except IO.Error α)`
+whose error should raise from `await`. A normal returned `Except` remains
+data. The task profile accepts copied primitive arguments and copied
+primitive or nested `Except` results. It does not accept resource leases or
+retained Ruby callbacks. See [the Ruby consumer flow](../consume/ruby.md#await-a-task-or-read-a-stream).
 
 ## Export arrays and records
 

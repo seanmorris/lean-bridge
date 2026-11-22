@@ -137,17 +137,17 @@ static PyObject *lb_start_${i}(lean_object *v) {
 		].join("\n")
 	};
 };
-const emit = (resources, entry, i, codecs, synchronous) => {
+const emit = (resources, entry, i, codecs, synchronous, immediate) => {
 	const args = entry.parameters.map(p => carrier(resources, p.type));
 	const effect = entry.effect ?? "IO", task = entry.delivery === "task", stream = entry.delivery === "async-iterator";
 	const bound = resources.length > 0 && !task && !stream;
-	if(!["pure", "IO", "EIO", ...(task || stream || synchronous ? ["BaseIO"] : [])].includes(effect)) throw new TypeError("unsupported entry effect");
+	if(!["pure", "IO", "EIO", ...(task || stream || immediate ? ["BaseIO"] : [])].includes(effect)) throw new TypeError("unsupported entry effect");
 	if((task || stream) && (!copied(entry.result) || entry.parameters.some(p => !copied(p.type)))) throw new TypeError("Lean tasks require copied carriers");
 	if(stream && (entry.protocol?.open !== entry.declaration || !qualified.test(entry.protocol.next) || !qualified.test(entry.protocol.close)
 		|| (entry.stepError && !copied(entry.stepError)))) throw new TypeError("invalid async iterator protocol");
 	if((entry.result?.kind === "apply" && !copied(entry.result)) || (effect === "EIO" && !copied(entry.error)))
 		throw new TypeError("returned sums and EIO errors require copied payloads");
-	if(!synchronous && !task && !stream && effect === "pure" && entry.result?.constructor !== "result") throw new TypeError("expected a returned Except");
+	if(!immediate && !task && !stream && effect === "pure" && entry.result?.constructor !== "result") throw new TypeError("expected a returned Except");
 	const startError = effect === "EIO" ? returned(resources, entry.error, codecs) : null;
 	const asyncOut = stream ? streamCodec(i, entry, returned(resources, entry.result, codecs), startError, entry.stepError ? returned(resources, entry.stepError, codecs) : null)
 		: task ? taskCodec(i, returned(resources, entry.result, codecs), startError, entry.taskIO) : null;
@@ -241,9 +241,10 @@ export const generatePythonHostExtension = options => {
 	const publicNames = [...provider.resources, ...entries.map(e => e.name)];
 	if((outcomes && publicNames.includes("LeanTaskError")) || (callbacks && publicNames.includes("RetainedCallback")))
 		throw new TypeError("reserved Python task name");
+	const immediate = synchronous || (!ir && entries.some(row => row.delivery));
 	const functions = entries.map((e, i) => e.parameters.some(p => slots.has(p))
 		? retainedEntry({ entry: e, i, scalar: t => carrier(resources, t), returned: t => returned(resources, t, codecs), slots })
-		: emit(resources, e, i, codecs, synchronous));
+		: emit(resources, e, i, codecs, synchronous, immediate));
 	const callbackCodecs = callbacks ? [...slots].map(([p, id]) => {
 		const a = carrier(resources, p.type.argument);
 		return `static PyObject *lb_cb_in_${id}(lean_object *v) { return ${a.toPython("v")}; }

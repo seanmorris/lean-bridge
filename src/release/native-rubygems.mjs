@@ -18,7 +18,7 @@ import { generateCopiedRubyGraphPackage } from "../backends/ruby/copied-graph-pa
 import { nativeGraphRefinementDiagnostics } from "../build/native-graph-sources.mjs";
 import { generateCallableRubyGraphPackage } from "../backends/ruby/callable-graph-package.mjs";
 import { rubyLiteral } from "../backends/ruby/copied-assets.mjs";
-import { validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
+import { defaultRubyVersion, validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
 import { auditManagedBindingPackage } from "../backends/managed/package-audit.mjs";
 
 /**
@@ -38,7 +38,7 @@ import { auditManagedBindingPackage } from "../backends/managed/package-audit.mj
 export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings = {}, glibcMinimumVersion, environment = process.env, signal }) => {
 	validateOrdinaryRubySettings(settings);
 	const { model, projection, prefix, evidence, receipt } = await ordinaryRubyEvidence({ nativeRoot, runtimeRoot, adapterRoot });
-	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? model.component.version.replace("-", ".pre.");
+	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? defaultRubyVersion(model.component.version);
 	validateOrdinaryRubySettings({ name, version });
 	const generate = model.copiedGraph
 		? model.copiedGraph.callbacks ? generateCallableRubyGraphPackage : generateCopiedRubyGraphPackage

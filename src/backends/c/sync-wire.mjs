@@ -6,6 +6,7 @@
  * @file
  */
 import { cTaskValues } from "./task-values.mjs";
+import { taskWireEntry, taskWireWait } from "./task-wire.mjs";
 
 const scalars = new Set("unit bool char uint8 uint16 uint32 uint64 usize int8 int16 int32 int64 isize float32 float64 string bytes nat int".split(" "));
 const shape = t => {
@@ -37,13 +38,15 @@ const emit = (v, expr, p, index = 0) => {
  *
  * @param prefix - Checked native component symbol prefix.
  * @param entries - Elaborated synchronous application declarations.
+ * @param options - Enable native Task and pull descriptors for a task package.
+ * @param options.tasks - Include task handles and scheduler wait operations.
  */
-export const generateSyncWire = (prefix, entries) => {
+export const generateSyncWire = (prefix, entries, { tasks = false } = {}) => {
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
 	const p = prefix, stem = "lbwire_" + p + "_v1", values = cTaskValues(p, false);
 	const symbols = [stem + "_clear"], methods = [];
 	const functions = entries.map((e, i) => {
-		if(e.delivery || e.taskIO || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)
+		if((!tasks && (e.delivery || e.taskIO)) || (e.delivery && !["task", "async-iterator"].includes(e.delivery)) || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)
 			|| !/^[a-z][a-z0-9_]*$/u.test(e.name)) throw new TypeError("Expected an authenticated synchronous function");
 		const args = e.parameters.map(a => shape(a.type));
 		if(args.some(Array.isArray)) throw new TypeError("The host wire accepts copied scalar arguments");
@@ -52,19 +55,25 @@ export const generateSyncWire = (prefix, entries) => {
 		const ec = e.effect === "EIO" ? values.codec(e.error) : null;
 		const n = p + "_" + e.name, symbol = stem + "_" + i;
 		const checks = args.map((v, k) => (v === "bool" || v === "unit") ? `if (args[${3 * k}] > ${v === "bool" ? 1 : 0}u) return ${p}_INVALID;` : "").filter(Boolean);
+		if(e.delivery)
+		{
+			const wire = taskWireEntry({ p, n, symbol, e, args, codecs, values, shape, depth, input, emit, checks });
+			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
+		}
 		methods.push({ name: e.name, declaration: e.declaration
 			, symbol, args, result, error: err, effect: e.effect
 			, tagBytes: Math.max(1, depth(result), depth(err)) }); symbols.push(symbol);
 		const call = [...codecs.map((c, k) => input(c, args[k], k)), "&value", ...err ? ["&error"] : []];
+		const alias = n + (tasks ? "_start_error" : "_error");
 		return `int ${symbol}(const uint64_t *args, uint64_t *out, uint8_t *tags) {
     if (!out || !tags${args.length ? " || !args" : ""}) return ${p}_INVALID;
     (void)args; memset(out, 0, 4 * sizeof(*out));
     ${checks.join("\n    ")}
-    ${n}_value value = {0}; ${err ? (ec ? n + "_error" : p + "_buffer") + " error = {0};" : ""}
+    ${n}_value value = {0}; ${err ? (ec ? alias : p + "_buffer") + " error = {0};" : ""}
     ${p}_status s = ${n}_call(${call.join(", ")});
     if (s == ${p}_OK) { ${emit(result, "value", p)} }
     ${err ? `else if (s == ${p}_${ec ? "TYPED_ERROR" : "IO_ERROR"}) { ${emit(err, "error", p)} }` : ""}
-    ${item.dispose ? `${n}_value_dispose(&value);` : ""} ${ec?.dispose ? `${n}_error_dispose(&error);` : e.effect === "IO" ? `${p}_buffer_dispose(&error);` : ""}
+    ${item.dispose ? `${n}_value_dispose(&value);` : ""} ${ec?.dispose ? `${alias}_dispose(&error);` : e.effect === "IO" ? `${p}_buffer_dispose(&error);` : ""}
     return (int)s;
 }`;
 	});
@@ -82,5 +91,10 @@ void ${stem}_clear(uint64_t *out) {
 }
 ${functions.join("\n")}
 `;
+	if(tasks)
+	{
+		const wait = taskWireWait(stem, p);
+		return { source: source + wait.source + "\n", methods, symbols: [...symbols, ...Object.values(wait.names)], clear: symbols[0], wait: wait.names };
+	}
 	return { source, methods, symbols, clear: symbols[0] };
 };

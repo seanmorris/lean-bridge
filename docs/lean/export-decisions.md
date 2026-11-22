@@ -26,7 +26,7 @@ declarations of the host methods they call.
 | Resources, host objects, mutable members | Declare identity, ownership, borrowing, transfer, and disposal. Keep incompatible runtimes separate. |
 | Callbacks and returned closures | Specify argument/result types, retention, reentry, failure behavior, and lifetime. For a task that calls its host, see the owner-thread callback contracts for [C](../publish/c.md#export-a-callback-taking-task), [C++](../publish/cpp.md#export-a-callback-taking-task), [Python](../publish/pypi.md#let-a-lean-task-call-python), and [Rust](../publish/cargo.md#export-a-callback-taking-task). |
 | `IO`, `EIO`, declared errors | Preserve effect order and typed failures. An IO action is not automatically asynchronous. |
-| `Task`, cancellation, iterators, async iterators | Select a real Lean task with `taskExports`, or a cursor factory, pull, and close with `asyncIterators`. Linux CPython exposes [awaitables](../publish/pypi.md#export-a-lean-task-to-asyncio) and [async iterators](../publish/pypi.md#export-an-async-iterator); Linux C11 exposes [waitable descriptors](../publish/c.md#export-tasks-and-pull-streams), C++20 exposes [move-only futures and pull streams](../consume/cpp.md#await-a-task-or-pull-a-stream), and Rust exposes [executor-driven futures and streams](../publish/cargo.md#export-a-task-or-pull-stream). |
+| `Task`, cancellation, iterators, async iterators | Select a real Lean task with `taskExports`, or a cursor factory, pull, and close with `asyncIterators`. Linux CPython exposes [awaitables](../publish/pypi.md#export-a-lean-task-to-asyncio) and [async iterators](../publish/pypi.md#export-an-async-iterator); Linux C11 exposes [waitable descriptors](../publish/c.md#export-tasks-and-pull-streams), C++20 exposes [move-only futures and pull streams](../consume/cpp.md#await-a-task-or-pull-a-stream), Ruby exposes [fiber-aware tasks and Enumerable streams](../consume/ruby.md#await-a-task-or-read-a-stream), and Rust exposes [executor-driven futures and streams](../publish/cargo.md#export-a-task-or-pull-stream). |
 
 These decisions define the full authoring work. A listed form becomes usable in a profile when its compiler, generated API, package, and installed checks support that mapping. The [implementation stages](../architecture/cross-language-authoring.md#stages) track the remaining work.
 
@@ -592,6 +592,13 @@ The [Ruby IO package](../publish/rubygems.md#export-synchronous-io) uses the
 same checked effects and exposes ordinary Ruby methods and exceptions. Its
 [installed-gem receipts](../evidence/ruby-sync-io-20261122.json) include the
 missing-grant and altered-library checks.
+
+The same distinction holds when a module also exports a task. In the
+[installed C, C++, Python and Rust example](../evidence/native-task-companions-20261122.json),
+an application reads a pure result, updates Lean state, awaits a task, and
+updates the same state again. Only the task needs an await or poll. The
+[Ruby callers](../evidence/ruby-fiber-tasks-20261122.json) exercise direct
+companions on both the ordinary-source and reviewed task-gem routes.
 
 The build follows compiled Lean code through library wrappers and task closures.
 It checks application startup and each selected entry, including an iterator's

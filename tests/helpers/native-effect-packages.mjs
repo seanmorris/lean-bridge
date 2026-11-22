@@ -26,7 +26,7 @@ const fsCap = "capability:native.filesystem", envCap = "capability:native.enviro
 export const buildEffectHandoffs = async (root, target, env, sample = {}) => {
 	let ordinary;
 	await mkdir(join(root, target));
-	for(const route of ["ordinary", "reviewed"])
+	for(const route of sample.routes ?? ["ordinary", "reviewed"])
 	{
 		const dir = join(root, target, route), src = join(dir, "source");
 		await mkdir(src, { recursive: true });

@@ -67,6 +67,44 @@ A thrown `EIO` raises the package's `DeclaredError` with its Lean
 the package's `Unavailable`; another call cannot restart it. See the
 [installed Ruby caller](../../tests/fixtures/ruby-sync-io/consumer.rb).
 
+### Await a task or read a stream
+
+A gem marked `native-ruby-task-v1` returns a `Task` for a selected Lean task
+and an `Enumerable` for a selected cursor. Install the gem normally; no
+compiler, scheduler gem, or native handle is required. For Ruby Pulse:
+
+```ruby
+require "lean_bridge/ruby_pulse"
+
+pulse = LeanBridge::RubyPulse
+task = pulse.bytes("packet".b)
+puts task.await
+
+pulse.series(false, false, "first").each do |item|
+  p item
+  break                    # closes the Lean cursor
+end
+```
+
+`await` returns the same settled value on later calls. With a
+[Ruby fiber scheduler](https://docs.ruby-lang.org/en/3.3/Fiber/Scheduler.html#method-i-io_wait)
+on the main thread, a pending task parks the calling fiber while others run;
+without one, the caller waits for IO readiness. `cancel` wakes waiters with
+the package's `Cancelled` exception. Lean cancellation is cooperative: code
+that ignores it may finish, but it cannot deliver a late result to that task.
+Use `task.with { |t| ... }` or `ensure` with `close` if you may leave work
+unconsumed. Use the original process main thread for all operations.
+
+A stream pulls one item at a time. `next` raises `StopIteration` on
+exhaustion, and `each` closes on exhaustion, `break`, or a block exception.
+A concurrent pull raises `Busy`. A declared pull failure raises `StepError`
+with the pull declaration and its typed payload. A selected terminal IO
+failure raises `TaskIOError` from `await`; a factory that fails before it
+returns a task raises from the factory call instead. A returned `Except` is
+still an `Ok` or `Err` value. The [installed client](../../tests/fixtures/ruby-task-lab/consumer.rb)
+shows each case. The [installed task and stream receipts](../evidence/ruby-fiber-tasks-20261122.json)
+identify the exact gems and callers, including the stream-only package.
+
 ### Arrays and records
 
 For an installed [Parcels package](../publish/rubygems.md#export-arrays-and-records),
@@ -884,6 +922,8 @@ The [hosted generic-Subtype matrix](../evidence/generic-subtype-promotion-202610
 Profiles: Ruby. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
+
+For a compiled Ruby gem, check its package receipt: `native-ruby-io-v1` supports [synchronous IO and typed errors](#call-synchronous-io), and `native-ruby-task-v1` supports [tasks and pull streams](#await-a-task-or-read-a-stream). Those profiles have separate installed checks; the general audit rows below do not describe their delivery APIs.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Ruby in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

@@ -17,7 +17,7 @@ import { writePackageSetReceipt } from "./package-set-receipt.mjs";
  */
 export const writeRubySyncRelease = async o => {
 	const { workRoot, name, version, prefix, wire, files, api, evidence, manifest, runtimeIdentity, componentIdentity, bindingIrSha256, floor, projectContract } = o;
-	const profile = "native-ruby-io-v1", library = "lib" + prefix + ".so", libraries = {};
+	const async = Boolean(wire.wait), profile = async ? "native-ruby-task-v1" : "native-ruby-io-v1", library = "lib" + prefix + ".so", libraries = {};
 	for(const path of [library, "liblean_bridge_native.so", "libleanshared.so"])
 	{
 		const file = "lib/" + path, bytes = files.get(file);
@@ -43,9 +43,10 @@ export const writeRubySyncRelease = async o => {
 		await save("lean-bridge/licenses/LeanBridge-LICENSE", await readFile(new URL("../../LICENSE", import.meta.url)));
 		for(const f of ["LICENSE", "LICENSES"]) await save("lean-bridge/licenses/Lean-" + f, await readFile(join(o.leanPrefix, f)));
 		for(const [path, b] of Object.entries(projectContract.notices)) await save("lean-bridge/licenses/" + path, b);
-		await save("README.md", `# ${name}\n\nRequire \`${source.requirePath}\` and call \`${source.namespace}\` methods on the original process main thread. No compiler or event loop is needed. An IO failure raises IOError with its declaration; a thrown EIO raises DeclaredError with its declaration and payload. An Except returned normally is an Ok or Err value. MRI Ruby 3.3 on Linux x86-64, glibc ${floor}+. The matching Lean runtime is included.\n`);
+		await save("README.md", `# ${name}\n\nRequire \`${source.requirePath}\` and call \`${source.namespace}\` methods on the original process main thread. ${async ? "Tasks provide await and cancel. Pull streams provide next, each and close. Pending operations park through Ruby IO and honor a fiber scheduler. Close abandoned work or use with/each for deterministic cleanup." : "No compiler or event loop is needed."} An IO failure raises IOError with its declaration; a thrown EIO raises DeclaredError with its declaration and payload. An Except returned normally is an Ok or Err value. MRI Ruby 3.3 on Linux x86-64, glibc ${floor}+. The matching Lean runtime is included.\n`);
 		await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: 1
-			, kind: "lean-bridge-native-ruby-io", profile, name, version
+			, kind: async ? "lean-bridge-native-ruby-task" : "lean-bridge-native-ruby-io"
+			, profile, name, version
 			, component: api.component, componentIdentity, bindingIrSha256
 			, sourceTreeSha256: projectContract.sourceTreeSha256
 			, runtimeIdentity, namespace: source.namespace
@@ -55,7 +56,7 @@ export const writeRubySyncRelease = async o => {
 			, root, name, version
 			, environment: o.environment, signal: o.signal, componentId: api.component.id
 			, bindingIrSha256, metadata: projectContract.metadata ?? {}
-			, summary: "Synchronous compiled Lean IO for Ruby" });
+			, summary: async ? "Compiled Lean tasks and pull streams for Ruby" : "Synchronous compiled Lean IO for Ruby" });
 		const receipt = await writePackageSetReceipt({ root: workRoot
 			, component: api.component
 			, source: { treeSha256: projectContract.sourceTreeSha256 }

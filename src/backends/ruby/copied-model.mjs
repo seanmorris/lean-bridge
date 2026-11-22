@@ -117,6 +117,13 @@ export const compileCopiedRubyModel = ir => {
 };
 
 /**
+ * Derive a gem version from Lean. An unversioned build must satisfy RubyGems' default >= 0 requirement.
+ *
+ * @param version - Inferred Lean package version.
+ */
+export const defaultRubyVersion = version => version === "0.0.0-local" ? "0.0.0" : version.replace("-", ".pre.");
+
+/**
  * Require exact RubyGems coordinates without silent version normalization.
  *
  * @param settings - Optional gem name and version.

@@ -28,7 +28,8 @@ export const generateCTaskExports = options => {
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
-	if((retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC].filter(Boolean).length !== 1 || publicC !== gmp))
+	if(retained && options.rubyDelivery) throw new TypeError("Ruby retained task callbacks require a host callback dispatcher");
+	if((retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery].filter(Boolean).length !== 1 || publicC !== gmp))
 		throw new TypeError("This task callback ABI requires Rust or C++ word carriers or a checked public C profile with GMP");
 	const statuses = [...baseStatuses, ...publicC && (retained || terminal) ? ["TASK_IO_ERROR"] : [], ...publicC && retained ? ["CALLBACK_ERROR", "CALLBACK_CLOSED", "CALLBACK_TRAP"] : []];
 	if(options.integerMode && !["gmp", "words"].includes(options.integerMode)) throw new TypeError("Unknown task integer ABI");

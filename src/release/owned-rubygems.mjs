@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { compiledPackageMetadata } from "../analyze/package-metadata.mjs";
 import { rubyPackageLicense } from "../analyze/package-license.mjs";
 import { generateOwnedRubyPackage } from "../backends/ruby/owned-package.mjs";
-import { validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
+import { defaultRubyVersion, validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
 import { rubyLiteral } from "../backends/ruby/copied-assets.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { ownedRubyEvidence } from "../build/owned-ruby-artifacts.mjs";
@@ -31,7 +31,7 @@ export const packageOwnedRuby = async options => {
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
 	const generated = generateOwnedRubyPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors }), prefix = generated.c.prefix;
-	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? model.component.version.replace("-", ".pre.");
+	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? defaultRubyVersion(model.component.version);
 	validateOrdinaryRubySettings({ name, version });
 	const root = join(working, "packages/rubygems/package");
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };

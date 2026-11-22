@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-ruby-fiber-tasks",
+  "node": 1223,
+  "scope": "Installed Linux x86-64 native-ruby-task-v1 gems; local candidate evidence for VO 1223, 1222 and 1221.",
+  "toolchain": "Lean 4.32.2; MRI 3.3.12; glibc 2.36; RubyGems with Fiddle. The installed programs run with no compiler or build tools on PATH.",
+  "acceptanceSha256": "238ec98b4a467ff04afb828d7f2eb6c1cf3bdfc7e0210247cf9eeea717493ea0",
+  "checks": [
+    "Ordinary Lean source and independently selected reviewed IR yield identical public interfaces and distinct source trees and gem archives. Two stream-only factories are installed from a separate Lean application.",
+    "All 19 primitive input/result shapes are delivered through tasks. Checks distinguish a returned nested Except, an immediate typed factory failure, a selected terminal IO failure and a stream-step failure. Pure, BaseIO and IO companions remain direct calls.",
+    "MRI fibers share pending and settled tasks; individual waits park on IO readiness. Cancellation wakes both waiters even when the Lean worker ignores cancellation. Retirement wakes a parked fiber before the worker can complete.",
+    "Stream pulls exercise backpressure, concurrent pull refusal, block exceptions, early break, empty and exhausted streams. Frozen owners work, copied and fork-inherited owners are rejected, and explicit close and abandoned-owner cleanup return observed live identities to zero.",
+    "Each exact gem is installed offline and relocated. Inner file sizes and digests are checked before exercising retained clients. A disposable installed library with one additional byte is rejected on the next require."
+  ],
+  "controls": [
+    "Separate fresh builds reject a retained Ruby callback and a non-IO.Error terminal selection with declaration-specific diagnostics, without creating a release directory.",
+    "An explicitly supplied invalid gem version is rejected unchanged. With neither a Lake version nor gem coordinates, an original platform gem installs offline as lean-bad 0.0.0. Plain require loads it and the Lean-produced task returns 37."
+  ],
+  "limits": [
+    "This profile does not support retained Ruby callbacks, nominal resource leases or foreign host-object imports. It is not a whole-matrix gate or hosted CI result.",
+    "Only the listed synchronous companions, task/cursor declarations and value shapes were exercised. The operating system, VM and toolchain are part of the profile."
+  ],
+  "reproduce": {
+    "controls": "CC=cc LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_RUBY_TASK_REFUSALS=1 node --test --test-concurrency=1 tests/helpers/ruby-task-installed.mjs",
+    "build": "CC=cc LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_RUBY_TASK_EVIDENCE=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/ruby-task-installed.mjs",
+    "replay": "LEAN_BRIDGE_RUBY_TASK_REPLAY=/absolute/path/to/original-handoffs LEAN_BRIDGE_RUBY_TASK_EXPECTED=docs/evidence/ruby-fiber-tasks-20261122.json node --test --test-concurrency=1 tests/helpers/ruby-task-installed.mjs",
+    "tools": "Set LEAN_BRIDGE_RUBY to MRI 3.3. A build also needs the pinned LEAN_BRIDGE_LEAN_PREFIX and a C compiler. Replay needs MRI, all three original handoffs, their three client files and the original acceptance.json."
+  },
+  "routes": [
+    {
+      "archive": {
+        "bytes": 50112512,
+        "path": "archives/ruby-pulse-1.0.0-x86_64-linux.gem",
+        "sha256": "7906038645ae87f49edd5476fcb38f3b4ced49fbc24396ca36120cf310cc1362"
+      },
+      "bindingIrSha256": "cd59d607d2962170ee4638e26e470ce751607c9f07d0a0fecc7c271d55fe9e64",
+      "clients": {
+        "consumer.rb": "3e7da8696c59c2cd9a70f371821b6df416a75dead81d3dcd9686f88745145265",
+        "scheduler.rb": "05297d2d873da0cbc66ed01c09365148aeb3b07d857b24424fb521b93e000e92"
+      },
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "output": "Ruby Task: 19 scalars, fiber readiness, cancellation, typed errors, stream backpressure, retirement and cleanup passed",
+      "profile": "native-ruby-task-v1",
+      "receiptSha256": "b883b33fce012644780f02f8abf977375a9c83270bea159c69a2383523642dea",
+      "reviewedSourceSha256": null,
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "8d2c92e9d12acf22691da3a93405cb1877223f28b21a2a2569ff95e44dfd9695"
+    },
+    {
+      "archive": {
+        "bytes": 50112512,
+        "path": "archives/ruby-pulse-1.0.0-x86_64-linux.gem",
+        "sha256": "4843951714491407dd333d2b5985025ce16c216d008f7ba494dfcbd4f61e2984"
+      },
+      "bindingIrSha256": "cd59d607d2962170ee4638e26e470ce751607c9f07d0a0fecc7c271d55fe9e64",
+      "clients": {
+        "consumer.rb": "3e7da8696c59c2cd9a70f371821b6df416a75dead81d3dcd9686f88745145265",
+        "scheduler.rb": "05297d2d873da0cbc66ed01c09365148aeb3b07d857b24424fb521b93e000e92"
+      },
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "output": "Ruby Task: 19 scalars, fiber readiness, cancellation, typed errors, stream backpressure, retirement and cleanup passed",
+      "profile": "native-ruby-task-v1",
+      "receiptSha256": "ecb79ce9610a5d42886405978e346df4e7917dc6f6987b84d7225e4113ab6010",
+      "reviewedSourceSha256": "eb5585ab4c608d387c4d50b99b214a1e97bb8a0a9831a8debd35a7ddac72de52",
+      "route": "reviewed",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "71457d86532d9e8acecbba9c8f75a11b0c40a6921ebf488a638b7464ad45530f"
+    },
+    {
+      "archive": {
+        "bytes": 50076672,
+        "path": "archives/ruby-signals-1.0.0-x86_64-linux.gem",
+        "sha256": "d4ac9ea67b7b175cc056470fba82042fecf3a4d791407764833efb1d33640159"
+      },
+      "bindingIrSha256": "eb4fd745502ed4e64de8dd64153cb41287ce0862d1bd40937819a57374b10e83",
+      "clients": {
+        "stream-only.rb": "7fc7d2b7a0bd67ff830339d3e04274c9c560e5ecb65e765af04bd3c41f8bed34"
+      },
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "output": "Ruby: standalone cursor factories, exact integers, early close and empty stream passed",
+      "profile": "native-ruby-task-v1",
+      "receiptSha256": "f18374cf27868ca05589370fb4831ec379aecedfd4855a5f6ba59beccccb141a",
+      "reviewedSourceSha256": null,
+      "route": "stream-only",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "4d2fff94253a6ff6f4d4be1d536e59eb3dff2ab3e3604c6af27b9e8c336eebe3"
+    }
+  ]
+}

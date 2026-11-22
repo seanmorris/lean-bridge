@@ -35,7 +35,7 @@ const asset = path => readFile(new URL(path, import.meta.url));
 export const buildCTaskPackage = async options => {
 	const { projectContract, name, version, workRoot, runtimeRoot, leanPrefix, environment, signal } = options;
 	const target = options.target ?? "c", cpp = target === "cpp", rust = target === "cargo", ruby = target === "rubygems";
-	if(!["c", "cpp", "cargo", "rubygems"].includes(target) || (ruby && !projectContract.synchronousIO)) throw new TypeError("Invalid native delivery target");
+	if(!["c", "cpp", "cargo", "rubygems"].includes(target)) throw new TypeError("Invalid native delivery target");
 	(rust ? validateOrdinaryCargoSettings : ruby ? validateOrdinaryRubySettings : validateNativeCSettings)({ name, version });
 	if(options.ir || !name || !version || options.sources.some(s => /^(?:LeanBridge(?:\.|$)|BridgeCAsync$)/u.test(s.module))) throw new TypeError("Invalid C task source modules or coordinates");
 	const { identity: runtimeIdentity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
@@ -51,7 +51,7 @@ export const buildCTaskPackage = async options => {
 		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
 		const threads = cpp && (!synchronous || resources.length > 0);
-		const config = { name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", integerMode: cpp || rust || ruby ? "words" : "gmp" };
+		const config = { name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, integerMode: cpp || rust || ruby ? "words" : "gmp" };
 		const callbackHeaders = new Map();
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
@@ -63,7 +63,7 @@ export const buildCTaskPackage = async options => {
 		const ledgerId = ledger && sha256(canonicalJson({ runtimeIdentity, header: sha256(ledger.header), source: sha256(ledger.source) }));
 		const ledgerName = ledger && `liblb_task_resources_${ledgerId}.so`, ledgerFlag = `-DLB_LEASE_PREFIX=lb_task_resource_${ledgerId}_`;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
-		const wire = ruby && generateSyncWire(skeleton.prefix, entries);
+		const wire = ruby && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous });
 		const integers = skeleton.integerMode && await asset("../backends/c/task-integers.h");
 		const gmp = integers && !cpp && !rust && !ruby && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
 		const boost = integers && cpp && boostSources();

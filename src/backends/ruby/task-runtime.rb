@@ -1,0 +1,245 @@
+# frozen_string_literal: true
+require "io/wait"
+
+module LeanBridge::GeneratedTaskComponent
+  class Cancelled < BoundaryError; end
+  class Busy < BoundaryError; end
+  class StepError < DeclaredError; end
+  class TaskIOError < IOError; end
+
+  module TaskRuntimeV1
+    API = ::LeanBridge::GeneratedTaskComponent
+    PID = ::Process.pid
+    SLOTS = {}.compare_by_identity
+    Slot = ::Struct.new(:h, :ops, :gates, :abandoned, :state, :value, :pulling, :iterating)
+    END_OF_STREAM = ::Object.new.freeze
+
+    def self.context
+      unless ::Ractor.current.equal?(::Ractor.main) && ::Thread.current.equal?(::Thread.main) && ::Process.pid == PID
+        raise WrongContext, "Lean delivery requires its original process and main thread"
+      end
+    end
+    def self.atomic(&block) = ::Thread.handle_interrupt(::Exception => :never, &block)
+    def self.finalizer(slot) = proc { slot.abandoned = true }
+    def self.release(slot)
+      return unless slot.h
+      slot.gates.each { |gate| slot.ops[:wake].call(gate) }
+      unless slot.h[0, 8].unpack1("Q<").zero?
+        code = slot.ops[:close].call(slot.h)
+        unless code == 0 || code == 6
+          slot.abandoned = true
+          status(code)
+        end
+      end
+      slot.h.call_free
+      slot.h = nil
+      SLOTS.delete(slot)
+    end
+    def self.drain
+      context
+      atomic { SLOTS.each_key { |slot| release(slot) if slot.abandoned } }
+    end
+    at_exit do
+      if ::Process.pid == PID && ::Thread.current.equal?(::Thread.main)
+        atomic { SLOTS.each_key { |slot| release(slot) } }
+      end
+    end
+    def self.status(code)
+      case code
+      when 5 then raise ::ArgumentError, "Invalid Lean argument"
+      when 6 then raise Cancelled, "Lean operation is closed"
+      when 7 then raise Busy, "A pull is already in flight"
+      when 9 then raise WrongContext, "Wrong Lean runtime context"
+      when 10 then raise Unavailable, "Lean runtime is unavailable"
+      when 11 then raise ::NoMemoryError, "Lean allocation failed"
+      when 12 then raise ::RangeError, "Lean copy budget exceeded"
+      else raise BoundaryError, "Unexpected Lean delivery status #{code}"
+      end
+    end
+    def self.output(ops)
+      frame = NativeSyncWireV1::Frame.new
+      begin
+        out = frame.bytes(32); tags = frame.bytes(ops[:depth]); out[0, 32] = "\0" * 32
+        begin
+          yield frame, out, tags
+        ensure
+          ops[:clear].call(out)
+        end
+      ensure
+        frame.close
+      end
+    end
+    def self.decode(type, out, tags) = NativeSyncWireV1.decode(API, type, out[0, 32].unpack("Q<4"), tags)
+    def self.start(ops, args)
+      drain
+      atomic do
+        h = ::Fiddle::Pointer.malloc(16, ::Fiddle::RUBY_FREE); h[0, 16] = "\0" * 16
+        slot = Slot.new(h, ops, [], false)
+        begin
+          SLOTS[slot] = true
+          output(ops) do |frame, out, tags|
+            input = frame.bytes(24 * args.size)
+            ops[:args].each_with_index { |type, i| input[24 * i, 24] = NativeSyncWireV1.encode(type, args[i], frame, UNIT).pack("Q<3") }
+            code = ops[:start].call(input, h, out, tags)
+            case code
+            when 0 then nil
+            when 3 then raise DeclaredError.new(ops[:decl], decode(ops[:error], out, tags))
+            when 4 then raise IOError.new(ops[:decl], decode("string", out, tags))
+            else status(code)
+            end
+          end
+          obj = (ops[:pull] ? PullStream : Task).__send__(:new, slot)
+          ::ObjectSpace.define_finalizer(obj, finalizer(slot))
+          obj
+        rescue ::Exception
+          release(slot)
+          raise
+        end
+      end
+    end
+    # A separate epoll registration per waiter. Another fiber may settle or
+    # cancel the owner at any time inside wait_readable, even before it returns.
+    def self.ready(slot)
+      ops = slot.ops
+      ::Fiddle::Pointer.malloc(4, ::Fiddle::RUBY_FREE) do |fd|
+        code = ops[:poll].call(slot.h, fd)
+        return true if code.zero?
+        status(code) unless code == 1
+        ::Fiddle::Pointer.malloc(8, ::Fiddle::RUBY_FREE) do |gate|
+          code = ops[:open_wait].call(fd[0, 4].unpack1("l<"), gate)
+          status(code) unless code.zero?
+          begin
+            slot.gates << gate
+            io = ::IO.for_fd(gate[0, 4].unpack1("l<"), autoclose: false)
+            ::Thread.handle_interrupt(::Exception => :immediate) { io.wait_readable }
+          ensure
+            slot.gates.delete(gate)
+            ops[:end_wait].call(gate)
+          end
+        end
+        false
+      end
+    end
+    def self.take(slot)
+      ops = slot.ops
+      output(ops) do |_, out, tags|
+        case code = ops[:take].call(slot.h, out, tags)
+        when 0 then decode(ops[:result], out, tags)
+        when 2 then END_OF_STREAM
+        when 3 then raise StepError.new(ops[:step], decode(ops[:terminal], out, tags))
+        when 4 then raise TaskIOError.new(ops[:decl], decode("string", out, tags))
+        else status(code)
+        end
+      end
+    end
+  end
+  private_constant :TaskRuntimeV1
+
+  class DeliveryOwner
+    private_class_method :new, :allocate
+    def initialize(slot) = (@slot = slot)
+    def initialize_copy(other)
+      ::ObjectSpace.undefine_finalizer(self)
+      raise ::TypeError, "Lean delivery owners cannot be copied"
+    end
+    def _dump(*) = raise(::TypeError, "Lean delivery owners cannot be serialized")
+    def with
+      TaskRuntimeV1.context
+      begin
+        yield self
+      ensure
+        close
+      end
+    end
+  end
+  private_constant :DeliveryOwner
+  class Task < DeliveryOwner
+    def await
+      TaskRuntimeV1.drain
+      TaskRuntimeV1.atomic do
+        begin
+          until @slot.state
+            next unless TaskRuntimeV1.ready(@slot)
+            settle(:value, TaskRuntimeV1.take(@slot))
+          end
+        rescue ::Exception => error
+          settle(:error, error) unless @slot.state
+          raise
+        end
+        raise @slot.value if @slot.state == :error
+        @slot.value
+      end
+    end
+    def cancel
+      TaskRuntimeV1.context
+      TaskRuntimeV1.atomic { @slot.state ? false : settle(:error, Cancelled.new("Lean task cancelled")) }
+    end
+    alias close cancel
+    private
+    def settle(state, value)
+      @slot.state, @slot.value = state, value
+      TaskRuntimeV1.release(@slot)
+      true
+    end
+  end
+  class PullStream < DeliveryOwner
+    include ::Enumerable
+    def next
+      TaskRuntimeV1.drain
+      TaskRuntimeV1.atomic do
+        raise ::StopIteration if @slot.state == :closed
+        raise Busy, "Another fiber is already pulling this stream" if @slot.pulling || (@slot.iterating && @slot.iterating != ::Fiber.current.object_id)
+        @slot.pulling = true
+        begin
+          code = @slot.ops[:pull].call(@slot.h); TaskRuntimeV1.status(code) unless code.zero?
+          until TaskRuntimeV1.ready(@slot)
+            raise Cancelled, "Lean stream closed during pull" if @slot.state == :closed
+          end
+          item = TaskRuntimeV1.take(@slot)
+          if item.equal?(TaskRuntimeV1::END_OF_STREAM)
+            close
+            raise ::StopIteration
+          end
+          item
+        rescue ::Exception
+          close
+          raise
+        ensure
+          @slot.pulling = false
+        end
+      end
+    end
+    def each
+      return enum_for(:each) unless block_given?
+      TaskRuntimeV1.drain
+      TaskRuntimeV1.atomic do
+        raise Busy, "Another enumeration is active" if @slot.pulling || @slot.iterating
+        # Do not retain an Enumerator's suspended Fiber (and therefore its owner).
+        @slot.iterating = ::Fiber.current.object_id
+        begin
+          ::Thread.handle_interrupt(::Exception => :immediate) do
+            while true
+              begin
+                item = self.next
+              rescue ::StopIteration
+                break
+              end
+              yield item
+            end
+          end
+        ensure
+          @slot.iterating = nil
+          close
+        end
+      end
+      self
+    end
+    def close
+      TaskRuntimeV1.context
+      TaskRuntimeV1.atomic do
+        return false if @slot.state == :closed
+        @slot.state = :closed; TaskRuntimeV1.release(@slot); true
+      end
+    end
+  end
+end

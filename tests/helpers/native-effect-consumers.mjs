@@ -25,7 +25,10 @@ const run = async (cmd, args, cwd, env, timeout = 600_000) => {
 	try
 	{ return (await exec(cmd, args, { cwd, env, timeout, maxBuffer: 4 << 20 })).stdout.trim(); }
 	catch(e)
-	{ throw new Error([e.message, e.stdout, e.stderr].join("\n"), { cause: e }); }
+	{
+		const termination = e.signal ? `Terminated by ${e.signal} (wall-clock limit ${timeout} ms)` : null;
+		throw new Error([e.message, termination, e.stdout, e.stderr].filter(Boolean).join("\n"), { cause: e });
+	}
 };
 const ext = { c: "c", cpp: "cpp", pypi: "py", cargo: "rs" };
 export { run as runNativeTool };
@@ -42,7 +45,7 @@ export const runEffectConsumers = async (work, releases, target, env, sample = {
 	const client = join(sample.clients ?? clients, "consumer." + ext[target]);
 	const reports = [];
 	let ordinary;
-	for(const route of ["ordinary", "reviewed"])
+	for(const route of sample.routes ?? ["ordinary", "reviewed"])
 	{
 		const handoff = join(releases, target, route, "handoff");
 		const { report, receipt, api } = await (sample.check ?? checkEffectHandoff)(handoff, ordinary); ordinary ??= api;
@@ -96,7 +99,7 @@ export const runEffectConsumers = async (work, releases, target, env, sample = {
 				}
 				// The executable cannot rely on the Cargo tree / build prefix or producer tools.
 				await rm(build, { recursive: true }); await writeFile(join(app, "state"), "open");
-				await run(bin, [], app, isolated, 45_000);
+				await run(bin, [], app, isolated, target === "cargo" ? sample.rustClientTimeoutMs ?? 45_000 : 45_000);
 			}
 			assert.equal(await readFile(join(app, "state"), "utf8"), "closed");
 			reports.push({ target, route, ...report, consumerSha256: sha256(await readFile(client)), ...installed ? { installed } : {} });
