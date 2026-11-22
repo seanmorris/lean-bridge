@@ -11,7 +11,7 @@ module LeanBridge::GeneratedTaskComponent
     API = ::LeanBridge::GeneratedTaskComponent
     PID = ::Process.pid
     SLOTS = {}.compare_by_identity
-    Slot = ::Struct.new(:h, :ops, :gates, :abandoned, :state, :value, :pulling, :iterating)
+    Slot = ::Struct.new(:h, :ops, :gates, :abandoned, :state, :value, :pulling, :iterating, :dispatcher)
     END_OF_STREAM = ::Object.new.freeze
 
     def self.context
@@ -20,14 +20,14 @@ module LeanBridge::GeneratedTaskComponent
       end
     end
     def self.atomic(&block) = ::Thread.handle_interrupt(::Exception => :never, &block)
-    def self.finalizer(slot) = proc { slot.abandoned = true }
+    def self.finalizer(flag) = proc { flag[0] = true }
     def self.release(slot)
       return unless slot.h
       slot.gates.each { |gate| slot.ops[:wake].call(gate) }
       unless slot.h[0, 8].unpack1("Q<").zero?
         code = slot.ops[:close].call(slot.h)
         unless code == 0 || code == 6
-          slot.abandoned = true
+          slot.abandoned[0] = true
           status(code)
         end
       end
@@ -37,7 +37,7 @@ module LeanBridge::GeneratedTaskComponent
     end
     def self.drain
       context
-      atomic { SLOTS.each_key { |slot| release(slot) if slot.abandoned } }
+      atomic { SLOTS.each_key { |slot| release(slot) if slot.abandoned[0] } }
     end
     at_exit do
       if ::Process.pid == PID && ::Thread.current.equal?(::Thread.main)
@@ -74,12 +74,16 @@ module LeanBridge::GeneratedTaskComponent
       drain
       atomic do
         h = ::Fiddle::Pointer.malloc(16, ::Fiddle::RUBY_FREE); h[0, 16] = "\0" * 16
-        slot = Slot.new(h, ops, [], false)
+        slot = Slot.new(h, ops, [], [false])
         begin
+          callbacks = ops[:callbacks] && RetainedRuntimeV1.new(ops, args)
           SLOTS[slot] = true
           output(ops) do |frame, out, tags|
             input = frame.bytes(24 * args.size)
-            ops[:args].each_with_index { |type, i| input[24 * i, 24] = NativeSyncWireV1.encode(type, args[i], frame, UNIT).pack("Q<3") }
+            ops[:args].each_with_index do |type, i|
+              next if type == "callback"
+              input[24 * i, 24] = NativeSyncWireV1.encode(type, args[i], frame, UNIT).pack("Q<3")
+            end
             code = ops[:start].call(input, h, out, tags)
             case code
             when 0 then nil
@@ -88,8 +92,8 @@ module LeanBridge::GeneratedTaskComponent
             else status(code)
             end
           end
-          obj = (ops[:pull] ? PullStream : Task).__send__(:new, slot)
-          ::ObjectSpace.define_finalizer(obj, finalizer(slot))
+          obj = (ops[:pull] ? PullStream : Task).__send__(:new, slot, callbacks)
+          ::ObjectSpace.define_finalizer(obj, finalizer(slot.abandoned))
           obj
         rescue ::Exception
           release(slot)
@@ -99,14 +103,24 @@ module LeanBridge::GeneratedTaskComponent
     end
     # A separate epoll registration per waiter. Another fiber may settle or
     # cancel the owner at any time inside wait_readable, even before it returns.
-    def self.ready(slot)
+    def self.ready(slot, callbacks = nil)
       ops = slot.ops
+      if callbacks && !slot.dispatcher
+        callbacks.pump(slot)
+        return false if slot.state
+      end
       ::Fiddle::Pointer.malloc(4, ::Fiddle::RUBY_FREE) do |fd|
         code = ops[:poll].call(slot.h, fd)
         return true if code.zero?
         status(code) unless code == 1
         ::Fiddle::Pointer.malloc(8, ::Fiddle::RUBY_FREE) do |gate|
-          code = ops[:open_wait].call(fd[0, 4].unpack1("l<"), gate)
+          cb = -1
+          if callbacks && !slot.dispatcher
+            code = ops[:callback_fd].call(slot.h, gate)
+            status(code) unless code.zero?
+            cb = gate[0, 4].unpack1("l<")
+          end
+          code = ops[:open_wait].call(fd[0, 4].unpack1("l<"), cb, gate)
           status(code) unless code.zero?
           begin
             slot.gates << gate
@@ -120,14 +134,18 @@ module LeanBridge::GeneratedTaskComponent
         false
       end
     end
-    def self.take(slot)
+    def self.take(slot, callbacks = nil)
       ops = slot.ops
       output(ops) do |_, out, tags|
         case code = ops[:take].call(slot.h, out, tags)
         when 0 then decode(ops[:result], out, tags)
         when 2 then END_OF_STREAM
-        when 3 then raise StepError.new(ops[:step], decode(ops[:terminal], out, tags))
+        when 3
+          raise DeclaredError.new(ops[:decl], decode(ops[:error], out, tags)) if callbacks
+          raise StepError.new(ops[:step], decode(ops[:terminal], out, tags))
         when 4 then raise TaskIOError.new(ops[:decl], decode("string", out, tags))
+        when 13 then raise IOError.new(ops[:decl], decode("string", out, tags))
+        when 14 then raise callbacks.original(out[0, 8].unpack1("Q<"))
         else status(code)
         end
       end
@@ -137,7 +155,7 @@ module LeanBridge::GeneratedTaskComponent
 
   class DeliveryOwner
     private_class_method :new, :allocate
-    def initialize(slot) = (@slot = slot)
+    def initialize(slot, callbacks) = (@slot, @callbacks = slot, callbacks)
     def initialize_copy(other)
       ::ObjectSpace.undefine_finalizer(self)
       raise ::TypeError, "Lean delivery owners cannot be copied"
@@ -157,14 +175,14 @@ module LeanBridge::GeneratedTaskComponent
     def await
       TaskRuntimeV1.drain
       TaskRuntimeV1.atomic do
+        raise Busy, "A callback cannot await its own task" if !@slot.state && @slot.dispatcher == ::Fiber.current.object_id
         begin
           until @slot.state
-            next unless TaskRuntimeV1.ready(@slot)
-            settle(:value, TaskRuntimeV1.take(@slot))
+            next unless TaskRuntimeV1.ready(@slot, @callbacks)
+            settle(:value, TaskRuntimeV1.take(@slot, @callbacks))
           end
         rescue ::Exception => error
           settle(:error, error) unless @slot.state
-          raise
         end
         raise @slot.value if @slot.state == :error
         @slot.value
@@ -178,6 +196,7 @@ module LeanBridge::GeneratedTaskComponent
     private
     def settle(state, value)
       @slot.state, @slot.value = state, value
+      @callbacks&.clear
       TaskRuntimeV1.release(@slot)
       true
     end

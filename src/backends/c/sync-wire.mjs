@@ -6,7 +6,7 @@
  * @file
  */
 import { cTaskValues } from "./task-values.mjs";
-import { taskWireEntry, taskWireWait } from "./task-wire.mjs";
+import { retainedWireEntry, taskWireEntry, taskWireWait } from "./task-wire.mjs";
 
 const scalars = new Set("unit bool char uint8 uint16 uint32 uint64 usize int8 int16 int32 int64 isize float32 float64 string bytes nat int".split(" "));
 const shape = t => {
@@ -48,12 +48,18 @@ export const generateSyncWire = (prefix, entries, { tasks = false } = {}) => {
 	const functions = entries.map((e, i) => {
 		if((!tasks && (e.delivery || e.taskIO)) || (e.delivery && !["task", "async-iterator"].includes(e.delivery)) || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)
 			|| !/^[a-z][a-z0-9_]*$/u.test(e.name)) throw new TypeError("Expected an authenticated synchronous function");
+		const n = p + "_" + e.name, symbol = stem + "_" + i;
+		if(e.parameters.some(a => a.type.kind === "io-callback"))
+		{
+			if(!tasks || e.delivery !== "task") throw new TypeError("Retained host callbacks require a task");
+			const wire = retainedWireEntry({ p, n, symbol, e, values, shape, depth, input, emit });
+			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
+		}
 		const args = e.parameters.map(a => shape(a.type));
 		if(args.some(Array.isArray)) throw new TypeError("The host wire accepts copied scalar arguments");
 		const codecs = e.parameters.map(a => values.codec(a.type)), result = shape(e.result), item = values.codec(e.result);
 		const err = e.effect === "EIO" ? shape(e.error) : e.effect === "IO" ? "string" : null;
 		const ec = e.effect === "EIO" ? values.codec(e.error) : null;
-		const n = p + "_" + e.name, symbol = stem + "_" + i;
 		const checks = args.map((v, k) => (v === "bool" || v === "unit") ? `if (args[${3 * k}] > ${v === "bool" ? 1 : 0}u) return ${p}_INVALID;` : "").filter(Boolean);
 		if(e.delivery)
 		{

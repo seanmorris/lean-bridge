@@ -70,6 +70,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "cargo" && projectContract.taskExports?.length ? { rustTaskCallbacks: true } : {})
 		, ...(options.target === "cpp" && projectContract.taskExports?.length ? { cppTaskCallbacks: true } : {})
 		, ...(options.target === "c" && projectContract.taskExports?.length ? { cTaskCallbacks: true } : {})
+		, ...(options.target === "rubygems" && projectContract.taskExports?.length ? { rubyTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []

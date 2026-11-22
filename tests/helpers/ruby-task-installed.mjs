@@ -74,9 +74,9 @@ test("Ruby task signature refusals and local version selection", { skip: !env.LE
 	const src = join(work, "src"), out = join(work, "handoff"); await mkdir(src);
 	await copyFile(join(fixtures, "c-lean-tasks/lean-toolchain"), join(src, "lean-toolchain"));
 	await writeFile(join(src, "lakefile.toml"), 'name="bad"\n[[lean_lib]]\nname="Bad"\n');
-	await writeFile(join(src, "Bad.lean"), "namespace Bad\ndef request (_ : Nat → IO Nat) : Task Nat := Task.pure 9\ndef wrong : Task (Except String Nat) := Task.pure (.ok 1)\ndef valid : Task UInt32 := Task.pure 37\nend Bad\n");
+	await writeFile(join(src, "Bad.lean"), "namespace Bad\ndef request (_ : Nat → IO (Array Nat)) : Task Nat := Task.pure 9\ndef wrong : Task (Except String Nat) := Task.pure (.ok 1)\ndef valid : Task UInt32 := Task.pure 37\nend Bad\n");
 	const build = () => buildCanonicalProject({ projectRoot: src, outputRoot: out, targets: ["rubygems"], environment: env });
-	for(const [name, error] of [["Bad.request", /unsupported .*carrier/u], ["Bad.wrong", /taskIOErrors requires Task/u]]) await t.test("refuses " + name, async () => {
+	for(const [name, error] of [["Bad.request", /must be copied scalars/u], ["Bad.wrong", /taskIOErrors requires Task/u]]) await t.test("refuses " + name, async () => {
 		await writeFile(join(src, "lean-bridge.exports.json"), canonicalJson({ schemaVersion: 1, modules: ["Bad"], taskExports: [name], ...name === "Bad.wrong" ? { taskIOErrors: [name] } : {} }));
 		await assert.rejects(build(), e => {
 			assert.match([e.message, e.details?.stderr, e.details?.stdout].join("\n"), error); return true;
@@ -108,8 +108,9 @@ test("Ruby task signature refusals and local version selection", { skip: !env.LE
  * @param root - Root holding immutable handoffs.
  * @param route - Ordinary, reviewed, or stream-only package.
  * @param clientRoot - Original client location (defaults to the retained handoff).
+ * @param sample - Additional package-specific IR checks, retained callers and success marker.
  */
-export const installRubyTaskCase = async (work, root, route, clientRoot = root) => {
+export const installRubyTaskCase = async (work, root, route, clientRoot = root, sample = null) => {
 	const dir = join(root, route, "handoff"), only = route === "stream-only";
 	const { receipt, result } = await readVerifiedPackageSetReceipt({ receiptPath: join(dir, "package-set-receipt.json") });
 	await assertJsonSchema("package-set-receipt", receipt);
@@ -119,7 +120,8 @@ export const installRubyTaskCase = async (work, root, route, clientRoot = root) 
 	const api = await read(join(dir, "binding-ir.json")), proof = await read(join(dir, "host-export-evidence.json"));
 	assert.equal(hashBindingIr(api), profile.bindingIrSha256); assert.equal(proof.sourceTreeSha256, receipt.source.treeSha256);
 	assert.equal(Boolean(proof.reviewedSourceSha256), route === "reviewed");
-	if(!only)
+	if(sample) sample.check(api, proof);
+	else if(!only)
 	{
 		assert.deepEqual(api.declarations.find(d => d.name === "terminal").failure.errors, ["error:TaskIO.Error"]);
 		for(const name of ["direct", "identity", "base"])
@@ -141,13 +143,13 @@ export const installRubyTaskCase = async (work, root, route, clientRoot = root) 
 	{
 		const bytes = await readFile(join(installed, path)); assert.equal(bytes.length, identity.bytes); assert.equal(sha256(bytes), identity.sha256);
 	}
-	const files = only ? ["stream-only.rb"] : ["consumer.rb", "scheduler.rb"], sources = {};
+	const files = sample?.files ?? (only ? ["stream-only.rb"] : ["consumer.rb", "scheduler.rb"]), sources = {};
 	for(const file of files)
 	{
 		await copyFile(join(clientRoot, file), join(app, file)); sources[file] = sha256(await readFile(join(app, file)));
 	}
 	const output = await run(ruby, [files[0]], app, isolated, 120_000);
-	assert.match(output, only ? /empty stream passed/u : /retirement and cleanup passed/u);
+	assert.match(output, sample?.marker ?? (only ? /empty stream passed/u : /retirement and cleanup passed/u));
 	const lib = Object.keys(inner.files).find(f => f.endsWith("/liblbc_" + pkg.name.replaceAll("-", "_") + ".so")); assert.ok(lib);
 	await appendFile(join(installed, lib), Buffer.from([0]));
 	await assert.rejects(run(ruby, ["-e", 'require "' + inner.requirePath + '"'], app, isolated), /Native library differs from compiled evidence/u);

@@ -26,6 +26,7 @@ import "./helpers/native-sync-io.mjs";
 import "./helpers/native-sync-peer.mjs";
 import "./helpers/ruby-sync-installed.mjs";
 import "./helpers/ruby-task-installed.mjs";
+import "./helpers/ruby-retained-task-installed.mjs";
 import "./helpers/native-task-companions.mjs";
 import { generatePythonHostExtension } from "../src/backends/python/host-exports.mjs";
 import { generatePythonHostProvider } from "../src/backends/python/host-provider.mjs";

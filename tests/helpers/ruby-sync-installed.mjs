@@ -31,6 +31,24 @@ test("the Ruby IO wire excludes asynchronous and identity-bearing carriers", () 
 	for(const extra of [{ delivery: "task" }, { delivery: "async-iterator" }, { taskIO: true }, { result: { kind: "named", id: "lean:Badge" } }])
 		assert.throws(() => generateSyncWire("lbc_a", [{ ...e, ...extra }]), /synchronous function|copied primitive/u);
 });
+test("only a real callback-taking Ruby task exposes block or callable delivery", async () => {
+	const scalar = { kind: "primitive", name: "uint32" }, f = { kind: "io-callback", argument: scalar, reply: scalar };
+	const e = { name: "once", declaration: "A.once", delivery: "task", effect: "BaseIO", result: scalar, parameters: [{ type: scalar }, { type: f }] };
+	const make = entries => generateSyncWire("lbc_a", entries, { tasks: true });
+	assert.throws(() => make([{ ...e, delivery: null }]), /require a task/u);
+	assert.throws(() => make([{ ...e, delivery: "async-iterator" }]), /require a task/u);
+	assert.throws(() => make([{ ...e, parameters: [{ type: { ...f, reply: { kind: "named", id: "lean:Badge" } } }] }]), /copied scalars/u);
+	const wire = make([e, { ...e, name: "before", parameters: [...e.parameters].reverse() }]);
+	assert.deepEqual(wire.methods.map(m => m.callbacks), [[[1, "uint32", "uint32"]], [[0, "uint32", "uint32"]]]);
+	const files = (await generateRubySyncSources({ name: "sample", wire })).files, api = files["lib/lean_bridge/sample.rb"];
+	assert.match(api, /def self\.once\(v0, v1 = nil, &block\)/u);
+	assert.match(api, /def self\.before\(v0, v1\)/u);
+	assert.doesNotMatch(api, /Fiddle|lbwire_/u);
+	assert.ok(files["lib/lean_bridge/sample/retained_task.rb"]);
+	const plain = make([{ ...e, parameters: [] }]);
+	assert.ok(!(await generateRubySyncSources({ name: "sample", wire: plain })).files["lib/lean_bridge/sample/retained_task.rb"]);
+	await assert.rejects(generateRubySyncSources({ name: "retained-callback", wire }), /Reserved Ruby task namespace/u);
+});
 test("Ruby IO packages include their runtime in the CLI and keep native details private", async () => {
 	for(const manifest of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
 	{
@@ -40,6 +58,7 @@ test("Ruby IO packages include their runtime in the CLI and keep native details 
 			, "src/backends/ruby/sync-io.mjs"
 			, "src/backends/ruby/sync-wire.rb"
 			, "src/backends/ruby/task-runtime.rb"
+			, "src/backends/ruby/retained-task.rb"
 			, "src/release/ruby-sync-package.mjs"])
 			assert.ok(files.includes(path), manifest + ": " + path);
 	}
@@ -47,6 +66,7 @@ test("Ruby IO packages include their runtime in the CLI and keep native details 
 	const make = (name, entries) => generateRubySyncSources({ name, wire: generateSyncWire("lbc_a", entries) });
 	const result = await make("sample", [entry]), publicAPI = result.files["lib/lean_bridge/sample.rb"];
 	assert.ok(!Object.keys(result.files).some(p => p.endsWith("/task_runtime.rb")));
+	assert.ok(!Object.keys(result.files).some(p => p.endsWith("/retained_task.rb")));
 	assert.match(publicAPI, /def self\.dup_\(\)/u); assert.doesNotMatch(publicAPI, /Fiddle|lbwire_|Future|Promise/u);
 	assert.match(result.files["lib/lean_bridge/sample/native.rb"], /require_relative "sync_wire"/u);
 	assert.match(result.files["lib/lean_bridge/sample/sync_wire.rb"], /module LeanBridge::Sample/u);

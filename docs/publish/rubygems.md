@@ -87,8 +87,19 @@ runtime. See the [tested source and reviewed-IR handoffs](../evidence/ruby-fiber
 for the package and client hashes. Use `taskIOErrors` only for a selected `Task (Except IO.Error α)`
 whose error should raise from `await`. A normal returned `Except` remains
 data. The task profile accepts copied primitive arguments and copied
-primitive or nested `Except` results. It does not accept resource leases or
-retained Ruby callbacks. See [the Ruby consumer flow](../consume/ruby.md#await-a-task-or-read-a-stream).
+primitive or nested `Except` results. It does not accept resource leases.
+See [the Ruby consumer flow](../consume/ruby.md#await-a-task-or-read-a-stream).
+
+### Export a callback-taking task
+
+Give the selected task a unary parameter of type `α → IO β`, where both
+types are copied primitives. No additional callback manifest is required.
+For example, `Feedback.once : UInt32 → (UInt32 → IO UInt32) → BaseIO (Task (Except IO.Error UInt32))`
+uses both `taskExports: ["Feedback.once"]` and `taskIOErrors: ["Feedback.once"]`.
+The second selection makes terminal IO failures raise instead of returning
+an `Except` value. Lean workers send requests; the Ruby thread running
+`await` calls the block and supplies its reply. See [calling it from Ruby](../consume/ruby.md#pass-a-callback-to-a-lean-task)
+and the [ordinary and reviewed gem receipts](../evidence/ruby-retained-tasks-20261122.json).
 
 ## Export arrays and records
 

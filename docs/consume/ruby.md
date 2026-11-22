@@ -99,11 +99,49 @@ A stream pulls one item at a time. `next` raises `StopIteration` on
 exhaustion, and `each` closes on exhaustion, `break`, or a block exception.
 A concurrent pull raises `Busy`. A declared pull failure raises `StepError`
 with the pull declaration and its typed payload. A selected terminal IO
-failure raises `TaskIOError` from `await`; a factory that fails before it
-returns a task raises from the factory call instead. A returned `Except` is
+failure raises `TaskIOError` from `await`. For a task without callbacks,
+a factory failure raises from the factory call instead. A returned `Except` is
 still an `Ok` or `Err` value. The [installed client](../../tests/fixtures/ruby-task-lab/consumer.rb)
 shows each case. The [installed task and stream receipts](../evidence/ruby-fiber-tasks-20261122.json)
 identify the exact gems and callers, including the stream-only package.
+
+### Pass a callback to a Lean task
+
+For a task that takes a Ruby callback, pass an object with `call`. If the
+last parameter is a callback, you can pass a block instead. For example,
+the [Feedback package](../../tests/fixtures/ruby-retained-tasks/Feedback.lean) calls
+your function with a `UInt32` and uses its return value:
+
+```ruby
+require "lean_bridge/ruby_feedback"
+api = LeanBridge::RubyFeedback
+task = api.once(21) { |n| n * 2 }
+puts task.await  # 42
+```
+
+`await` services requests on the original process's main Ruby thread.
+With a fiber scheduler, other fibers can run while Lean is working. A
+callback can call another generated function or await a *different* task.
+Trying to await the task that is invoking the callback raises `Busy`.
+Return a value of the declared reply type, not a task.
+
+Ordinary Ruby exceptions become Lean IO failures. If Lean catches the
+failure, its recovery value is returned. If it propagates that same
+`IO.Error`, `await` raises the original Ruby exception object. A new Lean
+error with identical text remains a Lean error. If Ruby cannot format the
+exception's message, Lean gets a generic message; the original exception
+is still available if Lean propagates that failure. A callback that raises a
+non-`StandardError` exception retires the runtime. If the task is still
+pending, `await` raises that exception; if cancellation already won, all
+waiters still receive the same cancellation.
+
+The task releases its callbacks on settlement or cancellation. To revoke a
+callback shared by several tasks, wrap it in `api::RetainedCallback.new { |n| … }`
+and call `close`. An invocation already running can finish; later invocations
+fail with `CallbackClosed`. A callback-taking factory also runs via the
+task driver, so its Lean factory errors are observed at `await`, not when
+the Ruby method returns. See the [installed caller](../../tests/fixtures/ruby-retained-tasks/consumer.rb)
+and the [receipts for the two callback packages and their load-order tests](../evidence/ruby-retained-tasks-20261122.json).
 
 ### Arrays and records
 

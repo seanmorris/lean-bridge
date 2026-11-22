@@ -174,7 +174,8 @@ A task release is a separate profile. Select actual Lean `Task` factories with `
 
 The [Ruby task profile](../publish/rubygems.md#export-a-task-or-pull-stream)
 delivers copied results to a waiting fiber and exposes pull streams as
-`Enumerable`; it does not accept retained Ruby callbacks. In standalone task
+`Enumerable`. A task can [retain Ruby blocks or callable objects](../publish/rubygems.md#export-a-callback-taking-task)
+over copied scalars. In standalone task
 packages, list any direct functions alongside the task factories in `exports`.
 Only the selected task declarations go in `taskExports`. A neighboring
 pure, `BaseIO`, or synchronous `IO` function returns directly.

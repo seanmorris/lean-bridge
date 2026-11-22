@@ -28,9 +28,8 @@ export const generateCTaskExports = options => {
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
-	if(retained && options.rubyDelivery) throw new TypeError("Ruby retained task callbacks require a host callback dispatcher");
 	if((retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery].filter(Boolean).length !== 1 || publicC !== gmp))
-		throw new TypeError("This task callback ABI requires Rust or C++ word carriers or a checked public C profile with GMP");
+		throw new TypeError("The task callback ABI requires Rust, C++ or Ruby word carriers, or the public C profile with GMP; select exactly one host");
 	const statuses = [...baseStatuses, ...publicC && (retained || terminal) ? ["TASK_IO_ERROR"] : [], ...publicC && retained ? ["CALLBACK_ERROR", "CALLBACK_CLOSED", "CALLBACK_TRAP"] : []];
 	if(options.integerMode && !["gmp", "words"].includes(options.integerMode)) throw new TypeError("Unknown task integer ABI");
 	const types = [], prototypes = [], functions = [], symbols = [`${p}_buffer_dispose`];
@@ -63,7 +62,7 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, cpp: options.cppCallbacks, prototypes }); continue;
+			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wordAliases: options.cppCallbacks || options.rubyDelivery, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");
