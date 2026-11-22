@@ -25,8 +25,9 @@ for(const bits of [8, 16, 32, 64])
  *
  * @param p - Public component symbol prefix.
  * @param gmp - Expose GMP at the public C boundary; C++ uses private magnitude views instead.
+ * @param resources - Verified application-owned nominal identities.
  */
-export const cTaskValues = (p, gmp = true) => {
+export const cTaskValues = (p, gmp = true, resources = []) => {
 	const values = new Map(), types = [], bodies = [], symbols = [];
 	let exact = false;
 	const address = (c, v) => c.directMpz ? v : "&" + v;
@@ -44,6 +45,20 @@ export const cTaskValues = (p, gmp = true) => {
 				, validate: v => t.name === "unit" ? `if (${v} != 0) return LB(INVALID);`
 					: t.name === "char" ? `if (${v} > 0x10ffff || (${v} >= 0xd800 && ${v} <= 0xdfff)) return LB(INVALID);` : ""
 				, convert: `(void)v; *out = (${type})(${expr}); return LB(OK);` };
+		} else if(t?.kind === "named" && resources.some(r => r.id === t.id))
+		{
+			const r = resources.find(r => r.id === t.id), base = `${p}_resource_${r.slug}`, type = base + "_t", kind = JSON.stringify(r.hash);
+			c = { lean: "_root_." + r.lean
+				, type
+				, arg: type
+				, abi: "lean_object *"
+				, resource: true
+				, validate: () => ""
+				, bind: v => `lean_object *ref_${v} = LB_LEASE(borrow)(${kind}, ${v}._private);
+    if (!ref_${v}) return LB(CLOSED);`
+				, argument: v => `lb_lease_arg(ref_${v})`
+				, convert: `return lb_lease_status(LB_LEASE(create)(${kind}, v, out->_private));`
+				, dispose: base + "_release" };
 		} else if(t?.kind === "primitive" && ["nat", "int"].includes(t.name))
 		{
 			exact = true;
@@ -72,6 +87,7 @@ export const cTaskValues = (p, gmp = true) => {
 		} else if(t?.kind === "apply" && t.constructor === "result" && t.arguments?.length === 2)
 		{
 			const [ok, err] = t.arguments.map(codec), type = `${p}_result_${values.size}`;
+			if(ok.resource || err.resource) throw new TypeError("Resource-bearing sums require an owned aggregate contract");
 			const hasMpz = ok.hasMpz || err.hasMpz;
 			types.push(`typedef struct { bool ok; ${hasMpz ? "bool initialized; " : ""}union { ${ok.type} value; ${err.type} error; } as; } ${type};`);
 			c = { lean: `(_root_.Except ${err.lean} ${ok.lean})`, type

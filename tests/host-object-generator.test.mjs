@@ -14,6 +14,7 @@ import "./helpers/lean-stream-only-installed.mjs";
 import "./helpers/c-task-installed.mjs";
 import "./helpers/cpp-task-installed.mjs";
 import "./helpers/task-integer-installed.mjs";
+import "./helpers/resource-task-installed.mjs";
 import { generatePythonHostExtension } from "../src/backends/python/host-exports.mjs";
 import { generatePythonHostProvider } from "../src/backends/python/host-provider.mjs";
 

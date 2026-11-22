@@ -55,8 +55,10 @@ static void lb_drop(lb_entry *e) {
     *slot = e->next;
     lb_watch_close(&e->watch, 1);
     if (e->cursor) {
-        /* The monomorphic IO wrapper consumes the owned cursor and lifts BaseIO Unit. */
-        lean_object *io = e->close(e->cursor); lean_dec(io);
+        /* Retirement allows release, not a fresh application effect. */
+        if (lean_bridge_native_component_ready(LB_COMPONENT)) {
+            lean_object *io = e->close(e->cursor); lean_dec(io);
+        } else lean_dec(e->cursor);
     }
     lean_bridge_native_identity_release(e->id, LB_OWNER_KIND, e); free(e);
 }

@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { taskResourceTypes } from "../c/task-resources.mjs";
 const reserved = new Set(("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break case catch char char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast continue co_await co_return co_yield decltype default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new noexcept not not_eq nullptr operator or or_eq private protected public reflexpr register reinterpret_cast requires return short signed sizeof static static_assert static_cast struct switch synchronized template this thread_local throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq detail run_one shutdown").split(" "));
 const scalars = {
 	unit: "std::monostate", char: "char32_t", bool: "bool"
@@ -12,7 +13,17 @@ const scalars = {
 };
 for(const sign of ["int", "uint"])
 	for(const bits of [8, 16, 32, 64]) scalars[`${sign}${bits}`] = `std::${sign}${bits}_t`;
-const codec = t => {
+const codec = (t, resources) => {
+	if(t?.kind === "named" && resources.some(r => r.id === t.id))
+	{
+		const r = resources.find(r => r.id === t.id);
+		return { type: r.name
+			, arg: "const " + r.name + "&"
+			, owned: true
+			, resource: true
+			, read: v => `async_v1::detail::LeaseAccess::adopt(${v}, detail::ops_${r.slug})`
+			, input: v => `async_v1::detail::LeaseAccess::view(${v})` };
+	}
 	if(t?.kind === "primitive" && ["nat", "int"].includes(t.name))
 	{
 		const natural = t.name === "nat", type = natural ? "Nat" : "Int";
@@ -29,7 +40,8 @@ const codec = t => {
 			, read: v => buffer ? `detail::${t.name === "string" ? "text" : "bytes"}(${v})` : t.name === "unit" ? "std::monostate{}" : `static_cast<${type}>(${v})` };
 	}
 	if(t?.kind !== "apply" || t.constructor !== "result" || t.arguments?.length !== 2) throw new TypeError("Unsupported C++ task carrier");
-	const [ok, err] = t.arguments.map(codec), type = `Result<${ok.type}, ${err.type}>`;
+	const [ok, err] = t.arguments.map(v => codec(v, resources)), type = `Result<${ok.type}, ${err.type}>`;
+	if(ok.resource || err.resource) throw new TypeError("Resource-bearing sums require an owned aggregate contract");
 	return { type, owned: ok.owned || err.owned, bigint: ok.bigint || err.bigint, read: v => `(${v}.ok ? ${type}{Ok<${ok.type}>{${ok.read(v + ".as.value")}}} : ${type}{Err<${err.type}>{${err.read(v + ".as.error")}}})` };
 };
 const slot = (site, local, t) => `detail::Slot<${site}> ${local}{${t.owned ? "&" + site + "_dispose" : ""}};`;
@@ -41,17 +53,24 @@ const slot = (site, local, t) => `detail::Slot<${site}> ${local}{${t.owned ? "&"
  */
 export const generateCppTaskHeader = options => {
 	const { prefix: p, entries } = options, names = new Set();
+	const resources = taskResourceTypes(options.resources);
+	for(const r of resources)
+		if(reserved.has(r.name) || r.name.startsWith("_") || r.name.includes("__")
+			|| "Int Nat Future Stream Routine Ok Err Result StartError StepError IOError Cancelled Closed Busy Unavailable WrongContext".split(" ").includes(r.name))
+			throw new TypeError("Reserved C++ resource class name");
+		else names.add(r.name);
+	const value = t => codec(t, resources);
 	let bigint = false;
 	const functions = entries.map(e => {
 		const name = reserved.has(e.name) ? e.name + "_" : e.name;
 		if(!/^[a-z][a-z0-9_]*$/u.test(name) || name.includes("__") || names.has(name)) throw new TypeError("Invalid or colliding C++ task name");
 		names.add(name);
 		const c = `${p}_${e.name}`, stream = e.delivery === "async-iterator", async = stream || e.delivery === "task";
-		const args = e.parameters.map(v => codec(v.type)), item = codec(e.result);
+		const args = e.parameters.map(v => value(v.type)), item = value(e.result);
 		if(args.some(a => !a.arg)) throw new TypeError("C++ task arguments must be copied scalars");
 		const unit = e.result.kind === "primitive" && e.result.name === "unit", type = unit ? "void" : item.type;
 		const out = stream ? `Stream<${item.type}>` : async ? `Future<${type}>` : type;
-		const er = e.effect === "EIO" ? codec(e.error) : null, step = e.stepError ? codec(e.stepError) : null, io = e.effect === "IO";
+		const er = e.effect === "EIO" ? value(e.error) : null, step = e.stepError ? value(e.stepError) : null, io = e.effect === "IO";
 		bigint ||= [item, er, step, ...args].some(t => t?.bigint);
 		const guards = args.some(a => a.direct) ? [
 			"std::size_t available = 16u * 1024u * 1024u;"
@@ -91,7 +110,7 @@ export const generateCppTaskHeader = options => {
 #define ${p.toUpperCase()}_CPP_TASK_V1_HPP
 #include "${p}.h"
 #include <lean_bridge/async_v1/task-routine.hpp>
-#include <span>${bigint ? `
+#include <span>${resources.length ? "\n#include <lean_bridge/async_v1/task-resource.hpp>" : ""}${bigint ? `
 #ifndef BOOST_MP_STANDALONE
 #define BOOST_MP_STANDALONE
 #endif
@@ -100,7 +119,7 @@ export const generateCppTaskHeader = options => {
 #include <iterator>
 #include <limits>` : ""}
 namespace lean_bridge::${p} {
-${bigint ? "using Nat = boost::multiprecision::cpp_int; using Int = boost::multiprecision::cpp_int;\n" : ""}using async_v1::Future; using async_v1::Stream; using async_v1::Routine;
+${resources.map(r => `using ${r.name} = async_v1::Resource<${r.raw}>;\n`).join("")}${bigint ? "using Nat = boost::multiprecision::cpp_int; using Int = boost::multiprecision::cpp_int;\n" : ""}using async_v1::Future; using async_v1::Stream; using async_v1::Routine;
 using async_v1::Ok; using async_v1::Err; using async_v1::Result;
 using async_v1::StartError; using async_v1::StepError; using async_v1::IOError;
 using async_v1::Cancelled; using async_v1::Closed; using async_v1::Busy;
@@ -164,7 +183,14 @@ inline void check(${p}_status s) {
     default: throw std::runtime_error("unexpected Lean task state: " + std::to_string(s));
     }
 }
-} // namespace detail
+${resources.map(r => {
+		const b = `${p}_resource_${r.slug}`, t = r.raw;
+		return `inline constexpr async_v1::detail::LeaseOps<${t}> ops_${r.slug}{
+    [](${t} *v) noexcept { (void)${b}_release(v); },
+    [](${t} v, ${t} *o) { check(${b}_retain(v, o)); },
+    [](${t} a, ${t} b) { bool v = false; check(${b}_same(a, b, &v)); return v; }
+};\n`;
+}).join("")}} // namespace detail
 ${functions.join("\n")}
 } // namespace lean_bridge::${p}
 #endif

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Depot"],
+  "resources": ["Shared.Ticket", "Shared.Badge"],
+  "exports": ["Depot.add", "Depot.alias", "Depot.badge", "Depot.checked", "Depot.closes", "Depot.count", "Depot.make", "Depot.pending", "Depot.release", "Depot.reset", "Depot.state", "Depot.tickets"],
+  "taskExports": ["Depot.pending", "Depot.checked"],
+  "asyncIterators": [{"open": "Depot.tickets", "next": "Depot.next", "close": "Depot.close"}],
+  "targets": {"c": {"name": "depot", "version": "1.0.0"}, "cpp": {"name": "depot", "version": "1.0.0"}}
+}

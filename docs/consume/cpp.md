@@ -130,8 +130,14 @@ The [installed example](../../tests/fixtures/cpp-lean-tasks/consumer.cpp) also
 exercises nested coroutines, cancellation while a pull is pending, and cleanup
 when a suspended coroutine is abandoned. This is a separate package profile
 from the general [type conversion matrix](#type-conversions). Its installed
-tests cover the [listed task payloads](../publish/cpp.md#export-tasks-and-streams),
-not arbitrary resource or callback values.
+tests cover the [listed task payloads](../publish/cpp.md#export-tasks-and-streams).
+
+A declared resource such as `Ticket` is move-only. Use `ticket.clone()` for a
+second independently owned lease, and `==` to compare Lean object identity.
+A started task keeps its own reference: moving or closing the input cannot
+invalidate the pending operation. A `StartError<Ticket>` or `StepError<Ticket>`
+owns its payload too. Scope exit releases a lease; destroying it on a worker
+queues release for the main dispatcher. See the [installed C++ example](../../tests/fixtures/resource-tasks/consumer.cpp).
 
 In packages that export `Nat` or `Int`, the namespace defines `Nat` and
 `Int` as `boost::multiprecision::cpp_int`. Pass an integer by const reference;

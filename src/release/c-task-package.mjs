@@ -42,7 +42,14 @@ export const buildCTaskPackage = async options => {
 		const { entries, objects, api, env, evidence } = await compileHostSources({ ...options, app, run });
 		const bindingIrSha256 = hashBindingIr(api), profile = cpp ? "native-cpp-task-v1" : "native-c-task-v1";
 		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
-		const config = { name, modules: projectContract.modules, entries, integerMode: cpp ? "words" : "gmp" };
+		const resources = api.types.filter(t => t.kind === "resource");
+		const config = { name, modules: projectContract.modules, entries, resources, integerMode: cpp ? "words" : "gmp" };
+		const ledger = resources.length ? {
+			header: await asset("../backends/native/task-resource-ledger.h")
+			, source: await asset("../backends/native/task-resource-ledger.c")
+		} : null;
+		const ledgerId = ledger && sha256(canonicalJson({ runtimeIdentity, header: sha256(ledger.header), source: sha256(ledger.source) }));
+		const ledgerName = ledger && `liblb_task_resources_${ledgerId}.so`, ledgerFlag = `-DLB_LEASE_PREFIX=lb_task_resource_${ledgerId}_`;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
 		const integers = skeleton.integerMode && await asset("../backends/c/task-integers.h");
 		const gmp = integers && !cpp && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
@@ -52,6 +59,7 @@ export const buildCTaskPackage = async options => {
 			, evidence
 			, skeleton
 			, delivery: sha256(delivery), notification: sha256(notification)
+			, ...ledger ? { resourceLedger: ledgerId } : {}
 			, ...integers ? { integerAdapter: sha256(integers) } : {}
 			, ...gmp ? { gmpKit: gmp.identity } : {} }));
 		const gen = generateCTaskExports({ ...config, componentIdentity }), p = gen.prefix;
@@ -61,6 +69,31 @@ export const buildCTaskPackage = async options => {
 		await save("checked-entry.c", `#include "entry.c"\n${gen.declarations}\n`);
 		await save(`${p}.h`, gen.header); await save("adapter.c", gen.source);
 		await save("task-delivery.h", delivery); await save("task-notification.h", notification);
+		if(ledger)
+		{
+			await save("task-resource-ledger.h", ledger.header); await save("ledger.c", ledger.source);
+			await run(environment.CC ?? "cc", ["-std=gnu11"
+				, "-O1"
+				, "-g0"
+				, "-shared"
+				, "-fPIC"
+				, ledgerFlag
+				, "-I"
+				, join(runtimeRoot, "include")
+				, `-ffile-prefix-map=${runtimeRoot}=/build/lean-bridge/runtime`
+				, `-ffile-prefix-map=${app}=/build/lean-bridge/component`
+				, "ledger.c"
+				, "-L"
+				, join(runtimeRoot, "lib")
+				, "-lleanshared"
+				, "-llean_bridge_native"
+				, "-Wl,-z,defs,-z,nodelete"
+				, "-Wl,--build-id=none"
+				, `-Wl,-soname,${ledgerName}`
+				, "-Wl,-rpath,$ORIGIN"
+				, "-o"
+				, ledgerName], app);
+		}
 		if(integers) await save("task-integers.h", integers);
 		await save("exports.map", `{ global: ${gen.symbols.join("; ")}; local: *; };\n`);
 		const library = `lib${p}.so`;
@@ -81,6 +114,7 @@ export const buildCTaskPackage = async options => {
 			, join(runtimeRoot, "lib")
 			, "-lleanshared"
 			, "-llean_bridge_native"
+			, ...ledger ? [ledgerFlag, "-L.", "-l:" + ledgerName] : []
 			, ...gmp ? ["-L", join(gmp.root, "lib"), "-l:libgmp.so.10"] : []
 			, "-pthread"
 			, "-lm"
@@ -93,6 +127,7 @@ export const buildCTaskPackage = async options => {
 		if(!/^2\.\d+$/u.test(floor)) throw new TypeError("Invalid native glibc floor");
 		const files = new Map(gmp ? gmp.files : []), sharedLibs = Object.keys(manifest.files).filter(f => f.startsWith("lib/"));
 		const compiled = [[`lib/${library}`, join(app, library)], ...sharedLibs.map(f => [f, join(runtimeRoot, f)])];
+		if(ledger) compiled.push([`lib/${ledgerName}`, join(app, ledgerName)]);
 		if(gmp) compiled.push(["lib/libgmp.so.10", join(gmp.root, "lib/libgmp.so.10")]);
 		for(const [path, file] of compiled)
 		{
@@ -109,7 +144,7 @@ export const buildCTaskPackage = async options => {
 		files.set(`include/${p}.h`, gen.header);
 		if(cpp)
 		{
-			const dir = "lean_bridge/async_v1", hpp = generateCppTaskHeader({ prefix: p, entries });
+			const dir = "lean_bridge/async_v1", hpp = generateCppTaskHeader({ prefix: p, entries, resources });
 			if(boost) for(const [path, value] of Object.entries(boost))
 			{
 				files.set(path, value);
@@ -121,7 +156,7 @@ export const buildCTaskPackage = async options => {
 				}
 			}
 			await mkdir(join(app, dir), { recursive: true });
-			for(const base of ["task-loop.hpp", "task-values.hpp", "task-routine.hpp"])
+			for(const base of ["task-loop.hpp", "task-values.hpp", "task-routine.hpp", ...ledger ? ["task-resource.hpp"] : []])
 			{
 				const bytes = await asset(`../backends/cpp/${base}`);
 				files.set(`include/${dir}/${base}`, bytes); await save(`${dir}/${base}`, bytes);
@@ -157,6 +192,9 @@ endif()
 		if(integers) files.set("README.md", files.get("README.md") + (cpp
 			? "\nNat and Int use the bundled Boost.Multiprecision cpp_int. Negative Nat arguments reject before entering Lean. Task results and typed errors own their integer values.\n"
 			: "\nNat and Int use GMP mpz_t. Initialize direct integer result and error slots with mpz_init; dispose each once with mpz_clear. For a returned Except, zero-initialize the outer value and use its generated disposer; do not initialize or clear individual union members. Negative Nat inputs reject before entering Lean. GMP 6.3.0, notices and complete corresponding source are included.\n"));
+		if(ledger) files.set("README.md", files.get("README.md") + (cpp
+			? "\nNominal resources are move-only. Use .clone() for an independent lease and == for Lean object identity, including across compatible packages. Destruction or .close() releases your lease; a started task or cursor retains its own Lean reference. Worker-thread destruction queues release on the main dispatcher.\n"
+			: "\nZero-initialize resource outputs (including typed error slots). An input borrows your lease for the call; a returned resource is an independent lease. Use the generated resource retain, same and release functions, not assignment to duplicate ownership. Release the input immediately after a task or cursor starts if you no longer need it.\n"));
 		const records = [...files].map(([path, value]) => ({ path, bytes: Buffer.isBuffer(value) ? value : Buffer.from(value), mode: 0o644 }));
 		const inventory = Object.fromEntries(records.map(f => [f.path, { bytes: f.bytes.length, sha256: sha256(f.bytes) }]));
 		const component = projectContract.component, archiveRoot = `${name}-${version}-${target}`;

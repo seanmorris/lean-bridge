@@ -5,6 +5,7 @@
  */
 import { nativePullEntry, streamEntryLean } from "../native/pull-entry.mjs";
 import { cTaskValues } from "./task-values.mjs";
+import { cResourceApi, cResourceSupport, taskResourceTypes } from "./task-resources.mjs";
 
 const statuses = "OK PENDING END TYPED_ERROR IO_ERROR INVALID CLOSED BUSY IDLE WRONG_CONTEXT UNAVAILABLE NO_MEMORY LIMIT".split(" ");
 const qualified = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/u;
@@ -18,7 +19,8 @@ export const generateCTaskExports = options => {
 	const { name, modules, entries, componentIdentity } = options;
 	if(!/^[a-z][a-z0-9]*(?:[-_.][a-z0-9]+)*$/u.test(name) || !/^[0-9a-f]{64}$/u.test(componentIdentity)
 		|| !modules?.length || !modules.every(m => qualified.test(m)) || !entries.some(e => e.delivery)) throw new TypeError("Invalid C task component");
-	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", values = cTaskValues(p, gmp);
+	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources);
+	const values = cTaskValues(p, gmp, resources);
 	if(options.integerMode && !["gmp", "words"].includes(options.integerMode)) throw new TypeError("Unknown task integer ABI");
 	const types = [], prototypes = [], functions = [], symbols = [`${p}_buffer_dispose`];
 	const names = new Set(), declarations = [
@@ -33,6 +35,8 @@ export const generateCTaskExports = options => {
 		const signature = `${p}_status ${name}(${args.join(", ") || "void"})`;
 		symbols.push(name); prototypes.push(signature + ";"); functions.push(`${signature} {\n    ${body}\n}`);
 	};
+	const resourceHeader = cResourceApi(p, resources, fn);
+	const occupied = (t, v) => t?.resource ? ` || ${v}->_private[0] || ${v}->_private[1]` : "";
 	for(const [i, e] of entries.entries())
 	{
 		if(!qualified.test(e.declaration) || !/^[a-z][a-z0-9_]*$/u.test(e.name) || names.has(e.name)
@@ -72,10 +76,10 @@ export const generateCTaskExports = options => {
 		fn(`${n}_${async ? "start" : "call"}`, [...args.map((a, k) => `${a.arg} v${k}`)
 			, async ? `${h} *out` : values.out(item, "out")
 			, ...error ? [values.out(error, "error")] : ioError ? [`${p}_buffer *io_error`] : []],
-		`if (!out${async ? " || out->id" : ""}${error ? " || !error" : ""}) return LB(INVALID);
+		`if (!out${async ? " || out->id" : occupied(item, "out")}${error ? " || !error" + occupied(error, "error") : ""}) return LB(INVALID);
     ${args.some(a => a.buffer) ? "size_t budget = 0;" : ""}
     ${checkedArgs}
-    LB(status) s = lb_prepare(); if (s != LB(OK)) return s;
+    LB(status) s = lb_prepare(); if (s != LB(OK)) return s;${args.flatMap((a, k) => a.bind ? ["\n    " + a.bind(`v${k}`)] : []).join("")}
     ${async ? `lb_entry *owner; s = lb_reserve(${i}, &owner); if (s != LB(OK)) return s;` : ""}
     lean_object *io = ${entry}(${args.map((a, k) => a.argument(`v${k}`)).join(", ")});
     if (!lean_io_result_is_ok(io)) s = lb_io_failure(io, ${ioError ? "io_error" : "NULL"});
@@ -93,7 +97,7 @@ export const generateCTaskExports = options => {
 		if(stream) fn(`${n}_pull`, [`${h} h`], `return lb_request(h.id, h.domain, ${i});`);
 		fn(`${n}_poll`, [`${h} h`, "int *fd"], `return lb_poll(h.id, h.domain, ${i}, fd);`);
 		fn(`${n}_take`, [`${h} *h`, values.out(item, "out"), ...step ? [values.out(step, "error")] : []],
-			`if (!h || !out${step ? " || !error" : ""}) return LB(INVALID);
+			`if (!h || !out${occupied(item, "out")}${step ? " || !error" + occupied(step, "error") : ""}) return LB(INVALID);
     lb_entry *e; LB(status) s = lb_lookup(h->id, h->domain, ${i}, &e, 0);
     if (s != LB(OK)) return s;
     if (!e->watch.source) return LB(IDLE);
@@ -128,7 +132,7 @@ void ${p}_buffer_dispose(${p}_buffer *v);${exact && !gmp ? `
 typedef struct { const uint64_t *words; size_t len; bool negative; } ${p}_integer_view;
 typedef struct { uint64_t *words; size_t len; bool negative; } ${p}_integer;
 void ${p}_integer_dispose(${p}_integer *v);` : ""}
-${[...values.types, ...types, ...prototypes].join("\n")}
+${[...resourceHeader ? [resourceHeader] : [], ...values.types, ...types, ...prototypes].join("\n")}
 #ifdef __cplusplus
 }
 #endif
@@ -140,7 +144,7 @@ ${declarations.join("\n")}
 #define LB(x) ${p}_##x
 #define LB_COMPONENT "ctask:${componentIdentity}"
 #define LB_MAX_BYTES (16u * 1024u * 1024u)
-#include "task-delivery.h"${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}
+#include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}
 ${values.bodies.join("\n")}
 ${functions.join("\n")}
 `;

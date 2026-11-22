@@ -61,8 +61,13 @@ Task and stream payloads can use exact `Nat` and `Int`, fixed-width and
 machine-word integers, `Char`, `Bool`, both float widths, `Unit`, strings,
 byte arrays and nested returned `Except`. For exact integers the archive
 includes pinned Boost.Multiprecision 1.90.0 headers and their license. It
-does not require a GMP installation. Callback and resource payloads remain
-unsupported on this path. The [exact-integer receipts](../evidence/exact-task-integers-20261122.json)
+does not require a GMP installation. Declare a heap resource in `resources`
+to expose its move-only C++ class as a direct argument, result, item or typed
+error. Independently built components share that class when the declaring
+Lean module, its transitive application imports and the compiler match.
+Host callbacks and resources nested inside copied sums are not supported on
+this path. The [resource release receipts](../evidence/resource-tasks-20261122.json)
+cover cross-package identity, cancellation and disposal. The [exact-integer receipts](../evidence/exact-task-integers-20261122.json)
 cover results, stream items and typed errors. The [task lifecycle evidence](../evidence/cpp-task-streams-20261122.json)
 records which archives, compilers and consumer builds were tested. It also shows
 how to repeat the checks from those archives without rebuilding Lean.

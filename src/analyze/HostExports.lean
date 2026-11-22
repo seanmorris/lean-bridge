@@ -24,6 +24,7 @@ structure Request where
   taskExports : Array String
   asyncIterators : Array PullProtocol
   resources : Array Nominal
+  leanResources : Array String := #[]
   members : Array String
   deriving FromJson
 
@@ -41,6 +42,8 @@ def carrier (request : Request) (e : Expr) : MetaM Json := do
       return Json.mkObj [("kind", toJson "primitive"), ("name", toJson tag)]
     if let some r := request.resources.find? (·.lean == name.toString) then
       return Json.mkObj [("kind", toJson "named"), ("id", toJson r.id)]
+    if request.leanResources.contains name.toString then
+      return Json.mkObj [("kind", toJson "named"), ("id", toJson ("lean:" ++ name.toString))]
   throwError "unsupported Python host-component carrier: {e}"
 
 /-- A returned Except is a value. Its success arm is first in Binding IR. -/
@@ -51,9 +54,36 @@ partial def returned (r : Request) (e : Expr) (copyOnly := false) : MetaM Json :
     return Json.mkObj [("kind", toJson "apply"), ("constructor", toJson "result"),
       ("arguments", Json.arr #[← returned r args[1]! true, ← returned r args[0]! true])]
   let t ← carrier r e
+  if copyOnly && e.constName?.any (fun n => r.leanResources.contains n.toString) then
+    throwError "a leased Lean resource cannot be a copied exception payload: {e}"
   if copyOnly && !primitives.any (fun p => e.constName? == some p.1) then
     throwError "an owned host object cannot be a copied exception payload: {e}"
   return t
+
+/-- An explicitly leased nominal may cross by itself, never as a copied sum payload. -/
+def delivered (r : Request) (e : Expr) : MetaM Json := do
+  if let some name := (← instantiateMVars e).consumeMData.constName? then
+    if r.leanResources.contains name.toString then return ← carrier r e
+  returned r e true
+
+/-- Match the native extractor's definite-heap rule; tagged/scalar values have no stable identity. -/
+def resourceOwner (r : Request) (name : String) : MetaM Json := do
+  let env ← getEnv
+  let n := name.toName
+  let info ← getConstInfo n
+  let some idx := env.getModuleIdxFor? n | throwError "no owner for resource {n}"
+  let owner := env.header.modules[idx.toNat]!.module.toString
+  match info with
+  | .inductInfo _ | .defnInfo _ | .opaqueInfo _ => pure ()
+  | _ => throwError "resource must have an executable application definition: {n}"
+  unless r.modules.contains owner && owner != "LeanBridge.Host.Python" && !isPrivateName n &&
+      !isProtected env n && info.levelParams.isEmpty && info.type.isSort && !info.type.isProp do
+    throwError "resource must be a public concrete application type: {n}"
+  let ty := mkConst n
+  let lowered ← Compiler.LCNF.toImpureType (← Compiler.LCNF.toMonoType (← Compiler.LCNF.toLCNFType ty))
+  unless lowered == Compiler.LCNF.ImpureType.object do
+    throwError "resource has no stable heap identity: {n}"
+  return Json.mkObj [("declaration", toJson name), ("module", toJson owner)]
 
 partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM NameSet := do
   if seen.contains n then return seen
@@ -111,7 +141,7 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
   let (effect, cursor, extra) ← if (head == some ``IO || head == some ``BaseIO) && args.size == 1 then
     pure (head.get!.toString, args[0]!, [])
   else if head == some ``EIO && args.size == 2 then
-    pure ("EIO", args[1]!, [("error", ← returned r args[0]! true)])
+    pure ("EIO", args[1]!, [("error", ← delivered r args[0]!)])
   else pure ("pure", result, [])
   let env ← getEnv
   let some cn := cursor.getAppFn.constName? | throwError "expected an application-owned cursor"
@@ -129,15 +159,19 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
     throwError "cursor next must return a real Task: {p.next}"
   let v := task.getAppArgs[0]!
   let (item, failure) ← if v.getAppFn.constName? == some ``Except && v.getAppArgs.size == 2 then
-    pure (v.getAppArgs[1]!, [("stepError", ← returned r v.getAppArgs[0]! true)])
+    pure (v.getAppArgs[1]!, [("stepError", ← delivered r v.getAppArgs[0]!)])
   else pure (v, [])
   unless item.getAppFn.constName? == some ``Option && item.getAppArgs.size == 1 do
     throwError "cursor step must distinguish exhaustion with Option: {p.next}"
   return [("effect", toJson effect), ("delivery", toJson "async-iterator"),
-    ("protocol", toJson p), ("result", ← returned r item.getAppArgs[0]! true)] ++ extra ++ failure
+    ("protocol", toJson p), ("result", ← delivered r item.getAppArgs[0]!)] ++ extra ++ failure
 
 def extract (r : Request) : MetaM Json := do
   let env ← getEnv
+  let owned ← r.leanResources.mapM (resourceOwner r)
+  for name in r.leanResources do
+    let _ ← checkDependencies r name.toName {}
+    if (← collectAxioms name.toName).contains ``sorryAx then throwError "resource {name} depends on sorry"
   -- Module startup runs even declarations that no public function references.
   for module in r.modules do
     if module == "LeanBridge.Host.Python" then continue
@@ -172,7 +206,7 @@ def extract (r : Request) : MetaM Json := do
       let resultArgs := result.getAppArgs
       let fields ← if let some protocol := r.asyncIterators.find? (·.open == publicName) then do
         for a in args do
-          let _ ← returned r (← a.fvarId!.getDecl).type true
+          let _ ← delivered r (← a.fvarId!.getDecl).type
         pullFields r protocol result deps
       else if r.taskExports.contains publicName then do
         let (effect, task, extra) ← if head == ``Task then
@@ -180,19 +214,19 @@ def extract (r : Request) : MetaM Json := do
         else if (head == ``IO || head == ``BaseIO) && resultArgs.size == 1 then
           pure (head.toString, resultArgs[0]!, [])
         else if head == ``EIO && resultArgs.size == 2 then
-          pure ("EIO", resultArgs[1]!, [("error", ← returned r resultArgs[0]! true)])
+          pure ("EIO", resultArgs[1]!, [("error", ← delivered r resultArgs[0]!)])
         else throwError "taskExports requires a real Lean Task result: {n}"
         unless task.getAppFn.constName? == some ``Task && task.getAppArgs.size == 1 do
           throwError "taskExports requires a real Lean Task result: {n}"
         noWorkerHost r deps n
         for a in args do
-          let _ ← returned r (← a.fvarId!.getDecl).type true
+          let _ ← delivered r (← a.fvarId!.getDecl).type
         pure <| [("effect", toJson effect), ("delivery", toJson "task"),
-          ("result", ← returned r task.getAppArgs[0]! true)] ++ extra
+          ("result", ← delivered r task.getAppArgs[0]!)] ++ extra
       else if head == ``IO && resultArgs.size == 1 then
         pure [("effect", toJson "IO"), ("result", ← returned r resultArgs[0]!)]
       else if head == ``EIO && resultArgs.size == 2 then
-        pure [("effect", toJson "EIO"), ("error", ← returned r resultArgs[0]! true),
+        pure [("effect", toJson "EIO"), ("error", ← delivered r resultArgs[0]!),
           ("result", ← returned r resultArgs[1]!)]
       else if head == ``Except && resultArgs.size == 2 then
         pure [("effect", toJson "pure"), ("result", ← returned r result)]
@@ -200,8 +234,9 @@ def extract (r : Request) : MetaM Json := do
       return Json.mkObj <| fields ++ [("declaration", toJson publicName), ("module", toJson owner),
         ("parameters", toJson params), ("hostMembers", toJson (r.members.filter (fun m => deps.contains m.toName)))]
     rows := rows.push row
-  return Json.mkObj [("schemaVersion", toJson (1 : Nat)), ("kind", toJson "lean-bridge-host-export-metadata"),
-    ("leanVersion", toJson Lean.versionString), ("entries", toJson rows)]
+  return Json.mkObj <| [("schemaVersion", toJson (1 : Nat)), ("kind", toJson "lean-bridge-host-export-metadata"),
+    ("leanVersion", toJson Lean.versionString), ("entries", toJson rows)] ++
+    (if owned.isEmpty then [] else [("leanResources", toJson owned)])
 
 end LeanBridge.HostExports
 

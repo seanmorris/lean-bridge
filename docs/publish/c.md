@@ -71,8 +71,17 @@ machine-word integers, floats, `Bool`, `Char`, `Unit`, UTF-8 strings and byte
 arrays. A result or typed error may also contain nested `Except` values. If
 the signatures use `Nat` or `Int`, the archive includes GMP 6.3.0, its header,
 licenses and complete corresponding source. Packages with only fixed-width
-integers do not require GMP. This profile does not package callback or
-resource payloads. Select `cpp` separately
+integers do not require GMP. For an application-owned resource, add its qualified
+Lean type to `resources`, for example `"resources": ["Shared.Ticket"]`.
+The compiler checks that the type has stable heap identity. It can appear as
+a direct argument, result, stream item, or typed start/step error. The input
+borrows the caller’s lease only during entry; the Lean task may retain its own
+reference. Resource-bearing copied sums and host callbacks are not supported
+by this profile. The binding conservatively marks effectful calls with resource
+inputs as potentially writing through them; borrowing a lease does not make
+the object immutable. See the [resource task fixture](../../tests/fixtures/resource-tasks/Depot.lean)
+and the [original release receipts and replay instructions](../evidence/resource-tasks-20261122.json).
+Select `cpp` separately
 for [C++20 futures and streams](cpp.md#export-tasks-and-streams).
 The [Lean source](../../tests/fixtures/c-lean-tasks/Pulse.lean) and
 [installed C consumer](../consume/c.md#wait-for-a-task-or-pull-a-stream) show

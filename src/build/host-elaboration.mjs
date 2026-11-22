@@ -42,10 +42,12 @@ export const compileHostSources = async options => {
 		if(projectContract)
 		{
 			const dependencies = await run(lean, ["-j1", "--src-deps", spec.path], app, env);
+			spec.imports = new Set();
 			for(const line of dependencies.stdout.trim().split("\n"))
 			{
 				const dep = byPath.get(resolve(app, line));
-				if(dep) await compile(dep);
+				if(dep)
+				{ spec.imports.add(dep.name); await compile(dep); }
 			}
 		}
 		const olean = spec.path.replace(/\.lean$/u, ".olean"), c = `module${objects.length}.c`;
@@ -60,6 +62,7 @@ export const compileHostSources = async options => {
 	if(!projectContract) return { objects, entries: options.entries, env };
 	const selection = {
 		...pythonHostSelection(ir), exports: projectContract.exports
+		, leanResources: projectContract.leanResources ?? []
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []
 		, exportModules: roots, modules: [...built.keys()]
@@ -68,7 +71,6 @@ export const compileHostSources = async options => {
 	await writeFile(request, canonicalJson(selection), { flag: "wx" });
 	const result = await run(lean, ["-j1", "--run", extractor, request], app, env);
 	const metadata = JSON.parse(result.stdout);
-	const { entries, api } = reconcileHostExports({ ir, metadata, selection, component: projectContract.component, review: projectContract.review });
 	const interfaces = [];
 	for(const f of built.values())
 	{
@@ -77,6 +79,23 @@ export const compileHostSources = async options => {
 		if(sha256(await readFile(join(app, f.c))) !== f.cSha256) fail(`generated C changed: ${f.name}`);
 		interfaces.push({ module: f.name, sourceSha256: f.sourceSha256, cSha256: f.cSha256, ...check });
 	}
+	// Independent packages may exchange this type only if the declaring module,
+	// its entire application import closure and the Lean compiler agree. Do not
+	// include unrelated component entry points or private staging paths.
+	const family = n => {
+		const seen = new Set();
+		const visit = name => {
+			const f = built.get(name);
+			if(!f) fail("unknown resource owner module");
+			if(seen.has(name)) return;
+			seen.add(name); for(const dep of f.imports) visit(dep);
+		};
+		visit(n);
+		return [...seen].sort().map(module => ({ module, sourceSha256: built.get(module).sourceSha256 }));
+	};
+	const owned = (metadata.leanResources ?? []).map(r => ({ ...r
+		, identity: sha256(canonicalJson({ abi: "lean-bridge/heap-resource-v1", declaration: r.declaration, compilerSha256, modules: family(r.module) })) }));
+	const { entries, api } = reconcileHostExports({ ir, metadata, selection, component: projectContract.component, review: projectContract.review, owned });
 	if(sha256(await readFile(lean)) !== compilerSha256 || sha256(await readFile(extractor)) !== extractorSha256
 		|| await readFile(request, "utf8") !== canonicalJson(selection)) fail("host inspector or its invocation changed");
 	const evidence = {

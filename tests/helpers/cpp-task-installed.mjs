@@ -33,7 +33,7 @@ test("C++ task headers expose native values and never silently narrow unsupporte
 	assert.throws(() => header([{ ...entry, result: pr("unknown") }]), /Unsupported/u);
 	const allow = JSON.parse(await readFile("config/cli-package.v1.json")).files;
 	const nix = JSON.parse(await readFile("nix/perl-engine-source-boundary.json")).includedFiles;
-	for(const f of ["task-exports.mjs", "task-loop.hpp", "task-routine.hpp", "task-values.hpp"])
+	for(const f of ["task-exports.mjs", "task-loop.hpp", "task-resource.hpp", "task-routine.hpp", "task-values.hpp"])
 	{
 		assert.ok(allow.includes("src/backends/cpp/" + f)); assert.ok(nix.includes("src/backends/cpp/" + f));
 	}

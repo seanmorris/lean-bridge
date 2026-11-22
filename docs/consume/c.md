@@ -148,6 +148,15 @@ their own output slot; `IO_ERROR` can carry an owned UTF-8 message. Use the
 generated disposal functions for owned buffers and results before reusing
 their output slots. An alias of a consumed handle returns `CLOSED`.
 
+For a declared resource, zero-initialize the output slot. A successful call
+returns one lease; use the generated `_retain` operation for a second lease,
+`_same` to test object identity, and `_release` when done. Assigning the C
+struct copies a reference to the *same lease*. Once a task starts, you can
+release your input immediately: Lean keeps its own reference for as long as
+the task needs it. A typed start or step error may itself return an owned
+resource. The [two-package consumer](../../tests/fixtures/resource-tasks/consumer.c)
+shows the same object being mutated, returned, and released by different packages.
+
 Pass `Nat` and `Int` as ordinary GMP `mpz_t` values. Initialize a direct
 integer result or typed-error slot with `mpz_init` and clear it once with
 `mpz_clear`. A pending or failed take does not overwrite the integer result.

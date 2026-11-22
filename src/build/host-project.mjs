@@ -63,7 +63,7 @@ const captureContracts = async (project, inventory) => {
 		|| selected.some(n => !exports.includes(n))
 		|| (review && canonicalJson(exports) !== canonicalJson(reviewedExports)))
 		fail("Select application exports by Lean name; reviewed and configured exports must agree");
-	return { ir, review, exports, taskExports, asyncIterators, hostImportsSourceSha256: input?.sha256 ?? null };
+	return { ir, review, exports, taskExports, asyncIterators, leanResources: config.resources?.toSorted() ?? [], hostImportsSourceSha256: input?.sha256 ?? null };
 };
 
 /**
@@ -81,7 +81,7 @@ export const buildHostProject = async options => {
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
 	await absent(output);
 	assertExportConfigurationCapabilities(config, { target
-		, fields: ["modules", "exports", "hostImports", "taskExports", "asyncIterators", "package"]
+		, fields: ["modules", "exports", "hostImports", "taskExports", "asyncIterators", "package", ...target === "pypi" ? [] : ["resources"]]
 		, targetFields: ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.[target] ?? {}, name = settings.name ?? `lean-${component.name.toLowerCase().replaceAll("_", "-")}`;

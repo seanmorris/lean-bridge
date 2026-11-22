@@ -43,6 +43,40 @@ export const reconcileHostExports = options => {
 	if(metadata?.kind !== "lean-bridge-host-export-metadata" || metadata.schemaVersion !== 1
 		|| canonicalJson(metadata.entries.map(e => e.declaration)) !== canonicalJson(selection.exports)) fail("Fresh Lean metadata did not cover the complete export selection");
 	const imports = ir ? hashBindingIr(ir) : null, types = resources(ir), members = importedMembers(ir, types);
+	const owned = options.owned ?? [];
+	if(canonicalJson(owned.map(r => r.declaration)) !== canonicalJson(selection.leanResources ?? [])
+		|| owned.some(r => !selection.modules.includes(r.module) || !/^[a-f0-9]{64}$/u.test(r.identity))) fail("Unverified application resource identity");
+	const ownedTypes = owned.map(r => ({ id: "lean:" + r.declaration
+		, name: r.declaration.split(".").at(-1)
+		, kind: "resource", representation: "identity", mutability: "write"
+		, typeParameters: []
+		, fields: []
+		, cases: []
+		, target: null
+		, callable: null
+		, host: null
+		, assurance: []
+		, resource: { kindId: "resource:" + r.declaration + "/" + r.identity, disposal: "required", fallback: "none", cycles: "explicit-cut" }
+		, source: { producer: "lean", declaration: r.declaration, extensions: { "lean-bridge.dev/resource-identity": r.identity } }
+		, documentation: doc("An independently disposable lease of " + r.declaration + ".") }));
+	const isOwned = t => t?.kind === "named" && ownedTypes.some(r => r.id === t.id);
+	// A borrow prevents consuming the caller's lease, not mutating the Lean
+	// object. IO/EIO/BaseIO and a cursor's BaseIO pull may write through it.
+	const mayWrite = e => e.effect !== "pure" || e.delivery === "async-iterator";
+	const resourceEffects = e => {
+		const effects = [];
+		if(e.parameters.some(p => isOwned(p.type)))
+		{
+			effects.push("reads-resource");
+			if(mayWrite(e)) effects.push("writes-resource");
+		}
+		if([e.result, e.error, e.stepError].some(isOwned)) effects.push("allocates");
+		return effects;
+	};
+	const site = (t, input = false) => isOwned(t) && input
+		? { type: t, ownership: "borrow", lifetime: { scope: "call", anchor: null } } : signature(t);
+	if(ownedTypes.some(r => !metadata.entries.some(e => [e.result, e.error, e.stepError, ...e.parameters.map(p => p.type)].some(t => t?.id === r.id))))
+		fail("Selected resource does not occur directly at a checked export boundary");
 	const errors = [];
 	if(metadata.entries.some(e => e.effect === "IO")) errors.push({ id: "error:IO.Error"
 		, name: "IOError"
@@ -90,17 +124,18 @@ export const reconcileHostExports = options => {
 	const api = {
 		schemaVersion: 3, component
 		, producers: [{ id: "lean", adapter: "lean-bridge-host-exports", adapterVersion: 1, tool: "Lean", toolVersion: metadata.leanVersion, extensions: {} }]
-		, types: types.map(t => ({ ...t, assurance: []
-			, host: { ...t.host, targets: ["python"] }
-			, source: { producer: "lean", declaration: `${hostModule}.${t.name}`, extensions: {} } }))
+		, types: [...ownedTypes
+			, ...types.map(t => ({ ...t, assurance: []
+				, host: { ...t.host, targets: ["python"] }
+				, source: { producer: "lean", declaration: `${hostModule}.${t.name}`, extensions: {} } }))]
 		, declarations: metadata.entries.map((e, i) => ({
 			id: `lean:${e.declaration}`, name: entries[i].name, kind: "function"
 			, owner: null, overloadKey: e.declaration, typeParameters: [], receiver: null
-			, parameters: e.parameters.map((p, j) => ({ ...signature(p.type), name: entries[i].parameters[j].name
-				, mutability: p.type.kind === "named" ? types.find(t => t.id === p.type.id).mutability : "immutable"
+			, parameters: e.parameters.map((p, j) => ({ ...site(p.type, true), name: entries[i].parameters[j].name
+				, mutability: isOwned(p.type) ? mayWrite(e) ? "write" : "read" : p.type.kind === "named" ? types.find(t => t.id === p.type.id).mutability : "immutable"
 				, optional: false, default: null }))
-			, result: signature(e.result), mutability: "immutable"
-			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...e.hostMembers.flatMap(n => members.get(n).effects)])].sort()
+			, result: site(e.result), mutability: "immutable"
+			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...resourceEffects(e), ...e.hostMembers.flatMap(n => members.get(n).effects)])].sort()
 			, failure: { mode: errorIds(e).length ? "declared" : "none", errors: errorIds(e), unexpected: "poison-runtime" }
 			, resultMode: e.delivery === "task" ? "promise" : e.delivery ?? "value"
 			, capabilities: [], assurance: []
