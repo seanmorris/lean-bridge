@@ -66,10 +66,10 @@ test("C task receipts require a C archive with an embedded runtime, not a Python
 		assert.throws(() => validatePackageSetReceipt({ ...tasks, packages: [{ ...c, ...patch }] }));
 });
 
-test("C++ task receipts require a C++ component archive with an embedded runtime", async t => {
+for(const delivery of ["task", "io"]) test(`C++ ${delivery} receipts require a C++ component archive with an embedded runtime`, async t => {
 	const { receipt } = await createPackageSetHandoff(t);
 	const cpp = structuredClone(receipt.packages.find(p => p.target === "cpp"));
-	const profile = { ...receipt.profiles.find(p => p.id === cpp.profile), id: "native-cpp-task-v1" };
+	const profile = { ...receipt.profiles.find(p => p.id === cpp.profile), id: `native-cpp-${delivery}-v1` };
 	cpp.profile = profile.id;
 	const tasks = { ...receipt, profiles: [profile], packages: [cpp] };
 	await assertJsonSchema("package-set-receipt", tasks);
@@ -81,9 +81,10 @@ test("C++ task receipts require a C++ component archive with an embedded runtime
 	]) assert.throws(() => validatePackageSetReceipt({ ...tasks, packages: [{ ...cpp, ...patch }] }));
 });
 
-test("Rust tasks require exactly the compatible Cargo runtime provider; ordinary Rust stays embedded", async t => {
+const rustProfiles = { tasks: "native-rust-task-v1", "synchronous IO packages": "native-rust-io-v1" };
+for(const [title, id] of Object.entries(rustProfiles)) test(`Rust ${title} require exactly the compatible Cargo runtime provider; ordinary Rust stays embedded`, async t => {
 	const { receipt } = await createPackageSetHandoff(t);
-	const previous = receipt.packages.find(p => p.target === "cargo"), id = "native-rust-task-v1";
+	const previous = receipt.packages.find(p => p.target === "cargo");
 	const profile = { ...receipt.profiles.find(p => p.id === previous.profile), id };
 	const runtime = { ...structuredClone(previous)
 		, name: "lean-bridge-task-runtime", version: "1.0.0-r" + "a".repeat(64)

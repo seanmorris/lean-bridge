@@ -35,6 +35,16 @@ This path supports pure copied primitives, nested arrays and Lists, copied recor
 
 Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
+## Export synchronous IO
+
+Select your `IO`, `EIO` or `BaseIO` functions in `exports` and [declare their native OS access](../lean/export-decisions.md#declare-native-os-access).
+Build with `--target cargo`. The `native-rust-io-v1` component depends on
+the exact shared runtime **without its async feature**. Cargo installs the
+runtime automatically; a synchronous-only consumer does not compile the
+reactor. Publish the exact runtime archive once even if multiple components
+need it. A real task component enables async on that same version. See
+[calling synchronous IO](../consume/rust.md#call-synchronous-io).
+
 ## Export a task or pull stream
 
 If the Lean code uses files, environment variables, or other OS facilities,

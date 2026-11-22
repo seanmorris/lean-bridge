@@ -64,7 +64,7 @@ Native CPAN uses the same [compiler report](../architecture/elaborated-export-me
 
 The npm builder accepts shared module/export selection, `arities`, `specializations`, `hostProjections`, `contracts`, `generators`, `targets.npm.name`, and `targets.npm.version`. The CPAN projection also accepts `resources`, `arities`, `targets.cpan.module`, and `targets.cpan.version`. [Ordinary C/C++ builds](../publish/c.md#build-an-ordinary-lean-project) accept the shared configuration for pure copied primitive signatures and use `targets.c.name`/`version` and `targets.cpp.name`/`version`. C-only builds do not require CPAN settings or Perl tools. [PHP-Wasm](../publish/php.md#build-an-ordinary-php-wasm-package) separates `targets.php-wasm.npm.name`/`version` from `targets.php-wasm.composer.name`/`version`. Repeat `--target` to combine supported targets from one captured source tree, with one compilation per ABI. The [staged implementation](../architecture/cross-language-authoring.md) tracks the remaining type-family decisions. A reviewed Binding IR owns its export decisions; only `modules`, exact `hostProjections`, package metadata, generators and target settings can accompany it.
 
-If the package exports native tasks, pull iterators, Python host imports, or standalone synchronous C11 or CPython IO functions,
+If the package exports native tasks, pull iterators, Python host imports, or standalone synchronous C11, C++20, Rust or CPython IO functions,
 [declare the OS access its Lean code needs](export-decisions.md#declare-native-os-access).
 For standalone IO, specify `nativeEffects: []` if no OS access is needed. Use
 ordinary `exports` for those functions; there is nothing to await.

@@ -6,9 +6,9 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 ## Build an ordinary Lean project
 
-Use the [ordinary C/C++ build](c.md#build-an-ordinary-lean-project) with `--target cpp`. For synchronous exports, select `--target c --target cpp` to produce both archives from one native compilation. For tasks and streams, select `cpp` alone. The author needs Node 22, Lean 4.32.2, C11 and C++20 compilers, and binutils on Linux x86-64; consumers need only their C++ toolchain and the prepared archive.
+Use the [ordinary C/C++ build](c.md#build-an-ordinary-lean-project) with `--target cpp`. For pure exports, select `--target c --target cpp` to produce both archives from one native compilation. For standalone IO, tasks, or streams, select `cpp` alone. The author needs Node 22, Lean 4.32.2, C11 and C++20 compilers, and binutils on Linux x86-64; consumers need only their C++ toolchain and the prepared archive.
 
-For synchronous exports, the generated namespace follows the source component. A project named `sample` produces `sample.hpp` and functions in `lean_bridge::sample`. Fixed-width integers use exact-width C++ types, `String` becomes `std::string`, and `ByteArray` becomes `std::vector<uint8_t>`. Both `Nat` and `Int` use `boost::multiprecision::cpp_int`; negative `Nat` inputs raise `Error` before Lean runs. Unit parameters use `std::monostate`, and Unit results return `void`.
+For pure exports, the generated namespace follows the source component. A project named `sample` produces `sample.hpp` and functions in `lean_bridge::sample`. Fixed-width integers use exact-width C++ types, `String` becomes `std::string`, and `ByteArray` becomes `std::vector<uint8_t>`. Both `Nat` and `Int` use `boost::multiprecision::cpp_int`; negative `Nat` inputs raise `Error` before Lean runs. Unit parameters use `std::monostate`, and Unit results return `void`.
 
 Packages using `Nat` or `Int` include pinned Boost.Multiprecision and Boost.Config 1.90.0 headers and their Boost Software License. Builds and downstream installs need no Boost download. CMake and pkg-config supply `BOOST_MP_STANDALONE`; use the packaged include path and this same mode throughout your application. The package records dependency sources and file hashes in `share/lean-bridge/boost.json`.
 
@@ -34,6 +34,15 @@ name collisions fail before packaging. See
 C++ results own their data. Scoped input views keep nested buffers alive through the call. Generated wrappers free intermediate C results on success and exceptions, including allocation failures partway through a nested result. Invalid UTF-8 or an exceeded copy budget raises the generated `Error` with the underlying status and code. C++ allocation failures propagate as `std::bad_alloc`. The [type conversion table](../consume/cpp.md#type-conversions) records installed coverage by position.
 
 Set `targets.cpp.name` and `targets.cpp.version` in `lean-bridge.exports.json` to choose archive coordinates. The package includes the C API, native libraries, matching runtime, CMake and pkg-config metadata. C++ does not require a separately installed C package or Lean runtime.
+
+## Export synchronous IO
+
+Select your Lean functions in `exports`, [declare their native OS access](../lean/export-decisions.md#declare-native-os-access),
+and build with `--target cpp`. Use `nativeEffects: []` for in-memory state.
+The `native-cpp-io-v1` archive exposes ordinary C++20 functions. A package
+using copied values has no coroutine or dispatcher header. If it returns
+nominal resources, it includes the ownership support needed to share leases
+with task packages and handle off-thread destruction. See [calling synchronous IO](../consume/cpp.md#call-synchronous-io).
 
 ## Export tasks and streams
 

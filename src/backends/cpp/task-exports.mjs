@@ -1,5 +1,5 @@
 /**
- * Project authenticated C task operations into C++20 values, exceptions and coroutines.
+ * Project authenticated C calls into C++20 values, exceptions and, for real tasks, coroutines.
  *
  * @file
  */
@@ -14,7 +14,7 @@ const scalars = {
 };
 for(const sign of ["int", "uint"])
 	for(const bits of [8, 16, 32, 64]) scalars[`${sign}${bits}`] = `std::${sign}${bits}_t`;
-const codec = (t, resources) => {
+const codec = (t, resources, leaseAccess) => {
 	if(t?.kind === "named" && resources.some(r => r.id === t.id))
 	{
 		const r = resources.find(r => r.id === t.id);
@@ -22,8 +22,8 @@ const codec = (t, resources) => {
 			, arg: "const " + r.name + "&"
 			, owned: true
 			, resource: true
-			, read: v => `async_v2::detail::LeaseAccess::adopt(${v}, detail::ops_${r.slug})`
-			, input: v => `async_v2::detail::LeaseAccess::view(${v})` };
+			, read: v => `${leaseAccess}::adopt(${v}, detail::ops_${r.slug})`
+			, input: v => `${leaseAccess}::view(${v})` };
 	}
 	if(t?.kind === "primitive" && ["nat", "int"].includes(t.name))
 	{
@@ -41,7 +41,7 @@ const codec = (t, resources) => {
 			, read: v => buffer ? `detail::${t.name === "string" ? "text" : "bytes"}(${v})` : t.name === "unit" ? "std::monostate{}" : `static_cast<${type}>(${v})` };
 	}
 	if(t?.kind !== "apply" || t.constructor !== "result" || t.arguments?.length !== 2) throw new TypeError("Unsupported C++ task carrier");
-	const [ok, err] = t.arguments.map(v => codec(v, resources)), type = `Result<${ok.type}, ${err.type}>`;
+	const [ok, err] = t.arguments.map(v => codec(v, resources, leaseAccess)), type = `Result<${ok.type}, ${err.type}>`;
 	if(ok.resource || err.resource) throw new TypeError("Resource-bearing sums require an owned aggregate contract");
 	return { type, owned: ok.owned || err.owned, bigint: ok.bigint || err.bigint, read: v => `(${v}.ok ? ${type}{Ok<${ok.type}>{${ok.read(v + ".as.value")}}} : ${type}{Err<${err.type}>{${err.read(v + ".as.error")}}})` };
 };
@@ -60,12 +60,16 @@ const inputGuards = args => args.some(a => a?.direct) ? [
 export const generateCppTaskHeader = options => {
 	const { prefix: p, entries } = options, names = new Set();
 	const resources = taskResourceTypes(options.resources);
+	const synchronous = options.synchronousIO === true;
+	if(synchronous && (entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "EIO", "BaseIO"].includes(e.effect))))
+		throw new TypeError("Invalid standalone C++ IO delivery contract");
 	for(const r of resources)
 		if(reserved.has(r.name) || r.name.startsWith("_") || r.name.includes("__")
+			|| (synchronous && r.name === "DeclaredError")
 			|| "Int Nat Future Stream Routine Ok Err Result StartError StepError IOError TaskIOError RetainedCallback CallbackTrap CallbackClosed Cancelled Closed Busy Unavailable WrongContext".split(" ").includes(r.name))
 			throw new TypeError("Reserved C++ resource class name");
 		else names.add(r.name);
-	const value = t => codec(t, resources);
+	const value = t => codec(t, resources, synchronous ? "sync_v1::detail::LeaseAccess" : "async_v2::detail::LeaseAccess");
 	let bigint = false, retained = false;
 	const functions = entries.map(e => {
 		const name = reserved.has(e.name) ? e.name + "_" : e.name;
@@ -87,8 +91,8 @@ export const generateCppTaskHeader = options => {
 		const guards = inputGuards(args);
 		const startArgs = [...args.map((a, i) => a.input(`v${i}`)), async ? "&owner->handle" : "&value.value"];
 		if(er || io) startArgs.push("&error.value");
-		const startError = er ? slot(`${c}_start_error`, "error", er) : io ? `detail::Slot<${p}_buffer> error{&${p}_buffer_dispose};` : "";
-		const catchStart = er ? `if (s == ${p}_TYPED_ERROR) throw StartError<${er.type}>{"${e.declaration}", ${er.read("error.value")}};`
+		const startError = er ? slot(c + (synchronous ? "_error" : "_start_error"), "error", er) : io ? `detail::Slot<${p}_buffer> error{&${p}_buffer_dispose};` : "";
+		const catchStart = er ? `if (s == ${p}_TYPED_ERROR) throw ${synchronous ? "DeclaredError" : "StartError"}<${er.type}>{"${e.declaration}", ${er.read("error.value")}};`
 			: io ? `if (s == ${p}_IO_ERROR) throw IOError{"${e.declaration}", detail::text(error.value)};` : "";
 		const read = slot(c + "_value", "value", item);
 		const take = `[owner] {
@@ -109,18 +113,19 @@ export const generateCppTaskHeader = options => {
 			: async ? `return async_v2::detail::future<${type}>(loop, ${poll}, ${take}, ${close});`
 			: unit ? "return;" : `return ${item.read("value.value")};`;
 		return `inline ${out} ${name}(${args.map((a, i) => `${a.arg} v${i}`).join(", ")}) {
-    auto &loop = async_v2::detail::Loop::main(); loop.enter();
+    ${synchronous ? resources.length ? "sync_v1::detail::enter_leases();" : "" : "auto &loop = async_v2::detail::Loop::main(); loop.enter();"}
     ${guards}${async ? `auto owner = std::make_shared<detail::Owner<${c}_handle, ${c}_close>>();` : read}
     ${startError}
     auto s = ${c}_${async ? "start" : "call"}(${startArgs.join(", ")}); ${catchStart}
     detail::check(s); ${finish}
 }`;
 	});
-	return `#ifndef ${p.toUpperCase()}_CPP_TASK_V2_HPP
-#define ${p.toUpperCase()}_CPP_TASK_V2_HPP
+	const guard = p.toUpperCase() + (synchronous ? "_CPP_IO_V1_HPP" : "_CPP_TASK_V2_HPP"), lifecycle = resources.length ? "async_v2" : "sync_v1";
+	return `#ifndef ${guard}
+#define ${guard}
 #include "${p}.h"
-#include <lean_bridge/async_v2/task-routine.hpp>
-#include <span>${retained ? "\n#include <lean_bridge/async_v2/task-callback.hpp>" : ""}${resources.length ? "\n#include <lean_bridge/async_v2/task-resource.hpp>" : ""}${bigint ? `
+#include <lean_bridge/${synchronous ? "sync_v1/sync-values.hpp" : "async_v2/task-routine.hpp"}>
+#include <span>${retained ? "\n#include <lean_bridge/async_v2/task-callback.hpp>" : ""}${resources.length ? `\n#include <lean_bridge/${synchronous ? "sync_v1/sync-resource.hpp" : "async_v2/task-resource.hpp"}>` : ""}${bigint ? `
 #ifndef BOOST_MP_STANDALONE
 #define BOOST_MP_STANDALONE
 #endif
@@ -129,12 +134,13 @@ export const generateCppTaskHeader = options => {
 #include <iterator>
 #include <limits>` : ""}
 namespace lean_bridge::${p} {
-${resources.map(r => `using ${r.name} = async_v2::Resource<${r.raw}>;\n`).join("")}${bigint ? "using Nat = boost::multiprecision::cpp_int; using Int = boost::multiprecision::cpp_int;\n" : ""}using async_v2::Future; using async_v2::Stream; using async_v2::Routine;
+${resources.map(r => `using ${r.name} = async_v2::Resource<${r.raw}>;\n`).join("")}${bigint ? "using Nat = boost::multiprecision::cpp_int; using Int = boost::multiprecision::cpp_int;\n" : ""}${synchronous ? `using sync_v1::Ok; using sync_v1::Err; using sync_v1::Result; using sync_v1::IOError; using sync_v1::DeclaredError;
+using ${lifecycle}::Closed; using ${lifecycle}::Busy; using ${lifecycle}::WrongContext; using ${lifecycle}::Unavailable;` : `using async_v2::Future; using async_v2::Stream; using async_v2::Routine;
 using async_v2::Ok; using async_v2::Err; using async_v2::Result;
 using async_v2::StartError; using async_v2::StepError; using async_v2::IOError;
 using async_v2::TaskIOError;${retained ? "\nusing async_v2::RetainedCallback; using async_v2::CallbackTrap; using async_v2::CallbackClosed;" : ""}
 using async_v2::Cancelled; using async_v2::Closed; using async_v2::Busy;
-using async_v2::Unavailable; using async_v2::WrongContext; using async_v2::run_one; using async_v2::shutdown;
+using async_v2::Unavailable; using async_v2::WrongContext; using async_v2::run_one; using async_v2::shutdown;`}
 namespace detail {${bigint ? `
 inline void charge(std::size_t &available, std::size_t bytes) {
     if (bytes > available) throw std::length_error("Lean copy budget exceeded");
@@ -170,11 +176,11 @@ template<class R> struct Slot {
     Slot(const Slot&) = delete;
     ~Slot() { if (dispose) dispose(&value); }
 };
-template<class H, auto Drop> struct Owner {
+${synchronous ? "" : `template<class H, auto Drop> struct Owner {
     H handle{}; Owner() = default; Owner(const Owner&) = delete;
     void close() noexcept { if (handle.id) (void)Drop(&handle); }
     ~Owner() { close(); }
-};
+};`}
 inline std::string text(const ${p}_buffer &b) {
     return b.len ? std::string(reinterpret_cast<const char *>(b.data), b.len) : std::string{};
 }
@@ -191,7 +197,7 @@ inline void check(${p}_status s) {
     case ${p}_NO_MEMORY: throw std::bad_alloc{};
     case ${p}_LIMIT: throw std::length_error("Lean copy budget exceeded");
     case ${p}_INVALID: throw std::invalid_argument("invalid Lean argument");
-    default: throw std::runtime_error("unexpected Lean task state: " + std::to_string(s));
+    default: throw std::runtime_error("unexpected Lean ${synchronous ? "call" : "task"} state: " + std::to_string(s));
     }
 }
 ${retained ? cppCallbackFaults(p) : ""}${resources.map(r => {

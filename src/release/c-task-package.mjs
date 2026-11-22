@@ -33,7 +33,6 @@ export const buildCTaskPackage = async options => {
 	const { projectContract, name, version, workRoot, runtimeRoot, leanPrefix, environment, signal } = options;
 	const target = options.target ?? "c", cpp = target === "cpp", rust = target === "cargo";
 	if(!["c", "cpp", "cargo"].includes(target)) throw new TypeError("Invalid native task target");
-	if(projectContract?.synchronousIO && target !== "c") throw new TypeError("Standalone synchronous C-family packaging currently requires the C11 target");
 	(rust ? validateOrdinaryCargoSettings : validateNativeCSettings)({ name, version });
 	if(options.ir || !name || !version || options.sources.some(s => /^(?:LeanBridge(?:\.|$)|BridgeCAsync$)/u.test(s.module))) throw new TypeError("Invalid C task source modules or coordinates");
 	const { identity: runtimeIdentity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
@@ -48,6 +47,7 @@ export const buildCTaskPackage = async options => {
 		const bindingIrSha256 = hashBindingIr(api), profile = `native-${cpp ? "cpp" : "c"}-${synchronous ? "io" : "task"}-v1`;
 		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
+		const threads = cpp && (!synchronous || resources.length > 0);
 		const config = { name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", integerMode: cpp || rust ? "words" : "gmp" };
 		const callbackHeaders = new Map();
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
@@ -156,7 +156,7 @@ export const buildCTaskPackage = async options => {
 		files.set(`include/${p}.h`, gen.header);
 		if(cpp)
 		{
-			const dir = "lean_bridge/async_v2", hpp = generateCppTaskHeader({ prefix: p, entries, resources });
+			const hpp = generateCppTaskHeader({ prefix: p, entries, resources, synchronousIO: synchronous });
 			if(boost) for(const [path, value] of Object.entries(boost))
 			{
 				files.set(path, value);
@@ -167,9 +167,12 @@ export const buildCTaskPackage = async options => {
 					await save(src, value);
 				}
 			}
-			await mkdir(join(app, dir), { recursive: true });
-			for(const base of ["task-loop.hpp", "task-values.hpp", "task-routine.hpp", ...ledger ? ["task-resource.hpp"] : [], ...callbackHeaders.size ? ["task-callback.hpp"] : []])
+			const headers = synchronous ? ["sync-values.hpp", ...ledger ? ["sync-resource.hpp", "task-loop.hpp", "task-resource.hpp"] : []]
+				: ["task-loop.hpp", "task-values.hpp", "task-routine.hpp", ...ledger ? ["task-resource.hpp"] : [], ...callbackHeaders.size ? ["task-callback.hpp"] : []];
+			for(const base of headers)
 			{
+				const dir = "lean_bridge/" + (base.startsWith("sync-") ? "sync_v1" : "async_v2");
+				await mkdir(join(app, dir), { recursive: true });
 				const bytes = await asset(`../backends/cpp/${base}`);
 				files.set(`include/${dir}/${base}`, bytes); await save(`${dir}/${base}`, bytes);
 			}
@@ -183,13 +186,13 @@ libdir=\${prefix}/lib
 Name: ${name}
 Description: Compiled Lean ${cpp ? "C++20" : "C11"} ${synchronous ? "synchronous calls" : "tasks"}
 Version: ${version}
-Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}${cpp ? " -pthread" : gmp ? " -l:libgmp.so.10" : ""}
-Cflags: -I\${includedir}${cpp ? " -pthread" : ""}${boost ? " -DBOOST_MP_STANDALONE" : ""}
+Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}${threads ? " -pthread" : gmp ? " -l:libgmp.so.10" : ""}
+Cflags: -I\${includedir}${threads ? " -pthread" : ""}${boost ? " -DBOOST_MP_STANDALONE" : ""}
 `);
-		files.set(`lib/cmake/${cmakePackage}/${cmakePackage}Config.cmake`, `if(NOT TARGET ${cmakeTarget})${cpp ? "\n  include(CMakeFindDependencyMacro)\n  find_dependency(Threads)" : ""}
+		files.set(`lib/cmake/${cmakePackage}/${cmakePackage}Config.cmake`, `if(NOT TARGET ${cmakeTarget})${threads ? "\n  include(CMakeFindDependencyMacro)\n  find_dependency(Threads)" : ""}
   get_filename_component(_lb_root "\${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
   add_library(${cmakeTarget} SHARED IMPORTED)
-  set_target_properties(${cmakeTarget} PROPERTIES IMPORTED_LOCATION "\${_lb_root}/lib/${library}" INTERFACE_INCLUDE_DIRECTORIES "\${_lb_root}/include"${cpp ? ' INTERFACE_COMPILE_FEATURES "cxx_std_20" INTERFACE_LINK_LIBRARIES "Threads::Threads"' : gmp ? ' INTERFACE_LINK_LIBRARIES "${_lb_root}/lib/libgmp.so.10"' : ""}${boost ? ' INTERFACE_COMPILE_DEFINITIONS "BOOST_MP_STANDALONE"' : ""})
+  set_target_properties(${cmakeTarget} PROPERTIES IMPORTED_LOCATION "\${_lb_root}/lib/${library}" INTERFACE_INCLUDE_DIRECTORIES "\${_lb_root}/include"${cpp ? ' INTERFACE_COMPILE_FEATURES "cxx_std_20"' : ""}${threads ? ' INTERFACE_LINK_LIBRARIES "Threads::Threads"' : gmp ? ' INTERFACE_LINK_LIBRARIES "${_lb_root}/lib/libgmp.so.10"' : ""}${boost ? ' INTERFACE_COMPILE_DEFINITIONS "BOOST_MP_STANDALONE"' : ""})
   unset(_lb_root)
 endif()
 `);
@@ -199,7 +202,8 @@ endif()
 		for(const f of ["LICENSE", "LICENSES"]) files.set(`${share}/licenses/Lean-${f}`, await readFile(join(leanPrefix, f)));
 		for(const [path, bytes] of Object.entries(projectContract.notices)) files.set(`${share}/licenses/${path}`, bytes);
 		files.set("package-metadata.json", canonicalJson(projectContract.metadata ?? {}));
-		if(synchronous) files.set("README.md", `# ${name} ${version}\n\nLinux x86-64, glibc ${floor} or later. Include ${p}.h and link with pkg-config ${name} or CMake target ${cmakeTarget}. Call the generated _call functions on the process main thread. They return immediately after Lean finishes, without a task handle or event loop. IO_ERROR carries a UTF-8 message; TYPED_ERROR writes the declared EIO payload. A returned Except is ordinary data. Zero-initialize aggregate outputs, and use their named disposers before reuse. The matching Lean runtime is included.\n`);
+		if(synchronous && cpp) files.set("README.md", `# ${name} ${version}\n\nInclude ${p}.hpp and call functions in lean_bridge::${p} on the process main thread. Use CMake target ${cmakeTarget} or pkg-config ${name} with C++20 on Linux x86-64 (glibc ${floor}+). Functions finish before returning. Returned Except values are Result<T,E> (Ok<T> or Err<E>); thrown EIO carries its payload in DeclaredError<E>, and IOError carries the Lean declaration and message. No executor, polling or coroutine is required. The shared Lean runtime is included.\n`);
+		else if(synchronous) files.set("README.md", `# ${name} ${version}\n\nLinux x86-64, glibc ${floor} or later. Include ${p}.h and link with pkg-config ${name} or CMake target ${cmakeTarget}. Call the generated _call functions on the process main thread. They return immediately after Lean finishes, without a task handle or event loop. IO_ERROR carries a UTF-8 message; TYPED_ERROR writes the declared EIO payload. A returned Except is ordinary data. Zero-initialize aggregate outputs, and use their named disposers before reuse. The matching Lean runtime is included.\n`);
 		else if(cpp) files.set("README.md", `# ${name} ${version}\n\nInclude ${p}.hpp and use namespace lean_bridge::${p}. Linux x86-64, glibc ${floor} or later; the matching Lean runtime is included. Link CMake target ${cmakeTarget} (find_package(${cmakePackage} CONFIG REQUIRED)), or use C++20 and pkg-config ${name}.\n\nA function returning Future<T> starts a real Lean task. Use .get() or co_await on the main thread. Stream<T>::next() requests precisely one item and returns a Future<std::optional<T>>; empty means exhausted. A returned Result<T,E> is a variant of Ok<T> and Err<E>; IOError, StartError<E> and StepError<E> represent three different failure channels. Tasks and streams are move-only. Explicit cancel()/close(), scope exit and coroutine abandonment release pending work. Worker-thread disposal queues cleanup until the main thread pumps or enters an API; it never invokes Lean on the worker. Routine<T>::get() drives suspended C++20 coroutines using poll, without a worker or timer. An application with its own main loop may call run_one(timeout_ms). Destroy externally owned suspended coroutine frames on that same thread. shutdown() permanently stops this C++ dispatcher, cancelling its owners; pump outstanding waiters to observe Cancelled.\n`);
 		else files.set("README.md", `# ${name} ${version}\n\nLinux x86-64, glibc ${floor} or later. Include ${p}.h and link with pkg-config package ${name} or CMake target ${cmakeTarget} (find_package(${cmakePackage} CONFIG REQUIRED)). The shared Lean runtime initializes automatically.\n\nUse the API on the process main thread. Zero-initialize handles. A task starts immediately; a stream starts its factory but does not pull until _pull. Only one pull can be outstanding. _poll returns OK when ready, or PENDING with a borrowed descriptor: wait for readability without reading or closing it. _take never blocks. A task result, stream END or failed step consumes the handle; a stream item leaves it idle. _close cancels outstanding work without waiting for it. Copied stale handles do not become valid again. Dispose owned output buffers (including nested results) before reuse. String inputs are strict length-delimited UTF-8. IO_ERROR, typed failures, and returned Except values are distinct.\n`);
 		if(cpp && callbackHeaders.size) files.set("README.md", files.get("README.md") + "\nPass a lambda for a retained task callback. Await on the main thread: the dispatcher watches both callback and completion descriptors. RetainedCallback<R(A)>::close() revokes future invocations. Propagated standard C++ exceptions retain their identity; TaskIOError is a terminal Lean error, and non-standard callback exceptions retire the shared runtime. Use C++ task support ABI 2 for packages that share a coroutine loop.\n");
@@ -209,7 +213,8 @@ endif()
 			? "\nNat and Int use the bundled Boost.Multiprecision cpp_int. Negative Nat arguments reject before entering Lean. Task results and typed errors own their integer values.\n"
 			: "\nNat and Int use GMP mpz_t. Initialize direct integer result and error slots with mpz_init; dispose each once with mpz_clear. For a returned Except, zero-initialize the outer value and use its generated disposer; do not initialize or clear individual union members. Negative Nat inputs reject before entering Lean. GMP 6.3.0, notices and complete corresponding source are included.\n"));
 		if(ledger) files.set("README.md", files.get("README.md") + (synchronous
-			? "\nZero-initialize nominal resource outputs, including typed error slots. Inputs are borrowed only for the call; each returned resource owns an independent lease. Use the generated retain, same and release functions. Copying a resource struct does not create another owner.\n"
+			? cpp ? "\nNominal values are move-only resources. Use .clone() for a separate lease and .close() to release it. Off-thread destruction defers release to the next owner-thread entry; resource packages share the same ownership support as task packages.\n"
+				: "\nZero-initialize nominal resource outputs, including typed error slots. Inputs are borrowed only for the call; each returned resource owns an independent lease. Use the generated retain, same and release functions. Copying a resource struct does not create another owner.\n"
 			: cpp
 				? "\nNominal resources are move-only. Use .clone() for an independent lease and == for Lean object identity, including across compatible packages. Destruction or .close() releases your lease; a started task or cursor retains its own Lean reference. Worker-thread destruction queues release on the main dispatcher.\n"
 				: "\nZero-initialize resource outputs (including typed error slots). An input borrows your lease for the call; a returned resource is an independent lease. Use the generated resource retain, same and release functions, not assignment to duplicate ownership. Release the input immediately after a task or cursor starts if you no longer need it.\n"));
@@ -230,7 +235,7 @@ endif()
 			, cmakePackage
 			, cmakeTarget
 			, pkgConfig: name
-			, ...(cpp ? { cppNamespace: `lean_bridge::${p}`, cppStandard: 20, cppTaskSupportAbi: 2 } : {})
+			, ...(cpp ? { cppNamespace: `lean_bridge::${p}`, cppStandard: 20, ...synchronous ? { cppSyncSupportAbi: 1 } : { cppTaskSupportAbi: 2 } } : {})
 			, ...integers ? { exactIntegers: cpp ? "boost-1.90.0" : "gmp-6.3.0" } : {}
 			, files: inventory };
 		records.push({ path: "lean-bridge-package.json", mode: 0o644, bytes: Buffer.from(canonicalJson(pkg)) });

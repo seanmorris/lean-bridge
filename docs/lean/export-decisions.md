@@ -532,9 +532,9 @@ Analysis reports separate reasons for unresolved implicit, instance, dependent, 
 
 A Lean `IO` result tells the caller how an operation can fail. It doesn't say
 whether that operation reads a file, checks an environment variable, or only
-updates an in-memory reference. For the Linux x86-64 native task and iterator packages (C, C++,
-Rust, and Python), Python host-import packages, and standalone synchronous C11
-and CPython packages, declare OS access separately
+updates an in-memory reference. For Linux x86-64 C11, C++20, Rust and CPython
+packages that export synchronous IO, tasks or iterators, and for Python
+host-import packages, declare OS access separately
 in `lean-bridge.exports.json`. Here the module reads an environment variable at
 startup, and its worker reads a file:
 
@@ -576,15 +576,18 @@ API. For example, `Journal.read : String → IO String` reads a file:
 }
 ```
 
-Build one target (`c` or `pypi`) at a time. No task, iterator or host import
+Build one target (`c`, `cpp`, `cargo` or `pypi`) at a time. No task, iterator or host import
 is required. Source discovery alone cannot check OS access; use the build's
 `binding-ir.json` to review the compiled interface. The functions finish
 before returning. A thrown `EIO` error
 retains its declared payload; an `Except` returned by the same function is
 ordinary data. Pure companions can share the package. Leave `nativeEffects`
-out of a pure-only package to use its usual projection. The [installed package
-checks](../evidence/native-sync-io-20261122.json) record the tested C11 and
-CPython versions, inputs, archive digests and replay command.
+out of a pure-only package to use its usual projection. The [four-target
+install checks](../evidence/native-sync-cpp-rust-20261122.json) include exact
+archives, toolchains and replay commands, as well as a C++ and Rust example
+that passes one Lean resource between a synchronous package and a task package.
+The [original C11 and CPython receipts](../evidence/native-sync-io-20261122.json)
+remain available for those earlier packages.
 
 The build follows compiled Lean code through library wrappers and task closures.
 It checks application startup and each selected entry, including an iterator's

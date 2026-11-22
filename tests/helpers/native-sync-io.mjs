@@ -11,7 +11,9 @@ import test from "node:test";
 import { validateExportConfiguration } from "../../src/analyze/export-configuration.mjs";
 import { analyzeLeanProject } from "../../src/analyze/lean-project.mjs";
 import { generateCTaskExports } from "../../src/backends/c/task-exports.mjs";
+import { generateCppTaskHeader } from "../../src/backends/cpp/task-exports.mjs";
 import { generatePythonHostExtension } from "../../src/backends/python/host-exports.mjs";
+import { generateRustTaskSources } from "../../src/backends/rust/task-crate.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
@@ -40,9 +42,18 @@ test("standalone IO generates no polling or awaitable API and rejects a mixed de
 	const c = generateCTaskExports(common), py = generatePythonHostExtension(common);
 	assert.match(c.header, /lbc_journal_read_call\(/u); assert.doesNotMatch(c.header, /_handle|_start\(|_poll\(|_PENDING/u);
 	assert.match(py.stub, /def read\(value: int\) -> int/u); assert.doesNotMatch(py.python, /import asyncio|async def|_lb_await/u);
-	for(const gen of [generateCTaskExports, generatePythonHostExtension])
+	for(const gen of [generateCTaskExports, generatePythonHostExtension, generateCppTaskHeader])
 		for(const e of [{ ...entry, delivery: "task" }, { ...entry, effect: "pure" }])
 			assert.throws(() => gen({ ...common, entries: [e] }), /delivery contract/u);
+});
+test("the packaged CLI and isolated engine include synchronous C++ and feature-gated Rust support", async () => {
+	const sources = ["cpp/sync-resource.hpp", "cpp/sync-values.hpp", "rust/sync-component.lock", "rust/task-channel.rs", "rust/task-runtime/src/delivery.rs"];
+	for(const manifest of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
+	{
+		const index = await json(manifest);
+		for(const source of sources) assert.ok((index.files ?? index.includedFiles).includes("src/backends/" + source), manifest + ": " + source);
+	}
+	await assert.rejects(generateRustTaskSources({ synchronousIO: true, entries: [{ effect: "IO", delivery: "task" }] }), /delivery contract/u);
 });
 test("standalone IO checks actual effects and does not reinterpret tasks or pure-only packages", { skip: !enabled, timeout: 600_000 }, async t => {
 	const work = await scratch(t);
@@ -75,8 +86,14 @@ test("an in-memory standalone API needs no grant for an unselected file operatio
 test("ordinary and reviewed standalone IO packages run from installed archives", { skip: !enabled && !replay, timeout: 3_600_000 }, async t => {
 	const work = await scratch(t), releases = resolve(replay ?? process.env.LEAN_BRIDGE_NATIVE_SYNC_EVIDENCE ?? join(work, "releases"));
 	if(!replay) await mkdir(releases, { recursive: true });
+	// A historical pinned receipt names the exact original edition. A fresh
+	// build or an unpinned replay always has to exercise every current target.
+	const pinned = replay && process.env.LEAN_BRIDGE_NATIVE_SYNC_EXPECTED ? await json(resolve(process.env.LEAN_BRIDGE_NATIVE_SYNC_EXPECTED)) : null;
+	const targets = pinned ? [...new Set(pinned.routes.map(r => r.target))] : Object.keys(profiles);
+	assert.ok(targets.length && targets.every(t => Object.hasOwn(profiles, t)));
+	if(pinned) for(const target of targets) assert.deepEqual(pinned.routes.filter(r => r.target === target).map(r => r.route), ["ordinary", "reviewed"]);
 	const reports = [];
-	for(const target of Object.keys(profiles))
+	for(const target of targets)
 	{
 		if(!replay) await buildEffectHandoffs(releases, target, env, sample);
 		reports.push(...await runEffectConsumers(work, releases, target, env, sample));
@@ -87,9 +104,8 @@ test("ordinary and reviewed standalone IO packages run from installed archives",
 	{
 		const bytes = await readFile(join(releases, "acceptance.json"));
 		assert.deepEqual(report, JSON.parse(bytes));
-		if(process.env.LEAN_BRIDGE_NATIVE_SYNC_EXPECTED)
+		if(pinned)
 		{
-			const pinned = await json(resolve(process.env.LEAN_BRIDGE_NATIVE_SYNC_EXPECTED));
 			assert.equal(sha256(bytes), pinned.acceptanceSha256); assert.deepEqual(reports, pinned.routes);
 		}
 	}

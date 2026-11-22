@@ -29,11 +29,14 @@ const quote = JSON.stringify;
  */
 export const generateRustTaskSources = async options => {
 	const { prefix, entries, resources = [], evidence } = options;
+	const synchronous = options.synchronousIO === true, errorType = synchronous ? "CallError" : "Error";
+	if(synchronous && (entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "EIO", "BaseIO"].includes(e.effect))))
+		throw new TypeError("Invalid standalone Rust IO delivery contract");
 	if(!/^lbc_[a-z0-9_]+$/u.test(prefix) || evidence?.library !== "lib" + prefix + ".so"
 		|| !/^[a-f0-9]{64}$/u.test(evidence.runtimeIdentity) || !/^[a-f0-9]{64}$/u.test(evidence.libraries?.[evidence.library]))
 		throw new TypeError("Rust task generation requires its checked native adapter identity");
 	const ffi = new Map(), models = new Map(), raw = [], funcs = [], pub = [];
-	const names = new Set(["native", "abi", "Task", "Items", "Stream", "Error", "Fault", "BigInt", "BigUint", "CallbackTask", "CallbackTaskError", "CallbackError", "RetainedCallback"]);
+	const names = new Set(["native", "abi", "Task", "Items", "Stream", "Error", "Fault", "BigInt", "BigUint", "CallbackTask", "CallbackTaskError", "CallbackError", "RetainedCallback", ...synchronous ? ["CallError"] : []]);
 	const rs = taskResourceTypes(resources), c = cTaskValues(prefix, false, rs);
 	const sym = (name, args, out = "i32") => {
 		const sig = 'unsafe extern "C" fn(' + args.join(",") + ")->" + out;
@@ -116,7 +119,7 @@ export const generateRustTaskSources = async options => {
 		const async = Boolean(e.delivery), stream = e.delivery === "async-iterator", io = e.effect === "IO", base = prefix + "_" + e.name;
 		if(!["task", "async-iterator", undefined].includes(e.delivery)) throw new TypeError("Unsupported Rust delivery");
 		const out = async ? stream ? `Items<${value.host},${step?.host ?? "std::convert::Infallible"}>` : `Task<${value.host}>` : value.host;
-		const returnType = `Result<${out},Error${error ? "<" + error.host + ">" : ""}>`;
+		const returnType = `Result<${out},${errorType}${error ? "<" + error.host + ">" : ""}>`;
 		const fn = ident(e.name);
 		if(names.has(fn)) throw new TypeError("Rust export name collides: " + fn); names.add(fn);
 		const argNames = e.parameters.map(p => ident(p.name));
@@ -144,15 +147,16 @@ export const generateRustTaskSources = async options => {
 		funcs.push(`pub(super) fn call${i}(${args.map((x, j) => "v" + j + ":" + x.input).join(",")})->${returnType} {
     let a=runtime()?; ${prepared.map(p => p[0]).join("\n")} ${async ? "let mut h=Handle::default();" : guard(value, "out")}
     ${error ? guard(error, "err") : io ? `let mut err:Guard<Buffer>=unsafe{Guard::zero(Clear::Void(a.${bufFree}))};` : ""} ${call}
-    ${error ? `if s==3{return Err(Error::Start(${error.read}(a,&mut err.v)?));}` : ""}
+    ${error ? `if s==3{let payload=${error.read}(a,&mut err.v)?;return Err(${synchronous ? `CallError::Declared{declaration:${quote(e.declaration)},payload}` : "Error::Start(payload)"});}` : ""}
     ${io ? `if s==4{return Err(Fault::Io{declaration:${quote(e.declaration)},message:text(&err.v)?}.into());}` : ""}
     abi::status(s)?; ${success}
 }`);
 	}
 	const driver = await readFile(new URL("./task-native.rs", import.meta.url), "utf8");
+	const delivery = synchronous ? "" : await readFile(new URL("./task-channel.rs", import.meta.url), "utf8");
 	const fields = [...ffi.values()].map(x => x.field + ":" + x.sig);
 	const loads = [...ffi].map(([n, x]) => `${x.field}:sym!(${quote(n)},${x.sig})`);
-	return { "src/lib.rs": `//! Generated bindings to compiled Lean. All native calls belong on the process main thread.\npub use lean_bridge_task_runtime::{Task,Items,Error,Fault,Stream,CallbackTask,CallbackTaskError,CallbackError,RetainedCallback};\npub use num_bigint::{BigUint,BigInt};\nmod native;\n${pub.join("\n")}\n`
-		, "src/native.rs": `#![allow(dead_code,unused_imports,unused_variables)]\n${driver.replace("/* GENERATED_SYMBOLS */", loads.join(",\n"))}\nstruct Api{${fields.join(",\n")}}\n${raw.join("\n")}\n${funcs.join("\n")}\n`
+	return { "src/lib.rs": `//! Generated bindings to compiled Lean. All native calls belong on the process main thread.\npub use lean_bridge_task_runtime::{${synchronous ? "CallError,Fault" : "Task,Items,Error,Fault,Stream,CallbackTask,CallbackTaskError,CallbackError,RetainedCallback"}};\npub use num_bigint::{BigUint,BigInt};\nmod native;\n${pub.join("\n")}\n`
+		, "src/native.rs": `#![allow(dead_code,unused_imports,unused_variables)]\n${driver.replace("/* GENERATED_DELIVERY */", delivery).replace("/* GENERATED_SYMBOLS */", loads.join(",\n"))}\nstruct Api{${fields.join(",\n")}}\n${raw.join("\n")}\n${funcs.join("\n")}\n`
 		, "src/assets.rs": copiedRustAssets(evidence, { task: true }) };
 };

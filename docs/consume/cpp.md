@@ -86,6 +86,23 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+## Call synchronous IO
+
+A `native-cpp-io-v1` function runs on the process main thread and finishes
+before it returns. For example, `auto text = api::read(path);` returns a
+`std::string` or throws `api::IOError` with a declaration and message.
+An `EIO ε` failure throws `api::DeclaredError<E>` with an owned `payload`.
+If the function *returns* an `Except`, inspect the `Ok<T>` or `Err<E>` arm
+of its `Result<T,E>` variant instead. There is nothing to wait on. A bad
+argument or a call from the wrong thread is a boundary error, not a Lean
+failure. See the [installed C++ caller](../../tests/fixtures/native-sync-io-clients/consumer.cpp).
+
+A package that only copies values does not open a dispatcher or require a
+thread library. A package that returns a Lean resource uses the same resource
+type as a task package built for that runtime. You can pass the resource to
+either package. If a worker thread drops a lease, the next call into the
+resource package on the owner thread drains the pending release.
+
 ## Await a task or pull a stream
 
 For a package marked `native-cpp-task-v1`, include the C++ header and link

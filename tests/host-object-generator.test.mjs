@@ -23,6 +23,7 @@ import "./helpers/resource-task-installed.mjs";
 import "./helpers/rust-task-installed.mjs";
 import "./helpers/native-effect-policy.mjs";
 import "./helpers/native-sync-io.mjs";
+import "./helpers/native-sync-peer.mjs";
 import { generatePythonHostExtension } from "../src/backends/python/host-exports.mjs";
 import { generatePythonHostProvider } from "../src/backends/python/host-provider.mjs";
 

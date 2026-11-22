@@ -55,6 +55,22 @@ Rust conversion and native copying each use a 16 MiB accounting budget. Non-recu
 
 Compiled libraries are embedded in your executable. The first call verifies their hashes and loads them through a private temporary directory; compatible crates share one runtime. You can move the executable without retaining the Cargo source tree. Each crate embeds its assets, so multi-crate executable size can grow even when loading is shared. Loading needs Linux `/proc` and writable `/tmp` that permits shared-library loading, not a `noexec` mount. Temporary library files are removed after loading, and a small process registry is removed at normal exit. The libraries stay loaded until process exit. Calls from multiple threads are supported; reuse after `fork` and composition with foreign runtime loaders are rejected. See the [installed-crate evidence](../evidence/native-rust-20260915.md).
 
+### Call synchronous IO
+
+Call a `native-rust-io-v1` export directly on the process main thread:
+`let text = journal::read(path)?;`. No executor or `.await` is involved.
+A thrown `EIO` is `Err(CallError::Declared { declaration, payload })`.
+A Lean `IO.Error` is `Err(CallError::Io { declaration, message })`. A rejected
+host argument or a call on the wrong thread is `Err(CallError::Boundary(fault))`.
+If Lean returns an `Except`, its error arm is ordinary data: `Ok(Err(value))`.
+Cargo selects the runtime automatically. Installing a real task package
+alongside a synchronous package can enable async support but does not change
+the synchronous function's return type. See the [installed Rust caller](../../tests/fixtures/native-sync-io-clients/consumer.rs).
+
+Two compatible packages use the same Rust type for the same Lean resource.
+An `EIO` error whose payload is a resource owns that lease; it can be passed
+to the other package just like a successful return value.
+
 ### Await a task or pull a stream
 
 If the release receipt says `native-rust-task-v1`, add only the component crate to your Cargo dependencies. Cargo resolves its exact `lean-bridge-task-runtime` dependency. Run these functions on a current-thread executor **on the process main thread**. Tasks and resource owners are not `Send`; there is no Lean scheduler for your application to drive.
