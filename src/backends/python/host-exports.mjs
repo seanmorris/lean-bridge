@@ -271,7 +271,7 @@ static PyObject *lb_matches_runtime(PyObject *mod, PyObject *args) {
 }
 ${tasks ? asset("../native/task-notification.h") + "\n" + asset("task-delivery.h") : ""}
 ${streams ? asset("stream-delivery.h") : ""}
-${outcomes ? ioOutcome + "\n" : ""}${callbacks ? asset("task-callback.h") + "\n" + callbackCodecs + "\n" : ""}${[...codecs.values()].map(f => f.c).join("\n")}
+${outcomes ? ioOutcome + "\n" : ""}${callbacks ? '#define LB_PORT_NAME LB_COMPONENT ".callback-port-v1"\n#define LB_PORT_KIND "lean-bridge/python-callback-port-v1"\n#define LB_CB_REQUEST lb_py_cb_request\n#define LB_CB_TRACK lb_py_cb_track\n' + asset("../native/task-callback-queue.h") + "\n" + asset("task-callback.h") + "\n" + callbackCodecs + "\n" : ""}${[...codecs.values()].map(f => f.c).join("\n")}
 ${functions.map(f => f.c).join("\n")}
 static PyMethodDef lb_methods[] = {
     ${ir ? '{"_bind", lb_pybind, METH_VARARGS, NULL}, {"_unbind", lb_pyunbind, METH_NOARGS, NULL},' : ""}

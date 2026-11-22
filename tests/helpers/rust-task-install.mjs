@@ -65,6 +65,20 @@ export const runInstalledRustTasks = async options => {
 		const { receipt, result } = checks;
 		assert.equal(result.archives, 2); assert.equal(receipt.profiles[0].id, "native-rust-task-v1");
 		const src = await json(join(handoff, "host-export-evidence.json")); assert.equal(Boolean(src.reviewedSourceSha256), route === "reviewed");
+		if(api.types.some(t => t.kind === "callback"))
+		{
+			assert.equal(src.selection.rustTaskCallbacks, true);
+			assert.equal(src.selection.pythonTaskCallbacks, undefined);
+			assert.ok(api.errors.some(e => e.id === "error:RustCallbackError"));
+			assert.ok(!api.errors.some(e => e.id === "error:PythonHostException"));
+			const twice = api.declarations.find(d => d.source.declaration === "Lab.cbRepeatCall");
+			assert.equal(twice.parameters[1].lifetime.scope, "explicit");
+			assert.equal(twice.parameters[1].ownership, "lease");
+			assert.equal(twice.resultMode, "promise");
+			assert.deepEqual(new Set(twice.failure.errors), new Set(["error:TaskIO.Error", "error:RustCallbackError"]));
+			const recover = api.declarations.find(d => d.source.declaration === "Lab.cbRecover");
+			assert.equal(recover.result.type.constructor, "result"); assert.equal(recover.failure.mode, "none");
+		}
 		const sourceRoot = join(kept, route, "source");
 		const original = await checksum(sourceRoot);
 		const tree = Object.keys(original).sort((a, b) => a.localeCompare(b)).map(p => original[p] + "  " + p + "\n").join("");
@@ -139,6 +153,11 @@ export const runInstalledRustTasks = async options => {
 	await writeFile(join(client, ".cargo/config.toml"), `[source.crates-io]\nreplace-with = "installed"\n[source.installed]\ndirectory = ${JSON.stringify(vendor)}\n`);
 	await writeFile(join(client, "Cargo.toml"), '[package]\nname="rust-task-app"\nversion="1.0.0"\nedition="2021"\n[dependencies]\ntask-lab="=1.0.0"\ntask-lab-peer="=1.0.0"\nfutures-core="0.3"\n[profile.dev]\ndebug=0\nincremental=false\n');
 	for(const [f, to] of [["consumer.rs", "main.rs"], ["pulse_checks.rs", "pulse_checks.rs"]]) await copyFile(join(fx, f), join(client, "src", to));
+	// Historical receipts replay their own original client, not today's checks.
+	const retained = (await readdir(fx)).includes("callback_checks.rs");
+	if(retained) await copyFile(join(fx, "callback_checks.rs"), join(client, "src/callback_checks.rs"));
+	const guide = (await readdir(fx)).includes("callback_example.rs");
+	if(guide) await copyFile(join(fx, "callback_example.rs"), join(client, "src/callback_example.rs"));
 	await run(cargo, ["generate-lockfile", "--offline"], client, env);
 	const metadata = JSON.parse(await run(cargo, ["metadata", "--locked", "--offline", "--format-version", "1"], client, env));
 	for(const [name, p] of pkgs)
@@ -159,5 +178,11 @@ export const runInstalledRustTasks = async options => {
 	await rm(work, { recursive: true });
 	const output = (await run(bin, [], root, { PATH: "/unavailable", CARGO_HOME: "/unavailable", LEAN_SYSROOT: "/unavailable", TMPDIR: root, LEAN_NUM_THREADS: "1" })).trim();
 	assert.match(output, /cross-crate resource cleanup passed$/u);
-	return { reports, output, consumerSha256: sha256(await readFile(join(fx, "consumer.rs"))), wakeChecksSha256: sha256(await readFile(join(fx, "pulse_checks.rs"))) };
+	if(retained) assert.match(output, /retained callback checks passed/u);
+	return { reports
+		, output
+		, consumerSha256: sha256(await readFile(join(fx, "consumer.rs")))
+		, wakeChecksSha256: sha256(await readFile(join(fx, "pulse_checks.rs")))
+		, ...retained ? { callbackChecksSha256: sha256(await readFile(join(fx, "callback_checks.rs"))) } : {}
+		, ...guide ? { guideSha256: sha256(await readFile(join(fx, "callback_example.rs"))) } : {} };
 };

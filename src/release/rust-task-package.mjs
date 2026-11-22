@@ -9,6 +9,7 @@ import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { cargoPackageMetadata } from "../analyze/package-metadata.mjs";
 import { generateRustTaskSources } from "../backends/rust/task-crate.mjs";
+import { retainedTask } from "../backends/c/task-callback-exports.mjs";
 import { validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
@@ -68,6 +69,7 @@ export const writeRustTaskRelease = async o => {
 	const supportManifest = (await asset("task-runtime/Cargo.toml")).toString(), supportLock = (await asset("task-runtime/Cargo.lock")).toString();
 	common.set("src/lib.rs", (await asset("task-runtime/src/lib.rs")).toString() + '\n#[doc(hidden)] pub mod __assets { pub static LEAN:&[u8]=include_bytes!("../native/linux-x64/libleanshared.so"); pub static BROKER:&[u8]=include_bytes!("../native/linux-x64/liblean_bridge_native.so"); }\n');
 	common.set("src/resource.rs", await asset("task-runtime/src/resource.rs"));
+	common.set("src/callback.rs", await asset("task-runtime/src/callback.rs"));
 	common.set("lean-bridge/runtime.json", canonicalJson(manifest));
 	common.set("README.md", "Shared Linux x86-64 Lean runtime and executor-independent Rust task delivery. Cargo selects this crate through your component's exact dependency.\n");
 	const license = await readFile(new URL("../../LICENSE", import.meta.url));
@@ -87,6 +89,8 @@ export const writeRustTaskRelease = async o => {
 	const localLock = withVersion(baseLock, seed, final);
 	app.set("Cargo.lock", withVersion(baseLock, seed, final + `\nsource = "registry+https://github.com/rust-lang/crates.io-index"\nchecksum = "${provider.record.sha256}"`));
 	app.set("README.md", `# ${name}\n\nLinux x86-64, glibc ${floor}+, Rust 1.90+. Cargo supplies the runtime automatically. Use a current-thread executor on the process main thread. Await the returned Task; drop it to cancel without blocking. A stream pulls only on demand. Call next().await or use the futures Stream trait. Returned Except values stay Rust Results; declared factory and step failures are Error::Start and Error::Step. IO errors carry the declaring function and message. Never reuse native state in a forked child.\n`);
+	if(entries.some(retainedTask)) app.set("README.md", app.get("README.md") + "\nCallback-taking tasks accept Rust closures that return Result<Reply, CallbackError>. The executor runs closures on the main thread, even during factory initialization. Await the task for typed factory rejection, IO or declared terminal IO failure. An unchanged callback error retains its Rust identity. Drop or cancel the task to release all callback captures; RetainedCallback also permits explicit close. An unwinding Rust callback panic retires the native runtime.\n");
+	if(entries.some(e => e.taskIO && !retainedTask(e))) app.set("README.md", app.get("README.md") + "\nA task declaring terminal IO errors without a callback uses ordinary Task<T>. Its factory can fail immediately; a later task failure is Fault::TaskIo on await. No callback queue is allocated.\n");
 	app.set("lean-bridge/binding-ir.json", canonicalJson(api)); app.set("lean-bridge/elaboration.json", canonicalJson(evidence));
 	app.set("lean-bridge/generated.lean", gen.entryLean); app.set("lean-bridge/adapter.h", gen.header);
 	app.set("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: 1, role: "component", profile, name, version, componentIdentity, bindingIrSha256, runtimeIdentity, supportId, glibcMinimumVersion: floor, files: inventory(app) }));

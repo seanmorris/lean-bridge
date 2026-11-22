@@ -6,9 +6,11 @@
     "Lab.add", "Lab.alias", "Lab.badge", "Lab.bytes", "Lab.checked", "Lab.closes", "Lab.count",
     "Lab.depotPhase", "Lab.depotRelease", "Lab.depotReset", "Lab.gated", "Lab.ioTask", "Lab.leaseChecked",
     "Lab.make", "Lab.pending", "Lab.phase", "Lab.pulls", "Lab.release", "Lab.reset",
-    "Lab.series", "Lab.sum", "Lab.tickets", "Lab.wideChecked", "Lab.wideSeries"
+    "Lab.series", "Lab.sum", "Lab.tickets", "Lab.wideChecked", "Lab.wideSeries",
+    "Lab.cbRepeatCall", "Lab.cbDuringStart", "Lab.cbRecover", "Lab.cbReplaceError", "Lab.cbTypedStart", "Lab.cbPlain", "Lab.cbTerminal", "Lab.cbRemember", "Lab.cbUseExpired", "Lab.cbForget", "Lab.cbReset", "Lab.cbRelease", "Lab.cbState", "Lab.cbCancelLate", "Lab.cbQueued", "Lab.cbScalarTour", "Lab.localStart"
   ],
-  "taskExports": ["Lab.bytes", "Lab.checked", "Lab.gated", "Lab.ioTask", "Lab.leaseChecked", "Lab.pending", "Lab.sum", "Lab.wideChecked"],
+  "taskExports": ["Lab.bytes", "Lab.checked", "Lab.gated", "Lab.ioTask", "Lab.leaseChecked", "Lab.pending", "Lab.sum", "Lab.wideChecked", "Lab.cbRepeatCall", "Lab.cbDuringStart", "Lab.cbRecover", "Lab.cbReplaceError", "Lab.cbTypedStart", "Lab.cbTerminal", "Lab.cbRemember", "Lab.cbUseExpired", "Lab.cbCancelLate", "Lab.cbQueued", "Lab.cbScalarTour", "Lab.localStart"],
+  "taskIOErrors": ["Lab.cbRepeatCall", "Lab.cbDuringStart", "Lab.cbReplaceError", "Lab.cbTypedStart", "Lab.cbTerminal", "Lab.cbUseExpired", "Lab.cbCancelLate", "Lab.cbQueued", "Lab.cbScalarTour", "Lab.localStart"],
   "asyncIterators": [
     {"open": "Lab.series", "next": "Lab.pull", "close": "Lab.close"},
     {"open": "Lab.tickets", "next": "Lab.ticketPull", "close": "Lab.ticketClose"},

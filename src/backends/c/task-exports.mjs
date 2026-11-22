@@ -5,6 +5,7 @@
  */
 import { nativePullEntry, streamEntryLean } from "../native/pull-entry.mjs";
 import { cTaskValues } from "./task-values.mjs";
+import { emitRetainedTask, retainedLean, retainedPrototypes, retainedTask } from "./task-callback-exports.mjs";
 import { cResourceApi, cResourceSupport, taskResourceTypes } from "./task-resources.mjs";
 
 const statuses = "OK PENDING END TYPED_ERROR IO_ERROR INVALID CLOSED BUSY IDLE WRONG_CONTEXT UNAVAILABLE NO_MEMORY LIMIT".split(" ");
@@ -21,16 +22,20 @@ export const generateCTaskExports = options => {
 		|| !modules?.length || !modules.every(m => qualified.test(m)) || !entries.some(e => e.delivery)) throw new TypeError("Invalid C task component");
 	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources);
 	const values = cTaskValues(p, gmp, resources);
+	const retained = entries.some(retainedTask);
+	if((retained || entries.some(e => e.taskIO)) && (!options.rustCallbacks || gmp)) throw new TypeError("This task callback ABI requires Rust word carriers");
 	if(options.integerMode && !["gmp", "words"].includes(options.integerMode)) throw new TypeError("Unknown task integer ABI");
 	const types = [], prototypes = [], functions = [], symbols = [`${p}_buffer_dispose`];
 	const names = new Set(), declarations = [
 		"extern lean_object *initialize_BridgeCAsync(uint8_t);"
-		, "extern lean_object *lb_c_error_text(lean_object *);"];
+		, "extern lean_object *lb_c_error_text(lean_object *);"
+		, ...retained ? retainedPrototypes : []];
 	const lean = [...modules.map(m => `import ${m}`)
+		, ...retained ? ["import Init.System.Promise"] : []
 		, "set_option autoImplicit false"
 		, "namespace LeanBridgeCAsync"
 		, "@[export lb_c_error_text] def errorText (e : IO.Error) : String := toString e"
-		, streamEntryLean];
+		, streamEntryLean, ...retained ? [retainedLean] : []];
 	const fn = (name, args, body) => {
 		const signature = `${p}_status ${name}(${args.join(", ") || "void"})`;
 		symbols.push(name); prototypes.push(signature + ";"); functions.push(`${signature} {\n    ${body}\n}`);
@@ -43,8 +48,13 @@ export const generateCTaskExports = options => {
 			|| e.hostMembers?.length) throw new TypeError("Invalid or duplicate C task export");
 		names.add(e.name);
 		const stream = e.delivery === "async-iterator", async = stream || e.delivery === "task";
+		if(e.taskIO && e.delivery !== "task") throw new TypeError("Terminal IO errors require a real Task");
 		if(e.delivery && !async || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)) throw new TypeError("Unsupported C task effect or delivery");
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
+		if(retainedTask(e))
+		{
+			emitRetainedTask({ e, i, n, h, p, values, types, fn, lean, declarations }); continue;
+		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");
 		const item = values.codec(e.result), error = e.effect === "EIO" ? values.codec(e.error) : null;
@@ -55,7 +65,8 @@ export const generateCTaskExports = options => {
 		{
 			lean.push(pull.helpers); declarations.push(pull.declarations);
 		}
-		const entry = `lb_c_invoke_${i}`, rawOut = async ? `(_root_.Task ${item.lean})` : item.lean;
+		const entry = `lb_c_invoke_${i}`, payload = e.taskIO ? `(_root_.Except _root_.IO.Error ${item.lean})` : item.lean;
+		const rawOut = async ? `(_root_.Task ${payload})` : item.lean;
 		const result = pull?.lean ?? (error ? `(_root_.Except ${error.lean} ${rawOut})` : rawOut);
 		const call = `(_root_.${e.declaration} ${args.map((_, k) => `v${k}`).join(" ")})`;
 		const app = pull ? pull.application(call) : call;
@@ -96,17 +107,21 @@ export const generateCTaskExports = options => {
 		if(!async) continue;
 		if(stream) fn(`${n}_pull`, [`${h} h`], `return lb_request(h.id, h.domain, ${i});`);
 		fn(`${n}_poll`, [`${h} h`, "int *fd"], `return lb_poll(h.id, h.domain, ${i}, fd);`);
-		fn(`${n}_take`, [`${h} *h`, values.out(item, "out"), ...step ? [values.out(step, "error")] : []],
-			`if (!h || !out${occupied(item, "out")}${step ? " || !error" + occupied(step, "error") : ""}) return LB(INVALID);
+		fn(`${n}_take`, [`${h} *h`, values.out(item, "out"), ...step ? [values.out(step, "error")] : [], ...e.taskIO ? [`${p}_buffer *message`] : []],
+			`if (!h || !out${occupied(item, "out")}${step ? " || !error" + occupied(step, "error") : ""}${e.taskIO ? " || !message" : ""}) return LB(INVALID);
     lb_entry *e; LB(status) s = lb_lookup(h->id, h->domain, ${i}, &e, 0);
     if (s != LB(OK)) return s;
     if (!e->watch.source) return LB(IDLE);
     if (!lb_watch_ready(&e->watch)) return LB(PENDING);
     lean_object *v = lean_task_get(e->watch.source);
+    ${e.taskIO ? `if (!lean_obj_tag(v)) {
+        lean_object *err = lean_ctor_get(v, 0); lean_inc(err); lean_object *text = lb_c_error_text(err);
+        s = lb_string(message, text); lean_dec(text); if (s == LB(OK)) s = LB(IO_ERROR);
+    } else { v = lean_ctor_get(v, 0);` : ""}
     ${step ? `if (!lean_obj_tag(v)) { s = ${step.read}(lean_ctor_get(v, 0), error); if (s == LB(OK)) s = LB(TYPED_ERROR); }
     else { v = lean_ctor_get(v, 0);` : ""}
     ${stream ? `if (!lean_obj_tag(v)) s = LB(END);
-    else s = ${item.read}(lean_ctor_get(v, 0), out);` : `s = ${item.read}(v, out);`}${step ? " }" : ""}
+    else s = ${item.read}(lean_ctor_get(v, 0), out);` : `s = ${item.read}(v, out);`}${step || e.taskIO ? " }" : ""}
     lb_watch_close(&e->watch, 0);
     ${stream ? "if (s != LB(OK)) " : ""}{ h->id = 0; lb_drop(e); }
     return s;`);
@@ -143,7 +158,7 @@ ${[...resourceHeader ? [resourceHeader] : [], ...values.types, ...types, ...prot
 ${declarations.join("\n")}
 #define LB(x) ${p}_##x
 #define LB_COMPONENT "ctask:${componentIdentity}"
-#define LB_MAX_BYTES (16u * 1024u * 1024u)
+#define LB_MAX_BYTES (16u * 1024u * 1024u)${retained ? "\n#define LB_RETAINED_TASKS 1" : ""}
 #include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}
 ${values.bodies.join("\n")}
 ${functions.join("\n")}

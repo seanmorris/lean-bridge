@@ -12,6 +12,7 @@ import { readVerifiedNativeRuntime, validateNativeElf } from "../build/native-ar
 import { pinnedCompiledLean } from "../build/elaborated-component.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCTaskExports } from "../backends/c/task-exports.mjs";
+import { retainedTask } from "../backends/c/task-callback-exports.mjs";
 import { generateCppTaskHeader } from "../backends/cpp/task-exports.mjs";
 import { boostSources } from "../backends/cpp/boost.mjs";
 import { taskGmpKit } from "../build/task-gmp.mjs";
@@ -45,7 +46,10 @@ export const buildCTaskPackage = async options => {
 		const bindingIrSha256 = hashBindingIr(api), profile = cpp ? "native-cpp-task-v1" : "native-c-task-v1";
 		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
-		const config = { name, modules: projectContract.modules, entries, resources, integerMode: cpp || rust ? "words" : "gmp" };
+		const config = { name, modules: projectContract.modules, entries, resources, rustCallbacks: rust, integerMode: cpp || rust ? "words" : "gmp" };
+		const callbackHeaders = new Map();
+		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
+			callbackHeaders.set(file, await asset(path + file));
 		const ledger = resources.length ? {
 			header: await asset("../backends/native/task-resource-ledger.h")
 			, source: await asset("../backends/native/task-resource-ledger.c")
@@ -61,6 +65,7 @@ export const buildCTaskPackage = async options => {
 			, evidence
 			, skeleton
 			, delivery: sha256(delivery), notification: sha256(notification)
+			, ...callbackHeaders.size ? { callbacks: Object.fromEntries([...callbackHeaders].map(([f, b]) => [f, sha256(b)])) } : {}
 			, ...ledger ? { resourceLedger: ledgerId } : {}
 			, ...integers ? { integerAdapter: sha256(integers) } : {}
 			, ...gmp ? { gmpKit: gmp.identity } : {} }));
@@ -71,6 +76,7 @@ export const buildCTaskPackage = async options => {
 		await save("checked-entry.c", `#include "entry.c"\n${gen.declarations}\n`);
 		await save(`${p}.h`, gen.header); await save("adapter.c", gen.source);
 		await save("task-delivery.h", delivery); await save("task-notification.h", notification);
+		for(const [file, bytes] of callbackHeaders) await save(file, bytes);
 		if(ledger)
 		{
 			await save("task-resource-ledger.h", ledger.header); await save("ledger.c", ledger.source);

@@ -29,6 +29,12 @@ pub(super) fn block<F:Future>(f:F)->F::Output {
         Poll::Ready(v)=>return v,Poll::Pending=>wait_for_wake(&s,old)
     }}
 }
+pub(super) fn wait_for_request<F:Future+Unpin>(f:&mut F,release:impl FnOnce()){
+    let (first,w1)=signal();let (last,w2)=signal();
+    assert!(Pin::new(&mut *f).poll(&mut Context::from_waker(&w1)).is_pending());
+    assert!(Pin::new(&mut *f).poll(&mut Context::from_waker(&w2)).is_pending());
+    release();wait_for_wake(&last,0);assert_eq!(first.calls.load(Ordering::SeqCst),0);
+}
 pub(super) fn run(){
     use lab::{Error,Fault,Stream};
     let s="é\0λ";assert_eq!(block(async{lab::bytes(&[0,255,9]).unwrap().await.unwrap()}),[0,255,9]);

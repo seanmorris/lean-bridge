@@ -10,10 +10,11 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryRecordSource } from "./source-at-fin-history-milestone.mjs";
 import { beforePerlAuthorDocsSource, perlAuthorDocsChangedPaths, perlAuthorDocsHistoryPath, perlAuthorDocsPredecessor, reversePerlAuthorDocsUpdate } from "./checked-record-perl-author-docs-history.mjs";
 
-const sourceAt = async (path, expected) => beforeFinRefinementSource(
-	path, await readFile(path, "utf8"), expected
+const sourceAt = (path, expected) => sourceAtFinHistoryRecordSource(
+	perlAuthorDocsHistoryPath, path, expected, beforePerlAuthorDocsSource
 );
 
 test("Perl checked-record author documentation source history authenticates exact changes and refuses unknown edits", async () => {

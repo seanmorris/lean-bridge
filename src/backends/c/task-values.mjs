@@ -42,6 +42,7 @@ export const cTaskValues = (p, gmp = true, resources = []) => {
 			const [lean, type, abi, expr, constant] = scalar;
 			c = { lean: `_root_.${lean}`, type, arg: type, abi
 				, argument: v => constant ?? `(${abi})${v}`
+				, boxed: v => constant ?? expr.replace("lean_unbox", "lean_box").replace("(v)", `((${abi})${v})`)
 				, validate: v => t.name === "unit" ? `if (${v} != 0) return LB(INVALID);`
 					: t.name === "char" ? `if (${v} > 0x10ffff || (${v} >= 0xd800 && ${v} <= 0xdfff)) return LB(INVALID);` : ""
 				, convert: `(void)v; *out = (${type})(${expr}); return LB(OK);` };

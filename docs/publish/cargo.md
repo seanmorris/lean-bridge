@@ -57,6 +57,14 @@ The generated dependency uses Cargo's default registry. If you repackage for a p
 
 If Cargo repackages the runtime, its registry checksum can differ from the prepared archive's checksum. Verify the downloaded runtime against the separately approved publication archive first. In a **separate publishing directory**, resolve the component lockfile against that registry runtime and review the lockfile diff before packaging the component. Keep the original handoff and its receipt unchanged.
 
+### Export a callback-taking task
+
+Select a declaration such as `Retained.repeatCall (s : String) (f : String → IO String) : BaseIO (Task (Except IO.Error String))` in `taskExports`. To treat that particular task's outer `Except IO.Error` as a terminal failure, also list the declaration in `taskIOErrors`. A normal returned `Except ε α` is a value; the build does not infer an exception convention from its name. Callback parameters must have the actual Lean type `α → IO β` with supported copied scalar arguments and replies.
+
+The installed component generates the Rust closure signature, schedules the factory off the owner thread, and delivers the result through the executor. Neither the publisher nor the consumer supplies FFI or polling glue. See [the Rust callback example](../consume/rust.md#pass-a-callback-to-a-lean-task).
+
+Selecting `taskIOErrors` on a declaration **without** a callback only changes how the terminal result is decoded. Its factory still runs at the call site, its normal Rust `Task<T>` is unchanged, and it allocates no callback queue.
+
 ## Export arrays and records
 
 Select concrete exports using `Array T` and acyclic Lean structures in the shared

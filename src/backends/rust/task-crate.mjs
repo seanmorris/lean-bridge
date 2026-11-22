@@ -7,6 +7,8 @@
 import { readFile } from "node:fs/promises";
 import { taskResourceTypes } from "../c/task-resources.mjs";
 import { cTaskValues } from "../c/task-values.mjs";
+import { retainedTask } from "../c/task-callback-exports.mjs";
+import { rustRetainedEntry } from "./task-callback.mjs";
 import { copiedRustAssets } from "./copied-assets.mjs";
 
 const reserved = new Set("as async await break const continue dyn else enum extern false fn for gen if impl in let loop match mod move mut pub ref return static struct super trait true type unsafe use where while yield abstract become box do final macro override priv try typeof unsized virtual".split(" "));
@@ -31,7 +33,7 @@ export const generateRustTaskSources = async options => {
 		|| !/^[a-f0-9]{64}$/u.test(evidence.runtimeIdentity) || !/^[a-f0-9]{64}$/u.test(evidence.libraries?.[evidence.library]))
 		throw new TypeError("Rust task generation requires its checked native adapter identity");
 	const ffi = new Map(), models = new Map(), raw = [], funcs = [], pub = [];
-	const names = new Set(["native", "abi", "Task", "Items", "Stream", "Error", "Fault", "BigInt", "BigUint"]);
+	const names = new Set(["native", "abi", "Task", "Items", "Stream", "Error", "Fault", "BigInt", "BigUint", "CallbackTask", "CallbackTaskError", "CallbackError", "RetainedCallback"]);
 	const rs = taskResourceTypes(resources), c = cTaskValues(prefix, false, rs);
 	const sym = (name, args, out = "i32") => {
 		const sig = 'unsafe extern "C" fn(' + args.join(",") + ")->" + out;
@@ -100,6 +102,13 @@ export const generateRustTaskSources = async options => {
 	const guard = (v, name) => `let mut ${name}:Guard<${v.raw}>=unsafe{Guard::zero(${v.clear})};`;
 	for(const [i, e] of entries.entries())
 	{
+		if(retainedTask(e))
+		{
+			const name = ident(e.name);
+			if(names.has(name)) throw new TypeError("Rust export name collides: " + name);
+			names.add(name);
+			rustRetainedEntry({ e, i, name, prefix, ident, shape, guard, sym, bufFree, pub, funcs }); continue;
+		}
 		// Match the C generator's traversal (including nested Except) so aggregate
 		// disposers and their ABI layouts agree with the compiled component.
 		const args = e.parameters.map(x => shape(x.type)), value = shape(e.result);
@@ -121,14 +130,16 @@ export const generateRustTaskSources = async options => {
 		{
 			const pull = stream && sym(base + "_pull", ["Handle"]);
 			const poll = sym(base + "_poll", ["Handle", "*mut i32"]), close = sym(base + "_close", ["*mut Handle"]);
-			const take = sym(base + "_take", ["*mut Handle", "*mut " + value.raw, ...step ? ["*mut " + step.raw] : []]);
-			funcs.push(`fn take${i}(a:&Api,h:&mut Handle)->Result<Option<${value.host}>,Error<${step?.host ?? "Infallible"}>> {
+			const take = sym(base + "_take", ["*mut Handle", "*mut " + value.raw, ...step ? ["*mut " + step.raw] : [], ...e.taskIO ? ["*mut Buffer"] : []]);
+			funcs.push(`fn take${i}(a:&Api,h:&mut Handle,_:&[CallbackError])->Result<Option<${value.host}>,Error<${step?.host ?? "Infallible"}>> {
     ${guard(value, "out")} ${step ? guard(step, "err") : ""}
-    let s=unsafe{(a.${take})(h,&mut out.v${step ? ",&mut err.v" : ""})};
+    ${e.taskIO ? `let mut msg:Guard<Buffer>=unsafe{Guard::zero(Clear::Void(a.${bufFree}))};` : ""}
+    let s=unsafe{(a.${take})(h,&mut out.v${step ? ",&mut err.v" : ""}${e.taskIO ? ",&mut msg.v" : ""})};
+    ${e.taskIO ? `if s==4{return Err(Fault::TaskIo{declaration:${quote(e.declaration)},message:text(&msg.v)?}.into());}` : ""}
     ${step ? `if s==3{return Err(Error::Step(${step.read}(a,&mut err.v)?));}` : ""}
     ${stream ? "if s==2{return Ok(None);}" : ""} abi::status(s)?; Ok(Some(${value.read}(a,&mut out.v)?))
 }`);
-			success = `Ok(${stream ? "Items" : "Task"}::from_source(Channel{api:a,h,poll:a.${poll},close:a.${close},pull:${pull ? "Some(a." + pull + ")" : "None"},take:take${i}}))`;
+			success = `Ok(${stream ? "Items" : "Task"}::from_source(Channel{api:a,h,poll:a.${poll},close:a.${close},pull:${pull ? "Some(a." + pull + ")" : "None"},take:take${i},callbacks:None}))`;
 		} else success = `Ok(${value.read}(a,&mut out.v)?)`;
 		funcs.push(`pub(super) fn call${i}(${args.map((x, j) => "v" + j + ":" + x.input).join(",")})->${returnType} {
     let a=runtime()?; ${prepared.map(p => p[0]).join("\n")} ${async ? "let mut h=Handle::default();" : guard(value, "out")}
@@ -141,7 +152,7 @@ export const generateRustTaskSources = async options => {
 	const driver = await readFile(new URL("./task-native.rs", import.meta.url), "utf8");
 	const fields = [...ffi.values()].map(x => x.field + ":" + x.sig);
 	const loads = [...ffi].map(([n, x]) => `${x.field}:sym!(${quote(n)},${x.sig})`);
-	return { "src/lib.rs": `//! Generated bindings to compiled Lean. All native calls belong on the process main thread.\npub use lean_bridge_task_runtime::{Task,Items,Error,Fault,Stream};\npub use num_bigint::{BigUint,BigInt};\nmod native;\n${pub.join("\n")}\n`
+	return { "src/lib.rs": `//! Generated bindings to compiled Lean. All native calls belong on the process main thread.\npub use lean_bridge_task_runtime::{Task,Items,Error,Fault,Stream,CallbackTask,CallbackTaskError,CallbackError,RetainedCallback};\npub use num_bigint::{BigUint,BigInt};\nmod native;\n${pub.join("\n")}\n`
 		, "src/native.rs": `#![allow(dead_code,unused_imports,unused_variables)]\n${driver.replace("/* GENERATED_SYMBOLS */", loads.join(",\n"))}\nstruct Api{${fields.join(",\n")}}\n${raw.join("\n")}\n${funcs.join("\n")}\n`
 		, "src/assets.rs": copiedRustAssets(evidence, { task: true }) };
 };

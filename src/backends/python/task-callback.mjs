@@ -4,18 +4,10 @@
  * @file
  */
 
+import { taskCallbackLean } from "../native/task-callback.mjs";
+
 const cb = p => p.type.kind === "io-callback";
-export const callbackLean = `opaque CallbackPort : Type
-@[extern "lb_py_cb_request"] opaque cbRequest {α β : Type} (port : @& CallbackPort) (slot : UInt32) (arg : α) (reply : IO.Promise (Except IO.Error β)) : BaseIO Unit
-@[extern "lb_py_cb_track"] opaque cbTrack {α : Type} (port : @& CallbackPort) (task : @& Task α) : BaseIO Unit
-def cbInvoke {α β : Type} (port : CallbackPort) (slot : UInt32) (v : α) : IO β := do
-  let p ← IO.Promise.new (α := Except IO.Error β)
-  cbRequest port slot v p
-  -- IO.ofExcept would stringify and allocate a different IO.Error.
-  match ← IO.wait p.result! with
-  | .ok value => return value
-  | .error error => throw error
-`;
+export const callbackLean = taskCallbackLean("lb_py_cb");
 export const callbackMethods = `{"_cb_open", lb_cb_open, METH_NOARGS, NULL}, {"_cb_fd", lb_cb_fd, METH_O, NULL},
     {"_cb_drain", lb_cb_drain, METH_VARARGS, NULL}, {"_cb_close", lb_cb_close, METH_O, NULL},`;
 export const callbackPrototypes = `extern lean_object *lb_py_cb_request(lean_object *, uint32_t, lean_object *, lean_object *);

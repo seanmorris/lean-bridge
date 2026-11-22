@@ -80,7 +80,9 @@ export const reconcileHostExports = options => {
 	if(ownedTypes.some(r => !metadata.entries.some(e => [e.result, e.error, e.stepError, ...e.parameters.map(p => p.type)].some(t => t?.id === r.id))))
 		fail("Selected resource does not occur directly at a checked export boundary");
 	const errors = [];
-	const callbacks = new Map(), hostError = "error:PythonHostException", terminal = "error:TaskIO.Error";
+	const callbacks = new Map(), rust = selection.rustTaskCallbacks === true;
+	const hostErrorName = rust ? "RustCallbackError" : "PythonHostException";
+	const hostError = "error:" + hostErrorName, terminal = "error:TaskIO.Error";
 	const callbackRef = t => {
 		const name = `Retained_${t.argument.name}_to_${t.reply.name}`, id = "bridge:" + name;
 		if(!callbacks.has(id)) callbacks.set(id, {
@@ -106,10 +108,10 @@ export const reconcileHostExports = options => {
 		, name: "TaskIOError", category: "domain", payload: null
 		, documentation: doc("A terminal IO failure from the selected Lean task.") });
 	if(metadata.entries.some(e => (e.effect === "IO" && e.hostMembers.length) || hasCallbacks(e))) errors.push({ id: hostError
-		, name: "PythonHostException"
+		, name: hostErrorName
 		, category: "domain"
 		, payload: null
-		, documentation: doc(metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
+		, documentation: doc(rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
 			: "The bound Python object raised an exception that escaped the Lean call.") });
 	const startErrors = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : ["pure", "BaseIO"].includes(e.effect) ? []
 		: ["error:IO.Error", ...(e.hostMembers.length || hasCallbacks(e) ? [hostError] : [])];
@@ -124,7 +126,7 @@ export const reconcileHostExports = options => {
 		const task = e.delivery === "task", stream = e.delivery === "async-iterator", async = task || stream;
 		const selected = selection.asyncIterators?.find(s => s.open === e.declaration);
 		if(Boolean(e.taskIO) !== Boolean(selection.taskIOErrors?.includes(e.declaration))
-			|| ((hasCallbacks(e) || e.taskIO) && (!task || !selection.pythonTaskCallbacks))) fail("Unverified retained-callback or terminal IO selection");
+			|| ((hasCallbacks(e) || e.taskIO) && (!task || !(selection.pythonTaskCallbacks || rust)))) fail("Unverified retained-callback or terminal IO selection");
 		for(const p of e.parameters) if(isCallback(p.type)) callbackRef(p.type);
 		if(!["IO", "EIO", "pure", ...(async ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
 			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (async && e.hostMembers.length)

@@ -3,6 +3,9 @@
 #include <string.h>
 #include <sys/syscall.h>
 #include "task-notification.h"
+#ifdef LB_RETAINED_TASKS
+#include "task-callback-port.h"
+#endif
 
 typedef lean_object *(*lb_cursor_op)(lean_object *);
 typedef struct lb_entry {
@@ -12,6 +15,9 @@ typedef struct lb_entry {
     lean_object *cursor;
     lb_cursor_op pull, close;
     lb_task_watch watch;
+#ifdef LB_RETAINED_TASKS
+    lb_retained retained;
+#endif
 } lb_entry;
 static lb_entry *lb_entries;
 static uint64_t lb_domain;
@@ -53,6 +59,9 @@ static void lb_drop(lb_entry *e) {
     lb_entry **slot = &lb_entries;
     while (*slot != e) slot = &(*slot)->next;
     *slot = e->next;
+#ifdef LB_RETAINED_TASKS
+    lb_retained_clear(&e->retained);
+#endif
     lb_watch_close(&e->watch, 1);
     if (e->cursor) {
         /* Retirement allows release, not a fresh application effect. */

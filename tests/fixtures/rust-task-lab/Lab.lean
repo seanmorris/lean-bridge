@@ -1,6 +1,7 @@
 import Depot
 import Pulse
 import Wide
+import Retained
 
 namespace Lab
 def bytes := Pulse.bytes
@@ -35,4 +36,23 @@ def ticketClose := Depot.close
 def depotReset := Depot.reset
 def depotRelease := Depot.release
 def depotPhase := Depot.state
+def cbRepeatCall := Retained.repeatCall
+def cbDuringStart := Retained.duringStart
+def cbRecover := Retained.recover
+def cbReplaceError := Retained.replaceError
+def cbTypedStart := Retained.typedStart
+def cbPlain := Retained.plain
+def cbTerminal := Retained.terminal
+def cbRemember := Retained.remember
+def cbUseExpired := Retained.useExpired
+def cbForget := Retained.forget
+def cbReset := Retained.reset
+def cbRelease := Retained.release
+def cbState := Retained.state
+def cbCancelLate := Retained.cancelLate
+def cbQueued := Retained.queued
+def cbScalarTour := Retained.scalarTour
+def localStart (reject : Bool) : IO (Task (Except IO.Error UInt32)) := do
+  if reject then throw (IO.userError "early IO")
+  pure (Task.pure (.ok 18))
 end Lab

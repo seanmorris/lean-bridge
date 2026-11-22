@@ -78,6 +78,26 @@ When the API includes a named resource, pass it by reference. A returned resourc
 
 The [installed Rust task evidence](../evidence/rust-tasks-20261122.json) records both source routes, the exact archives, and the checks made by a consumer using both crates.
 
+### Pass a callback to a Lean task
+
+Pass a Rust closure to a callback-taking task. Its argument is owned; it returns `Ok(reply)` or `Err(CallbackError)`. Captures can use `Rc` and need not be `Send`. In the task lab, Lean calls the closure twice:
+
+```rust
+async fn repeat() -> Result<(), task_lab::CallbackTaskError> {
+    let task = task_lab::cb_repeat_call("hello", |s| Ok(s + "!"))?;
+    assert_eq!(task.await?, "hello!!");
+    Ok(())
+}
+```
+
+The closure runs on the executor's owning thread, including when Lean calls it *before its factory returns*. Starting this kind of task doesn't wait for user code. Initialization errors come from the function call; declared factory rejection (`Error::Start`), factory IO failure (`Fault::Io`) and declared terminal IO failure (`Fault::TaskIo`) arrive on await. A returned Lean `Except` is still a normal Rust `Result` inside the successful task result.
+
+Return `CallbackError::new(my_error)` to signal a declared host failure. If Lean propagates that error through the same task, match `Error::Callback { declaration, error }` and use `error.downcast_ref::<MyError>()` to recover the original payload. The payload can contain owner-local values. Errors from callback-free APIs keep their ordinary `Send` and `Sync` bounds. Lean can catch a callback error; a newly created error with identical text doesn't acquire its identity. A Rust panic is different: the bridge catches an unwinding panic, retires the shared native runtime, and reports `Fault::CallbackPanic`. A binary built with `panic = "abort"` terminates as usual.
+
+Settlement, cancellation or dropping the task releases its reference to the Rust closure, even if Lean saved the function for later. For earlier explicit disposal, use `RetainedCallback::new(f)`, pass `handle.function()` and call `handle.close()`. An invocation that closes itself can finish; later calls fail. Callbacks currently exchange the 19 copied scalar types, including strings, bytes and exact integers, not resources or arbitrary aggregates.
+
+The [installed callback evidence](../evidence/rust-retained-tasks-20261122.json) identifies the original crates, the consumer that exercised both, and the scope of the checks.
+
 ### Arrays and records
 
 Lean `Array T` inputs borrow `&[T]`; results and record fields use owned `Vec<T>`

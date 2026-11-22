@@ -1,6 +1,11 @@
 use task_lab as lab;
 use task_lab_peer as peer;
 mod pulse_checks;
+mod callback_checks;
+mod callback_example {
+    include!("callback_example.rs");
+    pub fn run(){super::pulse_checks::block(repeat()).unwrap();}
+}
 use pulse_checks::{block,until};
 use std::{collections::BTreeSet,ffi::{c_char,c_void},fs,path::Path};
 use lab::{BigInt,BigUint,Error,Fault};
@@ -73,6 +78,9 @@ fn child_isolation(){
     lab::release().unwrap();assert_eq!(block(f).unwrap(),9);
 }
 fn main(){
+    if let Some(mode)=std::env::args().nth(1){callback_checks::isolated(&mode);return;}
     pulse_checks::run();integers();leases();child_isolation();runtime_libraries();
+    callback_example::run();
+    callback_checks::run();
     println!("Rust: parked executor, waker replacement, cancellation, fused streams, typed errors, exact integers and cross-crate resource cleanup passed");
 }
