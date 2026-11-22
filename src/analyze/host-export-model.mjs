@@ -15,7 +15,7 @@ const resources = ir => ir.types.filter(t => t.kind === "resource" && t.host?.ta
 const importedMembers = (ir, types) => new Map(types.flatMap(t =>
 	ir.declarations.filter(d => d.owner === t.id).map(d => [`${hostModule}.${t.name}.${hostDeclarationName(d)}`, d])));
 const snake = value => value.replace(/([A-Z]+)([A-Z][a-z])/gu, "$1_$2").replace(/([a-z0-9])([A-Z])/gu, "$1_$2").toLowerCase();
-const signature = type => type.kind === "primitive"
+const signature = type => type.kind !== "named"
 	? { type, ownership: "copy", lifetime: null }
 	: { type, ownership: "lease", lifetime: { scope: "explicit", anchor: null } };
 
@@ -43,22 +43,33 @@ export const reconcileHostExports = options => {
 	if(metadata?.kind !== "lean-bridge-host-export-metadata" || metadata.schemaVersion !== 1
 		|| canonicalJson(metadata.entries.map(e => e.declaration)) !== canonicalJson(selection.exports)) fail("Fresh Lean metadata did not cover the complete export selection");
 	const imports = hashBindingIr(ir), types = resources(ir), members = importedMembers(ir, types);
-	const errors = [{ id: "error:IO.Error"
+	const errors = [];
+	if(metadata.entries.some(e => e.effect === "IO")) errors.push({ id: "error:IO.Error"
 		, name: "IOError"
 		, category: "domain"
 		, payload: null
-		, documentation: doc("A synchronous Lean IO failure.") }];
+		, documentation: doc("A synchronous Lean IO failure.") });
 	const hostError = "error:PythonHostException";
-	if(metadata.entries.some(e => e.hostMembers.length)) errors.push({ id: hostError
+	if(metadata.entries.some(e => e.effect === "IO" && e.hostMembers.length)) errors.push({ id: hostError
 		, name: "PythonHostException"
 		, category: "domain"
 		, payload: null
 		, documentation: doc("The bound Python object raised an exception that escaped the Lean call.") });
+	const errorIds = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : e.effect === "pure" ? []
+		: ["error:IO.Error", ...(e.hostMembers.length ? [hostError] : [])];
 	const entries = metadata.entries.map(e => {
-		if(e.effect !== "IO" || !selection.exportModules.includes(e.module)
+		if(!["IO", "EIO", "pure"].includes(e.effect) || !selection.exportModules.includes(e.module)
+			|| (e.effect === "pure" && (e.result?.constructor !== "result" || e.hostMembers.length))
 			|| e.hostMembers.some(n => !selection.members.includes(n))) fail(`Unauthenticated effect or host member for ${e.declaration}`);
+		if(e.effect === "EIO") errors.push({
+			id: errorIds(e)[0], name: `EIO_${e.declaration.replaceAll(".", "_")}`
+			, category: "domain", payload: e.error
+			, documentation: doc(`Typed synchronous failure of ${e.declaration}.`)
+		});
 		return { name: snake(e.declaration.split(".").at(-1))
 			, declaration: e.declaration
+			, effect: e.effect
+			, ...(e.effect === "EIO" ? { error: e.error } : {})
 			, parameters: e.parameters.map(p => ({ name: snake(p.name), type: p.type }))
 			, result: e.result };
 	});
@@ -75,13 +86,13 @@ export const reconcileHostExports = options => {
 				, mutability: p.type.kind === "named" ? types.find(t => t.id === p.type.id).mutability : "immutable"
 				, optional: false, default: null }))
 			, result: signature(e.result), mutability: "immutable"
-			, effects: [...new Set(["fails", "nondeterministic", ...e.hostMembers.flatMap(n => members.get(n).effects)])].sort()
-			, failure: { mode: "declared", errors: ["error:IO.Error", ...(e.hostMembers.length ? [hostError] : [])], unexpected: "poison-runtime" }
+			, effects: e.effect === "pure" ? [] : [...new Set(["fails", "nondeterministic", ...e.hostMembers.flatMap(n => members.get(n).effects)])].sort()
+			, failure: { mode: e.effect === "pure" ? "none" : "declared", errors: errorIds(e), unexpected: "poison-runtime" }
 			, resultMode: "value", capabilities: [], assurance: []
-			, documentation: doc(`Synchronous IO entry ${e.declaration}.`)
+			, documentation: doc(`${e.effect === "pure" ? "Pure" : `Synchronous ${e.effect}`} entry ${e.declaration}.`)
 			, source: { producer: "lean", declaration: e.declaration
 				, extensions: {
-					"lean-lang.org/effect": "IO"
+					"lean-lang.org/effect": e.effect
 					, "lean-bridge.dev/host-imports-sha256": imports
 					, "lean-bridge.dev/host-members": e.hostMembers
 				}

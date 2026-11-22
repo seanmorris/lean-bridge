@@ -50,12 +50,57 @@ for name in scalars:
 raises(RuntimeError, "bind_hosts", lambda: a.make(1))
 raises(TypeError, "class", lambda: a.bind_hosts(Box=3).__enter__())
 with a.bind_hosts(Box=AppBox), b.bind_hosts(Box=AppBox):
+    assert (a.component_mark(), b.component_mark()) == (17, 41)
     box, other = a.make(7), b.make(7)
     assert type(box) is AppBox and a.alias(box) is b.alias(box) is box
     assert a.same(box, box) and not b.same(box, other)
     assert a.live() == 2 and a.finish(other) == 7
     a.set_level(value=81, box=box)
     assert b.read(box) == 81 and b.scale(box, .25) == 20.25
+    label = "meter\x00λ🦊"
+    number = 2**18000 + 77
+    for api in (a, b):
+        assert api.choose(False, False, -number, label) == api.Ok(api.Ok(42))
+        assert api.choose(False, True, -number, label) == api.Ok(api.Err(label))
+        assert api.choose(True, False, -number, label) == api.Err(-number)
+        assert api.typed_choice(False, True, number, label) == api.Err(label)
+        assert api.typed_choice(False, False, number, label) == api.Ok(42)
+        for name, samples in scalars.items():
+            outcome = getattr(api, "outcome_" + name)
+            for sample in samples:
+                accepted = outcome(0, sample)
+                returned = outcome(1, sample)
+                assert accepted == api.Ok(sample) and type(accepted.value) is type(sample), name
+                assert returned == api.Err(sample) and type(returned.error) is type(sample), name
+                try:
+                    outcome(2, sample)
+                except api.LeanEIOError as err:
+                    assert err.payload == sample and type(err.payload) is type(sample), name
+                else:
+                    raise AssertionError("expected a thrown " + name)
+        try:
+            api.typed_choice(True, False, number, label)
+        except api.LeanEIOError as err:
+            assert err.declaration == "Workshop.typedChoice" and err.payload == number
+            assert "Workshop.typedChoice" in str(err)
+        else:
+            raise AssertionError("expected a typed Nat failure")
+        assert api.report_set(box, 81, label) == api.Ok(81)
+        assert api.report_set(box, 101, label) == api.Err(label)
+        assert api.checked_set(box, 81, label) == 81
+        raises(TypeError, "integer", lambda: api.checked_set(box, True, label))
+        try:
+            api.checked_set(box, 101, label)
+        except api.LeanEIOError as err:
+            assert err.declaration == "Workshop.checkedSet" and err.payload == label
+            assert err is not box.problem and err.__cause__ is None
+        else:
+            raise AssertionError("expected a translated host error")
+        assert api.read(box) == 81
+        failure = raises(api.LeanEIOError, "Workshop.setThenFail", lambda: api.set_then_fail(box, 22, label))
+        assert failure.payload == label and b.read(box) == 22
+        del failure
+        assert api.checked_set(box, 81, label) == 81
     for name, samples in scalars.items():
         for sample in samples:
             result = getattr(a, "echo_" + name)(box, sample)
@@ -123,3 +168,4 @@ del box
 gc.collect()
 assert len(Box.instances) == 0
 print("installed host imports: peers, 19 scalars, original exceptions, reentry, stale, fork, thread and zero live objects")
+print("19 typed error and returned result carriers on both source routes")

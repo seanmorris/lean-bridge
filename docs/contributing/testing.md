@@ -666,8 +666,9 @@ application, links an independently written CPython provider and removes its
 build tree. The relocated executable calls an ordinary Python class: a setter
 changes the value seen through a second reference, a rejected write preserves
 the old value, and all instances leave the class's weak set after the call.
-The installed-package test uses a separate, **generated** provider. It builds
-two component wheels and one shared runtime wheel, verifies each component's
+The installed-package test uses a separate, **generated** provider. The public
+CLI builds two different Lake applications (ordinary exports and a reviewed
+API) without a hand-written application signature list. It verifies each component's
 two-archive package-set receipt, and installs both components using offline
 pip. The consumer uses keyword arguments and ordinary Python classes:
 
@@ -684,8 +685,10 @@ with workshop.bind_hosts(Box=Box):
 
 The test removes the producer and archives, relocates the installation, and
 takes Lean, C, and pip off the consumer's executable search path. It exercises
-all nineteen scalar conversions, mutation, identity across two components,
-reentry, the original Python exception and a replacement Lean error, stale
+all nineteen scalar conversions in host methods and in each success, returned
+error and thrown `EIO` payload, mutation, identity across two components,
+reentry, the original Python exception, a translated typed `EIO` failure,
+a returned nested `Except`, a replacement Lean IO error, stale
 objects, fork/thread rejection, cleanup, and an altered binary. The runtime is
 a pinned wheel dependency that pip resolves; the application never loads it by
 hand. The generated functions accept keywords and ship typing declarations.
@@ -695,20 +698,21 @@ The native Python CI shard runs both interpreters sequentially. Its
 builds both ways through an offline-installed CLI: directly from source,
 then from a reviewed public API and a Lake lock. The tests verify both
 receipts, remove the tools, source and archives, and call each relocated
-installation. Negative cases cover non-IO results, a mismatched public type,
+installation. Negative cases cover unsupported exports, a mismatched public type,
 an unimplemented axiom and an undeclared foreign call. See the
 [authoring steps](../publish/pypi.md#call-python-objects-from-lean).
 Async, dynamic members, and compound or callable member values are not part
 of this installed profile.
 
 The shard's `python-host-imports-<attempt>` artifact contains the original wheels in
-`wheels/` (one copy of the shared runtime), the compiler inputs, the consumer
-program, and both package-set receipts under each CPython tag. To retain the
+`wheels/` (one copy of the shared runtime); each CPython tag contains the consumer
+and a directory per Workshop component with its exact source, API, compiler
+metadata and two-archive receipt. To retain the
 same files locally, set `LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR` to a fresh
 directory outside the source tree before running the checks for both versions.
 The CLI cases retain their source, review, compiler metadata, component wheel,
 receipt and consumer check in `projects/<tag>/<route>/`. To verify a retained
-receipt, place that component wheel and its matching runtime wheel from
+receipt, place its component wheel and its matching runtime wheel from
 `wheels/` in an adjacent `archives/` directory, then run `lean-bridge verify`.
 
 ### Ordinary-source Python packages

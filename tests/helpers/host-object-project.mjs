@@ -84,17 +84,28 @@ test("fresh Lean host signatures and transitive calls reject dishonest reviews a
 	assert.deepEqual(built.evidence.interfaces.map(i => i.module), ["LeanBridge.Host.Python", "Workshop.Internal", "Workshop"]);
 	row.result.type.name = "string";
 	await assert.rejects(compile(root, source, { source: canonicalJson(built.api) }), /Reviewed API differs/u);
+	const original = "def readLevel (box : Box) : IO UInt32 := Internal.level box";
+	const typed = source.replace(original, "def readLevel (box : Box) : EIO String UInt32 := IO.toEIO (fun _ => \"reading failed\") (Internal.level box)");
+	const domain = (await compile(root, typed)).api;
+	assert.deepEqual(domain.declarations[0].failure.errors, ["error:EIO.Workshop.readLevel"]);
+	assert.deepEqual(domain.errors[0].payload, { kind: "primitive", name: "string" });
+	domain.errors[0].payload.name = "bytes";
+	await assert.rejects(compile(root, typed, { source: canonicalJson(domain) }), /Reviewed API differs/u);
 	for(const [body, diagnostic] of [
 		["def readLevel (_box : Box) : UInt32 := 7", "expected synchronous IO result"]
 		, ["axiom unproved : UInt32\ndef readLevel (_box : Box) : IO UInt32 := pure unproved", "Workshop.unproved.*not supported by code generator"]
 		, ["axiom unproved : UInt32\nnoncomputable def readLevel (_box : Box) : IO UInt32 := pure unproved", "unimplemented application axiom"]
 		, ["@[extern \"unknown_host_member\"] opaque foreignRead : @& Box → IO UInt32\ndef readLevel (box : Box) := foreignRead box", "unreviewed unsafe, partial or foreign"]
+		, ["def readLevel (box : Box) : IO (Except String Box) := pure (.ok box)", "owned host object cannot be a copied"]
+		, ["def readLevel (box : Box) : EIO Box UInt32 := throw box", "owned host object cannot be a copied"]
+		, ["initialize invalid : IO.Ref UInt32 ← IO.mkRef (sorry : UInt32)\ndef readLevel (_box : Box) : IO UInt32 := invalid.get", "depends on sorry"]
+		, ["@[extern \"unknown_host_member\"] opaque badInit : IO Unit\ninitialize badInit\ndef readLevel (box : Box) : IO UInt32 := Internal.level box", "unreviewed unsafe, partial or foreign"]
 	]) {
 		const reason = error => {
 			assert.match(`${error.message} ${error.details?.stderr} ${error.details?.stdout}`, new RegExp(diagnostic, "u"));
 			return true;
 		};
-		await assert.rejects(compile(root, source.replace("def readLevel (box : Box) : IO UInt32 := Internal.level box", body)), reason);
+		await assert.rejects(compile(root, source.replace(original, body)), reason);
 	}
 });
 

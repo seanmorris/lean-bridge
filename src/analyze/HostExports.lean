@@ -35,12 +35,24 @@ def carrier (request : Request) (e : Expr) : MetaM Json := do
       return Json.mkObj [("kind", toJson "named"), ("id", toJson r.id)]
   throwError "unsupported Python host-component carrier: {e}"
 
+/-- A returned Except is a value. Its success arm is first in Binding IR. -/
+partial def returned (r : Request) (e : Expr) (copyOnly := false) : MetaM Json := do
+  let e := (← instantiateMVars e).consumeMData
+  let args := e.getAppArgs
+  if e.getAppFn.constName? == some ``Except && args.size == 2 then
+    return Json.mkObj [("kind", toJson "apply"), ("constructor", toJson "result"),
+      ("arguments", Json.arr #[← returned r args[1]! true, ← returned r args[0]! true])]
+  let t ← carrier r e
+  if copyOnly && !primitives.any (fun p => e.constName? == some p.1) then
+    throwError "an owned host object cannot be a copied exception payload: {e}"
+  return t
+
 partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM NameSet := do
   if seen.contains n then return seen
   let mut seen := seen.insert n
   let env ← getEnv
   let some index := env.getModuleIdxFor? n | return seen
-  let module := env.header.moduleNames[index.toNat]!.toString
+  let module := env.header.modules[index.toNat]!.module.toString
   if module == "LeanBridge.Host.Python" then
     if isExtern env n && !r.members.contains n.toString then throwError "undeclared host member {n}"
     return seen
@@ -49,19 +61,34 @@ partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM 
   if info.isUnsafe || info.isPartial || (env.find? (Compiler.mkUnsafeRecName n)).any (·.isPartial)
     || isExtern env n || (Compiler.getImplementedBy? env n).isSome then
     throwError "unreviewed unsafe, partial or foreign application declaration: {n}"
-  if let .axiomInfo _ := info then throwError "unimplemented application axiom: {n}"
+  if let some initFn := getInitFnNameFor? env n then
+    unless env.getModuleIdxFor? initFn == some index && initFn != n do
+      throwError "unreviewed application initializer: {n}"
+    if (← collectAxioms initFn).contains ``sorryAx then throwError "initializer {initFn} depends on sorry"
+    seen ← checkDependencies r initFn seen
+  else if let .axiomInfo _ := info then throwError "unimplemented application axiom: {n}"
   if let some v := info.value? (allowOpaque := true) then
     for dep in v.getUsedConstants do seen ← checkDependencies r dep seen
   return seen
 
 def extract (r : Request) : MetaM Json := do
   let env ← getEnv
+  -- Module startup runs even declarations that no public function references.
+  for module in r.modules do
+    if module == "LeanBridge.Host.Python" then continue
+    let some idx := env.getModuleIdx? module.toName | throwError "missing source module {module}"
+    for n in env.header.moduleData[idx.toNat]!.constNames do
+      if (getInitFnNameFor? env n).isSome || isIOUnitInitFn env n then
+        let deps ← checkDependencies r n {}
+        if (← collectAxioms n).contains ``sorryAx then throwError "initializer {n} depends on sorry"
+        if r.members.any (fun m => deps.contains m.toName) then
+          throwError "application initializer {n} calls a host before it is bound"
   let mut rows := #[]
   for publicName in r.exports do
     let n := publicName.toName
     let info ← getConstInfo n
     let some idx := env.getModuleIdxFor? n | throwError "no source module for {n}"
-    let owner := env.header.moduleNames[idx.toNat]!.toString
+    let owner := env.header.modules[idx.toNat]!.module.toString
     unless r.exportModules.contains owner && !isPrivateName n && !isProtected env n && info.levelParams.isEmpty do
       throwError "expected a public monomorphic declaration in a selected module: {n}"
     match info with
@@ -78,10 +105,16 @@ def extract (r : Request) : MetaM Json := do
       let result := result.consumeMData
       let some head := result.getAppFn.constName? | throwError "expected synchronous IO result: {n}"
       let resultArgs := result.getAppArgs
-      unless head == ``IO && resultArgs.size == 1 do throwError "expected synchronous IO result: {n}"
-      return Json.mkObj [("declaration", toJson publicName), ("module", toJson owner),
-        ("parameters", toJson params), ("result", ← carrier r resultArgs[0]!),
-        ("effect", toJson "IO"), ("hostMembers", toJson (r.members.filter (fun m => deps.contains m.toName)))]
+      let fields ← if head == ``IO && resultArgs.size == 1 then
+        pure [("effect", toJson "IO"), ("result", ← returned r resultArgs[0]!)]
+      else if head == ``EIO && resultArgs.size == 2 then
+        pure [("effect", toJson "EIO"), ("error", ← returned r resultArgs[0]! true),
+          ("result", ← returned r resultArgs[1]!)]
+      else if head == ``Except && resultArgs.size == 2 then
+        pure [("effect", toJson "pure"), ("result", ← returned r result)]
+      else throwError "expected synchronous IO result, typed EIO or returned Except: {n}"
+      return Json.mkObj <| fields ++ [("declaration", toJson publicName), ("module", toJson owner),
+        ("parameters", toJson params), ("hostMembers", toJson (r.members.filter (fun m => deps.contains m.toName)))]
     rows := rows.push row
   return Json.mkObj [("schemaVersion", toJson (1 : Nat)), ("kind", toJson "lean-bridge-host-export-metadata"),
     ("leanVersion", toJson Lean.versionString), ("entries", toJson rows)]

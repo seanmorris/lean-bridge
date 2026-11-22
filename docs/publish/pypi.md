@@ -93,9 +93,21 @@ fresh signatures, effects, ownership and the host-import identity. A mismatch
 stops the build before it exposes a release. Editing documentation alone does
 not change the API contract.
 
-This profile builds one target at a time. It supports synchronous `IO`
-entries over copied scalars and declared host objects, not async delivery,
-compound member arguments, custom native objects or generated Lake targets.
+The Lean signature controls what the Python caller receives:
+
+| Exported Lean result | Installed Python call |
+| --- | --- |
+| `IO α` | Returns the value. An unhandled exception from a Python method reaches its caller as the original exception. |
+| `EIO ε α` | Returns the value on success; raises the package's `LeanEIOError` with the original typed payload on failure. |
+| `Except ε α` or `IO (Except ε α)` | Returns `Ok(value)` or `Err(error)`. Returning `.error` does not raise. |
+
+These calls are synchronous. Export arguments may be copied scalars or
+declared host objects. Returned `Except` values may nest; their payloads
+and typed failures must contain only supported copied values. For example,
+`EIO Nat (Except String UInt32)` has two distinct error channels: a thrown
+`Nat` and a returned `String`. See the [compiled example](../../tests/fixtures/host-object/Workshop.lean).
+This profile builds one target at a time. It does not support async delivery,
+compound host-member arguments, custom native objects or generated Lake targets.
 
 ## Export arrays and records
 

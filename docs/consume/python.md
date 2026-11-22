@@ -92,6 +92,15 @@ with lean_meter.bind_hosts(Box=Meter):
 inherit from a generated base class. The call into Lean returns the value
 from your Python method. pip installs the matching runtime automatically.
 
+For components that export a Lean `Except`, inspect the result as a value:
+`Ok.value` holds a success and `Err.error` holds a rejection. A function
+declared with Lean's `EIO` instead raises the component's `LeanEIOError`:
+`exc.payload` holds the typed error, and `exc.declaration` names the Lean
+function. If Lean simply propagates an exception from your Python method in
+`IO`, you can catch that original Python exception. None of these calls
+requires `await`. The [Workshop consumer](../../tests/fixtures/host-object/installed.py)
+exercises all three cases.
+
 ### Arrays and records
 
 For an installed [Parcels package](../publish/pypi.md#export-arrays-and-records),

@@ -23,8 +23,8 @@ const simpleName = /^[A-Za-z][A-Za-z0-9_]*$/u;
 const qualified = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/u;
 const keywords = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield".split(" "));
 const checkNames = (entries, classes) => {
-	const seen = new Set(["bind_hosts", ...classes]);
-	const builtins = ["type", "int", "str", "bytes", "float", "bool", "property", "staticmethod", "bind_hosts"];
+	const builtins = ["type", "int", "str", "bytes", "float", "bool", "property", "staticmethod", "isinstance", "super", "Exception", "bind_hosts", "Ok", "Err", "LeanEIOError"];
+	const seen = new Set([...builtins, ...classes]);
 	for(const name of classes) if(keywords.has(name) || builtins.includes(name)) throw new TypeError("reserved Python host class name");
 	for(const entry of entries)
 	{
@@ -58,11 +58,63 @@ const carrier = (resources, type) => {
 		, toPython: arg => `lb_host_arg(${i}, ${arg})`
 	};
 };
-const emit = (resources, entry, i) => {
-	const args = entry.parameters.map(p => carrier(resources, p.type)), out = carrier(resources, entry.result);
+const returned = (resources, type, codecs) => {
+	if(type?.kind !== "apply" || type.constructor !== "result") return carrier(resources, type);
+	if(type.arguments?.length !== 2) throw new TypeError("Except requires success and error payloads");
+	const key = JSON.stringify(type);
+	if(codecs.has(key)) return codecs.get(key);
+	const [ok, err] = type.arguments.map(t => returned(resources, t, codecs));
+	const n = codecs.size, decode = (t, v) => t.decode ? t.decode(v) : v;
+	const codec = {
+		lean: `(_root_.Except ${err.lean} ${ok.lean})`
+		, toPython: v => `lb_result_${n}(${v})`, decode: v => `_lb_result_${n}(${v})`
+		, python: `def _lb_result_${n}(raw):\n    return Ok(${decode(ok, "raw[1]")}) if raw[0] else Err(${decode(err, "raw[1]")})\n`
+		, c: `static PyObject *lb_result_${n}(lean_object *v) {
+    /* Lean Except.error is constructor 0; Except.ok is constructor 1. Both own a boxed payload. */
+    int ok = lean_obj_tag(v) == 1;
+    lean_object *p = lean_ctor_get(v, 0);
+    PyObject *payload = ok ? ${ok.toPython("p")} : ${err.toPython("p")};
+    if (!payload) return NULL;
+    PyObject *pair = PyTuple_Pack(2, ok ? Py_True : Py_False, payload);
+    Py_DECREF(payload); return pair;
+}`
+	};
+	codecs.set(key, codec);
+	return codec;
+};
+const resultTypes = `from dataclasses import dataclass as _dataclass
+from typing import Generic as _Generic, TypeVar as _TypeVar
+_T = _TypeVar("_T")
+
+@_dataclass(frozen=True)
+class Ok(_Generic[_T]):
+    value: _T
+
+@_dataclass(frozen=True)
+class Err(_Generic[_T]):
+    error: _T
+`;
+const errorClass = `class LeanEIOError(Exception):
+    def __init__(self, declaration: str, payload: object) -> None:
+        self.declaration = declaration
+        self.payload = payload
+        super().__init__(f"{declaration} raised a Lean EIO error")
+`;
+const copied = t => t?.kind === "primitive" ? Object.hasOwn(scalars, t.name)
+	: t?.kind === "apply" && t.constructor === "result" && t.arguments?.length === 2 && t.arguments.every(copied);
+const emit = (resources, entry, i, codecs) => {
+	const args = entry.parameters.map(p => carrier(resources, p.type));
+	const effect = entry.effect ?? "IO";
+	if(!["pure", "IO", "EIO"].includes(effect)) throw new TypeError("unsupported synchronous entry effect");
+	if((entry.result?.kind === "apply" && !copied(entry.result)) || (effect === "EIO" && !copied(entry.error)))
+		throw new TypeError("returned sums and EIO errors require copied payloads");
+	if(effect === "pure" && entry.result?.constructor !== "result") throw new TypeError("expected a returned Except");
+	const out = returned(resources, effect === "EIO" ? { kind: "apply", constructor: "result", arguments: [entry.result, entry.error] } : entry.result, codecs);
 	const symbol = `lb_python_host_invoke_${i}`;
 	const values = args.map((a, j) => a.unbox ? `${a.unbox}(v[${j}])` : `v[${j}]`).join(", ");
-	const lean = `@[export ${symbol}] def invoke${i} ${args.map((a, j) => `(v${j} : ${a.lean})`).join(" ")} : IO ${out.lean} := _root_.${entry.declaration} ${args.map((_, j) => `v${j}`).join(" ")}`;
+	const application = `(_root_.${entry.declaration} ${args.map((_, j) => `v${j}`).join(" ")})`;
+	const invoke = effect === "EIO" ? `_root_.EIO.toIO' ${application}` : effect === "pure" ? `pure ${application}` : application;
+	const lean = `@[export ${symbol}] def invoke${i} ${args.map((a, j) => `(v${j} : ${a.lean})`).join(" ")} : IO ${out.lean} := ${invoke}`;
 	const c = `extern lean_object *${symbol}(${args.map(a => a.c).join(", ") || "void"});
 static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     (void)module;
@@ -96,7 +148,8 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     return result;
 }`;
 	const params = entry.parameters.map(p => p.name).join(", ");
-	const python = `def ${entry.name}(${params}):\n    return _native.${entry.name}(${params})\n`;
+	const raw = `_native.${entry.name}(${params})`, decoded = out.decode ? out.decode(raw) : raw;
+	const python = `def ${entry.name}(${params}):\n    return ${effect === "EIO" ? `_lb_unwrap("${entry.declaration}", ${decoded})` : decoded}\n`;
 	return { lean, c, python, method: `{"${entry.name}", lb_invoke_${i}, METH_VARARGS, NULL}` };
 };
 
@@ -113,7 +166,7 @@ export const generatePythonHostExtension = options => {
 	const provider = generatePythonHostProvider(ir);
 	checkNames(entries, provider.resources);
 	const resources = ir.types.filter(r => r.kind === "resource" && r.host?.targets.includes("python"));
-	const functions = entries.map((e, i) => emit(resources, e, i));
+	const codecs = new Map(), functions = entries.map((e, i) => emit(resources, e, i, codecs));
 	const entryLean = [
 		...modules.map(m => `import ${m}`), "import LeanBridge.Host.Python"
 		, "set_option autoImplicit false", "namespace LeanBridgeHostEntry"
@@ -146,6 +199,7 @@ static PyObject *lb_matches_runtime(PyObject *mod, PyObject *args) {
     return PyBool_FromLong(lean == (uintptr_t)&lean_register_external_class
         && broker == (uintptr_t)&lean_bridge_native_component_initialize);
 }
+${[...codecs.values()].map(f => f.c).join("\n")}
 ${functions.map(f => f.c).join("\n")}
 static PyMethodDef lb_methods[] = {
     {"_bind", lb_pybind, METH_VARARGS, NULL}, {"_unbind", lb_pyunbind, METH_NOARGS, NULL},
@@ -157,11 +211,13 @@ PyMODINIT_FUNC PyInit__native(void) { return PyModule_Create(&lb_module); }
 `;
 	const render = t => {
 		if(t.kind === "named") return resources.find(r => r.id === t.id).name;
+		if(t.kind === "apply" && t.constructor === "result") return `Ok[${render(t.arguments[0])}] | Err[${render(t.arguments[1])}]`;
 		return { bool: "bool", char: "str", string: "str", bytes: "bytes", unit: "None", float32: "float", float64: "float" }[t.name] ?? "int";
 	};
 	const hostNames = provider.resources.join(", ");
 	const stub = [
 		"from typing import ContextManager as _ContextManager"
+		, ...(codecs.size ? [resultTypes, "class LeanEIOError(Exception):\n    declaration: str\n    payload: object\n    def __init__(self, declaration: str, payload: object) -> None: ...\n"] : [])
 		, `from .host_types import ${provider.resources.map(n => `${n} as ${n}`).join(", ")}`
 		, `def bind_hosts(*, ${provider.resources.map(n => `${n}: type[${n}]`).join(", ")}) -> _ContextManager[None]: ...`
 		, ...entries.map(e => `def ${e.name}(${e.parameters.map(p => `${p.name}: ${render(p.type)}`).join(", ")}) -> ${render(e.result)}: ...`)
@@ -188,9 +244,12 @@ PyMODINIT_FUNC PyInit__native(void) { return PyModule_Create(&lb_module); }
 		}
 		types.push("");
 	}
+	const support = codecs.size ? [resultTypes, errorClass
+		, "def _lb_unwrap(declaration, value):\n    if isinstance(value, Err):\n        raise LeanEIOError(declaration, value.error)\n    return value.value\n"
+		, ...[...codecs.values()].map(f => f.python)].join("\n") : "";
 	return {
 		hostLean: provider.lean, entryLean, source, stub, types: types.join("\n")
 		, bindingIrSha256: hashBindingIr(ir)
-		, python: `${provider.binder}\nfrom .host_types import ${hostNames}\n\n${functions.map(f => f.python).join("\n")}`
+		, python: `${provider.binder}\nfrom .host_types import ${hostNames}\n\n${support}\n${functions.map(f => f.python).join("\n")}`
 	};
 };

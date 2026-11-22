@@ -71,6 +71,8 @@ test("generated CPython providers refuse dynamic, asynchronous and unimplemented
 	assert.throws(() => generate([entry, entry]), /duplicate/u);
 	assert.throws(() => generate([{ ...entry, name: "bind_hosts" }]), /duplicate/u);
 	assert.throws(() => generate([{ ...entry, parameters: [...entry.parameters, ...entry.parameters] }]), /argument name/u);
+	assert.throws(() => generate([{ ...entry, effect: "EIO", error: entry.parameters[0].type }]), /copied payloads/u);
+	assert.throws(() => generate([{ ...entry, result: { kind: "apply", constructor: "result", arguments: [entry.result, entry.parameters[0].type] } }]), /copied payloads/u);
 	const result = generate([entry]);
 	assert.match(result.stub, /def read\(box: Box\) -> int:/u);
 	assert.match(result.types, /@level.setter\n +def level\(self, value: int\) -> None:/u);
