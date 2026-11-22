@@ -12,6 +12,7 @@ import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { elaboratedComponent } from "../analyze/semantic-model.mjs";
 import { validateOrdinaryPythonSettings } from "../backends/python/copied-model.mjs";
 import { validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
+import { validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
 import { captureSourceNotices } from "../release/source-notices.mjs";
 import { buildPythonHostWheel, packagePythonHostRuntime, writePythonHostPackageSet } from "../release/host-pypi.mjs";
 import { buildCTaskPackage } from "../release/c-task-package.mjs";
@@ -83,7 +84,9 @@ export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
 	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
-	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi"].includes(target)) fail("Native IO, task and async iterator builds require one c, cpp, cargo or pypi target");
+	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, or (for synchronous copied calls) rubygems");
+	if(target === "rubygems" && (config.taskExports || config.asyncIterators || config.taskIOErrors || config.resources?.length))
+		fail("Ruby native IO requires synchronous copied exports; tasks, iterators and resource leases require other projections");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
@@ -94,7 +97,7 @@ export const buildHostProject = async options => {
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.[target] ?? {}, name = settings.name ?? `lean-${component.name.toLowerCase().replaceAll("_", "-")}`;
 	const version = settings.version ?? (target === "pypi" && component.version === "0.0.0-local" ? "0.0.0+local" : component.version);
-	(target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : validateNativeCSettings)({ name, version });
+	(target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : target === "rubygems" ? validateOrdinaryRubySettings : validateNativeCSettings)({ name, version });
 	const contract = await captureContracts(project, inventory);
 	if(inventory.project.toolchain !== "leanprover/lean4:v4.32.2") fail("Host source and runtime require the same pinned Lean toolchain");
 	if(!inventory.project.lakefile) fail("Host imports require a Lake package so each module has a checked owner");

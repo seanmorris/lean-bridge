@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-native-ruby-sync-io-acceptance",
+  "node": 1222,
+  "profile": "native-ruby-io-v1",
+  "platform": "Linux x86-64, glibc 2.36",
+  "toolchains": {
+    "lean": "4.32.2",
+    "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+    "c": "GCC 12.2.0"
+  },
+  "acceptanceSha256": "87125b157cb367a02b449ebbf1e223c7f91a9331ba0ce161844d910c31268316",
+  "fixture": "tests/fixtures/ruby-sync-io",
+  "sharedSource": "tests/fixtures/native-sync-io/Journal.lean",
+  "checks": [
+    "Compiler-selected ordinary Lean source and a reviewed interface without an explicit export list produce the same 26 immediate-value declarations. Each original gem has its own receipt, source tree and archive hash.",
+    "Each MRI client installs its exact platform gem locally, moves GEM_HOME, removes the producer installation directory, and runs with no build tools on PATH. The package embeds the verified Lean runtime.",
+    "Nineteen primitive representations round-trip, including signed extrema, full UInt64/USize, 4097-bit magnitudes, embedded NUL, binary data, a supplementary Unicode scalar, NaN, infinity and signed zero. Oversized and invalid inputs and a non-main-thread call do not initialize the component.",
+    "Ordered BaseIO state and real file IO run directly. A returned nested Except, the identical typed EIO error payload and an actual IO.Error remain distinct. Thrown errors report their Lean declaration.",
+    "A Ruby exception injected while decoding actual owned success and error payloads invokes the native disposer once on each owned buffer and zeros its slot. A later call still succeeds. Forked reuse is refused without affecting the parent.",
+    "After explicit retirement of the real native runtime, both a read of component state and a filesystem write raise the package's Unavailable error. The file, runtime initialization count and live identity count remain unchanged.",
+    "An independently built pure gem repacks byte-for-byte and calls Lean without build tools. Installed beside the IO gem in both require orders, the broker reports one runtime initialization, two initialized and attached components and zero live identities."
+  ],
+  "controls": [
+    "An explicit empty resource list reaches the Lean effect check: selecting Journal.store without its filesystem grant fails before an output directory exists. A nonempty resource list is refused by the Ruby synchronous profile before packaging.",
+    "On pinned replay, appending one byte to each disposable installed component makes a fresh Ruby process refuse the library's digest before invoking it. The original archives are unchanged.",
+    "Task, iterator and nominal-resource delivery cannot pass this copied synchronous wire generator.",
+    "Both clients select their own private converter even with a conflicting converter earlier on the Ruby load path. Only the authenticated shared native loader is process-wide."
+  ],
+  "limits": [
+    "Standalone copied primitive inputs and nested result outputs; no Ruby host-import, nominal resource, retained callback, task or stream support is claimed here.",
+    "A compiler-checked capability grant is not a runtime sandbox. Local installed evidence is not a registry publication or hosted CI result."
+  ],
+  "reproduce": {
+    "build": "CC=cc LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_RUBY_SYNC_TEST=1 LEAN_BRIDGE_RUBY_SYNC_EVIDENCE=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/ruby-sync-installed.mjs",
+    "replay": "LEAN_BRIDGE_RUBY_SYNC_REPLAY=/absolute/path/to/original-handoffs LEAN_BRIDGE_RUBY_SYNC_EXPECTED=docs/evidence/ruby-sync-io-20261122.json node --test --test-concurrency=1 tests/helpers/ruby-sync-installed.mjs",
+    "tools": "Set LEAN_BRIDGE_RUBY to MRI 3.3. A build also needs the pinned LEAN_BRIDGE_LEAN_PREFIX and a C11 compiler. Replay needs the retained handoffs and MRI with RubyGems and Fiddle, but no Lean compiler."
+  },
+  "routes": [
+    {
+      "archive": {
+        "bytes": 50083328,
+        "path": "archives/journal-ruby-1.0.0-x86_64-linux.gem",
+        "sha256": "5d035cfbc1f10d2031840b4738edcb104655d65155a92d267c20521ab6023e00"
+      },
+      "bindingIrSha256": "378da2e36a4df6e24af0f06ff48c09c65074a59cc98495d00ae549b2271400ea",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "d6ad8bfc1e51c23ba0a9372c21509c0252329a401831be2e503a583160a6fd6c",
+      "profile": "native-ruby-io-v1",
+      "receiptSha256": "a2babae548dc85480a3a5534d6ad9a2ea20c93c704f5c74d03af364e60310892",
+      "reviewedSourceSha256": null,
+      "route": "ordinary",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "b40a01c4820e5906432a423abcaec5b7829375159819f353db40897594360f88"
+    },
+    {
+      "archive": {
+        "bytes": 50083328,
+        "path": "archives/journal-ruby-1.0.0-x86_64-linux.gem",
+        "sha256": "ce888aaaba3a33d730640d57c53d87dd4a198b746f87b46cf2435fa7054252e7"
+      },
+      "bindingIrSha256": "378da2e36a4df6e24af0f06ff48c09c65074a59cc98495d00ae549b2271400ea",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "consumerSha256": "d6ad8bfc1e51c23ba0a9372c21509c0252329a401831be2e503a583160a6fd6c",
+      "profile": "native-ruby-io-v1",
+      "receiptSha256": "9e369046ed9047c4669f21abd30ad252222f62910692a8d655bf736e1e8dd0b1",
+      "reviewedSourceSha256": "114db571c0a44c7264d33867319561ff21c5dedf04da6b9a7b0755890433e75d",
+      "route": "reviewed",
+      "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "sourceTreeSha256": "9332fe33da558d4aa0dbebce2f3081dbc6ccd89cff190e8345a979c237b62cce"
+    }
+  ],
+  "coInstallationSha256": "5c084da53ddfaaa4c36db44780ba6884f341d3ad3ecf2a65f4c501ff532584fc",
+  "coInstallation": {
+    "consumerSha256": "a956a488173ddbbfbd4d1fa94d76cc26599e89980067ca47b9d597f8154cfdc7",
+    "ioGemSha256": "5d035cfbc1f10d2031840b4738edcb104655d65155a92d267c20521ab6023e00",
+    "orders": [
+      {
+        "attached": 2,
+        "componentInitializations": 2,
+        "liveIdentities": 0,
+        "order": [
+          "orchard",
+          "journal_ruby"
+        ],
+        "runtimeInitializations": 1
+      },
+      {
+        "attached": 2,
+        "componentInitializations": 2,
+        "liveIdentities": 0,
+        "order": [
+          "journal_ruby",
+          "orchard"
+        ],
+        "runtimeInitializations": 1
+      }
+    ],
+    "pureGem": {
+      "bytes": 50076160,
+      "path": "orchard-ruby-1.0.0-x86_64-linux.gem",
+      "sha256": "7741fab0747db5017781874cf50e79ac7a87877167c3cd05a377e114fc9c8aa3"
+    },
+    "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+  }
+}

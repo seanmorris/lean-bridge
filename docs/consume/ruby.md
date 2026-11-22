@@ -40,6 +40,33 @@ Fixed-width integers use range-checked Ruby `Integer`. Nat and Int remain exact 
 
 Calls copy nested values. Invalid types, numeric ranges and encodings raise exceptions. `nil` is valid only at an `Option` position. Native input/output conversions share a 16 MiB budget; input scratch has its own bound. Generated cleanup releases temporary and owned output buffers even when a conversion raises. Native libraries load from the installed gem, verify their embedded hashes and share a compatible Lean runtime. No runtime-path setting is needed.
 
+### Call synchronous IO
+
+Install the prepared platform gem as above. For a package marked
+`native-ruby-io-v1`, call the method on the process main thread. It finishes
+before returning; there is no event loop, compiler, or second gem to install.
+A compatible pure Lean gem shares that runtime automatically, whichever gem
+you require first. For the Journal example:
+
+```ruby
+require "lean_bridge/journal_ruby"
+
+journal = LeanBridge::JournalRuby
+begin
+  puts journal.read("notes.txt")
+rescue journal::IOError => error
+  warn "#{error.declaration}: #{error.message}"
+end
+```
+
+A thrown `EIO` raises the package's `DeclaredError` with its Lean
+`declaration` and Ruby `payload`. A returned `Except` is a normal
+`Ok.new(value)` or `Err.new(value)`, even when that value is another
+`Except`. Neither is a rejected Ruby argument. For example, a negative
+`Nat` raises `RangeError` before Lean runs. A retired shared runtime raises
+the package's `Unavailable`; another call cannot restart it. See the
+[installed Ruby caller](../../tests/fixtures/ruby-sync-io/consumer.rb).
+
 ### Arrays and records
 
 For an installed [Parcels package](../publish/rubygems.md#export-arrays-and-records),

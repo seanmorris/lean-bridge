@@ -31,7 +31,7 @@ test("a stream-only package installs pure and IO factories with shared private o
 		return JSON.parse(stdout);
 	};
 	const wrongTarget = join(root, "unsupported");
-	await assert.rejects(run("build", "--project", project, "--target", "cargo", "--output", wrongTarget), /one c, cpp or pypi target/u);
+	await assert.rejects(run("build", "--project", project, "--target", "rubygems", "--output", wrongTarget), /Ruby native IO requires synchronous copied exports/u);
 	await assert.rejects(access(wrongTarget), { code: "ENOENT" });
 	await run("build", "--project", project, "--target", "pypi", "--output", output);
 	const receipt = join(output, "package-set-receipt.json");

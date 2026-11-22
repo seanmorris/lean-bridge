@@ -36,6 +36,30 @@ The acyclic copied profile supports up to 32 type levels. Packages with recursiv
 
 Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
+## Export synchronous IO
+
+Select `IO`, `EIO`, or `BaseIO` functions by name. Declare the [native OS
+access](../lean/export-decisions.md#declare-native-os-access) they need, or
+use `nativeEffects: []` for an in-memory API. Build with `--target rubygems`.
+For example:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.read", "Journal.store"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"rubygems": {"name": "journal-ruby", "version": "1.0.0"}}
+}
+```
+
+The `native-ruby-io-v1` receipt identifies one MRI 3.3 Linux x86-64 gem
+with its matching runtime. It supports copied primitive inputs and outputs,
+including exact integers, and nested `Except` values in results and typed
+errors. It does not select task, iterator, or resource exports. Distribute
+the original archive using the same RubyGems workflow as the pure package.
+See [calling synchronous IO](../consume/ruby.md#call-synchronous-io).
+
 ## Export arrays and records
 
 Add these definitions to `Parcels.lean`:

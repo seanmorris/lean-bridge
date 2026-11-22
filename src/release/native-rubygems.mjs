@@ -69,12 +69,26 @@ export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, ad
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
 	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: 1, kind: "lean-bridge-ordinary-rubygems-package", ecosystem: "rubygems", name, version, component: model.component, namespace: projection.namespace, requirePath: projection.requirePath, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: evidence.runtimeIdentity, sourceIdentity: model.sourceIdentity, glibcMinimumVersion, files: inventory }));
+	const pkg = await buildRubyPlatformGem({ working, root, name, version
+		, environment, signal
+		, componentId: model.component.id, bindingIrSha256: model.bindingIrSha256
+		, metadata: compiledPackageMetadata(model.sourceIdentity)
+		, summary: "Compiled Lean API with generated Ruby copied-value conversions" });
+	return { ecosystem: "rubygems", backend: "ordinary-ruby-v1", runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion, namespace: projection.namespace, packages: [pkg] };
+};
+
+/**
+ * Syntax-check packaged Ruby sources and build the original Linux platform gem.
+ *
+ * @param options - Staged gem files, authenticated coordinates and author toolchain.
+ */
+export const buildRubyPlatformGem = async options => {
+	const { working, root, name, version, environment, signal, componentId, bindingIrSha256, metadata, summary } = options;
 	const entries = await nativeArtifactPaths(root), spec = `${name}.gemspec`, archive = `${name}-${version}-x86_64-linux.gem`;
-	const metadata = compiledPackageMetadata(model.sourceIdentity);
-	await save(spec, `Gem::Specification.new do |spec|
+	await writeFile(join(root, spec), `Gem::Specification.new do |spec|
   spec.name = ${rubyLiteral(name)}
   spec.version = ${rubyLiteral(version)}
-  spec.summary = ${rubyLiteral(metadata.description ?? "Compiled Lean API with generated Ruby copied-value conversions")}
+  spec.summary = ${rubyLiteral(metadata.description ?? summary)}
   spec.authors = ${rubyLiteral(metadata.authors?.map(author => author.name) ?? ["Author not declared"])}
   spec.email = ${rubyLiteral(metadata.authors?.flatMap(author => author.email ? [author.email] : []) ?? [])}
 ${metadata.homepage ? `  spec.homepage = ${rubyLiteral(metadata.homepage)}\n` : ""}\
@@ -84,9 +98,9 @@ ${metadata.homepage ? `  spec.homepage = ${rubyLiteral(metadata.homepage)}\n` : 
   spec.required_ruby_version = "~> 3.3.0"
   spec.files = ${rubyLiteral(entries)}
   spec.require_paths = ["lib"]
-  spec.metadata = { ${metadata.license ? `"spdx_expression" => ${rubyLiteral(metadata.license)}, ` : ""}"lean_bridge_component" => ${rubyLiteral(model.component.id)}, "lean_bridge_binding_ir_sha256" => ${rubyLiteral(model.bindingIrSha256)}${metadata.repository ? `, "source_code_uri" => ${rubyLiteral(metadata.repository)}` : ""} }
+  spec.metadata = { ${metadata.license ? `"spdx_expression" => ${rubyLiteral(metadata.license)}, ` : ""}"lean_bridge_component" => ${rubyLiteral(componentId)}, "lean_bridge_binding_ir_sha256" => ${rubyLiteral(bindingIrSha256)}${metadata.repository ? `, "source_code_uri" => ${rubyLiteral(metadata.repository)}` : ""} }
 end
-`);
+`, { flag: "wx" });
 	const env = { ...environment, SOURCE_DATE_EPOCH: "1" };
 	for(const key of ["RUBYOPT", "RUBYLIB", "GEM_HOME", "GEM_PATH", "GEMRC", "RUBYGEMS_GEMDEPS", "BUNDLE_GEMFILE", "BUNDLE_PATH"]) delete env[key];
 	const run = args => processBuildRunner.capture({ command: environment.LEAN_BRIDGE_RUBY ?? "ruby", args, cwd: root, env, signal });
@@ -96,5 +110,5 @@ end
 	const bytes = await readFile(join(root, archive)), hash = sha256(bytes);
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
-	return { ecosystem: "rubygems", backend: "ordinary-ruby-v1", runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion, namespace: projection.namespace, packages: [{ archive, name, version, bytes: bytes.length, sha256: hash, compilerAccess: false }] };
+	return { archive, name, version, bytes: bytes.length, sha256: hash, compilerAccess: false };
 };

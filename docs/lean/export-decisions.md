@@ -576,7 +576,7 @@ API. For example, `Journal.read : String → IO String` reads a file:
 }
 ```
 
-Build one target (`c`, `cpp`, `cargo` or `pypi`) at a time. No task, iterator or host import
+Build one target (`c`, `cpp`, `cargo`, `rubygems` or `pypi`) at a time. No task, iterator or host import
 is required. Source discovery alone cannot check OS access; use the build's
 `binding-ir.json` to review the compiled interface. The functions finish
 before returning. A thrown `EIO` error
@@ -588,6 +588,10 @@ archives, toolchains and replay commands, as well as a C++ and Rust example
 that passes one Lean resource between a synchronous package and a task package.
 The [original C11 and CPython receipts](../evidence/native-sync-io-20261122.json)
 remain available for those earlier packages.
+The [Ruby IO package](../publish/rubygems.md#export-synchronous-io) uses the
+same checked effects and exposes ordinary Ruby methods and exceptions. Its
+[installed-gem receipts](../evidence/ruby-sync-io-20261122.json) include the
+missing-grant and altered-library checks.
 
 The build follows compiled Lean code through library wrappers and task closures.
 It checks application startup and each selected entry, including an iterator's

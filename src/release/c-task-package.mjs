@@ -20,6 +20,9 @@ import { validateNativeCSettings } from "./native-c-family.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
 import { writeRustTaskRelease } from "./rust-task-package.mjs";
+import { writeRubySyncRelease } from "./ruby-sync-package.mjs";
+import { generateSyncWire } from "../backends/c/sync-wire.mjs";
+import { validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
 import { validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
 
 const asset = path => readFile(new URL(path, import.meta.url));
@@ -31,9 +34,9 @@ const asset = path => readFile(new URL(path, import.meta.url));
  */
 export const buildCTaskPackage = async options => {
 	const { projectContract, name, version, workRoot, runtimeRoot, leanPrefix, environment, signal } = options;
-	const target = options.target ?? "c", cpp = target === "cpp", rust = target === "cargo";
-	if(!["c", "cpp", "cargo"].includes(target)) throw new TypeError("Invalid native task target");
-	(rust ? validateOrdinaryCargoSettings : validateNativeCSettings)({ name, version });
+	const target = options.target ?? "c", cpp = target === "cpp", rust = target === "cargo", ruby = target === "rubygems";
+	if(!["c", "cpp", "cargo", "rubygems"].includes(target) || (ruby && !projectContract.synchronousIO)) throw new TypeError("Invalid native delivery target");
+	(rust ? validateOrdinaryCargoSettings : ruby ? validateOrdinaryRubySettings : validateNativeCSettings)({ name, version });
 	if(options.ir || !name || !version || options.sources.some(s => /^(?:LeanBridge(?:\.|$)|BridgeCAsync$)/u.test(s.module))) throw new TypeError("Invalid C task source modules or coordinates");
 	const { identity: runtimeIdentity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
 	const run = (command, args, cwd, env = environment) => processBuildRunner.capture({ command, args, cwd, env, signal });
@@ -48,7 +51,7 @@ export const buildCTaskPackage = async options => {
 		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
 		const threads = cpp && (!synchronous || resources.length > 0);
-		const config = { name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", integerMode: cpp || rust ? "words" : "gmp" };
+		const config = { name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", integerMode: cpp || rust || ruby ? "words" : "gmp" };
 		const callbackHeaders = new Map();
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
@@ -60,13 +63,15 @@ export const buildCTaskPackage = async options => {
 		const ledgerId = ledger && sha256(canonicalJson({ runtimeIdentity, header: sha256(ledger.header), source: sha256(ledger.source) }));
 		const ledgerName = ledger && `liblb_task_resources_${ledgerId}.so`, ledgerFlag = `-DLB_LEASE_PREFIX=lb_task_resource_${ledgerId}_`;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
+		const wire = ruby && generateSyncWire(skeleton.prefix, entries);
 		const integers = skeleton.integerMode && await asset("../backends/c/task-integers.h");
-		const gmp = integers && !cpp && !rust && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
+		const gmp = integers && !cpp && !rust && !ruby && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
 		const boost = integers && cpp && boostSources();
 		const componentIdentity = sha256(canonicalJson({ runtimeIdentity
 			, bindingIrSha256
 			, evidence
 			, skeleton
+			, ...wire ? { hostWireSha256: sha256(wire.source) } : {}
 			, delivery: sha256(delivery), notification: sha256(notification)
 			, ...callbackHeaders.size ? { callbacks: Object.fromEntries([...callbackHeaders].map(([f, b]) => [f, sha256(b)])) } : {}
 			, ...ledger ? { resourceLedger: ledgerId } : {}
@@ -78,6 +83,7 @@ export const buildCTaskPackage = async options => {
 		await run(join(leanPrefix, "bin/lean"), ["-j1", "-c", "entry.c", "BridgeCAsync.lean"], app, env);
 		await save("checked-entry.c", `#include "entry.c"\n${gen.declarations}\n`);
 		await save(`${p}.h`, gen.header); await save("adapter.c", gen.source);
+		if(wire) await save("host-wire.c", wire.source);
 		await save("task-delivery.h", delivery); await save("task-notification.h", notification);
 		for(const [file, bytes] of callbackHeaders) await save(file, bytes);
 		if(ledger)
@@ -106,7 +112,7 @@ export const buildCTaskPackage = async options => {
 				, ledgerName], app);
 		}
 		if(integers) await save("task-integers.h", integers);
-		await save("exports.map", `{ global: ${gen.symbols.join("; ")}; local: *; };\n`);
+		await save("exports.map", `{ global: ${[...gen.symbols, ...wire ? wire.symbols : []].join("; ")}; local: *; };\n`);
 		const library = `lib${p}.so`;
 		await run(environment.CC ?? "cc", ["-std=gnu11"
 			, "-O1"
@@ -121,6 +127,7 @@ export const buildCTaskPackage = async options => {
 			, ...objects
 			, "checked-entry.c"
 			, "adapter.c"
+			, ...wire ? ["host-wire.c"] : []
 			, "-L"
 			, join(runtimeRoot, "lib")
 			, "-lleanshared"
@@ -151,6 +158,7 @@ export const buildCTaskPackage = async options => {
 			files.set(path, bytes);
 		}
 		if(rust) return await writeRustTaskRelease({ ...options, prefix: p, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
+		if(ruby) return await writeRubySyncRelease({ ...options, prefix: p, wire, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		const cmakePackage = `LeanBridge${p.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join("")}`;
 		const cmakeTarget = `LeanBridge::${p}`, share = "share/lean-bridge";
 		files.set(`include/${p}.h`, gen.header);

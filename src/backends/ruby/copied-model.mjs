@@ -13,6 +13,13 @@ for(const name of ["Scope", "Lease", "LeanClosure", "Monitor", "Process", "Objec
 const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
 
 /**
+ * Protect Ruby's language words and the generated runtime's methods.
+ *
+ * @param name - Candidate public name.
+ */
+export const isReservedRubyName = name => reserved.has(name) || ["deconstruct", "deconstruct_keys"].includes(name);
+
+/**
  * Derive source-named Ruby functions, records and private C field offsets.
  *
  * @param ir - Compiler-authorized Binding IR.
