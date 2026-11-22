@@ -29,6 +29,7 @@ typedef struct lbp_handle {
   char *kind;
   uint64_t token;
   PerlInterpreter *interpreter;
+  int leased;
 } lbp_handle;
 
 void lbp_check_interpreter(pTHX) {
@@ -136,7 +137,11 @@ static lbp_handle *lbp_get_handle(pTHX_ SV *value) {
   if (handle->interpreter != LBP_CONTEXT) croak("wrong Perl interpreter for Lean resource");
   return handle;
 }
-SV *lbp_resource(pTHX_ lean_object *object, const char *kind, const char *package) {
+static void lbp_expire_borrow(pTHX_ void *data) {
+  lbp_handle *handle = data;
+  if (!handle->leased) lbp_handle_close(aTHX_ handle);
+}
+static SV *lbp_wrap_resource(pTHX_ lean_object *object, const char *kind, const char *package, int lease) {
   lbp_check_interpreter(aTHX);
   uint64_t token = lean_bridge_native_identity_acquire(kind, object);
   if (!token) croak("native resource identity capacity exceeded");
@@ -145,17 +150,31 @@ SV *lbp_resource(pTHX_ lean_object *object, const char *kind, const char *packag
   SV **known = hv_fetch(wrappers, key, size, 0);
   if (known && SvROK(*known)) {
     lean_bridge_native_identity_release(token, kind, object);
+    if (lease) lbp_get_handle(aTHX_ *known)->leased = 1;
     return lbp_mortal(newSVsv(*known));
   }
   lbp_handle *handle; Newxz(handle, 1, lbp_handle);
   handle->kind = savepv(kind); handle->object = object; handle->token = token; handle->interpreter = LBP_CONTEXT;
+  handle->leased = lease;
   lean_inc(object);
   SV *rv = lbp_mortal(newRV_noinc((SV *)newHV()));
   sv_magicext(SvRV(rv), NULL, PERL_MAGIC_ext, &lbp_handle_magic, (char *)handle, 0);
   sv_bless(rv, gv_stashpv(package, GV_ADD));
   SV *weak = newSVsv(rv); sv_rvweaken(weak); hv_store(wrappers, key, size, weak, 0);
   ++lbp_live_wrappers;
+  if (!lease) {
+    /* Only the outermost borrow created this wrapper. Keep its magic alive
+       through LEAVE (also on croak); a nested lease may promote it in place. */
+    SAVEFREESV(SvREFCNT_inc(SvRV(rv)));
+    SAVEDESTRUCTOR_X(lbp_expire_borrow, handle);
+  }
   return rv;
+}
+SV *lbp_resource(pTHX_ lean_object *object, const char *kind, const char *package) {
+  return lbp_wrap_resource(aTHX_ object, kind, package, 1);
+}
+SV *lbp_borrowed_resource(pTHX_ lean_object *object, const char *kind, const char *package) {
+  return lbp_wrap_resource(aTHX_ object, kind, package, 0);
 }
 lean_object *lbp_borrow(pTHX_ lbp_scope *scope, SV *value, const char *kind) {
   lbp_handle *handle = lbp_get_handle(aTHX_ value);

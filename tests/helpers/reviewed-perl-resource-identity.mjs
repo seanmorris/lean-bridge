@@ -5,7 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { copyFile, cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
+import { copyFile, cp, mkdir, mkdtemp, readFile, rename, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -15,7 +15,9 @@ import { reconcileReviewedSource, reviewedSourceSelection } from "../../src/anal
 import { buildNativeProject } from "../../src/build/native-project.mjs";
 import { installCpanArchive } from "../../src/release/cpan-install.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
+import { perlConfigurations } from "../../scripts/test-perl-consumers.mjs";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
+import { addResourceCallables, resourceCallableArities } from "./standalone-resource-callables.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
@@ -40,13 +42,14 @@ const contract = module => {
 			ownership: "lease", lifetime: { scope: "explicit", anchor: null }
 		});
 	}
-	return ir;
+	return module === "Workshop" ? addResourceCallables(ir) : ir;
 };
 const capture = ir => {
 	const source = canonicalJson(ir);
 	return { schemaVersion: 1, path: "api.binding-ir.json", source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(ir) };
 };
 const native = { nativeResources: true };
+const matrix = process.env.LEAN_BRIDGE_RESOURCE_MATRIX === "1";
 
 test("reviewed standalone resources bind the exact native selection and cannot be copied", () => {
 	const ir = contract("Workshop"), review = capture(ir);
@@ -76,56 +79,130 @@ test("reviewed standalone resources bind the exact native selection and cannot b
 });
 
 test("installed reviewed CPAN packages share standalone resource identity across independent components", {
-	skip: process.env.LEAN_BRIDGE_PERL_NATIVE_TEST !== "1", timeout: 600_000
+	skip: process.env.LEAN_BRIDGE_PERL_NATIVE_TEST !== "1"
+	, timeout: matrix ? 1_800_000 : 900_000
 }, async t => {
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-reviewed-resources-"));
 	t.after(() => rm(working, { recursive: true, force: true }));
-	const perl = process.env.LEAN_BRIDGE_TEST_PERL ?? "/usr/bin/perl";
-	const environment = { ...nativeFixtureEnvironment(["perl"]), LEAN_BRIDGE_PERLS: JSON.stringify([perl]) };
+	const interpreters = matrix ? perlConfigurations.map(configuration => ({
+		...configuration, perl: resolve(process.env.LEAN_BRIDGE_RESOURCE_PERL_ROOT ?? ".toolchains/perl", configuration.label, "bin/perl")
+	})) : [{ label: "selected", perl: process.env.LEAN_BRIDGE_TEST_PERL ?? "/usr/bin/perl" }];
+	if(matrix) assert.deepEqual(interpreters.map(item => item.label).sort(), [
+		"5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"
+	], "the acceptance matrix must exercise all four pinned interpreters");
+	const environment = { ...nativeFixtureEnvironment(["perl"]), LEAN_BRIDGE_PERLS: JSON.stringify(interpreters.map(item => item.perl)) };
+	for(const interpreter of interpreters)
+	{
+		const config = await runCopied(interpreter.perl, ["-MConfig", "-e", 'printf "%vd %s %d", $^V, $Config{archname}, !!$Config{useithreads}'], working, copiedCleanEnvironment);
+		const [version, archname, threaded] = config.stdout.trim().split(" ");
+		if(matrix)
+		{
+			assert.equal(version, interpreter.version); assert.equal(threaded, interpreter.threaded ? "1" : "0");
+		}
+		interpreter.abi = { version, archname, threaded: threaded === "1" };
+	}
+	const archive = process.env.LEAN_BRIDGE_RECORD_RESOURCE_EVIDENCE === "1";
+	const evidence = join(working, "evidence"), results = [], packages = [], retained = new Set();
+	if(archive) await mkdir(join(evidence, "archives"), { recursive: true });
 	const fixture = resolve("tests/fixtures/perl");
-	const source = await readFile(join(fixture, "ordinary/Workshop.lean"), "utf8") + `
-namespace Workshop
-structure Badge where
-  value : UInt32
-  label : String
-def newBadge (value : UInt32) : Badge := ⟨value, "badge"⟩
-end Workshop
-`;
-	const components = [], prefix = join(working, "prefix"), consumer = join(working, "consumer");
-	await mkdir(consumer);
-	for(const module of ["Workshop", "Other"])
+	const source = await readFile(join(fixture, "ordinary/Workshop.lean"), "utf8")
+		+ "\n" + await readFile(join(fixture, "resource-callables.lean"), "utf8");
+	const builds = [];
+	for(const [module, route] of [["Workshop", "reviewed"], ["Other", "reviewed"], ["Workshop", "ordinary"]])
 	{
 		const producer = join(working, "producer"), project = join(producer, "project"), output = join(producer, "release");
-		const handoff = join(working, `handoff-${module}`), ir = contract(module);
+		const handoff = join(working, `handoff-${module}-${route}`), ir = contract(module);
 		await cp(join(fixture, module === "Other" ? "other" : "ordinary"), project, { recursive: true });
 		await saveLakeFile(project, "Workshop.lean", source);
 		await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson({
 			schemaVersion: 1
 			, modules: [module]
 			, targets: { cpan: { module: `LeanBridge::${module}`, version: "0.001" } }
+			, ...(route === "ordinary" ? { exports: ir.declarations.map(item => item.source.declaration)
+				, resources: ["Workshop.Badge", "Workshop.Counter"]
+				, arities: resourceCallableArities } : {})
 		}));
-		await saveLakeFile(project, "api.binding-ir.json", canonicalJson(ir));
-		const built = await buildNativeProject({ projectRoot: project, outputRoot: output, targets: ["cpan"], environment });
-		assert.equal(built.reviewedBindingIrSha256, hashBindingIr(ir));
-		await copyPackageSetHandoff(output, handoff);
+		if(route === "reviewed") await saveLakeFile(project, "api.binding-ir.json", canonicalJson(ir));
+		const built = await buildNativeProject({ projectRoot: project, outputRoot: output, targets: ["cpan"], environment })
+			.catch(error => { t.diagnostic(`${module} (${route}): ${JSON.stringify(error.details)}`); throw error; });
+		assert.equal(built.reviewedBindingIrSha256, route === "reviewed" ? hashBindingIr(ir) : undefined);
+		const receipt = await copyPackageSetHandoff(output, handoff);
 		await rm(producer, { recursive: true });
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
-		components.push({ handoff, built });
+		if(archive)
+		{
+			for(const pkg of built.packages)
+			{
+				if(retained.has(pkg.sha256)) continue;
+				retained.add(pkg.sha256);
+				const retainedPath = join(evidence, "archives", `${pkg.sha256}.tar.gz`);
+				await copyFile(join(handoff, "archives", pkg.archive), retainedPath);
+				assert.equal(sha256(await readFile(retainedPath)), pkg.sha256);
+			}
+			const archives = built.packages.map(({ archive, sha256 }) => ({ archive, sha256 }));
+			packages.push({ module, route, receipt, archives
+				, bindingIrSha256: built.bindingIrSha256
+				, reviewedBindingIrSha256: built.reviewedBindingIrSha256 ?? null });
+		}
+		builds.push({ route, handoff, built });
 	}
-	const [first, second] = components.map(component => component.built);
-	assert.equal(first.packages[0].sha256, second.packages[0].sha256, "independently prepared packages use the identical runtime archive");
-	assert.notEqual(first.packages[1].sha256, second.packages[1].sha256);
-	for(const [index, { handoff, built }] of components.entries())
+	const [reviewed, peer, ordinary] = builds;
+	const installTools = join(working, "install-tools");
+	await mkdir(installTools);
+	for(const name of ["make", "tar", "gzip", "sh", "cp", "mv", "rm", "chmod", "mkdir", "touch", "true"])
+		await symlink(`/usr/bin/${name}`, join(installTools, name));
+	const installEnvironment = { ...copiedCleanEnvironment, PATH: installTools };
+	for(const { label, perl } of interpreters) for(const subject of [reviewed, ordinary])
 	{
-		for(const pkg of built.packages.slice(index === 0 ? 0 : 1))
-			await installCpanArchive({ archive: join(handoff, "archives", pkg.archive), workingRoot: consumer, prefix, perl, mode: "prebuilt-only" });
-		await rm(handoff, { recursive: true });
+		const consumer = join(working, label, subject.route), prefix = join(consumer, "prefix");
+		assert.equal(subject.built.packages[0].sha256, peer.built.packages[0].sha256, "independent builds share one exact runtime");
+		assert.notEqual(subject.built.packages[1].sha256, peer.built.packages[1].sha256);
+		for(const [index, { handoff, built }] of [subject, peer].entries())
+			for(const pkg of built.packages.slice(index === 0 ? 0 : 1))
+				await installCpanArchive({ archive: join(handoff, "archives", pkg.archive)
+					, workingRoot: consumer
+					, prefix, perl, mode: "prebuilt-only", environment: installEnvironment });
+		await rename(prefix, join(consumer, "relocated"));
 	}
-	const installed = join(consumer, "relocated");
-	await rename(prefix, installed);
-	await copyFile(join(fixture, "reviewed-resources.t"), join(consumer, "consumer.t"));
-	const probe = await runCopied(perl, ["consumer.t"], consumer, { ...copiedCleanEnvironment, PERL5LIB: join(installed, "lib/perl5") });
-	assert.doesNotMatch(probe.stdout, /^not ok/mu);
-	assert.match(probe.stdout, /1\.\.12\s*$/u);
-	t.diagnostic(`12 installed checks; ${first.packages[0].sha256} runtime; ${first.packages[1].sha256} and ${second.packages[1].sha256} components`);
+	for(const { handoff } of builds) await rm(handoff, { recursive: true });
+	for(const { label, perl, abi } of interpreters) for(const subject of [reviewed, ordinary])
+	{
+		const consumer = join(working, label, subject.route);
+		for(const [probeName, checks] of [["reviewed-resources.t", 12], ["resource-callables.t", 23], ["resource-borrows.t", 15]])
+		{
+			await copyFile(join(fixture, probeName), join(consumer, "consumer.t"));
+			const probe = await runCopied(perl, ["consumer.t"], consumer, { ...copiedCleanEnvironment, PERL5LIB: join(consumer, "relocated/lib/perl5") });
+			assert.equal(probe.stderr, "");
+			assert.doesNotMatch(probe.stdout, /^not ok|#\s*(?:skip|todo)\b/imu);
+			assert.equal(probe.stdout.trimEnd().split("\n").at(-1), `1..${checks}`, probe.stdout);
+			assert.deepEqual([...probe.stdout.matchAll(/^ok (\d+)\b/gmu)].map(item => Number(item[1])), Array.from({ length: checks }, (_, i) => i + 1));
+			if(archive)
+			{
+				const tap = `tap/${label}/${subject.route}/${probeName}.tap`;
+				const bytes = await readFile(join(consumer, "consumer.t"));
+				await saveLakeFile(evidence, `probes/${probeName}`, bytes);
+				await saveLakeFile(evidence, tap, probe.stdout);
+				results.push({ abi, route: subject.route, probe: probeName
+					, probeSha256: sha256(bytes)
+					, checks, tap, tapSha256: sha256(probe.stdout) });
+			}
+		}
+		t.diagnostic(`${abi.version} ${abi.archname} ${subject.route}: 50 installed checks; archives ${subject.built.packages.map(pkg => pkg.sha256).join(", ")}; peer ${peer.built.packages[1].sha256}`);
+	}
+	if(archive)
+	{
+		const checks = results.reduce((sum, result) => sum + result.checks, 0);
+		assert.equal(new Set(results.map(result => result.tap)).size, matrix ? 24 : 6);
+		assert.equal(checks, matrix ? 400 : 100);
+		assert.equal(retained.size, 4, "expect one runtime and three independently built components");
+		const sources = { Workshop: sha256(source), Other: sha256(await readFile(join(fixture, "other/Other.lean"))) };
+		await saveLakeFile(evidence, "report.json", canonicalJson({ schemaVersion: 1
+			, family: "standalone-resource-callbacks"
+			, commit: process.env.GITHUB_SHA ?? null
+			, checks, sources, packages, results }));
+		const destination = resolve("build/standalone-resource-acceptance");
+		await mkdir(resolve("build"), { recursive: true });
+		await mkdir(destination);
+		await cp(evidence, destination, { recursive: true, errorOnExist: true, force: false });
+	}
 });

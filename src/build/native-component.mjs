@@ -8,7 +8,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
-import { nativeCType, nativeCallbackDefault, nativeReplyRejectedSymbol } from "./native-model.mjs";
+import { nativeCType, nativeCallbackDefault, nativeReplyRejectedSymbol, nativeResourceReplyArgument, nativeAcceptsHostCallback } from "./native-model.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from "./native-graph-model.mjs";
 import { generateNativeCallableGraphTrampolines } from "./native-callable-graph.mjs";
 import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
@@ -115,6 +115,20 @@ export const generateCompiledCallbacks = model => {
 		if(type.reply)
 			callbacks += `lean_object *lb_t${type.key}_reply_reject(lean_object *reply) {\n  lean_dec(reply);\n  lb_reply_rejected = 1;\n  return lb_t${type.key}_reply_fallback(lean_box(0));\n}\n`;
 		const result = nativeCType(type.result), arguments_ = type.parameters.map((_, i) => `value${i}`).join(", ");
+		if(nativeResourceReplyArgument(type) !== null)
+		{
+			if(!nativeAcceptsHostCallback(model, type)) continue;
+			const symbol = `lb_t${type.key}`;
+			// The public result is never null. Only this private callback uses NULL
+			// for failure, and Lean itself constructs both branches of Option.
+			callbacks += `lean_object *${symbol}_invoke(size_t token, ${type.parameters.map((p, i) => `${nativeCType(p)} value${i}`).join(", ")}) {
+  lb_native_callback cb = lb_native_callback_lookup(token);
+  if (!cb.invoke) { ${type.parameters.map((p, i) => nativeCType(p) === "lean_object *" ? `lean_dec(value${i});` : "").join(" ")} return ${symbol}_none(lean_box(0)); }
+  lean_object *reply = ((lean_object *(*)(void *, ${type.parameters.map(nativeCType).join(", ")}))cb.invoke)(cb.context, ${arguments_});
+  return reply ? ${symbol}_some(reply) : ${symbol}_none(lean_box(0));
+}\n`;
+			continue;
+		}
 		callbacks += `${result} lb_t${type.key}_invoke(size_t token, ${type.parameters.map((p, i) => `${nativeCType(p)} value${i}`).join(", ")}) {\n  lb_native_callback cb = lb_native_callback_lookup(token);\n  if (!cb.invoke) { ${type.parameters.map((p, i) => nativeCType(p) === "lean_object *" ? `lean_dec(value${i});` : "").join(" ")} return ${callbackDefault(type.result)}; }\n  return ((${result} (*)(void *, ${type.parameters.map(nativeCType).join(", ")}))cb.invoke)(cb.context, ${arguments_});\n}\n`;
 	}
 	return callbacks;

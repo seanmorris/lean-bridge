@@ -951,7 +951,19 @@ print LeanBridge::Other::value($alias), "\n";  # 42
 $counter->close;
 ```
 
-Callbacks may reenter the generated API. A callback can close the resource or closure involved in its own call; the active call retains what it needs until it returns. Perl exceptions, including exception objects, are rethrown after native cleanup. Lean may not retain a host callback beyond that call. An expired callback fails safely when invoked later.
+Callbacks may reenter the generated API. A resource first seen as a callback argument is borrowed: saving its Perl reference alone does not keep it open after the callback. If you already hold a lease, or a generated API returns that same resource as a leased result during the callback, the canonical wrapper stays open. A callback can close a resource used in its own call; the active Lean frame retains what it needs to finish. Perl exceptions, including exception objects, are rethrown after native cleanup. Lean may not retain a call-scoped host callback beyond that call. An expired callback fails safely when invoked later.
+
+A synchronous callback that returns a standalone resource normally takes a Perl coderef. If any argument has the same resource type as the result, Lean can use that argument while unwinding a failed call. If there is no matching argument, supply a live recovery object when registering the callback:
+
+```perl
+my $choose = LeanBridge::Workshop::Runtime::Callback->new(
+    code     => sub { LeanBridge::Workshop::new_counter($_[0]) },
+    recovery => $counter,
+);
+my $value = LeanBridge::Workshop::choose_with(42, $choose);
+```
+
+The adapter checks the recovery object's type and lifetime before calling Lean. A recovery object lets Lean finish evaluating the current call safely; it does not turn an exception into a successful result. Calling a **returned Lean closure** with `->call(...)` needs no recovery descriptor.
 
 Keep calls and handles in the creating process, Perl interpreter and thread.
 Calls and fresh imports reject inherited runtime state after a fork. Automatic

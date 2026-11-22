@@ -181,3 +181,17 @@ Compare isolated relocated builds, reject stale interfaces and corrupted artifac
 Keep the two documentation workflows: build and publish a Lean package; install and use a published package. Cover every target, keep PHP consolidated, retain package-manager guidance and bookmarks, and execute named example files against candidate archives. Site/toolchain maintenance belongs under Contributing.
 
 Record commands, artifact hashes, covered cells, failures, and remaining work on the owning VO tasks. Completed milestones may be committed locally. Pushes, registry uploads, and deployment require separate approval. Existing platform profiles and release approval requirements remain unchanged.
+
+For the standalone Perl resource and callback checks, dispatch **Perl native packages**
+with `suite=standalone-resources` on the branch under review:
+
+```sh
+gh workflow run perl-consumer.yml --ref BRANCH -f suite=standalone-resources
+```
+
+One runner builds the shared runtime and three components, then installs the same archives
+on threaded and unthreaded Perl 5.36.3 and 5.38.2. The probes call the ordinary-source and
+reviewed components from relocated installs with no compiler on the consumer path. The
+artifact includes the original archives, package receipts, probe sources and all 24 TAP
+transcripts. These 400 assertions cover standalone resource identity, callback borrows,
+leases and returned closures; they do not establish host-object or async support.

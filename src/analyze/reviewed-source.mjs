@@ -194,10 +194,10 @@ const checkReview = document => {
 				|| !same(callable.failure, callbackFailure) || !callable.parameters.length || callable.parameters.length > 16, `${definition.id}.callable`);
 			for(const [index, value] of callable.parameters.entries())
 			{
-				type(value.type, `${definition.id}.parameters[${index}].type`);
+				reject(isCallback(value.type), `${definition.id}.parameters[${index}].type`);
 				parameter(value, `${definition.id}.parameters[${index}]`);
 			}
-			type(callable.result.type, `${definition.id}.result.type`);
+			reject(isCallback(callable.result.type), `${definition.id}.result.type`);
 			site(callable.result, `${definition.id}.result`, true);
 			continue;
 		}

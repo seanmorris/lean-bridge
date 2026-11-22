@@ -127,6 +127,8 @@ The review selects exact Lean declarations through `source.declaration` and `lea
 
 For a standalone resource in a CPAN build, name the Lean type in the review. For example, `Workshop.Counter` has type ID `lean:Workshop.Counter`, kind `resource`, representation `identity`, and resource kind ID `resource:Workshop.Counter`. A function borrows the handle for the call; a returned handle is a lease with an explicit lifetime. Do not repeat `resources` in the export configuration. The native builder sends the reviewed names to Lean and checks the resulting signatures. A resource inside a record or collection needs an ownership-aware contract, not a copied field.
 
+Direct arguments and results of synchronous callables can likewise name the resource. In a reviewed callback signature, use a call-scoped borrow for a resource argument and an explicit lease for a resource result. For a host callback with no same-type argument to use during failure cleanup, the [Perl API takes a typed recovery object](../consume/perl.md#ownership-and-failures). Returning a Lean closure does not impose that requirement on its caller.
+
 For a schema-3 finite specialization, put the closed choice in the declaration's `source.extensions["lean-lang.org/specialization"]`:
 
 ```json
