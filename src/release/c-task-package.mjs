@@ -40,7 +40,6 @@ export const buildCTaskPackage = async options => {
 	const dotnet = target === "nuget";
 	if(!["c", "cpp", "cargo", "rubygems", "nuget"].includes(target)) throw new TypeError("Invalid native delivery target");
 	(rust ? validateOrdinaryCargoSettings : ruby ? validateOrdinaryRubySettings : dotnet ? validateOrdinaryNugetSettings : validateNativeCSettings)({ name, version });
-	if(dotnet && projectContract.leanResources?.length) throw new TypeError("NuGet IO and tasks require copied-value contracts");
 	if(options.ir || !name || !version || options.sources.some(s => /^(?:LeanBridge(?:\.|$)|BridgeCAsync$)/u.test(s.module))) throw new TypeError("Invalid C task source modules or coordinates");
 	const { identity: runtimeIdentity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
 	const run = (command, args, cwd, env = environment) => processBuildRunner.capture({ command, args, cwd, env, signal });
@@ -163,7 +162,7 @@ export const buildCTaskPackage = async options => {
 		}
 		if(rust) return await writeRustTaskRelease({ ...options, prefix: p, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(ruby) return await writeRubySyncRelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
-		if(dotnet) return await writeDotnetIORelease({ ...options, prefix: p, wire, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
+		if(dotnet) return await writeDotnetIORelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		const cmakePackage = `LeanBridge${p.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join("")}`;
 		const cmakeTarget = `LeanBridge::${p}`, share = "share/lean-bridge";
 		files.set(`include/${p}.h`, gen.header);

@@ -176,7 +176,8 @@ The [NuGet task profile](../publish/nuget.md#export-tasks-and-pull-streams)
 turns actual Lean tasks into C# `Task` or `Task<T>` and pull protocols into
 `IAsyncEnumerable<T>`. Independent NuGet packages share the application's
 owner loop. Task factories can also [retain C# delegates over copied
-scalars](../publish/nuget.md#export-a-callback-taking-task).
+scalars](../publish/nuget.md#export-a-callback-taking-task). Select a common
+Lean heap type in both packages to [share resources across IO, tasks, streams and typed errors](../publish/nuget.md#export-a-shared-lean-resource).
 
 The [Ruby task profile](../publish/rubygems.md#export-a-task-or-pull-stream)
 delivers copied results or [explicit resource leases](../publish/rubygems.md#export-a-shared-lean-resource) to a waiting fiber and exposes pull streams as

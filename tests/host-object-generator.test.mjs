@@ -31,6 +31,7 @@ import "./helpers/ruby-resource-installed.mjs";
 import "./helpers/dotnet-io-installed.mjs";
 import "./helpers/dotnet-task-installed.mjs";
 import "./helpers/dotnet-task-managed-replay.mjs";
+import "./helpers/dotnet-resource-installed.mjs";
 import "./helpers/native-task-companions.mjs";
 import { generatePythonHostExtension } from "../src/backends/python/host-exports.mjs";
 import { generatePythonHostProvider } from "../src/backends/python/host-provider.mjs";

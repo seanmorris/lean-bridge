@@ -65,7 +65,8 @@ The prepared archive includes the managed assembly, compiled component,
 runtime, licenses and package receipt. See [calling the installed package](../consume/dotnet.md#call-synchronous-io).
 The [offline install results](../evidence/dotnet-sync-io-20261122.json) identify the
 ordinary and reviewed archives and record the matching public interface digest.
-This synchronous profile does not export task factories, iterators or resource leases.
+Use the task profile below for task factories and iterators. Both profiles
+accept [explicit Lean resources](#export-a-shared-lean-resource).
 
 ## Export tasks and pull streams
 
@@ -93,8 +94,8 @@ task, also select the declaration in `taskIOErrors`. Other supported returned
 `Except` values are data, not exceptions.
 
 This profile supports copied primitive arguments, primitive or nested result
-values, and the retained callbacks below. Resource-valued tasks require a
-separate projection. See [calling the installed package](../consume/dotnet.md#await-tasks-and-pull-streams)
+values, retained callbacks, and direct [resource arguments, results and errors](#export-a-shared-lean-resource).
+See [calling the installed package](../consume/dotnet.md#await-tasks-and-pull-streams)
 and the [ordinary, reviewed and stream-only package receipts](../evidence/dotnet-tasks-20261122.json).
 
 ### Export a callback-taking task
@@ -127,6 +128,38 @@ adapter copies each argument and reply; a Lean worker never enters the CLR.
 A reviewed API must preserve the callback lease, reentry policy and declared
 .NET exception. See [using the delegate](../consume/dotnet.md#let-a-lean-task-call-c)
 and the [ordinary and reviewed package results](../evidence/dotnet-retained-tasks-20261122.json).
+
+### Export a shared Lean resource
+
+List the fully qualified name of a concrete Lean heap type under `resources`.
+Select the functions that borrow or return it. For example, an IO package can
+export [Desk](../../tests/fixtures/ruby-task-resources/Desk.lean) over the
+[shared Ticket definition](../../tests/fixtures/resource-tasks/Shared.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Desk"],
+  "exports": ["Desk.issue", "Desk.count", "Desk.checkTicket"],
+  "resources": ["Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"nuget": {"name": "Acme.Desk", "version": "1.0.0"}}
+}
+```
+
+An independent [task and stream package](../../tests/fixtures/resource-tasks/Depot.lean)
+can import the same module and select the same resource. Build each with
+`lean-bridge build --project . --target nuget --output release`. Keep the
+module defining the type and its Lean dependencies identical in both builds:
+the compiler, declaration and source determine identity, not the NuGet name
+or the other functions each component exports. Each archive includes the
+matching managed type and native ledger. Consumers need no extra reference.
+
+An input borrows the caller's lease. A direct result, stream item or declared
+error carrying the resource gives the caller a new disposable lease. A reviewed
+API must preserve the compiled kind and ownership at each site. See
+[using both packages from C#](../consume/dotnet.md#share-a-lean-resource-across-packages)
+and the [ordinary and reviewed cross-package results](../evidence/dotnet-resource-leases-20261122.json).
 
 ## Export arrays and records
 

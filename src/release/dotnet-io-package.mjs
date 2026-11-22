@@ -26,9 +26,21 @@ export const writeDotnetIORelease = async o => {
 		if(!bytes || (path !== library && sha256(bytes) !== manifest.files[file]?.sha256)) throw new Error("Missing or inconsistent .NET native library: " + path);
 		libraries[path] = sha256(bytes);
 	}
+	let resourceLedger;
+	if(wire.leases?.length)
+	{
+		if(!/^[a-f0-9]{64}$/u.test(o.ledgerId)) throw new Error("Missing .NET resource ledger identity");
+		const path = "liblb_task_resources_" + o.ledgerId + ".so", bytes = files.get("lib/" + path);
+		if(!bytes) throw new Error("Missing .NET resource ledger library");
+		libraries[path] = sha256(bytes); resourceLedger = { id: o.ledgerId, library: path, sha256: libraries[path] };
+	}
 	if(files.size !== Object.keys(libraries).length) throw new Error("Unexpected .NET IO native payload");
-	const auth = { library, libraries, componentId: api.component.id, componentReceiptSha256: componentIdentity, runtimeIdentity };
-	const { assembly, files: sources } = await (wire.wait ? generateDotnetTasks : generateDotnetIO)({ api, wire, evidence: auth });
+	const auth = { library
+		, libraries
+		, componentId: api.component.id
+		, componentReceiptSha256: componentIdentity
+		, runtimeIdentity, ...resourceLedger ? { ledgerId: resourceLedger.id } : {} };
+	const { assembly, files: sources, contracts = {} } = await (wire.wait ? generateDotnetTasks : generateDotnetIO)({ api, wire, evidence: auth });
 	const stage = await mkdtemp(join(workRoot, ".dotnet-io-")), root = join(stage, "package"), compiler = join(stage, "managed");
 	const write = async (dir, path, data) => {
 		await mkdir(dirname(join(dir, path)), { recursive: true });
@@ -36,28 +48,35 @@ export const writeDotnetIORelease = async o => {
 	};
 	try
 	{
-		const project = `<Project Sdk="Microsoft.NET.Sdk">
+		const csproj = (id, v, refs = "") => `<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>disable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks><GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1591</NoWarn><TreatWarningsAsErrors>true</TreatWarningsAsErrors><Deterministic>true</Deterministic>
-    <AssemblyName>${assembly}</AssemblyName><Version>${version}</Version><DebugType>none</DebugType>
+    <AssemblyName>${id}</AssemblyName><Version>${v}</Version><DebugType>none</DebugType>
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
   </PropertyGroup>
-</Project>
+${refs}</Project>
 `;
 		const inventory = {};
 		const save = async (path, data) => { await write(root, path, data); inventory[path] = { bytes: Buffer.byteLength(data), sha256: sha256(data) }; };
-		for(const [f, s] of Object.entries({ ...sources, [assembly + ".csproj"]: project }))
+		const contractIds = Object.keys(contracts).sort();
+		const refs = contractIds.length ? "  <ItemGroup>" + contractIds.map(id => `<ProjectReference Include="../${id}/${id}.csproj" />`).join("") + "</ItemGroup>\n" : "";
+		for(const id of contractIds) for(const [file, data] of [["Resource.cs", contracts[id]], [id + ".csproj", csproj(id, "1.0.0")]])
+		{
+			await write(compiler, `src/${id}/${file}`, data);
+			await save(`lean-bridge/dotnet/src/${id}/${file}`, data);
+		}
+		for(const [f, s] of Object.entries({ ...sources, [assembly + ".csproj"]: csproj(assembly, version, refs) }))
 		{
 			await write(compiler, `src/${assembly}/${f}`, s);
 			await save(`lean-bridge/dotnet/src/${assembly}/${f}`, s);
 		}
 		await write(compiler, "NuGet.Config", "<configuration><packageSources><clear /></packageSources></configuration>\n");
-		const sdk = await compilePreparedAssembly({ root: compiler, scratch: join(stage, "scratch"), working: stage, assembly, environment: o.environment, signal: o.signal });
-		for(const ext of ["dll", "xml"])
+		const sdk = await compilePreparedAssembly({ root: compiler, scratch: join(stage, "scratch"), working: stage, assembly, environment: o.environment, signal: o.signal, projectReferences: contractIds.length > 0 });
+		for(const id of [assembly, ...contractIds]) for(const ext of ["dll", "xml"])
 		{
-			const path = `lib/net8.0/${assembly}.${ext}`; await save(path, await readFile(join(compiler, path)));
+			const path = `lib/net8.0/${id}.${ext}`; await save(path, await readFile(join(compiler, path)));
 		}
 		for(const lib of Object.keys(libraries)) await save("runtimes/linux-x64/native/" + lib, files.get("lib/" + lib));
 		await save("lean-bridge/dotnet/global.json", await readFile(join(compiler, "global.json")));
@@ -75,6 +94,7 @@ export const writeDotnetIORelease = async o => {
 			, component: api.component, componentIdentity, bindingIrSha256
 			, sourceTreeSha256: projectContract.sourceTreeSha256
 			, runtimeIdentity, assembly, namespace: assembly, sdk
+			, ...resourceLedger ? { resourceLedger, resourceContracts: contractIds } : {}
 			, glibcMinimumVersion: floor, files: inventory }));
 		const archive = name + "." + version + ".nupkg", bytes = await createDeterministicZip({ directory: root, sourceDateEpoch: 315532800 });
 		await writeFile(join(o.output, archive), bytes, { flag: "wx" });

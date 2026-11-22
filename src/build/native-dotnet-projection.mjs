@@ -52,10 +52,11 @@ export const projectOrdinaryDotnet = async ({ working, nativeRoot, runtimeRoot, 
  * @param options.scratch - Private intermediate files and local package cache.
  * @param options.working - Parent staging path to erase from compiler output.
  * @param options.assembly - Validated managed assembly name.
+ * @param options.projectReferences - Keep intermediates separate for independent nominal contract assemblies.
  * @param options.environment - Explicit toolchain environment.
  * @param options.signal - Optional cancellation signal.
  */
-export const compilePreparedAssembly = async ({ root, scratch, working, assembly, environment, signal }) => {
+export const compilePreparedAssembly = async ({ root, scratch, working, assembly, environment, signal, projectReferences = false }) => {
 	const env = { ...environment, DOTNET_CLI_HOME: join(scratch, "cli"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1", NUGET_PACKAGES: join(scratch, "packages") };
 	const run = args => processBuildRunner.capture({ command: environment.LEAN_BRIDGE_DOTNET ?? "dotnet", args, cwd: root, env, signal });
 	const sdks = (await run(["--list-sdks"])).stdout.split("\n").map(line => /^(8\.0\.\d+) \[/.exec(line)?.[1]).filter(Boolean);
@@ -71,8 +72,13 @@ export const compilePreparedAssembly = async ({ root, scratch, working, assembly
 		, "/p:ImportDirectoryBuildProps=false"
 		, "/p:ImportDirectoryBuildTargets=false"
 		, "/p:ImportDirectoryPackagesProps=false"
+		// The build directory may be nested in an unrelated checkout. Its git
+		// revision is not Lean source provenance or part of a shared CLR type.
+		, "/p:EnableSourceControlManagerQueries=false"
+		, "/p:IncludeSourceRevisionInInformationalVersion=false"
+		, "/p:EnableSourceLink=false"
 		, "/p:ContinuousIntegrationBuild=true", "/p:UseSharedCompilation=false"
-		, `/p:BaseIntermediateOutputPath=${scratch}/obj/`
+		, ...projectReferences ? ["-m:1"] : [`/p:BaseIntermediateOutputPath=${scratch}/obj/`]
 		, `/p:PathMap=${working}=/build/ordinary-dotnet`]);
 	await rm(scratch, { recursive: true, force: true });
 	return version;

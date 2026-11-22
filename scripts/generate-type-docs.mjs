@@ -534,7 +534,7 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		, ...(profiles.length === 1 && profiles[0] === "ruby"
 			? ["", "For a compiled Ruby gem, check its package receipt: `native-ruby-io-v1` supports [synchronous IO and typed errors](#call-synchronous-io), and `native-ruby-task-v1` supports [tasks and pull streams](#await-a-task-or-read-a-stream). Those profiles have separate installed checks; the general audit rows below do not describe their delivery APIs."] : [])
 		, ...(zeroPayloadMatrix ? ["", zeroPayloadMatrix] : [])
-		, ...(profiles.length === 1 && profiles[0] === "dotnet" ? ["", "For NuGet's native delivery profiles, see [synchronous IO and typed errors](#call-synchronous-io), [awaiting tasks and pulling streams](#await-tasks-and-pull-streams), and [retained C# callbacks](#let-a-lean-task-call-c). These profiles are separate from the general audit rows below."] : [])
+		, ...(profiles.length === 1 && profiles[0] === "dotnet" ? ["", "For NuGet's native delivery profiles, see [synchronous IO and typed errors](#call-synchronous-io), [tasks and streams](#await-tasks-and-pull-streams), [retained C# callbacks](#let-a-lean-task-call-c), and [shared resources](#share-a-lean-resource-across-packages). These profiles are separate from the general audit rows below."] : [])
 		, ...(dependentCheckedRecordMatrix
 			? ["", dependentCheckedRecordMatrix] : [])
 		, ...(dependentSignatureComplete

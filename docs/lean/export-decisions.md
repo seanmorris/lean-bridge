@@ -23,7 +23,7 @@ declarations of the host methods they call.
 | Generics, implicit arguments, instances | Select finite build-time specializations and resolve the required dictionaries. |
 | `Fin`, `Subtype`, dependent signatures | Preserve runtime constraints through checked constructors or validation. An erased proof does not authorize an unchecked input. |
 | Theorems and direct proof arguments | Let Lean authenticate proof-only positions and erase their runtime slots. Retain theorem identities and assumptions in assurance metadata. Refuse proof-valued exports instead of fabricating host evidence. |
-| Resources, host objects, mutable members | Declare identity, ownership, borrowing, transfer, and disposal. See [how Ruby IO and task gems share a Lean resource](../publish/rubygems.md#export-a-shared-lean-resource). Keep incompatible runtimes separate. |
+| Resources, host objects, mutable members | Declare identity, ownership, borrowing, transfer, and disposal. See how [C#](../publish/nuget.md#export-a-shared-lean-resource) and [Ruby](../publish/rubygems.md#export-a-shared-lean-resource) share resources between IO and task packages. Keep incompatible runtimes separate. |
 | Callbacks and returned closures | Specify argument/result types, retention, reentry, failure behavior, and lifetime. For a task that calls its host, see the owner-thread callback contracts for [C](../publish/c.md#export-a-callback-taking-task), [C++](../publish/cpp.md#export-a-callback-taking-task), [Python](../publish/pypi.md#let-a-lean-task-call-python), [Ruby](../publish/rubygems.md#export-a-callback-taking-task), and [Rust](../publish/cargo.md#export-a-callback-taking-task). |
 | `IO`, `EIO`, declared errors | Preserve effect order and typed failures. An IO action is not automatically asynchronous. |
 | `Task`, cancellation, iterators, async iterators | Select a real Lean task with `taskExports`, or a cursor factory, pull, and close with `asyncIterators`. Linux CPython exposes [awaitables](../publish/pypi.md#export-a-lean-task-to-asyncio) and [async iterators](../publish/pypi.md#export-an-async-iterator); Linux C11 exposes [waitable descriptors](../publish/c.md#export-tasks-and-pull-streams), C++20 exposes [move-only futures and pull streams](../consume/cpp.md#await-a-task-or-pull-a-stream), Ruby exposes [fiber-aware tasks and Enumerable streams](../consume/ruby.md#await-a-task-or-read-a-stream), and Rust exposes [executor-driven futures and streams](../publish/cargo.md#export-a-task-or-pull-stream). |
@@ -600,7 +600,8 @@ For genuine Lean tasks and pull streams, use the separate
 it exposes C# `Task<T>` and `IAsyncEnumerable<T>`. A
 [callback-taking task](../publish/nuget.md#export-a-callback-taking-task)
 keeps its delegates until settlement. Propagating the original Lean callback
-error rethrows the C# exception; constructing a new error does not.
+error rethrows the C# exception; constructing a new error does not. Both profiles
+can [exchange resource leases](../publish/nuget.md#export-a-shared-lean-resource) across independently built packages.
 
 The same distinction holds when a module also exports a task. In the
 [installed C, C++, Python and Rust example](../evidence/native-task-companions-20261122.json),

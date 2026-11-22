@@ -45,10 +45,10 @@ test("NuGet IO exposes typed synchronous methods, rejects name collisions and sh
 	for(const path of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
 	{
 		const manifest = await parse(path), included = manifest.files ?? manifest.includedFiles;
-		for(const f of ["src/backends/dotnet/sync-io.mjs", "src/backends/dotnet/sync-wire.cs", "src/backends/dotnet/task-callbacks.cs", "src/backends/dotnet/task-delivery.cs", "src/backends/dotnet/task-loop.cs", "src/release/dotnet-io-package.mjs"]) assert.ok(included.includes(f), path + ": " + f);
+		for(const f of ["src/backends/dotnet/sync-io.mjs", "src/backends/dotnet/sync-wire.cs", "src/backends/dotnet/task-callbacks.cs", "src/backends/dotnet/task-delivery.cs", "src/backends/dotnet/task-loop.cs", "src/backends/dotnet/resource-contract.cs", "src/backends/dotnet/resource-wire.cs", "src/release/dotnet-io-package.mjs"]) assert.ok(included.includes(f), path + ": " + f);
 	}
 });
-test("NuGet checks OS effects and does not replace a task or a resource with a synchronous wrapper", {
+test("NuGet checks OS grants, real task factories and concrete resource declarations", {
 	skip: !env.LEAN_BRIDGE_DOTNET_IO_POLICY, timeout: 600_000
 }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "nuget-io-policy-")); t.after(() => rm(root, { recursive: true, force: true }));
@@ -56,7 +56,7 @@ test("NuGet checks OS effects and does not replace a task or a resource with a s
 	for(const f of ["Journal.lean", "lean-toolchain", "lakefile.toml"]) await copyFile(join(journal, f), join(src, f));
 	const refusals = [[{}, /requires nativeEffects "filesystem"/u]
 		, [{ taskExports: ["Journal.store"], nativeEffects: ["filesystem"] }, /requires a real Lean Task/u]
-		, [{ resources: ["Journal.Clock"] }, /do not implement resource leases/u]];
+		, [{ resources: ["Journal.echo"], nativeEffects: ["filesystem"] }, /resource must be a public concrete application type: Journal.echo/u]];
 	for(const [extra, error] of refusals)
 	{
 		await writeFile(join(src, "lean-bridge.exports.json"), canonicalJson({ schemaVersion: 1, modules: ["Journal"], exports: ["Journal.store"], nativeEffects: [], ...extra }));

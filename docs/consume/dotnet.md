@@ -169,6 +169,48 @@ faults it. A catchable fatal CLR fault such as `OutOfMemoryException` retires
 the shared Lean runtime, including other components that use it. See the
 [installed callback checks and archive hashes](../evidence/dotnet-retained-tasks-20261122.json).
 
+### Share a Lean resource across packages
+
+If two packages export the same Lean resource, a value from one passes directly
+to the other. Here Desk issues a ticket and Depot uses it in a task.
+`Retain()` gives you an independently disposable lease on the same ticket;
+it does not copy the underlying object.
+
+```csharp
+using System;
+using Desk = LeanBridge.LeaseDesk.Api;
+using Depot = LeanBridge.LeaseDepot.Api;
+using LeanBridge.LeaseDepot;
+
+LeanRuntime.Run(async () =>
+{
+    using var ticket = Desk.Issue(40);
+    using var spare = ticket.Retain();
+    using var result = await Depot.Revisit(ticket, count => count + 2);
+    ticket.Dispose();
+    Console.WriteLine(Desk.Count(result));         // 42
+    Console.WriteLine(result.SameResource(spare)); // True
+});
+```
+
+Use `using` for each returned lease, including each stream item and each
+resource-valued `DeclaredError<T>.Payload`. Ending a stream closes the cursor,
+not items already handed to you. Another await of the same task returns the
+same wrapper, not a new lease. A stream borrows its input on the first pull,
+so keep it open until then. Once an operation has started, disposing the
+input does not revoke the worker's reference. Resource operations, including
+`Dispose`, run on the process main thread. Reusing a closed wrapper throws
+`ObjectDisposedException`.
+
+NuGet brings the matching CLR type along with the component. For example,
+import `LeanBridge.Resources.Shared` to name `Ticket`. Catch the declaring
+package's error type: `Depot.Checked` throws
+`LeanBridge.LeaseDepot.DeclaredError<Ticket>`. Even if a second resource definition has the same full name,
+it is a distinct CLR type. If you intentionally reference both incompatible
+definitions, use `var` or a C# assembly alias to distinguish them. See
+[exporting a shared resource](../publish/nuget.md#export-a-shared-lean-resource)
+and the [installed resource checks and archive hashes](../evidence/dotnet-resource-leases-20261122.json).
+
 ### Arrays and records
 
 Lean `Array T` uses a typed C# `T[]`, including nested arrays and arrays of
@@ -292,7 +334,7 @@ Compatible owned and copied packages share one runtime. Calls in a forked child
 reject, including a package first used in that child. Execute a fresh program
 before calling Lean there. Function results can borrow a declared input owner;
 see the whole-value API below. The [async package profile](#await-tasks-and-pull-streams)
-supports copied payloads, not these owned values.
+supports copied payloads and [direct resource leases](#share-a-lean-resource-across-packages), not these resource-containing aggregates.
 
 #### Consuming inputs
 
@@ -977,7 +1019,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 
-For NuGet's native delivery profiles, see [synchronous IO and typed errors](#call-synchronous-io), [awaiting tasks and pulling streams](#await-tasks-and-pull-streams), and [retained C# callbacks](#let-a-lean-task-call-c). These profiles are separate from the general audit rows below.
+For NuGet's native delivery profiles, see [synchronous IO and typed errors](#call-synchronous-io), [tasks and streams](#await-tasks-and-pull-streams), [retained C# callbacks](#let-a-lean-task-call-c), and [shared resources](#share-a-lean-resource-across-packages). These profiles are separate from the general audit rows below.
 
 [Hosted dependent checked-record acceptance](../evidence/dependent-checked-record-promotion.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The proof-free host value carries the tested runtime bound and bounded value. Full packages validate inputs with the selected dependent constructor before Lean execution; standalone result-only packages expose Lean-produced values without checked-input metadata. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain outside this evidence.
 
