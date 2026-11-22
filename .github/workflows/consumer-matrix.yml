@@ -4591,6 +4591,20 @@ jobs:
         if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success' || steps.optional_parameters_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')))
         run: exit 1
 
+      - name: Execute the Lean host-import ABI against ordinary Python objects
+        if: ${{ !cancelled() && matrix.profile == 'python' && steps.collection_python311.outcome == 'success' && steps.collection_python312.outcome == 'success' }}
+        timeout-minutes: 3
+        env:
+          LEAN_BRIDGE_HOST_OBJECT_TEST: "1"
+          HOST_PYTHON_311: ${{ steps.collection_python311.outputs.python-path }}
+          HOST_PYTHON_312: ${{ steps.collection_python312.outputs.python-path }}
+        run: |
+          status=0
+          for interpreter in "$HOST_PYTHON_311" "$HOST_PYTHON_312"; do
+            LEAN_BRIDGE_HOST_PYTHON="$interpreter" node --test --test-concurrency=1 tests/host-object-generator.test.mjs || status=1
+          done
+          exit "$status"
+
   managed-consumers:
     name: Managed consumer (${{ matrix.profile }})
     needs: type-surface-authentication

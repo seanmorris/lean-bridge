@@ -649,6 +649,26 @@ The output includes `lib/php/lean_alpha.so`, the shared Lean runtime, and `share
 
 ## Python packages
 
+### Lean calling a host-owned Python object
+
+Run the producer-side host-import contract with the pinned Lean compiler, a C
+compiler and a CPython installation with its headers and shared library:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_HOST_OBJECT_TEST=1 LEAN_BRIDGE_HOST_PYTHON="$(command -v python3)" \
+  node --test tests/host-object-generator.test.mjs
+```
+
+Lean checks the exact types of all nineteen primitives, nested collections and
+results, and a member returning another host type. A second test compiles a Lean
+application, links an independently written CPython provider and removes its
+build tree. The relocated executable calls an ordinary Python class: a setter
+changes the value seen through a second reference, a rejected write preserves
+the old value, and all instances leave the class's weak set after the call.
+The native Python CI shard runs this on 3.11 and 3.12. It tests the Lean import
+ABI; it does not establish a generated provider in a consumer wheel.
+
 ### Ordinary-source Python packages
 
 Use the pinned Lean compiler, a native C compiler and Python 3.11 or newer with pip and venv. Set `LEAN_BRIDGE_PYTHON` to an absolute interpreter path if it is not available as `python3`:
