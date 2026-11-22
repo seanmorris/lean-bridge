@@ -27,8 +27,8 @@ const pathIsSafe = value => typeof value === "string" && value.length <= 1024 &&
 	&& value.split("/").every(part => part && part !== "." && part !== "..");
 const targetProfiles = { npm: ["component-scalars-v1", "javascript-wasm-owned-v1"]
 	, "php-wasm": "php-wasm-copied-v1"
-	, pypi: ["native-library-v1", "native-python-host-v1", "native-python-task-v1"]
-	, c: ["native-library-v1", "native-c-task-v1"]
+	, pypi: ["native-library-v1", "native-python-host-v1", "native-python-task-v1", "native-python-io-v1"]
+	, c: ["native-library-v1", "native-c-task-v1", "native-c-io-v1"]
 	, cpp: ["native-library-v1", "native-cpp-task-v1"]
 	, cargo: ["native-library-v1", "native-rust-task-v1"]
 	, ...Object.fromEntries(["cpan", "nuget", "maven", "rubygems", "wit-wasi", "php-native"].map(target => [target, "native-library-v1"])) };
@@ -72,7 +72,7 @@ export const validatePackageSetReceipt = receipt => {
 		if(!Object.hasOwn(targetProfiles, pkg.target) || ![targetProfiles[pkg.target]].flat().includes(pkg.profile) || !ecosystemFor(pkg.target).includes(pkg.ecosystem)) invalid("Package target, ecosystem and profile disagree");
 		if(pkg.runtimeIdentity !== profiles.get(pkg.profile)?.runtimeIdentity) fail("package-set-runtime-mismatch", "Package runtime differs from its compiled profile");
 		if(!["runtime", "component", "api"].includes(pkg.role) || !["provided", "embedded", "dependency"].includes(pkg.runtimeDelivery)) invalid("Invalid package role or runtime delivery");
-		const pythonHosts = ["native-python-host-v1", "native-python-task-v1"].includes(pkg.profile);
+		const pythonHosts = ["native-python-host-v1", "native-python-task-v1", "native-python-io-v1"].includes(pkg.profile);
 		const rustTasks = pkg.profile === "native-rust-task-v1";
 		const runtimeTarget = pythonHosts || rustTasks || pkg.target === "npm" || pkg.target === "cpan" || pkg.target === "php-wasm";
 		if(pkg.role === "runtime" ? (!runtimeTarget || pkg.runtimeDelivery !== "provided" || pkg.ecosystem === "composer")

@@ -26,15 +26,17 @@ const ext = { c: "c", cpp: "cpp", pypi: "py", cargo: "rs" };
  * @param releases - Original package handoffs.
  * @param target - Native language to exercise.
  * @param env - Installation tools and offline package cache.
+ * @param sample - Installed package coordinates, client directory and receipt checks for this fixture.
  */
-export const runEffectConsumers = async (work, releases, target, env) => {
-	const client = join(clients, "consumer." + ext[target]);
+export const runEffectConsumers = async (work, releases, target, env, sample = {}) => {
+	const client = join(sample.clients ?? clients, "consumer." + ext[target]);
 	const reports = [];
 	let ordinary;
 	for(const route of ["ordinary", "reviewed"])
 	{
 		const handoff = join(releases, target, route, "handoff");
-		const { report, receipt, api } = await checkEffectHandoff(handoff, ordinary); ordinary ??= api;
+		const { report, receipt, api } = await (sample.check ?? checkEffectHandoff)(handoff, ordinary); ordinary ??= api;
+		const component = receipt.packages.find(p => p.role === "component");
 		const build = await mkdtemp(join(work, "install-")), app = await mkdtemp(join(work, "deployed-"));
 		const bin = join(app, "client"), isolated = { PATH: "/unavailable", LANG: "C", LEAN_NUM_THREADS: "1", LEAN_BRIDGE_EFFECT_BOOT: "from-app", TMPDIR: app };
 		try
@@ -43,7 +45,7 @@ export const runEffectConsumers = async (work, releases, target, env) => {
 			{
 				const py = env.LEAN_BRIDGE_PYTHON ?? "python3", python = await run(py, ["-c", "import sys; print(sys.executable)"], build, env);
 				const prefix = join(app, "site");
-				const args = ["-m", "pip", "--disable-pip-version-check", "install", "--no-index", "--no-cache-dir", "--only-binary", ":all:", "--find-links", join(handoff, "archives"), "--target", prefix, "lean-effects==1.0.0"];
+				const args = ["-m", "pip", "--disable-pip-version-check", "install", "--no-index", "--no-cache-dir", "--only-binary", ":all:", "--find-links", join(handoff, "archives"), "--target", prefix, component.name + "==" + component.version];
 				await run(python, args, build, env);
 				await copyFile(client, bin); isolated.PYTHONPATH = prefix;
 				await writeFile(join(app, "state"), "open");
@@ -56,12 +58,12 @@ export const runEffectConsumers = async (work, releases, target, env) => {
 					await run("tar", ["-xzf", join(handoff, p.artifacts[0].path), "--strip-components=1", "-C", dir], build, env);
 					return dir;
 				};
-				const prefix = await unpack(receipt.packages.find(p => p.role === "component"));
+				const prefix = await unpack(component);
 				if(target === "cargo")
 				{
 					const runtime = receipt.packages.find(p => p.role === "runtime"), lib = await unpack(runtime);
 					await mkdir(join(build, "src")); await copyFile(client, join(build, "src/main.rs"));
-					await writeFile(join(build, "Cargo.toml"), `[package]\nname="installed-effects-client"\nversion="0.1.0"\nedition="2021"\n[dependencies]\neffects={path=${JSON.stringify(prefix)}}\n[patch.crates-io]\n${runtime.name}={path=${JSON.stringify(lib)}}\n`);
+					await writeFile(join(build, "Cargo.toml"), `[package]\nname="installed-effects-client"\nversion="0.1.0"\nedition="2021"\n[dependencies]\n${JSON.stringify(component.name)}={path=${JSON.stringify(prefix)}}\n[patch.crates-io]\n${runtime.name}={path=${JSON.stringify(lib)}}\n`);
 					const cargo = env.LEAN_BRIDGE_CARGO ?? "cargo", rust = { ...env, RUSTC: env.LEAN_BRIDGE_RUSTC ?? "rustc", CARGO_TARGET_DIR: join(build, "target"), CARGO_NET_OFFLINE: "true" };
 					await run(cargo, ["generate-lockfile", "--offline"], build, rust);
 					await run(cargo, ["build", "--locked", "--offline", "-j1"], build, rust);
@@ -70,7 +72,7 @@ export const runEffectConsumers = async (work, releases, target, env) => {
 				else
 				{
 					const pc = { ...env, PKG_CONFIG_PATH: "", PKG_CONFIG_LIBDIR: join(prefix, "lib/pkgconfig") };
-					const flags = (await run("pkg-config", ["--cflags", "--libs", "effects"], build, pc)).split(/\s+/u);
+					const flags = (await run("pkg-config", ["--cflags", "--libs", component.name], build, pc)).split(/\s+/u);
 					const cpp = target === "cpp";
 					await run(cpp ? env.CXX ?? "c++" : env.CC ?? "cc", [cpp ? "-std=c++20" : "-std=c11", "-Wall", "-Wextra", "-Werror", client, ...flags, "-pthread", "-ldl", "-o", bin], build, env);
 					await rename(prefix, join(app, "installed")); isolated.LD_LIBRARY_PATH = join(app, "installed/lib");

@@ -109,6 +109,14 @@ and typed failures must contain only supported copied values. For example,
 This profile builds one target at a time. Python host-member calls themselves
 are synchronous; compound member arguments and custom native objects are not supported.
 
+## Export synchronous IO to Python
+
+Select the functions in `exports`, [declare native OS access](../lean/export-decisions.md#declare-native-os-access),
+and build with `--target pypi`. Use `nativeEffects: []` for an API that
+needs no OS access. The `native-python-io-v1` package exposes ordinary Python
+functions; the exact shared runtime wheel is a package dependency. No host
+binding or asyncio loop is required. See [how Python handles errors](../consume/python.md#call-synchronous-io).
+
 ## Export a Lean task to asyncio
 
 If the Lean code uses files, environment variables, or other OS facilities,

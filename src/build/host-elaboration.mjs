@@ -64,6 +64,7 @@ export const compileHostSources = async options => {
 	const selection = {
 		...pythonHostSelection(ir), exports: projectContract.exports
 		, nativeEffectPolicy, nativeEffects: projectContract.nativeEffects ?? []
+		, ...(projectContract.synchronousIO ? { synchronousIO: true } : {})
 		, leanResources: projectContract.leanResources ?? []
 		, ...(options.python && projectContract.taskExports?.length ? { pythonTaskCallbacks: true } : {})
 		, ...(options.target === "cargo" && projectContract.taskExports?.length ? { rustTaskCallbacks: true } : {})

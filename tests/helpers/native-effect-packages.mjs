@@ -21,20 +21,21 @@ const fsCap = "capability:native.filesystem", envCap = "capability:native.enviro
  * @param root - Directory for original source snapshots and handoffs.
  * @param target - Native package target.
  * @param env - Pinned build tools.
+ * @param sample - Optional source fixture and acceptance check for another native delivery profile.
  */
-export const buildEffectHandoffs = async (root, target, env) => {
+export const buildEffectHandoffs = async (root, target, env, sample = {}) => {
 	let ordinary;
 	await mkdir(join(root, target));
 	for(const route of ["ordinary", "reviewed"])
 	{
 		const dir = join(root, target, route), src = join(dir, "source");
 		await mkdir(src, { recursive: true });
-		for(const f of ["Effects.lean", "lakefile.toml", "lean-toolchain", "lean-bridge.exports.json"]) await copyFile(join(fixture, f), join(src, f));
-		if(ordinary) await writeFile(join(src, "effects.binding-ir.json"), canonicalJson(ordinary), { flag: "wx" });
+		for(const f of [sample.module ?? "Effects.lean", "lakefile.toml", "lean-toolchain", "lean-bridge.exports.json"]) await copyFile(join(sample.fixture ?? fixture, f), join(src, f));
+		if(ordinary) await writeFile(join(src, sample.reviewFile ?? "effects.binding-ir.json"), canonicalJson(ordinary), { flag: "wx" });
 		const handoff = join(dir, "handoff");
 		await buildCanonicalProject({ projectRoot: src, outputRoot: handoff, targets: [target], environment: env })
 			.catch(e => { throw new Error(e.message + "\n" + JSON.stringify(e.details), { cause: e }); });
-		const checked = await checkEffectHandoff(handoff, ordinary);
+		const checked = await (sample.check ?? checkEffectHandoff)(handoff, ordinary);
 		ordinary ??= checked.api;
 	}
 };

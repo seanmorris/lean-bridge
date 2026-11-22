@@ -2,6 +2,11 @@
    pointer. Only the main thread owns the registry; Lean workers signal eventfd. */
 #include <string.h>
 #include <sys/syscall.h>
+#if LB_SYNC_ONLY
+#include <stdlib.h>
+#include <unistd.h>
+#include "lean_bridge_native_runtime.h"
+#else
 #include "task-notification.h"
 #ifdef LB_RETAINED_TASKS
 #include "task-callback-port.h"
@@ -27,8 +32,9 @@ typedef struct lb_entry {
 #endif
 } lb_entry;
 static lb_entry *lb_entries;
-static uint64_t lb_domain;
 #define LB_OWNER_KIND LB_COMPONENT ".owner"
+#endif
+static uint64_t lb_domain;
 
 static int lb_context(void) {
     return getpid() == (pid_t)syscall(SYS_gettid) && lean_bridge_native_process_valid();
@@ -46,6 +52,7 @@ static LB(status) lb_prepare(void) {
     }
     return LB(OK);
 }
+#if !LB_SYNC_ONLY
 static LB(status) lb_reserve(unsigned kind, lb_entry **out) {
     lb_entry *e = calloc(1, sizeof *e);
     if (!e) return LB(NO_MEMORY);
@@ -113,6 +120,7 @@ static LB(status) lb_close(uint64_t *id, uint64_t domain, unsigned kind) {
     return s;
 }
 
+#endif
 static LB(status) lb_copy(LB(buffer) *out, const void *bytes, size_t n) {
     if (n > LB_MAX_BYTES) return LB(LIMIT);
     uint8_t *p = n ? malloc(n) : NULL;

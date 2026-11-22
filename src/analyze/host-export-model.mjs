@@ -46,6 +46,10 @@ export const reconcileHostExports = options => {
 	if(metadata?.kind !== "lean-bridge-host-export-metadata" || metadata.schemaVersion !== 1
 		|| canonicalJson(metadata.entries.map(e => e.declaration)) !== canonicalJson(selection.exports)) fail("Fresh Lean metadata did not cover the complete export selection");
 	const imports = ir ? hashBindingIr(ir) : null, types = resources(ir), members = importedMembers(ir, types);
+	const synchronous = selection.synchronousIO === true;
+	if(synchronous && (!selection.nativeEffectPolicy || ir || !metadata.entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
+		|| selection.taskExports?.length || selection.asyncIterators?.length || metadata.entries.some(e => e.delivery || e.taskIO)))
+		fail("A standalone native IO package requires a checked IO, BaseIO or EIO entry and no host imports or async protocols");
 	if(selection.nativeEffectPolicy && ir?.capabilities.some(c => c.id.startsWith("capability:native.")))
 		fail("Host imports cannot declare compiler-owned capability:native.* identifiers");
 	// Unmarked records also occur in pre-policy evidence. Canonical builds always
@@ -140,11 +144,11 @@ export const reconcileHostExports = options => {
 		if(Boolean(e.taskIO) !== Boolean(selection.taskIOErrors?.includes(e.declaration))
 			|| ((hasCallbacks(e) || e.taskIO) && (!task || !(selection.pythonTaskCallbacks || rust || cpp || c)))) fail("Unverified retained-callback or terminal IO selection");
 		for(const p of e.parameters) if(isCallback(p.type)) callbackRef(p.type);
-		if(!["IO", "EIO", "pure", ...(async ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
+		if(!["IO", "EIO", "pure", ...(async || synchronous ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
 			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (async && e.hostMembers.length)
 			|| Boolean(selected) !== stream || (stream && canonicalJson(selected) !== canonicalJson(e.protocol))
 			|| (!stream && (e.stepError || e.protocol)) || (e.delivery !== undefined && !async)
-			|| (!async && e.effect === "pure" && (e.result?.constructor !== "result" || e.hostMembers.length))
+			|| (!async && e.effect === "pure" && ((!synchronous && e.result?.constructor !== "result") || e.hostMembers.length))
 			|| e.hostMembers.some(n => !selection.members.includes(n))) fail(`Unauthenticated effect or host member for ${e.declaration}`);
 		if(e.effect === "EIO") errors.push({
 			id: errorIds(e)[0], name: `EIO_${e.declaration.replaceAll(".", "_")}`
@@ -201,7 +205,7 @@ export const reconcileHostExports = options => {
 			}
 		}))
 		, errors, capabilities: requiredCaps, assurance: []
-		, documentation: doc(`Compiled ${ir ? "host-object" : "task"} API for ${component.name}.`)
+		, documentation: doc(`Compiled ${ir ? "host-object" : synchronous ? "synchronous IO" : "task"} API for ${component.name}.`)
 	};
 	validateBindingIr(api);
 	if(review)

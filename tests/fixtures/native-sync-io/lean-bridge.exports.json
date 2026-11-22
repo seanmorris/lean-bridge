@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.bump", "Journal.count", "Journal.store", "Journal.read", "Journal.choose", "Journal.echo"],
+  "nativeEffects": ["filesystem"],
+  "targets": {
+    "c": {"name": "journal", "version": "1.0.0"},
+    "pypi": {"name": "lean-journal", "version": "1.0.0"}
+  }
+}

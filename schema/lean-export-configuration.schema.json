@@ -4,15 +4,14 @@
   "type": "object",
   "additionalProperties": false,
   "required": ["schemaVersion"],
-  "dependentRequired": {"hostImports": ["modules"], "taskExports": ["modules"], "taskIOErrors": ["taskExports"], "asyncIterators": ["modules"]},
-  "dependentSchemas": {"nativeEffects": {"anyOf": [{"required":["hostImports"]}, {"required":["taskExports"]}, {"required":["asyncIterators"]}]}},
+  "dependentRequired": {"hostImports": ["modules"], "taskExports": ["modules"], "taskIOErrors": ["taskExports"], "asyncIterators": ["modules"], "nativeEffects": ["modules"]},
   "properties": {
     "schemaVersion": {"const": 1},
     "package": {"$ref": "#/$defs/metadata"},
     "modules": {"$ref": "#/$defs/selection"},
     "exports": {"$ref": "#/$defs/selection"},
     "hostImports": {"const": "lean-bridge.hosts.json"},
-    "nativeEffects": {"type":"array","uniqueItems":true,"items":{"enum":["clock","environment","filesystem","process-info","random","stdio"]}},
+    "nativeEffects": {"description":"Allowed native OS capabilities checked against compiled code. On standalone synchronous IO packages, specify [] when no grant is needed.","type":"array","uniqueItems":true,"items":{"enum":["clock","environment","filesystem","process-info","random","stdio"]}},
     "taskExports": {"type": "array", "items": {"$ref": "#/$defs/specializationName"}, "uniqueItems": true, "minItems": 1, "maxItems": 128},
     "taskIOErrors": {"type": "array", "items": {"$ref": "#/$defs/specializationName"}, "uniqueItems": true, "minItems": 1, "maxItems": 128},
     "asyncIterators": {"type": "array", "minItems": 1, "maxItems": 128, "uniqueItems": true, "items": {

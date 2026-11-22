@@ -59,12 +59,15 @@ const captureContracts = async (project, inventory) => {
 	const taskExports = config.taskExports?.toSorted() ?? [];
 	const asyncIterators = [...config.asyncIterators ?? []].sort((a, b) => a.open < b.open ? -1 : 1);
 	const selected = [...taskExports, ...asyncIterators.map(s => s.open)];
+	if(!ir && !selected.length && config.nativeEffects === undefined)
+		fail("Standalone synchronous IO requires an explicit nativeEffects list; use [] for an in-memory API");
 	const exports = config.exports ? [...config.exports].sort() : reviewedExports ?? selected.toSorted();
 	if(!exports?.length || new Set(exports).size !== exports.length
 		|| selected.some(n => !exports.includes(n))
 		|| (review && canonicalJson(exports) !== canonicalJson(reviewedExports)))
 		fail("Select application exports by Lean name; reviewed and configured exports must agree");
 	return { ir, review, exports, taskExports, asyncIterators
+		, ...(!ir && !selected.length ? { synchronousIO: true } : {})
 		, nativeEffects: config.nativeEffects?.toSorted() ?? []
 		, ...(config.taskIOErrors ? { taskIOErrors: config.taskIOErrors.toSorted() } : {})
 		, leanResources: config.resources?.toSorted() ?? []
@@ -80,7 +83,7 @@ export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
 	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
-	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi"].includes(target)) fail("Task and async iterator builds require one c, cpp, cargo or pypi target");
+	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi"].includes(target)) fail("Native IO, task and async iterator builds require one c, cpp, cargo or pypi target");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
@@ -93,6 +96,8 @@ export const buildHostProject = async options => {
 	const version = settings.version ?? (target === "pypi" && component.version === "0.0.0-local" ? "0.0.0+local" : component.version);
 	(target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : validateNativeCSettings)({ name, version });
 	const contract = await captureContracts(project, inventory);
+	if(contract.synchronousIO && !["c", "pypi"].includes(target))
+		fail("Standalone synchronous IO currently requires a c or pypi target");
 	if(inventory.project.toolchain !== "leanprover/lean4:v4.32.2") fail("Host source and runtime require the same pinned Lean toolchain");
 	if(!inventory.project.lakefile) fail("Host imports require a Lake package so each module has a checked owner");
 	const leanPrefix = resolve(environment.LEAN_BRIDGE_LEAN_PREFIX ?? (await processBuildRunner.capture({

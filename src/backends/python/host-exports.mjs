@@ -103,6 +103,14 @@ const errorClass = `class LeanEIOError(Exception):
         self.payload = payload
         super().__init__(f"{declaration} raised a Lean EIO error")
 `;
+const syncIOClass = `class LeanIOError(RuntimeError):
+    def __init__(self, declaration: str, message: str) -> None:
+        self.declaration = declaration
+        self.message = message
+        super().__init__(message)
+
+_native._io_failure_type = LeanIOError
+`;
 const copied = t => t?.kind === "primitive" ? Object.hasOwn(scalars, t.name)
 	: t?.kind === "apply" && t.constructor === "result" && t.arguments?.length === 2 && t.arguments.every(copied);
 const asset = path => readFileSync(new URL(path, import.meta.url), "utf8");
@@ -129,17 +137,17 @@ static PyObject *lb_start_${i}(lean_object *v) {
 		].join("\n")
 	};
 };
-const emit = (resources, entry, i, codecs) => {
+const emit = (resources, entry, i, codecs, synchronous) => {
 	const args = entry.parameters.map(p => carrier(resources, p.type));
 	const effect = entry.effect ?? "IO", task = entry.delivery === "task", stream = entry.delivery === "async-iterator";
 	const bound = resources.length > 0 && !task && !stream;
-	if(!["pure", "IO", "EIO", ...(task || stream ? ["BaseIO"] : [])].includes(effect)) throw new TypeError("unsupported entry effect");
+	if(!["pure", "IO", "EIO", ...(task || stream || synchronous ? ["BaseIO"] : [])].includes(effect)) throw new TypeError("unsupported entry effect");
 	if((task || stream) && (!copied(entry.result) || entry.parameters.some(p => !copied(p.type)))) throw new TypeError("Lean tasks require copied carriers");
 	if(stream && (entry.protocol?.open !== entry.declaration || !qualified.test(entry.protocol.next) || !qualified.test(entry.protocol.close)
 		|| (entry.stepError && !copied(entry.stepError)))) throw new TypeError("invalid async iterator protocol");
 	if((entry.result?.kind === "apply" && !copied(entry.result)) || (effect === "EIO" && !copied(entry.error)))
 		throw new TypeError("returned sums and EIO errors require copied payloads");
-	if(!task && !stream && effect === "pure" && entry.result?.constructor !== "result") throw new TypeError("expected a returned Except");
+	if(!synchronous && !task && !stream && effect === "pure" && entry.result?.constructor !== "result") throw new TypeError("expected a returned Except");
 	const startError = effect === "EIO" ? returned(resources, entry.error, codecs) : null;
 	const asyncOut = stream ? streamCodec(i, entry, returned(resources, entry.result, codecs), startError, entry.stepError ? returned(resources, entry.stepError, codecs) : null)
 		: task ? taskCodec(i, returned(resources, entry.result, codecs), startError, entry.taskIO) : null;
@@ -154,10 +162,15 @@ const emit = (resources, entry, i, codecs) => {
 	const c = `${asyncOut?.c ?? ""}
 static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     (void)module;
-    ${bound ? `if (!lb_active() || !lean_bridge_native_component_ready(LB_COMPONENT)) {
+    ${synchronous ? "if (!lb_sync_owner()) return NULL;" : bound ? `if (!lb_active() || !lean_bridge_native_component_ready(LB_COMPONENT)) {
         PyErr_SetString(PyExc_RuntimeError, "enter bind_hosts on this thread before calling this component"); return NULL;
     }` : "if (!lb_prepare()) return NULL;"}
     if (PyTuple_GET_SIZE(args) != ${args.length}) { PyErr_SetString(PyExc_TypeError, "wrong number of arguments to ${entry.name}"); return NULL; }
+    ${synchronous ? `${args.length ? `if (!lb_sync_started) {
+        ${entry.parameters.map((p, j) => `if (!lb_convert_${p.type.name}(PyTuple_GET_ITEM(args, ${j}), 0)) return NULL;`).join("\n        ")}
+    }` : ""}
+    if (!lb_prepare()) return NULL;
+    lb_sync_started = 1;` : ""}
     ${bound ? "lb_current->depth++; lb_frame frame = {lb_call_frame, NULL}; lb_call_frame = &frame; lb_sweep();" : ""}
     lean_object *v[${Math.max(1, args.length)}] = {0}, *io = NULL; PyObject *result = NULL;
     ${args.map((a, j) => `if (!(v[${j}] = ${a.fromPython(`PyTuple_GET_ITEM(args, ${j})`)})) goto done;`).join("\n    ")}
@@ -170,7 +183,15 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
         ${bound ? "if (!lb_restore_fault(e))" : ""} {
             lean_inc(e); lean_object *s = lb_python_host_error_text(e);
             PyObject *msg = lb_in_string(s); lean_dec(s);
-            if (msg) { PyErr_SetObject(PyExc_RuntimeError, msg); Py_DECREF(msg); }
+            if (msg) {
+                ${synchronous && effect === "IO" ? `PyObject *type = PyObject_GetAttrString(module, "_io_failure_type");
+                if (type) {
+                    PyObject *exc = PyObject_CallFunction(type, "sO", "${entry.declaration}", msg);
+                    if (exc) { PyErr_SetObject(type, exc); Py_DECREF(exc); }
+                    Py_DECREF(type);
+                }` : "PyErr_SetObject(PyExc_RuntimeError, msg);"}
+                Py_DECREF(msg);
+            }
         }
     }
     ${args.length ? "done: ;" : ""}
@@ -198,12 +219,16 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
  */
 export const generatePythonHostExtension = options => {
 	const { ir, module, entries, runtimeIdentity, componentIdentity, modules = [module] } = options;
+	const synchronous = options.synchronousIO === true, syncIO = synchronous && entries.some(e => e.effect === "IO");
+	if(synchronous && (ir || entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))))
+		throw new TypeError("Invalid standalone Python IO delivery contract");
 	if(!modules.includes(module) || modules.some(m => !qualified.test(m)) || !entries.length || ![runtimeIdentity, componentIdentity].every(d => /^[a-f0-9]{64}$/u.test(d)))
 		throw new TypeError("expected a source module, entries, and exact runtime/component identities");
 	const provider = ir ? generatePythonHostProvider(ir) : {
 		resources: [], lean: "", binder: "from . import _native\n"
 		, source: `#define PY_SSIZE_T_CLEAN\n#include <Python.h>\n#include <lean/lean.h>\n${asset("host-scalars.h")}` };
 	checkNames(entries, provider.resources);
+	if(syncIO && entries.some(e => e.name === "LeanIOError")) throw new TypeError("reserved Python IO error name");
 	const resources = ir?.types.filter(r => r.kind === "resource" && r.host?.targets.includes("python")) ?? [];
 	const codecs = new Map(), slots = new Map();
 	for(const e of entries) for(const p of e.parameters) if(p.type.kind === "io-callback")
@@ -218,7 +243,7 @@ export const generatePythonHostExtension = options => {
 		throw new TypeError("reserved Python task name");
 	const functions = entries.map((e, i) => e.parameters.some(p => slots.has(p))
 		? retainedEntry({ entry: e, i, scalar: t => carrier(resources, t), returned: t => returned(resources, t, codecs), slots })
-		: emit(resources, e, i, codecs));
+		: emit(resources, e, i, codecs, synchronous));
 	const callbackCodecs = callbacks ? [...slots].map(([p, id]) => {
 		const a = carrier(resources, p.type.argument);
 		return `static PyObject *lb_cb_in_${id}(lean_object *v) { return ${a.toPython("v")}; }
@@ -244,6 +269,14 @@ static const lb_codec lb_cb_slot_${id} = {lb_cb_in_${id}, lb_out_${p.type.reply.
 #include "lean_bridge_native_runtime.h"
 #define LB_COMPONENT "pyhost:${componentIdentity}"
 ${entryDeclarations}
+${synchronous ? `#include <sys/syscall.h>
+#include <unistd.h>
+static int lb_sync_started;
+static int lb_sync_owner(void) {
+    if (getpid() == (pid_t)syscall(SYS_gettid) && lean_bridge_native_process_valid()
+        && PyThreadState_GetInterpreter(PyThreadState_Get()) == PyInterpreterState_Main()) return 1;
+    PyErr_SetString(PyExc_RuntimeError, "synchronous Lean IO requires the original process main thread and interpreter"); return 0;
+}` : ""}
 static void *lb_init_component(uint8_t b) { return initialize_BridgeHostExports(b); }
 static int lb_prepare(void) {
     if (PyThreadState_GetInterpreter(PyThreadState_Get()) != PyInterpreterState_Main()) {
@@ -292,6 +325,7 @@ PyMODINIT_FUNC PyInit__native(void) { return PyModule_Create(&lb_module); }
 	const hostNames = provider.resources.join(", ");
 	const stub = [
 		"from typing import ContextManager as _ContextManager"
+		, ...(syncIO ? ["class LeanIOError(RuntimeError):\n    declaration: str\n    message: str\n    def __init__(self, declaration: str, message: str) -> None: ...\n"] : [])
 		, ...(outcomes ? ["class LeanTaskError(RuntimeError):\n    declaration: str\n"] : [])
 		, ...(callbacks ? ["from typing import Callable as _Callable, Generic as _CBGeneric, TypeVar as _CBVar\n_CBArg = _CBVar('_CBArg')\n_CBReply = _CBVar('_CBReply')\nclass RetainedCallback(_CBGeneric[_CBArg, _CBReply]):\n    def __init__(self, callback: _Callable[[_CBArg], _CBReply]) -> None: ...\n    def close(self) -> None: ...\n    def __call__(self, value: _CBArg) -> _CBReply: ...\n"] : [])
 		, ...(streams ? [streamStub] : [])
@@ -329,6 +363,6 @@ PyMODINIT_FUNC PyInit__native(void) { return PyModule_Create(&lb_module); }
 		hostLean: provider.lean, entryLean, entryDeclarations, source, stub
 		, types: types.join("\n")
 		, bindingIrSha256: ir ? hashBindingIr(ir) : null
-		, python: `${provider.binder}\n${ir ? `from .host_types import ${hostNames}` : ""}\n\n${support}\n${tasks ? asset("task-await.py") : ""}\n${streams ? asset("stream-await.py") : ""}\n${outcomes ? ioPython + "\n" : ""}${callbacks ? asset("task-callback.py") + "\n" : ""}${functions.map(f => f.python).join("\n")}`
+		, python: `${provider.binder}\n${ir ? `from .host_types import ${hostNames}` : ""}\n\n${syncIO ? syncIOClass : ""}${support}\n${tasks ? asset("task-await.py") : ""}\n${streams ? asset("stream-await.py") : ""}\n${outcomes ? ioPython + "\n" : ""}${callbacks ? asset("task-callback.py") + "\n" : ""}${functions.map(f => f.python).join("\n")}`
 	};
 };

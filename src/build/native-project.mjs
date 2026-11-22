@@ -85,7 +85,8 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 	try
 	{
 		const inventory = await inspectLeanProject(projectRoot, { signal });
-		if(inventory.configurationRecord.configuration.hostImports || inventory.configurationRecord.configuration.taskExports || inventory.configurationRecord.configuration.asyncIterators)
+		const config = inventory.configurationRecord.configuration;
+		if(config.hostImports || config.taskExports || config.asyncIterators || config.nativeEffects !== undefined)
 			return await buildHostProject({ projectRoot, outputRoot, targets
 				, environment, signal, onProgress, lakeSnapshot, inventory });
 		await readNativeReviewedSource(projectRoot, inventory, signal, ownedGraphs);

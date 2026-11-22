@@ -123,6 +123,18 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+## Call synchronous IO
+
+With a `native-c-io-v1` package, call the generated `_call` function on the
+process main thread and inspect its return status. `OK` writes the result
+(including either arm of a returned `Except`). `TYPED_ERROR` writes the
+declared `EIO` error into its own output slot. `IO_ERROR` can supply an owned
+UTF-8 message. Argument-validation failures do not run the selected Lean
+function. Zero-initialize owned aggregate outputs; dispose of buffers and
+owned results with the functions named in the installed header. There is no
+task handle to wait on. The [installed C example](../../tests/fixtures/native-sync-io-clients/consumer.c)
+exercises each outcome and makes another call after both kinds of Lean failure.
+
 ## Wait for a task or pull a stream
 
 A C archive marked `native-c-task-v1` bundles the Lean runtime. Include the

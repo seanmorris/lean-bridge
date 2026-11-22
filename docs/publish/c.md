@@ -41,6 +41,14 @@ Each archive includes its component library, C adapter and matching Lean runtime
 
 Add `--target cpan` to produce Perl archives from that same native compilation. Add `--target npm` to also compile one Wasm component from the same captured source tree when the API fits [npm's supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records. Selecting npm for unsupported signatures rejects the combined build without partial output. Combined builds check source API agreement across profiles and put the native archives under `profiles/native/archives/`. Install the [npm](npm.md#build-npm-and-cpan-together) and [CPAN](cpan.md#build-an-ordinary-lean-project) tools only when selecting those targets. C-only builds do not invoke Perl.
 
+## Export synchronous IO to C11
+
+Select the Lean declarations in `exports` and [declare native OS access](../lean/export-decisions.md#declare-native-os-access).
+Use `nativeEffects: []` for an in-memory API. Build with `--target c`; the
+`native-c-io-v1` receipt identifies the synchronous profile. A function
+returning `IO α` or `EIO ε α` generates one `_call` entry, not a polling
+handle. See [how an installed caller handles the result](../consume/c.md#call-synchronous-io).
+
 ## Export tasks and pull streams
 
 If the Lean code uses files, environment variables, or other OS facilities,

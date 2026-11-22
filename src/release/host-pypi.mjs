@@ -107,7 +107,8 @@ export const buildPythonHostWheel = async options => {
 		const tag = `${abi}-${abi}-${platformTag}`, pkg = normalize(name);
 		const app = join(stage, "producer"), root = join(stage, "wheel", pkg);
 		const { entries, env, objects, api, evidence } = await compileHostSources({ ...options, environment, run, app });
-		const config = { ir, module, entries, runtimeIdentity: identity, modules: projectContract?.modules };
+		const synchronous = projectContract?.synchronousIO === true;
+		const config = { ir, module, entries, runtimeIdentity: identity, modules: projectContract?.modules, synchronousIO: synchronous };
 		const skeleton = generatePythonHostExtension({ ...config, componentIdentity: "0".repeat(64) });
 		const sourceIdentity = sources.map(s => ({ module: s.module, sha256: sha256(s.source) }));
 		const sourceTreeSha256 = projectContract?.sourceTreeSha256 ?? sha256(canonicalJson({ name, version, module, entries, sourceIdentity, bindingIrSha256: skeleton.bindingIrSha256, licenseSha256: sha256(license) }));
@@ -164,11 +165,12 @@ del _runtime
 		}));
 		const archive = await wheel({
 			stage, output, name, version, tag
-			, summary: ir ? "Compiled Lean component with generated Python host imports" : "Compiled Lean tasks for Python asyncio"
+			, summary: ir ? "Compiled Lean component with generated Python host imports" : synchronous ? "Synchronous compiled Lean IO for Python" : "Compiled Lean tasks for Python asyncio"
 			, metadata: projectContract?.metadata
 			, requires: `Requires-Dist: ${runtimePackage} (==${runtimePackageVersion})\n`
 			, licenses: { ...(projectContract?.notices ?? { "Source-LICENSE": license }), "LeanBridge-LICENSE": await readFile(notice) } });
-		return { ...archive, runtimeIdentity: identity, runtimePackageVersion, componentIdentity, sourceTreeSha256, bindingIrSha256, ...(entries.some(e => e.delivery) ? { profile: "native-python-task-v1" } : {}), ...(api ? { api, evidence, component: projectContract.component } : {}) };
+		const profile = synchronous ? "native-python-io-v1" : entries.some(e => e.delivery) ? "native-python-task-v1" : null;
+		return { ...archive, runtimeIdentity: identity, runtimePackageVersion, componentIdentity, sourceTreeSha256, bindingIrSha256, ...profile ? { profile } : {}, ...api ? { api, evidence, component: projectContract.component } : {} };
 	});
 };
 

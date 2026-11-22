@@ -19,8 +19,11 @@ const qualified = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/u;
  */
 export const generateCTaskExports = options => {
 	const { name, modules, entries, componentIdentity } = options;
+	const synchronous = options.synchronousIO === true;
 	if(!/^[a-z][a-z0-9]*(?:[-_.][a-z0-9]+)*$/u.test(name) || !/^[0-9a-f]{64}$/u.test(componentIdentity)
-		|| !modules?.length || !modules.every(m => qualified.test(m)) || !entries.some(e => e.delivery)) throw new TypeError("Invalid C task component");
+		|| !modules?.length || !modules.every(m => qualified.test(m))
+		|| (synchronous ? entries.some(e => e.delivery || e.taskIO) || !entries.some(e => ["IO", "BaseIO", "EIO"].includes(e.effect))
+			: !entries.some(e => e.delivery))) throw new TypeError("Invalid native C delivery contract");
 	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources);
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
@@ -39,7 +42,7 @@ export const generateCTaskExports = options => {
 		, "set_option autoImplicit false"
 		, "namespace LeanBridgeCAsync"
 		, "@[export lb_c_error_text] def errorText (e : IO.Error) : String := toString e"
-		, streamEntryLean, ...retained ? [retainedLean] : []];
+		, ...synchronous ? [] : [streamEntryLean], ...retained ? [retainedLean] : []];
 	const fn = (name, args, body) => {
 		const signature = `${p}_status ${name}(${args.join(", ") || "void"})`;
 		symbols.push(name); prototypes.push(signature + ";"); functions.push(`${signature} {\n    ${body}\n}`);
@@ -82,7 +85,7 @@ export const generateCTaskExports = options => {
 		if(async) types.push(`typedef struct { uint64_t id, domain; } ${h};`);
 		// Stable aliases: adding a different export must not change the consumer's
 		// spelling for an anonymous returned Except or the way it is disposed.
-		for(const [kind, c] of [["value", item], ["start_error", error], ["step_error", step]])
+		for(const [kind, c] of [["value", item], [synchronous ? "error" : "start_error", error], ["step_error", step]])
 			if(c)
 			{
 				const alias = `${n}_${kind}`;
@@ -146,7 +149,7 @@ export const generateCTaskExports = options => {
 #ifdef __cplusplus
 extern "C" {
 #endif
-typedef enum { ${statuses.map(s => `${p}_${s}`).join(", ")} } ${p}_status;
+typedef enum { ${statuses.flatMap((s, i) => synchronous ? ["PENDING", "END", "IDLE"].includes(s) ? [] : [`${p}_${s} = ${i}`] : [`${p}_${s}`]).join(", ")} } ${p}_status;
 typedef struct { const uint8_t *data; size_t len; } ${p}_view;
 typedef struct { uint8_t *data; size_t len; } ${p}_buffer;
 void ${p}_buffer_dispose(${p}_buffer *v);${exact && !gmp ? `
@@ -163,6 +166,7 @@ ${[...resourceHeader ? [resourceHeader] : [], ...values.types, ...host ? host.he
 #include <lean/lean.h>
 ${declarations.join("\n")}
 #define LB(x) ${p}_##x
+#define LB_SYNC_ONLY ${Number(synchronous)}
 #define LB_COMPONENT "ctask:${componentIdentity}"
 #define LB_MAX_BYTES (16u * 1024u * 1024u)${retained ? "\n#define LB_RETAINED_TASKS 1" : ""}${host ? "\n#define LB_PUBLIC_C_CALLBACKS 1" : ""}
 #include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}

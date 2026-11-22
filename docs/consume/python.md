@@ -101,6 +101,18 @@ function. If Lean simply propagates an exception from your Python method in
 requires `await`. The [Workshop consumer](../../tests/fixtures/host-object/installed.py)
 exercises all three cases.
 
+### Call synchronous IO
+
+Call a `native-python-io-v1` function directly on the process main thread
+in the main interpreter, without `await` or `bind_hosts`. Start a fresh
+process instead of reusing an initialized runtime after `fork`.
+For example, `text = journal.read(path)` returns a string or raises
+`journal.LeanIOError` with the Lean declaration and a message.
+`journal.LeanEIOError.payload` carries the typed value thrown by an `EIO`
+function. By contrast, a returned `Except` is an ordinary `Ok` or `Err`
+value. A wrong Python type or out-of-range integer fails conversion before
+the exported function runs. See the [installed Python example](../../tests/fixtures/native-sync-io-clients/consumer.py).
+
 ### Await a Lean task
 
 Install the [Timers release](../publish/pypi.md#export-a-lean-task-to-asyncio)

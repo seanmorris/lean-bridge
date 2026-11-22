@@ -577,6 +577,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		fail("task-exports-require-elaboration", "Awaitable delivery requires a compiler-checked Lean Task; source discovery cannot authorize a scheduler");
 	if(configuration.asyncIterators)
 		fail("async-iterators-require-elaboration", "Async iteration requires a compiler-checked cursor, pull and close protocol");
+	if(configuration.nativeEffects !== undefined)
+		fail("native-io-requires-elaboration", "Build the selected native target to check synchronous IO signatures and OS access; source discovery cannot authorize native effects");
 	if(configuration.ownedAggregates !== undefined)
 		fail("ownership-requires-elaboration", "Owned aggregates require compiler-backed analysis; source discovery cannot authorize retained resource fields");
 	if(Object.keys(configuration.arities ?? {}).length)

@@ -533,7 +533,8 @@ Analysis reports separate reasons for unresolved implicit, instance, dependent, 
 A Lean `IO` result tells the caller how an operation can fail. It doesn't say
 whether that operation reads a file, checks an environment variable, or only
 updates an in-memory reference. For the Linux x86-64 native task and iterator packages (C, C++,
-Rust, and Python), and Python host-import packages, declare OS access separately
+Rust, and Python), Python host-import packages, and standalone synchronous C11
+and CPython packages, declare OS access separately
 in `lean-bridge.exports.json`. Here the module reads an environment variable at
 startup, and its worker reads a file:
 
@@ -555,11 +556,35 @@ startup, and its worker reads a file:
 | `random` | Request random bytes from the OS. |
 | `process-info` | Read process information such as the working directory or PID. |
 
-Omit `nativeEffects` to grant none. In-memory references, task scheduling,
+On task, iterator and host-import packages, omitting `nativeEffects` grants
+no ambient access. In-memory references, task scheduling,
 waiting, cancellation, and mutexes do not need a grant. Spawning processes,
 changing the process working directory, terminating the host, networking, and
 unclassified native operations are not grantable on this route. A reviewed API
 cannot override a refusal.
+
+To publish synchronous `IO`, `BaseIO`, or `EIO` functions on their own, select
+them with `exports` and include `nativeEffects`. Use `[]` for an in-memory
+API. For example, `Journal.read : String → IO String` reads a file:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.read"],
+  "nativeEffects": ["filesystem"]
+}
+```
+
+Build one target (`c` or `pypi`) at a time. No task, iterator or host import
+is required. Source discovery alone cannot check OS access; use the build's
+`binding-ir.json` to review the compiled interface. The functions finish
+before returning. A thrown `EIO` error
+retains its declared payload; an `Except` returned by the same function is
+ordinary data. Pure companions can share the package. Leave `nativeEffects`
+out of a pure-only package to use its usual projection. The [installed package
+checks](../evidence/native-sync-io-20261122.json) record the tested C11 and
+CPython versions, inputs, archive digests and replay command.
 
 The build follows compiled Lean code through library wrappers and task closures.
 It checks application startup and each selected entry, including an iterator's

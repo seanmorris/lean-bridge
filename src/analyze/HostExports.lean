@@ -32,6 +32,7 @@ structure Request where
   cTaskCallbacks : Option Bool := none
   taskIOErrors : Option (Array String) := none
   nativeEffectPolicy : Option String := none
+  synchronousIO : Option Bool := none
   members : Array String
   deriving FromJson
 
@@ -300,12 +301,14 @@ def extract (r : Request) : MetaM Json := do
           pure (payload.getAppArgs[1]!, [("taskIO", toJson true)])
         else pure (payload, [])
         pure <| [("effect", toJson effect), ("delivery", toJson "task"), ("result", ← delivered r value)] ++ extra ++ terminal
-      else if head == ``IO && resultArgs.size == 1 then
-        pure [("effect", toJson "IO"), ("result", ← returned r resultArgs[0]!)]
+      else if (head == ``IO || (head == ``BaseIO && r.synchronousIO.getD false)) && resultArgs.size == 1 then
+        pure [("effect", toJson head.toString), ("result", ← returned r resultArgs[0]!)]
       else if head == ``EIO && resultArgs.size == 2 then
         pure [("effect", toJson "EIO"), ("error", ← delivered r resultArgs[0]!),
           ("result", ← returned r resultArgs[1]!)]
       else if head == ``Except && resultArgs.size == 2 then
+        pure [("effect", toJson "pure"), ("result", ← returned r result)]
+      else if r.synchronousIO.getD false then
         pure [("effect", toJson "pure"), ("result", ← returned r result)]
       else throwError "expected synchronous IO result, typed EIO or returned Except: {n}"
       return Json.mkObj <| fields ++ [("declaration", toJson publicName), ("module", toJson owner),

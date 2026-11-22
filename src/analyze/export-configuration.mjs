@@ -84,9 +84,9 @@ export const validateExportConfiguration = configuration => {
 	if(configuration.nativeEffects !== undefined)
 	{
 		const allowed = configuration.nativeEffects;
-		if(!(configuration.hostImports || configuration.taskExports || configuration.asyncIterators)
+		if(!Array.isArray(configuration.modules) || !configuration.modules.length
 			|| !Array.isArray(allowed) || new Set(allowed).size !== allowed.length || allowed.some(c => !nativeEffects.includes(c)))
-			fail("invalid-export-configuration", "nativeEffects requires a native host, task, or iterator selection and distinct supported capabilities: " + nativeEffects.join(", "));
+			fail("invalid-export-configuration", "nativeEffects requires selected modules and distinct supported capabilities: " + nativeEffects.join(", "));
 	}
 	if(configuration.asyncIterators !== undefined)
 	{
