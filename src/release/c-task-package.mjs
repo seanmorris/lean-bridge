@@ -18,6 +18,8 @@ import { taskGmpKit } from "../build/task-gmp.mjs";
 import { validateNativeCSettings } from "./native-c-family.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
+import { writeRustTaskRelease } from "./rust-task-package.mjs";
+import { validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
 
 const asset = path => readFile(new URL(path, import.meta.url));
 
@@ -28,9 +30,9 @@ const asset = path => readFile(new URL(path, import.meta.url));
  */
 export const buildCTaskPackage = async options => {
 	const { projectContract, name, version, workRoot, runtimeRoot, leanPrefix, environment, signal } = options;
-	const target = options.target ?? "c", cpp = target === "cpp";
-	if(!["c", "cpp"].includes(target)) throw new TypeError("Invalid C-family task target");
-	validateNativeCSettings({ name, version });
+	const target = options.target ?? "c", cpp = target === "cpp", rust = target === "cargo";
+	if(!["c", "cpp", "cargo"].includes(target)) throw new TypeError("Invalid native task target");
+	(rust ? validateOrdinaryCargoSettings : validateNativeCSettings)({ name, version });
 	if(options.ir || !name || !version || options.sources.some(s => /^(?:LeanBridge(?:\.|$)|BridgeCAsync$)/u.test(s.module))) throw new TypeError("Invalid C task source modules or coordinates");
 	const { identity: runtimeIdentity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
 	const run = (command, args, cwd, env = environment) => processBuildRunner.capture({ command, args, cwd, env, signal });
@@ -43,7 +45,7 @@ export const buildCTaskPackage = async options => {
 		const bindingIrSha256 = hashBindingIr(api), profile = cpp ? "native-cpp-task-v1" : "native-c-task-v1";
 		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
-		const config = { name, modules: projectContract.modules, entries, resources, integerMode: cpp ? "words" : "gmp" };
+		const config = { name, modules: projectContract.modules, entries, resources, integerMode: cpp || rust ? "words" : "gmp" };
 		const ledger = resources.length ? {
 			header: await asset("../backends/native/task-resource-ledger.h")
 			, source: await asset("../backends/native/task-resource-ledger.c")
@@ -52,7 +54,7 @@ export const buildCTaskPackage = async options => {
 		const ledgerName = ledger && `liblb_task_resources_${ledgerId}.so`, ledgerFlag = `-DLB_LEASE_PREFIX=lb_task_resource_${ledgerId}_`;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
 		const integers = skeleton.integerMode && await asset("../backends/c/task-integers.h");
-		const gmp = integers && !cpp && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
+		const gmp = integers && !cpp && !rust && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
 		const boost = integers && cpp && boostSources();
 		const componentIdentity = sha256(canonicalJson({ runtimeIdentity
 			, bindingIrSha256
@@ -139,6 +141,7 @@ export const buildCTaskPackage = async options => {
 			if(gmp && path === "lib/libgmp.so.10" && (!bytes.equals(gmp.files.get(path)) || !/\(SONAME\)\s+Library soname: \[libgmp\.so\.10\]/u.test((await run("readelf", ["-d", file], app)).stdout))) throw new Error("C task GMP library identity differs");
 			files.set(path, bytes);
 		}
+		if(rust) return await writeRustTaskRelease({ ...options, prefix: p, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		const cmakePackage = `LeanBridge${p.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join("")}`;
 		const cmakeTarget = `LeanBridge::${p}`, share = "share/lean-bridge";
 		files.set(`include/${p}.h`, gen.header);

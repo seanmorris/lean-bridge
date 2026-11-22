@@ -55,6 +55,29 @@ Rust conversion and native copying each use a 16 MiB accounting budget. Non-recu
 
 Compiled libraries are embedded in your executable. The first call verifies their hashes and loads them through a private temporary directory; compatible crates share one runtime. You can move the executable without retaining the Cargo source tree. Each crate embeds its assets, so multi-crate executable size can grow even when loading is shared. Loading needs Linux `/proc` and writable `/tmp` that permits shared-library loading, not a `noexec` mount. Temporary library files are removed after loading, and a small process registry is removed at normal exit. The libraries stay loaded until process exit. Calls from multiple threads are supported; reuse after `fork` and composition with foreign runtime loaders are rejected. See the [installed-crate evidence](../evidence/native-rust-20260915.md).
 
+### Await a task or pull a stream
+
+If the release receipt says `native-rust-task-v1`, add only the component crate to your Cargo dependencies. Cargo resolves its exact `lean-bridge-task-runtime` dependency. Run these functions on a current-thread executor **on the process main thread**. Tasks and resource owners are not `Send`; there is no Lean scheduler for your application to drive.
+
+This example uses the task lab's API:
+
+```rust
+async fn example() -> Result<(), Box<dyn std::error::Error>> {
+    let value = task_lab::checked(false, false, "item")?.await?;
+    assert_eq!(value, Ok(42)); // Lean returned an Except value.
+
+    let mut items = task_lab::series(false, false, "first")?;
+    assert_eq!(items.next().await.transpose()?, Some(Err("first".to_owned())));
+    Ok(()) // Dropping the stream closes the cursor.
+}
+```
+
+A factory may reject before returning a task (`Error::Start(payload)`). A stream starts a pull only when polled. A terminal `Error::Step(payload)` arrives once; subsequent pulls return `None`. Dropping a waiter for `next()` leaves its single pull attached to the stream. Dropping the stream or a task requests cancellation without waiting for an uncooperative Lean worker. An ordinary synchronous `IO` function returns its result immediately.
+
+When the API includes a named resource, pass it by reference. A returned resource owns its own lease. Use `try_clone()` to keep a second lease and `same_object()` to compare Lean identity, even between compatible crates. Dropping an owner releases its lease; an already-started Lean task keeps its own reference.
+
+The [installed Rust task evidence](../evidence/rust-tasks-20261122.json) records both source routes, the exact archives, and the checks made by a consumer using both crates.
+
 ### Arrays and records
 
 Lean `Array T` inputs borrow `&[T]`; results and record fields use owned `Vec<T>`
@@ -862,6 +885,12 @@ separate work.
 The [hosted generic-Subtype matrix](../evidence/generic-subtype-promotion-20261023.md) installs the closed `GenericNat` alias of `GenericCarrier Nat` on ordinary-source and reviewed-IR packages across the sixteen non-PHP-Wasm consumer profiles. Its selected `Positive` field crosses as a proof-erased value beside a retained `Nat` marker, and the two named specializations keep their distinct `plusOne` and `plusTwo` constructors. Rejection preserves the caller record, a later valid call recovers, and copied results carry no constructor. PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence.
 
 ### Type conversions
+
+The general audit table below describes the ordinary native projection. A
+separate [task release](#await-a-task-or-pull-a-stream) maps real Lean tasks to
+Rust [futures](https://doc.rust-lang.org/std/future/trait.Future.html), demand-driven
+cursors to [streams](https://docs.rs/futures-core/0.3.31/futures_core/stream/trait.Stream.html),
+and direct application-owned resources to typed leases.
 
 Profiles: Rust. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 

@@ -1,0 +1,11 @@
+[package]
+name = "lean-bridge-task-runtime"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.90"
+license = "MIT"
+description = "Executor-independent delivery of native Lean tasks and pull streams"
+
+[dependencies]
+async-io = "=2.6.0"
+futures-core = "=0.3.31"

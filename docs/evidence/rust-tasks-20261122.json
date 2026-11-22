@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "observed": "2026-11-22",
+  "profile": "native-rust-task-v1",
+  "platform": "Linux x86-64; Lean 4.32.2, rustc/Cargo 1.90.0, glibc 2.36 locally; package floor 2.38.",
+  "fixture": "tests/fixtures/rust-task-lab",
+  "test": "tests/helpers/rust-task-installed.mjs",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "bindingIrSha256": "0c96e4121739547da3081bc9fae57936ae13911939228198b404422b53152e21",
+  "sharedRuntime": {
+    "version": "1.0.0-r6d917cb3f2d0942212874365fe25f029ba408ae6d16787f6105e3ff98d1c22e8",
+    "bytes": 51309971,
+    "path": "archives/lean-bridge-task-runtime-1.0.0-r6d917cb3f2d0942212874365fe25f029ba408ae6d16787f6105e3ff98d1c22e8.crate",
+    "sha256": "5f8fd2e28aa139fef9eca8da36e1174b2f1fef62cb76def2fe59fb4380eb0503"
+  },
+  "releases": [
+    {
+      "route": "ordinary",
+      "sourceTreeSha256": "247f952b853d60e978c15b9d1407b0c8f6ce3e8bb5724f69c2cb50614cc422fa",
+      "componentIdentity": "b98be36acf3cf2e95236cee4ea974a6712d96b0aba1a03ce44119d5e4120075b",
+      "receiptSha256": "2d387a92b7c8de0e631ff0d3eae88bab7e639b699b61fa6e7b22f1c331c7fae9",
+      "componentArchive": {
+        "bytes": 70423,
+        "path": "archives/task-lab-1.0.0.crate",
+        "sha256": "fb534c0e1ed86a13d0f08b323da5a20fffbb7a34dd59b876c643669376116c60"
+      }
+    },
+    {
+      "route": "reviewed",
+      "sourceTreeSha256": "41de98c596994cbc22d30fd4c5013afd8e7c15f81ba0ae7e93f396e7f6d94e68",
+      "componentIdentity": "5124ddfcc4883d9a7baf627aa11e65c6f3f1b2526005bd0e413c3df66d935063",
+      "receiptSha256": "d61ebc90fdd61030845830f15d378a0e58f09ba33570025e2278fb0c5f1015d7",
+      "componentArchive": {
+        "bytes": 70503,
+        "path": "archives/task-lab-peer-1.0.0.crate",
+        "sha256": "df165fe657334a6366dfb2c645af46df9dc6ea16df09da701743e71ccb42a58f"
+      }
+    }
+  ],
+  "consumer": {
+    "mainSha256": "b49b930e0bb41cba4797cf577c14f99b9d37180c5237417029ed10a4fb37caf8",
+    "wakeupChecksSha256": "94df0159012b1106ef3cfea8580934fd20bdef8a76a0043793184cc6dbf6a11e",
+    "output": "Rust: parked executor, waker replacement, cancellation, fused streams, typed errors, exact integers and cross-crate resource cleanup passed"
+  },
+  "observations": [
+    "The release CLI independently verified both package-set receipts and their archives. Regenerating each component's Rust sources reproduced the archived bytes; the unchanged non-task loader output was also compared byte-for-byte against the preceding revision.",
+    "An independent archive-only replay reverified both receipts and original source trees and reinstalled the unchanged crates into a fresh offline registry. The retained Rust consumer passed again with no Lean rebuild. A separately compiled Rust client accepted the generated cursor through the external futures-core FusedStream trait.",
+    "Each source route independently compiled the captured Lean project to a native component and packaged its Rust API. Cargo resolved two components and one byte-identical runtime by exact registry coordinate from an offline directory source. The relocated executable ran with the registry, source and Cargo build directories removed and no compiler on PATH.",
+    "A parked executor awaited an actual gated Lean Task, replaced its waker while pending and received a completion notification only on the latest waker. Dropping or cancelling did not wait for an uncooperative worker; cooperative cancellation also reached Lean. Dropping a next() waiter and polling the stream again did not create another pull.",
+    "Returned Except values, synchronous IO errors, typed factory rejection, typed terminal stream failure and exhaustion remain distinct. Real typestate and runtime checks cover 4096-bit exact integers, repeated exhaustion, embedded NUL/Unicode and binary values.",
+    "The two crates exchanged the same nominal resource; a real Lean worker retained its file-backed object after the final host lease was released. Both the independent OS file descriptor count and the runtime's live identity count returned to baseline. The executable observed one mapped instance of each component, resource ledger, broker and Lean runtime.",
+    "Rust rejected a Send bound on a main-thread task and resource and rejected a mismatched nominal argument. A worker-thread call and reuse in a forked child were refused without invalidating the parent."
+  ],
+  "replay": "Cache the locked third-party Cargo archives with node scripts/warm-rust-task-deps.mjs. Set LEAN_BRIDGE_RUST_TASK_REPLAY to the retained directory containing ordinary/, reviewed/, client/ and acceptance.json; run node --test --test-concurrency=1 tests/helpers/rust-task-installed.mjs. Archive-only replay does not compile Lean.",
+  "scope": "Linux owner-thread Rust tasks and pull streams, including direct application-owned resources. This is local installed evidence, not hosted CI or registry publication. It does not establish arbitrary resources inside copied sums, retained host callbacks on Lean workers, global trap/poison handling, or all-profile coverage."
+}

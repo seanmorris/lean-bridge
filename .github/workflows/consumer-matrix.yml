@@ -4327,6 +4327,32 @@ jobs:
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
           source scripts/env.sh
           node --test tests/native-rust.test.mjs
+      - name: Install and exercise Rust tasks and pull streams offline
+        id: rust_tasks
+        if: matrix.profile == 'rust'
+        continue-on-error: true
+        timeout-minutes: 35
+        env:
+          LEAN_BRIDGE_RUST_TASK_TEST: "1"
+          LEAN_BRIDGE_RUST_TASK_EVIDENCE: build/consumer-ci/rust-tasks
+          LEAN_NUM_THREADS: "1"
+          CARGO_BUILD_JOBS: "1"
+        run: |
+          bash scripts/bootstrap-rust-ci.sh
+          source scripts/env.sh
+          export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+          export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+          node scripts/warm-rust-task-deps.mjs
+          CARGO_NET_OFFLINE=true node --test --test-concurrency=1 tests/helpers/rust-task-installed.mjs
+      - name: Retain the installed Rust task release and receipts
+        if: ${{ !cancelled() && steps.rust_tasks.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: rust-task-crates-${{ github.run_attempt }}
+          path: build/consumer-ci/rust-tasks/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
       - name: Compare isolated Cargo corpus consumers with fresh Lean
         id: type_corpus_rust
         if: matrix.profile == 'rust'
@@ -4655,7 +4681,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_TEST=1 LEAN_BRIDGE_RUST_GRAPH_PACKAGE_TEST=1 node --test tests/rust-graph-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs"
               consumer_command="$consumer_command && bash scripts/run-direct-proof-erasure-language-ci.sh rust && bash scripts/run-optional-parameter-language-ci.sh rust"
-              if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ] || [ "${{ steps.optional_parameters_language.outcome }}" != success ]; then
+              if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.rust_tasks.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ] || [ "${{ steps.direct_proof_language.outcome }}" != success ] || [ "${{ steps.optional_parameters_language.outcome }}" != success ]; then
                 result=failed
                 installed=false
               fi
@@ -4700,6 +4726,9 @@ jobs:
           compression-level: 0
           retention-days: 30
 
+      - name: Enforce installed Rust task results
+        if: ${{ !cancelled() && matrix.profile == 'rust' && steps.rust_tasks.outcome != 'success' }}
+        run: exit 1
       - name: Enforce installed C and C++ task results
         if: ${{ !cancelled() && matrix.profile == 'c-family' && (steps.c_tasks.outcome != 'success' || steps.cpp_tasks.outcome != 'success' || steps.task_integers.outcome != 'success' || steps.task_resources.outcome != 'success') }}
         run: exit 1

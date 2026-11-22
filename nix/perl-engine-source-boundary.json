@@ -348,6 +348,13 @@
     "src/backends/rust/owned-transfers.mjs",
     "src/backends/rust/owned-values.mjs",
     "src/backends/rust/package-audit.mjs",
+    "src/backends/rust/task-component.lock",
+    "src/backends/rust/task-crate.mjs",
+    "src/backends/rust/task-native.rs",
+    "src/backends/rust/task-runtime/Cargo.lock",
+    "src/backends/rust/task-runtime/Cargo.toml",
+    "src/backends/rust/task-runtime/src/lib.rs",
+    "src/backends/rust/task-runtime/src/resource.rs",
     "src/backends/wit/callable-graph-host.mjs",
     "src/backends/wit/callable-graph-model.mjs",
     "src/backends/wit/callable-graph-package.mjs",
@@ -482,6 +489,7 @@
     "src/release/owned-wasi.mjs",
     "src/release/package-set-assembly.mjs",
     "src/release/package-set-receipt.mjs",
+    "src/release/rust-task-package.mjs",
     "src/release/source-notices.mjs",
     "src/release/wheel-record.mjs"
   ]

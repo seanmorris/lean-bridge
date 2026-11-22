@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Lab"],
+  "resources": ["Shared.Badge", "Shared.Ticket"],
+  "exports": [
+    "Lab.add", "Lab.alias", "Lab.badge", "Lab.bytes", "Lab.checked", "Lab.closes", "Lab.count",
+    "Lab.depotPhase", "Lab.depotRelease", "Lab.depotReset", "Lab.gated", "Lab.ioTask", "Lab.leaseChecked",
+    "Lab.make", "Lab.pending", "Lab.phase", "Lab.pulls", "Lab.release", "Lab.reset",
+    "Lab.series", "Lab.sum", "Lab.tickets", "Lab.wideChecked", "Lab.wideSeries"
+  ],
+  "taskExports": ["Lab.bytes", "Lab.checked", "Lab.gated", "Lab.ioTask", "Lab.leaseChecked", "Lab.pending", "Lab.sum", "Lab.wideChecked"],
+  "asyncIterators": [
+    {"open": "Lab.series", "next": "Lab.pull", "close": "Lab.close"},
+    {"open": "Lab.tickets", "next": "Lab.ticketPull", "close": "Lab.ticketClose"},
+    {"open": "Lab.wideSeries", "next": "Lab.widePull", "close": "Lab.wideClose"}
+  ],
+  "targets": {"cargo": {"name": "task-lab", "version": "1.0.0"}}
+}

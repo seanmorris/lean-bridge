@@ -35,6 +35,28 @@ This path supports pure copied primitives, nested arrays and Lists, copied recor
 
 Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
+## Export a task or pull stream
+
+For a Linux x86-64 task release, select Lean declarations by name in `lean-bridge.exports.json`, then run your normal `--target cargo` build:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "taskExports": ["Pulse.bytes"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"cargo": {"name": "pulse", "version": "1.0.0"}}
+}
+```
+
+The build checks the exports against fresh Lean interfaces. `taskExports` must return real Lean tasks. A cursor's next operation must produce a task with explicit exhaustion; its close operation must accept that cursor and return `BaseIO Unit`. To carry application-owned heap resources directly in arguments, results or typed failures, also list their fully qualified Lean names in `resources`. The independent reviewed route uses the same checks.
+
+The `native-rust-task-v1` receipt names **two crates**. The component contains its compiled adapter and public Rust functions. The runtime contains the shared Lean libraries and executor integration; its exact version identifies those bytes and the Rust support code. Verify the full receipt and check the registry's crate-size limit before uploading the runtime. Publish the runtime before the component.
+
+The generated dependency uses Cargo's default registry. If you repackage for a private registry, set the runtime dependency's `registry` explicitly and verify the resulting archives and dependency resolution. An offline [Cargo directory source](https://doc.rust-lang.org/cargo/reference/source-replacement.html#directory-sources) can instead supply the two original checked archives and their ordinary dependencies. The [consumer walkthrough](../consume/rust.md#await-a-task-or-pull-a-stream) shows the resulting API.
+
+If Cargo repackages the runtime, its registry checksum can differ from the prepared archive's checksum. Verify the downloaded runtime against the separately approved publication archive first. In a **separate publishing directory**, resolve the component lockfile against that registry runtime and review the lockfile diff before packaging the component. Keep the original handoff and its receipt unchanged.
+
 ## Export arrays and records
 
 Select concrete exports using `Array T` and acyclic Lean structures in the shared

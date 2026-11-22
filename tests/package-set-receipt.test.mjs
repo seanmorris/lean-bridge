@@ -81,6 +81,32 @@ test("C++ task receipts require a C++ component archive with an embedded runtime
 	]) assert.throws(() => validatePackageSetReceipt({ ...tasks, packages: [{ ...cpp, ...patch }] }));
 });
 
+test("Rust tasks require exactly the compatible Cargo runtime provider; ordinary Rust stays embedded", async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const previous = receipt.packages.find(p => p.target === "cargo"), id = "native-rust-task-v1";
+	const profile = { ...receipt.profiles.find(p => p.id === previous.profile), id };
+	const runtime = { ...structuredClone(previous)
+		, name: "lean-bridge-task-runtime", version: "1.0.0-r" + "a".repeat(64)
+		, role: "runtime", profile: id, runtimeDelivery: "provided"
+		, artifacts: [{ ...previous.artifacts[0], path: "runtime.crate" }] };
+	const need = { ecosystem: "cargo", name: runtime.name, version: runtime.version };
+	const app = { ...structuredClone(previous), profile: id, runtimeDelivery: "dependency", requires: [need] };
+	const set = { ...receipt, profiles: [profile], packages: [app, runtime] };
+	await assertJsonSchema("package-set-receipt", set);
+	assert.equal(validatePackageSetReceipt(set), true);
+	for(const mutate of [
+		r => r.packages.pop(), r => { r.packages[0].requires = []; }
+		, r => { r.packages[0].runtimeDelivery = "embedded"; }
+		, r => { r.packages[1].name = "other"; }
+		, r => { r.packages[1].version = "1.0.0"; }
+		, r => { r.packages[0].requires[0].version = "1.0.0"; }
+		, r => { r.packages[1].runtimeIdentity = "e".repeat(64); }
+	]) {
+		const bad = structuredClone(set); mutate(bad); assert.throws(() => validatePackageSetReceipt(bad));
+	}
+	assert.equal(previous.runtimeDelivery, "embedded");
+});
+
 test("one closed receipt covers every ordinary package ecosystem and deterministically records its archives", async t => {
 	const handoff = await createPackageSetHandoff(t);
 	await assertJsonSchema("package-set-receipt", handoff.receipt);
