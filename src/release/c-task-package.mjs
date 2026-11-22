@@ -40,7 +40,7 @@ export const buildCTaskPackage = async options => {
 	const dotnet = target === "nuget";
 	if(!["c", "cpp", "cargo", "rubygems", "nuget"].includes(target)) throw new TypeError("Invalid native delivery target");
 	(rust ? validateOrdinaryCargoSettings : ruby ? validateOrdinaryRubySettings : dotnet ? validateOrdinaryNugetSettings : validateNativeCSettings)({ name, version });
-	if(dotnet && (!projectContract.synchronousIO || projectContract.leanResources?.length)) throw new TypeError("NuGet IO requires a synchronous copied-value contract");
+	if(dotnet && projectContract.leanResources?.length) throw new TypeError("NuGet IO and tasks require copied-value contracts");
 	if(options.ir || !name || !version || options.sources.some(s => /^(?:LeanBridge(?:\.|$)|BridgeCAsync$)/u.test(s.module))) throw new TypeError("Invalid C task source modules or coordinates");
 	const { identity: runtimeIdentity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
 	const run = (command, args, cwd, env = environment) => processBuildRunner.capture({ command, args, cwd, env, signal });
@@ -55,7 +55,7 @@ export const buildCTaskPackage = async options => {
 		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
 		const threads = cpp && (!synchronous || resources.length > 0);
-		const config = { name: dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, integerMode: cpp || rust || ruby || dotnet ? "words" : "gmp" };
+		const config = { name: dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet ? "words" : "gmp" };
 		const callbackHeaders = new Map();
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));

@@ -127,7 +127,8 @@ int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
 };
 
 /**
- * Combine completion, retirement, optional callback requests and cancellation into one Ruby io_wait descriptor.
+ * Combine completion, retirement, optional callback requests and cancellation
+ * into one readable descriptor for the host event loop.
  *
  * @param stem - Component-private wire prefix.
  * @param p - Native status prefix.

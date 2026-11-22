@@ -595,6 +595,9 @@ missing-grant and altered-library checks.
 The [NuGet IO package](../publish/nuget.md#export-synchronous-io) runs the
 same operations as synchronous C# methods. Returned `Result<T,E>` values and
 thrown `DeclaredError<T>` exceptions remain distinct.
+For genuine Lean tasks and pull streams, use the separate
+[NuGet task profile](../publish/nuget.md#export-tasks-and-pull-streams);
+it exposes C# `Task<T>` and `IAsyncEnumerable<T>`.
 
 The same distinction holds when a module also exports a task. In the
 [installed C, C++, Python and Rust example](../evidence/native-task-companions-20261122.json),

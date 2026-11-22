@@ -67,6 +67,36 @@ The [offline install results](../evidence/dotnet-sync-io-20261122.json) identify
 ordinary and reviewed archives and record the matching public interface digest.
 This synchronous profile does not export task factories, iterators or resource leases.
 
+## Export tasks and pull streams
+
+Select functions that return actual Lean `Task` values and name the three
+operations of each pull stream. For example, this configuration builds the
+[Pulse module](../../tests/fixtures/c-lean-tasks/Pulse.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "exports": ["Pulse.bytes", "Pulse.series"],
+  "taskExports": ["Pulse.bytes"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"nuget": {"name": "Acme.Pulse", "version": "1.0.0"}}
+}
+```
+
+Build with `lean-bridge build --project . --target nuget --output release`.
+The `native-dotnet-task-v1` package exposes `Task` for `Task Unit`, `Task<T>`
+for other task results, and `IAsyncEnumerable<T>` for streams. A stream-only
+package does not need a dummy task export. Synchronous companions stay
+synchronous. For a `Task (Except IO.Error α)` whose error should fault the
+task, also select the declaration in `taskIOErrors`. Other supported returned
+`Except` values are data, not exceptions.
+
+This profile supports copied primitive arguments and primitive or nested
+result values. It does not admit resource leases or retained worker-to-C#
+callbacks. See [calling the installed package](../consume/dotnet.md#await-tasks-and-pull-streams)
+and the [ordinary, reviewed and stream-only package receipts](../evidence/dotnet-tasks-20261122.json).
+
 ## Export arrays and records
 
 Select concrete exports using `Array T` and acyclic Lean structures in the same

@@ -6,7 +6,7 @@
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { generateDotnetIO } from "../backends/dotnet/sync-io.mjs";
+import { generateDotnetIO, generateDotnetTasks } from "../backends/dotnet/sync-io.mjs";
 import { compilePreparedAssembly } from "../build/native-dotnet-projection.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { writeNugetManifest } from "./native-nuget.mjs";
@@ -19,7 +19,7 @@ import { writePackageSetReceipt } from "./package-set-receipt.mjs";
  */
 export const writeDotnetIORelease = async o => {
 	const { workRoot, name, version, prefix, wire, files, api, evidence, manifest, runtimeIdentity, componentIdentity, bindingIrSha256, floor, projectContract } = o;
-	const library = "lib" + prefix + ".so", libraries = {}, profile = "native-dotnet-io-v1";
+	const library = "lib" + prefix + ".so", libraries = {}, mode = wire.wait ? "task" : "io", profile = "native-dotnet-" + mode + "-v1";
 	for(const path of [library, "liblean_bridge_native.so", "libleanshared.so"])
 	{
 		const file = "lib/" + path, bytes = files.get(file);
@@ -28,7 +28,7 @@ export const writeDotnetIORelease = async o => {
 	}
 	if(files.size !== Object.keys(libraries).length) throw new Error("Unexpected .NET IO native payload");
 	const auth = { library, libraries, componentId: api.component.id, componentReceiptSha256: componentIdentity, runtimeIdentity };
-	const { assembly, files: sources } = await generateDotnetIO({ api, wire, evidence: auth });
+	const { assembly, files: sources } = await (wire.wait ? generateDotnetTasks : generateDotnetIO)({ api, wire, evidence: auth });
 	const stage = await mkdtemp(join(workRoot, ".dotnet-io-")), root = join(stage, "package"), compiler = join(stage, "managed");
 	const write = async (dir, path, data) => {
 		await mkdir(dirname(join(dir, path)), { recursive: true });
@@ -66,10 +66,12 @@ export const writeDotnetIORelease = async o => {
 		await save("lean-bridge/licenses/LeanBridge-LICENSE", await readFile(new URL("../../LICENSE", import.meta.url)));
 		for(const f of ["LICENSE", "LICENSES"]) await save("lean-bridge/licenses/Lean-" + f, await readFile(join(o.leanPrefix, f)));
 		for(const [p, data] of Object.entries(projectContract.notices)) await save("lean-bridge/licenses/" + p, data);
-		await save("README.md", `# ${name} ${version}\n\nCall ${assembly}.Api synchronously on the process main thread. Returned Except values are Result<T,E>; thrown EIO raises DeclaredError<T> with its Lean declaration and typed payload. OS errors raise LeanIOException. .NET 8, Linux x86-64 with glibc ${floor}+; the exact native runtime is included and verified automatically. No Lean compiler or event loop needed.\n`);
+		await save("README.md", wire.wait
+			? `# ${name} ${version}\n\nStart ${assembly}.LeanRuntime.Run(async () => { /* application */ }) once on the process main thread. Await generated Api methods and use await foreach for pull streams. Pass a CancellationToken to a task or WithCancellation(token) to a stream. No polling, Lean compiler or external runtime setup is required. Native calls stay on the owner thread. For .NET 8 on Linux x86-64 with glibc ${floor}+.\n`
+			: `# ${name} ${version}\n\nCall ${assembly}.Api synchronously on the process main thread. Returned Except values are Result<T,E>; thrown EIO raises DeclaredError<T> with its Lean declaration and typed payload. OS errors raise LeanIOException. .NET 8, Linux x86-64 with glibc ${floor}+; the exact native runtime is included and verified automatically. No Lean compiler or event loop needed.\n`);
 		await writeNugetManifest(save, name, version, projectContract.metadata ?? {});
 		await write(root, "lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: 1
-			, kind: "lean-bridge-native-dotnet-io", profile, name, version
+			, kind: "lean-bridge-native-dotnet-" + mode, profile, name, version
 			, component: api.component, componentIdentity, bindingIrSha256
 			, sourceTreeSha256: projectContract.sourceTreeSha256
 			, runtimeIdentity, assembly, namespace: assembly, sdk

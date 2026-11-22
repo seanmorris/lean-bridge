@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-dotnet-task-delivery",
+  "nodes": [
+    1223
+  ],
+  "profile": "native-dotnet-task-v1",
+  "scope": "Real compiled Lean tasks and pull protocols delivered as .NET Task/Task<T> and IAsyncEnumerable<T> on Linux x86-64. The application starts the supplied owner loop once on its process main thread.",
+  "checks": [
+    "Fresh ordinary and independently reviewed Pulse packages agree on the public Binding IR. A third package, Signals, contains only stream factories. Verification checks the original archive, inner file inventory, and (during capture) the generator output against the installed sources; a changed review is refused.",
+    "A local-only NuGet restore installs Pulse and Signals together. The client is built, relocated, and run without its source, feed, package cache or developer tools on PATH. Both author routes run in both load orders; either package can supply the shared owner loop. A changed native library is rejected in a separate process.",
+    "The installed app awaits all 19 copied scalar types, including 4098-bit integers, scalar and byte copies. It distinguishes returned Except, thrown typed EIO, factory IO and terminal IO. A closed Lean gate leaves two simultaneous tasks pending while the application yields and calls the other package. A settled task can be awaited repeatedly.",
+    "Cross-thread token cancellation is observed as cancellation with the original token for both cooperating and ignoring Lean workers. No late result overwrites it. Tests cover already-cancelled tokens, main-thread affinity, one outstanding pull, no prefetch, early exit, exhaustion, typed step failure, cancellation and disposal during a stalled pull.",
+    "Leaving the application loop cancels an outstanding task. Explicit test-only retirement wakes pending work, prevents additional native execution and permits cleanup of a stream from the other installed package. The observer reports one runtime, two components and zero live identities."
+  ],
+  "limits": [
+    "Local .NET SDK 8.0.424 / .NET 8.0.30, Lean 4.32.2, Linux x86-64, glibc 2.36. No registry publication or hosted run is inferred.",
+    "Task payloads are copied primitives or supported nested results. Retained managed callbacks, resource delivery and integration with third-party dispatchers are outside this receipt."
+  ],
+  "reproduce": {
+    "build": "CC=cc LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_TASK_BUILD=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/dotnet-task-installed.mjs",
+    "capture": "LEAN_BRIDGE_DOTNET_TASK_CAPTURE=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/dotnet-io-installed.mjs",
+    "replay": "LEAN_BRIDGE_DOTNET_TASK_REPLAY=/absolute/path/to/original-handoffs LEAN_BRIDGE_DOTNET_TASK_EXPECTED=docs/evidence/dotnet-tasks-20261122.json node --test --test-concurrency=1 tests/helpers/dotnet-io-installed.mjs",
+    "requirements": "Use the pinned LEAN_BRIDGE_LEAN_PREFIX and .NET 8 SDK. Set LEAN_BRIDGE_DOTNET if dotnet is not on PATH. Replay requires the original handoffs and captured client sources, not a rebuild."
+  },
+  "acceptanceSha256": "2f4d50a36ce1eb44548e3778be309f0f5da8680968e5741e800780903b1b66b9",
+  "installed": {
+    "clients": {
+      "Audit.cs": "aa5bb1391377472075d9ba816fdbf75f65973edac8ba7df44d80da38451a74f9",
+      "Program.cs": "20ec75cf30449e2369daee81d23197e4f273da1ee17d7cd4bdcd4e82fb37ea78"
+    },
+    "rows": [
+      {
+        "calls": [
+          "pulse-first: 19 scalars, genuine await, cancellation, pull backpressure, disposal and retirement; shared owner, 2 components, 0 live identities",
+          "peer-first: 19 scalars, genuine await, cancellation, pull backpressure, disposal and retirement; shared owner, 2 components, 0 live identities"
+        ],
+        "installed": [
+          {
+            "archive": {
+              "bytes": 51401863,
+              "path": "archives/Acme.Pulse.1.0.0.nupkg",
+              "sha256": "59eb555da0682045344c08d277745d56831d6c8b45413b9aea6e1cafc18acc3b"
+            },
+            "assembly": "LeanBridge.Pulse",
+            "assemblySha256": "fbbeb3bedf62bac904a1d3fccdce9d67f753602f0114659cff83ddebe9f54848",
+            "bindingIrSha256": "6e6d981517cf56a1baf809426ecd722fe244d940108b40cb1bfc99e55eadd2e2",
+            "name": "Acme.Pulse",
+            "nativeLibrary": "liblbc_acme_pulse.so",
+            "nativeSha256": "6fca7d718b12678b9b667e87a833bfcdf8d12d36c5c312a8d32675f808ec5c7d",
+            "profile": "native-dotnet-task-v1",
+            "receiptSha256": "9d1f61e93facd2389a9da084212fa9614efb6d8062805f7cc874d47b3c9d5d23",
+            "reviewedSourceSha256": null,
+            "route": "ordinary",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "0e56c7ac8a4733e48afad55d41a2ccc17dd749669a7bfccf5f1b01cbc1a107ac",
+            "version": "1.0.0"
+          },
+          {
+            "archive": {
+              "bytes": 51352332,
+              "path": "archives/Acme.Signals.1.0.0.nupkg",
+              "sha256": "1dacc4fff9e96c4b8b0956ecb06b8cf266b2a11da957557cfd2525b24260eeeb"
+            },
+            "assembly": "LeanBridge.Signals",
+            "assemblySha256": "7e7dfaebc652d66ad56ce2306a042ca9562a5d99a394902307d0edd6504d87fd",
+            "bindingIrSha256": "470db88cdb09d59ca56fa91529b7a3377f6fcce14cc6ea6ecb15070c22d9bb81",
+            "name": "Acme.Signals",
+            "nativeLibrary": "liblbc_acme_signals.so",
+            "nativeSha256": "c2fe995fdbff55364affba450fbae2a767e2e4e5291c5cb4845c9de4c7083bf9",
+            "profile": "native-dotnet-task-v1",
+            "receiptSha256": "ec85d664abc814a11d8732474fe25c3f183d483b853265ac74f1862bf029417d",
+            "reviewedSourceSha256": null,
+            "route": "peer",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "db82e355aec64ed1ab682b777f571843356268b4eec69de7db94ab8e0ae4879d",
+            "version": "1.0.0"
+          }
+        ],
+        "route": "ordinary"
+      },
+      {
+        "calls": [
+          "pulse-first: 19 scalars, genuine await, cancellation, pull backpressure, disposal and retirement; shared owner, 2 components, 0 live identities",
+          "peer-first: 19 scalars, genuine await, cancellation, pull backpressure, disposal and retirement; shared owner, 2 components, 0 live identities"
+        ],
+        "installed": [
+          {
+            "archive": {
+              "bytes": 51401898,
+              "path": "archives/Acme.Pulse.1.0.0.nupkg",
+              "sha256": "8d4895a5fc5989459cab5d763b0d62eb9f3f1c405c419ccacad5c8dd46a7b5f3"
+            },
+            "assembly": "LeanBridge.Pulse",
+            "assemblySha256": "6dc9351d00a9fe5ff8652c3f3c8e621be72ae2ea724aec01a7e0bfd824be9162",
+            "bindingIrSha256": "6e6d981517cf56a1baf809426ecd722fe244d940108b40cb1bfc99e55eadd2e2",
+            "name": "Acme.Pulse",
+            "nativeLibrary": "liblbc_acme_pulse.so",
+            "nativeSha256": "9592c674bcdf3296606455a2b001e46c415add59110058677819e782a848c964",
+            "profile": "native-dotnet-task-v1",
+            "receiptSha256": "69c96e83e1a8634030ac60a1e1158c4f8a4878b710c1a68ee8ff95151606f093",
+            "reviewedSourceSha256": "da56173137e4fc4ea346f6e39c4daffca8ffa9ff42a28ad7b6f7b04252a4a7c4",
+            "route": "reviewed",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "552808268d2c0bf8310e2b62c3b778cc067037c569b4ce93f7dfa7f25e023a49",
+            "version": "1.0.0"
+          },
+          {
+            "archive": {
+              "bytes": 51352332,
+              "path": "archives/Acme.Signals.1.0.0.nupkg",
+              "sha256": "1dacc4fff9e96c4b8b0956ecb06b8cf266b2a11da957557cfd2525b24260eeeb"
+            },
+            "assembly": "LeanBridge.Signals",
+            "assemblySha256": "7e7dfaebc652d66ad56ce2306a042ca9562a5d99a394902307d0edd6504d87fd",
+            "bindingIrSha256": "470db88cdb09d59ca56fa91529b7a3377f6fcce14cc6ea6ecb15070c22d9bb81",
+            "name": "Acme.Signals",
+            "nativeLibrary": "liblbc_acme_signals.so",
+            "nativeSha256": "c2fe995fdbff55364affba450fbae2a767e2e4e5291c5cb4845c9de4c7083bf9",
+            "profile": "native-dotnet-task-v1",
+            "receiptSha256": "ec85d664abc814a11d8732474fe25c3f183d483b853265ac74f1862bf029417d",
+            "reviewedSourceSha256": null,
+            "route": "peer",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "db82e355aec64ed1ab682b777f571843356268b4eec69de7db94ab8e0ae4879d",
+            "version": "1.0.0"
+          }
+        ],
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  }
+}

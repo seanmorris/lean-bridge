@@ -84,6 +84,47 @@ and loads the matching native runtime; no scheduler or interop setup is
 needed. See [how to export this API](../publish/nuget.md#export-synchronous-io)
 and the [installed results for both load orders](../evidence/dotnet-sync-io-20261122.json).
 
+### Await tasks and pull streams
+
+For a `native-dotnet-task-v1` package, start the application with
+`LeanRuntime.Run` on the process main thread. It supplies one event loop for
+all installed Lean task packages. Callers use ordinary `await` and
+`await foreach`; they don't need native handles, polling, or a Lean toolchain.
+For example, this is a complete `Program.cs` for the Pulse package:
+
+```csharp
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using LeanBridge.Pulse;
+
+using var stop = new CancellationTokenSource();
+LeanRuntime.Run(async () =>
+{
+    byte[] result = await Api.Bytes(new byte[] { 1, 2, 3 }, stop.Token);
+    Console.WriteLine(result.Length); // 3
+
+    await foreach (var item in Api.Series(false, false, "first").WithCancellation(stop.Token))
+        Console.WriteLine(item.IsError ? item.Error : item.Value.ToString()); // first, then 73
+});
+```
+
+A task can be awaited more than once. Cancelling its token cancels delivery
+and asks Lean to stop; a worker that ignores cancellation cannot deliver a
+late result. A stream opens on its first pull, never prefetches another item,
+and closes on exhaustion, `break`, cancellation or `DisposeAsync`.
+Leaving `Run` closes outstanding deliveries. A cancelled await raises
+`OperationCanceledException` with the supplied token.
+
+Start calls and pulls on the owner thread. Normal `await` inside `Run`
+returns there; don't start a Lean operation inside `Task.Run` or after
+opting out of the context with `ConfigureAwait(false)`. An OS error opening
+a task or stream raises `LeanIOException`; an explicitly selected terminal
+`IO.Error` raises `TaskIOException`. A typed `EIO` failure raises
+`DeclaredError<T>`, while a returned `Except` stays a `Result<T,E>`.
+See [exporting tasks and pull streams](../publish/nuget.md#export-tasks-and-pull-streams)
+and the [installed .NET results](../evidence/dotnet-tasks-20261122.json).
+
 ### Arrays and records
 
 Lean `Array T` uses a typed C# `T[]`, including nested arrays and arrays of
@@ -206,7 +247,8 @@ The package automatically loads its verified Lean libraries and private GMP.
 Compatible owned and copied packages share one runtime. Calls in a forked child
 reject, including a package first used in that child. Execute a fresh program
 before calling Lean there. Function results can borrow a declared input owner;
-see the whole-value API below. Asynchronous delivery requires separate support.
+see the whole-value API below. The [async package profile](#await-tasks-and-pull-streams)
+supports copied payloads, not these owned values.
 
 #### Consuming inputs
 
@@ -891,7 +933,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 
-For a synchronous NuGet package (`native-dotnet-io-v1`), see [calling compiled IO and distinguishing typed errors from returned results](#call-synchronous-io). This installed profile is separate from the general audit rows below.
+For NuGet's native delivery profiles, see [synchronous IO and typed errors](#call-synchronous-io) and [awaiting tasks and pulling streams](#await-tasks-and-pull-streams). These profiles are separate from the general audit rows below.
 
 [Hosted dependent checked-record acceptance](../evidence/dependent-checked-record-promotion.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The proof-free host value carries the tested runtime bound and bounded value. Full packages validate inputs with the selected dependent constructor before Lean execution; standalone result-only packages expose Lean-produced values without checked-input metadata. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain outside this evidence.
 

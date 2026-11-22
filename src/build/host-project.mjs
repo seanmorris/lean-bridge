@@ -86,8 +86,7 @@ export const buildHostProject = async options => {
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
 	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
 	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, or nuget");
-	if(target === "nuget" && (config.taskExports?.length || config.asyncIterators?.length || config.resources?.length))
-		fail("The NuGet synchronous IO profile does not implement async delivery or resource leases");
+	if(target === "nuget" && config.resources?.length) fail("The NuGet IO and task profiles do not implement resource leases");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");

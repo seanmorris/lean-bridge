@@ -1,5 +1,6 @@
 /**
- * Exercise real NuGet restores of a synchronous IO release and a second component.
+ * Exercise real NuGet restores of synchronous IO and task releases with an
+ * independent peer. Both profiles use the same receipt, relocation and tamper checks.
  *
  * @file
  */
@@ -14,7 +15,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reconcileHostExports } from "../../src/analyze/host-export-model.mjs";
 import { generateSyncWire } from "../../src/backends/c/sync-wire.mjs";
-import { generateDotnetIO } from "../../src/backends/dotnet/sync-io.mjs";
+import { generateDotnetIO, generateDotnetTasks } from "../../src/backends/dotnet/sync-io.mjs";
 import { dotnetComponentAssembly } from "../../src/backends/dotnet/copied-model.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
@@ -43,7 +44,7 @@ test("NuGet IO exposes typed synchronous methods, rejects name collisions and sh
 	for(const path of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
 	{
 		const manifest = await parse(path), included = manifest.files ?? manifest.includedFiles;
-		for(const f of ["src/backends/dotnet/sync-io.mjs", "src/backends/dotnet/sync-wire.cs", "src/release/dotnet-io-package.mjs"]) assert.ok(included.includes(f), path + ": " + f);
+		for(const f of ["src/backends/dotnet/sync-io.mjs", "src/backends/dotnet/sync-wire.cs", "src/backends/dotnet/task-delivery.cs", "src/backends/dotnet/task-loop.cs", "src/release/dotnet-io-package.mjs"]) assert.ok(included.includes(f), path + ": " + f);
 	}
 });
 test("NuGet checks OS effects and does not replace a task or a resource with a synchronous wrapper", {
@@ -53,8 +54,8 @@ test("NuGet checks OS effects and does not replace a task or a resource with a s
 	const src = join(root, "source"), out = join(root, "release"); await mkdir(src);
 	for(const f of ["Journal.lean", "lean-toolchain", "lakefile.toml"]) await copyFile(join(journal, f), join(src, f));
 	const refusals = [[{}, /requires nativeEffects "filesystem"/u]
-		, [{ taskExports: ["Journal.store"] }, /does not implement async delivery/u]
-		, [{ resources: ["Journal.Clock"] }, /does not implement async delivery/u]];
+		, [{ taskExports: ["Journal.store"], nativeEffects: ["filesystem"] }, /requires a real Lean Task/u]
+		, [{ resources: ["Journal.Clock"] }, /do not implement resource leases/u]];
 	for(const [extra, error] of refusals)
 	{
 		await writeFile(join(src, "lean-bridge.exports.json"), canonicalJson({ schemaVersion: 1, modules: ["Journal"], exports: ["Journal.store"], nativeEffects: [], ...extra }));
@@ -102,27 +103,33 @@ test("build ordinary and reviewed .NET IO packages and an independent peer", { s
 });
 
 const appFiles = ["Program.cs", "Audit.cs"], fixture = resolve("tests/fixtures/dotnet-sync-io");
-const handoff = async (releases, route) => {
+const handoff = async (releases, route, tasks) => {
 	const dir = join(releases, route, "handoff");
 	const { receipt, result } = await readVerifiedPackageSetReceipt({ receiptPath: join(dir, "package-set-receipt.json") });
 	await assertJsonSchema("package-set-receipt", receipt);
 	const api = await parse(join(dir, "binding-ir.json")), evidence = await parse(join(dir, "host-export-evidence.json"));
 	const [p] = receipt.packages, [archive] = p.artifacts;
-	assert.equal(p.profile, "native-dotnet-io-v1"); assert.equal(p.target, "nuget"); assert.equal(p.runtimeDelivery, "embedded");
-	assert.equal(p.name, route === "peer" ? "Acme.Clock" : "Acme.Journal"); assert.equal(p.version, "1.2.0-rc.1");
-	assert.ok(api.declarations.every(d => d.resultMode === "value" && !d.effects.includes("async")));
+	assert.equal(p.profile, tasks ? "native-dotnet-task-v1" : "native-dotnet-io-v1"); assert.equal(p.target, "nuget"); assert.equal(p.runtimeDelivery, "embedded");
+	assert.equal(p.name, tasks ? (route === "peer" ? "Acme.Signals" : "Acme.Pulse") : (route === "peer" ? "Acme.Clock" : "Acme.Journal"));
+	assert.equal(p.version, tasks ? "1.0.0" : "1.2.0-rc.1");
+	if(tasks)
+	{
+		assert.ok(api.declarations.some(d => d.resultMode === "async-iterator"));
+		assert.equal(api.declarations.some(d => d.resultMode === "promise"), route !== "peer");
+	}
+	else assert.ok(api.declarations.every(d => d.resultMode === "value" && !d.effects.includes("async")));
 	assert.equal(hashBindingIr(api), receipt.profiles[0].bindingIrSha256); assert.equal(evidence.sourceTreeSha256, receipt.source.treeSha256);
 	assert.equal(Boolean(evidence.reviewedSourceSha256), route === "reviewed");
 	if(route !== "peer")
 	{
-		const choose = api.declarations.find(d => d.source.declaration === "Journal.choose");
+		const name = tasks ? "RubyTasks.wide" : "Journal.choose", choose = api.declarations.find(d => d.source.declaration === name);
 		assert.equal(choose.source.extensions["lean-lang.org/effect"], "EIO");
 		assert.deepEqual(api.errors.find(e => e.id === choose.failure.errors[0]).payload, choose.result.type);
-		assert.equal(api.declarations.find(d => d.source.declaration === "Journal.store").source.extensions["lean-lang.org/effect"], "IO");
+		assert.equal(api.declarations.find(d => d.source.declaration === (tasks ? "Pulse.ioTask" : "Journal.store")).source.extensions["lean-lang.org/effect"], "IO");
 		const review = doc => reconcileHostExports({ ...evidence, ir: null, component: api.component, review: { source: canonicalJson(doc) } });
 		assert.deepEqual(review(api).api, api);
 		const fake = structuredClone(api);
-		fake.declarations.find(d => d.source.declaration === "Journal.choose").result.type = { kind: "primitive", name: "bool" };
+		fake.declarations.find(d => d.source.declaration === name).result.type = { kind: "primitive", name: "bool" };
 		assert.throws(() => review(fake), /Reviewed API differs/u);
 	}
 	const proof = { route, name: p.name, version: p.version, profile: p.profile
@@ -132,23 +139,21 @@ const handoff = async (releases, route) => {
 		, reviewedSourceSha256: evidence.reviewedSourceSha256 };
 	return { dir, proof, api, evidence };
 };
-const capture = env.LEAN_BRIDGE_DOTNET_IO_CAPTURE, replay = env.LEAN_BRIDGE_DOTNET_IO_REPLAY;
-test("relocated offline NuGet clients run both exact IO packages in both orders", {
-	skip: !capture && !replay, timeout: 3_600_000
-}, async t => {
-	const root = resolve(replay ?? capture), peer = await handoff(root, "peer");
+const checkInstalled = async (t, { tasks, prefix, capture, replay }) => {
+	const root = resolve(replay ?? capture), peer = await handoff(root, "peer", tasks);
 	const work = await mkdtemp(join(tmpdir(), "installed-nuget-io-")); t.after(() => rm(work, { recursive: true, force: true }));
 	const dotnet = await run("which", [env.LEAN_BRIDGE_DOTNET ?? "dotnet"], work, env);
 	const clients = {}, rows = [];
-	for(const file of appFiles) clients[file] = sha256(await readFile(join(replay ? root : fixture, file)));
+	const clientFile = file => join(replay ? root : tasks && file === "Program.cs" ? resolve("tests/fixtures/dotnet-tasks") : fixture, file);
+	for(const file of appFiles) clients[file] = sha256(await readFile(clientFile(file)));
 	for(const route of ["ordinary", "reviewed"])
 	{
-		const primary = await handoff(root, route), pkgs = [primary, peer], scratch = join(work, route);
+		const primary = await handoff(root, route, tasks), pkgs = [primary, peer], scratch = join(work, route);
 		const feed = join(scratch, "feed"), project = join(scratch, "project"), cache = join(scratch, "packages");
 		const stage = join(scratch, "output"), moved = join(scratch, "relocated"); await mkdir(feed, { recursive: true }); await mkdir(project);
 		assert.equal(peer.proof.runtimeIdentity, primary.proof.runtimeIdentity);
 		for(const p of pkgs) await copyFile(join(p.dir, p.proof.archive.path), join(feed, basename(p.proof.archive.path)), constants.COPYFILE_EXCL);
-		for(const file of appFiles) await copyFile(join(replay ? root : fixture, file), join(project, file), constants.COPYFILE_EXCL);
+		for(const file of appFiles) await copyFile(clientFile(file), join(project, file), constants.COPYFILE_EXCL);
 		await writeFile(join(project, "NuGet.Config"), "<configuration><packageSources><clear /></packageSources></configuration>");
 		await writeFile(join(project, "Client.csproj"), `<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit></PropertyGroup><ItemGroup>${pkgs.map(p => `<PackageReference Include="${p.proof.name}" Version="[${p.proof.version}]" />`).join("")}</ItemGroup></Project>`);
 		const install = { ...env, DOTNET_CLI_HOME: join(scratch, "cli"), NUGET_PACKAGES: cache, DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", MSBUILDDISABLENODEREUSE: "1" };
@@ -164,14 +169,16 @@ test("relocated offline NuGet clients run both exact IO packages in both orders"
 			const bytes = await readFile(join(dir, basename(p.proof.archive.path).toLowerCase())); assert.equal(sha256(bytes), p.proof.archive.sha256);
 			assert.equal(inner.bindingIrSha256, p.proof.bindingIrSha256); assert.equal(inner.runtimeIdentity, p.proof.runtimeIdentity);
 			assert.equal(inner.sourceTreeSha256, p.proof.sourceTreeSha256); assert.equal(inner.profile, p.proof.profile);
-			const assembly = "LeanBridge." + (p === peer ? "Clock" : "Journal"); assert.equal(inner.assembly, assembly); assert.equal(inner.namespace, assembly);
+			const assembly = dotnetComponentAssembly(p.api.component); assert.equal(inner.assembly, assembly); assert.equal(inner.namespace, assembly);
 			const dll = `lib/net8.0/${assembly}.dll`;
 			for(const [path, file] of Object.entries(inner.files).filter(([path]) => /^(lib|runtimes|lean-bridge)\//u.test(path)))
 			{
 				const b = await readFile(join(dir, path)); assert.equal(b.length, file.bytes); assert.equal(sha256(b), file.sha256);
 			}
 			const source = await readFile(join(dir, "lean-bridge/dotnet/src", assembly, "Api.cs"), "utf8");
-			assert.doesNotMatch(source, /DllImport|delegate\*|stackalloc|\bTask\b/u);
+			assert.doesNotMatch(source, /DllImport|delegate\*|stackalloc/u);
+			assert.equal(/\bTask\b/u.test(source), tasks && p !== peer);
+			assert.equal(source.includes("IAsyncEnumerable<"), tasks);
 			const nativeLibrary = "liblbc_" + p.proof.name.toLowerCase().replaceAll(".", "_") + ".so";
 			const nativeSha256 = inner.files["runtimes/linux-x64/native/" + nativeLibrary].sha256;
 			if(!replay)
@@ -179,8 +186,8 @@ test("relocated offline NuGet clients run both exact IO packages in both orders"
 				const libraries = Object.fromEntries(Object.entries(inner.files).filter(([f]) => f.startsWith("runtimes/linux-x64/native/")).map(([f, v]) => [basename(f), v.sha256]));
 				const { entries, api } = reconcileHostExports({ ...p.evidence, ir: null, component: p.api.component });
 				assert.deepEqual(api, p.api);
-				const wire = generateSyncWire(nativeLibrary.slice(3, -3), entries);
-				const generated = await generateDotnetIO({ api, wire, evidence: { libraries, library: nativeLibrary, componentId: api.component.id, componentReceiptSha256: inner.componentIdentity, runtimeIdentity: inner.runtimeIdentity } });
+				const wire = generateSyncWire(nativeLibrary.slice(3, -3), entries, { tasks });
+				const generated = await (tasks ? generateDotnetTasks : generateDotnetIO)({ api, wire, evidence: { libraries, library: nativeLibrary, componentId: api.component.id, componentReceiptSha256: inner.componentIdentity, runtimeIdentity: inner.runtimeIdentity } });
 				for(const [f, bytes] of Object.entries(generated.files)) assert.equal(sha256(bytes), inner.files["lean-bridge/dotnet/src/" + assembly + "/" + f].sha256);
 			}
 			installed.push({ ...p.proof, assembly, assemblySha256: inner.files[dll].sha256, sdk: inner.sdk, nativeLibrary, nativeSha256 });
@@ -191,10 +198,10 @@ test("relocated offline NuGet clients run both exact IO packages in both orders"
 		await rm(feed, { recursive: true }); await rm(cache, { recursive: true }); await rm(project, { recursive: true });
 		const withoutTools = { PATH: "/unavailable", LANG: "C.UTF-8", DOTNET_NOLOGO: "1", DOTNET_EnableDiagnostics: "0", DOTNET_PROCESSOR_COUNT: "1", LEAN_NUM_THREADS: "1", TMPDIR: scratch };
 		const calls = [];
-		for(const order of ["journal-first", "peer-first"])
+		for(const order of [tasks ? "pulse-first" : "journal-first", "peer-first"])
 		{
 			const output = await run(dotnet, [join(moved, "Client.dll"), order], scratch, withoutTools, 120_000);
-			assert.equal(output, order + ": 19 scalars, nested EIO/Except, IO order, validation, retirement; 1 runtime, 2 components, 0 live identities");
+			assert.equal(output, order + (tasks ? ": 19 scalars, genuine await, cancellation, pull backpressure, disposal and retirement; shared owner, 2 components, 0 live identities" : ": 19 scalars, nested EIO/Except, IO order, validation, retirement; 1 runtime, 2 components, 0 live identities"));
 			calls.push(output);
 		}
 		const native = installed[0], nested = join(moved, "runtimes/linux-x64/native", native.nativeLibrary);
@@ -210,14 +217,20 @@ test("relocated offline NuGet clients run both exact IO packages in both orders"
 	if(replay)
 	{
 		const bytes = await readFile(path); assert.deepEqual(report, JSON.parse(bytes));
-		if(env.LEAN_BRIDGE_DOTNET_IO_EXPECTED)
+		if(env[prefix + "EXPECTED"])
 		{
-			const pin = await parse(resolve(env.LEAN_BRIDGE_DOTNET_IO_EXPECTED)); assert.equal(sha256(bytes), pin.acceptanceSha256); assert.deepEqual(report, pin.installed);
+			const pin = await parse(resolve(env[prefix + "EXPECTED"])); assert.equal(sha256(bytes), pin.acceptanceSha256); assert.deepEqual(report, pin.installed);
 		}
 	}
 	else
 	{
-		for(const file of appFiles) await copyFile(join(fixture, file), join(root, file), constants.COPYFILE_EXCL);
+		for(const file of appFiles) await copyFile(clientFile(file), join(root, file), constants.COPYFILE_EXCL);
 		await writeFile(path, canonicalJson(report), { flag: "wx" });
 	}
-});
+};
+for(const { tasks, prefix } of [{ tasks: false, prefix: "LEAN_BRIDGE_DOTNET_IO_" }, { tasks: true, prefix: "LEAN_BRIDGE_DOTNET_TASK_" }])
+{
+	const capture = env[prefix + "CAPTURE"], replay = env[prefix + "REPLAY"];
+	test("relocated offline NuGet clients run both exact " + (tasks ? "task" : "IO") + " packages in both orders"
+		, { skip: !capture && !replay, timeout: 3_600_000 }, t => checkInstalled(t, { tasks, prefix, capture, replay }));
+}
