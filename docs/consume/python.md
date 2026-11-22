@@ -129,6 +129,38 @@ stops delivery and asks Lean to cancel; a computation that doesn't check
 `IO.checkCanceled` can still finish, but can't deliver a second result.
 No Python worker thread, polling loop or manual runtime setup is required.
 
+### Pass a callback to a Lean task
+
+Pass a normal Python function. The [Retained example](../publish/pypi.md#let-a-lean-task-call-python)
+calls it twice on the same asyncio loop that started the task:
+
+```python
+import asyncio
+import lean_retained
+
+async def main():
+    result = await lean_retained.repeat_call("start", lambda s: s + "!")
+    print(result)  # start!!
+
+asyncio.run(main())
+```
+
+The callable runs synchronously on your loop. It can call synchronous Lean
+APIs; it must return a value, not a coroutine. The package releases it when
+the exported task settles or is cancelled. To stop it sooner, wrap it in
+`lean_retained.RetainedCallback(fn)` and call `close()`. A call already
+executing can finish; later calls fail. An escaped Lean closure cannot call
+back into an expired Python scope.
+
+If Lean propagates the callback's original error back to the await that owns
+it, Python receives the same exception object. Lean can also catch it and
+return a value, or throw a new error with the same message. A declared
+terminal Lean IO failure raises
+`LeanTaskError`; its `declaration` names the export. A typed factory rejection
+raises `LeanEIOError`. An ordinary returned `Except` remains `Ok` or `Err`.
+See the [installed CPython 3.11 and 3.12 results](../evidence/python-retained-tasks-20261122.json)
+for the exact four wheels and what was checked.
+
 ### Read a Lean stream
 
 The same Timers wheels export async iterators. Save this as `stream.py`:
@@ -375,7 +407,7 @@ Returned functions have a typed `LeanClosure` API. Use `with`, or call `close()`
 
 Invoke a closure on its creating thread. Closing from another thread waits for an active call; closing during same-thread re-entry defers disposal until that call finishes. Independent calls and closures can run on different threads.
 
-If a callback raises, the caller receives the original Python exception after native cleanup. Later callback invocations in that call are suppressed. Nested synchronous calls are allowed, with a native re-entry limit of 64. Callback conversions share the exporting call's 16 MiB conversion budget. Async callbacks are rejected. Lean cannot retain a borrowed host callback beyond the exporting call; attempts to invoke an expired callback raise `LeanBridgeError`.
+If a callback raises, the caller receives the original Python exception after native cleanup. Later callback invocations in that call are suppressed. Nested synchronous calls are allowed, with a native re-entry limit of 64. Callback conversions share the exporting call's 16 MiB conversion budget. Async callbacks are rejected. Lean cannot retain a borrowed host callback beyond the exporting call; attempts to invoke an expired callback raise `LeanBridgeError`. An explicitly selected task can instead [retain an IO callback on its event loop](#pass-a-callback-to-a-lean-task).
 
 See the [Python callable acceptance record](../evidence/python-callables-20260918.md) for installed-wheel boundary and lifetime checks.
 
@@ -909,7 +941,7 @@ selected `Subtype` leaf before their body runs. This includes the admitted
 copied containers, such as options, results and arrays. A rejected call leaves
 the closure open, so a later valid call can reuse it. Call `close()` when the
 closure is no longer needed. These directional callback checks are implemented for synchronous copied-value
-callbacks; retained or asynchronous host callbacks remain unsupported.
+callbacks. Retained callbacks with refined payloads and asynchronous Python replies remain unsupported.
 The [hosted owned-Subtype matrix](../evidence/owned-subtype-promotion-20261023.md) covers one selected `Nat` Subtype field in the tested acyclic `Bundle` owner on both source routes. Host input is validated before ownership transfer; rejection keeps ownership with the caller. Leased or retained results preserve the owner lifetime, explicit close or release performs cleanup, and later valid calls recover. Recursive owned graphs and owned Subtype callback positions remain separate work. Owned checked-record fields have [separate acceptance](../evidence/owned-checked-record-promotion-20261025.md).
 
 ### Subtypes in copied records

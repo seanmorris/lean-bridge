@@ -4704,7 +4704,7 @@ jobs:
       - name: Install and exercise compiled Lean host objects and asyncio tasks
         id: python_host_imports
         if: ${{ !cancelled() && matrix.profile == 'python' && steps.collection_python311.outcome == 'success' && steps.collection_python312.outcome == 'success' }}
-        timeout-minutes: 18
+        timeout-minutes: 25
         env:
           LEAN_BRIDGE_HOST_OBJECT_TEST: "1"
           LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR: build/consumer-ci/python-host-imports
@@ -4712,8 +4712,15 @@ jobs:
           HOST_PYTHON_312: ${{ steps.collection_python312.outputs.python-path }}
         run: |
           status=0
+          compiler_checked=0
           for interpreter in "$HOST_PYTHON_311" "$HOST_PYTHON_312"; do
-            LEAN_BRIDGE_HOST_PYTHON="$interpreter" node --test --test-concurrency=1 tests/host-object-generator.test.mjs || status=1
+            # The Lean-only negative controls are ABI independent. Both Python
+            # interpreters must still build and execute both installed wheels.
+            if LEAN_BRIDGE_CALLBACK_COMPILER_CHECKED="$compiler_checked" LEAN_BRIDGE_HOST_PYTHON="$interpreter" node --test --test-concurrency=1 tests/host-object-generator.test.mjs; then
+              compiler_checked=1
+            else
+              status=1
+            fi
           done
           exit "$status"
       - name: Retain Python host-object and task receipts with the original wheels

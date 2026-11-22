@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Retained"],
+  "exports": ["Retained.repeatCall", "Retained.duringStart", "Retained.recover", "Retained.replaceError", "Retained.typedStart", "Retained.plain", "Retained.terminal", "Retained.remember", "Retained.useExpired", "Retained.forget", "Retained.reset", "Retained.release", "Retained.state", "Retained.cancelLate", "Retained.queued", "Retained.scalarTour"],
+  "taskExports": ["Retained.repeatCall", "Retained.duringStart", "Retained.recover", "Retained.replaceError", "Retained.typedStart", "Retained.terminal", "Retained.remember", "Retained.useExpired", "Retained.cancelLate", "Retained.queued", "Retained.scalarTour"],
+  "taskIOErrors": ["Retained.repeatCall", "Retained.duringStart", "Retained.replaceError", "Retained.typedStart", "Retained.terminal", "Retained.useExpired", "Retained.cancelLate", "Retained.queued", "Retained.scalarTour"],
+  "targets": {"pypi": {"name": "lean-retained", "version": "1.0.0"}}
+}

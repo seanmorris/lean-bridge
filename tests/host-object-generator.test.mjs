@@ -10,6 +10,7 @@ import "./helpers/host-object-compiled.mjs";
 import "./helpers/host-object-installed.mjs";
 import "./helpers/host-object-project.mjs";
 import "./helpers/lean-task-installed.mjs";
+import "./helpers/python-retained-task-installed.mjs";
 import "./helpers/lean-stream-only-installed.mjs";
 import "./helpers/c-task-installed.mjs";
 import "./helpers/cpp-task-installed.mjs";

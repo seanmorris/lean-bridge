@@ -18,6 +18,8 @@ const snake = value => value.replace(/([A-Z]+)([A-Z][a-z])/gu, "$1_$2").replace(
 const signature = type => type.kind !== "named"
 	? { type, ownership: "copy", lifetime: null }
 	: { type, ownership: "lease", lifetime: { scope: "explicit", anchor: null } };
+const isCallback = t => t?.kind === "io-callback";
+const hasCallbacks = e => e.parameters.some(p => isCallback(p.type));
 
 /**
  * Select only generated foreign names and concrete nominal identities.
@@ -78,23 +80,52 @@ export const reconcileHostExports = options => {
 	if(ownedTypes.some(r => !metadata.entries.some(e => [e.result, e.error, e.stepError, ...e.parameters.map(p => p.type)].some(t => t?.id === r.id))))
 		fail("Selected resource does not occur directly at a checked export boundary");
 	const errors = [];
+	const callbacks = new Map(), hostError = "error:PythonHostException", terminal = "error:TaskIO.Error";
+	const callbackRef = t => {
+		const name = `Retained_${t.argument.name}_to_${t.reply.name}`, id = "bridge:" + name;
+		if(!callbacks.has(id)) callbacks.set(id, {
+			id, name, kind: "callback", representation: "identity"
+			, mutability: "immutable"
+			, fields: [], cases: [], typeParameters: [], assurance: []
+			, target: null, host: null, resource: null
+			, callable: { invocation: "many", reentry: "same-agent"
+				, selfDisposal: "defer", resultMode: "value"
+				, parameters: [{ ...signature(t.argument), name: "value", mutability: "immutable", optional: false, default: null }]
+				, result: signature(t.reply), effects: ["fails", "host-call"]
+				, failure: { mode: "declared", errors: [hostError], unexpected: "poison-runtime" } }
+			, source: { producer: "lean", declaration: name, extensions: { "lean-bridge.dev/callback-scheduler": "owner-event-loop" } }
+			, documentation: doc("A synchronous host callable retained until its exporting task settles or is cancelled.") });
+		return { kind: "named", id };
+	};
 	if(metadata.entries.some(e => e.effect === "IO")) errors.push({ id: "error:IO.Error"
 		, name: "IOError"
 		, category: "domain"
 		, payload: null
 		, documentation: doc("A synchronous Lean IO failure.") });
-	const hostError = "error:PythonHostException";
-	if(metadata.entries.some(e => e.effect === "IO" && e.hostMembers.length)) errors.push({ id: hostError
+	if(metadata.entries.some(e => e.taskIO)) errors.push({ id: terminal
+		, name: "TaskIOError", category: "domain", payload: null
+		, documentation: doc("A terminal IO failure from the selected Lean task.") });
+	if(metadata.entries.some(e => (e.effect === "IO" && e.hostMembers.length) || hasCallbacks(e))) errors.push({ id: hostError
 		, name: "PythonHostException"
 		, category: "domain"
 		, payload: null
-		, documentation: doc("The bound Python object raised an exception that escaped the Lean call.") });
+		, documentation: doc(metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
+			: "The bound Python object raised an exception that escaped the Lean call.") });
 	const startErrors = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : ["pure", "BaseIO"].includes(e.effect) ? []
-		: ["error:IO.Error", ...(e.hostMembers.length ? [hostError] : [])];
-	const errorIds = e => [...startErrors(e), ...e.stepError ? [`error:AsyncStep.${e.declaration}`] : []];
+		: ["error:IO.Error", ...(e.hostMembers.length || hasCallbacks(e) ? [hostError] : [])];
+	const errorIds = e => {
+		const ids = new Set(startErrors(e));
+		if(e.taskIO)
+		{ ids.add(terminal); if(hasCallbacks(e)) ids.add(hostError); }
+		if(e.stepError) ids.add(`error:AsyncStep.${e.declaration}`);
+		return [...ids];
+	};
 	const entries = metadata.entries.map(e => {
 		const task = e.delivery === "task", stream = e.delivery === "async-iterator", async = task || stream;
 		const selected = selection.asyncIterators?.find(s => s.open === e.declaration);
+		if(Boolean(e.taskIO) !== Boolean(selection.taskIOErrors?.includes(e.declaration))
+			|| ((hasCallbacks(e) || e.taskIO) && (!task || !selection.pythonTaskCallbacks))) fail("Unverified retained-callback or terminal IO selection");
+		for(const p of e.parameters) if(isCallback(p.type)) callbackRef(p.type);
 		if(!["IO", "EIO", "pure", ...(async ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
 			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (async && e.hostMembers.length)
 			|| Boolean(selected) !== stream || (stream && canonicalJson(selected) !== canonicalJson(e.protocol))
@@ -116,6 +147,7 @@ export const reconcileHostExports = options => {
 			, declaration: e.declaration
 			, effect: e.effect
 			, ...(async ? { delivery: e.delivery } : {})
+			, ...(e.taskIO ? { taskIO: true } : {})
 			, ...(stream ? { protocol: e.protocol, ...(e.stepError ? { stepError: e.stepError } : {}) } : {})
 			, ...(e.effect === "EIO" ? { error: e.error } : {})
 			, parameters: e.parameters.map(p => ({ name: snake(p.name), type: p.type }))
@@ -124,18 +156,18 @@ export const reconcileHostExports = options => {
 	const api = {
 		schemaVersion: 3, component
 		, producers: [{ id: "lean", adapter: "lean-bridge-host-exports", adapterVersion: 1, tool: "Lean", toolVersion: metadata.leanVersion, extensions: {} }]
-		, types: [...ownedTypes
+		, types: [...ownedTypes, ...callbacks.values()
 			, ...types.map(t => ({ ...t, assurance: []
 				, host: { ...t.host, targets: ["python"] }
 				, source: { producer: "lean", declaration: `${hostModule}.${t.name}`, extensions: {} } }))]
 		, declarations: metadata.entries.map((e, i) => ({
 			id: `lean:${e.declaration}`, name: entries[i].name, kind: "function"
 			, owner: null, overloadKey: e.declaration, typeParameters: [], receiver: null
-			, parameters: e.parameters.map((p, j) => ({ ...site(p.type, true), name: entries[i].parameters[j].name
+			, parameters: e.parameters.map((p, j) => ({ ...site(isCallback(p.type) ? callbackRef(p.type) : p.type, true), name: entries[i].parameters[j].name
 				, mutability: isOwned(p.type) ? mayWrite(e) ? "write" : "read" : p.type.kind === "named" ? types.find(t => t.id === p.type.id).mutability : "immutable"
 				, optional: false, default: null }))
 			, result: site(e.result), mutability: "immutable"
-			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...resourceEffects(e), ...e.hostMembers.flatMap(n => members.get(n).effects)])].sort()
+			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(hasCallbacks(e) ? ["host-call"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...resourceEffects(e), ...e.hostMembers.flatMap(n => members.get(n).effects)])].sort()
 			, failure: { mode: errorIds(e).length ? "declared" : "none", errors: errorIds(e), unexpected: "poison-runtime" }
 			, resultMode: e.delivery === "task" ? "promise" : e.delivery ?? "value"
 			, capabilities: [], assurance: []
@@ -144,6 +176,7 @@ export const reconcileHostExports = options => {
 				, extensions: {
 					"lean-lang.org/effect": e.effect
 					, ...(e.delivery === "task" ? { "lean-lang.org/delivery": "Task" } : {})
+					, ...(e.taskIO ? { "lean-bridge.dev/task-failure": "IO.Error" } : {})
 					, ...(e.protocol ? { "lean-bridge.dev/pull-protocol": e.protocol } : {})
 					, ...(imports ? { "lean-bridge.dev/host-imports-sha256": imports } : {})
 					, "lean-bridge.dev/host-members": e.hostMembers

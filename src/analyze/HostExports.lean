@@ -25,6 +25,8 @@ structure Request where
   asyncIterators : Array PullProtocol
   resources : Array Nominal
   leanResources : Array String := #[]
+  pythonTaskCallbacks : Option Bool := none
+  taskIOErrors : Option (Array String) := none
   members : Array String
   deriving FromJson
 
@@ -65,6 +67,19 @@ def delivered (r : Request) (e : Expr) : MetaM Json := do
   if let some name := (← instantiateMVars e).consumeMData.constName? then
     if r.leanResources.contains name.toString then return ← carrier r e
   returned r e true
+
+/-- An actual unary, nondependent IO function, not a foreign host object or a pure borrow. -/
+def taskInput (r : Request) (e : Expr) : MetaM Json := do
+  if r.pythonTaskCallbacks.getD false then
+    if let .forallE _ a b .default := (← instantiateMVars e).consumeMData then
+      let b := b.consumeMData
+      unless !b.hasLooseBVars && b.getAppFn.constName? == some ``IO && b.getAppArgs.size == 1 do
+        throwError "retained task callbacks require an explicit unary IO function: {e}"
+      let v := b.getAppArgs[0]!
+      unless [a, v].all (fun t => primitives.any (fun p => t.constName? == some p.1)) do
+        throwError "retained task callback arguments and replies must be copied scalars: {e}"
+      return Json.mkObj [("kind", toJson "io-callback"), ("argument", ← carrier r a), ("reply", ← carrier r v)]
+  delivered r e
 
 /-- Match the native extractor's definite-heap rule; tagged/scalar values have no stable identity. -/
 def resourceOwner (r : Request) (name : String) : MetaM Json := do
@@ -200,7 +215,8 @@ def extract (r : Request) : MetaM Json := do
       for arg in args do
         let decl ← arg.fvarId!.getDecl
         unless decl.binderInfo == .default do throwError "explicit application parameters required: {n}"
-        params := params.push <| Json.mkObj [("name", toJson decl.userName.toString), ("type", ← carrier r decl.type)]
+        let t ← if r.taskExports.contains publicName then taskInput r decl.type else carrier r decl.type
+        params := params.push <| Json.mkObj [("name", toJson decl.userName.toString), ("type", t)]
       let result := result.consumeMData
       let some head := result.getAppFn.constName? | throwError "expected synchronous IO result: {n}"
       let resultArgs := result.getAppArgs
@@ -219,10 +235,14 @@ def extract (r : Request) : MetaM Json := do
         unless task.getAppFn.constName? == some ``Task && task.getAppArgs.size == 1 do
           throwError "taskExports requires a real Lean Task result: {n}"
         noWorkerHost r deps n
-        for a in args do
-          let _ ← delivered r (← a.fvarId!.getDecl).type
-        pure <| [("effect", toJson effect), ("delivery", toJson "task"),
-          ("result", ← delivered r task.getAppArgs[0]!)] ++ extra
+        let payload := task.getAppArgs[0]!
+        let (value, terminal) ← if (r.taskIOErrors.getD #[]).contains publicName then do
+          unless r.pythonTaskCallbacks.getD false && payload.getAppFn.constName? == some ``Except && payload.getAppArgs.size == 2 &&
+              payload.getAppArgs[0]!.isConstOf ``IO.Error do
+            throwError "taskIOErrors requires Task (Except IO.Error value): {n}"
+          pure (payload.getAppArgs[1]!, [("taskIO", toJson true)])
+        else pure (payload, [])
+        pure <| [("effect", toJson effect), ("delivery", toJson "task"), ("result", ← delivered r value)] ++ extra ++ terminal
       else if head == ``IO && resultArgs.size == 1 then
         pure [("effect", toJson "IO"), ("result", ← returned r resultArgs[0]!)]
       else if head == ``EIO && resultArgs.size == 2 then

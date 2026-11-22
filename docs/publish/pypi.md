@@ -134,14 +134,53 @@ lean-bridge verify --receipt build/timers/package-set-receipt.json
 
 An explicitly selected `Task α`, `BaseIO (Task α)`, `IO (Task α)`, or
 `EIO ε (Task α)` delivers `α`. A startup failure from `EIO` raises the typed
-exception when awaited; an `Except` **inside** the task stays a returned
-value. Ordinary `IO α` is not an async contract. Startup runs on the calling
-thread until it returns the task, so put long-running work *inside* the task.
-Task arguments may use the nineteen copied scalars. Results may also nest
-`Except` over those scalars. Other result types (including a returned
-`IO.Error`), Python host objects and callbacks from Lean workers are not
-supported by this adapter.
+exception when awaited. An `Except` **inside** the task stays a returned value
+unless you explicitly select terminal `IO.Error` delivery as described below.
+Ordinary `IO α` is not an async contract. A factory without retained callbacks
+starts on the calling thread: put long-running work *inside* its task.
+Task arguments may use the nineteen copied scalars; results may also nest
+`Except` over them. Imported Python host objects cannot cross onto Lean workers.
 [Use the installed awaitable](../consume/python.md#await-a-lean-task).
+
+### Let a Lean task call Python
+
+Use an ordinary unary Lean function argument, `α → IO β`. Both sides of the
+callback use copied scalar types. For example:
+
+```lean
+def repeatCall (s : String) (f : String → IO String) :
+    BaseIO (Task (Except IO.Error String)) :=
+  IO.asTask do f (← f s)
+```
+
+In [the example package](../../tests/fixtures/python-retained-tasks/Retained.lean),
+this declaration lives in the `Retained` namespace. Select it in
+`lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Retained"],
+  "taskExports": ["Retained.repeatCall"],
+  "taskIOErrors": ["Retained.repeatCall"]
+}
+```
+
+`taskIOErrors` selects the **outer** `Except IO.Error` of a task result as
+its failure channel. Lean checks that exact signature. Without this selection,
+`IO.Error` is not a copied payload, so the build rejects that signature; it
+doesn't silently reinterpret it. A successful value can still contain its own
+`Except`. Keep the selection for reviewed builds, too.
+
+The package runs callback-capable factories on Lean's scheduler, including
+calls made before the factory returns a task. It dispatches each invocation
+to the owning Python event loop and resolves a Lean promise with the reply.
+To propagate the original Python exception, rethrow the caught `IO.Error`
+itself; `IO.ofExcept` turns it into text and constructs a different error.
+Cancellation revokes the callback even if Lean stored the function for later.
+Each export call can queue up to 256 unanswered requests and retain up to
+4,096 caught Python exceptions. Keep callbacks short so other event-loop
+work can run. [Call the installed package](../consume/python.md#pass-a-callback-to-a-lean-task).
 
 ## Export an async iterator
 

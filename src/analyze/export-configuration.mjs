@@ -62,7 +62,7 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "asyncIterators", "contracts", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
 	if(configuration.hostImports !== undefined && (configuration.hostImports !== hostImportsFile || !Array.isArray(configuration.modules) || !configuration.modules.length))
 		fail("invalid-export-configuration", `hostImports requires ${hostImportsFile} and selected application modules`);
@@ -73,6 +73,12 @@ export const validateExportConfiguration = configuration => {
 			|| !ts.length || ts.length > 128 || new Set(ts).size !== ts.length
 			|| ts.some(n => typeof n !== "string" || !specializationName.test(n) || (configuration.exports !== undefined && (!Array.isArray(configuration.exports) || !configuration.exports.includes(n)))))
 			fail("invalid-export-configuration", "taskExports requires distinct selected Lean names and application modules");
+	}
+	if(configuration.taskIOErrors !== undefined)
+	{
+		const names = configuration.taskIOErrors;
+		if(!Array.isArray(names) || !names.length || new Set(names).size !== names.length || names.some(n => !configuration.taskExports?.includes(n)))
+			fail("invalid-export-configuration", "taskIOErrors must select distinct names from taskExports");
 	}
 	if(configuration.asyncIterators !== undefined)
 	{

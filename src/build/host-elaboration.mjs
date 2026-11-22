@@ -63,6 +63,8 @@ export const compileHostSources = async options => {
 	const selection = {
 		...pythonHostSelection(ir), exports: projectContract.exports
 		, leanResources: projectContract.leanResources ?? []
+		, ...(options.python && projectContract.taskExports?.length ? { pythonTaskCallbacks: true } : {})
+		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []
 		, exportModules: roots, modules: [...built.keys()]
