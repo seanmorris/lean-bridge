@@ -4,9 +4,8 @@
  *
  * @file
  */
-export const streamEntryLean = `structure PullHandle (α : Type) where
-  next : Unit → BaseIO (Task α)
-  close : Unit → BaseIO Unit`;
+import { nativePullEntry } from "../native/pull-entry.mjs";
+export { streamEntryLean } from "../native/pull-entry.mjs";
 
 export const streamStub = `from typing import AsyncIterator as _AsyncIterator, TypeVar as _StreamTypeVar
 _Item = _StreamTypeVar("_Item", covariant=True)
@@ -31,20 +30,9 @@ class LeanStreamError(Exception):
  * @param stepError - Optional typed pull error codec.
  */
 export const streamCodec = (i, entry, value, startError, stepError) => {
-	const option = `(_root_.Option ${value.lean})`;
-	const step = stepError ? `(_root_.Except ${stepError.lean} ${option})` : option;
-	const handle = `(PullHandle ${step})`;
 	const unpack = (t, expression) => t?.decode ? t.decode(expression) : expression;
 	return {
-		lean: startError ? `(_root_.Except ${startError.lean} ${handle})` : handle
-		, helpers: `@[export lb_python_pull_next_${i}] def pullNext${i} (h : ${handle}) : IO (Task ${step}) := liftM (h.next ())
-@[export lb_python_pull_close_${i}] def pullClose${i} (h : ${handle}) : IO Unit := liftM (h.close ())`
-		, application: expr => {
-			const wrap = `(fun cursor => PullHandle.mk (fun _ => _root_.${entry.protocol.next} cursor) (fun _ => _root_.${entry.protocol.close} cursor))`;
-			return entry.effect === "pure" ? `(${wrap} ${expr})` : `(${wrap} <$> ${expr})`;
-		}
-		, declarations: `extern lean_object *lb_python_pull_next_${i}(lean_object *);
-extern lean_object *lb_python_pull_close_${i}(lean_object *);`
+		...nativePullEntry(i, "lb_python", entry, value.lean, startError?.lean, stepError?.lean)
 		, c: `static PyObject *lb_item_${i}(lean_object *v) {
     ${stepError ? `lean_object *payload = lean_ctor_get(v, 0);
     if (!lean_obj_tag(v)) return lb_cursor_value(2, ${stepError.toPython("payload")});

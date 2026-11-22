@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "exports": [
+    "Pulse.bytes", "Pulse.checked", "Pulse.closes", "Pulse.ioTask", "Pulse.late",
+    "Pulse.pulls", "Pulse.release", "Pulse.reset", "Pulse.series", "Pulse.state"
+  ],
+  "taskExports": ["Pulse.bytes", "Pulse.checked", "Pulse.ioTask", "Pulse.late"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"c": {"name": "pulse", "version": "1.0.0"}}
+}

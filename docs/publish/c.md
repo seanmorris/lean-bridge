@@ -8,11 +8,11 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 Install Node 22, Lean 4.32.2, a C11 compiler, Make, m4, tar, xz, and `readelf` from binutils on Linux x86-64. Add a C++20 compiler if you also select `cpp`. Consumers need no Lean installation.
 
-Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. Both C and C++ accept synchronous primitive callbacks and returned closures. Resource-containing C values require the [explicit ownership policy](#resource-containing-c-values) below. Asynchronous signatures remain unsupported; the build reports the rejected Lean declaration and location.
+Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The synchronous C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Both adapters accept synchronous primitive callbacks and returned closures. Resource-containing C values require the [explicit ownership policy](#resource-containing-c-values). For real Lean tasks and pull streams, select the [C11 task profile](#export-tasks-and-pull-streams) separately.
 
 `Option`, `Except`, binary products and `List` also compile through both ordinary-source and reviewed-IR builds. They may contain supported primitives, arrays, records and each other, but not callbacks or resources. All seventeen consumer profiles have installed acceptance for these copied constructors. Check each target's guide for its host representation and toolchain requirements before selecting a combined release.
 
-For a Lake project named `sample` at version `1.0.0`, select both native targets:
+For a Lake project named `sample` at version `1.0.0`, select both synchronous native targets:
 
 ```sh
 lean-bridge build --project /path/to/sample \
@@ -40,6 +40,41 @@ Package names do not rename the API. The source component determines `sample.h`,
 Each archive includes its component library, C adapter and matching Lean runtime. Loading the C library initializes Lean automatically; pkg-config and CMake locate the libraries. The tested public profile is Linux x86-64 with glibc 2.38 or newer. The builder rejects binaries requiring a newer glibc version than the declared floor. Lean and Lean Bridge license notices accompany the binaries; supply your library's license with the release as well.
 
 Add `--target cpan` to produce Perl archives from that same native compilation. Add `--target npm` to also compile one Wasm component from the same captured source tree when the API fits [npm's supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records. Selecting npm for unsupported signatures rejects the combined build without partial output. Combined builds check source API agreement across profiles and put the native archives under `profiles/native/archives/`. Install the [npm](npm.md#build-npm-and-cpan-together) and [CPAN](cpan.md#build-an-ordinary-lean-project) tools only when selecting those targets. C-only builds do not invoke Perl.
+
+## Export tasks and pull streams
+
+Use `--target c` on its own for a Linux C11 package whose consumers drive work
+from an event loop. Select a Lean declaration returning `Task α` in
+`taskExports`. It may be pure or start in `BaseIO`, `IO`, or `EIO ε`.
+Ordinary `IO` functions remain synchronous. To export a stream, name the
+factory and its two operations in `asyncIterators`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "taskExports": ["Pulse.late"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"c": {"name": "pulse", "version": "1.0.0"}}
+}
+```
+
+The compiler checks the actual cursor type. Its pull must return
+`BaseIO (Task (Option α))` or `BaseIO (Task (Except ε (Option α)))`; its close
+must return `BaseIO Unit`. The consumer never sees the cursor. If you supply
+`exports`, include every selected task and factory. For a reviewed release,
+keep those selections and add the emitted public `.binding-ir.json` to the
+project. Each build checks the signatures against fresh Lean interfaces.
+
+The `native-c-task-v1` archive accepts fixed-width and machine-word integers,
+floats, `Bool`, `Char`, `Unit`, UTF-8 strings and byte arrays. A result or
+typed error may also contain nested `Except` values. This profile does not
+narrow `Nat` or `Int`, package callbacks or resources, or produce C++ bindings.
+The [Lean source](../../tests/fixtures/c-lean-tasks/Pulse.lean) and
+[installed C consumer](../consume/c.md#wait-for-a-task-or-pull-a-stream) show
+the producer and consumer sides of the same package. The
+[installed release evidence](../evidence/c-task-streams-20261122.json) lists the
+two archive receipts, checked behaviors and replay command.
 
 ## Resource-containing C values
 

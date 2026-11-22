@@ -1,5 +1,5 @@
 /**
- * Build a host-object wheel from a source package without accepting hand-written entry signatures.
+ * Build an installed host-object or async projection without accepting hand-written entry signatures.
  *
  * @file
  */
@@ -13,6 +13,8 @@ import { elaboratedComponent } from "../analyze/semantic-model.mjs";
 import { validateOrdinaryPythonSettings } from "../backends/python/copied-model.mjs";
 import { captureSourceNotices } from "../release/source-notices.mjs";
 import { buildPythonHostWheel, packagePythonHostRuntime, writePythonHostPackageSet } from "../release/host-pypi.mjs";
+import { buildCTaskPackage } from "../release/c-task-package.mjs";
+import { validateNativeCSettings } from "../release/native-c-family.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { prepareLakeDependencySnapshot, verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
 import { selectLakeEntryModules, verifyLakeEntryModules } from "./lake-entry-modules.mjs";
@@ -69,21 +71,22 @@ const captureContracts = async (project, inventory) => {
  *
  * @param options - Inspected application, selected targets, pinned tools and optional cancellation.
  */
-export const buildPythonHostProject = async options => {
+export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
-	if(targets.length !== 1 || targets[0] !== "pypi") fail("Python host imports and task exports currently require a pypi-only build");
+	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
+	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
+	if(targets.length !== 1 || !["c", "pypi"].includes(target)) fail("Task and async iterator builds require a single c or pypi target");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
 	await absent(output);
-	const record = inventory.configurationRecord, config = record.configuration;
-	assertExportConfigurationCapabilities(config, { target: "pypi"
+	assertExportConfigurationCapabilities(config, { target
 		, fields: ["modules", "exports", "hostImports", "taskExports", "asyncIterators", "package"]
 		, targetFields: ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
-	const settings = config.targets?.pypi ?? {}, name = settings.name ?? `lean-${component.name.toLowerCase().replaceAll("_", "-")}`;
-	const version = settings.version ?? (component.version === "0.0.0-local" ? "0.0.0+local" : component.version);
-	validateOrdinaryPythonSettings({ name, version });
+	const settings = config.targets?.[target] ?? {}, name = settings.name ?? `lean-${component.name.toLowerCase().replaceAll("_", "-")}`;
+	const version = settings.version ?? (target === "pypi" && component.version === "0.0.0-local" ? "0.0.0+local" : component.version);
+	(target === "pypi" ? validateOrdinaryPythonSettings : validateNativeCSettings)({ name, version });
 	const contract = await captureContracts(project, inventory);
 	if(inventory.project.toolchain !== "leanprover/lean4:v4.32.2") fail("Host source and runtime require the same pinned Lean toolchain");
 	if(!inventory.project.lakefile) fail("Host imports require a Lake package so each module has a checked owner");
@@ -130,24 +133,41 @@ export const buildPythonHostProject = async options => {
 			, lake: { snapshotSha256: snapshot.sha256, resolutionSha256: workspace.sha256, resolution: workspace.document } };
 		const runtimeRoot = join(stage, "runtime"), archives = join(stage, "archives");
 		await mkdir(archives);
-		onProgress?.({ phase: "build", state: "info", message: "Compiling source and checking Python export signatures" });
+		onProgress?.({ phase: "build", state: "info", message: `Compiling source and checking ${target} export signatures` });
 		await buildNativeSharedRuntime({ outputRoot: runtimeRoot, leanPrefix });
-		const common = { runtimeRoot, leanPrefix, workRoot: stage, output: archives, environment, signal };
-		const wheel = await buildPythonHostWheel({ ...common, projectContract, sources
-			, ir: contract.ir, module: config.modules[0], name, version
-			, python: environment.LEAN_BRIDGE_PYTHON ?? environment.LEAN_BRIDGE_HOST_PYTHON ?? "python3" });
-		const runtime = await packagePythonHostRuntime(common);
-		const receipt = await writePythonHostPackageSet({ root: stage, runtime, component: wheel, archivePrefix: "archives/" });
+		const common = { runtimeRoot
+			, leanPrefix
+			, workRoot: stage
+			, output: archives
+			, environment
+			, signal
+			, projectContract
+			, sources
+			, ir: contract.ir
+			, module: config.modules[0]
+			, name
+			, version };
+		let artifact, receipt;
+		if(target === "c")
+		{
+			artifact = await buildCTaskPackage(common); receipt = artifact.receipt;
+		}
+		else
+		{
+			artifact = await buildPythonHostWheel({ ...common, python: environment.LEAN_BRIDGE_PYTHON ?? environment.LEAN_BRIDGE_HOST_PYTHON ?? "python3" });
+			const runtime = await packagePythonHostRuntime(common);
+			receipt = await writePythonHostPackageSet({ root: stage, runtime, component: artifact, archivePrefix: "archives/" });
+		}
 		const manifest = { schemaVersion: 1
 			, profile: receipt.profiles[0].id
 			, component
 			, packages: receipt.packages, configurationSha256: record.sha256
-			, nativeRuntimeIdentity: runtime.runtimeIdentity
-			, bindingIrSha256: wheel.bindingIrSha256
+			, nativeRuntimeIdentity: artifact.runtimeIdentity
+			, bindingIrSha256: artifact.bindingIrSha256
 			, ...(contract.review ? { reviewedBindingIrSha256: contract.review.semanticSha256 } : {}) };
 		await writeFile(join(stage, "native-release.json"), canonicalJson(manifest));
-		await writeFile(join(stage, "binding-ir.json"), canonicalJson(wheel.api));
-		await writeFile(join(stage, "host-export-evidence.json"), canonicalJson(wheel.evidence));
+		await writeFile(join(stage, "binding-ir.json"), canonicalJson(artifact.api));
+		await writeFile(join(stage, "host-export-evidence.json"), canonicalJson(artifact.evidence));
 		await rm(runtimeRoot, { recursive: true });
 		if((await inspectLeanProject(project, { signal })).sourceTreeSha256 !== inventory.sourceTreeSha256) fail("Host project changed during compilation");
 		await verifyLakeSnapshotSourceTree({ snapshot, projectRoot: project, signal });

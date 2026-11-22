@@ -55,6 +55,17 @@ test("Python host components require their pinned runtime; existing native wheel
 	assert.equal(validatePackageSetReceipt(receipt), true);
 });
 
+test("C task receipts require a C archive with an embedded runtime, not a Python dependency", async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const c = structuredClone(receipt.packages.find(p => p.target === "c"));
+	const profile = { ...receipt.profiles.find(p => p.id === c.profile), id: "native-c-task-v1" };
+	c.profile = profile.id;
+	const tasks = { ...receipt, profiles: [profile], packages: [c] };
+	await assertJsonSchema("package-set-receipt", tasks); assert.equal(validatePackageSetReceipt(tasks), true);
+	for(const patch of [{ ecosystem: "cpp", target: "cpp" }, { role: "runtime", runtimeDelivery: "provided" }, { runtimeDelivery: "dependency" }])
+		assert.throws(() => validatePackageSetReceipt({ ...tasks, packages: [{ ...c, ...patch }] }));
+});
+
 test("one closed receipt covers every ordinary package ecosystem and deterministically records its archives", async t => {
 	const handoff = await createPackageSetHandoff(t);
 	await assertJsonSchema("package-set-receipt", handoff.receipt);

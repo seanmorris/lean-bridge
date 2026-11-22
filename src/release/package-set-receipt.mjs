@@ -28,7 +28,8 @@ const pathIsSafe = value => typeof value === "string" && value.length <= 1024 &&
 const targetProfiles = { npm: ["component-scalars-v1", "javascript-wasm-owned-v1"]
 	, "php-wasm": "php-wasm-copied-v1"
 	, pypi: ["native-library-v1", "native-python-host-v1", "native-python-task-v1"]
-	, ...Object.fromEntries(["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "cargo", "php-native"].map(target => [target, "native-library-v1"])) };
+	, c: ["native-library-v1", "native-c-task-v1"]
+	, ...Object.fromEntries(["cpan", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "cargo", "php-native"].map(target => [target, "native-library-v1"])) };
 const ecosystemFor = target => target === "php-native" ? ["composer"] : target === "php-wasm" ? ["npm", "composer"] : [target];
 const nameKey = value => `${value.ecosystem}:${value.ecosystem === "pypi" ? value.name.toLowerCase().replaceAll(/[-_.]+/g, "-")
 	: ["nuget", "composer", "npm", "cargo"].includes(value.ecosystem) ? value.name.toLowerCase() : value.name}`;

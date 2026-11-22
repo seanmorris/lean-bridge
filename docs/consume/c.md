@@ -123,6 +123,35 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+## Wait for a task or pull a stream
+
+A C archive marked `native-c-task-v1` bundles the Lean runtime. Include the
+public header and link the pkg-config package or CMake target named in its
+manifest. No Lean installation or worker thread is needed in the application.
+
+Start a task on the process main thread with a zero-initialized handle. For the
+example package, `lbc_pulse_late_poll(handle, &fd)` returns `lbc_pulse_OK` if
+the result is ready, or `lbc_pulse_PENDING` and a descriptor otherwise.
+Watch that descriptor for readability in your event loop. Do not read or
+close it: `lbc_pulse_late_take(&handle, &value)` collects the result and
+releases the descriptor. Call `lbc_pulse_late_close(&handle)` if you stop
+waiting. Cancellation requests cooperation from Lean; it doesn't block the
+event loop waiting for the task to finish. The component library stays loaded
+for the process lifetime so a late Lean completion cannot call unloaded code.
+
+For a stream, `_start` opens the cursor without requesting an item. Call
+`_pull` once, wait for readiness if needed, then call `_take`. An item leaves
+the cursor idle until your next request. `END` and a typed pull failure close
+it automatically; call `_close` when you stop early. A Lean `Except.error`
+returned **as an item** is still an item, not a failed pull. Typed errors have
+their own output slot; `IO_ERROR` can carry an owned UTF-8 message. Use the
+generated disposal functions for owned buffers and results before reusing
+their output slots. An alias of a consumed handle returns `CLOSED`.
+
+The [complete C program](../../tests/fixtures/c-lean-tasks/consumer.c) uses
+`poll(2)` with the prepared package, including cancellation, failed starts,
+typed stream failures, early exits and normal completion.
+
 ## Values and cleanup
 
 Ordinary-source arrays use typed spans; records use generated structs. Both can nest. Inputs borrow your storage for one call. Packages exposing `Nat` or `Int` provide generated `_init` functions for their aggregate structs. Call `_init` before first use, then `_clear` to release the complete value, including nested integers, arrays and record fields. `_clear` resets fields to initialized empty values. Successful calls replace initialized copied outputs; failed conversions leave them unchanged. Packages without arbitrary integers, including Alpha above, use zero-initialized outputs and require clearing before reuse. Do not shallow-copy an owned output and clear both copies.

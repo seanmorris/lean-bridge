@@ -14,7 +14,7 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { readNativeReviewedSource } from "../analyze/reviewed-owned-source.mjs";
-import { buildPythonHostProject } from "./host-project.mjs";
+import { buildHostProject } from "./host-project.mjs";
 import { generateOwnedCValues } from "../backends/c/owned-values.mjs";
 import { generateOwnedCppPackage } from "../backends/cpp/owned-package.mjs";
 import { generateOwnedRustPackage } from "../backends/rust/owned-package.mjs";
@@ -86,7 +86,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 	{
 		const inventory = await inspectLeanProject(projectRoot, { signal });
 		if(inventory.configurationRecord.configuration.hostImports || inventory.configurationRecord.configuration.taskExports || inventory.configurationRecord.configuration.asyncIterators)
-			return await buildPythonHostProject({ projectRoot, outputRoot, targets
+			return await buildHostProject({ projectRoot, outputRoot, targets
 				, environment, signal, onProgress, lakeSnapshot, inventory });
 		await readNativeReviewedSource(projectRoot, inventory, signal, ownedGraphs);
 	}

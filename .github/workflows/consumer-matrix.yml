@@ -3800,6 +3800,27 @@ jobs:
       - name: Prepare native compiler for this shard
         run: |
           bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Exercise installed Lean tasks and pull streams through C11
+        id: c_tasks
+        if: matrix.profile == 'c-family'
+        continue-on-error: true
+        timeout-minutes: 12
+        env:
+          LEAN_BRIDGE_C_TASK_TEST: "1"
+          LEAN_BRIDGE_C_TASK_EVIDENCE_DIR: build/consumer-ci/c-tasks
+          LEAN_NUM_THREADS: "1"
+        run: |
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/helpers/c-task-installed.mjs
+      - name: Preserve verified C task archives and installed results
+        if: ${{ !cancelled() && steps.c_tasks.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: c-task-releases-${{ github.run_attempt }}
+          path: build/consumer-ci/c-tasks/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
       - name: Execute direct proof erasure through prepared C and C++ packages
         id: direct_proof_native
         if: matrix.profile == 'c-family'
@@ -4615,6 +4636,10 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
+
+      - name: Enforce installed C task results
+        if: ${{ !cancelled() && matrix.profile == 'c-family' && steps.c_tasks.outcome != 'success' }}
+        run: exit 1
 
   managed-consumers:
     name: Managed consumer (${{ matrix.profile }})

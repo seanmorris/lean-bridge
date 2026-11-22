@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.20)
+project(installed_c_task LANGUAGES C)
+find_package(LeanBridgeLbcPulse CONFIG REQUIRED)
+find_package(Threads REQUIRED)
+add_executable(installed-task consumer.c)
+target_compile_features(installed-task PRIVATE c_std_11)
+target_link_libraries(installed-task PRIVATE LeanBridge::lbc_pulse Threads::Threads ${CMAKE_DL_LIBS})
