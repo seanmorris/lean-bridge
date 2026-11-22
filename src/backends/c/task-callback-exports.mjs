@@ -74,9 +74,12 @@ export const emitRetainedTask = options => {
     if (s != LB(OK)) { lb_drop(e); return s; }
     out->id = e->id; out->domain = lb_domain; return LB(OK);`);
 	const get = `lb_entry *e; LB(status) s = lb_lookup(h.id, h.domain, ${i}, &e, 0); if (s != LB(OK)) return s;`;
-	fn(n + "_poll", [h + " h", "int *fd"], `return lb_poll(h.id, h.domain, ${i}, fd);`);
-	fn(n + "_close", [h + " *h"], `return h ? lb_close(&h->id, h->domain, ${i}) : LB(INVALID);`);
-	if(callbacks.length)
+	if(!options.publicC)
+	{
+		fn(n + "_poll", [h + " h", "int *fd"], `return lb_poll(h.id, h.domain, ${i}, fd);`);
+		fn(n + "_close", [h + " *h"], `return h ? lb_close(&h->id, h->domain, ${i}) : LB(INVALID);`);
+	}
+	if(!options.publicC && callbacks.length)
 	{
 		fn(n + "_callbacks", [h + " h", "int *fd"], `${get}
     if (!fd) return LB(INVALID); *fd = ((lb_port *)lean_get_external_data(e->retained.token))->fd; return LB(OK);`);

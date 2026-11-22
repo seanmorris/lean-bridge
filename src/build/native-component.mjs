@@ -11,7 +11,7 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { nativeCType, nativeCallbackDefault, nativeReplyRejectedSymbol, nativeResourceReplyArgument, nativeAcceptsHostCallback } from "./native-model.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from "./native-graph-model.mjs";
 import { generateNativeCallableGraphTrampolines } from "./native-callable-graph.mjs";
-import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
+import { linuxBrokerHeader, linuxBrokerSource } from "../backends/native/runtime-broker.mjs";
 import { nativeCallbackHeader, nativeCallbackBroker } from "../backends/native/callback-broker.mjs";
 import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
@@ -50,8 +50,8 @@ export const buildNativeSharedRuntime = async ({ outputRoot, leanPrefix, cc = "c
 	{
 		const probe = await run(join(leanPrefix, "bin/lean"), ["--version"]);
 		if(!probe.stdout.includes(pinnedNativeLean)) throw new Error("native runtime Lean identity mismatch");
-		await save(join(staging, "include/lean_bridge_native_runtime.h"), brokerHeader.replace("#ifdef __cplusplus\n}", `${nativeCallbackHeader}\n#ifdef __cplusplus\n}`));
-		await save(join(staging, "broker.c"), `${brokerSource}\n${nativeCallbackBroker}`);
+		await save(join(staging, "include/lean_bridge_native_runtime.h"), linuxBrokerHeader.replace("#ifdef __cplusplus\n}", `${nativeCallbackHeader}\n#ifdef __cplusplus\n}`));
+		await save(join(staging, "broker.c"), `${linuxBrokerSource}\n${nativeCallbackBroker}`);
 		await mkdir(join(staging, "lib"));
 		const leanLibrary = join(leanPrefix, "lib/lean/libleanshared.so");
 		await copyFile(leanLibrary, join(staging, "lib/libleanshared.so"));

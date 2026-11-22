@@ -85,7 +85,7 @@ export const buildHostProject = async options => {
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
 	await absent(output);
 	assertExportConfigurationCapabilities(config, { target
-		, fields: ["modules", "exports", "hostImports", "taskExports", "asyncIterators", "package", ...target === "pypi" ? [] : ["resources"], ...["pypi", "cargo", "cpp"].includes(target) ? ["taskIOErrors"] : []]
+		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "package", ...target === "pypi" ? [] : ["resources"]]
 		, targetFields: ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.[target] ?? {}, name = settings.name ?? `lean-${component.name.toLowerCase().replaceAll("_", "-")}`;

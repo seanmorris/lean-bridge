@@ -12,10 +12,9 @@ import { canonicalJson } from "../../src/capsule/node.mjs";
 import { reconcileHostExports } from "../../src/analyze/host-export-model.mjs";
 import { generateCTaskExports } from "../../src/backends/c/task-exports.mjs";
 import { generateCppTaskHeader } from "../../src/backends/cpp/task-exports.mjs";
-import { compileHostSources } from "../../src/build/host-elaboration.mjs";
-import { processBuildRunner } from "../../src/build/process-runner.mjs";
-import { buildCppCallbackPackages } from "./cpp-retained-task-packages.mjs";
-import { captureCppCallbackClient, runCppCallbackInstall } from "./cpp-retained-task-install.mjs";
+import { verifyNativeTaskRefusals } from "./native-retained-task-refusals.mjs";
+import { buildNativeCallbackPackages } from "./native-retained-task-packages.mjs";
+import { captureNativeCallbackClient, runNativeCallbackInstall } from "./native-retained-task-install.mjs";
 
 test("C++ retained callbacks require a checked C++ scheduler, exact exception policy and packaged support", async () => {
 	for(const f of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
@@ -65,27 +64,7 @@ test("the C++ compiler selection refuses unsupported replies, false terminal err
 	, timeout: 240_000
 }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "cpp-callback-signatures-")); t.after(() => rm(root, { recursive: true, force: true }));
-	const source = `namespace Bad
-def reply (_ : UInt32 → IO (Array UInt32)) : Task UInt32 := Task.pure 0
-def wrong : Task (Except String Nat) := Task.pure (.ok 1)
-def retained (_ : Nat → IO Nat) : Task Nat := Task.pure 1
-end Bad`;
-	const invalid = [["Bad.reply", "cpp", /must be copied scalars/u]
-		, ["Bad.wrong", "cpp", /taskIOErrors requires Task/u]
-		, ["Bad.retained", undefined, /unsupported .*carrier/u]];
-	for(const [name, target, pattern] of invalid)
-	{
-		const compile = compileHostSources({ app: await mkdtemp(join(root, "source-"))
-			, ir: null, target
-			, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2")
-			, environment: { ...process.env, LEAN_NUM_THREADS: "1" }
-			, sources: [{ module: "Bad", source }]
-			, projectContract: { modules: ["Bad"], exports: [name], taskExports: [name], ...name === "Bad.wrong" ? { taskIOErrors: [name] } : {} }
-			, run: (command, args, cwd, env) => processBuildRunner.capture({ command, args, cwd, env }) });
-		await assert.rejects(compile, e => {
-			assert.match([e.message, e.details?.stdout, e.details?.stderr].join("\n"), pattern); return true;
-		});
-	}
+	await verifyNativeTaskRefusals(root, "cpp");
 });
 test("installed ordinary and reviewed C++ tasks run retained host closures on their main dispatcher", {
 	skip: !enabled && !replay, timeout: 1_800_000
@@ -94,10 +73,10 @@ test("installed ordinary and reviewed C++ tasks run retained host closures on th
 	const release = resolve(replay ?? process.env.LEAN_BRIDGE_CPP_CALLBACK_EVIDENCE ?? join(root, "releases"));
 	if(!replay)
 	{
-		await mkdir(release); await captureCppCallbackClient(release);
-		await buildCppCallbackPackages({ root, release });
+		await mkdir(release); await captureNativeCallbackClient(release, "cpp");
+		await buildNativeCallbackPackages({ root, release, target: "cpp" });
 	}
-	const result = await runCppCallbackInstall({ root, release }), record = join(release, "acceptance.json");
+	const result = await runNativeCallbackInstall({ root, release, target: "cpp" }), record = join(release, "acceptance.json");
 	if(replay) assert.deepEqual(result, JSON.parse(await readFile(record)));
 	else await writeFile(record, canonicalJson(result), { flag: "wx" });
 	t.diagnostic("Both relocated executables passed normal, retirement, non-standard exception and shutdown checks.");

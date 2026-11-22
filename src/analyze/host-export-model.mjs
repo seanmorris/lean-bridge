@@ -81,8 +81,9 @@ export const reconcileHostExports = options => {
 		fail("Selected resource does not occur directly at a checked export boundary");
 	const errors = [];
 	const callbacks = new Map(), rust = selection.rustTaskCallbacks === true, cpp = selection.cppTaskCallbacks === true;
-	if([rust, cpp, selection.pythonTaskCallbacks === true].filter(Boolean).length > 1) fail("Ambiguous retained-callback host");
-	const hostErrorName = cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException";
+	const c = selection.cTaskCallbacks === true;
+	if([rust, cpp, c, selection.pythonTaskCallbacks === true].filter(Boolean).length > 1) fail("Ambiguous retained-callback host");
+	const hostErrorName = c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException";
 	const hostError = "error:" + hostErrorName, terminal = "error:TaskIO.Error";
 	const callbackRef = t => {
 		const name = `Retained_${t.argument.name}_to_${t.reply.name}`, id = "bridge:" + name;
@@ -112,7 +113,7 @@ export const reconcileHostExports = options => {
 		, name: hostErrorName
 		, category: "domain"
 		, payload: null
-		, documentation: doc(cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
+		, documentation: doc(c ? "A C callback failure propagated through its original Lean IO error." : cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
 			: "The bound Python object raised an exception that escaped the Lean call.") });
 	const startErrors = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : ["pure", "BaseIO"].includes(e.effect) ? []
 		: ["error:IO.Error", ...(e.hostMembers.length || hasCallbacks(e) ? [hostError] : [])];
@@ -127,7 +128,7 @@ export const reconcileHostExports = options => {
 		const task = e.delivery === "task", stream = e.delivery === "async-iterator", async = task || stream;
 		const selected = selection.asyncIterators?.find(s => s.open === e.declaration);
 		if(Boolean(e.taskIO) !== Boolean(selection.taskIOErrors?.includes(e.declaration))
-			|| ((hasCallbacks(e) || e.taskIO) && (!task || !(selection.pythonTaskCallbacks || rust || cpp)))) fail("Unverified retained-callback or terminal IO selection");
+			|| ((hasCallbacks(e) || e.taskIO) && (!task || !(selection.pythonTaskCallbacks || rust || cpp || c)))) fail("Unverified retained-callback or terminal IO selection");
 		for(const p of e.parameters) if(isCallback(p.type)) callbackRef(p.type);
 		if(!["IO", "EIO", "pure", ...(async ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
 			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (async && e.hostMembers.length)

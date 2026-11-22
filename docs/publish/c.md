@@ -99,6 +99,32 @@ new archive. Consumers do not set either variable. The
 [exact-integer release evidence](../evidence/exact-task-integers-20261122.json)
 records the package receipts and the dependency digests for both C and C++.
 
+### Export a callback-taking task
+
+Select a declaration returning a real Lean `Task` in `taskExports`. A
+parameter of type `α → IO β` becomes a retained C callback when both
+types are copied primitives. For example, the
+[fixture](../../tests/fixtures/cpp-retained-tasks/CppTasks.lean) accepts
+`UInt32 → IO UInt32`; the generated C header gives it a typed function
+pointer, a context pointer and an optional destructor. No application
+function runs on a Lean worker, including callbacks made before the
+factory returns its task.
+
+Add the declaration to `taskIOErrors` to expose the outer
+`Task (Except IO.Error α)` as a terminal failure channel. In a reviewed
+API, the callback has explicit lease lifetime and the declared host error
+is `error:CCallbackError`. The builder checks both against freshly compiled
+Lean interfaces. Do not substitute a borrowed callback or a different
+language's exception policy. The [C consumer example](../consume/c.md#pass-a-callback-to-a-lean-task)
+shows the complete polling loop and who owns each value.
+
+Callback arguments and replies use the same copied scalar representations as
+ordinary C task values, including GMP for exact integers. Each task can have
+256 waiting callback requests. It can preserve up to 4,096 C failures and
+16 MiB of copied failure text; exceeding the capture budget returns `LIMIT`.
+The [installed callback checks](../evidence/c-retained-tasks-20261122.json)
+record both source routes, the consumer and the release hashes.
+
 ## Resource-containing C values
 
 For target `c`, the ownership-aware transport accepts resources inside arrays,

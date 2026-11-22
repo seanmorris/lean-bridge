@@ -7,8 +7,9 @@ import { nativePullEntry, streamEntryLean } from "../native/pull-entry.mjs";
 import { cTaskValues } from "./task-values.mjs";
 import { emitRetainedTask, retainedLean, retainedPrototypes, retainedTask } from "./task-callback-exports.mjs";
 import { cResourceApi, cResourceSupport, taskResourceTypes } from "./task-resources.mjs";
+import { cHostCallbacks } from "./task-host-callback.mjs";
 
-const statuses = "OK PENDING END TYPED_ERROR IO_ERROR INVALID CLOSED BUSY IDLE WRONG_CONTEXT UNAVAILABLE NO_MEMORY LIMIT".split(" ");
+const baseStatuses = "OK PENDING END TYPED_ERROR IO_ERROR INVALID CLOSED BUSY IDLE WRONG_CONTEXT UNAVAILABLE NO_MEMORY LIMIT".split(" ");
 const qualified = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/u;
 
 /**
@@ -23,7 +24,10 @@ export const generateCTaskExports = options => {
 	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources);
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
-	if((retained || entries.some(e => e.taskIO)) && (Boolean(options.rustCallbacks) === Boolean(options.cppCallbacks) || gmp)) throw new TypeError("This task callback ABI requires Rust or C++ word carriers");
+	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
+	if((retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC].filter(Boolean).length !== 1 || publicC !== gmp))
+		throw new TypeError("This task callback ABI requires Rust or C++ word carriers or a checked public C profile with GMP");
+	const statuses = [...baseStatuses, ...publicC && (retained || terminal) ? ["TASK_IO_ERROR"] : [], ...publicC && retained ? ["CALLBACK_ERROR", "CALLBACK_CLOSED", "CALLBACK_TRAP"] : []];
 	if(options.integerMode && !["gmp", "words"].includes(options.integerMode)) throw new TypeError("Unknown task integer ABI");
 	const types = [], prototypes = [], functions = [], symbols = [`${p}_buffer_dispose`];
 	const names = new Set(), declarations = [
@@ -41,6 +45,7 @@ export const generateCTaskExports = options => {
 		symbols.push(name); prototypes.push(signature + ";"); functions.push(`${signature} {\n    ${body}\n}`);
 	};
 	const resourceHeader = cResourceApi(p, resources, fn);
+	const host = publicC && retained && cHostCallbacks({ p, values, fn, types, prototypes, functions, symbols });
 	if(retained && options.cppCallbacks) fn(p + "_callback_trap", ["void"], "if (!lb_context()) return LB(WRONG_CONTEXT); lean_bridge_native_runtime_retire(); return LB(OK);");
 	const occupied = (t, v) => t?.resource ? ` || ${v}->_private[0] || ${v}->_private[1]` : "";
 	for(const [i, e] of entries.entries())
@@ -54,7 +59,7 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			emitRetainedTask({ e, i, n, h, p, values, types, fn, lean, declarations, cpp: options.cppCallbacks, prototypes }); continue;
+			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, cpp: options.cppCallbacks, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");
@@ -117,7 +122,7 @@ export const generateCTaskExports = options => {
     lean_object *v = lean_task_get(e->watch.source);
     ${e.taskIO ? `if (!lean_obj_tag(v)) {
         lean_object *err = lean_ctor_get(v, 0); lean_inc(err); lean_object *text = lb_c_error_text(err);
-        s = lb_string(message, text); lean_dec(text); if (s == LB(OK)) s = LB(IO_ERROR);
+        s = lb_string(message, text); lean_dec(text); if (s == LB(OK)) s = LB(${publicC ? "TASK_IO_ERROR" : "IO_ERROR"});
     } else { v = lean_ctor_get(v, 0);` : ""}
     ${step ? `if (!lean_obj_tag(v)) { s = ${step.read}(lean_ctor_get(v, 0), error); if (s == LB(OK)) s = LB(TYPED_ERROR); }
     else { v = lean_ctor_get(v, 0);` : ""}
@@ -148,7 +153,7 @@ void ${p}_buffer_dispose(${p}_buffer *v);${exact && !gmp ? `
 typedef struct { const uint64_t *words; size_t len; bool negative; } ${p}_integer_view;
 typedef struct { uint64_t *words; size_t len; bool negative; } ${p}_integer;
 void ${p}_integer_dispose(${p}_integer *v);` : ""}
-${[...resourceHeader ? [resourceHeader] : [], ...values.types, ...types, ...prototypes].join("\n")}
+${[...resourceHeader ? [resourceHeader] : [], ...values.types, ...host ? host.header : [], ...types, ...prototypes].join("\n")}
 #ifdef __cplusplus
 }
 #endif
@@ -159,9 +164,10 @@ ${[...resourceHeader ? [resourceHeader] : [], ...values.types, ...types, ...prot
 ${declarations.join("\n")}
 #define LB(x) ${p}_##x
 #define LB_COMPONENT "ctask:${componentIdentity}"
-#define LB_MAX_BYTES (16u * 1024u * 1024u)${retained ? "\n#define LB_RETAINED_TASKS 1" : ""}
+#define LB_MAX_BYTES (16u * 1024u * 1024u)${retained ? "\n#define LB_RETAINED_TASKS 1" : ""}${host ? "\n#define LB_PUBLIC_C_CALLBACKS 1" : ""}
 #include "task-delivery.h"${resources.length ? "\n" + cResourceSupport : ""}${exact ? `\n#define LB_TASK_GMP ${Number(gmp)}\n#include "task-integers.h"` : ""}
 ${values.bodies.join("\n")}
+${host ? '#include "task-host-callback.h"\n' + host.helpers.join("\n") : ""}
 ${functions.join("\n")}
 `;
 	return { prefix: p, header, source

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "observed": "2026-11-22",
+  "profile": "native-c-task-v1",
+  "platform": "Linux x86-64; local glibc 2.36, release floor 2.38.",
+  "toolchain": {
+    "lean": "4.32.2",
+    "compiler": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+    "cmake": "3.31.6",
+    "gmp": "6.3.0",
+    "gmpReceiptSha256": "0171ea1d2bbfdc4d7f82f3943519b87330964b2a679ce17c299fe84efa1220cc"
+  },
+  "source": [
+    "tests/fixtures/python-retained-tasks/Retained.lean",
+    "tests/fixtures/cpp-retained-tasks/CppTasks.lean",
+    "tests/fixtures/c-retained-tasks/Parking.lean"
+  ],
+  "test": "tests/helpers/c-retained-task-installed.mjs",
+  "consumer": "tests/fixtures/c-retained-tasks/consumer.c",
+  "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+  "releases": [
+    {
+      "archive": {
+        "bytes": 53850177,
+        "path": "archives/c-retained-1.0.0-c.tar.gz",
+        "sha256": "798622feb3e654b17656fe7b1f8b5ac88e5de177c4f1b8b6a9537a6f0bfab13a"
+      },
+      "bindingIrSha256": "d3a4c25dc7a93708d1526ebcedde8ac96fe10330e34ea13f4f4c722e24bcdba7",
+      "componentIdentity": "f42d9583123b4893a27516fc5556dd8fc064ca0e5ce79cf16d61ef67eb8d6e58",
+      "extractorSha256": "213ab9249396b2c7548aa02b5dba99a3baa30599c9658f5a160836f9a97542c1",
+      "receiptSha256": "1889d5d19d28137affd3e921bb41e6b86a13ec84044c1486c686142df447474f",
+      "route": "ordinary",
+      "sourceTreeSha256": "13a666979195bd1a4ff5b8670d291fe55f6ad772b2ea15bf921b8629b0f97f37"
+    },
+    {
+      "archive": {
+        "bytes": 53849899,
+        "path": "archives/c-peer-1.0.0-c.tar.gz",
+        "sha256": "a2f30e1663ad6c68e69d54dd9205bb745f7293ef89d3fe53974e2cfd6129d8b3"
+      },
+      "bindingIrSha256": "d3a4c25dc7a93708d1526ebcedde8ac96fe10330e34ea13f4f4c722e24bcdba7",
+      "componentIdentity": "1f0fa43a6cd572d07374015db01c668aec1bf8092f169c77cf597bda2be90587",
+      "extractorSha256": "213ab9249396b2c7548aa02b5dba99a3baa30599c9658f5a160836f9a97542c1",
+      "receiptSha256": "da4bbb0586cc56fb54830ef4d8440f63168b3257ab41d98cc5b4ace6ba76361e",
+      "route": "reviewed",
+      "sourceTreeSha256": "06429b14b2902b6f53eb6af1b412dc51ee80619fb4adb0e307eb4345704422a8"
+    }
+  ],
+  "installers": [
+    "pkg-config",
+    "CMake"
+  ],
+  "clientSources": {
+    "CMakeLists.txt": "12fbc73451c6cc53e6da544f60bad7536c0e261f0331391a100a79378c7da16f",
+    "audit.h": "3e0992dbd7c19e4a913e646628291d2d85738350eeb943a753ff4cc555edd82c",
+    "consumer.c": "05ae4d2960e49d3a1f1f5f2cbf5dd230ad33ca2b64bdc5c93220d12f8e43c876",
+    "example.h": "7a6e5c9aeb1e4c4fd4de60905ae169711c6840ccd3a2f8eab11b7a5684369ba1",
+    "scalars.h": "c2bea309a0b1d3b0a2e5676801f4bccbaba3fc891410a35b385d6b973df6da7a"
+  },
+  "isolated": [
+    "trap",
+    "peer-trap",
+    "cancel-trap",
+    "retire"
+  ],
+  "observations": [
+    "Both archives were built from freshly compiled ordinary Lean source: automatic API discovery first, then an independently compiled source package checked against the reviewed API. Both produced the same Binding IR; their component identities differ.",
+    "The installer verified the package-set receipts, source tree hashes, complete archive inventories and loader paths. Two independent clients, compiled via pkg-config and CMake, ran with relocated packages, no producer sources and PATH=/nonexistent.",
+    "All 19 copied primitive callback arguments and replies ran on the main thread, including a 4096-bit GMP integer, a Unicode scalar, embedded NUL, binary octets, fixed-width boundaries, negative zero and infinity.",
+    "A callback ran during factory construction, in a worker task and again after factory return. A callback drove a second installed component; driving its own task returned BUSY. Waiting used one borrowed descriptor with no reads or timers in the consumer.",
+    "Releasing the last public callback handle did not revoke the task's private reference. Explicit self-close allowed the active call to return and prevented the next call. Stale, mismatched-signature, foreign-component, forked and off-thread uses did not enter the host. Queued cancellation and late-created inner task cancellation did not invoke the disposed context.",
+    "Escaping C failures preserved code and payload identity; the owner disposed that payload exactly once. Caught failures produced returned Except data; equal-message replacement produced terminal Lean IO. Eager/factory IO, terminal IO, typed EIO, invalid UTF-8, negative Nat and over-budget replies remained distinct.",
+    "A cooperative parked task in a different component became readable when an explicit trap, unrecognized callback status, self-cancel-then-trap or external retirement poisoned the shared runtime. It settled UNAVAILABLE with its output unchanged. Normal and isolated runs returned to zero live identities and the baseline descriptor count."
+  ],
+  "runtimeCoexistence": {
+    "test": "tests/helpers/c-task-broker-coexistence.mjs",
+    "consumer": "tests/fixtures/c-retained-tasks/coexist.c",
+    "sourceSha256": "0678525d00db107fdc25e4332c25bea1cb9a02c907b61c9a49b222e70424d788",
+    "oldReceiptSha256": "23e2141e44314c77e28d29e2dc36a8a9889aa41eea4214ef318e5a834a9dbf7e",
+    "newReceiptSha256": "1889d5d19d28137affd3e921bb41e6b86a13ec84044c1486c686142df447474f",
+    "runtimeOrders": ["old-first", "new-first"],
+    "outcome": "The same executable loaded with either original broker first. The new runtime ran tasks from both generations. The old runtime ran completion-only operations and rejected a retained start with UNAVAILABLE before invoking the host."
+  },
+  "commands": {
+    "build": "LEAN_BRIDGE_C_CALLBACK_TEST=1 LEAN_BRIDGE_C_CALLBACK_EVIDENCE=/absolute/path/to/new-handoff node --test --test-concurrency=1 tests/host-object-generator.test.mjs",
+    "replay": "LEAN_BRIDGE_C_CALLBACK_REPLAY=/absolute/path/to/original-handoff node --test --test-concurrency=1 tests/host-object-generator.test.mjs"
+  },
+  "scope": "Local installed C11 evidence for copied primitive unary callbacks retained by actual Lean tasks on Linux x86-64. This does not establish resource-bearing callback replies, arbitrary foreign threads, signal/longjmp recovery, other targets, hosted CI or registry publication."
+}

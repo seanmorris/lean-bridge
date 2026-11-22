@@ -28,12 +28,14 @@ structure Request where
   pythonTaskCallbacks : Option Bool := none
   rustTaskCallbacks : Option Bool := none
   cppTaskCallbacks : Option Bool := none
+  cTaskCallbacks : Option Bool := none
   taskIOErrors : Option (Array String) := none
   members : Array String
   deriving FromJson
 
 def Request.ownerTaskCallbacks (r : Request) : Bool :=
-  r.pythonTaskCallbacks.getD false || r.rustTaskCallbacks.getD false || r.cppTaskCallbacks.getD false
+  r.pythonTaskCallbacks.getD false || r.rustTaskCallbacks.getD false ||
+    r.cppTaskCallbacks.getD false || r.cTaskCallbacks.getD false
 
 def primitives : List (Name × String) := [
   (``Unit, "unit"), (``Bool, "bool"), (``Char, "char"), (``String, "string"),
@@ -51,7 +53,7 @@ def carrier (request : Request) (e : Expr) : MetaM Json := do
       return Json.mkObj [("kind", toJson "named"), ("id", toJson r.id)]
     if request.leanResources.contains name.toString then
       return Json.mkObj [("kind", toJson "named"), ("id", toJson ("lean:" ++ name.toString))]
-  throwError "unsupported Python host-component carrier: {e}"
+  throwError "unsupported host export carrier: {e}"
 
 /-- A returned Except is a value. Its success arm is first in Binding IR. -/
 partial def returned (r : Request) (e : Expr) (copyOnly := false) : MetaM Json := do

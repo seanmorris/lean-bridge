@@ -8,6 +8,10 @@
 #endif
 
 typedef lean_object *(*lb_cursor_op)(lean_object *);
+#ifdef LB_PUBLIC_C_CALLBACKS
+typedef struct lb_c_owner lb_c_owner;
+static void lb_c_detach(lb_c_owner *);
+#endif
 typedef struct lb_entry {
     struct lb_entry *next;
     uint64_t id;
@@ -15,6 +19,9 @@ typedef struct lb_entry {
     lean_object *cursor;
     lb_cursor_op pull, close;
     lb_task_watch watch;
+#ifdef LB_PUBLIC_C_CALLBACKS
+    lb_c_owner *host;
+#endif
 #ifdef LB_RETAINED_TASKS
     lb_retained retained;
 #endif
@@ -69,7 +76,11 @@ static void lb_drop(lb_entry *e) {
             lean_object *io = e->close(e->cursor); lean_dec(io);
         } else lean_dec(e->cursor);
     }
-    lean_bridge_native_identity_release(e->id, LB_OWNER_KIND, e); free(e);
+    lean_bridge_native_identity_release(e->id, LB_OWNER_KIND, e);
+#ifdef LB_PUBLIC_C_CALLBACKS
+    if (e->host) lb_c_detach(e->host);
+#endif
+    free(e);
 }
 static LB(status) lb_subscribe(lb_entry *e, lean_object *task) {
     if (!lb_watch_start(&e->watch, task)) return LB(OK);

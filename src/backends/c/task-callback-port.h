@@ -1,6 +1,5 @@
-/* Owner side of the private Rust task ABI. Handles refer to a checked
-   component entry; neither the Rust executor nor a user closure sees a
-   Lean object, promise, raw address or function pointer from a worker. */
+/* Native owner side shared by the C, C++ and Rust task adapters. No host
+   callable runs on a Lean worker. */
 #define LB_PORT_KIND LB_COMPONENT ".callback-port-v1"
 #define LB_CB_REQUEST lb_c_cb_request
 #define LB_CB_TRACK lb_c_cb_track

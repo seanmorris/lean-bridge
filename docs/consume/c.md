@@ -173,6 +173,81 @@ The [complete C program](../../tests/fixtures/c-lean-tasks/consumer.c) uses
 `poll(2)` with the prepared package, including cancellation, failed starts,
 typed stream failures, early exits and normal completion.
 
+### Pass a callback to a Lean task
+
+For a task that takes `UInt32 → IO UInt32`, create a typed C callback and
+pass it to the generated start function. The task keeps its own reference.
+On the process main thread, `_poll` and `_take` service waiting callbacks. A
+single borrowed descriptor becomes readable for callback work, completion,
+or runtime retirement. Wait for readability; do not read or close it.
+
+```c
+#include <lbc_c_retained.h>
+#include <errno.h>
+#include <poll.h>
+
+static lbc_c_retained_status twice(void *ctx, uint32_t n, uint32_t *reply,
+                                   lbc_c_retained_callback_error *error) {
+    (void)ctx; (void)error;
+    *reply = 2 * n;
+    return lbc_c_retained_OK;
+}
+
+lbc_c_retained_status call_factory(uint32_t *value, lbc_c_retained_callback_error *error) {
+    lbc_c_retained_callback_uint32_to_uint32 callback = {0};
+    lbc_c_retained_factory_handle task = {0};
+    lbc_c_retained_status s =
+        lbc_c_retained_callback_uint32_to_uint32_make(twice, NULL, NULL, &callback);
+    if (s != lbc_c_retained_OK) return s;
+    s = lbc_c_retained_factory_start(callback, false, &task);
+    lbc_c_retained_callback_uint32_to_uint32_release(&callback);
+    if (s != lbc_c_retained_OK) return s;
+
+    int fd;
+    while ((s = lbc_c_retained_factory_poll(task, &fd)) == lbc_c_retained_PENDING) {
+        struct pollfd wait = {.fd = fd, .events = POLLIN};
+        int n;
+        do { n = poll(&wait, 1, -1); } while (n < 0 && errno == EINTR);
+        if (n < 0) { s = lbc_c_retained_UNAVAILABLE; break; }
+    }
+    if (s == lbc_c_retained_OK) s = lbc_c_retained_factory_take(&task, value, error);
+    if (task.id) lbc_c_retained_factory_close(&task);
+    return s;
+}
+```
+
+Zero-initialize the error output. A callback can return `callback_error_set`
+with a numeric code, a UTF-8 diagnostic, and an optional payload and
+destructor. The setter copies the diagnostic and takes ownership of the
+payload only when it returns `CALLBACK_ERROR`. If the same error escapes Lean, `_take` returns `CALLBACK_ERROR`
+and transfers that payload to you. Dispose the error with
+`callback_error_dispose`. If Lean catches the error or throws a new one
+with the same text, the bridge disposes the original payload. A factory
+failure is `IO_ERROR`; a selected terminal task failure is `TASK_IO_ERROR`.
+An ordinary returned `Except` is still a value.
+
+The callback borrows its input for the duration of the call. Write a scalar
+reply through the output pointer. For a string or byte reply, use the
+generated `buffer_set` to copy your bytes; do not assign a stack pointer to
+the output buffer. A `Nat` or `Int` reply is an already initialized
+`mpz_ptr`: set its value, but do not initialize or clear it yourself.
+
+`_make` takes responsibility for the context and its destructor only on
+success. `_retain` creates another independent callback handle. `_release` drops
+one handle; `_close` also revokes future calls, including calls from
+already-started tasks. A callback may close itself: its current call can
+finish, and its context destructor runs after it returns. Reentering a
+different task is supported; trying to drive the same task recursively
+returns `BUSY`. Callbacks must return normally. Use `CALLBACK_TRAP` to
+retire the shared runtime; do not throw or `longjmp` across the C interface.
+
+When mixing archive generations, load the newer bundled runtime. The old
+runtime still runs completion-only APIs, but a retained task returns
+`UNAVAILABLE` from `_start` without invoking a callback.
+
+The [installed callback checks](../evidence/c-retained-tasks-20261122.json)
+identify the archives, consumer sources and commands for an offline replay.
+
 ## Values and cleanup
 
 Ordinary-source arrays use typed spans; records use generated structs. Both can nest. Inputs borrow your storage for one call. Packages exposing `Nat` or `Int` provide generated `_init` functions for their aggregate structs. Call `_init` before first use, then `_clear` to release the complete value, including nested integers, arrays and record fields. `_clear` resets fields to initialized empty values. Successful calls replace initialized copied outputs; failed conversions leave them unchanged. Packages without arbitrary integers, including Alpha above, use zero-initialized outputs and require clearing before reuse. Do not shallow-copy an owned output and clear both copies.
