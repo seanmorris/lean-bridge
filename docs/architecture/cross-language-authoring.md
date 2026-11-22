@@ -195,3 +195,17 @@ reviewed components from relocated installs with no compiler on the consumer pat
 artifact includes the original archives, package receipts, probe sources and all 24 TAP
 transcripts. These 400 assertions cover standalone resource identity, callback borrows,
 leases and returned closures; they do not establish host-object or async support.
+The [four-ABI Perl evidence](../evidence/standalone-perl-resources-20261122.md)
+includes the original hosted ZIP and the verified result.
+
+To retain a successful run, use its run ID, the exact producer commit and a new
+directory. Keep that commit in the local checkout. The first command checks the
+GitHub run and job, downloads the original ZIP and checks its GitHub SHA-256. The
+second rechecks the saved evidence without contacting GitHub. Both compare all
+probes with the producer's tracked sources, validate the package receipts and
+check every TAP transcript.
+
+```sh
+node scripts/verify-perl-resource-run.mjs RUN_ID PRODUCER_SHA /absolute/evidence
+node scripts/verify-perl-resource-run.mjs --offline RUN_ID PRODUCER_SHA /absolute/evidence
+```
