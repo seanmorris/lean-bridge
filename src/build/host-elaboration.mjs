@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
 import { pythonHostSelection, reconcileHostExports } from "../analyze/host-export-model.mjs";
+import { nativeEffectPolicy } from "../analyze/native-host-effects.mjs";
 import { generatePythonHostProvider } from "../backends/python/host-provider.mjs";
 
 const extractor = fileURLToPath(new URL("../analyze/HostExports.lean", import.meta.url));
@@ -62,6 +63,7 @@ export const compileHostSources = async options => {
 	if(!projectContract) return { objects, entries: options.entries, env };
 	const selection = {
 		...pythonHostSelection(ir), exports: projectContract.exports
+		, nativeEffectPolicy, nativeEffects: projectContract.nativeEffects ?? []
 		, leanResources: projectContract.leanResources ?? []
 		, ...(options.python && projectContract.taskExports?.length ? { pythonTaskCallbacks: true } : {})
 		, ...(options.target === "cargo" && projectContract.taskExports?.length ? { rustTaskCallbacks: true } : {})

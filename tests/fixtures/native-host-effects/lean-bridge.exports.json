@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Effects"],
+  "exports": ["Effects.readBoot", "Effects.observe", "Effects.worker", "Effects.walk"],
+  "taskExports": ["Effects.worker"],
+  "asyncIterators": [{"open": "Effects.walk", "next": "Effects.pull", "close": "Effects.close"}],
+  "nativeEffects": ["environment", "filesystem"],
+  "targets": {
+    "c": {"name": "effects", "version": "1.0.0"},
+    "cpp": {"name": "effects", "version": "1.0.0"},
+    "cargo": {"name": "effects", "version": "1.0.0"},
+    "pypi": {"name": "lean-effects", "version": "1.0.0"}
+  }
+}

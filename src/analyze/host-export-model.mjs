@@ -6,7 +6,8 @@
 import { canonicalJson } from "../capsule/node.mjs";
 import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
-import { hostDeclarationName } from "../backends/lean/host-object.mjs";
+import { hostDeclarationName, hostMemberSymbol } from "../backends/lean/host-object.mjs";
+import { resolveNativeHostEffects } from "./native-host-effects.mjs";
 
 const doc = summary => ({ summary, details: "" });
 const hostModule = "LeanBridge.Host.Python";
@@ -45,6 +46,15 @@ export const reconcileHostExports = options => {
 	if(metadata?.kind !== "lean-bridge-host-export-metadata" || metadata.schemaVersion !== 1
 		|| canonicalJson(metadata.entries.map(e => e.declaration)) !== canonicalJson(selection.exports)) fail("Fresh Lean metadata did not cover the complete export selection");
 	const imports = ir ? hashBindingIr(ir) : null, types = resources(ir), members = importedMembers(ir, types);
+	if(selection.nativeEffectPolicy && ir?.capabilities.some(c => c.id.startsWith("capability:native.")))
+		fail("Host imports cannot declare compiler-owned capability:native.* identifiers");
+	// Unmarked records also occur in pre-policy evidence. Canonical builds always
+	// mark the request; a partially missing audit must never become an empty one.
+	const native = selection.nativeEffectPolicy === undefined && selection.nativeEffects === undefined && metadata.nativeEffectAudit === undefined ? null
+		: resolveNativeHostEffects(selection, metadata.nativeEffectAudit, new Map([...members].map(([name, d]) =>
+			[name, hostMemberSymbol("python", types.find(t => t.id === d.owner), d)])));
+	const phases = e => native?.phases.get(e.declaration) ?? {};
+	const capabilities = e => [...new Set([...Object.values(phases(e)).flat(), ...e.hostMembers.flatMap(n => members.get(n).capabilities)])].sort();
 	const owned = options.owned ?? [];
 	if(canonicalJson(owned.map(r => r.declaration)) !== canonicalJson(selection.leanResources ?? [])
 		|| owned.some(r => !selection.modules.includes(r.module) || !/^[a-f0-9]{64}$/u.test(r.identity))) fail("Unverified application resource identity");
@@ -157,6 +167,8 @@ export const reconcileHostExports = options => {
 			, parameters: e.parameters.map(p => ({ name: snake(p.name), type: p.type }))
 			, result: e.result };
 	});
+	const importedCaps = new Set(metadata.entries.flatMap(e => e.hostMembers.flatMap(n => members.get(n).capabilities)));
+	const requiredCaps = [...(native?.capabilities ?? []), ...(ir?.capabilities.filter(c => importedCaps.has(c.id)) ?? [])];
 	const api = {
 		schemaVersion: 3, component
 		, producers: [{ id: "lean", adapter: "lean-bridge-host-exports", adapterVersion: 1, tool: "Lean", toolVersion: metadata.leanVersion, extensions: {} }]
@@ -174,11 +186,12 @@ export const reconcileHostExports = options => {
 			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(hasCallbacks(e) ? ["host-call"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...resourceEffects(e), ...e.hostMembers.flatMap(n => members.get(n).effects)])].sort()
 			, failure: { mode: errorIds(e).length ? "declared" : "none", errors: errorIds(e), unexpected: "poison-runtime" }
 			, resultMode: e.delivery === "task" ? "promise" : e.delivery ?? "value"
-			, capabilities: [], assurance: []
+			, capabilities: capabilities(e), assurance: []
 			, documentation: doc(e.protocol ? `Pull elements from ${e.declaration}; close on exhaustion or early exit.` : e.delivery === "task" ? `Await the Lean task returned by ${e.declaration}.` : `${e.effect === "pure" ? "Pure" : `Synchronous ${e.effect}`} entry ${e.declaration}.`)
 			, source: { producer: "lean", declaration: e.declaration
 				, extensions: {
 					"lean-lang.org/effect": e.effect
+					, ...(Object.keys(phases(e)).length ? { "lean-bridge.dev/native-effects-v1": phases(e) } : {})
 					, ...(e.delivery === "task" ? { "lean-lang.org/delivery": "Task" } : {})
 					, ...(e.taskIO ? { "lean-bridge.dev/task-failure": "IO.Error" } : {})
 					, ...(e.protocol ? { "lean-bridge.dev/pull-protocol": e.protocol } : {})
@@ -187,7 +200,7 @@ export const reconcileHostExports = options => {
 				}
 			}
 		}))
-		, errors, capabilities: [], assurance: []
+		, errors, capabilities: requiredCaps, assurance: []
 		, documentation: doc(`Compiled ${ir ? "host-object" : "task"} API for ${component.name}.`)
 	};
 	validateBindingIr(api);
@@ -197,7 +210,8 @@ export const reconcileHostExports = options => {
 		const ignoreProse = item => ({ ...item, documentation: doc("Public API.") });
 		const identity = value => hashBindingIr({ ...ignoreProse(value), types: value.types.map(ignoreProse)
 			, declarations: value.declarations.map(ignoreProse)
-			, errors: value.errors.map(ignoreProse) });
+			, errors: value.errors.map(ignoreProse)
+			, capabilities: value.capabilities.map(ignoreProse) });
 		if(identity(api) !== identity(reviewed)) fail("Reviewed API differs from compiled host exports, effects, ownership, or import identity");
 		return { entries, api: reviewed };
 	}

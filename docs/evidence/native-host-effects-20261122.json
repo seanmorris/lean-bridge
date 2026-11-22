@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-native-effect-acceptance",
+  "policy": "native-host-io-v1",
+  "node": 1222,
+  "platform": "Linux x86-64",
+  "toolchains": {
+    "lean": "4.32.2",
+    "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "extractorSha256": "ac564b5e70628d4f4962b6715e1274d82751ac43674499dab5ea109453cd427b",
+    "sharedRuntimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+    "cAndCpp": "GCC 12.2.0",
+    "python": "CPython 3.11.16",
+    "rust": "rustc 1.90.0"
+  },
+  "acceptanceSha256": "b2a52ffa6e43ff02df3f8ffb2b808b896379df07a19c6b7c08986736d2ff75f0",
+  "sourceFixture": "tests/fixtures/native-host-effects",
+  "consumerFixture": "tests/fixtures/native-effect-clients",
+  "driver": "tests/helpers/native-effect-policy.mjs",
+  "installers": {
+    "c": "pkg-config and cc -std=c11 with the extracted release",
+    "cpp": "pkg-config and c++ -std=c++20 with the extracted release",
+    "pypi": "pip --no-index from both wheels",
+    "cargo": "cargo --locked --offline with the extracted component and runtime crates"
+  },
+  "observed": [
+    "Each of eight installed consumers read a value captured by the application initializer, made a synchronous file read, awaited a scheduled file read, pulled one item, and closed the iterator. The independent harness verified the previous contents were replaced with 'closed'.",
+    "Ordinary and reviewed artifacts agreed on the per-entry and phase-specific capabilities. Receipt verification authenticated all archive references before installation.",
+    "Real Lean interfaces distinguished clock, randomness, process information and stdio from a plain IO signature. No runtime sandbox, registry publication or other language profile is claimed.",
+    "Unpermitted startup, worker, iterator-only close, process-wide directory mutation, and eagerly computed debug output each stopped a real build without a handoff. A startup write sentinel was not executed by inspection.",
+    "Existing Retained and Pulse fixtures needed no ambient grants. Depot's leased-resource and close paths required filesystem. A generated Python host member remained a separate host capability."
+  ],
+  "reproduce": {
+    "build": "LEAN_BRIDGE_NATIVE_EFFECT_TEST=1 LEAN_BRIDGE_NATIVE_EFFECT_EVIDENCE=/absolute/path/to/new-releases node --test --test-concurrency=1 tests/helpers/native-effect-policy.mjs",
+    "replay": "LEAN_BRIDGE_NATIVE_EFFECT_REPLAY=/absolute/path/to/original-releases node --test --test-concurrency=1 tests/helpers/native-effect-policy.mjs",
+    "prerequisites": "Use pinned Lean, native C/C++, CPython, and Rust tooling for the build; configure CARGO_HOME with the locked task-runtime dependencies for offline Cargo. Replay uses the original handoffs and host installation tools without compiling Lean."
+  },
+  "routes": [
+    {
+      "archives": [
+        {
+          "bytes": 51322870,
+          "path": "archives/effects-1.0.0-c.tar.gz",
+          "sha256": "e2561d6e4fd36250e71a6a9b27eaa6c76cd6cf9554343bff49320cf8d82530f8"
+        }
+      ],
+      "bindingIrSha256": "5b69dbf611ac5a37b5c32fce01cb3075341512433175ba15f48709a6f831216f",
+      "consumerSha256": "dbc71262c9fc07dbe21b31abba61b458332e28d703a99d92ac82d77b2f6ffc40",
+      "profile": "native-c-task-v1",
+      "receiptSha256": "28b8119147993259245e9e8a8fe1ff91100a30386715a693a262a721bbcc2c65",
+      "route": "ordinary",
+      "sourceTreeSha256": "6160db015e33287a126b0fdd74e477e0391e442496b6eaf2096138a0b2aadcca",
+      "target": "c"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51322921,
+          "path": "archives/effects-1.0.0-c.tar.gz",
+          "sha256": "f8b3c85d28fa1e39e272f03b70ed2572fc347f1a584bbf289352e24a774fd8c4"
+        }
+      ],
+      "bindingIrSha256": "5b69dbf611ac5a37b5c32fce01cb3075341512433175ba15f48709a6f831216f",
+      "consumerSha256": "dbc71262c9fc07dbe21b31abba61b458332e28d703a99d92ac82d77b2f6ffc40",
+      "profile": "native-c-task-v1",
+      "receiptSha256": "09b801c8689f808679a69236955243aad46617090c05b7ff4493e33535f9ffb8",
+      "route": "reviewed",
+      "sourceTreeSha256": "a8147bbf39dca16b6c75a2cacab6671c0dd70c692db83f61dbc2609c312dc7c7",
+      "target": "c"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51331154,
+          "path": "archives/effects-1.0.0-cpp.tar.gz",
+          "sha256": "13cb7c5680089bc701a326ebfe6c09c493b724210509b2429f6bc876e0c4d181"
+        }
+      ],
+      "bindingIrSha256": "5b69dbf611ac5a37b5c32fce01cb3075341512433175ba15f48709a6f831216f",
+      "consumerSha256": "10cde852fc956a617c7b44204b8dd1b8289cc8a8f7cda36d5053625fc4a62b90",
+      "profile": "native-cpp-task-v1",
+      "receiptSha256": "3a62ecdec95aaddc63fd3b0071d1c70b83c2365901dd1d1103f34518c74f2bec",
+      "route": "ordinary",
+      "sourceTreeSha256": "6160db015e33287a126b0fdd74e477e0391e442496b6eaf2096138a0b2aadcca",
+      "target": "cpp"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51331186,
+          "path": "archives/effects-1.0.0-cpp.tar.gz",
+          "sha256": "98e703e31807c3eced7f54f089ba1e10595e0604729103c8fbaeb6c33b209432"
+        }
+      ],
+      "bindingIrSha256": "5b69dbf611ac5a37b5c32fce01cb3075341512433175ba15f48709a6f831216f",
+      "consumerSha256": "10cde852fc956a617c7b44204b8dd1b8289cc8a8f7cda36d5053625fc4a62b90",
+      "profile": "native-cpp-task-v1",
+      "receiptSha256": "b3f322db0c191e76cee61745a4cf224e80d5222bfd362b59879f41ca541418de",
+      "route": "reviewed",
+      "sourceTreeSha256": "a8147bbf39dca16b6c75a2cacab6671c0dd70c692db83f61dbc2609c312dc7c7",
+      "target": "cpp"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51310803,
+          "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+          "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+        },
+        {
+          "bytes": 23441,
+          "path": "archives/lean_effects-1.0.0-cp311-cp311-linux_x86_64.whl",
+          "sha256": "143cd0fc2ed5ff16bfb3898ab2bb1a07cf5d8273d0d33559b7a8da6e6212985a"
+        }
+      ],
+      "bindingIrSha256": "5b69dbf611ac5a37b5c32fce01cb3075341512433175ba15f48709a6f831216f",
+      "consumerSha256": "4b048c0dd41a8d1b96fc9a9906c3adb8a83bb64bd1448e66d5bcebe8d8f194c1",
+      "profile": "native-python-task-v1",
+      "receiptSha256": "ddf7b52dff544169d1730ef445c0ff2d25e4d17ddfc8a7379b72949a9156535e",
+      "route": "ordinary",
+      "sourceTreeSha256": "6160db015e33287a126b0fdd74e477e0391e442496b6eaf2096138a0b2aadcca",
+      "target": "pypi"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 51310803,
+          "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+          "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+        },
+        {
+          "bytes": 23476,
+          "path": "archives/lean_effects-1.0.0-cp311-cp311-linux_x86_64.whl",
+          "sha256": "ceebebc155f1c8715d799e36ff33b330821db389b229c252c080d06ed807764d"
+        }
+      ],
+      "bindingIrSha256": "5b69dbf611ac5a37b5c32fce01cb3075341512433175ba15f48709a6f831216f",
+      "consumerSha256": "4b048c0dd41a8d1b96fc9a9906c3adb8a83bb64bd1448e66d5bcebe8d8f194c1",
+      "profile": "native-python-task-v1",
+      "receiptSha256": "9a6b37f4def2dd99e4c4e776275a472ca1380eb225920517d7b764725ad0be4b",
+      "route": "reviewed",
+      "sourceTreeSha256": "a8147bbf39dca16b6c75a2cacab6671c0dd70c692db83f61dbc2609c312dc7c7",
+      "target": "pypi"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 28451,
+          "path": "archives/effects-1.0.0.crate",
+          "sha256": "a678df94c6c3090fa41e1b4466bfc63e19d061df4cfee536a3fb74bdfa293e17"
+        },
+        {
+          "bytes": 51311792,
+          "path": "archives/lean-bridge-task-runtime-1.0.0-r145d0d6dba6af6854563e67dbb1a70051b7cfbb50f537ff05c4fbb857f93768d.crate",
+          "sha256": "ef1280861f2e6473b218294d0d5b5dd9862e802487d8c10e986973627bc86da0"
+        }
+      ],
+      "bindingIrSha256": "5b69dbf611ac5a37b5c32fce01cb3075341512433175ba15f48709a6f831216f",
+      "consumerSha256": "95d06025ab7bbca2d6d79bd25b26e4787778f8bae4dd7d2b62ba80f1ebce2969",
+      "profile": "native-rust-task-v1",
+      "receiptSha256": "0cdfdca4362663d4dfc2255c9da8e7503bde334b61eb769f0709eadc8e9311cf",
+      "route": "ordinary",
+      "sourceTreeSha256": "6160db015e33287a126b0fdd74e477e0391e442496b6eaf2096138a0b2aadcca",
+      "target": "cargo"
+    },
+    {
+      "archives": [
+        {
+          "bytes": 28461,
+          "path": "archives/effects-1.0.0.crate",
+          "sha256": "98d003d5ddaf5e0b7520fe7d921f012a0cc15cc870c86252c137b539fbf894e2"
+        },
+        {
+          "bytes": 51311792,
+          "path": "archives/lean-bridge-task-runtime-1.0.0-r145d0d6dba6af6854563e67dbb1a70051b7cfbb50f537ff05c4fbb857f93768d.crate",
+          "sha256": "ef1280861f2e6473b218294d0d5b5dd9862e802487d8c10e986973627bc86da0"
+        }
+      ],
+      "bindingIrSha256": "5b69dbf611ac5a37b5c32fce01cb3075341512433175ba15f48709a6f831216f",
+      "consumerSha256": "95d06025ab7bbca2d6d79bd25b26e4787778f8bae4dd7d2b62ba80f1ebce2969",
+      "profile": "native-rust-task-v1",
+      "receiptSha256": "368f939ac7c645f38b843ee76dce10ed9a7e7d0e0fee51149a0bd0dbfc9004e5",
+      "route": "reviewed",
+      "sourceTreeSha256": "a8147bbf39dca16b6c75a2cacab6671c0dd70c692db83f61dbc2609c312dc7c7",
+      "target": "cargo"
+    }
+  ]
+}

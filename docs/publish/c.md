@@ -43,6 +43,10 @@ Add `--target cpan` to produce Perl archives from that same native compilation. 
 
 ## Export tasks and pull streams
 
+If the Lean code uses files, environment variables, or other OS facilities,
+[declare its native OS access](../lean/export-decisions.md#declare-native-os-access).
+Scheduling a task or waiting for its result does not require a grant.
+
 Use `--target c` on its own for a Linux C11 package whose consumers drive work
 from an event loop. Select a Lean declaration returning `Task α` in
 `taskExports`. It may be pure or start in `BaseIO`, `IO`, or `EIO ε`.

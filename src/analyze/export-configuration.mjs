@@ -10,6 +10,7 @@ import { componentNpmIdentity } from "../release/component-package-receipt.mjs";
 import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { validateGeneratorConfiguration } from "./generator-configuration.mjs";
 import { validatePackageMetadata } from "./package-metadata.mjs";
+import { nativeEffects } from "./native-host-effects.mjs";
 import { validateOwnedAggregatePolicy } from "./owned-aggregate-policy.mjs";
 import { projectionCheckedSelection, validateCheckedRefinementSelection } from "./checked-refinement-selection.mjs";
 
@@ -62,7 +63,7 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "contracts", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "nativeEffects", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
 	if(configuration.hostImports !== undefined && (configuration.hostImports !== hostImportsFile || !Array.isArray(configuration.modules) || !configuration.modules.length))
 		fail("invalid-export-configuration", `hostImports requires ${hostImportsFile} and selected application modules`);
@@ -79,6 +80,13 @@ export const validateExportConfiguration = configuration => {
 		const names = configuration.taskIOErrors;
 		if(!Array.isArray(names) || !names.length || new Set(names).size !== names.length || names.some(n => !configuration.taskExports?.includes(n)))
 			fail("invalid-export-configuration", "taskIOErrors must select distinct names from taskExports");
+	}
+	if(configuration.nativeEffects !== undefined)
+	{
+		const allowed = configuration.nativeEffects;
+		if(!(configuration.hostImports || configuration.taskExports || configuration.asyncIterators)
+			|| !Array.isArray(allowed) || new Set(allowed).size !== allowed.length || allowed.some(c => !nativeEffects.includes(c)))
+			fail("invalid-export-configuration", "nativeEffects requires a native host, task, or iterator selection and distinct supported capabilities: " + nativeEffects.join(", "));
 	}
 	if(configuration.asyncIterators !== undefined)
 	{

@@ -1,4 +1,5 @@
 import Lean
+import Lean.Compiler.IR.EmitUtil
 
 /- Read freshly compiled application interfaces, not source text or package declarations.
    The generated host module is the only authorized source of foreign imports. -/
@@ -30,6 +31,7 @@ structure Request where
   cppTaskCallbacks : Option Bool := none
   cTaskCallbacks : Option Bool := none
   taskIOErrors : Option (Array String) := none
+  nativeEffectPolicy : Option String := none
   members : Array String
   deriving FromJson
 
@@ -188,6 +190,41 @@ def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet)
   return [("effect", toJson effect), ("delivery", toJson "async-iterator"),
     ("protocol", toJson p), ("result", ← delivered r item.getAppArgs[0]!)] ++ extra ++ failure
 
+/-- Module-system imports store code in the IR section; classic application modules
+    store it alongside their declarations. Look up the exact symbol in either case. -/
+private def compiled? (env : Environment) (n : Name) : Option IR.Decl := do
+  let index ← env.getModuleIdxFor? n
+  let find := fun (ds : Array IR.Decl) => ds.binSearch (IR.Decl.extern n #[] default default)
+    (fun a b => Name.quickLt a.name b.name)
+  find (IR.declMapExt.getModuleIREntries env index) <|> find (IR.declMapExt.getModuleEntries env index)
+
+/-- Allocating a partial application in a global does not run the function.
+    Its body is still inspected if reachable from any entry that uses the closure. -/
+private partial def mayCall : IR.FnBody → Bool
+  | .vdecl _ _ (.fap ..) _ | .vdecl _ _ (.ap ..) _ => true
+  | .jdecl _ _ v b => mayCall v || mayCall b
+  | .case _ _ _ alts => alts.any (fun a => mayCall a.body)
+  | b => !b.isTerminal && mayCall b.body
+
+/-- Follow codegen's dependencies, including partially applied workers, without
+    calling the application. An opaque implementation is not evidence of purity. -/
+private partial def nativeLeaves (env : Environment) (root : Name) (pending : List Name)
+    (seen : NameSet := {}) (leaves : Array Json := #[]) : MetaM (Array Json) := do
+  let n :: rest := pending | return leaves
+  if seen.contains n then return ← nativeLeaves env root rest seen leaves
+  let seen := seen.insert n
+  match compiled? env n with
+  | some (d@(.fdecl ..)) =>
+    return ← nativeLeaves env root ((IR.collectUsedDecls env [d]).toList ++ rest) seen leaves
+  | some (.extern _ _ _ attr) =>
+    let some (.standard _ symbol) := getExternEntryFor attr `c
+      | throwError "native effect policy: {root} reaches unclassified native implementation {n}"
+    let some index := env.getModuleIdxFor? n | throwError "native effect policy: no owner for {n}"
+    let leaf := Json.mkObj [("name", toJson n.toString), ("symbol", toJson symbol),
+      ("module", toJson env.header.modules[index.toNat]!.module.toString)]
+    return ← nativeLeaves env root rest seen (leaves.push leaf)
+  | none => throwError "native effect policy: {root} reaches {n} without compiled IR"
+
 def extract (r : Request) : MetaM Json := do
   let env ← getEnv
   let owned ← r.leanResources.mapM (resourceOwner r)
@@ -195,11 +232,24 @@ def extract (r : Request) : MetaM Json := do
     let _ ← checkDependencies r name.toName {}
     if (← collectAxioms name.toName).contains ``sorryAx then throwError "resource {name} depends on sorry"
   -- Module startup runs even declarations that no public function references.
+  let mut startup : NameSet := {}
   for module in r.modules do
     if module == "LeanBridge.Host.Python" then continue
     let some idx := env.getModuleIdx? module.toName | throwError "missing source module {module}"
+    if r.nativeEffectPolicy.isSome then
+      -- In addition to 'initialize', codegen may eagerly evaluate an ordinary
+      -- zero-arity global. Do not count constructing a literal/closure as a call.
+      for ds in #[IR.declMapExt.getModuleIREntries env idx, IR.declMapExt.getModuleEntries env idx] do
+        for d in ds do
+          if let .fdecl n xs _ body _ := d then
+            if xs.isEmpty && !(getInitFnNameFor? env n).isSome &&
+                !isClosedTermName env n && !Compiler.LCNF.isSimpleGroundDecl env n && mayCall body then
+              startup := startup.insert n
     for n in env.header.moduleData[idx.toNat]!.constNames do
+      if (getBuiltinInitFnNameFor? env n).isSome || isIOUnitBuiltinInitFn env n then
+        throwError "unreviewed application builtin initializer: {n}"
       if (getInitFnNameFor? env n).isSome || isIOUnitInitFn env n then
+        startup := startup.insert ((getInitFnNameFor? env n).getD n)
         let deps ← checkDependencies r n {}
         if (← collectAxioms n).contains ``sorryAx then throwError "initializer {n} depends on sorry"
         if r.members.any (fun m => deps.contains m.toName) then
@@ -261,7 +311,17 @@ def extract (r : Request) : MetaM Json := do
       return Json.mkObj <| fields ++ [("declaration", toJson publicName), ("module", toJson owner),
         ("parameters", toJson params), ("hostMembers", toJson (r.members.filter (fun m => deps.contains m.toName)))]
     rows := rows.push row
-  return Json.mkObj <| [("schemaVersion", toJson (1 : Nat)), ("kind", toJson "lean-bridge-host-export-metadata"),
+  let mut extra := []
+  if let some policy := r.nativeEffectPolicy then
+    unless policy == "native-host-io-v1" do throwError "unknown native effect policy: {policy}"
+    let mut roots := startup
+    for s in r.exports do roots := roots.insert s.toName
+    for p in r.asyncIterators do roots := (roots.insert p.next.toName).insert p.close.toName
+    let facts ← roots.toList.mapM fun n => do
+      return Json.mkObj [("declaration", toJson n.toString), ("leaves", toJson (← nativeLeaves env n [n]))]
+    extra := [("nativeEffectAudit", Json.mkObj [("policy", toJson policy),
+      ("initializers", toJson (startup.toList.map Name.toString)), ("roots", toJson facts)])]
+  return Json.mkObj <| extra ++ [("schemaVersion", toJson (1 : Nat)), ("kind", toJson "lean-bridge-host-export-metadata"),
     ("leanVersion", toJson Lean.versionString), ("entries", toJson rows)] ++
     (if owned.isEmpty then [] else [("leanResources", toJson owned)])
 

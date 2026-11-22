@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "modules": ["Lab"],
   "resources": ["Shared.Badge", "Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
   "exports": [
     "Lab.add", "Lab.alias", "Lab.badge", "Lab.bytes", "Lab.checked", "Lab.closes", "Lab.count",
     "Lab.depotPhase", "Lab.depotRelease", "Lab.depotReset", "Lab.gated", "Lab.ioTask", "Lab.leaseChecked",

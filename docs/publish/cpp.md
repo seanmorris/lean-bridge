@@ -37,6 +37,10 @@ Set `targets.cpp.name` and `targets.cpp.version` in `lean-bridge.exports.json` t
 
 ## Export tasks and streams
 
+If the Lean code uses files, environment variables, or other OS facilities,
+[declare its native OS access](../lean/export-decisions.md#declare-native-os-access).
+Scheduling a task or waiting for its result does not require a grant.
+
 Declare a real Lean `Task` in `taskExports`. For a stream, put its factory,
 pull and close functions in `asyncIterators`. The compiler checks the same
 [Lean signatures as the C task profile](c.md#export-tasks-and-pull-streams).

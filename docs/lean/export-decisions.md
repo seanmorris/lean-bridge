@@ -528,6 +528,58 @@ Alias-named generic records can contain arrays and appear as array elements. The
 
 Analysis reports separate reasons for unresolved implicit, instance, dependent, generic, effectful and unsupported value types. The [compiler metadata](../architecture/elaborated-export-metadata.md) retains the binder types and source positions for inspection. Theorem references record direct relationships in Lean's environment; assurance claims require separate verification.
 
+## Declare native OS access
+
+A Lean `IO` result tells the caller how an operation can fail. It doesn't say
+whether that operation reads a file, checks an environment variable, or only
+updates an in-memory reference. For the Linux x86-64 native task and iterator packages (C, C++,
+Rust, and Python), and Python host-import packages, declare OS access separately
+in `lean-bridge.exports.json`. Here the module reads an environment variable at
+startup, and its worker reads a file:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Effects"],
+  "taskExports": ["Effects.worker"],
+  "nativeEffects": ["environment", "filesystem"]
+}
+```
+
+| Grant | What it permits |
+| --- | --- |
+| `filesystem` | Open, read, write, or change files, directories, and metadata. This is not a per-path or read-only grant. |
+| `environment` | Read environment variables. |
+| `stdio` | Use standard input, output, error, or the supported debug-output primitives. |
+| `clock` | Read a system or monotonic clock. |
+| `random` | Request random bytes from the OS. |
+| `process-info` | Read process information such as the working directory or PID. |
+
+Omit `nativeEffects` to grant none. In-memory references, task scheduling,
+waiting, cancellation, and mutexes do not need a grant. Spawning processes,
+changing the process working directory, terminating the host, networking, and
+unclassified native operations are not grantable on this route. A reviewed API
+cannot override a refusal.
+
+The build follows compiled Lean code through library wrappers and task closures.
+It checks application startup and each selected entry, including an iterator's
+separate pull and close operations. The diagnostic names the declaration,
+native operation, and missing grant. The resulting `binding-ir.json` lists
+the capabilities the compiler found, not unused grants. Each declaration's
+`lean-bridge.dev/native-effects-v1` extension groups conservative requirements
+by startup, call (including work scheduled by the call), pull, and close.
+An entry with no native OS dependencies has no such extension.
+A call that reads an initialized global can inherit its startup requirement;
+this does not mean the call reads the environment a second time.
+
+These are pre-packaging checks, not runtime permissions: they don't sandbox
+the process, compiler, pinned toolchain's own startup, or a callback implemented by the host.
+Host-member requirements come from the host-import contract, not the Lean grants.
+They do not change how a returned `Except`, a thrown IO error, or cancellation
+arrives in the consumer language. Other build profiles do not inherit these grants.
+The [installed examples and receipt hashes](../evidence/native-host-effects-20261122.json)
+cover both ordinary and reviewed releases on all four native targets.
+
 ## Native C and C++ exports
 
 Ordinary `c` and `cpp` builds accept all 19 pure primitive parameter/result types above, including compiler-resolved aliases and concrete specializations. C uses exact-width scalars, copied buffers and GMP `mpz_t` for Nat/Int; C++ supplies owned standard-library values and Boost.Multiprecision cpp_int. Packages include and configure the exact-integer dependency. Both targets share one compiled native component and include the runtime automatically. Use the [C/C++ author recipe](../publish/c.md#build-an-ordinary-lean-project).

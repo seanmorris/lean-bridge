@@ -37,6 +37,10 @@ Authenticate and distribute the original archive through your controlled release
 
 ## Export a task or pull stream
 
+If the Lean code uses files, environment variables, or other OS facilities,
+[declare its native OS access](../lean/export-decisions.md#declare-native-os-access).
+Scheduling a task or waiting for its result does not require a grant.
+
 For a Linux x86-64 task release, select Lean declarations by name in `lean-bridge.exports.json`, then run your normal `--target cargo` build:
 
 ```json

@@ -21,6 +21,7 @@ import "./helpers/cpp-task-abi-coexistence.mjs";
 import "./helpers/task-integer-installed.mjs";
 import "./helpers/resource-task-installed.mjs";
 import "./helpers/rust-task-installed.mjs";
+import "./helpers/native-effect-policy.mjs";
 import { generatePythonHostExtension } from "../src/backends/python/host-exports.mjs";
 import { generatePythonHostProvider } from "../src/backends/python/host-provider.mjs";
 

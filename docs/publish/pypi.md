@@ -111,6 +111,10 @@ are synchronous; compound member arguments and custom native objects are not sup
 
 ## Export a Lean task to asyncio
 
+If the Lean code uses files, environment variables, or other OS facilities,
+[declare its native OS access](../lean/export-decisions.md#declare-native-os-access).
+Scheduling a task or waiting for its result does not require a grant.
+
 Use `taskExports` to select functions that should deliver an awaitable on Linux
 x86-64 CPython. The [Timers package](../../tests/fixtures/python-lean-tasks/Timers.lean)
 needs no host-import contract. Its delayed calculation runs on Lean's scheduler:
