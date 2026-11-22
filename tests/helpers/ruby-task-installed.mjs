@@ -139,6 +139,11 @@ export const installRubyTaskCase = async (work, root, route, clientRoot = root, 
 	const installed = join(moved, "gems", artifact.path.slice("archives/".length, -4));
 	const inner = await read(join(installed, "lean-bridge/package-receipt.json"));
 	assert.equal(inner.profile, profile.id); assert.equal(inner.runtimeIdentity, pkg.runtimeIdentity); assert.equal(inner.bindingIrSha256, hashBindingIr(api));
+	if(!api.types.some(t => t.kind === "resource"))
+	{
+		assert.equal(inner.resourceLedger, undefined);
+		assert.ok(!Object.keys(inner.files).some(p => p.endsWith("/native_resource_lease_v1.rb") || p.includes("/liblb_task_resources_")));
+	}
 	for(const [path, identity] of Object.entries(inner.files))
 	{
 		const bytes = await readFile(join(installed, path)); assert.equal(bytes.length, identity.bytes); assert.equal(sha256(bytes), identity.sha256);

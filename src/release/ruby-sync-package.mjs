@@ -24,8 +24,16 @@ export const writeRubySyncRelease = async o => {
 		if(!bytes || (path !== library && sha256(bytes) !== manifest.files[file]?.sha256)) throw new Error("Missing or inconsistent Ruby native library: " + path);
 		libraries[path] = sha256(bytes);
 	}
+	let resourceLedger;
+	if(wire.leases?.length)
+	{
+		if(!/^[a-f0-9]{64}$/u.test(o.ledgerId)) throw new Error("Missing Ruby resource ledger identity");
+		const path = "liblb_task_resources_" + o.ledgerId + ".so", bytes = files.get("lib/" + path);
+		if(!bytes) throw new Error("Missing compiled Ruby resource ledger");
+		libraries[path] = sha256(bytes); resourceLedger = { id: o.ledgerId, library: path, sha256: libraries[path] };
+	}
 	if(files.size !== Object.keys(libraries).length) throw new Error("Unexpected Ruby synchronous native payload");
-	const source = await generateRubySyncSources({ name, wire, evidence: { componentId: api.component.id, library, libraries, runtimeIdentity } });
+	const source = await generateRubySyncSources({ name, wire, ledgerId: o.ledgerId, evidence: { componentId: api.component.id, library, libraries, runtimeIdentity } });
 	const root = await mkdtemp(join(workRoot, ".ruby-io-"));
 	try
 	{
@@ -50,6 +58,7 @@ export const writeRubySyncRelease = async o => {
 			, component: api.component, componentIdentity, bindingIrSha256
 			, sourceTreeSha256: projectContract.sourceTreeSha256
 			, runtimeIdentity, namespace: source.namespace
+			, ...resourceLedger ? { resourceLedger } : {}
 			, requirePath: source.requirePath, glibcMinimumVersion: floor
 			, ruby: "3.3", platform: "x86_64-linux", files: inventory }));
 		const pkg = await buildRubyPlatformGem({ working: workRoot

@@ -7,7 +7,7 @@
 import { compileCopiedCGraphLayout } from "../c/copied-graph-layout.mjs";
 
 const constant = name => name.split("_").filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("") + (name.match(/_+$/)?.[0] ?? "");
-const reservedConstants = new Set("Native GraphValues Unit UNIT LeanBridgeError LeanClosure Some Ok Err Object BasicObject String Array Integer Float Fiddle Gem File Digest Thread Mutex Ractor Encoding RangeError TypeError StandardError Exception Kernel Struct Module Class Scope Lease Monitor Process ObjectSpace ArgumentError LocalJumpError EncodingError NoMemoryError LoadError NativeCopiedRuntimeV1 RUBY_ENGINE RUBY_VERSION RUBY_PLATFORM".split(" "));
+const reservedConstants = new Set("Native GraphValues Unit UNIT LeanBridgeError LeanClosure Some Ok Err Object BasicObject String Array Integer Float Fiddle Gem File Digest Thread Mutex Ractor Encoding RangeError TypeError StandardError Exception Kernel Struct Module Class Scope Lease Monitor Process ObjectSpace ArgumentError LocalJumpError EncodingError NoMemoryError LoadError NativeCopiedRuntimeV1 NativeResourceLeaseV1 RUBY_ENGINE RUBY_VERSION RUBY_PLATFORM".split(" "));
 /**
  * Public Ruby member for a Lean field: reserved Ruby names gain one trailing underscore.
  *

@@ -6,6 +6,7 @@
  * @file
  */
 import { cTaskValues } from "./task-values.mjs";
+import { taskResourceTypes } from "./task-resources.mjs";
 import { retainedWireEntry, taskWireEntry, taskWireWait } from "./task-wire.mjs";
 
 const scalars = new Set("unit bool char uint8 uint16 uint32 uint64 usize int8 int16 int32 int64 isize float32 float64 string bytes nat int".split(" "));
@@ -18,6 +19,7 @@ const depth = v => Array.isArray(v) ? 1 + Math.max(...v.map(depth)) : 0;
 const buffer = s => s === "string" || s === "bytes", wide = s => s === "nat" || s === "int";
 const input = (c, v, i) => {
 	const a = n => `args[${3 * i + n}]`;
+	if(c.resource) return `(${c.arg}){{${a(0)},${a(1)}}}`;
 	if(buffer(v)) return `(${c.arg}){(const uint8_t *)(uintptr_t)${a(0)}, ${a(1)}}`;
 	if(wide(v)) return `(${c.arg}){(const uint64_t *)(uintptr_t)${a(0)}, ${a(1)}, ${a(2)} != 0}`;
 	if(v === "float32" || v === "float64") return `lb_wire_${v}(${a(0)})`;
@@ -40,10 +42,17 @@ const emit = (v, expr, p, index = 0) => {
  * @param entries - Elaborated synchronous application declarations.
  * @param options - Enable native Task and pull descriptors for a task package.
  * @param options.tasks - Include task handles and scheduler wait operations.
+ * @param options.resources - Nominal resource definitions authenticated by elaboration.
  */
-export const generateSyncWire = (prefix, entries, { tasks = false } = {}) => {
+export const generateSyncWire = (prefix, entries, { tasks = false, resources = [] } = {}) => {
 	if(!/^lbc_[a-z][a-z0-9_]*$/u.test(prefix) || !entries?.length) throw new TypeError("Invalid synchronous host wire identity");
-	const p = prefix, stem = "lbwire_" + p + "_v1", values = cTaskValues(p, false);
+	const p = prefix, stem = "lbwire_" + p + "_v1", kinds = taskResourceTypes(resources), values = cTaskValues(p, false, kinds);
+	const leases = kinds.map((r, i) => ({ ...r, type: "lease:" + r.hash, tag: 3 + i, symbol: stem + "_lease_" + i }));
+	const wireShape = t => leases.find(r => t?.kind === "named" && t.id === r.id)?.type ?? shape(t);
+	const move = (t, v, prefix) => {
+		const r = leases.find(x => x.type === t);
+		return r ? `out[0] = ${v}._private[0]; out[1] = ${v}._private[1]; out[3] = ${r.tag}; ${v} = (${r.raw}){0};` : emit(t, v, prefix);
+	};
 	const symbols = [stem + "_clear"], methods = [];
 	const functions = entries.map((e, i) => {
 		if((!tasks && (e.delivery || e.taskIO)) || (e.delivery && !["task", "async-iterator"].includes(e.delivery)) || !["pure", "BaseIO", "EIO", "IO"].includes(e.effect)
@@ -52,18 +61,18 @@ export const generateSyncWire = (prefix, entries, { tasks = false } = {}) => {
 		if(e.parameters.some(a => a.type.kind === "io-callback"))
 		{
 			if(!tasks || e.delivery !== "task") throw new TypeError("Retained host callbacks require a task");
-			const wire = retainedWireEntry({ p, n, symbol, e, values, shape, depth, input, emit });
+			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move });
 			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
 		}
-		const args = e.parameters.map(a => shape(a.type));
+		const args = e.parameters.map(a => wireShape(a.type));
 		if(args.some(Array.isArray)) throw new TypeError("The host wire accepts copied scalar arguments");
-		const codecs = e.parameters.map(a => values.codec(a.type)), result = shape(e.result), item = values.codec(e.result);
-		const err = e.effect === "EIO" ? shape(e.error) : e.effect === "IO" ? "string" : null;
+		const codecs = e.parameters.map(a => values.codec(a.type)), result = wireShape(e.result), item = values.codec(e.result);
+		const err = e.effect === "EIO" ? wireShape(e.error) : e.effect === "IO" ? "string" : null;
 		const ec = e.effect === "EIO" ? values.codec(e.error) : null;
 		const checks = args.map((v, k) => (v === "bool" || v === "unit") ? `if (args[${3 * k}] > ${v === "bool" ? 1 : 0}u) return ${p}_INVALID;` : "").filter(Boolean);
 		if(e.delivery)
 		{
-			const wire = taskWireEntry({ p, n, symbol, e, args, codecs, values, shape, depth, input, emit, checks });
+			const wire = taskWireEntry({ p, n, symbol, e, args, codecs, values, shape: wireShape, depth, input, emit: move, checks });
 			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
 		}
 		methods.push({ name: e.name, declaration: e.declaration
@@ -77,30 +86,48 @@ export const generateSyncWire = (prefix, entries, { tasks = false } = {}) => {
     ${checks.join("\n    ")}
     ${n}_value value = {0}; ${err ? (ec ? alias : p + "_buffer") + " error = {0};" : ""}
     ${p}_status s = ${n}_call(${call.join(", ")});
-    if (s == ${p}_OK) { ${emit(result, "value", p)} }
-    ${err ? `else if (s == ${p}_${ec ? "TYPED_ERROR" : "IO_ERROR"}) { ${emit(err, "error", p)} }` : ""}
+    if (s == ${p}_OK) { ${move(result, "value", p)} }
+    ${err ? `else if (s == ${p}_${ec ? "TYPED_ERROR" : "IO_ERROR"}) { ${move(err, "error", p)} }` : ""}
     ${item.dispose ? `${n}_value_dispose(&value);` : ""} ${ec?.dispose ? `${alias}_dispose(&error);` : e.effect === "IO" ? `${p}_buffer_dispose(&error);` : ""}
     return (int)s;
 }`;
 	});
+	const leaseHelpers = leases.map(r => {
+		const base = p + "_resource_" + r.slug, sym = r.symbol, t = r.raw;
+		symbols.push(sym + "_close", sym + "_retain", sym + "_same");
+		return `int ${sym}_close(uint64_t *h) {
+    if (!h) return ${p}_INVALID; ${t} v = {{h[0],h[1]}}; int s = ${base}_release(&v);
+    h[0] = v._private[0]; h[1] = v._private[1]; return s;
+}
+int ${sym}_retain(const uint64_t *h, uint64_t *out) {
+    if (!h || !out || out[0] || out[1]) return ${p}_INVALID;
+    ${t} v = {{h[0],h[1]}}, tmp = {0}; int s = ${base}_retain(v, &tmp);
+    out[0] = tmp._private[0]; out[1] = tmp._private[1]; return s;
+}
+int ${sym}_same(const uint64_t *a, const uint64_t *b, uint8_t *out) {
+    if (!a || !b || !out) return ${p}_INVALID; bool equal = false;
+    int s = ${base}_same((${t}){{a[0],a[1]}}, (${t}){{b[0],b[1]}}, &equal); *out = equal; return s;
+}`;
+	}).join("\n");
 	const source = `#include "${p}.h"
 #include <string.h>
 #include <limits.h>
 _Static_assert(sizeof(uintptr_t) == 8 && sizeof(size_t) == 8 && sizeof(float) == 4 && sizeof(double) == 8 && CHAR_BIT == 8, "Linux x86-64 host wire");
 static inline float lb_wire_float32(uint64_t bits) { uint32_t u = (uint32_t)bits; float f; memcpy(&f, &u, 4); return f; }
-static inline double lb_wire_float64(uint64_t bits) { double f; memcpy(&f, &bits, 8); return f; }
+static inline double lb_wire_float64(uint64_t bits) { double f; memcpy(&f, &bits, 8); return f; }${leaseHelpers && "\n" + leaseHelpers}
 void ${stem}_clear(uint64_t *out) {
     if (!out) return;
     if (out[3] == 1) { ${p}_buffer v = {(uint8_t *)(uintptr_t)out[0], out[1]}; ${p}_buffer_dispose(&v); }
     ${values.hasIntegers() ? `else if (out[3] == 2) { ${p}_integer v = {(uint64_t *)(uintptr_t)out[0], out[1], out[2] != 0}; ${p}_integer_dispose(&v); }` : ""}
-    memset(out, 0, 4 * sizeof(*out));
+    ${leases.map(r => `else if (out[3] == ${r.tag} && out[0]) { ${r.symbol}_close(out); }`).join("\n    ")}memset(out, 0, 4 * sizeof(*out));
 }
 ${functions.join("\n")}
 `;
+	const extra = leases.length ? { leases: leases.map(({ type, name, hash, tag, symbol }) => ({ type, name, hash, tag, symbol })) } : {};
 	if(tasks)
 	{
 		const wait = taskWireWait(stem, p);
-		return { source: source + wait.source + "\n", methods, symbols: [...symbols, ...Object.values(wait.names)], clear: symbols[0], wait: wait.names };
+		return { source: source + wait.source + "\n", methods, symbols: [...symbols, ...Object.values(wait.names)], clear: symbols[0], wait: wait.names, ...extra };
 	}
-	return { source, methods, symbols, clear: symbols[0] };
+	return { source, methods, symbols, clear: symbols[0], ...extra };
 };

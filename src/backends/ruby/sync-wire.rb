@@ -55,6 +55,7 @@ module LeanBridge::GeneratedSyncComponent
       copy.ord
     end
     def self.encode(type, value, frame, unit)
+      return Native.borrow_resource(type, value) if type.start_with?("lease:")
       case type
       when "unit"
         raise ::TypeError, "Expected UNIT" unless SAME.bind_call(value, unit)
@@ -81,14 +82,15 @@ module LeanBridge::GeneratedSyncComponent
       else [number(type, value), 0, 0]
       end
     end
-    def self.decode(api, type, words, tags, level = 0)
+    def self.decode(api, type, words, tags, out, level = 0)
       if type.is_a?(::Array)
         arm = tags[level, 1].unpack1("C")
         raise api::BoundaryError, "Invalid native result tag" if arm > 1
-        value = decode(api, type[arm == 1 ? 0 : 1], words, tags, level + 1)
+        value = decode(api, type[arm == 1 ? 0 : 1], words, tags, out, level + 1)
         return (arm == 1 ? api::Ok : api::Err).new(value)
       end
       a, n, sign, owner = words
+      return Native.take_resource(type, out, owner) if type.start_with?("lease:")
       case type
       when "unit" then api::UNIT
       when "bool" then a != 0
@@ -121,13 +123,15 @@ module LeanBridge::GeneratedSyncComponent
           begin
             status = fn.call(input, out, tags)
             words = out[0, 32].unpack("Q<4")
-            return decode(api, result, words, tags) if status.zero?
+            return decode(api, result, words, tags, out) if status.zero?
             if status == 3 && effect == "EIO"
-              raise api::DeclaredError.new(declaration, decode(api, error, words, tags))
+              raise api::DeclaredError.new(declaration, decode(api, error, words, tags, out))
             elsif status == 4 && effect == "IO"
-              raise api::IOError.new(declaration, decode(api, error, words, tags))
+              raise api::IOError.new(declaration, decode(api, error, words, tags, out))
             elsif status == 5
               raise ::ArgumentError, "Invalid Lean argument"
+            elsif status == 6 && types.any? { |t| t.start_with?("lease:") }
+              raise api::ClosedResource, "Lean resource is closed"
             elsif status == 9
               raise api::WrongContext, "Lean requires the original process main thread"
             elsif status == 10

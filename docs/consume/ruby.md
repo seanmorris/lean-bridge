@@ -143,6 +143,44 @@ task driver, so its Lean factory errors are observed at `await`, not when
 the Ruby method returns. See the [installed caller](../../tests/fixtures/ruby-retained-tasks/consumer.rb)
 and the [receipts for the two callback packages and their load-order tests](../evidence/ruby-retained-tasks-20261122.json).
 
+### Share a Lean resource between gems
+
+A resource such as `Ticket` identifies a Lean object, not a copy of its
+fields. An IO gem can create one and a task from another gem can use it:
+
+```ruby
+require "lean_bridge/ruby_lease_desk"
+require "lean_bridge/ruby_lease_depot"
+
+desk = LeanBridge::RubyLeaseDesk
+depot = LeanBridge::RubyLeaseDepot
+desk.issue(40).with do |ticket|
+  job = depot.revisit(ticket) { |n| n + 2 }
+  job.await.with do |updated|
+    puts updated.same_resource?(ticket)  # true: one Lean object
+    puts desk.count(updated)             # 42
+  end
+end
+```
+
+Each returned wrapper owns an independent **lease**. `close` releases just
+that lease; `with` closes it when the block exits. Use `retain` to obtain
+another lease, and `same_resource?` to compare the underlying objects.
+Repeated `await` on the same task returns its cached wrapper, not a new
+lease. A resource returned in a stream item or a typed exception's
+`payload` is yours to close, too.
+
+Passing a lease does not consume it. Once a task starts, closing the
+caller's lease is safe: Lean keeps the value alive for as long as its
+worker needs it. Cancelling stops delivery; a worker that ignores
+cancellation can still hold its reference until it exits. A closed lease
+raises `ClosedResource` when passed to a function. An unrelated kind,
+even one with the same Ruby name, raises `TypeError`. Use resources on
+the original process's main thread; neither a fork nor `Marshal` transfers
+ownership. The [installed caller](../../tests/fixtures/ruby-task-resources/consumer.rb)
+exercises these cases. The [installed gem results](../evidence/ruby-resource-leases-20261122.json)
+record both load orders and check that no file descriptors leak.
+
 ### Arrays and records
 
 For an installed [Parcels package](../publish/rubygems.md#export-arrays-and-records),

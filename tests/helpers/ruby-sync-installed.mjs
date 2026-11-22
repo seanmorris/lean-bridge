@@ -25,7 +25,7 @@ const routes = ["ordinary", "reviewed"], env = { ...process.env, LEAN_NUM_THREAD
 const ruby = env.LEAN_BRIDGE_RUBY ?? "ruby", replay = env.LEAN_BRIDGE_RUBY_SYNC_REPLAY;
 const read = async p => JSON.parse(await readFile(p, "utf8"));
 const active = env.LEAN_BRIDGE_RUBY_SYNC_TEST === "1";
-test("the Ruby IO wire excludes asynchronous and identity-bearing carriers", () => {
+test("the default Ruby IO wire rejects asynchronous functions and undeclared resources", () => {
 	const p = { kind: "primitive", name: "uint32" }, e = { name: "read", declaration: "A.read", parameters: [], effect: "BaseIO", result: p };
 	assert.deepEqual(generateSyncWire("lbc_a", [e]).methods[0].result, "uint32");
 	for(const extra of [{ delivery: "task" }, { delivery: "async-iterator" }, { taskIO: true }, { result: { kind: "named", id: "lean:Badge" } }])
@@ -59,6 +59,7 @@ test("Ruby IO packages include their runtime in the CLI and keep native details 
 			, "src/backends/ruby/sync-wire.rb"
 			, "src/backends/ruby/task-runtime.rb"
 			, "src/backends/ruby/retained-task.rb"
+			, "src/backends/ruby/resource-lease.rb"
 			, "src/release/ruby-sync-package.mjs"])
 			assert.ok(files.includes(path), manifest + ": " + path);
 	}
@@ -67,11 +68,31 @@ test("Ruby IO packages include their runtime in the CLI and keep native details 
 	const result = await make("sample", [entry]), publicAPI = result.files["lib/lean_bridge/sample.rb"];
 	assert.ok(!Object.keys(result.files).some(p => p.endsWith("/task_runtime.rb")));
 	assert.ok(!Object.keys(result.files).some(p => p.endsWith("/retained_task.rb")));
+	assert.ok(!Object.keys(result.files).some(p => p.endsWith("/native_resource_lease_v1.rb")));
 	assert.match(publicAPI, /def self\.dup_\(\)/u); assert.doesNotMatch(publicAPI, /Fiddle|lbwire_|Future|Promise/u);
 	assert.match(result.files["lib/lean_bridge/sample/native.rb"], /require_relative "sync_wire"/u);
 	assert.match(result.files["lib/lean_bridge/sample/sync_wire.rb"], /module LeanBridge::Sample/u);
 	await assert.rejects(make("sample", [entry, { ...entry, name: "dup_" }]), /collides/u);
 	await assert.rejects(make("native-sync-wire-v1", [entry]), /reserved/u);
+});
+test("Ruby lease wire requires a matching elaborated nominal and does not hide leases inside copied sums", async () => {
+	const hash = "1".repeat(64), ledgerId = "2".repeat(64);
+	const definition = name => ({ kind: "resource", id: "lean:" + name, host: null
+		, resource: { kindId: "resource:" + name + "/" + hash }
+		, source: { declaration: name, extensions: { "lean-bridge.dev/resource-identity": hash } } });
+	const kind = definition("Shared.Ticket"), type = { kind: "named", id: kind.id };
+	const entry = { declaration: "Desk.keep", name: "keep", effect: "IO", parameters: [{ type }], result: type };
+	const make = (entries, resources) => generateSyncWire("lbc_desk", entries, { resources });
+	const wire = make([entry], [kind]); assert.equal(wire.leases[0].hash, hash);
+	assert.throws(() => make([entry], []), /copied primitive/u);
+	assert.throws(() => make([entry], [{ ...kind, resource: { kindId: "resource:forged" } }]), /checked Lean heap resource/u);
+	assert.throws(() => make([{ ...entry, result: { kind: "apply", constructor: "result", arguments: [type, type] } }], [kind]), /copied primitive/u);
+	const generated = await generateRubySyncSources({ name: "desk", wire, ledgerId });
+	assert.ok(generated.files["lib/lean_bridge/native_resource_lease_v1.rb"]);
+	assert.doesNotMatch(generated.files["lib/lean_bridge/desk.rb"], /Fiddle|lbwire_|_private/u);
+	await assert.rejects(generateRubySyncSources({ name: "desk", wire, ledgerId: "absent" }), /ledger/u);
+	const bad = definition("Shared.ClosedResource"), field = { kind: "named", id: bad.id };
+	await assert.rejects(generateRubySyncSources({ name: "desk", ledgerId, wire: make([{ ...entry, parameters: [], result: field }], [bad]) }), /reserved resource/u);
 });
 const build = async (root, route, reviewed) => {
 	const src = join(root, route, "source"), outputRoot = join(root, route, "handoff");
@@ -100,8 +121,10 @@ test("a Ruby release refuses ungranted native IO before it emits a gem", { skip:
 		assert.match([e.message, e.details?.stdout, e.details?.stderr].join("\n"), /requires nativeEffects "filesystem"/u); return true;
 	});
 	await assert.rejects(lstat(outputRoot), { code: "ENOENT" });
-	await writeFile(configPath, canonicalJson({ ...config, resources: ["Journal.Badge"] }));
-	await assert.rejects(buildCanonicalProject({ projectRoot: src, outputRoot, targets: ["rubygems"], environment: env }), /resource leases require another projection/u);
+	await writeFile(configPath, canonicalJson({ ...config, nativeEffects: ["filesystem"], resources: ["Journal.Badge"] }));
+	await assert.rejects(buildCanonicalProject({ projectRoot: src, outputRoot, targets: ["rubygems"], environment: env }), e => {
+		assert.match([e.message, e.details?.stdout, e.details?.stderr].join("\n"), /unknown (constant|declaration).*Journal\.Badge/iu); return true;
+	});
 	await assert.rejects(lstat(outputRoot), { code: "ENOENT" });
 });
 const install = async (work, root, route, review) => {

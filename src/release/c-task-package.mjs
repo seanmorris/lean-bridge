@@ -63,7 +63,7 @@ export const buildCTaskPackage = async options => {
 		const ledgerId = ledger && sha256(canonicalJson({ runtimeIdentity, header: sha256(ledger.header), source: sha256(ledger.source) }));
 		const ledgerName = ledger && `liblb_task_resources_${ledgerId}.so`, ledgerFlag = `-DLB_LEASE_PREFIX=lb_task_resource_${ledgerId}_`;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
-		const wire = ruby && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous });
+		const wire = ruby && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources });
 		const integers = skeleton.integerMode && await asset("../backends/c/task-integers.h");
 		const gmp = integers && !cpp && !rust && !ruby && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
 		const boost = integers && cpp && boostSources();
@@ -158,7 +158,7 @@ export const buildCTaskPackage = async options => {
 			files.set(path, bytes);
 		}
 		if(rust) return await writeRustTaskRelease({ ...options, prefix: p, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
-		if(ruby) return await writeRubySyncRelease({ ...options, prefix: p, wire, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
+		if(ruby) return await writeRubySyncRelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		const cmakePackage = `LeanBridge${p.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join("")}`;
 		const cmakeTarget = `LeanBridge::${p}`, share = "share/lean-bridge";
 		files.set(`include/${p}.h`, gen.header);

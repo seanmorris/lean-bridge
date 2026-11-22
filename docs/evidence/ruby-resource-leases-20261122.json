@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-ruby-nominal-resource-leases",
+  "nodes": [
+    1221,
+    1222,
+    1223
+  ],
+  "profiles": [
+    "native-ruby-io-v1",
+    "native-ruby-task-v1"
+  ],
+  "toolchain": "Lean 4.32.2; MRI 3.3.12; Linux x86-64; glibc 2.36. Host applications run with prebuilt RubyGems and no compiler on PATH.",
+  "checks": [
+    "Two independently built application gems share the hashed Shared.Ticket and Shared.Badge definitions and a content-addressed native ledger. A fifth gem built with a changed declaring module exposes types with the same name and layout, but cannot pass them to either matching component.",
+    "The installed client exercises direct IO, task completion, retained scalar callback reentry and failures, and cursor success, early close and typed step failure. Owned EIO payloads from synchronous calls and task factories are separately disposable. Closed, wrong-kind, forked and wrong-thread use are refused. The native resource kind in a reviewed API cannot override fresh elaboration.",
+    "An input lease can close while the worker still owns the Lean value. Both cooperative and ignoring workers were cancelled; no cancelled task delivers a late result. Counts from the broker and real /proc/self/fd descriptors independently return to baseline, including after wrapper allocation failure, abandoned-wrapper cleanup and runtime retirement.",
+    "The ordinary and reviewed pairs are installed from verified archives in a disposable GEM_HOME, relocated, and loaded in both orders. Both components agree on their nominal Ruby class, the exact native ledger and its Ruby support bytes. A corrupted installed ledger prevents fresh require."
+  ],
+  "limits": [
+    "These are local installed Linux MRI results, not hosted CI, a registry publication, or full-matrix acceptance.",
+    "This profile projects direct nominal application resources, not arbitrary Ruby host objects, nested resources in copied values, or resource-valued callback parameters or replies. Other ownership-aware package profiles have their own contracts.",
+    "Inputs borrow rather than consuming the caller's lease. A late worker may retain an ordinary Lean reference after cancellation; the test observes this separately from released native host identities."
+  ],
+  "separateControls": {
+    "buildPolicy": "Two ordinary Ruby builds failed before producing an output directory: Journal.store without a filesystem grant, and a resource declaration naming the nonexistent Journal.Badge.",
+    "noResourceRegression": {
+      "comparison": "ruby-fiber-tasks-20261122.json, ordinary route",
+      "rebuiltGemSha256": "e407389bfb1d6852b104bb0ed03e246835fae72861498f12733b8a8ea828f3c5",
+      "unchangedBindingIrSha256": "cd59d607d2962170ee4638e26e470ce751607c9f07d0a0fecc7c271d55fe9e64",
+      "observation": "Fresh installation ran the unchanged public client and scheduler: 19 scalar round trips, fiber readiness, cancellation, typed errors, stream backpressure, retirement and cleanup. The gem had no resource ledger or resource wrapper support file."
+    }
+  },
+  "reproduce": {
+    "build": "CC=cc LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_RUBY_LEASE_BUILD=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/ruby-resource-installed.mjs",
+    "capture": "LEAN_BRIDGE_RUBY_LEASE_CAPTURE=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/ruby-resource-installed.mjs",
+    "replay": "LEAN_BRIDGE_RUBY_LEASE_REPLAY=/absolute/path/to/original-handoffs LEAN_BRIDGE_RUBY_LEASE_EXPECTED=docs/evidence/ruby-resource-leases-20261122.json node --test --test-concurrency=1 tests/helpers/ruby-resource-installed.mjs",
+    "requirements": "Set LEAN_BRIDGE_RUBY to MRI 3.3, and for builds set the pinned LEAN_BRIDGE_LEAN_PREFIX and a C compiler. Replay uses the five original handoffs, retained consumer.rb and original acceptance.json. It never rebuilds a gem."
+  },
+  "acceptanceSha256": "ec801676ef8a4227f8403d92075ad618ccdd46e6802ad2818ea2bdc836e4c9cf",
+  "installed": {
+    "clientSha256": "b2584c5c4d9a9d099746047df2546dd6569d219e0abac1d25ef593a3502f2cc5",
+    "rows": [
+      {
+        "ledger": {
+          "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+          "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+          "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+        },
+        "orders": [
+          {
+            "componentInitializations": 3,
+            "foreignKindRejected": true,
+            "leakedDescriptors": 0,
+            "liveIdentities": 0,
+            "order": [
+              "ruby_lease_desk",
+              "ruby_lease_depot"
+            ],
+            "runtimeInitializations": 1
+          },
+          {
+            "componentInitializations": 3,
+            "foreignKindRejected": true,
+            "leakedDescriptors": 0,
+            "liveIdentities": 0,
+            "order": [
+              "ruby_lease_depot",
+              "ruby_lease_desk"
+            ],
+            "runtimeInitializations": 1
+          }
+        ],
+        "packages": [
+          {
+            "artifact": {
+              "bytes": 50075648,
+              "path": "archives/ruby-lease-desk-1.0.0-x86_64-linux.gem",
+              "sha256": "765b71a286dbc8e043d7b4e0e91b302e1f86be15197050c85bdd3ac65f6af51c"
+            },
+            "bindingIrSha256": "443907fc4398d50df33ba5d645c70c697d4b124a8cdc567ed96643e570149f41",
+            "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+            "profile": "native-ruby-io-v1",
+            "receiptSha256": "5bfe8f20499177e9d2c36dd252438fe09d02b5624fa8bc506e7f317a917e10b4",
+            "reviewedSourceSha256": null,
+            "role": "desk",
+            "route": "ordinary",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sourceTreeSha256": "9b5b1510a818a2d1115c67187db061e35459f5a78b1ed1ccaaba67f049367fc7"
+          },
+          {
+            "artifact": {
+              "bytes": 50105344,
+              "path": "archives/ruby-lease-depot-1.0.0-x86_64-linux.gem",
+              "sha256": "c2c09f31e1687c2338eaa0b2fdcd2aa1e545efc35c16b390f85ff04a5bd58f3c"
+            },
+            "bindingIrSha256": "ac62030949698b587f7b76cab4c1f475fff4e09b4fc68386c2ee493e71876ef8",
+            "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+            "profile": "native-ruby-task-v1",
+            "receiptSha256": "6bab9d23d91707b334bd647413692b993a5530c15fc91eb47a744ed4400aa5ee",
+            "reviewedSourceSha256": null,
+            "role": "depot",
+            "route": "ordinary",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sourceTreeSha256": "4bd2262f7bdd36c59911d328f0eb5cfd7d0c277189bd45a75e718e6e05be85b9"
+          },
+          {
+            "artifact": {
+              "bytes": 50075648,
+              "path": "archives/ruby-other-desk-1.0.0-x86_64-linux.gem",
+              "sha256": "ddf36656e2386f74158cf83e8bbfb92eed35645edb60fc6db9537c21c154afd0"
+            },
+            "bindingIrSha256": "03e7dc80b0ab9a40654d857e38e3bddf39a0cb96f056cf1259a372329ef12f08",
+            "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "nominal": "resource:Shared.Ticket/ec937b0b3ec2754e2e77b7373c31d40bf5eeca96fe0df6a133583d377e0db07e",
+            "profile": "native-ruby-io-v1",
+            "receiptSha256": "32ea77e9909e8bbcd9a01070d4a4ea352d217cf7f58a2cca50fc84938831f7a3",
+            "reviewedSourceSha256": null,
+            "role": "desk",
+            "route": "lookalike",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sourceTreeSha256": "f69a0793e81afb6bdbeaf2577bd5cd56a8d1e9e7f06d0a48f534194ccce1e253"
+          }
+        ],
+        "route": "ordinary",
+        "sharedRubySha256": "f367515d7304ceaa454a6e9d551b6b7bb89eab8f7f67175c39cee817871b5f31"
+      },
+      {
+        "ledger": {
+          "id": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+          "library": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+          "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+        },
+        "orders": [
+          {
+            "componentInitializations": 3,
+            "foreignKindRejected": true,
+            "leakedDescriptors": 0,
+            "liveIdentities": 0,
+            "order": [
+              "ruby_lease_desk",
+              "ruby_lease_depot"
+            ],
+            "runtimeInitializations": 1
+          },
+          {
+            "componentInitializations": 3,
+            "foreignKindRejected": true,
+            "leakedDescriptors": 0,
+            "liveIdentities": 0,
+            "order": [
+              "ruby_lease_depot",
+              "ruby_lease_desk"
+            ],
+            "runtimeInitializations": 1
+          }
+        ],
+        "packages": [
+          {
+            "artifact": {
+              "bytes": 50075648,
+              "path": "archives/ruby-lease-desk-1.0.0-x86_64-linux.gem",
+              "sha256": "e91b141e93a02cf7c9eec7c55a1929815e1ea9196b260d0e1e094b010940b2ae"
+            },
+            "bindingIrSha256": "443907fc4398d50df33ba5d645c70c697d4b124a8cdc567ed96643e570149f41",
+            "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+            "profile": "native-ruby-io-v1",
+            "receiptSha256": "7a60e5cc3f4f383eb7d6d6b45c9fb44261a10ba0b0ec14af4e5c5fa56c7cef10",
+            "reviewedSourceSha256": "0b7396f321f09f40d5344359755deac25e0e1a0b3cef426f1d6f300a9a58679b",
+            "role": "desk",
+            "route": "reviewed",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sourceTreeSha256": "d7849ddbf50a5968fbde4580f717c2945c627be47486f0fd1067bec48f6e650d"
+          },
+          {
+            "artifact": {
+              "bytes": 50105344,
+              "path": "archives/ruby-lease-depot-1.0.0-x86_64-linux.gem",
+              "sha256": "1fc2071a79a3cbe294d825574654efc1598723970a1df8fb42512ab2db2e9939"
+            },
+            "bindingIrSha256": "ac62030949698b587f7b76cab4c1f475fff4e09b4fc68386c2ee493e71876ef8",
+            "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+            "profile": "native-ruby-task-v1",
+            "receiptSha256": "8e74469ad6eb932621b5734b11cec0ace8290bb191a4f161e531eb8e1f94eb82",
+            "reviewedSourceSha256": "29d95867d4e6137a1fec923ecca4c4408146af94a2134aa4c10edfbf83804f5c",
+            "role": "depot",
+            "route": "reviewed",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sourceTreeSha256": "8e4e67ed26886014a42dffc6a11b883851d669dc2ea874f3049059d6d95effa8"
+          },
+          {
+            "artifact": {
+              "bytes": 50075648,
+              "path": "archives/ruby-other-desk-1.0.0-x86_64-linux.gem",
+              "sha256": "ddf36656e2386f74158cf83e8bbfb92eed35645edb60fc6db9537c21c154afd0"
+            },
+            "bindingIrSha256": "03e7dc80b0ab9a40654d857e38e3bddf39a0cb96f056cf1259a372329ef12f08",
+            "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "nominal": "resource:Shared.Ticket/ec937b0b3ec2754e2e77b7373c31d40bf5eeca96fe0df6a133583d377e0db07e",
+            "profile": "native-ruby-io-v1",
+            "receiptSha256": "32ea77e9909e8bbcd9a01070d4a4ea352d217cf7f58a2cca50fc84938831f7a3",
+            "reviewedSourceSha256": null,
+            "role": "desk",
+            "route": "lookalike",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sourceTreeSha256": "f69a0793e81afb6bdbeaf2577bd5cd56a8d1e9e7f06d0a48f534194ccce1e253"
+          }
+        ],
+        "route": "reviewed",
+        "sharedRubySha256": "f367515d7304ceaa454a6e9d551b6b7bb89eab8f7f67175c39cee817871b5f31"
+      }
+    ],
+    "schemaVersion": 1
+  }
+}

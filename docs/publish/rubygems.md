@@ -60,7 +60,9 @@ For example:
 The `native-ruby-io-v1` receipt identifies one MRI 3.3 Linux x86-64 gem
 with its matching runtime. It supports copied primitive inputs and outputs,
 including exact integers, and nested `Except` values in results and typed
-errors. It does not select task, iterator, or resource exports. Distribute
+errors. Add [explicit resource types](#export-a-shared-lean-resource) for
+identity-bearing inputs or results. Tasks and iterators use the task
+profile instead. Distribute
 the original archive using the same RubyGems workflow as the pure package.
 See [calling synchronous IO](../consume/ruby.md#call-synchronous-io).
 
@@ -86,8 +88,8 @@ Distribute the original `native-ruby-task-v1` gem; it embeds the matching
 runtime. See the [tested source and reviewed-IR handoffs](../evidence/ruby-fiber-tasks-20261122.json)
 for the package and client hashes. Use `taskIOErrors` only for a selected `Task (Except IO.Error α)`
 whose error should raise from `await`. A normal returned `Except` remains
-data. The task profile accepts copied primitive arguments and copied
-primitive or nested `Except` results. It does not accept resource leases.
+data. The task profile accepts copied primitive arguments, copied primitive
+or nested `Except` results, and explicitly selected top-level resources.
 See [the Ruby consumer flow](../consume/ruby.md#await-a-task-or-read-a-stream).
 
 ### Export a callback-taking task
@@ -100,6 +102,39 @@ The second selection makes terminal IO failures raise instead of returning
 an `Except` value. Lean workers send requests; the Ruby thread running
 `await` calls the block and supplies its reply. See [calling it from Ruby](../consume/ruby.md#pass-a-callback-to-a-lean-task)
 and the [ordinary and reviewed gem receipts](../evidence/ruby-retained-tasks-20261122.json).
+
+### Export a shared Lean resource
+
+List an application-owned heap type in `resources` by its full Lean name,
+and select the functions that use it. For the
+[Desk example](../../tests/fixtures/ruby-task-resources/Desk.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Desk"],
+  "resources": ["Shared.Ticket"],
+  "exports": ["Desk.issue", "Desk.count", "Desk.checkTicket"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"rubygems": {"name": "ruby-lease-desk", "version": "1.0.0"}}
+}
+```
+
+Here `Desk.issue` opens a file, so the filesystem grant is necessary.
+To share the type with a task gem, build both with the same pinned Lean
+toolchain and the same declaring module and imports. Each gem includes the
+verified native resource library and loads it automatically. A same-named
+type from a different module revision does not become interchangeable.
+The [installed gem results](../evidence/ruby-resource-leases-20261122.json)
+include a separately built gem with the same type name and layout that the
+other two correctly refuse.
+
+Direct arguments are borrowed. A resource returned by a synchronous call,
+task, stream pull, or typed error is a separate lease. A scalar callback
+can operate alongside a leased argument, as in
+[Exchange.revisit](../../tests/fixtures/ruby-task-resources/Exchange.lean).
+This contract does not put resources inside copied sums or make them
+arguments or replies of the callback itself. See [sharing resources from Ruby](../consume/ruby.md#share-a-lean-resource-between-gems).
 
 ## Export arrays and records
 

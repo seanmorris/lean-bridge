@@ -37,6 +37,7 @@ module LeanBridge::GeneratedTaskComponent
     end
     def self.drain
       context
+      Native.drain_resources if Native.respond_to?(:drain_resources)
       atomic { SLOTS.each_key { |slot| release(slot) if slot.abandoned[0] } }
     end
     at_exit do
@@ -69,7 +70,7 @@ module LeanBridge::GeneratedTaskComponent
         frame.close
       end
     end
-    def self.decode(type, out, tags) = NativeSyncWireV1.decode(API, type, out[0, 32].unpack("Q<4"), tags)
+    def self.decode(type, out, tags) = NativeSyncWireV1.decode(API, type, out[0, 32].unpack("Q<4"), tags, out)
     def self.start(ops, args)
       drain
       atomic do
@@ -89,6 +90,9 @@ module LeanBridge::GeneratedTaskComponent
             when 0 then nil
             when 3 then raise DeclaredError.new(ops[:decl], decode(ops[:error], out, tags))
             when 4 then raise IOError.new(ops[:decl], decode("string", out, tags))
+            when 6
+              raise ClosedResource, "Lean resource is closed" if ops[:args].any? { |t| t.start_with?("lease:") }
+              status(code)
             else status(code)
             end
           end
