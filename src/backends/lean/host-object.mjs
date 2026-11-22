@@ -80,6 +80,16 @@ const declarationName = declaration => declaration.kind === "property"
 	? `${declaration.parameters.length === 0 ? "get" : "set"}${pascal(declaration.name)}`
 	: declaration.name;
 
+/**
+ * Resolve the same external name on the Lean importer and native provider.
+ *
+ * @param target - Host language.
+ * @param type - Nominal resource declaration.
+ * @param declaration - Operation whose kind distinguishes reads and writes of the same property.
+ */
+export const hostMemberSymbol = (target, type, declaration) =>
+	`lean_bridge_host_${snake(target)}_${snake(type.name)}_${snake(declarationName(declaration))}`;
+
 const emitTarget = (ir, target, resources) => {
 	const namespace = `LeanBridge.Host.${pascal(target)}`;
 	const types = new Map(resources.map(resource => [resource.id, resource.name]));
@@ -114,7 +124,7 @@ const emitTarget = (ir, target, resources) => {
 			);
 			if(declaration.receiver !== null) parameters.unshift(`(self : ${declaration.receiver.ownership === "borrow" ? "@& " : ""}${type.name})`);
 			const name = declarationName(declaration);
-			const symbol = `lean_bridge_host_${snake(target)}_${snake(type.name)}_${snake(name)}`;
+			const symbol = hostMemberSymbol(target, type, declaration);
 			if(symbols.has(symbol)) fail("host-member-collision", "Host members resolve to the same external symbol", { symbol });
 			symbols.add(symbol);
 			const sites = [

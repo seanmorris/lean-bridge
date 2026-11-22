@@ -7,6 +7,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import "./helpers/host-object-compiled.mjs";
+import "./helpers/host-object-installed.mjs";
+import { generatePythonHostExtension } from "../src/backends/python/host-exports.mjs";
+import { generatePythonHostProvider } from "../src/backends/python/host-provider.mjs";
 
 import { executableHostFixture, hostFixture, hostMember, hostParameter, primitiveRef } from "./helpers/host-object-contract.mjs";
 import {
@@ -48,4 +51,26 @@ test("host adapters reject calls that omit the trusted host boundary", () => {
     () => generateLeanHostObjectAdapters(ir),
     error => error instanceof LeanHostObjectGenerationError && error.code === "missing-host-effect",
   );
+});
+
+test("generated CPython providers refuse dynamic, asynchronous and unimplemented contracts", () => {
+	for(const [change, why] of [
+		[ir => { ir.types.find(t => t.host).host.dynamic = true; }, /statically declared/u]
+		, [ir => { ir.declarations.find(d => d.name === "scale").resultMode = "promise"; }, /synchronous|promise/iu]
+		, [ir => { ir.declarations.find(d => d.name === "box").result.lifetime.scope = "runtime"; }, /lifetime/u]
+		, [ir => { hostMember(ir, "nested", { result: { type: { kind: "apply", constructor: "array", arguments: [primitiveRef("uint32")] }, ownership: "copy", lifetime: null } }); }, /copied scalar/u]
+	]) {
+		const ir = executableHostFixture(); change(ir);
+		assert.throws(() => generatePythonHostProvider(ir), why);
+	}
+	const ir = executableHostFixture();
+	const params = { ir, module: "Workshop", componentIdentity: "a".repeat(64), runtimeIdentity: "b".repeat(64) };
+	const entry = { name: "read", declaration: "Workshop.read", parameters: [{ name: "box", type: { kind: "named", id: "lean:Alpha.Box" } }], result: primitiveRef("uint32") };
+	const generate = entries => generatePythonHostExtension({ ...params, entries });
+	assert.throws(() => generate([entry, entry]), /duplicate/u);
+	assert.throws(() => generate([{ ...entry, name: "bind_hosts" }]), /duplicate/u);
+	assert.throws(() => generate([{ ...entry, parameters: [...entry.parameters, ...entry.parameters] }]), /argument name/u);
+	const result = generate([entry]);
+	assert.match(result.stub, /def read\(box: Box\) -> int:/u);
+	assert.match(result.types, /@level.setter\n +def level\(self, value: int\) -> None:/u);
 });

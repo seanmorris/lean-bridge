@@ -651,8 +651,8 @@ The output includes `lib/php/lean_alpha.so`, the shared Lean runtime, and `share
 
 ### Lean calling a host-owned Python object
 
-Run the producer-side host-import contract with the pinned Lean compiler, a C
-compiler and a CPython installation with its headers and shared library:
+Run the host-import checks with the pinned Lean compiler, a C compiler, and
+CPython 3.11 or 3.12 with pip, headers, and its shared library:
 
 ```sh
 source scripts/env.sh
@@ -666,8 +666,41 @@ application, links an independently written CPython provider and removes its
 build tree. The relocated executable calls an ordinary Python class: a setter
 changes the value seen through a second reference, a rejected write preserves
 the old value, and all instances leave the class's weak set after the call.
-The native Python CI shard runs this on 3.11 and 3.12. It tests the Lean import
-ABI; it does not establish a generated provider in a consumer wheel.
+The installed-package test uses a separate, **generated** provider. It builds
+two component wheels and one shared runtime wheel, verifies each component's
+two-archive package-set receipt, and installs both components using offline
+pip. The consumer uses keyword arguments and ordinary Python classes:
+
+```python
+import lean_workshop as workshop
+from host_app import Box
+
+with workshop.bind_hosts(Box=Box):
+    box = workshop.make(7)
+    workshop.set_level(box=box, value=81)
+    assert workshop.alias(box) is box
+    assert workshop.read(box) == 81
+```
+
+The test removes the producer and archives, relocates the installation, and
+takes Lean, C, and pip off the consumer's executable search path. It exercises
+all nineteen scalar conversions, mutation, identity across two components,
+reentry, the original Python exception and a replacement Lean error, stale
+objects, fork/thread rejection, cleanup, and an altered binary. The runtime is
+a pinned wheel dependency that pip resolves; the application never loads it by
+hand. The generated functions accept keywords and ship typing declarations.
+
+The native Python CI shard runs both interpreters sequentially. This Linux
+x86-64 producer API takes an explicit host-import contract and selected Lean
+`IO` declarations. The ordinary/reviewed `lean-bridge build` authoring routes
+do not yet select host imports. Async, dynamic members, and compound or
+callable member values are not part of this installed fixture.
+
+The shard's `python-host-imports-<attempt>` artifact contains the original wheels in
+`wheels/` (one copy of the shared runtime), the compiler inputs, the consumer
+program, and both package-set receipts under each CPython tag. To retain the
+same files locally, set `LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR` to a fresh
+directory outside the source tree before running the checks for both versions.
 
 ### Ordinary-source Python packages
 

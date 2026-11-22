@@ -27,7 +27,8 @@ const pathIsSafe = value => typeof value === "string" && value.length <= 1024 &&
 	&& value.split("/").every(part => part && part !== "." && part !== "..");
 const targetProfiles = { npm: ["component-scalars-v1", "javascript-wasm-owned-v1"]
 	, "php-wasm": "php-wasm-copied-v1"
-	, ...Object.fromEntries(["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].map(target => [target, "native-library-v1"])) };
+	, pypi: ["native-library-v1", "native-python-host-v1"]
+	, ...Object.fromEntries(["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "cargo", "php-native"].map(target => [target, "native-library-v1"])) };
 const ecosystemFor = target => target === "php-native" ? ["composer"] : target === "php-wasm" ? ["npm", "composer"] : [target];
 const nameKey = value => `${value.ecosystem}:${value.ecosystem === "pypi" ? value.name.toLowerCase().replaceAll(/[-_.]+/g, "-")
 	: ["nuget", "composer", "npm", "cargo"].includes(value.ecosystem) ? value.name.toLowerCase() : value.name}`;
@@ -52,7 +53,7 @@ export const validatePackageSetReceipt = receipt => {
 		|| receipt.component.version !== receipt.component.id.slice(receipt.component.id.lastIndexOf("@") + 1)) invalid("Inconsistent component identity");
 	closed(receipt.source, ["treeSha256"], "source");
 	if(!hash(receipt.source.treeSha256)) invalid("Invalid source tree identity");
-	if(!Array.isArray(receipt.profiles) || !receipt.profiles.length || receipt.profiles.length > 3) invalid("Expected one to three ABI profiles");
+	if(!Array.isArray(receipt.profiles) || !receipt.profiles.length || receipt.profiles.length > 4) invalid("Expected one to four ABI profiles");
 	if(!Array.isArray(receipt.packages) || !receipt.packages.length || receipt.packages.length > 128) invalid("Expected one to 128 packages");
 	const profiles = new Map(), names = new Map(), paths = new Set(), packages = new Map();
 	for(const profile of receipt.profiles)
@@ -68,10 +69,14 @@ export const validatePackageSetReceipt = receipt => {
 		if(!Object.hasOwn(targetProfiles, pkg.target) || ![targetProfiles[pkg.target]].flat().includes(pkg.profile) || !ecosystemFor(pkg.target).includes(pkg.ecosystem)) invalid("Package target, ecosystem and profile disagree");
 		if(pkg.runtimeIdentity !== profiles.get(pkg.profile)?.runtimeIdentity) fail("package-set-runtime-mismatch", "Package runtime differs from its compiled profile");
 		if(!["runtime", "component", "api"].includes(pkg.role) || !["provided", "embedded", "dependency"].includes(pkg.runtimeDelivery)) invalid("Invalid package role or runtime delivery");
-		const runtimeTarget = pkg.target === "npm" || pkg.target === "cpan" || pkg.target === "php-wasm";
+		const pythonHosts = pkg.profile === "native-python-host-v1";
+		const runtimeTarget = pythonHosts || pkg.target === "npm" || pkg.target === "cpan" || pkg.target === "php-wasm";
 		if(pkg.role === "runtime" ? (!runtimeTarget || pkg.runtimeDelivery !== "provided" || pkg.ecosystem === "composer")
 			: pkg.runtimeDelivery !== (runtimeTarget ? "dependency" : "embedded")) invalid("Package role and runtime delivery disagree");
 		if((pkg.role === "api") !== (pkg.target === "php-wasm" && pkg.ecosystem === "composer")) invalid("Only the PHP-Wasm Composer companion has the API role");
+		if(pythonHosts && pkg.role === "runtime" && (pkg.name !== "lean-bridge-host-runtime"
+			|| !pkg.version.startsWith(`1+${pkg.runtimeIdentity}.`) || !hash(pkg.version.split(".")[1]) || pkg.version.split(".").length !== 2))
+			invalid("Python host wheels require the exact shared runtime coordinate");
 		if(names.has(nameKey(pkg))) fail("package-set-coordinate-conflict", `Package name is supplied more than once: ${nameKey(pkg)}`);
 		names.set(nameKey(pkg), pkg); packages.set(coordinate(pkg), pkg);
 		if(!Array.isArray(pkg.requires) || pkg.requires.length > 16) invalid("Invalid in-set dependencies");

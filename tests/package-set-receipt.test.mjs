@@ -17,6 +17,36 @@ import {
 	copyPackageSetHandoff, createPackageSetHandoff, retainPackageSetEvidence
 } from "./helpers/package-set.mjs";
 
+test("Python host components require their pinned runtime; existing native wheels remain embedded", async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const previous = receipt.packages.find(p => p.target === "pypi"), id = "native-python-host-v1";
+	const profile = { ...receipt.profiles.find(p => p.id === previous.profile), id };
+	const runtime = {
+		...structuredClone(previous), name: "lean-bridge-host-runtime"
+		, version: `1+${profile.runtimeIdentity}.${"c".repeat(64)}`, profile: id
+		, role: "runtime", runtimeDelivery: "provided"
+		, artifacts: [{ ...previous.artifacts[0], path: "runtime.whl" }]
+	};
+	const app = { ...structuredClone(previous), profile: id, runtimeDelivery: "dependency", requires: [{ ecosystem: "pypi", name: runtime.name, version: runtime.version }] };
+	const host = { ...receipt, profiles: [profile], packages: [app, runtime] };
+	await assertJsonSchema("package-set-receipt", host);
+	assert.equal(validatePackageSetReceipt(host), true);
+	const combined = { ...receipt, profiles: [...receipt.profiles, profile], packages: [...receipt.packages.filter(p => p.target !== "pypi"), app, runtime] };
+	await assertJsonSchema("package-set-receipt", combined);
+	assert.equal(validatePackageSetReceipt(combined), true);
+	for(const edit of [
+		r => { r.packages[0].runtimeDelivery = "embedded"; }
+		, r => { r.packages[0].requires = []; }
+		, r => { r.packages[1].version = r.packages[0].requires[0].version = "0+wrong"; }
+		, r => { r.packages[1].name = r.packages[0].requires[0].name = "different-runtime"; }
+		, r => { r.profiles[0].id = r.packages[0].profile = r.packages[1].profile = "native-library-v1"; }
+	]) {
+		const changed = structuredClone(host); edit(changed);
+		assert.throws(() => validatePackageSetReceipt(changed));
+	}
+	assert.equal(validatePackageSetReceipt(receipt), true);
+});
+
 test("one closed receipt covers every ordinary package ecosystem and deterministically records its archives", async t => {
 	const handoff = await createPackageSetHandoff(t);
 	await assertJsonSchema("package-set-receipt", handoff.receipt);

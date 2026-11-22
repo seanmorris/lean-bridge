@@ -96,7 +96,13 @@ const collectFiles = async root => {
 
 const recordHash = bytes => createHash("sha256").update(bytes).digest("base64url");
 
-const writeWheelRecord = async (wheelRoot, distInfo) => {
+/**
+ * Close a staged wheel with standard Python installation hashes.
+ *
+ * @param wheelRoot - Staged payload directory.
+ * @param distInfo - Wheel metadata directory relative to the root.
+ */
+export const writeWheelRecord = async (wheelRoot, distInfo) => {
 	const lines = [];
 	for(const file of await collectFiles(wheelRoot))
 	{
