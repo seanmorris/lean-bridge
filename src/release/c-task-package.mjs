@@ -1,9 +1,9 @@
 /**
- * Build a relocatable Linux C11 task and stream archive with its pinned shared runtime.
+ * Build relocatable Linux C11 and C++20 task archives with their pinned shared runtime.
  *
  * @file
  */
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
@@ -12,6 +12,7 @@ import { readVerifiedNativeRuntime, validateNativeElf } from "../build/native-ar
 import { pinnedCompiledLean } from "../build/elaborated-component.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCTaskExports } from "../backends/c/task-exports.mjs";
+import { generateCppTaskHeader } from "../backends/cpp/task-exports.mjs";
 import { validateNativeCSettings } from "./native-c-family.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
@@ -25,6 +26,8 @@ const asset = path => readFile(new URL(path, import.meta.url));
  */
 export const buildCTaskPackage = async options => {
 	const { projectContract, name, version, workRoot, runtimeRoot, leanPrefix, environment, signal } = options;
+	const target = options.target ?? "c", cpp = target === "cpp";
+	if(!["c", "cpp"].includes(target)) throw new TypeError("Invalid C-family task target");
 	validateNativeCSettings({ name, version });
 	if(options.ir || !name || !version || options.sources.some(s => /^(?:LeanBridge(?:\.|$)|BridgeCAsync$)/u.test(s.module))) throw new TypeError("Invalid C task source modules or coordinates");
 	const { identity: runtimeIdentity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
@@ -35,7 +38,7 @@ export const buildCTaskPackage = async options => {
 	{
 		const app = join(stage, "producer");
 		const { entries, objects, api, env, evidence } = await compileHostSources({ ...options, app, run });
-		const bindingIrSha256 = hashBindingIr(api), profile = "native-c-task-v1";
+		const bindingIrSha256 = hashBindingIr(api), profile = cpp ? "native-cpp-task-v1" : "native-c-task-v1";
 		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
 		const config = { name, modules: projectContract.modules, entries };
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
@@ -91,19 +94,32 @@ export const buildCTaskPackage = async options => {
 		const cmakePackage = `LeanBridge${p.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join("")}`;
 		const cmakeTarget = `LeanBridge::${p}`, share = "share/lean-bridge";
 		files.set(`include/${p}.h`, gen.header);
+		if(cpp)
+		{
+			const dir = "lean_bridge/async_v1", hpp = generateCppTaskHeader({ prefix: p, entries });
+			await mkdir(join(app, dir), { recursive: true });
+			for(const base of ["task-loop.hpp", "task-values.hpp", "task-routine.hpp"])
+			{
+				const bytes = await asset(`../backends/cpp/${base}`);
+				files.set(`include/${dir}/${base}`, bytes); await save(`${dir}/${base}`, bytes);
+			}
+			files.set(`include/${p}.hpp`, hpp); await save(`${p}.hpp`, hpp);
+			await save("consumer-header.cpp", `#include "${p}.hpp"\n`);
+			await run(environment.CXX ?? "c++", ["-std=c++20", "-Wall", "-Wextra", "-Werror", "-fsyntax-only", "-I.", "consumer-header.cpp"], app);
+		}
 		files.set(`lib/pkgconfig/${name}.pc`, `prefix=\${pcfiledir}/../..
 includedir=\${prefix}/include
 libdir=\${prefix}/lib
 Name: ${name}
-Description: Compiled Lean C11 tasks
+Description: Compiled Lean ${cpp ? "C++20" : "C11"} tasks
 Version: ${version}
-Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}
-Cflags: -I\${includedir}
+Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}${cpp ? " -pthread" : ""}
+Cflags: -I\${includedir}${cpp ? " -pthread" : ""}
 `);
-		files.set(`lib/cmake/${cmakePackage}/${cmakePackage}Config.cmake`, `if(NOT TARGET ${cmakeTarget})
+		files.set(`lib/cmake/${cmakePackage}/${cmakePackage}Config.cmake`, `if(NOT TARGET ${cmakeTarget})${cpp ? "\n  include(CMakeFindDependencyMacro)\n  find_dependency(Threads)" : ""}
   get_filename_component(_lb_root "\${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
   add_library(${cmakeTarget} SHARED IMPORTED)
-  set_target_properties(${cmakeTarget} PROPERTIES IMPORTED_LOCATION "\${_lb_root}/lib/${library}" INTERFACE_INCLUDE_DIRECTORIES "\${_lb_root}/include")
+  set_target_properties(${cmakeTarget} PROPERTIES IMPORTED_LOCATION "\${_lb_root}/lib/${library}" INTERFACE_INCLUDE_DIRECTORIES "\${_lb_root}/include"${cpp ? ' INTERFACE_COMPILE_FEATURES "cxx_std_20" INTERFACE_LINK_LIBRARIES "Threads::Threads"' : ""})
   unset(_lb_root)
 endif()
 `);
@@ -114,12 +130,13 @@ endif()
 		for(const [path, bytes] of Object.entries(projectContract.notices)) files.set(`${share}/licenses/${path}`, bytes);
 		files.set("package-metadata.json", canonicalJson(projectContract.metadata ?? {}));
 		files.set("README.md", `# ${name} ${version}\n\nLinux x86-64, glibc ${floor} or later. Include ${p}.h and link with pkg-config package ${name} or CMake target ${cmakeTarget} (find_package(${cmakePackage} CONFIG REQUIRED)). The shared Lean runtime initializes automatically.\n\nUse the API on the process main thread. Zero-initialize handles. A task starts immediately; a stream starts its factory but does not pull until _pull. Only one pull can be outstanding. _poll returns OK when ready, or PENDING with a borrowed descriptor: wait for readability without reading or closing it. _take never blocks. A task result, stream END or failed step consumes the handle; a stream item leaves it idle. _close cancels outstanding work without waiting for it. Copied stale handles do not become valid again. Dispose owned output buffers (including nested results) before reuse. String inputs are strict length-delimited UTF-8. IO_ERROR, typed failures, and returned Except values are distinct.\n`);
+		if(cpp) files.set("README.md", `# ${name} ${version}\n\nInclude ${p}.hpp and use namespace lean_bridge::${p}. Linux x86-64, glibc ${floor} or later; the matching Lean runtime is included. Link CMake target ${cmakeTarget} (find_package(${cmakePackage} CONFIG REQUIRED)), or use C++20 and pkg-config ${name}.\n\nA function returning Future<T> starts a real Lean task. Use .get() or co_await on the main thread. Stream<T>::next() requests precisely one item and returns a Future<std::optional<T>>; empty means exhausted. A returned Result<T,E> is a variant of Ok<T> and Err<E>; IOError, StartError<E> and StepError<E> represent three different failure channels. Tasks and streams are move-only. Explicit cancel()/close(), scope exit and coroutine abandonment release pending work. Worker-thread disposal queues cleanup until the main thread pumps or enters an API; it never invokes Lean on the worker. Routine<T>::get() drives suspended C++20 coroutines using poll, without a worker or timer. An application with its own main loop may call run_one(timeout_ms). Destroy externally owned suspended coroutine frames on that same thread. shutdown() permanently stops this C++ dispatcher, cancelling its owners; pump outstanding waiters to observe Cancelled.\n`);
 		const records = [...files].map(([path, value]) => ({ path, bytes: Buffer.isBuffer(value) ? value : Buffer.from(value), mode: 0o644 }));
 		const inventory = Object.fromEntries(records.map(f => [f.path, { bytes: f.bytes.length, sha256: sha256(f.bytes) }]));
-		const component = projectContract.component, archiveRoot = `${name}-${version}-c`;
+		const component = projectContract.component, archiveRoot = `${name}-${version}-${target}`;
 		const pkg = { schemaVersion: 1
 			, kind: "lean-bridge-native-c-package"
-			, ecosystem: "c"
+			, ecosystem: target
 			, name
 			, version
 			, component
@@ -131,6 +148,7 @@ endif()
 			, cmakePackage
 			, cmakeTarget
 			, pkgConfig: name
+			, ...(cpp ? { cppNamespace: `lean_bridge::${p}`, cppStandard: 20 } : {})
 			, files: inventory };
 		records.push({ path: "lean-bridge-package.json", mode: 0o644, bytes: Buffer.from(canonicalJson(pkg)) });
 		const data = createDeterministicTarGzFromFiles({ files: records.map(f => ({ ...f, path: `${archiveRoot}/${f.path}` })), sourceDateEpoch: 1 });
@@ -140,8 +158,8 @@ endif()
 			, component
 			, source: { treeSha256: projectContract.sourceTreeSha256 }
 			, profiles: [{ id: profile, bindingIrSha256, runtimeIdentity }], signal
-			, packages: [{ target: "c"
-				, ecosystem: "c"
+			, packages: [{ target
+				, ecosystem: target
 				, name
 				, version
 				, profile

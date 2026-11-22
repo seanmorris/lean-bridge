@@ -69,7 +69,8 @@ project. Each build checks the signatures against fresh Lean interfaces.
 The `native-c-task-v1` archive accepts fixed-width and machine-word integers,
 floats, `Bool`, `Char`, `Unit`, UTF-8 strings and byte arrays. A result or
 typed error may also contain nested `Except` values. This profile does not
-narrow `Nat` or `Int`, package callbacks or resources, or produce C++ bindings.
+narrow `Nat` or `Int`, or package callbacks or resources. Select `cpp` separately
+for [C++20 futures and streams](cpp.md#export-tasks-and-streams).
 The [Lean source](../../tests/fixtures/c-lean-tasks/Pulse.lean) and
 [installed C consumer](../consume/c.md#wait-for-a-task-or-pull-a-stream) show
 the producer and consumer sides of the same package. The

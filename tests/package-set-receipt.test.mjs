@@ -66,6 +66,21 @@ test("C task receipts require a C archive with an embedded runtime, not a Python
 		assert.throws(() => validatePackageSetReceipt({ ...tasks, packages: [{ ...c, ...patch }] }));
 });
 
+test("C++ task receipts require a C++ component archive with an embedded runtime", async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const cpp = structuredClone(receipt.packages.find(p => p.target === "cpp"));
+	const profile = { ...receipt.profiles.find(p => p.id === cpp.profile), id: "native-cpp-task-v1" };
+	cpp.profile = profile.id;
+	const tasks = { ...receipt, profiles: [profile], packages: [cpp] };
+	await assertJsonSchema("package-set-receipt", tasks);
+	assert.equal(validatePackageSetReceipt(tasks), true);
+	for(const patch of [
+		{ ecosystem: "c", target: "c" }
+		, { role: "runtime", runtimeDelivery: "provided" }
+		, { runtimeDelivery: "dependency" }
+	]) assert.throws(() => validatePackageSetReceipt({ ...tasks, packages: [{ ...cpp, ...patch }] }));
+});
+
 test("one closed receipt covers every ordinary package ecosystem and deterministically records its archives", async t => {
 	const handoff = await createPackageSetHandoff(t);
 	await assertJsonSchema("package-set-receipt", handoff.receipt);

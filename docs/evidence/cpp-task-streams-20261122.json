@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "profile": "native-cpp-task-v1",
+  "observed": "2026-11-22",
+  "platform": "Linux x86-64 (glibc 2.36 test host; advertised archive floor 2.38)",
+  "lean": "4.32.2",
+  "compiler": "c++ (Debian 12.2.0-14+deb12u1) 12.2.0",
+  "cmake": "cmake version 3.31.6",
+  "producer": "tests/fixtures/c-lean-tasks/Pulse.lean",
+  "consumer": "tests/fixtures/cpp-lean-tasks/consumer.cpp",
+  "consumerSha256": "f91af85a3d05026a4d8e76aed888654271e8314dc9a5b6b011191df61745d16d",
+  "bindingIrSha256": "c3d949a9273dedc5f38155a919b55371792f4af784419876906e00be16d5a56d",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "observations": [
+    "Each release was independently elaborated, compiled and verified. The reviewed route reconciled the ordinary route's public binding IR against fresh compiler output.",
+    "After deleting the producer project, the test moved the installed tree, linked a consumer with pkg-config and separately with the imported CMake target, and checked that all three shared libraries resolved inside that tree.",
+    "Blocking .get(), native co_await (including a separate host coroutine type), nested Routine<void>/Routine<T>, immediate tasks and descriptor-backed waits ran against real Lean tasks.",
+    "Exactly one outstanding stream demand, no prefetch, repeated exhaustion, early break, a returned Except.error item, typed step failure, cancellation during a pull and exactly-once cursor close.",
+    "IO start failure, typed EIO factory rejection, returned error-as-value and invalid arguments stay distinct. A signed 64-bit minimum, UTF-8 with embedded NUL and binary bytes survived the boundary.",
+    "Moved-from and consumed owners, duplicate waiters, rejected rvalue claims without loss of ownership, wrong thread and post-fork calls, worker-thread disposal, abandoned peer coroutine frames, late results and dispatcher shutdown."
+  ],
+  "releases": [
+    {
+      "route": "ordinary",
+      "sourceTreeSha256": "fe89eae70a1251264ca9c452935630505f54f939f0adecd4afcbcf3b9221ced9",
+      "componentIdentity": "fc370a513865f0aef42f702050896548055b1616124b21bedb1999f5e0f1439f",
+      "packageSetReceiptSha256": "6bbd44b66749fc5b78558941cfb437624d57c502e493069e3ab7a50b70824faf",
+      "archive": {
+        "bytes": 51337233,
+        "path": "archives/pulse-1.0.0-cpp.tar.gz",
+        "sha256": "dfe0c7e0b452fe0734f9164e02c99894beffeaf8249ab562351d37b12fd3cafb"
+      },
+      "consumerInstallations": [
+        "pkg-config",
+        "CMake"
+      ],
+      "result": "passed"
+    },
+    {
+      "route": "reviewed",
+      "sourceTreeSha256": "8f3e9bcbe8e4c720991d6baeace0791fad202114e23c0d550b4be7c40c3bbb49",
+      "componentIdentity": "c2660720fe89835746098384a2b256a58491896cba240d9c80bba166e0576601",
+      "packageSetReceiptSha256": "e37436a813d32cad0a2e6ed9445ab830035b3cc2b6cdc3e08a8869742f70662e",
+      "archive": {
+        "bytes": 51337299,
+        "path": "archives/pulse-1.0.0-cpp.tar.gz",
+        "sha256": "32f84fd80e76b7f913f302bba5e2a28dbf8f9b602f86d30bdb11d727a59a809a"
+      },
+      "consumerInstallations": [
+        "pkg-config",
+        "CMake"
+      ],
+      "result": "passed"
+    }
+  ],
+  "sanitizer": {
+    "archiveRoute": "ordinary",
+    "compileFlags": "-std=c++20 -O0 -g1 -fno-omit-frame-pointer -fsanitize=address,undefined -no-pie -Wall -Wextra -Werror",
+    "runtimeOptions": "ASAN_OPTIONS=detect_leaks=0:abort_on_error=1 UBSAN_OPTIONS=halt_on_error=1",
+    "instrumented": "The installed C++ consumer and header-only dispatcher, not the bundled C/Lean shared libraries. Leak detection was not run.",
+    "result": "passed"
+  },
+  "scope": "Local installed-package evidence for the Linux C++20 task profile. Not full-matrix acceptance for arbitrary-precision integers, resources, callback payloads, OS effects or other schedulers.",
+  "reproduce": "LEAN_BRIDGE_CPP_TASK_TEST=1 node --test --test-concurrency=1 tests/helpers/cpp-task-installed.mjs",
+  "replay": "Set LEAN_BRIDGE_CPP_TASK_REPLAY_DIR to the trusted release evidence directory containing ordinary/ and reviewed/, leave LEAN_BRIDGE_CPP_TASK_TEST unset, and run the same test file. It verifies, extracts, relocates, links and executes the two original archives without rebuilding Lean."
+}

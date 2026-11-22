@@ -75,7 +75,7 @@ export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
 	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
-	if(targets.length !== 1 || !["c", "pypi"].includes(target)) fail("Task and async iterator builds require a single c or pypi target");
+	if(targets.length !== 1 || !["c", "cpp", "pypi"].includes(target)) fail("Task and async iterator builds require one c, cpp or pypi target");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
@@ -148,9 +148,9 @@ export const buildHostProject = async options => {
 			, name
 			, version };
 		let artifact, receipt;
-		if(target === "c")
+		if(target === "c" || target === "cpp")
 		{
-			artifact = await buildCTaskPackage(common); receipt = artifact.receipt;
+			artifact = await buildCTaskPackage({ ...common, target }); receipt = artifact.receipt;
 		}
 		else
 		{

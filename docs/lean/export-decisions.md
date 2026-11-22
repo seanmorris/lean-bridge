@@ -26,7 +26,7 @@ declarations of the host methods they call.
 | Resources, host objects, mutable members | Declare identity, ownership, borrowing, transfer, and disposal. Keep incompatible runtimes separate. |
 | Callbacks and returned closures | Specify argument/result types, retention, reentry, failure behavior, and lifetime. |
 | `IO`, `EIO`, declared errors | Preserve effect order and typed failures. An IO action is not automatically asynchronous. |
-| `Task`, cancellation, iterators, async iterators | Select a real Lean task with `taskExports`, or a cursor factory, pull, and close with `asyncIterators`. Linux CPython exposes [awaitables](../publish/pypi.md#export-a-lean-task-to-asyncio) and [async iterators](../publish/pypi.md#export-an-async-iterator); Linux C11 exposes [nonblocking handles with waitable descriptors](../publish/c.md#export-tasks-and-pull-streams). |
+| `Task`, cancellation, iterators, async iterators | Select a real Lean task with `taskExports`, or a cursor factory, pull, and close with `asyncIterators`. Linux CPython exposes [awaitables](../publish/pypi.md#export-a-lean-task-to-asyncio) and [async iterators](../publish/pypi.md#export-an-async-iterator); Linux C11 exposes [waitable descriptors](../publish/c.md#export-tasks-and-pull-streams), and C++20 exposes [move-only futures and pull streams](../consume/cpp.md#await-a-task-or-pull-a-stream). |
 
 These decisions define the full authoring work. A listed form becomes usable in a profile when its compiler, generated API, package, and installed checks support that mapping. The [implementation stages](../architecture/cross-language-authoring.md#stages) track the remaining work.
 

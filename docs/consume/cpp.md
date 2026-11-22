@@ -86,6 +86,53 @@ Expected output:
 Box: 42; payload: 42; callback: 44; closure: 42
 ```
 
+## Await a task or pull a stream
+
+For a package marked `native-cpp-task-v1`, include the C++ header and link
+the CMake target or pkg-config package in its manifest. The prepared archive
+includes Lean's runtime. In the `pulse` example:
+
+```cpp
+#include <lbc_pulse.hpp>
+namespace pulse = lean_bridge::lbc_pulse;
+
+pulse::Routine<unsigned> count_items() {
+    auto stream = pulse::series(false, false, "example");
+    unsigned count = 0;
+    while (auto item = co_await stream.next()) ++count;
+    co_return count;
+}
+
+int main() { return count_items().get() == 2 ? 0 : 1; }
+```
+
+A task starts at the call. Await its `Future<T>`, or call `.get()` if a blocking
+wait is appropriate. A stream waits for `.next()` before requesting an item;
+only one pull can be outstanding. `std::nullopt` means exhaustion. A returned
+`Result<T,E>` is a variant of `Ok<T>` and `Err<E>`: either branch can be a
+stream item. Catch `IOError` for a Lean IO failure, `StartError<E>` for a typed
+factory failure and `StepError<E>` for a typed pull failure. Each carries the
+Lean declaration and its payload or message.
+
+Tasks and streams are move-only. Scope exit or explicit `.cancel()` / `.close()`
+requests cleanup without waiting for non-cooperative work. A pending waiter
+receives `Cancelled`; a second waiter on the same operation receives `Busy`.
+Start, await and resume on the process main thread. Dropping an owner on a
+worker sends cleanup to the main thread; it runs when the dispatcher pumps or
+the application next enters a generated function. `Routine<T>::get()` drives bridge waits with
+`poll(2)`, not a timer or one thread per task. A host with its own coroutine
+type may drive the dispatcher with `run_one(timeout_ms)`: zero checks without
+blocking, and a positive timeout is in milliseconds. Resume and destroy
+its suspended frames on that thread. `shutdown()` cancels active owners and
+rejects new work. Pump existing waiters to receive `Cancelled`.
+
+The [installed example](../../tests/fixtures/cpp-lean-tasks/consumer.cpp) also
+exercises nested coroutines, cancellation while a pull is pending, and cleanup
+when a suspended coroutine is abandoned. This is a separate package profile
+from the general [type conversion matrix](#type-conversions). Its installed
+tests cover the [listed task payloads](../publish/cpp.md#export-tasks-and-streams),
+not arbitrary resource or callback values.
+
 ## Values and cleanup
 
 Ordinary-source arrays become `std::vector<T>`, and records become generated structs with owned fields. Both can nest; `Array Bool` uses `std::vector<bool>`. The wrapper keeps input views alive through the call and releases the intermediate C result even if copying a nested result throws. Returned C++ values are independent of the inputs and need no explicit cleanup.
@@ -676,6 +723,10 @@ generic Subtypes beyond the closed `GenericNat` alias, remain pending.
 The [hosted generic-Subtype matrix](../evidence/generic-subtype-promotion-20261023.md) installs the closed `GenericNat` alias of `GenericCarrier Nat` on ordinary-source and reviewed-IR packages across the sixteen non-PHP-Wasm consumer profiles. Its selected `Positive` field crosses as a proof-erased value beside a retained `Nat` marker, and the two named specializations keep their distinct `plusOne` and `plusTwo` constructors. Rejection preserves the caller record, a later valid call recovers, and copied results carry no constructor. PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence.
 
 The [hosted value-index matrix](../evidence/checked-record-value-index-matrix-promotion-20261020.md) retains ordinary-source and reviewed C++ packages for closed `Bool`, `String`, and `Nat` indexed records. Indices remain metadata; callers pass only the generated proof-free multiprecision payload fields.
+
+For Linux C++20 task packages, see [Await a task or pull a stream](#await-a-task-or-pull-a-stream).
+The table below records general C++ conversion coverage; its unaudited async
+row does not describe the separate `native-cpp-task-v1` package.
 
 ### Type conversions
 

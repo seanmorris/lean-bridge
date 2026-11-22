@@ -6,9 +6,9 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 ## Build an ordinary Lean project
 
-Use the [ordinary C/C++ build](c.md#build-an-ordinary-lean-project) with `--target cpp`. Select `--target c --target cpp` to produce both archives from one native compilation. The author needs Node 22, Lean 4.32.2, C11 and C++20 compilers, and binutils on Linux x86-64; consumers need only their C++ toolchain and the prepared archive.
+Use the [ordinary C/C++ build](c.md#build-an-ordinary-lean-project) with `--target cpp`. For synchronous exports, select `--target c --target cpp` to produce both archives from one native compilation. For tasks and streams, select `cpp` alone. The author needs Node 22, Lean 4.32.2, C11 and C++20 compilers, and binutils on Linux x86-64; consumers need only their C++ toolchain and the prepared archive.
 
-The generated namespace follows the source component. A project named `sample` produces `sample.hpp` and functions in `lean_bridge::sample`. Fixed-width integers use exact-width C++ types, `String` becomes `std::string`, and `ByteArray` becomes `std::vector<uint8_t>`. Both `Nat` and `Int` use `boost::multiprecision::cpp_int`; negative `Nat` inputs raise `Error` before Lean runs. Unit parameters use `std::monostate`, and Unit results return `void`.
+For synchronous exports, the generated namespace follows the source component. A project named `sample` produces `sample.hpp` and functions in `lean_bridge::sample`. Fixed-width integers use exact-width C++ types, `String` becomes `std::string`, and `ByteArray` becomes `std::vector<uint8_t>`. Both `Nat` and `Int` use `boost::multiprecision::cpp_int`; negative `Nat` inputs raise `Error` before Lean runs. Unit parameters use `std::monostate`, and Unit results return `void`.
 
 Packages using `Nat` or `Int` include pinned Boost.Multiprecision and Boost.Config 1.90.0 headers and their Boost Software License. Builds and downstream installs need no Boost download. CMake and pkg-config supply `BOOST_MP_STANDALONE`; use the packaged include path and this same mode throughout your application. The package records dependency sources and file hashes in `share/lean-bridge/boost.json`.
 
@@ -34,6 +34,36 @@ name collisions fail before packaging. See
 C++ results own their data. Scoped input views keep nested buffers alive through the call. Generated wrappers free intermediate C results on success and exceptions, including allocation failures partway through a nested result. Invalid UTF-8 or an exceeded copy budget raises the generated `Error` with the underlying status and code. C++ allocation failures propagate as `std::bad_alloc`. The [type conversion table](../consume/cpp.md#type-conversions) records installed coverage by position.
 
 Set `targets.cpp.name` and `targets.cpp.version` in `lean-bridge.exports.json` to choose archive coordinates. The package includes the C API, native libraries, matching runtime, CMake and pkg-config metadata. C++ does not require a separately installed C package or Lean runtime.
+
+## Export tasks and streams
+
+Declare a real Lean `Task` in `taskExports`. For a stream, put its factory,
+pull and close functions in `asyncIterators`. The compiler checks the same
+[Lean signatures as the C task profile](c.md#export-tasks-and-pull-streams).
+A synchronous `IO` function stays synchronous. Use `targets.cpp.name` and
+`targets.cpp.version` for the archive coordinates and build one C++ release:
+
+```sh
+lean-bridge build --project ./pulse --target cpp --output ./release-cpp
+lean-bridge verify --receipt ./release-cpp/package-set-receipt.json
+```
+
+The `native-cpp-task-v1` archive contains a C++20 header, the compiled component
+and its shared runtime. The producer typechecks the public header before
+packaging. Supplying a reviewed `.binding-ir.json` does not replace fresh
+elaboration. The manifest names the C++ namespace, CMake target and pkg-config
+package. The receipt’s archive digest covers the C++ headers, build metadata
+and native libraries.
+The [C++ consumer](../consume/cpp.md#await-a-task-or-pull-a-stream)
+uses owning C++ values; no application code passes C handles or Lean pointers.
+
+Task and stream payloads can use fixed-width and machine-word integers,
+`Char`, `Bool`, both float widths, `Unit`, strings, byte arrays and nested
+returned `Except`. This profile rejects `Nat`, `Int`, callback and resource
+payloads. The synchronous Boost integer mapping does not narrow them into the
+task ABI. The [installed release evidence](../evidence/cpp-task-streams-20261122.json)
+records which archives, compilers and consumer builds were tested. It also shows
+how to repeat the checks from those archives without rebuilding Lean.
 
 ## Copied tagged variants
 
