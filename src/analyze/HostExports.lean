@@ -27,9 +27,13 @@ structure Request where
   leanResources : Array String := #[]
   pythonTaskCallbacks : Option Bool := none
   rustTaskCallbacks : Option Bool := none
+  cppTaskCallbacks : Option Bool := none
   taskIOErrors : Option (Array String) := none
   members : Array String
   deriving FromJson
+
+def Request.ownerTaskCallbacks (r : Request) : Bool :=
+  r.pythonTaskCallbacks.getD false || r.rustTaskCallbacks.getD false || r.cppTaskCallbacks.getD false
 
 def primitives : List (Name × String) := [
   (``Unit, "unit"), (``Bool, "bool"), (``Char, "char"), (``String, "string"),
@@ -71,7 +75,7 @@ def delivered (r : Request) (e : Expr) : MetaM Json := do
 
 /-- An actual unary, nondependent IO function, not a foreign host object or a pure borrow. -/
 def taskInput (r : Request) (e : Expr) : MetaM Json := do
-  if r.pythonTaskCallbacks.getD false || r.rustTaskCallbacks.getD false then
+  if r.ownerTaskCallbacks then
     if let .forallE _ a b .default := (← instantiateMVars e).consumeMData then
       let b := b.consumeMData
       unless !b.hasLooseBVars && b.getAppFn.constName? == some ``IO && b.getAppArgs.size == 1 do
@@ -238,7 +242,7 @@ def extract (r : Request) : MetaM Json := do
         noWorkerHost r deps n
         let payload := task.getAppArgs[0]!
         let (value, terminal) ← if (r.taskIOErrors.getD #[]).contains publicName then do
-          unless (r.pythonTaskCallbacks.getD false || r.rustTaskCallbacks.getD false) && payload.getAppFn.constName? == some ``Except && payload.getAppArgs.size == 2 &&
+          unless r.ownerTaskCallbacks && payload.getAppFn.constName? == some ``Except && payload.getAppArgs.size == 2 &&
               payload.getAppArgs[0]!.isConstOf ``IO.Error do
             throwError "taskIOErrors requires Task (Except IO.Error value): {n}"
           pure (payload.getAppArgs[1]!, [("taskIO", toJson true)])

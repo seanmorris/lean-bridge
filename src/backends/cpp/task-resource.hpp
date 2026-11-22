@@ -1,8 +1,8 @@
 // One C++ type for the same compiler-verified nominal across component headers.
-#ifndef LEAN_BRIDGE_CPP_TASK_RESOURCE_V1_HPP
-#define LEAN_BRIDGE_CPP_TASK_RESOURCE_V1_HPP
+#ifndef LEAN_BRIDGE_CPP_TASK_RESOURCE_V2_HPP
+#define LEAN_BRIDGE_CPP_TASK_RESOURCE_V2_HPP
 #include "task-loop.hpp"
-namespace lean_bridge::async_v1 {
+namespace lean_bridge::async_v2 {
 template<class R> class Resource;
 namespace detail {
 template<class R> struct LeaseOps {

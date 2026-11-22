@@ -148,6 +148,43 @@ by the call’s arguments; an oversized input or result throws `std::length_erro
 The [installed C++ example](../../tests/fixtures/exact-task-integers/consumer.cpp)
 uses `co_await` with the same integer type in values and errors.
 
+### Pass a callback to a Lean task
+
+Pass a lambda to the generated function. In this example Lean calls the lambda
+twice. The call starts the task; `.get()` or `co_await` lets its callbacks run
+on the process main thread, even if Lean needs an answer before its factory
+returns. No worker calls your C++ code.
+
+If your application drives the dispatcher with `run_one()`, the callbacks
+also run before anyone awaits the future. On completion the dispatcher
+releases the callable and saves the result or exception for the first waiter.
+
+```cpp
+#include <lbc_cpp_retained.hpp>
+
+inline std::string guide_example() {
+    using lean_bridge::lbc_cpp_retained::repeat_call;
+    return repeat_call("hello", [](std::string s) { return s + "!"; }).get();
+}
+```
+
+The future owns the callable, including a move-only capture. For early
+revocation, pass a `RetainedCallback<R(A)>` and call its `.close()`. A call
+already executing can finish; the next one throws `CallbackClosed`. Cancelling
+the future releases its copy without invoking a queued callback.
+
+If Lean propagates a callback's original `std::exception`, the future rethrows
+that exception with its C++ payload. If Lean catches it or throws a new error
+with the same message, it does not become the original exception.
+`TaskIOError` denotes a declared terminal Lean IO failure; `IOError` denotes a
+factory IO failure. A non-standard C++ exception from the callback retires the
+shared native runtime and reports `CallbackTrap`. The dispatcher wakes its
+other pending waiters with `Unavailable`; they do not have to wait for their
+Lean tasks to finish.
+
+The [installed callback checks](../evidence/cpp-retained-tasks-20261122.json)
+identify both archives and the client that exercised these behaviors.
+
 ## Values and cleanup
 
 Ordinary-source arrays become `std::vector<T>`, and records become generated structs with owned fields. Both can nest; `Array Bool` uses `std::vector<bool>`. The wrapper keeps input views alive through the call and releases the intermediate C result even if copying a nested result throws. Returned C++ values are independent of the inputs and need no explicit cleanup.

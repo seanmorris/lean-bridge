@@ -1,6 +1,6 @@
 // Public C++20 task/stream types, independent of the private C handle layout.
-#ifndef LEAN_BRIDGE_CPP_TASK_VALUES_V1_HPP
-#define LEAN_BRIDGE_CPP_TASK_VALUES_V1_HPP
+#ifndef LEAN_BRIDGE_CPP_TASK_VALUES_V2_HPP
+#define LEAN_BRIDGE_CPP_TASK_VALUES_V2_HPP
 #include "task-loop.hpp"
 #include <functional>
 #include <optional>
@@ -9,13 +9,18 @@
 #include <type_traits>
 #include <variant>
 
-namespace lean_bridge::async_v1 {
+namespace lean_bridge::async_v2 {
 template<class T> struct Ok { T value; friend bool operator==(const Ok&, const Ok&) = default; };
 template<class E> struct Err { E value; friend bool operator==(const Err&, const Err&) = default; };
 template<class T, class E> using Result = std::variant<Ok<T>, Err<E>>;
 struct IOError : std::runtime_error {
     std::string declaration, message;
     IOError(std::string_view d, std::string v) : runtime_error(v), declaration(d), message(std::move(v)) {}
+};
+struct TaskIOError : IOError { using IOError::IOError; };
+struct CallbackTrap : std::runtime_error {
+    std::string declaration;
+    explicit CallbackTrap(std::string_view d) : runtime_error("unexpected C++ exception; Lean runtime retired"), declaration(d) {}
 };
 template<class E> struct StartError : std::runtime_error {
     std::string declaration; E payload;
@@ -33,30 +38,76 @@ template<class T> struct Pending final : Control {
     std::function<int()> interest;
     std::function<V()> take;
     std::function<void()> close;
+    std::function<void()> callbacks;
+    std::exception_ptr dispatch_error;
+    std::optional<V> cached;
     Watch watch;
-    bool claimed = false, cancelled = false;
-    Pending(Loop &l, std::function<int()> p, std::function<V()> t, std::function<void()> c)
-        : Control(l), interest(std::move(p)), take(std::move(t)), close(std::move(c)) {}
+    bool claimed = false, cancelled = false, buffered = false, poisoned = false;
+    Pending(Loop &l, std::function<int()> p, std::function<V()> t, std::function<void()> c,
+            int callback_fd = -1, std::function<void()> service = {})
+        : Control(l), interest(std::move(p)), take(std::move(t)), close(std::move(c)), callbacks(std::move(service)) {
+        watch.callback_fd = callback_fd; watch.owner = this;
+        watch.dispatch = [](void *p) noexcept { static_cast<Pending *>(p)->dispatch(); };
+        watch.unclaimed_ready = [](void *p) noexcept { static_cast<Pending *>(p)->collect(); };
+    }
+    void arm() { if (callbacks) home.add(watch, interest(), {}); }
+    void store_terminal(bool poison = false) noexcept {
+        buffered = true; unlink(); watch.fd = -1;
+        if (!claimed) home.remove(watch);
+        if (poison) home.poison(); // Preserve the origin first, then wake even peers parked on unrelated tasks.
+        close(); clear();
+    }
+    void collect() noexcept {
+        if (claimed || !live() || !callbacks) return;
+        auto keep = shared_from_this();
+        try { cached.emplace(take()); } catch (...) { dispatch_error = std::current_exception(); }
+        // Release closures and the native port now, not when someone eventually asks for the cached result.
+        store_terminal();
+    }
+    void dispatch() noexcept {
+        // Pin the operation and callable across arbitrary host reentry, including cancellation of this future.
+        auto keep = shared_from_this(); watch.dispatching = true;
+        try { auto work = callbacks; if (live() && work) work(); }
+        catch (const CallbackTrap&) {
+            if (live()) { dispatch_error = std::current_exception(); store_terminal(true); }
+            else home.poison(); // A self-cancelled invocation cannot reverse the process-wide trap.
+        }
+        catch (...) { if (live()) { dispatch_error = std::current_exception(); store_terminal(); } }
+        watch.dispatching = false;
+    }
     void claim() {
         home.check();
+        if (home.poisoned() && live()) cancel_here();
+        if (poisoned) throw Unavailable{};
         if (cancelled) throw Cancelled{};
-        if (!live()) throw Closed{};
-        if (claimed) throw Busy{};
+        if (!live() && !buffered) throw Closed{};
+        if (claimed || watch.dispatching) throw Busy{};
         claimed = true;
     }
-    void clear() noexcept { interest = {}; take = {}; close = {}; }
+    void clear() noexcept { interest = {}; take = {}; close = {}; callbacks = {}; watch.callback_fd = -1; }
     void cancel_value() noexcept override {
-        cancelled = true; watch.fd = -1;
+        poisoned = home.poisoned(); cancelled = true; watch.fd = -1;
+        if (!claimed) home.remove(watch);
         close(); clear();
     }
     int ready_fd() {
         home.check(); home.drain();
-        if (cancelled) return -1;
+        if (home.poisoned() && live()) cancel_here();
+        if (cancelled || buffered) return -1;
         if (!live()) throw Closed{};
-        try { return interest(); } catch (...) { cancel_here(); throw; }
+        try { int fd = interest(); if (fd < 0 && !watch.dispatching) collect(); return fd; }
+        catch (...) { cancel_here(); throw; }
     }
     V finish() {
         home.check(); home.drain();
+        home.remove(watch);
+        if (home.poisoned() && live()) cancel_here();
+        if (poisoned) throw Unavailable{};
+        if (buffered) {
+            buffered = false;
+            if (auto e = std::exchange(dispatch_error, {})) std::rethrow_exception(e);
+            V v = std::move(cached).value(); cached.reset(); return v;
+        }
         if (cancelled) throw Cancelled{};
         if (!live()) throw Closed{};
         try { V v = take(); unlink(); clear(); return v; }
@@ -117,8 +168,9 @@ public:
 
 namespace detail {
 template<class T, class P, class F, class C>
-Future<T> future(Loop &l, P &&poll, F &&take, C &&close) {
-    return Future<T>(std::make_shared<Pending<T>>(l, std::forward<P>(poll), std::forward<F>(take), std::forward<C>(close)));
+Future<T> future(Loop &l, P &&poll, F &&take, C &&close, int callback_fd = -1, std::function<void()> service = {}) {
+    auto state = std::make_shared<Pending<T>>(l, std::forward<P>(poll), std::forward<F>(take), std::forward<C>(close), callback_fd, std::move(service));
+    state->arm(); return Future<T>(std::move(state));
 }
 template<class T> struct Cursor final : Control {
     using Item = std::optional<T>;
@@ -168,5 +220,5 @@ public:
     void close() noexcept { if (state_) state_->request_cancel(); }
     Future<std::optional<T>> next() { if (!state_) throw Closed{}; return state_->next(); }
 };
-} // namespace lean_bridge::async_v1
+} // namespace lean_bridge::async_v2
 #endif

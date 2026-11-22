@@ -65,6 +65,7 @@ export const compileHostSources = async options => {
 		, leanResources: projectContract.leanResources ?? []
 		, ...(options.python && projectContract.taskExports?.length ? { pythonTaskCallbacks: true } : {})
 		, ...(options.target === "cargo" && projectContract.taskExports?.length ? { rustTaskCallbacks: true } : {})
+		, ...(options.target === "cpp" && projectContract.taskExports?.length ? { cppTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []

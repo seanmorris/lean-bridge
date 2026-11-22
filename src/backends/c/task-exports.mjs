@@ -23,7 +23,7 @@ export const generateCTaskExports = options => {
 	const p = `lbc_${name.replaceAll(/[-.]/gu, "_")}`, gmp = options.integerMode !== "words", resources = taskResourceTypes(options.resources);
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
-	if((retained || entries.some(e => e.taskIO)) && (!options.rustCallbacks || gmp)) throw new TypeError("This task callback ABI requires Rust word carriers");
+	if((retained || entries.some(e => e.taskIO)) && (Boolean(options.rustCallbacks) === Boolean(options.cppCallbacks) || gmp)) throw new TypeError("This task callback ABI requires Rust or C++ word carriers");
 	if(options.integerMode && !["gmp", "words"].includes(options.integerMode)) throw new TypeError("Unknown task integer ABI");
 	const types = [], prototypes = [], functions = [], symbols = [`${p}_buffer_dispose`];
 	const names = new Set(), declarations = [
@@ -41,6 +41,7 @@ export const generateCTaskExports = options => {
 		symbols.push(name); prototypes.push(signature + ";"); functions.push(`${signature} {\n    ${body}\n}`);
 	};
 	const resourceHeader = cResourceApi(p, resources, fn);
+	if(retained && options.cppCallbacks) fn(p + "_callback_trap", ["void"], "if (!lb_context()) return LB(WRONG_CONTEXT); lean_bridge_native_runtime_retire(); return LB(OK);");
 	const occupied = (t, v) => t?.resource ? ` || ${v}->_private[0] || ${v}->_private[1]` : "";
 	for(const [i, e] of entries.entries())
 	{
@@ -53,7 +54,7 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			emitRetainedTask({ e, i, n, h, p, values, types, fn, lean, declarations }); continue;
+			emitRetainedTask({ e, i, n, h, p, values, types, fn, lean, declarations, cpp: options.cppCallbacks, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");

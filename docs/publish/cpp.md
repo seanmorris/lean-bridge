@@ -53,7 +53,11 @@ and its shared runtime. The producer typechecks the public header before
 packaging. Supplying a reviewed `.binding-ir.json` does not replace fresh
 elaboration. The manifest names the C++ namespace, CMake target and pkg-config
 package. The receipt’s archive digest covers the C++ headers, build metadata
-and native libraries.
+and native libraries. Packages sharing a coroutine dispatcher should have the
+same `cppTaskSupportAbi` in their manifests. ABI 2 keeps its headers and C++
+types separate from the older completion-only dispatcher. An archive that
+omits the field uses ABI 1. The two can link into the same application, but
+their futures run on separate dispatchers.
 The [C++ consumer](../consume/cpp.md#await-a-task-or-pull-a-stream)
 uses owning C++ values; no application code passes C handles or Lean pointers.
 
@@ -71,6 +75,22 @@ cover cross-package identity, cancellation and disposal. The [exact-integer rece
 cover results, stream items and typed errors. The [task lifecycle evidence](../evidence/cpp-task-streams-20261122.json)
 records which archives, compilers and consumer builds were tested. It also shows
 how to repeat the checks from those archives without rebuilding Lean.
+
+### Export a callback-taking task
+
+Select the factory in `taskExports`. A parameter of type `α → IO β` becomes
+a synchronous C++ callable retained by the task. Both `α` and `β` must be
+copied primitives. `Unit` maps to an empty argument list or a `void` reply;
+`Nat` and `Int` use the archive's exact integer type.
+
+For example, an export with type
+`(String → IO String) → IO (Task (Except IO.Error String))` can also appear
+in `taskIOErrors`. Then an outer `.error` rejects the future; an ordinary
+returned `Except` remains a value. The compiler checks that exact shape on
+both source routes. A callback-taking factory runs off the owner thread so it
+can ask the caller for a value before it returns. Its failures arrive on
+await. A factory without callbacks still reports a start failure at the call.
+See the [C++ example](../consume/cpp.md#pass-a-callback-to-a-lean-task).
 
 ## Copied tagged variants
 

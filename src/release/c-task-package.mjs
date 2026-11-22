@@ -46,7 +46,7 @@ export const buildCTaskPackage = async options => {
 		const bindingIrSha256 = hashBindingIr(api), profile = cpp ? "native-cpp-task-v1" : "native-c-task-v1";
 		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
-		const config = { name, modules: projectContract.modules, entries, resources, rustCallbacks: rust, integerMode: cpp || rust ? "words" : "gmp" };
+		const config = { name, modules: projectContract.modules, entries, resources, rustCallbacks: rust, cppCallbacks: cpp, integerMode: cpp || rust ? "words" : "gmp" };
 		const callbackHeaders = new Map();
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
@@ -153,7 +153,7 @@ export const buildCTaskPackage = async options => {
 		files.set(`include/${p}.h`, gen.header);
 		if(cpp)
 		{
-			const dir = "lean_bridge/async_v1", hpp = generateCppTaskHeader({ prefix: p, entries, resources });
+			const dir = "lean_bridge/async_v2", hpp = generateCppTaskHeader({ prefix: p, entries, resources });
 			if(boost) for(const [path, value] of Object.entries(boost))
 			{
 				files.set(path, value);
@@ -165,7 +165,7 @@ export const buildCTaskPackage = async options => {
 				}
 			}
 			await mkdir(join(app, dir), { recursive: true });
-			for(const base of ["task-loop.hpp", "task-values.hpp", "task-routine.hpp", ...ledger ? ["task-resource.hpp"] : []])
+			for(const base of ["task-loop.hpp", "task-values.hpp", "task-routine.hpp", ...ledger ? ["task-resource.hpp"] : [], ...callbackHeaders.size ? ["task-callback.hpp"] : []])
 			{
 				const bytes = await asset(`../backends/cpp/${base}`);
 				files.set(`include/${dir}/${base}`, bytes); await save(`${dir}/${base}`, bytes);
@@ -198,6 +198,7 @@ endif()
 		files.set("package-metadata.json", canonicalJson(projectContract.metadata ?? {}));
 		files.set("README.md", `# ${name} ${version}\n\nLinux x86-64, glibc ${floor} or later. Include ${p}.h and link with pkg-config package ${name} or CMake target ${cmakeTarget} (find_package(${cmakePackage} CONFIG REQUIRED)). The shared Lean runtime initializes automatically.\n\nUse the API on the process main thread. Zero-initialize handles. A task starts immediately; a stream starts its factory but does not pull until _pull. Only one pull can be outstanding. _poll returns OK when ready, or PENDING with a borrowed descriptor: wait for readability without reading or closing it. _take never blocks. A task result, stream END or failed step consumes the handle; a stream item leaves it idle. _close cancels outstanding work without waiting for it. Copied stale handles do not become valid again. Dispose owned output buffers (including nested results) before reuse. String inputs are strict length-delimited UTF-8. IO_ERROR, typed failures, and returned Except values are distinct.\n`);
 		if(cpp) files.set("README.md", `# ${name} ${version}\n\nInclude ${p}.hpp and use namespace lean_bridge::${p}. Linux x86-64, glibc ${floor} or later; the matching Lean runtime is included. Link CMake target ${cmakeTarget} (find_package(${cmakePackage} CONFIG REQUIRED)), or use C++20 and pkg-config ${name}.\n\nA function returning Future<T> starts a real Lean task. Use .get() or co_await on the main thread. Stream<T>::next() requests precisely one item and returns a Future<std::optional<T>>; empty means exhausted. A returned Result<T,E> is a variant of Ok<T> and Err<E>; IOError, StartError<E> and StepError<E> represent three different failure channels. Tasks and streams are move-only. Explicit cancel()/close(), scope exit and coroutine abandonment release pending work. Worker-thread disposal queues cleanup until the main thread pumps or enters an API; it never invokes Lean on the worker. Routine<T>::get() drives suspended C++20 coroutines using poll, without a worker or timer. An application with its own main loop may call run_one(timeout_ms). Destroy externally owned suspended coroutine frames on that same thread. shutdown() permanently stops this C++ dispatcher, cancelling its owners; pump outstanding waiters to observe Cancelled.\n`);
+		if(cpp && callbackHeaders.size) files.set("README.md", files.get("README.md") + "\nPass a lambda for a retained task callback. Await on the main thread: the dispatcher watches both callback and completion descriptors. RetainedCallback<R(A)>::close() revokes future invocations. Propagated standard C++ exceptions retain their identity; TaskIOError is a terminal Lean error, and non-standard callback exceptions retire the shared runtime. Use C++ task support ABI 2 for packages that share a coroutine loop.\n");
 		if(integers) files.set("README.md", files.get("README.md") + (cpp
 			? "\nNat and Int use the bundled Boost.Multiprecision cpp_int. Negative Nat arguments reject before entering Lean. Task results and typed errors own their integer values.\n"
 			: "\nNat and Int use GMP mpz_t. Initialize direct integer result and error slots with mpz_init; dispose each once with mpz_clear. For a returned Except, zero-initialize the outer value and use its generated disposer; do not initialize or clear individual union members. Negative Nat inputs reject before entering Lean. GMP 6.3.0, notices and complete corresponding source are included.\n"));
@@ -221,7 +222,7 @@ endif()
 			, cmakePackage
 			, cmakeTarget
 			, pkgConfig: name
-			, ...(cpp ? { cppNamespace: `lean_bridge::${p}`, cppStandard: 20 } : {})
+			, ...(cpp ? { cppNamespace: `lean_bridge::${p}`, cppStandard: 20, cppTaskSupportAbi: 2 } : {})
 			, ...integers ? { exactIntegers: cpp ? "boost-1.90.0" : "gmp-6.3.0" } : {}
 			, files: inventory };
 		records.push({ path: "lean-bridge-package.json", mode: 0o644, bytes: Buffer.from(canonicalJson(pkg)) });

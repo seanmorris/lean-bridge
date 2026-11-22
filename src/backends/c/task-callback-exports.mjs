@@ -50,6 +50,13 @@ export const emitRetainedTask = options => {
   ${error ? "| .ok (.error e) => return .startError e\n  | .ok (.ok inner) => finish inner" : "| .ok inner => finish inner"}`);
 	declarations.push(`extern lean_object *${entry}(lean_object *${args.map(x => ", " + x.c.abi).join("")});`);
 	types.push(`typedef struct { uint64_t id, domain; } ${h};`);
+	if(options.cpp) for(const [kind, c] of [["value", value], ["start_error", error], ...callbacks.map(x => ["callback_arg_" + x.j, x.input])])
+	{
+		if(!c) continue;
+		const alias = n + "_" + kind;
+		types.push(`typedef ${c.type} ${alias};`);
+		if(c.dispose) options.prototypes.push(`static inline void ${alias}_dispose(${alias} *v) { ${c.dispose}(v); }`);
+	}
 	const checked = (c, v) => c.validate(v);
 	fn(n + "_start", [...args.map(x => x.c.arg + " v" + x.j), h + " *out"], `if (!out || out->id) return LB(INVALID);
     ${args.some(x => x.c.buffer) ? "size_t budget = 0;" : ""}

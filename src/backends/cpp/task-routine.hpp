@@ -1,8 +1,8 @@
 // A small owning coroutine root for applications without a coroutine framework.
-#ifndef LEAN_BRIDGE_CPP_TASK_ROUTINE_V1_HPP
-#define LEAN_BRIDGE_CPP_TASK_ROUTINE_V1_HPP
+#ifndef LEAN_BRIDGE_CPP_TASK_ROUTINE_V2_HPP
+#define LEAN_BRIDGE_CPP_TASK_ROUTINE_V2_HPP
 #include "task-values.hpp"
-namespace lean_bridge::async_v1 {
+namespace lean_bridge::async_v2 {
 namespace detail {
 template<class T> struct Return {
     std::optional<T> value;
@@ -60,5 +60,5 @@ public:
         return frame.result();
     }
 };
-} // namespace lean_bridge::async_v1
+} // namespace lean_bridge::async_v2
 #endif

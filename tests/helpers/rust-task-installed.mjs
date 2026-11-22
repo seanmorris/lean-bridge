@@ -17,7 +17,7 @@ import { validateExportConfiguration } from "../../src/analyze/export-configurat
 import { reconcileHostExports } from "../../src/analyze/host-export-model.mjs";
 
 const env = process.env, replay = env.LEAN_BRIDGE_RUST_TASK_REPLAY;
-test("Cargo packages all retained-task templates and does not enable the C or C++ callback ABI", async () => {
+test("Cargo packages all retained-task templates and does not opt an unspecified host into its callback ABI", async () => {
 	const manifest = JSON.parse(await readFile("package.json"));
 	const cli = JSON.parse(await readFile("config/cli-package.v1.json"));
 	const engine = JSON.parse(await readFile("nix/perl-engine-source-boundary.json"));

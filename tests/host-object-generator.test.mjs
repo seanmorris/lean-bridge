@@ -14,6 +14,8 @@ import "./helpers/python-retained-task-installed.mjs";
 import "./helpers/lean-stream-only-installed.mjs";
 import "./helpers/c-task-installed.mjs";
 import "./helpers/cpp-task-installed.mjs";
+import "./helpers/cpp-retained-task-installed.mjs";
+import "./helpers/cpp-task-abi-coexistence.mjs";
 import "./helpers/task-integer-installed.mjs";
 import "./helpers/resource-task-installed.mjs";
 import "./helpers/rust-task-installed.mjs";

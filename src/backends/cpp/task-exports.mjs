@@ -4,6 +4,7 @@
  * @file
  */
 import { taskResourceTypes } from "../c/task-resources.mjs";
+import { cppCallbackFaults, cppRetainedEntry } from "./task-callback.mjs";
 const reserved = new Set(("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break case catch char char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast continue co_await co_return co_yield decltype default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new noexcept not not_eq nullptr operator or or_eq private protected public reflexpr register reinterpret_cast requires return short signed sizeof static static_assert static_cast struct switch synchronized template this thread_local throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq detail run_one shutdown").split(" "));
 const scalars = {
 	unit: "std::monostate", char: "char32_t", bool: "bool"
@@ -21,8 +22,8 @@ const codec = (t, resources) => {
 			, arg: "const " + r.name + "&"
 			, owned: true
 			, resource: true
-			, read: v => `async_v1::detail::LeaseAccess::adopt(${v}, detail::ops_${r.slug})`
-			, input: v => `async_v1::detail::LeaseAccess::view(${v})` };
+			, read: v => `async_v2::detail::LeaseAccess::adopt(${v}, detail::ops_${r.slug})`
+			, input: v => `async_v2::detail::LeaseAccess::view(${v})` };
 	}
 	if(t?.kind === "primitive" && ["nat", "int"].includes(t.name))
 	{
@@ -45,6 +46,11 @@ const codec = (t, resources) => {
 	return { type, owned: ok.owned || err.owned, bigint: ok.bigint || err.bigint, read: v => `(${v}.ok ? ${type}{Ok<${ok.type}>{${ok.read(v + ".as.value")}}} : ${type}{Err<${err.type}>{${err.read(v + ".as.error")}}})` };
 };
 const slot = (site, local, t) => `detail::Slot<${site}> ${local}{${t.owned ? "&" + site + "_dispose" : ""}};`;
+const inputGuards = args => args.some(a => a?.direct) ? [
+	"std::size_t available = 16u * 1024u * 1024u;"
+	, ...args.flatMap((a, i) => a?.direct ? [`const auto limbs${i} = detail::count(v${i}, ${a.natural}, available);`] : a?.buffer ? [`detail::charge(available, v${i}.size());`] : [])
+	, ...args.flatMap((a, i) => a?.direct ? [`detail::IntegerIn arg_v${i}(v${i}, limbs${i});`] : [])
+].join("\n    ") + "\n    " : "";
 
 /**
  * Keep the C handles, ownership operations, buffers and effect tags out of application code.
@@ -56,27 +62,29 @@ export const generateCppTaskHeader = options => {
 	const resources = taskResourceTypes(options.resources);
 	for(const r of resources)
 		if(reserved.has(r.name) || r.name.startsWith("_") || r.name.includes("__")
-			|| "Int Nat Future Stream Routine Ok Err Result StartError StepError IOError Cancelled Closed Busy Unavailable WrongContext".split(" ").includes(r.name))
+			|| "Int Nat Future Stream Routine Ok Err Result StartError StepError IOError TaskIOError RetainedCallback CallbackTrap CallbackClosed Cancelled Closed Busy Unavailable WrongContext".split(" ").includes(r.name))
 			throw new TypeError("Reserved C++ resource class name");
 		else names.add(r.name);
 	const value = t => codec(t, resources);
-	let bigint = false;
+	let bigint = false, retained = false;
 	const functions = entries.map(e => {
 		const name = reserved.has(e.name) ? e.name + "_" : e.name;
 		if(!/^[a-z][a-z0-9_]*$/u.test(name) || name.includes("__") || names.has(name)) throw new TypeError("Invalid or colliding C++ task name");
 		names.add(name);
 		const c = `${p}_${e.name}`, stream = e.delivery === "async-iterator", async = stream || e.delivery === "task";
+		if(e.taskIO && e.delivery !== "task") throw new TypeError("Terminal IO errors require a real Task");
+		if(e.parameters.some(a => a.type.kind === "io-callback"))
+		{
+			const result = cppRetainedEntry({ e, name, c, p, codec: value, slot, guards: inputGuards });
+			retained = true; bigint ||= result.bigint; return result.source;
+		}
 		const args = e.parameters.map(v => value(v.type)), item = value(e.result);
 		if(args.some(a => !a.arg)) throw new TypeError("C++ task arguments must be copied scalars");
 		const unit = e.result.kind === "primitive" && e.result.name === "unit", type = unit ? "void" : item.type;
 		const out = stream ? `Stream<${item.type}>` : async ? `Future<${type}>` : type;
 		const er = e.effect === "EIO" ? value(e.error) : null, step = e.stepError ? value(e.stepError) : null, io = e.effect === "IO";
 		bigint ||= [item, er, step, ...args].some(t => t?.bigint);
-		const guards = args.some(a => a.direct) ? [
-			"std::size_t available = 16u * 1024u * 1024u;"
-			, ...args.flatMap((a, i) => a.direct ? [`const auto limbs${i} = detail::count(v${i}, ${a.natural}, available);`] : a.buffer ? [`detail::charge(available, v${i}.size());`] : [])
-			, ...args.flatMap((a, i) => a.direct ? [`detail::IntegerIn arg_v${i}(v${i}, limbs${i});`] : [])
-		].join("\n    ") + "\n    " : "";
+		const guards = inputGuards(args);
 		const startArgs = [...args.map((a, i) => a.input(`v${i}`)), async ? "&owner->handle" : "&value.value"];
 		if(er || io) startArgs.push("&error.value");
 		const startError = er ? slot(`${c}_start_error`, "error", er) : io ? `detail::Slot<${p}_buffer> error{&${p}_buffer_dispose};` : "";
@@ -85,7 +93,9 @@ export const generateCppTaskHeader = options => {
 		const read = slot(c + "_value", "value", item);
 		const take = `[owner] {
         ${read} ${step ? slot(c + "_step_error", "error", step) : ""}
-        auto s = ${c}_take(&owner->handle, &value.value${step ? ", &error.value" : ""});
+        ${e.taskIO ? `detail::Slot<${p}_buffer> terminal{&${p}_buffer_dispose};` : ""}
+        auto s = ${c}_take(&owner->handle, &value.value${step ? ", &error.value" : ""}${e.taskIO ? ", &terminal.value" : ""});
+        ${e.taskIO ? `if (s == ${p}_IO_ERROR) throw TaskIOError{"${e.declaration}", detail::text(terminal.value)};` : ""}
         ${stream ? `if (s == ${p}_END) return std::optional<${item.type}>{};` : ""}
         ${step ? `if (s == ${p}_TYPED_ERROR) throw StepError<${step.type}>{"${e.declaration}", ${step.read("error.value")}};` : ""}
         detail::check(s); return ${stream ? `std::optional<${item.type}>{${item.read("value.value")}}` : item.read("value.value")};
@@ -94,23 +104,23 @@ export const generateCppTaskHeader = options => {
         if (s != ${p}_PENDING) detail::check(s);
         return fd; }`;
 		const close = "[owner] { owner->close(); }";
-		const finish = stream ? `return ${out}(std::make_shared<async_v1::detail::Cursor<${item.type}>>(loop,
+		const finish = stream ? `return ${out}(std::make_shared<async_v2::detail::Cursor<${item.type}>>(loop,
         [owner] { detail::check(${c}_pull(owner->handle)); }, ${poll}, ${take}, ${close}));`
-			: async ? `return async_v1::detail::future<${type}>(loop, ${poll}, ${take}, ${close});`
+			: async ? `return async_v2::detail::future<${type}>(loop, ${poll}, ${take}, ${close});`
 			: unit ? "return;" : `return ${item.read("value.value")};`;
 		return `inline ${out} ${name}(${args.map((a, i) => `${a.arg} v${i}`).join(", ")}) {
-    auto &loop = async_v1::detail::Loop::main(); loop.enter();
+    auto &loop = async_v2::detail::Loop::main(); loop.enter();
     ${guards}${async ? `auto owner = std::make_shared<detail::Owner<${c}_handle, ${c}_close>>();` : read}
     ${startError}
     auto s = ${c}_${async ? "start" : "call"}(${startArgs.join(", ")}); ${catchStart}
     detail::check(s); ${finish}
 }`;
 	});
-	return `#ifndef ${p.toUpperCase()}_CPP_TASK_V1_HPP
-#define ${p.toUpperCase()}_CPP_TASK_V1_HPP
+	return `#ifndef ${p.toUpperCase()}_CPP_TASK_V2_HPP
+#define ${p.toUpperCase()}_CPP_TASK_V2_HPP
 #include "${p}.h"
-#include <lean_bridge/async_v1/task-routine.hpp>
-#include <span>${resources.length ? "\n#include <lean_bridge/async_v1/task-resource.hpp>" : ""}${bigint ? `
+#include <lean_bridge/async_v2/task-routine.hpp>
+#include <span>${retained ? "\n#include <lean_bridge/async_v2/task-callback.hpp>" : ""}${resources.length ? "\n#include <lean_bridge/async_v2/task-resource.hpp>" : ""}${bigint ? `
 #ifndef BOOST_MP_STANDALONE
 #define BOOST_MP_STANDALONE
 #endif
@@ -119,11 +129,12 @@ export const generateCppTaskHeader = options => {
 #include <iterator>
 #include <limits>` : ""}
 namespace lean_bridge::${p} {
-${resources.map(r => `using ${r.name} = async_v1::Resource<${r.raw}>;\n`).join("")}${bigint ? "using Nat = boost::multiprecision::cpp_int; using Int = boost::multiprecision::cpp_int;\n" : ""}using async_v1::Future; using async_v1::Stream; using async_v1::Routine;
-using async_v1::Ok; using async_v1::Err; using async_v1::Result;
-using async_v1::StartError; using async_v1::StepError; using async_v1::IOError;
-using async_v1::Cancelled; using async_v1::Closed; using async_v1::Busy;
-using async_v1::Unavailable; using async_v1::WrongContext; using async_v1::run_one; using async_v1::shutdown;
+${resources.map(r => `using ${r.name} = async_v2::Resource<${r.raw}>;\n`).join("")}${bigint ? "using Nat = boost::multiprecision::cpp_int; using Int = boost::multiprecision::cpp_int;\n" : ""}using async_v2::Future; using async_v2::Stream; using async_v2::Routine;
+using async_v2::Ok; using async_v2::Err; using async_v2::Result;
+using async_v2::StartError; using async_v2::StepError; using async_v2::IOError;
+using async_v2::TaskIOError;${retained ? "\nusing async_v2::RetainedCallback; using async_v2::CallbackTrap; using async_v2::CallbackClosed;" : ""}
+using async_v2::Cancelled; using async_v2::Closed; using async_v2::Busy;
+using async_v2::Unavailable; using async_v2::WrongContext; using async_v2::run_one; using async_v2::shutdown;
 namespace detail {${bigint ? `
 inline void charge(std::size_t &available, std::size_t bytes) {
     if (bytes > available) throw std::length_error("Lean copy budget exceeded");
@@ -183,9 +194,9 @@ inline void check(${p}_status s) {
     default: throw std::runtime_error("unexpected Lean task state: " + std::to_string(s));
     }
 }
-${resources.map(r => {
+${retained ? cppCallbackFaults(p) : ""}${resources.map(r => {
 		const b = `${p}_resource_${r.slug}`, t = r.raw;
-		return `inline constexpr async_v1::detail::LeaseOps<${t}> ops_${r.slug}{
+		return `inline constexpr async_v2::detail::LeaseOps<${t}> ops_${r.slug}{
     [](${t} *v) noexcept { (void)${b}_release(v); },
     [](${t} v, ${t} *o) { check(${b}_retain(v, o)); },
     [](${t} a, ${t} b) { bool v = false; check(${b}_same(a, b, &v)); return v; }

@@ -165,7 +165,7 @@ Targets `c`, `cpp`, `cargo`, `pypi`, `rubygems`, `nuget`, `maven`, `cpan`, `php-
 
 Schema-3 reviewed builds reject resources and callbacks inside copied containers. Resource-containing values require a schema-4 contract and an ownership-aware target. Both versions accept compiler-authenticated optional copied parameters whose typed defaults reconcile with fresh Lean metadata. These copied and ownership profiles reject asynchronous operations, author-supplied compiler evidence and assurance claims. Do not combine a review with `exports`, `resources`, `ownedAggregates`, `arities`, `specializations` or `contracts` in the configuration.
 
-A task release is a separate profile. Select actual Lean `Task` factories with `taskExports`; add `taskIOErrors` only for an outer `Except IO.Error` that should reject the task. A task can retain a unary `α → IO β` callback over copied scalars on [Rust's owning executor](../publish/cargo.md#export-a-callback-taking-task) or [Python's owning event loop](../publish/pypi.md#let-a-lean-task-call-python). The usual borrowed, synchronous callback profile is unchanged.
+A task release is a separate profile. Select actual Lean `Task` factories with `taskExports`; add `taskIOErrors` only for an outer `Except IO.Error` that should reject the task. A task can retain a unary `α → IO β` callback over copied scalars on [C++'s main-thread dispatcher](../publish/cpp.md#export-a-callback-taking-task), [Rust's owning executor](../publish/cargo.md#export-a-callback-taking-task), or [Python's owning event loop](../publish/pypi.md#let-a-lean-task-call-python). The usual borrowed, synchronous callback profile is unchanged.
 
 ### Export optional parameters
 
