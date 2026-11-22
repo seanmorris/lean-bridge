@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Timers"],
+  "exports": ["Timers.immediate", "Timers.compute", "Timers.later", "Timers.openTask", "Timers.startChecked", "Timers.startIO", "Timers.reset", "Timers.release", "Timers.state"],
+  "taskExports": ["Timers.immediate", "Timers.compute", "Timers.later", "Timers.openTask", "Timers.startChecked", "Timers.startIO"],
+  "targets": { "pypi": { "name": "lean-timers", "version": "1.0.0" } }
+}

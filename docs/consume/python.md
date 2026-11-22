@@ -101,6 +101,34 @@ function. If Lean simply propagates an exception from your Python method in
 requires `await`. The [Workshop consumer](../../tests/fixtures/host-object/installed.py)
 exercises all three cases.
 
+### Await a Lean task
+
+Install the [Timers release](../publish/pypi.md#export-a-lean-task-to-asyncio)
+from its two wheels:
+
+```sh
+./.venv/bin/python -m pip install --no-index --find-links ./archives lean-timers==1.0.0
+```
+
+Save this as `timers.py`:
+
+```python
+import asyncio
+import lean_timers
+
+async def main():
+    print(await lean_timers.later(14))  # 42
+
+asyncio.run(main())
+```
+
+Calling `later` creates a coroutine; awaiting or scheduling it starts the
+call. Lean notifies the event loop when the result is ready. Use
+`asyncio.create_task`, `asyncio.gather`, and `cancel()` as usual. Cancellation
+stops delivery and asks Lean to cancel; a computation that doesn't check
+`IO.checkCanceled` can still finish, but can't deliver a second result.
+No Python worker thread, polling loop or manual runtime setup is required.
+
 ### Arrays and records
 
 For an installed [Parcels package](../publish/pypi.md#export-arrays-and-records),

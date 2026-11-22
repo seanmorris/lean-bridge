@@ -39,9 +39,9 @@ const absent = async path => {
 const captureContracts = async (project, inventory) => {
 	const config = inventory.configurationRecord.configuration;
 	const input = inventory.inputs.find(f => f.path === config.hostImports);
-	const ir = parseBindingIr(await capturedText(project, input));
-	const ids = new Set(ir.types.filter(t => t.kind === "resource" && t.host?.targets.includes("python")).map(t => t.id));
-	if(!ids.size || ids.size !== ir.types.length || ir.declarations.some(d => !ids.has(d.owner)))
+	const ir = config.hostImports ? parseBindingIr(await capturedText(project, input)) : null;
+	const ids = new Set(ir?.types.filter(t => t.kind === "resource" && t.host?.targets.includes("python")).map(t => t.id));
+	if(ir && (!ids.size || ids.size !== ir.types.length || ir.declarations.some(d => !ids.has(d.owner))))
 		fail("The host import contract must contain only Python host resources and their members; application exports belong in the public API");
 	const reviews = inventory.inputs.filter(f => f.path.endsWith(".binding-ir.json"));
 	if(reviews.length > 1) fail("Expected at most one reviewed public .binding-ir.json file");
@@ -53,11 +53,13 @@ const captureContracts = async (project, inventory) => {
 		review = { ...reviews[0], source, semanticSha256: hashBindingIr(api) };
 		reviewedExports = api.declarations.map(d => d.source.declaration).sort();
 	}
-	const exports = config.exports ? [...config.exports].sort() : reviewedExports;
+	const exports = config.exports ? [...config.exports].sort() : reviewedExports ?? config.taskExports?.toSorted();
+	const taskExports = config.taskExports?.toSorted() ?? [];
 	if(!exports?.length || new Set(exports).size !== exports.length
+		|| taskExports.some(n => !exports.includes(n))
 		|| (review && canonicalJson(exports) !== canonicalJson(reviewedExports)))
 		fail("Select application exports by Lean name; reviewed and configured exports must agree");
-	return { ir, review, exports, hostImportsSourceSha256: input.sha256 };
+	return { ir, review, exports, taskExports, hostImportsSourceSha256: input?.sha256 ?? null };
 };
 
 /**
@@ -67,14 +69,14 @@ const captureContracts = async (project, inventory) => {
  */
 export const buildPythonHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
-	if(targets.length !== 1 || targets[0] !== "pypi") fail("Host imports currently require a pypi-only build");
+	if(targets.length !== 1 || targets[0] !== "pypi") fail("Python host imports and task exports currently require a pypi-only build");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
 	await absent(output);
 	const record = inventory.configurationRecord, config = record.configuration;
 	assertExportConfigurationCapabilities(config, { target: "pypi"
-		, fields: ["modules", "exports", "hostImports", "package"]
+		, fields: ["modules", "exports", "hostImports", "taskExports", "package"]
 		, targetFields: ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.pypi ?? {}, name = settings.name ?? `lean-${component.name.toLowerCase().replaceAll("_", "-")}`;
@@ -98,7 +100,7 @@ export const buildPythonHostProject = async options => {
 	const stage = await mkdtemp(join(dirname(output), ".lean-bridge-host-project-"));
 	try
 	{
-		workspace = await resolveLockedLakeWorkspace({ snapshot, modules: config.modules, leanPrefix, signal, generatedPythonHost: true });
+		workspace = await resolveLockedLakeWorkspace({ snapshot, modules: config.modules, leanPrefix, signal, generatedPythonHost: Boolean(contract.ir) });
 		if(workspace.document.leanCommit !== pinnedNativeLean || workspace.document.modules.some(m => m.nativeInputs?.length))
 			fail("Host modules require the pinned Lean compiler and cannot import additional native objects");
 		verifyLakeEntryModules(roots, workspace.document);
@@ -126,7 +128,7 @@ export const buildPythonHostProject = async options => {
 			, lake: { snapshotSha256: snapshot.sha256, resolutionSha256: workspace.sha256, resolution: workspace.document } };
 		const runtimeRoot = join(stage, "runtime"), archives = join(stage, "archives");
 		await mkdir(archives);
-		onProgress?.({ phase: "build", state: "info", message: "Compiling source and checking Python host IO signatures" });
+		onProgress?.({ phase: "build", state: "info", message: "Compiling source and checking Python export signatures" });
 		await buildNativeSharedRuntime({ outputRoot: runtimeRoot, leanPrefix });
 		const common = { runtimeRoot, leanPrefix, workRoot: stage, output: archives, environment, signal };
 		const wheel = await buildPythonHostWheel({ ...common, projectContract, sources
@@ -135,7 +137,7 @@ export const buildPythonHostProject = async options => {
 		const runtime = await packagePythonHostRuntime(common);
 		const receipt = await writePythonHostPackageSet({ root: stage, runtime, component: wheel, archivePrefix: "archives/" });
 		const manifest = { schemaVersion: 1
-			, profile: "native-python-host-v1"
+			, profile: receipt.profiles[0].id
 			, component
 			, packages: receipt.packages, configurationSha256: record.sha256
 			, nativeRuntimeIdentity: runtime.runtimeIdentity

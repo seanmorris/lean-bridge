@@ -31,6 +31,14 @@ test("Python host components require their pinned runtime; existing native wheel
 	const host = { ...receipt, profiles: [profile], packages: [app, runtime] };
 	await assertJsonSchema("package-set-receipt", host);
 	assert.equal(validatePackageSetReceipt(host), true);
+	const tasks = structuredClone(host);
+	tasks.profiles[0].id = "native-python-task-v1";
+	for(const pkg of tasks.packages) pkg.profile = tasks.profiles[0].id;
+	await assertJsonSchema("package-set-receipt", tasks);
+	assert.equal(validatePackageSetReceipt(tasks), true);
+	const missingRuntime = structuredClone(tasks);
+	missingRuntime.packages.pop();
+	assert.throws(() => validatePackageSetReceipt(missingRuntime));
 	const combined = { ...receipt, profiles: [...receipt.profiles, profile], packages: [...receipt.packages.filter(p => p.target !== "pypi"), app, runtime] };
 	await assertJsonSchema("package-set-receipt", combined);
 	assert.equal(validatePackageSetReceipt(combined), true);

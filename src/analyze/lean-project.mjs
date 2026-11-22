@@ -573,6 +573,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 	const configuration = configurationRecord.configuration;
 	if(configuration.hostImports)
 		fail("host-imports-require-elaboration", "Host imports require compiler-checked IO signatures; source discovery cannot authorize generated foreign declarations");
+	if(configuration.taskExports)
+		fail("task-exports-require-elaboration", "Awaitable delivery requires a compiler-checked Lean Task; source discovery cannot authorize a scheduler");
 	if(configuration.ownedAggregates !== undefined)
 		fail("ownership-requires-elaboration", "Owned aggregates require compiler-backed analysis; source discovery cannot authorize retained resource fields");
 	if(Object.keys(configuration.arities ?? {}).length)

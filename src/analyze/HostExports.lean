@@ -15,6 +15,7 @@ structure Request where
   modules : Array String
   exportModules : Array String
   exports : Array String
+  taskExports : Array String
   resources : Array Nominal
   members : Array String
   deriving FromJson
@@ -105,7 +106,23 @@ def extract (r : Request) : MetaM Json := do
       let result := result.consumeMData
       let some head := result.getAppFn.constName? | throwError "expected synchronous IO result: {n}"
       let resultArgs := result.getAppArgs
-      let fields ← if head == ``IO && resultArgs.size == 1 then
+      let fields ← if r.taskExports.contains publicName then do
+        let (effect, task, extra) ← if head == ``Task then
+          pure ("pure", result, [])
+        else if (head == ``IO || head == ``BaseIO) && resultArgs.size == 1 then
+          pure (head.toString, resultArgs[0]!, [])
+        else if head == ``EIO && resultArgs.size == 2 then
+          pure ("EIO", resultArgs[1]!, [("error", ← returned r resultArgs[0]! true)])
+        else throwError "taskExports requires a real Lean Task result: {n}"
+        unless task.getAppFn.constName? == some ``Task && task.getAppArgs.size == 1 do
+          throwError "taskExports requires a real Lean Task result: {n}"
+        if r.members.any (fun m => deps.contains m.toName) || r.resources.any (fun t => deps.contains t.lean.toName) then
+          throwError "host identities or calls cannot cross this task scheduler: {n}"
+        for a in args do
+          let _ ← returned r (← a.fvarId!.getDecl).type true
+        pure <| [("effect", toJson effect), ("delivery", toJson "task"),
+          ("result", ← returned r task.getAppArgs[0]! true)] ++ extra
+      else if head == ``IO && resultArgs.size == 1 then
         pure [("effect", toJson "IO"), ("result", ← returned r resultArgs[0]!)]
       else if head == ``EIO && resultArgs.size == 2 then
         pure [("effect", toJson "EIO"), ("error", ← returned r resultArgs[0]! true),

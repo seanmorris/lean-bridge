@@ -22,7 +22,7 @@ const python = resolve(process.env.LEAN_BRIDGE_HOST_PYTHON ?? ".toolchains/pytho
 const fixture = resolve("tests/fixtures/host-object");
 const contract = source => {
 	const ir = executableHostFixture();
-	const names = ["make", "alias", "read", "finish", "scale", "same", "setLevel", "replaceError", "keep", "readHeld", "forget", "live", "componentMark", "checkedSet", "reportSet", "setThenFail", "choose", "typedChoice"];
+	const names = ["make", "alias", "read", "finish", "scale", "same", "setLevel", "replaceError", "keep", "readHeld", "forget", "live", "componentMark", "taskMark", "checkedSet", "reportSet", "setThenFail", "choose", "typedChoice"];
 	const extras = ["namespace Workshop", "open LeanBridge.Host.Python"];
 	for(const lean of ["UInt8", "UInt16", "UInt32", "UInt64", "Int8", "Int16", "Int32", "Int64", "USize", "ISize", "Float32", "Float", "Nat", "Int", "Bool", "Unit", "Char", "String", "ByteArray"])
 	{
@@ -58,11 +58,11 @@ test("offline wheels let ordinary Python classes implement compiled Lean host im
 		await copyFile("LICENSE", join(project, "LICENSE"));
 		await writeFile(join(project, "lean-toolchain"), "leanprover/lean4:v4.32.2\n");
 		await writeFile(join(project, "lakefile.toml"), `name = "${name}"\nversion = "1.0.0"\n[[lean_lib]]\nname = "Workshop"\n`);
-		await writeFile(join(project, "Workshop.lean"), corpus.source + `\ndef Workshop.componentMark : IO UInt32 := pure ${mark}\n`);
+		await writeFile(join(project, "Workshop.lean"), corpus.source + `\ndef Workshop.componentMark : IO UInt32 := pure ${mark}\ndef Workshop.taskMark : Task UInt32 := Task.pure ${mark}\n`);
 		await writeFile(join(project, "lean-bridge.hosts.json"), canonicalJson(corpus.ir));
 		await writeFile(join(project, "lean-bridge.exports.json"), canonicalJson({
 			schemaVersion: 1, hostImports: "lean-bridge.hosts.json"
-			, modules: ["Workshop"]
+			, modules: ["Workshop"], taskExports: ["Workshop.taskMark"]
 			, ...(reviewed ? {} : { exports: corpus.exports })
 			, targets: { pypi: { name: `lean-${name}`, version: "1.0.0" } }
 		}));
@@ -86,7 +86,8 @@ test("offline wheels let ordinary Python classes implement compiled Lean host im
 		assert.equal(decl("typed_choice").result.type.constructor, "result");
 		assert.deepEqual(decl("typed_choice").failure.errors, ["error:EIO.Workshop.typedChoice"]);
 		assert.deepEqual(api.errors.find(e => e.id === "error:EIO.Workshop.typedChoice").payload, p("nat"));
-		assert.ok(api.declarations.every(d => d.resultMode === "value" && !d.effects.includes("async")));
+		assert.ok(api.declarations.filter(d => d.name !== "task_mark").every(d => d.resultMode === "value" && !d.effects.includes("async")));
+		assert.equal(decl("task_mark").resultMode, "promise");
 		assert.equal(hashBindingIr(api), receipt.profiles[0].bindingIrSha256);
 		assert.deepEqual(evidenceRecord.metadata.entries.map(e => e.declaration).sort(), [...corpus.exports].sort());
 		assert.equal(receipt.packages.length, 2);

@@ -149,7 +149,7 @@ del _runtime
 		if(api)
 		{
 			await save(root, "binding-ir.json", canonicalJson(api));
-			await save(root, "host-imports.json", canonicalJson(ir));
+			if(ir) await save(root, "host-imports.json", canonicalJson(ir));
 			await save(root, "elaboration.json", canonicalJson(evidence));
 		}
 		await save(root, "host-component.json", canonicalJson({
@@ -161,11 +161,11 @@ del _runtime
 		}));
 		const archive = await wheel({
 			stage, output, name, version, tag
-			, summary: "Compiled Lean component with generated Python host imports"
+			, summary: ir ? "Compiled Lean component with generated Python host imports" : "Compiled Lean tasks for Python asyncio"
 			, metadata: projectContract?.metadata
 			, requires: `Requires-Dist: ${runtimePackage} (==${runtimePackageVersion})\n`
 			, licenses: { ...(projectContract?.notices ?? { "Source-LICENSE": license }), "LeanBridge-LICENSE": await readFile(notice) } });
-		return { ...archive, runtimeIdentity: identity, runtimePackageVersion, componentIdentity, sourceTreeSha256, bindingIrSha256, ...(api ? { api, evidence, component: projectContract.component } : {}) };
+		return { ...archive, runtimeIdentity: identity, runtimePackageVersion, componentIdentity, sourceTreeSha256, bindingIrSha256, ...(entries.some(e => e.delivery === "task") ? { profile: "native-python-task-v1" } : {}), ...(api ? { api, evidence, component: projectContract.component } : {}) };
 	});
 };
 
@@ -178,7 +178,7 @@ export const writePythonHostPackageSet = async options => {
 	const { root, runtime, component, archivePrefix = "" } = options;
 	if(runtime.name !== runtimePackage || runtime.runtimeIdentity !== component.runtimeIdentity
 		|| runtime.version !== component.runtimePackageVersion) throw new Error("incompatible Python host runtime package");
-	const profile = { id: "native-python-host-v1", runtimeIdentity: runtime.runtimeIdentity, bindingIrSha256: component.bindingIrSha256 };
+	const profile = { id: component.profile ?? "native-python-host-v1", runtimeIdentity: runtime.runtimeIdentity, bindingIrSha256: component.bindingIrSha256 };
 	const requires = [{ ecosystem: "pypi", name: runtime.name, version: runtime.version }];
 	const packages = [runtime, component].map((p, i) => ({
 		ecosystem: "pypi", target: "pypi", name: p.name, version: p.version

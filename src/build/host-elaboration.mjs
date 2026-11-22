@@ -26,7 +26,7 @@ export const compileHostSources = async options => {
 	const compilerSha256 = projectContract ? sha256(await readFile(lean)) : null;
 	const extractorSha256 = projectContract ? sha256(await readFile(extractor)) : null;
 	const env = { ...options.environment, LEAN_SYSROOT: leanPrefix, LEAN_SRC_PATH: app, LEAN_PATH: app, LEAN_NUM_THREADS: "1" };
-	const modules = [{ module: hostModule, source: generatePythonHostProvider(ir).lean }, ...sources];
+	const modules = [...(ir ? [{ module: hostModule, source: generatePythonHostProvider(ir).lean }] : []), ...sources];
 	const byPath = new Map(), byName = new Map(), built = new Map(), active = new Set(), objects = [];
 	for(const s of modules)
 	{
@@ -55,10 +55,14 @@ export const compileHostSources = async options => {
 		built.set(spec.name, { ...spec, olean, iface, c, cSha256 }); active.delete(spec.name); objects.push(c);
 	};
 	const roots = projectContract?.modules ?? modules.map(s => s.module);
-	await compile(byName.get(hostModule));
+	if(ir) await compile(byName.get(hostModule));
 	for(const root of roots) await compile(byName.get(root));
 	if(!projectContract) return { objects, entries: options.entries, env };
-	const selection = { ...pythonHostSelection(ir), exports: projectContract.exports, exportModules: roots, modules: [...built.keys()] };
+	const selection = {
+		...pythonHostSelection(ir), exports: projectContract.exports
+		, taskExports: projectContract.taskExports ?? []
+		, exportModules: roots, modules: [...built.keys()]
+	};
 	const request = join(app, "host-request.json");
 	await writeFile(request, canonicalJson(selection), { flag: "wx" });
 	const result = await run(lean, ["-j1", "--run", extractor, request], app, env);

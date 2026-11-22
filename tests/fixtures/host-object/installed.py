@@ -1,4 +1,5 @@
 """Consumer application. Uses only installed packages and ordinary Python classes."""
+import asyncio
 import gc
 import os
 import warnings
@@ -48,6 +49,7 @@ for name in scalars:
     setattr(AppBox, "echo_" + name, echo)
 
 raises(RuntimeError, "bind_hosts", lambda: a.make(1))
+assert (asyncio.run(a.task_mark()), asyncio.run(b.task_mark())) == (17, 41)
 raises(TypeError, "class", lambda: a.bind_hosts(Box=3).__enter__())
 with a.bind_hosts(Box=AppBox), b.bind_hosts(Box=AppBox):
     assert (a.component_mark(), b.component_mark()) == (17, 41)

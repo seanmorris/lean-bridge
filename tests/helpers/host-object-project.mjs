@@ -57,14 +57,14 @@ const retain = async (handoff, project, route, receipt, inputs) => {
 	}
 	return dest;
 };
-const compile = async (root, sourceText, review) => compileHostSources({
+const compile = async (root, sourceText, review, taskExports = []) => compileHostSources({
 	app: await mkdtemp(join(root, "probe-"))
 	, leanPrefix
 	, environment: env
 	, ir: hostImports
 	, sources: [{ module: "Workshop", source: sourceText }, { module: "Workshop.Internal", source: internal }]
 	, projectContract: { component
-		, exports: config.exports
+		, exports: config.exports, taskExports
 		, modules: config.modules
 		, sourceTreeSha256: sha256(sourceText)
 		, configurationSha256: sha256(canonicalJson(config))
@@ -85,6 +85,11 @@ test("fresh Lean host signatures and transitive calls reject dishonest reviews a
 	row.result.type.name = "string";
 	await assert.rejects(compile(root, source, { source: canonicalJson(built.api) }), /Reviewed API differs/u);
 	const original = "def readLevel (box : Box) : IO UInt32 := Internal.level box";
+	const hostTask = source.replace(original, "def readLevel (box : Box) : IO (Task UInt32) := do return Task.pure (← box.read)");
+	await assert.rejects(compile(root, hostTask, undefined, config.exports), error => {
+		assert.match(`${error.message} ${error.details?.stdout} ${error.details?.stderr}`, /host identities or calls cannot cross/u);
+		return true;
+	});
 	const typed = source.replace(original, "def readLevel (box : Box) : EIO String UInt32 := IO.toEIO (fun _ => \"reading failed\") (Internal.level box)");
 	const domain = (await compile(root, typed)).api;
 	assert.deepEqual(domain.declarations[0].failure.errors, ["error:EIO.Workshop.readLevel"]);

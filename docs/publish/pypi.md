@@ -106,8 +106,42 @@ declared host objects. Returned `Except` values may nest; their payloads
 and typed failures must contain only supported copied values. For example,
 `EIO Nat (Except String UInt32)` has two distinct error channels: a thrown
 `Nat` and a returned `String`. See the [compiled example](../../tests/fixtures/host-object/Workshop.lean).
-This profile builds one target at a time. It does not support async delivery,
-compound host-member arguments, custom native objects or generated Lake targets.
+This profile builds one target at a time. Python host-member calls themselves
+are synchronous; compound member arguments and custom native objects are not supported.
+
+## Export a Lean task to asyncio
+
+Use `taskExports` to select functions that should deliver an awaitable on Linux
+x86-64 CPython. The [Timers package](../../tests/fixtures/python-lean-tasks/Timers.lean)
+needs no host-import contract. Its delayed calculation runs on Lean's scheduler:
+
+```lean
+def later (n : Nat) : BaseIO (Task Nat) := BaseIO.asTask do
+  IO.sleep 15
+  return n * 3
+```
+
+List the Lean name in `taskExports` and select its module with `modules`.
+If the package also exports ordinary calls, include the complete public list
+in `exports`. For a reviewed build, keep `taskExports` and supply the emitted
+API as `api.binding-ir.json` instead of listing `exports`. Both routes check
+the actual Lean signatures. For the [full example](../../tests/fixtures/python-lean-tasks/lean-bridge.exports.json):
+
+```sh
+lean-bridge build --project tests/fixtures/python-lean-tasks --target pypi --output build/timers
+lean-bridge verify --receipt build/timers/package-set-receipt.json
+```
+
+An explicitly selected `Task α`, `BaseIO (Task α)`, `IO (Task α)`, or
+`EIO ε (Task α)` delivers `α`. A startup failure from `EIO` raises the typed
+exception when awaited; an `Except` **inside** the task stays a returned
+value. Ordinary `IO α` is not an async contract. Startup runs on the calling
+thread until it returns the task, so put long-running work *inside* the task.
+Task arguments may use the nineteen copied scalars. Results may also nest
+`Except` over those scalars. Other result types (including a returned
+`IO.Error`), Python host objects, callbacks from Lean workers and async
+iterators are not yet supported by this adapter.
+[Use the installed awaitable](../consume/python.md#await-a-lean-task).
 
 ## Export arrays and records
 

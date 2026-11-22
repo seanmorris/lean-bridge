@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { readFileSync } from "node:fs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { generatePythonHostProvider } from "./host-provider.mjs";
 
@@ -102,27 +103,53 @@ const errorClass = `class LeanEIOError(Exception):
 `;
 const copied = t => t?.kind === "primitive" ? Object.hasOwn(scalars, t.name)
 	: t?.kind === "apply" && t.constructor === "result" && t.arguments?.length === 2 && t.arguments.every(copied);
+const asset = path => readFileSync(new URL(path, import.meta.url), "utf8");
+const taskCodec = (i, value, error) => {
+	const task = `(_root_.Task ${value.lean})`;
+	return {
+		lean: error ? `(_root_.Except ${error.lean} ${task})` : task
+		, c: `static PyObject *lb_finish_${i}(lean_object *v) { return ${value.toPython("v")}; }
+static PyObject *lb_start_${i}(lean_object *v) {
+    ${error ? `int ok = lean_obj_tag(v) == 1;
+    lean_object *p = lean_ctor_get(v, 0);
+    PyObject *payload = ok ? lb_ticket_new(p, lb_finish_${i}) : ${error.toPython("p")};
+    if (!payload) return NULL;
+    PyObject *pair = PyTuple_Pack(2, ok ? Py_True : Py_False, payload);
+    Py_DECREF(payload); return pair;` : `return lb_ticket_new(v, lb_finish_${i});`}
+}`
+		, toPython: v => `lb_start_${i}(${v})`
+		, body: (raw, name) => [
+			`    _start = ${raw}`
+			, ...(error ? [`    if not _start[0]:\n        raise _lb_error_type("${name}", ${error.decode ? error.decode("_start[1]") : "_start[1]"})`] : [])
+			, `    _value = await _lb_await(${error ? "_start[1]" : "_start"})`
+			, `    return ${value.decode ? value.decode("_value") : "_value"}\n`
+		].join("\n")
+	};
+};
 const emit = (resources, entry, i, codecs) => {
 	const args = entry.parameters.map(p => carrier(resources, p.type));
-	const effect = entry.effect ?? "IO";
-	if(!["pure", "IO", "EIO"].includes(effect)) throw new TypeError("unsupported synchronous entry effect");
+	const effect = entry.effect ?? "IO", task = entry.delivery === "task", bound = resources.length > 0 && !task;
+	if(!["pure", "IO", "EIO", ...(task ? ["BaseIO"] : [])].includes(effect)) throw new TypeError("unsupported entry effect");
+	if(task && (!copied(entry.result) || entry.parameters.some(p => !copied(p.type)))) throw new TypeError("Lean tasks require copied carriers");
 	if((entry.result?.kind === "apply" && !copied(entry.result)) || (effect === "EIO" && !copied(entry.error)))
 		throw new TypeError("returned sums and EIO errors require copied payloads");
-	if(effect === "pure" && entry.result?.constructor !== "result") throw new TypeError("expected a returned Except");
-	const out = returned(resources, effect === "EIO" ? { kind: "apply", constructor: "result", arguments: [entry.result, entry.error] } : entry.result, codecs);
+	if(!task && effect === "pure" && entry.result?.constructor !== "result") throw new TypeError("expected a returned Except");
+	const asyncOut = task ? taskCodec(i, returned(resources, entry.result, codecs), effect === "EIO" ? returned(resources, entry.error, codecs) : null) : null;
+	const out = asyncOut ?? returned(resources, effect === "EIO" ? { kind: "apply", constructor: "result", arguments: [entry.result, entry.error] } : entry.result, codecs);
 	const symbol = `lb_python_host_invoke_${i}`;
 	const values = args.map((a, j) => a.unbox ? `${a.unbox}(v[${j}])` : `v[${j}]`).join(", ");
 	const application = `(_root_.${entry.declaration} ${args.map((_, j) => `v${j}`).join(" ")})`;
-	const invoke = effect === "EIO" ? `_root_.EIO.toIO' ${application}` : effect === "pure" ? `pure ${application}` : application;
+	const invoke = effect === "EIO" ? `_root_.EIO.toIO' ${application}` : effect === "pure" ? `pure ${application}` : effect === "BaseIO" ? `liftM ${application}` : application;
 	const lean = `@[export ${symbol}] def invoke${i} ${args.map((a, j) => `(v${j} : ${a.lean})`).join(" ")} : IO ${out.lean} := ${invoke}`;
-	const c = `extern lean_object *${symbol}(${args.map(a => a.c).join(", ") || "void"});
+	const c = `${asyncOut?.c ?? ""}
+extern lean_object *${symbol}(${args.map(a => a.c).join(", ") || "void"});
 static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     (void)module;
-    if (!lb_active() || !lean_bridge_native_component_ready(LB_COMPONENT)) {
+    ${bound ? `if (!lb_active() || !lean_bridge_native_component_ready(LB_COMPONENT)) {
         PyErr_SetString(PyExc_RuntimeError, "enter bind_hosts on this thread before calling this component"); return NULL;
-    }
+    }` : "if (!lb_prepare()) return NULL;"}
     if (PyTuple_GET_SIZE(args) != ${args.length}) { PyErr_SetString(PyExc_TypeError, "wrong number of arguments to ${entry.name}"); return NULL; }
-    lb_current->depth++; lb_frame frame = {lb_call_frame, NULL}; lb_call_frame = &frame; lb_sweep();
+    ${bound ? "lb_current->depth++; lb_frame frame = {lb_call_frame, NULL}; lb_call_frame = &frame; lb_sweep();" : ""}
     lean_object *v[${Math.max(1, args.length)}] = {0}, *io = NULL; PyObject *result = NULL;
     ${args.map((a, j) => `if (!(v[${j}] = ${a.fromPython(`PyTuple_GET_ITEM(args, ${j})`)})) goto done;`).join("\n    ")}
     io = ${symbol}(${values});
@@ -131,7 +158,7 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
         result = ${out.toPython("lean_io_result_get_value(io)")};
     } else {
         lean_object *e = lean_io_result_get_error(io);
-        if (!lb_restore_fault(e)) {
+        ${bound ? "if (!lb_restore_fault(e))" : ""} {
             lean_inc(e); lean_object *s = lb_python_host_error_text(e);
             PyObject *msg = lb_in_string(s); lean_dec(s);
             if (msg) { PyErr_SetObject(PyExc_RuntimeError, msg); Py_DECREF(msg); }
@@ -143,13 +170,14 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
     if (!result) PyErr_Fetch(&et, &ev, &tb);
     if (io) lean_dec(io);
     ${args.map((_, j) => `if (v[${j}]) lean_dec(v[${j}]);`).join(" ")}
-    lb_frame_close(&frame); lb_sweep(); lb_current->depth--;
+    ${bound ? "lb_frame_close(&frame); lb_sweep(); lb_current->depth--;" : ""}
     if (!result) PyErr_Restore(et, ev, tb);
     return result;
 }`;
 	const params = entry.parameters.map(p => p.name).join(", ");
 	const raw = `_native.${entry.name}(${params})`, decoded = out.decode ? out.decode(raw) : raw;
-	const python = `def ${entry.name}(${params}):\n    return ${effect === "EIO" ? `_lb_unwrap("${entry.declaration}", ${decoded})` : decoded}\n`;
+	const python = asyncOut ? `async def ${entry.name}(${params}):\n${asyncOut.body(raw, entry.declaration)}`
+		: `def ${entry.name}(${params}):\n    return ${effect === "EIO" ? `_lb_unwrap("${entry.declaration}", ${decoded})` : decoded}\n`;
 	return { lean, c, python, method: `{"${entry.name}", lb_invoke_${i}, METH_VARARGS, NULL}` };
 };
 
@@ -163,12 +191,16 @@ export const generatePythonHostExtension = options => {
 	const { ir, module, entries, runtimeIdentity, componentIdentity, modules = [module] } = options;
 	if(!modules.includes(module) || modules.some(m => !qualified.test(m)) || !entries.length || ![runtimeIdentity, componentIdentity].every(d => /^[a-f0-9]{64}$/u.test(d)))
 		throw new TypeError("expected a source module, entries, and exact runtime/component identities");
-	const provider = generatePythonHostProvider(ir);
+	const provider = ir ? generatePythonHostProvider(ir) : {
+		resources: [], lean: "", binder: "from . import _native\n"
+		, source: `#define PY_SSIZE_T_CLEAN\n#include <Python.h>\n#include <lean/lean.h>\n${asset("host-scalars.h")}` };
 	checkNames(entries, provider.resources);
-	const resources = ir.types.filter(r => r.kind === "resource" && r.host?.targets.includes("python"));
+	const resources = ir?.types.filter(r => r.kind === "resource" && r.host?.targets.includes("python")) ?? [];
 	const codecs = new Map(), functions = entries.map((e, i) => emit(resources, e, i, codecs));
+	const tasks = entries.some(e => e.delivery === "task"), errorTypes = codecs.size || entries.some(e => e.effect === "EIO");
 	const entryLean = [
-		...modules.map(m => `import ${m}`), "import LeanBridge.Host.Python"
+		...modules.map(m => `import ${m}`)
+		, ...(ir ? ["import LeanBridge.Host.Python"] : [])
 		, "set_option autoImplicit false", "namespace LeanBridgeHostEntry"
 		, "@[export lb_python_host_error_text] def errorText (e : IO.Error) : String := toString e"
 		, ...functions.map(f => f.lean), "end LeanBridgeHostEntry", ""].join("\n");
@@ -178,20 +210,23 @@ export const generatePythonHostExtension = options => {
 extern lean_object *lb_python_host_error_text(lean_object *);
 extern lean_object *initialize_BridgeHostExports(uint8_t);
 static void *lb_init_component(uint8_t b) { return initialize_BridgeHostExports(b); }
-static PyObject *lb_pybind(PyObject *mod, PyObject *args) {
-    (void)mod;
+static int lb_prepare(void) {
     if (PyThreadState_GetInterpreter(PyThreadState_Get()) != PyInterpreterState_Main()) {
-        PyErr_SetString(PyExc_RuntimeError, "this runtime requires the main Python interpreter"); return NULL;
+        PyErr_SetString(PyExc_RuntimeError, "this runtime requires the main Python interpreter"); return 0;
     }
     if (!lean_bridge_native_component_initialize(LB_COMPONENT, lb_init_component)) {
-        PyErr_SetString(PyExc_RuntimeError, "cannot initialize the Lean component in this process"); return NULL;
+        PyErr_SetString(PyExc_RuntimeError, "cannot initialize the Lean component in this process"); return 0;
     }
+    return 1;
+}
+${ir ? `static PyObject *lb_pybind(PyObject *mod, PyObject *args) {
+    (void)mod; if (!lb_prepare()) return NULL;
     if (lb_bind(lb_specs, sizeof(lb_specs)/sizeof(lb_specs[0]), args, "${runtimeIdentity}")) return NULL;
     Py_RETURN_NONE;
 }
 static PyObject *lb_pyunbind(PyObject *mod, PyObject *args) {
     (void)mod; (void)args; if (lb_unbind()) return NULL; Py_RETURN_NONE;
-}
+}` : ""}
 static PyObject *lb_matches_runtime(PyObject *mod, PyObject *args) {
     (void)mod;
     unsigned long long lean, broker;
@@ -199,10 +234,12 @@ static PyObject *lb_matches_runtime(PyObject *mod, PyObject *args) {
     return PyBool_FromLong(lean == (uintptr_t)&lean_register_external_class
         && broker == (uintptr_t)&lean_bridge_native_component_initialize);
 }
+${tasks ? asset("../native/task-notification.h") + "\n" + asset("task-delivery.h") : ""}
 ${[...codecs.values()].map(f => f.c).join("\n")}
 ${functions.map(f => f.c).join("\n")}
 static PyMethodDef lb_methods[] = {
-    {"_bind", lb_pybind, METH_VARARGS, NULL}, {"_unbind", lb_pyunbind, METH_NOARGS, NULL},
+    ${ir ? '{"_bind", lb_pybind, METH_VARARGS, NULL}, {"_unbind", lb_pyunbind, METH_NOARGS, NULL},' : ""}
+    ${tasks ? '{"_task_ready", lb_task_ready, METH_O, NULL}, {"_task_fd", lb_task_descriptor, METH_O, NULL}, {"_task_take", lb_task_take, METH_O, NULL}, {"_task_close", lb_task_close, METH_O, NULL},' : ""}
     {"_matches_runtime", lb_matches_runtime, METH_VARARGS, NULL},
     ${functions.map(f => f.method).join(",\n    ")}, {NULL, NULL, 0, NULL}
 };
@@ -217,10 +254,9 @@ PyMODINIT_FUNC PyInit__native(void) { return PyModule_Create(&lb_module); }
 	const hostNames = provider.resources.join(", ");
 	const stub = [
 		"from typing import ContextManager as _ContextManager"
-		, ...(codecs.size ? [resultTypes, "class LeanEIOError(Exception):\n    declaration: str\n    payload: object\n    def __init__(self, declaration: str, payload: object) -> None: ...\n"] : [])
-		, `from .host_types import ${provider.resources.map(n => `${n} as ${n}`).join(", ")}`
-		, `def bind_hosts(*, ${provider.resources.map(n => `${n}: type[${n}]`).join(", ")}) -> _ContextManager[None]: ...`
-		, ...entries.map(e => `def ${e.name}(${e.parameters.map(p => `${p.name}: ${render(p.type)}`).join(", ")}) -> ${render(e.result)}: ...`)
+		, ...(errorTypes ? [resultTypes, "class LeanEIOError(Exception):\n    declaration: str\n    payload: object\n    def __init__(self, declaration: str, payload: object) -> None: ...\n"] : [])
+		, ...(ir ? [`from .host_types import ${provider.resources.map(n => `${n} as ${n}`).join(", ")}`, `def bind_hosts(*, ${provider.resources.map(n => `${n}: type[${n}]`).join(", ")}) -> _ContextManager[None]: ...`] : [])
+		, ...entries.map(e => `${e.delivery === "task" ? "async " : ""}def ${e.name}(${e.parameters.map(p => `${p.name}: ${render(p.type)}`).join(", ")}) -> ${render(e.result)}: ...`)
 		, ""
 	].join("\n");
 	const types = ["from __future__ import annotations", "from typing import Protocol as _Protocol", ""];
@@ -244,12 +280,13 @@ PyMODINIT_FUNC PyInit__native(void) { return PyModule_Create(&lb_module); }
 		}
 		types.push("");
 	}
-	const support = codecs.size ? [resultTypes, errorClass
+	const support = errorTypes ? [
+		resultTypes, errorClass, "_lb_error_type = LeanEIOError"
 		, "def _lb_unwrap(declaration, value):\n    if isinstance(value, Err):\n        raise LeanEIOError(declaration, value.error)\n    return value.value\n"
 		, ...[...codecs.values()].map(f => f.python)].join("\n") : "";
 	return {
 		hostLean: provider.lean, entryLean, source, stub, types: types.join("\n")
-		, bindingIrSha256: hashBindingIr(ir)
-		, python: `${provider.binder}\nfrom .host_types import ${hostNames}\n\n${support}\n${functions.map(f => f.python).join("\n")}`
+		, bindingIrSha256: ir ? hashBindingIr(ir) : null
+		, python: `${provider.binder}\n${ir ? `from .host_types import ${hostNames}` : ""}\n\n${support}\n${tasks ? asset("task-await.py") : ""}\n${functions.map(f => f.python).join("\n")}`
 	};
 };

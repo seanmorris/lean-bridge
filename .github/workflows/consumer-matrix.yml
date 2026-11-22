@@ -4591,10 +4591,10 @@ jobs:
         if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'c-family' && (steps.ordinary_c.outcome != 'success' || steps.type_corpus_c_family.outcome != 'success' || steps.direct_proof_native.outcome != 'success' || steps.optional_parameters_native.outcome != 'success')) || (matrix.profile == 'python' && (steps.ordinary_python.outcome != 'success' || steps.type_corpus_python.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')) || (matrix.profile == 'rust' && (steps.ordinary_rust.outcome != 'success' || steps.type_corpus_rust.outcome != 'success' || steps.direct_proof_language.outcome != 'success' || steps.optional_parameters_language.outcome != 'success')))
         run: exit 1
 
-      - name: Install compiled Lean host imports and exercise ordinary Python classes
+      - name: Install and exercise compiled Lean host objects and asyncio tasks
         id: python_host_imports
         if: ${{ !cancelled() && matrix.profile == 'python' && steps.collection_python311.outcome == 'success' && steps.collection_python312.outcome == 'success' }}
-        timeout-minutes: 12
+        timeout-minutes: 18
         env:
           LEAN_BRIDGE_HOST_OBJECT_TEST: "1"
           LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR: build/consumer-ci/python-host-imports
@@ -4606,7 +4606,7 @@ jobs:
             LEAN_BRIDGE_HOST_PYTHON="$interpreter" node --test --test-concurrency=1 tests/host-object-generator.test.mjs || status=1
           done
           exit "$status"
-      - name: Retain installed Python host imports and the original shared wheels
+      - name: Retain Python host-object and task receipts with the original wheels
         if: ${{ !cancelled() && steps.python_host_imports.outcome == 'success' }}
         uses: actions/upload-artifact@v7
         with:

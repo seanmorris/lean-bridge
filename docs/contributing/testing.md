@@ -701,8 +701,15 @@ receipts, remove the tools, source and archives, and call each relocated
 installation. Negative cases cover unsupported exports, a mismatched public type,
 an unimplemented axiom and an undeclared foreign call. See the
 [authoring steps](../publish/pypi.md#call-python-objects-from-lean).
-Async, dynamic members, and compound or callable member values are not part
-of this installed profile.
+Dynamic members and compound or callable host-member values are not part
+of this installed profile. A separate [Timers fixture](../../tests/fixtures/python-lean-tasks/Timers.lean)
+builds standalone async wheels from both source routes with the installed CLI.
+The source-free consumer checks real task wakeup, typed startup failures,
+returned errors, cancellation before scheduling and during execution, late
+completion, loop shutdown, fork rejection and return to its file-descriptor
+baseline. It uses one Lean worker. Setting `LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR`
+retains these original wheels and receipts under `tasks/<tag>/<route>/`, with
+the shared runtime under `wheels/`.
 
 The shard's `python-host-imports-<attempt>` artifact contains the original wheels in
 `wheels/` (one copy of the shared runtime); each CPython tag contains the consumer

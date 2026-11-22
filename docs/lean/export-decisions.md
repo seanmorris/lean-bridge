@@ -26,7 +26,7 @@ declarations of the host methods they call.
 | Resources, host objects, mutable members | Declare identity, ownership, borrowing, transfer, and disposal. Keep incompatible runtimes separate. |
 | Callbacks and returned closures | Specify argument/result types, retention, reentry, failure behavior, and lifetime. |
 | `IO`, `EIO`, declared errors | Preserve effect order and typed failures. An IO action is not automatically asynchronous. |
-| `Task`, cancellation, iterators, async iterators | Specify result delivery and cleanup after completion, cancellation, failure, or early termination. |
+| `Task`, cancellation, iterators, async iterators | Specify delivery and cleanup after completion, cancellation, failure, or early termination. For Linux CPython, [select real Lean tasks for `await`](../publish/pypi.md#export-a-lean-task-to-asyncio) with `taskExports`. |
 
 These decisions define the full authoring work. A listed form becomes usable in a profile when its compiler, generated API, package, and installed checks support that mapping. The [implementation stages](../architecture/cross-language-authoring.md#stages) track the remaining work.
 
@@ -589,7 +589,7 @@ Both prebuilt and XS-only installation work without Lean sources. Explicit
 [parameter-anchored results](../consume/perl.md#borrowed-results) preserve their
 declared owner lifetimes. [Methods and properties](../consume/perl.md#methods-and-properties)
 use nominal owners and preserve the original receiver or argument anchor.
-Asynchronous delivery remains unsupported.
+This Perl ownership profile does not provide asynchronous delivery.
 
 ## Types understood by source analysis
 
