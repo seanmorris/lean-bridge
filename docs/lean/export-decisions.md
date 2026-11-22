@@ -576,7 +576,7 @@ API. For example, `Journal.read : String → IO String` reads a file:
 }
 ```
 
-Build one target (`c`, `cpp`, `cargo`, `rubygems` or `pypi`) at a time. No task, iterator or host import
+Build one target (`c`, `cpp`, `cargo`, `rubygems`, `nuget` or `pypi`) at a time. No task, iterator or host import
 is required. Source discovery alone cannot check OS access; use the build's
 `binding-ir.json` to review the compiled interface. The functions finish
 before returning. A thrown `EIO` error
@@ -592,6 +592,9 @@ The [Ruby IO package](../publish/rubygems.md#export-synchronous-io) uses the
 same checked effects and exposes ordinary Ruby methods and exceptions. Its
 [installed-gem receipts](../evidence/ruby-sync-io-20261122.json) include the
 missing-grant and altered-library checks.
+The [NuGet IO package](../publish/nuget.md#export-synchronous-io) runs the
+same operations as synchronous C# methods. Returned `Result<T,E>` values and
+thrown `DeclaredError<T>` exceptions remain distinct.
 
 The same distinction holds when a module also exports a task. In the
 [installed C, C++, Python and Rust example](../evidence/native-task-companions-20261122.json),

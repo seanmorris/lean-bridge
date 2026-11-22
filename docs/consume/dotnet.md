@@ -52,6 +52,38 @@ Nat and Int use `BigInteger`. Fixed-width numbers use their corresponding C# num
 
 Null strings, arrays and records, negative Nat inputs, and oversized input copies throw before invoking the Lean function. Managed input copying has a 16 MiB accounting budget. Native copying shares a separate 16 MiB budget across inputs and outputs, including array slots and record storage. These budgets do not bound every managed allocation or Lean working memory. An oversized result throws after Lean returns. Generated code releases temporary input buffers and native results on failure. Native library hashes and runtime compatibility are checked automatically when loading. See the [author guide](../publish/nuget.md#build-an-ordinary-lean-project) for admitted signatures.
 
+### Call synchronous IO
+
+A NuGet release marked `native-dotnet-io-v1` exposes ordinary C# methods.
+Call them on the process main thread. They finish before returning; do not
+wrap them in `Task.Run`. For example, the Journal package writes a file and
+reads it back in that order:
+
+```csharp
+using System;
+using LeanBridge.Journal;
+
+Api.Store("state.txt", "ready");
+Console.WriteLine(Api.Read("state.txt")); // ready
+
+var result = Api.Choose(false, false, "detail"); // returned Result<string, uint>
+Console.WriteLine(result.Error);               // 37
+try { Api.Choose(true, false, "detail"); }
+catch (DeclaredError<Result<string, uint>> e)
+{
+    Console.WriteLine(e.Declaration);   // Journal.choose
+    Console.WriteLine(e.Payload.Error); // 37
+}
+```
+
+A file error throws `LeanIOException` (a `System.IO.IOException`) with the
+Lean declaration and message. Neither a declared error nor a file error
+stops later calls. Null inputs, invalid UTF-16, negative `Nat` and inputs
+over the copy budget are rejected before Lean runs. The package includes
+and loads the matching native runtime; no scheduler or interop setup is
+needed. See [how to export this API](../publish/nuget.md#export-synchronous-io)
+and the [installed results for both load orders](../evidence/dotnet-sync-io-20261122.json).
+
 ### Arrays and records
 
 Lean `Array T` uses a typed C# `T[]`, including nested arrays and arrays of
@@ -858,6 +890,8 @@ Profiles: C#. Installed checks apply only to the named positions and package pat
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
+
+For a synchronous NuGet package (`native-dotnet-io-v1`), see [calling compiled IO and distinguishing typed errors from returned results](#call-synchronous-io). This installed profile is separate from the general audit rows below.
 
 [Hosted dependent checked-record acceptance](../evidence/dependent-checked-record-promotion.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The proof-free host value carries the tested runtime bound and bounded value. Full packages validate inputs with the selected dependent constructor before Lean execution; standalone result-only packages expose Lean-produced values without checked-input metadata. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain outside this evidence.
 

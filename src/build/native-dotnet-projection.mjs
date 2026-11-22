@@ -36,6 +36,26 @@ export const projectOrdinaryDotnet = async ({ working, nativeRoot, runtimeRoot, 
 	auditManagedBindingPackage(model.bindingIr, files, "dotnet");
 	for(const [path, contents] of Object.entries(files))
 	{ await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), contents, { flag: "wx" }); }
+	const version = await compilePreparedAssembly({ root, scratch, working, assembly: projection.assembly, environment, signal });
+	const inventory = {};
+	for(const path of await nativeArtifactPaths(root))
+	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
+	await writeFile(join(root, "native-dotnet.json"), canonicalJson({ schemaVersion: 1, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256, evidence, sdk: version, assembly: projection.assembly, files: inventory }), { flag: "wx" });
+	return packageOrdinaryNuget({ working, dotnetRoot: root, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings, glibcMinimumVersion });
+};
+
+/**
+ * Compile a generated net8.0 project offline with its exact installed SDK.
+ *
+ * @param options - Generated source tree and build environment.
+ * @param options.root - Managed project root containing a private NuGet.Config.
+ * @param options.scratch - Private intermediate files and local package cache.
+ * @param options.working - Parent staging path to erase from compiler output.
+ * @param options.assembly - Validated managed assembly name.
+ * @param options.environment - Explicit toolchain environment.
+ * @param options.signal - Optional cancellation signal.
+ */
+export const compilePreparedAssembly = async ({ root, scratch, working, assembly, environment, signal }) => {
 	const env = { ...environment, DOTNET_CLI_HOME: join(scratch, "cli"), DOTNET_CLI_TELEMETRY_OPTOUT: "1", DOTNET_NOLOGO: "1", DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1", NUGET_PACKAGES: join(scratch, "packages") };
 	const run = args => processBuildRunner.capture({ command: environment.LEAN_BRIDGE_DOTNET ?? "dotnet", args, cwd: root, env, signal });
 	const sdks = (await run(["--list-sdks"])).stdout.split("\n").map(line => /^(8\.0\.\d+) \[/.exec(line)?.[1]).filter(Boolean);
@@ -44,7 +64,7 @@ export const projectOrdinaryDotnet = async ({ working, nativeRoot, runtimeRoot, 
 	await writeFile(join(root, "global.json"), canonicalJson({ sdk: { version, rollForward: "disable", allowPrerelease: false } }), { flag: "wx" });
 	if((await run(["--version"])).stdout.trim() !== version) throw new Error("The generated .NET project did not use its selected SDK");
 	const output = join(root, "lib/net8.0");
-	await run(["build", `src/${projection.assembly}/${projection.assembly}.csproj`
+	await run(["build", `src/${assembly}/${assembly}.csproj`
 		, "--configuration", "Release", "--output", output
 		, "--nologo", "--disable-build-servers"
 		, "-noAutoResponse"
@@ -55,9 +75,5 @@ export const projectOrdinaryDotnet = async ({ working, nativeRoot, runtimeRoot, 
 		, `/p:BaseIntermediateOutputPath=${scratch}/obj/`
 		, `/p:PathMap=${working}=/build/ordinary-dotnet`]);
 	await rm(scratch, { recursive: true, force: true });
-	const inventory = {};
-	for(const path of await nativeArtifactPaths(root))
-	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await writeFile(join(root, "native-dotnet.json"), canonicalJson({ schemaVersion: 1, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256, evidence, sdk: version, assembly: projection.assembly, files: inventory }), { flag: "wx" });
-	return packageOrdinaryNuget({ working, dotnetRoot: root, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings, glibcMinimumVersion });
+	return version;
 };

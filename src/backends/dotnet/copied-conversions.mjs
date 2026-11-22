@@ -162,7 +162,7 @@ ${copy.cases.map((branch, index) => `            ${index} => new ${branch.public
 }).join("\n");
 
 /** Closed, copied C# compound values. No native discriminants enter the public API. */
-export const copiedCompoundTypes = `/// <summary>A copied Lean Option. Default is None; Some retains its payload, including nested None.</summary>
+const copiedOptionType = `/// <summary>A copied Lean Option. Default is None; Some retains its payload, including nested None.</summary>
 public readonly record struct Option<T>
 {
     private readonly T value;
@@ -177,8 +177,9 @@ public readonly record struct Option<T>
     public override int GetHashCode() => global::System.HashCode.Combine(IsSome,
         IsSome ? global::System.Collections.StructuralComparisons.StructuralEqualityComparer.GetHashCode(value!) : 0);
     public override string ToString() => IsSome ? $"Some({value})" : "None";
-}
-/// <summary>A copied Lean Except. Use Ok or Err; default has no branch and cannot cross the boundary.</summary>
+}`;
+/** The same checked Result value is used in pure and effectful managed APIs. */
+export const copiedResultType = `/// <summary>A copied Lean Except. Use Ok or Err; default has no branch and cannot cross the boundary.</summary>
 public readonly record struct Result<T, E>
 {
     private readonly byte state;
@@ -207,6 +208,7 @@ public readonly record struct Result<T, E>
     public override string ToString() => IsOk ? $"Ok({value})" : IsError ? $"Err({error})" : "Uninitialized Result";
 }
 `;
+export const copiedCompoundTypes = copiedOptionType + "\n" + copiedResultType;
 
 /** C# scoped scratch allocation. Native results use their own generated clear functions. */
 export const copiedScope = `internal sealed unsafe class Scope : IDisposable

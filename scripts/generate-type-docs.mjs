@@ -534,6 +534,7 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		, ...(profiles.length === 1 && profiles[0] === "ruby"
 			? ["", "For a compiled Ruby gem, check its package receipt: `native-ruby-io-v1` supports [synchronous IO and typed errors](#call-synchronous-io), and `native-ruby-task-v1` supports [tasks and pull streams](#await-a-task-or-read-a-stream). Those profiles have separate installed checks; the general audit rows below do not describe their delivery APIs."] : [])
 		, ...(zeroPayloadMatrix ? ["", zeroPayloadMatrix] : [])
+		, ...(profiles.length === 1 && profiles[0] === "dotnet" ? ["", "For a synchronous NuGet package (`native-dotnet-io-v1`), see [calling compiled IO and distinguishing typed errors from returned results](#call-synchronous-io). This installed profile is separate from the general audit rows below."] : [])
 		, ...(dependentCheckedRecordMatrix
 			? ["", dependentCheckedRecordMatrix] : [])
 		, ...(dependentSignatureComplete

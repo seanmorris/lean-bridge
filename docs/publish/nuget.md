@@ -38,6 +38,35 @@ Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation.
 
 NuGet archive assembly consumes verified compiled artifacts and does not invoke a compiler. Registry upload uses the native NuGet commands below. Verify the release with `lean-bridge verify --receipt /absolute/path/to/aurora-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
+## Export synchronous IO
+
+Select the functions and declare the OS access they use in
+`lean-bridge.exports.json`. This example uses the [Journal source](../../tests/fixtures/native-sync-io/Journal.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.store", "Journal.read", "Journal.choose"],
+  "nativeEffects": ["filesystem"],
+  "targets": { "nuget": { "name": "Acme.Journal", "version": "1.2.0-rc.1" } }
+}
+```
+
+Build with `lean-bridge build --project . --target nuget --output release`.
+Use `nativeEffects: []` for an in-memory IO API. The build checks transitive
+Lean calls and refuses undeclared OS access. The `native-dotnet-io-v1` package
+accepts primitive arguments, including `Nat`, `Int`, `String` and `ByteArray`;
+results and declared error payloads can also be nested `Except` values.
+Pure companions can share the assembly. A reviewed `.binding-ir.json` must
+match a fresh elaboration of the same project.
+
+The prepared archive includes the managed assembly, compiled component,
+runtime, licenses and package receipt. See [calling the installed package](../consume/dotnet.md#call-synchronous-io).
+The [offline install results](../evidence/dotnet-sync-io-20261122.json) identify the
+ordinary and reviewed archives and record the matching public interface digest.
+This synchronous profile does not export task factories, iterators or resource leases.
+
 ## Export arrays and records
 
 Select concrete exports using `Array T` and acyclic Lean structures in the same

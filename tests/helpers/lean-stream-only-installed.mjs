@@ -31,7 +31,7 @@ test("a stream-only package installs pure and IO factories with shared private o
 		return JSON.parse(stdout);
 	};
 	const wrongTarget = join(root, "unsupported");
-	await assert.rejects(run("build", "--project", project, "--target", "nuget", "--output", wrongTarget), /Select one native IO target/u);
+	await assert.rejects(run("build", "--project", project, "--target", "nuget", "--output", wrongTarget), /NuGet synchronous IO profile does not implement async delivery/u);
 	await assert.rejects(access(wrongTarget), { code: "ENOENT" });
 	await run("build", "--project", project, "--target", "pypi", "--output", output);
 	const receipt = join(output, "package-set-receipt.json");
