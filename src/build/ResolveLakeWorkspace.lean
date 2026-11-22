@@ -32,6 +32,7 @@ structure Request where
   files : Array String
   generatorPhase : String := "none"
   generators : Array GeneratorInput := #[]
+  generatedPythonHost? : Option Bool := none
   deriving FromJson
 
 structure Traversal where
@@ -138,6 +139,12 @@ partial def visit (request : Request) (ws : Workspace) (name : Name)
   if (← get).visiting.contains name then
     fail s!"Cyclic Lake module imports: {name}"
   let candidates := ws.findModules name
+  -- Only the host-wheel build supplies this exact module, in private staging.
+  -- The application cannot provide it, and this exception never affects other imports.
+  if request.generatedPythonHost? == some true && name == `LeanBridge.Host.Python then
+    unless candidates.isEmpty do fail "Lake source shadows the generated Python host module"
+    modify fun state => { state with external := state.external.insert name }
+    return
   if candidates.isEmpty then
     -- The search path contains only the selected compiler's libraries.
     let _ ← findOLean name

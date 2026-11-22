@@ -690,17 +690,26 @@ objects, fork/thread rejection, cleanup, and an altered binary. The runtime is
 a pinned wheel dependency that pip resolves; the application never loads it by
 hand. The generated functions accept keywords and ship typing declarations.
 
-The native Python CI shard runs both interpreters sequentially. This Linux
-x86-64 producer API takes an explicit host-import contract and selected Lean
-`IO` declarations. The ordinary/reviewed `lean-bridge build` authoring routes
-do not yet select host imports. Async, dynamic members, and compound or
-callable member values are not part of this installed fixture.
+The native Python CI shard runs both interpreters sequentially. Its
+[meter project](../../tests/fixtures/python-host-meter/Workshop.lean) also
+builds both ways through an offline-installed CLI: directly from source,
+then from a reviewed public API and a Lake lock. The tests verify both
+receipts, remove the tools, source and archives, and call each relocated
+installation. Negative cases cover non-IO results, a mismatched public type,
+an unimplemented axiom and an undeclared foreign call. See the
+[authoring steps](../publish/pypi.md#call-python-objects-from-lean).
+Async, dynamic members, and compound or callable member values are not part
+of this installed profile.
 
 The shard's `python-host-imports-<attempt>` artifact contains the original wheels in
 `wheels/` (one copy of the shared runtime), the compiler inputs, the consumer
 program, and both package-set receipts under each CPython tag. To retain the
 same files locally, set `LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR` to a fresh
 directory outside the source tree before running the checks for both versions.
+The CLI cases retain their source, review, compiler metadata, component wheel,
+receipt and consumer check in `projects/<tag>/<route>/`. To verify a retained
+receipt, place that component wheel and its matching runtime wheel from
+`wheels/` in an adjacent `archives/` directory, then run `lean-bridge verify`.
 
 ### Ordinary-source Python packages
 

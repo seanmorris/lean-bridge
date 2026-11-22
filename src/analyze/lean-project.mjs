@@ -543,6 +543,7 @@ export const inspectLeanProject = async (projectRoot, { signal = undefined } = {
 		path.endsWith(".lean")
     || path.endsWith(".binding-ir.json")
     || relevantProjectFiles.has(basename(path))
+    || (configurationRecord.configuration.hostImports && path === join(root, configurationRecord.configuration.hostImports))
     || isSourceNotice(relative(root, path).replaceAll("\\", "/"), packageMetadata)
 	);
 	const inputs = [];
@@ -570,6 +571,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 	const inspected = await inspectLeanProject(root, { signal });
 	const { inputs, sourceTreeSha256: treeSha256, project: facts, configurationRecord } = inspected;
 	const configuration = configurationRecord.configuration;
+	if(configuration.hostImports)
+		fail("host-imports-require-elaboration", "Host imports require compiler-checked IO signatures; source discovery cannot authorize generated foreign declarations");
 	if(configuration.ownedAggregates !== undefined)
 		fail("ownership-requires-elaboration", "Owned aggregates require compiler-backed analysis; source discovery cannot authorize retained resource fields");
 	if(Object.keys(configuration.arities ?? {}).length)

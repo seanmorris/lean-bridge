@@ -76,7 +76,12 @@ const ownershipNote = site => {
 	return `${site.ownership}, lifetime ${lifetime}`;
 };
 
-const declarationName = declaration => declaration.kind === "property"
+/**
+ * Resolve an imported member's Lean name, including the two sides of a property.
+ *
+ * @param declaration - Validated host member.
+ */
+export const hostDeclarationName = declaration => declaration.kind === "property"
 	? `${declaration.parameters.length === 0 ? "get" : "set"}${pascal(declaration.name)}`
 	: declaration.name;
 
@@ -88,7 +93,7 @@ const declarationName = declaration => declaration.kind === "property"
  * @param declaration - Operation whose kind distinguishes reads and writes of the same property.
  */
 export const hostMemberSymbol = (target, type, declaration) =>
-	`lean_bridge_host_${snake(target)}_${snake(type.name)}_${snake(declarationName(declaration))}`;
+	`lean_bridge_host_${snake(target)}_${snake(type.name)}_${snake(hostDeclarationName(declaration))}`;
 
 const emitTarget = (ir, target, resources) => {
 	const namespace = `LeanBridge.Host.${pascal(target)}`;
@@ -123,7 +128,7 @@ const emitTarget = (ir, target, resources) => {
 				`(${parameter.name} : ${parameter.ownership === "borrow" ? "@& " : ""}${leanType(types, parameter.type)})`,
 			);
 			if(declaration.receiver !== null) parameters.unshift(`(self : ${declaration.receiver.ownership === "borrow" ? "@& " : ""}${type.name})`);
-			const name = declarationName(declaration);
+			const name = hostDeclarationName(declaration);
 			const symbol = hostMemberSymbol(target, type, declaration);
 			if(symbols.has(symbol)) fail("host-member-collision", "Host members resolve to the same external symbol", { symbol });
 			symbols.add(symbol);

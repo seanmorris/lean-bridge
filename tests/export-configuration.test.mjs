@@ -29,6 +29,21 @@ const workspace = async t => {
 const configure = (directory, value) => writeFile(join(directory, exportConfigurationFile), JSON.stringify(value));
 const copySite = { ownership: "copy", lifetime: null };
 
+test("host imports require an exact file, explicit modules and compiler-backed export checking", async t => {
+	const directory = await workspace(t);
+	const hostImports = "lean-bridge.hosts.json";
+	const valid = { schemaVersion: 1, modules: ["First"], hostImports };
+	assert.equal(validateExportConfiguration(valid), valid);
+	await assertJsonSchema("lean-export-configuration", valid);
+	for(const value of [{ schemaVersion: 1, hostImports }, { ...valid, hostImports: "../host.json" }, { ...valid, modules: [] }])
+	{
+		assert.throws(() => validateExportConfiguration(value), { code: "invalid-export-configuration" });
+		await assert.rejects(assertJsonSchema("lean-export-configuration", value));
+	}
+	await configure(directory, valid);
+	await assert.rejects(analyzeLeanProject(directory), { code: "host-imports-require-elaboration" });
+});
+
 test("export contracts and their schema agree on closed ownership, lifetime, refinement and effect choices", async () => {
 	const wrap = contract => ({ schemaVersion: 1, contracts: { "Library.run": contract } });
 	const borrowed = { ownership: "borrow", lifetime: { scope: "call", anchor: null } };

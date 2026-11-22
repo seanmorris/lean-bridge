@@ -14,6 +14,7 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { readNativeReviewedSource } from "../analyze/reviewed-owned-source.mjs";
+import { buildPythonHostProject } from "./host-project.mjs";
 import { generateOwnedCValues } from "../backends/c/owned-values.mjs";
 import { generateOwnedCppPackage } from "../backends/cpp/owned-package.mjs";
 import { generateOwnedRustPackage } from "../backends/rust/owned-package.mjs";
@@ -82,7 +83,13 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and cpan targets");
 	const ownedGraphs = targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target));
 	try
-	{ await readNativeReviewedSource(projectRoot, await inspectLeanProject(projectRoot, { signal }), signal, ownedGraphs); }
+	{
+		const inventory = await inspectLeanProject(projectRoot, { signal });
+		if(inventory.configurationRecord.configuration.hostImports)
+			return await buildPythonHostProject({ projectRoot, outputRoot, targets
+				, environment, signal, onProgress, lakeSnapshot, inventory });
+		await readNativeReviewedSource(projectRoot, inventory, signal, ownedGraphs);
+	}
 	catch(error)
 	{ throw new CanonicalBuildError(error.code ?? "native-project-build-failed", error.message, { details: error.details }); }
 	const record = await readExportConfiguration(projectRoot, { signal });

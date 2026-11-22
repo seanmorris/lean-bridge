@@ -65,6 +65,33 @@ Python conversion and native input/output copying each have a 16 MiB budget. Arr
 
 Calls can run on separate threads. Do not mutate inputs during conversion. The loader rejects free-threaded interpreters and calls after `fork`; start a fresh interpreter in the child process. Subinterpreters and non-CPython implementations have not been accepted. See the [installed-wheel evidence](../evidence/native-python-20260915.md) for tested versions and cases.
 
+### Bind a Python object that Lean calls
+
+Some components call methods on your own objects. The meter example ships a
+component wheel for your CPython version and a shared runtime wheel. With both
+in the publisher's `archives/` directory, install without a registry:
+
+```sh
+./.venv/bin/python -m pip install --no-index --find-links ./archives lean-meter==2.0.1
+```
+
+Save this as `meter.py` and run it with `./.venv/bin/python meter.py`:
+
+```python
+import lean_meter
+
+class Meter:
+    def read(self) -> int:
+        return 47
+
+with lean_meter.bind_hosts(Box=Meter):
+    assert lean_meter.read_level(box=Meter()) == 47
+```
+
+`Box` is the name in the component's contract; your class doesn't have to
+inherit from a generated base class. The call into Lean returns the value
+from your Python method. pip installs the matching runtime automatically.
+
 ### Arrays and records
 
 For an installed [Parcels package](../publish/pypi.md#export-arrays-and-records),

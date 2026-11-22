@@ -21,7 +21,7 @@ Prepare the source and select exports using [shared export configuration](../lea
 }
 ```
 
-Use a lowercase hyphen-separated distribution name you own. Python imports follow the compiled component name, not the distribution name: component `iris` becomes `lean_iris`. Release versions such as `1.2.3`, `2.0.0rc1` and `1.2.3.post1` are accepted. The development default is `0.0.0+local`; choose a public version before uploading to PyPI.
+Use a lowercase hyphen-separated distribution name you own. For these copied-value and callable packages, Python imports follow the compiled component name, not the distribution name: component `iris` becomes `lean_iris`. Release versions such as `1.2.3`, `2.0.0rc1` and `1.2.3.post1` are accepted. The development default is `0.0.0+local`; choose a public version before uploading to PyPI.
 
 On Linux x86-64 with the pinned Lean toolchain, native C compiler and Python 3.11 or newer available, run:
 
@@ -44,6 +44,58 @@ Repeat `--target` to combine PyPI with npm, CPAN, C, C++, Cargo, NuGet, Maven, R
 Before upload, run `lean-bridge verify --receipt ./release-iris/package-set-receipt.json` and the [installed Python example](../consume/python.md#ordinary-project-packages). Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths with the wheel for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). These unsigned checks detect byte and metadata drift; they do not authenticate the publisher. The [acceptance record](../evidence/native-python-20260915.md) covers relocated builds, offline pip installation, cleanup and shared-runtime composition.
 
 Use the Twine upload and download checks below for an ordinary wheel too. The Alpha-specific source projection and preflight are separate.
+
+## Call Python objects from Lean
+
+The [meter project](../../tests/fixtures/python-host-meter/lean-bridge.exports.json)
+shows the two sides of this interface. The application supplies a Python
+class with a `read()` method. A public Lean function accepts an instance and
+returns its reading:
+
+```lean
+import LeanBridge.Host.Python
+namespace Workshop
+open LeanBridge.Host.Python
+
+def readLevel (box : Box) : IO UInt32 := box.read
+end Workshop
+```
+
+In `lean-bridge.exports.json`, set `hostImports` to
+[`lean-bridge.hosts.json`](../../tests/fixtures/python-host-meter/lean-bridge.hosts.json).
+That file describes the **imports**: a nominal `Box` and its borrowed
+receiver and copied `UInt32` result. Select the application's own public
+functions with `modules` and `exports`. Lean Bridge generates the import
+module; don't add your own `LeanBridge/Host/Python.lean`.
+
+Build the Lake package on Linux x86-64 with Lean 4.32.2, a C compiler, and CPython 3.11 or 3.12
+with its shared library and development headers. From the repository root:
+
+```sh
+lean-bridge build --project tests/fixtures/python-host-meter \
+  --target pypi --output build/meter-release
+lean-bridge verify --receipt build/meter-release/package-set-receipt.json
+```
+
+The CLI compiles the selected modules and inspects their fresh Lean interfaces.
+The release contains `binding-ir.json` (the **exports**), a compiler evidence
+file, and two wheels under `archives/`: the CPython-specific component and
+its exact shared-runtime dependency. This profile uses the distribution name
+with underscores for the Python import: `lean-meter` becomes `lean_meter`.
+Give consumers both wheels. See
+[binding a Python class](../consume/python.md#bind-a-python-object-that-lean-calls)
+for the offline installation and call.
+
+For a reviewed build, copy the emitted `binding-ir.json` into your source
+project as `api.binding-ir.json`. Keep `modules` and `hostImports`; the review
+can now supply the export list. The next build checks the review against
+fresh signatures, effects, ownership and the host-import identity. A mismatch
+stops the build before it exposes a release. Editing documentation alone does
+not change the API contract.
+
+This profile builds one target at a time. It supports synchronous `IO`
+entries over copied scalars and declared host objects, not async delivery,
+compound member arguments, custom native objects or generated Lake targets.
 
 ## Export arrays and records
 

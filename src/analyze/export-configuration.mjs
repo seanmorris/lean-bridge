@@ -14,6 +14,7 @@ import { validateOwnedAggregatePolicy } from "./owned-aggregate-policy.mjs";
 import { projectionCheckedSelection, validateCheckedRefinementSelection } from "./checked-refinement-selection.mjs";
 
 export const exportConfigurationFile = "lean-bridge.exports.json";
+export const hostImportsFile = "lean-bridge.hosts.json";
 const legacyFile = "lean-bridge.native.json";
 const leanName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
 const specializationName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/;
@@ -61,8 +62,10 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "contracts", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
+	if(configuration.hostImports !== undefined && (configuration.hostImports !== hostImportsFile || !Array.isArray(configuration.modules) || !configuration.modules.length))
+		fail("invalid-export-configuration", `hostImports requires ${hostImportsFile} and selected application modules`);
 	if(configuration.ownedAggregates !== undefined)
 	{
 		try

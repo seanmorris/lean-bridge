@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import "./helpers/host-object-compiled.mjs";
 import "./helpers/host-object-installed.mjs";
+import "./helpers/host-object-project.mjs";
 import { generatePythonHostExtension } from "../src/backends/python/host-exports.mjs";
 import { generatePythonHostProvider } from "../src/backends/python/host-provider.mjs";
 

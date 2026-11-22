@@ -1,6 +1,6 @@
 /**
  * Build installable native CPython host-import wheels from explicit producer inputs.
- * This lower-level assembly is not a substitute for ordinary/reviewed project analysis.
+ * The project build derives its entry signatures from freshly compiled interfaces.
  *
  * @file
  */
@@ -12,8 +12,12 @@ import { pinnedCompiledLean } from "../build/elaborated-component.mjs";
 import { readVerifiedNativeRuntime, validateNativeElf } from "../build/native-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generatePythonHostExtension } from "../backends/python/host-exports.mjs";
+import { validateOrdinaryPythonSettings } from "../backends/python/copied-model.mjs";
+import { pythonPackageMetadata } from "../analyze/package-metadata.mjs";
+import { hashBindingIr } from "../binding-ir/canonical.mjs";
+import { compileHostSources } from "../build/host-elaboration.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
-import { writeWheelRecord } from "./pypi-package.mjs";
+import { writeWheelRecord } from "./wheel-record.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
 
 const moduleName = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/u;
@@ -34,11 +38,12 @@ const workspace = async (workRoot, fn) => {
 	{ await rm(stage, { force: true, recursive: true }); }
 };
 const notice = fileURLToPath(new URL("../../LICENSE", import.meta.url));
-const wheel = async ({ stage, output, name, version, tag, summary, requires = "", licenses }) => {
+const wheel = async ({ stage, output, name, version, tag, summary, metadata = {}, requires = "", licenses }) => {
 	const root = join(stage, "wheel"), dist = `${normalize(name)}-${version}.dist-info`;
 	for(const [key, bytes] of Object.entries(licenses)) await save(root, `${dist}/licenses/${key}`, bytes);
 	await save(root, `${dist}/WHEEL`, `Wheel-Version: 1.0\nGenerator: lean-bridge-python-host/1\nRoot-Is-Purelib: false\nTag: ${tag}\n`);
-	await save(root, `${dist}/METADATA`, `Metadata-Version: 2.4\nName: ${name}\nVersion: ${version}\nSummary: ${summary}\nRequires-Python: >=3.11\n${requires}${Object.keys(licenses).map(n => `License-File: ${n}\n`).join("")}\n`);
+	const fields = pythonPackageMetadata({ description: summary, ...metadata });
+	await save(root, `${dist}/METADATA`, `Metadata-Version: 2.4\nName: ${name}\nVersion: ${version}\n${fields}\nRequires-Python: >=3.11\n${requires}${Object.keys(licenses).map(n => `License-File: ${n}\n`).join("")}\n`);
 	await writeWheelRecord(root, dist);
 	const bytes = await createDeterministicZip({ directory: root, sourceDateEpoch: 315532800 });
 	const archive = `${normalize(name)}-${version}-${tag}.whl`;
@@ -87,35 +92,31 @@ print(json.dumps([c.get_path("include"), str(next(p for p in paths if p.is_file(
  * @param options - Producer source, reviewed named entry signatures, import contract and tools.
  */
 export const buildPythonHostWheel = async options => {
-	const { sources, module, entries, ir, name, version, license, runtimeRoot, leanPrefix, python, workRoot, output, cc = "cc" } = options;
-	if(!/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/u.test(name) || name === runtimePackage || !/^\d+\.\d+\.\d+$/u.test(version)
-		|| !sources?.length || !license || !sources.some(s => s.module === module) || new Set(sources.map(s => s.module)).size !== sources.length
+	const { sources, module, projectContract, ir, name, version, license, runtimeRoot, leanPrefix, python, workRoot, output, cc = "cc", environment = process.env, signal } = options;
+	validateOrdinaryPythonSettings({ name, version });
+	if(!name || !version || name === runtimePackage || !sources?.length || (!license && !projectContract?.notices)
+		|| !sources.some(s => s.module === module) || new Set(sources.map(s => s.module)).size !== sources.length
 		|| sources.some(s => !moduleName.test(s.module) || /^(?:LeanBridge(?:\.|$)|BridgeHostExports$)/u.test(s.module) || typeof s.source !== "string"))
 		throw new TypeError("invalid Python host component source, license or package coordinates");
 	const { identity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
-	const run = (command, args, cwd, env = process.env) => processBuildRunner.capture({ command, args, cwd, env });
+	const run = (command, args, cwd, env = environment) => processBuildRunner.capture({ command, args, cwd, env, signal });
 	if(manifest.leanCommit !== pinnedCompiledLean || !(await run(join(leanPrefix, "bin/lean"), ["--version"], workRoot)).stdout.includes(pinnedCompiledLean))
 		throw new Error("host component compiler/runtime pin differs");
 	return workspace(workRoot, async stage => {
 		const [include, pylib, suffix, abi] = JSON.parse((await run(python, ["-I", "-c", pythonConfig], stage)).stdout);
 		const tag = `${abi}-${abi}-${platformTag}`, pkg = normalize(name);
-		const config = { ir, module, entries, runtimeIdentity: identity };
+		const app = join(stage, "producer"), root = join(stage, "wheel", pkg);
+		const { entries, env, objects, api, evidence } = await compileHostSources({ ...options, environment, run, app });
+		const config = { ir, module, entries, runtimeIdentity: identity, modules: projectContract?.modules };
 		const skeleton = generatePythonHostExtension({ ...config, componentIdentity: "0".repeat(64) });
 		const sourceIdentity = sources.map(s => ({ module: s.module, sha256: sha256(s.source) }));
-		const sourceTreeSha256 = sha256(canonicalJson({ name, version, module, entries, sourceIdentity, bindingIrSha256: skeleton.bindingIrSha256, licenseSha256: sha256(license) }));
+		const sourceTreeSha256 = projectContract?.sourceTreeSha256 ?? sha256(canonicalJson({ name, version, module, entries, sourceIdentity, bindingIrSha256: skeleton.bindingIrSha256, licenseSha256: sha256(license) }));
 		const runtimePackageVersion = loaderVersion(identity, await readFile(loaderPath));
-		const componentIdentity = sha256(canonicalJson({ sourceTreeSha256, skeleton, tag, runtimePackageVersion }));
+		const componentIdentity = sha256(canonicalJson({ sourceTreeSha256, skeleton, tag, runtimePackageVersion, ...(evidence ? { provenance: evidence } : {}) }));
 		const generated = generatePythonHostExtension({ ...config, componentIdentity });
-		const app = join(stage, "producer"), root = join(stage, "wheel", pkg);
-		const env = { ...process.env, LEAN_PATH: app, LEAN_NUM_THREADS: "1" }, objects = [];
-		const modules = [{ module: "LeanBridge.Host.Python", source: generated.hostLean }, ...sources, { module: "BridgeHostExports", source: generated.entryLean }];
-		for(const [i, s] of modules.entries())
-		{
-			const relative = s.module.replaceAll(".", "/");
-			await save(app, `${relative}.lean`, s.source);
-			await run(join(leanPrefix, "bin/lean"), ["-j1", "-o", `${relative}.olean`, "-c", `module${i}.c`, `${relative}.lean`], app, env);
-			objects.push(`module${i}.c`);
-		}
+		await save(app, "BridgeHostExports.lean", generated.entryLean);
+		await run(join(leanPrefix, "bin/lean"), ["-j1", "-c", "entry.c", "BridgeHostExports.lean"], app, env);
+		objects.push("entry.c");
 		await save(app, "provider.c", generated.source);
 		await save(app, "exports.map", "{ global: PyInit__native; local: *; };\n");
 		await mkdir(root, { recursive: true });
@@ -144,18 +145,27 @@ del _runtime
 `);
 		await save(root, "__init__.pyi", generated.stub); await save(root, "py.typed", "");
 		await save(root, "host_types.py", generated.types);
+		const bindingIrSha256 = api ? hashBindingIr(api) : generated.bindingIrSha256;
+		if(api)
+		{
+			await save(root, "binding-ir.json", canonicalJson(api));
+			await save(root, "host-imports.json", canonicalJson(ir));
+			await save(root, "elaboration.json", canonicalJson(evidence));
+		}
 		await save(root, "host-component.json", canonicalJson({
 			schemaVersion: 1, componentIdentity, sourceIdentity
-			, runtimeIdentity: identity, bindingIrSha256: generated.bindingIrSha256
+			, runtimeIdentity: identity, bindingIrSha256
+			, hostImportsSha256: generated.bindingIrSha256
 			, entries, module, tag, binary, binarySha256: sha256(bytes)
 			, runtimePackageVersion
 		}));
 		const archive = await wheel({
 			stage, output, name, version, tag
 			, summary: "Compiled Lean component with generated Python host imports"
+			, metadata: projectContract?.metadata
 			, requires: `Requires-Dist: ${runtimePackage} (==${runtimePackageVersion})\n`
-			, licenses: { "Source-LICENSE": license, "LeanBridge-LICENSE": await readFile(notice) } });
-		return { ...archive, runtimeIdentity: identity, runtimePackageVersion, componentIdentity, sourceTreeSha256, bindingIrSha256: generated.bindingIrSha256 };
+			, licenses: { ...(projectContract?.notices ?? { "Source-LICENSE": license }), "LeanBridge-LICENSE": await readFile(notice) } });
+		return { ...archive, runtimeIdentity: identity, runtimePackageVersion, componentIdentity, sourceTreeSha256, bindingIrSha256, ...(api ? { api, evidence, component: projectContract.component } : {}) };
 	});
 };
 
@@ -165,7 +175,7 @@ del _runtime
  * @param options - Handoff directory and compiler/runtime archive reports.
  */
 export const writePythonHostPackageSet = async options => {
-	const { root, runtime, component } = options;
+	const { root, runtime, component, archivePrefix = "" } = options;
 	if(runtime.name !== runtimePackage || runtime.runtimeIdentity !== component.runtimeIdentity
 		|| runtime.version !== component.runtimePackageVersion) throw new Error("incompatible Python host runtime package");
 	const profile = { id: "native-python-host-v1", runtimeIdentity: runtime.runtimeIdentity, bindingIrSha256: component.bindingIrSha256 };
@@ -176,10 +186,10 @@ export const writePythonHostPackageSet = async options => {
 		, runtimeDelivery: i ? "dependency" : "provided"
 		, role: i ? "component" : "runtime"
 		, requires: i ? requires : []
-		, artifacts: [{ path: p.archive, bytes: p.bytes, sha256: p.sha256 }]
+		, artifacts: [{ path: archivePrefix + p.archive, bytes: p.bytes, sha256: p.sha256 }]
 	}));
 	return writePackageSetReceipt({
 		root, profiles: [profile], packages
-		, component: { id: `python/${component.name}@${component.version}`, name: component.name, version: component.version }
+		, component: component.component ?? { id: `python/${component.name}@${component.version}`, name: component.name, version: component.version }
 		, source: { treeSha256: component.sourceTreeSha256 } });
 };

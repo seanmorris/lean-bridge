@@ -6,6 +6,11 @@ Use the shared [export configuration](existing-package.md#configure-exports) to 
 
 ## Choose value and callable semantics
 
+If Lean calls a class supplied by Python, describe the class in a separate
+[host-import contract](../publish/pypi.md#call-python-objects-from-lean).
+The application's public functions remain exports; they don't double as
+declarations of the host methods they call.
+
 | Lean form | Author decision |
 | --- | --- |
 | `Unit`, `Bool`, fixed-width signed and unsigned integers | Preserve the unit value, Boolean meaning, and integer bounds. Reject invalid inputs before narrowing. |

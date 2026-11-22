@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "hostImports": "lean-bridge.hosts.json",
+  "modules": ["Workshop"],
+  "exports": ["Workshop.readLevel"],
+  "package": { "description": "Installed source-checked meter", "license": "MIT" },
+  "targets": { "pypi": { "name": "lean-meter", "version": "2.0.1" } }
+}

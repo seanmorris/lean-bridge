@@ -401,6 +401,8 @@ export const readReviewedOwnedSource = async (projectRoot, inventory, signal) =>
  * @param ownedGraphs - Whether this caller implements the owned transport.
  */
 export const readNativeReviewedSource = async (projectRoot, inventory, signal, ownedGraphs = false) => {
+	if(inventory.configurationRecord?.configuration?.hostImports)
+		fail("invalid-host-project", "Host imports currently require a pypi-only build; they are not a review of the application's exports");
 	try
 	{ return await readReviewedSource(projectRoot, inventory, signal); }
 	catch(error)

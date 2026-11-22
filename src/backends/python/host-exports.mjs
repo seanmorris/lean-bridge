@@ -107,15 +107,15 @@ static PyObject *lb_invoke_${i}(PyObject *module, PyObject *args) {
  * @param options - Reviewed import IR, source module, public entries and verified runtime/component digests.
  */
 export const generatePythonHostExtension = options => {
-	const { ir, module, entries, runtimeIdentity, componentIdentity } = options;
-	if(!qualified.test(module) || !entries.length || ![runtimeIdentity, componentIdentity].every(d => /^[a-f0-9]{64}$/u.test(d)))
+	const { ir, module, entries, runtimeIdentity, componentIdentity, modules = [module] } = options;
+	if(!modules.includes(module) || modules.some(m => !qualified.test(m)) || !entries.length || ![runtimeIdentity, componentIdentity].every(d => /^[a-f0-9]{64}$/u.test(d)))
 		throw new TypeError("expected a source module, entries, and exact runtime/component identities");
 	const provider = generatePythonHostProvider(ir);
 	checkNames(entries, provider.resources);
 	const resources = ir.types.filter(r => r.kind === "resource" && r.host?.targets.includes("python"));
 	const functions = entries.map((e, i) => emit(resources, e, i));
 	const entryLean = [
-		`import ${module}`, "import LeanBridge.Host.Python"
+		...modules.map(m => `import ${m}`), "import LeanBridge.Host.Python"
 		, "set_option autoImplicit false", "namespace LeanBridgeHostEntry"
 		, "@[export lb_python_host_error_text] def errorText (e : IO.Error) : String := toString e"
 		, ...functions.map(f => f.lean), "end LeanBridgeHostEntry", ""].join("\n");

@@ -4,11 +4,13 @@
   "type": "object",
   "additionalProperties": false,
   "required": ["schemaVersion"],
+  "dependentRequired": {"hostImports": ["modules"]},
   "properties": {
     "schemaVersion": {"const": 1},
     "package": {"$ref": "#/$defs/metadata"},
     "modules": {"$ref": "#/$defs/selection"},
     "exports": {"$ref": "#/$defs/selection"},
+    "hostImports": {"const": "lean-bridge.hosts.json"},
     "resources": {"$ref": "#/$defs/names"},
     "ownedAggregates": {"$ref": "#/$defs/ownedAggregates"},
     "arities": {"type": "object", "propertyNames": {"$ref": "#/$defs/name"}, "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 32}},
