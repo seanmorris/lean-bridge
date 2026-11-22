@@ -7,7 +7,7 @@
 import assert from "node:assert/strict";
 import { copyFile, cp, mkdir, mkdtemp, readFile, rename, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
@@ -50,6 +50,27 @@ const capture = ir => {
 };
 const native = { nativeResources: true };
 const matrix = process.env.LEAN_BRIDGE_RESOURCE_MATRIX === "1";
+
+const retainEvidence = async (source, destination) => {
+	await mkdir(dirname(destination), { recursive: true });
+	await mkdir(destination); // Reserve a new run; never replace a previous result.
+	for(const entry of ["archives", "probes", "tap", "report.json"])
+		await cp(join(source, entry), join(destination, entry), { recursive: true, errorOnExist: true, force: false });
+};
+
+test("standalone resource evidence fills a fresh directory and cannot overwrite a retained run", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-resource-retention-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const source = join(root, "source"), destination = join(root, "published", "run");
+	for(const file of ["archives/original", "probes/consumer", "tap/abi/route/probe.tap", "report.json"])
+		await saveLakeFile(source, file, file);
+	await retainEvidence(source, destination);
+	for(const file of ["archives/original", "probes/consumer", "tap/abi/route/probe.tap", "report.json"])
+		assert.equal(await readFile(join(destination, file), "utf8"), file);
+	await saveLakeFile(source, "report.json", "different run");
+	await assert.rejects(retainEvidence(source, destination), { code: "EEXIST" });
+	assert.equal(await readFile(join(destination, "report.json"), "utf8"), "report.json");
+});
 
 test("reviewed standalone resources bind the exact native selection and cannot be copied", () => {
 	const ir = contract("Workshop"), review = capture(ir);
@@ -200,9 +221,6 @@ test("installed reviewed CPAN packages share standalone resource identity across
 			, family: "standalone-resource-callbacks"
 			, commit: process.env.GITHUB_SHA ?? null
 			, checks, sources, packages, results }));
-		const destination = resolve("build/standalone-resource-acceptance");
-		await mkdir(resolve("build"), { recursive: true });
-		await mkdir(destination);
-		await cp(evidence, destination, { recursive: true, errorOnExist: true, force: false });
+		await retainEvidence(evidence, resolve("build/standalone-resource-acceptance"));
 	}
 });
