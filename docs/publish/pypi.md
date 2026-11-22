@@ -139,9 +139,47 @@ value. Ordinary `IO α` is not an async contract. Startup runs on the calling
 thread until it returns the task, so put long-running work *inside* the task.
 Task arguments may use the nineteen copied scalars. Results may also nest
 `Except` over those scalars. Other result types (including a returned
-`IO.Error`), Python host objects, callbacks from Lean workers and async
-iterators are not yet supported by this adapter.
+`IO.Error`), Python host objects and callbacks from Lean workers are not
+supported by this adapter.
 [Use the installed awaitable](../consume/python.md#await-a-lean-task).
+
+## Export an async iterator
+
+Choose three public Lean definitions: a factory for your own cursor, a pull
+operation that returns a real task, and a close operation. Only the factory
+appears in the installed Python API. List the modules defining all three in
+`modules`. For example, the [Timers source](../../tests/fixtures/python-lean-tasks/Timers.lean)
+defines `units : Nat → BaseIO UnitCursor`, `nextUnit : UnitCursor → BaseIO (Task (Option Unit))`,
+and `closeUnits : UnitCursor → BaseIO Unit`. Select them in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Timers"],
+  "asyncIterators": [
+    {"open": "Timers.units", "next": "Timers.nextUnit", "close": "Timers.closeUnits"}
+  ]
+}
+```
+
+The factory can return the cursor directly or in `BaseIO`, `IO`, or `EIO ε`.
+Keep the factory, task creation, and close operation short: they run on the
+calling event loop. Put work for the next element inside the task. Each call
+to `next` produces one task; `some x` emits one item and `none` ends the stream.
+To report a typed pull failure, return `BaseIO (Task (Except ε (Option α)))`.
+An `Except` **inside** `Option` is an element, not a failed pull. Items and
+typed errors use the same copied scalars and nested `Except` as task results.
+
+Close may run while a cancelled task is still finishing. Synchronize any
+shared cursor state, and have workers check `IO.checkCanceled` when appropriate.
+On the owning live runtime, the bridge calls close once for every opened
+cursor, including after exhaustion and failure. An iterator closed before
+its first pull never opens. Neither a forked child nor a retired runtime
+runs the original cursor's Lean cleanup.
+Both build routes check the actual cursor and helper signatures; a reviewed
+API must name the same helpers. A factory, pull, or close operation that
+calls a Python host member is rejected even if the call is indirect.
+[Consume the stream in Python](../consume/python.md#read-a-lean-stream).
 
 ## Export arrays and records
 

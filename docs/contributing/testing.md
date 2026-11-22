@@ -709,7 +709,22 @@ returned errors, cancellation before scheduling and during execution, late
 completion, loop shutdown, fork rejection and return to its file-descriptor
 baseline. It uses one Lean worker. Setting `LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR`
 retains these original wheels and receipts under `tasks/<tag>/<route>/`, with
-the shared runtime under `wheels/`.
+the shared runtime under `wheels/`. The installed [stream consumer](../../tests/fixtures/python-lean-tasks/streams.py)
+checks one pull per demand, scoped early exit, cancellation during a pull,
+typed failures, and loop shutdown using Lean-side counters. The independent
+broker audit checks cursor and task leases separately, including non-cooperative
+late completion. Each route retains the exact consumer and audit scripts.
+
+The wheel build compiles the extension's C declarations alongside Lean's
+generated entry definitions. Successful linking alone cannot check that two
+C translation units agree on function arguments. The cursor regression also
+checks a deliberately mismatched polymorphic signature at compile time;
+it never calls it.
+
+The separate [Signals fixture](../../tests/fixtures/python-lean-stream-only/Signals.lean)
+exports only streams. It installs two factories sharing one private pull/close
+pair and checks that a retired runtime rejects new work but releases an open
+cursor. Its handoff and test output are retained under `stream-only/<tag>/`.
 
 The shard's `python-host-imports-<attempt>` artifact contains the original wheels in
 `wheels/` (one copy of the shared runtime); each CPython tag contains the consumer

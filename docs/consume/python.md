@@ -129,6 +129,35 @@ stops delivery and asks Lean to cancel; a computation that doesn't check
 `IO.checkCanceled` can still finish, but can't deliver a second result.
 No Python worker thread, polling loop or manual runtime setup is required.
 
+### Read a Lean stream
+
+The same Timers wheels export async iterators. Save this as `stream.py`:
+
+```python
+import asyncio
+import lean_timers
+
+async def main():
+    async with lean_timers.units(10) as ticks:
+        async for tick in ticks:
+            print(tick)  # None is a Unit item, not the end of the stream.
+            break
+
+asyncio.run(main())
+```
+
+The first pull opens the Lean cursor. Each `anext` asks Lean for one item;
+there is no prefetch. Use plain `async for` when reading to exhaustion. Use
+`async with` (or `contextlib.aclosing`) when you may break early: a bare
+`break` does not close a retained Python iterator. You can also `await ticks.aclose()`
+on the owning event loop, even during a pull. It wakes the pending reader
+without emitting a late item. Cancelling the reader propagates
+`asyncio.CancelledError` and closes the stream.
+
+A typed startup failure raises `LeanEIOError`. A typed failure during a pull
+raises `LeanStreamError`, with `declaration` and `payload`. An `Ok` or `Err`
+yielded as an item is still a value. See the [working consumer](../../tests/fixtures/python-lean-tasks/streams.py).
+
 ### Arrays and records
 
 For an installed [Parcels package](../publish/pypi.md#export-arrays-and-records),

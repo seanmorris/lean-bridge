@@ -53,13 +53,15 @@ const captureContracts = async (project, inventory) => {
 		review = { ...reviews[0], source, semanticSha256: hashBindingIr(api) };
 		reviewedExports = api.declarations.map(d => d.source.declaration).sort();
 	}
-	const exports = config.exports ? [...config.exports].sort() : reviewedExports ?? config.taskExports?.toSorted();
 	const taskExports = config.taskExports?.toSorted() ?? [];
+	const asyncIterators = [...config.asyncIterators ?? []].sort((a, b) => a.open < b.open ? -1 : 1);
+	const selected = [...taskExports, ...asyncIterators.map(s => s.open)];
+	const exports = config.exports ? [...config.exports].sort() : reviewedExports ?? selected.toSorted();
 	if(!exports?.length || new Set(exports).size !== exports.length
-		|| taskExports.some(n => !exports.includes(n))
+		|| selected.some(n => !exports.includes(n))
 		|| (review && canonicalJson(exports) !== canonicalJson(reviewedExports)))
 		fail("Select application exports by Lean name; reviewed and configured exports must agree");
-	return { ir, review, exports, taskExports, hostImportsSourceSha256: input?.sha256 ?? null };
+	return { ir, review, exports, taskExports, asyncIterators, hostImportsSourceSha256: input?.sha256 ?? null };
 };
 
 /**
@@ -76,7 +78,7 @@ export const buildPythonHostProject = async options => {
 	await absent(output);
 	const record = inventory.configurationRecord, config = record.configuration;
 	assertExportConfigurationCapabilities(config, { target: "pypi"
-		, fields: ["modules", "exports", "hostImports", "taskExports", "package"]
+		, fields: ["modules", "exports", "hostImports", "taskExports", "asyncIterators", "package"]
 		, targetFields: ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.pypi ?? {}, name = settings.name ?? `lean-${component.name.toLowerCase().replaceAll("_", "-")}`;

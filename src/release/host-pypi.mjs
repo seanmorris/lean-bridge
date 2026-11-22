@@ -116,7 +116,10 @@ export const buildPythonHostWheel = async options => {
 		const generated = generatePythonHostExtension({ ...config, componentIdentity });
 		await save(app, "BridgeHostExports.lean", generated.entryLean);
 		await run(join(leanPrefix, "bin/lean"), ["-j1", "-c", "entry.c", "BridgeHostExports.lean"], app, env);
-		objects.push("entry.c");
+		// A linker cannot check C prototypes across translation units. Compile the
+		// exact declarations used by the extension beside Lean's emitted definitions.
+		await save(app, "checked-entry.c", `#include "entry.c"\n${generated.entryDeclarations}\n`);
+		objects.push("checked-entry.c");
 		await save(app, "provider.c", generated.source);
 		await save(app, "exports.map", "{ global: PyInit__native; local: *; };\n");
 		await mkdir(root, { recursive: true });
@@ -165,7 +168,7 @@ del _runtime
 			, metadata: projectContract?.metadata
 			, requires: `Requires-Dist: ${runtimePackage} (==${runtimePackageVersion})\n`
 			, licenses: { ...(projectContract?.notices ?? { "Source-LICENSE": license }), "LeanBridge-LICENSE": await readFile(notice) } });
-		return { ...archive, runtimeIdentity: identity, runtimePackageVersion, componentIdentity, sourceTreeSha256, bindingIrSha256, ...(entries.some(e => e.delivery === "task") ? { profile: "native-python-task-v1" } : {}), ...(api ? { api, evidence, component: projectContract.component } : {}) };
+		return { ...archive, runtimeIdentity: identity, runtimePackageVersion, componentIdentity, sourceTreeSha256, bindingIrSha256, ...(entries.some(e => e.delivery) ? { profile: "native-python-task-v1" } : {}), ...(api ? { api, evidence, component: projectContract.component } : {}) };
 	});
 };
 

@@ -41,4 +41,55 @@ def startIO (reject : Bool) : IO (Task UInt32) := do
   if reject then throw (IO.userError "start refused")
   return Task.pure 47
 
+structure Cursor where
+  position : Std.Mutex Nat
+  base : Nat
+  count : Nat
+  failAt : Nat
+  paused : Bool
+  cooperate : Bool
+  label : String
+
+structure Counts where
+  opens : Nat := 0
+  pulls : Nat := 0
+  closes : Nat := 0
+  deriving Inhabited
+
+initialize counts : Std.Mutex Counts ← Std.Mutex.new {}
+def opens : IO Nat := counts.atomically (return (← get).opens)
+def pulls : IO Nat := counts.atomically (return (← get).pulls)
+def closes : IO Nat := counts.atomically (return (← get).closes)
+
+def series (base count failAt : Nat) (paused cooperate reject : Bool) (label : String) : EIO String Cursor := do
+  if reject then throw label
+  let position ← Std.Mutex.new 0
+  counts.atomically (modify fun s => { s with opens := s.opens + 1 })
+  return { position, base, count, failAt, paused, cooperate, label }
+
+def nextSeries (c : Cursor) : BaseIO (Task (Except String (Option (Except String Nat)))) := BaseIO.asTask do
+  counts.atomically (modify fun s => { s with pulls := s.pulls + 1 })
+  let i ← c.position.atomically do let i ← get; set (i + 1); return i
+  if c.paused then
+    if let .error e ← step c.cooperate c.label then return .error e
+  if i ≥ c.count then return .ok none
+  if i == c.failAt then return .error c.label
+  return .ok (some (if i % 2 == 0 then .ok (c.base + i) else .error c.label))
+
+def closeSeries (_ : Cursor) : BaseIO Unit :=
+  counts.atomically (modify fun s => { s with closes := s.closes + 1 })
+
+structure UnitCursor where
+  remaining : Std.Mutex Nat
+
+def units (n : Nat) : BaseIO UnitCursor := return ⟨← Std.Mutex.new n⟩
+def nextUnit (c : UnitCursor) : BaseIO (Task (Option Unit)) := do
+  let value ← c.remaining.atomically do
+    let n ← get
+    if n == 0 then return none
+    set (n - 1)
+    return some ()
+  return Task.pure value
+def closeUnits (_ : UnitCursor) : BaseIO Unit := pure ()
+
 end Timers

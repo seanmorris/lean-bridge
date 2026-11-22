@@ -11,11 +11,18 @@ structure Nominal where
   id : String
   deriving FromJson
 
+structure PullProtocol where
+  «open» : String
+  next : String
+  close : String
+  deriving FromJson, ToJson
+
 structure Request where
   modules : Array String
   exportModules : Array String
   exports : Array String
   taskExports : Array String
+  asyncIterators : Array PullProtocol
   resources : Array Nominal
   members : Array String
   deriving FromJson
@@ -72,6 +79,63 @@ partial def checkDependencies (r : Request) (n : Name) (seen : NameSet) : MetaM 
     for dep in v.getUsedConstants do seen ← checkDependencies r dep seen
   return seen
 
+def noWorkerHost (r : Request) (deps : NameSet) (n : Name) : MetaM Unit := do
+  if r.members.any (fun m => deps.contains m.toName) || r.resources.any (fun t => deps.contains t.lean.toName) then
+    throwError "host identities or calls cannot cross this task scheduler: {n}"
+
+/-- Read each protocol member independently; a review cannot authorize a different cursor or an extern. -/
+def cursorMember (r : Request) (memberName : String) (cursor : Expr) : MetaM Expr := do
+  let n := memberName.toName
+  let env ← getEnv
+  let info ← getConstInfo n
+  let some idx := env.getModuleIdxFor? n | throwError "missing cursor operation {n}"
+  unless r.exportModules.contains env.header.modules[idx.toNat]!.module.toString &&
+      !isPrivateName n && !isProtected env n && info.levelParams.isEmpty do
+    throwError "cursor operation must be a public monomorphic application definition: {n}"
+  match info with
+  | .defnInfo _ | .opaqueInfo _ => pure ()
+  | _ => throwError "expected an executable cursor operation: {n}"
+  noWorkerHost r (← checkDependencies r n {}) n
+  if (← collectAxioms n).contains ``sorryAx then throwError "cursor operation {n} depends on sorry"
+  forallTelescope info.type fun args result => do
+    unless args.size == 1 do throwError "cursor operation takes exactly one cursor: {n}"
+    let d ← args[0]!.fvarId!.getDecl
+    unless d.binderInfo == .default && (← isDefEq d.type cursor) && !result.hasFVar do
+      throwError "cursor operation has the wrong cursor or a dependent result: {n}"
+    return result.consumeMData
+
+def pullFields (r : Request) (p : PullProtocol) (result : Expr) (deps : NameSet) : MetaM (List (String × Json)) := do
+  noWorkerHost r deps p.open.toName
+  let head := result.getAppFn.constName?
+  let args := result.getAppArgs
+  let (effect, cursor, extra) ← if (head == some ``IO || head == some ``BaseIO) && args.size == 1 then
+    pure (head.get!.toString, args[0]!, [])
+  else if head == some ``EIO && args.size == 2 then
+    pure ("EIO", args[1]!, [("error", ← returned r args[0]! true)])
+  else pure ("pure", result, [])
+  let env ← getEnv
+  let some cn := cursor.getAppFn.constName? | throwError "expected an application-owned cursor"
+  let some idx := env.getModuleIdxFor? cn | throwError "expected an application-owned cursor: {cn}"
+  unless r.modules.contains env.header.modules[idx.toNat]!.module.toString && !cursor.hasFVar do
+    throwError "expected a concrete application-owned cursor: {cn}"
+  let stop ← cursorMember r p.close cursor
+  unless (← isDefEq stop (← mkAppM ``BaseIO #[mkConst ``Unit])) do
+    throwError "cursor close must return BaseIO Unit: {p.close}"
+  let step ← cursorMember r p.next cursor
+  unless step.getAppFn.constName? == some ``BaseIO && step.getAppArgs.size == 1 do
+    throwError "cursor next must return BaseIO (Task ...): {p.next}"
+  let task := step.getAppArgs[0]!
+  unless task.getAppFn.constName? == some ``Task && task.getAppArgs.size == 1 do
+    throwError "cursor next must return a real Task: {p.next}"
+  let v := task.getAppArgs[0]!
+  let (item, failure) ← if v.getAppFn.constName? == some ``Except && v.getAppArgs.size == 2 then
+    pure (v.getAppArgs[1]!, [("stepError", ← returned r v.getAppArgs[0]! true)])
+  else pure (v, [])
+  unless item.getAppFn.constName? == some ``Option && item.getAppArgs.size == 1 do
+    throwError "cursor step must distinguish exhaustion with Option: {p.next}"
+  return [("effect", toJson effect), ("delivery", toJson "async-iterator"),
+    ("protocol", toJson p), ("result", ← returned r item.getAppArgs[0]! true)] ++ extra ++ failure
+
 def extract (r : Request) : MetaM Json := do
   let env ← getEnv
   -- Module startup runs even declarations that no public function references.
@@ -106,7 +170,11 @@ def extract (r : Request) : MetaM Json := do
       let result := result.consumeMData
       let some head := result.getAppFn.constName? | throwError "expected synchronous IO result: {n}"
       let resultArgs := result.getAppArgs
-      let fields ← if r.taskExports.contains publicName then do
+      let fields ← if let some protocol := r.asyncIterators.find? (·.open == publicName) then do
+        for a in args do
+          let _ ← returned r (← a.fvarId!.getDecl).type true
+        pullFields r protocol result deps
+      else if r.taskExports.contains publicName then do
         let (effect, task, extra) ← if head == ``Task then
           pure ("pure", result, [])
         else if (head == ``IO || head == ``BaseIO) && resultArgs.size == 1 then
@@ -116,8 +184,7 @@ def extract (r : Request) : MetaM Json := do
         else throwError "taskExports requires a real Lean Task result: {n}"
         unless task.getAppFn.constName? == some ``Task && task.getAppArgs.size == 1 do
           throwError "taskExports requires a real Lean Task result: {n}"
-        if r.members.any (fun m => deps.contains m.toName) || r.resources.any (fun t => deps.contains t.lean.toName) then
-          throwError "host identities or calls cannot cross this task scheduler: {n}"
+        noWorkerHost r deps n
         for a in args do
           let _ ← returned r (← a.fvarId!.getDecl).type true
         pure <| [("effect", toJson effect), ("delivery", toJson "task"),

@@ -61,6 +61,7 @@ export const compileHostSources = async options => {
 	const selection = {
 		...pythonHostSelection(ir), exports: projectContract.exports
 		, taskExports: projectContract.taskExports ?? []
+		, asyncIterators: projectContract.asyncIterators ?? []
 		, exportModules: roots, modules: [...built.keys()]
 	};
 	const request = join(app, "host-request.json");

@@ -575,6 +575,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 		fail("host-imports-require-elaboration", "Host imports require compiler-checked IO signatures; source discovery cannot authorize generated foreign declarations");
 	if(configuration.taskExports)
 		fail("task-exports-require-elaboration", "Awaitable delivery requires a compiler-checked Lean Task; source discovery cannot authorize a scheduler");
+	if(configuration.asyncIterators)
+		fail("async-iterators-require-elaboration", "Async iteration requires a compiler-checked cursor, pull and close protocol");
 	if(configuration.ownedAggregates !== undefined)
 		fail("ownership-requires-elaboration", "Owned aggregates require compiler-backed analysis; source discovery cannot authorize retained resource fields");
 	if(Object.keys(configuration.arities ?? {}).length)

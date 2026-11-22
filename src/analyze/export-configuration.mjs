@@ -62,7 +62,7 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "contracts", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "hostProjections", "hostImports", "taskExports", "asyncIterators", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
 	if(configuration.hostImports !== undefined && (configuration.hostImports !== hostImportsFile || !Array.isArray(configuration.modules) || !configuration.modules.length))
 		fail("invalid-export-configuration", `hostImports requires ${hostImportsFile} and selected application modules`);
@@ -73,6 +73,22 @@ export const validateExportConfiguration = configuration => {
 			|| !ts.length || ts.length > 128 || new Set(ts).size !== ts.length
 			|| ts.some(n => typeof n !== "string" || !specializationName.test(n) || (configuration.exports !== undefined && (!Array.isArray(configuration.exports) || !configuration.exports.includes(n)))))
 			fail("invalid-export-configuration", "taskExports requires distinct selected Lean names and application modules");
+	}
+	if(configuration.asyncIterators !== undefined)
+	{
+		const rows = configuration.asyncIterators, opens = new Set();
+		if(!Array.isArray(rows) || !rows.length || rows.length > 128 || !Array.isArray(configuration.modules) || !configuration.modules.length)
+			fail("invalid-export-configuration", "asyncIterators requires selected modules and one or more pull protocols");
+		for(const row of rows)
+		{
+			closed(row, ["open", "next", "close"], "asyncIterators");
+			if([row.open, row.next, row.close].some(n => typeof n !== "string" || !specializationName.test(n))
+				|| new Set([row.open, row.next, row.close]).size !== 3 || opens.has(row.open)
+				|| configuration.taskExports?.includes(row.open)
+				|| (configuration.exports !== undefined && (!Array.isArray(configuration.exports) || !configuration.exports.includes(row.open))))
+				fail("invalid-export-configuration", "asyncIterators requires distinct open, next and close names and an unambiguous selected factory");
+			opens.add(row.open);
+		}
 	}
 	if(configuration.ownedAggregates !== undefined)
 	{

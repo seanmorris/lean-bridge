@@ -55,23 +55,34 @@ export const reconcileHostExports = options => {
 		, category: "domain"
 		, payload: null
 		, documentation: doc("The bound Python object raised an exception that escaped the Lean call.") });
-	const errorIds = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : ["pure", "BaseIO"].includes(e.effect) ? []
+	const startErrors = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : ["pure", "BaseIO"].includes(e.effect) ? []
 		: ["error:IO.Error", ...(e.hostMembers.length ? [hostError] : [])];
+	const errorIds = e => [...startErrors(e), ...e.stepError ? [`error:AsyncStep.${e.declaration}`] : []];
 	const entries = metadata.entries.map(e => {
-		const task = e.delivery === "task";
-		if(!["IO", "EIO", "pure", ...(task ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
-			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (task && e.hostMembers.length)
-			|| (!task && e.effect === "pure" && (e.result?.constructor !== "result" || e.hostMembers.length))
+		const task = e.delivery === "task", stream = e.delivery === "async-iterator", async = task || stream;
+		const selected = selection.asyncIterators?.find(s => s.open === e.declaration);
+		if(!["IO", "EIO", "pure", ...(async ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)
+			|| Boolean(selection.taskExports?.includes(e.declaration)) !== task || (async && e.hostMembers.length)
+			|| Boolean(selected) !== stream || (stream && canonicalJson(selected) !== canonicalJson(e.protocol))
+			|| (!stream && (e.stepError || e.protocol)) || (e.delivery !== undefined && !async)
+			|| (!async && e.effect === "pure" && (e.result?.constructor !== "result" || e.hostMembers.length))
 			|| e.hostMembers.some(n => !selection.members.includes(n))) fail(`Unauthenticated effect or host member for ${e.declaration}`);
 		if(e.effect === "EIO") errors.push({
 			id: errorIds(e)[0], name: `EIO_${e.declaration.replaceAll(".", "_")}`
 			, category: "domain", payload: e.error
 			, documentation: doc(`Typed synchronous failure of ${e.declaration}.`)
 		});
+		if(e.stepError) errors.push({
+			id: `error:AsyncStep.${e.declaration}`
+			, name: `AsyncStep_${e.declaration.replaceAll(".", "_")}`
+			, category: "domain", payload: e.stepError
+			, documentation: doc(`Failure while pulling from ${e.declaration}.`)
+		});
 		return { name: snake(e.declaration.split(".").at(-1))
 			, declaration: e.declaration
 			, effect: e.effect
-			, ...(task ? { delivery: "task" } : {})
+			, ...(async ? { delivery: e.delivery } : {})
+			, ...(stream ? { protocol: e.protocol, ...(e.stepError ? { stepError: e.stepError } : {}) } : {})
 			, ...(e.effect === "EIO" ? { error: e.error } : {})
 			, parameters: e.parameters.map(p => ({ name: snake(p.name), type: p.type }))
 			, result: e.result };
@@ -89,15 +100,16 @@ export const reconcileHostExports = options => {
 				, mutability: p.type.kind === "named" ? types.find(t => t.id === p.type.id).mutability : "immutable"
 				, optional: false, default: null }))
 			, result: signature(e.result), mutability: "immutable"
-			, effects: [...new Set([...(e.delivery === "task" ? ["async"] : []), ...(e.effect === "pure" ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...e.hostMembers.flatMap(n => members.get(n).effects)])].sort()
+			, effects: [...new Set([...(e.delivery ? ["async"] : []), ...(e.effect === "pure" && !e.protocol ? [] : ["nondeterministic"]), ...(errorIds(e).length ? ["fails"] : []), ...e.hostMembers.flatMap(n => members.get(n).effects)])].sort()
 			, failure: { mode: errorIds(e).length ? "declared" : "none", errors: errorIds(e), unexpected: "poison-runtime" }
-			, resultMode: e.delivery === "task" ? "promise" : "value"
+			, resultMode: e.delivery === "task" ? "promise" : e.delivery ?? "value"
 			, capabilities: [], assurance: []
-			, documentation: doc(e.delivery === "task" ? `Await the Lean task returned by ${e.declaration}.` : `${e.effect === "pure" ? "Pure" : `Synchronous ${e.effect}`} entry ${e.declaration}.`)
+			, documentation: doc(e.protocol ? `Pull elements from ${e.declaration}; close on exhaustion or early exit.` : e.delivery === "task" ? `Await the Lean task returned by ${e.declaration}.` : `${e.effect === "pure" ? "Pure" : `Synchronous ${e.effect}`} entry ${e.declaration}.`)
 			, source: { producer: "lean", declaration: e.declaration
 				, extensions: {
 					"lean-lang.org/effect": e.effect
 					, ...(e.delivery === "task" ? { "lean-lang.org/delivery": "Task" } : {})
+					, ...(e.protocol ? { "lean-bridge.dev/pull-protocol": e.protocol } : {})
 					, ...(imports ? { "lean-bridge.dev/host-imports-sha256": imports } : {})
 					, "lean-bridge.dev/host-members": e.hostMembers
 				}
