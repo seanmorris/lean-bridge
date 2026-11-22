@@ -57,11 +57,13 @@ and native libraries.
 The [C++ consumer](../consume/cpp.md#await-a-task-or-pull-a-stream)
 uses owning C++ values; no application code passes C handles or Lean pointers.
 
-Task and stream payloads can use fixed-width and machine-word integers,
-`Char`, `Bool`, both float widths, `Unit`, strings, byte arrays and nested
-returned `Except`. This profile rejects `Nat`, `Int`, callback and resource
-payloads. The synchronous Boost integer mapping does not narrow them into the
-task ABI. The [installed release evidence](../evidence/cpp-task-streams-20261122.json)
+Task and stream payloads can use exact `Nat` and `Int`, fixed-width and
+machine-word integers, `Char`, `Bool`, both float widths, `Unit`, strings,
+byte arrays and nested returned `Except`. For exact integers the archive
+includes pinned Boost.Multiprecision 1.90.0 headers and their license. It
+does not require a GMP installation. Callback and resource payloads remain
+unsupported on this path. The [exact-integer receipts](../evidence/exact-task-integers-20261122.json)
+cover results, stream items and typed errors. The [task lifecycle evidence](../evidence/cpp-task-streams-20261122.json)
 records which archives, compilers and consumer builds were tested. It also shows
 how to repeat the checks from those archives without rebuilding Lean.
 

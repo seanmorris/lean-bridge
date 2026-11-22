@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Wide"],
+  "exports": ["Wide.calls", "Wide.checked", "Wide.closes", "Wide.huge", "Wide.late", "Wide.openGate", "Wide.series", "Wide.sum"],
+  "taskExports": ["Wide.checked", "Wide.huge", "Wide.late", "Wide.sum"],
+  "asyncIterators": [{"open": "Wide.series", "next": "Wide.next", "close": "Wide.close"}],
+  "targets": {"c": {"name": "wide", "version": "1.0.0"}, "cpp": {"name": "wide", "version": "1.0.0"}}
+}

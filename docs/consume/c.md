@@ -148,6 +148,18 @@ their own output slot; `IO_ERROR` can carry an owned UTF-8 message. Use the
 generated disposal functions for owned buffers and results before reusing
 their output slots. An alias of a consumed handle returns `CLOSED`.
 
+Pass `Nat` and `Int` as ordinary GMP `mpz_t` values. Initialize a direct
+integer result or typed-error slot with `mpz_init` and clear it once with
+`mpz_clear`. A pending or failed take does not overwrite the integer result.
+For an `Except` result, zero-initialize the outer struct and use its generated
+disposer; the package manages its active union member. Inputs are copied
+before the start call returns. You can change or clear the original while
+the task is pending. A negative `Nat` returns `INVALID`. Integer magnitudes
+count in 64-bit words toward the 16 MiB input copy budget shared by the
+call’s arguments; a result over 16 MiB also returns `LIMIT`.
+The [installed C example](../../tests/fixtures/exact-task-integers/consumer.c)
+shows both direct and nested integer results.
+
 The [complete C program](../../tests/fixtures/c-lean-tasks/consumer.c) uses
 `poll(2)` with the prepared package, including cancellation, failed starts,
 typed stream failures, early exits and normal completion.

@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "observed": "2026-11-22",
+  "platform": "Linux x86-64, glibc 2.36; archive release floor 2.38",
+  "lean": "4.32.2",
+  "compilers": {
+    "c": "GCC 12.2.0, C11",
+    "cpp": "GCC 12.2.0, C++20",
+    "cmake": "3.31.6"
+  },
+  "bindingIrSha256": "31eb2ed8a441e6893cb1c9b22eabbe59dac4f12bac81e0f7872009e0cb3dc6a8",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "producer": "tests/fixtures/exact-task-integers/Wide.lean",
+  "consumers": {
+    "c": {
+      "path": "tests/fixtures/exact-task-integers/consumer.c",
+      "sha256": "2230a13dacf51fba850bb5e6557336b39b6b051db7b0563c090d983ee508604d"
+    },
+    "cpp": {
+      "path": "tests/fixtures/exact-task-integers/consumer.cpp",
+      "sha256": "68265d646a2dafe61333e67d1eae5284b54eca67a36d354ca9901348225313ce"
+    }
+  },
+  "observations": [
+    "Each ordinary-source and reviewed-IR release compiled and elaborated Wide.lean independently. Each reviewed source selection matched the ordinary public binding IR.",
+    "The original archives passed receipt and complete manifest file verification, were moved to fresh prefixes after removing producer sources, then linked and executed by pkg-config and CMake. Runtime libraries resolved inside the installations. The C executable used the packaged GMP DSO; the Boost consumer loaded no GMP DSO.",
+    "4096-bit signed and unsigned arguments and results, zero, nested returned Except on both branches, typed EIO start and terminal pull errors, exhaustion, and exactly-once cursor cleanup.",
+    "A gated Lean task preserved its argument after the host changed the original. Negative Nat and over-budget aggregate input did not enter Lean. A failed over-budget C take consumed the handle without modifying the initialized GMP result.",
+    "On separate archive-only replay, a second public consumer compared Lean-created powers of two and cross-cancelling sums against GMP and Boost for 32 bit lengths, from 0 to 123456 (224 numerical comparisons per release)."
+  ],
+  "boundaryConsumer": {
+    "path": "tests/fixtures/exact-task-integers/word-boundaries.c",
+    "sha256": "f231e8fc9eb453c147d26469fd2529d083f187ac8cbb398bb8b8bb023e2d1ce1"
+  },
+  "dependencies": {
+    "c": {
+      "name": "GMP 6.3.0",
+      "mode": "Previously built and upstream-tested kit, verified and reused for these local releases; no claim that GMP was recompiled in this run.",
+      "origin": {
+        "commit": "e615440714f006aad70d210e2ad4d8b7d7ad5550",
+        "path": "docs/evidence/nominal-primitive-subtype-native-20261014/ordinary/full/records/handoff/archives/nominalprimitivesubtypes-1.0.0-c.tar.gz",
+        "archiveSha256": "730a43f8ce888f0c1a44e239592a0ca105280485a869fbb9d8a5411d04f6b8c2",
+        "gmpReceiptSha256": "0171ea1d2bbfdc4d7f82f3943519b87330964b2a679ce17c299fe84efa1220cc"
+      }
+    },
+    "cpp": {
+      "name": "Boost.Multiprecision 1.90.0",
+      "mode": "pinned standalone headers",
+      "receiptSha256": "565fe804848083b2c3252b93dbdf91e1a0f18c99a872af97b3e9299e36b0e8f2"
+    }
+  },
+  "releases": [
+    {
+      "target": "c",
+      "route": "ordinary",
+      "sourceTreeSha256": "9250350a9fb9f6a0c3201ec9228dfe98564daffa1f0ebef8d2ca13e4200972c9",
+      "reviewedSourceSha256": null,
+      "componentIdentity": "03e1790a5d3aa9668159bf7e60b5ae30f8d4d8f9413146ff56df7ee36c14c045",
+      "receiptSha256": "b51646bdee69b077bf206ab9b4450a37aa56437953af2b7d241dc14226991386",
+      "archive": {
+        "bytes": 53800441,
+        "path": "archives/wide-1.0.0-c.tar.gz",
+        "sha256": "87e797fb877d3f6f52a24b854c22d5780414f496a64036e556cf6408d02360c8"
+      },
+      "installations": [
+        "pkg-config",
+        "CMake"
+      ],
+      "result": "passed"
+    },
+    {
+      "target": "c",
+      "route": "reviewed",
+      "sourceTreeSha256": "cfadbf1cb2630c231fb59be231801d25c0d331c8fd6d69482755b98b9e3fac40",
+      "reviewedSourceSha256": "6ec1730619a7564fe155f7d1463c086247109ed3068766502f060d8816c4b4e2",
+      "componentIdentity": "147e827fb56d2d08bdb4809775a1b6d0cd7edd6c2eecec650605f973c7dab0e7",
+      "receiptSha256": "a8ed586f00e3c7654ef70e0bb3f6919988f789be17fbe7c5137963a50314bc94",
+      "archive": {
+        "bytes": 53800569,
+        "path": "archives/wide-1.0.0-c.tar.gz",
+        "sha256": "0620952c754ace1bb2afdd0dd76ad89d12a4a47624de43b37f528108637b7a53"
+      },
+      "installations": [
+        "pkg-config",
+        "CMake"
+      ],
+      "result": "passed"
+    },
+    {
+      "target": "cpp",
+      "route": "ordinary",
+      "sourceTreeSha256": "9250350a9fb9f6a0c3201ec9228dfe98564daffa1f0ebef8d2ca13e4200972c9",
+      "reviewedSourceSha256": null,
+      "componentIdentity": "083e07fc0f796abd1511ddf6dfba2280ce8582b23577fd766aa45082ff5f930e",
+      "receiptSha256": "b253d41a59a3a5025b9be93c024ee9897dd3267b0c59ac3348a0d3eb55c091d8",
+      "archive": {
+        "bytes": 51749778,
+        "path": "archives/wide-1.0.0-cpp.tar.gz",
+        "sha256": "3aa2fa86c78ba7943787875c7039a7729bf990f4d3683d901d8aeaf36c3fc84c"
+      },
+      "installations": [
+        "pkg-config",
+        "CMake"
+      ],
+      "result": "passed"
+    },
+    {
+      "target": "cpp",
+      "route": "reviewed",
+      "sourceTreeSha256": "cfadbf1cb2630c231fb59be231801d25c0d331c8fd6d69482755b98b9e3fac40",
+      "reviewedSourceSha256": "6ec1730619a7564fe155f7d1463c086247109ed3068766502f060d8816c4b4e2",
+      "componentIdentity": "e4b0f06289d2ecd74eae6ecb227550647b8ebccf6a44a94dc34d825b6ac8b03f",
+      "receiptSha256": "dbac8feaf2b7d705b190bb5673ed5c712507c9a36676069edf556e7d999b170c",
+      "archive": {
+        "bytes": 51749782,
+        "path": "archives/wide-1.0.0-cpp.tar.gz",
+        "sha256": "e970e56d366630f558d426d623fff8e7e4d7ddeff9a8b87df75307c9b7668de4"
+      },
+      "installations": [
+        "pkg-config",
+        "CMake"
+      ],
+      "result": "passed"
+    }
+  ],
+  "reproduce": "LEAN_BRIDGE_TASK_INTEGER_TEST=1 node --test --test-concurrency=1 tests/helpers/task-integer-installed.mjs",
+  "replay": "Set LEAN_BRIDGE_TASK_INTEGER_REPLAY to the trusted c-ordinary/, c-reviewed/, cpp-ordinary/ and cpp-reviewed/ evidence root. Run the same test file to verify, relocate and execute the existing archives without a producer build.",
+  "scope": "Local installed evidence for exact integers on the Linux C11 and C++20 task profiles. Not a promotion of all-profile ownership, effects, callback, or scheduler rows."
+}

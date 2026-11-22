@@ -133,6 +133,15 @@ from the general [type conversion matrix](#type-conversions). Its installed
 tests cover the [listed task payloads](../publish/cpp.md#export-tasks-and-streams),
 not arbitrary resource or callback values.
 
+In packages that export `Nat` or `Int`, the namespace defines `Nat` and
+`Int` as `boost::multiprecision::cpp_int`. Pass an integer by const reference;
+the call copies it before returning. Task results, stream items and typed
+exceptions own their values. A negative `Nat` throws `std::invalid_argument`.
+Magnitudes count in 64-bit words toward the 16 MiB input copy budget shared
+by the call’s arguments; an oversized input or result throws `std::length_error`.
+The [installed C++ example](../../tests/fixtures/exact-task-integers/consumer.cpp)
+uses `co_await` with the same integer type in values and errors.
+
 ## Values and cleanup
 
 Ordinary-source arrays become `std::vector<T>`, and records become generated structs with owned fields. Both can nest; `Array Bool` uses `std::vector<bool>`. The wrapper keeps input views alive through the call and releases the intermediate C result even if copying a nested result throws. Returned C++ values are independent of the inputs and need no explicit cleanup.

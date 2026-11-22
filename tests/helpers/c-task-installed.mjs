@@ -26,6 +26,8 @@ test("the packaged CLI and isolated engine include the C notification and compil
 	const paths = ["src/backends/c/task-delivery.h"
 		, "src/backends/c/task-exports.mjs"
 		, "src/backends/c/task-values.mjs"
+		, "src/backends/c/task-integers.h"
+		, "src/build/task-gmp.mjs"
 		, "src/backends/native/task-notification.h"
 		, "src/backends/native/pull-entry.mjs"
 		, "src/release/c-task-package.mjs"
@@ -43,7 +45,8 @@ test("C task generation rejects unsupported carrier widths and colliding or fore
 	const g = build([entry]);
 	assert.match(g.header, /uint64_t \*out/u); assert.doesNotMatch(g.header, /lean_object|lean\/lean\.h/u);
 	assert.match(g.entryLean, /IO \(_root_\.Task _root_\.UInt64\)/u);
-	for(const name of ["int", "nat"]) assert.throws(() => build([{ ...entry, result: pr(name) }]), /no implicit narrowing/u);
+	for(const name of ["int", "nat"]) assert.match(build([{ ...entry, result: pr(name) }]).header, /mpz_ptr out/u);
+	assert.throws(() => build([{ ...entry, result: pr("unknown") }]), /no implicit narrowing/u);
 	assert.throws(() => build([entry, entry]), /duplicate/u);
 	assert.throws(() => build([{ ...entry, hostMembers: ["Other.read"] }]), /Invalid/u);
 });

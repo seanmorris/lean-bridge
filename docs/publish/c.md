@@ -66,16 +66,29 @@ must return `BaseIO Unit`. The consumer never sees the cursor. If you supply
 keep those selections and add the emitted public `.binding-ir.json` to the
 project. Each build checks the signatures against fresh Lean interfaces.
 
-The `native-c-task-v1` archive accepts fixed-width and machine-word integers,
-floats, `Bool`, `Char`, `Unit`, UTF-8 strings and byte arrays. A result or
-typed error may also contain nested `Except` values. This profile does not
-narrow `Nat` or `Int`, or package callbacks or resources. Select `cpp` separately
+The `native-c-task-v1` archive accepts exact `Nat` and `Int`, fixed-width and
+machine-word integers, floats, `Bool`, `Char`, `Unit`, UTF-8 strings and byte
+arrays. A result or typed error may also contain nested `Except` values. If
+the signatures use `Nat` or `Int`, the archive includes GMP 6.3.0, its header,
+licenses and complete corresponding source. Packages with only fixed-width
+integers do not require GMP. This profile does not package callback or
+resource payloads. Select `cpp` separately
 for [C++20 futures and streams](cpp.md#export-tasks-and-streams).
 The [Lean source](../../tests/fixtures/c-lean-tasks/Pulse.lean) and
 [installed C consumer](../consume/c.md#wait-for-a-task-or-pull-a-stream) show
 the producer and consumer sides of the same package. The
 [installed release evidence](../evidence/c-task-streams-20261122.json) lists the
 two archive receipts, checked behaviors and replay command.
+
+By default the producer builds the pinned GMP source and runs its upstream
+checks. To reuse a previously verified kit, set `LEAN_BRIDGE_TASK_GMP_ROOT`
+to the absolute path of its installed tree and `LEAN_BRIDGE_TASK_GMP_SHA256`
+to the trusted digest of `share/lean-bridge/gmp.json` from the original
+release. Both settings are required together. The producer checks the header,
+shared library, notices and corresponding source and copies them into the
+new archive. Consumers do not set either variable. The
+[exact-integer release evidence](../evidence/exact-task-integers-20261122.json)
+records the package receipts and the dependency digests for both C and C++.
 
 ## Resource-containing C values
 

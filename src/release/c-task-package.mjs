@@ -13,6 +13,8 @@ import { pinnedCompiledLean } from "../build/elaborated-component.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCTaskExports } from "../backends/c/task-exports.mjs";
 import { generateCppTaskHeader } from "../backends/cpp/task-exports.mjs";
+import { boostSources } from "../backends/cpp/boost.mjs";
+import { taskGmpKit } from "../build/task-gmp.mjs";
 import { validateNativeCSettings } from "./native-c-family.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
@@ -40,13 +42,18 @@ export const buildCTaskPackage = async options => {
 		const { entries, objects, api, env, evidence } = await compileHostSources({ ...options, app, run });
 		const bindingIrSha256 = hashBindingIr(api), profile = cpp ? "native-cpp-task-v1" : "native-c-task-v1";
 		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
-		const config = { name, modules: projectContract.modules, entries };
+		const config = { name, modules: projectContract.modules, entries, integerMode: cpp ? "words" : "gmp" };
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
+		const integers = skeleton.integerMode && await asset("../backends/c/task-integers.h");
+		const gmp = integers && !cpp && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
+		const boost = integers && cpp && boostSources();
 		const componentIdentity = sha256(canonicalJson({ runtimeIdentity
 			, bindingIrSha256
 			, evidence
 			, skeleton
-			, delivery: sha256(delivery), notification: sha256(notification) }));
+			, delivery: sha256(delivery), notification: sha256(notification)
+			, ...integers ? { integerAdapter: sha256(integers) } : {}
+			, ...gmp ? { gmpKit: gmp.identity } : {} }));
 		const gen = generateCTaskExports({ ...config, componentIdentity }), p = gen.prefix;
 		const save = (f, data) => writeFile(join(app, f), data, { flag: "wx" });
 		await save("BridgeCAsync.lean", gen.entryLean);
@@ -54,6 +61,7 @@ export const buildCTaskPackage = async options => {
 		await save("checked-entry.c", `#include "entry.c"\n${gen.declarations}\n`);
 		await save(`${p}.h`, gen.header); await save("adapter.c", gen.source);
 		await save("task-delivery.h", delivery); await save("task-notification.h", notification);
+		if(integers) await save("task-integers.h", integers);
 		await save("exports.map", `{ global: ${gen.symbols.join("; ")}; local: *; };\n`);
 		const library = `lib${p}.so`;
 		await run(environment.CC ?? "cc", ["-std=gnu11"
@@ -63,6 +71,7 @@ export const buildCTaskPackage = async options => {
 			, "-fPIC"
 			, "-I"
 			, join(runtimeRoot, "include")
+			, ...gmp ? ["-I", join(gmp.root, "include"), `-ffile-prefix-map=${gmp.root}=/build/gmp`] : []
 			, `-ffile-prefix-map=${runtimeRoot}=/build/lean-bridge/runtime`
 			, `-ffile-prefix-map=${app}=/build/lean-bridge/component`
 			, ...objects
@@ -72,6 +81,7 @@ export const buildCTaskPackage = async options => {
 			, join(runtimeRoot, "lib")
 			, "-lleanshared"
 			, "-llean_bridge_native"
+			, ...gmp ? ["-L", join(gmp.root, "lib"), "-l:libgmp.so.10"] : []
 			, "-pthread"
 			, "-lm"
 			, "-Wl,-z,defs,-z,nodelete"
@@ -81,14 +91,17 @@ export const buildCTaskPackage = async options => {
 			, "-Wl,-rpath,$ORIGIN", "-o", library], app);
 		const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 		if(!/^2\.\d+$/u.test(floor)) throw new TypeError("Invalid native glibc floor");
-		const files = new Map(), sharedLibs = Object.keys(manifest.files).filter(f => f.startsWith("lib/"));
-		for(const [path, file] of [[`lib/${library}`, join(app, library)], ...sharedLibs.map(f => [f, join(runtimeRoot, f)])])
+		const files = new Map(gmp ? gmp.files : []), sharedLibs = Object.keys(manifest.files).filter(f => f.startsWith("lib/"));
+		const compiled = [[`lib/${library}`, join(app, library)], ...sharedLibs.map(f => [f, join(runtimeRoot, f)])];
+		if(gmp) compiled.push(["lib/libgmp.so.10", join(gmp.root, "lib/libgmp.so.10")]);
+		for(const [path, file] of compiled)
 		{
 			const bytes = await readFile(file); validateNativeElf(bytes);
 			if(file === join(app, library) && bytes.includes(Buffer.from(workRoot))) throw new Error("C task library retained a private staging path");
 			for(const m of (await run("readelf", ["--version-info", file], app)).stdout.matchAll(/GLIBC_(\d+)\.(\d+)(?:\.(\d+))?/gu))
 				if(+m[1] > 2 || (+m[1] === 2 && (+m[2] > +floor.slice(2) || (+m[2] === +floor.slice(2) && +m[3] > 0)))) throw new Error(`C task library exceeds glibc ${floor}: ${m[0]}`);
-			if(file !== join(app, library) && sha256(bytes) !== manifest.files[path].sha256) throw new Error("C task runtime changed during packaging");
+			if(sharedLibs.includes(path) && sha256(bytes) !== manifest.files[path].sha256) throw new Error("C task runtime changed during packaging");
+			if(gmp && path === "lib/libgmp.so.10" && (!bytes.equals(gmp.files.get(path)) || !/\(SONAME\)\s+Library soname: \[libgmp\.so\.10\]/u.test((await run("readelf", ["-d", file], app)).stdout))) throw new Error("C task GMP library identity differs");
 			files.set(path, bytes);
 		}
 		const cmakePackage = `LeanBridge${p.split("_").map(w => w[0].toUpperCase() + w.slice(1)).join("")}`;
@@ -97,6 +110,16 @@ export const buildCTaskPackage = async options => {
 		if(cpp)
 		{
 			const dir = "lean_bridge/async_v1", hpp = generateCppTaskHeader({ prefix: p, entries });
+			if(boost) for(const [path, value] of Object.entries(boost))
+			{
+				files.set(path, value);
+				if(path.startsWith("include/"))
+				{
+					const src = path.slice(8);
+					await mkdir(join(app, src.slice(0, src.lastIndexOf("/"))), { recursive: true });
+					await save(src, value);
+				}
+			}
 			await mkdir(join(app, dir), { recursive: true });
 			for(const base of ["task-loop.hpp", "task-values.hpp", "task-routine.hpp"])
 			{
@@ -113,13 +136,13 @@ libdir=\${prefix}/lib
 Name: ${name}
 Description: Compiled Lean ${cpp ? "C++20" : "C11"} tasks
 Version: ${version}
-Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}${cpp ? " -pthread" : ""}
-Cflags: -I\${includedir}${cpp ? " -pthread" : ""}
+Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}${cpp ? " -pthread" : gmp ? " -l:libgmp.so.10" : ""}
+Cflags: -I\${includedir}${cpp ? " -pthread" : ""}${boost ? " -DBOOST_MP_STANDALONE" : ""}
 `);
 		files.set(`lib/cmake/${cmakePackage}/${cmakePackage}Config.cmake`, `if(NOT TARGET ${cmakeTarget})${cpp ? "\n  include(CMakeFindDependencyMacro)\n  find_dependency(Threads)" : ""}
   get_filename_component(_lb_root "\${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
   add_library(${cmakeTarget} SHARED IMPORTED)
-  set_target_properties(${cmakeTarget} PROPERTIES IMPORTED_LOCATION "\${_lb_root}/lib/${library}" INTERFACE_INCLUDE_DIRECTORIES "\${_lb_root}/include"${cpp ? ' INTERFACE_COMPILE_FEATURES "cxx_std_20" INTERFACE_LINK_LIBRARIES "Threads::Threads"' : ""})
+  set_target_properties(${cmakeTarget} PROPERTIES IMPORTED_LOCATION "\${_lb_root}/lib/${library}" INTERFACE_INCLUDE_DIRECTORIES "\${_lb_root}/include"${cpp ? ' INTERFACE_COMPILE_FEATURES "cxx_std_20" INTERFACE_LINK_LIBRARIES "Threads::Threads"' : gmp ? ' INTERFACE_LINK_LIBRARIES "${_lb_root}/lib/libgmp.so.10"' : ""}${boost ? ' INTERFACE_COMPILE_DEFINITIONS "BOOST_MP_STANDALONE"' : ""})
   unset(_lb_root)
 endif()
 `);
@@ -131,6 +154,9 @@ endif()
 		files.set("package-metadata.json", canonicalJson(projectContract.metadata ?? {}));
 		files.set("README.md", `# ${name} ${version}\n\nLinux x86-64, glibc ${floor} or later. Include ${p}.h and link with pkg-config package ${name} or CMake target ${cmakeTarget} (find_package(${cmakePackage} CONFIG REQUIRED)). The shared Lean runtime initializes automatically.\n\nUse the API on the process main thread. Zero-initialize handles. A task starts immediately; a stream starts its factory but does not pull until _pull. Only one pull can be outstanding. _poll returns OK when ready, or PENDING with a borrowed descriptor: wait for readability without reading or closing it. _take never blocks. A task result, stream END or failed step consumes the handle; a stream item leaves it idle. _close cancels outstanding work without waiting for it. Copied stale handles do not become valid again. Dispose owned output buffers (including nested results) before reuse. String inputs are strict length-delimited UTF-8. IO_ERROR, typed failures, and returned Except values are distinct.\n`);
 		if(cpp) files.set("README.md", `# ${name} ${version}\n\nInclude ${p}.hpp and use namespace lean_bridge::${p}. Linux x86-64, glibc ${floor} or later; the matching Lean runtime is included. Link CMake target ${cmakeTarget} (find_package(${cmakePackage} CONFIG REQUIRED)), or use C++20 and pkg-config ${name}.\n\nA function returning Future<T> starts a real Lean task. Use .get() or co_await on the main thread. Stream<T>::next() requests precisely one item and returns a Future<std::optional<T>>; empty means exhausted. A returned Result<T,E> is a variant of Ok<T> and Err<E>; IOError, StartError<E> and StepError<E> represent three different failure channels. Tasks and streams are move-only. Explicit cancel()/close(), scope exit and coroutine abandonment release pending work. Worker-thread disposal queues cleanup until the main thread pumps or enters an API; it never invokes Lean on the worker. Routine<T>::get() drives suspended C++20 coroutines using poll, without a worker or timer. An application with its own main loop may call run_one(timeout_ms). Destroy externally owned suspended coroutine frames on that same thread. shutdown() permanently stops this C++ dispatcher, cancelling its owners; pump outstanding waiters to observe Cancelled.\n`);
+		if(integers) files.set("README.md", files.get("README.md") + (cpp
+			? "\nNat and Int use the bundled Boost.Multiprecision cpp_int. Negative Nat arguments reject before entering Lean. Task results and typed errors own their integer values.\n"
+			: "\nNat and Int use GMP mpz_t. Initialize direct integer result and error slots with mpz_init; dispose each once with mpz_clear. For a returned Except, zero-initialize the outer value and use its generated disposer; do not initialize or clear individual union members. Negative Nat inputs reject before entering Lean. GMP 6.3.0, notices and complete corresponding source are included.\n"));
 		const records = [...files].map(([path, value]) => ({ path, bytes: Buffer.isBuffer(value) ? value : Buffer.from(value), mode: 0o644 }));
 		const inventory = Object.fromEntries(records.map(f => [f.path, { bytes: f.bytes.length, sha256: sha256(f.bytes) }]));
 		const component = projectContract.component, archiveRoot = `${name}-${version}-${target}`;
@@ -149,6 +175,7 @@ endif()
 			, cmakeTarget
 			, pkgConfig: name
 			, ...(cpp ? { cppNamespace: `lean_bridge::${p}`, cppStandard: 20 } : {})
+			, ...integers ? { exactIntegers: cpp ? "boost-1.90.0" : "gmp-6.3.0" } : {}
 			, files: inventory };
 		records.push({ path: "lean-bridge-package.json", mode: 0o644, bytes: Buffer.from(canonicalJson(pkg)) });
 		const data = createDeterministicTarGzFromFiles({ files: records.map(f => ({ ...f, path: `${archiveRoot}/${f.path}` })), sourceDateEpoch: 1 });

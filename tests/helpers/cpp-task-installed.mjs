@@ -29,7 +29,8 @@ test("C++ task headers expose native values and never silently narrow unsupporte
 	const header = entries => generateCppTaskHeader({ prefix: "lbc_test", entries });
 	assert.match(header([entry]), /Future<std::uint64_t> class_\(/u);
 	assert.throws(() => header([entry, { ...entry, name: "class_" }]), /colliding/u);
-	for(const t of ["int", "nat"]) assert.throws(() => header([{ ...entry, result: pr(t) }]), /narrow/u);
+	for(const t of ["int", "nat"]) assert.match(header([{ ...entry, result: pr(t) }]), /boost::multiprecision::cpp_int/u);
+	assert.throws(() => header([{ ...entry, result: pr("unknown") }]), /Unsupported/u);
 	const allow = JSON.parse(await readFile("config/cli-package.v1.json")).files;
 	const nix = JSON.parse(await readFile("nix/perl-engine-source-boundary.json")).includedFiles;
 	for(const f of ["task-exports.mjs", "task-loop.hpp", "task-routine.hpp", "task-values.hpp"])
