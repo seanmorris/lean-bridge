@@ -175,7 +175,8 @@ A task release is a separate profile. Select actual Lean `Task` factories with `
 The [NuGet task profile](../publish/nuget.md#export-tasks-and-pull-streams)
 turns actual Lean tasks into C# `Task` or `Task<T>` and pull protocols into
 `IAsyncEnumerable<T>`. Independent NuGet packages share the application's
-owner loop; this profile takes copied values, not retained C# callbacks.
+owner loop. Task factories can also [retain C# delegates over copied
+scalars](../publish/nuget.md#export-a-callback-taking-task).
 
 The [Ruby task profile](../publish/rubygems.md#export-a-task-or-pull-stream)
 delivers copied results or [explicit resource leases](../publish/rubygems.md#export-a-shared-lean-resource) to a waiting fiber and exposes pull streams as

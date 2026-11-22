@@ -125,6 +125,50 @@ a task or stream raises `LeanIOException`; an explicitly selected terminal
 See [exporting tasks and pull streams](../publish/nuget.md#export-tasks-and-pull-streams)
 and the [installed .NET results](../evidence/dotnet-tasks-20261122.json).
 
+### Let a Lean task call C#
+
+Pass a synchronous delegate to a task that requests a callback. The worker
+waits for its reply; your delegate runs on the same main thread as the rest
+of the Lean application. The Feedback package, for example, can call back
+into a synchronous Lean function:
+
+```csharp
+using System;
+using LeanBridge.Feedback;
+
+LeanRuntime.Run(async () =>
+{
+    uint value = await Api.Once(20, n => 2 * Api.Plain(n));
+    Console.WriteLine(value); // 42
+
+    using var suffix = RetainedCallback.Create<string, string>(s => s + "!");
+    Console.WriteLine(await Api.RepeatCall("ready", suffix.Callback)); // ready!!
+});
+```
+
+A task holds its delegates until it settles or is cancelled. Use a plain
+delegate for that lifetime. Use `RetainedCallback.Create` when you also want
+to revoke it yourself or share one registration across packages. Disposing a
+registration during a call lets that invocation finish; later invocations
+throw `ObjectDisposedException`. Cancelling one task doesn't revoke another
+task's use of the same delegate.
+
+A callback can call a second Lean task and return its result with
+`LeanRuntime.Await(otherTask)`. This runs the owner loop until the other task
+finishes. Don't block the owner on `.Result` or `.Wait()`, or pass an
+`async void` delegate. Waiting on the task that invoked the current callback
+is rejected. If mixing older archives with a callback-capable package, start
+`Run` from the latter so nested waits are available. Use ordinary `await`
+everywhere the caller is asynchronous.
+
+Lean may catch an exception from a delegate. If Lean propagates the original
+error, C# receives the same exception object and original stack. A replacement
+error is a Lean error even if its message matches. Cancelling the operation's
+token cancels the task; a callback throwing its own `OperationCanceledException`
+faults it. A catchable fatal CLR fault such as `OutOfMemoryException` retires
+the shared Lean runtime, including other components that use it. See the
+[installed callback checks and archive hashes](../evidence/dotnet-retained-tasks-20261122.json).
+
 ### Arrays and records
 
 Lean `Array T` uses a typed C# `T[]`, including nested arrays and arrays of
@@ -933,7 +977,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 
-For NuGet's native delivery profiles, see [synchronous IO and typed errors](#call-synchronous-io) and [awaiting tasks and pulling streams](#await-tasks-and-pull-streams). These profiles are separate from the general audit rows below.
+For NuGet's native delivery profiles, see [synchronous IO and typed errors](#call-synchronous-io), [awaiting tasks and pulling streams](#await-tasks-and-pull-streams), and [retained C# callbacks](#let-a-lean-task-call-c). These profiles are separate from the general audit rows below.
 
 [Hosted dependent checked-record acceptance](../evidence/dependent-checked-record-promotion.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The proof-free host value carries the tested runtime bound and bounded value. Full packages validate inputs with the selected dependent constructor before Lean execution; standalone result-only packages expose Lean-produced values without checked-input metadata. Fields, callbacks, owned positions, other dependent field kinds, nested or recursive dependent records and open or opaque indices remain outside this evidence.
 

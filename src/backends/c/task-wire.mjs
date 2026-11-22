@@ -53,7 +53,7 @@ ${stream ? `int ${names.pull}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owne
 };
 
 /**
- * Adapt the private typed callback port. Workers see Lean promises, never Ruby objects.
+ * Adapt the private typed callback port. Workers see Lean promises, never host objects.
  * Status 13 is a factory IO error; 14 carries the original host failure's one-based ID.
  *
  * @param a - Compiler-authenticated declaration, word codecs and copy emitters.

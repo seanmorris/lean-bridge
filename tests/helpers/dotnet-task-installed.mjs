@@ -29,7 +29,7 @@ test("NuGet task signatures use managed awaitables only for genuine Lean deliver
 	assert.match(files["Api.cs"], /global::LeanBridge.Example.Wire.Port0/u);
 	assert.doesNotMatch(files["Api.cs"], /DllImport|stackalloc|Task\.FromResult/u);
 	await assert.rejects(gen({ wire: { ...wire, wait: null } }), /requires real native delivery/u);
-	await assert.rejects(gen({ wire: { ...wire, methods: [{ ...wire.methods[0], callbacks: [[0, "unit", "unit"]] }] } }), /callback-free/u);
+	await assert.rejects(gen({ wire: { ...wire, methods: [{ ...wire.methods[0], callbacks: [[0, "unit", "unit"]] }] } }), /callback contract/u);
 	await assert.rejects(gen({ api: { ...api, declarations: [{ ...api.declarations[0], resultMode: "value" }] } }), /Invalid/u);
 });
 test("build .NET tasks and an independent stream-only peer on both author routes", { skip: !build, timeout: 3_600_000 }, async t => {

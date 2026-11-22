@@ -597,7 +597,10 @@ same operations as synchronous C# methods. Returned `Result<T,E>` values and
 thrown `DeclaredError<T>` exceptions remain distinct.
 For genuine Lean tasks and pull streams, use the separate
 [NuGet task profile](../publish/nuget.md#export-tasks-and-pull-streams);
-it exposes C# `Task<T>` and `IAsyncEnumerable<T>`.
+it exposes C# `Task<T>` and `IAsyncEnumerable<T>`. A
+[callback-taking task](../publish/nuget.md#export-a-callback-taking-task)
+keeps its delegates until settlement. Propagating the original Lean callback
+error rethrows the C# exception; constructing a new error does not.
 
 The same distinction holds when a module also exports a task. In the
 [installed C, C++, Python and Rust example](../evidence/native-task-companions-20261122.json),

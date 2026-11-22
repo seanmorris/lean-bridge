@@ -42,9 +42,37 @@ const decode = (t, depth = 0) => {
 	return base[t] ?? `unchecked((${type(t)})output[0])`;
 };
 
+const parameterTypes = (m, d, api) => {
+	const slots = new Map();
+	for(const [i, from, to] of m.callbacks ?? [])
+	{
+		const p = d.parameters[i], cb = api.types?.find(t => t.id === p?.type?.id)?.callable;
+		if(m.delivery !== "task" || slots.has(i) || m.args[i] !== "callback" || p?.ownership !== "lease"
+			|| p.lifetime?.scope !== "explicit" || cb?.parameters.length !== 1 || cb.parameters[0].type?.name !== from
+			|| cb.result?.type?.name !== to || cb.reentry !== "same-agent" || cb.selfDisposal !== "defer"
+			|| cb.resultMode !== "value" || cb.failure?.errors?.[0] !== "error:DotNetCallbackException")
+			throw new TypeError("Invalid retained .NET callback contract");
+		slots.set(i, to === "unit" ? `global::System.Action<${type(from)}>` : `global::System.Func<${type(from)}, ${type(to)}>`);
+	}
+	return m.args.map((t, i) => slots.get(i) ?? type(t));
+};
+const callbackSetup = m => {
+	const ns = ["callbacks", "next", "arg", "reply", "fail", "trap"].map(k => {
+		if(!m.names[k]) throw new TypeError("Incomplete native callback port");
+		return JSON.stringify(m.names[k]);
+	});
+	const cases = m.callbacks.map(([j, from, to]) => `                case ${j}:
+                {
+                    var x = owner.Argument<${type(from)}>(h, slot, static output => ${decode(from)});
+                    if (!owner.Invoke<${type(to)}>(h, active, () => ${to === "unit" ? `{ v${j}(x); return default(Unit); }` : `v${j}(x)`}, out var y)) return;
+                    owner.Reply(h, slot, (frame, input) => { ${args(to, "y", 0)} });
+                    return;
+                }`);
+	return { ns, cases, guards: m.callbacks.map(([j]) => `        CheckDelegate(v${j});`).join("\n") };
+};
 // Keep await outside of unsafe code. Start copies values before returning; Take
 // copies the active value or error before releasing native output ownership.
-const taskMethod = ({ m, i, params, signature, method, runtimeClass, assembly, wire }) => {
+const taskMethod = ({ m, i, params, argTypes, signature, method, runtimeClass, assembly, wire }) => {
 	const value = type(m.result), stream = m.delivery === "async-iterator", call = params.map(n => "@" + n).join(", ");
 	let token = "cancellationToken";
 	while(params.includes(token)) token += "_";
@@ -54,13 +82,24 @@ const taskMethod = ({ m, i, params, signature, method, runtimeClass, assembly, w
 	const pub = `    /// <summary>${stream ? "Pull items from" : "Await"} ${m.declaration} on the Lean owner loop.</summary>
     public static ${output} ${method}(${publicArgs}) => global::${assembly}.Delivery<${value}>.${stream ? "Sequence" : "Value"}(() => ${runtimeClass}.Port${i}(${call})${stream ? "" : ", " + token});`;
 	const name = JSON.stringify;
-	const impl = `    internal static Port<${value}> Port${i}(${m.args.map((t, j) => type(t) + " v" + j).join(", ")}) =>
-        new(h =>
+	const cb = m.callbacks?.length && callbackSetup(m);
+	const construct = cb ? `
+    {
+${cb.guards}
+        var callbacks = new Requests(${cb.ns.join(", ")}, ${name(wire.clear)}, (owner, slot, h, active) =>
+        {
+            switch (slot) {
+${cb.cases.join("\n")}
+                default: owner.InvalidSlot(); return;
+            }
+        });
+        return new(h =>` : " =>\n        new(h =>";
+	const impl = `    internal static Port<${value}> Port${i}(${argTypes.map((t, j) => t + " v" + j).join(", ")})${construct}
         {
             using var frame = new Frame();
             ulong* input = stackalloc ulong[${Math.max(1, m.args.length * 3)}];
             new global::System.Span<ulong>(input, ${Math.max(1, m.args.length * 3)}).Clear();
-            ${m.args.map((t, j) => args(t, "v" + j, j)).join("\n            ")}
+            ${m.args.flatMap((t, j) => t === "callback" ? [] : [args(t, "v" + j, j)]).join("\n            ")}
             var fn = (delegate* unmanaged[Cdecl]<ulong*, ulong*, ulong*, byte*, int>)Symbol(${name(m.names.start)});
             var clear = (delegate* unmanaged[Cdecl]<ulong*, void>)Symbol(${name(wire.clear)});
             ulong* output = stackalloc ulong[4]; new global::System.Span<ulong>(output, 4).Clear();
@@ -83,12 +122,16 @@ const taskMethod = ({ m, i, params, signature, method, runtimeClass, assembly, w
             {
                 int s = fn(h, output, tags);
                 if (s == 0) return (true, ${decode(m.result)});
+                ${cb ? `if (s == 14) throw callbacks.Original(output[0]);
+                if (s == 13) throw new LeanIOException(${name(m.declaration)}, ${decode("string")});
+                if (s == 4) throw new TaskIOException(${name(m.declaration)}, ${decode("string")});${m.effect === "EIO" ? `
+                if (s == 3) throw new DeclaredError<${type(m.error)}>(${name(m.declaration)}, ${decode(m.error)});` : ""}` : ""}
                 ${stream ? "if (s == 2) return (false, default!);" : ""}
                 ${m.terminal ? stream ? `if (s == 3) throw new DeclaredError<${type(m.terminal)}>(${name(m.stepDeclaration)}, ${decode(m.terminal)});` : `if (s == 4) throw new TaskIOException(${name(m.declaration)}, ${decode("string")});` : ""}
                 throw Failure(s);
             }
             finally { clear(output); }
-        }, ${name(m.names.poll)}, ${name(m.names.close)}, ${name(m.names.pull ?? null)});`;
+        }, ${name(m.names.poll)}, ${name(m.names.close)}, ${name(m.names.pull ?? null)}${cb ? ", callbacks);\n    }" : ");"}`;
 	return { pub, impl };
 };
 
@@ -105,8 +148,8 @@ const generate = async ({ api, wire, evidence }, tasks) => {
 	if(!tasks && (wire.wait || wire.methods.some(m => m.delivery)))
 		throw new TypeError("The .NET IO profile requires synchronous copied values");
 	if(tasks && (!wire.wait || !wire.methods.some(m => m.delivery))) throw new TypeError("The .NET task profile requires real native delivery");
-	if(wire.leases?.length || wire.methods.some(m => m.callbacks?.length) || api.types?.some(t => t.kind === "resource"))
-		throw new TypeError("The .NET IO profile requires synchronous copied values or callback-free copied task payloads");
+	if(wire.leases?.length || api.types?.some(t => t.kind === "resource"))
+		throw new TypeError("The .NET IO profile requires copied values and does not admit resource leases");
 	const assembly = dotnetComponentAssembly(api.component), component = assembly.slice("LeanBridge.".length);
 	const names = new Set(["Api", "Equals", "ReferenceEquals", "GetType", "ToString", "GetHashCode", "MemberwiseClone", "Finalize"]);
 	if(!/^[A-Za-z][A-Za-z0-9]*$/u.test(component) || names.has(component)) throw new TypeError("Invalid .NET IO component name");
@@ -122,10 +165,10 @@ const generate = async ({ api, wire, evidence }, tasks) => {
 		names.add(method);
 		const params = d.parameters.map(p => p.name);
 		if(params.some(n => !/^[a-z][a-z0-9_]*$/u.test(n)) || new Set(params).size !== params.length) throw new TypeError("Invalid .NET parameter names");
-		const signature = m.args.map((t, j) => type(t) + " @" + params[j]).join(", ");
+		const argTypes = parameterTypes(m, d, api), signature = argTypes.map((t, j) => t + " @" + params[j]).join(", ");
 		if(m.delivery)
 		{
-			const generated = taskMethod({ m, i, params, signature, method, runtimeClass, assembly, wire });
+			const generated = taskMethod({ m, i, params, argTypes, signature, method, runtimeClass, assembly, wire });
 			pub.push(generated.pub); impl.push(generated.impl); continue;
 		}
 		const output = m.result === "unit" ? "void" : type(m.result);
@@ -182,8 +225,14 @@ ${verifiedDotnetAssets(evidence)}
 ${tasks ? `    private const string WaitOpen = "${wire.wait.open}", WaitClose = "${wire.wait.close}";\n` : ""}${impl.join("\n")}
 }
 ` };
-	if(tasks) for(const [source, dest] of [["task-delivery.cs", "TaskDelivery.cs"], ["task-loop.cs", "LeanRuntime.cs"]])
-		files[dest] = (await readFile(new URL(source, import.meta.url), "utf8")).replace("namespace LeanBridge.GeneratedIO;", "namespace " + assembly + ";");
+	if(tasks)
+	{
+		const templates = [["task-delivery.cs", "TaskDelivery.cs"]
+			, ["task-loop.cs", "LeanRuntime.cs"]];
+		if(wire.methods.some(m => m.callbacks?.length)) templates.push(["task-callbacks.cs", "RetainedCallback.cs"]);
+		for(const [source, dest] of templates)
+			files[dest] = (await readFile(new URL(source, import.meta.url), "utf8")).replace("namespace LeanBridge.GeneratedIO;", "namespace " + assembly + ";");
+	}
 	return { assembly, files };
 };
 

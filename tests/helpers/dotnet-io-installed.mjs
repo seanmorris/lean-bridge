@@ -20,6 +20,7 @@ import { dotnetComponentAssembly } from "../../src/backends/dotnet/copied-model.
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
+import { checkDotnetCallbackContract } from "./dotnet-callback-installed.mjs";
 
 const env = { ...process.env, LEAN_NUM_THREADS: "1" }, journal = resolve("tests/fixtures/native-sync-io");
 const parse = async p => JSON.parse(await readFile(p, "utf8"));
@@ -44,7 +45,7 @@ test("NuGet IO exposes typed synchronous methods, rejects name collisions and sh
 	for(const path of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
 	{
 		const manifest = await parse(path), included = manifest.files ?? manifest.includedFiles;
-		for(const f of ["src/backends/dotnet/sync-io.mjs", "src/backends/dotnet/sync-wire.cs", "src/backends/dotnet/task-delivery.cs", "src/backends/dotnet/task-loop.cs", "src/release/dotnet-io-package.mjs"]) assert.ok(included.includes(f), path + ": " + f);
+		for(const f of ["src/backends/dotnet/sync-io.mjs", "src/backends/dotnet/sync-wire.cs", "src/backends/dotnet/task-callbacks.cs", "src/backends/dotnet/task-delivery.cs", "src/backends/dotnet/task-loop.cs", "src/release/dotnet-io-package.mjs"]) assert.ok(included.includes(f), path + ": " + f);
 	}
 });
 test("NuGet checks OS effects and does not replace a task or a resource with a synchronous wrapper", {
@@ -103,24 +104,26 @@ test("build ordinary and reviewed .NET IO packages and an independent peer", { s
 });
 
 const appFiles = ["Program.cs", "Audit.cs"], fixture = resolve("tests/fixtures/dotnet-sync-io");
-const handoff = async (releases, route, tasks) => {
+const handoff = async (releases, route, tasks, callbacks) => {
 	const dir = join(releases, route, "handoff");
 	const { receipt, result } = await readVerifiedPackageSetReceipt({ receiptPath: join(dir, "package-set-receipt.json") });
 	await assertJsonSchema("package-set-receipt", receipt);
 	const api = await parse(join(dir, "binding-ir.json")), evidence = await parse(join(dir, "host-export-evidence.json"));
 	const [p] = receipt.packages, [archive] = p.artifacts;
 	assert.equal(p.profile, tasks ? "native-dotnet-task-v1" : "native-dotnet-io-v1"); assert.equal(p.target, "nuget"); assert.equal(p.runtimeDelivery, "embedded");
-	assert.equal(p.name, tasks ? (route === "peer" ? "Acme.Signals" : "Acme.Pulse") : (route === "peer" ? "Acme.Clock" : "Acme.Journal"));
+	const pair = callbacks ? ["Acme.Feedback", "Acme.Relay"] : tasks ? ["Acme.Pulse", "Acme.Signals"] : ["Acme.Journal", "Acme.Clock"];
+	assert.equal(p.name, pair[Number(route === "peer")]);
 	assert.equal(p.version, tasks ? "1.0.0" : "1.2.0-rc.1");
 	if(tasks)
 	{
-		assert.ok(api.declarations.some(d => d.resultMode === "async-iterator"));
-		assert.equal(api.declarations.some(d => d.resultMode === "promise"), route !== "peer");
+		assert.equal(api.declarations.some(d => d.resultMode === "async-iterator"), !callbacks || route === "peer");
+		assert.equal(api.declarations.some(d => d.resultMode === "promise"), Boolean(callbacks) || route !== "peer");
 	}
 	else assert.ok(api.declarations.every(d => d.resultMode === "value" && !d.effects.includes("async")));
 	assert.equal(hashBindingIr(api), receipt.profiles[0].bindingIrSha256); assert.equal(evidence.sourceTreeSha256, receipt.source.treeSha256);
 	assert.equal(Boolean(evidence.reviewedSourceSha256), route === "reviewed");
-	if(route !== "peer")
+	if(callbacks) checkDotnetCallbackContract(api, evidence, route === "peer");
+	else if(route !== "peer")
 	{
 		const name = tasks ? "RubyTasks.wide" : "Journal.choose", choose = api.declarations.find(d => d.source.declaration === name);
 		assert.equal(choose.source.extensions["lean-lang.org/effect"], "EIO");
@@ -139,16 +142,16 @@ const handoff = async (releases, route, tasks) => {
 		, reviewedSourceSha256: evidence.reviewedSourceSha256 };
 	return { dir, proof, api, evidence };
 };
-const checkInstalled = async (t, { tasks, prefix, capture, replay }) => {
-	const root = resolve(replay ?? capture), peer = await handoff(root, "peer", tasks);
+const checkInstalled = async (t, { tasks, callbacks, prefix, capture, replay }) => {
+	const root = resolve(replay ?? capture), peer = await handoff(root, "peer", tasks, callbacks);
 	const work = await mkdtemp(join(tmpdir(), "installed-nuget-io-")); t.after(() => rm(work, { recursive: true, force: true }));
 	const dotnet = await run("which", [env.LEAN_BRIDGE_DOTNET ?? "dotnet"], work, env);
 	const clients = {}, rows = [];
-	const clientFile = file => join(replay ? root : tasks && file === "Program.cs" ? resolve("tests/fixtures/dotnet-tasks") : fixture, file);
+	const clientFile = file => join(replay ? root : tasks && file === "Program.cs" ? resolve("tests/fixtures", callbacks ? "dotnet-retained-tasks" : "dotnet-tasks") : fixture, file);
 	for(const file of appFiles) clients[file] = sha256(await readFile(clientFile(file)));
 	for(const route of ["ordinary", "reviewed"])
 	{
-		const primary = await handoff(root, route, tasks), pkgs = [primary, peer], scratch = join(work, route);
+		const primary = await handoff(root, route, tasks, callbacks), pkgs = [primary, peer], scratch = join(work, route);
 		const feed = join(scratch, "feed"), project = join(scratch, "project"), cache = join(scratch, "packages");
 		const stage = join(scratch, "output"), moved = join(scratch, "relocated"); await mkdir(feed, { recursive: true }); await mkdir(project);
 		assert.equal(peer.proof.runtimeIdentity, primary.proof.runtimeIdentity);
@@ -177,8 +180,9 @@ const checkInstalled = async (t, { tasks, prefix, capture, replay }) => {
 			}
 			const source = await readFile(join(dir, "lean-bridge/dotnet/src", assembly, "Api.cs"), "utf8");
 			assert.doesNotMatch(source, /DllImport|delegate\*|stackalloc/u);
-			assert.equal(/\bTask\b/u.test(source), tasks && p !== peer);
-			assert.equal(source.includes("IAsyncEnumerable<"), tasks);
+			assert.equal(/\bTask\b/u.test(source), tasks && (Boolean(callbacks) || p !== peer));
+			assert.equal(source.includes("IAsyncEnumerable<"), tasks && (!callbacks || p === peer));
+			assert.equal(source.includes("global::System.Func<"), Boolean(callbacks));
 			const nativeLibrary = "liblbc_" + p.proof.name.toLowerCase().replaceAll(".", "_") + ".so";
 			const nativeSha256 = inner.files["runtimes/linux-x64/native/" + nativeLibrary].sha256;
 			if(!replay)
@@ -198,10 +202,10 @@ const checkInstalled = async (t, { tasks, prefix, capture, replay }) => {
 		await rm(feed, { recursive: true }); await rm(cache, { recursive: true }); await rm(project, { recursive: true });
 		const withoutTools = { PATH: "/unavailable", LANG: "C.UTF-8", DOTNET_NOLOGO: "1", DOTNET_EnableDiagnostics: "0", DOTNET_PROCESSOR_COUNT: "1", LEAN_NUM_THREADS: "1", TMPDIR: scratch };
 		const calls = [];
-		for(const order of [tasks ? "pulse-first" : "journal-first", "peer-first"])
+		for(const order of [callbacks ? "feedback-first" : tasks ? "pulse-first" : "journal-first", "peer-first"])
 		{
 			const output = await run(dotnet, [join(moved, "Client.dll"), order], scratch, withoutTools, 120_000);
-			assert.equal(output, order + (tasks ? ": 19 scalars, genuine await, cancellation, pull backpressure, disposal and retirement; shared owner, 2 components, 0 live identities" : ": 19 scalars, nested EIO/Except, IO order, validation, retirement; 1 runtime, 2 components, 0 live identities"));
+			assert.equal(output, order + (callbacks ? ": 19 retained carriers, nested owner reentry, exception identity, revocation, cancellation and shared trap; 2 components, 0 live identities" : tasks ? ": 19 scalars, genuine await, cancellation, pull backpressure, disposal and retirement; shared owner, 2 components, 0 live identities" : ": 19 scalars, nested EIO/Except, IO order, validation, retirement; 1 runtime, 2 components, 0 live identities"));
 			calls.push(output);
 		}
 		const native = installed[0], nested = join(moved, "runtimes/linux-x64/native", native.nativeLibrary);
@@ -228,9 +232,12 @@ const checkInstalled = async (t, { tasks, prefix, capture, replay }) => {
 		await writeFile(path, canonicalJson(report), { flag: "wx" });
 	}
 };
-for(const { tasks, prefix } of [{ tasks: false, prefix: "LEAN_BRIDGE_DOTNET_IO_" }, { tasks: true, prefix: "LEAN_BRIDGE_DOTNET_TASK_" }])
+const profiles = [{ tasks: false, prefix: "LEAN_BRIDGE_DOTNET_IO_" }
+	, { tasks: true, prefix: "LEAN_BRIDGE_DOTNET_TASK_" }
+	, { tasks: true, callbacks: true, prefix: "LEAN_BRIDGE_DOTNET_CALLBACK_" }];
+for(const { tasks, callbacks, prefix } of profiles)
 {
 	const capture = env[prefix + "CAPTURE"], replay = env[prefix + "REPLAY"];
-	test("relocated offline NuGet clients run both exact " + (tasks ? "task" : "IO") + " packages in both orders"
-		, { skip: !capture && !replay, timeout: 3_600_000 }, t => checkInstalled(t, { tasks, prefix, capture, replay }));
+	test("relocated offline NuGet clients run both exact " + (callbacks ? "retained callback" : tasks ? "task" : "IO") + " packages in both orders"
+		, { skip: !capture && !replay, timeout: 3_600_000 }, t => checkInstalled(t, { tasks, callbacks, prefix, capture, replay }));
 }

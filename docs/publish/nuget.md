@@ -92,10 +92,41 @@ synchronous. For a `Task (Except IO.Error α)` whose error should fault the
 task, also select the declaration in `taskIOErrors`. Other supported returned
 `Except` values are data, not exceptions.
 
-This profile supports copied primitive arguments and primitive or nested
-result values. It does not admit resource leases or retained worker-to-C#
-callbacks. See [calling the installed package](../consume/dotnet.md#await-tasks-and-pull-streams)
+This profile supports copied primitive arguments, primitive or nested result
+values, and the retained callbacks below. Resource-valued tasks require a
+separate projection. See [calling the installed package](../consume/dotnet.md#await-tasks-and-pull-streams)
 and the [ordinary, reviewed and stream-only package receipts](../evidence/dotnet-tasks-20261122.json).
+
+### Export a callback-taking task
+
+A selected task can accept one or more unary functions of type `α → IO β`
+over copied scalars. Select the real factory in `taskExports`. Select it in
+`taskIOErrors` too if `Except IO.Error` should fault the task. For example,
+the [Feedback module](../../tests/fixtures/ruby-retained-tasks/Feedback.lean)
+imports the [shared Lean fixture](../../tests/fixtures/python-retained-tasks/Retained.lean)
+and defines:
+
+```lean
+def once (n : UInt32) (f : UInt32 → IO UInt32) : BaseIO (Task (Except IO.Error UInt32)) :=
+  IO.asTask (f n)
+```
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Feedback"],
+  "taskExports": ["Feedback.once"],
+  "taskIOErrors": ["Feedback.once"],
+  "targets": {"nuget": {"name": "Acme.Feedback", "version": "1.0.0"}}
+}
+```
+
+C# gets `Func<A,B>` (or `Action<A>` for a `Unit` reply). Its delegate can
+run during the factory as well as during the inner task. The generated
+adapter copies each argument and reply; a Lean worker never enters the CLR.
+A reviewed API must preserve the callback lease, reentry policy and declared
+.NET exception. See [using the delegate](../consume/dotnet.md#let-a-lean-task-call-c)
+and the [ordinary and reviewed package results](../evidence/dotnet-retained-tasks-20261122.json).
 
 ## Export arrays and records
 

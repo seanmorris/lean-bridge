@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-22",
+  "kind": "local-installed-dotnet-retained-task-callbacks",
+  "nodes": [
+    1221,
+    1222,
+    1223
+  ],
+  "profile": "native-dotnet-task-v1",
+  "scope": "C# Func/Action delegates retained by real Lean tasks on Linux x86-64. Ordinary and compiler-reviewed Feedback NuGet archives compose with the independently built Relay package.",
+  "checks": [
+    "Both producer routes elaborate the same public interface. The loader verifies the exact component, broker and Lean libraries. Altered callback host selection, ambiguous host selection and changed self-disposal contracts are rejected.",
+    "Offline NuGet restores, relocated clients, both package load orders, regeneration of the managed sources at capture, and a tampered-library negative control per author route. Clients run without the source project, feed, package cache or build tools on PATH.",
+    "One real worker calls through all 19 scalar carriers. Nested callbacks reenter both the same and an independent component on the process main thread. An outstanding task rejoins the owner loop without blocking it; a direct wait on the active callback's own task is refused.",
+    "Returned Except, EIO factory failure, factory IO, terminal IO, boundary validation, and an original callback exception are distinct. Lean can catch an exception or replace it with a new same-message error. The original C# object and throw stack survive repeated awaits, a throwing Message getter, and a Message getter that rethrows the same object. A callback-origin OperationCanceledException faults its task without masquerading as token cancellation.",
+    "Revocable registrations work across independently installed assemblies and permit self-disposal without interrupting the active call. A Lean-stored callback expires after its task completes. Cancelling one invocation leaves an independent invocation usable. Cross-thread cancellation, cancellation while a callback is on its stack, and a cancelled factory's late inner task leave no stale replies. A WeakReference verifies a cancelled task no longer roots its delegate target.",
+    "A catchable, explicitly injected managed fatal exception during callback or diagnostic formatting retires the shared runtime; ordinary callback failures do not. Both load orders observe one runtime, two components, and zero live native identities at cleanup."
+  ],
+  "limits": [
+    "Local .NET SDK 8.0.424 and shared framework 8.0.30 / Lean 4.32.2 / Linux x86-64 with glibc 2.36. No hosted result or registry publication is inferred.",
+    "The retained callback contract is synchronous and unary with copied scalar input and reply. No promise of recovering from a process-terminating CLR or OS failure; resource-valued tasks and streams are separate."
+  ],
+  "reproduce": {
+    "build": "CC=cc LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_CALLBACK_BUILD=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/dotnet-callback-installed.mjs",
+    "capture": "LEAN_BRIDGE_DOTNET_CALLBACK_CAPTURE=/absolute/path/to/new-handoffs node --test --test-concurrency=1 tests/helpers/dotnet-io-installed.mjs",
+    "replay": "LEAN_BRIDGE_DOTNET_CALLBACK_REPLAY=/absolute/path/to/original-handoffs LEAN_BRIDGE_DOTNET_CALLBACK_EXPECTED=docs/evidence/dotnet-retained-tasks-20261122.json node --test --test-concurrency=1 tests/helpers/dotnet-io-installed.mjs",
+    "managedRegression": "LEAN_BRIDGE_DOTNET_MANAGED_REPLAY=/absolute/path/to/original-callback-free-handoffs node --test --test-concurrency=1 tests/helpers/dotnet-task-managed-replay.mjs",
+    "requirements": "Use the pinned Lean compiler path for production, a C compiler, and .NET 8. The callback-free managed regression verifies the prior archive pin, regenerates the current managed assemblies, and runs the original C# client; it does not build or claim new callback-free NuGet packages."
+  },
+  "acceptanceSha256": "3093f0d0b8e3446f545ecfe75cc20e28802130e89a4e734ac67a98012fff4dc6",
+  "installed": {
+    "clients": {
+      "Audit.cs": "aa5bb1391377472075d9ba816fdbf75f65973edac8ba7df44d80da38451a74f9",
+      "Program.cs": "5a68131ba602e5812a26276656fa359587ed3ef2819ec62c04b2e384aa3d76f3"
+    },
+    "rows": [
+      {
+        "calls": [
+          "feedback-first: 19 retained carriers, nested owner reentry, exception identity, revocation, cancellation and shared trap; 2 components, 0 live identities",
+          "peer-first: 19 retained carriers, nested owner reentry, exception identity, revocation, cancellation and shared trap; 2 components, 0 live identities"
+        ],
+        "installed": [
+          {
+            "archive": {
+              "bytes": 51432713,
+              "path": "archives/Acme.Feedback.1.0.0.nupkg",
+              "sha256": "f47021de7bd7830daf8dfc084b6f7835f5aa373ae52dbe452a8b0f8da4a8b5e5"
+            },
+            "assembly": "LeanBridge.Feedback",
+            "assemblySha256": "3440847cd01fdc8d575c2a34ef78b8348bf0e51317afed21660fe589e8853f11",
+            "bindingIrSha256": "1b31054d4288edfd0ca342a45c955b07ca1838cab76b9cf114566a63b5d0d94e",
+            "name": "Acme.Feedback",
+            "nativeLibrary": "liblbc_acme_feedback.so",
+            "nativeSha256": "e56f52f0ba9307827ef8446d8a05347355112b40c588c47805fd017956b15bb7",
+            "profile": "native-dotnet-task-v1",
+            "receiptSha256": "a0d3756d864f43652637d27ffa8dceaceb6c181ce2d542b9649a139313cf9859",
+            "reviewedSourceSha256": null,
+            "route": "ordinary",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "afddb4fd259c0b76a7c7dadf704c4db255bbd859da329047bc802d1ce03f3519",
+            "version": "1.0.0"
+          },
+          {
+            "archive": {
+              "bytes": 51371610,
+              "path": "archives/Acme.Relay.1.0.0.nupkg",
+              "sha256": "1f5daa6a7d8258165342608abb943d69894e3e484b2efae9108039179027e801"
+            },
+            "assembly": "LeanBridge.Relay",
+            "assemblySha256": "2415941b6948d23a4c3c83f5e2fcef26109a4c9ecd3ca8ef8967fdb252d5cb01",
+            "bindingIrSha256": "046e57a1f124b65de3cd18afc6e66b342c1e019f4a6ca02b713866c1705fa6a6",
+            "name": "Acme.Relay",
+            "nativeLibrary": "liblbc_acme_relay.so",
+            "nativeSha256": "57a68dcbaa7c35e580d7f06f1421353dd79dbf664b27cfca752fea8ef440eb9e",
+            "profile": "native-dotnet-task-v1",
+            "receiptSha256": "913f61d443e1525a6d0b76b2576c3c999a11ca52ab80dbae8ed728d0f24f5fd5",
+            "reviewedSourceSha256": null,
+            "route": "peer",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "9f3ca4622429ea41240d6248a765c663e2467362ec6cb06d8b2982396090a624",
+            "version": "1.0.0"
+          }
+        ],
+        "route": "ordinary"
+      },
+      {
+        "calls": [
+          "feedback-first: 19 retained carriers, nested owner reentry, exception identity, revocation, cancellation and shared trap; 2 components, 0 live identities",
+          "peer-first: 19 retained carriers, nested owner reentry, exception identity, revocation, cancellation and shared trap; 2 components, 0 live identities"
+        ],
+        "installed": [
+          {
+            "archive": {
+              "bytes": 51432754,
+              "path": "archives/Acme.Feedback.1.0.0.nupkg",
+              "sha256": "2e5c6294c1be11e36eac78513766af3eb2a5b0213417836c47446d0f0ce2648a"
+            },
+            "assembly": "LeanBridge.Feedback",
+            "assemblySha256": "6ed263d8b476c5ef6f704a44ce11e0cb2cfa03d6f96f89e3694876956f625d88",
+            "bindingIrSha256": "1b31054d4288edfd0ca342a45c955b07ca1838cab76b9cf114566a63b5d0d94e",
+            "name": "Acme.Feedback",
+            "nativeLibrary": "liblbc_acme_feedback.so",
+            "nativeSha256": "25e3032077658a991855be1c5fcecd692bc1fdfcfe1ae12f26964313b966f563",
+            "profile": "native-dotnet-task-v1",
+            "receiptSha256": "548aecfc7d26aeb188be9ef11f868f2ceeaf771c332dc574eb41ad93990bb35c",
+            "reviewedSourceSha256": "2ec2e81261c5c4123311e6bad79e6d3d83e534151afc9da45d43883d1598809e",
+            "route": "reviewed",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "01657af016ec8699e6f53aff6d42e0fb9b30fb69c21328bdc3bca349f45afc4b",
+            "version": "1.0.0"
+          },
+          {
+            "archive": {
+              "bytes": 51371610,
+              "path": "archives/Acme.Relay.1.0.0.nupkg",
+              "sha256": "1f5daa6a7d8258165342608abb943d69894e3e484b2efae9108039179027e801"
+            },
+            "assembly": "LeanBridge.Relay",
+            "assemblySha256": "2415941b6948d23a4c3c83f5e2fcef26109a4c9ecd3ca8ef8967fdb252d5cb01",
+            "bindingIrSha256": "046e57a1f124b65de3cd18afc6e66b342c1e019f4a6ca02b713866c1705fa6a6",
+            "name": "Acme.Relay",
+            "nativeLibrary": "liblbc_acme_relay.so",
+            "nativeSha256": "57a68dcbaa7c35e580d7f06f1421353dd79dbf664b27cfca752fea8ef440eb9e",
+            "profile": "native-dotnet-task-v1",
+            "receiptSha256": "913f61d443e1525a6d0b76b2576c3c999a11ca52ab80dbae8ed728d0f24f5fd5",
+            "reviewedSourceSha256": null,
+            "route": "peer",
+            "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+            "sdk": "8.0.424",
+            "sourceTreeSha256": "9f3ca4622429ea41240d6248a765c663e2467362ec6cb06d8b2982396090a624",
+            "version": "1.0.0"
+          }
+        ],
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "managedRegressionSha256": "34d3f61c18ca082665074fe26b2b8c6c32794eaa2f34202b5a028219c7b42bb7",
+  "managedRegression": {
+    "calls": [
+      "pulse-first: 19 scalars, genuine await, cancellation, pull backpressure, disposal and retirement; shared owner, 2 components, 0 live identities",
+      "peer-first: 19 scalars, genuine await, cancellation, pull backpressure, disposal and retirement; shared owner, 2 components, 0 live identities"
+    ],
+    "generated": {
+      "LeanBridge.Pulse": {
+        "Api.cs": "97b4d0052a2a99ce185c4f1bbfd1fb1411246c8afd417b9fa263bf46ede388a3",
+        "Calls.cs": "37ef4ff6c58e2e13e8ff58c9355899dfe5dbf6a4e5d1e9468239a3fdab165138",
+        "LeanRuntime.cs": "baca17d8141e8219b57d7c5b09ad21ab208f00e90b9770cdf2b2033f2b47c252",
+        "TaskDelivery.cs": "2efd022b8fee08dd329966fb9ec9fad12983fb28526d786df7cf8287ef548f16",
+        "Wire.cs": "6b87c284d8fe328c534e0360e1d2cd019e8829a6dce39bc963102d0e8cb9d24d"
+      },
+      "LeanBridge.Signals": {
+        "Api.cs": "b7c97a69912ab0796ff9d518bf7439deb2991f21c76364507d4598c06daf0547",
+        "Calls.cs": "db41d7535a0708c34982399480e6efa39ecbd0c1bd1d64371f1708fdc43d3b8d",
+        "LeanRuntime.cs": "e6258dc4b5e0e29c97c7d7c38c0f0569f398b4b9c7a347ec4eb4b466f7033fd8",
+        "TaskDelivery.cs": "c8e82cd0bfe424c9917471d593d91e5e30dfb8f68e65f88aec81bfc96c56e5c6",
+        "Wire.cs": "b6a43c839369879dfd1444da4c1865eb3a29361bf57ebaf87f31023e209b3115"
+      }
+    },
+    "pinnedAcceptance": "2f4d50a36ce1eb44548e3778be309f0f5da8680968e5741e800780903b1b66b9",
+    "sdk": "8.0.424"
+  }
+}

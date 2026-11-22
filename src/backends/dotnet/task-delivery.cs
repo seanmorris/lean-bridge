@@ -13,13 +13,23 @@ internal static unsafe partial class Wire
 {
     internal delegate void Start(ulong* handle);
     internal delegate (bool, T) Take<T>(ulong* handle);
-    internal sealed class Port<T>(Start start, Take<T> take, string poll, string close, string? pull)
+    internal interface IRequests
+    {
+        int Descriptor(ulong* h);
+        void Pump(ulong* h, Func<bool> active);
+        void Clear();
+    }
+    internal sealed class Port<T>(Start start, Take<T> take, string poll, string close, string? pull, IRequests? requests = null)
     {
         private readonly ulong[] handle = new ulong[2];
         private readonly int[] gate = { -1, -1 };
         private readonly nint pollFn = Symbol(poll), closeFn = Symbol(close), pullFn = pull == null ? 0 : Symbol(pull);
         private readonly nint gateOpen = Symbol(WaitOpen), gateClose = Symbol(WaitClose);
-        internal void Open() { fixed (ulong* h = handle) start(h); }
+        private Start? starter = start;
+        private Take<T>? reader = take;
+        internal bool HasRequests => requests != null;
+        internal void Open() { var call = starter!; starter = null; fixed (ulong* h = handle) call(h); }
+        internal void Pump(Func<bool> active) { fixed (ulong* h = handle) requests?.Pump(h, active); }
         internal void Pull()
         {
             if (pullFn != 0) fixed (ulong* h = handle)
@@ -35,9 +45,9 @@ internal static unsafe partial class Wire
         }
         internal int Watch(int fd)
         {
-            fixed (int* g = gate)
+            fixed (int* g = gate) fixed (ulong* h = handle)
             {
-                int s = ((delegate* unmanaged[Cdecl]<int, int, int*, int>)gateOpen)(fd, -1, g);
+                int s = ((delegate* unmanaged[Cdecl]<int, int, int*, int>)gateOpen)(fd, requests?.Descriptor(h) ?? -1, g);
                 return s == 0 ? g[0] : throw Failure(s);
             }
         }
@@ -45,11 +55,12 @@ internal static unsafe partial class Wire
         {
             if (gate[0] >= 0) fixed (int* g = gate) ((delegate* unmanaged[Cdecl]<int*, void>)gateClose)(g);
         }
-        internal (bool, T) Read() { fixed (ulong* h = handle) return take(h); }
+        internal (bool, T) Read() { fixed (ulong* h = handle) return reader!(h); }
         internal void Close()
         {
             Unwatch();
             if (handle[0] != 0) fixed (ulong* h = handle) ((delegate* unmanaged[Cdecl]<ulong*, int>)closeFn)(h);
+            requests?.Clear(); requests = null; starter = null; reader = null;
         }
     }
 }
@@ -62,6 +73,7 @@ internal sealed class Delivery<T> : IDisposable
     private readonly bool single;
     private CancellationTokenRegistration registration;
     private TaskCompletionSource<(bool, T)>? pending;
+    private TaskCompletionSource<T>? value;
     private Action? untrack, unwatch;
     private bool ended;
     private Delivery(Func<Wire.Port<T>> make, CancellationToken token, bool single)
@@ -80,12 +92,19 @@ internal sealed class Delivery<T> : IDisposable
         }
         catch { Dispose(); throw; }
     }
-    internal static async Task<T> Value(Func<Wire.Port<T>> make, CancellationToken token)
+    internal static Task<T> Value(Func<Wire.Port<T>> make, CancellationToken token)
     {
-        var delivery = new Delivery<T>(make, token, true);
-        var (present, value) = await delivery.Next().ConfigureAwait(false);
-        if (!present) throw new InvalidOperationException("Unexpected end of Lean task");
-        return value;
+        try
+        {
+            var d = new Delivery<T>(make, token, true);
+            var completion = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
+            d.value = completion;
+            d.Begin();
+            return completion.Task;
+        }
+        catch (OperationCanceledException e) when (e.CancellationToken.IsCancellationRequested)
+        { return Task.FromCanceled<T>(e.CancellationToken); }
+        catch (Exception e) { return Task.FromException<T>(e); }
     }
     internal static IAsyncEnumerable<T> Sequence(Func<Wire.Port<T>> make) => new SequenceImpl(make);
     private sealed class SequenceImpl(Func<Wire.Port<T>> make) : IAsyncEnumerable<T>
@@ -128,23 +147,46 @@ internal sealed class Delivery<T> : IDisposable
         if (ended) throw new ObjectDisposedException("Lean delivery");
         var next = new TaskCompletionSource<(bool, T)>(TaskCreationOptions.RunContinuationsAsynchronously);
         pending = next;
-        try { port.Pull(); Ready(); }
-        catch (Exception e) { Fail(e); }
+        Begin();
         return next.Task;
     }
-    private void Ready()
+    private void Begin()
     {
-        if (pending == null) return;
+        try { if (token.IsCancellationRequested) Dispose(); else { port.Pull(); Check(false); } }
+        catch (Exception e) { Fail(e); }
+    }
+    private void Ready() => Check(true);
+    private void Check(bool notified)
+    {
+        if (pending == null && value == null) return;
         try
         {
             if (token.IsCancellationRequested) { Dispose(); return; }
+            if (notified && port.HasRequests)
+            {
+                // Do not let a nested owner wait redispatch this same request.
+                Unwatch();
+                var active = LeanRuntime.ActiveCallbacks;
+                var current = value!.Task;
+                active?.Add(current);
+                try { port.Pump(() => !ended && !token.IsCancellationRequested); }
+                finally { active?.Remove(current); }
+                if (ended) return;
+                if (token.IsCancellationRequested) { Dispose(); return; }
+            }
             int fd = port.Poll();
             if (fd >= 0) { unwatch ??= owner.Item2(port.Watch(fd), Ready); return; }
             Unwatch();
             var item = port.Read();
             var done = pending; pending = null;
+            var completed = value; value = null;
             if (single || !item.Item1) Dispose();
-            done.TrySetResult(item);
+            if (completed != null)
+            {
+                if (item.Item1) completed.TrySetResult(item.Item2);
+                else completed.TrySetException(new InvalidOperationException("Unexpected end of Lean task"));
+            }
+            else done!.TrySetResult(item);
         }
         catch (Exception e) { Fail(e); }
     }
@@ -156,7 +198,8 @@ internal sealed class Delivery<T> : IDisposable
     private void Fail(Exception e)
     {
         var done = pending; pending = null;
-        Dispose(); done?.TrySetException(e);
+        var failed = value; value = null;
+        Dispose(); done?.TrySetException(e); failed?.TrySetException(e);
     }
     public void Dispose()
     {
@@ -165,6 +208,8 @@ internal sealed class Delivery<T> : IDisposable
         registration.Dispose(); Unwatch(); port.Close();
         untrack?.Invoke(); untrack = null;
         var done = pending; pending = null;
-        done?.TrySetCanceled(token.IsCancellationRequested ? token : new CancellationToken(true));
+        var canceled = value; value = null;
+        var reason = token.IsCancellationRequested ? token : new CancellationToken(true);
+        done?.TrySetCanceled(reason); canceled?.TrySetCanceled(reason);
     }
 }

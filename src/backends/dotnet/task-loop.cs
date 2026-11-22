@@ -25,6 +25,25 @@ public static class LeanRuntime
         return AppDomain.CurrentDomain.GetData(Key) as Services ??
             throw new InvalidOperationException("Call LeanRuntime.Run from the process main thread before starting Lean tasks or streams.");
     }
+    private const string NestedKey = Key + ".nested-v1";
+    internal static HashSet<Task>? ActiveCallbacks =>
+        (AppDomain.CurrentDomain.GetData(NestedKey) as Tuple<Action<Task>, HashSet<Task>>)?.Item2;
+
+    // A synchronous retained delegate may need a second Lean task in order to
+    // answer its worker. Pump readiness on the same owner, never block on .Result.
+    private static void WaitFor(Task task)
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        Current();
+        if (task.IsCompleted) return;
+        var nested = AppDomain.CurrentDomain.GetData(NestedKey) as Tuple<Action<Task>, HashSet<Task>> ??
+            throw new InvalidOperationException("Start LeanRuntime.Run from a package with nested callback support");
+        if (nested.Item2.Contains(task)) throw new InvalidOperationException("A callback cannot wait on its own active Lean task");
+        nested.Item1(task);
+    }
+    /// <summary>Wait for independent work inside a synchronous owner-thread callback.</summary>
+    public static T Await<T>(Task<T> task) { WaitFor(task); return task.GetAwaiter().GetResult(); }
+    public static void Await(Task task) { WaitFor(task); task.GetAwaiter().GetResult(); }
 
     public static void Run(Func<Task> application)
     {
@@ -37,21 +56,17 @@ public static class LeanRuntime
         // Only BCL delegates cross assemblies; no generated class identity is shared.
         var services = new Services(loop.Enqueue, loop.Watch, loop.Track);
         domain.SetData(Key, services);
+        domain.SetData(NestedKey, Tuple.Create<Action<Task>, HashSet<Task>>(loop.Until, new()));
         SynchronizationContext.SetSynchronizationContext(loop);
         try
         {
             var task = application() ?? throw new InvalidOperationException("The application returned no Task");
-            if (!task.IsCompleted)
-            {
-                _ = task.ContinueWith(_ => loop.Signal(), CancellationToken.None,
-                    TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
-                while (!task.IsCompleted) loop.Turn();
-            }
+            loop.Until(task);
             task.GetAwaiter().GetResult();
         }
         finally
         {
-            domain.SetData(Key, null);
+            domain.SetData(NestedKey, null); domain.SetData(Key, null);
             SynchronizationContext.SetSynchronizationContext(previous);
         }
     }
@@ -95,20 +110,31 @@ public static class LeanRuntime
         public override void Post(SendOrPostCallback callback, object? state) => Enqueue(() => callback(state));
         public override SynchronizationContext CreateCopy() => this;
 
+        internal void Until(Task task)
+        {
+            if (task.IsCompleted) return;
+            _ = task.ContinueWith(_ => Signal(), CancellationToken.None,
+                TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+            while (!task.IsCompleted) Turn();
+        }
         internal void Turn()
         {
             var snapshot = readers.ToArray();
             var fds = new PollFd[snapshot.Length + 1];
             fds[0] = new PollFd { fd = wake, events = 1 };
             for (int i = 0; i < snapshot.Length; i++) fds[i + 1] = new PollFd { fd = snapshot[i].Key, events = 1 };
-            if (poll(fds, (nuint)fds.Length, -1) < 0)
+            // An outer turn may already have consumed the wake counter while
+            // another posted continuation is still queued behind this callback.
+            int timeout; lock (pending) timeout = pending.Count == 0 ? -1 : 0;
+            if (poll(fds, (nuint)fds.Length, timeout) < 0)
             {
                 if (Marshal.GetLastPInvokeError() == 4) return;
                 throw new System.IO.IOException("Waiting on Lean descriptors failed");
             }
-            if (fds[0].revents != 0)
+            if (fds[0].revents != 0 || timeout == 0)
             {
-                while (read(wake, out _, 8) < 0 && Marshal.GetLastPInvokeError() == 4) { }
+                if (fds[0].revents != 0)
+                    while (read(wake, out _, 8) < 0 && Marshal.GetLastPInvokeError() == 4) { }
                 // Bound each batch so an active producer cannot starve native completions.
                 for (int k = 0; k < 64; k++)
                 {
