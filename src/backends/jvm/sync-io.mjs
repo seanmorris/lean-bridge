@@ -22,6 +22,17 @@ const insertAt = (source, marker, replacement) => {
 	if(!source.includes(marker) || source.indexOf(marker) !== source.lastIndexOf(marker)) throw new Error("Missing or ambiguous JVM template hook: " + marker);
 	return source.replace(marker, () => replacement);
 };
+// Keep the previously installed copied-only Java source byte-for-byte. In a
+// lease package, native publication has a separate path from user completion.
+const renderDelivery = (text, owned) => {
+	const src = text.replace(/^\/\/ @leases\n([\s\S]*?)^\/\/ @end\n/gmu, (_, block) => {
+		const parts = block.split("// @otherwise\n");
+		if(parts.length > 2 || parts.some(s => s.includes("// @"))) throw new TypeError("Invalid JVM ownership template");
+		return owned ? parts[0] : parts[1] ?? "";
+	});
+	if(src.includes("// @")) throw new TypeError("Unmatched JVM ownership template");
+	return src;
+};
 const spelling = (t, ns, k, nest = false) => {
 	if(t?.leaseClass) return t.leaseClass;
 	if(Array.isArray(t) && t.length === 2)
@@ -89,7 +100,6 @@ const callbackSpecs = (api, m, decl, ns) => {
 export const generateJvmIO = async options => {
 	const { api, wire, invoke, retire, evidence } = options, tasks = Boolean(wire.wait);
 	const retained = wire.methods.some(m => m.callbacks?.length);
-	if(tasks && wire.leases) throw new TypeError("Resource-bearing JVM packages currently require synchronous IO exports");
 	if(tasks !== Boolean(options.task && options.watch) || retained && !tasks) throw new TypeError("Inconsistent JVM task delivery");
 	const slug = api.component.name.toLowerCase().replaceAll(/[^a-z0-9]+/gu, "_");
 	if(!/^[a-z][a-z0-9_]*$/u.test(slug) || words.has(slug)) throw new TypeError("Invalid JVM IO component namespace");
@@ -99,11 +109,12 @@ export const generateJvmIO = async options => {
 	const leases = jvmLeaseModels(api, wire, evidence, words);
 	const shape = t => leases.get(t) ?? t;
 	const names = new Set(), classes = new Set(["Api", "Wire", "Unit", "NativeAssets", "Result", "LeanEIOError", "LeanIOException"]);
-	const methods = [], kotlin = [];
+	const methods = [], kotlin = [], ownedErrors = [];
 	const typedError = (ex, shape, decl) => {
 		if(classes.has(ex)) throw new TypeError("Colliding JVM IO exception: " + ex);
 		classes.add(ex);
 		const et = spelling(shape, ns, false, true);
+		if(shape?.leaseClass) ownedErrors.push(ex);
 		java(ex, `public final class ${ex} extends LeanEIOError {
     private final ${et} value;
     ${ex}(${et} value) { super(${decl}); this.value = value; }
@@ -113,7 +124,7 @@ export const generateJvmIO = async options => {
 	};
 	for(const [i, raw] of wire.methods.entries())
 	{
-		const m = leases.size ? { ...raw, args: raw.args.map(shape), result: shape(raw.result), error: shape(raw.error) } : raw;
+		const m = leases.size ? { ...raw, args: raw.args.map(shape), result: shape(raw.result), error: shape(raw.error), terminal: shape(raw.terminal) } : raw;
 		const decl = api.declarations.find(d => d.name === m.name);
 		const mode = m.delivery === "task" ? "promise" : m.delivery === "async-iterator" ? m.delivery : "value";
 		if(!decl || decl.source.declaration !== m.declaration || decl.parameters.length !== m.args.length || decl.resultMode !== mode
@@ -142,6 +153,8 @@ export const generateJvmIO = async options => {
 		const kp = m.args.map((t, j) => back(params[j]) + ": " + (slots.get(j)?.kotlin ?? spelling(t, ns, true))).join(", ");
 		const kt = m.result === "unit" ? "kotlin.Unit" : spelling(m.result, ns, true);
 		const call = `${ns}.Api.${back(name)}(${params.map(back).join(", ")})`;
+		const owns = Boolean(m.result?.leaseClass || m.error?.leaseClass || m.terminal?.leaseClass);
+		const awaiter = owns ? ".awaitLeanLease()" : ".await()";
 		if(slots.size)
 		{
 			const value = spelling(m.result, ns, false, true), unit = m.result === "unit";
@@ -155,7 +168,7 @@ export const generateJvmIO = async options => {
                 Wire.success(status); return ${result(m.result)};
             }, new CallbackPort.Slot[]{${m.args.map((_, j) => slots.get(j)?.bind ?? "null").join(", ")}}));
     }`);
-			kotlin.push(`    @JvmStatic suspend fun ${back(name)}(${kp}): ${kt}${unit ? " { " + call + ".await() }" : " = " + call + ".await()"}`);
+			kotlin.push(`    @JvmStatic suspend fun ${back(name)}(${kp}): ${kt}${unit ? " { " + call + awaiter + " }" : " = " + call + awaiter}`);
 			continue;
 		}
 		if(m.delivery)
@@ -175,7 +188,7 @@ export const generateJvmIO = async options => {
             f -> { ${input} }, (f,status) -> { ${error} Wire.success(status); },
             (f,status) -> { ${stream ? "if (status == 2) return null;" : ""} ${terminal} Wire.success(status); return ${result(m.result)}; }));
     }`);
-			const unit = m.result === "unit", tail = stream ? ".asLeanFlow()" + (unit ? ".map { kotlin.Unit }" : "") : ".await()";
+			const unit = m.result === "unit", tail = stream ? (owns ? ".asLeanLeaseFlow()" : ".asLeanFlow()") + (unit ? ".map { kotlin.Unit }" : "") : awaiter;
 			kotlin.push(`    @JvmStatic ${stream ? "" : "suspend "}fun ${back(name)}(${kp}): ${stream ? "kotlinx.coroutines.flow.Flow<" + kt + ">" : kt}${!stream && unit ? " { " + call + tail + " }" : " = " + call + tail}`);
 			continue;
 		}
@@ -216,6 +229,14 @@ export const generateJvmIO = async options => {
 			files["src/main/java/" + r.leaseClass.replaceAll(".", "/") + ".java"] = jvmLeaseSource(r);
 			ports.push(`    static final ResourcePort<${r.leaseClass}> K${r.index} = new ResourcePort<>(${r.leaseClass}.class, "${r.ledger}", ${r.index}, ${r.tag});`);
 		}
+		if(tasks)
+		{
+			ports.push("    static void discardValue(Object value) {"
+				, ...[...leases.values()].map(r => `        if (value instanceof ${r.leaseClass} v) v.close();`)
+				, "    }", "    static void discardError(Throwable error) {"
+				, ...ownedErrors.map(ex => `        if (error instanceof ${ex} e) e.payload().close();`), "    }");
+			files[`src/main/kotlin/${dir}/LeaseDelivery.kt`] = (await readFile(new URL("./lease-delivery.kt", import.meta.url), "utf8")).replace("__PACKAGE__", ns);
+		}
 		java("Resources", "final class Resources {\n    private Resources() {}\n" + ports.join("\n") + "\n}\n");
 		java("ResourcePort", (await readFile(new URL("./resource-port.java", import.meta.url), "utf8")).split("package __PACKAGE__;\n")[1]);
 		const path = `src/main/java/${dir}/Wire.java`;
@@ -235,7 +256,8 @@ export const generateJvmIO = async options => {
     void disownLease() { out.set(JAVA_LONG, 24, 0L); }
     long scalar()`);
 	}
-	const imports = tasks ? "import kotlinx.coroutines.future.await\nimport kotlinx.coroutines.flow.map\n" : "";
+	const imports = (tasks ? "import kotlinx.coroutines.future.await\nimport kotlinx.coroutines.flow.map\n" : "")
+		+ (tasks && leases.size ? `import ${ns}.awaitLeanLease\nimport ${ns}.asLeanLeaseFlow\n` : "");
 	files[`src/main/kotlin/${dir}/kotlin/Api.kt`] = `package ${ns}.kotlin\n${imports}object Api {\n${kotlin.join("\n")}\n}\n`;
 	if(tasks)
 	{
@@ -245,6 +267,8 @@ export const generateJvmIO = async options => {
 		if(retained) assets.push(["CallbackPort", "callback-port"], ["RetainedCallback", "retained-callback"]);
 		for(const [name, asset] of assets) files[`src/main/java/${dir}/${name}.java`] = (await readFile(new URL("./" + asset + ".java", import.meta.url), "utf8"))
 			.replace("__PACKAGE__", ns).replace("__WATCH__", options.watch).replace("__TASK__", options.task);
+		const deliveryPath = `src/main/java/${dir}/Delivery.java`;
+		files[deliveryPath] = renderDelivery(files[deliveryPath], leases.size);
 		if(retained)
 		{
 			// Keep copied-only packages free of callback classes or callback policy.

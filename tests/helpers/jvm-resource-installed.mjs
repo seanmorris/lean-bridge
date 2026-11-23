@@ -23,7 +23,7 @@ const fixture = resolve("tests/fixtures/jvm-sync-resources"), shared = resolve("
 const routes = ["ordinary", "peer", "lookalike", "reviewed"];
 const json = async f => JSON.parse(await readFile(f, "utf8"));
 const policy = env.LEAN_BRIDGE_JVM_RESOURCE_POLICY;
-test("resource Maven builds refuse missing OS grants, async selection and forged source identity before handoff", { skip: !policy, timeout: 600_000 }, async t => {
+test("resource Maven builds refuse missing OS grants, false task selection and forged source identity before handoff", { skip: !policy, timeout: 600_000 }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "jvm-resource-policy-")); t.after(() => rm(root, { recursive: true, force: true }));
 	const src = join(root, "project"), out = join(root, "release");
 	await cp(join(resolve(policy), "ordinary/source"), src, { recursive: true });
@@ -35,7 +35,7 @@ test("resource Maven builds refuse missing OS grants, async selection and forged
 		});
 		await assert.rejects(access(out), { code: "ENOENT" });
 	};
-	await refuse({ ...cfg, taskExports: ["Desk.issue"] }, /require synchronous IO exports/u);
+	await refuse({ ...cfg, taskExports: ["Desk.issue"] }, /taskExports requires a real Lean Task result/u);
 	await refuse({ ...cfg, nativeEffects: [] }, /requires nativeEffects "filesystem"/u);
 	const ir = await json(join(resolve(policy), "ordinary/handoff/binding-ir.json")), type = ir.types.find(t => t.id === "lean:Shared.Ticket");
 	const hash = "0".repeat(64); type.resource.kindId = "resource:Shared.Ticket/" + hash;
@@ -60,11 +60,11 @@ test("JVM resource operations require the shared owner, source kind and declared
 		, source: { declaration: "Shared.Ticket", extensions: { "lean-bridge.dev/resource-identity": hash } } };
 	const entry = { declaration: "Desk.keep", name: "keep", effect: "EIO", parameters: [{ type }], result: type, error: type };
 	const w = generateSyncWire("lbc_desk", [entry], { resources: [kind] }), m = w.methods[0];
-	const api = { types: [kind], errors: [{ id: "error:x", payload: type }] };
+	const errorId = "error:EIO.Desk.keep", api = { types: [kind], errors: [{ id: errorId, payload: type }] };
 	const evidence = { ledgerId: l.id, libraries: { [l.name]: hash } };
 	const kinds = jvmLeaseModels(api, w, evidence, new Set());
 	const site = (ownership, scope) => ({ type, ownership, lifetime: { scope, anchor: null } });
-	const decl = { parameters: [site("borrow", "call")], result: site("lease", "explicit"), failure: { errors: ["error:x"] } };
+	const decl = { parameters: [site("borrow", "call")], result: site("lease", "explicit"), failure: { errors: [errorId] } };
 	verifyJvmLeaseSites(kinds, m, decl, api);
 	for(const d of [{ ...decl, parameters: [site("lease", "explicit")] }, { ...decl, result: site("copy", "explicit") }])
 		assert.throws(() => verifyJvmLeaseSites(kinds, m, d, api), /resource ownership/u);

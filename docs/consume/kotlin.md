@@ -113,6 +113,32 @@ A returned `Result.Err` is data, not an exception.
 
 The suspend wrapper uses Kotlin’s [cancellable await](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.future/await.html). See the [Maven author configuration](../publish/maven.md#export-tasks-and-streams) and the [installed Java/Kotlin checks](../evidence/jvm-tasks-20261123.json).
 
+### Receive resources from tasks and streams
+
+Use `use` on each lease returned by a suspend function or emitted by a flow.
+This example takes one ticket. Ending collection closes the cursor without
+closing the ticket returned by `first()`:
+
+```kotlin
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import org.leanbridge.desk.kotlin.Api as Desk
+import org.leanbridge.depot.kotlin.Api as Depot
+
+fun main() = runBlocking {
+    Desk.issue(42).use { ticket ->
+        Depot.tickets(ticket, false).first().use { println(Desk.count(it)) }
+    }
+}
+```
+
+A cold flow borrows its input when collection starts. A task that has
+started keeps the Lean object alive independently of the input lease.
+If [cancellation wins before a coroutine resumes](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/suspend-cancellable-coroutine.html),
+the bridge releases a pending result or typed-error payload. Once your collector receives a lease,
+it owns it; close it even if you stop collecting. An exception rethrown
+from your own callback is still yours.
+
 ### Pass a callback to a Lean task
 
 Pass a Kotlin function to the suspend API. The callback itself is synchronous; this call returns `42`:

@@ -33,6 +33,7 @@ import "./helpers/jvm-io-installed.mjs";
 import "./helpers/jvm-tasks-installed.mjs";
 import "./helpers/jvm-retained-installed.mjs";
 import "./helpers/jvm-resource-installed.mjs";
+import "./helpers/jvm-lease-tasks-installed.mjs";
 import "./helpers/dotnet-task-installed.mjs";
 import "./helpers/dotnet-task-managed-replay.mjs";
 import "./helpers/dotnet-resource-installed.mjs";

@@ -155,6 +155,31 @@ A subscriber receives the original error in `onError`. A returned
 
 The [JDK subscription contract](https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/util/concurrent/Flow.Subscription.html) defines demand and cancellation. See the [Maven author configuration](../publish/maven.md#export-tasks-and-streams) and the [installed Java/Kotlin checks](../evidence/jvm-tasks-20261123.json).
 
+### Receive resources from tasks and streams
+
+An asynchronous result can own a Lean object. Here a task returns a new
+lease on the same ticket. Close the result and the input independently:
+
+```java
+import org.leanbridge.desk.Api;
+
+class Example {
+    public static void main(String[] args) {
+        try (var ticket = Api.issue(42); var completed = org.leanbridge.depot.Api.checked(false, ticket).join()) {
+            System.out.println(Api.count(completed));
+        }
+    }
+}
+```
+
+A task borrows its input when started. Once the call returns its future, you
+can close the input; the worker keeps the underlying Lean object alive. A
+cold publisher borrows its input on first demand, so keep that input open
+until the subscription actually starts. Each item passed to `onNext` belongs
+to the subscriber, even if it cancels immediately. A resource carried by a
+declared exception belongs to the catcher. Cancellation releases native
+results that never reach the future or subscriber.
+
 ### Pass a callback to a Lean task
 
 Pass a lambda directly, or use a registration when you need to revoke future calls. This example uses the prepared `com.acme:feedback` package:

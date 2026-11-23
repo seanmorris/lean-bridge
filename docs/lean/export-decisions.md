@@ -609,6 +609,10 @@ configuration](../publish/maven.md#export-synchronous-resource-parameters-and-re
 to expose a closeable object in both languages. A parameter borrows the object;
 a result or typed failure gives the caller a new lease. The prepared JARs
 provide the shared native owner and ledger.
+For [resource-bearing Maven tasks and streams](../publish/maven.md#export-resource-bearing-tasks-and-streams),
+select the same resource declaration and the task or iterator protocol.
+A started worker keeps the object alive; a cold stream borrows it on first
+demand. A discarded result or step failure must not leak a lease.
 
 The same distinction holds when a module also exports a task. In the
 [installed C, C++, Python and Rust example](../evidence/native-task-companions-20261122.json),

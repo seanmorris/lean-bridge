@@ -32,7 +32,11 @@ lean-bridge build --project /absolute/path/to/maple --target maven \
 
 The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes Java 22 classes, the companion `.kotlin` API with Kotlin type metadata, native libraries, generated sources, compiler evidence and dependency license notices. Its POM declares `kotlin-stdlib:2.2.0`; downstream Maven and Gradle projects resolve it automatically. Its README names both generated APIs. Changing the Maven coordinate does not rename their Lean-derived packages.
 
-Calls accept concrete copied values, synchronous callbacks and returned closures. Acyclic conversions allow 32 type levels with 16 MiB copy budgets. [Recursive copied values](../consume/java.md#recursive-values) allow 128 value levels and 262,144 visited values, with separate 16 MiB native-copy and scratch/output budgets. These limits do not measure Lean working memory or all JVM heap allocation. [Recursive callback values](#recursive-callback-values) use the same bounded graph conversion. Resource-containing aggregates and asynchronous effects remain unsupported. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
+This copied-value profile accepts concrete values, synchronous callbacks and returned closures. Acyclic conversions allow 32 type levels with 16 MiB copy budgets. [Recursive copied values](../consume/java.md#recursive-values) allow 128 value levels and 262,144 visited values, with separate 16 MiB native-copy and scratch/output budgets. These limits do not measure Lean working memory or all JVM heap allocation. [Recursive callback values](#recursive-callback-values) use the same bounded graph conversion.
+
+For aggregates containing a resource, see [owned resources and aggregates](#owned-resources-and-aggregates). For asynchronous delivery, select [tasks and streams](#export-tasks-and-streams); their results can also be [direct resource leases](#export-resource-bearing-tasks-and-streams).
+
+Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
 
 Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
@@ -95,8 +99,8 @@ A direct resource parameter is borrowed for the call. A direct result or
 declared `EIO` error carries its own lease. See the compiled
 [Java](../consume/java.md#share-a-lean-resource-between-packages) and
 [Kotlin](../consume/kotlin.md#share-a-lean-resource-between-packages) examples.
-This selection is for synchronous IO; it does not add resource-bearing tasks
-or streams. The [installed-package evidence](../evidence/jvm-sync-resources-20261123.json)
+This selection exports synchronous IO. For tasks and streams, select their
+delivery protocols as described below. The [synchronous installed-package evidence](../evidence/jvm-sync-resources-20261123.json)
 records both load orders, the incompatible lookalike package, and cleanup
 after a typed error or runtime retirement.
 
@@ -134,10 +138,38 @@ does not run until a subscriber requests its first item.
 For a task returning `Except IO.Error α`, select its declaration in
 `taskIOErrors` to surface terminal IO failure separately from a factory
 failure. An ordinary returned `Except` remains data. Scalar arguments,
-copied results and nested returned or thrown `Except` values are supported;
-resource-bearing task values remain unsupported.
+copied results and nested returned or thrown `Except` values are supported.
 See the [Java](../consume/java.md#await-tasks-and-consume-streams) and
 [Kotlin](../consume/kotlin.md#await-tasks-and-consume-streams) examples.
+
+### Export resource-bearing tasks and streams
+
+List the direct resource kinds in `resources`, alongside the usual task and
+cursor selections. A task may return a resource or fail with a declared
+resource payload; a cursor may emit one or fail with one at its next step.
+The same nominal type can also occur as a companion parameter or result.
+Here Depot uses the same Lean definition of `Shared.Ticket` as Desk:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Depot"],
+  "resources": ["Shared.Ticket"],
+  "exports": ["Depot.checked", "Depot.tickets"],
+  "taskExports": ["Depot.checked"],
+  "asyncIterators": [{"open": "Depot.tickets", "next": "Depot.next", "close": "Depot.close"}],
+  "nativeEffects": ["filesystem"],
+  "targets": {"maven": {"name": "com.acme:depot", "version": "1.0.0"}}
+}
+```
+
+The [Lean fixture](../../tests/fixtures/resource-tasks/Depot.lean) shows the
+factory and step signatures. A task can also borrow a resource while it
+calls a retained host function; the callback's own arguments and replies
+remain copied scalars. See the installed
+[Java](../consume/java.md#receive-resources-from-tasks-and-streams) and
+[Kotlin](../consume/kotlin.md#receive-resources-from-tasks-and-streams)
+examples and [package evidence](../evidence/jvm-lease-tasks-20261123.json).
 
 ### Export a retained task callback
 

@@ -53,7 +53,6 @@ export const compileJvmIOOwner = async options => {
  * @param reactor - Private Linux readiness operations; included only in task components.
  */
 export const jvmIOEntry = (wire, p, reactor) => {
-	if(wire.leases && wire.wait) throw new TypeError("Resource-bearing JVM packages currently require synchronous IO exports");
 	if(Boolean(wire.wait) !== Boolean(reactor) || !wire.methods.length
 		|| wire.methods.some(m => m.callbacks?.length && (!wire.wait || m.delivery !== "task")))
 		throw new TypeError("The JVM callback port requires an actual task with copied carriers");

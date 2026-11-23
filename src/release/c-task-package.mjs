@@ -57,7 +57,6 @@ export const buildCTaskPackage = async options => {
 		const bindingIrSha256 = hashBindingIr(api), profile = `native-${cpp ? "cpp" : "c"}-${synchronous ? "io" : "task"}-v1`;
 		const delivery = await nativeDeliveryHeader(jvm), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
-		if(jvm && resources.length && !synchronous) throw new TypeError("Resource-bearing JVM packages currently require synchronous IO exports");
 		const owner = jvm && await compileJvmIOOwner({ app, runtimeRoot, runtimeIdentity, cc: environment.CC ?? "cc", run });
 		const threads = cpp && (!synchronous || resources.length > 0);
 		const config = { name: jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet || jvm ? "words" : "gmp" };

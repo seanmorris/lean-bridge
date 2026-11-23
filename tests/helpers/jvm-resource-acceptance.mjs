@@ -25,21 +25,37 @@ const fixture = resolve("tests/fixtures/jvm-sync-resources");
 const paths = { "Observe.java": resolve("tests/fixtures/jvm-tasks/Observe.java")
 	, "settings.xml": resolve("tests/fixtures/jvm-sync-io/settings.xml") };
 const clients = ["Installed.java", "Installed.kt", "Bad.java", "Bad.kt", "Example.java", "Example.kt", "RejectLedger.java", "verify.py", ...Object.keys(paths)];
-const inspect = async (root, route, work) => {
+/**
+ * Verify an original resource release, including its compiler evidence and native dependency graph.
+ *
+ * @param root - Directory of original handoffs.
+ * @param route - Ordinary, reviewed, compatible peer or lookalike producer.
+ * @param work - Directory containing the independent archive verifier.
+ * @param tasks - Verify the task-capable Depot profile instead of a synchronous package.
+ */
+export const inspectJvmResource = async (root, route, work, tasks = false) => {
 	const dir = join(root, route, "handoff");
 	const { result, receipt } = await readVerifiedPackageSetReceipt({ receiptPath: join(dir, "package-set-receipt.json") });
 	await assertJsonSchema("package-set-receipt", receipt);
 	const [p] = receipt.packages, artifacts = p.artifacts;
 	const ir = await json(join(dir, "binding-ir.json")), evidence = await json(join(dir, "host-export-evidence.json"));
-	const name = "com.acme:" + (route === "peer" ? "counter" : route === "lookalike" ? "other-desk" : "desk");
-	assert.equal(receipt.packages.length, 1); assert.equal(p.name, name); assert.equal(p.profile, "native-jvm-io-v1");
+	const name = "com.acme:" + (tasks ? "depot" : route === "peer" ? "counter" : route === "lookalike" ? "other-desk" : "desk");
+	assert.equal(receipt.packages.length, 1); assert.equal(p.name, name); assert.equal(p.profile, tasks ? "native-jvm-task-v1" : "native-jvm-io-v1");
 	assert.deepEqual(artifacts.map(a => a.path), ["jar", "pom"].map(e => "archives/" + name.split(":")[1] + "-1.0.0." + e));
 	assert.deepEqual(evidence.selection.leanResources, ["Shared.Badge", "Shared.Ticket"]);
-	assert.deepEqual(evidence.selection.nativeEffects, ["filesystem"]); assert.equal(evidence.selection.synchronousIO, true);
+	assert.deepEqual(evidence.selection.nativeEffects, ["filesystem"]); assert.equal(evidence.selection.synchronousIO === true, !tasks);
+	if(tasks)
+	{
+		const s = evidence.selection;
+		assert.deepEqual(s.taskExports, ["Depot.checked", "Depot.pending", "Exchange.revisit"]);
+		assert.deepEqual(s.asyncIterators, [{ open: "Depot.tickets", next: "Depot.next", close: "Depot.close" }]);
+		assert.deepEqual(s.taskIOErrors, ["Exchange.revisit"]);
+		const cb = ir.types.find(t => t.kind === "callback"); assert.deepEqual(cb.callable.failure.errors, ["error:JvmCallbackException"]);
+	}
 	assert.equal(evidence.sourceTreeSha256, receipt.source.treeSha256); assert.equal(Boolean(evidence.reviewedSourceSha256), route === "reviewed");
-	if(route !== "peer") verifyLeaseModel(ir, evidence, false);
+	if(route !== "peer") verifyLeaseModel(ir, evidence, tasks);
 	const paths = artifacts.map(a => join(dir, a.path));
-	const detail = JSON.parse(await run(env.LEAN_BRIDGE_PYTHON ?? "python3", ["-I", "-B", "verify.py", ...paths, dir], work, env));
+	const detail = JSON.parse(await run(env.LEAN_BRIDGE_PYTHON ?? "python3", ["-I", "-B", "verify.py", ...paths, dir, ...tasks ? ["--task"] : []], work, env));
 	assert.equal(detail.runtime, p.runtimeIdentity); assert.equal(detail.ir, hashBindingIr(ir));
 	for(const a of artifacts)
 	{
@@ -61,7 +77,7 @@ test("replay cross-package resource ownership through real offline-installed Jav
 		const b = await readFile(replay ? join(root, f) : paths[f] ?? join(fixture, f));
 		sources[f] = sha256(b); await writeFile(join(work, f), b, { flag: "wx" });
 	}
-	for(const r of ["ordinary", "peer", "lookalike", "reviewed"]) packages.set(r, await inspect(root, r, work));
+	for(const r of ["ordinary", "peer", "lookalike", "reviewed"]) packages.set(r, await inspectJvmResource(root, r, work));
 	const peer = packages.get("peer"), foreign = packages.get("lookalike");
 	const java = env.LEAN_BRIDGE_JAVA, javac = env.LEAN_BRIDGE_JAVAC, sdk = env.LEAN_BRIDGE_KOTLIN_HOME;
 	for(const route of ["ordinary", "reviewed"])

@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "kind": "installed-jvm-resource-tasks-and-cancellation",
+  "date": "2026-11-23",
+  "planNodes": [
+    1221,
+    1222,
+    1223
+  ],
+  "scope": "Observed local Linux x86-64 installations using JDK 22, Kotlin 2.2.0, kotlinx-coroutines-core-jvm 1.8.0, Maven 3.9.11, Lean 4.32.2 and the local glibc 2.36 override. Retained callbacks have copied scalar arguments and replies; the enclosing task can borrow and return a direct resource. Not hosted CI, registry publication, or closure of all languages/ownership shapes.",
+  "checks": [
+    "An ordinary and a reviewed Depot JAR each resolved through an offline Maven repository with its original, independently built Desk peer and same-named incompatible OtherDesk type. Verified every original JAR entry, POM, runtime/ledger/native owner dependency and the shared nominal class bytes before compiling relocated Java and Kotlin clients. Both languages reject both wrong kinds and same-spelling foreign definitions.",
+    "Real Lean workers keep borrowed inputs alive after host close, mutate the same object and return independently disposable leases. Covered successful and rejected factories, resource-bearing callback tasks and original host exceptions, blocked callback cancellation, cooperative and late workers, pull demand, stream exhaustion, early cancel, typed step failure, post-retirement cleanup without running user close code. Test processes ended with zero live identities, no residual Lean file descriptors and no readiness reactor.",
+    "Additional ordinary/reviewed Java and Kotlin clients closed the last host lease while a pending worker or an already-open cursor still held the file. With no host resource lease, a pending worker held two broker identities (delivery handle and completion notification). Non-cooperative cancellation removed the delivery handle immediately, leaving one notification and the file until the worker finished; then broker identities, file descriptors and reactor count returned to baseline. A fresh cold Java subscription after closing the sole input was rejected without invalidating the open cursor.",
+    "A test-only package peer pauses the installed native port after a real take/decoding but before production settlement. Verified cancel and external future completion dispose only unpublished native leases; a caller-supplied replacement remains usable. Invalid demand or cancellation after a native stream take or owned step failure disposes the unused lease. A controlled Kotlin dispatcher exercises pending success and typed-error signals at the actual coroutine handoff, including unconsumed channel elements; cancellation does not revoke a caller-owned exception from a retained callback.",
+    "Both source review mutations (wrong stream-step payload and read-only borrow in place of a mutable borrow) are refused without any output release. An offline-installed CLI reproduced the complete ordinary Maven handoff. The current generator was also compared to every generated source file in the original accepted scalar task, retained callback and synchronous-resource packages without rebuilding old commits."
+  ],
+  "reproduce": [
+    "Use JDK 22, Kotlin 2.2.0, Maven 3.9.11, Python 3.11+, unzip/readelf and Lean 4.32.2 as in docs/evidence/jvm-tasks-20261123.json. Seed LEAN_BRIDGE_JVM_TASK_M2_SEED with third-party prerequisites only, LEAN_NUM_THREADS=1. Set LEAN_BRIDGE_JVM_LEASE_TASK_SYNC to the original handoffs from jvm-sync-resources-20261123.json. Use fresh EVIDENCE and SECOND destinations; only use the 2.36 floor override on the matching local platform.",
+    "LEAN_BRIDGE_JVM_LEASE_TASK_BUILD=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-lease-tasks-installed.mjs",
+    "LEAN_BRIDGE_JVM_LEASE_TASK_POLICY=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-lease-tasks-installed.mjs",
+    "LEAN_BRIDGE_JVM_LEASE_TASK_CAPTURE=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-lease-tasks-acceptance.mjs",
+    "LEAN_BRIDGE_JVM_LEASE_TASK_ORIGINAL=$EVIDENCE LEAN_BRIDGE_JVM_LEASE_SOLE_OUTPUT=$EVIDENCE/sole.json node --test --test-concurrency=1 tests/helpers/jvm-lease-tasks-sole.mjs (for replay set LEAN_BRIDGE_JVM_LEASE_TASK_EXPECTED to this receipt and use a new output file).",
+    "LEAN_BRIDGE_JVM_ORIGINAL=$EVIDENCE LEAN_BRIDGE_JVM_REPRO=$SECOND node --test --test-name-pattern='offline-installed CLI in a second producer' tests/helpers/jvm-io-installed.mjs",
+    "Set LEAN_BRIDGE_JVM_PRIOR_TASK and LEAN_BRIDGE_JVM_PRIOR_CALLBACK to original scalar-task and retained-callback handoffs. LEAN_BRIDGE_JVM_LEASE_TASK_COMPAT=$EVIDENCE/compat.json node --test tests/helpers/jvm-lease-tasks-compat.mjs",
+    "LEAN_BRIDGE_JVM_LEASE_TASK_REPLAY=$EVIDENCE LEAN_BRIDGE_JVM_LEASE_TASK_EXPECTED=docs/evidence/jvm-lease-tasks-20261123.json node --test --test-concurrency=1 tests/helpers/jvm-lease-tasks-acceptance.mjs"
+  ],
+  "acceptanceSha256": "df21649c60a1b3bf13cc7ec6c9d1e7aee23464749449cb7917f520faa1284009",
+  "independentProducer": {
+    "artifacts": [
+      {
+        "bytes": 51463770,
+        "path": "archives/depot-1.0.0.jar",
+        "sha256": "3843a563cb47972419b661477b64029ea946820a213e2a844cfb3d5c532915fd"
+      },
+      {
+        "bytes": 750,
+        "path": "archives/depot-1.0.0.pom",
+        "sha256": "01ce46a2742e8f1c87a8934c0edebfe83eab89ffd0a83cba03a7d5c6d2d3075a"
+      }
+    ],
+    "cliArchiveSha256": "bf44751b713790a982489953953a129d12eff87175f01fcd60e87747f6320d2d",
+    "receiptSha256": "7321f63e2696e4f2f461a9abf2cb8238f97469ab50d5bd2d417f32cccc191a32"
+  },
+  "compatibility": [
+    {
+      "generatedFiles": 17,
+      "name": "com.acme:timers",
+      "receiptSha256": "7737e34f087814337c5b23f83755b6ebccee9c9cb8656dd213981d260f88ed50"
+    },
+    {
+      "generatedFiles": 17,
+      "name": "com.acme:feedback",
+      "receiptSha256": "2f69b6f4c28af8f0ad4f1323788c9044fe449953014fc80fcd0a102c68d21bff"
+    },
+    {
+      "generatedFiles": 14,
+      "name": "com.acme:desk",
+      "receiptSha256": "eca14151ea2e5a37074945cf061a0adb9307d6f3faf044736c0fefc142fa2fd5"
+    }
+  ],
+  "soleOwner": {
+    "rows": [
+      {
+        "observations": {
+          "Sole": "Java: last host lease closed; worker, late cancelled worker and opened cursor retained the file until native cleanup; baseline restored",
+          "SoleKt": "Kotlin: last host lease closed; worker, late cancelled worker and collected cursor retained the file until native cleanup; baseline restored"
+        },
+        "receipts": [
+          "7321f63e2696e4f2f461a9abf2cb8238f97469ab50d5bd2d417f32cccc191a32",
+          "eca14151ea2e5a37074945cf061a0adb9307d6f3faf044736c0fefc142fa2fd5"
+        ],
+        "route": "ordinary"
+      },
+      {
+        "observations": {
+          "Sole": "Java: last host lease closed; worker, late cancelled worker and opened cursor retained the file until native cleanup; baseline restored",
+          "SoleKt": "Kotlin: last host lease closed; worker, late cancelled worker and collected cursor retained the file until native cleanup; baseline restored"
+        },
+        "receipts": [
+          "52ccb08fb0040d8bd110432a114d7ef086a2a1036339b94cc64154281218c89c",
+          "3b8671cfb9ad0b534b5e20b2f9969ffc6253c62f1f608d1c445fae595ead7dbb"
+        ],
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1,
+    "sources": {
+      "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75",
+      "Sole.java": "bd2a147bb6afe3bb973c7296259c1d2e5564b2ebdbbba3a15d9560d0b9873f76",
+      "Sole.kt": "592fc09247dd14160f55dd2df2627764318ee14e8b619847fe08ff504af31924",
+      "settings.xml": "bc96ebbba3ebe910e99d8206eed774fd57931bda2450cd3344271d2325251439"
+    }
+  },
+  "installed": {
+    "peers": [
+      {
+        "receiptSha256": "d90f94da7633a8f26b396c1c661c948ff703e18227ce6851bdba981f41f36e63",
+        "route": "lookalike"
+      },
+      {
+        "receiptSha256": "eca14151ea2e5a37074945cf061a0adb9307d6f3faf044736c0fefc142fa2fd5",
+        "route": "ordinary"
+      },
+      {
+        "receiptSha256": "3b8671cfb9ad0b534b5e20b2f9969ffc6253c62f1f608d1c445fae595ead7dbb",
+        "route": "reviewed"
+      }
+    ],
+    "rows": [
+      {
+        "negative": [
+          "wrong kind",
+          "same Lean spelling with foreign identity"
+        ],
+        "observations": {
+          "depot-first/Example": "42",
+          "depot-first/ExampleKt": "42",
+          "depot-first/Installed": "Java: shared resource tasks, callback reentry and original failure, cancellation, cold stream, early exit, typed step error, retirement; zero leaked leases or files",
+          "depot-first/InstalledKt": "Kotlin: suspend, first and typed failure; prompt cancellation disposes unpublished success and error, preserves caller-owned callback errors; zero leaked leases or files",
+          "desk-first/Installed": "Java: shared resource tasks, callback reentry and original failure, cancellation, cold stream, early exit, typed step error, retirement; zero leaked leases or files",
+          "desk-first/InstalledKt": "Kotlin: suspend, first and typed failure; prompt cancellation disposes unpublished success and error, preserves caller-owned callback errors; zero leaked leases or files"
+        },
+        "resolved": [
+          "com/acme/depot/1.0.0/depot-1.0.0.jar",
+          "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar",
+          "org/jetbrains/annotations/13.0/annotations-13.0.jar",
+          "org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.jar",
+          "com/acme/desk/1.0.0/desk-1.0.0.jar",
+          "com/acme/other-desk/1.0.0/other-desk-1.0.0.jar"
+        ],
+        "route": "ordinary"
+      },
+      {
+        "negative": [
+          "wrong kind",
+          "same Lean spelling with foreign identity"
+        ],
+        "observations": {
+          "depot-first/Example": "42",
+          "depot-first/ExampleKt": "42",
+          "depot-first/Installed": "Java: shared resource tasks, callback reentry and original failure, cancellation, cold stream, early exit, typed step error, retirement; zero leaked leases or files",
+          "depot-first/InstalledKt": "Kotlin: suspend, first and typed failure; prompt cancellation disposes unpublished success and error, preserves caller-owned callback errors; zero leaked leases or files",
+          "desk-first/Installed": "Java: shared resource tasks, callback reentry and original failure, cancellation, cold stream, early exit, typed step error, retirement; zero leaked leases or files",
+          "desk-first/InstalledKt": "Kotlin: suspend, first and typed failure; prompt cancellation disposes unpublished success and error, preserves caller-owned callback errors; zero leaked leases or files"
+        },
+        "resolved": [
+          "com/acme/depot/1.0.0/depot-1.0.0.jar",
+          "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar",
+          "org/jetbrains/annotations/13.0/annotations-13.0.jar",
+          "org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.jar",
+          "com/acme/desk/1.0.0/desk-1.0.0.jar",
+          "com/acme/other-desk/1.0.0/other-desk-1.0.0.jar"
+        ],
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1,
+    "sources": {
+      "Bad.java": "48de1d0ec2661c5e77b83c00ab57d6ed696b1fef03cf6dc93493312654df4203",
+      "Bad.kt": "150543033478632aef4f5644c442dc7254279f6ec1b43ea3ed8efad4568fb3ec",
+      "DeliveryAccess.java": "12dc69411ed39547b0e53c0f92543ef9157eaf72d2cbfa7fa46081b3cf73cce4",
+      "Example.java": "88f63009e308614cc4eaadd98453baf3a1ed226277553032f272f42911d908da",
+      "Example.kt": "e6c7aaee5e5a093d52383756c4ff31665d9d53f2f2ed8e566fdcb5dd6dfc5516",
+      "Installed.java": "e1f019b9e672f2777e97d7af91b5fe0c3bbcc3e7e0a625d02cfe748d3b5e02a6",
+      "Installed.kt": "4facf64cc907285c48d189472cdbdb685a6eda8b4d86ad117735110c3f3ee312",
+      "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75",
+      "Races.java": "f6496a39eb54772cadeec0e83000048187e137aea20f65e81ec08ccc16d12cbd",
+      "settings.xml": "bc96ebbba3ebe910e99d8206eed774fd57931bda2450cd3344271d2325251439",
+      "verify.py": "7d05260edf27ac4050d47a45e158ae718737b8955e25c17b629ba036659f8e02"
+    },
+    "tasks": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51463770,
+            "path": "archives/depot-1.0.0.jar",
+            "sha256": "3843a563cb47972419b661477b64029ea946820a213e2a844cfb3d5c532915fd"
+          },
+          {
+            "bytes": 750,
+            "path": "archives/depot-1.0.0.pom",
+            "sha256": "01ce46a2742e8f1c87a8934c0edebfe83eab89ffd0a83cba03a7d5c6d2d3075a"
+          }
+        ],
+        "detail": {
+          "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+          "ir": "875fdb3ed3be36e14895896f9419d708c714ce339fbf33abead890cc599ccd98",
+          "ledger": {
+            "id": "0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b",
+            "library": "liblb_task_resources_0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b.so"
+          },
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblb_task_resources_0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b.so": "b8e382dede5cf7a02ce09ebbca05d8a5c782427d9a3291b2b94563711d35c299",
+            "liblbc_jvm_4b4975af5d3f804659c34c0bf8ae7189d46391b3b41add417fa7fe6bb063b839.so": "1310bacb43007b3d2705f059cc2dba88727f0fccc2b1c67adb1e81bb05ef1cab",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "namespace": "org.leanbridge.depot",
+          "nominal": {
+            "Badge": {
+              "classSha256": "c3fbaf36c51efc385676a97387e501d9a35c97597d1bac705ffb8c301a9563c6",
+              "identity": "62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+              "sourceSha256": "333965c898edd2673858e8b8f99e7fddfaeac956a030b0e283aa06d01a3bfab9"
+            },
+            "Ticket": {
+              "classSha256": "61d5eb9b28356f7e298d820cf95dc70f71dd4eaceb865cf3d2ef7c91b503bc92",
+              "identity": "3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+              "sourceSha256": "970b9defe179cf51d41f6efc93650de4496e7f7616d04194e945ce467179373e"
+            }
+          },
+          "ops": {
+            "checked": 3,
+            "pending": 7,
+            "revisit": 12,
+            "tickets": 11
+          },
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "name": "com.acme:depot",
+        "receiptSha256": "7321f63e2696e4f2f461a9abf2cb8238f97469ab50d5bd2d417f32cccc191a32",
+        "reviewedSourceSha256": null,
+        "route": "ordinary",
+        "sourceTreeSha256": "1583148f763f43663ec69b86c3dc36eba103a1133b281b31fffc7f417f0b5f1e"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51463809,
+            "path": "archives/depot-1.0.0.jar",
+            "sha256": "1543aa489a857dfc1e4505eb51663092cf23aa54d60efc092be9b519a0e869bb"
+          },
+          {
+            "bytes": 750,
+            "path": "archives/depot-1.0.0.pom",
+            "sha256": "01ce46a2742e8f1c87a8934c0edebfe83eab89ffd0a83cba03a7d5c6d2d3075a"
+          }
+        ],
+        "detail": {
+          "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+          "ir": "875fdb3ed3be36e14895896f9419d708c714ce339fbf33abead890cc599ccd98",
+          "ledger": {
+            "id": "0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b",
+            "library": "liblb_task_resources_0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b.so"
+          },
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblb_task_resources_0979d7b247db5e9862b4c3df798af3a3badbb2bc2ac604ee71a67f4057ff5b0b.so": "b8e382dede5cf7a02ce09ebbca05d8a5c782427d9a3291b2b94563711d35c299",
+            "liblbc_jvm_4b4975af5d3f804659c34c0bf8ae7189d46391b3b41add417fa7fe6bb063b839.so": "1e7167ce19f96daac8d88f1c48a60d8f146fe10efec14b4975686e329dd3fd92",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "namespace": "org.leanbridge.depot",
+          "nominal": {
+            "Badge": {
+              "classSha256": "c3fbaf36c51efc385676a97387e501d9a35c97597d1bac705ffb8c301a9563c6",
+              "identity": "62ea221d3cc59ab75b8bceba67ce2389fbe86ec9f5bf7430f8b685731286ef61",
+              "sourceSha256": "333965c898edd2673858e8b8f99e7fddfaeac956a030b0e283aa06d01a3bfab9"
+            },
+            "Ticket": {
+              "classSha256": "61d5eb9b28356f7e298d820cf95dc70f71dd4eaceb865cf3d2ef7c91b503bc92",
+              "identity": "3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+              "sourceSha256": "970b9defe179cf51d41f6efc93650de4496e7f7616d04194e945ce467179373e"
+            }
+          },
+          "ops": {
+            "checked": 3,
+            "pending": 7,
+            "revisit": 12,
+            "tickets": 11
+          },
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "name": "com.acme:depot",
+        "receiptSha256": "52ccb08fb0040d8bd110432a114d7ef086a2a1036339b94cc64154281218c89c",
+        "reviewedSourceSha256": "2c06b8ab0119c551385f4df1b2e2f6135ceec34d3fec55f65d99210fbbdb7896",
+        "route": "reviewed",
+        "sourceTreeSha256": "20e0ff48665a9a18a71ee306b51769b7d203791fdb7099d6726d3e72e8368b54"
+      }
+    ]
+  }
+}

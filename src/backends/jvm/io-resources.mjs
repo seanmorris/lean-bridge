@@ -50,6 +50,12 @@ export const verifyJvmLeaseSites = (leases, method, decl, api) => {
 	const declared = new Set(decl.failure.errors.map(id => api.errors.find(e => e.id === id)?.payload?.id).filter(id => byId.has(id)));
 	const actual = new Set([method.error, method.terminal].map(t => leases.get(t)?.id).filter(Boolean));
 	if(actual.size !== declared.size || [...actual].some(id => !declared.has(id))) throw new TypeError("Unverified JVM resource error: " + method.declaration);
+	for(const [stage, type] of [["EIO", method.error], ["AsyncStep", method.terminal]])
+	{
+		const id = "error:" + stage + "." + method.declaration;
+		const expected = decl.failure.errors.includes(id) ? byId.get(api.errors.find(e => e.id === id)?.payload?.id) : undefined;
+		if(expected !== leases.get(type)) throw new TypeError("Unverified JVM resource error stage: " + method.declaration);
+	}
 };
 
 /**

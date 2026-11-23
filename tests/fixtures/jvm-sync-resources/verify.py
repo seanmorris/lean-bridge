@@ -5,16 +5,19 @@ import re
 import subprocess
 import sys
 import tempfile
+import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
 jar, pom, root = map(Path, sys.argv[1:4])
+tasks = sys.argv[4:] == ["--task"]
+assert tasks or len(sys.argv) == 4
 meta = "META-INF/lean-bridge/"
 native = meta + "native/linux-x64/"
 with zipfile.ZipFile(jar) as z:
     receipt = meta + "package-receipt.json"
     r = json.loads(z.read(receipt))
-    assert r["profile"] == "native-jvm-io-v1"
+    assert r["profile"] == ("native-jvm-task-v1" if tasks else "native-jvm-io-v1")
     assert len(z.namelist()) == len(set(z.namelist())) and set(z.namelist()) == set(r["files"]) | {receipt}
     for name, info in r["files"].items():
         assert not name.startswith("/") and not set(name.split("/")) & {"", ".", ".."}
@@ -57,7 +60,25 @@ with zipfile.ZipFile(jar) as z:
     api = r["namespace"].replace(".", "/") + "/Api"
     assert api + ".class" in r["files"] and api[:-3] + "kotlin/Api.class" in r["files"]
     src = z.read(meta + "generated/src/main/java/" + api + ".java").decode()
-    match = re.search(r"\bissue\(long a0\).*?status = f\.call\((\d+)\)", src, re.S)
-    assert match
+    if tasks:
+        sdk = json.loads(z.read(meta + "compilers.json"))["kotlin"]
+        coro = sdk["compilerFiles"]["kotlinx-coroutines-core-jvm.jar"]
+        assert coro == "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+        assert {"LeaseDeliveryKt", "Resources", "TaskPort", "CallbackPort", "Delivery"} <= {
+            name[len(api)-3:-6] for name in r["files"] if name.startswith(api[:-3]) and name.endswith(".class")}
+        deps = ET.parse(pom).getroot().findall("{*}dependencies/{*}dependency")
+        assert [(v.findtext("{*}artifactId"), v.findtext("{*}version")) for v in deps] == [
+            ("kotlin-stdlib", "2.2.0"), ("kotlinx-coroutines-core-jvm", "1.8.0")]
+        assert "_jvm_task" in symbols and "_jvm_watch" in symbols
+        ops = {}
+        for name in ["pending", "checked", "tickets", "revisit"]:
+            m = re.search(r"\b" + name + r"\([^\n]+?\) \{\n\s+return Delivery\.[^\n]*?Port<[^>]+>\((\d+), 2, 1,", src)
+            assert m, name
+            ops[name] = int(m[1])
+        extra = dict(ops=ops, coroutinesSha256=coro)
+    else:
+        match = re.search(r"\bissue\(long a0\).*?status = f\.call\((\d+)\)", src, re.S)
+        assert match
+        extra = dict(issue=int(match[1]))
     print(json.dumps(dict(ledger=r["ledger"], owner=r["owner"], libraries=libs, runtime=r["runtimeIdentity"],
-                          ir=r["bindingIrSha256"], nominal=nominal, namespace=r["namespace"], issue=int(match[1]))))
+                          ir=r["bindingIrSha256"], nominal=nominal, namespace=r["namespace"], **extra)))
