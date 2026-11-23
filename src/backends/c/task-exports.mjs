@@ -28,11 +28,12 @@ export const generateCTaskExports = options => {
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
-	if((retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery].filter(Boolean).length !== 1 || publicC !== gmp))
-		throw new TypeError(options.perlDelivery ? "The Perl task ABI requires word carriers; select exactly one host"
-			: options.jvmDelivery ? "The JVM task ABI requires word carriers; select exactly one host"
-				: options.dotnetDelivery ? "The .NET task ABI requires word carriers; select exactly one host"
-					: "The task callback ABI requires Rust, C++ or Ruby word carriers, or the public C profile with GMP; select exactly one host");
+	if((retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].filter(Boolean).length !== 1 || publicC !== gmp))
+		throw new TypeError(options.phpDelivery ? "The PHP task ABI requires word carriers; select exactly one host"
+			: options.perlDelivery ? "The Perl task ABI requires word carriers; select exactly one host"
+				: options.jvmDelivery ? "The JVM task ABI requires word carriers; select exactly one host"
+					: options.dotnetDelivery ? "The .NET task ABI requires word carriers; select exactly one host"
+						: "The task callback ABI requires Rust, C++ or Ruby word carriers, or the public C profile with GMP; select exactly one host");
 	const statuses = [...baseStatuses, ...publicC && (retained || terminal) ? ["TASK_IO_ERROR"] : [], ...publicC && retained ? ["CALLBACK_ERROR", "CALLBACK_CLOSED", "CALLBACK_TRAP"] : []];
 	if(options.integerMode && !["gmp", "words"].includes(options.integerMode)) throw new TypeError("Unknown task integer ABI");
 	const types = [], prototypes = [], functions = [], symbols = [`${p}_buffer_dispose`];

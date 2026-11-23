@@ -41,15 +41,17 @@ const pascal=s=>s.split(/[-_]+/u).filter(Boolean).map(w=>w[0].toUpperCase()+w.sl
  * @param input.api - Compiler-derived or source-reconciled reviewed Binding IR.
  * @param input.bindingIrSha256 - Native adapter's pinned public IR hash.
  * @param input.evidence - Compiler interface, source and selection evidence.
+ * @param tasks - Require genuine asynchronous declarations in the selection.
  */
-export const compilePhpSyncSurface=({name,version,api,bindingIrSha256,evidence})=>{
+const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks)=>{
 	if(typeof name!=="string"||typeof version!=="string") fail("missing Composer coordinates");
 	validateOrdinaryPhpSettings({name,version});
 	const s=evidence?.selection;
-	if(!s?.synchronousIO||s.taskExports?.length||s.asyncIterators?.length
+	const async = Boolean(s?.taskExports?.length || s?.asyncIterators?.length);
+	if(!s || async!==tasks || (s.synchronousIO===true)===tasks
 		||evidence.hostImportsSourceSha256!==null||!evidence.interfaces?.length
 		||![evidence.sourceTreeSha256,evidence.compilerSha256,evidence.extractorSha256,evidence.configurationSha256].every(hex))
-		fail("expected standalone synchronous compiler evidence");
+		fail(tasks ? "expected standalone task compiler evidence" : "expected standalone synchronous compiler evidence");
 	if(!hex(bindingIrSha256)||hashBindingIr(api)!==bindingIrSha256) fail("Binding IR digest does not match the adapter");
 	const owned = s.leanResources?.length ? heapResourceIdentities({ ...evidence, resources: evidence.metadata.leanResources }) : [];
 	const {api: actual,entries}=reconcileHostExports({...evidence,ir: null,component: api.component,review: {source: canonicalJson(api)},owned});
@@ -57,9 +59,10 @@ export const compilePhpSyncSurface=({name,version,api,bindingIrSha256,evidence})
 	if(!/^[A-Za-z][A-Za-z0-9]*(?:[-_][A-Za-z0-9]+)*$/u.test(api.component.name)) fail("invalid component namespace");
 	const namespace="Lean"+pascal(api.component.name),prefix="lbc_php_"+sha256(name);
 	const resources = api.types.filter(type => type.kind === "resource");
-	const wire=generateSyncWire(prefix,entries,{ resources });
+	const wire=generateSyncWire(prefix,entries,{ tasks, resources });
 	const publicNames=new Set(),errorClasses=new Set(["ioerror","declaredfailure","leanbridgeerror","bytes","ok","err"]);
 	const leases = new Map();
+	if(tasks) for(const n of ["taskioerror","pullstream"]) errorClasses.add(n);
 	for(const r of wire.leases ?? [])
 	{
 		const publicName = phpClassName(r.name), lower = publicName.toLowerCase();
@@ -70,8 +73,9 @@ export const compilePhpSyncSurface=({name,version,api,bindingIrSha256,evidence})
 	}
 	const methods=wire.methods.map((w,i)=>{
 		const d=api.declarations[i],raw=phpClassName(w.name);
-		if(d.resultMode!=="value"||d.failure.unexpected!=="poison-runtime"||d.name!==w.name||w.declaration!==d.source.declaration
-			|| !/^[A-Za-z][A-Za-z0-9_]*$/u.test(raw)||reservedPhpNames.has(raw.toLowerCase())||publicNames.has(raw.toLowerCase()))
+		const mode = w.delivery==="task" ? "promise" : w.delivery ?? "value";
+		if(d.resultMode!==mode||d.failure.unexpected!=="poison-runtime"||d.name!==w.name||w.declaration!==d.source.declaration
+			|| !/^[A-Za-z][A-Za-z0-9_]*$/u.test(raw)||publicNames.has(raw.toLowerCase()))
 			fail("incompatible or colliding declaration "+w.declaration);
 		publicNames.add(raw.toLowerCase());
 		if(d.parameters.length!==w.args.length||new Set(d.parameters.map(p=>p.name)).size!==w.args.length) fail("parameter selection differs");
@@ -90,7 +94,30 @@ export const compilePhpSyncSurface=({name,version,api,bindingIrSha256,evidence})
 			if(errorClasses.has(failure.toLowerCase())) fail("typed error class collision");
 			errorClasses.add(failure.toLowerCase());
 		}
-		return {...w,publicName: raw,parameters,returnType: checkType(w.result,leases),failure,errorType: w.error===null?null:checkType(w.error,leases)};
+		const terminalFailure = w.terminal ? w.delivery==="task" ? "TaskIOError" : pascal(w.name)+"StepError" : null;
+		if(terminalFailure && w.delivery==="async-iterator")
+		{
+			if(errorClasses.has(terminalFailure.toLowerCase())) fail("typed step error class collision");
+			errorClasses.add(terminalFailure.toLowerCase());
+		}
+		const returnType=checkType(w.result,leases), errorType=w.error===null?null:checkType(w.error,leases);
+		const terminalType=w.terminal ? checkType(w.terminal,leases) : null;
+		const step=w.delivery ? {terminalFailure,terminalType} : {};
+		return {...w,publicName: raw,parameters,returnType,failure,errorType,...step};
 	});
 	return {namespace,prefix,methods,wire,leases};
 };
+
+/**
+ * Reconcile a synchronous-only native PHP component.
+ *
+ * @param input - Public coordinates, Binding IR and compiler evidence.
+ */
+export const compilePhpSyncSurface=input=>compileSurface(input,false);
+
+/**
+ * Reconcile a compiler-selected native PHP task or pull component.
+ *
+ * @param input - Public coordinates, Binding IR and compiler evidence.
+ */
+export const compilePhpTaskSurface=input=>compileSurface(input,true);

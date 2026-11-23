@@ -7,7 +7,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { composerPackageMetadata } from "../analyze/package-metadata.mjs";
 import { brickMathRequirement } from "../backends/php/brick-math.mjs";
-import { compilePhpSyncSurface } from "../backends/php/io-surface.mjs";
+import { compilePhpSyncSurface, compilePhpTaskSurface } from "../backends/php/io-surface.mjs";
 import { generatePhpIOPort } from "../backends/php/io-port.mjs";
 import { generatePhpIOFiles } from "../backends/php/io-package.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
@@ -24,7 +24,8 @@ import { writePackageSetReceipt } from "./package-set-receipt.mjs";
  */
 export const writePhpIORelease=async o=>{
 	const {name,version,api,evidence,bindingIrSha256,componentIdentity,runtimeIdentity,manifest,files,workRoot,projectContract}=o;
-	const model=compilePhpSyncSurface({name,version,api,evidence,bindingIrSha256}),port=generatePhpIOPort(model);
+	const tasks=!projectContract.synchronousIO, surface=tasks ? compilePhpTaskSurface : compilePhpSyncSurface;
+	const model=surface({name,version,api,evidence,bindingIrSha256}),port=generatePhpIOPort(model);
 	if(model.prefix!==o.prefix||canonicalJson(model.wire)!==canonicalJson(o.wire)||canonicalJson(port)!==canonicalJson(o.phpPort))
 		throw new TypeError("PHP IO packaging differs from compiled port");
 	const library="lib"+model.prefix+".so",libraries={};
@@ -37,7 +38,7 @@ export const writePhpIORelease=async o=>{
 		libraries[n]=h;
 	}
 	if(files.size!==Object.keys(libraries).length) throw new Error("Unexpected PHP synchronous IO library");
-	const profile="native-php-io-v1",root=join(workRoot,"packages/php-native/composer");
+	const profile=tasks ? "native-php-task-v1" : "native-php-io-v1",root=join(workRoot,"packages/php-native/composer");
 	const ledger = nativeLedger && { id: nativeLedger.id, library: nativeLedger.name, sha256: libraries[nativeLedger.name] };
 	const asset={componentId: api.component.id,componentIdentity,runtimeIdentity,library,libraries,...ledger ? { ledger } : {}};
 	const generated=await generatePhpIOFiles(model,asset),inventory={};
@@ -58,17 +59,19 @@ export const writePhpIORelease=async o=>{
 	await save("lean-bridge/port.c",port.source); await save("lean-bridge/php-io-port.h",port.header);
 	await save("lean-bridge/binding-ir.json",canonicalJson(api)); await save("lean-bridge/elaboration.json",canonicalJson(evidence));
 	await save("lean-bridge/runtime.json",canonicalJson(manifest));
-	await save("README.md","# "+name+"\n\nInstall with Composer and call the functions in "+model.namespace+". Calls execute synchronously on the original Linux x86-64 PHP CLI thread. IO errors and typed EIO exceptions are distinct from returned Ok/Err values. The native runtime is included; no compiler or event loop is required. Requires PHP 8.2+ NTS, FFI and glibc "+o.floor+"+.\n");
+	const usage=tasks ? "Tasks return Amp futures; call ->await() to receive a result. Iterate pull streams with foreach. Pass an Amp cancellation token to the generated function to cancel the operation; passing one only to await cancels that wait. Composer installs Amp and Revolt. No compiler is required." : "Calls execute synchronously on the original Linux x86-64 PHP CLI thread. IO errors and typed EIO exceptions are distinct from returned Ok/Err values. The native runtime is included; no compiler or event loop is required.";
+	await save("README.md","# "+name+"\n\nInstall with Composer and call the functions in "+model.namespace+". "+usage+" Requires PHP 8.2+ NTS, FFI and glibc "+o.floor+"+.\n");
 	const glibcMinimumVersion = o.floor, namespace = model.namespace;
 	const bridge = { profile, namespace, platform: "linux-x86_64", glibcMinimumVersion };
-	const require = { php: ">=8.2 <9", "ext-ffi": "*", ...brickMathRequirement };
+	const require = { php: ">=8.2 <9", "ext-ffi": "*", ...brickMathRequirement, ...tasks ? { "amphp/amp": "^3.1", "revolt/event-loop": "^1.0" } : {} };
 	const metadata = composerPackageMetadata(projectContract.metadata??{});
 	const autoload = { files: ["src/Api.php"] }, extra = { "lean-bridge": bridge };
-	const description = "Synchronous compiled Lean functions for PHP";
+	const description = tasks ? "Compiled Lean tasks and pull streams for PHP" : "Synchronous compiled Lean functions for PHP";
 	const composer = { name, version, type: "library", description, ...metadata, require, autoload, extra };
 	await save("composer.json",canonicalJson(composer));
 	const source = { treeSha256: projectContract.sourceTreeSha256 };
-	const component = { schemaVersion: 1, kind: "lean-bridge-native-php-io"
+	const kind = tasks ? "lean-bridge-native-php-task" : "lean-bridge-native-php-io";
+	const component = { schemaVersion: 1, kind
 		, profile, component: api.component, name, version, namespace, bindingIrSha256
 		, componentIdentity, runtimeIdentity, sourceTreeSha256: source.treeSha256
 		, glibcMinimumVersion

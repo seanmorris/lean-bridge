@@ -13,11 +13,12 @@ import { buildCliNpmPackage } from "../../src/release/cli-npm-package.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 
-const env = { ...process.env, LEAN_NUM_THREADS: "1" }, dest = env.LEAN_BRIDGE_PHP_IO_REPRO;
-test("offline-installed CLI rebuilds the native Composer IO ZIP and its exact receipts"
+const env = { ...process.env, LEAN_NUM_THREADS: "1" }, task = env.LEAN_BRIDGE_PHP_TASK_REPRO;
+const dest = task ?? env.LEAN_BRIDGE_PHP_IO_REPRO;
+test("offline-installed CLI rebuilds the native Composer ZIP and its exact receipts"
 	, { skip: !dest, timeout: 3_600_000 }
 	, async () => {
-	const root = resolve(dest), ordinary = resolve(env.LEAN_BRIDGE_PHP_IO_ORIGINAL, "ordinary");
+	const root = resolve(dest), ordinary = resolve(task ? env.LEAN_BRIDGE_PHP_TASK_ORIGINAL : env.LEAN_BRIDGE_PHP_IO_ORIGINAL, "ordinary");
 	await mkdir(root);
 	const cliHome = join(root,"installed"), project = join(root,"project"), output = join(root,"handoff");
 	const packed = await buildCliNpmPackage({ outputRoot: join(root,"cli-feed") });
@@ -30,7 +31,7 @@ test("offline-installed CLI rebuilds the native Composer IO ZIP and its exact re
 	assert.equal(verify.result.archives,1);
 	const a = await readVerifiedPackageSetReceipt({ receiptPath: join(ordinary,"handoff",file) });
 	const b = await readVerifiedPackageSetReceipt({ receiptPath: join(output,file) });
-	assert.equal(b.receipt.profiles[0].id,"native-php-io-v1");
+	assert.equal(b.receipt.profiles[0].id,task ? "native-php-task-v1" : "native-php-io-v1");
 	assert.deepEqual(a.receipt,b.receipt); assert.equal(a.result.receiptSha256,b.result.receiptSha256);
 	for(const name of ["binding-ir.json","host-export-evidence.json","native-release.json","packages/php-native/composer/lean-bridge/package-receipt.json"])
 		assert.deepEqual(await readFile(join(ordinary,"handoff",name)),await readFile(join(output,name)));

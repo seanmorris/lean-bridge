@@ -13,6 +13,45 @@ import { generatePhpIOPort } from "./io-port.mjs";
 const q=s=>"'"+s.replaceAll("\\","\\\\").replaceAll("'","\\'")+"'";
 const expr=t=>Array.isArray(t)?"["+t.map(expr).join(",")+"]":q(t);
 const hex=s=>typeof s==="string"&&/^[0-9a-f]{64}$/u.test(s);
+const exceptions=m=>[m.failure,m.terminalFailure].filter(Boolean);
+const taskPublic=(m,i)=>{
+	const stream=m.delivery==="async-iterator", type=stream ? "PullStream" : "\\Amp\\Future";
+	const args=m.parameters.map(p=>"$"+p.name), params=args.map(a=>"mixed "+a);
+	let token="$cancellation";
+	while(args.includes(token)) token+="_";
+	return `/** ${m.parameters.map(p=>"@param "+p.type+" $"+p.name).join(" ")} @return ${type}<${m.returnType}> */
+function ${m.publicName}(${[...params,"?\\Amp\\Cancellation "+token+"=null"].join(", ")}): ${type} {
+    if (func_num_args()>${args.length+1}) throw new \\ArgumentCountError('Unexpected arguments');
+    return Internal\\Native::call${i}([${args.join(", ")}],${token});
+}`;
+};
+const taskNative=(m,i,model,port,decode)=>{
+	const {namespace: ns,wire}=model, fn=port.symbols[i+1], stream=m.delivery==="async-iterator";
+	const ops={ poll: m.names.poll, close: m.names.close, watch: wire.wait.open, unwatch: wire.wait.close, ...stream ? {pull: m.names.pull} : {} };
+	const failure=(cls,code,decl,shape)=>cls ? `if ($status===${code}) throw new \\${ns}\\${cls}(${q(decl)},${decode}(${expr(shape)},$tags,$data));` : "";
+	const bad=`throw new \\${ns}\\LeanBridgeError(${q("Lean bridge failure in "+m.declaration+" (status ")}.$status.')');`;
+	const result=`${decode}(${expr(m.result)},$tags,$data)`;
+	return `    public static function call${i}(array $args,?\\Amp\\Cancellation $cancel): mixed {
+        $cancel?->throwIfRequested();
+        $ffi=self::ffi(); $h=$ffi->new('uint64_t[2]');
+        $take=static function() use ($h) {
+            [$status,$tags,$data]=self::invoke(${q(fn+"_take")},[],[],${m.tagBytes},$h,true);
+            if ($status===0) return ${stream ? "["+result+"]" : result};
+            ${stream ? "if ($status===2) return [];" : ""}
+            ${failure(m.terminalFailure,stream ? 3 : 4,m.stepDeclaration??m.declaration,m.terminal)}
+            ${bad}
+        };
+        $owner=new Delivery($ffi,$h,[${Object.entries(ops).map(([k,v])=>q(k)+"=>"+q(v)).join(",")}],$take,$cancel);
+        try {
+            [$status,$tags,$data]=self::invoke(${q(fn)},${expr(m.args)},$args,${m.tagBytes},$h);
+            ${failure(m.failure,m.effect==="IO" ? 4 : 3,m.declaration,m.error)}
+            if ($status!==0) ${bad}
+            $owner->subscribe();
+            ${stream ? `$make=\\Closure::bind(static fn()=>new \\${ns}\\PullStream($owner),null,\\${ns}\\PullStream::class);
+            return $make();` : "return $owner->read();"}
+        } catch (\\Throwable $error) { $owner->close(); throw $error; }
+    }`;
+};
 
 /**
  * Generate the public API with exact byte-verified native loading. Only the
@@ -30,8 +69,10 @@ export const generatePhpIOFiles=async(model,assets)=>{
 	if(!assets||!hex(assets.componentIdentity)||!hex(assets.runtimeIdentity)||!assets.componentId
 		||assets.library!=="lib"+prefix+".so"||Object.keys(assets.libraries).sort().join("/")!==[assets.library,...deps].sort().join("/")
 		||!Object.values(assets.libraries).every(hex)) throw new TypeError("Unverified native PHP synchronous IO libraries");
-	const branches=methods.some(m=>Array.isArray(m.result)||Array.isArray(m.error))?["Ok","Err"]:[];
+	const tasks=Boolean(model.wire.wait);
+	const branches=methods.some(m=>Array.isArray(m.result)||Array.isArray(m.error)||Array.isArray(m.terminal))?["Ok","Err"]:[];
 	const extra = {};
+	if(tasks) extra["src/Internal/Delivery.php"]=(await readFile(new URL("./io-delivery.php",import.meta.url),"utf8")).replaceAll("__LB_PUBLIC__",ns);
 	if(leased)
 	{
 		const types = [...model.leases.values()];
@@ -50,7 +91,7 @@ declare(strict_types=1);
 namespace ${ns};
 require_once __DIR__ . '/Internal/Loader.php';${leased ? "\nrequire_once __DIR__ . '/Internal/Leases.php';\nrequire_once __DIR__ . '/Internal/LeaseCodec.php';" : ""}
 require_once __DIR__ . '/Internal/Native.php';
-require_once __DIR__ . '/Internal/WireValues.php';
+require_once __DIR__ . '/Internal/WireValues.php';${tasks ? "\nrequire_once __DIR__ . '/Internal/Delivery.php';" : ""}
 ${copiedPhpValues}
 ${branches.map(c=>`final readonly class ${c} {
     public function __construct(public mixed $value) { if (func_num_args()!==1) throw new \\ArgumentCountError('Expected one payload'); }
@@ -61,8 +102,8 @@ abstract class DeclaredFailure extends \\RuntimeException {
         parent::__construct(is_string($payload)?$payload:$declaration.': '.static::class);
     }
 }
-${[...new Set(methods.map(m=>m.failure).filter(Boolean))].map(f=>"final class "+f+" extends DeclaredFailure {}").join("\n")}
-${methods.map((m,i)=>`/** ${m.parameters.map(p=>"@param "+p.type+" $"+p.name).join(" ")} @return ${m.returnType} */
+${[...new Set(methods.flatMap(exceptions))].map(f=>"final class "+f+" extends DeclaredFailure {}").join("\n")}
+${methods.map((m,i)=>m.delivery ? taskPublic(m,i) : `/** ${m.parameters.map(p=>"@param "+p.type+" $"+p.name).join(" ")} @return ${m.returnType} */
 function ${m.publicName}(${m.parameters.map(p=>"mixed $"+p.name).join(", ")}): ${m.returnType} {
     if (func_num_args()!==${m.args.length}) throw new \\ArgumentCountError('Expected ${m.args.length} arguments');
     return Internal\\Native::call${i}(${m.parameters.map(p=>"$"+p.name).join(", ")});
@@ -83,7 +124,7 @@ TYPES;
         \\LeanBridge\\CopiedNativeV1\\Runtime::ensureProcess();
         return self::$ffi??=self::load();
     }
-    private static function invoke(string $fn,array $types,array $args,int $depth): array {
+    private static function invoke(string $fn,array $types,array $args,int $depth${tasks ? ",?\\FFI\\CData $handle=null,bool $taking=false" : ""}): array {
         $budget=new Budget(); $bytes=[];
         foreach ($types as $i=>$kind) $bytes[]=${leased ? "self::encoded" : "WireValues::input"}($kind,$args[$i],$budget);
         $ffi=self::ffi(); $scope=new Scope($ffi);
@@ -94,7 +135,9 @@ TYPES;
                 $in[$i]->data=$scope->buffer($data);
                 $in[$i]->length=strlen($data);
             }
-            $status=$ffi->$fn(\\FFI::addr($in[0]),count($bytes),\\FFI::addr($out),\\FFI::addr($tags[0]),$depth);
+            $status=${tasks ? `$taking ? $ffi->$fn($handle,\\FFI::addr($out),\\FFI::addr($tags[0]),$depth)
+                : ($handle!==null ? $ffi->$fn(\\FFI::addr($in[0]),count($bytes),\\FFI::addr($out),\\FFI::addr($tags[0]),$depth,$handle)
+                : $ffi->$fn(\\FFI::addr($in[0]),count($bytes),\\FFI::addr($out),\\FFI::addr($tags[0]),$depth))` : `$ffi->$fn(\\FFI::addr($in[0]),count($bytes),\\FFI::addr($out),\\FFI::addr($tags[0]),$depth)`};
             $length=$out->length;${leased ? `
             if ($out->lease[3]) {
                 $owner=self::adopted($ffi,$out);
@@ -108,7 +151,7 @@ TYPES;
             $scope->close();
         }
     }
-${methods.map((m,i)=>`    public static function call${i}(${m.parameters.map(p=>"mixed $"+p.name).join(", ")}): mixed {
+${methods.map((m,i)=>m.delivery ? taskNative(m,i,model,port,decode) : `    public static function call${i}(${m.parameters.map(p=>"mixed $"+p.name).join(", ")}): mixed {
         [$status,$tags,$data]=self::invoke(${q(port.symbols[i+1])},${expr(m.args)},[${m.parameters.map(p=>"$"+p.name).join(",")}],${m.tagBytes});
         if ($status===0) return ${decode}(${expr(m.result)},$tags,$data);
         ${m.failure?`if ($status===${m.effect==="IO"?4:3}) throw new \\${ns}\\${m.failure}(${q(m.declaration)},${decode}(${expr(m.error)},$tags,$data));`:""}

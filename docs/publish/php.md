@@ -48,7 +48,7 @@ lean-bridge build --project ./clover --target php-native --output ./release-php
 
 The build compiles Lean and the shared C adapter, generates and syntax-checks PHP, verifies the native artifacts, then produces `release-php/archives/example-clover-api-2.0.0-RC.1-linux-x86_64.zip`. The ZIP includes `composer.json`, PHP sources, compiled libraries, license notices, source identities and `lean-bridge/package-receipt.json`. Repeat another supported `--target` to share compilation. Every requested target must succeed before the release directory appears.
 
-Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, Lists, records, concrete copied variants, options, results, nested binary products and synchronous callables with those payloads, including [finite recursive values](#export-recursive-callbacks). The [explicit ownership profile](#export-resource-containing-values) also accepts resources inside these values. FPM, ZTS and asynchronous delivery remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [structured callback record](../evidence/php-structured-callables-20260925.md) record installed checks and archive identities.
+Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, Lists, records, concrete copied variants, options, results, nested binary products and synchronous callables with those payloads, including [finite recursive values](#export-recursive-callbacks). The [explicit ownership profile](#export-resource-containing-values) also accepts resources inside these values. Native CLI tasks use the [task package profile](#export-tasks-and-pull-streams). FPM and ZTS remain unsupported. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [structured callback record](../evidence/php-structured-callables-20260925.md) record installed checks and archive identities.
 
 Native PHP maps `Option` to `null` or a generated `Some`, `Except` to `Ok` or
 `Err`, and each `Prod` to exactly two consecutive array elements. Branch classes
@@ -103,6 +103,36 @@ filesystem effect prevents packaging. For direct nominal resources, name the
 declarations in `resources`, as below. Callbacks, tasks, and PHP-Wasm are
 separate from this synchronous profile. See [the consumer example](../php.md#call-synchronous-io-and-handle-errors)
 and the [independently reproduced archive](../evidence/php-sync-io-20261123.json).
+
+### Export tasks and pull streams
+
+Select functions with a real Lean `Task` result in `taskExports`; do not mark
+an ordinary `IO α` function async. A pull stream names its open, next, and
+close functions. For example, using the `Pulse` module:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "exports": ["Pulse.bytes", "Pulse.series"],
+  "taskExports": ["Pulse.bytes"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"php-native": {"name": "lean-bridge/pulse", "version": "1.0.0"}}
+}
+```
+
+Build with `lean-bridge build --project . --target php-native --output release`.
+For a reviewed contract, omit `exports`, supply `public.binding-ir.json`, and
+keep the task and stream selections. Both routes produce a Composer ZIP with
+profile `native-php-task-v1`. Composer installs the scheduler dependencies;
+the consumer needs no build tools. A synchronous-only package does not
+depend on the scheduler.
+
+For a `Task (Except IO.Error α)`, additionally select the function in
+`taskIOErrors` if the error should reject the future. Otherwise a supported
+returned `Except` is data, not a thrown error. Native PHP currently supports
+direct tasks and pull protocols on this path, not retained host callbacks.
+See the [installed consumer example](../php.md#await-a-lean-task-or-iterate-a-stream).
 
 ### Export a directly owned IO result
 

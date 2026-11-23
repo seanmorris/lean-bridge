@@ -104,8 +104,6 @@ export const buildHostProject = async options => {
 		: target === "pypi" && component.version === "0.0.0-local" ? "0.0.0+local" : component.version);
 	(target === "php-native" ? validateOrdinaryPhpSettings : target === "cpan" ? validatePerlIOSettings : target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : target === "rubygems" ? validateOrdinaryRubySettings : target === "nuget" ? validateOrdinaryNugetSettings : target === "maven" ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
 	const contract = await captureContracts(project, inventory);
-	if(target === "php-native" && !contract.synchronousIO)
-		fail("Native PHP IO requires a synchronous API");
 	if(inventory.project.toolchain !== "leanprover/lean4:v4.32.2") fail("Host source and runtime require the same pinned Lean toolchain");
 	if(!inventory.project.lakefile) fail("Host imports require a Lake package so each module has a checked owner");
 	const leanPrefix = resolve(environment.LEAN_BRIDGE_LEAN_PREFIX ?? (await processBuildRunner.capture({

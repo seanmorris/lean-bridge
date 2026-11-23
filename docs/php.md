@@ -102,6 +102,47 @@ performs the effect. This profile targets native PHP CLI, not PHP-Wasm.
 See [export synchronous IO](publish/php.md#export-synchronous-io) and the
 [installed PHP 8.2 and 8.5 results](evidence/php-sync-io-20261123.json).
 
+### Await a Lean task or iterate a stream
+
+A native Composer task package installs Amp and Revolt alongside the Lean
+runtime. A task returns an `Amp\Future`: call `await()` to get its value.
+A stream works with `foreach`, requesting one item at a time. In the Pulse
+example, the output is `hello` followed by `first item`.
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__.'/vendor/autoload.php';
+
+use Amp\TimeoutCancellation;
+use LeanPulse\Bytes;
+use function LeanPulse\{bytes, series};
+
+$deadline = new TimeoutCancellation(5);
+$result = bytes(Bytes::fromString("hello"), cancellation: $deadline)->await();
+echo $result->toString(), PHP_EOL;
+
+foreach (series(false, false, 'first item') as $item) {
+    echo $item->value, PHP_EOL;
+    break; // No second pull; the loop releases the cursor.
+}
+```
+
+Pass a cancellation token to the **generated function** to cancel the Lean
+operation. Passing one only to `$future->await($token)` cancels that wait;
+other callers can still await the same future. An already-running Lean task
+must cooperate to stop its computation. Late results never replace cancellation.
+
+A failure to *start* (for example, an `EIO` refusal) throws from the function.
+A selected terminal IO failure throws `TaskIOError` from `await()`. A typed
+stream failure is thrown while iterating. A returned `Except` remains an
+`Ok` or `Err` value in all three cases.
+
+Breaking out of a normal `foreach` closes the cursor. If you retain the iterator
+itself, call `$stream->close()` in a `finally` block when you stop consuming it.
+This path is for native PHP CLI, not PHP-Wasm. See [how to export tasks](publish/php.md#export-tasks-and-pull-streams)
+and the [installed results and archive hashes](evidence/php-task-delivery-20261123.json).
+
 ### Share a resource between native PHP packages
 
 An exported Lean heap resource is an object, not an integer handle. When a
@@ -1806,6 +1847,21 @@ constructor/source entry counts or dispatch.
 
 The [hosted generic-Subtype matrix](evidence/generic-subtype-promotion-20261023.md) installs the closed `GenericNat` alias of `GenericCarrier Nat` on ordinary-source and reviewed-IR packages across the sixteen non-PHP-Wasm consumer profiles. Its selected `Positive` field crosses as a proof-erased value beside a retained `Nat` marker, and the two named specializations keep their distinct `plusOne` and `plusTwo` constructors. Rejection preserves the caller record, a later valid call recovers, and copied results carry no constructor. PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence. Native PHP is
 one of those profiles.
+
+### Native CLI effects and delivery
+
+The two native Composer profiles have their own receipts. Use these mappings
+for native IO and task packages; the cross-profile inventory below describes
+the older package paths.
+
+| Export | Native PHP result | Failure or cleanup |
+| --- | --- | --- |
+| Synchronous `IO α` or `EIO ε α` | `α` before the call returns | `IOError` or a declaration-specific exception carrying `ε` |
+| Selected `Task α` | `Amp\Future` resolving to `α` | An operation token cancels the worker; an await token cancels only that waiter |
+| Selected pull protocol | `PullStream` consumed with `foreach` | One outstanding pull; exhaustion, early exit or explicit close releases the cursor |
+
+See the [synchronous IO receipts](evidence/php-sync-io-20261123.json) and the
+[native task receipts](evidence/php-task-delivery-20261123.json). Neither changes PHP-Wasm's coverage.
 
 ### Type conversions
 

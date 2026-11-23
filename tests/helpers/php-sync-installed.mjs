@@ -19,7 +19,7 @@ const target = "php-native", profile = "native-php-io-v1";
 const onlyNew = { flag: "wx" };
 
 const policy = env.LEAN_BRIDGE_PHP_IO_POLICY;
-test("PHP IO refuses undeclared filesystem effects, asynchronous delivery and an altered review before packaging"
+test("PHP IO refuses undeclared filesystem effects, a non-Task selected as a Task and an altered review before packaging"
 	, { skip: !policy, timeout: 1_800_000 }
 	, async t => {
 	const work = await mkdtemp(join(tmpdir(), "php-io-policy-"));
@@ -36,7 +36,7 @@ test("PHP IO refuses undeclared filesystem effects, asynchronous delivery and an
 		await assert.rejects(access(out), { code: "ENOENT" });
 	};
 	await reject({ ...cfg, nativeEffects: [] }, /requires nativeEffects "filesystem"/u);
-	await reject({ ...cfg, taskExports: ["Journal.store"] }, /requires a synchronous API/u);
+	await reject({ ...cfg, taskExports: ["Journal.store"] }, /requires a real Lean Task result: Journal.store/u);
 	const ir = await json(join(ordinary, "handoff/binding-ir.json"));
 	const err = ir.errors.find(e => e.id === "error:EIO.ScalarIO.nested");
 	err.payload.arguments[0] = { kind: "primitive", name: "uint64" };
