@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 1,
+  "kind": "installed-cpan-lean-worker-callbacks",
+  "planNodes": [
+    1221,
+    1222,
+    1223
+  ],
+  "acceptanceSha256": "cfb1f601e781d234b818ee7a181ec00d3f936485b396926d7d59ec96bcd25711",
+  "reproductionSha256": "ae612938bb48bed4d9efd38fb12800a7939fbc8ceafcaa1e8c59df3442377702",
+  "sharedRuntime": {
+    "bytes": 51394992,
+    "path": "archives/LeanBridge-Runtime-0.0020276624700658970660393113293618122178994814009577038764491667816735790235240581.tar.gz",
+    "sha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731"
+  },
+  "sources": {
+    "Observe.xs": "24029e29f2faa3fa70d89598ad8de8752feeb12c5eb8de202bdfab8c5b58efd2",
+    "build-observer.pl": "2081ccf5c50cf0435c11bd888bd450e2f338a4373244f7974b9482336ea8e7d9",
+    "compose.t": "f373ff79a024f7bf0d9827b3c4bbc3e4506f0ff63edc7b85d8900c39217072b8",
+    "example.pl": "03181a13b552c787e5fad503884c2c1323a92614bd29e207f069d1aad3b03191",
+    "installed.t": "0b5da10d24f0ed2a032c4b42b47004796bde395aeda94d2cd2d6d156b154a4ef",
+    "registration.t": "9fe47a777df8049fd794253eec91daed589e160f8fe066d911f5a7b7e2d35fa1",
+    "retired.t": "823dd7d69137d7e871fa3de6b62a04ed2379562d8d9eb0d8e774198df9cebeaf",
+    "verify.py": "149e33f769872d6e129f76c8d997cf0c4606db677b723011a9c33b82286ce307"
+  },
+  "packages": [
+    {
+      "route": "ordinary",
+      "receiptSha256": "f309b213eaa57ae770864921e729ccdc2b6671e5f49f509e5ee355737197d1b2",
+      "profile": {
+        "bindingIrSha256": "4addb16d7e7609a56da092cafd6b59d765eb9f82ff3f81e0298a25a8da4eda8d",
+        "id": "native-perl-task-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "component": {
+        "bytes": 269784,
+        "path": "archives/LeanBridge-Retained-0.001.tar.gz",
+        "sha256": "99b51321876c94aa844ef5bc534aebac8a9c1298ddc9d2eef552d4a32f0e256f"
+      },
+      "modules": {
+        "Retained": "e712320837e3d8ce7c884dc5d2e8ffc5f7825faa8a6666290330fb4dc2468a6a",
+        "Feedback": "634c9812a1abfe2c353b500d055dc86b826b8bbcdc433d52c4ca3a346885cc0c"
+      },
+      "target": "cpan",
+      "glibcMinimumVersion": "2.36",
+      "leanVersion": "4.32.2",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "extractorSha256": "6133517e1a822b9610264acf12a676a2b42279d7fa36660e046a4323826db60b",
+      "sourceTreeSha256": "65ba2042324e7c572ef0368f191363c3d9b93412f7261a2e9b902d2049bfb5cb",
+      "reviewedSourceSha256": null
+    },
+    {
+      "route": "reviewed",
+      "receiptSha256": "e58e28ab4a7f92eac82090daf1a91d573c254fb16560eb26f792bdbba08093d0",
+      "profile": {
+        "bindingIrSha256": "4addb16d7e7609a56da092cafd6b59d765eb9f82ff3f81e0298a25a8da4eda8d",
+        "id": "native-perl-task-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "component": {
+        "bytes": 269774,
+        "path": "archives/LeanBridge-Retained-0.001.tar.gz",
+        "sha256": "6fa419489a11d46a4001cf1df1f69eae860df1c870f90ea6de763a2cd4bf43e5"
+      },
+      "modules": {
+        "Retained": "e712320837e3d8ce7c884dc5d2e8ffc5f7825faa8a6666290330fb4dc2468a6a",
+        "Feedback": "634c9812a1abfe2c353b500d055dc86b826b8bbcdc433d52c4ca3a346885cc0c"
+      },
+      "target": "cpan",
+      "glibcMinimumVersion": "2.36",
+      "leanVersion": "4.32.2",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "extractorSha256": "6133517e1a822b9610264acf12a676a2b42279d7fa36660e046a4323826db60b",
+      "sourceTreeSha256": "6c6b384efad71f72056aeaa7a4a674986129f14982f13ec5dfc255d90f4dad44",
+      "reviewedSourceSha256": "58b67814e407b3a2842eb6451aa3d8ee583aa6ff93c154a7bedd4ff88c3b6435"
+    },
+    {
+      "route": "peer",
+      "receiptSha256": "1ca3aeebfc3b9cc8b0043c0e384c0d44ed4b93003c188aac0f9c1a7ec2567d1e",
+      "profile": {
+        "bindingIrSha256": "174e55171ca290de19282ddd17b62b783e4c0c5a0438b756bfb2f9d4f15a49e6",
+        "id": "native-perl-task-v1",
+        "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+      },
+      "component": {
+        "bytes": 107494,
+        "path": "archives/LeanBridge-Relay-0.001.tar.gz",
+        "sha256": "7f510536720d7b6786f524ef65326280bada1c41890413b465a72063b5510394"
+      },
+      "modules": {
+        "Relay": "51520baaa782a9ce0bf378a92e5e932ebbb92f31d1b0830f177e0917106c3c7d"
+      },
+      "target": "cpan",
+      "glibcMinimumVersion": "2.36",
+      "leanVersion": "4.32.2",
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "extractorSha256": "6133517e1a822b9610264acf12a676a2b42279d7fa36660e046a4323826db60b",
+      "sourceTreeSha256": "8ee087a58978df80eff7f4de45d7fca27b0f8cb02b3c7d49b9fb4c604dc10525",
+      "reviewedSourceSha256": null
+    }
+  ],
+  "rows": [
+    {
+      "installedXsSha256": "cc53a0a6c873618535bbcbc78018167bb463e75a0368b192d276135d7a7a32cf",
+      "key": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+      "observations": {
+        "primary-first": {
+          "tapSha256": "b32593314c1d8ffa5993c720846a3b33211ed2b2e5e91841463641227eff16fa",
+          "tests": 8
+        },
+        "public": {
+          "tapSha256": "4a95a34cb3a9c65fc96ac21852afcf5a05ffa972f4a5428c430b1147d33bbec0",
+          "tests": 66
+        },
+        "registration": {
+          "tapSha256": "570b83364952492fc1a8aecfc939e37ee12bf2a66e505d3f90107efbef80d45c",
+          "tests": 18
+        },
+        "relay-first": {
+          "tapSha256": "620a1a73f4be0ad7b6f7a293e41d6fb30bafbad72e75f9b8f2f5bca271974cdb",
+          "tests": 8
+        },
+        "retirement": {
+          "tapSha256": "1cf6f2db658d02a1fa540e77ab293796361d4bba43305e791be2802b44433bd0",
+          "tests": 6
+        }
+      },
+      "route": "ordinary",
+      "threaded": 1,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "cc53a0a6c873618535bbcbc78018167bb463e75a0368b192d276135d7a7a32cf",
+      "key": "fe1ed1f898a2336c1788377ee7d5a8e1689d19a54d14d0a7988325879a758a77",
+      "observations": {
+        "primary-first": {
+          "tapSha256": "b32593314c1d8ffa5993c720846a3b33211ed2b2e5e91841463641227eff16fa",
+          "tests": 8
+        },
+        "public": {
+          "tapSha256": "4a95a34cb3a9c65fc96ac21852afcf5a05ffa972f4a5428c430b1147d33bbec0",
+          "tests": 66
+        },
+        "registration": {
+          "tapSha256": "570b83364952492fc1a8aecfc939e37ee12bf2a66e505d3f90107efbef80d45c",
+          "tests": 18
+        },
+        "relay-first": {
+          "tapSha256": "620a1a73f4be0ad7b6f7a293e41d6fb30bafbad72e75f9b8f2f5bca271974cdb",
+          "tests": 8
+        },
+        "retirement": {
+          "tapSha256": "1cf6f2db658d02a1fa540e77ab293796361d4bba43305e791be2802b44433bd0",
+          "tests": 6
+        }
+      },
+      "route": "reviewed",
+      "threaded": 1,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "83ad48d78fe4fe0267ec59df0c451556a9b4ca678a35d1163d37c438cb5fd083",
+      "key": "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+      "observations": {
+        "primary-first": {
+          "tapSha256": "b32593314c1d8ffa5993c720846a3b33211ed2b2e5e91841463641227eff16fa",
+          "tests": 8
+        },
+        "public": {
+          "tapSha256": "4a95a34cb3a9c65fc96ac21852afcf5a05ffa972f4a5428c430b1147d33bbec0",
+          "tests": 66
+        },
+        "registration": {
+          "tapSha256": "fa832294936e7b4eff29b4ec0f16f6bf3104f0c1aa4a2c5f5941830a19054fb3",
+          "tests": 18
+        },
+        "relay-first": {
+          "tapSha256": "620a1a73f4be0ad7b6f7a293e41d6fb30bafbad72e75f9b8f2f5bca271974cdb",
+          "tests": 8
+        },
+        "retirement": {
+          "tapSha256": "1cf6f2db658d02a1fa540e77ab293796361d4bba43305e791be2802b44433bd0",
+          "tests": 6
+        }
+      },
+      "route": "ordinary",
+      "threaded": 0,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "83ad48d78fe4fe0267ec59df0c451556a9b4ca678a35d1163d37c438cb5fd083",
+      "key": "8f3d6c67901e92e0245686ae64e3608d95ba676577af516db8ff421960336c8d",
+      "observations": {
+        "primary-first": {
+          "tapSha256": "b32593314c1d8ffa5993c720846a3b33211ed2b2e5e91841463641227eff16fa",
+          "tests": 8
+        },
+        "public": {
+          "tapSha256": "4a95a34cb3a9c65fc96ac21852afcf5a05ffa972f4a5428c430b1147d33bbec0",
+          "tests": 66
+        },
+        "registration": {
+          "tapSha256": "fa832294936e7b4eff29b4ec0f16f6bf3104f0c1aa4a2c5f5941830a19054fb3",
+          "tests": 18
+        },
+        "relay-first": {
+          "tapSha256": "620a1a73f4be0ad7b6f7a293e41d6fb30bafbad72e75f9b8f2f5bca271974cdb",
+          "tests": 8
+        },
+        "retirement": {
+          "tapSha256": "1cf6f2db658d02a1fa540e77ab293796361d4bba43305e791be2802b44433bd0",
+          "tests": 6
+        }
+      },
+      "route": "reviewed",
+      "threaded": 0,
+      "version": "5.36.3"
+    },
+    {
+      "installedXsSha256": "b4977c841e34af0e1570aaf10a3c1e483b46b79a8787782b8b689bebdee70d0b",
+      "key": "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+      "observations": {
+        "primary-first": {
+          "tapSha256": "b32593314c1d8ffa5993c720846a3b33211ed2b2e5e91841463641227eff16fa",
+          "tests": 8
+        },
+        "public": {
+          "tapSha256": "4a95a34cb3a9c65fc96ac21852afcf5a05ffa972f4a5428c430b1147d33bbec0",
+          "tests": 66
+        },
+        "registration": {
+          "tapSha256": "570b83364952492fc1a8aecfc939e37ee12bf2a66e505d3f90107efbef80d45c",
+          "tests": 18
+        },
+        "relay-first": {
+          "tapSha256": "620a1a73f4be0ad7b6f7a293e41d6fb30bafbad72e75f9b8f2f5bca271974cdb",
+          "tests": 8
+        },
+        "retirement": {
+          "tapSha256": "1cf6f2db658d02a1fa540e77ab293796361d4bba43305e791be2802b44433bd0",
+          "tests": 6
+        }
+      },
+      "route": "ordinary",
+      "threaded": 1,
+      "version": "5.38.2"
+    },
+    {
+      "installedXsSha256": "b4977c841e34af0e1570aaf10a3c1e483b46b79a8787782b8b689bebdee70d0b",
+      "key": "4b52a460a64ff751914be31d06f9e7ef8c77e79819c34233bd0ad6a687b9661c",
+      "observations": {
+        "primary-first": {
+          "tapSha256": "b32593314c1d8ffa5993c720846a3b33211ed2b2e5e91841463641227eff16fa",
+          "tests": 8
+        },
+        "public": {
+          "tapSha256": "4a95a34cb3a9c65fc96ac21852afcf5a05ffa972f4a5428c430b1147d33bbec0",
+          "tests": 66
+        },
+        "registration": {
+          "tapSha256": "570b83364952492fc1a8aecfc939e37ee12bf2a66e505d3f90107efbef80d45c",
+          "tests": 18
+        },
+        "relay-first": {
+          "tapSha256": "620a1a73f4be0ad7b6f7a293e41d6fb30bafbad72e75f9b8f2f5bca271974cdb",
+          "tests": 8
+        },
+        "retirement": {
+          "tapSha256": "1cf6f2db658d02a1fa540e77ab293796361d4bba43305e791be2802b44433bd0",
+          "tests": 6
+        }
+      },
+      "route": "reviewed",
+      "threaded": 1,
+      "version": "5.38.2"
+    },
+    {
+      "installedXsSha256": "80fded5519ce51f15936b99a1ec1ff9899dc6256d556ce505113616ec7b3f23c",
+      "key": "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+      "observations": {
+        "primary-first": {
+          "tapSha256": "b32593314c1d8ffa5993c720846a3b33211ed2b2e5e91841463641227eff16fa",
+          "tests": 8
+        },
+        "public": {
+          "tapSha256": "4a95a34cb3a9c65fc96ac21852afcf5a05ffa972f4a5428c430b1147d33bbec0",
+          "tests": 66
+        },
+        "registration": {
+          "tapSha256": "fa832294936e7b4eff29b4ec0f16f6bf3104f0c1aa4a2c5f5941830a19054fb3",
+          "tests": 18
+        },
+        "relay-first": {
+          "tapSha256": "620a1a73f4be0ad7b6f7a293e41d6fb30bafbad72e75f9b8f2f5bca271974cdb",
+          "tests": 8
+        },
+        "retirement": {
+          "tapSha256": "1cf6f2db658d02a1fa540e77ab293796361d4bba43305e791be2802b44433bd0",
+          "tests": 6
+        }
+      },
+      "route": "ordinary",
+      "threaded": 0,
+      "version": "5.38.2"
+    },
+    {
+      "installedXsSha256": "80fded5519ce51f15936b99a1ec1ff9899dc6256d556ce505113616ec7b3f23c",
+      "key": "6d98df607855ba1e697a50c32f459fe3e55e26ebb29471e63cb7020f02ddbc8e",
+      "observations": {
+        "primary-first": {
+          "tapSha256": "b32593314c1d8ffa5993c720846a3b33211ed2b2e5e91841463641227eff16fa",
+          "tests": 8
+        },
+        "public": {
+          "tapSha256": "4a95a34cb3a9c65fc96ac21852afcf5a05ffa972f4a5428c430b1147d33bbec0",
+          "tests": 66
+        },
+        "registration": {
+          "tapSha256": "fa832294936e7b4eff29b4ec0f16f6bf3104f0c1aa4a2c5f5941830a19054fb3",
+          "tests": 18
+        },
+        "relay-first": {
+          "tapSha256": "620a1a73f4be0ad7b6f7a293e41d6fb30bafbad72e75f9b8f2f5bca271974cdb",
+          "tests": 8
+        },
+        "retirement": {
+          "tapSha256": "1cf6f2db658d02a1fa540e77ab293796361d4bba43305e791be2802b44433bd0",
+          "tests": 6
+        }
+      },
+      "route": "reviewed",
+      "threaded": 0,
+      "version": "5.38.2"
+    }
+  ],
+  "prebuiltTAP": {
+    "passed": 832,
+    "skipped": 16
+  },
+  "offlineCLI": {
+    "artifacts": [
+      {
+        "bytes": 269784,
+        "path": "archives/LeanBridge-Retained-0.001.tar.gz",
+        "sha256": "99b51321876c94aa844ef5bc534aebac8a9c1298ddc9d2eef552d4a32f0e256f"
+      },
+      {
+        "bytes": 51394992,
+        "path": "archives/LeanBridge-Runtime-0.0020276624700658970660393113293618122178994814009577038764491667816735790235240581.tar.gz",
+        "sha256": "93a797dfa7abf5c38f15f51feab64dd2d5c2f74ff2dda562cabb98f6cf6d8731"
+      }
+    ],
+    "cliArchiveSha256": "0f88885596b5354febcbe626f51e49f7c76f9bbf2a839027017ecf62dc1affae",
+    "receiptSha256": "f309b213eaa57ae770864921e729ccdc2b6671e5f49f509e5ee355737197d1b2"
+  }
+}

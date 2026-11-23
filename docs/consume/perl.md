@@ -119,6 +119,24 @@ Invalid task arguments throw at the call. A declared failure starting the task o
 
 The [installed task and cursor checks](../evidence/perl-tasks-20261123.json) cover both package routes on four Perl ABIs, including what happens when an interpreter thread is created while a native pull is pending.
 
+### Pass a callback to a Lean worker
+
+An installed [task that calls Perl](../publish/cpan.md#export-a-task-that-calls-perl) accepts a normal code reference. The Lean worker sends each request to the Perl event loop; it never enters the interpreter itself. Save this as `retained.pl`:
+
+```perl
+use v5.36;
+use LeanBridge::Retained;
+
+my $task = LeanBridge::Retained::repeat_call('go', sub ($s) { $s . '!' });
+say $task->get;  # go!!
+```
+
+The callback returns **one scalar**, including `undef` for Lean `Unit`. It may call another export or wait for a different task. Waiting for its own task throws an error. If a callback throws and Lean propagates that error, `get` throws the original Perl exception. Lean can also catch it and return an ordinary value.
+
+To stop accepting calls before a task settles, create a `LeanBridge::Retained::RetainedCallback` with `->new($code)` and pass `$registration->callback` to the task. Calling `$registration->close` revokes that code reference for every consumer, including a second component. An invocation already underway may finish. Cancelling a future revokes that task's access; it does not revoke other tasks' use of the same registration.
+
+The [installed worker-callback checks](../evidence/perl-retained-workers-20261123.json) cover both package load orders, callback failures, cancellation during a reply, and runtime shutdown with a queued request. They run on threaded and unthreaded Perl 5.36.3 and 5.38.2.
+
 ### Options, results and products
 
 `Option` uses `undef` for None and the generated `Some->new($value)` for Some. Unit also uses `undef`: `Some->new(undef)` preserves a present Unit or an outer Some containing an inner None, according to the declared type. Nested options keep every layer.

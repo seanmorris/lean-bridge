@@ -2668,6 +2668,22 @@ LEAN_BRIDGE_PERL_TASK_AUDIT="$EVIDENCE" LEAN_BRIDGE_PERL_TASK_REPRODUCED="$REPRO
 
 Set `REPRO` to the completed reproduction directory. Unthreaded builds skip the thread-specific checks. On threaded builds, the owner must still work after a child interpreter tries to read a live cursor or settle a pending future.
 
+### Perl workers that call the application
+
+Use the same four Perl interpreters and upstream event-loop modules as in the futures suite above. Set `WORKERS` and `WORKER_REPRO` to new directories. Run the steps in order:
+
+```sh
+LEAN_BRIDGE_PERL_CALLBACK_BUILD="$WORKERS" node --test --test-concurrency=1 tests/helpers/perl-retained-packages.mjs
+LEAN_BRIDGE_PERL_CALLBACK_CAPTURE="$WORKERS" node --test --test-concurrency=1 tests/helpers/perl-retained-consumers.mjs
+LEAN_BRIDGE_PERL_TASK_ORIGINAL="$WORKERS" LEAN_BRIDGE_PERL_TASK_REPRO="$WORKER_REPRO" \
+  node --test --test-concurrency=1 tests/helpers/perl-io-repro.mjs
+node scripts/audit-perl-worker-evidence.mjs "$WORKERS" "$WORKER_REPRO"
+```
+
+The first step builds the ordinary Retained package, its reviewed counterpart and an independent Relay. The second installs and relocates the actual archives, checks both component load orders and retires a runtime with an outstanding callback request. The third rebuilds the ordinary package with a separately installed CLI. The audit reads the saved packages, receipts, fixtures and TAP; it prints a release summary and does not run Lean or update files.
+
+To repeat the installed calls without rebuilding, use `LEAN_BRIDGE_PERL_CALLBACK_REPLAY` instead of `LEAN_BRIDGE_PERL_CALLBACK_CAPTURE`. For the [recorded worker release](../evidence/perl-retained-workers-20261123.json), set `LEAN_BRIDGE_PERL_CALLBACK_EXPECTED=docs/evidence/perl-retained-workers-20261123.json`. Pass the same file as the audit's third argument to compare every row, receipt and transcript against it.
+
 ### Recursive Perl conversion
 
 Run the staged recursive XS checks with the four pinned Perl installations,

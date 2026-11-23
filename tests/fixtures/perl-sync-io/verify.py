@@ -69,6 +69,36 @@ def inspect(path, role, api_bytes, evidence_bytes, profile="sync"):
                 assert declarations["terminal"]["failure"]["errors"] == ["error:TaskIO.Error"]
                 assert declarations["series"]["failure"]["errors"] == ["error:IO.Error", "error:AsyncStep.Pulse.series"]
                 assert declarations["direct"]["resultMode"] == "value"
+            elif m["module"] in ("LeanBridge::Retained", "LeanBridge::Relay"):
+                assert chosen["perlTaskCallbacks"] is True and not cursors
+                refs = {t["id"]: t for t in api["types"] if t["kind"] == "callback"}
+                assert refs
+                slots = {}
+                for name, decl in declarations.items():
+                    pairs = []
+                    for arg in decl["parameters"]:
+                        cb = refs.get(arg["type"].get("id"))
+                        if cb is None:
+                            continue
+                        assert decl["resultMode"] == "promise" and "host-call" in decl["effects"]
+                        assert arg["ownership"] == "lease" and arg["lifetime"] == {"scope": "explicit", "anchor": None}
+                        assert cb["source"]["extensions"]["lean-bridge.dev/callback-scheduler"] == "owner-event-loop"
+                        c = cb["callable"]
+                        assert (c["invocation"], c["reentry"], c["selfDisposal"], c["resultMode"]) == ("many", "same-agent", "defer", "value")
+                        assert c["failure"] == {"mode": "declared", "errors": ["error:PerlHostException"], "unexpected": "poison-runtime"}
+                        assert len(c["parameters"]) == 1 and c["parameters"][0]["ownership"] == c["result"]["ownership"] == "copy"
+                        pairs.append((c["parameters"][0]["type"]["name"], c["result"]["type"]["name"]))
+                    if pairs:
+                        slots[name] = pairs
+                if m["module"] == "LeanBridge::Retained":
+                    tour = "unit bool char string bytes nat int uint8 uint16 uint32 uint64 usize int8 int16 int32 int64 isize float32 float64 unit".split()
+                    assert slots["scalar_tour"] == list(zip(tour, tour[1:]))
+                    assert slots["during_start"] == [("string", "string")] * 2
+                    assert declarations["early"]["failure"]["errors"] == ["error:IO.Error", "error:PerlHostException", "error:TaskIO.Error"]
+                    assert declarations["plain"]["resultMode"] == "value"
+                else:
+                    assert slots == {"run": [("string", "string")]}
+                    assert declarations["run"]["failure"]["errors"] == ["error:TaskIO.Error", "error:PerlHostException"]
             else:
                 assert not tasks and len(cursors) == 3
         if m["module"] in ("LeanBridge::Journal", "LeanBridge::Pulse"):

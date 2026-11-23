@@ -10,6 +10,7 @@ import { reconcileHostExports } from "../../analyze/host-export-model.mjs";
 import { generateSyncWire } from "../c/sync-wire.mjs";
 import { perlStringLiteral as q, projectPerlNames } from "./naming.mjs";
 import { perlTaskAssets, taskDeclarations, taskModules, taskXs } from "./task-xs.mjs";
+import { retainedArguments } from "./retained-xs.mjs";
 
 const digest = s => /^[a-f0-9]{64}$/u.test(s);
 const libraryFor = name => "liblbc_perl_" + sha256(name) + ".so";
@@ -96,18 +97,22 @@ const verify = (api, wire, ns) => {
 		const mode = m.delivery === "task" ? "promise" : m.delivery === "async-iterator" ? "async-iterator" : "value";
 		const step = m.stepDeclaration ? api.errors.find(x => x.id === "error:AsyncStep."+m.declaration) : null;
 		const taskIO = d?.source.extensions["lean-bridge.dev/task-failure"] === "IO.Error";
-		if(step) ids.push(step.id);
+		const retained = Boolean(m.callbacks?.length), hostError = "error:PerlHostException";
+		if(retained && e === "IO") ids.push(hostError);
 		if(taskIO) ids.push("error:TaskIO.Error");
+		if(retained && taskIO && !ids.includes(hostError)) ids.push(hostError);
+		if(step) ids.push(step.id);
 		const depth = t => Array.isArray(t) ? 1 + Math.max(...t.map(depth)) : 0;
 		if(!d || d.source.declaration !== m.declaration || !/^[a-z][a-z0-9_]*$/u.test(m.name) || m.name !== m.publicName
 			|| ["import", "unimport", "isa", "can", "version", "does"].includes(m.name) || m.symbol !== stem + "_" + i
 			|| !["pure", "IO", "BaseIO", "EIO"].includes(e) || d.source.extensions["lean-lang.org/effect"] !== e || d.resultMode !== mode
-			|| !same(d.failure.errors, ids) || !same(d.parameters.map(p => shape(p.type)), m.args) || m.args.some(Array.isArray)
-			|| !same(shape(d.result.type), m.result) || !same(e === "IO" ? "string" : e === "EIO" ? shape(a?.payload) : null, m.error)
+			|| !same(d.failure.errors, ids) || !same(retained ? retainedArguments(api,d,m,shape) : d.parameters.map(p => shape(p.type)), m.args) || m.args.some(Array.isArray)
+			|| !same(shape(d.result.type), m.result) || !same(e === "EIO" ? shape(a?.payload) : e === "IO" && !retained ? "string" : null, m.error)
 			|| m.tagBytes !== Math.max(1,depth(m.result),depth(m.error),depth(m.terminal))
-			|| (m.delivery && (!wire.wait || !same(m.terminal,step ? shape(step.payload) : taskIO ? "string" : null)
-				|| m.stepDeclaration !== d.source.extensions["lean-bridge.dev/pull-protocol"]?.next))
-			|| m.callbacks)
+			|| (m.delivery && !wire.wait)
+			|| (retained ? m.delivery !== "task" || m.stepDeclaration !== undefined || m.terminal !== undefined
+				: m.delivery && (!same(m.terminal,step ? shape(step.payload) : taskIO ? "string" : null)
+					|| m.stepDeclaration !== d.source.extensions["lean-bridge.dev/pull-protocol"]?.next)))
 			throw new TypeError("CPAN IO wire differs from elaborated declaration: " + m.name);
 	}
 	return methods;
@@ -156,7 +161,7 @@ const loader = (name, version, runtimeVersion, runtime, lib, libHash, api, evide
 		return q(i.module) + " => " + q(i.sourceSha256);
 	}).join(", ");
 	const args = `${q(runtime)}, { ${sources} }, ${q(api.component.id)}, ${q(libHash)}`;
-	return `${modules(name,methods)}${assets ? "\n"+taskModules(name,methods,assets.driver) : ""}
+	return `${modules(name,methods)}${assets ? "\n"+taskModules(name,methods,assets) : ""}
 package ${name};
 use strict;
 use warnings;

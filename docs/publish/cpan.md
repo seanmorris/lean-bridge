@@ -88,6 +88,34 @@ Build and publish the same two CPAN distributions as above. The `native-perl-tas
 
 The compiler checks the task result and cursor protocol against the Lean source on both ordinary and reviewed builds. An `EIO` factory error, an `IO` factory error, a step failure and a returned `Except` occupy different stages. Use `taskIOErrors` only for a selected task that returns `Except IO.Error α` and should fail the future on a terminal IO error. This profile transports copied scalar values and nested `Except` payloads. It does not transport resource handles or retained Perl callbacks.
 
+### Export a task that calls Perl
+
+In `Retained.lean`, declare a worker that requests the same callback twice:
+
+```lean
+namespace Retained
+
+def repeatCall (s : String) (f : String → IO String) : BaseIO (Task (Except IO.Error String)) :=
+  IO.asTask do f (← f s)
+
+end Retained
+```
+
+Select the worker and its terminal `IO.Error` in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Retained"],
+  "exports": ["Retained.repeatCall"],
+  "taskExports": ["Retained.repeatCall"],
+  "taskIOErrors": ["Retained.repeatCall"],
+  "targets": {"cpan": {"module": "LeanBridge::Retained", "version": "0.001"}}
+}
+```
+
+The callback must take one copied primitive and return one copied primitive in `IO`. The compiler checks the argument and reply types; the installed API supplies the worker's callback queue and wakes the Perl loop. The [consumer example](../consume/perl.md#pass-a-callback-to-a-lean-worker) needs neither a polling loop nor an XS wrapper.
+
 ### Export a specialized closure
 
 The native builder accepts the shared [finite specialization configuration](../lean/existing-package.md#export-concrete-specializations). For example, define a generic function in `Library.lean`:

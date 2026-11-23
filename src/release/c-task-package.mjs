@@ -61,7 +61,7 @@ export const buildCTaskPackage = async options => {
 		const resources = api.types.filter(t => t.kind === "resource");
 		const owner = jvm && await compileJvmIOOwner({ app, runtimeRoot, runtimeIdentity, cc: environment.CC ?? "cc", run });
 		const threads = cpp && (!synchronous || resources.length > 0);
-		if(perl && (resources.length || entries.some(retainedTask))) throw new TypeError("Perl resource and retained-callback delivery require their own checked owners");
+		if(perl && resources.length) throw new TypeError("Perl resource delivery requires a checked resource owner");
 		const config = { name: perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet || jvm || perl ? "words" : "gmp" };
 		const callbackHeaders = new Map();
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])

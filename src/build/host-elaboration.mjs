@@ -73,6 +73,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "rubygems" && projectContract.taskExports?.length ? { rubyTaskCallbacks: true } : {})
 		, ...(options.target === "nuget" && projectContract.taskExports?.length ? { dotnetTaskCallbacks: true } : {})
 		, ...(options.target === "maven" && projectContract.taskExports?.length ? { jvmTaskCallbacks: true } : {})
+		, ...(options.target === "cpan" && projectContract.taskExports?.length ? { perlTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []
