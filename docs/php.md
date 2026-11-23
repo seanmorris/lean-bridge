@@ -263,6 +263,38 @@ that ignores cancellation can still hold the underlying Lean object until it
 finishes. Do not infer that a file has closed from cancellation alone. See the
 [installed cross-package checks](evidence/php-task-leases-20261123.json).
 
+#### Close a resource from a worker callback
+
+Closing your PHP handle inside a callback does not invalidate the worker's
+borrow. Here `issue` creates a ticket in one Composer package. A worker in
+another package reads the counter, asks PHP for the new value, and returns
+the same underlying ticket with a new PHP handle.
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__.'/vendor/autoload.php';
+
+use function LeanCounter\issue;
+use function LeanDepot\{count, revisit};
+
+$ticket = issue(40);
+$updated = revisit($ticket, static function (int $before) use ($ticket): int {
+    $ticket->close();
+    return $before + 2;
+})->await();
+try {
+    echo count($updated), PHP_EOL; // 42
+} finally {
+    $updated->close();
+}
+```
+
+If a factory throws a typed error carrying a ticket, `$error->payload` owns a
+handle too. Close that handle when you finish inspecting it. Cancelling the
+operation while its callback is suspended discards a late reply; it does not
+deliver a ticket. See the [installed cross-package checks](evidence/php-retained-resource-loans-20261123.json).
+
 ### Arrays and records
 
 Native Composer packages expose nested `Array` values as consecutive-key PHP

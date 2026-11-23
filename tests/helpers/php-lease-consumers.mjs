@@ -13,9 +13,10 @@ import { runNativeTool as run } from "./native-effect-consumers.mjs";
 import { installPhpIOComponents } from "./php-io-install.mjs";
 import { schedulerPackages, schedulerRepositories } from "./php-task-feed.mjs";
 
-const env = process.env, asyncRoot = env.LEAN_BRIDGE_PHP_TASK_LEASE_CONSUME;
+const env = process.env, retained=env.LEAN_BRIDGE_PHP_RETAINED_LEASE_CONSUME;
+const asyncRoot = retained ?? env.LEAN_BRIDGE_PHP_TASK_LEASE_CONSUME;
 const root = asyncRoot ?? env.LEAN_BRIDGE_PHP_LEASE_CONSUME, syncFixture=resolve("tests/fixtures/php-io-resources");
-const fixture = asyncRoot ? resolve("tests/fixtures/php-task-resources") : syncFixture;
+const fixture = retained ? resolve("tests/fixtures/php-retained-resources") : asyncRoot ? resolve("tests/fixtures/php-task-resources") : syncFixture;
 const json = async f => JSON.parse(await readFile(f,"utf8"));
 test("installed PHP resource identities cross independent packages, not incompatible Lean definitions"
 	, { skip: !root, timeout: 3_600_000 }
@@ -48,7 +49,7 @@ test("installed PHP resource identities cross independent packages, not incompat
 				const ir = await json(join(prefix,"lean-bridge/binding-ir.json"));
 				ledger ??= pin.ledger; assert.deepEqual(ledger,pin.ledger);
 				assert.equal(pin.libraries[ledger.library],ledger.sha256);
-				const keys = Object.fromEntries(ir.types.map(type => [type.name,type.resource.kindId]));
+				const keys = Object.fromEntries(ir.types.filter(type=>type.kind==="resource").map(type => [type.name,type.resource.kindId]));
 				assert.deepEqual(Object.keys(keys).sort(),["Badge","Ticket"]);
 				const data = { receiptSha256, archive: pkg.artifacts[0], runtime: pkg.runtimeIdentity, ledger, keys, bindingIrSha256: pin.bindingIrSha256 };
 				if(releases[r]) assert.deepEqual(releases[r],data); else releases[r] = data;
@@ -71,13 +72,15 @@ test("installed PHP resource identities cross independent packages, not incompat
 				if(asyncRoot)
 				{
 					assert.equal(example,"42");
-					assert.equal(await run(php,[...flags,"shutdown.php"],deploy,isolated),"released worker, stream and file");
+					assert.equal(await run(php,[...flags,"shutdown.php"],deploy,isolated),retained?"released callback, worker and file":"released worker, stream and file");
 				}
 				for(const order of ["depot-first","peer-first"])
 				{
 					const row = JSON.parse(await run(php,[...flags,"installed.php",order],deploy,isolated));
 					assert.equal(row.order,order); assert.deepEqual(row.final,[3,1,3,0]);
-					if(asyncRoot)
+					if(retained)
+					{ assert.equal(row.descriptorDelta,0); assert.equal(row.checks,54); }
+					else if(asyncRoot)
 { assert.equal(row.descriptorDelta,0); assert.equal(row.checks,59); }
 					else
 { assert.equal(typeof row.fork,"boolean"); assert.equal(row.checks,row.fork ? 35 : 34); }

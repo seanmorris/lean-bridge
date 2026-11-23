@@ -10,6 +10,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { validateExportConfiguration } from "../../src/analyze/export-configuration.mjs";
 import { generatePhpIOFiles } from "../../src/backends/php/io-package.mjs";
+import { generatePhpIOPort } from "../../src/backends/php/io-port.mjs";
 import { compilePhpSyncSurface, compilePhpTaskSurface } from "../../src/backends/php/io-surface.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -52,10 +53,37 @@ test("the PHP task loan record covers every release, installed host and load ord
 	const previous=await json("docs/evidence/php-task-delivery-20261123.json");
 	assert.equal(pin.offlineCLI.cliArchiveSha256,previous.offlineCLI.cliArchiveSha256);
 });
-const env=process.env, root=env.LEAN_BRIDGE_PHP_TASK_LEASE_AUDIT;
-test("replay the PHP async resource identity, ownership, installed observations and offline reproduction"
-	,{skip: !root},async()=>{
-	const pin=await json(file), {offlineCLI,...expected}=pin;
+const env=process.env, retainedFile="docs/evidence/php-retained-resource-loans-20261123.json";
+test("a retained PHP callback can close a peer's last handle without losing the borrowed Lean resource",async()=>{
+	const pin=await json(retainedFile), earlier=await json(file),retained="tests/fixtures/php-retained-resources";
+	const snippet=async(path,heading)=>(await readFile(path,"utf8")).split(heading+"\n")[1].match(/\x60{3}\w+\n([\s\S]*?)\x60{3}/u)[1];
+	assert.equal(await snippet("docs/php.md","#### Close a resource from a worker callback"),await readFile(join(retained,"example.php"),"utf8"));
+	const cfg=JSON.parse(await snippet("docs/publish/php.md","#### Let a worker borrow a resource and call PHP"));
+	validateExportConfiguration(cfg); await assertJsonSchema("lean-export-configuration",cfg);
+	assert.deepEqual(cfg.resources,["Shared.Ticket"]); assert.deepEqual(cfg.taskExports,["Exchange.revisit"]); assert.deepEqual(cfg.taskIOErrors,cfg.taskExports);
+	assert.deepEqual(pin.releases.peer,earlier.releases.peer); assert.deepEqual(pin.releases.foreign,earlier.releases.foreign);
+	assert.deepEqual(pin.releases.ordinary.keys,pin.releases.peer.keys); assert.deepEqual(pin.releases.ordinary.keys,pin.releases.reviewed.keys);
+	assert.notEqual(pin.releases.ordinary.keys.Ticket,pin.releases.foreign.keys.Ticket);
+	assert.equal(pin.releases.ordinary.bindingIrSha256,pin.releases.reviewed.bindingIrSha256);
+	assert.notEqual(pin.releases.ordinary.receiptSha256,pin.releases.reviewed.receiptSha256);
+	assert.deepEqual(pin.scheduler,schedulerPackages);
+	assert.deepEqual(Object.keys(pin.sources).sort(),["example.php","installed.php","integrity.php","shutdown.php"]);
+	for(const [f,hash] of Object.entries(pin.sources)) assert.equal(sha256(await readFile(f==="integrity.php"?source(f):join(retained,f))),hash);
+	const cells=pin.reports.map(row=>{
+		assert.ok(row.shutdown && row.modifiedLedgerRefused); assert.equal(row.checks,54);
+		assert.equal(row.descriptorDelta,0); assert.deepEqual(row.final,[3,1,3,0]); return [row.route,row.php,row.order].join("/");
+	});
+	const expected=earlier.reports.map(row=>[row.route,row.php,row.order].join("/"));
+	assert.equal(cells.length,8); assert.deepEqual(cells.sort(),expected.sort());
+	assert.deepEqual(pin.offlineCLI.archive,pin.releases.ordinary.archive); assert.equal(pin.offlineCLI.receiptSha256,pin.releases.ordinary.receiptSha256);
+	assert.equal(pin.offlineCLI.cliArchiveSha256,(await json("docs/evidence/php-retained-tasks-20261123.json")).offlineCLI.cliArchiveSha256);
+});
+for(const retained of [false,true])
+{
+	const root=retained?env.LEAN_BRIDGE_PHP_RETAINED_LEASE_AUDIT:env.LEAN_BRIDGE_PHP_TASK_LEASE_AUDIT;
+	test("replay PHP resource ownership and offline reproduction for "+(retained?"retained worker callbacks":"direct tasks and streams")
+		,{skip: !root},async()=>{
+	const pin=await json(retained?retainedFile:file), {offlineCLI,...expected}=pin;
 	assert.deepEqual(await json(join(root,"installed-php-leases.json")),expected);
 	for(const route of ["ordinary","reviewed","peer","foreign"])
 	{
@@ -74,22 +102,48 @@ test("replay the PHP async resource identity, ownership, installed observations 
 		const files=await generatePhpIOFiles(model,assets);
 		for(const [name,bytes] of Object.entries(files)) assert.equal(bytes,await readFile(join(base,name),"utf8"));
 		if(!task) continue;
+		const port=generatePhpIOPort(model); assert.equal(port.source,await readFile(join(base,"lean-bridge/port.c"),"utf8"));
 		const lease=model.leases.get("lease:"+ref.keys.Ticket.split("/").at(-1)).type;
 		const deliveries=model.methods.filter(m=>m.delivery);
-		assert.deepEqual(deliveries.map(m=>m.name).sort(),["checked","pending","revisit","tickets"]);
+		assert.deepEqual(deliveries.map(m=>m.name).sort(),retained?["lend","revisit"]:["checked","pending","revisit","tickets"]);
+		if(retained)
+		{
+			assert.equal(evidence.selection.phpTaskCallbacks,true);
+			const sourceFiles={Depot: "resource-tasks/Depot.lean",Shared: "resource-tasks/Shared.lean",Exchange: "ruby-task-resources/Exchange.lean",LeaseFactory: "php-retained-resources/LeaseFactory.lean"};
+			for(const [mod,path] of Object.entries(sourceFiles))
+			{
+				const fixture=await readFile(join("tests/fixtures",path));
+				assert.deepEqual(fixture,await readFile(join(root,route,"source",mod+".lean")));
+				assert.equal(evidence.interfaces.find(i=>i.module===mod).sourceSha256,sha256(fixture));
+			}
+		}
 		for(const m of deliveries)
 		{
 			assert.equal(m.result,lease); assert.ok(m.args.includes(lease));
 			const d=api.declarations.find(x=>x.name===m.name);
 			assert.equal(d.result.ownership,"lease"); assert.deepEqual(d.result.lifetime,{scope: "explicit",anchor: null});
 			assert.equal(d.parameters.find(p=>p.type.id==="lean:Shared.Ticket").ownership,"borrow");
+			if(retained)
+			{
+				assert.deepEqual(m.args,[lease,"callback"]); assert.deepEqual(m.callbacks,[[1,"uint32",m.name==="revisit"?"uint32":"bool"]]);
+				const cb=d.parameters[1]; assert.deepEqual(cb.lifetime,{scope: "explicit",anchor: null}); assert.equal(cb.ownership,"lease");
+				assert.deepEqual(api.types.find(t=>t.id===cb.type.id).callable.failure.errors,["error:PhpCallbackException"]);
+			}
 		}
 		const method=n=>model.methods.find(m=>m.name===n);
-		assert.equal(method("checked").error,lease); assert.equal(method("tickets").terminal,lease);
+		if(retained)
+		{
+			assert.equal(method("lend").error,lease);
+			assert.equal(api.errors.find(e=>e.id==="error:EIO.LeaseFactory.lend").payload.id,"lean:Shared.Ticket");
+			assert.deepEqual(api.declarations.find(d=>d.name==="revisit").failure.errors,["error:TaskIO.Error","error:PhpCallbackException"]);
+		}
+		else
+{ assert.equal(method("checked").error,lease); assert.equal(method("tickets").terminal,lease); }
 		assert.equal(method("revisit").terminal,"string");
 	}
-	const rebuilt=env.LEAN_BRIDGE_PHP_TASK_LEASE_REBUILT;
+	const rebuilt=retained?env.LEAN_BRIDGE_PHP_RETAINED_LEASE_REBUILT:env.LEAN_BRIDGE_PHP_TASK_LEASE_REBUILT;
 	const copy=await readVerifiedPackageSetReceipt({receiptPath: join(rebuilt,"handoff/package-set-receipt.json")});
 	assert.equal(copy.result.receiptSha256,offlineCLI.receiptSha256);
-		assert.deepEqual(await json(join(rebuilt,"reproduction.json")),offlineCLI);}
-);
+			assert.deepEqual(await json(join(rebuilt,"reproduction.json")),offlineCLI);}
+	);
+}

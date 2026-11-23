@@ -219,6 +219,30 @@ item, or typed error that returns a ticket produces its own lease. An independen
 synchronous package can accept that ticket if it compiled the same resource
 definition and shares the runtime. See [the consumer example](../php.md#pass-a-resource-to-a-native-php-task).
 
+#### Let a worker borrow a resource and call PHP
+
+Select the borrowed resource and the worker in the same export configuration.
+In this example, `Exchange.revisit` accepts a `Shared.Ticket` and a
+`UInt32 → IO UInt32` callback, then returns a task with either an IO error or
+the ticket. PHP receives the counter value; the worker retains the ticket.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Depot", "Exchange"],
+  "exports": ["Depot.make", "Depot.count", "Exchange.revisit"],
+  "resources": ["Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
+  "taskExports": ["Exchange.revisit"],
+  "taskIOErrors": ["Exchange.revisit"],
+  "targets": {"php-native": {"name": "lean-bridge/depot", "version": "1.0.0"}}
+}
+```
+
+The filesystem effect here belongs to the ticket constructor. A peer package
+can supply the ticket when both packages use the same compiled definition and
+runtime. See [closing the caller's handle inside the callback](../php.md#close-a-resource-from-a-worker-callback).
+
 ### Export resource-containing values
 
 For native PHP or PHP-Wasm, declare resources and aggregate ownership explicitly. In a Lake

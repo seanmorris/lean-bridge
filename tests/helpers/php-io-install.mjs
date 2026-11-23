@@ -44,8 +44,10 @@ export const installPhpIOComponents = async (stage,local,deploy,handoffs,schedul
 	const require = Object.fromEntries(pkgs.map(p => [p.name, p.version]));
 	await writeFile(join(local,"composer.json"), canonicalJson({ name: "test/consumer", require, repositories }));
 	const composer = env.LEAN_BRIDGE_COMPOSER ?? "composer";
-	const offline = { ...env, COMPOSER_DISABLE_NETWORK: "1", COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_HOME: join(stage,"home"), COMPOSER_CACHE_DIR: join(stage,"cache") };
-	await run(composer, ["--no-plugins","--no-scripts","--no-interaction","install","--prefer-dist"],local,offline);
+	// These distributions are already local, checksum-verified ZIPs. A second
+	// cache of embedded runtimes only consumes disk in a disposable install.
+	const offline = { ...env, COMPOSER_DISABLE_NETWORK: "1", COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_HOME: join(stage,"home"), COMPOSER_MAX_PARALLEL_PROCESSES: "1" };
+	await run(composer, ["--no-cache","--no-plugins","--no-scripts","--no-interaction","install","--prefer-dist"],local,offline);
 	await rename(local, deploy); const vendor = join(deploy,"vendor");
 	const lock = await load(join(deploy,"composer.lock"));
 	assert.deepEqual(lock.packages.map(p => p.name).sort(), ["brick/math", ...pkgs.map(p => p.name), ...scheduler.map(r=>r.package.name)].sort());

@@ -13,7 +13,8 @@ import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 
-const env = { ...process.env, LEAN_NUM_THREADS: "1" }, asyncRoot = env.LEAN_BRIDGE_PHP_TASK_LEASE_BUILD;
+const env = { ...process.env, LEAN_NUM_THREADS: "1" }, retained = env.LEAN_BRIDGE_PHP_RETAINED_LEASE_BUILD;
+const asyncRoot = retained ?? env.LEAN_BRIDGE_PHP_TASK_LEASE_BUILD;
 const root = asyncRoot ?? env.LEAN_BRIDGE_PHP_LEASE_BUILD;
 const load = async file => JSON.parse(await readFile(file,"utf8"));
 const fx = resolve("tests/fixtures"), shared = join(fx,"resource-tasks");
@@ -38,9 +39,15 @@ test("compile installed PHP resource owners from independent ordinary, reviewed 
 		let exports;
 		if(depot)
 		{
-			await copy(join(shared,"Depot.lean"),"Depot.lean"); await copy(join(fx,"php-io-resources/Exchange.lean"),"Exchange.lean");
-			exports = ["Depot.make","Depot.alias","Depot.add","Depot.badge","Depot.count","Exchange.choose"];
-			if(asyncRoot)
+			await copy(join(shared,"Depot.lean"),"Depot.lean");
+			await copy(join(fx,retained?"ruby-task-resources/Exchange.lean":"php-io-resources/Exchange.lean"),"Exchange.lean");
+			exports = ["Depot.make","Depot.alias","Depot.add","Depot.badge","Depot.count",retained?"Exchange.revisit":"Exchange.choose"];
+			if(retained)
+			{
+				await copy(join(fx,"php-retained-resources/LeaseFactory.lean"),"LeaseFactory.lean");
+				modules.push("LeaseFactory"); exports.push("LeaseFactory.lend");
+			}
+			else if(asyncRoot)
 			{
 				await copy(join(fx,"php-task-resources/AsyncExchange.lean"),"AsyncExchange.lean");
 				modules.push("AsyncExchange");
@@ -59,7 +66,8 @@ test("compile installed PHP resource owners from independent ordinary, reviewed 
 		}
 		await save("lakefile.toml",'name="'+mod.toLowerCase()+'"\nversion="1.0.0"\n'+["Shared",...modules].map(n => '[[lean_lib]]\nname="'+n+'"\n').join(""));
 		const cfg = { schemaVersion: 1, modules, exports, resources: ["Shared.Badge","Shared.Ticket"], nativeEffects: ["filesystem"], targets: { "php-native": { name, version: "1.0.0" } } };
-		if(asyncRoot) Object.assign(cfg,{taskExports: ["AsyncExchange.revisit","Depot.pending","Depot.checked"],taskIOErrors: ["AsyncExchange.revisit"],asyncIterators: [{open: "Depot.tickets",next: "Depot.next",close: "Depot.close"}]});
+		if(retained) Object.assign(cfg,{taskExports: ["Exchange.revisit","LeaseFactory.lend"],taskIOErrors: ["Exchange.revisit"]});
+		else if(asyncRoot) Object.assign(cfg,{taskExports: ["AsyncExchange.revisit","Depot.pending","Depot.checked"],taskIOErrors: ["AsyncExchange.revisit"],asyncIterators: [{open: "Depot.tickets",next: "Depot.next",close: "Depot.close"}]});
 		if(route === "reviewed")
 		{
 			delete cfg.exports; await copy(resolve(root,"ordinary/handoff/binding-ir.json"),"public.binding-ir.json");
