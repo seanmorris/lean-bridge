@@ -290,6 +290,10 @@ export class PendingOperationRegistry
 	settle(token, outcome, value)
 	{
 		const { entry, slot } = this.requirePending(token);
+		// Cancellation, lease cleanup and transition observers may all call
+		// back synchronously. Claim the outcome before notifying any of them,
+		// without making the slot available to another operation yet.
+		entry.state = "settling";
 		const resolvePromise = entry.resolvePromise;
 		const rejectPromise = entry.rejectPromise;
 		const cleanupFailures = [];
@@ -378,12 +382,11 @@ export class PendingOperationRegistry
    */
 	shutdown(reason = "the runtime shut down before the operation settled")
 	{
-		if(this.state === "closed") return false;
+		if(this.state !== "open") return false;
 		this.state = "closing";
-		const tokens = this.slots
-      .filter(entry => entry.state === "pending")
-      .map(entry => entry.token);
-		for(const token of tokens) this.cancel(token, reason);
+		// No new entry can start while closing. An earlier cancellation hook
+		// may already have settled a later sibling; inspect each slot in turn.
+		for(const entry of this.slots) if(entry.state === "pending") this.cancel(entry.token, reason);
 		this.state = "closed";
 		this.epoch += 1;
 		return true;
