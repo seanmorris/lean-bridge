@@ -1,0 +1,18 @@
+use v5.36;
+use Config;
+use Scalar::Util qw(weaken);
+use LeanBridge::Depot;
+die 'probe requires a threaded Perl' unless $Config{useithreads};
+require threads;
+my $a=LeanBridge::Depot::make(3,'weak-refs');
+my $b=LeanBridge::Depot::checked(!!0,$a)->get;
+die 'not the same resource' unless $a->same_resource($b);
+$a->close;
+my ($w1,$w2)=($b,$b); weaken($_) for ($w1,$w2);
+my $refused=threads->create(sub { !eval { $b->close; 1 } })->join;
+die 'foreign interpreter disposed the parent resource' unless $refused;
+die 'parent resource changed' unless LeanBridge::Depot::count($b)==3;
+$b->close; undef $b;
+die 'uncleared weak observers' if defined($w1)||defined($w2);
+die 'unreleased broker identity' if LeanBridge::Runtime::_snapshot()->{live_identities};
+say 'parent owner survived';

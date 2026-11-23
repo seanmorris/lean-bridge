@@ -137,6 +137,25 @@ To stop accepting calls before a task settles, create a `LeanBridge::Retained::R
 
 The [installed worker-callback checks](../evidence/perl-retained-workers-20261123.json) cover both package load orders, callback failures, cancellation during a reply, and runtime shutdown with a queued request. They run on threaded and unthreaded Perl 5.36.3 and 5.38.2.
 
+### Receive a resource from a task or stream
+
+The [Depot package](../publish/cpan.md#export-resource-bearing-tasks-and-streams) returns a ticket that owns a Lean object. A task can return another handle to that same object. Save this as `ticket.pl`:
+
+```perl
+use v5.36;
+use LeanBridge::Depot;
+
+my $ticket = LeanBridge::Depot::make(42, 'delivery');
+my $item = LeanBridge::Depot::checked(!!0, $ticket)->get;
+$ticket->close;
+say LeanBridge::Depot::count($item);  # 42
+$item->close;
+```
+
+Run `perl ticket.pl`. It prints `42` because closing the input releases only that handle. Use `$item->same_resource($other)` to compare two live handles of the same kind. To release an item from a cursor, close the item itself; closing the cursor ends the stream but leaves items already delivered to you usable. A typed `EIO` or stream-step error can also own a resource: use `$error->payload` and close that handle when you're done.
+
+Keep handles on their original process and Perl interpreter thread. Compatible packages load the shared runtime themselves; pass the object directly without converting it to a pointer or ID. The [installed resource checks](../evidence/perl-lease-delivery-20261123.json) pass tickets through three independently built packages, reject a fourth with a different layout, and check that the file behind a ticket closes after the last owner releases it.
+
 ### Options, results and products
 
 `Option` uses `undef` for None and the generated `Some->new($value)` for Some. Unit also uses `undef`: `Some->new(undef)` preserves a present Unit or an outer Some containing an inner None, according to the declared type. Nested options keep every layer.

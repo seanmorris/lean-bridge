@@ -18,6 +18,7 @@ import { readOwnedPerlGmp } from "../build/owned-perl-artifacts.mjs";
 import { verifyOwnedCpanTransfers } from "./owned-cpan-contract.mjs";
 import { preparePerlIOFiles, renderPerlIOBuild, verifyPerlIOFiles } from "../backends/perl/sync-io.mjs";
 import { perlTaskAssets } from "../backends/perl/task-xs.mjs";
+import { taskResourceLedger } from "../build/task-resource-ledger.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const templates = join(root, "src/backends/perl");
@@ -103,6 +104,8 @@ export const readVerifiedCpanPackage = async packageRoot => {
 		if(Boolean(io) !== ioPayload || Boolean(manifest.taskDelivery)!==files.has("task-wire.h") || (manifest.syncIO && manifest.taskDelivery))
 			throw new Error("CPAN IO manifest and payload select different profiles");
 		if(io) verifyPerlIOFiles(manifest, files, await readFile(join(templates, "Build.pm"), "utf8"), await readFile(join(templates, "sync-wire.h")),manifest.taskDelivery ? await perlTaskAssets() : null);
+		if(io?.resourceLedger && io.resourceLedger.id !== (await taskResourceLedger(manifest.nativeRuntimeIdentity)).id)
+			throw new Error("CPAN resource ledger identity differs from the native runtime and ledger sources");
 		if(manifest.ownedValues?.schemaVersion === 5)
 		{
 			const installer = renderOwnedPerlCallbackBuild(
@@ -268,7 +271,7 @@ export const stageCpanPackage = async ({ outputRoot
 	}
 	const taskDelivery = ioContract?.profile === "native-perl-task-v1";
 	if(ioContract)
-		await save(join(directory, "LeanBridgeBuild.pm"), renderPerlIOBuild(await readFile(join(templates, "Build.pm"), "utf8"), moduleName, ioContract.library, taskDelivery));
+		await save(join(directory, "LeanBridgeBuild.pm"), renderPerlIOBuild(await readFile(join(templates, "Build.pm"), "utf8"), moduleName, ioContract.library, taskDelivery, ioContract.resourceLedger));
 	else if(callbackModel)
 		await save(join(directory, "LeanBridgeBuild.pm"), renderOwnedPerlCallbackBuild(
 			await readFile(join(templates, "Build.pm"), "utf8")

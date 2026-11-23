@@ -30,6 +30,7 @@ typedef struct lbp_handle {
   uint64_t token;
   PerlInterpreter *interpreter;
   int leased;
+  int independent;
 } lbp_handle;
 
 void lbp_check_interpreter(pTHX) {
@@ -112,8 +113,10 @@ static void lbp_handle_close(pTHX_ lbp_handle *handle) {
     return;
   }
   if (handle->interpreter != LBP_CONTEXT) croak("wrong Perl interpreter for Lean resource");
-  char key[32]; int size = snprintf(key, sizeof(key), "%" PRIu64, handle->token);
-  hv_delete(lbp_wrappers(aTHX), key, size, G_DISCARD);
+  if (!handle->independent) {
+    char key[32]; int size = snprintf(key, sizeof(key), "%" PRIu64, handle->token);
+    hv_delete(lbp_wrappers(aTHX), key, size, G_DISCARD);
+  }
   lean_bridge_native_identity_release(handle->token, handle->kind, handle->object);
   lean_dec(handle->object); handle->object = NULL;
   --lbp_live_wrappers;
@@ -127,11 +130,33 @@ static int lbp_handle_free(pTHX_ SV *sv, MAGIC *magic) {
   }
   return 0;
 }
-static MGVTBL lbp_handle_magic = { .svt_free = lbp_handle_free };
+/* CLONE_SKIP on the public referent breaks Perl's weak backreferences when
+   two or more observers survive a thread clone. Clone the Perl shell, never
+   the native owner: a child must not borrow, release or free its parent's
+   handle. Its inert magic also makes destruction safe without calling Lean. */
+#ifdef USE_ITHREADS
+static int lbp_handle_dup(pTHX_ MAGIC *magic, CLONE_PARAMS *params) {
+  (void)params; magic->mg_ptr = NULL; magic->mg_len = 0; return 0;
+}
+#endif
+static MGVTBL lbp_handle_magic = {
+  .svt_free = lbp_handle_free,
+#ifdef USE_ITHREADS
+  .svt_dup = lbp_handle_dup,
+#endif
+};
+static MAGIC *lbp_attach_handle(pTHX_ SV *rv, lbp_handle *handle) {
+  MAGIC *magic = sv_magicext(SvRV(rv), NULL, PERL_MAGIC_ext, &lbp_handle_magic, NULL, 0);
+  magic->mg_ptr = (char *)handle;
+#ifdef USE_ITHREADS
+  magic->mg_flags |= MGf_DUP;
+#endif
+  return magic;
+}
 static lbp_handle *lbp_get_handle(pTHX_ SV *value) {
   lbp_check_interpreter(aTHX);
   if (!SvROK(value)) croak("expected a generated Lean resource object");
-  MAGIC *magic = mg_findext(SvRV(value), PERL_MAGIC_ext, &lbp_handle_magic);
+  MAGIC *magic = SvMAGICAL(SvRV(value)) ? mg_findext(SvRV(value), PERL_MAGIC_ext, &lbp_handle_magic) : NULL;
   if (!magic || !magic->mg_ptr) croak("invalid or foreign Lean resource object");
   lbp_handle *handle = (lbp_handle *)magic->mg_ptr;
   if (handle->interpreter != LBP_CONTEXT) croak("wrong Perl interpreter for Lean resource");
@@ -158,7 +183,7 @@ static SV *lbp_wrap_resource(pTHX_ lean_object *object, const char *kind, const 
   handle->leased = lease;
   lean_inc(object);
   SV *rv = lbp_mortal(newRV_noinc((SV *)newHV()));
-  sv_magicext(SvRV(rv), NULL, PERL_MAGIC_ext, &lbp_handle_magic, (char *)handle, 0);
+  lbp_attach_handle(aTHX_ rv, handle);
   sv_bless(rv, gv_stashpv(package, GV_ADD));
   SV *weak = newSVsv(rv); sv_rvweaken(weak); hv_store(wrappers, key, size, weak, 0);
   ++lbp_live_wrappers;
@@ -172,6 +197,24 @@ static SV *lbp_wrap_resource(pTHX_ lean_object *object, const char *kind, const 
 }
 SV *lbp_resource(pTHX_ lean_object *object, const char *kind, const char *package) {
   return lbp_wrap_resource(aTHX_ object, kind, package, 1);
+}
+SV *lbp_independent_resource(pTHX_ lean_object *object, const char *kind, const char *package) {
+  lbp_check_interpreter(aTHX);
+  if (!object || lean_is_scalar(object) || strncmp(kind, "lean:", 5))
+    croak("expected a checked heap resource");
+  /* Attach rollback to a mortal before acquiring either the broker identity
+     or a Lean reference. Do not publish this owner in the weak intern table. */
+  SV *rv = lbp_mortal(newRV_noinc((SV *)newHV()));
+  sv_bless(rv, gv_stashpv(package, GV_ADD));
+  MAGIC *magic = lbp_attach_handle(aTHX_ rv, NULL);
+  lbp_handle *handle; Newxz(handle, 1, lbp_handle); magic->mg_ptr = (char *)handle;
+  handle->kind = savepv(kind); handle->interpreter = LBP_CONTEXT;
+  handle->token = lean_bridge_native_identity_acquire(kind, object);
+  if (!handle->token) croak("native resource identity capacity exceeded");
+  lean_inc(object);
+  handle->object = object; handle->leased = 1; handle->independent = 1;
+  ++lbp_live_wrappers;
+  return rv;
 }
 SV *lbp_borrowed_resource(pTHX_ lean_object *object, const char *kind, const char *package) {
   return lbp_wrap_resource(aTHX_ object, kind, package, 0);
@@ -298,6 +341,16 @@ _snapshot(...)
     XPUSHs(sv_2mortal(newRV_noinc((SV *)out)));
 
 MODULE = LeanBridge::Runtime    PACKAGE = LeanBridge::Runtime::Resource
+
+void
+same_resource(value, other)
+    SV *value
+    SV *other
+  PPCODE:
+    lbp_handle *a = lbp_get_handle(aTHX_ value), *b = lbp_get_handle(aTHX_ other);
+    if (!a->object || !b->object) croak("Lean resource is closed");
+    if (strncmp(a->kind, "lean:", 5) || strcmp(a->kind, b->kind)) croak("wrong Lean resource type");
+    XPUSHs(boolSV(a->object == b->object));
 
 void
 close(value)

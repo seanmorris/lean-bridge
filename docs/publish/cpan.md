@@ -86,7 +86,7 @@ Use `taskExports` for functions returning an actual Lean `Task` (directly or ins
 
 Build and publish the same two CPAN distributions as above. The `native-perl-task-v1` component adds `Future` and `IO::Async::Loop` to its runtime prerequisites; the shared runtime archive does not change. A synchronous companion such as `Pulse.release` stays synchronous. The [Perl consumer example](../consume/perl.md#wait-for-a-task-or-read-a-stream) calls the installed package.
 
-The compiler checks the task result and cursor protocol against the Lean source on both ordinary and reviewed builds. An `EIO` factory error, an `IO` factory error, a step failure and a returned `Except` occupy different stages. Use `taskIOErrors` only for a selected task that returns `Except IO.Error α` and should fail the future on a terminal IO error. This profile transports copied scalar values and nested `Except` payloads. It does not transport resource handles or retained Perl callbacks.
+The compiler checks the task result and cursor protocol against the Lean source on both ordinary and reviewed builds. An `EIO` factory error, an `IO` factory error, a step failure and a returned `Except` occupy different stages. Use `taskIOErrors` only for a selected task that returns `Except IO.Error α` and should fail the future on a terminal IO error. For a worker that needs to call Perl, [export its callback](#export-a-task-that-calls-perl). For a worker or stream that passes a Lean object by identity, select its resource type as shown below.
 
 ### Export a task that calls Perl
 
@@ -115,6 +115,25 @@ Select the worker and its terminal `IO.Error` in `lean-bridge.exports.json`:
 ```
 
 The callback must take one copied primitive and return one copied primitive in `IO`. The compiler checks the argument and reply types; the installed API supplies the worker's callback queue and wakes the Perl loop. The [consumer example](../consume/perl.md#pass-a-callback-to-a-lean-worker) needs neither a polling loop nor an XS wrapper.
+
+### Export resource-bearing tasks and streams
+
+In the [Depot source](../../tests/fixtures/resource-tasks/Depot.lean), `checked` returns `EIO Ticket (Task Ticket)`. Both a successful result and a declared failure carry a ticket. Identify the [shared type](../../tests/fixtures/resource-tasks/Shared.lean) by its full Lean name:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Depot"],
+  "resources": ["Shared.Ticket"],
+  "exports": ["Depot.make", "Depot.count", "Depot.checked", "Depot.tickets"],
+  "taskExports": ["Depot.checked"],
+  "asyncIterators": [{"open": "Depot.tickets", "next": "Depot.next", "close": "Depot.close"}],
+  "nativeEffects": ["filesystem"],
+  "targets": {"cpan": {"module": "LeanBridge::Depot", "version": "0.001"}}
+}
+```
+
+`Depot.make` opens a file, hence the filesystem grant. `make` and `count` stay synchronous, `checked` returns a future, and `tickets` returns a demand-driven cursor. To share tickets with another component, import the same `Shared` definition and select `Shared.Ticket` there too. The declaring module, its application dependencies and the Lean compiler must agree. Build and publish the two CPAN distributions as usual; the [Perl consumer](../consume/perl.md#receive-a-resource-from-a-task-or-stream) needs no separate resource runtime. The [four-ABI build record](../evidence/perl-lease-delivery-20261123.json) includes a byte-for-byte rebuild by an offline-installed CLI.
 
 ### Export a specialized closure
 

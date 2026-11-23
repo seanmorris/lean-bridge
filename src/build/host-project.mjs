@@ -103,8 +103,6 @@ export const buildHostProject = async options => {
 		: target === "pypi" && component.version === "0.0.0-local" ? "0.0.0+local" : component.version);
 	(target === "cpan" ? validatePerlIOSettings : target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : target === "rubygems" ? validateOrdinaryRubySettings : target === "nuget" ? validateOrdinaryNugetSettings : target === "maven" ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
 	const contract = await captureContracts(project, inventory);
-	if(target === "cpan" && contract.leanResources.length)
-		fail("Direct Perl task or IO resources require a checked shared lease projection");
 	if(inventory.project.toolchain !== "leanprover/lean4:v4.32.2") fail("Host source and runtime require the same pinned Lean toolchain");
 	if(!inventory.project.lakefile) fail("Host imports require a Lake package so each module has a checked owner");
 	const leanPrefix = resolve(environment.LEAN_BRIDGE_LEAN_PREFIX ?? (await processBuildRunner.capture({

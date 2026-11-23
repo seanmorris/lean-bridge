@@ -8,6 +8,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { identifyLeanInterface } from "../analyze/elaborated-metadata.mjs";
+import { heapResourceIdentities } from "../analyze/heap-resource-identity.mjs";
 import { pythonHostSelection, reconcileHostExports } from "../analyze/host-export-model.mjs";
 import { nativeEffectPolicy } from "../analyze/native-host-effects.mjs";
 import { generatePythonHostProvider } from "../backends/python/host-provider.mjs";
@@ -94,24 +95,15 @@ export const compileHostSources = async options => {
 	// Independent packages may exchange this type only if the declaring module,
 	// its entire application import closure and the Lean compiler agree. Do not
 	// include unrelated component entry points or private staging paths.
-	const family = n => {
-		const seen = new Set();
-		const visit = name => {
-			const f = built.get(name);
-			if(!f) fail("unknown resource owner module");
-			if(seen.has(name)) return;
-			seen.add(name); for(const dep of f.imports) visit(dep);
-		};
-		visit(n);
-		return [...seen].sort().map(module => ({ module, sourceSha256: built.get(module).sourceSha256 }));
-	};
-	const owned = (metadata.leanResources ?? []).map(r => ({ ...r
-		, identity: sha256(canonicalJson({ abi: "lean-bridge/heap-resource-v1", declaration: r.declaration, compilerSha256, modules: family(r.module) })) }));
+	const resources = metadata.leanResources ?? [];
+	const resourceImports = resources.length ? Object.fromEntries([...built].map(([name,f])=>[name,[...f.imports].sort()])) : null;
+	const owned = resources.length ? heapResourceIdentities({ compilerSha256, interfaces, resourceImports, resources }) : [];
 	const { entries, api } = reconcileHostExports({ ir, metadata, selection, component: projectContract.component, review: projectContract.review, owned });
 	if(sha256(await readFile(lean)) !== compilerSha256 || sha256(await readFile(extractor)) !== extractorSha256
 		|| await readFile(request, "utf8") !== canonicalJson(selection)) fail("host inspector or its invocation changed");
 	const evidence = {
 		selection, compilerSha256, extractorSha256, interfaces, metadata
+		, ...(options.target === "cpan" && owned.length ? { resourceImports } : {})
 		, sourceTreeSha256: projectContract.sourceTreeSha256
 		, configurationSha256: projectContract.configurationSha256
 		, lake: projectContract.lake ?? null

@@ -11,6 +11,8 @@ import { generateSyncWire } from "../c/sync-wire.mjs";
 import { perlStringLiteral as q, projectPerlNames } from "./naming.mjs";
 import { perlTaskAssets, taskDeclarations, taskModules, taskXs } from "./task-xs.mjs";
 import { retainedArguments } from "./retained-xs.mjs";
+import { heapResourceIdentities } from "../../analyze/heap-resource-identity.mjs";
+import { perlLeaseModules, perlLeaseXs, perlResourceKinds } from "./io-resources.mjs";
 
 const digest = s => /^[a-f0-9]{64}$/u.test(s);
 const libraryFor = name => "liblbc_perl_" + sha256(name) + ".so";
@@ -26,9 +28,11 @@ const certified = (name, api, evidence) => {
 	if((!evidence.selection?.synchronousIO && !tasks) || !digest(evidence.compilerSha256) || !digest(evidence.extractorSha256)
 		|| !digest(evidence.sourceTreeSha256) || !digest(evidence.configurationSha256) || !evidence.interfaces?.length
 		|| evidence.hostImportsSourceSha256 !== null) throw new TypeError("Missing standalone Perl IO elaboration");
-	const reviewed = reconcileHostExports({ ...evidence, component: api.component, ir: null, review: { source: canonicalJson(api) } });
+	const resources=evidence.metadata.leanResources??[];
+	const owned=resources.length?heapResourceIdentities({...evidence,resources}):[];
+	const reviewed = reconcileHostExports({ ...evidence, owned, component: api.component, ir: null, review: { source: canonicalJson(api) } });
 	if(!same(reviewed.api,api)) throw new TypeError("Perl IO API differs from source evidence");
-	return generateSyncWire("lbc_perl_" + sha256(name),reviewed.entries,{ tasks });
+	return generateSyncWire("lbc_perl_" + sha256(name),reviewed.entries,{ tasks, resources: api.types.filter(t=>t.kind==="resource") });
 };
 const hook = (source, needle, replacement) => {
 	if(source.split(needle).length !== 2) throw new TypeError("Missing or ambiguous CPAN installer hook");
@@ -54,11 +58,14 @@ export const validatePerlIOSettings = ({ name, version }) => {
  * @param name - Validated Perl namespace.
  * @param library - Exact component SONAME.
  * @param tasks - Install the Perl event-loop dependency only for task/cursor packages.
+ * @param ledger - Optional source-addressed resource library linked by the XS.
  */
-export const renderPerlIOBuild = (base, name, library, tasks = false) => {
+export const renderPerlIOBuild = (base, name, library, tasks = false, ledger = null) => {
 	projectPerlNames(name, []); if(library !== libraryFor(name)) throw new TypeError("Invalid CPAN IO library");
 	const dir = name.replaceAll("::", "/"), tag = "my @link_flags = ('-Wl,--build-id=none');";
-	let s = hook(base, tag, tag + `\n  push @link_flags, '-L', 'lib/${dir}/native', '-l:${library}';`);
+	if(ledger && (!digest(ledger.id) || ledger.library !== "liblb_task_resources_"+ledger.id+".so" || !digest(ledger.sha256)))
+		throw new TypeError("Invalid CPAN resource ledger library");
+	let s = hook(base, tag, tag + `\n  push @link_flags, '-L', 'lib/${dir}/native', '-l:${library}'${ledger?", '-l:"+ledger.library+"'":""};`);
 	const field = tasks ? "taskDelivery" : "syncIO";
 	s = hook(s, "if owned_values($manifest);", "if $manifest->{"+field+"};");
 	s = hook(s, "return unless owned_values($manifest);", "return unless $manifest->{"+field+"};");
@@ -85,10 +92,17 @@ const value = (t, ns, i = 0) => {
 	const b = t.endsWith("size") ? "64" : t.match(/\d+/u)[0];
 	return t.startsWith("u") ? "sv_2mortal(newSVuv(out[0]))" : `sv_2mortal(newSViv((int${b}_t)out[0]))`;
 };
-const verify = (api, wire, ns) => {
+const verify = (api, wire, ns, kinds) => {
 	const methods = projectPerlNames(ns, wire.methods);
 	const stem = "lbwire_lbc_perl_" + sha256(ns) + "_v1";
-	if(wire.clear !== stem + "_clear" || wire.leases || !methods.length || api.declarations.length !== methods.length) throw new TypeError("Invalid CPAN IO wire");
+	if(wire.clear !== stem + "_clear" || !methods.length || api.declarations.length !== methods.length) throw new TypeError("Invalid CPAN IO wire");
+	const byId=new Map([...kinds.values()].map(r=>[r.id,r.wire]));
+	const type=t=>byId.get(t?.id)??shape(t);
+	const site=(p,raw,argument)=>{
+		const expected=byId.get(p?.type?.id);
+		if(!expected) return !kinds.has(raw);
+		return raw===expected && p.ownership===(argument?"borrow":"lease") && p.lifetime?.scope===(argument?"call":"explicit") && p.lifetime.anchor===null;
+	};
 	for(const [i,m] of methods.entries())
 	{
 		const d = api.declarations.find(d => d.name === m.name), e = m.effect;
@@ -106,18 +120,19 @@ const verify = (api, wire, ns) => {
 		if(!d || d.source.declaration !== m.declaration || !/^[a-z][a-z0-9_]*$/u.test(m.name) || m.name !== m.publicName
 			|| ["import", "unimport", "isa", "can", "version", "does"].includes(m.name) || m.symbol !== stem + "_" + i
 			|| !["pure", "IO", "BaseIO", "EIO"].includes(e) || d.source.extensions["lean-lang.org/effect"] !== e || d.resultMode !== mode
-			|| !same(d.failure.errors, ids) || !same(retained ? retainedArguments(api,d,m,shape) : d.parameters.map(p => shape(p.type)), m.args) || m.args.some(Array.isArray)
-			|| !same(shape(d.result.type), m.result) || !same(e === "EIO" ? shape(a?.payload) : e === "IO" && !retained ? "string" : null, m.error)
+			|| !same(d.failure.errors, ids) || !same(retained ? retainedArguments(api,d,m,type) : d.parameters.map(p => type(p.type)), m.args) || m.args.some(Array.isArray)
+			|| !m.args.every((raw,j)=>site(d.parameters[j],raw,true)) || !site(d.result,m.result,false)
+			|| !same(type(d.result.type), m.result) || !same(e === "EIO" ? type(a?.payload) : e === "IO" && !retained ? "string" : null, m.error)
 			|| m.tagBytes !== Math.max(1,depth(m.result),depth(m.error),depth(m.terminal))
 			|| (m.delivery && !wire.wait)
 			|| (retained ? m.delivery !== "task" || m.stepDeclaration !== undefined || m.terminal !== undefined
-				: m.delivery && (!same(m.terminal,step ? shape(step.payload) : taskIO ? "string" : null)
+				: m.delivery && (!same(m.terminal,step ? type(step.payload) : taskIO ? "string" : null)
 					|| m.stepDeclaration !== d.source.extensions["lean-bridge.dev/pull-protocol"]?.next)))
 			throw new TypeError("CPAN IO wire differs from elaborated declaration: " + m.name);
 	}
 	return methods;
 };
-const xs = (m, ns) => {
+const xs = (m, ns, input, value) => {
 	const args = m.args.map((_,i) => "v" + i);
 	const errorClass = m.effect === "EIO" ? "Error::" + m.name : "IOError";
 	const failure = m.error ? `\n    if (status == ${m.effect === "EIO" ? 3 : 4}) croak_sv(lbs_failure(aTHX_ "${ns}::${errorClass}",${JSON.stringify(m.declaration)},${value(m.error,ns)}));` : "";
@@ -154,14 +169,14 @@ sub new { die "Expected one payload\\n" unless @_ == 2; bless {value => $_[1]}, 
 sub value { $_[0]->{value} }`).join("\n");
 };
 
-const loader = (name, version, runtimeVersion, runtime, lib, libHash, api, evidence, methods, assets = null) => {
+const loader = (name, version, runtimeVersion, runtime, lib, libHash, api, evidence, methods, assets, kinds, ledger) => {
 	const relative = name.replaceAll("::","/"), stem = name.split("::").at(-1);
 	const sources = evidence.interfaces.map(i => {
 		if(!digest(i.sourceSha256)) throw new TypeError("Unverified Perl component source");
 		return q(i.module) + " => " + q(i.sourceSha256);
 	}).join(", ");
 	const args = `${q(runtime)}, { ${sources} }, ${q(api.component.id)}, ${q(libHash)}`;
-	return `${modules(name,methods)}${assets ? "\n"+taskModules(name,methods,assets) : ""}
+	return `${modules(name,methods)}${perlLeaseModules(kinds,name)}${assets ? "\n"+taskModules(name,methods,assets) : ""}
 package ${name};
 use strict;
 use warnings;
@@ -184,7 +199,7 @@ for my $dir ($base,@INC) {
   if (-f $candidate) { $xs = Cwd::abs_path($candidate); last; }
 }
 die "Cannot locate installed Perl IO XS\\n" unless defined $xs;
-my $paths = LeanBridge::Runtime::OwnedAssets::load([
+my $paths = LeanBridge::Runtime::OwnedAssets::load([${ledger?`\n  { path => "$root/native/${ledger.library}", soname => '${ledger.library}', sha256 => '${ledger.sha256}' },`:""}
   { path => "$root/native/${lib}", soname => '${lib}', sha256 => '${libHash}' },
   { path => $xs, sha256 => '__LEAN_BRIDGE_OWNED_XS_SHA256__' }
 ]);
@@ -215,15 +230,19 @@ is an Ok or Err object with a C<value> method, not an exception.
 `;
 };
 
-const xsSource = (wire, methods, name) => `#include "sync-wire.h"
+const xsSource = (wire, methods, name, kinds) => {
+	const encode=(t,i)=>kinds.has(t)?`lbs_in_${kinds.get(t).index}(aTHX_ v${i},a+${i*3});`:input(t,i);
+	const decode=(t,ns)=>kinds.has(t)?`lbs_out_${kinds.get(t).index}(aTHX_ out)`:value(t,ns);
+	return `#include "sync-wire.h"
 extern void ${wire.clear}(uint64_t *);
-static void lbs_clear(pTHX_ void *frame) { ${wire.clear}((uint64_t *)frame); Safefree(frame); }
+static void lbs_clear(pTHX_ void *frame) { ${wire.clear}((uint64_t *)frame); Safefree(frame); }${kinds.size?"\n"+perlLeaseXs(kinds,name):""}
 ${methods.filter(m=>!m.delivery).map(m => `extern int ${m.symbol}(const uint64_t *, uint64_t *, uint8_t *);`).join("\n")}${wire.wait?"\n"+taskDeclarations(wire):""}
 
 MODULE = ${name}    PACKAGE = ${name}
 PROTOTYPES: DISABLE
 
-${methods.map((m,i) => m.delivery ? taskXs(m,name,i,input,value) : xs(m,name)).join("\n")}`;
+${methods.map((m,i) => m.delivery ? taskXs(m,name,i,encode,decode) : xs(m,name,encode,decode)).join("\n")}`;
+};
 
 /**
  * Produce Perl source and a build receipt from an already checked native component.
@@ -238,22 +257,27 @@ export const preparePerlIOFiles = async (o, pins) => {
 	if(!native || "lib" + o.prefix + ".so" !== library || !digest(o.componentIdentity) || !digest(runtimeIdentity)
 		|| hashBindingIr(api) !== o.bindingIrSha256 || !evidence.interfaces.length) throw new TypeError("Unverified compiled Perl IO component");
 	if(!same(certified(name,api,evidence),wire)) throw new TypeError("Perl IO wire differs from the compiled signatures");
-	const methods = verify(api,wire,name), librarySha256 = sha256(native);
+	const resourceLib=wire.leases?.length && digest(o.ledgerId) ? "liblb_task_resources_"+o.ledgerId+".so" : null;
+	const resourceBytes=resourceLib && o.files.get("lib/"+resourceLib);
+	if(Boolean(wire.leases?.length)!==Boolean(resourceBytes)) throw new TypeError("Missing Perl resource ledger");
+	const ledger=resourceBytes?{id: o.ledgerId, library: resourceLib, sha256: sha256(resourceBytes)}:null;
+	const kinds=perlResourceKinds(api,wire,evidence,ledger), methods = verify(api,wire,name,kinds), librarySha256 = sha256(native);
 	const assets = wire.wait ? await perlTaskAssets() : null;
 	const contract = { schemaVersion: 1
 		, profile: wire.wait ? "native-perl-task-v1" : "native-perl-io-v1"
 		, component: api.component, componentIdentity: o.componentIdentity
 		, bindingIrSha256: o.bindingIrSha256
 		, elaborationSha256: sha256(canonicalJson(evidence))
-		, library, librarySha256 };
-	const files = new Map([["Component.xs", xsSource(wire,methods,name)]
+		, library, librarySha256, ...ledger?{resourceLedger: ledger}:{} };
+	const files = new Map([["Component.xs", xsSource(wire,methods,name,kinds)]
 		, ["sync-wire.h", await readFile(new URL("./sync-wire.h", import.meta.url))]
-		, ["lib/" + relative + ".pm", loader(name, version, runtimeVersion, runtimeIdentity, library, librarySha256, api, evidence, methods, assets)]
+		, ["lib/" + relative + ".pm", loader(name, version, runtimeVersion, runtimeIdentity, library, librarySha256, api, evidence, methods, assets,kinds,ledger)]
 		, ["lib/" + relative + "/native/" + library, native]
 		, ["binding-ir.json", canonicalJson(api)]
 		, ["elaboration.json", canonicalJson(evidence)]
 		, ["binding-manifest.json", canonicalJson(contract)]]);
 	if(assets) files.set("task-wire.h",assets.header);
+	if(ledger) files.set("lib/"+relative+"/native/"+ledger.library,resourceBytes);
 	return { files, contract };
 };
 
@@ -275,10 +299,12 @@ export const verifyPerlIOFiles = (manifest, files, base, header, assets = null) 
 		|| s.elaborationSha256 !== sha256(elaboration) || s.library !== libraryFor(ns)
 		|| s.librarySha256 !== sha256(bytes("lib/" + ns.replaceAll("::","/") + "/native/" + s.library))
 		|| !bytes("sync-wire.h").equals(header) || (assets && !bytes("task-wire.h").equals(assets.header))
-		|| bytes("LeanBridgeBuild.pm").toString() !== renderPerlIOBuild(base,ns,s.library,Boolean(assets)))
+		|| bytes("LeanBridgeBuild.pm").toString() !== renderPerlIOBuild(base,ns,s.library,Boolean(assets),s.resourceLedger))
 		throw new TypeError("Standalone Perl IO payload differs from its compiled interface or installer");
-	const evidence = JSON.parse(elaboration), wire = certified(ns,api,evidence), methods = verify(api,wire,ns);
-	if(Boolean(wire.wait)!==Boolean(assets) || bytes("Component.xs").toString() !== xsSource(wire,methods,ns)
-		|| bytes("lib/" + ns.replaceAll("::","/") + ".pm").toString() !== loader(ns,manifest.version,manifest.runtimeVersion,manifest.runtimeIdentity,s.library,s.librarySha256,api,evidence,methods,assets))
+	const evidence = JSON.parse(elaboration), wire = certified(ns,api,evidence), ledger=s.resourceLedger;
+	const kinds=perlResourceKinds(api,wire,evidence,ledger), methods = verify(api,wire,ns,kinds);
+	if(Boolean(kinds.size)!==Boolean(ledger) || (ledger && sha256(bytes("lib/"+ns.replaceAll("::","/")+"/native/"+ledger.library))!==ledger.sha256)
+		|| Boolean(wire.wait)!==Boolean(assets) || bytes("Component.xs").toString() !== xsSource(wire,methods,ns,kinds)
+		|| bytes("lib/" + ns.replaceAll("::","/") + ".pm").toString() !== loader(ns,manifest.version,manifest.runtimeVersion,manifest.runtimeIdentity,s.library,s.librarySha256,api,evidence,methods,assets,kinds,ledger))
 		throw new TypeError("Generated CPAN IO source differs from the compiled declarations");
 };

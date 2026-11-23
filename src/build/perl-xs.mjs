@@ -37,6 +37,8 @@ export const compileCpanXsVariant = async ({ packageRoot, perl = "perl", environ
 		const bytes = await readFile(join(directory,path)); validateNativeElf(bytes);
 		const elf = async args => (await processBuildRunner.capture({ command: "readelf", args: [...args,path], cwd: directory, env: environment })).stdout;
 		const dynamic = await elf(["-d"]);
+		if(io.resourceLedger && !dynamic.includes("Shared library: ["+io.resourceLedger.library+"]"))
+			throw new Error("CPAN resource XS does not link its checked ledger");
 		if(bytes.includes(Buffer.from(directory)) || !dynamic.includes("Shared library: [" + io.library + "]") || /\((?:RPATH|RUNPATH)\)/u.test(dynamic))
 			throw new Error("CPAN IO XS depends on a staging path or does not link its compiled component");
 		const maxMinor = Number(manifest.glibcMinimumVersion.split(".")[1]);

@@ -786,7 +786,7 @@ _callback_${type.key}(...)
 				'  die "record fields do not match the generated schema\\n" if keys(%fields) != @required || grep { !exists $fields{$_} } @required;',
 				`  return bless \\%fields, '${name}';`, "}");
 			for(const field of type.fields) pm.push(`sub ${field.name} { $_[0]->{${field.name}} }`);
-		} else pm.push("our @ISA = ('LeanBridge::Runtime::Resource');", "sub CLONE_SKIP { 1 }");
+		} else pm.push("our @ISA = ('LeanBridge::Runtime::Resource');", "sub CLONE_SKIP { 0 }");
 	}
 	pm.push(...perlVariantClasses(model));
 	pm.push("1;", "", "__END__", "=head1 NAME", "", `${model.moduleName} - Generated functions from ${model.component.name}`, "", "=head1 API", "");
