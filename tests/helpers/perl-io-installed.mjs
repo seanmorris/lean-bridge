@@ -49,7 +49,7 @@ test("real Perl IO rejects undeclared OS access, a changed review and unsupporte
 		}); await assert.rejects(access(out),{ code: "ENOENT" });
 	};
 	await reject({ ...cfg, nativeEffects: [] },/requires nativeEffects "filesystem"/u);
-	await reject({ ...cfg, taskExports: ["Journal.store"] },/separate delivery support/u);
+	await reject({ ...cfg, taskExports: ["Journal.store"] },/taskExports requires a real Lean Task result/u);
 	const ir = await json(join(root,"ordinary/handoff/binding-ir.json"));
 	const err = ir.errors.find(x => x.id === "error:EIO.Journal.choose"); err.payload.arguments[1] = { kind: "primitive", name: "uint64" };
 	delete cfg.exports; await writeFile(join(src,"public.binding-ir.json"),canonicalJson(ir),{ flag: "wx" });

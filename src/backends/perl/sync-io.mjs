@@ -9,6 +9,7 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { reconcileHostExports } from "../../analyze/host-export-model.mjs";
 import { generateSyncWire } from "../c/sync-wire.mjs";
 import { perlStringLiteral as q, projectPerlNames } from "./naming.mjs";
+import { perlTaskAssets, taskDeclarations, taskModules, taskXs } from "./task-xs.mjs";
 
 const digest = s => /^[a-f0-9]{64}$/u.test(s);
 const libraryFor = name => "liblbc_perl_" + sha256(name) + ".so";
@@ -20,12 +21,13 @@ const shape = t => {
 };
 const same = (a, b) => canonicalJson(a) === canonicalJson(b);
 const certified = (name, api, evidence) => {
-	if(!evidence.selection?.synchronousIO || !digest(evidence.compilerSha256) || !digest(evidence.extractorSha256)
+	const tasks=!evidence.selection?.synchronousIO && Boolean(evidence.selection?.taskExports?.length || evidence.selection?.asyncIterators?.length);
+	if((!evidence.selection?.synchronousIO && !tasks) || !digest(evidence.compilerSha256) || !digest(evidence.extractorSha256)
 		|| !digest(evidence.sourceTreeSha256) || !digest(evidence.configurationSha256) || !evidence.interfaces?.length
 		|| evidence.hostImportsSourceSha256 !== null) throw new TypeError("Missing standalone Perl IO elaboration");
 	const reviewed = reconcileHostExports({ ...evidence, component: api.component, ir: null, review: { source: canonicalJson(api) } });
 	if(!same(reviewed.api,api)) throw new TypeError("Perl IO API differs from source evidence");
-	return generateSyncWire("lbc_perl_" + sha256(name),reviewed.entries);
+	return generateSyncWire("lbc_perl_" + sha256(name),reviewed.entries,{ tasks });
 };
 const hook = (source, needle, replacement) => {
 	if(source.split(needle).length !== 2) throw new TypeError("Missing or ambiguous CPAN installer hook");
@@ -50,13 +52,16 @@ export const validatePerlIOSettings = ({ name, version }) => {
  * @param base - Standard installer.
  * @param name - Validated Perl namespace.
  * @param library - Exact component SONAME.
+ * @param tasks - Install the Perl event-loop dependency only for task/cursor packages.
  */
-export const renderPerlIOBuild = (base, name, library) => {
+export const renderPerlIOBuild = (base, name, library, tasks = false) => {
 	projectPerlNames(name, []); if(library !== libraryFor(name)) throw new TypeError("Invalid CPAN IO library");
 	const dir = name.replaceAll("::", "/"), tag = "my @link_flags = ('-Wl,--build-id=none');";
 	let s = hook(base, tag, tag + `\n  push @link_flags, '-L', 'lib/${dir}/native', '-l:${library}';`);
-	s = hook(s, "if owned_values($manifest);", "if $manifest->{syncIO};");
-	return hook(s, "return unless owned_values($manifest);", "return unless $manifest->{syncIO};");
+	const field = tasks ? "taskDelivery" : "syncIO";
+	s = hook(s, "if owned_values($manifest);", "if $manifest->{"+field+"};");
+	s = hook(s, "return unless owned_values($manifest);", "return unless $manifest->{"+field+"};");
+	return tasks ? hook(s,"PREREQ_PM => { 'Math::BigInt'","PREREQ_PM => { 'IO::Async::Loop' => '0.805', 'Future' => '0.54', 'Math::BigInt'") : s;
 };
 const input = (type, i) => {
 	const v = "v" + i, a = "a+" + 3*i, x = "a[" + 3*i + "]", args = "aTHX_ " + v;
@@ -82,19 +87,27 @@ const value = (t, ns, i = 0) => {
 const verify = (api, wire, ns) => {
 	const methods = projectPerlNames(ns, wire.methods);
 	const stem = "lbwire_lbc_perl_" + sha256(ns) + "_v1";
-	if(wire.clear !== stem + "_clear" || wire.wait || wire.leases || !methods.length || api.declarations.length !== methods.length) throw new TypeError("Invalid CPAN IO wire");
+	if(wire.clear !== stem + "_clear" || wire.leases || !methods.length || api.declarations.length !== methods.length) throw new TypeError("Invalid CPAN IO wire");
 	for(const [i,m] of methods.entries())
 	{
 		const d = api.declarations.find(d => d.name === m.name), e = m.effect;
 		const ids = e === "IO" ? ["error:IO.Error"] : e === "EIO" ? ["error:EIO." + m.declaration] : [];
 		const a = api.errors.find(x => x.id === ids[0]);
+		const mode = m.delivery === "task" ? "promise" : m.delivery === "async-iterator" ? "async-iterator" : "value";
+		const step = m.stepDeclaration ? api.errors.find(x => x.id === "error:AsyncStep."+m.declaration) : null;
+		const taskIO = d?.source.extensions["lean-bridge.dev/task-failure"] === "IO.Error";
+		if(step) ids.push(step.id);
+		if(taskIO) ids.push("error:TaskIO.Error");
 		const depth = t => Array.isArray(t) ? 1 + Math.max(...t.map(depth)) : 0;
 		if(!d || d.source.declaration !== m.declaration || !/^[a-z][a-z0-9_]*$/u.test(m.name) || m.name !== m.publicName
 			|| ["import", "unimport", "isa", "can", "version", "does"].includes(m.name) || m.symbol !== stem + "_" + i
-			|| !["pure", "IO", "BaseIO", "EIO"].includes(e) || d.source.extensions["lean-lang.org/effect"] !== e || d.resultMode !== "value"
+			|| !["pure", "IO", "BaseIO", "EIO"].includes(e) || d.source.extensions["lean-lang.org/effect"] !== e || d.resultMode !== mode
 			|| !same(d.failure.errors, ids) || !same(d.parameters.map(p => shape(p.type)), m.args) || m.args.some(Array.isArray)
 			|| !same(shape(d.result.type), m.result) || !same(e === "IO" ? "string" : e === "EIO" ? shape(a?.payload) : null, m.error)
-			|| m.tagBytes !== Math.max(1,depth(m.result),depth(m.error)) || m.delivery || m.callbacks)
+			|| m.tagBytes !== Math.max(1,depth(m.result),depth(m.error),depth(m.terminal))
+			|| (m.delivery && (!wire.wait || !same(m.terminal,step ? shape(step.payload) : taskIO ? "string" : null)
+				|| m.stepDeclaration !== d.source.extensions["lean-bridge.dev/pull-protocol"]?.next))
+			|| m.callbacks)
 			throw new TypeError("CPAN IO wire differs from elaborated declaration: " + m.name);
 	}
 	return methods;
@@ -136,14 +149,14 @@ sub new { die "Expected one payload\\n" unless @_ == 2; bless {value => $_[1]}, 
 sub value { $_[0]->{value} }`).join("\n");
 };
 
-const loader = (name, version, runtimeVersion, runtime, lib, libHash, api, evidence, methods) => {
+const loader = (name, version, runtimeVersion, runtime, lib, libHash, api, evidence, methods, assets = null) => {
 	const relative = name.replaceAll("::","/"), stem = name.split("::").at(-1);
 	const sources = evidence.interfaces.map(i => {
 		if(!digest(i.sourceSha256)) throw new TypeError("Unverified Perl component source");
 		return q(i.module) + " => " + q(i.sourceSha256);
 	}).join(", ");
 	const args = `${q(runtime)}, { ${sources} }, ${q(api.component.id)}, ${q(libHash)}`;
-	return `${modules(name,methods)}
+	return `${modules(name,methods)}${assets ? "\n"+taskModules(name,methods,assets.driver) : ""}
 package ${name};
 use strict;
 use warnings;
@@ -183,11 +196,11 @@ sub CLONE_SKIP { 1 }
 __END__
 =head1 NAME
 
-${name} - Compiled synchronous Lean functions
+${name} - ${assets ? "Compiled Lean futures and demand-driven cursors" : "Compiled synchronous Lean functions"}
 
 =head1 CALLS
 
-${methods.map(m => `=head2 ${m.name}\n\nCalls C<${m.declaration}> (${m.effect}).`).join("\n\n")}
+${methods.map(m => `=head2 ${m.name}\n\nCalls C<${m.declaration}> (${m.effect}).${m.delivery==="task"?" Returns a Future.":m.delivery==="async-iterator"?" Returns a cursor; next yields a Future with one item or an empty list at end.":""}`).join("\n\n")}
 
 An EIO failure dies with the declaration-specific exception; use C<payload>
 to read the typed value. IO failures provide C<message>. A returned Except
@@ -200,12 +213,12 @@ is an Ok or Err object with a C<value> method, not an exception.
 const xsSource = (wire, methods, name) => `#include "sync-wire.h"
 extern void ${wire.clear}(uint64_t *);
 static void lbs_clear(pTHX_ void *frame) { ${wire.clear}((uint64_t *)frame); Safefree(frame); }
-${methods.map(m => `extern int ${m.symbol}(const uint64_t *, uint64_t *, uint8_t *);`).join("\n")}
+${methods.filter(m=>!m.delivery).map(m => `extern int ${m.symbol}(const uint64_t *, uint64_t *, uint8_t *);`).join("\n")}${wire.wait?"\n"+taskDeclarations(wire):""}
 
 MODULE = ${name}    PACKAGE = ${name}
 PROTOTYPES: DISABLE
 
-${methods.map(m => xs(m,name)).join("\n")}`;
+${methods.map((m,i) => m.delivery ? taskXs(m,name,i,input,value) : xs(m,name)).join("\n")}`;
 
 /**
  * Produce Perl source and a build receipt from an already checked native component.
@@ -221,18 +234,21 @@ export const preparePerlIOFiles = async (o, pins) => {
 		|| hashBindingIr(api) !== o.bindingIrSha256 || !evidence.interfaces.length) throw new TypeError("Unverified compiled Perl IO component");
 	if(!same(certified(name,api,evidence),wire)) throw new TypeError("Perl IO wire differs from the compiled signatures");
 	const methods = verify(api,wire,name), librarySha256 = sha256(native);
-	const contract = { schemaVersion: 1, profile: "native-perl-io-v1"
+	const assets = wire.wait ? await perlTaskAssets() : null;
+	const contract = { schemaVersion: 1
+		, profile: wire.wait ? "native-perl-task-v1" : "native-perl-io-v1"
 		, component: api.component, componentIdentity: o.componentIdentity
 		, bindingIrSha256: o.bindingIrSha256
 		, elaborationSha256: sha256(canonicalJson(evidence))
 		, library, librarySha256 };
 	const files = new Map([["Component.xs", xsSource(wire,methods,name)]
 		, ["sync-wire.h", await readFile(new URL("./sync-wire.h", import.meta.url))]
-		, ["lib/" + relative + ".pm", loader(name, version, runtimeVersion, runtimeIdentity, library, librarySha256, api, evidence, methods)]
+		, ["lib/" + relative + ".pm", loader(name, version, runtimeVersion, runtimeIdentity, library, librarySha256, api, evidence, methods, assets)]
 		, ["lib/" + relative + "/native/" + library, native]
 		, ["binding-ir.json", canonicalJson(api)]
 		, ["elaboration.json", canonicalJson(evidence)]
 		, ["binding-manifest.json", canonicalJson(contract)]]);
+	if(assets) files.set("task-wire.h",assets.header);
 	return { files, contract };
 };
 
@@ -243,19 +259,21 @@ export const preparePerlIOFiles = async (o, pins) => {
  * @param files - Hash-verified package bytes.
  * @param base - Original shared build template.
  * @param header - Original checked Perl scalar conversion header.
+ * @param assets - Original task-specific sources, absent for synchronous packages.
  */
-export const verifyPerlIOFiles = (manifest, files, base, header) => {
-	const s = manifest.syncIO, ns = manifest.module;
+export const verifyPerlIOFiles = (manifest, files, base, header, assets = null) => {
+	const s = manifest.taskDelivery ?? manifest.syncIO, ns = manifest.module;
 	const bytes = p => { const b = files.get(p); if(!b) throw new TypeError("Missing Perl IO payload: " + p); return b; };
 	const api = JSON.parse(bytes("binding-ir.json")), elaboration = bytes("elaboration.json");
-	if(manifest.ownedValues || s.schemaVersion !== 1 || s.profile !== "native-perl-io-v1" || !same(s,JSON.parse(bytes("binding-manifest.json")))
+	if(manifest.ownedValues || Boolean(manifest.taskDelivery) !== Boolean(assets) || s.schemaVersion !== 1 || s.profile !== (assets ? "native-perl-task-v1" : "native-perl-io-v1") || !same(s,JSON.parse(bytes("binding-manifest.json")))
 		|| !same(s.component,api.component) || !digest(s.componentIdentity) || s.bindingIrSha256 !== hashBindingIr(api)
 		|| s.elaborationSha256 !== sha256(elaboration) || s.library !== libraryFor(ns)
 		|| s.librarySha256 !== sha256(bytes("lib/" + ns.replaceAll("::","/") + "/native/" + s.library))
-		|| !bytes("sync-wire.h").equals(header) || bytes("LeanBridgeBuild.pm").toString() !== renderPerlIOBuild(base,ns,s.library))
+		|| !bytes("sync-wire.h").equals(header) || (assets && !bytes("task-wire.h").equals(assets.header))
+		|| bytes("LeanBridgeBuild.pm").toString() !== renderPerlIOBuild(base,ns,s.library,Boolean(assets)))
 		throw new TypeError("Standalone Perl IO payload differs from its compiled interface or installer");
 	const evidence = JSON.parse(elaboration), wire = certified(ns,api,evidence), methods = verify(api,wire,ns);
-	if(bytes("Component.xs").toString() !== xsSource(wire,methods,ns)
-		|| bytes("lib/" + ns.replaceAll("::","/") + ".pm").toString() !== loader(ns,manifest.version,manifest.runtimeVersion,manifest.runtimeIdentity,s.library,s.librarySha256,api,evidence,methods))
+	if(Boolean(wire.wait)!==Boolean(assets) || bytes("Component.xs").toString() !== xsSource(wire,methods,ns)
+		|| bytes("lib/" + ns.replaceAll("::","/") + ".pm").toString() !== loader(ns,manifest.version,manifest.runtimeVersion,manifest.runtimeIdentity,s.library,s.librarySha256,api,evidence,methods,assets))
 		throw new TypeError("Generated CPAN IO source differs from the compiled declarations");
 };

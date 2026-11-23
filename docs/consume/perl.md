@@ -72,7 +72,7 @@ Run `perl consumer.pl`. Expected output is `42`, `42`, `42`, then `41`, each on 
 
 ### Call synchronous IO and handle errors
 
-Call a Lean `BaseIO`, `IO` or `EIO` export as a normal Perl function. It finishes before the next statement; there is no future to await. With the [Journal author example](../publish/cpan.md#export-synchronous-io), save this as `journal.pl`:
+Call a synchronous Lean `BaseIO`, `IO` or `EIO` export as a normal Perl function. It finishes before the next statement. With the [Journal author example](../publish/cpan.md#export-synchronous-io), save this as `journal.pl`:
 
 ```perl
 use v5.36;
@@ -93,6 +93,31 @@ unless ($ok) {
 Run `perl journal.pl`. It prints `42`, `37`, and `out of stock`. A function returning `Except` gives you an `Ok` or `Err` object. A thrown `EIO` error is a declaration-specific exception: `->declaration` names the Lean function and `->payload` preserves the value, including a nested `Except`. A failed `IO` operation throws `LeanBridge::Journal::IOError`; use `->message` for the Lean error text.
 
 The package loads the shared runtime. Use it from the process and interpreter thread that loaded it. Invalid inputs fail before the Lean function runs. The [installed acceptance checks](../evidence/perl-sync-io-20261123.json) exercise both threaded and unthreaded Perl.
+
+### Wait for a task or read a stream
+
+A task export returns a `Future` attached to the default loop returned by `IO::Async::Loop->new`. If your application already uses that loop, its timers and I/O continue to run while `get` waits for a result. In event-driven code, register `on_done` and `on_fail` callbacks instead. The component declares its CPAN dependencies; synchronous-only packages do not require an event loop.
+
+With the [Pulse author example](../publish/cpan.md#export-tasks-and-streams), save this as `pulse.pl`:
+
+```perl
+use v5.36;
+use LeanBridge::Pulse;
+
+my $answer = LeanBridge::Pulse::checked(!!0, !!0, '')->get;
+say $answer->value;
+my $cursor = LeanBridge::Pulse::series(!!0, !!0, 'first');
+while (my @item = $cursor->next->get) {
+    say $item[0]->value;
+}
+$cursor->close;
+```
+
+Run `perl pulse.pl`. It prints `42`, `first`, then `73`. The stream opens on first demand. Each `next` returns a future for one item; read it in list context so a single `undef` (Lean `Unit`) is distinct from an empty list (end of stream). Finish the pending pull before asking for another. If you break early, call `close` to release the cursor immediately.
+
+Invalid task arguments throw at the call. A declared failure starting the task or pulling an item fails the future and `get` throws. A returned `Except` is still ordinary `Ok`/`Err` data. Call `cancel` to stop waiting and request Lean cancellation. A worker that ignores cancellation can finish, but its result is not delivered. Keep futures and cursors in the process and interpreter that created them.
+
+The [installed task and cursor checks](../evidence/perl-tasks-20261123.json) cover both package routes on four Perl ABIs, including what happens when an interpreter thread is created while a native pull is pending.
 
 ### Options, results and products
 
@@ -831,6 +856,8 @@ recursive and dependent Subtypes, generic Subtypes beyond the closed `GenericNat
 constructor/source entry counts and memory measurement, remain separate work.
 
 The [hosted generic-Subtype matrix](../evidence/generic-subtype-promotion-20261023.md) installs the closed `GenericNat` alias of `GenericCarrier Nat` on ordinary-source and reviewed-IR packages across the sixteen non-PHP-Wasm consumer profiles. Its selected `Positive` field crosses as a proof-erased value beside a retained `Nat` marker, and the two named specializations keep their distinct `plusOne` and `plusTwo` constructors. Rejection preserves the caller record, a later valid call recovers, and copied results carry no constructor. PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence.
+
+For the standalone effect profiles, see [synchronous IO and errors](#call-synchronous-io-and-handle-errors) and [tasks and streams](#wait-for-a-task-or-read-a-stream). These packages have their own installed checks, separate from the cross-language inventory below.
 
 ### Type conversions
 

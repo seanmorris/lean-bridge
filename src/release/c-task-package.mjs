@@ -61,7 +61,7 @@ export const buildCTaskPackage = async options => {
 		const resources = api.types.filter(t => t.kind === "resource");
 		const owner = jvm && await compileJvmIOOwner({ app, runtimeRoot, runtimeIdentity, cc: environment.CC ?? "cc", run });
 		const threads = cpp && (!synchronous || resources.length > 0);
-		if(perl && (!synchronous || resources.length)) throw new TypeError("Expected synchronous copied CPAN IO");
+		if(perl && (resources.length || entries.some(retainedTask))) throw new TypeError("Perl resource and retained-callback delivery require their own checked owners");
 		const config = { name: perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet || jvm || perl ? "words" : "gmp" };
 		const callbackHeaders = new Map();
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
@@ -70,6 +70,7 @@ export const buildCTaskPackage = async options => {
 		const ledger = resources.length ? await taskResourceLedger(runtimeIdentity, owner || null) : null;
 		const ledgerId = ledger && ledger.id, ledgerName = ledger?.name, ledgerFlag = ledger?.flag;
 		if(jvm && !synchronous) config.jvmDelivery = true;
+		if(perl && !synchronous) config.perlDelivery = true;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
 		const wire = (ruby || dotnet || jvm || perl) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources });
 		const jvmEntry = jvm && jvmIOEntry(wire, skeleton.prefix, wire.wait && await asset("../backends/jvm/task-reactor.c"));

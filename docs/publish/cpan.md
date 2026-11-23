@@ -47,7 +47,7 @@ The Nix entry point supplies the pinned upstream toolchain:
 nix run .#perl-build-engine -- --project /path/to/project --output /path/to/new-release
 ```
 
-The ordinary native-library build contains `native/runtime`, `native/component`, prepared distributions under `packages`, and two `.tar.gz` files under `archives`. Its profile is `native-library-v1`. The [synchronous IO build](#export-synchronous-io) uses `native-perl-io-v1` and the same two-distribution handoff. In both cases, `package-set-receipt.json` identifies the profile, the exact archives and the runtime dependency. Neither changes the WebAssembly side-module ABI.
+The ordinary native-library build contains `native/runtime`, `native/component`, prepared distributions under `packages`, and two `.tar.gz` files under `archives`. Its profile is `native-library-v1`. [Synchronous IO](#export-synchronous-io) uses `native-perl-io-v1`; [tasks and streams](#export-tasks-and-streams) use `native-perl-task-v1`. All three produce the same two-distribution handoff. Read `package-set-receipt.json` for the profile, exact archives and runtime dependency.
 
 For APIs that also fit npm's primitive profile, [select npm and CPAN together](npm.md#build-npm-and-cpan-together). The combined build uses one captured source tree and exposes both package sets only after their source APIs agree. Its CPAN archives live under `profiles/native/archives/`. Keep a CPAN-only build for native records, arrays, resources and callbacks.
 
@@ -68,6 +68,25 @@ Select your Lean functions and declare the OS access they need. For the [Journal
 `Journal.store` and `Journal.read` need the filesystem grant. Select `nativeEffects: []` for an in-memory-only API. Ordinary selection and reviewed Binding IR both pass through the same Lean compiler and effect checks. Build into a new directory with `lean-bridge build --project . --target cpan --output release`. The release contains a component distribution and an exact dependency on the shared runtime; publish both using the [CPAN instructions](#publish-to-cpan).
 
 The synchronous profile supports the 19 copied scalar types and nested returned or thrown `Except` values. `IO` failures carry the Lean error message; `EIO` failures retain the type of their payload. It does not turn tasks, streams, or direct resource parameters into synchronous copied values. See the [installed Perl example](../consume/perl.md#call-synchronous-io-and-handle-errors) and the [four-ABI acceptance record](../evidence/perl-sync-io-20261123.json).
+
+### Export tasks and streams
+
+Use `taskExports` for functions returning an actual Lean `Task` (directly or inside `BaseIO`, `IO` or `EIO`). Use `asyncIterators` for a demand-driven stream: select its open, next and close declarations together. For the [Pulse source](../../tests/fixtures/c-lean-tasks/Pulse.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Pulse"],
+  "exports": ["Pulse.checked", "Pulse.late", "Pulse.release", "Pulse.series"],
+  "taskExports": ["Pulse.checked", "Pulse.late"],
+  "asyncIterators": [{"open": "Pulse.series", "next": "Pulse.next", "close": "Pulse.close"}],
+  "targets": {"cpan": {"module": "LeanBridge::Pulse", "version": "0.001"}}
+}
+```
+
+Build and publish the same two CPAN distributions as above. The `native-perl-task-v1` component adds `Future` and `IO::Async::Loop` to its runtime prerequisites; the shared runtime archive does not change. A synchronous companion such as `Pulse.release` stays synchronous. The [Perl consumer example](../consume/perl.md#wait-for-a-task-or-read-a-stream) calls the installed package.
+
+The compiler checks the task result and cursor protocol against the Lean source on both ordinary and reviewed builds. An `EIO` factory error, an `IO` factory error, a step failure and a returned `Except` occupy different stages. Use `taskIOErrors` only for a selected task that returns `Except IO.Error α` and should fail the future on a terminal IO error. This profile transports copied scalar values and nested `Except` payloads. It does not transport resource handles or retained Perl callbacks.
 
 ### Export a specialized closure
 

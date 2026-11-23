@@ -2644,6 +2644,30 @@ The build produces an ordinary Journal, a reviewed Journal and an independent co
 
 To test the producer a second time, set `LEAN_BRIDGE_PERL_IO_ORIGINAL` to the same directory and `LEAN_BRIDGE_PERL_IO_REPRO` to a new directory, then run `node --test --test-concurrency=1 tests/helpers/perl-io-repro.mjs`. It installs the CLI offline and compares both archives and their receipts byte for byte.
 
+### Perl futures and demand-driven streams
+
+Use the same four `LEAN_BRIDGE_PERLS` interpreters and compiler as for the synchronous suite. Install the upstream `Future` (0.54) and `IO::Async` (0.805) distributions and their prerequisites in a local Perl prefix. Set `LEAN_BRIDGE_PERL_TASK_DEPS` to that prefix's `lib/perl5` directory and include it in `PERL5LIB`. The installed-client suite uses the real event loop, not a mocked scheduler.
+
+```sh
+export EVIDENCE="$PWD/build/acceptance/perl-tasks"
+export PERL5LIB="$LEAN_BRIDGE_PERL_TASK_DEPS${PERL5LIB:+:$PERL5LIB}"
+LEAN_BRIDGE_PERL_TASK_BUILD="$EVIDENCE" node --test --test-concurrency=1 tests/helpers/perl-tasks-installed.mjs
+LEAN_BRIDGE_PERL_TASK_CAPTURE="$EVIDENCE" node --test --test-concurrency=1 tests/helpers/perl-task-consumers.mjs
+```
+
+The producer builds Pulse from source, Pulse from the reviewed Binding IR, and a separate stream-only component. Capture installs the original archives and relocates them. Each application runs without a compiler on its path. The checks exercise two pending workers on the application event loop, cancellation, dropped futures, exact errors, lazy pull and early close, an emitted `Unit` versus exhaustion, shared-runtime retirement, and loading both packages in either order. The archive inspector reads the tar files, XS receipts, ABI fingerprints and ELF libraries without running the packages.
+
+Use `LEAN_BRIDGE_PERL_TASK_REPLAY` in place of `LEAN_BRIDGE_PERL_TASK_CAPTURE` to rerun the retained Perl clients using the same archives and compare their TAP. To reproduce the producer side, set `LEAN_BRIDGE_PERL_TASK_ORIGINAL` to the evidence directory and `LEAN_BRIDGE_PERL_TASK_REPRO` to a fresh output directory, then run `node --test --test-concurrency=1 tests/helpers/perl-io-repro.mjs`.
+
+For the [recorded task release](../evidence/perl-tasks-20261123.json), set `LEAN_BRIDGE_PERL_TASK_EXPECTED=docs/evidence/perl-tasks-20261123.json` when replaying. This checks the acceptance digest before installing. To audit the saved source files, TAP and offline rebuild without compiling or rerunning the packages:
+
+```sh
+LEAN_BRIDGE_PERL_TASK_AUDIT="$EVIDENCE" LEAN_BRIDGE_PERL_TASK_REPRODUCED="$REPRO" \
+  node --test --test-concurrency=1 tests/helpers/perl-task-consumers.mjs
+```
+
+Set `REPRO` to the completed reproduction directory. Unthreaded builds skip the thread-specific checks. On threaded builds, the owner must still work after a child interpreter tries to read a live cursor or settle a pending future.
+
 ### Recursive Perl conversion
 
 Run the staged recursive XS checks with the four pinned Perl installations,

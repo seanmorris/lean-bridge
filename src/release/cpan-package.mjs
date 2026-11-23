@@ -17,6 +17,7 @@ import { renderOwnedPerlCallbackBuild } from "../backends/perl/owned-callback-bu
 import { readOwnedPerlGmp } from "../build/owned-perl-artifacts.mjs";
 import { verifyOwnedCpanTransfers } from "./owned-cpan-contract.mjs";
 import { preparePerlIOFiles, renderPerlIOBuild, verifyPerlIOFiles } from "../backends/perl/sync-io.mjs";
+import { perlTaskAssets } from "../backends/perl/task-xs.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const templates = join(root, "src/backends/perl");
@@ -96,10 +97,12 @@ export const readVerifiedCpanPackage = async packageRoot => {
 	} else
 	{
 		verifyOwnedCpanTransfers(manifest, files);
+		const io = manifest.syncIO ?? manifest.taskDelivery;
 		const ioPayload = files.has("sync-wire.h") || (files.has("binding-manifest.json")
-			&& JSON.parse(files.get("binding-manifest.json")).profile === "native-perl-io-v1");
-		if(Boolean(manifest.syncIO) !== ioPayload) throw new Error("CPAN IO manifest and payload select different profiles");
-		if(manifest.syncIO) verifyPerlIOFiles(manifest, files, await readFile(join(templates, "Build.pm"), "utf8"), await readFile(join(templates, "sync-wire.h")));
+			&& ["native-perl-io-v1","native-perl-task-v1"].includes(JSON.parse(files.get("binding-manifest.json")).profile));
+		if(Boolean(io) !== ioPayload || Boolean(manifest.taskDelivery)!==files.has("task-wire.h") || (manifest.syncIO && manifest.taskDelivery))
+			throw new Error("CPAN IO manifest and payload select different profiles");
+		if(io) verifyPerlIOFiles(manifest, files, await readFile(join(templates, "Build.pm"), "utf8"), await readFile(join(templates, "sync-wire.h")),manifest.taskDelivery ? await perlTaskAssets() : null);
 		if(manifest.ownedValues?.schemaVersion === 5)
 		{
 			const installer = renderOwnedPerlCallbackBuild(
@@ -110,6 +113,8 @@ export const readVerifiedCpanPackage = async packageRoot => {
 				throw new Error("Owned CPAN callback installer differs from its generated source");
 		}
 		const metadata = JSON.parse(files.get("META.json"));
+		if(manifest.taskDelivery && (metadata.prereqs?.runtime?.requires?.["IO::Async::Loop"] !== "0.805" || metadata.prereqs.runtime.requires.Future !== "0.54"))
+			throw new Error("CPAN task component lacks its event-loop dependencies");
 		const pin = `== ${manifest.runtimeVersion}`;
 		const pm = files.get(`lib/${manifest.module.replaceAll("::", "/")}.pm`)?.toString("utf8");
 		if(!runtimeVersionPattern.test(manifest.runtimeVersion)
@@ -261,8 +266,9 @@ export const stageCpanPackage = async ({ outputRoot
 		await copy(join(runtimeRoot, "include/lean_bridge_native_runtime.h"), join(directory, include, "lean_bridge_native_runtime.h"));
 		await copy(join(templates, "runtime.h"), join(directory, include, "runtime.h"));
 	}
+	const taskDelivery = ioContract?.profile === "native-perl-task-v1";
 	if(ioContract)
-		await save(join(directory, "LeanBridgeBuild.pm"), renderPerlIOBuild(await readFile(join(templates, "Build.pm"), "utf8"), moduleName, ioContract.library));
+		await save(join(directory, "LeanBridgeBuild.pm"), renderPerlIOBuild(await readFile(join(templates, "Build.pm"), "utf8"), moduleName, ioContract.library, taskDelivery));
 	else if(callbackModel)
 		await save(join(directory, "LeanBridgeBuild.pm"), renderOwnedPerlCallbackBuild(
 			await readFile(join(templates, "Build.pm"), "utf8")
@@ -286,7 +292,7 @@ export const stageCpanPackage = async ({ outputRoot
 		, release_status: version.includes("_") ? "testing" : "stable"
 		, generated_by: "lean-bridge cpan-package-v1"
 		, prereqs: { configure: { requires: { "ExtUtils::MakeMaker": "6.64", "ExtUtils::CBuilder": "0", "ExtUtils::ParseXS": "0", "JSON::PP": "0", "Digest::SHA": "0", ...(component ? { [runtimeModule]: `== ${runtimeVersion}` } : {}) } }
-			, runtime: { requires: { perl: "5.036", "Math::BigInt": "0", "JSON::PP": "0", "Digest::SHA": "0", ...(component ? { [runtimeModule]: `== ${runtimeVersion}` } : {}) } }
+			, runtime: { requires: { perl: "5.036", "Math::BigInt": "0", "JSON::PP": "0", "Digest::SHA": "0", ...(component ? { [runtimeModule]: `== ${runtimeVersion}` } : {}), ...taskDelivery ? { "IO::Async::Loop": "0.805", Future: "0.54" } : {} } }
 			, test: { requires: { "Test::More": "0" } } }
 		, provides: { [moduleName]: { file: `lib/${moduleName.replaceAll("::", "/")}.pm`, version } }
 		, ...(component ? {} : { resources: { repository: { type: "git", url: "https://github.com/seanmorris/lean-bridge.git" } } })
@@ -306,7 +312,7 @@ export const stageCpanPackage = async ({ outputRoot
 		, include
 		, prebuilt: []
 		, ...(ownedValues ? { ownedValues } : {})
-		, ...(ioContract ? { syncIO: ioContract } : {})
+		, ...(ioContract ? { [taskDelivery ? "taskDelivery" : "syncIO"]: ioContract } : {})
 		, files: {} };
 	await refreshCpanInventory(directory, manifest);
 	return { directory, manifest };
