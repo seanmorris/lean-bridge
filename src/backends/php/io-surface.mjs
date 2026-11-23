@@ -63,6 +63,7 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks)=>{
 	const publicNames=new Set(),errorClasses=new Set(["ioerror","declaredfailure","leanbridgeerror","bytes","ok","err"]);
 	const leases = new Map();
 	if(tasks) for(const n of ["taskioerror","pullstream"]) errorClasses.add(n);
+	if(wire.methods.some(m=>m.callbacks)) for(const n of ["retainedcallback","callbackclosed"]) errorClasses.add(n);
 	for(const r of wire.leases ?? [])
 	{
 		const publicName = phpClassName(r.name), lower = publicName.toLowerCase();
@@ -80,6 +81,16 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks)=>{
 		publicNames.add(raw.toLowerCase());
 		if(d.parameters.length!==w.args.length||new Set(d.parameters.map(p=>p.name)).size!==w.args.length) fail("parameter selection differs");
 		const parameters=d.parameters.map((p,j)=>{
+			if(w.args[j]==="callback")
+			{
+				const t=api.types.find(x=>x.id===p.type.id), c=t?.callable, slot=w.callbacks?.find(x=>x[0]===j);
+				if(s.phpTaskCallbacks!==true || w.delivery!=="task" || !slot || p.optional || p.default!==null || p.ownership!=="lease" || p.lifetime?.scope!=="explicit" || p.lifetime.anchor!==null
+					|| t.kind!=="callback" || t.source.extensions["lean-bridge.dev/callback-scheduler"]!=="owner-event-loop" || c?.invocation!=="many"
+					|| c.reentry!=="same-agent" || c.selfDisposal!=="defer" || c.resultMode!=="value" || c.parameters.length!==1
+					|| c.parameters[0].ownership!=="copy" || c.result.ownership!=="copy" || c.parameters[0].type.name!==slot[1] || c.result.type.name!==slot[2]
+					|| c.failure.unexpected!=="poison-runtime" || c.failure.errors.join()!=="error:PhpCallbackException") fail("unverified retained callback");
+				return {name: phpFieldName(p.name,fail),type: "callable("+checkType(slot[1],leases)+"): "+checkType(slot[2],leases)};
+			}
 			const borrowed = leases.has(w.args[j]);
 			if(Array.isArray(w.args[j])||p.ownership!==(borrowed ? "borrow" : "copy")||p.optional||p.default!==null
 				|| (borrowed && (p.lifetime?.scope!=="call" || p.lifetime.anchor!==null))) fail("expected a copied argument or call-scoped resource");
@@ -94,16 +105,19 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks)=>{
 			if(errorClasses.has(failure.toLowerCase())) fail("typed error class collision");
 			errorClasses.add(failure.toLowerCase());
 		}
-		const terminalFailure = w.terminal ? w.delivery==="task" ? "TaskIOError" : pascal(w.name)+"StepError" : null;
+		const terminal = w.callbacks && entries[i].taskIO ? "string" : w.terminal;
+		const error = w.callbacks && w.effect==="IO" ? "string" : w.error;
+		const terminalFailure = terminal ? w.delivery==="task" ? "TaskIOError" : pascal(w.name)+"StepError" : null;
 		if(terminalFailure && w.delivery==="async-iterator")
 		{
 			if(errorClasses.has(terminalFailure.toLowerCase())) fail("typed step error class collision");
 			errorClasses.add(terminalFailure.toLowerCase());
 		}
-		const returnType=checkType(w.result,leases), errorType=w.error===null?null:checkType(w.error,leases);
-		const terminalType=w.terminal ? checkType(w.terminal,leases) : null;
+		const returnType=checkType(w.result,leases), errorType=error===null?null:checkType(error,leases);
+		const terminalType=terminal ? checkType(terminal,leases) : null;
 		const step=w.delivery ? {terminalFailure,terminalType} : {};
-		return {...w,publicName: raw,parameters,returnType,failure,errorType,...step};
+		const phases=w.callbacks ? {error,terminal} : {};
+		return {...w,...phases,publicName: raw,parameters,returnType,failure,errorType,...step};
 	});
 	return {namespace,prefix,methods,wire,leases};
 };

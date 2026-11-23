@@ -28,28 +28,37 @@ function ${m.publicName}(${[...params,"?\\Amp\\Cancellation "+token+"=null"].joi
 const taskNative=(m,i,model,port,decode)=>{
 	const {namespace: ns,wire}=model, fn=port.symbols[i+1], stream=m.delivery==="async-iterator";
 	const ops={ poll: m.names.poll, close: m.names.close, watch: wire.wait.open, unwatch: wire.wait.close, ...stream ? {pull: m.names.pull} : {} };
+	const callback=m.callbacks?.length>0;
+	const queue=callback ? { callbacks: m.names.callbacks,next: m.names.next,arg: fn+"_arg",reply: fn+"_reply",fail: fn+"_fail",trap: m.names.trap,dispose: port.dispose } : {};
+	const pairs=obj=>"["+Object.entries(obj).map(([k,v])=>q(k)+"=>"+q(v)).join(",")+"]";
+	const bindings=callback ? "["+m.callbacks.map(([slot,a,b])=>"["+slot+","+q(a)+","+q(b)+"]").join(",")+"]" : "";
 	const failure=(cls,code,decl,shape)=>cls ? `if ($status===${code}) throw new \\${ns}\\${cls}(${q(decl)},${decode}(${expr(shape)},$tags,$data));` : "";
 	const bad=`throw new \\${ns}\\LeanBridgeError(${q("Lean bridge failure in "+m.declaration+" (status ")}.$status.')');`;
 	const result=`${decode}(${expr(m.result)},$tags,$data)`;
 	return `    public static function call${i}(array $args,?\\Amp\\Cancellation $cancel): mixed {
         $cancel?->throwIfRequested();
-        $ffi=self::ffi(); $h=$ffi->new('uint64_t[2]');
-        $take=static function() use ($h) {
+        $ffi=self::ffi(); $h=$ffi->new('uint64_t[2]');${callback ? `
+        $pump=new CallbackPump($ffi,$h,${pairs(queue)},${bindings},$args,$cancel);` : ""}
+        $take=static function() use ($h${callback ? ",$pump" : ""}) {
             [$status,$tags,$data]=self::invoke(${q(fn+"_take")},[],[],${m.tagBytes},$h,true);
             if ($status===0) return ${stream ? "["+result+"]" : result};
             ${stream ? "if ($status===2) return [];" : ""}
-            ${failure(m.terminalFailure,stream ? 3 : 4,m.stepDeclaration??m.declaration,m.terminal)}
+            ${failure(m.terminalFailure,stream ? 3 : 4,m.stepDeclaration??m.declaration,m.terminal)}${callback ? `
+            if ($status===14) throw $pump->original(WireValues::output('uint32',$tags,$data));
+            ${failure(m.failure,m.effect==="IO" ? 13 : 3,m.declaration,m.error)}` : ""}
             ${bad}
         };
-        $owner=new Delivery($ffi,$h,[${Object.entries(ops).map(([k,v])=>q(k)+"=>"+q(v)).join(",")}],$take,$cancel);
+        $owner=new Delivery($ffi,$h,[${Object.entries(ops).map(([k,v])=>q(k)+"=>"+q(v)).join(",")}${callback ? ",'releaseCallbacks'=>[$pump,'close']" : ""}],$take,$cancel);
         try {
             [$status,$tags,$data]=self::invoke(${q(fn)},${expr(m.args)},$args,${m.tagBytes},$h);
             ${failure(m.failure,m.effect==="IO" ? 4 : 3,m.declaration,m.error)}
             if ($status!==0) ${bad}
-            $owner->subscribe();
+            $owner->subscribe();${callback ? `
+            $pump->listen($owner);
+            return $owner->read();` : `
             ${stream ? `$make=\\Closure::bind(static fn()=>new \\${ns}\\PullStream($owner),null,\\${ns}\\PullStream::class);
-            return $make();` : "return $owner->read();"}
-        } catch (\\Throwable $error) { $owner->close(); throw $error; }
+            return $make();` : "return $owner->read();"}`}
+        } catch (\\Throwable $error) { ${callback ? "$pump->close(); " : ""}$owner->close(); throw $error; }
     }`;
 };
 
@@ -70,9 +79,12 @@ export const generatePhpIOFiles=async(model,assets)=>{
 		||assets.library!=="lib"+prefix+".so"||Object.keys(assets.libraries).sort().join("/")!==[assets.library,...deps].sort().join("/")
 		||!Object.values(assets.libraries).every(hex)) throw new TypeError("Unverified native PHP synchronous IO libraries");
 	const tasks=Boolean(model.wire.wait);
+	const retained=methods.some(m=>m.callbacks?.length);
 	const branches=methods.some(m=>Array.isArray(m.result)||Array.isArray(m.error)||Array.isArray(m.terminal))?["Ok","Err"]:[];
 	const extra = {};
-	if(tasks) extra["src/Internal/Delivery.php"]=(await readFile(new URL("./io-delivery.php",import.meta.url),"utf8")).replaceAll("__LB_PUBLIC__",ns);
+	if(retained) extra["src/Internal/Callbacks.php"]=(await readFile(new URL("./io-callbacks.php",import.meta.url),"utf8")).replaceAll("__LB_PUBLIC__",ns);
+	if(tasks) extra["src/Internal/Delivery.php"]=(await readFile(new URL("./io-delivery.php",import.meta.url),"utf8")).replaceAll("__LB_PUBLIC__",ns)
+		.replace("/*__LB_RELEASE_CALLBACKS__*/",retained ? "\n                if (isset($this->ops['releaseCallbacks'])) ($this->ops['releaseCallbacks'])();" : "");
 	if(leased)
 	{
 		const types = [...model.leases.values()];
@@ -91,7 +103,7 @@ declare(strict_types=1);
 namespace ${ns};
 require_once __DIR__ . '/Internal/Loader.php';${leased ? "\nrequire_once __DIR__ . '/Internal/Leases.php';\nrequire_once __DIR__ . '/Internal/LeaseCodec.php';" : ""}
 require_once __DIR__ . '/Internal/Native.php';
-require_once __DIR__ . '/Internal/WireValues.php';${tasks ? "\nrequire_once __DIR__ . '/Internal/Delivery.php';" : ""}
+require_once __DIR__ . '/Internal/WireValues.php';${tasks ? "\nrequire_once __DIR__ . '/Internal/Delivery.php';" : ""}${retained ? "\nrequire_once __DIR__ . '/Internal/Callbacks.php';" : ""}
 ${copiedPhpValues}
 ${branches.map(c=>`final readonly class ${c} {
     public function __construct(public mixed $value) { if (func_num_args()!==1) throw new \\ArgumentCountError('Expected one payload'); }
@@ -126,7 +138,7 @@ TYPES;
     }
     private static function invoke(string $fn,array $types,array $args,int $depth${tasks ? ",?\\FFI\\CData $handle=null,bool $taking=false" : ""}): array {
         $budget=new Budget(); $bytes=[];
-        foreach ($types as $i=>$kind) $bytes[]=${leased ? "self::encoded" : "WireValues::input"}($kind,$args[$i],$budget);
+        foreach ($types as $i=>$kind) $bytes[]=${retained ? "$kind==='callback' ? '' : " : ""}${leased ? "self::encoded" : "WireValues::input"}($kind,$args[$i],$budget);
         $ffi=self::ffi(); $scope=new Scope($ffi);
         $in=$ffi->new('lbphp_buffer['.max(1,count($bytes)).']');
         $out=$ffi->new('lbphp_buffer'); $tags=$ffi->new('uint8_t['.$depth.']');${leased ? " $kept=false;" : ""}

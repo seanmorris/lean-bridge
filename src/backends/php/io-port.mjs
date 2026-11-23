@@ -81,24 +81,17 @@ static int lbphp_pack(int kind, ${has ? "" : "const "}uint64_t *words, ${type} *
     else memcpy(data,p,(size_t)n);
     out->data=data; out->length=n; return 0;
 }`];
-	for(const [i,m] of methods.entries())
-	{
-		if(m.symbol!=="lbwire_"+prefix+"_v1_"+i||m.tagBytes<1||!Number.isSafeInteger(m.tagBytes)) throw new TypeError("Invalid PHP fixed entry");
-		const fn=stem+"_"+i, slots=Math.max(1,m.args.length);
-		const async=Boolean(m.delivery);
-		if(async && (!wire.wait || !["task","async-iterator"].includes(m.delivery) || m.callbacks))
-			throw new TypeError("Invalid PHP delivery protocol");
-		symbols.push(fn); declarations.push(signature(fn,";",async));
-		const inputs=m.args.map((t,j)=>{
-			const a=3*j, k=kinds.get(t) ?? shape(t);
-			const base=`const uint8_t *p=args[${j}].data; uint64_t n=args[${j}].length;
+	const input=(t,j)=>{
+		if(t==="callback") return `    if (args[${j}].length || args[${j}].data) goto finish;`;
+		const a=3*j, k=kinds.get(t) ?? shape(t);
+		const base=`const uint8_t *p=args[${j}].data; uint64_t n=args[${j}].length;
         if (n>LIMIT-total) { status=${prefix}_LIMIT; goto finish; } total+=n;
         if (n&&!p) goto finish;`;
-			const step=k===0?`if (n!=8) goto finish;
+		const step=k===0?`if (n!=8) goto finish;
         uint64_t v; memcpy(&v,p,8); ${scalarChecks[t]?"if (!("+scalarChecks[t]+")) goto finish; ":""}a[${a}]=v;`
-				:k>=16?`if (n!=16) goto finish; memcpy(a+${a},p,16); if (!a[${a}] || !a[${a+1}]) goto finish;`
+			:k>=16?`if (n!=16) goto finish; memcpy(a+${a},p,16); if (!a[${a}] || !a[${a+1}]) goto finish;`
 				:k===1?`a[${a}]=(uintptr_t)p; a[${a+1}]=n;`
-				:`if (n<8 || n%8) goto finish;
+					:`if (n<8 || n%8) goto finish;
         uint64_t sign; memcpy(&sign,p,8); if (sign>${k===3?1:0}u || (n==8&&sign)) goto finish;
         if (n>8) {
             uint64_t high; memcpy(&high,p+n-8,8); if (!high) goto finish;
@@ -107,8 +100,17 @@ static int lbphp_pack(int kind, ${has ? "" : "const "}uint64_t *words, ${type} *
             memcpy(owned[${j}],p+8,(size_t)n-8);
         }
         a[${a}]=(uintptr_t)owned[${j}]; a[${a+1}]=n/8-1; a[${a+2}]=sign;`;
-			return "    { "+base+"\n        "+step+" }";
-		});
+		return "    { "+base+"\n        "+step+" }";
+	};
+	for(const [i,m] of methods.entries())
+	{
+		if(m.symbol!=="lbwire_"+prefix+"_v1_"+i||m.tagBytes<1||!Number.isSafeInteger(m.tagBytes)) throw new TypeError("Invalid PHP fixed entry");
+		const fn=stem+"_"+i, slots=Math.max(1,m.args.length);
+		const async=Boolean(m.delivery);
+		if(async && (!wire.wait || !["task","async-iterator"].includes(m.delivery) || (m.callbacks && m.delivery!=="task")))
+			throw new TypeError("Invalid PHP delivery protocol");
+		symbols.push(fn); declarations.push(signature(fn,";",async));
+		const inputs=m.args.map(input);
 		const error=m.error===null?"":`else if (status==${prefix}_${m.effect==="IO"?"IO_ERROR":"TYPED_ERROR"}) kind=${output(m.error,kinds)};`;
 		const start=async ? m.names.start : m.symbol;
 		source.push(`extern int ${start}(const uint64_t *,${async ? "uint64_t *," : ""}uint64_t *,uint8_t *);
@@ -144,12 +146,56 @@ ${prototype} {
     uint64_t w[4]={0}; memset(tags,0,(size_t)tagcap);
     int status=${names.take}(h,w,tags), kind=-1;
     if (status==${prefix}_OK) kind=${output(m.result,kinds)};
-    ${m.terminal ? `else if (status==${prefix}_${terminal}) kind=${output(m.terminal,kinds)};` : ""}
+    ${m.terminal ? `else if (status==${prefix}_${terminal}) kind=${output(m.terminal,kinds)};` : ""}${m.callbacks ? `
+    else if (status==14) kind=0;
+    else if (status==13) kind=1;${m.effect==="EIO" ? `
+    else if (status==${prefix}_TYPED_ERROR) kind=${output(m.error,kinds)};` : ""}` : ""}
     else goto finish;
     { int packed=lbphp_pack(kind,w,out); if (packed) status=packed; }
 finish:
     ${wire.clear}(w); return status;
 }`);
+			if(m.callbacks)
+			{
+				for(const k of ["arg","reply","next","callbacks","fail","trap"])
+					if(names[k]!==m.symbol+"_"+k) throw new TypeError("Invalid checked PHP callback entry");
+				const slots=new Set(), args=[], replies=[];
+				for(const [slot,from,to] of m.callbacks)
+				{
+					if(!Number.isSafeInteger(slot)||slot<0||slots.has(slot)||m.args[slot]!=="callback") throw new TypeError("Invalid PHP callback slot");
+					slots.add(slot); args.push(`case ${slot}: kind=${shape(from)}; break;`);
+					replies.push(`case ${slot}: ${input(to,0)} break;`);
+				}
+				const get=fn+"_arg", put=fn+"_reply", reject=fn+"_fail";
+				const getProto=`int ${get}(uint64_t *h, uint32_t slot, ${type} *out)`;
+				const putProto=`int ${put}(uint64_t *h, uint32_t slot, const ${type} *args)`;
+				const failProto=`int ${reject}(uint64_t *h, const char *msg, uint64_t len, uint32_t *id)`;
+				taskSymbols.push(get,put,reject,names.callbacks,names.next,names.trap);
+				taskDeclarations.push(getProto+";",putProto+";",failProto+";",`int ${names.callbacks}(uint64_t *h, int *fd);`,`int ${names.next}(uint64_t *h, uint32_t *slot);`,`void ${names.trap}(void);`);
+				source.push(`extern int ${names.arg}(uint64_t *,uint32_t,uint64_t *);
+extern int ${names.reply}(uint64_t *,uint32_t,const uint64_t *);
+extern int ${names.fail}(uint64_t *,const uint64_t *,uint32_t *);
+${getProto} {
+    if (!h || ${occupied}) return ${prefix}_INVALID;
+    int kind; switch (slot) { ${args.join(" ")} default: return ${prefix}_INVALID; }
+    uint64_t w[4]={0}; int status=${names.arg}(h,slot,w);
+    if (!status) status=lbphp_pack(kind,w,out);
+    ${wire.clear}(w); return status;
+}
+${putProto} {
+    if (!h || !args) return ${prefix}_INVALID;
+    uint64_t a[3]={0}, total=0; void *owned[1]={0};
+    int status=${prefix}_INVALID;
+    switch (slot) { ${replies.join("\n")} default: goto finish; }
+    status=${names.reply}(h,slot,a);
+finish:
+    free(owned[0]); return status;
+}
+${failProto} {
+    if (!h || !id || len>LIMIT || (len&&!msg)) return ${prefix}_INVALID;
+    uint64_t words[3]={(uintptr_t)msg,len,0}; return ${names.fail}(h,words,id);
+}`);
+			}
 		}
 	}
 	if(wire.wait)

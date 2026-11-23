@@ -130,9 +130,44 @@ depend on the scheduler.
 
 For a `Task (Except IO.Error α)`, additionally select the function in
 `taskIOErrors` if the error should reject the future. Otherwise a supported
-returned `Except` is data, not a thrown error. Native PHP currently supports
-direct tasks and pull protocols on this path, not retained host callbacks.
+returned `Except` is data, not a thrown error. To invoke PHP during the
+factory or worker, [export a task that calls PHP](#export-a-task-that-calls-php).
 See the [installed consumer example](../php.md#await-a-lean-task-or-iterate-a-stream).
+
+### Export a task that calls PHP
+
+An exported task can accept a function from a copied scalar to an IO result.
+For example, this worker asks PHP for two replies:
+
+```lean
+namespace Retained
+
+def repeatCall (s : String) (f : String → IO String) : BaseIO (Task (Except IO.Error String)) :=
+  IO.asTask do f (← f s)
+
+end Retained
+```
+
+In `lean-bridge.exports.json`, select the function as a task and select its
+terminal IO error. The ordinary-source configuration for this example is:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Retained"],
+  "exports": ["Retained.repeatCall"],
+  "taskExports": ["Retained.repeatCall"],
+  "taskIOErrors": ["Retained.repeatCall"],
+  "targets": { "php-native": { "name": "lean-bridge/retained", "version": "1.0.0" } }
+}
+```
+
+The reviewed-interface route checks the same signature against Lean source.
+No PHP callable address crosses into Lean. A worker sends a request to the
+owner event loop; PHP runs the callable there and replies with a copied value
+or exception. The same protocol works when the factory calls PHP before
+returning its task. See the [Composer consumer example](../php.md#pass-a-callback-to-a-lean-worker)
+and the [reproduced archive and installed results](../evidence/php-retained-tasks-20261123.json).
 
 ### Export a directly owned IO result
 

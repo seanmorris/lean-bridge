@@ -68,7 +68,7 @@ final class Delivery {
                 }
             } finally {
                 if ($this->subscription!==null) $this->cancel->unsubscribe($this->subscription);
-                unset(self::$live[$this]);
+                unset(self::$live[$this]);/*__LB_RELEASE_CALLBACKS__*/
                 $pending=$this->pending; $this->pending=null;
                 $pending?->error($reason??new LeanBridgeError('Lean stream closed during pull'));
             }

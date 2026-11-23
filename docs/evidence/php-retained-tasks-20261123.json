@@ -1,0 +1,95 @@
+{
+  "offlineCLI": {
+    "archive": {
+      "bytes": 51402986,
+      "path": "archives/lean-bridge-retained-1.0.0-linux-x86_64.zip",
+      "sha256": "61cc50907c029a83504b7c34d9081ef793e77b79cae81c99fde4582d7572dcc6"
+    },
+    "cliArchiveSha256": "aa0f29ec87b4d9f29dff055bcc41d8d22d97774409317e0177d0f05ef935f828",
+    "receiptSha256": "fb73caf14ab0ddd1f467fb2d56959ac3b59c4b333f368c4583b4daa4f50ac33a"
+  },
+  "packages": {
+    "ordinary": {
+      "archive": {
+        "bytes": 51402986,
+        "path": "archives/lean-bridge-retained-1.0.0-linux-x86_64.zip",
+        "sha256": "61cc50907c029a83504b7c34d9081ef793e77b79cae81c99fde4582d7572dcc6"
+      },
+      "bindingIrSha256": "78953b28fccb5f7bde55d5c55ecfade62e1ee7b937194f1359db08b60b8efc81",
+      "receiptSha256": "fb73caf14ab0ddd1f467fb2d56959ac3b59c4b333f368c4583b4daa4f50ac33a",
+      "retainedExports": 11,
+      "scalarSlots": 19
+    },
+    "reviewed": {
+      "archive": {
+        "bytes": 51403020,
+        "path": "archives/lean-bridge-retained-1.0.0-linux-x86_64.zip",
+        "sha256": "d8bfc2e0dc1f2769a615a8b17196056a2236f58c3322783ce467f7d52a370f4b"
+      },
+      "bindingIrSha256": "78953b28fccb5f7bde55d5c55ecfade62e1ee7b937194f1359db08b60b8efc81",
+      "receiptSha256": "f938632c8a04c742fbb1be1504231ca4b42d56b82a7093a0fc9cf7a2607291ed",
+      "retainedExports": 11,
+      "scalarSlots": 19
+    }
+  },
+  "profile": "native-php-task-v1",
+  "reports": [
+    {
+      "checks": 66,
+      "example": true,
+      "fdDelta": 0,
+      "live": 0,
+      "php": "8.2.35",
+      "receipt": "fb73caf14ab0ddd1f467fb2d56959ac3b59c4b333f368c4583b4daa4f50ac33a",
+      "route": "ordinary",
+      "shutdown": true
+    },
+    {
+      "checks": 66,
+      "example": true,
+      "fdDelta": 0,
+      "live": 0,
+      "php": "8.5.10",
+      "receipt": "fb73caf14ab0ddd1f467fb2d56959ac3b59c4b333f368c4583b4daa4f50ac33a",
+      "route": "ordinary",
+      "shutdown": true
+    },
+    {
+      "checks": 66,
+      "example": true,
+      "fdDelta": 0,
+      "live": 0,
+      "php": "8.2.35",
+      "receipt": "f938632c8a04c742fbb1be1504231ca4b42d56b82a7093a0fc9cf7a2607291ed",
+      "route": "reviewed",
+      "shutdown": true
+    },
+    {
+      "checks": 66,
+      "example": true,
+      "fdDelta": 0,
+      "live": 0,
+      "php": "8.5.10",
+      "receipt": "f938632c8a04c742fbb1be1504231ca4b42d56b82a7093a0fc9cf7a2607291ed",
+      "route": "reviewed",
+      "shutdown": true
+    }
+  ],
+  "scheduler": [
+    [
+      "amphp/amp",
+      "v3.1.3",
+      "6b9051b59037d5a763a43bed0c44571671ce8dc8d45be4cd256c9afa1fe3cd51"
+    ],
+    [
+      "revolt/event-loop",
+      "v1.1.0",
+      "a316f5d942d896aeae5826db5331738585fe4d8ebb603cbefc01ae4f6e18e4cf"
+    ]
+  ],
+  "sources": {
+    "example.php": "f7bd32ba584755047cf179c37b6f8f9a3466d77003939e868538ee71173f64bf",
+    "installed.php": "9a549e8d1f38e9671768c5a9d4e2efedba9c2936f6770279c1e2ad94f848f904",
+    "shutdown.php": "a6df632c7e3e3ffd6db3dea0a32b93667f7826be57f0338830e0ced313f1d7c3"
+  }
+}

@@ -133,7 +133,8 @@ operation. Passing one only to `$future->await($token)` cancels that wait;
 other callers can still await the same future. An already-running Lean task
 must cooperate to stop its computation. Late results never replace cancellation.
 
-A failure to *start* (for example, an `EIO` refusal) throws from the function.
+A failure to *start* (for example, an `EIO` refusal) throws from the function
+unless the factory takes a [retained PHP callback](#pass-a-callback-to-a-lean-worker).
 A selected terminal IO failure throws `TaskIOError` from `await()`. A typed
 stream failure is thrown while iterating. A returned `Except` remains an
 `Ok` or `Err` value in all three cases.
@@ -142,6 +143,41 @@ Breaking out of a normal `foreach` closes the cursor. If you retain the iterator
 itself, call `$stream->close()` in a `finally` block when you stop consuming it.
 This path is for native PHP CLI, not PHP-Wasm. See [how to export tasks](publish/php.md#export-tasks-and-pull-streams)
 and the [installed results and archive hashes](evidence/php-task-delivery-20261123.json).
+
+### Pass a callback to a Lean worker
+
+Pass a PHP callable to the generated function. Lean can invoke it more than
+once; each invocation runs on the PHP event loop, not on a Lean worker thread.
+Here Lean calls the same function twice:
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__.'/vendor/autoload.php';
+
+use function LeanRetained\repeat_call;
+
+$result = repeat_call('hello', static fn(string $text): string => $text.'!');
+echo $result->await(), "\n"; // hello!!
+```
+
+The future owns the callable until the operation settles or is cancelled. To
+revoke it sooner, wrap it in the package's `RetainedCallback` and call `close()`.
+A call already executing may finish; a later invocation throws `CallbackClosed`.
+A callback may call another export or await a different task. Do not await the
+callback's own unfinished task: that task needs your reply before it can finish.
+
+If your callback throws a PHP `Exception`, Lean can catch it. If Lean propagates
+it, `await()` throws the **same PHP object**. If Lean instead throws a new IO
+error, even with identical text, you receive the generated Lean exception.
+For exports with retained callbacks, both factory and worker failures arrive
+through the future: the exception type still identifies which failed. Returning
+a value of the wrong type rejects only that call. An unexpected PHP `Error`
+thrown by the callable retires the shared native runtime.
+
+See [how to export a task with callbacks](publish/php.md#export-a-task-that-calls-php)
+and the [installed PHP results](evidence/php-retained-tasks-20261123.json).
+This applies to native Composer packages, not PHP-Wasm.
 
 ### Share a resource between native PHP packages
 
@@ -1905,6 +1941,7 @@ the older package paths.
 | --- | --- | --- |
 | Synchronous `IO α` or `EIO ε α` | `α` before the call returns | `IOError` or a declaration-specific exception carrying `ε` |
 | Selected `Task α` | `Amp\Future` resolving to `α` | An operation token cancels the worker; an await token cancels only that waiter |
+| Selected worker callback `α → IO β` | A unary PHP callable returning a copied value | Retained through settlement; a propagated PHP exception keeps its identity |
 | Selected pull protocol | `PullStream` consumed with `foreach` | One outstanding pull; exhaustion, early exit or explicit close releases the cursor |
 
 See the [synchronous IO receipts](evidence/php-sync-io-20261123.json) and the
