@@ -1,0 +1,562 @@
+{
+  "schemaVersion": 1,
+  "kind": "installed-cpython-native-lean-resource-leases",
+  "date": "2026-11-23",
+  "nodes": [
+    1221,
+    1222,
+    1223
+  ],
+  "scope": "Separate Linux x86-64 CPython 3.11.16 and 3.12.14 ABI wheels on Lean 4.32.2, GCC 12.2.0 and glibc 2.36. Both ordinary and compiler-reviewed synchronous Desk and asyncio Depot share the source-owned Shared.Ticket and Shared.Badge; a third wheel deliberately changes the definition. Includes selector wakeup on native runtime retirement.",
+  "checks": [
+    "Each ABI has five original component wheels and the shared runtime dependency. pip restored three components offline on each author route. All archive RECORD file hashes and all installed payloads were checked. The clients then ran from relocated installs without developer tools or access to the wheel feed; tampered ledger bytes were rejected even after a good peer had loaded its copy.",
+    "Canonical CPython classes shared between compatible packages, rejection of a same-named foreign type and wrong kind, no construction or subclassing, independent retain/close, borrowed inputs, mutable identity and original callback exceptions. Direct and async EIO errors and stream step errors carry independently owned resource values.",
+    "Real tasks and pull streams: successful delivery, cooperative cancellation and late discarded results, copies of Python references versus independent leases, exhaustion, early close, cancellation after an item, and a worker-thread finalizer whose release is drained in the other package. Both compatible component load orders and a foreign-first process ended with one native runtime, three initialized components and zero live identities or leaked /dev/null descriptors.",
+    "Retiring the runtime alone wakes both already-blocked asyncio waiters. No unrelated callback or completion is needed. An open cursor releases its resources without running its application close hook; epoll and eventfd descriptor counts return to baseline.",
+    "mypy checks the actual installed stubs on both author routes: cross-package annotations, isinstance narrowing, declared EIO/step error payloads and three wrong-kind or foreign-definition rejections. The public stubs do not expose ledger words or pointers.",
+    "The complete ordinary CPython 3.11 Desk handoff (runtime and component wheels, receipt and elaboration evidence) was reproduced from a second independent path. The producer rejects extension bytes containing its staging root or CPython SDK include path."
+  ],
+  "limits": [
+    "Local release evidence, not hosted CI or registry publication. Python-owned host imports and resource-containing compound values have separate contracts.",
+    "The resource routes require the process main thread in the main interpreter. Creating a coroutine or an async iterator does not start Lean; keep its borrowed inputs open until it starts."
+  ],
+  "reproduce": [
+    "Use a clean directory for each ABI and a matching Linux x86-64 CPython/Lean toolchain. Set LEAN_BRIDGE_LEAN_PREFIX and LEAN_BRIDGE_PYTHON to those installations. The application needs no compiler or JavaScript after pip install.",
+    "LEAN_BRIDGE_PYTHON_LEASE_BUILD=$EVIDENCE node --test --test-concurrency=1 tests/helpers/python-resource-installed.mjs",
+    "Use mypy 1.18.2 in an independent verification environment. LEAN_BRIDGE_PYTHON_LEASE_CAPTURE=$EVIDENCE LEAN_BRIDGE_PYTHON_LEASE_MYPY=/path/to/mypy node --test --test-concurrency=1 tests/helpers/python-resource-installed.mjs",
+    "LEAN_BRIDGE_PYTHON_LEASE_REPLAY=$EVIDENCE LEAN_BRIDGE_PYTHON_LEASE_COMPARE_SOURCES=1 LEAN_BRIDGE_PYTHON_LEASE_MYPY=/path/to/mypy LEAN_BRIDGE_PYTHON_LEASE_EXPECTED=docs/evidence/python-resource-leases-20261123.json node --test --test-concurrency=1 tests/helpers/python-resource-installed.mjs",
+    "For the separate scalar regression, set LEAN_BRIDGE_HOST_OBJECT_TEST=1, LEAN_BRIDGE_HOST_PYTHON to the matching Python executable, and LEAN_BRIDGE_HOST_OBJECT_EVIDENCE_DIR to a clean location. Run node --test --test-concurrency=1 --test-name-pattern=\"offline installed Lean tasks wake\" tests/helpers/lean-task-installed.mjs.",
+    "For independent-root reproduction, set LEAN_BRIDGE_PYTHON_LEASE_ROUTE=ordinary and LEAN_BRIDGE_PYTHON_LEASE_ROLE=desk and build into a separate clean root. Point LEAN_BRIDGE_PYTHON_LEASE_ORIGINAL and LEAN_BRIDGE_PYTHON_LEASE_INDEPENDENT at the two roots and rerun the test."
+  ],
+  "independentProducer": {
+    "component": {
+      "bytes": 27458,
+      "path": "archives/lease_desk-1.0.0-cp311-cp311-linux_x86_64.whl",
+      "sha256": "4255aa9793814dfcd99109e62ee8c871bce15d2c046ddf28b7402596b099beaf"
+    },
+    "receiptSha256": "a9cf398757d140f4d7e908a8a81938da4b07aedacb54b7f779bd0bbed9d2c34f",
+    "runtime": {
+      "bytes": 51310803,
+      "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+      "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+    },
+    "sourceTreeSha256": "0e9648e3fffa6ca50a811874c6528f4ebbd3e0145216654bfc4152fa4ffd1ef9"
+  },
+  "scalarRegression": {
+    "interpreter": "cpython-311",
+    "routes": {
+      "ordinary": {
+        "acceptanceSha256": "f0d88d848435a1966cbc8219b9b817471be5c3dac4f0abb5467d41dd652cba8c",
+        "packageSetReceiptSha256": "424cc37dc1ca0d8f52bea7b87e6afd3f8b06fba67c0887f7d8d38167801d1693",
+        "cliArchiveSha256": "cbd60d3a49c90bbc4a6df2dff89aefbda39c907a473d7ede5cf25f0cb54ef3b0",
+        "clientSha256": "6cdce0e3e34e41d92cb74fcaec66d0b085f96fef7824fc80bdb0733502ee7e57",
+        "auditSha256": "f403e7ef8f30ce156d67f126809ed875b884824f1dcb457638c9f49393e9623f",
+        "streamsSha256": "b3194aae35522603a3695c0daba1033137a1dfb3b7480cc76e36ab4af3d23a3e"
+      },
+      "reviewed": {
+        "acceptanceSha256": "9aac92120b676434939949bca8af8ff35f0b946f6e5e85327af7343b0273e926",
+        "packageSetReceiptSha256": "bf97e60a4b07adb38698aaa3529f0bc51226b0c755ef6226a1581a38a287e4f3",
+        "cliArchiveSha256": "cbd60d3a49c90bbc4a6df2dff89aefbda39c907a473d7ede5cf25f0cb54ef3b0",
+        "clientSha256": "6cdce0e3e34e41d92cb74fcaec66d0b085f96fef7824fc80bdb0733502ee7e57",
+        "auditSha256": "f403e7ef8f30ce156d67f126809ed875b884824f1dcb457638c9f49393e9623f",
+        "streamsSha256": "b3194aae35522603a3695c0daba1033137a1dfb3b7480cc76e36ab4af3d23a3e"
+      }
+    }
+  },
+  "interpreters": {
+    "cpython-311": {
+      "acceptanceSha256": "518f12945ba4df3ec28cc8ee029d40b347845de45be0387838157ba87d60baea",
+      "installed": {
+        "clients": {
+          "example.py": "87953b616cf7f2851918f544e8ad0d9a3e066ed44f8eb0b6d2d7e2b39416da79",
+          "installed.py": "d757e36846f7acc8f49fc63a09a82b7d320ce56fe94265ae615808ee00b29928",
+          "observe.py": "3011e674f70f097847a7e52900dbcd8b2df609001cdad8c6f683b44a255839d3",
+          "verify_install.py": "7b32034be2f23b3aa715f7790993374aa13e2e4b631d3c8a700bb74de27b0968"
+        },
+        "interpreter": "cpython-311",
+        "rows": [
+          {
+            "ledger": {
+              "identity": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+              "name": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+              "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+            },
+            "orders": [
+              [
+                "lease_desk",
+                "lease_depot",
+                "other_desk"
+              ],
+              [
+                "lease_depot",
+                "lease_desk",
+                "other_desk"
+              ],
+              [
+                "other_desk",
+                "lease_desk",
+                "lease_depot"
+              ]
+            ],
+            "packages": [
+              {
+                "bindingIrSha256": "ee60ad11ce1e21e514b2adb14b1f27acd7988d1d7984aabcc8aad4651f00907c",
+                "component": {
+                  "bytes": 27458,
+                  "path": "archives/lease_desk-1.0.0-cp311-cp311-linux_x86_64.whl",
+                  "sha256": "4255aa9793814dfcd99109e62ee8c871bce15d2c046ddf28b7402596b099beaf"
+                },
+                "name": "lease-desk",
+                "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+                "profile": "native-python-io-v1",
+                "receiptSha256": "a9cf398757d140f4d7e908a8a81938da4b07aedacb54b7f779bd0bbed9d2c34f",
+                "reviewedSourceSha256": null,
+                "role": "desk",
+                "route": "ordinary",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "0e9648e3fffa6ca50a811874c6528f4ebbd3e0145216654bfc4152fa4ffd1ef9"
+              },
+              {
+                "bindingIrSha256": "a45c489cc2ac8817afe2f89b2b17d4d320fb6ef94e57faecc232915918294a2f",
+                "component": {
+                  "bytes": 53114,
+                  "path": "archives/lease_depot-1.0.0-cp311-cp311-linux_x86_64.whl",
+                  "sha256": "506631d0914bb99fc60210d0ff2c86a5322ee48e3f4c27570da09bbe622ff328"
+                },
+                "name": "lease-depot",
+                "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+                "profile": "native-python-task-v1",
+                "receiptSha256": "6eaf4612c2fe3c137c2da40373bbb643af735ac18849a1bf45aea2857bbab67f",
+                "reviewedSourceSha256": null,
+                "role": "depot",
+                "route": "ordinary",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "ac0a93a68cd982bcfe66b2241b05b9306b9cf922bcc11ece4c4d195242ea0678"
+              },
+              {
+                "bindingIrSha256": "54855cebc0472a188983b0951f260f4fd8eedc09346de2313d1acb345d22714b",
+                "component": {
+                  "bytes": 27515,
+                  "path": "archives/other_desk-1.0.0-cp311-cp311-linux_x86_64.whl",
+                  "sha256": "103ae41a5aec5701c6f751c4b5c8a7743d7f72d134a120f60bf9df2cf8d87ace"
+                },
+                "name": "other-desk",
+                "nominal": "resource:Shared.Ticket/ec937b0b3ec2754e2e77b7373c31d40bf5eeca96fe0df6a133583d377e0db07e",
+                "profile": "native-python-io-v1",
+                "receiptSha256": "1708202c9177bdd0a64a3df72ab853a4ff90519c0f6d22d5d3dbe0745455efda",
+                "reviewedSourceSha256": null,
+                "role": "desk",
+                "route": "lookalike",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "cbdd2ba20685de70f91d16d1a6b909782127b0da4aa7a15d4a321b2511e121be"
+              }
+            ],
+            "route": "ordinary",
+            "verified": {
+              "lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl": 9,
+              "lease_depot-1.0.0-cp311-cp311-linux_x86_64.whl": 12,
+              "lease_desk-1.0.0-cp311-cp311-linux_x86_64.whl": 12,
+              "other_desk-1.0.0-cp311-cp311-linux_x86_64.whl": 12
+            }
+          },
+          {
+            "ledger": {
+              "identity": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+              "name": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+              "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+            },
+            "orders": [
+              [
+                "lease_desk",
+                "lease_depot",
+                "other_desk"
+              ],
+              [
+                "lease_depot",
+                "lease_desk",
+                "other_desk"
+              ],
+              [
+                "other_desk",
+                "lease_desk",
+                "lease_depot"
+              ]
+            ],
+            "packages": [
+              {
+                "bindingIrSha256": "ee60ad11ce1e21e514b2adb14b1f27acd7988d1d7984aabcc8aad4651f00907c",
+                "component": {
+                  "bytes": 27500,
+                  "path": "archives/lease_desk-1.0.0-cp311-cp311-linux_x86_64.whl",
+                  "sha256": "8c80c70618289ddfbb3b6d376442997a3b2a08949643e43f7938f9eacaf0fd7c"
+                },
+                "name": "lease-desk",
+                "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+                "profile": "native-python-io-v1",
+                "receiptSha256": "55a38dc5e162493007fc42c1d6db315864c278c5900f51e5aa8ada8db057b01b",
+                "reviewedSourceSha256": "69d1715918cd541a3b9967c97a7c86fa19a258d8a3eb4cc957fb6ecb6b18b263",
+                "role": "desk",
+                "route": "reviewed",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "9faf2c4f392e497bd433f8555bbbb93fc64b5e0852c77077a376271b98a31530"
+              },
+              {
+                "bindingIrSha256": "a45c489cc2ac8817afe2f89b2b17d4d320fb6ef94e57faecc232915918294a2f",
+                "component": {
+                  "bytes": 53160,
+                  "path": "archives/lease_depot-1.0.0-cp311-cp311-linux_x86_64.whl",
+                  "sha256": "5902aaadd513caa2a399959dcb145b1cc9b3ca4db783a8934825eff894c6d7d5"
+                },
+                "name": "lease-depot",
+                "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+                "profile": "native-python-task-v1",
+                "receiptSha256": "81336ad8c4b5be6db3f324e5410b4e5c1c2738db0e1fd3f36aa6e12db9a43209",
+                "reviewedSourceSha256": "a52893e58ea8eb392b703dc4e9160287c4c067fb7c7f74d0c46f88de9b3654c1",
+                "role": "depot",
+                "route": "reviewed",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "78b912c9ce136b4757bbc37402cd738331ffa57f446bf02dccb656ecd6a795b3"
+              },
+              {
+                "bindingIrSha256": "54855cebc0472a188983b0951f260f4fd8eedc09346de2313d1acb345d22714b",
+                "component": {
+                  "bytes": 27515,
+                  "path": "archives/other_desk-1.0.0-cp311-cp311-linux_x86_64.whl",
+                  "sha256": "103ae41a5aec5701c6f751c4b5c8a7743d7f72d134a120f60bf9df2cf8d87ace"
+                },
+                "name": "other-desk",
+                "nominal": "resource:Shared.Ticket/ec937b0b3ec2754e2e77b7373c31d40bf5eeca96fe0df6a133583d377e0db07e",
+                "profile": "native-python-io-v1",
+                "receiptSha256": "1708202c9177bdd0a64a3df72ab853a4ff90519c0f6d22d5d3dbe0745455efda",
+                "reviewedSourceSha256": null,
+                "role": "desk",
+                "route": "lookalike",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "cbdd2ba20685de70f91d16d1a6b909782127b0da4aa7a15d4a321b2511e121be"
+              }
+            ],
+            "route": "reviewed",
+            "verified": {
+              "lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl": 9,
+              "lease_depot-1.0.0-cp311-cp311-linux_x86_64.whl": 12,
+              "lease_desk-1.0.0-cp311-cp311-linux_x86_64.whl": 12,
+              "other_desk-1.0.0-cp311-cp311-linux_x86_64.whl": 12
+            }
+          }
+        ],
+        "schemaVersion": 1
+      },
+      "staticChecks": [
+        {
+          "checkerVersion": "mypy 1.18.2 (compiled: yes)",
+          "clients": {
+            "typed.py": "5e56a84cba4ee1d7e4265858b54c7d19d38c23ce4dc59be6a50447851c326697",
+            "wrong_types.py": "93d7a70643999c20e94597b08a6dfa5acf540a12233e59edc406b99763ca611d"
+          },
+          "rejectedArgumentLines": [
+            8,
+            9,
+            10
+          ],
+          "route": "ordinary"
+        },
+        {
+          "checkerVersion": "mypy 1.18.2 (compiled: yes)",
+          "clients": {
+            "typed.py": "5e56a84cba4ee1d7e4265858b54c7d19d38c23ce4dc59be6a50447851c326697",
+            "wrong_types.py": "93d7a70643999c20e94597b08a6dfa5acf540a12233e59edc406b99763ca611d"
+          },
+          "rejectedArgumentLines": [
+            8,
+            9,
+            10
+          ],
+          "route": "reviewed"
+        }
+      ]
+    },
+    "cpython-312": {
+      "acceptanceSha256": "0dcda1514564d512d5d1c3d10b73c259026ff20c734fefecc77107fcc9c3040e",
+      "installed": {
+        "clients": {
+          "example.py": "87953b616cf7f2851918f544e8ad0d9a3e066ed44f8eb0b6d2d7e2b39416da79",
+          "installed.py": "d757e36846f7acc8f49fc63a09a82b7d320ce56fe94265ae615808ee00b29928",
+          "observe.py": "3011e674f70f097847a7e52900dbcd8b2df609001cdad8c6f683b44a255839d3",
+          "verify_install.py": "7b32034be2f23b3aa715f7790993374aa13e2e4b631d3c8a700bb74de27b0968"
+        },
+        "interpreter": "cpython-312",
+        "rows": [
+          {
+            "ledger": {
+              "identity": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+              "name": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+              "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+            },
+            "orders": [
+              [
+                "lease_desk",
+                "lease_depot",
+                "other_desk"
+              ],
+              [
+                "lease_depot",
+                "lease_desk",
+                "other_desk"
+              ],
+              [
+                "other_desk",
+                "lease_desk",
+                "lease_depot"
+              ]
+            ],
+            "packages": [
+              {
+                "bindingIrSha256": "ee60ad11ce1e21e514b2adb14b1f27acd7988d1d7984aabcc8aad4651f00907c",
+                "component": {
+                  "bytes": 27712,
+                  "path": "archives/lease_desk-1.0.0-cp312-cp312-linux_x86_64.whl",
+                  "sha256": "1ce768fcfa6fb5f57d6f64cc8936dfa6c9d64272e40229b22603d1066924394e"
+                },
+                "name": "lease-desk",
+                "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+                "profile": "native-python-io-v1",
+                "receiptSha256": "9b194543337251c44b182b8a04984c68fb9d93d30997cca9516a7bd6e7c2532e",
+                "reviewedSourceSha256": null,
+                "role": "desk",
+                "route": "ordinary",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "0e9648e3fffa6ca50a811874c6528f4ebbd3e0145216654bfc4152fa4ffd1ef9"
+              },
+              {
+                "bindingIrSha256": "a45c489cc2ac8817afe2f89b2b17d4d320fb6ef94e57faecc232915918294a2f",
+                "component": {
+                  "bytes": 53925,
+                  "path": "archives/lease_depot-1.0.0-cp312-cp312-linux_x86_64.whl",
+                  "sha256": "4c740c43bf5a998c57ca19d4169f0cd7a6fc9e9984d17d8bae2ae654e80efa3e"
+                },
+                "name": "lease-depot",
+                "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+                "profile": "native-python-task-v1",
+                "receiptSha256": "0ddb71b1eb72a2cb1a22c159fcc880da47010b21bf24b21f2a236cad429038f0",
+                "reviewedSourceSha256": null,
+                "role": "depot",
+                "route": "ordinary",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "ac0a93a68cd982bcfe66b2241b05b9306b9cf922bcc11ece4c4d195242ea0678"
+              },
+              {
+                "bindingIrSha256": "54855cebc0472a188983b0951f260f4fd8eedc09346de2313d1acb345d22714b",
+                "component": {
+                  "bytes": 27798,
+                  "path": "archives/other_desk-1.0.0-cp312-cp312-linux_x86_64.whl",
+                  "sha256": "c9885cf75bdd03ca6696df40d0015a6370b94aea405f71e2fb4d4e07cee64c13"
+                },
+                "name": "other-desk",
+                "nominal": "resource:Shared.Ticket/ec937b0b3ec2754e2e77b7373c31d40bf5eeca96fe0df6a133583d377e0db07e",
+                "profile": "native-python-io-v1",
+                "receiptSha256": "36fb5c21aea5935b263b3a5ccac5fdb1f5775671d70b94bc97b1d5ff614c9eef",
+                "reviewedSourceSha256": null,
+                "role": "desk",
+                "route": "lookalike",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "cbdd2ba20685de70f91d16d1a6b909782127b0da4aa7a15d4a321b2511e121be"
+              }
+            ],
+            "route": "ordinary",
+            "verified": {
+              "lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl": 9,
+              "lease_depot-1.0.0-cp312-cp312-linux_x86_64.whl": 12,
+              "lease_desk-1.0.0-cp312-cp312-linux_x86_64.whl": 12,
+              "other_desk-1.0.0-cp312-cp312-linux_x86_64.whl": 12
+            }
+          },
+          {
+            "ledger": {
+              "identity": "45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5",
+              "name": "liblb_task_resources_45d982ab18349b5cd139bad286f919eb140ed1882febb61ed4715f2be31a97c5.so",
+              "sha256": "39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381"
+            },
+            "orders": [
+              [
+                "lease_desk",
+                "lease_depot",
+                "other_desk"
+              ],
+              [
+                "lease_depot",
+                "lease_desk",
+                "other_desk"
+              ],
+              [
+                "other_desk",
+                "lease_desk",
+                "lease_depot"
+              ]
+            ],
+            "packages": [
+              {
+                "bindingIrSha256": "ee60ad11ce1e21e514b2adb14b1f27acd7988d1d7984aabcc8aad4651f00907c",
+                "component": {
+                  "bytes": 27759,
+                  "path": "archives/lease_desk-1.0.0-cp312-cp312-linux_x86_64.whl",
+                  "sha256": "f96d5a08b0a5133cb274f2ac5cb2c294992d72eca80daba99f12952945045f35"
+                },
+                "name": "lease-desk",
+                "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+                "profile": "native-python-io-v1",
+                "receiptSha256": "72386bda7130180bd983e263ddb1ffea121031f7d6da732a94b396d1bf349b18",
+                "reviewedSourceSha256": "69d1715918cd541a3b9967c97a7c86fa19a258d8a3eb4cc957fb6ecb6b18b263",
+                "role": "desk",
+                "route": "reviewed",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "9faf2c4f392e497bd433f8555bbbb93fc64b5e0852c77077a376271b98a31530"
+              },
+              {
+                "bindingIrSha256": "a45c489cc2ac8817afe2f89b2b17d4d320fb6ef94e57faecc232915918294a2f",
+                "component": {
+                  "bytes": 53966,
+                  "path": "archives/lease_depot-1.0.0-cp312-cp312-linux_x86_64.whl",
+                  "sha256": "c34b82064ba6473eaf0cbfdfd109ad223b0e6f3466a7ac42ead171bcce402c90"
+                },
+                "name": "lease-depot",
+                "nominal": "resource:Shared.Ticket/3120a1c013a933b5e4983c82ae23d457fd617496b40e2e7474dc39de4022c6d4",
+                "profile": "native-python-task-v1",
+                "receiptSha256": "4392d920b59a470d2797729bc2da949bac7af281d34aac53bd102d064c48b0e1",
+                "reviewedSourceSha256": "a52893e58ea8eb392b703dc4e9160287c4c067fb7c7f74d0c46f88de9b3654c1",
+                "role": "depot",
+                "route": "reviewed",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "78b912c9ce136b4757bbc37402cd738331ffa57f446bf02dccb656ecd6a795b3"
+              },
+              {
+                "bindingIrSha256": "54855cebc0472a188983b0951f260f4fd8eedc09346de2313d1acb345d22714b",
+                "component": {
+                  "bytes": 27798,
+                  "path": "archives/other_desk-1.0.0-cp312-cp312-linux_x86_64.whl",
+                  "sha256": "c9885cf75bdd03ca6696df40d0015a6370b94aea405f71e2fb4d4e07cee64c13"
+                },
+                "name": "other-desk",
+                "nominal": "resource:Shared.Ticket/ec937b0b3ec2754e2e77b7373c31d40bf5eeca96fe0df6a133583d377e0db07e",
+                "profile": "native-python-io-v1",
+                "receiptSha256": "36fb5c21aea5935b263b3a5ccac5fdb1f5775671d70b94bc97b1d5ff614c9eef",
+                "reviewedSourceSha256": null,
+                "role": "desk",
+                "route": "lookalike",
+                "runtime": {
+                  "bytes": 51310803,
+                  "path": "archives/lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl",
+                  "sha256": "29684f9b6e49a8723dd242712b60197ebf9414d1206537d00194679a0af2d0fd"
+                },
+                "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+                "runtimePackageVersion": "1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358",
+                "sourceTreeSha256": "cbdd2ba20685de70f91d16d1a6b909782127b0da4aa7a15d4a321b2511e121be"
+              }
+            ],
+            "route": "reviewed",
+            "verified": {
+              "lean_bridge_host_runtime-1+435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.f2967c3ae67781788ad876a69a4073264c437fa85d82a60b6c1cce02df38b358-py3-none-linux_x86_64.whl": 9,
+              "lease_depot-1.0.0-cp312-cp312-linux_x86_64.whl": 12,
+              "lease_desk-1.0.0-cp312-cp312-linux_x86_64.whl": 12,
+              "other_desk-1.0.0-cp312-cp312-linux_x86_64.whl": 12
+            }
+          }
+        ],
+        "schemaVersion": 1
+      },
+      "staticChecks": [
+        {
+          "checkerVersion": "mypy 1.18.2 (compiled: yes)",
+          "clients": {
+            "typed.py": "5e56a84cba4ee1d7e4265858b54c7d19d38c23ce4dc59be6a50447851c326697",
+            "wrong_types.py": "93d7a70643999c20e94597b08a6dfa5acf540a12233e59edc406b99763ca611d"
+          },
+          "rejectedArgumentLines": [
+            8,
+            9,
+            10
+          ],
+          "route": "ordinary"
+        },
+        {
+          "checkerVersion": "mypy 1.18.2 (compiled: yes)",
+          "clients": {
+            "typed.py": "5e56a84cba4ee1d7e4265858b54c7d19d38c23ce4dc59be6a50447851c326697",
+            "wrong_types.py": "93d7a70643999c20e94597b08a6dfa5acf540a12233e59edc406b99763ca611d"
+          },
+          "rejectedArgumentLines": [
+            8,
+            9,
+            10
+          ],
+          "route": "reviewed"
+        }
+      ]
+    }
+  }
+}

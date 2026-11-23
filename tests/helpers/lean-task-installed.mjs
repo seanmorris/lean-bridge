@@ -268,6 +268,7 @@ test("offline installed Lean tasks wake asyncio, forward cancellation and clean 
 		assert.equal(stderr, ""); assert.match(stdout, /loop shutdown, fork rejection and descriptor baseline/u);
 		assert.match(stdout, /0\/1\/1\/0 leases and prompt process shutdown/u);
 		assert.match(stdout, /independent pull leases: idle 0\/1\/0; pending 0\/2\/1\/0; descriptors restored/u);
+		assert.match(stdout, /retirement alone woke both pending tasks; all selector descriptors and native leases released/u);
 		assert.match(stdout, /compiled streams: demand, exhaustion, scoped break, error ordering, pending close\/cancel, late result and loop shutdown/u);
 		const example = await exec(python, ["-S", "-B", "stream-example.py"], { cwd: root
 			, env: { PATH: "/unavailable", PYTHONPATH: path, LEAN_NUM_THREADS: "1" } });

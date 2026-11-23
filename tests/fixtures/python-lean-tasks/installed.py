@@ -68,7 +68,8 @@ async def exercise():
     delivered = []
     job.add_done_callback(delivered.append)
     await phase(1)
-    assert not job.done() and fd_count() == warm + 1
+    # A suspended wait has a completion fd, a shared retirement fd and a selector.
+    assert not job.done() and fd_count() == warm + 3
     timers.release()
     assert await job == timers.Ok(label)
     await asyncio.sleep(0)

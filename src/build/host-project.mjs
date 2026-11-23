@@ -91,7 +91,7 @@ export const buildHostProject = async options => {
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
 	await absent(output);
 	assertExportConfigurationCapabilities(config, { target
-		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "nativeEffects", "package", ...target === "pypi" ? [] : ["resources"]]
+		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "nativeEffects", "package", "resources"]
 		, targetFields: ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.[target] ?? {}, name = settings.name ?? (target === "nuget" ? dotnetComponentAssembly(component) : `lean-${component.name.toLowerCase().replaceAll("_", "-")}`);

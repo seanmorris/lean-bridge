@@ -172,6 +172,11 @@ Schema-3 reviewed builds reject resources and callbacks inside copied containers
 
 A task release is a separate profile. Select actual Lean `Task` factories with `taskExports`; add `taskIOErrors` only for an outer `Except IO.Error` that should reject the task. A task can retain a unary `α → IO β` callback over copied scalars on [C's main-thread polling loop](../publish/c.md#export-a-callback-taking-task), [C++'s main-thread dispatcher](../publish/cpp.md#export-a-callback-taking-task), [Rust's owning executor](../publish/cargo.md#export-a-callback-taking-task), or [Python's owning event loop](../publish/pypi.md#let-a-lean-task-call-python). The usual borrowed, synchronous callback profile is unchanged.
 
+Independently built Python IO and asyncio wheels can also
+[share a Lean-owned resource](../publish/pypi.md#export-a-shared-lean-resource)
+as a direct input, output, typed error, or stream item. Use `hostImports`
+instead when Lean needs to call a Python-owned object's methods.
+
 The [NuGet task profile](../publish/nuget.md#export-tasks-and-pull-streams)
 turns actual Lean tasks into C# `Task` or `Task<T>` and pull protocols into
 `IAsyncEnumerable<T>`. Independent NuGet packages share the application's

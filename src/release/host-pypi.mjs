@@ -16,6 +16,7 @@ import { validateOrdinaryPythonSettings } from "../backends/python/copied-model.
 import { pythonPackageMetadata } from "../analyze/package-metadata.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { compileHostSources } from "../build/host-elaboration.mjs";
+import { compileTaskResourceLedger, taskResourceLedger } from "../build/task-resource-ledger.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { writeWheelRecord } from "./wheel-record.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
@@ -108,12 +109,20 @@ export const buildPythonHostWheel = async options => {
 		const app = join(stage, "producer"), root = join(stage, "wheel", pkg);
 		const { entries, env, objects, api, evidence } = await compileHostSources({ ...options, environment, run, app });
 		const synchronous = projectContract?.synchronousIO === true;
-		const config = { ir, module, entries, runtimeIdentity: identity, modules: projectContract?.modules, synchronousIO: synchronous };
+		const leanResources = api?.types.filter(t => t.kind === "resource" && !t.host && t.source?.producer === "lean") ?? [];
+		const ledger = leanResources.length ? await taskResourceLedger(identity) : null;
+		const config = { ir, module, entries, runtimeIdentity: identity
+			, modules: projectContract?.modules, synchronousIO: synchronous
+			, ...ledger ? { leanResources, ledgerId: ledger.id } : {} };
+		const leaseLoader = ledger && await readFile(new URL("../backends/python/resource-loader.py", import.meta.url), "utf8");
 		const skeleton = generatePythonHostExtension({ ...config, componentIdentity: "0".repeat(64) });
 		const sourceIdentity = sources.map(s => ({ module: s.module, sha256: sha256(s.source) }));
 		const sourceTreeSha256 = projectContract?.sourceTreeSha256 ?? sha256(canonicalJson({ name, version, module, entries, sourceIdentity, bindingIrSha256: skeleton.bindingIrSha256, licenseSha256: sha256(license) }));
 		const runtimePackageVersion = loaderVersion(identity, await readFile(loaderPath));
-		const componentIdentity = sha256(canonicalJson({ sourceTreeSha256, skeleton, tag, runtimePackageVersion, ...(evidence ? { provenance: evidence } : {}) }));
+		const componentIdentity = sha256(canonicalJson({ sourceTreeSha256
+			, skeleton, tag, runtimePackageVersion
+			, ...(evidence ? { provenance: evidence } : {})
+			, ...ledger ? { resourceLedger: ledger.id, loader: sha256(leaseLoader) } : {} }));
 		const generated = generatePythonHostExtension({ ...config, componentIdentity });
 		await save(app, "BridgeHostExports.lean", generated.entryLean);
 		await run(join(leanPrefix, "bin/lean"), ["-j1", "-c", "entry.c", "BridgeHostExports.lean"], app, env);
@@ -125,16 +134,31 @@ export const buildPythonHostWheel = async options => {
 		await save(app, "exports.map", "{ global: PyInit__native; local: *; };\n");
 		await mkdir(root, { recursive: true });
 		const binary = `_native${suffix}`;
+		let ledgerDigest;
+		if(ledger)
+		{
+			await compileTaskResourceLedger({ ledger, app, runtimeRoot, cc, run });
+			const bytes = await readFile(join(app, ledger.name)); validateNativeElf(bytes);
+			ledgerDigest = sha256(bytes); await save(root, ledger.name, bytes);
+		}
 		await run(cc, [
 			"-std=gnu11", "-O1", "-g0", "-shared", "-fPIC"
+			// Lean and CPython headers can embed __FILE__ even with no debug info.
+			, `-ffile-prefix-map=${workRoot}=/build/lean-bridge`
+			, `-ffile-prefix-map=${app}=/build/lean-bridge/component`
+			, `-ffile-prefix-map=${runtimeRoot}=/build/lean-bridge/runtime`
+			, `-ffile-prefix-map=${include}=/build/lean-bridge/${abi}/include`
 			, "-I", join(runtimeRoot, "include"), "-I", include, ...objects
 			, "provider.c", "-L", join(runtimeRoot, "lib")
 			, "-lleanshared", "-llean_bridge_native", pylib
+			, ...ledger ? [ledger.flag, "-L.", "-l:" + ledger.name, "-Wl,-z,nodelete", "-Wl,-rpath,$ORIGIN"] : []
 			, "-Wl,-z,defs", "-Wl,--build-id=none", "-Wl,--version-script=exports.map"
 			, `-Wl,-rpath,$ORIGIN/../${runtimeModule}/lib`
 			, "-pthread", "-lm", "-o", join(root, binary)
 		], app);
 		const bytes = await readFile(join(root, binary)); validateNativeElf(bytes);
+		if([resolve(workRoot), resolve(include)].some(path => bytes.includes(Buffer.from(path))))
+			throw new Error("CPython extension retained a private producer or SDK path");
 		await save(root, "__init__.py", `from ${runtimeModule} import _verify
 from hashlib import file_digest as _digest
 from pathlib import Path as _Path
@@ -142,10 +166,10 @@ _runtime = _verify("${identity}")
 with (_Path(__file__).parent / "${binary}").open("rb") as _binary:
     if _digest(_binary, "sha256").hexdigest() != "${sha256(bytes)}":
         raise ImportError("compiled Lean component identity differs")
-${generated.python}
+${ledger ? `${leaseLoader}\n_lb_ledger = _lb_load_ledger("${ledger.id}", "${ledgerDigest}")\n` : ""}${generated.python}
 if not _native._matches_runtime(*_runtime):
     raise ImportError("extension resolved a different Lean runtime")
-del _runtime
+del _runtime${ledger ? '\nif not _native._matches_ledger(_lb_ledger):\n    raise ImportError("extension resolved a different Lean resource ledger")\ndel _lb_ledger' : ""}
 `);
 		await save(root, "__init__.pyi", generated.stub); await save(root, "py.typed", "");
 		await save(root, "host_types.py", generated.types);
@@ -161,7 +185,7 @@ del _runtime
 			, runtimeIdentity: identity, bindingIrSha256
 			, hostImportsSha256: generated.bindingIrSha256
 			, entries, module, tag, binary, binarySha256: sha256(bytes)
-			, runtimePackageVersion
+			, runtimePackageVersion, ...ledger ? { resourceLedger: { name: ledger.name, identity: ledger.id, sha256: ledgerDigest } } : {}
 		}));
 		const archive = await wheel({
 			stage, output, name, version, tag

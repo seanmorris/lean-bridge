@@ -43,7 +43,7 @@ export const prepareLeaseProject = async (root, route, role, target) => {
 		config.taskIOErrors = ["Exchange.revisit"];
 	}
 	else await copy(cases, "Desk.lean");
-	const pkg = target === "rubygems" ? name : "Acme." + (task ? "Depot" : route === "lookalike" ? "OtherDesk" : "Desk");
+	const pkg = target === "nuget" ? "Acme." + (task ? "Depot" : route === "lookalike" ? "OtherDesk" : "Desk") : name;
 	config.targets = { [target]: { name: pkg, version: "1.0.0" } };
 	if(route === "reviewed")
 	{

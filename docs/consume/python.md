@@ -139,6 +139,9 @@ call. Lean notifies the event loop when the result is ready. Use
 `asyncio.create_task`, `asyncio.gather`, and `cancel()` as usual. Cancellation
 stops delivery and asks Lean to cancel; a computation that doesn't check
 `IO.checkCanceled` can still finish, but can't deliver a second result.
+If the shared runtime retires, every pending wait wakes and raises
+`RuntimeError`; it does not need another completion or a Python callback
+to arrive first.
 No Python worker thread, polling loop or manual runtime setup is required.
 
 ### Pass a callback to a Lean task
@@ -201,6 +204,52 @@ without emitting a late item. Cancelling the reader propagates
 A typed startup failure raises `LeanEIOError`. A typed failure during a pull
 raises `LeanStreamError`, with `declaration` and `payload`. An `Ok` or `Err`
 yielded as an item is still a value. See the [working consumer](../../tests/fixtures/python-lean-tasks/streams.py).
+
+### Share a Lean resource across packages
+
+Two wheels built against the same Lean definition share the same Python
+class: `lease_desk.Ticket is lease_depot.Ticket`. Use a ticket from either
+package directly in the other. This example prints `42`:
+
+```python
+import asyncio
+import lease_desk as desk
+import lease_depot as depot
+
+
+async def main():
+    with desk.issue(40) as ticket:
+        with await depot.revisit(ticket, lambda n: n + 2) as returned:
+            assert returned.same_resource(ticket)
+            print(desk.count(returned))
+
+
+asyncio.run(main())
+```
+
+A returned ticket owns a lease. `with` releases it on exit; `close()` is
+idempotent. Assigning another variable does not acquire a lease. Call
+`ticket.retain()` for an independently closable owner, and
+`ticket.same_resource(other)` to compare the underlying Lean objects.
+Use the original process main thread and keep the argument open until the
+coroutine starts or the stream first pulls. A coroutine or stream sitting
+in a variable has not called Lean yet.
+
+A resource returned as a stream item or as `LeanEIOError.payload` or
+`LeanStreamError.payload` also owns a lease. You can close the original
+argument and keep using that result. The packages reject a closed lease,
+another kind of resource, or a same-named type built from different Lean
+source. No raw handles, callback registration, or runtime setup are needed.
+If a worker thread drops the last Python reference, the next resource
+call on the main thread drains the deferred release. Use `with` when the
+release must happen at a particular point.
+The installed type stubs also distinguish these definitions when you check
+calls across packages. If the package declares several error payload types,
+the exception's `payload` annotation lists their union; use `isinstance` to
+narrow it before using the value.
+See the [author configuration](../publish/pypi.md#export-a-shared-lean-resource),
+the [installed client](../../tests/fixtures/python-task-resources/installed.py),
+and the [CPython 3.11 and 3.12 verification receipts](../evidence/python-resource-leases-20261123.json).
 
 ### Arrays and records
 
@@ -997,6 +1046,8 @@ The [hosted generic-Subtype matrix](../evidence/generic-subtype-promotion-202610
 Profiles: Python. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
+
+For native Python wheels, the [IO](#call-synchronous-io) and [asyncio](#await-a-lean-task) profiles also support [shared Lean resources](#share-a-lean-resource-across-packages). The general audit rows below are separate from those installed profiles.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Python in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

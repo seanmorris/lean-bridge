@@ -1,5 +1,6 @@
 """Independent observer of the installed broker; not application glue."""
 import asyncio
+from collections import Counter
 import ctypes
 import os
 from pathlib import Path
@@ -26,6 +27,18 @@ def leases():
     value = Snapshot()
     lib.lean_bridge_native_snapshot_read(ctypes.byref(value))
     return value.live
+
+
+def poll_fds():
+    result = Counter()
+    for fd in Path("/proc/self/fd").iterdir():
+        try:
+            name = os.readlink(fd)
+            if name in ("anon_inode:[eventfd]", "anon_inode:[eventpoll]"):
+                result[name] += 1
+        except FileNotFoundError:
+            pass
+    return result
 
 
 async def audit():
@@ -80,15 +93,16 @@ async def stream_leases():
     assert leases() == 0
     timers.reset()
     stream = timers.series(1, 3, 10, True, False, False, "late")
-    nfd = len(os.listdir("/proc/self/fd"))
+    before = poll_fds()
     pending = asyncio.create_task(anext(stream, "done"))
     async with asyncio.timeout(10):
         while timers.state() != 1:
             await asyncio.sleep(.005)
-        assert leases() == 2 and len(os.listdir("/proc/self/fd")) == nfd + 1
+        # One completion event, one shared retirement event, one selector gate.
+        assert leases() == 2 and poll_fds() == before + Counter({"anon_inode:[eventfd]": 2, "anon_inode:[eventpoll]": 1})
         await stream.aclose()
         assert await pending == "done" and leases() == 1
-        assert len(os.listdir("/proc/self/fd")) == nfd
+        assert poll_fds() == before
         timers.release()
         while leases():
             await asyncio.sleep(.005)
@@ -104,3 +118,35 @@ child = subprocess.run([sys.executable, "-S", "-B", "consumer.py", "--exit-with-
                        timeout=12, capture_output=True, text=True, check=True)
 assert child.stdout.strip() == "exiting with uncancelled native work" and not child.stderr
 print("independent broker: 0/1/1/0 leases and prompt process shutdown with late work")
+
+
+async def idle_retirement():
+    timers.reset()
+    loop = asyncio.get_running_loop()
+    add, waiting, before = loop.add_reader, set(), poll_fds()
+    def register(fd, fn, *args):
+        add(fd, fn, *args)
+        waiting.add(fd)
+    loop.add_reader = register
+    try:
+        jobs = [asyncio.create_task(timers.open_task(True, str(i))) for i in range(2)]
+        async with asyncio.timeout(10):
+            while len(waiting) != 2 or timers.state() != 1:
+                await asyncio.sleep(.005)
+    finally:
+        loop.add_reader = add
+    lib.lean_bridge_native_runtime_retire.argtypes = []
+    lib.lean_bridge_native_runtime_retire.restype = None
+    lib.lean_bridge_native_runtime_retire()
+    done, pending = await asyncio.wait(jobs, timeout=10)
+    assert len(done) == 2 and not pending, "retirement did not wake both idle waits"
+    for job in done:
+        err = job.exception()
+        assert isinstance(err, RuntimeError) and "runtime" in str(err)
+    async with asyncio.timeout(10):
+        while leases() or poll_fds() != before:
+            await asyncio.sleep(.005)
+    print("retirement alone woke both pending tasks; all selector descriptors and native leases released")
+
+
+asyncio.run(idle_retirement())

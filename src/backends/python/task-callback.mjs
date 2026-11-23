@@ -46,7 +46,8 @@ def _lb_outcome(outcome, faults, declaration, terminal):
 export const retainedEntry = options => {
 	const { entry, i, scalar, returned, slots } = options;
 	const { parameters, name, declaration, effect } = entry, typed = effect === "EIO";
-	if(parameters.some(p => !cb(p) && p.type.kind !== "primitive")) throw new TypeError("retained tasks require copied scalar inputs");
+	if(parameters.some(p => !cb(p) && p.type.kind !== "primitive" && !options.owned?.some(r => p.type.kind === "named" && r.id === p.type.id)))
+		throw new TypeError("retained tasks require copied scalar inputs or checked Lean resources");
 	const value = returned(entry.result), err = typed && returned(entry.error);
 	const params = parameters.map((p, j) => ({ p, j, c: cb(p) ? null : scalar(p.type) }));
 	const ordinary = params.filter(x => x.c), callbacks = params.filter(x => !x.c);

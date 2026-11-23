@@ -117,6 +117,38 @@ needs no OS access. The `native-python-io-v1` package exposes ordinary Python
 functions; the exact shared runtime wheel is a package dependency. No host
 binding or asyncio loop is required. See [how Python handles errors](../consume/python.md#call-synchronous-io).
 
+## Export a shared Lean resource
+
+Use `resources` for an opaque Lean-owned heap type. For example, Desk issues a
+`Shared.Ticket` that owns a mutable counter and a file descriptor:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Desk"],
+  "exports": ["Desk.issue", "Desk.count", "Desk.checkTicket"],
+  "resources": ["Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"pypi": {"name": "lease-desk", "version": "1.0.0"}}
+}
+```
+
+The [Desk module](../../tests/fixtures/ruby-task-resources/Desk.lean) imports
+the [resource definition](../../tests/fixtures/resource-tasks/Shared.lean).
+Select the same definition in a second package's `resources` list to borrow
+or return tickets there. Its compiler and declaring module's transitive
+application imports must match; unrelated entry modules need not match.
+The two packages share the Python class and ownership ledger. No Python
+implementation of the resource or separate namespace package is required.
+
+Build each project normally with `--target pypi`. Select genuine task
+factories in `taskExports`, and pull protocols in `asyncIterators`. A direct
+resource can be an argument, result, declared failure, or stream item.
+Resource-containing copied sums are a different contract; `resources` by
+itself does not make their ownership unambiguous. See
+[how Python code uses the installed pair](../consume/python.md#share-a-lean-resource-across-packages)
+and the [wheel verification receipts and replay instructions](../evidence/python-resource-leases-20261123.json).
+
 ## Export a Lean task to asyncio
 
 If the Lean code uses files, environment variables, or other OS facilities,

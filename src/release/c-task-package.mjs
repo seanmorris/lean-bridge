@@ -16,6 +16,7 @@ import { retainedTask } from "../backends/c/task-callback-exports.mjs";
 import { generateCppTaskHeader } from "../backends/cpp/task-exports.mjs";
 import { boostSources } from "../backends/cpp/boost.mjs";
 import { taskGmpKit } from "../build/task-gmp.mjs";
+import { compileTaskResourceLedger, taskResourceLedger } from "../build/task-resource-ledger.mjs";
 import { validateNativeCSettings } from "./native-c-family.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
@@ -59,12 +60,8 @@ export const buildCTaskPackage = async options => {
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
 		if(target === "c" && callbackHeaders.size) callbackHeaders.set("task-host-callback.h", await asset("../backends/c/task-host-callback.h"));
-		const ledger = resources.length ? {
-			header: await asset("../backends/native/task-resource-ledger.h")
-			, source: await asset("../backends/native/task-resource-ledger.c")
-		} : null;
-		const ledgerId = ledger && sha256(canonicalJson({ runtimeIdentity, header: sha256(ledger.header), source: sha256(ledger.source) }));
-		const ledgerName = ledger && `liblb_task_resources_${ledgerId}.so`, ledgerFlag = `-DLB_LEASE_PREFIX=lb_task_resource_${ledgerId}_`;
+		const ledger = resources.length ? await taskResourceLedger(runtimeIdentity) : null;
+		const ledgerId = ledger && ledger.id, ledgerName = ledger?.name, ledgerFlag = ledger?.flag;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
 		const wire = (ruby || dotnet) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources });
 		const integers = skeleton.integerMode && await asset("../backends/c/task-integers.h");
@@ -89,31 +86,7 @@ export const buildCTaskPackage = async options => {
 		if(wire) await save("host-wire.c", wire.source);
 		await save("task-delivery.h", delivery); await save("task-notification.h", notification);
 		for(const [file, bytes] of callbackHeaders) await save(file, bytes);
-		if(ledger)
-		{
-			await save("task-resource-ledger.h", ledger.header); await save("ledger.c", ledger.source);
-			await run(environment.CC ?? "cc", ["-std=gnu11"
-				, "-O1"
-				, "-g0"
-				, "-shared"
-				, "-fPIC"
-				, ledgerFlag
-				, "-I"
-				, join(runtimeRoot, "include")
-				, `-ffile-prefix-map=${runtimeRoot}=/build/lean-bridge/runtime`
-				, `-ffile-prefix-map=${app}=/build/lean-bridge/component`
-				, "ledger.c"
-				, "-L"
-				, join(runtimeRoot, "lib")
-				, "-lleanshared"
-				, "-llean_bridge_native"
-				, "-Wl,-z,defs,-z,nodelete"
-				, "-Wl,--build-id=none"
-				, `-Wl,-soname,${ledgerName}`
-				, "-Wl,-rpath,$ORIGIN"
-				, "-o"
-				, ledgerName], app);
-		}
+		if(ledger) await compileTaskResourceLedger({ ledger, app, runtimeRoot, cc: environment.CC ?? "cc", run });
 		if(integers) await save("task-integers.h", integers);
 		await save("exports.map", `{ global: ${[...gen.symbols, ...wire ? wire.symbols : []].join("; ")}; local: *; };\n`);
 		const library = `lib${p}.so`;
