@@ -38,6 +38,11 @@ different boundary: injected traps, malformed outputs, and failed cleanup.
 They test the JavaScript frame reader and the shared runtime's retirement
 policy; they do not count as executions of the compiled Lean fixture.
 
+The [cross-package callback test](javascript-wasm-callback-io-retirement-20261123.md)
+later found and fixed a separate retirement bug using a real compiled Wasm
+trap. Its receipt identifies the updated runtime; the hashes above describe
+the original synchronous IO build.
+
 ## Reproduce
 
 Set up the [synchronous npm author SDK](../publish/npm.md#export-synchronous-lean-io)

@@ -8,11 +8,34 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { compileOwnedJavaScriptWasmLayout } from "../src/backends/javascript/owned-wasm-layout.mjs";
 import { createOwnedWasmCalls } from "../src/release/owned-wasm-calls.mjs";
+import { createOwnedWasmCallbacks } from "../src/release/owned-wasm-callbacks.mjs";
 import { writeOwnedWasmScalar } from "../src/release/owned-wasm-scalars.mjs";
 import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 
 const layout = compileOwnedJavaScriptWasmLayout(ownedAggregateReviewedIr());
 const ticket = layout.types.find(type => type.kind === "resource");
+test("callback recovery status is only valid while the shared runtime is open", () => {
+	// The same error object must be recoverable on a live heap and fatal on a
+	// retired one. The decision is about runtime state, not exception class.
+	const error = new WebAssembly.RuntimeError("callback failed");
+	for(const siblingRetired of [false, true])
+	{
+		let dispatch, poisoned = false;
+		const frame = {};
+		const noop = () => {};
+		createOwnedWasmCallbacks({}, layout, {begin: noop, end: noop, valid: noop
+			, install: handler => { dispatch = handler.dispatch; return () => {}; }}, {
+			frames: [frame]
+			, registry: {assertOpen: () => { throw error; }}
+			, isPoisoned: () => poisoned
+			, bindings: {assertOpen: () => { if(siblingRetired) throw new Error("retired"); }}
+			, poison: () => { poisoned = true; }});
+		if(siblingRetired) assert.throws(() => dispatch(1, 1, 0, 1, 0, 0), e => e === error);
+		else assert.equal(dispatch(1, 1, 0, 1, 0, 0), 10);
+		assert.equal(frame.callbackError, error); assert.equal(poisoned, siblingRetired);
+	}
+});
+
 const fixture = (options = {}) => {
 	const memory = new WebAssembly.Memory({ initial: 16 }), allocations = new Map(), owners = new Map();
 	let next = 64, nextOwner = 0, nextToken = 0n, poisoned = 0, closed = 0, calls = 0, frees = 0, mallocs = 0;

@@ -112,8 +112,16 @@ console.log(read_total());                 // 2
 ```
 
 An ordinary `IO.Error` throws `IOError` with Lean's message. Invalid arguments
-are rejected before the call changes state. An unexpected Wasm trap retires
-the shared runtime; don't retry a call on that instance.
+are rejected before the call changes state. A synchronous callback can call
+another installed component and catch its declared error. If the callback
+throws a JavaScript exception, the caller receives the same exception and
+both packages remain usable.
+
+An unexpected trap **inside a bridge component** retires every package using
+that runtime instance. Catching the trap inside a callback does not make the
+suspended call safe to resume. Discard the instance and its leases; don't
+retry on the same heap. A separate Node worker has its own runtime; retiring
+that worker's instance leaves the parent runtime usable.
 
 ## TypeScript
 

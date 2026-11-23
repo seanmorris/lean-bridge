@@ -235,7 +235,7 @@ export const createOwnedWasmCalls = (module, suppliedLayout, bindings, options =
 		, poison
 	}, { ...options.registry, checkpoint });
 	if(bindings.callbacks) callbacks = createOwnedWasmCallbacks(module, layout, bindings.callbacks, {
-		frames, registry, codec, bindings, native, requireNative, status
+		frames, registry, codec, bindings, native, requireNative, status, poison
 		, releaseOwner, readNative
 		, isPoisoned: () => poisoned
 	});
