@@ -22,6 +22,8 @@ import { ownedPerlNamespace } from "./owned-perl-projection.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { buildNativeSharedRuntime } from "./native-component.mjs";
 import { openHostProjectSource } from "./host-project-source.mjs";
+import { validateOrdinaryWasiSettings } from "../backends/wit/copied-model.mjs";
+import { buildWitSyncPackage } from "../release/wit-sync-io-package.mjs";
 
 const fail = message => { throw new CanonicalBuildError("invalid-host-project", message); };
 const absent = async path => {
@@ -41,7 +43,10 @@ export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
 	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
-	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, cpan, or php-native");
+	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, cpan, php-native, or wit-wasi");
+	const wit = target === "wit-wasi";
+	if(wit && (config.nativeEffects === undefined || config.taskExports?.length || config.asyncIterators?.length || config.resources?.length || config.taskIOErrors?.length))
+		fail("WIT IO requires standalone synchronous exports and explicit nativeEffects; tasks, iterators and resources need a different profile");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
@@ -51,10 +56,10 @@ export const buildHostProject = async options => {
 		, targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.[target] ?? {}, slug = component.name.toLowerCase().replaceAll("_", "-");
-	const name = target === "cpan" ? ownedPerlNamespace(component, settings) : settings.name ?? (target === "php-native" ? "lean-bridge/" + slug : target === "nuget" ? dotnetComponentAssembly(component) : target === "maven" ? "org.leanbridge:" + slug : "lean-" + slug);
+	const name = wit ? settings.name : target === "cpan" ? ownedPerlNamespace(component, settings) : settings.name ?? (target === "php-native" ? "lean-bridge/" + slug : target === "nuget" ? dotnetComponentAssembly(component) : target === "maven" ? "org.leanbridge:" + slug : "lean-" + slug);
 	const version = settings.version ?? (target === "cpan" ? "0.001" : target === "rubygems" ? defaultRubyVersion(component.version)
 		: target === "pypi" && component.version === "0.0.0-local" ? "0.0.0+local" : component.version);
-	(target === "php-native" ? validateOrdinaryPhpSettings : target === "cpan" ? validatePerlIOSettings : target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : target === "rubygems" ? validateOrdinaryRubySettings : target === "nuget" ? validateOrdinaryNugetSettings : target === "maven" ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
+	(wit ? validateOrdinaryWasiSettings : target === "php-native" ? validateOrdinaryPhpSettings : target === "cpan" ? validatePerlIOSettings : target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : target === "rubygems" ? validateOrdinaryRubySettings : target === "nuget" ? validateOrdinaryNugetSettings : target === "maven" ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
 	const source = await openHostProjectSource({ ...options, project, component });
 	let stage;
 	try
@@ -81,7 +86,7 @@ export const buildHostProject = async options => {
 		let artifact, receipt;
 		if(target !== "pypi")
 		{
-			artifact = await buildCTaskPackage({ ...common, target }); receipt = artifact.receipt;
+			artifact = await (wit ? buildWitSyncPackage : buildCTaskPackage)({ ...common, target }); receipt = artifact.receipt;
 		}
 		else
 		{

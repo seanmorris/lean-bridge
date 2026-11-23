@@ -848,7 +848,8 @@
     "src/release/source-identity.mjs",
     "src/release/source-notices.mjs",
     "src/release/wasi-package.mjs",
-    "src/release/wheel-record.mjs"
+    "src/release/wheel-record.mjs",
+    "src/release/wit-sync-io-package.mjs"
   ],
   "bin": {
     "lean-bridge": "scripts/lean-bridge.mjs",
@@ -1097,6 +1098,7 @@
     "test:wit-recursive-generated": "LEAN_BRIDGE_WIT_RECURSIVE_CALLABLE_TEST=1 LEAN_BRIDGE_WIT_RECURSIVE_CALLABLE_FAULT_TEST=1 node --test --test-concurrency=1 tests/wit-recursive-callable-model.test.mjs tests/wit-recursive-callable-host.test.mjs tests/wit-recursive-callable-native.test.mjs tests/wit-recursive-callable-faults.test.mjs",
     "test:wit-recursive-packages": "LEAN_BRIDGE_WIT_RECURSIVE_CALLABLE_INSTALLED_TEST=1 LEAN_BRIDGE_WIT_RECURSIVE_CALLABLE_MIXED_TEST=1 node --test --test-concurrency=1 tests/wit-recursive-callable-package.test.mjs",
     "test:wit-sync-io": "LEAN_BRIDGE_WIT_IO_HOST_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-sync-io.mjs",
+    "test:wit-sync-io-package": "LEAN_BRIDGE_WIT_IO_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-sync-io-package-flow.mjs",
     "test:profile": "bash scripts/run-test-profile.sh",
     "test:managed-generators": "node --test tests/managed-generators.test.mjs",
     "test:managed-artifacts": "node --test tests/managed-artifacts.test.mjs",

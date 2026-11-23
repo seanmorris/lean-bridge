@@ -535,7 +535,8 @@ whether that operation reads a file, checks an environment variable, or only
 updates an in-memory reference. Declare OS access separately for Linux x86-64
 C, C++, Rust, Python, Ruby, .NET and JVM packages that export native synchronous
 IO, tasks or iterators (see [Maven task exports](../publish/maven.md#export-tasks-and-streams));
-and for Python host-import packages. List the grants
+and for Python host-import packages. The [synchronous WIT profile](../publish/wit-wasi.md#export-synchronous-io)
+also requires these grants; it executes them in the native Wasmtime host. List the grants
 in `lean-bridge.exports.json`. Here the module reads an environment variable at
 startup, and its worker reads a file:
 

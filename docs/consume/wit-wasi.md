@@ -139,6 +139,30 @@ See the [installed library-isolation checks](../evidence/wit-host-isolation-2026
 
 See the [ordinary installed acceptance](../evidence/native-wit-20260914.md) for the exercised types and failure paths.
 
+### Call synchronous IO
+
+A `native-wit-io-v1` package uses the same extraction and `pkg-config` workflow
+as the ordinary package above. Calls run synchronously. A `BaseIO` export
+returns its WIT value directly. A fallible `IO` or `EIO` export returns a WIT
+`result`: the outer error is an `IO.Error` message or the declared `EIO` payload.
+If the function itself returns an `Except`, that value has a separate inner
+result. For example, `ok(err(37))` means Lean returned `Except.error 37`;
+`err(err(37))` means Lean threw `Except.error 37`. Neither case is a Wasmtime trap.
+
+The generated `*_wasmtime_call` checks arguments before entering Lean.
+Delete successful results with `wasmtime_component_val_delete`; they can
+outlive the session. A boundary error leaves the result slot unchanged and
+returns a `wasmtime_error_t *` to delete. A guest trap can occur **after** an
+effect already took place. The host retires an invalid shared runtime; do not
+retry the call automatically.
+
+If you own the Wasmtime store, use `*_wasmtime_link` to register the native
+imports and `*_wasmtime_call_instance` to invoke exports. Pass the store and
+its matching instance, and initialize `bool discard_store = true`. Dispose
+of the store if the call reports that it trapped. A raw Wasmtime call that
+bypasses this guard cannot run the native effect. The component uses its
+native host's OS permissions, not a standalone WASI filesystem.
+
 ### Packages containing resources
 
 An ownership-aware package ships named C records, variants, sequences and opaque

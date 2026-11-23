@@ -633,6 +633,9 @@
     "src/backends/wit/owned-native-resources.mjs",
     "src/backends/wit/owned-package.mjs",
     "src/backends/wit/owned-session.mjs",
+    "src/backends/wit/sync-io-host.mjs",
+    "src/backends/wit/sync-io-model.mjs",
+    "src/backends/wit/sync-io-values.h",
     "src/binding-ir/canonical.mjs",
     "src/binding-ir/contract.mjs",
     "src/binding-ir/default-value.mjs",
@@ -752,6 +755,7 @@
     "src/build/side-module-audit.mjs",
     "src/build/task-gmp.mjs",
     "src/build/task-resource-ledger.mjs",
+    "src/build/wit-sync-io-host.mjs",
     "src/capsule/contract.mjs",
     "src/capsule/node.mjs",
     "src/cli/commands.mjs",
@@ -846,6 +850,7 @@
     "src/release/source-identity.mjs",
     "src/release/source-notices.mjs",
     "src/release/wasi-package.mjs",
-    "src/release/wheel-record.mjs"
+    "src/release/wheel-record.mjs",
+    "src/release/wit-sync-io-package.mjs"
   ]
 }

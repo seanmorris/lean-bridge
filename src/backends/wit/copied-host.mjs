@@ -11,8 +11,9 @@ import { renderCallableHostHeader, renderCallableHostSource } from "./callable-h
  *
  * @param root0 - Admitted copied WIT model.
  * @param root0.surface - Shared C naming and function model.
+ * @param root0.trackIOTraps - Provide a guarded entry for caller-owned Wasmtime stores.
  */
-export const renderWitHostHeader = ({ surface }) => {
+export const renderWitHostHeader = ({ surface, trackIOTraps = false }) => {
 	if(surface.callbacks.size) return renderCallableHostHeader({ surface });
 	const p = surface.prefix;
 	return `#ifndef ${p.toUpperCase()}_WASMTIME_H
@@ -32,7 +33,15 @@ wasmtime_error_t *${p}_wasmtime_link(wasmtime_component_linker_t *linker);
  * Use a fresh result slot. An error leaves it unchanged. */
 wasmtime_error_t *${p}_wasmtime_call(${p}_wasmtime *session, const char *name,
     const wasmtime_component_val_t *args, size_t count, wasmtime_component_val_t *out);
-/* Dispose the session; caller-owned results remain valid. */
+${trackIOTraps ? `/* Call an export in your own store/instance with the same checked argument and
+ * effect boundary. They must belong to each other. On failure, discard_store
+ * tells you whether the trapped store must be destroyed before another call.
+ * Calling these native imports without a guarded entry is refused. */
+wasmtime_error_t *${p}_wasmtime_call_instance(wasmtime_store_t *store,
+    const wasmtime_component_instance_t *instance, const char *name,
+    const wasmtime_component_val_t *args, size_t count,
+    wasmtime_component_val_t *out, bool *discard_store);
+` : ""}/* Dispose the session; caller-owned results remain valid. */
 void ${p}_wasmtime_close(${p}_wasmtime *session);
 #ifdef __cplusplus
 }
@@ -115,7 +124,7 @@ struct ${p}_wasmtime {
   wasmtime_component_t *component;
   wasmtime_store_t *store;
   wasmtime_component_linker_t *linker;
-  wasmtime_component_instance_t instance;
+  wasmtime_component_instance_t instance;${model.trackIOTraps ? "\n  bool borrowed_store, trapped;" : ""}
 };
 wasmtime_error_t *${p}_wasmtime_link(wasmtime_component_linker_t *linker) {
   if (!linker) return wasmtime_error_new("Missing Wasmtime linker");
@@ -184,11 +193,23 @@ ${functions.map(fn => `  if (strcmp(name, "${fn.witName}") == 0) valid = count =
   if (error) {
     wasmtime_component_val_delete(&result);
     /* A trap bypasses canonical post-return. Dispose its store and scratch memory. */
-    wasmtime_error_t *reset_error = lb_refresh(session);
+    ${model.trackIOTraps ? "if (session->borrowed_store) { session->trapped=true; return error; }\n    " : ""}wasmtime_error_t *reset_error = lb_refresh(session);
     if (reset_error) wasmtime_error_delete(reset_error);
     return error;
   }
   *out = result; return NULL;
 }
-`;
+${model.trackIOTraps ? `wasmtime_error_t *${p}_wasmtime_call_instance(wasmtime_store_t *store,
+    const wasmtime_component_instance_t *instance, const char *name,
+    const wasmtime_component_val_t *args, size_t count,
+    wasmtime_component_val_t *out, bool *discard_store) {
+  if (!discard_store) return wasmtime_error_new("Missing WIT store disposition");
+  *discard_store=false;
+  if (!store || !instance) return wasmtime_error_new("Missing WIT store or instance");
+  ${p}_wasmtime view={.store=store,.instance=*instance,.borrowed_store=true};
+  wasmtime_error_t *error=${p}_wasmtime_call(&view,name,args,count,out);
+  *discard_store=view.trapped;
+  return error;
+}
+` : ""}`;
 };

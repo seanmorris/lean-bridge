@@ -40,5 +40,5 @@ node --test --test-concurrency=1 tests/helpers/wit-sync-io.mjs
 
 This interface check alone does not execute a Lean call. The
 [relocated Wasmtime host test](wit-sync-io-host-20261123.md) exercises the
-same binary worlds against compiled Lean. The public build CLI does not yet
-produce an installable synchronous WIT IO archive.
+same binary worlds against compiled Lean. To build an installable archive,
+see [Export synchronous IO](../publish/wit-wasi.md#export-synchronous-io).

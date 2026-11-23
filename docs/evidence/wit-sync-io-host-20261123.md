@@ -34,9 +34,10 @@ intercepts the native reply; the production library has no fault selector.
 
 The caller's output slot stayed unchanged on every failure. After each case
 the observer found no outstanding tracked buffer or live broker identity.
-These checks cover the generated session API, not arbitrary components run
-on a caller-owned store. A raw linker cannot observe traps that happen after
-its import returns.
+These checks at `4d15ac5` cover the generated session API, not arbitrary
+components run on a caller-owned store. A raw linker cannot observe traps
+that happen after its import returns. The [package workflow](../consume/wit-wasi.md#call-synchronous-io)
+also supplies a guarded entry for caller-owned stores.
 
 ## Reproduce
 
@@ -53,5 +54,6 @@ The [test driver](../../tests/helpers/wit-sync-io.mjs) compiles the Lean
 sources and checks each binary against its WIT world before linking the host.
 The [relocation test](../../tests/helpers/wit-sync-io-install.mjs) uses native
 shared libraries, not a standalone WASI command: `IO.FS` runs with the host
-process's filesystem permissions. This is not an archive installation, async
-acceptance, or a claim that a published package exists.
+process's filesystem permissions. This host test does not install an archive.
+The [archive acceptance](../../tests/helpers/wit-sync-io-package-flow.mjs)
+exercises that separate workflow. Neither test exercises async delivery.

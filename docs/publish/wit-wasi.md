@@ -46,6 +46,37 @@ Repeat `--target` to add C, C++, Cargo, PyPI, CPAN, NuGet, Maven, RubyGems, nati
 
 Run `lean-bridge verify --receipt /absolute/path/to/cobalt-release/package-set-receipt.json`, then the [ordinary prepared-package example](../consume/wit-wasi.md#ordinary-project-packages) against the original archive. Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). The receipt checks unsigned local consistency, not publisher identity. The [acceptance evidence](../evidence/native-wit-20260914.md) records relocated builds, installed calls and cleanup checks.
 
+## Export synchronous IO
+
+Use ordinary `exports` for `BaseIO`, `IO` or `EIO`. Declare the native host
+capabilities the code actually needs. For example, the
+[Journal fixture](../../tests/fixtures/native-sync-io/Journal.lean)
+reads and writes files:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.store", "Journal.read", "Journal.choose"],
+  "nativeEffects": ["filesystem"]
+}
+```
+
+For in-memory effects use `"nativeEffects": []`. Build with `--target wit-wasi`
+and the tools listed above. The resulting `native-wit-io-v1` archive contains
+the component, native host, verified libraries, WIT, headers and `pkg-config`
+metadata. A reviewed project can supply its public `.binding-ir.json` instead
+of listing `exports`; the builder checks the review against compiled Lean.
+This profile takes one target per build and does not accept task, iterator,
+host-object or resource selections.
+
+The grant is an author-side admission check, not a WASI sandbox. For example,
+a permitted file write uses the host process's filesystem permissions. An
+undeclared native effect stops the build. Distribute the receipt and archive
+as above. See [calling synchronous IO](../consume/wit-wasi.md#call-synchronous-io)
+for results and traps, and the [installed archive checks](../evidence/wit-sync-io-packages-20261123.md)
+for the ordinary and reviewed builds.
+
 ## Export resource-containing values
 
 Declare resource types and opt into aggregate ownership when records, variants,

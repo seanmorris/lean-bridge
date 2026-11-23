@@ -39,7 +39,8 @@ static int lb_reply_${i}(int status,const uint64_t w[4],const uint8_t *tags,lb_s
 }
 static wasmtime_error_t *lb_call_${i}(void *data,wasmtime_context_t *context,const wasmtime_component_func_type_t *type,
     lb_val *args,size_t count,lb_val *results,size_t result_count) {
-    (void)data;(void)context;(void)type;(void)args;
+    (void)data;(void)type;(void)args;
+    if (!lb_active || lb_active->context!=context) return wasmtime_error_new("WIT IO requires a guarded call in this store");
     if (count!=${m.args.length} || (${m.args.length} && !args) || result_count!=1 || !results) return wasmtime_error_new("Wrong WIT call shape");
     lb_scope scope={.remaining=16u*1024u*1024u}; wasmtime_error_t *error=NULL;
     uint64_t a[${Math.max(1,m.args.length*3)}]={0},w[4]={0}; uint8_t tags[${m.tagBytes}]={0}; lb_val out={0};${input}
@@ -54,7 +55,7 @@ static wasmtime_error_t *lb_call_${i}(void *data,wasmtime_context_t *context,con
     return error;
 }`;
 	});
-	const header = renderWitHostHeader({surface});
+	const header = renderWitHostHeader({surface,trackIOTraps: true});
 	const source = `#include "${p}_wasmtime.h"
 #include "lean_bridge_native_runtime.h"
 #include <stdint.h>

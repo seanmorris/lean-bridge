@@ -63,7 +63,7 @@ export const linkWitSyncHost = async options => {
 	await save("host-wire.c",model.wire.source); await save("task-delivery.h",delivery);
 	if(integers) await save("task-integers.h",integers);
 	await save(p+"_wasmtime.h",host.header); await save("wit-host.c",guarded);
-	const exported = ["open","call","link","close"].map(n=>p+"_wasmtime_"+n);
+	const exported = ["open","call","call_instance","link","close"].map(n=>p+"_wasmtime_"+n);
 	exported.push("__lean_bridge_wit_host_process_origin_v1");
 	await save("exports.map","{ global: "+exported.join("; ")+"; local: *; };\n");
 	const library = "lib"+p+"_wasmtime.so", inc = ["-I",join(sdk,"include"),"-I",join(runtimeRoot,"include")];

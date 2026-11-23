@@ -69,6 +69,7 @@ If the package exports native tasks, pull iterators, Python host imports, or sta
 For standalone IO, specify `nativeEffects: []` if no OS access is needed. Use
 ordinary `exports` for those functions; there is nothing to await. For Java
 and Kotlin, [publish synchronous IO in a Maven package](../publish/maven.md#export-synchronous-io).
+For a Component Model consumer, [publish synchronous IO with a native Wasmtime host](../publish/wit-wasi.md#export-synchronous-io).
 
 ### Select an explicit host-null projection
 
