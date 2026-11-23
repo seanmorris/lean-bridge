@@ -71,9 +71,9 @@ bash scripts/build-lean-runtime.sh
 export LEAN_WASM_PROJECT_ROOT="$PWD"
 source scripts/lean-runtime-config.sh
 export LEAN_BRIDGE_JS_THREAD_CORE="$LEAN_WASM_RUNTIME_CACHE/$LEAN_WASM_RUNTIME_BUILD_ID+core"
-node tests/helpers/javascript-wasm-task-probe-init.mjs "$LEAN_WASM_LEAN_SOURCE" \
+node scripts/prepare-javascript-task-init.mjs "$LEAN_WASM_LEAN_SOURCE" \
   "$LEAN_BRIDGE_JS_THREAD_CORE" "$LEAN_WASM_EMSDK" "$scratch/init"
-export LEAN_BRIDGE_JS_THREAD_INIT="$scratch/init/libProbeInit.a"
+export LEAN_BRIDGE_JS_THREAD_INIT="$scratch/init/libTaskInit.a"
 export LEAN_BRIDGE_JS_EMSDK="$LEAN_WASM_EMSDK" LEAN_BRIDGE_LEAN_PREFIX="$LEAN_WASM_HOST_LEAN_PREFIX"
 npm run test:javascript-threaded-task-probe
 npm run test:javascript-shared-task-probe
@@ -82,14 +82,45 @@ npm run test:javascript-generated-tasks
 
 ## Why a separate runtime profile?
 
+The author CLI selects the threaded SDK when `taskExports` or `asyncIterators` is nonempty. Ordinary synchronous npm IO keeps its single-threaded runtime. The two profiles do not substitute for one another.
+
 Pinned Lean `f3b06c705e6c85f5314019d5d3baab0fec5b580c` executes spawned work inline without a task manager; its promise implementation requires a manager. The ordinary browser profile builds with `MULTI_THREAD=OFF`. This probe initializes a real manager in a pthread-enabled module. Bringing in the real `Init.System.Promise` initializer also exposes a separate ABI problem:
 
 - With the same final `emcc` command from the installed runner and baseline `threaded` core, `wasm-ld` reports function signature mismatches for `lean_io_create_tempfile` and `lean_io_create_tempdir`: `() -> i32` versus `(i32) -> i32`. Ignoring the warnings can leave a trapping call in a successful link.
 - At that revision `stage0/stdlib/Init/System/IO.c` calls both externs with no arguments. `src/runtime/io.cpp` defines both with an unused world argument. A host adapter cannot change calls inside the compiler-generated Init module. The [two-line patch](../../patches/lean4-4.32.2-task-io-world.patch) corrects the definitions only; neither their filesystem behavior nor the Lean kernel changes. The final link uses `-Wl,--fatal-warnings`.
 - The change is gated to `threaded-task`, whose patch-set identity differs from both existing profiles. For an upstream update, compare the generated calls to the definitions, try the strict link *without* the patch and run the installed Node/browser test. Drop the patch when those pass. The upstream change belongs in Lean's two extern definitions; if a future compiler intentionally retains the world argument, reassess that compiler and runtime as a pair. If they cannot be reconciled, keep this profile unavailable.
 
+## Prepare the author SDK
+
+After building the pinned threaded core and PIC Init archive above, build the application-independent owner once:
+
+```sh
+node scripts/prepare-javascript-task-sdk.mjs "$scratch/task-sdk"
+node scripts/build-cli-npm-package.mjs --output "$scratch/author-cli" \
+  --javascript-task-inputs "$scratch/task-sdk"
+LEAN_BRIDGE_TEST_TASK_INPUTS="$scratch/task-sdk" npm run test:javascript-task-author-cli
+```
+
+The first command links the in-memory Lean value and scheduler operations, notification bridge and ownership broker. It takes no user project as input. It records digests of the libraries, link recipe, toolchain, output bytes and matching target headers. The second embeds the verified SDK in an installable CLI. A publisher can distribute the same SDK separately. Compare its manifest digest with one obtained independently; the local digest sidecar is not a publisher signature.
+
+The installed-CLI test builds ordinary and reviewed releases, checks clean-directory reproduction, then builds a second library with a different API. Both libraries must use identical runtime archives and run together. A permanently pending worker in the first package would make a simple sequential smoke test hang; the consumer runs the second package before releasing the first worker.
+
+The compact SDK built above contains the pinned `Init.System.Promise` dependency closure. The example modules use `prelude` with an explicit import. This does not establish that the full default `Init` or arbitrary `Std` and Lake dependencies are available: a component that needs a missing runtime symbol fails before the handoff is written.
+
+### Installed CLI results, November 23, 2026
+
+Two independent links in different directories produced byte-identical SDK files (manifest SHA-256 `a242f1f85763892627fc1898be1c35e3a8ddb6f647ddc00523742ac2aba3e98b`). An offline-installed CLI used the bundled SDK without the raw target tree or a supplied runtime path. It reproduced the ordinary release from a relocated source tree. These are the verified top-level package-set receipt digests:
+
+| Release | SHA-256 |
+| --- | --- |
+| Ordinary and relocated Jobs | `2a218cc45df67ad057891d728efa4d09824cc462e57f779bf29d5baef1e37837` |
+| Independently reviewed Jobs | `0b6b44f03650751cb96c941ae5e4bb38d28c558e22525833e1b5978053d6d799` |
+| Unrelated Totals | `d2501cb2d94e638a97cef273eba64b50043e047602b6e9ec78663ee9b5d703ea` |
+
+All three contain the same 757,897-byte runtime archive (SHA-256 `cc275ed105a05ec5af1cde689445904dd0a9ca2208cdb4331cb3eba412919ece`). Both Jobs routes passed strict TypeScript plus 47 public checks per host in Node and isolated Chromium. On each host, Totals returned 29 while Jobs still owned a pending worker; Jobs then returned 71, leaving zero native owners. The CLI refused an absent or mismatched SDK, external effects, and a scalar declaration selected as a task, without emitting a handoff. Set `LEAN_BRIDGE_JS_TASK_EVIDENCE` to a new directory to retain all three releases from a replay.
+
 ## What this does not ship
 
-The three-package experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. Its driver knows both component signatures. The generated application takes a different path: it imports ordinary npm functions and uses the compiled component's own contract. The test producer still links the owner runtime against the fixture's required imports. The normal author CLI does not yet provision a component-independent pthread runtime, and this copied-value package does not admit retained callbacks or captured resources. Emscripten 6.0.6 marks dynamic linking with pthreads experimental.
+The three-package wire experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. Its driver knows both component signatures. The generated npm application instead imports ordinary package functions and uses the compiled component's own contract. The low-level wire test still creates a fixture-specific runtime; the author SDK is linked independently. The copied-value task profile does not admit retained callbacks or captured resources. Emscripten 6.0.6 marks dynamic linking with pthreads experimental.
 
 The pthread archives use a distinct profile and content-addressed runtime version. The single-threaded runtime remains separate; no native binding or language-neutral IR changed. These are local installations, not a published, signed or Nix-built release.

@@ -71,7 +71,8 @@ test("compile, reproduce, install and check ordinary and reviewed JS IO releases
 		await writeFile(path, canonicalJson(ir)); await refuse("incorrect-review", /Reviewed API differs/u);
 		await writeFile(path, review); await refuse("explicit-isolation", /explicit isolated backend/u, {LEAN_BRIDGE_BUILD_BACKEND: "docker"});
 		await writeFile(config, canonicalJson({...cfg, nativeEffects: ["filesystem"]})); await refuse("filesystem-grant", /only in-memory/u);
-		await writeFile(config, canonicalJson({...cfg, taskExports: ["Ledger.add"]})); await refuse("task-export", /does not yet implement taskExports/u);
+		await writeFile(config, canonicalJson({...cfg, taskExports: ["Ledger.add"]}));
+		await refuse("missing-threaded-sdk", /threaded npm author SDK is not installed/u, {LEAN_BRIDGE_JS_TASK_INPUTS: join(root, "absent-task-sdk")});
 		await writeFile(config, canonicalJson(cfg));
 		const lean = join(src, "Ledger.lean");
 		await writeFile(lean, (await readFile(lean, "utf8")).replace("def magnitude (value : Int) : IO Int := pure value",

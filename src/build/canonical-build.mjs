@@ -998,10 +998,11 @@ export const buildCanonicalProject = async ({
 		const record = await readExportConfiguration(root, {signal}).catch(error => {
 			signal?.throwIfAborted(); throw new CanonicalBuildError(error.code ?? "invalid-export-configuration", error.message);
 		});
-		if(Object.hasOwn(record.configuration, "nativeEffects"))
+		const threaded=Boolean(record.configuration.taskExports?.length || record.configuration.asyncIterators?.length);
+		if(threaded || Object.hasOwn(record.configuration, "nativeEffects"))
 		{
-			if(mixed || normalized.some(target => target !== "npm")) fail("invalid-package-targets", "Build synchronous JavaScript IO as a separate npm handoff");
-			return buildJavaScriptIOProject({projectRoot: root, engineRoot: engine, outputRoot, environment, runner, cache, signal, onProgress, lakeSnapshot, record});
+			if(mixed || normalized.some(target => target !== "npm")) fail("invalid-package-targets", "Build JavaScript effects as a separate npm handoff");
+			return buildJavaScriptIOProject({projectRoot: root, engineRoot: engine, outputRoot, environment, runner, cache, signal, onProgress, lakeSnapshot, record,threaded});
 		}
 	}
 	const ownedNpm = selectsNpm && await usesOwnedJavaScript(root, signal);

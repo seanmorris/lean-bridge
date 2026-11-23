@@ -1,15 +1,15 @@
-/** @file Cross-compile the pinned Init dependencies of the pthread task experiment. */
+/** @file Prepare the PIC Init.System.Promise dependency closure for the threaded npm author SDK. */
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { promisify } from "node:util";
-import { javascriptWasmOwnedPins } from "../../src/build/javascript-wasm-owned-artifacts.mjs";
-import { probeInitIdentity } from "./javascript-wasm-task-init-identity.mjs";
+import { javascriptWasmOwnedPins } from "../src/build/javascript-wasm-toolchain.mjs";
+import { taskInitIdentity } from "../src/build/javascript-wasm-task-init-identity.mjs";
 
 const run = promisify(execFile);
 const [source, runtime, sdk, out] = process.argv.slice(2).map(p => resolve(p));
-if(!out) throw new Error("usage: node javascript-wasm-task-probe-init.mjs <pinned Lean checkout> <threaded runtime build> <emsdk> <new output>");
+if(!out || process.argv.length !== 6) throw new Error("usage: node scripts/prepare-javascript-task-init.mjs <pinned Lean checkout> <threaded runtime build> <emsdk> <new output>");
 const commit = javascriptWasmOwnedPins.leanCommit;
 // Use the official bootstrap C from this commit, compiled against the same
 // current threaded headers as leanrt. Never relink a single-thread Init.a.
@@ -50,8 +50,8 @@ for(let i = 0; i < names.length; i += 12)
 	objects.push(...group.map(name => name + ".o"));
 	console.log("compiled " + objects.length + "/" + names.length + " pinned Init modules");
 }
-await run(join(prefix, "emar"), ["rcsD", "libProbeInit.a", ...objects], {cwd: out, env});
+await run(join(prefix, "emar"), ["rcsD", "libTaskInit.a", ...objects], {cwd: out, env});
 for(const object of objects) await rm(join(out, object));
-const identity = await probeInitIdentity(runtime, join(out, "libProbeInit.a"));
+const identity = await taskInitIdentity(runtime, join(out, "libTaskInit.a"));
 const inputs = Object.fromEntries(names.map(n => [n, selected.get(n).digest]));
 await writeFile(join(out, "inputs.json"), JSON.stringify({commit, identity, inputs}) + "\n");

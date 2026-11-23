@@ -1,4 +1,4 @@
-/** @file Build a private, source-checked npm handoff for synchronous in-memory Lean IO. */
+/** @file Build a source-checked npm handoff for in-memory Lean IO or threaded tasks. */
 import { lstat, mkdir, mkdtemp, readFile, realpath, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { canonicalJson } from "../capsule/node.mjs";
@@ -11,6 +11,9 @@ import { CanonicalBuildError } from "./build-error.mjs";
 import { openHostProjectSource } from "./host-project-source.mjs";
 import { compileJavaScriptIOComponent } from "./javascript-wasm-io-component.mjs";
 import { prepareHostJavaScriptCompiler } from "./javascript-wasm-owned-project.mjs";
+import { compileJavaScriptTaskComponent } from "./javascript-wasm-task-component.mjs";
+import { assertJavaScriptTaskConfiguration,writeJavaScriptTaskPackages } from "../release/javascript-wasm-task-packages.mjs";
+import { readTaskInputs,taskProfile } from "../release/javascript-wasm-task-inputs.mjs";
 
 const absent = async path => {
 	if(await lstat(path).catch(error => { if(error.code === "ENOENT") return null; throw error; }))
@@ -23,43 +26,50 @@ const absent = async path => {
  * @param options - Canonical build options and observed export configuration.
  */
 export const buildJavaScriptIOProject = async options => {
-	const {engineRoot, environment, runner, cache, signal, lakeSnapshot, onProgress, record} = options;
+	const {engineRoot, environment, runner, cache, signal, lakeSnapshot, onProgress, record, threaded=false} = options;
 	const project = await realpath(options.projectRoot), output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-release"));
 	let staging, work, source;
 	try
 	{
-		assertJavaScriptIOConfiguration(record.configuration);
+		(threaded ? assertJavaScriptTaskConfiguration : assertJavaScriptIOConfiguration)(record.configuration);
 		if(environment.LEAN_BRIDGE_BUILD_BACKEND !== undefined && environment.LEAN_BRIDGE_BUILD_BACKEND !== "auto")
-			throw new CanonicalBuildError("unsupported-build-backend", "Synchronous npm IO requires the pinned local author SDK; an explicit isolated backend cannot fall back to it");
+			throw new CanonicalBuildError("unsupported-build-backend", "In-memory npm exports require the pinned local author SDK; an explicit isolated backend cannot fall back to it");
 		if(!cache || !["use", "refresh", "off"].includes(cache.policy)) throw new CanonicalBuildError("invalid-cache-policy", "Expected use, refresh or off");
-		if(cache.directory !== null && cache.directory !== undefined) throw new CanonicalBuildError("cache-directory-unsupported", "Synchronous npm IO builds compile fresh; a custom cache is not supported");
+		if(cache.directory !== null && cache.directory !== undefined) throw new CanonicalBuildError("cache-directory-unsupported", "In-memory npm builds compile fresh; a custom cache is not supported");
 		if(output === project || project.startsWith(output + "/")) throw new CanonicalBuildError("invalid-output-root", "Output cannot replace the source project");
 		await absent(output);
 		const inventory = await inspectLeanProject(project, {signal});
 		if(inventory.configurationRecord.sha256 !== record.sha256) throw new Error("Export configuration changed before compiling JavaScript IO");
 		const component = elaboratedComponent(inventory.project);
-		const runtimeRoot = await resolveComponentRuntimeRoot({engineRoot, environment});
-		const compiler = await prepareHostJavaScriptCompiler({project, engineRoot, environment, runner, intent: {lakeSnapshot}, signal}, async tools => {
+		const sdkRoot=environment.LEAN_BRIDGE_JS_TASK_INPUTS ?? join(engineRoot,"runtime/javascript-task");
+		if(threaded && !await lstat(sdkRoot).catch(e => { if(e.code!=="ENOENT") throw e; }))
+			throw new CanonicalBuildError("javascript-task-inputs-unavailable","The threaded npm author SDK is not installed. Supply the verified LEAN_BRIDGE_JS_TASK_INPUTS directory or a CLI containing it.");
+		const taskInputs=threaded ? await readTaskInputs(sdkRoot,{signal,expectedIdentity: environment.LEAN_BRIDGE_JS_TASK_INPUTS_SHA256}) : null;
+		const runtimeRoot = threaded ? null : await resolveComponentRuntimeRoot({engineRoot, environment});
+		const compile=threaded ? compileJavaScriptTaskComponent : compileJavaScriptIOComponent;
+		const packages=threaded ? writeJavaScriptTaskPackages : writeJavaScriptIOPackages;
+		const compiler = await prepareHostJavaScriptCompiler({project, engineRoot, environment, runner, intent: {lakeSnapshot}, signal,taskInputs}, async tools => {
 			source = await openHostProjectSource({...tools, project, inventory, component});
-			const compilation = await compileJavaScriptIOComponent({...tools, ...source, app: work});
+			const compilation = await compile({...tools, ...source, app: work});
 			const root = join(staging, "packages/npm");
 			await mkdir(root, {recursive: true});
-			const receipt = await writeJavaScriptIOPackages({root
+			const receipt = await packages({root
 				, ...source
 				, compilation
 				, signal
 				, configuration: record.configuration
-				, mainModule: await readFile(join(runtimeRoot, "main.mjs"))
-				, mainWasm: await readFile(join(runtimeRoot, "main.wasm"))});
+				, mainModule: threaded ? taskInputs.files.get("task.mjs") : await readFile(join(runtimeRoot, "main.mjs"))
+				, mainWasm: threaded ? taskInputs.files.get("task.wasm") : await readFile(join(runtimeRoot, "main.wasm"))});
 			return {compilation, receipt};
 		});
 		await mkdir(dirname(output), {recursive: true});
 		staging = await mkdtemp(join(dirname(output), ".lean-js-io-release-"));
 		work = await mkdtemp(join(dirname(output), ".lean-js-io-objects-"));
-		onProgress?.({phase: "build", state: "info", message: "Compiling synchronous Lean IO for the JavaScript shared runtime"});
+		onProgress?.({phase: "build", state: "info", message: threaded ? "Compiling Lean tasks for the shared pthread runtime" : "Compiling synchronous Lean IO for the JavaScript shared runtime"});
 		const {compilation, receipt} = await compiler.compile({staging, configurationSha256: record.sha256});
 		const manifest = {schemaVersion: 1
-			, profile: javaScriptIOProfile
+			, profile: threaded ? taskProfile : javaScriptIOProfile
+			, ...(threaded ? {taskInputsSha256: taskInputs.identity} : {})
 			, backend: compiler.backend
 			, component
 			, configurationSha256: record.sha256
@@ -71,16 +81,17 @@ export const buildJavaScriptIOProject = async options => {
 			, reviewedSourceSha256: compilation.evidence.reviewedSourceSha256
 			, packages: receipt.packages
 			, packageSet: "packages/npm/package-set-receipt.json"};
-		await writeFile(join(staging, "javascript-wasm-io-release.json"), canonicalJson(manifest), {flag: "wx"});
+		await writeFile(join(staging, threaded ? "javascript-wasm-task-release.json" : "javascript-wasm-io-release.json"), canonicalJson(manifest), {flag: "wx"});
 		await writeCombinedPackageSet({root: staging, roots: ["packages/npm"], component, source: receipt.source, signal});
 		await source.verify();
+		if(threaded) await readTaskInputs(sdkRoot, {signal, expectedIdentity: taskInputs.identity});
 		signal?.throwIfAborted(); await absent(output); await rename(staging, output); staging = null;
 		return {...manifest, output, targets: ["npm"]};
 	} catch(error)
 	{
 		signal?.throwIfAborted();
 		if(error instanceof CanonicalBuildError) throw error;
-		throw new CanonicalBuildError(error.code ?? "javascript-wasm-io-project-failed", error.message, {details: error.details});
+		throw new CanonicalBuildError(error.code ?? (threaded ? "javascript-wasm-task-project-failed" : "javascript-wasm-io-project-failed"), error.message, {details: error.details});
 	} finally
 	{
 		await source?.dispose();

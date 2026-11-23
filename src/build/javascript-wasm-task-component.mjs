@@ -10,13 +10,13 @@ import {generateTaskControl} from "../backends/javascript/task-control.mjs";
 import {compileHostSources} from "./host-elaboration.mjs";
 import {identifyJavaScriptWasmCompiler, javascriptWasmOwnedPins as pins, javascriptWasmTargetHeaders} from "./javascript-wasm-toolchain.mjs";
 import {processBuildRunner} from "./process-runner.mjs";
+import {taskStamp} from "../release/javascript-wasm-task-inputs.mjs";
+export {threadedTaskPatch} from "../release/javascript-wasm-task-inputs.mjs";
 
 const owner = `#include <emscripten/threading.h>
 static int lb_context(void) { return emscripten_is_main_runtime_thread() && lean_bridge_native_process_valid(); }
 `;
 const sourceAsset = path => readFile(new URL("../backends/" + path, import.meta.url));
-// Ordered hashes of the four patches in scripts/lean-runtime-config.sh.
-export const threadedTaskPatch = "3a660e7700f40784e59fcbca0d20993313bf18303c1f250108533b34ed2e52df";
 
 /**
  * Compile against the threaded profile, not the single-threaded IO runtime.
@@ -33,12 +33,14 @@ export const compileJavaScriptTaskComponent = async options => {
 	for(const key of ["CPATH","C_INCLUDE_PATH","CPLUS_INCLUDE_PATH","OBJC_INCLUDE_PATH","COMPILER_PATH","GCC_EXEC_PREFIX","LIBRARY_PATH","CFLAGS","CPPFLAGS","LDFLAGS","EMCC_CFLAGS","CCC_OVERRIDE_OPTIONS","DEPENDENCIES_OUTPUT","SUNPRO_DEPENDENCIES_OUTPUT"]) delete env[key];
 	const run = (command,args,cwd=app,vars=env) => processBuildRunner.capture({command,args,cwd,env: vars,signal});
 	const lean = join(leanPrefix,"bin/lean"), emcc = join(sdk,"upstream/emscripten/emcc");
-	const stamp = (await readFile(join(target,"source/.lean-wasm-patched"),"utf8")).trim();
-	if(stamp !== pins.leanCommit + " " + threadedTaskPatch + " threaded-task"
+	const kit=options.taskInputs;
+	const stamp = kit ? kit.manifest.stamp : (await readFile(join(target,"source/.lean-wasm-patched"),"utf8")).trim();
+	if(stamp !== taskStamp
 		|| (await run(lean,["--githash"])).stdout.trim() !== pins.leanCommit
-		|| !/^MULTI_THREAD:BOOL=ON$/mu.test(await readFile(join(target,"cmake/CMakeCache.txt"),"utf8")))
+		|| (!kit && !/^MULTI_THREAD:BOOL=ON$/mu.test(await readFile(join(target,"cmake/CMakeCache.txt"),"utf8"))))
 		throw new Error("Expected matching pinned Lean compiler and threaded Wasm runtime");
 	const compiler = await identifyJavaScriptWasmCompiler({sdkRoot: sdk, run});
+	if(kit && canonicalJson(compiler)!==canonicalJson(kit.manifest.compiler)) throw new Error("Installed Emscripten differs from the pthread SDK producer");
 	const built = await compileHostSources({...options, ir: null, environment: env, target: "npm", run});
 	const {api,evidence,entries} = built;
 	const assets = {"task-notification.h": await sourceAsset("javascript/wasm-task-watch.h")
@@ -51,7 +53,7 @@ export const compileJavaScriptTaskComponent = async options => {
 	await mkdir(include,{recursive: true});
 	for(const name of javascriptWasmTargetHeaders)
 	{
-		const bytes = await readFile(join(target,"cmake/include/lean",name));
+		const bytes = kit ? kit.files.get(name) : await readFile(join(target,"cmake/include/lean",name));
 		if(name === "version.h" && !bytes.toString().includes('#define LEAN_PLATFORM_TARGET "wasm32-unknown-emscripten"'))
 			throw new Error("Expected threaded wasm32 headers, not host headers");
 		headers[name] = sha256(bytes); await writeFile(join(include,name),bytes,{flag: "wx"});
@@ -107,5 +109,6 @@ export const compileJavaScriptTaskComponent = async options => {
 	if(!exported.some(s => s.kind === "function" && s.name === controlSymbol)
 		|| !WebAssembly.Module.imports(module).some(s => s.name === "lean_bridge_wasm_task_subscribe_v1"))
 		throw new Error("Missing generated task control or shared runtime subscription");
+	if(kit && canonicalJson(await identifyJavaScriptWasmCompiler({sdkRoot: sdk,run}))!==canonicalJson(compiler)) throw new Error("JavaScript compiler changed during task compilation");
 	return {api, evidence, abi, methods: abi.methods, controlSymbol, componentIdentity, binary, integrity: sha256(binary)};
 };

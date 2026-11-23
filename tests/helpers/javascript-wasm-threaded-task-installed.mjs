@@ -8,7 +8,7 @@ import { dirname, join, resolve } from "node:path";
 import { promisify } from "node:util";
 import { javascriptWasmOwnedPins as pins } from "../../src/build/javascript-wasm-owned-artifacts.mjs";
 import { runInstalledChromium } from "./javascript-wasm-installed-browser.mjs";
-import { probeInitIdentity } from "./javascript-wasm-task-init-identity.mjs";
+import { taskInitIdentity as probeInitIdentity } from "../../src/build/javascript-wasm-task-init-identity.mjs";
 import { buildTaskPlugins, threadedPluginNames } from "./javascript-wasm-task-plugins.mjs";
 
 const run = promisify(execFile), name = "@example/threaded-lean-task-probe";

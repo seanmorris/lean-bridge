@@ -6,6 +6,8 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 ## Build with locked Lake dependencies
 
+For a package that exports Lean tasks or on-demand iterators, see [Build a threaded npm handoff](#build-a-threaded-npm-handoff). That profile uses a pinned local author SDK.
+
 Keep the project's reviewed `lake-manifest.json` and exact `lean-toolchain` in source control. Populate its dependency cache during normal Lean development before invoking the bridge. Git entries must identify full commits, and cached checkouts must match those pins without modified or untracked source files. Local path dependencies must be relative and available when you start the build.
 
 Build the selected public API with the usual command:
@@ -76,6 +78,19 @@ shared-runtime dependency, and their receipt. Install both archives for a
 local handoff. This profile currently builds npm separately with the local
 SDK; an explicit Nix or Docker request does not fall back to a host build.
 See [calling synchronous IO from JavaScript](../javascript-typescript.md#synchronous-lean-io).
+
+## Build a threaded npm handoff
+
+Select the declarations in `taskExports` or group the cursor's `open`, `next`, and `close` in `asyncIterators`. The [Jobs example](../../tests/fixtures/javascript-wasm-generated-tasks/lean-bridge.exports.json) includes both and a synchronous companion that releases a pending worker. Lean checks the actual signatures. This profile supports in-memory operations and copied values; do not select host callbacks, captured resources, or filesystem effects.
+
+Use an author CLI containing the threaded SDK, or set `LEAN_BRIDGE_JS_TASK_INPUTS` to the prepared SDK directory. Set `LEAN_BRIDGE_LEAN_PREFIX` to Lean 4.32.2 and `LEAN_BRIDGE_JS_EMSDK` to the matching pinned Emscripten 6.0.6 installation. A separately supplied `LEAN_BRIDGE_JS_TASK_INPUTS_SHA256` pins the SDK manifest to an identity from a trusted source. A single-threaded browser runtime cannot substitute for this kit.
+
+```sh
+lean-bridge build --project . --target npm --output build/tasks
+lean-bridge verify --receipt build/tasks/package-set-receipt.json
+```
+
+Distribute the two archives in `build/tasks/packages/npm` together. Different components compiled for the same threaded runtime depend on the same exact runtime package. This is a local handoff; it does not upload either package. [SDK preparation and checks](../evidence/threaded-task-probe.md#prepare-the-author-sdk) are maintainer steps, not consumer requirements.
 
 ## Build owned-value npm packages
 

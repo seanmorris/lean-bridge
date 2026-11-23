@@ -57,16 +57,25 @@ const taskRuntime = async (mainModule,mainWasm,profile) => {
 };
 
 /**
+ * Reject unsupported author choices before selecting any toolchain.
+ *
+ * @param configuration - Checked source configuration.
+ */
+export const assertJavaScriptTaskConfiguration=configuration => {
+	assertExportConfigurationCapabilities(configuration,{target: "npm"
+		, fields: ["package","modules","exports","nativeEffects","asyncIterators","taskExports","taskIOErrors"]
+		, targetFields: ["name","version"]});
+	if(configuration.nativeEffects?.length) throw new Error("Threaded JavaScript tasks support only in-memory effects");
+};
+
+/**
  * Package a live source-checked compilation, not a user-supplied ABI or method table.
  *
  * @param options - Verified project snapshot, compiler output, prepared owner runtime and empty staging directory.
  */
 export const writeJavaScriptTaskPackages = async options => {
 	const {root,compilation,configuration,projectContract,captured,mainModule,mainWasm,signal}=options;
-	signal?.throwIfAborted();
-	assertExportConfigurationCapabilities(configuration,{target: "npm"
-		, fields: ["package","modules","exports","nativeEffects","asyncIterators","taskExports","taskIOErrors"]
-		, targetFields: ["name","version"]});
+	signal?.throwIfAborted(); assertJavaScriptTaskConfiguration(configuration);
 	const {api,evidence,componentIdentity,binary,integrity}=compilation, abi=javaScriptTaskAbi(api,componentIdentity);
 	if(evidence.configurationSha256!==sha256(canonicalJson(configuration)) || evidence.sourceTreeSha256!==captured.document.packages[0].source.sourceTreeSha256
 		|| evidence.reviewedSourceSha256!==(projectContract.review?.sha256 ?? null) || evidence.hostImportsSourceSha256!==null

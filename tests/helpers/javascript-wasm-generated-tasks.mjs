@@ -10,53 +10,21 @@ import {openHostProjectSource} from "../../src/build/host-project-source.mjs";
 import {processBuildRunner} from "../../src/build/process-runner.mjs";
 import {compileJavaScriptTaskComponent,threadedTaskPatch} from "../../src/build/javascript-wasm-task-component.mjs";
 import {generateOwnedWasmBroker} from "../../src/backends/javascript/owned-wasm-broker.mjs";
-import {probeInitIdentity} from "./javascript-wasm-task-init-identity.mjs";
+import {taskInitIdentity} from "../../src/build/javascript-wasm-task-init-identity.mjs";
 import {runInstalledChromium} from "./javascript-wasm-installed-browser.mjs";
 import {writeJavaScriptTaskPackages} from "../../src/release/javascript-wasm-task-packages.mjs";
-import {packageSetReceiptName,verifyPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
-import {createRequire} from "node:module";
+import {checkInstalledTaskHandoff} from "./javascript-wasm-public-task-consumer.mjs";
 
 const checkInstalledPackage=async ({root,fixtures,pkg,src,built,configuration,command,environment,mode}) => {
-	const handoff=join(root,mode+"-handoff"), installed=join(root,mode+"-consumer");
-	await mkdir(handoff); await mkdir(installed);
-	const receipt=await writeJavaScriptTaskPackages({...src
+	const handoff=join(root,mode+"-handoff");
+	await mkdir(handoff);
+	await writeJavaScriptTaskPackages({...src
 		, root: handoff
 		, compilation: built
 		, configuration
 		, mainModule: await readFile(join(pkg,"task.mjs"))
 		, mainWasm: await readFile(join(pkg,"task.wasm"))});
-	await verifyPackageSetReceipt({receiptPath: join(handoff,packageSetReceiptName)});
-	const publicName=receipt.packages.find(p => p.role==="component").name;
-	await writeFile(join(installed,"package.json"),'{"private":true,"type":"module"}');
-	await command("npm",["install"
-		, "--offline"
-		, "--ignore-scripts"
-		, "--no-audit"
-		, "--no-fund"
-		, "--cache"
-		, join(root,mode+"-cache")
-		, ...receipt.packages.map(p => join(handoff,p.artifacts[0].path))],installed);
-	const contents=join(installed,"node_modules",publicName);
-	if(src.projectContract.review) assert.equal(await readFile(join(contents,"metadata/review.binding-ir.json"),"utf8"),src.projectContract.review.source);
-	await copyFile(join(fixtures,"public-consumer.mjs"),join(installed,"calls.mjs"));
-	await copyFile(join(fixtures,"public-types.mts"),join(installed,"calls.mts"));
-	const typescript=createRequire(import.meta.url).resolve("typescript/bin/tsc");
-	// The temporary directory may live beneath the author's repository. Do
-	// not import its ambient @types packages into an otherwise empty consumer.
-	const compilerOptions={strict: true,noEmit: true,module: "NodeNext",target: "ES2022",types: []};
-	await writeFile(join(installed,"tsconfig.json"),JSON.stringify({files: ["calls.mts"],compilerOptions}));
-	await command(process.execPath,[typescript,"--project","tsconfig.json"],installed);
-	await writeFile(join(installed,"run.mjs"),'import {exercise} from "./calls.mjs"; console.log(JSON.stringify(await exercise()));\n');
-	const node=JSON.parse((await processBuildRunner.capture({command: process.execPath,args: ["run.mjs"],cwd: installed,env: environment,timeoutMs: 60000})).stdout);
-	assert.equal(node.checks,47);
-	const chromium=await runInstalledChromium({root
-		, consumer: installed
-		, names: [publicName]
-		, isolated: true
-		, timeoutMs: 60000
-		, evaluate: async () => (await import("/calls.mjs")).exercise()});
-	assert.deepEqual(chromium,node);
-	return {mode,node,chromium,runtime: receipt.packages.find(p => p.role==="runtime").artifacts[0].sha256};
+	return checkInstalledTaskHandoff({root,fixtures,handoff,command,environment,mode,reviewText: src.projectContract.review?.source});
 };
 
 test("compiler-generated task, error and iterator controls execute on an installed pthread runtime", {
@@ -89,7 +57,7 @@ test("compiler-generated task, error and iterator controls execute on an install
 		if(process.env.LEAN_BRIDGE_JS_THREAD_INIT)
 		{
 			const receipt = JSON.parse(await readFile(join(dirname(archive),"inputs.json"),"utf8"));
-			assert.deepEqual(receipt.identity,await probeInitIdentity(target,archive));
+			assert.deepEqual(receipt.identity,await taskInitIdentity(target,archive));
 		}
 		const broker = generateOwnedWasmBroker();
 		await writeFile(join(root,"lean_bridge_native_runtime.h"),broker.header); await writeFile(join(root,"broker.c"),broker.source);

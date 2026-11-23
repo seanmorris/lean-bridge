@@ -83,7 +83,22 @@ export const compileHostSources = async options => {
 	};
 	const request = join(app, "host-request.json");
 	await writeFile(request, canonicalJson(selection), { flag: "wx" });
-	const result = await run(lean, ["-j1", "--run", extractor, request], app, env);
+	const result = await run(lean, ["-j1", "--run", extractor, request], app, env).catch(error => {
+		signal?.throwIfAborted();
+		// Surface this author decision without exposing raw compiler output, paths
+		// or commands. Only match failures from our own checked extractor.
+		if(error.code === "build-command-failed")
+		{
+			const output = [error.details?.stderr, error.details?.stdout].filter(Boolean).join("\n").split("\n");
+			for(const name of selection.taskExports)
+			{
+				const message = "taskExports requires a real Lean Task result: " + name;
+				if(output.some(line => line.trimEnd().endsWith(message)))
+					throw Object.assign(new Error(message), {code: "invalid-task-export", cause: error, details: error.details});
+			}
+		}
+		throw error;
+	});
 	const metadata = JSON.parse(result.stdout);
 	const interfaces = [];
 	for(const f of built.values())
