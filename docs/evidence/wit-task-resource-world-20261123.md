@@ -100,7 +100,7 @@ Run `npm run test:wit-task-lease-package`. The [driver](../../tests/helpers/wit-
 
 Peer changes Depot's Ticket from 11 to 42. Depot sees the new count after its original owner has been dropped. A stale Ticket and a same-layout Badge are rejected before entering Lean. Factory failures, successful tasks, cursor items and terminal pull failures return independently disposable owners of the same Ticket. Owners remain usable after both sessions close. Disposing the last owner leaves zero live broker identities and one runtime initialization.
 
-| Independent build | Archive SHA-256 | Receipt SHA-256 |
+| Independent build at `b76c483` | Archive SHA-256 | Receipt SHA-256 |
 | --- | --- | --- |
 | Ordinary Depot | `aa40a6152acc6c291f1beaf2a68ee229153b15e2fe7575c6660ba50ec0dfc010` | `ff0da22e33c0afe4ae224456c6eecde434cab073350d2fdc96f1b9db3c07f19e` |
 | Ordinary Peer | `0597f558a4d9f7717a15f76b35d5d0552a670cd60858603e311ae35e68aeef45` | `d521630e6d30ab87a6990b71666c0067236055e3b01d32ffed63365fab68039d` |
@@ -108,3 +108,16 @@ Peer changes Depot's Ticket from 11 to 42. Depot sees the new count after its or
 | Reviewed Peer | `689a6da09f0ac044f5f712936a624ecc06e87c3e31ac91ff7751f1ce44916ec7` | `00b853701842f9a40ba10bbdabd56c3e72bb90501a78e98400306a877ab238ab` |
 
 All four archives contained the same shared lease library (SHA-256 `39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381`). Reusing Peer's review after changing the Lean module defining Ticket failed before creating an output archive.
+
+### Count live borrows before store shutdown
+
+Run `npm run test:wit-task-lease-lifetime` with the same producer tools. Set `LEAN_BRIDGE_WIT_PARKED_LEASE_EVIDENCE` to a new directory to keep the ordinary and reviewed Depot releases. The [Lean worker](../../tests/fixtures/wit-task-package/parked-leases.lean) waits on a real promise before mutating a Ticket. The [installed consumer](../../tests/fixtures/wit-task-package/parked-leases.c) drops its last input owner, then lets a second store release the worker. It checks three outcomes: one result delivered; cancellation followed by a late mutation but no result; and shutdown of the originating store before the mutation. In all three, a completion witness reads 42 from the worker.
+
+The consumer also fills the store to its 255-task limit, delivers a result from the reserved slot, and recovers capacity by dropping tasks. In a fresh store it makes 260 calls with a valid first Ticket and stale second Ticket; in another, 260 successful calls borrowing the same Ticket twice. After **every call**, the live count must be exactly two: the session and the external Ticket. Closing each session and dropping its last owner brings the count to zero.
+
+At `b76c483`, teardown still returned the count to zero. While the store was open, the 254th rejected call returned `LIMIT` instead of `STALE`, and the first successful two-borrow call left four identities instead of two. The native host now takes back each temporary Wasmtime owner after a normal return or argument rejection and explicitly releases its native slot. If the component traps with a borrow still active, the failed store tears down without re-entry.
+
+| Parked-worker release | Archive SHA-256 | Receipt SHA-256 |
+| --- | --- | --- |
+| Ordinary Depot | `a2e8ffc2991eb51f1e8a4f7fc42a96c86cdb94d43c1daddcaa7f03710c08b517` | `1a9b95b40cf1a78a5ff535596d814ca0b4fa001e63c41b5dfdd9e65c5d3d8483` |
+| Reviewed Depot | `246faae47d97dfbb804f51033dc8b99a91cf201bfc9f7f6757cafa8104862b76` | `aad72e35b5b4a8753b95998bbacde772ebe5f8de79cb53239cf1bfb24488e2b9` |

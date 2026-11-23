@@ -39,8 +39,14 @@ static inline LBP(status) lb_start_leases(lb_session *s,size_t i,lb_val *args,
         /* A trapped call can strand a canonical borrow. In that case store
          * shutdown, not an attempted reentry, releases its remaining slots. */
         if (!s->failed) {
-            wasmtime_error_t *err=wasmtime_component_resource_any_drop(s->tasks.ctx,args[n].of.resource);
+            /* These are host-created temporary owners, not owners returned by
+             * a guest. Dropping their ResourceAny does not dispatch the
+             * linker's guest-facing destructor. Take back the canonical owner
+             * and explicitly release its native lease and store slot. */
+            size_t kind=m->args[n]-LB_HEAP_BASE; lb_task_slot *slot=NULL;
+            wasmtime_error_t *err=lb_task_lookup(&s->tasks,LB_TASK_METHODS+kind,&args[n],true,&slot);
             if (err) { wasmtime_error_delete(err); rc=lb_fault(s,true); }
+            else if (!lb_task_release(&s->tasks,slot)) rc=lb_fault(s,true);
         }
         wasmtime_component_val_delete(&args[n]); args[n]=(lb_val){0};
     }

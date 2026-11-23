@@ -247,6 +247,8 @@ Put both packages' `lib/pkgconfig` directories on `PKG_CONFIG_PATH` and build th
 
 A task input is a borrow. Its result, an iterator item, and a typed failure can each hand back a separately owned Ticket. Initialize each output to zero; call `drop_lease_ticket` once for every owner you receive. To keep another owner, call `retain_lease_ticket`; assigning the C struct only copies the same lease. An owned Ticket outlives its session. `same_lease_ticket` compares object identity, not field values.
 
+Once `start` succeeds, you can drop your Ticket even if the worker is still waiting. Lean keeps the object it needs. Cancelling the task stops delivery to the caller; it does not undo mutations or guarantee that the worker has stopped. Closing the session invalidates its borrowed readiness descriptors.
+
 ### Packages containing resources
 
 An ownership-aware package ships named C records, variants, sequences and opaque
