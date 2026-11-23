@@ -28,7 +28,6 @@ export const generateCTaskExports = options => {
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
-	if(retained && options.jvmDelivery) throw new TypeError("The JVM task profile does not admit retained host callbacks");
 	if((retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery].filter(Boolean).length !== 1 || publicC !== gmp))
 		throw new TypeError(options.jvmDelivery ? "The JVM task ABI requires word carriers; select exactly one host"
 			: options.dotnetDelivery ? "The .NET task ABI requires word carriers; select exactly one host"
@@ -65,7 +64,7 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wordAliases: options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery, prototypes }); continue;
+			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wordAliases: options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");

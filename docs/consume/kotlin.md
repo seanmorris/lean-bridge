@@ -90,6 +90,22 @@ A returned `Result.Err` is data, not an exception.
 
 The suspend wrapper uses Kotlin’s [cancellable await](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.future/await.html). See the [Maven author configuration](../publish/maven.md#export-tasks-and-streams) and the [installed Java/Kotlin checks](../evidence/jvm-tasks-20261123.json).
 
+### Pass a callback to a Lean task
+
+Pass a Kotlin function to the suspend API. The callback itself is synchronous; this call returns `42`:
+
+```kotlin
+import kotlinx.coroutines.runBlocking
+import org.leanbridge.feedback.kotlin.Api
+
+fun main() = runBlocking {
+    val answer: Long = Api.once(40L) { n -> n + 2 }
+    println(answer)
+}
+```
+
+The lambda runs on a JVM virtual thread, not on the calling coroutine’s dispatcher. Cancelling the coroutine releases the native task even if a callback is still blocked in application code. The bridge discards a late reply; it does not interrupt the callback. To revoke a callback across calls, use the generated `RetainedCallback.function` and pass `registration.callback()::apply`.
+
 ### Arrays and records
 
 New ordinary Maven packages include a Kotlin API in a `.kotlin` subpackage.
@@ -934,7 +950,7 @@ Profiles: Kotlin. Installed checks apply only to the named positions and package
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
-The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. The separate [task profile](#await-tasks-and-consume-streams) uses Java futures and publishers or Kotlin suspend functions and flows.
+The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. The separate [task profile](#await-tasks-and-consume-streams) uses Java futures and publishers or Kotlin suspend functions and flows. Tasks can [call back into the JVM](#pass-a-callback-to-a-lean-task) using copied scalar arguments and replies.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Kotlin in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

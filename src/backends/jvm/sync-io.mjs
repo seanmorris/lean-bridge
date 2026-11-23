@@ -17,6 +17,10 @@ const boxed = { boolean: "Boolean", int: "Integer", long: "Long", byte: "Byte", 
 const words = new Set("abstract assert boolean break byte case catch char class const continue default do double else enum extends final finally float for goto if implements import instanceof int interface long native new package private protected public return short static strictfp super switch synchronized this throw throws transient try void volatile while true false null record sealed permits var yield _ getClass clone finalize notify notifyAll wait hashCode toString equals".split(" "));
 const camel = s => s.replace(/_([a-z0-9])/gu, (_, c) => c.toUpperCase());
 const ident = s => words.has(camel(s)) ? camel(s) + "_" : camel(s);
+const insertAt = (source, marker, replacement) => {
+	if(!source.includes(marker) || source.indexOf(marker) !== source.lastIndexOf(marker)) throw new Error("Missing or ambiguous JVM template hook: " + marker);
+	return source.replace(marker, () => replacement);
+};
 const spelling = (t, ns, k, nest = false) => {
 	if(Array.isArray(t) && t.length === 2)
 		return (k ? ns + "." : "") + "Result<" + t.map(a => spelling(a, ns, k, true)).join(", ") + ">";
@@ -47,6 +51,32 @@ const result = (t, d = 0) => {
 	return read[t] ?? "(" + types[t][0] + ") f.scalar()";
 };
 
+const callbackSpecs = (api, m, decl, ns) => {
+	const slots = new Map(), spec = m.callbacks ?? [];
+	for(const [j, a, b] of spec)
+	{
+		const param = decl.parameters[j], ref = api.types?.find(t => t.id === param?.type?.id), cb = ref?.callable;
+		if(!Number.isSafeInteger(j) || j < 0 || m.args[j] !== "callback" || slots.has(j) || m.delivery !== "task"
+			|| param?.ownership !== "lease" || param.lifetime?.scope !== "explicit" || ref?.kind !== "callback"
+			|| ref.source?.extensions?.["lean-bridge.dev/callback-scheduler"] !== "jvm-virtual-thread"
+			|| cb?.invocation !== "many" || cb.reentry !== "same-agent" || cb.selfDisposal !== "defer" || cb.resultMode !== "value"
+			|| cb.parameters?.length !== 1 || cb.parameters[0].type?.kind !== "primitive" || cb.parameters[0].type.name !== a
+			|| cb.result?.type?.kind !== "primitive" || cb.result.type.name !== b || cb.failure?.unexpected !== "poison-runtime"
+			|| cb.failure.errors?.length !== 1 || cb.failure.errors[0] !== "error:JvmCallbackException")
+			throw new TypeError("Invalid compiler-selected JVM callback contract");
+		const ja = spelling(a, ns, false, true), jb = spelling(b, ns, false, true), input = a !== "unit", output = b !== "unit";
+		const java = input ? output ? `java.util.function.Function<${ja}, ${jb}>` : `java.util.function.Consumer<${ja}>`
+			: output ? `java.util.function.Supplier<${jb}>` : "Runnable";
+		const kotlin = "(" + (input ? spelling(a, ns, true) : "") + ") -> " + (output ? spelling(b, ns, true) : "kotlin.Unit");
+		const invoke = "a" + j + "." + (input ? output ? "apply(v)" : "accept(v)" : output ? "get()" : "run()");
+		const body = output ? invoke : "{ " + invoke + "; return Unit.INSTANCE; }";
+		const bind = `CallbackPort.<${ja}, ${jb}>bind(f -> ${result(a)}, v -> ${body}, (f,v) -> { ${argument(b, 0, "v")} })`;
+		slots.set(j, { java, kotlin, bind });
+	}
+	if(m.args.some((t, j) => (t === "callback") !== slots.has(j))) throw new TypeError("Missing compiler-selected JVM callback slot");
+	return slots;
+};
+
 /**
  * Generate both language projections over the same private native ABI.
  *
@@ -54,8 +84,9 @@ const result = (t, d = 0) => {
  */
 export const generateJvmIO = async options => {
 	const { api, wire, invoke, retire, evidence } = options, tasks = Boolean(wire.wait);
-	if(tasks !== Boolean(options.task && options.watch) || wire.leases || wire.methods.some(m => m.callbacks?.length))
-		throw new TypeError("Inconsistent JVM delivery or unsupported resource or callback");
+	const retained = wire.methods.some(m => m.callbacks?.length);
+	if(tasks !== Boolean(options.task && options.watch) || wire.leases || retained && !tasks)
+		throw new TypeError("Inconsistent JVM delivery or unsupported resource");
 	const slug = api.component.name.toLowerCase().replaceAll(/[^a-z0-9]+/gu, "_");
 	if(!/^[a-z][a-z0-9_]*$/u.test(slug) || words.has(slug)) throw new TypeError("Invalid JVM IO component namespace");
 	const ns = "org.leanbridge." + slug, pkg = "package " + ns + ";\n";
@@ -88,8 +119,9 @@ export const generateJvmIO = async options => {
 			return /^[a-zA-Z][A-Za-z0-9_]*$/u.test(key) ? key : "arg" + j;
 		});
 		if(new Set(params).size !== params.length) throw new TypeError("Colliding JVM IO parameter names: " + name);
-		const nativeArgs = m.args.map((t, j) => spelling(t, ns, false) + " a" + j).join(", ");
-		const init = m.args.map((t, j) => argument(t, j, "a" + j)).join("\n            ");
+		const slots = callbackSpecs(api, m, decl, ns);
+		const nativeArgs = m.args.map((t, j) => (slots.get(j)?.java ?? spelling(t, ns, false)) + " a" + j).join(", ");
+		const init = m.args.map((t, j) => slots.has(j) ? `java.util.Objects.requireNonNull(a${j});` : argument(t, j, "a" + j)).join("\n            ");
 		const declaration = JSON.stringify(m.declaration), jt = m.result === "unit" ? "void" : spelling(m.result, ns, false);
 		let error = "";
 		if(m.effect === "IO") error = `if (status == 4) throw new LeanIOException(${declaration}, f.text());`;
@@ -99,9 +131,25 @@ export const generateJvmIO = async options => {
 			error = typedError(ex, m.error, declaration);
 		}
 		const back = s => "\u0060" + s + "\u0060";
-		const kp = m.args.map((t, j) => back(params[j]) + ": " + spelling(t, ns, true)).join(", ");
+		const kp = m.args.map((t, j) => back(params[j]) + ": " + (slots.get(j)?.kotlin ?? spelling(t, ns, true))).join(", ");
 		const kt = m.result === "unit" ? "kotlin.Unit" : spelling(m.result, ns, true);
 		const call = `${ns}.Api.${back(name)}(${params.map(back).join(", ")})`;
+		if(slots.size)
+		{
+			const value = spelling(m.result, ns, false, true), unit = m.result === "unit";
+			const startError = m.effect === "IO" ? `if (status == 13) throw new LeanIOException(${declaration}, f.text());` : error;
+			const late = decl.source.extensions?.["lean-bridge.dev/task-failure"] === "IO.Error"
+				? `if (status == 4) throw new TaskIOException(${declaration}, f.text());` : "";
+			methods.push(`    public static java.util.concurrent.CompletableFuture<${value}> ${name}(${nativeArgs}) {
+        return Delivery.task(new CallbackPort<${value}>(${i}, ${m.args.length}, ${m.tagBytes},
+            f -> { ${init} }, (f,status,state) -> {
+                if (status == 14) throw state.original(f.scalar()); ${startError} ${late}
+                Wire.success(status); return ${result(m.result)};
+            }, new CallbackPort.Slot[]{${m.args.map((_, j) => slots.get(j)?.bind ?? "null").join(", ")}}));
+    }`);
+			kotlin.push(`    @JvmStatic suspend fun ${back(name)}(${kp}): ${kt}${unit ? " { " + call + ".await() }" : " = " + call + ".await()"}`);
+			continue;
+		}
 		if(m.delivery)
 		{
 			const stream = mode === "async-iterator", value = spelling(m.result, ns, false, true);
@@ -159,8 +207,24 @@ export const generateJvmIO = async options => {
 		const path = `src/main/java/${dir}/Wire.java`;
 		files[path] = files[path].replace("    int call(int op)", "    int task(TaskPort<?> port, int op) { return port.call(op, arena, args, out, tags); }\n    int call(int op)");
 		const assets = [["TaskReactor", "task-reactor"], ["TaskPort", "task-port"], ["Delivery", "task-delivery"]];
+		if(retained) assets.push(["CallbackPort", "callback-port"], ["RetainedCallback", "retained-callback"]);
 		for(const [name, asset] of assets) files[`src/main/java/${dir}/${name}.java`] = (await readFile(new URL("./" + asset + ".java", import.meta.url), "utf8"))
 			.replace("__PACKAGE__", ns).replace("__WATCH__", options.watch).replace("__TASK__", options.task);
+		if(retained)
+		{
+			// Keep copied-only packages free of callback classes or callback policy.
+			const port = `src/main/java/${dir}/TaskPort.java`, delivery = `src/main/java/${dir}/Delivery.java`;
+			files[port] = insertAt(files[port], "final class TaskPort", "class TaskPort");
+			files[path] = insertAt(files[path], "private static IllegalStateException corrupt", `static void retireCallbackRuntime() {
+        try { Native.RETIRE.invokeExact(); } catch (Throwable e) { throw new IllegalStateException("Cannot retire Lean runtime", e); }
+    }
+    static IllegalStateException corrupt`);
+			files[delivery] = insertAt(files[delivery], "        @Override public boolean cancel", `        private void checkWait() { if (!isDone()) CallbackPort.checkWait(port); }
+        @Override public T join() { checkWait(); return super.join(); }
+        @Override public T get() throws InterruptedException, ExecutionException { checkWait(); return port instanceof CallbackPort<?> cb ? cb.checkedGet(this) : super.get(); }
+        @Override public T get(long t, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException { checkWait(); return port instanceof CallbackPort<?> cb ? cb.checkedGet(this,t,unit) : super.get(t,unit); }
+        @Override public boolean cancel`);
+		}
 		java("TaskIOException", `public final class TaskIOException extends java.io.UncheckedIOException {
     private final String declaration;
     TaskIOException(String decl, String message) { super(decl + ": " + message, new java.io.IOException(message)); declaration = decl; }

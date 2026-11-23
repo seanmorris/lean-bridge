@@ -130,6 +130,25 @@ A subscriber receives the original error in `onError`. A returned
 
 The [JDK subscription contract](https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/util/concurrent/Flow.Subscription.html) defines demand and cancellation. See the [Maven author configuration](../publish/maven.md#export-tasks-and-streams) and the [installed Java/Kotlin checks](../evidence/jvm-tasks-20261123.json).
 
+### Pass a callback to a Lean task
+
+Pass a lambda directly, or use a registration when you need to revoke future calls. This example uses the prepared `com.acme:feedback` package:
+
+```java
+import org.leanbridge.feedback.Api;
+import org.leanbridge.feedback.RetainedCallback;
+
+class Example {
+    public static void main(String[] args) {
+        try (var addTwo = RetainedCallback.function((Long n) -> n + 2)) {
+            System.out.println(Api.once(40, addTwo.callback()).join());
+        }
+    }
+}
+```
+
+`close()` is safe during a callback: that invocation may finish, but later invocations fail. Cancelling one future does not revoke a registration shared with another package. The callback runs on a virtual thread, outside the native owner. It may call Lean again, but it cannot wait on its own unfinished future. If its exception escapes through Lean unchanged, `join()` reports that same throwable as the cause. If Lean catches or replaces it, the caller sees the result or replacement instead.
+
 ### Arrays and records
 
 Lean `Array T` uses a typed Java array. Primitive elements use primitive arrays, such as `long[]` for `Array UInt32`. Named copied structures become Java records with typed component accessors. Arrays and records can nest; calls copy their contents into independent returned values.
@@ -1038,7 +1057,7 @@ Profiles: Java. Installed checks apply only to the named positions and package p
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
-The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. The separate [task profile](#await-tasks-and-consume-streams) uses Java futures and publishers or Kotlin suspend functions and flows.
+The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. The separate [task profile](#await-tasks-and-consume-streams) uses Java futures and publishers or Kotlin suspend functions and flows. Tasks can [call back into the JVM](#pass-a-callback-to-a-lean-task) using copied scalar arguments and replies.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Java in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

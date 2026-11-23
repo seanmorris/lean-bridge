@@ -94,7 +94,7 @@ contains both Java and Kotlin APIs. Its POM supplies Kotlin 2.2.0 and
 `kotlinx-coroutines-core-jvm:1.8.0`. Real tasks become Java futures and
 Kotlin suspend functions; cursors become demand-driven Java publishers and
 cold Kotlin flows. An ordinary `IO` method still returns directly.
-For `IO (Task α)`, the factory runs on the native owner before the Java
+For a copied-only `IO (Task α)`, the factory runs on the native owner before the Java
 method hands back its future. Put long-running work inside the Lean task
 if it should continue after that point. A stream factory, in contrast,
 does not run until a subscriber requests its first item.
@@ -103,9 +103,52 @@ For a task returning `Except IO.Error α`, select its declaration in
 `taskIOErrors` to surface terminal IO failure separately from a factory
 failure. An ordinary returned `Except` remains data. Scalar arguments,
 copied results and nested returned or thrown `Except` values are supported;
-this task profile rejects resource and retained-callback arguments.
+resource-bearing task values remain unsupported.
 See the [Java](../consume/java.md#await-tasks-and-consume-streams) and
 [Kotlin](../consume/kotlin.md#await-tasks-and-consume-streams) examples.
+
+### Export a retained task callback
+
+In `Feedback.lean`, write an ordinary Lean function:
+
+```lean
+namespace Feedback
+
+def once (n : UInt32) (f : UInt32 → IO UInt32) : BaseIO (Task (Except IO.Error UInt32)) :=
+  IO.asTask (f n)
+
+end Feedback
+```
+
+Select it in `lean-bridge.exports.json`. The `taskExports` entry exposes the
+task. The `taskIOErrors` entry makes a terminal `IO.Error` an exception
+instead of a returned value:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Feedback"],
+  "exports": ["Feedback.once"],
+  "taskExports": ["Feedback.once"],
+  "taskIOErrors": ["Feedback.once"],
+  "targets": { "maven": { "name": "com.acme:feedback", "version": "1.0.0" } }
+}
+```
+
+The parameter `f` becomes a Java function or a Kotlin lambda. Inputs and
+replies are copied; the host does not receive a native pointer or a Lean closure.
+
+Unlike a copied-only task factory, a factory that accepts a callback runs
+asynchronously: it can request a callback *before* returning its inner task.
+Lean may catch a callback error. If the same error escapes, the JVM caller
+receives its original throwable; a new Lean error with the same text is
+still a different failure. A JVM virtual-machine, linkage or thread-death
+error retires the shared native runtime. Cross-language marshalling and
+callback scheduling require no consumer-supplied event loop.
+
+See the installed [Java](../consume/java.md#pass-a-callback-to-a-lean-task)
+and [Kotlin](../consume/kotlin.md#pass-a-callback-to-a-lean-task) examples
+and the [JVM callback receipts and replay instructions](../evidence/jvm-retained-tasks-20261123.json).
 
 ## Export options, results and products
 

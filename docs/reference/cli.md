@@ -42,7 +42,7 @@ Build and publish options:
   --target cpan         Build native Perl packages using lean-bridge.exports.json
   --target c|cpp        Build native C/C++ packages for copied-value exports
   --target nuget        Build ordinary C#/.NET copied-value NuGet packages
-  --target maven        Build ordinary Java/Kotlin copied-value Maven packages
+  --target maven        Build Java/Kotlin Maven packages, including native IO and tasks
   --target rubygems     Build ordinary Ruby copied-value gems
   --target wit-wasi     Build ordinary WIT APIs with a native Wasmtime host
   --target pypi         Build ordinary Python APIs as prepared native wheels

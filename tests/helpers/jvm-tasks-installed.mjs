@@ -30,8 +30,14 @@ test("the JVM owner exposes only the compiler-selected task and pull operations"
 	assert.throws(() => make("async-iterator", names), /Unverified JVM task operations/u);
 	assert.throws(() => make("task", { ...names, pull: symbol + "_pull" }), /Unverified JVM task operations/u);
 	assert.match(make("async-iterator", { ...names, pull: symbol + "_pull" }).source, /case 4: r->status = lb_test_task_pull/u);
+	const retainedNames = { ...names, ...Object.fromEntries(["callbacks", "next", "arg", "reply", "fail", "trap"].map(k => [k, symbol + "_" + k])) };
+	const withCallback = (delivery, selected) => jvmIOEntry({ wait: {}, methods: [{ name: "fetch", symbol, delivery, callbacks: [[0, "nat", "nat"]], names: selected }] }, p, "__WATCH__");
+	assert.match(withCallback("task", retainedNames).source, /case 8: .*lb_test_task_reply/u);
+	assert.throws(() => withCallback("task", { ...retainedNames, fail: "foreign_fail" }), /Unverified JVM task operations/u);
+	assert.throws(() => withCallback("async-iterator", retainedNames), /callback port requires an actual task/u);
+	assert.throws(() => make("task", retainedNames), /Unverified JVM task operations/u);
 	const retained = { delivery: "task", parameters: [{ type: { kind: "io-callback" } }] };
-	assert.throws(() => generateCTaskExports({ name: "test", modules: ["Test"], entries: [retained], componentIdentity: "0".repeat(64), integerMode: "words", jvmDelivery: true }), /does not admit retained host callbacks/u);
+	assert.throws(() => generateCTaskExports({ name: "test", modules: ["Test"], entries: [retained], componentIdentity: "0".repeat(64), integerMode: "gmp", jvmDelivery: true }), /JVM task ABI requires word carriers/u);
 });
 test("Maven task packaging rejects false terminal errors and a changed reviewed payload before exposing a release", { skip: !policy, timeout: 900_000 }, async t => {
 	const dir = await mkdtemp(join(tmpdir(), "jvm-task-policy-")); t.after(() => rm(dir, { recursive: true, force: true }));
@@ -54,16 +60,24 @@ test("the Maven task release contains its private runtime and the docs use the i
 	for(const f of ["package.json", "config/cli-package.v1.json", "nix/perl-engine-source-boundary.json"])
 	{
 		const m = await parse(f), files = m.files ?? m.includedFiles;
-		for(const n of ["task-delivery.java", "task-flow.kt", "task-port.java", "task-reactor.c", "task-reactor.java"])
+		for(const n of ["task-delivery.java", "task-flow.kt", "task-port.java", "task-reactor.c", "task-reactor.java", "callback-port.java", "retained-callback.java"])
 			assert.ok(files.includes("src/backends/jvm/" + n), f + ": " + n);
 	}
 	const section = async (f, head) => (await readFile(f, "utf8")).split(head + "\n")[1];
 	const snippet = s => s.match(/\x60{3}(?:java|kotlin|json)\n([\s\S]*?)\x60{3}/u)[1];
 	for(const [lang, ext] of [["java", "java"], ["kotlin", "kt"]])
+	{
 		assert.equal(snippet(await section("docs/consume/" + lang + ".md", "### Await tasks and consume streams")), await readFile(join(fixture, "Example." + ext), "utf8"));
+		assert.equal(snippet(await section("docs/consume/" + lang + ".md", "### Pass a callback to a Lean task")), await readFile(resolve("tests/fixtures/jvm-retained", "Example." + ext), "utf8"));
+	}
 	const config = JSON.parse(snippet(await section("docs/publish/maven.md", "## Export tasks and streams")));
 	await assertJsonSchema("lean-export-configuration", config); validateExportConfiguration(config);
 	assert.deepEqual(config.taskExports, ["Timers.immediate"]); assert.equal(config.asyncIterators[0].open, "Timers.units");
+	const retained = await section("docs/publish/maven.md", "### Export a retained task callback");
+	const once = JSON.parse(snippet(retained)); await assertJsonSchema("lean-export-configuration", once);
+	validateExportConfiguration(once); assert.deepEqual(once.taskExports, ["Feedback.once"]); assert.deepEqual(once.taskIOErrors, once.taskExports);
+	const source = await readFile(resolve("tests/fixtures/jvm-retained/Feedback.lean"), "utf8");
+	assert.ok(source.includes(retained.match(/\x60{3}lean\n([\s\S]*?)\x60{3}/u)[1].split("\n\nend Feedback")[0].trimEnd()));
 });
 test("compiler-selected and reviewed Java and Kotlin task JARs contain native Lean tasks and cursors", { skip: !build, timeout: 3_600_000 }, async t => {
 	const root = resolve(build), routes = env.LEAN_BRIDGE_JVM_TASK_ROUTE ? [env.LEAN_BRIDGE_JVM_TASK_ROUTE] : ["ordinary", "peer", "reviewed"];

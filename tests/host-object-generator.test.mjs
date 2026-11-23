@@ -31,6 +31,7 @@ import "./helpers/ruby-resource-installed.mjs";
 import "./helpers/dotnet-io-installed.mjs";
 import "./helpers/jvm-io-installed.mjs";
 import "./helpers/jvm-tasks-installed.mjs";
+import "./helpers/jvm-retained-installed.mjs";
 import "./helpers/dotnet-task-installed.mjs";
 import "./helpers/dotnet-task-managed-replay.mjs";
 import "./helpers/dotnet-resource-installed.mjs";

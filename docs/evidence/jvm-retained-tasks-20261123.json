@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "kind": "installed-jvm-retained-lean-task-callbacks",
+  "date": "2026-11-23",
+  "planNodes": [
+    1221,
+    1222,
+    1223
+  ],
+  "scope": "Originally produced and locally installed Linux x86-64 Maven JARs/POMs, JDK 22.0.2, Lean 4.32.2, Kotlin 2.2.0, kotlinx-coroutines-core-jvm 1.8.0, Maven 3.9.11. glibc 2.36 override on this test host; normal release floor 2.38. No registry publication, hosted CI, or full-matrix promotion. Callback arguments and replies in this task profile are copied primitives, not nominal resource leases or asynchronous host functions.",
+  "checks": [
+    "Ordinary and compiler-reviewed Feedback plus an independently built Relay: original archives, repository sidecars, every archived payload, native runtimes, Binding IR, Java classes, Kotlin metadata, resolved coroutines artifact and POM dependencies verified. Offline Maven resolution and relocation; client runtime PATH contains no tools. Repeated with both load orders in Java and Kotlin.",
+    "Real Lean workers and factories invoke standard Java functional interfaces and synchronous Kotlin functions from JVM virtual threads. All 19 copied scalar carriers; nested same-component and cross-component calls return normally, and attempting to join the active callback’s own future is rejected.",
+    "Preserve the original throwable when its Lean IO error escapes; observe Lean catches, equal-text replacement errors, typed factory errors and invalid boundary replies separately. Callback CancellationException is distinct from cancelling a Java future. A hostile exception formatter does not replace error identity on join, get or timed get; repeated timed waits do not retain a new dependent each time. Interruption and reading a subsequently obtruded value are also exercised.",
+    "Self-revocation lets the current call finish and rejects future calls, including in a different component. Cancelling one task leaves a shared registration usable. Cooperative/late cancellation, unentered requests, weakly observed capture release while the cancelled future remains reachable, expired Lean-side callback, cancellation while a lambda is blocked and retirement while a lambda is blocked. Kotlin uses its native cancellable suspend API; negative cases fail at compile time.",
+    "Two components, one runtime, zero native identities and no net eventfd/epoll descriptors after cleanup. Fatal JVM linkage error retires the shared runtime; a separate process verifies that a late fatal callback after cancellation still retires both packages without changing the already-cancelled future.",
+    "A new retained callback reenters the previously accepted synchronous Journal and async Timers packages. The three original-first permutations all observe one runtime, three attached components and zero remaining identities. A fresh offline-installed CLI reproduces the primary release byte for byte.",
+    "Changed reviewed scheduler and callback ownership/lifetime, and a non-scalar callback reply in Lean source, all fail without an exposed handoff."
+  ],
+  "regression": {
+    "voGotcha": 79,
+    "beforeReceiptSha256": "655cf7453ec6e3e319bc0057ca24192e9f4891098c98e9699a056126a1241297",
+    "fixture": "tests/fixtures/jvm-retained/Formatter.java",
+    "before": "The original JVM get() constructed ExecutionException(Throwable); Throwable.toString invoked the user's broken formatter, masking the exception already preserved by join().",
+    "after": "A shared nonthrowing signal preserves interruption and timeout without retaining waiters; a fresh checked read uses ExecutionException(null, original)."
+  },
+  "reproduce": [
+    "Set the JDK 22, Kotlin 2.2.0, Maven, Python >=3.11, and Lean 4.32.2 paths as for docs/evidence/jvm-tasks-20261123.json. Use an empty EVIDENCE directory, LEAN_NUM_THREADS=1, and the test glibc override only on a compatible test host. Seed LEAN_BRIDGE_JVM_TASK_M2_SEED with the third-party prerequisites from tests/fixtures/jvm-tasks/prerequisites.xml, never any application JAR.",
+    "LEAN_BRIDGE_JVM_CALLBACK_BUILD=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-retained-installed.mjs",
+    "LEAN_BRIDGE_JVM_CALLBACK_POLICY=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-retained-installed.mjs",
+    "LEAN_BRIDGE_JVM_CALLBACK_CAPTURE=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-retained-acceptance.mjs",
+    "LEAN_BRIDGE_JVM_ORIGINAL=$EVIDENCE LEAN_BRIDGE_JVM_REPRO=$SECOND node --test --test-name-pattern='offline-installed CLI in a second producer' tests/helpers/jvm-io-installed.mjs",
+    "LEAN_BRIDGE_JVM_CALLBACK_ORIGINAL=$EVIDENCE LEAN_BRIDGE_JVM_MIXED_TASK=$ORIGINAL_TIMERS LEAN_BRIDGE_JVM_MIXED_SYNC=$ORIGINAL_JOURNAL LEAN_BRIDGE_JVM_CALLBACK_MIXED=$MIXED node --test --test-concurrency=1 tests/helpers/jvm-retained-acceptance.mjs",
+    "LEAN_BRIDGE_JVM_CALLBACK_REPLAY=$EVIDENCE LEAN_BRIDGE_JVM_CALLBACK_EXPECTED=docs/evidence/jvm-retained-tasks-20261123.json node --test --test-concurrency=1 tests/helpers/jvm-retained-acceptance.mjs"
+  ],
+  "acceptanceSha256": "5555e7e53e3cc8dd09521540c0a527129fc5e795840af073dac244a6d4af8c98",
+  "installed": {
+    "clients": {
+      "Bad.kt": "b5283bbd2ee5335ed17d753fb51c724b2d5b83a4f05d84775547513803316e1f",
+      "Example.java": "ec7a5d65886c956de0496790e71c66144e48e156a821809582c222a48b6b0df7",
+      "Example.kt": "95dadc73c1f870e328927471955a385e267ce77b617885fd370538388f05d889",
+      "Formatter.java": "24025e469c465c62271cd31227551d560727e5a266d0a04387af414362550f4f",
+      "Installed.java": "25755acb1dc6e7df7afaacd65adb91c23105d51ae0c8faa8e911025767607227",
+      "Installed.kt": "f53ef34fc27979a73d3e171a9c70e2f701a6387184918a3d33107b575ff682f7",
+      "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75",
+      "Trap.java": "8088e908cc28043a78a6899d9d5465522b1c8f494f449ac1ab06b8cb5cefd3e5",
+      "settings.xml": "bc96ebbba3ebe910e99d8206eed774fd57931bda2450cd3344271d2325251439",
+      "verify.py": "93c1606cce726a12432263491830bba7f3decfba72904a3179a9ba339d8db808"
+    },
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51480741,
+            "path": "archives/feedback-1.0.0.jar",
+            "sha256": "9178e7dc1cfef423a84c8ce3742a074212890defd0436c0144f6917c1206dddc"
+          },
+          {
+            "bytes": 753,
+            "path": "archives/feedback-1.0.0.pom",
+            "sha256": "4aa2954ce45f0ed3e96c59967fe5c1e9026ef5a294e551ab7fee795a696efdf1"
+          }
+        ],
+        "detail": {
+          "bindingIrSha256": "d550ffdb03c6fe36239c2e55cdb282b301e0af1fa6697fef6f0aa149609ccfd6",
+          "componentIdentity": "9e09e2dc0f9797d2075c3770f4efd699b5b21c3c4304d9b0e460a063e565d548",
+          "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+          "java": "javac 22.0.2",
+          "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblbc_jvm_76e1abaa1352ef48e800394c21c6ec6ef528c91f33222c91ceb29e27baef7e74.so": "432a9099a32b17c39c570043ea1ee57873010322ec8f422d53d5a5e7073a7f5a",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "payloads": 76,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "name": "com.acme:feedback",
+        "receiptSha256": "2f69b6f4c28af8f0ad4f1323788c9044fe449953014fc80fcd0a102c68d21bff",
+        "reviewedSourceSha256": null,
+        "route": "ordinary",
+        "sourceTreeSha256": "9143b56a3ff5c95ca020d236db37128b4b98060a46dcd3c1eb5c1113fd5e5fe6"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51407274,
+            "path": "archives/relay-1.0.0.jar",
+            "sha256": "c92ebe121b8811748c9b6b46926b956e6c4800d107f88250e58d2c6dd415b057"
+          },
+          {
+            "bytes": 750,
+            "path": "archives/relay-1.0.0.pom",
+            "sha256": "a35134c57503b61c2786642c4c2b1e1a5c759a82f5320decca248ad2c0a8b124"
+          }
+        ],
+        "detail": {
+          "bindingIrSha256": "96fc9df5be9e661e54c6fee223091eb8ca7eca4ddb4ce5eb5a0c81d9f572fc31",
+          "componentIdentity": "4a2f7208fb664287d4173feb8bc2762cbc9c7fbae61cbcc7e93fb3f50fe5820b",
+          "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+          "java": "javac 22.0.2",
+          "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblbc_jvm_08aafcb24920a6c0ace3734c429e056eacb772e939b10f1dd7fb5e4e2bb3be53.so": "107748a5168ac2e17419cf53561f83977281da4e9100827c7d9a53d627e52a1b",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "payloads": 64,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "name": "com.acme:relay",
+        "receiptSha256": "afec5b81343940c57de4e85f036cfd1f4a1fd7aa1cd9bf049fa1c9d6c82d14f4",
+        "reviewedSourceSha256": null,
+        "route": "peer",
+        "sourceTreeSha256": "fc871f8bd43ff213a8a690966ec732072bbd997e2137fe3937407e950fcf2b85"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51480778,
+            "path": "archives/feedback-1.0.0.jar",
+            "sha256": "1b4182cd276d6be1d5c879846ea2137c95943c1471ff765ff222f849f6101060"
+          },
+          {
+            "bytes": 753,
+            "path": "archives/feedback-1.0.0.pom",
+            "sha256": "4aa2954ce45f0ed3e96c59967fe5c1e9026ef5a294e551ab7fee795a696efdf1"
+          }
+        ],
+        "detail": {
+          "bindingIrSha256": "d550ffdb03c6fe36239c2e55cdb282b301e0af1fa6697fef6f0aa149609ccfd6",
+          "componentIdentity": "28495b79ba1431d1831f60bf942a1f1ff50a5e07484ed28a12bbe1883ada1553",
+          "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+          "java": "javac 22.0.2",
+          "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblbc_jvm_76e1abaa1352ef48e800394c21c6ec6ef528c91f33222c91ceb29e27baef7e74.so": "9078e2b219535d577f213fd52c07802a8075ee5707b48c5a0a95023a544811ec",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "payloads": 76,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "name": "com.acme:feedback",
+        "receiptSha256": "2751e4929be345a7c89069f3c33b1d11c7de1d873feed4e7566e84e84cdd2b26",
+        "reviewedSourceSha256": "1bd87b463171a1f584734d5dc1042b12ca3ffcccf47de659975812b87d7b43e7",
+        "route": "reviewed",
+        "sourceTreeSha256": "b5353b2fe1deaa96d168d7cd6953d0adbee4d0c9fe5afa88af94304b904bb642"
+      }
+    ],
+    "rows": [
+      {
+        "observed": {
+          "Example": "42",
+          "ExampleKt": "42",
+          "Formatter": "join, get and timed get preserve the same exception without formatting it again",
+          "Installed/feedback-first": "Java: 19 carrier conversions, nested callback reentry, original exceptions, revocation, cancellation and shared retirement; 2 components, 0 live identities, descriptor delta 0",
+          "Installed/peer-first": "Java: 19 carrier conversions, nested callback reentry, original exceptions, revocation, cancellation and shared retirement; 2 components, 0 live identities, descriptor delta 0",
+          "InstalledKt/feedback-first": "Kotlin: suspend callbacks, nested reentry, checked exception identity, revocation, cancellation and retirement during a blocked callback; 2 components, 0 live identities, descriptor delta 0",
+          "InstalledKt/peer-first": "Kotlin: suspend callbacks, nested reentry, checked exception identity, revocation, cancellation and retirement during a blocked callback; 2 components, 0 live identities, descriptor delta 0",
+          "Trap": "a fatal callback after cancellation retires both components without resettling the cancelled future"
+        },
+        "resolved": [
+          "com/acme/feedback/1.0.0/feedback-1.0.0.jar",
+          "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar",
+          "org/jetbrains/annotations/13.0/annotations-13.0.jar",
+          "org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.jar",
+          "com/acme/relay/1.0.0/relay-1.0.0.jar"
+        ],
+        "route": "ordinary"
+      },
+      {
+        "observed": {
+          "Example": "42",
+          "ExampleKt": "42",
+          "Formatter": "join, get and timed get preserve the same exception without formatting it again",
+          "Installed/feedback-first": "Java: 19 carrier conversions, nested callback reentry, original exceptions, revocation, cancellation and shared retirement; 2 components, 0 live identities, descriptor delta 0",
+          "Installed/peer-first": "Java: 19 carrier conversions, nested callback reentry, original exceptions, revocation, cancellation and shared retirement; 2 components, 0 live identities, descriptor delta 0",
+          "InstalledKt/feedback-first": "Kotlin: suspend callbacks, nested reentry, checked exception identity, revocation, cancellation and retirement during a blocked callback; 2 components, 0 live identities, descriptor delta 0",
+          "InstalledKt/peer-first": "Kotlin: suspend callbacks, nested reentry, checked exception identity, revocation, cancellation and retirement during a blocked callback; 2 components, 0 live identities, descriptor delta 0",
+          "Trap": "a fatal callback after cancellation retires both components without resettling the cancelled future"
+        },
+        "resolved": [
+          "com/acme/feedback/1.0.0/feedback-1.0.0.jar",
+          "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar",
+          "org/jetbrains/annotations/13.0/annotations-13.0.jar",
+          "org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.jar",
+          "com/acme/relay/1.0.0/relay-1.0.0.jar"
+        ],
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "mixed": {
+    "callbackReceiptSha256": "2f69b6f4c28af8f0ad4f1323788c9044fe449953014fc80fcd0a102c68d21bff",
+    "resolved": [
+      "com/acme/feedback/1.0.0/feedback-1.0.0.jar",
+      "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar",
+      "org/jetbrains/annotations/13.0/annotations-13.0.jar",
+      "org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.jar",
+      "com/acme/timers/1.0.0/timers-1.0.0.jar",
+      "com/acme/journal-io/1.2.0-rc.1/journal-io-1.2.0-rc.1.jar"
+    ],
+    "rows": {
+      "callback-first": "retained callback reentered original synchronous and task releases: 1 runtime, 3 components, 0 live identities",
+      "sync-first": "retained callback reentered original synchronous and task releases: 1 runtime, 3 components, 0 live identities",
+      "task-first": "retained callback reentered original synchronous and task releases: 1 runtime, 3 components, 0 live identities"
+    },
+    "schemaVersion": 1,
+    "sources": {
+      "Mixed.java": "a20b2eb24d07c8b04c473b2a890c15805c655a0880f388a5e92abc9936ad6b1c",
+      "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75",
+      "settings.xml": "bc96ebbba3ebe910e99d8206eed774fd57931bda2450cd3344271d2325251439",
+      "verify.py": "93c1606cce726a12432263491830bba7f3decfba72904a3179a9ba339d8db808"
+    },
+    "syncReceiptSha256": "713283d67d5bd23648b461a38d858a83f2f0a3c0ecaedc6de6ca5ca316db7967",
+    "taskReceiptSha256": "7737e34f087814337c5b23f83755b6ebccee9c9cb8656dd213981d260f88ed50"
+  },
+  "independentProducer": {
+    "artifacts": [
+      {
+        "bytes": 51480741,
+        "path": "archives/feedback-1.0.0.jar",
+        "sha256": "9178e7dc1cfef423a84c8ce3742a074212890defd0436c0144f6917c1206dddc"
+      },
+      {
+        "bytes": 753,
+        "path": "archives/feedback-1.0.0.pom",
+        "sha256": "4aa2954ce45f0ed3e96c59967fe5c1e9026ef5a294e551ab7fee795a696efdf1"
+      }
+    ],
+    "cliArchiveSha256": "068880a91badab8c7501dace82a5bd9ae774deeb9ce7fc6e573a0a21c3c5f211",
+    "receiptSha256": "2f69b6f4c28af8f0ad4f1323788c9044fe449953014fc80fcd0a102c68d21bff"
+  }
+}

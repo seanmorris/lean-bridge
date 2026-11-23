@@ -32,6 +32,7 @@ structure Request where
   cTaskCallbacks : Option Bool := none
   rubyTaskCallbacks : Option Bool := none
   dotnetTaskCallbacks : Option Bool := none
+  jvmTaskCallbacks : Option Bool := none
   taskIOErrors : Option (Array String) := none
   nativeEffectPolicy : Option String := none
   synchronousIO : Option Bool := none
@@ -41,7 +42,7 @@ structure Request where
 def Request.ownerTaskCallbacks (r : Request) : Bool :=
   r.pythonTaskCallbacks.getD false || r.rustTaskCallbacks.getD false ||
     r.cppTaskCallbacks.getD false || r.cTaskCallbacks.getD false || r.rubyTaskCallbacks.getD false ||
-    r.dotnetTaskCallbacks.getD false
+    r.dotnetTaskCallbacks.getD false || r.jvmTaskCallbacks.getD false
 
 /-- A task in a package does not change the delivery mode of adjacent exports. -/
 def Request.immediateValues (r : Request) : Bool :=

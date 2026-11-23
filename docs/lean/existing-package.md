@@ -181,6 +181,8 @@ instead when Lean needs to call a Python-owned object's methods.
 The [Maven task profile](../publish/maven.md#export-tasks-and-streams) turns
 selected Lean tasks into Java `CompletableFuture` or Kotlin suspend functions.
 Select a cursor protocol for Java `Flow.Publisher` or Kotlin `Flow`.
+An explicit unary `α → IO β` task parameter lets Lean [call back into
+Java or Kotlin](../publish/maven.md#export-a-retained-task-callback) with copied scalar values.
 Consumption requires neither a Lean compiler nor a manual scheduler.
 
 The [NuGet task profile](../publish/nuget.md#export-tasks-and-pull-streams)

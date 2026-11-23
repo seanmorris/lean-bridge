@@ -53,8 +53,9 @@ export const compileJvmIOOwner = async options => {
  * @param reactor - Private Linux readiness operations; included only in task components.
  */
 export const jvmIOEntry = (wire, p, reactor) => {
-	if(Boolean(wire.wait) !== Boolean(reactor) || wire.leases || !wire.methods.length || wire.methods.some(m => m.callbacks?.length))
-		throw new TypeError("The JVM IO and task profiles require copied values");
+	if(Boolean(wire.wait) !== Boolean(reactor) || wire.leases || !wire.methods.length
+		|| wire.methods.some(m => m.callbacks?.length && (!wire.wait || m.delivery !== "task")))
+		throw new TypeError("The JVM callback port requires an actual task with copied carriers");
 	const invoke = p + "_jvm_invoke", retire = p + "_jvm_retire";
 	const source = `#include "${p}.h"
 #include "io-owner.h"
@@ -83,7 +84,10 @@ void ${retire}(void) { lean_bridge_native_runtime_retire(); }
 	const declarations = [], cases = [];
 	for(const [i, m] of wire.methods.entries()) if(m.delivery)
 	{
-		const wanted = ["start", "poll", "take", "close", ...m.delivery === "async-iterator" ? ["pull"] : []];
+		const retained = Boolean(m.callbacks?.length);
+		const wanted = ["start", "poll", "take", "close"];
+		if(m.delivery === "async-iterator") wanted.push("pull");
+		if(retained) wanted.push("callbacks", "next", "arg", "reply", "fail", "trap");
 		if(!["task", "async-iterator"].includes(m.delivery) || Object.keys(m.names ?? {}).length !== wanted.length
 			|| wanted.some(k => m.names[k] !== m.symbol + "_" + k)) throw new TypeError("Unverified JVM task operations: " + m.name);
 		const row = [];
@@ -91,6 +95,24 @@ void ${retire}(void) { lean_bridge_native_runtime_retire(); }
 		{
 			declarations.push(`extern int ${m.names[key]}(${signature});`);
 			row.push(`case ${j}: r->status = ${m.names[key]}(${args}); break;`);
+		}
+		if(retained)
+		{
+			// The JVM never receives a function pointer. Only the verified method's
+			// own callback slots can consume or reply to its active native request.
+			const n = m.names;
+			const callbackOps = [["callbacks", "int *"]
+				, ["next", "uint32_t *"]
+				, ["arg", "uint32_t, uint64_t *"]
+				, ["reply", "uint32_t, const uint64_t *"]
+				, ["fail", "const uint64_t *, uint32_t *"]];
+			for(const [key, sig] of callbackOps)
+				declarations.push(`extern int ${n[key]}(uint64_t *, ${sig});`);
+			row.push(`case 5: { int fd=-1; r->status=${n.callbacks}(r->h,&fd); r->out[0]=(uint64_t)(int64_t)fd; break; }`
+				, `case 6: { uint32_t slot=0; r->status=${n.next}(r->h,&slot); r->out[0]=slot; break; }`
+				, `case 7: if(r->args && r->args[0]<=UINT32_MAX) r->status=${n.arg}(r->h,(uint32_t)r->args[0],r->out); break;`
+				, `case 8: if(r->args && r->args[3]<=UINT32_MAX) r->status=${n.reply}(r->h,(uint32_t)r->args[3],r->args); break;`
+				, `case 9: { uint32_t id=0; r->status=${n.fail}(r->h,r->args,&id); r->out[0]=id; break; }`);
 		}
 		cases.push(`case ${i}: switch(r->op){ ${row.join(" ")} } break;`);
 	}

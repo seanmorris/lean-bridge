@@ -20,21 +20,44 @@ const env = { ...process.env, LEAN_NUM_THREADS: "1" }, capture = env.LEAN_BRIDGE
 const fixture = resolve("tests/fixtures/jvm-tasks"), json = async p => JSON.parse(await readFile(p, "utf8"));
 const files = ["Installed.java", "Observe.java", "ExitPending.java", "Installed.kt", "Bad.kt", "Example.java", "Example.kt", "verify.py", "settings.xml"];
 const digest = async f => { const h = createHash("sha256"); for await(const b of createReadStream(f)) h.update(b); return h.digest("hex"); };
-const inspect = async (root, route, work) => {
+/**
+ * Authenticate an original Maven JAR, its POM, inner inventory and compiler evidence.
+ *
+ * @param root - Evidence directory containing the original handoffs.
+ * @param route - Ordinary source, reviewed source or the independently built peer.
+ * @param work - Consumer directory with the independent ZIP/POM verifier.
+ * @param retained - Verify a retained-callback profile rather than the scalar task fixtures.
+ */
+const inspect = async (root, route, work, retained = false) => {
 	const dir = join(root, route, "handoff"), { result, receipt } = await readVerifiedPackageSetReceipt({ receiptPath: join(dir, "package-set-receipt.json") });
 	await assertJsonSchema("package-set-receipt", receipt); assert.equal(receipt.packages.length, 1); assert.equal(receipt.profiles.length, 1);
 	const p = receipt.packages[0], ir = await json(join(dir, "binding-ir.json")), evidence = await json(join(dir, "host-export-evidence.json"));
-	const name = "com.acme:" + (route === "peer" ? "alarm" : "timers");
+	const name = "com.acme:" + (retained ? route === "peer" ? "relay" : "feedback" : route === "peer" ? "alarm" : "timers");
 	assert.equal(p.profile, "native-jvm-task-v1"); assert.equal(p.profile, receipt.profiles[0].id);
 	assert.equal(p.name, name); assert.equal(p.target, "maven"); assert.equal(p.role, "component"); assert.deepEqual(p.requires, []);
 	assert.equal(p.version, "1.0.0"); assert.equal(p.runtimeDelivery, "embedded");
 	assert.equal(p.runtimeIdentity, receipt.profiles[0].runtimeIdentity); assert.equal(receipt.profiles[0].bindingIrSha256, hashBindingIr(ir));
 	assert.equal(evidence.sourceTreeSha256, receipt.source.treeSha256); assert.equal(Boolean(evidence.reviewedSourceSha256), route === "reviewed");
 	const selection = evidence.selection;
-	assert.deepEqual(selection.nativeEffects, ["filesystem"]);
-	assert.equal(selection.taskExports.length, route === "peer" ? 1 : 8);
-	assert.equal(selection.asyncIterators.length, route === "peer" ? 0 : 2);
-	assert.deepEqual(selection.taskIOErrors ?? [], route === "peer" ? [] : ["Timers.finalIO"]);
+	if(retained)
+	{
+		assert.equal(selection.jvmTaskCallbacks, true); assert.deepEqual(selection.nativeEffects, []);
+		assert.equal(selection.asyncIterators.length, 0);
+		assert.deepEqual(selection.taskExports, ir.declarations.filter(d => d.resultMode === "promise").map(d => d.source.declaration));
+		const contracts = ir.types.filter(x => x.kind === "callback"); assert.ok(contracts.length >= (route === "peer" ? 1 : 19));
+		for(const x of contracts)
+		{
+			assert.deepEqual(x.callable.failure.errors, ["error:JvmCallbackException"]);
+			assert.equal(x.source.extensions["lean-bridge.dev/callback-scheduler"], "jvm-virtual-thread");
+		}
+	}
+	else
+	{
+		assert.deepEqual(selection.nativeEffects, ["filesystem"]);
+		assert.equal(selection.taskExports.length, route === "peer" ? 1 : 8);
+		assert.equal(selection.asyncIterators.length, route === "peer" ? 0 : 2);
+		assert.deepEqual(selection.taskIOErrors ?? [], route === "peer" ? [] : ["Timers.finalIO"]);
+	}
 	const artifacts = p.artifacts.toSorted((a,b) => a.path.localeCompare(b.path));
 	assert.equal(artifacts.length, 2);
 	const paths = artifacts.map(a => join(dir, a.path));
@@ -51,6 +74,13 @@ const inspect = async (root, route, work) => {
 		, reviewedSourceSha256: evidence.reviewedSourceSha256 };
 	return { paths, proof };
 };
+/**
+ * Install original component archives offline, then relocate the resolved JVM classpath.
+ *
+ * @param proj - Empty destination for this consumer's isolated Maven project.
+ * @param work - Directory containing the offline repository settings.
+ * @param packages - Verified package records and original JAR/POM files.
+ */
 const install = async (proj, work, packages) => {
 	const repo = join(proj, "tool-repo"), dest = join(proj, "installed"), mvn = env.LEAN_BRIDGE_MAVEN ?? "mvn";
 	await mkdir(proj); await cp(resolve(env.LEAN_BRIDGE_JVM_TASK_M2_SEED), repo, { recursive: true, mode: constants.COPYFILE_FICLONE });
@@ -74,6 +104,7 @@ const install = async (proj, work, packages) => {
 	return { resolved, classpath: resolved.map(s => join(dest, s)).join(delimiter) };
 };
 const mixed = env.LEAN_BRIDGE_JVM_MIXED_OUTPUT;
+export { inspect as inspectJvmTask, install as installJvmTasks };
 test("independently installed synchronous and task Maven profiles share one native owner", { skip: !mixed, timeout: 600_000 }, async t => {
 	const work = await mkdtemp(join(tmpdir(), "mixed-jvm-task-")); t.after(() => rm(work, { recursive: true, force: true }));
 	const sync = resolve(env.LEAN_BRIDGE_JVM_MIXED_SYNC), root = resolve(env.LEAN_BRIDGE_JVM_MIXED_TASK);
