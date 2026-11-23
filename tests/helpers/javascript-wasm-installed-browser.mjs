@@ -5,11 +5,16 @@ import { createServer } from "node:http";
 import { mkdtemp, readFile, realpath } from "node:fs/promises";
 import { join, resolve, sep } from "node:path";
 
-const serve = async (consumer, names) => {
+const serve = async (consumer, names, isolated) => {
 	const packages = await realpath(join(consumer, "node_modules"));
 	const imports = Object.fromEntries([...names, "@lean-bridge/runtime"].map(name => [name, "/installed/" + name + "/index.mjs"]));
 	const importMap = {imports};
 	const server = createServer(async (request, response) => {
+		if(isolated)
+		{
+			response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+			response.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+		}
 		try
 		{
 			if(request.url === "/")
@@ -38,9 +43,9 @@ const serve = async (consumer, names) => {
  * @param options - Scratch directory, consumer root, package coordinates and page entry point.
  */
 export const runInstalledChromium = async options => {
-	const {root, consumer, names, evaluate, argument} = options;
+	const {root, consumer, names, evaluate, argument, isolated = false} = options;
 	const {chromium} = await import("playwright");
-	const site = await serve(consumer, names);
+	const site = await serve(consumer, names, isolated);
 	// Keep Chromium in the test's CPU-limited process group, not a detached job.
 	const userData = await mkdtemp(join(root, "chromium-"));
 	const proc = spawn(process.env.LEAN_BRIDGE_CHROMIUM ?? chromium.executablePath()
@@ -75,7 +80,17 @@ export const runInstalledChromium = async options => {
 		const page = await browser.contexts()[0].newPage();
 		await page.route("**/*", route => new URL(route.request().url()).origin === site.origin ? route.continue() : route.abort());
 		await page.goto(site.origin);
-		return await page.evaluate(evaluate, argument);
+		const result = page.evaluate(evaluate, argument);
+		if(!options.timeoutMs) return await result;
+		let timer;
+		try
+		{
+			const deadline = new Promise((_, reject) => {
+				timer = setTimeout(() => reject(new Error("Installed Chromium consumer timed out")), options.timeoutMs);
+			});
+			return await Promise.race([result, deadline]);
+		} finally
+		{ clearTimeout(timer); }
 	}
 	finally
 	{

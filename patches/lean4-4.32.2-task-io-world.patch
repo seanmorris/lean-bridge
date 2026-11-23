@@ -1,0 +1,9 @@
+diff --git a/src/runtime/io.cpp b/src/runtime/io.cpp
+--- a/src/runtime/io.cpp
++++ b/src/runtime/io.cpp
+@@ -1249 +1249 @@
+-extern "C" LEAN_EXPORT obj_res lean_io_create_tempfile(lean_object * /* w */) {
++extern "C" LEAN_EXPORT obj_res lean_io_create_tempfile() {
+@@ -1295 +1295 @@
+-extern "C" LEAN_EXPORT obj_res lean_io_create_tempdir(lean_object * /* w */) {
++extern "C" LEAN_EXPORT obj_res lean_io_create_tempdir() {

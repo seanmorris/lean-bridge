@@ -10,6 +10,8 @@ operation. Shutdown skips already-settled siblings and runs only once, even
 when a cancellation hook calls shutdown again. These are registry guarantees;
 they do not imply support for asynchronous Lean-to-host callbacks.
 
+The [threaded task experiment](threaded-task-probe.md) checks a different boundary: a genuinely pending Lean worker task, notification of the host and cancellation while the worker still owns its inputs. It is not a generated npm task export.
+
 ## Generated contract
 
 `compilePendingOperationV1` accepts a validated Binding IR declaration whose result mode is `promise`. It emits a closed plan with:
