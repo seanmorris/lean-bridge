@@ -70,11 +70,35 @@ die $error unless $ok;
 
 Run `perl consumer.pl`. Expected output is `42`, `42`, `42`, then `41`, each on its own line. Imports and calls use the generated public API only.
 
+### Call synchronous IO and handle errors
+
+Call a Lean `BaseIO`, `IO` or `EIO` export as a normal Perl function. It finishes before the next statement; there is no future to await. With the [Journal author example](../publish/cpan.md#export-synchronous-io), save this as `journal.pl`:
+
+```perl
+use v5.36;
+use LeanBridge::Journal;
+
+say LeanBridge::Journal::bump(42);
+my $returned = LeanBridge::Journal::choose(!!0, !!0, 'not used');
+say $returned->value;  # An Err returned as data.
+
+my $ok = eval { LeanBridge::Journal::choose(!!1, !!1, 'out of stock'); 1 };
+unless ($ok) {
+    my $error = $@;
+    die $error unless ref($error) && $error->isa('LeanBridge::Journal::Error::choose');
+    say $error->payload->value;
+}
+```
+
+Run `perl journal.pl`. It prints `42`, `37`, and `out of stock`. A function returning `Except` gives you an `Ok` or `Err` object. A thrown `EIO` error is a declaration-specific exception: `->declaration` names the Lean function and `->payload` preserves the value, including a nested `Except`. A failed `IO` operation throws `LeanBridge::Journal::IOError`; use `->message` for the Lean error text.
+
+The package loads the shared runtime. Use it from the process and interpreter thread that loaded it. Invalid inputs fail before the Lean function runs. The [installed acceptance checks](../evidence/perl-sync-io-20261123.json) exercise both threaded and unthreaded Perl.
+
 ### Options, results and products
 
 `Option` uses `undef` for None and the generated `Some->new($value)` for Some. Unit also uses `undef`: `Some->new(undef)` preserves a present Unit or an outer Some containing an inner None, according to the declared type. Nested options keep every layer.
 
-`Except` uses distinct `Ok->new($value)` and `Err->new($error)` classes. Both expose `->value`. Domain errors return `Err`; invalid host values and bridge failures throw exceptions.
+`Except` uses distinct `Ok->new($value)` and `Err->new($error)` classes. Both expose `->value`. A returned `Err` is data; a declared `EIO` failure, an invalid host value, or a bridge failure throws.
 
 For the package in the [author example](../publish/cpan.md#export-options-results-and-products), save `compounds.pl`:
 

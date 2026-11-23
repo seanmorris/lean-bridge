@@ -23,11 +23,12 @@ import { installCpanArchive } from "../release/cpan-install.mjs";
  * @param options.onProgress - Build progress observer.
  * @param options.ownedGmpRoot - Verified private GMP root for an owned component.
  * @param options.ownedModuleName - Owned package namespace, separate from Lean IR.
+ * @param options.syncIO - Compiler-authenticated standalone synchronous Perl projection.
  */
 export const projectCpanPackages = async ({
 	working, runtimeRoot, nativeRoot, leanPrefix
 	, settings = {}, environment = process.env, signal, onProgress
-	, ownedGmpRoot = null, ownedModuleName = null
+	, ownedGmpRoot = null, ownedModuleName = null, syncIO = null
 }) => {
 	const perls = environment.LEAN_BRIDGE_PERLS ? JSON.parse(environment.LEAN_BRIDGE_PERLS) : ["perl"];
 	if(!Array.isArray(perls) || !perls.length || perls.some(perl => typeof perl !== "string" || !perl))
@@ -46,7 +47,7 @@ export const projectCpanPackages = async ({
 	await stageCpanPackage({ outputRoot: componentPackage
 		, componentRoot: nativeRoot
 		, runtimePackageRoot: runtimePackage, runtimeRoot, leanPrefix, version
-		, glibcMinimumVersion: floor, ownedGmpRoot, ownedModuleName });
+		, glibcMinimumVersion: floor, ownedGmpRoot, ownedModuleName, syncIO });
 	for(const perl of perls)
 	{
 		signal?.throwIfAborted();

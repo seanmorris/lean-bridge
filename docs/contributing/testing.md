@@ -2629,6 +2629,21 @@ For development on an older glibc host, `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36`
 
 The native target accepts ordinary local Lean modules. Tests cover all sixteen scalars, copied records and arrays, shared resource identity, callbacks, returned closures, invalid inputs, runtime mismatch, compiler-free installation, and independent build reproducibility. Additional checks reject partial implementations, admitted definitions, dependent or generic signatures, unreviewed foreign code and scalar values incorrectly declared as identity resources.
 
+### Synchronous Perl IO
+
+Use the four Perl builds listed above and the pinned Lean toolchain. Set `LEAN_BRIDGE_PERLS` to a JSON array of their absolute interpreter paths and `LEAN_BRIDGE_LEAN_PREFIX` to the compiler prefix. Choose a fresh directory for the release archives:
+
+```sh
+export EVIDENCE="$PWD/build/acceptance/perl-io"
+LEAN_BRIDGE_PERL_IO_BUILD="$EVIDENCE" node --test --test-concurrency=1 tests/helpers/perl-io-installed.mjs
+LEAN_BRIDGE_PERL_IO_CAPTURE="$EVIDENCE" node --test --test-concurrency=1 tests/helpers/perl-io-consumers.mjs
+LEAN_BRIDGE_PERL_IO_POLICY="$EVIDENCE" node --test --test-concurrency=1 tests/helpers/perl-io-installed.mjs
+```
+
+The build produces an ordinary Journal, a reviewed Journal and an independent companion. Capture installs those original archives, moves the installations, then runs the public Perl example, conversion, cross-package and retirement checks. It writes the TAP and `acceptance.json` only after all rows pass. To repeat those calls without rebuilding Lean, replace `LEAN_BRIDGE_PERL_IO_CAPTURE` with `LEAN_BRIDGE_PERL_IO_REPLAY`. For the [retained release](../evidence/perl-sync-io-20261123.json), also set `LEAN_BRIDGE_PERL_IO_EXPECTED=docs/evidence/perl-sync-io-20261123.json` to check the pinned digest before running the clients. Both operations require Perl build tools for the XS-only fallback and test observer; the installed applications run with no compiler on their path.
+
+To test the producer a second time, set `LEAN_BRIDGE_PERL_IO_ORIGINAL` to the same directory and `LEAN_BRIDGE_PERL_IO_REPRO` to a new directory, then run `node --test --test-concurrency=1 tests/helpers/perl-io-repro.mjs`. It installs the CLI offline and compares both archives and their receipts byte for byte.
+
 ### Recursive Perl conversion
 
 Run the staged recursive XS checks with the four pinned Perl installations,

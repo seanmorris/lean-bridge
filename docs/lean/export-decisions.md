@@ -614,6 +614,8 @@ select the same resource declaration and the task or iterator protocol.
 A started worker keeps the object alive; a cold stream borrows it on first
 demand. A discarded result or step failure must not leak a lease.
 
+For Perl, [select synchronous IO explicitly](../publish/cpan.md#export-synchronous-io). A returned `Except` stays a Perl `Ok` or `Err` value; an `EIO` failure throws a declaration-specific exception with a typed payload. The prepared component depends on the ordinary shared CPAN runtime.
+
 The same distinction holds when a module also exports a task. In the
 [installed C, C++, Python and Rust example](../evidence/native-task-companions-20261122.json),
 an application reads a pure result, updates Lean state, awaits a task, and

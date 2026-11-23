@@ -3,10 +3,11 @@
  *
  * @file
  */
-import { readdir, unlink } from "node:fs/promises";
+import { readFile, readdir, unlink } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { processBuildRunner } from "./process-runner.mjs";
 import { readVerifiedCpanPackage, refreshCpanInventory } from "../release/cpan-package.mjs";
+import { validateNativeElf } from "./native-artifacts.mjs";
 
 /**
  * Add an ABI-specific XS binary without recompiling native Lean artifacts.
@@ -30,6 +31,18 @@ export const compileCpanXsVariant = async ({ packageRoot, perl = "perl", environ
 			, `LeanBridgeBuild::verify(LeanBridgeBuild::read_json('lean-bridge-package.json')); LeanBridgeBuild::compile_xs(LeanBridgeBuild::read_json('lean-bridge-package.json'), 'prebuilt/${key}');`]
 		, cwd: directory, env: environment });
 	const path = `prebuilt/${key}/${manifest.module.split("::").at(-1)}.so`;
+	if(manifest.syncIO)
+	{
+		const bytes = await readFile(join(directory,path)); validateNativeElf(bytes);
+		const elf = async args => (await processBuildRunner.capture({ command: "readelf", args: [...args,path], cwd: directory, env: environment })).stdout;
+		const dynamic = await elf(["-d"]);
+		if(bytes.includes(Buffer.from(directory)) || !dynamic.includes("Shared library: [" + manifest.syncIO.library + "]") || /\((?:RPATH|RUNPATH)\)/u.test(dynamic))
+			throw new Error("CPAN IO XS depends on a staging path or does not link its compiled component");
+		const maxMinor = Number(manifest.glibcMinimumVersion.split(".")[1]);
+		for(const [,major,minor,patch] of (await elf(["--version-info"])).matchAll(/GLIBC_(\d+)\.(\d+)(?:\.(\d+))?/gu))
+			if(+major > 2 || +major === 2 && (+minor > maxMinor || +minor === maxMinor && Number(patch)>0))
+				throw new Error("CPAN IO XS exceeds the declared glibc floor");
+	}
 	for(const name of await readdir(join(directory, "prebuilt", key))) if(/\.(?:c|o)$/.test(name)) await unlink(join(directory, "prebuilt", key, name));
 	const variant = { abiKey: key, abi, path };
 	manifest.prebuilt.push(variant); manifest.prebuilt.sort((a, b) => a.abiKey.localeCompare(b.abiKey));

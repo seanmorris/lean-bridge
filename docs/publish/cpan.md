@@ -47,9 +47,27 @@ The Nix entry point supplies the pinned upstream toolchain:
 nix run .#perl-build-engine -- --project /path/to/project --output /path/to/new-release
 ```
 
-The output contains `native/runtime`, `native/component`, prepared distributions under `packages`, and the two `.tar.gz` files and checksum receipts under `archives`. `native-release.json` records the component, runtime, Binding IR and archive identities. The native profile is `native-library-v1`; it does not alter the WebAssembly side-module ABI.
+The ordinary native-library build contains `native/runtime`, `native/component`, prepared distributions under `packages`, and two `.tar.gz` files under `archives`. Its profile is `native-library-v1`. The [synchronous IO build](#export-synchronous-io) uses `native-perl-io-v1` and the same two-distribution handoff. In both cases, `package-set-receipt.json` identifies the profile, the exact archives and the runtime dependency. Neither changes the WebAssembly side-module ABI.
 
 For APIs that also fit npm's primitive profile, [select npm and CPAN together](npm.md#build-npm-and-cpan-together). The combined build uses one captured source tree and exposes both package sets only after their source APIs agree. Its CPAN archives live under `profiles/native/archives/`. Keep a CPAN-only build for native records, arrays, resources and callbacks.
+
+### Export synchronous IO
+
+Select your Lean functions and declare the OS access they need. For the [Journal source](../../tests/fixtures/native-sync-io/Journal.lean), use:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.bump", "Journal.choose", "Journal.store", "Journal.read"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"cpan": {"module": "LeanBridge::Journal", "version": "0.001"}}
+}
+```
+
+`Journal.store` and `Journal.read` need the filesystem grant. Select `nativeEffects: []` for an in-memory-only API. Ordinary selection and reviewed Binding IR both pass through the same Lean compiler and effect checks. Build into a new directory with `lean-bridge build --project . --target cpan --output release`. The release contains a component distribution and an exact dependency on the shared runtime; publish both using the [CPAN instructions](#publish-to-cpan).
+
+The synchronous profile supports the 19 copied scalar types and nested returned or thrown `Except` values. `IO` failures carry the Lean error message; `EIO` failures retain the type of their payload. It does not turn tasks, streams, or direct resource parameters into synchronous copied values. See the [installed Perl example](../consume/perl.md#call-synchronous-io-and-handle-errors) and the [four-ABI acceptance record](../evidence/perl-sync-io-20261123.json).
 
 ### Export a specialized closure
 

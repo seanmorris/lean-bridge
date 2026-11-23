@@ -1,0 +1,14 @@
+use v5.36;
+use strict;
+use warnings;
+use ExtUtils::ParseXS;
+use ExtUtils::CBuilder;
+use LeanBridge::Runtime;
+use File::Path qw(make_path);
+my ($source)=@ARGV;
+my $rt=$INC{'LeanBridge/Runtime.pm'}; $rt =~ s/\.pm\z//;
+make_path('auto/TestObserver');
+ExtUtils::ParseXS::process_file(filename=>$source,output=>'Observe.c',prototypes=>0);
+my $cc=ExtUtils::CBuilder->new(quiet=>1);
+my $o=$cc->compile(source=>'Observe.c',include_dirs=>["$rt/include"]);
+$cc->link(objects=>$o,module_name=>'TestObserver',lib_file=>'auto/TestObserver/TestObserver.so',extra_linker_flags=>['-ldl']);

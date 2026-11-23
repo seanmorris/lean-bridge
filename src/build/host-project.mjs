@@ -19,6 +19,8 @@ import { buildPythonHostWheel, packagePythonHostRuntime, writePythonHostPackageS
 import { buildCTaskPackage } from "../release/c-task-package.mjs";
 import { validateNativeCSettings } from "../release/native-c-family.mjs";
 import { validateOrdinaryMavenSettings } from "../backends/jvm/copied-model.mjs";
+import { validatePerlIOSettings } from "../backends/perl/sync-io.mjs";
+import { ownedPerlNamespace } from "./owned-perl-projection.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { prepareLakeDependencySnapshot, verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
 import { selectLakeEntryModules, verifyLakeEntryModules } from "./lake-entry-modules.mjs";
@@ -86,21 +88,23 @@ export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
 	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
-	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, or maven");
+	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, or cpan");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
 	await absent(output);
 	assertExportConfigurationCapabilities(config, { target
 		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "nativeEffects", "package", "resources"]
-		, targetFields: ["name", "version"] });
+		, targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
 	const settings = config.targets?.[target] ?? {}, slug = component.name.toLowerCase().replaceAll("_", "-");
-	const name = settings.name ?? (target === "nuget" ? dotnetComponentAssembly(component) : target === "maven" ? "org.leanbridge:" + slug : "lean-" + slug);
-	const version = settings.version ?? (target === "rubygems" ? defaultRubyVersion(component.version)
+	const name = target === "cpan" ? ownedPerlNamespace(component, settings) : settings.name ?? (target === "nuget" ? dotnetComponentAssembly(component) : target === "maven" ? "org.leanbridge:" + slug : "lean-" + slug);
+	const version = settings.version ?? (target === "cpan" ? "0.001" : target === "rubygems" ? defaultRubyVersion(component.version)
 		: target === "pypi" && component.version === "0.0.0-local" ? "0.0.0+local" : component.version);
-	(target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : target === "rubygems" ? validateOrdinaryRubySettings : target === "nuget" ? validateOrdinaryNugetSettings : target === "maven" ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
+	(target === "cpan" ? validatePerlIOSettings : target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : target === "rubygems" ? validateOrdinaryRubySettings : target === "nuget" ? validateOrdinaryNugetSettings : target === "maven" ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
 	const contract = await captureContracts(project, inventory);
+	if(target === "cpan" && (!contract.synchronousIO || contract.leanResources.length))
+		fail("CPAN native IO currently supports synchronous copied values and declared errors; tasks, iterators and direct resource IO require separate delivery support");
 	if(inventory.project.toolchain !== "leanprover/lean4:v4.32.2") fail("Host source and runtime require the same pinned Lean toolchain");
 	if(!inventory.project.lakefile) fail("Host imports require a Lake package so each module has a checked owner");
 	const leanPrefix = resolve(environment.LEAN_BRIDGE_LEAN_PREFIX ?? (await processBuildRunner.capture({
