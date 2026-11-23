@@ -527,6 +527,13 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		document, profiles, reference);
 	return [
 		"### Type conversions"
+		, ...(profiles.length === 1 && profiles[0] === "rust" ? [""
+			, "The general audit table below describes the ordinary native projection. A"
+			, "separate [task release](#await-a-task-or-pull-a-stream) maps real Lean tasks to"
+			, "Rust [futures](https://doc.rust-lang.org/std/future/trait.Future.html), demand-driven"
+			, "cursors to [streams](https://docs.rs/futures-core/0.3.31/futures_core/stream/trait.Stream.html),"
+			, "and direct application-owned resources to typed leases."
+		] : [])
 		, ""
 		, `Profiles: ${profiles.map(profile => names[profile]).join(", ")}. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.`
 		, ""
