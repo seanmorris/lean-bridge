@@ -62,6 +62,46 @@ Parameters use `mixed` with precise PHPDoc so generated checks can reject numeri
 
 Validation, PHP conversion and native copying each have a 16 MiB accounting limit. PHP lists count at least 32 bytes per element. These limits do not bound Lean working memory. `finally` releases native outputs after conversion errors. Compatible packages share one process runtime; post-fork calls and already loaded foreign Lean runtimes are rejected. Loading needs readable `/proc/self/maps` to detect foreign runtime mappings. See [installed PHP evidence](evidence/native-php-copied-20260915.md).
 
+### Call synchronous IO and handle errors
+
+Install the publisher’s native Composer package and require its autoloader.
+An exported Lean `BaseIO`, `IO`, or `EIO` call finishes before the next PHP
+statement runs. There is no promise to await and no separate runtime to start.
+
+A returned Lean `Except` is a value: inspect its `Ok` or `Err` wrapper.
+A thrown `EIO` error raises a declaration-specific PHP exception with the
+original typed payload. Both can carry an `Err` without meaning the same
+thing. For example, in the Journal package:
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__ . '/vendor/autoload.php';
+
+use LeanJournal\{ChooseError, Err};
+use function LeanJournal\choose;
+
+$result = choose(false, false, 'unused');
+if (!$result instanceof Err || $result->value !== 37) {
+    throw new RuntimeException('Expected a returned Err(37)');
+}
+try {
+    choose(true, false, 'unused');
+    throw new RuntimeException('Expected a declared failure');
+} catch (ChooseError $failure) {
+    if (!$failure->payload instanceof Err || $failure->payload->value !== 37) {
+        throw $failure;
+    }
+}
+```
+
+A failed Lean `IO` call such as `LeanJournal\read($path)` throws
+`LeanJournal\IOError`; its message comes from Lean and its `$declaration`
+identifies the function. Invalid argument types and ranges fail before Lean
+performs the effect. This profile targets native PHP CLI, not PHP-Wasm.
+See [export synchronous IO](publish/php.md#export-synchronous-io) and the
+[installed PHP 8.2 and 8.5 results](evidence/php-sync-io-20261123.json).
+
 ### Arrays and records
 
 Native Composer packages expose nested `Array` values as consecutive-key PHP

@@ -35,7 +35,8 @@ const targetProfiles = { npm: ["component-scalars-v1", "javascript-wasm-owned-v1
 	, nuget: ["native-library-v1", "native-dotnet-io-v1", "native-dotnet-task-v1"]
 	, maven: ["native-library-v1", "native-jvm-io-v1", "native-jvm-task-v1"]
 	, cpan: ["native-library-v1", "native-perl-io-v1", "native-perl-task-v1"]
-	, ...Object.fromEntries(["wit-wasi", "php-native"].map(target => [target, "native-library-v1"])) };
+	, "wit-wasi": "native-library-v1"
+	, "php-native": ["native-library-v1", "native-php-io-v1"] };
 const ecosystemFor = target => target === "php-native" ? ["composer"] : target === "php-wasm" ? ["npm", "composer"] : [target];
 const nameKey = value => `${value.ecosystem}:${value.ecosystem === "pypi" ? value.name.toLowerCase().replaceAll(/[-_.]+/g, "-")
 	: ["nuget", "composer", "npm", "cargo"].includes(value.ecosystem) ? value.name.toLowerCase() : value.name}`;

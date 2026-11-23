@@ -1,0 +1,236 @@
+{
+  "profile": "native-php-io-v1",
+  "packages": {
+    "ordinary": {
+      "archive": {
+        "bytes": 51350393,
+        "path": "archives/lean-bridge-journal-1.0.0-linux-x86_64.zip",
+        "sha256": "d48710c4416903b7c85c51e921b6e6abaafaa0dc23cb8868bfe71a5c8d100f38"
+      },
+      "receiptSha256": "8ee57eac29b283ef794036dfce7b2f9cd4ce58f40042b9c91b670103943d1077",
+      "bindingIrSha256": "76946f253967bf7cc4ae4f73d4675079f57ccc02c6e36c1b93d4a652eee036b4",
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "modules": {
+        "Journal": "95d47520a1fafa7b9a0f874c1d5146d33c590441c51fe0f553aea615616a4f9a",
+        "ScalarIO": "2337c93e5a5897a8db1dc994bdbc8358e2449b13ca6442b5f06aad3645a2ac85"
+      },
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "extractorSha256": "6133517e1a822b9610264acf12a676a2b42279d7fa36660e046a4323826db60b",
+      "sourceTreeSha256": "4e83e5ecd1f7d124f3034326d4c4c1328f5914f2066a4a815a1ce32bf06436cf",
+      "declarations": 26
+    },
+    "reviewed": {
+      "archive": {
+        "bytes": 51350432,
+        "path": "archives/lean-bridge-journal-1.0.0-linux-x86_64.zip",
+        "sha256": "4e0e9c32ada858449f1f8452590debd728d2139a7fbb55484c3be9b98f58da13"
+      },
+      "receiptSha256": "88b8f26fa99126d72b138375cc11735839af2d7e00e799aa5e46085e8f7ffc58",
+      "bindingIrSha256": "76946f253967bf7cc4ae4f73d4675079f57ccc02c6e36c1b93d4a652eee036b4",
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "modules": {
+        "Journal": "95d47520a1fafa7b9a0f874c1d5146d33c590441c51fe0f553aea615616a4f9a",
+        "ScalarIO": "2337c93e5a5897a8db1dc994bdbc8358e2449b13ca6442b5f06aad3645a2ac85"
+      },
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "extractorSha256": "6133517e1a822b9610264acf12a676a2b42279d7fa36660e046a4323826db60b",
+      "sourceTreeSha256": "b6c4fbd56dc30e0e2888989297b046be0eca5a8af128a3a0a391ccf43d711466",
+      "declarations": 26
+    },
+    "peer": {
+      "archive": {
+        "bytes": 51332579,
+        "path": "archives/lean-bridge-companion-1.0.0-linux-x86_64.zip",
+        "sha256": "d4d14e5c597bed56aad1c2017e0a1d2cdf2f81b890d3f7364640b5d0328e11e1"
+      },
+      "receiptSha256": "0d2285f1ff1dcc648b6c72b4afb0fab9a381928f5930404888aa278014198aaa",
+      "bindingIrSha256": "158261a6b8e00dca775ab5957dcaa5c67f2ac61f94246b12f7b428b423dd8acc",
+      "runtime": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0",
+      "modules": {
+        "Companion": "4d29a921a4d60970474b0f5fd2a05d55ec8e7be61773a3bce110c1a10224210a"
+      },
+      "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "extractorSha256": "6133517e1a822b9610264acf12a676a2b42279d7fa36660e046a4323826db60b",
+      "sourceTreeSha256": "fabc955d7a32d8cce75838abd1ed6f4ee453f64e5224656c78f22d39868fb22b",
+      "declarations": 6
+    }
+  },
+  "sources": {
+    "example.php": "c6d9e9204730eacd34207e310c3a1018f87ecb760f550c1134d08d20dd80fdb1",
+    "installed.php": "02edbdc76ab96329c9ddb9499f4f3aa2f16c2a386cc80e3c20dc0418b6e9d795",
+    "integrity.php": "34c723e816bce052505317c2d0d7f6e782ea3621abe13efa6e75992c2161f095"
+  },
+  "reports": [
+    {
+      "checks": 58,
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "forkCheck": true,
+      "modifiedLibraryRefused": true,
+      "order": "journal-first",
+      "php": "8.2.35",
+      "receipts": [
+        "8ee57eac29b283ef794036dfce7b2f9cd4ce58f40042b9c91b670103943d1077",
+        "0d2285f1ff1dcc648b6c72b4afb0fab9a381928f5930404888aa278014198aaa"
+      ],
+      "retired": true,
+      "route": "ordinary"
+    },
+    {
+      "checks": 58,
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "forkCheck": true,
+      "modifiedLibraryRefused": true,
+      "order": "peer-first",
+      "php": "8.2.35",
+      "receipts": [
+        "8ee57eac29b283ef794036dfce7b2f9cd4ce58f40042b9c91b670103943d1077",
+        "0d2285f1ff1dcc648b6c72b4afb0fab9a381928f5930404888aa278014198aaa"
+      ],
+      "retired": true,
+      "route": "ordinary"
+    },
+    {
+      "checks": 57,
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "forkCheck": false,
+      "modifiedLibraryRefused": true,
+      "order": "journal-first",
+      "php": "8.5.10",
+      "receipts": [
+        "8ee57eac29b283ef794036dfce7b2f9cd4ce58f40042b9c91b670103943d1077",
+        "0d2285f1ff1dcc648b6c72b4afb0fab9a381928f5930404888aa278014198aaa"
+      ],
+      "retired": true,
+      "route": "ordinary"
+    },
+    {
+      "checks": 57,
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "forkCheck": false,
+      "modifiedLibraryRefused": true,
+      "order": "peer-first",
+      "php": "8.5.10",
+      "receipts": [
+        "8ee57eac29b283ef794036dfce7b2f9cd4ce58f40042b9c91b670103943d1077",
+        "0d2285f1ff1dcc648b6c72b4afb0fab9a381928f5930404888aa278014198aaa"
+      ],
+      "retired": true,
+      "route": "ordinary"
+    },
+    {
+      "checks": 58,
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "forkCheck": true,
+      "modifiedLibraryRefused": true,
+      "order": "journal-first",
+      "php": "8.2.35",
+      "receipts": [
+        "88b8f26fa99126d72b138375cc11735839af2d7e00e799aa5e46085e8f7ffc58",
+        "0d2285f1ff1dcc648b6c72b4afb0fab9a381928f5930404888aa278014198aaa"
+      ],
+      "retired": true,
+      "route": "reviewed"
+    },
+    {
+      "checks": 58,
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "forkCheck": true,
+      "modifiedLibraryRefused": true,
+      "order": "peer-first",
+      "php": "8.2.35",
+      "receipts": [
+        "88b8f26fa99126d72b138375cc11735839af2d7e00e799aa5e46085e8f7ffc58",
+        "0d2285f1ff1dcc648b6c72b4afb0fab9a381928f5930404888aa278014198aaa"
+      ],
+      "retired": true,
+      "route": "reviewed"
+    },
+    {
+      "checks": 57,
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "forkCheck": false,
+      "modifiedLibraryRefused": true,
+      "order": "journal-first",
+      "php": "8.5.10",
+      "receipts": [
+        "88b8f26fa99126d72b138375cc11735839af2d7e00e799aa5e46085e8f7ffc58",
+        "0d2285f1ff1dcc648b6c72b4afb0fab9a381928f5930404888aa278014198aaa"
+      ],
+      "retired": true,
+      "route": "reviewed"
+    },
+    {
+      "checks": 57,
+      "flags": [
+        "-n",
+        "-d",
+        "extension=ffi",
+        "-d",
+        "ffi.enable=1"
+      ],
+      "forkCheck": false,
+      "modifiedLibraryRefused": true,
+      "order": "peer-first",
+      "php": "8.5.10",
+      "receipts": [
+        "88b8f26fa99126d72b138375cc11735839af2d7e00e799aa5e46085e8f7ffc58",
+        "0d2285f1ff1dcc648b6c72b4afb0fab9a381928f5930404888aa278014198aaa"
+      ],
+      "retired": true,
+      "route": "reviewed"
+    }
+  ],
+  "checks": 460,
+  "acceptanceSha256": "766d420f3d2b83b6a556f1b329c114f65c5f9e349d7898998d2daad417072c6c",
+  "offlineCLI": {
+    "archive": {
+      "bytes": 51350393,
+      "path": "archives/lean-bridge-journal-1.0.0-linux-x86_64.zip",
+      "sha256": "d48710c4416903b7c85c51e921b6e6abaafaa0dc23cb8868bfe71a5c8d100f38"
+    },
+    "cliArchiveSha256": "7c4ac45f1e4e7975d7dc96a55b5f0cbc73d3ce11d28f9e99462e0f68b49b5f42",
+    "receiptSha256": "8ee57eac29b283ef794036dfce7b2f9cd4ce58f40042b9c91b670103943d1077"
+  }
+}

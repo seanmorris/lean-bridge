@@ -11,6 +11,10 @@ import { compileHostSources } from "../build/host-elaboration.mjs";
 import { readVerifiedNativeRuntime, validateNativeElf } from "../build/native-artifacts.mjs";
 import { pinnedCompiledLean } from "../build/elaborated-component.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
+import { compilePhpSyncSurface } from "../backends/php/io-surface.mjs";
+import { generatePhpIOPort } from "../backends/php/io-port.mjs";
+import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
+import { writePhpIORelease } from "./php-io-package.mjs";
 import { generateCTaskExports } from "../backends/c/task-exports.mjs";
 import { retainedTask } from "../backends/c/task-callback-exports.mjs";
 import { generateCppTaskHeader } from "../backends/cpp/task-exports.mjs";
@@ -43,9 +47,9 @@ const asset = path => readFile(new URL(path, import.meta.url));
 export const buildCTaskPackage = async options => {
 	const { projectContract, name, version, workRoot, runtimeRoot, leanPrefix, environment, signal } = options;
 	const target = options.target ?? "c", cpp = target === "cpp", rust = target === "cargo", ruby = target === "rubygems";
-	const dotnet = target === "nuget", jvm = target === "maven", perl = target === "cpan";
-	if(!["c", "cpp", "cargo", "rubygems", "nuget", "maven", "cpan"].includes(target)) throw new TypeError("Invalid native delivery target");
-	(perl ? validatePerlIOSettings : rust ? validateOrdinaryCargoSettings : ruby ? validateOrdinaryRubySettings : dotnet ? validateOrdinaryNugetSettings : jvm ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
+	const dotnet = target === "nuget", jvm = target === "maven", perl = target === "cpan", php = target === "php-native";
+	if(!["c", "cpp", "cargo", "rubygems", "nuget", "maven", "cpan", "php-native"].includes(target)) throw new TypeError("Invalid native delivery target");
+	(php ? validateOrdinaryPhpSettings : perl ? validatePerlIOSettings : rust ? validateOrdinaryCargoSettings : ruby ? validateOrdinaryRubySettings : dotnet ? validateOrdinaryNugetSettings : jvm ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
 	if(options.ir || !name || !version || options.sources.some(s => /^(?:LeanBridge(?:\.|$)|BridgeCAsync$)/u.test(s.module))) throw new TypeError("Invalid C task source modules or coordinates");
 	const { identity: runtimeIdentity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
 	const run = (command, args, cwd, env = environment) => processBuildRunner.capture({ command, args, cwd, env, signal });
@@ -61,7 +65,7 @@ export const buildCTaskPackage = async options => {
 		const resources = api.types.filter(t => t.kind === "resource");
 		const owner = jvm && await compileJvmIOOwner({ app, runtimeRoot, runtimeIdentity, cc: environment.CC ?? "cc", run });
 		const threads = cpp && (!synchronous || resources.length > 0);
-		const config = { name: perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet || jvm || perl ? "words" : "gmp" };
+		const config = { name: php ? "php-" + sha256(name) : perl ? "perl-" + sha256(name) : jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet || jvm || perl || php ? "words" : "gmp" };
 		const callbackHeaders = new Map();
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
@@ -71,16 +75,18 @@ export const buildCTaskPackage = async options => {
 		if(jvm && !synchronous) config.jvmDelivery = true;
 		if(perl && !synchronous) config.perlDelivery = true;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
-		const wire = (ruby || dotnet || jvm || perl) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources });
+		const wire = (ruby || dotnet || jvm || perl || php) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources });
+		const phpPort = php && generatePhpIOPort(compilePhpSyncSurface({ name, version, api, evidence, bindingIrSha256 }));
 		const jvmEntry = jvm && jvmIOEntry(wire, skeleton.prefix, wire.wait && await asset("../backends/jvm/task-reactor.c"));
 		const integers = skeleton.integerMode && await asset("../backends/c/task-integers.h");
-		const gmp = integers && !cpp && !rust && !ruby && !dotnet && !jvm && !perl && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
+		const gmp = integers && !cpp && !rust && !ruby && !dotnet && !jvm && !perl && !php && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
 		const boost = integers && cpp && boostSources();
 		const componentIdentity = sha256(canonicalJson({ runtimeIdentity
 			, bindingIrSha256
 			, evidence
 			, skeleton
 			, ...wire ? { hostWireSha256: sha256(wire.source) } : {}
+			, ...php ? { phpPort: sha256(phpPort.source), phpHeader: sha256(phpPort.header) } : {}
 			, ...jvm ? { jvmOwner: owner.id, jvmEntry: sha256(jvmEntry.source) } : {}
 			, delivery: sha256(delivery), notification: sha256(notification)
 			, ...callbackHeaders.size ? { callbacks: Object.fromEntries([...callbackHeaders].map(([f, b]) => [f, sha256(b)])) } : {}
@@ -94,12 +100,14 @@ export const buildCTaskPackage = async options => {
 		await save("checked-entry.c", `#include "entry.c"\n${gen.declarations}\n`);
 		await save(`${p}.h`, gen.header); await save("adapter.c", gen.source);
 		if(wire) await save("host-wire.c", wire.source);
+		if(php)
+		{ await save("php-io-port.h", phpPort.header); await save("php-io.c", phpPort.source); }
 		if(jvm) await save("jvm-entry.c", jvmEntry.source);
 		await save("task-delivery.h", delivery); await save("task-notification.h", notification);
 		for(const [file, bytes] of callbackHeaders) await save(file, bytes);
 		if(ledger) await compileTaskResourceLedger({ ledger, app, runtimeRoot, cc: environment.CC ?? "cc", run });
 		if(integers) await save("task-integers.h", integers);
-		const exported = jvm ? [jvmEntry.invoke, jvmEntry.retire, ...ledger ? [] : [wire.clear], ...jvmEntry.task ? [jvmEntry.task, jvmEntry.watch] : []] : [...gen.symbols, ...wire ? wire.symbols : []];
+		const exported = php ? phpPort.symbols : jvm ? [jvmEntry.invoke, jvmEntry.retire, ...ledger ? [] : [wire.clear], ...jvmEntry.task ? [jvmEntry.task, jvmEntry.watch] : []] : [...gen.symbols, ...wire ? wire.symbols : []];
 		await save("exports.map", `{ global: ${exported.join("; ")}; local: *; };\n`);
 		const library = `lib${p}.so`;
 		await run(environment.CC ?? "cc", ["-std=gnu11"
@@ -116,6 +124,7 @@ export const buildCTaskPackage = async options => {
 			, "checked-entry.c"
 			, "adapter.c"
 			, ...wire ? ["host-wire.c"] : []
+			, ...php ? ["php-io.c"] : []
 			, ...jvm ? ["jvm-entry.c", owner.flag, "-L.", "-l:" + owner.name] : []
 			, "-L"
 			, join(runtimeRoot, "lib")
@@ -147,6 +156,7 @@ export const buildCTaskPackage = async options => {
 			if(gmp && path === "lib/libgmp.so.10" && (!bytes.equals(gmp.files.get(path)) || !/\(SONAME\)\s+Library soname: \[libgmp\.so\.10\]/u.test((await run("readelf", ["-d", file], app)).stdout))) throw new Error("C task GMP library identity differs");
 			files.set(path, bytes);
 		}
+		if(php) return await writePhpIORelease({ ...options, prefix: p, wire, phpPort, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(perl) return await writePerlIORelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(jvm) return await writeJvmIORelease({ ...options, prefix: p, wire, jvmEntry, owner, ledgerId, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(rust) return await writeRustTaskRelease({ ...options, prefix: p, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });

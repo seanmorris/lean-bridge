@@ -1,0 +1,82 @@
+/**
+ * Build a native Composer distribution from the compiled synchronous IO wire.
+ *
+ * @file
+ */
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { composerPackageMetadata } from "../analyze/package-metadata.mjs";
+import { brickMathRequirement } from "../backends/php/brick-math.mjs";
+import { compilePhpSyncSurface } from "../backends/php/io-surface.mjs";
+import { generatePhpIOPort } from "../backends/php/io-port.mjs";
+import { generatePhpIOFiles } from "../backends/php/io-package.mjs";
+import { canonicalJson, sha256 } from "../capsule/node.mjs";
+import { processBuildRunner } from "../build/process-runner.mjs";
+import { createDeterministicZip } from "./deterministic-zip.mjs";
+import { writePackageSetReceipt } from "./package-set-receipt.mjs";
+
+/**
+ * Reconcile the public signatures again before packaging the exact compiled
+ * bytes. The consumer installs a ZIP; there is no PHP-side compilation step.
+ *
+ * @param o - Compiled artifacts, host configuration and source evidence.
+ */
+export const writePhpIORelease=async o=>{
+	const {name,version,api,evidence,bindingIrSha256,componentIdentity,runtimeIdentity,manifest,files,workRoot,projectContract}=o;
+	const model=compilePhpSyncSurface({name,version,api,evidence,bindingIrSha256}),port=generatePhpIOPort(model);
+	if(model.prefix!==o.prefix||canonicalJson(model.wire)!==canonicalJson(o.wire)||canonicalJson(port)!==canonicalJson(o.phpPort))
+		throw new TypeError("PHP IO packaging differs from compiled port");
+	const library="lib"+model.prefix+".so",libraries={};
+	for(const n of ["libleanshared.so","liblean_bridge_native.so",library])
+	{
+		const path="lib/"+n,b=files.get(path); if(!b) throw new Error("Missing compiled PHP dependency: "+n);
+		const h=sha256(b); if(n!==library&&manifest.files[path]?.sha256!==h) throw new Error("PHP native runtime changed: "+n);
+		libraries[n]=h;
+	}
+	if(files.size!==3) throw new Error("Unexpected PHP synchronous IO library");
+	const profile="native-php-io-v1",root=join(workRoot,"packages/php-native/composer");
+	const asset={componentId: api.component.id,componentIdentity,runtimeIdentity,library,libraries};
+	const generated=await generatePhpIOFiles(model,asset),inventory={};
+	const save=async(path,bytes)=>{
+		await mkdir(dirname(join(root,path)),{recursive: true}); await writeFile(join(root,path),bytes,{flag: "wx"});
+		inventory[path]={bytes: Buffer.byteLength(bytes),sha256: sha256(bytes)};
+	};
+	for(const [p,b] of Object.entries(generated))
+	{
+		await save(p,b);
+		await processBuildRunner.capture({command: o.environment.LEAN_BRIDGE_PHP??"php",args: ["-n","-l",p],cwd: root,env: o.environment,signal: o.signal});
+	}
+	for(const n of Object.keys(libraries)) await save("native/linux-x64/"+n,files.get("lib/"+n));
+	for(const [p,b] of Object.entries(projectContract.notices)) await save("licenses/"+p,b);
+	await save("licenses/Lean-LICENSE",await readFile(join(o.leanPrefix,"LICENSE")));
+	await save("licenses/Lean-LICENSES",await readFile(join(o.leanPrefix,"LICENSES")));
+	await save("licenses/LeanBridge-LICENSE",await readFile(new URL("../../LICENSE",import.meta.url)));
+	await save("lean-bridge/port.c",port.source); await save("lean-bridge/php-io-port.h",port.header);
+	await save("lean-bridge/binding-ir.json",canonicalJson(api)); await save("lean-bridge/elaboration.json",canonicalJson(evidence));
+	await save("lean-bridge/runtime.json",canonicalJson(manifest));
+	await save("README.md","# "+name+"\n\nInstall with Composer and call the functions in "+model.namespace+". Calls execute synchronously on the original Linux x86-64 PHP CLI thread. IO errors and typed EIO exceptions are distinct from returned Ok/Err values. The native runtime is included; no compiler or event loop is required. Requires PHP 8.2+ NTS, FFI and glibc "+o.floor+"+.\n");
+	const glibcMinimumVersion = o.floor, namespace = model.namespace;
+	const bridge = { profile, namespace, platform: "linux-x86_64", glibcMinimumVersion };
+	const require = { php: ">=8.2 <9", "ext-ffi": "*", ...brickMathRequirement };
+	const metadata = composerPackageMetadata(projectContract.metadata??{});
+	const autoload = { files: ["src/Api.php"] }, extra = { "lean-bridge": bridge };
+	const description = "Synchronous compiled Lean functions for PHP";
+	const composer = { name, version, type: "library", description, ...metadata, require, autoload, extra };
+	await save("composer.json",canonicalJson(composer));
+	const source = { treeSha256: projectContract.sourceTreeSha256 };
+	const component = { schemaVersion: 1, kind: "lean-bridge-native-php-io"
+		, profile, component: api.component, name, version, namespace, bindingIrSha256
+		, componentIdentity, runtimeIdentity, sourceTreeSha256: source.treeSha256
+		, glibcMinimumVersion, libraries, files: inventory };
+	await save("lean-bridge/package-receipt.json",canonicalJson(component));
+	const filename=name.replace("/","-")+"-"+version+"-linux-x86_64.zip";
+	const bytes=await createDeterministicZip({directory: root,sourceDateEpoch: 315532800});
+	await writeFile(join(o.output,filename),bytes,{flag: "wx"});
+	const artifacts = [{ path: "archives/"+filename, bytes: bytes.length, sha256: sha256(bytes) }];
+	const pkg = { target: "php-native", ecosystem: "composer", name, version
+		, profile, role: "component", runtimeIdentity, runtimeDelivery: "embedded"
+		, requires: [], artifacts };
+	const profiles = [{ id: profile, bindingIrSha256, runtimeIdentity }];
+	const receipt = await writePackageSetReceipt({ root: workRoot, component: api.component, source, profiles, signal: o.signal, packages: [pkg] });
+	return {receipt,api,evidence,runtimeIdentity,bindingIrSha256};
+};

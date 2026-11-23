@@ -73,6 +73,37 @@ Distribute the original ZIP through a controlled release channel or a Composer r
 
 Review the source library's license and bundled notices before publication; generated metadata does not grant redistribution rights. Native package receipts are unsigned build inventories, not universal transaction authorizations. The stock CLI has no Composer registry-upload adapter.
 
+### Export synchronous IO
+
+Use `nativeEffects` to declare the operating-system capabilities your exported
+Lean functions use. For example, for a Lake package named `journal` using
+the [Journal module](https://github.com/seanmorris/lean-bridge/blob/237f95af8cea3eadb0c327cc175c6187d67c882e/tests/fixtures/native-sync-io/Journal.lean):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.bump", "Journal.count", "Journal.store", "Journal.read", "Journal.choose"],
+  "nativeEffects": ["filesystem"],
+  "targets": { "php-native": { "name": "lean-bridge/journal", "version": "1.0.0" } }
+}
+```
+
+Build with `lean-bridge build --project . --target php-native --output release`.
+For a [reviewed API](../lean/existing-package.md#compile-a-reviewed-contract),
+keep the modules and capabilities, omit `exports`, and supply
+`public.binding-ir.json`. The compiler checks both routes against the source.
+The receipt identifies this package as `native-php-io-v1`. Distribute the
+Composer ZIP; the consumer needs neither Lean nor a C compiler.
+
+This profile copies the scalar arguments and results, including strings,
+byte arrays and arbitrary-precision integers. A returned `Except` and a
+thrown `EIO` payload may each contain nested `Except` values. An undeclared
+filesystem effect prevents packaging. Direct resources, callbacks, tasks
+and PHP-Wasm use other contracts; this build does not add them to an IO
+signature. See [the consumer example](../php.md#call-synchronous-io-and-handle-errors)
+and the [independently reproduced archive](../evidence/php-sync-io-20261123.json).
+
 ### Export resource-containing values
 
 For native PHP or PHP-Wasm, declare resources and aggregate ownership explicitly. In a Lake
