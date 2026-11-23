@@ -22,7 +22,7 @@ The producer starts a gated Lean task. The peer accepts that same `Task UInt32` 
 
 ## From Lean declarations to a Wasm interface
 
-The [Jobs fixture](../../tests/fixtures/javascript-wasm-generated-tasks/Jobs.lean) supplies seven ordinary Lean declarations selected in `lean-bridge.exports.json`. None has a handwritten `@[export]` adapter. The [compiler](../../src/build/javascript-wasm-task-component.mjs) elaborates the captured Lake project, checks C prototypes against Lean's generated C, and links a pthread Wasm side module. [Binding IR](../../src/abi/javascript-wasm-tasks.mjs) and the C generator independently determine each method's argument types, result tags, factory and terminal errors. Packaging stops if they disagree. The ordinary synchronous and native file-descriptor profiles do not use this wire.
+The [Jobs fixture](../../tests/fixtures/javascript-wasm-generated-tasks/Jobs.lean) supplies nine ordinary Lean declarations selected in `lean-bridge.exports.json`. None has a handwritten `@[export]` adapter. The [compiler](../../src/build/javascript-wasm-task-component.mjs) elaborates the captured Lake project, checks C prototypes against Lean's generated C, and links a pthread Wasm side module. [Binding IR](../../src/abi/javascript-wasm-tasks.mjs) and the C generator independently determine each method's argument types, result tags, factory and terminal errors. Packaging stops if they disagree. The ordinary synchronous and native file-descriptor profiles do not use this wire.
 
 The [installed wire test](../../tests/helpers/javascript-wasm-generated-tasks.mjs) packs a runtime and a separate component, installs both offline, and calls the component through its own dynamic-library handle. Two fresh Node processes and an isolated Chromium page each passed 79 checks on November 23, 2026. In particular:
 
@@ -33,7 +33,22 @@ The [installed wire test](../../tests/helpers/javascript-wasm-generated-tasks.mj
 | `hold` and `release` | Trying to take the pending task returns immediately. Cancellation retains its native owner until the genuine Lean completion is consumed. A foreign domain or another declaration cannot close or cancel it. |
 | `series` and `closes` | A cursor never prefetches. A second outstanding pull is rejected. Exhaustion, an early close and a typed pull failure each run Lean cleanup exactly once. |
 
-Every run ended with zero live broker identities and zero pending notifications. The test intentionally calls the private interface: this is evidence about the generated Wasm component, **not** a released, user-facing npm Promise or async-iterator API. It does not yet test reviewed npm builds, retained callback/resource captures or a production package receipt.
+Every wire run ended with zero live broker identities and zero pending notifications. These checks deliberately use the private interface to test mistakes an application cannot express through the public API, such as a foreign owner domain.
+
+## What the installed application writes
+
+```js
+import { checked, series } from "@example/lean-jobs";
+
+const result = await checked(false, false, 19);  // { ok: 26 }
+for await (const n of series(3)) console.log(n);  // 0, 1, 2
+```
+
+The [package builder](../../src/release/javascript-wasm-task-packages.mjs) produces two npm archives and a hash-checked package-set receipt. The application imports the component; its exact dependency on `@lean-bridge/runtime` supplies the worker pool. Task functions return a native `Promise` with `cancel()`. Ordinary synchronous functions return their values directly. An iterator pulls one element per `next()`; `break` runs its Lean close action.
+
+Cancellation rejects the public operation immediately. It does **not** pretend an already-running worker has stopped: its native owner stays live until the completion notification arrives. Closing the runtime stops admission synchronously and waits for that drain. The [installed application checks](../../tests/fixtures/javascript-wasm-task-runtime/public-consumer.mjs) distinguish a returned `Except.error` from a thrown typed factory error, a worker IO error, and a failed iterator step. A separate [TypeScript consumer](../../tests/fixtures/javascript-wasm-task-runtime/public-types.mts) checks the signatures against the installed declarations.
+
+On November 23, 2026, both the ordinary project and a separately compiled reviewed project passed 47 public checks apiece in Node and isolated Chromium (188 checks: two fresh installations, each exercised on both hosts). Both passed strict TypeScript compilation against their installed declarations. The reviewed package retained the exact review file, the two component identities differed, and their runtime archives were byte-identical. Shutdown ended with zero native owners before worker termination. The 79 private-wire checks above ran separately in three fresh realms.
 
 The gate in `hold` is allocated on demand. Do not put an unresolved `IO.Promise` directly in a Lean `initialize` declaration: making an imported global persistent can traverse its unresolved task and block the author compiler before any application call.
 
@@ -75,6 +90,6 @@ Pinned Lean `f3b06c705e6c85f5314019d5d3baab0fec5b580c` executes spawned work inl
 
 ## What this does not ship
 
-The three-package experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. It demonstrates a cross-component task on one scheduler; its driver knows both signatures. The generated-wire test separately executes compiler-selected tasks, synchronous companions and cursors on a shared heap. Neither changes the existing browser or npm release profile. Emscripten 6.0.6 marks dynamic linking with pthreads experimental. The public npm build still needs to provision that shared runtime, lift results and errors into idiomatic host calls, retain captured resources, and verify concurrent work and shutdown through the installed public API.
+The three-package experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. Its driver knows both component signatures. The generated application takes a different path: it imports ordinary npm functions and uses the compiled component's own contract. The test producer still links the owner runtime against the fixture's required imports. The normal author CLI does not yet provision a component-independent pthread runtime, and this copied-value package does not admit retained callbacks or captured resources. Emscripten 6.0.6 marks dynamic linking with pthreads experimental.
 
-The existing shared runtime and composition graph are unchanged. No native binding, registry identity, consumer prerequisite or language-neutral IR changes. For assurance and reproducibility this experiment records its own profile and strict-link inputs; it is not a signed or Nix-built release. Publishing would first require the same manifest and graph checks as every other target. No special API is exposed to other languages or to tools that consume the existing metadata.
+The pthread archives use a distinct profile and content-addressed runtime version. The single-threaded runtime remains separate; no native binding or language-neutral IR changed. These are local installations, not a published, signed or Nix-built release.

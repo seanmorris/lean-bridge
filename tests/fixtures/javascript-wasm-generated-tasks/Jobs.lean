@@ -3,6 +3,9 @@ import Init.System.Promise
 
 namespace Jobs
 
+def exact (value : Int) : Task Int := Task.pure value
+def text (value : String) : Task String := Task.pure value
+
 def checked (rejectStart rejectValue : Bool) (v : UInt32) : EIO UInt32 (Task (Except UInt32 UInt32)) := do
   if rejectStart then throw v
   return Task.pure (if rejectValue then .error v else .ok (v + 7))

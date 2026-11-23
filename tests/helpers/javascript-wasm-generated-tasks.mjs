@@ -12,6 +12,52 @@ import {compileJavaScriptTaskComponent,threadedTaskPatch} from "../../src/build/
 import {generateOwnedWasmBroker} from "../../src/backends/javascript/owned-wasm-broker.mjs";
 import {probeInitIdentity} from "./javascript-wasm-task-init-identity.mjs";
 import {runInstalledChromium} from "./javascript-wasm-installed-browser.mjs";
+import {writeJavaScriptTaskPackages} from "../../src/release/javascript-wasm-task-packages.mjs";
+import {packageSetReceiptName,verifyPackageSetReceipt} from "../../src/release/package-set-receipt.mjs";
+import {createRequire} from "node:module";
+
+const checkInstalledPackage=async ({root,fixtures,pkg,src,built,configuration,command,environment,mode}) => {
+	const handoff=join(root,mode+"-handoff"), installed=join(root,mode+"-consumer");
+	await mkdir(handoff); await mkdir(installed);
+	const receipt=await writeJavaScriptTaskPackages({...src
+		, root: handoff
+		, compilation: built
+		, configuration
+		, mainModule: await readFile(join(pkg,"task.mjs"))
+		, mainWasm: await readFile(join(pkg,"task.wasm"))});
+	await verifyPackageSetReceipt({receiptPath: join(handoff,packageSetReceiptName)});
+	const publicName=receipt.packages.find(p => p.role==="component").name;
+	await writeFile(join(installed,"package.json"),'{"private":true,"type":"module"}');
+	await command("npm",["install"
+		, "--offline"
+		, "--ignore-scripts"
+		, "--no-audit"
+		, "--no-fund"
+		, "--cache"
+		, join(root,mode+"-cache")
+		, ...receipt.packages.map(p => join(handoff,p.artifacts[0].path))],installed);
+	const contents=join(installed,"node_modules",publicName);
+	if(src.projectContract.review) assert.equal(await readFile(join(contents,"metadata/review.binding-ir.json"),"utf8"),src.projectContract.review.source);
+	await copyFile(join(fixtures,"public-consumer.mjs"),join(installed,"calls.mjs"));
+	await copyFile(join(fixtures,"public-types.mts"),join(installed,"calls.mts"));
+	const typescript=createRequire(import.meta.url).resolve("typescript/bin/tsc");
+	// The temporary directory may live beneath the author's repository. Do
+	// not import its ambient @types packages into an otherwise empty consumer.
+	const compilerOptions={strict: true,noEmit: true,module: "NodeNext",target: "ES2022",types: []};
+	await writeFile(join(installed,"tsconfig.json"),JSON.stringify({files: ["calls.mts"],compilerOptions}));
+	await command(process.execPath,[typescript,"--project","tsconfig.json"],installed);
+	await writeFile(join(installed,"run.mjs"),'import {exercise} from "./calls.mjs"; console.log(JSON.stringify(await exercise()));\n');
+	const node=JSON.parse((await processBuildRunner.capture({command: process.execPath,args: ["run.mjs"],cwd: installed,env: environment,timeoutMs: 60000})).stdout);
+	assert.equal(node.checks,47);
+	const chromium=await runInstalledChromium({root
+		, consumer: installed
+		, names: [publicName]
+		, isolated: true
+		, timeoutMs: 60000
+		, evaluate: async () => (await import("/calls.mjs")).exercise()});
+	assert.deepEqual(chromium,node);
+	return {mode,node,chromium,runtime: receipt.packages.find(p => p.role==="runtime").artifacts[0].sha256};
+};
 
 test("compiler-generated task, error and iterator controls execute on an installed pthread runtime", {
 	skip: process.env.LEAN_BRIDGE_JS_GENERATED_TASK_TEST !== "1", timeout: 900000
@@ -61,7 +107,7 @@ test("compiler-generated task, error and iterator controls execute on an install
 			, join(core,"include")
 			, "-I"
 			, backend
-			, join(fixtures,"generated-driver.c")
+			, join(backend,"threaded-task-runtime.c")
 			, join(backend,"task-notification.c")
 			, join(root,"broker.c")
 			, join(core,"lib/lean/libleanrt.a")
@@ -82,6 +128,26 @@ test("compiler-generated task, error and iterator controls execute on an install
 			, "-o"
 			, join(pkg,"task.mjs")]);
 		assert.ok(!WebAssembly.Module.exports(await WebAssembly.compile(await readFile(join(pkg,"task.wasm")))).some(e => e.name === built.controlSymbol));
+		const settings={root,fixtures,pkg,command,environment};
+		const ordinary=await checkInstalledPackage({...settings,src,built,configuration: inventory.configurationRecord.configuration,mode: "ordinary"});
+		t.diagnostic(JSON.stringify(ordinary));
+		const reviewedProject=join(root,"review-project"), reviewedApp=join(root,"review-objects");
+		await mkdir(reviewedProject); await mkdir(reviewedApp);
+		for(const file of ["Jobs.lean","lakefile.toml","lean-toolchain"]) await copyFile(join(project,file),join(reviewedProject,file));
+		const reviewedIR=structuredClone(built.api), configuration=structuredClone(inventory.configurationRecord.configuration);
+		reviewedIR.documentation.summary="Reviewed public task and cursor contracts."; delete configuration.exports;
+		await writeFile(join(reviewedProject,"jobs.binding-ir.json"),JSON.stringify(reviewedIR,null,4)+"\n");
+		await writeFile(join(reviewedProject,"lean-bridge.exports.json"),JSON.stringify(configuration));
+		const reviewedInventory=await inspectLeanProject(reviewedProject);
+		const reviewedSource=await openHostProjectSource({project: reviewedProject,inventory: reviewedInventory,component});
+		try
+{
+			const reviewedBuilt=await compileJavaScriptTaskComponent({...reviewedSource,app: reviewedApp,environment,emsdkRoot: sdk,leanRuntimeRoot: target});
+			await reviewedSource.verify(); assert.notEqual(reviewedBuilt.componentIdentity,built.componentIdentity);
+			const reviewed=await checkInstalledPackage({...settings,src: reviewedSource,built: reviewedBuilt,configuration,mode: "reviewed"});
+			assert.equal(reviewed.runtime,ordinary.runtime); t.diagnostic(JSON.stringify(reviewed));
+} finally
+{ await reviewedSource.dispose(); }
 		await copyFile(resolve("src/runtime/wasm-task-notifications.mjs"),join(pkg,"wasm-task-notifications.mjs"));
 		await copyFile(join(fixtures,"generated-consumer.mjs"),join(pkg,"index.mjs"));
 		const entry = await readFile(resolve("tests/fixtures/javascript-wasm-task-components/package-entry.mjs"),"utf8");

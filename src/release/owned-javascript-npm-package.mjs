@@ -47,6 +47,17 @@ export const assertOwnedJavaScriptRuntime = ({ mainModule, mainWasm, sideWasm, p
 		if(!runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name))) throw new Error(`Prepared runtime lacks owned JavaScript support: ${name}`);
 	const suffix = privateAbi.controlSymbol.slice("lbjs_component_".length, -"_control".length);
 	const callbacks = new Set([`lbjs_${suffix}_dispatch_js`, `lbjs_${suffix}_finish_js`]);
+	assertWasmSideImports({side,runtimeExports,sideExports,callbacks,profile: "owned"});
+};
+
+/**
+ * Check every installed side-module import against the prepared owner, its
+ * own exports, or the specific symbols provided by the dynamic linker.
+ *
+ * @param options - Compiled side module, typed export sets and permitted embedded callbacks.
+ */
+export const assertWasmSideImports = options => {
+	const {side,runtimeExports,sideExports,callbacks=new Set(),profile}=options;
 	for(const item of WebAssembly.Module.imports(side))
 	{
 		const provided = item.kind === "function" ? item.module === "env" && (runtimeExports.has(`function:${item.name}`)
@@ -56,7 +67,7 @@ export const assertOwnedJavaScriptRuntime = ({ mainModule, mainWasm, sideWasm, p
 					: item.module === "GOT.func" ? sideExports.has(`function:${item.name}`) || runtimeExports.has(`function:${item.name}`)
 						: item.module === "GOT.mem" ? sideExports.has(`global:${item.name}`) || runtimeExports.has(`global:${item.name}`)
 							: item.module === "env" && (["__memory_base", "__table_base", "__stack_pointer"].includes(item.name) || runtimeExports.has(`global:${item.name}`));
-		if(!provided) throw new Error(`Prepared runtime cannot resolve owned import ${item.module}.${item.name}`);
+		if(!provided) throw new Error(`Prepared runtime cannot resolve ${profile} import ${item.module}.${item.name}`);
 	}
 };
 

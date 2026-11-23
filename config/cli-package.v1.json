@@ -152,6 +152,7 @@
     "src/abi/generic-specialization.mjs",
     "src/abi/initialization.mjs",
     "src/abi/iterator.mjs",
+    "src/abi/javascript-wasm-tasks.mjs",
     "src/abi/overload.mjs",
     "src/abi/owned-aggregate-model.mjs",
     "src/abi/owned-refinement-model.mjs",
@@ -856,6 +857,7 @@
     "src/release/source-identity.mjs",
     "src/release/source-notices.mjs",
     "src/release/wasi-package.mjs",
+    "src/release/wasm-word-codecs.mjs",
     "src/release/wheel-record.mjs",
     "src/release/wit-sync-io-package.mjs"
   ]

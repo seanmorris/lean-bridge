@@ -48,4 +48,7 @@ test("public error identities and delivery phases cannot be interchanged", () =>
 	assert.throws(() => javaScriptTaskAbi(wrong,id),/Unexpected typed payload/u);
 	const hidden = structuredClone(api); delete hidden.declarations[0].source.extensions["lean-bridge.dev/task-failure"];
 	assert.throws(() => javaScriptTaskAbi(hidden,id),/failure channels/u);
+	const optional=structuredClone(api);
+	Object.assign(optional.declarations[0].parameters[0],{optional: true,default: {kind: "integer",value: "7"}});
+	assert.throws(() => javaScriptTaskAbi(optional,id),/Inconsistent copied/u);
 });

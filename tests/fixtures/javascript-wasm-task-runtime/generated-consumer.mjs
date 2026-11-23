@@ -8,7 +8,7 @@ import {methods,controlSymbol} from "@example/lean-jobs";
 export const exercise = async () => {
 	const notifications = createWasmTaskNotifications();
 	const m = await createModule({onLeanTaskReady: notifications.notify});
-	let checks = 0;
+	let checks = 0, slot;
 	const eq = (a,b,what) => { if(a !== b) throw new Error(what + ": got " + a + ", expected " + b); checks++; };
 	const view = () => new DataView(m.HEAP8.buffer);
 	const live = new Set();
@@ -20,7 +20,7 @@ export const exercise = async () => {
 		view().setUint32(p,0x4c425431,true); view().setUint32(p+4,size,true); view().setUint32(p+8,i,true);
 		for(const [k,v] of input.entries()) view().setBigUint64(p+72+k*24,BigInt(v),true);
 		const call = (op, token = 0) => {
-			view().setUint32(p+12,op,true); view().setUint32(p+16,token,true); return m._generated_call(p);
+			view().setUint32(p+12,op,true); view().setUint32(p+16,token,true); return m._lb_js_task_call(slot,p);
 		};
 		const ready = () => new Promise((resolve,reject) => {
 			const sub = notifications.subscribe(resolve);
@@ -41,11 +41,13 @@ export const exercise = async () => {
 	{
 		m.FS.writeFile("/component.wasm",await readComponent());
 		const name = new TextEncoder().encode(controlSymbol+"\0"), ptr = m._malloc(name.length); m.HEAP8.set(name,ptr);
+		const path = new TextEncoder().encode("/component.wasm\0"), pathPtr = m._malloc(path.length);
+		m.HEAP8.set(path,pathPtr);
 		try
-		{ eq(m._generated_load(ptr),1,"load exact component control"); } finally
-		{ m._free(ptr); }
+		{ slot=m._lb_js_task_load(pathPtr,ptr); eq(slot,1,"load exact component control"); } finally
+		{ m._free(pathPtr); m._free(ptr); }
 		const ids = () => m._bridge_owned_runtime_identities();
-		eq(ids(),0,"baseline"); eq(m._generated_call(1),5,"unaligned frame");
+		eq(ids(),0,"baseline"); eq(m._lb_js_task_call(slot,1),5,"unaligned frame");
 		const invalid = open("checked",2,0,9); eq(invalid.call(0),5,"invalid bool"); eq(ids(),0,"no admission");
 		const bad = open("checked",1,0,617); eq(bad.call(0),3,"factory EIO"); eq(bad.value(),617,"typed factory payload");
 		eq(bad.handle(),0n,"failed factory has no handle"); eq(ids(),0,"released failed factory");

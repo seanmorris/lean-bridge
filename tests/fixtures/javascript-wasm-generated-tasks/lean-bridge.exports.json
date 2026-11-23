@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "modules": ["Jobs"],
-  "exports": ["Jobs.checked", "Jobs.ioStart", "Jobs.terminal", "Jobs.hold", "Jobs.release", "Jobs.series", "Jobs.closes"],
-  "taskExports": ["Jobs.checked", "Jobs.ioStart", "Jobs.terminal", "Jobs.hold"],
+  "exports": ["Jobs.checked", "Jobs.ioStart", "Jobs.terminal", "Jobs.hold", "Jobs.release", "Jobs.series", "Jobs.closes", "Jobs.exact", "Jobs.text"],
+  "taskExports": ["Jobs.checked", "Jobs.ioStart", "Jobs.terminal", "Jobs.hold", "Jobs.exact", "Jobs.text"],
   "taskIOErrors": ["Jobs.terminal"],
   "asyncIterators": [{"open": "Jobs.series", "next": "Jobs.next", "close": "Jobs.close"}],
   "nativeEffects": [],

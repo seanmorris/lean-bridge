@@ -1,10 +1,6 @@
 /** @file Single private wasm32 entry for compiler-selected copied tasks, cursors and synchronous companions. */
 
-export const taskFrame = Object.freeze({magic: 0x4c425431
-	, handle: 24
-	, out: 40
-	, args: 72
-	, start: 0, listen: 1, take: 2, cancel: 3, close: 4, pull: 5, clear: 6});
+import {taskFrame} from "../../abi/wasm-task-frame.mjs";
 
 /**
  * Validate the complete aligned frame before touching its handle or result.

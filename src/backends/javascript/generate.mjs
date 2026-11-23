@@ -19,6 +19,7 @@ import { sha256 } from "../../capsule/node.mjs";
 import { emitCopiedValidators } from "./copied-validators.mjs";
 import { compileOwnedJavaScriptPackageModel, renderOwnedJavaScriptPackageLayout } from "./owned-package.mjs";
 import { emitJavaScriptDefaults } from "./default-value.mjs";
+import { javaScriptTaskAbi } from "../../abi/javascript-wasm-tasks.mjs";
 
 const fail = (code, message, details = {}) => {
 	throw new JavaScriptProjectionError(code, message, details);
@@ -105,13 +106,13 @@ const typeScriptType = (typeRef, typeMap) => {
 	return `readonly [${typeRef.arguments.map(argument => typeScriptType(argument, typeMap)).join(", ")}]`;
 };
 
-const deliveredType = (declaration, typeMap) => {
+const deliveredType = (declaration, typeMap, threaded = false) => {
 	const resultType = declaration.result.type.kind === "named" ? typeMap.get(declaration.result.type.id) : undefined;
 	const projected = typeScriptType(declaration.result.type, typeMap);
 	const result = resultType?.kind === "callback" && declaration.result.ownership === "lease" ? `${projected} & LeanOwnedCallable` : projected;
-	if(declaration.resultMode === "promise") return `Promise<${result}>`;
+	if(declaration.resultMode === "promise") return `Promise<${result}>` + (threaded ? " & { cancel(): boolean }" : "");
 	if(declaration.resultMode === "iterator") return `Iterable<${result}>`;
-	if(declaration.resultMode === "async-iterator") return `AsyncIterable<${result}>`;
+	if(declaration.resultMode === "async-iterator") return threaded ? `AsyncIterableIterator<${result}> & { return(): Promise<IteratorResult<${result}>> }` : `AsyncIterable<${result}>`;
 	return result;
 };
 
@@ -312,7 +313,7 @@ const ensureUniqueSurface = ir => {
 	if(hostSubtypeCallbacks(ir).size) addExport("withRecovery", "generated checked-callback recovery helper");
 };
 
-const emitDeclarations = (ir, typeMap) => {
+const emitDeclarations = (ir, typeMap, threaded = false) => {
 	const output = [
 		`// Generated from Binding IR SHA-256 ${hashBindingIr(ir)}.`
 		, `import { runtime } from "./internal/runtime.mjs";`
@@ -345,7 +346,7 @@ const emitDeclarations = (ir, typeMap) => {
 		output.push(`export class ${error.name} extends Error {`);
 		if(error.payload === null)
 		{
-			const message = error.id === "error:IO.Error" ? `options?.cause?.message ?? ${quote(error.documentation.summary)}` : quote(error.documentation.summary);
+			const message = error.id === "error:IO.Error" || (threaded && error.id === "error:TaskIO.Error") ? `options?.cause?.message ?? ${quote(error.documentation.summary)}` : quote(error.documentation.summary);
 			output.push(`  constructor(options) {`, `    super(${message}, options);`);
 		} else
 		{
@@ -592,6 +593,16 @@ const emitDeclarations = (ir, typeMap) => {
 			continue;
 		}
 		ensureSupportedGenerics(declaration);
+		if(threaded)
+		{
+			// Do not add "async": it would wrap and lose the native Promise's
+			// cancellation method. Iterator failures occur at next(), not open().
+			const translate = declarationErrors(ir,declaration).length ? ", translateDeclaredError" : "";
+			output.push(docComment(declaration.documentation)
+				, `export function ${declaration.name}(${declaration.parameters.map(p => p.name).join(", ")}) {`
+				, `  return runtime.invoke(${quote(declaration.id)}, Array.from(arguments)${translate});`, "}", "");
+			exports.push(declaration.name); continue;
+		}
 		const refinements = declarationRefinements(declaration, ir.types);
 		const parameterExpressions = declaration.parameters.map(parameter => parameter.name);
 		const asyncPrefix = declaration.resultMode === "promise" ? "async " : "";
@@ -744,7 +755,7 @@ const emitValidators = (ir, typeMap) => {
 	return `${lines.join("\n")}\n${emitCopiedValidators(ir, typeMap, validatorName)}`;
 };
 
-const emitTypeScript = (ir, typeMap) => {
+const emitTypeScript = (ir, typeMap, threaded = false) => {
 	const lines = [
 		`// Generated from Binding IR SHA-256 ${hashBindingIr(ir)}.`
 		, ...emitTypeDeclarations(ir, typeMap)
@@ -838,7 +849,7 @@ const emitTypeScript = (ir, typeMap) => {
 		} else
 		{
 			lines.push(
-				`export declare function ${declaration.name}(${declaration.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")}): ${deliveredType(declaration, typeMap)};`,
+				`export declare function ${declaration.name}(${declaration.parameters.map(parameter => parameterType(parameter, typeMap)).join(", ")}): ${deliveredType(declaration, typeMap, threaded)};`,
 				"",
 			);
 		}
@@ -890,11 +901,13 @@ const emitDocumentation = ir => {
  * Compiles Binding IR into the validated JavaScript projection model.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param threadedTaskIdentity - Compiled copied-task identity, only for the pthread profile.
  */
-export const compileJavaScriptPackageModel = ir => {
-	if(ir.schemaVersion === 4) return compileOwnedJavaScriptPackageModel(ir);
+export const compileJavaScriptPackageModel = (ir, threadedTaskIdentity) => {
+	if(ir.schemaVersion === 4 && threadedTaskIdentity === undefined) return compileOwnedJavaScriptPackageModel(ir);
 	validateBindingIr(ir);
-	const coverage = analyzeJavaScriptCoverage(ir);
+	const taskAbi = threadedTaskIdentity === undefined ? null : javaScriptTaskAbi(ir,threadedTaskIdentity);
+	const coverage = analyzeJavaScriptCoverage(ir,taskAbi?.methods);
 	if(!coverage.supported)
 	{
 		const first = coverage.gaps[0];
@@ -902,7 +915,7 @@ export const compileJavaScriptPackageModel = ir => {
 	}
 	ensureUniqueSurface(ir);
 	const typeMap = new Map(ir.types.map(type => [type.id, type]));
-	return Object.freeze({ ir, typeMap });
+	return Object.freeze({ ir, typeMap, ...(taskAbi ? {threaded: true} : {}) });
 };
 
 /**
@@ -913,7 +926,7 @@ export const compileJavaScriptPackageModel = ir => {
 export const renderJavaScriptPackageLayout = model => {
 	if(model.kind === "owned-javascript-package") return renderOwnedJavaScriptPackageLayout(model);
 	const { ir, typeMap } = model;
-	const generated = emitDeclarations(ir, typeMap);
+	const generated = emitDeclarations(ir, typeMap, model.threaded);
 	const packageManifest = {
 		version: ir.component.version
 		, type: "module"
@@ -956,7 +969,7 @@ export const renderJavaScriptPackageLayout = model => {
 	};
 	const files = {
 		"index.mjs": generated.source
-		, "index.d.ts": emitTypeScript(ir, typeMap)
+		, "index.d.ts": emitTypeScript(ir, typeMap, model.threaded)
 		, "internal/validators.mjs": emitValidators(ir, typeMap)
 		, "README.md": emitDocumentation(ir)
 		, "binding-manifest.json": `${JSON.stringify(manifest, null, 2)}\n`
@@ -969,9 +982,10 @@ export const renderJavaScriptPackageLayout = model => {
  * Generates and audits a JavaScript package through explicit model and rendering stages.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param threadedTaskIdentity - Optional compiled pthread profile identity.
  */
-export const generateJavaScriptPackage = ir => {
-	const model = compileJavaScriptPackageModel(ir);
+export const generateJavaScriptPackage = (ir, threadedTaskIdentity) => {
+	const model = compileJavaScriptPackageModel(ir, threadedTaskIdentity);
 	const files = renderJavaScriptPackageLayout(model);
 	auditJavaScriptPackage(ir, files);
 	return files;

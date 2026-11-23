@@ -27,8 +27,10 @@ const namedTypeId = typeRef => (typeRef.kind === "named" ? typeRef.id : undefine
  * Traverses Binding IR types, callbacks, errors, and declarations to report unsupported JavaScript projection features.
  *
  * @param ir - Binding IR document that defines the source types and operations.
+ * @param taskMethods - Validated contracts for the opt-in compiled pthread profile.
  */
-export const analyzeJavaScriptCoverage = ir => {
+export const analyzeJavaScriptCoverage = (ir, taskMethods = []) => {
+	const taskContracts = new Map(taskMethods.map(m => [m.id,m]));
 	if(ir.schemaVersion === 4)
 	{
 		try
@@ -127,7 +129,7 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 	};
 
-	const inspectFailure = (failure, path, { errorEnvelope = false, syncIOError = null } = {}) => {
+	const inspectFailure = (failure, path, { errorEnvelope = false, syncIOError = null, taskMethod } = {}) => {
 		if(failure.mode !== "declared") return;
 		for(const errorId of failure.errors)
 		{
@@ -136,7 +138,8 @@ export const analyzeJavaScriptCoverage = ir => {
 			const envelopeSupported
         = errorEnvelope && error && (supportsErrorEnvelopeValue(error.payload)
 					|| (error.id === syncIOError && error.category === "domain" && supportsJavaScriptIOPayload(error.payload)));
-			if(!boundaryOnly && !envelopeSupported)
+			const taskError = taskMethod && error?.category === "domain" && [taskMethod.startId,taskMethod.terminalId].includes(errorId);
+			if(!boundaryOnly && !envelopeSupported && !taskError)
 			{
 				report(
 					"unsupported-error-envelope",
@@ -302,7 +305,7 @@ export const analyzeJavaScriptCoverage = ir => {
 			}
 			if(
 				new Set(["iterator", "async-iterator"]).has(declaration.resultMode)
-        && !supportsIteratorValue(parameter.type)
+        && !taskContracts.has(declaration.id) && !supportsIteratorValue(parameter.type)
 			) {
 				report(
 					"unsupported-iterator-value",
@@ -339,7 +342,7 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 		if(
 			new Set(["iterator", "async-iterator"]).has(declaration.resultMode)
-      && !supportsIteratorValue(declaration.result.type)
+      && !taskContracts.has(declaration.id) && !supportsIteratorValue(declaration.result.type)
 		) {
 			report(
 				"unsupported-iterator-value",
@@ -349,6 +352,7 @@ export const analyzeJavaScriptCoverage = ir => {
 		}
 		inspectFailure(declaration.failure, `${declaration.id}.failure`, {
 			errorEnvelope: declaration.kind === "function" && declaration.resultMode === "value"
+			, taskMethod: taskContracts.get(declaration.id)
 			, syncIOError: declaration.source?.extensions?.["lean-lang.org/effect"] === "EIO"
 				? "error:EIO." + declaration.source.declaration : null
 		});

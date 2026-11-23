@@ -27,9 +27,12 @@ export const javaScriptTaskAbi = (ir,componentIdentity) => {
 		const effect = ext["lean-lang.org/effect"], task = ext["lean-lang.org/delivery"], protocol = ext["lean-bridge.dev/pull-protocol"];
 		const terminal = ext["lean-bridge.dev/task-failure"], delivery = task ? "task" : protocol ? "async-iterator" : null;
 		const mode = task ? "promise" : protocol ? "async-iterator" : "value";
-		if(!declaration || !["IO","EIO","BaseIO","pure"].includes(effect) || d.kind !== "function" || d.owner !== null
+		if(!declaration || d.source.producer !== "lean" || !["IO","EIO","BaseIO","pure"].includes(effect) || d.kind !== "function" || d.owner !== null
+			|| d.receiver !== null || d.typeParameters.length || d.parameters.some(p => p.optional || p.default !== null || p.mutability !== "immutable")
 			|| d.capabilities.length || d.resultMode !== mode || d.failure.unexpected !== "poison-runtime"
-			|| (task !== undefined && (task !== "Task" || protocol)) || (protocol && protocol.open !== declaration)
+			|| (task !== undefined && (task !== "Task" || protocol)) || (protocol !== undefined && (!protocol || protocol.open !== declaration
+				|| ![protocol.next,protocol.close].every(n => typeof n === "string" && n.length)
+				|| new Set([protocol.open,protocol.next,protocol.close]).size !== 3))
 			|| (terminal !== undefined && (terminal !== "IO.Error" || !task)) || ext["lean-bridge.dev/host-members"]?.length
 			|| ext["lean-bridge.dev/native-effects-v1"] || ext["lean-bridge.dev/host-imports-sha256"]
 			|| [...d.parameters,d.result].some(x => x.ownership !== "copy" || x.lifetime !== null))
