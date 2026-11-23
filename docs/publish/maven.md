@@ -68,6 +68,45 @@ or resource into a synchronous copied value. See the installed
 [original package receipts](../evidence/jvm-sync-io-20261123.json), and the
 [native OS grant reference](../lean/export-decisions.md#declare-native-os-access).
 
+## Export tasks and streams
+
+Select declarations returning a real Lean `Task` in `taskExports`. For a pull
+cursor, name the factory, next operation and close operation. List ordinary
+synchronous companions only in `exports`. For example:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Timers"],
+  "exports": ["Timers.immediate", "Timers.units", "Timers.pulls"],
+  "taskExports": ["Timers.immediate"],
+  "asyncIterators": [
+    {"open": "Timers.units", "next": "Timers.nextUnit", "close": "Timers.closeUnits"}
+  ],
+  "targets": {"maven": {"name": "com.acme:timers", "version": "1.0.0"}}
+}
+```
+
+Use the ordinary Maven build and verification commands above. A reviewed
+Binding IR uses the same task and cursor selections; the compiler checks
+them against the current Lean declarations. The `native-jvm-task-v1` JAR
+contains both Java and Kotlin APIs. Its POM supplies Kotlin 2.2.0 and
+`kotlinx-coroutines-core-jvm:1.8.0`. Real tasks become Java futures and
+Kotlin suspend functions; cursors become demand-driven Java publishers and
+cold Kotlin flows. An ordinary `IO` method still returns directly.
+For `IO (Task α)`, the factory runs on the native owner before the Java
+method hands back its future. Put long-running work inside the Lean task
+if it should continue after that point. A stream factory, in contrast,
+does not run until a subscriber requests its first item.
+
+For a task returning `Except IO.Error α`, select its declaration in
+`taskIOErrors` to surface terminal IO failure separately from a factory
+failure. An ordinary returned `Except` remains data. Scalar arguments,
+copied results and nested returned or thrown `Except` values are supported;
+this task profile rejects resource and retained-callback arguments.
+See the [Java](../consume/java.md#await-tasks-and-consume-streams) and
+[Kotlin](../consume/kotlin.md#await-tasks-and-consume-streams) examples.
+
 ## Export options, results and products
 
 Both ordinary-source and independently reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain admitted primitives, arrays and acyclic records. The Java API supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches and a binary `Pair<A, B>` record. The companion Kotlin API supplies sealed interfaces and final classes with non-nullable, covariant type parameters. Both compare nested array contents. Generic primitive payloads use boxed JVM types. None, Some Unit and nested options remain distinct; domain errors return `Err` values while bridge failures throw exceptions.
@@ -195,7 +234,7 @@ and [Kotlin](../consume/kotlin.md#structured-callback-values) examples use the s
 This acyclic profile uses copied callback payloads. See the [recursive callback profile](#recursive-callback-values) for recursive types. Host callbacks borrow the
 enclosing synchronous call, and returned closures own explicit leases.
 Callback identities or resources inside copied
-aggregates, retained host callbacks and asynchronous delivery remain unsupported.
+aggregates, retained host callbacks and asynchronous delivery are not part of this callable profile.
 
 ## Recursive callback values
 

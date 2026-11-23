@@ -55,7 +55,7 @@ test("Maven IO rejects missing OS grants, unsupported delivery and dishonest sou
 		await assert.rejects(access(out), { code: "ENOENT" });
 	};
 	await writeFile(path, canonicalJson({ ...cfg, nativeEffects: [] })); await wrong(/requires nativeEffects "filesystem"/u);
-	await writeFile(path, canonicalJson({ ...cfg, taskExports: ["Journal.store"] })); await wrong(/synchronous IO profile requires copied IO values/u);
+	await writeFile(path, canonicalJson({ ...cfg, taskExports: ["Journal.store"] })); await wrong(/taskExports requires a real Lean Task result/u);
 	const reviewed = await parse(join(resolve(policy), "ordinary/handoff/binding-ir.json"));
 	const bump = reviewed.declarations.find(d => d.name === "bump"); assert.equal(bump.result.type.name, "uint32"); bump.result.type.name = "uint64";
 	delete cfg.exports;
@@ -99,9 +99,9 @@ test("ordinary and reviewed JARs contain compiled Java and Kotlin APIs for synch
 		t.diagnostic("built " + route + " JAR/POM");
 	}
 });
-const repro = env.LEAN_BRIDGE_JVM_IO_REPRO;
+const repro = env.LEAN_BRIDGE_JVM_REPRO ?? env.LEAN_BRIDGE_JVM_IO_REPRO;
 test("an offline-installed CLI in a second producer root reproduces the complete Maven handoff", { skip: !repro, timeout: 900_000 }, async () => {
-	const dir = resolve(repro), original = join(resolve(env.LEAN_BRIDGE_JVM_IO_ORIGINAL), "ordinary");
+	const dir = resolve(repro), original = join(resolve(env.LEAN_BRIDGE_JVM_ORIGINAL ?? env.LEAN_BRIDGE_JVM_IO_ORIGINAL), "ordinary");
 	await mkdir(dir); const src = join(dir, "project"), tools = join(dir, "installed-cli");
 	await cp(join(original, "source"), src, { recursive: true });
 	const packed = await buildCliNpmPackage({ outputRoot: join(dir, "cli-feed") });

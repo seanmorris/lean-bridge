@@ -26,7 +26,7 @@ declarations of the host methods they call.
 | Resources, host objects, mutable members | Declare identity, ownership, borrowing, transfer, and disposal. See how [C#](../publish/nuget.md#export-a-shared-lean-resource), [Python](../publish/pypi.md#export-a-shared-lean-resource), and [Ruby](../publish/rubygems.md#export-a-shared-lean-resource) share resources between IO and task packages. Keep incompatible runtimes separate. |
 | Callbacks and returned closures | Specify argument/result types, retention, reentry, failure behavior, and lifetime. For a task that calls its host, see the owner-thread callback contracts for [C](../publish/c.md#export-a-callback-taking-task), [C++](../publish/cpp.md#export-a-callback-taking-task), [Python](../publish/pypi.md#let-a-lean-task-call-python), [Ruby](../publish/rubygems.md#export-a-callback-taking-task), and [Rust](../publish/cargo.md#export-a-callback-taking-task). |
 | `IO`, `EIO`, declared errors | Preserve effect order and typed failures. An IO action is not automatically asynchronous. |
-| `Task`, cancellation, iterators, async iterators | Select a real Lean task with `taskExports`, or a cursor factory, pull, and close with `asyncIterators`. Linux CPython exposes [awaitables](../publish/pypi.md#export-a-lean-task-to-asyncio) and [async iterators](../publish/pypi.md#export-an-async-iterator); Linux C11 exposes [waitable descriptors](../publish/c.md#export-tasks-and-pull-streams), C++20 exposes [move-only futures and pull streams](../consume/cpp.md#await-a-task-or-pull-a-stream), Ruby exposes [fiber-aware tasks and Enumerable streams](../consume/ruby.md#await-a-task-or-read-a-stream), and Rust exposes [executor-driven futures and streams](../publish/cargo.md#export-a-task-or-pull-stream). |
+| `Task`, cancellation, iterators, async iterators | Select a real Lean task with `taskExports`, or a cursor factory, pull, and close with `asyncIterators`. Linux CPython exposes [awaitables](../publish/pypi.md#export-a-lean-task-to-asyncio) and [async iterators](../publish/pypi.md#export-an-async-iterator); Linux C11 exposes [waitable descriptors](../publish/c.md#export-tasks-and-pull-streams), C++20 exposes [move-only futures and pull streams](../consume/cpp.md#await-a-task-or-pull-a-stream), Ruby exposes [fiber-aware tasks and Enumerable streams](../consume/ruby.md#await-a-task-or-read-a-stream), .NET exposes [tasks and async enumerables](../publish/nuget.md#export-tasks-and-pull-streams), Maven exposes [Java futures and publishers plus Kotlin suspend functions and flows](../publish/maven.md#export-tasks-and-streams), and Rust exposes [executor-driven futures and streams](../publish/cargo.md#export-a-task-or-pull-stream). |
 
 These decisions define the full authoring work. A listed form becomes usable in a profile when its compiler, generated API, package, and installed checks support that mapping. The [implementation stages](../architecture/cross-language-authoring.md#stages) track the remaining work.
 
@@ -533,8 +533,8 @@ Analysis reports separate reasons for unresolved implicit, instance, dependent, 
 A Lean `IO` result tells the caller how an operation can fail. It doesn't say
 whether that operation reads a file, checks an environment variable, or only
 updates an in-memory reference. Declare OS access separately for Linux x86-64
-C, C++, Rust, Python, Ruby and .NET packages that export native synchronous
-IO, tasks or iterators; for JVM [synchronous IO](../publish/maven.md#export-synchronous-io);
+C, C++, Rust, Python, Ruby, .NET and JVM packages that export native synchronous
+IO, tasks or iterators (see [Maven task exports](../publish/maven.md#export-tasks-and-streams));
 and for Python host-import packages. List the grants
 in `lean-bridge.exports.json`. Here the module reads an environment variable at
 startup, and its worker reads a file:

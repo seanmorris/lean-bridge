@@ -1,5 +1,5 @@
 /**
- * Typed Java 22 and Kotlin 2.2 APIs for compiler-elaborated synchronous IO.
+ * Typed Java 22 and Kotlin 2.2 projections of compiler-elaborated IO, tasks and cursors.
  *
  * @file
  */
@@ -48,12 +48,14 @@ const result = (t, d = 0) => {
 };
 
 /**
- * Generate both language projections over the same private synchronous ABI.
+ * Generate both language projections over the same private native ABI.
  *
  * @param options - Checked Binding IR, wire methods, owner entry and native library evidence.
  */
 export const generateJvmIO = async options => {
-	const { api, wire, invoke, retire, evidence } = options;
+	const { api, wire, invoke, retire, evidence } = options, tasks = Boolean(wire.wait);
+	if(tasks !== Boolean(options.task && options.watch) || wire.leases || wire.methods.some(m => m.callbacks?.length))
+		throw new TypeError("Inconsistent JVM delivery or unsupported resource or callback");
 	const slug = api.component.name.toLowerCase().replaceAll(/[^a-z0-9]+/gu, "_");
 	if(!/^[a-z][a-z0-9_]*$/u.test(slug) || words.has(slug)) throw new TypeError("Invalid JVM IO component namespace");
 	const ns = "org.leanbridge." + slug, pkg = "package " + ns + ";\n";
@@ -61,11 +63,23 @@ export const generateJvmIO = async options => {
 	const java = (name, source) => { files[`src/main/java/${dir}/${name}.java`] = pkg + source; };
 	const names = new Set(), classes = new Set(["Api", "Wire", "Unit", "NativeAssets", "Result", "LeanEIOError", "LeanIOException"]);
 	const methods = [], kotlin = [];
+	const typedError = (ex, shape, decl) => {
+		if(classes.has(ex)) throw new TypeError("Colliding JVM IO exception: " + ex);
+		classes.add(ex);
+		const et = spelling(shape, ns, false, true);
+		java(ex, `public final class ${ex} extends LeanEIOError {
+    private final ${et} value;
+    ${ex}(${et} value) { super(${decl}); this.value = value; }
+    @Override public ${et} payload() { return value; }
+}\n`);
+		return `if (status == 3) throw new ${ex}(${result(shape)});`;
+	};
 	for(const [i, m] of wire.methods.entries())
 	{
 		const decl = api.declarations.find(d => d.name === m.name);
-		if(!decl || decl.source.declaration !== m.declaration || decl.parameters.length !== m.args.length || m.delivery || wire.wait || wire.leases)
-			throw new TypeError("JVM IO methods must match the synchronous Lean declarations");
+		const mode = m.delivery === "task" ? "promise" : m.delivery === "async-iterator" ? m.delivery : "value";
+		if(!decl || decl.source.declaration !== m.declaration || decl.parameters.length !== m.args.length || decl.resultMode !== mode
+			|| (m.delivery && (!tasks || mode === "value"))) throw new TypeError("JVM delivery must match the compiler-checked Lean declarations");
 		const name = ident(m.name);
 		if(!/^[a-z][A-Za-z0-9_]*$/u.test(name) || names.has(name)) throw new TypeError("Colliding JVM IO method: " + name);
 		names.add(name);
@@ -82,15 +96,32 @@ export const generateJvmIO = async options => {
 		if(m.effect === "EIO")
 		{
 			const ex = name[0].toUpperCase() + name.slice(1) + "Error";
-			if(classes.has(ex)) throw new TypeError("Colliding JVM IO exception: " + ex);
-			classes.add(ex);
-			const et = spelling(m.error, ns, false, true);
-			java(ex, `public final class ${ex} extends LeanEIOError {
-    private final ${et} value;
-    ${ex}(${et} value) { super(${declaration}); this.value = value; }
-    @Override public ${et} payload() { return value; }
-}\n`);
-			error = `if (status == 3) throw new ${ex}(${result(m.error)});`;
+			error = typedError(ex, m.error, declaration);
+		}
+		const back = s => "\u0060" + s + "\u0060";
+		const kp = m.args.map((t, j) => back(params[j]) + ": " + spelling(t, ns, true)).join(", ");
+		const kt = m.result === "unit" ? "kotlin.Unit" : spelling(m.result, ns, true);
+		const call = `${ns}.Api.${back(name)}(${params.map(back).join(", ")})`;
+		if(m.delivery)
+		{
+			const stream = mode === "async-iterator", value = spelling(m.result, ns, false, true);
+			const output = stream ? "java.util.concurrent.Flow.Publisher" : "java.util.concurrent.CompletableFuture";
+			const terminal = !m.terminal ? "" : stream
+				? typedError(name[0].toUpperCase() + name.slice(1) + "StepError", m.terminal, JSON.stringify(m.stepDeclaration))
+				: `if (status == 4) throw new TaskIOException(${declaration}, f.text());`;
+			const blobs = m.args.flatMap((t, j) => t === "bytes" ? [j] : []);
+			const capture = stream && blobs.length ? "int remaining = 16 * 1024 * 1024; "
+				+ blobs.map(j => `if (a${j}.length > remaining) throw new IllegalArgumentException("Lean conversion limit exceeded"); remaining -= a${j}.length;`).join(" ")
+				+ " " + blobs.map(j => `byte[] copy${j} = a${j}.clone();`).join(" ") + " " : "";
+			const input = m.args.map((t, j) => argument(t, j, (stream && t === "bytes" ? "copy" : "a") + j)).join(" ");
+			methods.push(`    public static ${output}<${value}> ${name}(${nativeArgs}) {
+        ${capture}return Delivery.${stream ? "stream(() -> " : "task("}new TaskPort<${value}>(${i}, ${m.args.length}, ${m.tagBytes},
+            f -> { ${input} }, (f,status) -> { ${error} Wire.success(status); },
+            (f,status) -> { ${stream ? "if (status == 2) return null;" : ""} ${terminal} Wire.success(status); return ${result(m.result)}; }));
+    }`);
+			const unit = m.result === "unit", tail = stream ? ".asLeanFlow()" + (unit ? ".map { kotlin.Unit }" : "") : ".await()";
+			kotlin.push(`    @JvmStatic ${stream ? "" : "suspend "}fun ${back(name)}(${kp}): ${stream ? "kotlinx.coroutines.flow.Flow<" + kt + ">" : kt}${!stream && unit ? " { " + call + tail + " }" : " = " + call + tail}`);
+			continue;
 		}
 		methods.push(`    public static ${jt} ${name}(${nativeArgs}) {
         try (var f = new Wire(${m.args.length}, ${m.tagBytes})) {
@@ -99,10 +130,7 @@ export const generateJvmIO = async options => {
             Wire.success(status); ${m.result === "unit" ? "f.unit();" : "return " + result(m.result) + ";"}
         }
     }`);
-		const back = s => "\u0060" + s + "\u0060";
-		const kp = m.args.map((t, j) => back(params[j]) + ": " + spelling(t, ns, true)).join(", ");
-		const kt = m.result === "unit" ? "kotlin.Unit" : spelling(m.result, ns, true);
-		kotlin.push(`    @JvmStatic fun ${back(name)}(${kp}): ${kt} = ${ns}.Api.${back(name)}(${params.map(back).join(", ")})`);
+		kotlin.push(`    @JvmStatic fun ${back(name)}(${kp}): ${kt} = ${call}`);
 	}
 	java("Api", "public final class Api {\n    private Api() {}\n" + methods.join("\n") + "\n}\n");
 	java("Unit", "public enum Unit { INSTANCE }\n");
@@ -124,7 +152,22 @@ export const generateJvmIO = async options => {
 	files[`src/main/java/${dir}/NativeAssets.java`] = copiedJvmAssets({ namespace: ns }, evidence);
 	files[`src/main/java/${dir}/Wire.java`] = (await readFile(new URL("./io-wire.java", import.meta.url), "utf8"))
 		.replace("__PACKAGE__", ns).replace("__INVOKE__", invoke).replace("__CLEAR__", wire.clear).replace("__RETIRE__", retire);
-	files[`src/main/kotlin/${dir}/kotlin/Api.kt`] = `package ${ns}.kotlin\nobject Api {\n${kotlin.join("\n")}\n}\n`;
-	files["binding-manifest.json"] = JSON.stringify({ generator: "jvm-sync-io-v1", namespace: ns, kotlin: { namespace: ns + ".kotlin" } });
+	const imports = tasks ? "import kotlinx.coroutines.future.await\nimport kotlinx.coroutines.flow.map\n" : "";
+	files[`src/main/kotlin/${dir}/kotlin/Api.kt`] = `package ${ns}.kotlin\n${imports}object Api {\n${kotlin.join("\n")}\n}\n`;
+	if(tasks)
+	{
+		const path = `src/main/java/${dir}/Wire.java`;
+		files[path] = files[path].replace("    int call(int op)", "    int task(TaskPort<?> port, int op) { return port.call(op, arena, args, out, tags); }\n    int call(int op)");
+		const assets = [["TaskReactor", "task-reactor"], ["TaskPort", "task-port"], ["Delivery", "task-delivery"]];
+		for(const [name, asset] of assets) files[`src/main/java/${dir}/${name}.java`] = (await readFile(new URL("./" + asset + ".java", import.meta.url), "utf8"))
+			.replace("__PACKAGE__", ns).replace("__WATCH__", options.watch).replace("__TASK__", options.task);
+		java("TaskIOException", `public final class TaskIOException extends java.io.UncheckedIOException {
+    private final String declaration;
+    TaskIOException(String decl, String message) { super(decl + ": " + message, new java.io.IOException(message)); declaration = decl; }
+    public String declaration() { return declaration; }
+}\n`);
+		files[`src/main/kotlin/${dir}/kotlin/TaskFlow.kt`] = (await readFile(new URL("./task-flow.kt", import.meta.url), "utf8")).replace("__PACKAGE__", ns);
+	}
+	files["binding-manifest.json"] = JSON.stringify({ generator: tasks ? "jvm-tasks-v1" : "jvm-sync-io-v1", namespace: ns, kotlin: { namespace: ns + ".kotlin" } });
 	return { namespace: ns, files };
 };

@@ -94,6 +94,42 @@ Lean work on one native thread. The [installed checks](../evidence/jvm-sync-io-2
 cover both thread types, concurrent writes to a Lean counter, and both
 package load orders.
 
+### Await tasks and consume streams
+
+A selected Lean `Task α` returns a `CompletableFuture<T>`. A cursor returns a cold `Flow.Publisher<T>`: subscribing alone does not open the cursor, and Lean produces an item only when the subscriber requests one. This example prints `42` and then `2`.
+
+```java
+import java.math.BigInteger;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Flow;
+import org.leanbridge.timers.Api;
+import org.leanbridge.timers.Unit;
+
+class Example {
+    public static void main(String[] args) {
+        System.out.println(Api.immediate(BigInteger.valueOf(41)).join());
+        var count = new CompletableFuture<Integer>();
+        Api.units(BigInteger.TWO).subscribe(new Flow.Subscriber<Unit>() {
+            Flow.Subscription subscription;
+            int items;
+            public void onSubscribe(Flow.Subscription s) { subscription = s; s.request(1); }
+            public void onNext(Unit item) { items++; subscription.request(1); }
+            public void onError(Throwable error) { count.completeExceptionally(error); }
+            public void onComplete() { count.complete(items); }
+        });
+        System.out.println(count.join());
+    }
+}
+```
+
+Call `future.cancel(false)` to release your interest in a task and ask its Lean worker to stop. Non-cooperative work can finish later; it cannot change the cancelled future. Call `subscription.cancel()` to close a cursor early. A nonpositive request fails the subscription. A failed factory, a failed task or stream step, and a returned `Result.Err` remain distinct. A retired runtime wakes pending calls. Synchronous companions stay ordinary methods.
+
+Use `CompletionException.getCause()` when `join()` reports a Lean failure.
+A subscriber receives the original error in `onError`. A returned
+`Result.Err` is an ordinary value in either API.
+
+The [JDK subscription contract](https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/util/concurrent/Flow.Subscription.html) defines demand and cancellation. See the [Maven author configuration](../publish/maven.md#export-tasks-and-streams) and the [installed Java/Kotlin checks](../evidence/jvm-tasks-20261123.json).
+
 ### Arrays and records
 
 Lean `Array T` uses a typed Java array. Primitive elements use primitive arrays, such as `long[]` for `Array UInt32`. Named copied structures become Java records with typed component accessors. Arrays and records can nest; calls copy their contents into independent returned values.
@@ -309,7 +345,7 @@ Callbacks borrow one synchronous call. Their copied arguments remain valid after
 
 Call `invoke` on the closure's creating platform thread. Java virtual threads are rejected for callable operations because they can move between native threads. `close` is idempotent, may run on another thread, and defers native release while a call is active. All references and saved method references reject invocation after closing. `isClosed` reports explicit closure; a Cleaner releases abandoned leases as a fallback. Use try-with-resources for deterministic cleanup.
 
-Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversion budget. Each native adapter allows 64 nested callable invocations on a thread; the shared runtime allows 4,096 live closure identities. These limits do not bound Lean or JVM heap allocation. Use a fresh process after fork. Futures, suspend functions and retained host callbacks remain unsupported. Resource-containing payloads use the [owned profile](#owned-resources-and-aggregates); recursive copied payloads use the [recursive callback profile](#recursive-callback-values). Do not start detached work that uses a borrowed function. See the [installed primitive callable checks](../evidence/jvm-callables-20260919.md) and the structured example below.
+Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversion budget. Each native adapter allows 64 nested callable invocations on a thread; the shared runtime allows 4,096 live closure identities. These limits do not bound Lean or JVM heap allocation. Use a fresh process after fork. This callable profile does not retain host callbacks or make them asynchronous. For top-level tasks and streams, use the Maven task profile. Resource-containing payloads use the [owned profile](#owned-resources-and-aggregates); recursive copied payloads use the [recursive callback profile](#recursive-callback-values). Do not start detached work that uses a borrowed function. See the [installed primitive callable checks](../evidence/jvm-callables-20260919.md) and the structured example below.
 
 ### Structured callback values
 
@@ -411,7 +447,7 @@ Cycles, null values, negative Nat values and invalid branches reject. Callback
 exceptions preserve the original Throwable after cleanup. Malformed native
 results retire the runtime; conversion limits and allocation failures allow
 later calls. Resources or callable identities inside copied aggregates,
-retained host callbacks and asynchronous delivery remain unsupported.
+retained host callbacks and asynchronous delivery are not part of this callable profile.
 
 When a synchronous Java or Kotlin callback returns a selected `Subtype` or
 checked record, pass a generated `WithRecovery<SAM, Result>` containing the
@@ -1002,7 +1038,7 @@ Profiles: Java. Installed checks apply only to the named positions and package p
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
-The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. It does not use futures or iterators.
+The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. The separate [task profile](#await-tasks-and-consume-streams) uses Java futures and publishers or Kotlin suspend functions and flows.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Java in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

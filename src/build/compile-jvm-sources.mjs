@@ -92,7 +92,15 @@ export const compileJvmSources = async ({ root, files, environment, signal }) =>
 			, "jvm-owned-values-v3", "jvm-owned-values-v4"
 			, "jvm-owned-values-v5"].includes(metadata.generator);
 		const options = kotlinOptions(module, copiedGraph || ownedValues);
-		await run(java, [...launch, ...options, "-jdk-home", jdk, "-classpath", `${join(lib, "kotlin-stdlib.jar")}${delimiter}${join(lib, "annotations-13.0.jar")}`, "-d", "classes", ...kotlinSources, ...javaSources]);
+		const dependencies = [join(lib, "kotlin-stdlib.jar"), join(lib, "annotations-13.0.jar")];
+		if(metadata.generator === "jvm-tasks-v1")
+		{
+			const name = "kotlinx-coroutines-core-jvm.jar";
+			if(compilerFiles[name] !== "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5")
+				throw new Error("JVM tasks require the kotlinx-coroutines-core-jvm 1.8.0 artifact shipped with Kotlin 2.2.0");
+			dependencies.push(join(lib, name));
+		}
+		await run(java, [...launch, ...options, "-jdk-home", jdk, "-classpath", dependencies.join(delimiter), "-d", "classes", ...kotlinSources, ...javaSources]);
 		classpath = ["classes", join(lib, "kotlin-stdlib.jar")
 			, join(lib, "annotations-13.0.jar")].join(delimiter);
 		kotlin = { version, module, options, compilerFiles, namespace: metadata.kotlin.namespace, standardLibraryVersion: "2.2.0" };

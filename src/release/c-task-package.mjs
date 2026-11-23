@@ -1,5 +1,5 @@
 /**
- * Build relocatable Linux C11 and C++20 task archives with their pinned shared runtime.
+ * Compile the shared Linux IO/task adapter and package it for the selected native host.
  *
  * @file
  */
@@ -57,7 +57,7 @@ export const buildCTaskPackage = async options => {
 		const bindingIrSha256 = hashBindingIr(api), profile = `native-${cpp ? "cpp" : "c"}-${synchronous ? "io" : "task"}-v1`;
 		const delivery = await nativeDeliveryHeader(jvm), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
-		if(jvm && (!synchronous || resources.length)) throw new TypeError("Expected copied synchronous JVM IO");
+		if(jvm && (resources.length || entries.some(retainedTask))) throw new TypeError("This JVM delivery profile requires copied values without retained host callbacks");
 		const owner = jvm && await compileJvmIOOwner({ app, runtimeRoot, runtimeIdentity, cc: environment.CC ?? "cc", run });
 		const threads = cpp && (!synchronous || resources.length > 0);
 		const config = { name: jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet || jvm ? "words" : "gmp" };
@@ -67,9 +67,10 @@ export const buildCTaskPackage = async options => {
 		if(target === "c" && callbackHeaders.size) callbackHeaders.set("task-host-callback.h", await asset("../backends/c/task-host-callback.h"));
 		const ledger = resources.length ? await taskResourceLedger(runtimeIdentity) : null;
 		const ledgerId = ledger && ledger.id, ledgerName = ledger?.name, ledgerFlag = ledger?.flag;
+		if(jvm && !synchronous) config.jvmDelivery = true;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
 		const wire = (ruby || dotnet || jvm) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources });
-		const jvmEntry = jvm && jvmIOEntry(wire, skeleton.prefix);
+		const jvmEntry = jvm && jvmIOEntry(wire, skeleton.prefix, wire.wait && await asset("../backends/jvm/task-reactor.c"));
 		const integers = skeleton.integerMode && await asset("../backends/c/task-integers.h");
 		const gmp = integers && !cpp && !rust && !ruby && !dotnet && !jvm && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
 		const boost = integers && cpp && boostSources();
@@ -96,7 +97,7 @@ export const buildCTaskPackage = async options => {
 		for(const [file, bytes] of callbackHeaders) await save(file, bytes);
 		if(ledger) await compileTaskResourceLedger({ ledger, app, runtimeRoot, cc: environment.CC ?? "cc", run });
 		if(integers) await save("task-integers.h", integers);
-		const exported = jvm ? [jvmEntry.invoke, jvmEntry.retire, wire.clear] : [...gen.symbols, ...wire ? wire.symbols : []];
+		const exported = jvm ? [jvmEntry.invoke, jvmEntry.retire, wire.clear, ...jvmEntry.task ? [jvmEntry.task, jvmEntry.watch] : []] : [...gen.symbols, ...wire ? wire.symbols : []];
 		await save("exports.map", `{ global: ${exported.join("; ")}; local: *; };\n`);
 		const library = `lib${p}.so`;
 		await run(environment.CC ?? "cc", ["-std=gnu11"

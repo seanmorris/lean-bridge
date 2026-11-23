@@ -1,5 +1,5 @@
 /**
- * Bind the synchronous JVM entry points to one process-wide native owner.
+ * Bind JVM operations to one native owner; task readiness waits stay off that owner.
  *
  * @file
  */
@@ -48,21 +48,23 @@ export const compileJvmIOOwner = async options => {
 /**
  * Only generated, enumerated calls cross the JVM downcall (never caller-provided functions).
  *
- * @param wire - Compiler-derived methods over the synchronous copy wire.
+ * @param wire - Compiler-derived copied methods and optional task or pull protocols.
  * @param p - Native component symbol prefix.
+ * @param reactor - Private Linux readiness operations; included only in task components.
  */
-export const jvmIOEntry = (wire, p) => {
-	if(wire.wait || wire.leases || !wire.methods.length) throw new TypeError("The JVM synchronous IO profile requires copied values");
+export const jvmIOEntry = (wire, p, reactor) => {
+	if(Boolean(wire.wait) !== Boolean(reactor) || wire.leases || !wire.methods.length || wire.methods.some(m => m.callbacks?.length))
+		throw new TypeError("The JVM IO and task profiles require copied values");
 	const invoke = p + "_jvm_invoke", retire = p + "_jvm_retire";
 	const source = `#include "${p}.h"
 #include "io-owner.h"
 #include "lean_bridge_native_runtime.h"
-${wire.methods.map(m => "extern int " + m.symbol + "(const uint64_t *, uint64_t *, uint8_t *);").join("\n")}
+${wire.methods.filter(m => !m.delivery).map(m => "extern int " + m.symbol + "(const uint64_t *, uint64_t *, uint8_t *);").join("\n")}
 typedef struct { int op, status; const uint64_t *args; uint64_t *out; uint8_t *tags; } lb_jvm_request;
 static void invoke_on_owner(void *context) {
     lb_jvm_request *r = context;
     switch (r->op) {
-${wire.methods.map((m, i) => `        case ${i}: r->status = ${m.symbol}(r->args, r->out, r->tags); break;`).join("\n")}
+${wire.methods.flatMap((m, i) => m.delivery ? [] : [`        case ${i}: r->status = ${m.symbol}(r->args, r->out, r->tags); break;`]).join("\n")}
         default: break;
     }
 }
@@ -72,5 +74,37 @@ int ${invoke}(int op, const uint64_t *args, uint64_t *out, uint8_t *tags) {
 }
 void ${retire}(void) { lean_bridge_native_runtime_retire(); }
 `;
-	return { invoke, retire, source };
+	if(!wire.wait) return { invoke, retire, source };
+	const task = p + "_jvm_task", watch = p + "_jvm_watch";
+	const ops = [["start", "const uint64_t *, uint64_t *, uint64_t *, uint8_t *", "r->args,r->h,r->out,r->tags"]
+		, ["poll", "uint64_t *, int *", "r->h,r->fd"]
+		, ["take", "uint64_t *, uint64_t *, uint8_t *", "r->h,r->out,r->tags"]
+		, ["close", "uint64_t *", "r->h"], ["pull", "uint64_t *", "r->h"]];
+	const declarations = [], cases = [];
+	for(const [i, m] of wire.methods.entries()) if(m.delivery)
+	{
+		const wanted = ["start", "poll", "take", "close", ...m.delivery === "async-iterator" ? ["pull"] : []];
+		if(!["task", "async-iterator"].includes(m.delivery) || Object.keys(m.names ?? {}).length !== wanted.length
+			|| wanted.some(k => m.names[k] !== m.symbol + "_" + k)) throw new TypeError("Unverified JVM task operations: " + m.name);
+		const row = [];
+		for(const [j, [key, signature, args]] of ops.entries()) if(m.names[key])
+		{
+			declarations.push(`extern int ${m.names[key]}(${signature});`);
+			row.push(`case ${j}: r->status = ${m.names[key]}(${args}); break;`);
+		}
+		cases.push(`case ${i}: switch(r->op){ ${row.join(" ")} } break;`);
+	}
+	if(!cases.length) throw new TypeError("The JVM task profile needs a compiler-checked task or cursor");
+	const extra = `${declarations.join("\n")}
+typedef struct {int method, op, status; const uint64_t *args; uint64_t *h, *out; uint8_t *tags; int *fd;} jvm_task_request;
+static void task_on_owner(void *ptr) {
+    jvm_task_request *r = ptr;
+    switch(r->method) { ${cases.join("\n")} }
+}
+int ${task}(int method, int op, const uint64_t *args, uint64_t *h, uint64_t *out, uint8_t *tags, int *fd) {
+    jvm_task_request r = {method, op, ${p}_INVALID, args, h, out, tags, fd};
+    return LB_JVM_OWNER(call)(task_on_owner, &r) ? r.status : ${p}_UNAVAILABLE;
+}
+${reactor.toString().replace("__WATCH__", watch)}`;
+	return { invoke, retire, task, watch, source: source + extra };
 };

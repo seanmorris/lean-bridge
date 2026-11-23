@@ -20,7 +20,7 @@ import { writePackageSetReceipt } from "./package-set-receipt.mjs";
  */
 export const writeJvmIORelease = async o => {
 	const { workRoot, projectContract, name, version, prefix, files, owner, api, evidence, runtimeIdentity, bindingIrSha256, componentIdentity, floor } = o;
-	const profile = "native-jvm-io-v1", component = projectContract.component;
+	const tasks = Boolean(o.wire.wait), profile = tasks ? "native-jvm-task-v1" : "native-jvm-io-v1", component = projectContract.component;
 	const library = "lib" + prefix + ".so", libraries = {};
 	for(const n of [library, owner.name, "liblean_bridge_native.so", "libleanshared.so"])
 	{
@@ -31,7 +31,7 @@ export const writeJvmIORelease = async o => {
 	}
 	if(files.size !== Object.keys(libraries).length) throw new Error("Unexpected JVM IO native payload");
 	const auth = { library, libraries, runtimeIdentity, componentId: component.id, componentReceiptSha256: componentIdentity };
-	const { namespace, files: sources } = await generateJvmIO({ api, wire: o.wire, invoke: o.jvmEntry.invoke, retire: o.jvmEntry.retire, evidence: auth });
+	const { namespace, files: sources } = await generateJvmIO({ api, wire: o.wire, ...o.jvmEntry, evidence: auth });
 	const stage = await mkdtemp(join(workRoot, ".jvm-io-")), root = join(stage, "jar"), compiler = join(stage, "compiler");
 	const write = async (dir, path, bytes) => { await mkdir(dirname(join(dir, path)), { recursive: true }); await writeFile(join(dir, path), bytes, { flag: "wx" }); };
 	const inventory = {}, save = async (path, value) => {
@@ -57,13 +57,14 @@ export const writeJvmIORelease = async o => {
 		for(const f of ["LICENSE", "LICENSES"]) await save(meta + "licenses/Lean-" + f, await readFile(join(o.leanPrefix, f)));
 		for(const [p, b] of Object.entries(projectContract.notices)) await save(meta + "licenses/" + p, b);
 		const [group, artifact] = name.split(":");
+		const coroutines = tasks ? "<dependency><groupId>org.jetbrains.kotlinx</groupId><artifactId>kotlinx-coroutines-core-jvm</artifactId><version>1.8.0</version></dependency>" : "";
 		const pom = `<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><groupId>${group}</groupId><artifactId>${artifact}</artifactId><version>${version}</version>${mavenPackageMetadata(projectContract.metadata ?? {})}<properties><maven.compiler.release>22</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties><dependencies><dependency><groupId>org.jetbrains.kotlin</groupId><artifactId>kotlin-stdlib</artifactId><version>2.2.0</version></dependency></dependencies></project>\n`;
+<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><groupId>${group}</groupId><artifactId>${artifact}</artifactId><version>${version}</version>${mavenPackageMetadata(projectContract.metadata ?? {})}<properties><maven.compiler.release>22</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties><dependencies><dependency><groupId>org.jetbrains.kotlin</groupId><artifactId>kotlin-stdlib</artifactId><version>2.2.0</version></dependency>${coroutines}</dependencies></project>\n`;
 		await save(`META-INF/maven/${group}/${artifact}/pom.xml`, pom);
 		await save("META-INF/MANIFEST.MF", "Manifest-Version: 1.0\n\n");
-		await save("README.md", `# ${name} ${version}\n\nCall ${namespace}.Api from Java or ${namespace}.kotlin.Api from Kotlin. JDK 22, Linux x86-64 (glibc ${floor}+), --enable-native-access=ALL-UNNAMED. Both APIs are synchronous. Compatible packages share a native owner thread, including when called from different Java or virtual threads. Returned Except values are Result.Ok or Result.Err. An EIO throw raises the declaration's typed error; a Lean IO failure raises LeanIOException. No Lean compiler or scheduler setup is needed.\n`);
+		await save("README.md", `# ${name} ${version}\n\nCall ${namespace}.Api from Java or ${namespace}.kotlin.Api from Kotlin. JDK 22, Linux x86-64 (glibc ${floor}+), --enable-native-access=ALL-UNNAMED. ${tasks ? "Selected Lean tasks use Java CompletableFuture and Kotlin suspend functions. Stream factories expose Java Flow.Publisher and Kotlin Flow; demand starts and advances the cursor. Cancellation releases the native handle. Ordinary methods remain synchronous." : "Both APIs are synchronous."} Compatible packages share a native owner thread, including when called from different Java or virtual threads. Returned Except values are Result.Ok or Result.Err. An EIO throw raises the declaration's typed error; a Lean IO failure raises LeanIOException. No Lean compiler or scheduler setup is needed.\n`);
 		await save(meta + "package-receipt.json", canonicalJson({ schemaVersion: 1
-			, kind: "lean-bridge-jvm-io-package"
+			, kind: tasks ? "lean-bridge-jvm-task-package" : "lean-bridge-jvm-io-package"
 			, profile, name, version, component, namespace
 			, bindingIrSha256, runtimeIdentity, componentIdentity
 			, glibcMinimumVersion: floor

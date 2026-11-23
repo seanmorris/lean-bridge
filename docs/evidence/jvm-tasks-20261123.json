@@ -1,0 +1,326 @@
+{
+  "schemaVersion": 1,
+  "kind": "installed-jvm-lean-tasks-and-streams",
+  "date": "2026-11-23",
+  "planNode": 1223,
+  "scope": "Original Linux x86-64 Java/Kotlin Maven packages, locally installed and executed. Lean 4.32.2, JDK 22.0.2, Kotlin 2.2.0, kotlinx-coroutines-core-jvm 1.8.0, Maven 3.9.11, GCC 12.2.0. Tested with a glibc 2.36 override; release policy defaults to 2.38. No registry publication, hosted CI or full-matrix promotion. Retained JVM host callbacks and resource-bearing task values are outside this receipt.",
+  "checks": [
+    "Ordinary and reviewed Timers JAR/POM pairs and an independent Alarm component. Outer archives, local repository sidecars, every inner JAR payload, Kotlin metadata, resolved coroutine binary and compiler selection verified. Each client install used an offline Maven repository containing only third-party prerequisites, then ran from relocated files with no Lean or Maven on PATH.",
+    "Java futures run actual Lean workers; synchronous companions return directly. Checked copied values, independent bytes, exact large integers, typed factory errors versus terminal IO errors versus returned Except, invalid input, nested continuation reentry, cooperative and late cancellation, and racing native completion versus cancellation (exactly one settlement).",
+    "Java publishers and Kotlin flows are cold. Native counters prove one pull per request/emission, no unsolicited pulls, independent subscriptions, normal exhaustion, cancellation of blocked pulls, early close, distinct factory/step failures and nonpositive demand. Kotlin suspend calls cancel Lean work when their coroutine is cancelled; wrong coroutine context and wrong public Flow type fail to compile.",
+    "Ordinary and reviewed installs in both package load orders: two independently loaded components share the same observed Lean native owner, one runtime and zero outstanding identities after cleanup. Java retirement wakes pending tasks from both packages and an idle cursor, returning eventfd/epoll counts to baseline. Normal JVM termination was tested with non-cooperative work still pending.",
+    "A separate original synchronous Journal package and the new Timers task package executed in both load orders with cross-package reentry. Kernel fdinfo showed 32 completion sources plus control and retirement registered on one epoll; no user callback or polling loop ran on its readiness thread.",
+    "The producer refuses a dishonest reviewed task payload and a falsely selected terminal IO error. An independently packed, offline-installed npm CLI rebuilt the original task release byte for byte and also reproduced the previous synchronous Maven release. The comparison covers JAR, POM, package-set receipt, native release manifest, binding IR and compiler evidence."
+  ],
+  "reproduce": [
+    "Use separate empty evidence/output directories. Pin the toolchain as in the Maven author guide. Set LEAN_BRIDGE_LEAN_PREFIX, JAVA_HOME, LEAN_BRIDGE_JAVA, LEAN_BRIDGE_JAVAC, LEAN_BRIDGE_KOTLINC, LEAN_BRIDGE_KOTLIN_HOME and LEAN_BRIDGE_MAVEN. Use Python 3.11+ for the independent zip verifier (LEAN_BRIDGE_PYTHON). On this host set LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36. Run with LEAN_NUM_THREADS=1 and TMPDIR on a filesystem with room for the JVM native libraries.",
+    "Warm a new prerequisite-only cache: mvn -B -s tests/fixtures/jvm-sync-io/settings.xml -f tests/fixtures/jvm-tasks/prerequisites.xml -Dmaven.repo.local=$LEAN_BRIDGE_JVM_TASK_M2_SEED org.apache.maven.plugins:maven-install-plugin:3.1.4:help org.apache.maven.plugins:maven-dependency-plugin:3.8.1:build-classpath. The component installation and all dependency resolution during acceptance are offline.",
+    "LEAN_BRIDGE_JVM_TASK_BUILD=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-tasks-installed.mjs",
+    "LEAN_BRIDGE_JVM_TASK_POLICY=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-tasks-installed.mjs",
+    "LEAN_BRIDGE_JVM_TASK_CAPTURE=$EVIDENCE node --test --test-concurrency=1 tests/helpers/jvm-tasks-acceptance.mjs",
+    "LEAN_BRIDGE_JVM_ORIGINAL=$EVIDENCE LEAN_BRIDGE_JVM_REPRO=$SECOND node --test --test-name-pattern='offline-installed CLI in a second producer' tests/helpers/jvm-io-installed.mjs",
+    "Prepare $SYNC as described in jvm-sync-io-20261123.json. Repeat the independent CLI rebuild with LEAN_BRIDGE_JVM_ORIGINAL=$SYNC and a new LEAN_BRIDGE_JVM_REPRO directory. LEAN_BRIDGE_JVM_MIXED_TASK=$EVIDENCE LEAN_BRIDGE_JVM_MIXED_SYNC=$SYNC LEAN_BRIDGE_JVM_MIXED_OUTPUT=$MIXED_JSON LEAN_BRIDGE_JVM_MIXED_EXPECTED=docs/evidence/jvm-tasks-20261123.json node --test --test-concurrency=1 tests/helpers/jvm-tasks-acceptance.mjs",
+    "LEAN_BRIDGE_JVM_TASK_REPLAY=$EVIDENCE LEAN_BRIDGE_JVM_TASK_EXPECTED=docs/evidence/jvm-tasks-20261123.json node --test --test-concurrency=1 tests/helpers/jvm-tasks-acceptance.mjs"
+  ],
+  "acceptanceSha256": "8935e4599889116e84d93a3a2ed4c8492b232d327d998252ac3ecbafef83f8d7",
+  "independentProducer": {
+    "artifacts": [
+      {
+        "bytes": 51433216,
+        "path": "archives/timers-1.0.0.jar",
+        "sha256": "08ee23119a003bf8f263bc105aef0b420eef852c558696dbaa009ba86aab339d"
+      },
+      {
+        "bytes": 751,
+        "path": "archives/timers-1.0.0.pom",
+        "sha256": "de7bdd227369041a1bb06cfe026044dfce8365ffeae009cfc8bcf1bcac795b24"
+      }
+    ],
+    "cliArchiveSha256": "88316fe1c13670a3940f4e868be193ee40ce069a7ce11efa10f78142c7a2d700",
+    "receiptSha256": "7737e34f087814337c5b23f83755b6ebccee9c9cb8656dd213981d260f88ed50"
+  },
+  "synchronousCompatibility": {
+    "artifacts": [
+      {
+        "bytes": 51377770,
+        "path": "archives/journal-io-1.2.0-rc.1.jar",
+        "sha256": "ca6e7472f88b80d9d16d45521e29ac9267186ffa8a4fe357a3af89eeb1333b8f"
+      },
+      {
+        "bytes": 619,
+        "path": "archives/journal-io-1.2.0-rc.1.pom",
+        "sha256": "1697308484b1bf1aaab0ff770f80e41d37561b7bd6085d309164df618cecd188"
+      }
+    ],
+    "cliArchiveSha256": "88316fe1c13670a3940f4e868be193ee40ce069a7ce11efa10f78142c7a2d700",
+    "receiptSha256": "713283d67d5bd23648b461a38d858a83f2f0a3c0ecaedc6de6ca5ca316db7967"
+  },
+  "mixed": {
+    "resolved": [
+      "com/acme/timers/1.0.0/timers-1.0.0.jar",
+      "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar",
+      "org/jetbrains/annotations/13.0/annotations-13.0.jar",
+      "org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.jar",
+      "com/acme/journal-io/1.2.0-rc.1/journal-io-1.2.0-rc.1.jar"
+    ],
+    "rows": {
+      "sync-first": "one native owner and runtime across installed sync and task releases; continuation reentered the sync package; 32 completions plus wake and retirement on one epoll; zero identities",
+      "task-first": "one native owner and runtime across installed sync and task releases; continuation reentered the sync package; 32 completions plus wake and retirement on one epoll; zero identities"
+    },
+    "schemaVersion": 1,
+    "sources": {
+      "Mixed.java": "b2e0e065681567d732d9d3cea5fdd6c21c7903a641ae59c558d03ddf6bae5cda",
+      "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75",
+      "settings.xml": "bc96ebbba3ebe910e99d8206eed774fd57931bda2450cd3344271d2325251439",
+      "verify.py": "93c1606cce726a12432263491830bba7f3decfba72904a3179a9ba339d8db808"
+    },
+    "syncReceiptSha256": "713283d67d5bd23648b461a38d858a83f2f0a3c0ecaedc6de6ca5ca316db7967",
+    "taskReceiptSha256": "7737e34f087814337c5b23f83755b6ebccee9c9cb8656dd213981d260f88ed50"
+  },
+  "installed": {
+    "clients": {
+      "Bad.kt": "17f9df1b71a273b56654f66ba5b2c838d848744cf5a149286733122c93482a60",
+      "Example.java": "aceae31bd8dd6e2cc7fa6b1e28f670ec9664a7d2d426c61b74dc5182cc21ae81",
+      "Example.kt": "0d2371649ab58f30cdff81873c9c38a64cc9026dd46f16c98dd990f463f94846",
+      "ExitPending.java": "d03eae0aba83520eaff2a4d67c8437ad750dd2826e75464ea663f891896777b1",
+      "Installed.java": "bcf358010a64cf689856900484141beb66888ab4ce58b37e4660e5bec34ab9bc",
+      "Installed.kt": "4363b3be72f7e1ce203ff415d6a2b44bfeffa643dc701a3d8769ce98a9a16265",
+      "Observe.java": "8603e2919d447328ab1d34be33bc2b3e7a32f5ccf266f883ad474680fc4d9a75",
+      "settings.xml": "bc96ebbba3ebe910e99d8206eed774fd57931bda2450cd3344271d2325251439",
+      "verify.py": "93c1606cce726a12432263491830bba7f3decfba72904a3179a9ba339d8db808"
+    },
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51433216,
+            "path": "archives/timers-1.0.0.jar",
+            "sha256": "08ee23119a003bf8f263bc105aef0b420eef852c558696dbaa009ba86aab339d"
+          },
+          {
+            "bytes": 751,
+            "path": "archives/timers-1.0.0.pom",
+            "sha256": "de7bdd227369041a1bb06cfe026044dfce8365ffeae009cfc8bcf1bcac795b24"
+          }
+        ],
+        "detail": {
+          "bindingIrSha256": "8fbcfe35299d009be8a6803ca44ace746ca49574630759a551d1fe1e96974515",
+          "componentIdentity": "28083ef6d883b5a92e505a6e202247d3f385e6f15e69acde25b143b759eaf5da",
+          "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+          "java": "javac 22.0.2",
+          "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblbc_jvm_2889d6de58e0bb170efe193a50d55bb2f401e7c8cc37bb8e7a5b33d9e48b105d.so": "ff7db0133380b3b959c0831ac5e80cbd520888bf72e51b85b366fb32a52c472b",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "payloads": 69,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "name": "com.acme:timers",
+        "receiptSha256": "7737e34f087814337c5b23f83755b6ebccee9c9cb8656dd213981d260f88ed50",
+        "reviewedSourceSha256": null,
+        "route": "ordinary",
+        "sourceTreeSha256": "7f8437dab861c79b500fd9649d65c5136231c7b70d644ac638643d6bc1405768"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51387917,
+            "path": "archives/alarm-1.0.0.jar",
+            "sha256": "ed4d5fc4f14b0ddf888dfb324ca64008b8cd88841b0c61e717ef54d62dfaba5c"
+          },
+          {
+            "bytes": 750,
+            "path": "archives/alarm-1.0.0.pom",
+            "sha256": "6d8cb4ddf0d070d920ece0955c707a746dea8e8fe70c83b5c86f4a45728ad3dd"
+          }
+        ],
+        "detail": {
+          "bindingIrSha256": "4d4597cdfcdb98173c21abc88d47f01ace9ed56e73434ccebd7a413dce13d881",
+          "componentIdentity": "8e499fb779131fdc8bbac2dddc155de43fb67b671a57925381383e4572d3baa3",
+          "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+          "java": "javac 22.0.2",
+          "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblbc_jvm_46a2cf77191a9e1fb011db63db191da2b80399f9a328ae4cde502f30e16d2b3e.so": "dffddd22435310d52abd220412dd00094502d9623ec0227ef81c174c4c178f88",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "payloads": 53,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "name": "com.acme:alarm",
+        "receiptSha256": "1746969e68e1706b8b873e8a9c36895eabb8360c16d24fd997982096dbd57bf7",
+        "reviewedSourceSha256": null,
+        "route": "peer",
+        "sourceTreeSha256": "d51c475b688538ad2d7cea7ad48f569137f1d0c8216c9aca8d4fc8b0a0f77250"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51433253,
+            "path": "archives/timers-1.0.0.jar",
+            "sha256": "bfe875642d0d93cc6e5dfc1b6f4b3b9b42c34bd2a54dbe2c0b2ac3c75a071c2c"
+          },
+          {
+            "bytes": 751,
+            "path": "archives/timers-1.0.0.pom",
+            "sha256": "de7bdd227369041a1bb06cfe026044dfce8365ffeae009cfc8bcf1bcac795b24"
+          }
+        ],
+        "detail": {
+          "bindingIrSha256": "8fbcfe35299d009be8a6803ca44ace746ca49574630759a551d1fe1e96974515",
+          "componentIdentity": "58a4deaece6ba8591bde764c5f3bd19671bce3c175812c94df21ed78a56e6876",
+          "coroutinesSha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+          "java": "javac 22.0.2",
+          "kotlin": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "libraries": {
+            "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so": "27c2c194e9938cb235b5f9edd0b0c198acc404f6b505d1cca33e79ea2bc31dfa",
+            "liblbc_jvm_2889d6de58e0bb170efe193a50d55bb2f401e7c8cc37bb8e7a5b33d9e48b105d.so": "cec67a10d6f68ec2c2049616885002b496c7d90b90040d74d2a5bffdc7fa35ff",
+            "liblean_bridge_native.so": "5dfd270198da86180675f17a78ee0adb340a55bcd97b974b678a5c065dfa6e52",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "owner": {
+            "id": "e2257872380a0f1ff94f2ae80e3e196754ce37842f6350ac50202044971185cc",
+            "library": "liblb_jvm_owner_435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0.so"
+          },
+          "payloads": 69,
+          "runtimeIdentity": "435df3ba25c15f046436350294d649cec8014446ac00b9610150ec6b173b03d0"
+        },
+        "name": "com.acme:timers",
+        "receiptSha256": "31441c5c8fd487023aed218312fee451eba7fcca84727c9107e69dde20879a90",
+        "reviewedSourceSha256": "e8a2b4e543a7989700838157384be8b398aa5bd1fc7375b1d4f15f69c68e9bad",
+        "route": "reviewed",
+        "sourceTreeSha256": "ec90b4db506e2d79c7b9da8ac3a697f1966ef5b251333ef96bfd315eea9aa2cd"
+      }
+    ],
+    "rows": [
+      {
+        "classpath": [
+          "com/acme/timers/1.0.0/timers-1.0.0.jar",
+          "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar",
+          "org/jetbrains/annotations/13.0/annotations-13.0.jar",
+          "org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.jar",
+          "com/acme/alarm/1.0.0/alarm-1.0.0.jar"
+        ],
+        "observed": {
+          "Example": "42\n2",
+          "ExampleKt": "42\n2",
+          "Installed/peer-first": {
+            "line": "Java: futures, cancellation, cold Flow demand, typed failures, two packages, retirement, zero native identities and descriptors at baseline",
+            "stats": {
+              "attached": 2,
+              "componentInits": 2,
+              "concurrentTasks": 32,
+              "fdDelta": 0,
+              "live": 0,
+              "readinessThreads": 1,
+              "runtimeInits": 1
+            }
+          },
+          "Installed/timers-first": {
+            "line": "Java: futures, cancellation, cold Flow demand, typed failures, two packages, retirement, zero native identities and descriptors at baseline",
+            "stats": {
+              "attached": 2,
+              "componentInits": 2,
+              "concurrentTasks": 32,
+              "fdDelta": 0,
+              "live": 0,
+              "readinessThreads": 1,
+              "runtimeInits": 1
+            }
+          },
+          "InstalledKt/peer-first": {
+            "line": "Kotlin: cancellable suspend functions, cold Flow, backpressure, early collection exit, typed errors and zero native identities",
+            "stats": {
+              "attached": 2,
+              "componentInits": 2,
+              "live": 0,
+              "runtimeInits": 1
+            }
+          },
+          "InstalledKt/timers-first": {
+            "line": "Kotlin: cancellable suspend functions, cold Flow, backpressure, early collection exit, typed errors and zero native identities",
+            "stats": {
+              "attached": 2,
+              "componentInits": 2,
+              "live": 0,
+              "runtimeInits": 1
+            }
+          },
+          "exit": "normal JVM exit with a non-cooperative pending Lean task"
+        },
+        "route": "ordinary"
+      },
+      {
+        "classpath": [
+          "com/acme/timers/1.0.0/timers-1.0.0.jar",
+          "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar",
+          "org/jetbrains/annotations/13.0/annotations-13.0.jar",
+          "org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.jar",
+          "com/acme/alarm/1.0.0/alarm-1.0.0.jar"
+        ],
+        "observed": {
+          "Example": "42\n2",
+          "ExampleKt": "42\n2",
+          "Installed/peer-first": {
+            "line": "Java: futures, cancellation, cold Flow demand, typed failures, two packages, retirement, zero native identities and descriptors at baseline",
+            "stats": {
+              "attached": 2,
+              "componentInits": 2,
+              "concurrentTasks": 32,
+              "fdDelta": 0,
+              "live": 0,
+              "readinessThreads": 1,
+              "runtimeInits": 1
+            }
+          },
+          "Installed/timers-first": {
+            "line": "Java: futures, cancellation, cold Flow demand, typed failures, two packages, retirement, zero native identities and descriptors at baseline",
+            "stats": {
+              "attached": 2,
+              "componentInits": 2,
+              "concurrentTasks": 32,
+              "fdDelta": 0,
+              "live": 0,
+              "readinessThreads": 1,
+              "runtimeInits": 1
+            }
+          },
+          "InstalledKt/peer-first": {
+            "line": "Kotlin: cancellable suspend functions, cold Flow, backpressure, early collection exit, typed errors and zero native identities",
+            "stats": {
+              "attached": 2,
+              "componentInits": 2,
+              "live": 0,
+              "runtimeInits": 1
+            }
+          },
+          "InstalledKt/timers-first": {
+            "line": "Kotlin: cancellable suspend functions, cold Flow, backpressure, early collection exit, typed errors and zero native identities",
+            "stats": {
+              "attached": 2,
+              "componentInits": 2,
+              "live": 0,
+              "runtimeInits": 1
+            }
+          },
+          "exit": "normal JVM exit with a non-cooperative pending Lean task"
+        },
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  }
+}

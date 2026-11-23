@@ -67,6 +67,29 @@ Validation and native runtime loading are shared with the
 [Java API](java.md#call-synchronous-io). See the
 [installed Kotlin checks](../evidence/jvm-sync-io-20261123.json).
 
+### Await tasks and consume streams
+
+A selected Lean task is a `suspend fun`; a cursor is a cold `kotlinx.coroutines.flow.Flow<T>`. Use them in a coroutine as you would any other suspend function or flow. This example prints `42` and then `2`.
+
+```kotlin
+import java.math.BigInteger
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.runBlocking
+import org.leanbridge.timers.kotlin.Api
+
+fun main() = runBlocking {
+    println(Api.immediate(BigInteger.valueOf(41)))
+    println(Api.units(BigInteger.TWO).count())
+}
+```
+
+Cancelling the awaiting coroutine also cancels its underlying Lean task. A non-cooperative worker may finish later; its result is discarded. A collector requests one item at a time, after the previous emission returns. Operators such as `take(1)` close the cursor early. The generated POM supplies the coroutine library. Synchronous companions need no coroutine.
+
+Catch a declared exception around the suspend call or around collection.
+A returned `Result.Err` is data, not an exception.
+
+The suspend wrapper uses Kotlin’s [cancellable await](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.future/await.html). See the [Maven author configuration](../publish/maven.md#export-tasks-and-streams) and the [installed Java/Kotlin checks](../evidence/jvm-tasks-20261123.json).
+
 ### Arrays and records
 
 New ordinary Maven packages include a Kotlin API in a `.kotlin` subpackage.
@@ -328,7 +351,7 @@ Kotlin's companion classes remain distinct, so import values from the same API
 as the function you call. Both adapters share the native loader and closure
 leases. Use `use` to close returned functions and keep invocation on the
 creating platform thread. Recursive callable payloads, resources inside copied
-aggregates, suspend functions and retained host callbacks remain unsupported.
+aggregates, suspend functions and retained host callbacks are not part of this callable profile.
 
 ### Recursive callback values
 
@@ -377,7 +400,7 @@ remain distinct; import the API and values from the same package.
 The [Java recursive callback limits and failure rules](java.md#recursive-callback-values)
 apply to both languages. Host exceptions retain their identity after native
 cleanup. Resources and callable identities inside copied aggregates, retained
-host callbacks and asynchronous delivery remain unsupported.
+host callbacks and asynchronous delivery are not part of this callable profile.
 
 [Installed recursive callback checks](../evidence/jvm-recursive-callables-20260926.md)
 cover both authoring paths and compile this example against the original JAR.
@@ -911,7 +934,7 @@ Profiles: Kotlin. Installed checks apply only to the named positions and package
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
-The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. It does not use futures or iterators.
+The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. The separate [task profile](#await-tasks-and-consume-streams) uses Java futures and publishers or Kotlin suspend functions and flows.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Kotlin in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

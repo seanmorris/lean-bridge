@@ -178,6 +178,11 @@ Independently built Python IO and asyncio wheels can also
 as a direct input, output, typed error, or stream item. Use `hostImports`
 instead when Lean needs to call a Python-owned object's methods.
 
+The [Maven task profile](../publish/maven.md#export-tasks-and-streams) turns
+selected Lean tasks into Java `CompletableFuture` or Kotlin suspend functions.
+Select a cursor protocol for Java `Flow.Publisher` or Kotlin `Flow`.
+Consumption requires neither a Lean compiler nor a manual scheduler.
+
 The [NuGet task profile](../publish/nuget.md#export-tasks-and-pull-streams)
 turns actual Lean tasks into C# `Task` or `Task<T>` and pull protocols into
 `IAsyncEnumerable<T>`. Independent NuGet packages share the application's
