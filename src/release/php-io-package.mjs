@@ -12,6 +12,7 @@ import { generatePhpIOPort } from "../backends/php/io-port.mjs";
 import { generatePhpIOFiles } from "../backends/php/io-package.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
+import { taskResourceLedger } from "../build/task-resource-ledger.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { writePackageSetReceipt } from "./package-set-receipt.mjs";
 
@@ -27,15 +28,18 @@ export const writePhpIORelease=async o=>{
 	if(model.prefix!==o.prefix||canonicalJson(model.wire)!==canonicalJson(o.wire)||canonicalJson(port)!==canonicalJson(o.phpPort))
 		throw new TypeError("PHP IO packaging differs from compiled port");
 	const library="lib"+model.prefix+".so",libraries={};
-	for(const n of ["libleanshared.so","liblean_bridge_native.so",library])
+	const nativeLedger = model.leases.size ? await taskResourceLedger(runtimeIdentity) : null;
+	if((nativeLedger?.id ?? null) !== (o.ledgerId ?? null)) throw new TypeError("PHP IO uses an unexpected lease library");
+	for(const n of ["libleanshared.so","liblean_bridge_native.so",...nativeLedger ? [nativeLedger.name] : [],library])
 	{
 		const path="lib/"+n,b=files.get(path); if(!b) throw new Error("Missing compiled PHP dependency: "+n);
-		const h=sha256(b); if(n!==library&&manifest.files[path]?.sha256!==h) throw new Error("PHP native runtime changed: "+n);
+		const h=sha256(b); if(n!==library && n!==nativeLedger?.name && manifest.files[path]?.sha256!==h) throw new Error("PHP native runtime changed: "+n);
 		libraries[n]=h;
 	}
-	if(files.size!==3) throw new Error("Unexpected PHP synchronous IO library");
+	if(files.size!==Object.keys(libraries).length) throw new Error("Unexpected PHP synchronous IO library");
 	const profile="native-php-io-v1",root=join(workRoot,"packages/php-native/composer");
-	const asset={componentId: api.component.id,componentIdentity,runtimeIdentity,library,libraries};
+	const ledger = nativeLedger && { id: nativeLedger.id, library: nativeLedger.name, sha256: libraries[nativeLedger.name] };
+	const asset={componentId: api.component.id,componentIdentity,runtimeIdentity,library,libraries,...ledger ? { ledger } : {}};
 	const generated=await generatePhpIOFiles(model,asset),inventory={};
 	const save=async(path,bytes)=>{
 		await mkdir(dirname(join(root,path)),{recursive: true}); await writeFile(join(root,path),bytes,{flag: "wx"});
@@ -67,7 +71,9 @@ export const writePhpIORelease=async o=>{
 	const component = { schemaVersion: 1, kind: "lean-bridge-native-php-io"
 		, profile, component: api.component, name, version, namespace, bindingIrSha256
 		, componentIdentity, runtimeIdentity, sourceTreeSha256: source.treeSha256
-		, glibcMinimumVersion, libraries, files: inventory };
+		, glibcMinimumVersion
+		, libraries
+		, files: inventory, ...ledger ? { ledger } : {} };
 	await save("lean-bridge/package-receipt.json",canonicalJson(component));
 	const filename=name.replace("/","-")+"-"+version+"-linux-x86_64.zip";
 	const bytes=await createDeterministicZip({directory: root,sourceDateEpoch: 315532800});

@@ -99,10 +99,36 @@ Composer ZIP; the consumer needs neither Lean nor a C compiler.
 This profile copies the scalar arguments and results, including strings,
 byte arrays and arbitrary-precision integers. A returned `Except` and a
 thrown `EIO` payload may each contain nested `Except` values. An undeclared
-filesystem effect prevents packaging. Direct resources, callbacks, tasks
-and PHP-Wasm use other contracts; this build does not add them to an IO
-signature. See [the consumer example](../php.md#call-synchronous-io-and-handle-errors)
+filesystem effect prevents packaging. For direct nominal resources, name the
+declarations in `resources`, as below. Callbacks, tasks, and PHP-Wasm are
+separate from this synchronous profile. See [the consumer example](../php.md#call-synchronous-io-and-handle-errors)
 and the [independently reproduced archive](../evidence/php-sync-io-20261123.json).
+
+### Export a directly owned IO result
+
+If `Depot` imports `Shared` and returns `Shared.Ticket`, select both the
+public functions and the resource type in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Depot"],
+  "exports": ["Depot.make", "Depot.count"],
+  "resources": ["Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
+  "targets": { "php-native": { "name": "lean-bridge/depot", "version": "1.0.0" } }
+}
+```
+
+The ZIP includes a content-addressed lease library, loaded automatically.
+Two packages can exchange tickets when the Lean compiler, the declaring
+module and its application imports agree, and the packages use the same
+runtime and lease library. An unrelated application module does not change
+the ticket’s identity. See [share a resource between packages](../php.md#share-a-resource-between-native-php-packages).
+The [installation evidence](../evidence/php-heap-lease-20261123.json)
+identifies both the shared ledger and each package’s compiled resource types.
+The [offline CLI rebuild](../evidence/php-heap-lease-rebuild-20261123.json)
+reproduced the resource ZIP and the previous copied-only ZIP byte-for-byte.
 
 ### Export resource-containing values
 

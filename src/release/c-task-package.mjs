@@ -156,7 +156,7 @@ export const buildCTaskPackage = async options => {
 			if(gmp && path === "lib/libgmp.so.10" && (!bytes.equals(gmp.files.get(path)) || !/\(SONAME\)\s+Library soname: \[libgmp\.so\.10\]/u.test((await run("readelf", ["-d", file], app)).stdout))) throw new Error("C task GMP library identity differs");
 			files.set(path, bytes);
 		}
-		if(php) return await writePhpIORelease({ ...options, prefix: p, wire, phpPort, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
+		if(php) return await writePhpIORelease({ ...options, prefix: p, wire, phpPort, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(perl) return await writePerlIORelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(jvm) return await writeJvmIORelease({ ...options, prefix: p, wire, jvmEntry, owner, ledgerId, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(rust) return await writeRustTaskRelease({ ...options, prefix: p, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });

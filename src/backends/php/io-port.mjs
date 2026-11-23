@@ -1,6 +1,6 @@
 /**
  * Private byte-buffer ABI for native PHP FFI calls.
- * PHP never receives a Lean object, ledger key or ownership flag.
+ * Applications never receive a Lean pointer or a public numeric handle.
  *
  * @file
  */
@@ -11,8 +11,8 @@
  * @param t - Primitive wire type at the active result branch.
  */
 const shape=t=>t==="string"||t==="bytes"?1:t==="nat"?2:t==="int"?3:0;
-const output=(t,depth=0)=>Array.isArray(t)
-	? `(tags[${depth}] == 1 ? ${output(t[0],depth+1)} : tags[${depth}] == 0 ? ${output(t[1],depth+1)} : -1)` : String(shape(t));
+const output=(t,kinds,depth=0)=>Array.isArray(t)
+	? `(tags[${depth}] == 1 ? ${output(t[0],kinds,depth+1)} : tags[${depth}] == 0 ? ${output(t[1],kinds,depth+1)} : -1)` : String(kinds.get(t) ?? shape(t));
 const scalarChecks = { unit: "v == 0", bool: "v <= 1"
 	, char: "v <= 0x10ffff && !(v >= 0xd800 && v <= 0xdfff)"
 	, uint8: "v <= UINT8_MAX", uint16: "v <= UINT16_MAX"
@@ -37,7 +37,19 @@ export const generatePhpIOPort=({prefix,methods,wire})=>{
 	const stem="lbphp_"+prefix.slice(8), dispose=stem+"_dispose";
 	const symbols=[dispose], type="lbphp_buffer";
 	const signature=(symbol,types)=>`int ${symbol}(const ${type} *args, uint64_t argc, ${type} *out, uint8_t *tags, uint64_t tagcap)${types}`;
-	const declarations=[`typedef struct { uint8_t *data; uint64_t length; } ${type};`,`void ${dispose}(${type} *out);`];
+	const leases = wire.leases ?? [], has = leases.length > 0;
+	const kinds = new Map(leases.map((r,i) => {
+		if(r.type !== "lease:"+r.hash || !/^[a-f0-9]{64}$/u.test(r.hash) || r.tag !== i+3 || r.symbol !== wire.clear.slice(0,-6)+"_lease_"+i)
+			throw new TypeError("Invalid PHP resource wire");
+		return [r.type,16+r.tag];
+	}));
+	const fields = has ? " uint64_t lease[4];" : "";
+	const declarations=[`typedef struct { uint8_t *data; uint64_t length;${fields} } ${type};`,`void ${dispose}(${type} *out);`];
+	const move = has ? `
+    if (kind >= 16) {
+        if (!words[0] || !words[1] || words[2] || words[3]!=(uint64_t)(kind-16)) return ${prefix}_INVALID;
+        memcpy(out->lease,words,sizeof out->lease); memset(words,0,sizeof out->lease); return 0;
+    }` : "";
 	const source=[`#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,9 +58,9 @@ export const generatePhpIOPort=({prefix,methods,wire})=>{
 #define LIMIT ${max}u
 _Static_assert(sizeof(void*)==8 && sizeof(size_t)==8,"native PHP needs a 64-bit target");
 extern void ${wire.clear}(uint64_t *);
-void ${dispose}(${type} *out) { if (out) { free(out->data); out->data=NULL; out->length=0; } }
-static int lbphp_pack(int kind, const uint64_t *words, ${type} *out) {
-    uint64_t n=0; const void *p=NULL;
+void ${dispose}(${type} *out) { if (out) {${has ? " "+wire.clear+"(out->lease);" : ""} free(out->data); out->data=NULL; out->length=0; } }
+static int lbphp_pack(int kind, ${has ? "" : "const "}uint64_t *words, ${type} *out) {
+    uint64_t n=0; const void *p=NULL;${move}
     if (kind==0) {
         if (words[1]||words[2]||words[3]) return ${prefix}_INVALID;
         n=8; p=words;
@@ -73,12 +85,13 @@ static int lbphp_pack(int kind, const uint64_t *words, ${type} *out) {
 		const fn=stem+"_"+i, slots=Math.max(1,m.args.length);
 		symbols.push(fn); declarations.push(signature(fn,";"));
 		const inputs=m.args.map((t,j)=>{
-			const a=3*j, k=shape(t);
+			const a=3*j, k=kinds.get(t) ?? shape(t);
 			const base=`const uint8_t *p=args[${j}].data; uint64_t n=args[${j}].length;
         if (n>LIMIT-total) { status=${prefix}_LIMIT; goto finish; } total+=n;
         if (n&&!p) goto finish;`;
 			const step=k===0?`if (n!=8) goto finish;
         uint64_t v; memcpy(&v,p,8); ${scalarChecks[t]?"if (!("+scalarChecks[t]+")) goto finish; ":""}a[${a}]=v;`
+				:k>=16?`if (n!=16) goto finish; memcpy(a+${a},p,16); if (!a[${a}] || !a[${a+1}]) goto finish;`
 				:k===1?`a[${a}]=(uintptr_t)p; a[${a+1}]=n;`
 				:`if (n<8 || n%8) goto finish;
         uint64_t sign; memcpy(&sign,p,8); if (sign>${k===3?1:0}u || (n==8&&sign)) goto finish;
@@ -91,21 +104,27 @@ static int lbphp_pack(int kind, const uint64_t *words, ${type} *out) {
         a[${a}]=(uintptr_t)owned[${j}]; a[${a+1}]=n/8-1; a[${a+2}]=sign;`;
 			return "    { "+base+"\n        "+step+" }";
 		});
-		const error=m.error===null?"":`else if (status==${prefix}_${m.effect==="IO"?"IO_ERROR":"TYPED_ERROR"}) kind=${output(m.error)};`;
+		const error=m.error===null?"":`else if (status==${prefix}_${m.effect==="IO"?"IO_ERROR":"TYPED_ERROR"}) kind=${output(m.error,kinds)};`;
 		source.push(`extern int ${m.symbol}(const uint64_t *,uint64_t *,uint8_t *);
 ${signature(fn,"")} {
-    if (!out || out->data || out->length || !tags || tagcap!=${m.tagBytes} || argc!=${m.args.length} || (argc&&!args)) return ${prefix}_INVALID;
+    if (!out || out->data || out->length${has ? " || out->lease[0] || out->lease[1] || out->lease[2] || out->lease[3]" : ""} || !tags || tagcap!=${m.tagBytes} || argc!=${m.args.length} || (argc&&!args)) return ${prefix}_INVALID;
     memset(tags,0,(size_t)tagcap);
     uint64_t a[${3*slots}]={0}, w[4]={0}, total=0; void *owned[${slots}]={0};
     int status=${prefix}_INVALID, kind=-1; (void)total;
 ${inputs.join("\n")}
     status=${m.symbol}(a,w,tags);
-    if (status==${prefix}_OK) kind=${output(m.result)}; ${error}
+    if (status==${prefix}_OK) kind=${output(m.result,kinds)}; ${error}
     else goto finish;
     { int packed=lbphp_pack(kind,w,out); if (packed) status=packed; }
 finish:
     ${wire.clear}(w); for (unsigned int j=0;j<${slots};j++) free(owned[j]); return status;
 }`);
+	}
+	for(const {symbol} of leases)
+	{
+		symbols.push(symbol+"_same",symbol+"_retain");
+		declarations.push(`int ${symbol}_same(const uint64_t *a,const uint64_t *b,uint8_t *out);`);
+		declarations.push(`int ${symbol}_retain(const uint64_t *h,uint64_t *out);`);
 	}
 	const definitions=declarations.join("\n")+"\n";
 	return {stem,dispose,symbols,definitions,header: "#pragma once\n#include <stdint.h>\n"+definitions,source: source.join("\n")+"\n"};

@@ -102,6 +102,43 @@ performs the effect. This profile targets native PHP CLI, not PHP-Wasm.
 See [export synchronous IO](publish/php.md#export-synchronous-io) and the
 [installed PHP 8.2 and 8.5 results](evidence/php-sync-io-20261123.json).
 
+### Share a resource between native PHP packages
+
+An exported Lean heap resource is an object, not an integer handle. When a
+call returns a ticket, you own one lease. Passing the ticket to a synchronous
+call borrows it for that call. A returned alias, a `retain()` result, or a
+resource carried by a declared error owns a separate lease. Closing one does
+not close the others. Use `sameResource()` to compare the underlying Lean
+objects; PHP’s `===` compares the wrapper objects.
+
+The Depot and Counter examples import the same Lean definition. After
+installing both Composer packages, save this as `example.php`:
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__.'/vendor/autoload.php';
+
+$original = LeanDepot\make(10, 'order');
+$alias = LeanCounter\bump($original);
+try {
+    if (!$original->sameResource($alias)) throw new LogicException('Expected the same ticket');
+    $original->close();
+    if (LeanDepot\count($alias) !== 11) throw new LogicException('Expected the updated counter');
+} finally {
+    $original->close();
+    $alias->close();
+}
+```
+
+Close a lease in `finally` when release timing matters. Otherwise the wrapper
+releases it on destruction. Do not clone or serialize a ticket, or use an
+inherited ticket after `fork()`. A resource with the same Lean name but
+a different compiled definition does not match. These direct resources
+are distinct from the [session-owned aggregate API](#resource-containing-values).
+The [installed resource checks](evidence/php-heap-lease-20261123.json)
+record the packages, runtime versions, and broker counts after shutdown.
+
 ### Arrays and records
 
 Native Composer packages expose nested `Array` values as consecutive-key PHP

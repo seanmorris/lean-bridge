@@ -1,0 +1,266 @@
+{
+  "compilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+  "configurationSha256": "358a21a2b45f60267ae124372fdc98f793bb4a4143dfed6aaa2d9b3b8912d74a",
+  "extractorSha256": "6133517e1a822b9610264acf12a676a2b42279d7fa36660e046a4323826db60b",
+  "hostImportsSourceSha256": null,
+  "interfaces": [
+    {
+      "cSha256": "48160ab36c4cc75ce33258f5c0ac64ed77535b4c9bcd815c39e892d102af38d1",
+      "interfaceSha256": "a92a21ba567368d8953ad7432fcc6d837b002afe33cd9456c32b724e014f9aaf",
+      "module": "Shared",
+      "oleanSha256": "68d9de4537fd9239c7b04e24188a7beaa729f2efd961d236641c7cde0bc97fd6",
+      "sourceSha256": "94946b12080174617ce30604f781dcb29ff751bd37cb563bf1acfe40f286d20b"
+    },
+    {
+      "cSha256": "482bc0706cec1b994841b5634e7a22637fbf3be48bfb853f8c2428fa94428bfd",
+      "interfaceSha256": "d1768f57b6802127b62a40ec2bf536d6b0fed91e9edd18b2738151367991ec27",
+      "module": "Counter",
+      "oleanSha256": "4008789ec2b1c4a24667b9fe76fe50bb8824851e2ec59e92582cb7b8d9ce81bd",
+      "sourceSha256": "44ba8f7d00603ac49c826decf08e46682b78b4094c2c303b007ddf79a805bf75"
+    }
+  ],
+  "lake": {
+    "resolution": {
+      "externalImports": [
+        "Init",
+        "Std.Sync.Mutex"
+      ],
+      "lakeLibrarySha256": "e29bbb0c9e1b46fcff3a507bed00e44dec287dd510ee6586c4b61e3e40547579",
+      "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+      "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "leanVersion": "4.32.2",
+      "modules": [
+        {
+          "imports": [
+            "Init",
+            "Init",
+            "Std.Sync.Mutex"
+          ],
+          "module": "Shared",
+          "package": "counter",
+          "path": "root/Shared.lean",
+          "source": {
+            "bytes": 219,
+            "mode": 420,
+            "path": "Shared.lean",
+            "sha256": "94946b12080174617ce30604f781dcb29ff751bd37cb563bf1acfe40f286d20b"
+          }
+        },
+        {
+          "imports": [
+            "Init",
+            "Init",
+            "Shared"
+          ],
+          "module": "Counter",
+          "package": "counter",
+          "path": "root/Counter.lean",
+          "source": {
+            "bytes": 339,
+            "mode": 420,
+            "path": "Counter.lean",
+            "sha256": "44ba8f7d00603ac49c826decf08e46682b78b4094c2c303b007ddf79a805bf75"
+          }
+        }
+      ],
+      "packages": [
+        {
+          "configFile": "root/lakefile.toml",
+          "dependencies": [],
+          "name": "counter"
+        }
+      ],
+      "resolver": "lean-lake-locked",
+      "resolverSha256": "1bf57c395eb9b212b553b2b9ec71d17747f9e23cd53126c232b052e618406854",
+      "schemaVersion": 1,
+      "snapshotSha256": "7529b62351df6daaa3b0f7a2bc72d9a61c4255f87e1dc6b0736bd4b8501de360"
+    },
+    "resolutionSha256": "4fd4eac34a9db2fe90e1e6a03ba7b9c0742b9043f29e3df6292140ad0f7e8e64",
+    "snapshotSha256": "7529b62351df6daaa3b0f7a2bc72d9a61c4255f87e1dc6b0736bd4b8501de360"
+  },
+  "metadata": {
+    "entries": [
+      {
+        "declaration": "Counter.bump",
+        "effect": "IO",
+        "hostMembers": [],
+        "module": "Counter",
+        "parameters": [
+          {
+            "name": "t",
+            "type": {
+              "id": "lean:Shared.Ticket",
+              "kind": "named"
+            }
+          }
+        ],
+        "result": {
+          "id": "lean:Shared.Ticket",
+          "kind": "named"
+        }
+      },
+      {
+        "declaration": "Counter.issue",
+        "effect": "IO",
+        "hostMembers": [],
+        "module": "Counter",
+        "parameters": [
+          {
+            "name": "n",
+            "type": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          }
+        ],
+        "result": {
+          "id": "lean:Shared.Ticket",
+          "kind": "named"
+        }
+      },
+      {
+        "declaration": "Counter.readBadge",
+        "effect": "IO",
+        "hostMembers": [],
+        "module": "Counter",
+        "parameters": [
+          {
+            "name": "b",
+            "type": {
+              "id": "lean:Shared.Badge",
+              "kind": "named"
+            }
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "uint32"
+        }
+      }
+    ],
+    "kind": "lean-bridge-host-export-metadata",
+    "leanResources": [
+      {
+        "declaration": "Shared.Badge",
+        "module": "Shared"
+      },
+      {
+        "declaration": "Shared.Ticket",
+        "module": "Shared"
+      }
+    ],
+    "leanVersion": "4.32.2",
+    "nativeEffectAudit": {
+      "initializers": [],
+      "policy": "native-host-io-v1",
+      "roots": [
+        {
+          "declaration": "Counter.issue",
+          "leaves": [
+            {
+              "module": "Init.System.ST",
+              "name": "ST.Prim.mkRef",
+              "symbol": "lean_st_mk_ref"
+            },
+            {
+              "module": "Std.Sync.Mutex",
+              "name": "Std.BaseMutex.new",
+              "symbol": "lean_io_basemutex_new"
+            },
+            {
+              "module": "Init.System.IO",
+              "name": "IO.FS.Handle.mk",
+              "symbol": "lean_io_prim_handle_mk"
+            }
+          ]
+        },
+        {
+          "declaration": "Counter.bump",
+          "leaves": [
+            {
+              "module": "Init.System.ST",
+              "name": "ST.Prim.Ref.take",
+              "symbol": "lean_st_ref_take"
+            },
+            {
+              "module": "Init.Data.UInt.BasicAux",
+              "name": "UInt32.add",
+              "symbol": "lean_uint32_add"
+            },
+            {
+              "module": "Init.System.ST",
+              "name": "ST.Prim.Ref.set",
+              "symbol": "lean_st_ref_set"
+            },
+            {
+              "module": "Std.Sync.Mutex",
+              "name": "Std.BaseMutex.lock",
+              "symbol": "lean_io_basemutex_lock"
+            },
+            {
+              "module": "Std.Sync.Mutex",
+              "name": "Std.BaseMutex.unlock",
+              "symbol": "lean_io_basemutex_unlock"
+            }
+          ]
+        },
+        {
+          "declaration": "Counter.readBadge",
+          "leaves": [
+            {
+              "module": "Init.System.ST",
+              "name": "ST.Prim.Ref.get",
+              "symbol": "lean_st_ref_get"
+            },
+            {
+              "module": "Std.Sync.Mutex",
+              "name": "Std.BaseMutex.lock",
+              "symbol": "lean_io_basemutex_lock"
+            },
+            {
+              "module": "Std.Sync.Mutex",
+              "name": "Std.BaseMutex.unlock",
+              "symbol": "lean_io_basemutex_unlock"
+            }
+          ]
+        }
+      ]
+    },
+    "schemaVersion": 1
+  },
+  "resourceImports": {
+    "Counter": [
+      "Shared"
+    ],
+    "Shared": []
+  },
+  "reviewedSourceSha256": null,
+  "selection": {
+    "asyncIterators": [],
+    "exportModules": [
+      "Counter"
+    ],
+    "exports": [
+      "Counter.bump",
+      "Counter.issue",
+      "Counter.readBadge"
+    ],
+    "leanResources": [
+      "Shared.Badge",
+      "Shared.Ticket"
+    ],
+    "members": [],
+    "modules": [
+      "Shared",
+      "Counter"
+    ],
+    "nativeEffectPolicy": "native-host-io-v1",
+    "nativeEffects": [
+      "filesystem"
+    ],
+    "resources": [],
+    "synchronousIO": true,
+    "taskExports": []
+  },
+  "sourceTreeSha256": "d5f0fa175c2de4af928f39a57f8099f5215dfcff24e660591f61016a1d12b400"
+}
