@@ -29,3 +29,19 @@ test("a detached or failed subscriber cannot consume the next notification", () 
 	assert.equal(owner.pending(), 0); assert.deepEqual(visits, ["ready"]);
 	assert.equal(owner.notify(next.token), false);
 });
+
+test("idle waits for reentrant subscriptions even when the last handler throws", async () => {
+	const owner = createWasmTaskNotifications(1);
+	let next, within, settled = false;
+	const first = owner.subscribe(() => {
+		within = owner.whenIdle();
+		next = owner.subscribe(() => { throw new Error("failed during drain"); });
+	});
+	const idle = owner.whenIdle(); idle.then(() => { settled = true; });
+	owner.notify(first.token); assert.equal(within,idle);
+	await Promise.resolve(); assert.equal(settled,false);
+	assert.throws(() => owner.notify(next.token),/failed during drain/u);
+	await idle; assert.equal(settled,true);
+	const final = owner.subscribe(() => assert.fail("detached")); const drained = owner.whenIdle();
+	final.detach(); await drained; assert.equal(owner.pending(),0);
+});

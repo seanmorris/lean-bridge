@@ -28,7 +28,11 @@ export const generateCTaskExports = options => {
 	const values = cTaskValues(p, gmp, resources);
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
-	if((retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].filter(Boolean).length !== 1 || publicC !== gmp))
+	const wasm = options.wasmTasks === true;
+	if(wasm && (synchronous || gmp || retained || resources.length
+		|| [options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].some(Boolean)))
+		throw new TypeError("Threaded Wasm tasks require word carriers and a dedicated delivery profile; retained callbacks and resource captures need an ownership adapter");
+	if(!wasm && (retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].filter(Boolean).length !== 1 || publicC !== gmp))
 		throw new TypeError(options.phpDelivery ? "The PHP task ABI requires word carriers; select exactly one host"
 			: options.perlDelivery ? "The Perl task ABI requires word carriers; select exactly one host"
 				: options.jvmDelivery ? "The JVM task ABI requires word carriers; select exactly one host"
@@ -37,15 +41,19 @@ export const generateCTaskExports = options => {
 	const statuses = [...baseStatuses, ...publicC && (retained || terminal) ? ["TASK_IO_ERROR"] : [], ...publicC && retained ? ["CALLBACK_ERROR", "CALLBACK_CLOSED", "CALLBACK_TRAP"] : []];
 	if(options.integerMode && !["gmp", "words"].includes(options.integerMode)) throw new TypeError("Unknown task integer ABI");
 	const types = [], prototypes = [], functions = [], symbols = [`${p}_buffer_dispose`];
+	const module = wasm ? "BridgeTask" + componentIdentity : "BridgeCAsync";
+	const namespace = wasm ? module : "LeanBridgeCAsync";
+	const entryPrefix = wasm ? "lb_wtask_" + componentIdentity : "lb_c";
 	const names = new Set(), declarations = [
-		"extern lean_object *initialize_BridgeCAsync(uint8_t);"
-		, "extern lean_object *lb_c_error_text(lean_object *);"
+		`extern lean_object *initialize_${module}(uint8_t);`
+		, `extern lean_object *${entryPrefix}_error_text(lean_object *);`
 		, ...retained ? retainedPrototypes : []];
-	const lean = [...modules.map(m => `import ${m}`)
+	const lean = [...wasm ? ["prelude", "import Init.System.Promise"] : []
+		, ...modules.map(m => `import ${m}`)
 		, ...retained ? ["import Init.System.Promise"] : []
 		, "set_option autoImplicit false"
-		, "namespace LeanBridgeCAsync"
-		, "@[export lb_c_error_text] def errorText (e : IO.Error) : String := toString e"
+		, "namespace " + namespace
+		, `@[export ${entryPrefix}_error_text] def errorText (e : IO.Error) : String := toString e`
 		, ...synchronous ? [] : [streamEntryLean], ...retained ? [retainedLean] : []];
 	const fn = (name, args, body) => {
 		const signature = `${p}_status ${name}(${args.join(", ") || "void"})`;
@@ -73,12 +81,12 @@ export const generateCTaskExports = options => {
 		const item = values.codec(e.result), error = e.effect === "EIO" ? values.codec(e.error) : null;
 		const step = e.stepError ? values.codec(e.stepError) : null;
 		if(stream && (e.protocol?.open !== e.declaration || !qualified.test(e.protocol.next) || !qualified.test(e.protocol.close))) throw new TypeError("Invalid C pull protocol");
-		const pull = stream ? nativePullEntry(i, "lb_c", e, item.lean, error?.lean, step?.lean) : null;
+		const pull = stream ? nativePullEntry(i, entryPrefix, e, item.lean, error?.lean, step?.lean) : null;
 		if(pull)
 		{
 			lean.push(pull.helpers); declarations.push(pull.declarations);
 		}
-		const entry = `lb_c_invoke_${i}`, payload = e.taskIO ? `(_root_.Except _root_.IO.Error ${item.lean})` : item.lean;
+		const entry = `${entryPrefix}_invoke_${i}`, payload = e.taskIO ? `(_root_.Except _root_.IO.Error ${item.lean})` : item.lean;
 		const rawOut = async ? `(_root_.Task ${payload})` : item.lean;
 		const result = pull?.lean ?? (error ? `(_root_.Except ${error.lean} ${rawOut})` : rawOut);
 		const call = `(_root_.${e.declaration} ${args.map((_, k) => `v${k}`).join(" ")})`;
@@ -119,7 +127,17 @@ export const generateCTaskExports = options => {
     lean_dec(io); ${async ? "if (s == LB(OK)) { out->id = owner->id; out->domain = lb_domain; } else lb_drop(owner);" : ""} return s;`);
 		if(!async) continue;
 		if(stream) fn(`${n}_pull`, [`${h} h`], `return lb_request(h.id, h.domain, ${i});`);
-		fn(`${n}_poll`, [`${h} h`, "int *fd"], `return lb_poll(h.id, h.domain, ${i}, fd);`);
+		if(wasm)
+		{
+			const lookup = `lb_entry *e; LB(status) s = lb_lookup(h.id, h.domain, ${i}, &e, 0);
+    if (s != LB(OK)) return s; if (!e->watch.source) return LB(IDLE);`;
+			fn(`${n}_listen`, [`${h} h`, "uint32_t token"], lookup + `
+    if (!token) return LB(INVALID); if (e->watch.listening) return LB(BUSY);
+    e->watch.listening = 1; lean_bridge_wasm_task_subscribe_v1(e->watch.source, token); return LB(OK);`);
+			fn(`${n}_cancel`, [`${h} h`], lookup + `
+    lean_io_cancel_core(e->watch.source); return LB(OK);`);
+		}
+		else fn(`${n}_poll`, [`${h} h`, "int *fd"], `return lb_poll(h.id, h.domain, ${i}, fd);`);
 		fn(`${n}_take`, [`${h} *h`, values.out(item, "out"), ...step ? [values.out(step, "error")] : [], ...e.taskIO ? [`${p}_buffer *message`] : []],
 			`if (!h || !out${occupied(item, "out")}${step ? " || !error" + occupied(step, "error") : ""}${e.taskIO ? " || !message" : ""}) return LB(INVALID);
     lb_entry *e; LB(status) s = lb_lookup(h->id, h->domain, ${i}, &e, 0);
@@ -167,7 +185,7 @@ ${[...resourceHeader ? [resourceHeader] : [], ...values.types, ...host ? host.he
 #endif
 `;
 	const source = `#include "${p}.h"
-#include <lean/lean.h>
+#include <lean/lean.h>${wasm ? `\n#define initialize_BridgeCAsync initialize_${module}\n#define lb_c_error_text ${entryPrefix}_error_text` : ""}
 ${declarations.join("\n")}
 #define LB(x) ${p}_##x
 #define LB_SYNC_ONLY ${Number(synchronous)}
@@ -179,7 +197,8 @@ ${host ? '#include "task-host-callback.h"\n' + host.helpers.join("\n") : ""}
 ${functions.join("\n")}
 `;
 	return { prefix: p, header, source
-		, entryLean: [...lean, "end LeanBridgeCAsync", ""].join("\n")
+		, entryLean: [...lean, "end " + namespace, ""].join("\n")
+		, ...wasm ? {entryModule: module} : {}
 		, declarations: declarations.join("\n"), symbols
 		, ...exact ? { integerMode: gmp ? "gmp" : "words" } : {} };
 };

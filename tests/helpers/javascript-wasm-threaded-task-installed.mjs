@@ -85,7 +85,7 @@ test("offline npm consumer settles and cancels genuine pthread Lean tasks", {
 		await command(process.execPath, ["wrong-components.mjs"], consumer);
 	}
 	await writeFile(join(consumer, "node.mjs"), imports + 'import * as api from "' + name + '";import {exercise} from "./calls.mjs";console.log(JSON.stringify(await exercise(api' + (shared ? ",{producer,peer}" : "") + ')));\n');
-	const result = {checks: 22, resolved: 1, cancelled: 3, live: 0};
+	const result = {checks: 23, resolved: 1, cancelled: 3, live: 0};
 	// Each fresh process has no server or test runner to keep a pending await
 	// alive. It must stay alive through native drain, then exit by itself.
 	const nodeProcesses = 4;

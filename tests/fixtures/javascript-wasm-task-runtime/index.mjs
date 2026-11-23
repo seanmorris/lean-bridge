@@ -79,7 +79,7 @@ export const openProbe = async plugins => {
 		if(closing) return closing;
 		closed = true; const row = job; domain.shutdown();
 		if(row) module._probe_release(row.key, 0);
-		closing = Promise.resolve(row?.drained).then(() => { module.PThread.terminateAllThreads(); });
+		closing = Promise.all([row?.drained, notifications.whenIdle()]).then(() => { module.PThread.terminateAllThreads(); });
 		return closing;
 	};
 	const alreadyReady = () => {

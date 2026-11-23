@@ -16,7 +16,7 @@ export const taskWireEntry = a => {
 	const error = start ? shape(e.error) : io ? "string" : null;
 	const step = e.stepError ? values.codec(e.stepError) : null;
 	const terminal = step ? shape(e.stepError) : e.taskIO ? "string" : null;
-	const names = Object.fromEntries(["start", "take", "poll", "close", ...stream ? ["pull"] : []].map(k => [k, symbol + "_" + k]));
+	const names = Object.fromEntries(["start", "take", ...a.wasmTasks ? ["listen", "cancel"] : ["poll"], "close", ...stream ? ["pull"] : []].map(k => [k, symbol + "_" + k]));
 	const pass = (declared, text) => declared || text ? ["&error"] : [];
 	const slot = (c, t, alias) => c ? n + "_" + alias + " error = {0};" : t ? p + "_buffer error = {0};" : "";
 	const clear = (c, t, alias) => c?.dispose ? n + "_" + alias + "_dispose(&error);" : !c && t ? p + "_buffer_dispose(&error);" : "";
@@ -41,7 +41,8 @@ int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
     ${failure(step, e.taskIO, terminal)}
     ${item.dispose ? n + "_value_dispose(&value);" : ""} ${clear(step, e.taskIO, "step_error")} return (int)s;
 }
-int ${names.poll}(uint64_t *h, int *fd) { if (!h) return ${p}_INVALID; ${owner} return ${n}_poll(owner, fd); }
+${a.wasmTasks ? `int ${names.listen}(uint64_t *h, uint32_t token) { if (!h) return ${p}_INVALID; ${owner} return ${n}_listen(owner, token); }
+int ${names.cancel}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owner} return ${n}_cancel(owner); }` : `int ${names.poll}(uint64_t *h, int *fd) { if (!h) return ${p}_INVALID; ${owner} return ${n}_poll(owner, fd); }`}
 int ${names.close}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owner} int s = ${n}_close(&owner); ${save} return s; }
 ${stream ? `int ${names.pull}(uint64_t *h) { if (!h) return ${p}_INVALID; ${owner} return ${n}_pull(owner); }` : ""}`;
 	const method = { name: e.name, declaration: e.declaration

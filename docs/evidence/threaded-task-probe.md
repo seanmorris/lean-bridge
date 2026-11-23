@@ -12,11 +12,30 @@ An earlier replay intermittently exited Node with code 13 and an unsettled top-l
 
 The [runtime-owned observer](../../src/backends/javascript/task-notification.c) takes a borrowed Lean task and an opaque token, not a host function or a result codec. The [JavaScript dispatcher](../../src/runtime/wasm-task-notifications.mjs) belongs to one Wasm instance. It never reuses a token or runs a subscriber twice. The consumer replay also attached two subscriptions to one already-finished Lean task; neither reentered the subscribing call. This brought each of the four Node runs and the Chromium run to 22 checks.
 
+A further shutdown check opens an instance with **only** those two subscriptions, then immediately closes it. There is no ordinary pending job to keep the workers alive. Closing waits until both notifications run before terminating the pool. The dispatcher's idle promise includes a handler already on the stack and any new subscriptions it registers.
+
 ## Two packages, one task manager
 
 The shared variant installs three different npm archives: the threaded runtime, a producer containing `ThreadProbe`, and a [peer component](../../tests/fixtures/javascript-wasm-task-components/TaskPeer.lean). Only the first archive contains the runtime and task manager. The [component builder](../../tests/helpers/javascript-wasm-task-plugins.mjs) compiles the other two as separate position-independent Wasm modules. The consumer loads them from their own installed locations. The driver resolves the module initializers and typed exports through separate `dlopen` handles; swapping the two packages must fail. The runtime binary must not export either implementation.
 
 The producer starts a gated Lean task. The peer accepts that same `Task UInt32` and schedules a `BaseIO.mapTask` continuation on its result. The continuation adds seven on a worker and returns a distinct sentinel on the main runtime thread. Nothing in JavaScript adds seven or passes a Lean pointer between packages. On 2026-11-23, four fresh Node processes and one isolated Chromium page each passed 22 checks on this path, including normal result **20**, cooperative cancellation with late native result **1008**, noncooperative cancellation with late native result **20**, and shutdown with late native result **10**. In every case cancellation targeted the original worker, not merely its derived task.
+
+## From Lean declarations to a Wasm interface
+
+The [Jobs fixture](../../tests/fixtures/javascript-wasm-generated-tasks/Jobs.lean) supplies seven ordinary Lean declarations selected in `lean-bridge.exports.json`. None has a handwritten `@[export]` adapter. The [compiler](../../src/build/javascript-wasm-task-component.mjs) elaborates the captured Lake project, checks C prototypes against Lean's generated C, and links a pthread Wasm side module. [Binding IR](../../src/abi/javascript-wasm-tasks.mjs) and the C generator independently determine each method's argument types, result tags, factory and terminal errors. Packaging stops if they disagree. The ordinary synchronous and native file-descriptor profiles do not use this wire.
+
+The [installed wire test](../../tests/helpers/javascript-wasm-generated-tasks.mjs) packs a runtime and a separate component, installs both offline, and calls the component through its own dynamic-library handle. Two fresh Node processes and an isolated Chromium page each passed 79 checks on November 23, 2026. In particular:
+
+| Call | Observed behavior |
+|---|---|
+| `checked` | A rejected EIO factory returns its typed payload with no task handle. A successful factory can deliver either branch of `Except` as an ordinary value. |
+| `ioStart` and `terminal` | A factory IO error is available immediately. A worker IO error arrives through a completion notification. Both retain their text; a subsequent task succeeds. |
+| `hold` and `release` | Trying to take the pending task returns immediately. Cancellation retains its native owner until the genuine Lean completion is consumed. A foreign domain or another declaration cannot close or cancel it. |
+| `series` and `closes` | A cursor never prefetches. A second outstanding pull is rejected. Exhaustion, an early close and a typed pull failure each run Lean cleanup exactly once. |
+
+Every run ended with zero live broker identities and zero pending notifications. The test intentionally calls the private interface: this is evidence about the generated Wasm component, **not** a released, user-facing npm Promise or async-iterator API. It does not yet test reviewed npm builds, retained callback/resource captures or a production package receipt.
+
+The gate in `hold` is allocated on demand. Do not put an unresolved `IO.Promise` directly in a Lean `initialize` declaration: making an imported global persistent can traverse its unresolved task and block the author compiler before any application call.
 
 ## Reproduce
 
@@ -43,6 +62,7 @@ export LEAN_BRIDGE_JS_THREAD_INIT="$scratch/init/libProbeInit.a"
 export LEAN_BRIDGE_JS_EMSDK="$LEAN_WASM_EMSDK" LEAN_BRIDGE_LEAN_PREFIX="$LEAN_WASM_HOST_LEAN_PREFIX"
 npm run test:javascript-threaded-task-probe
 npm run test:javascript-shared-task-probe
+npm run test:javascript-generated-tasks
 ```
 
 ## Why a separate runtime profile?
@@ -55,6 +75,6 @@ Pinned Lean `f3b06c705e6c85f5314019d5d3baab0fec5b580c` executes spawned work inl
 
 ## What this does not ship
 
-The experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. It demonstrates a cross-component task on one scheduler, but the test driver still knows both component signatures. On close it drains the known task before retiring that instance's pthread pool. Emscripten 6.0.6 marks dynamic linking with pthreads experimental. This does not change the existing browser or npm release profile. A production generator must provision the application's shared runtime, lift declared result and error types, retain captured resources, and support concurrent operations and orderly shutdown. The test does not admit arbitrary `taskExports`, retained callbacks or iterators.
+The three-package experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. It demonstrates a cross-component task on one scheduler; its driver knows both signatures. The generated-wire test separately executes compiler-selected tasks, synchronous companions and cursors on a shared heap. Neither changes the existing browser or npm release profile. Emscripten 6.0.6 marks dynamic linking with pthreads experimental. The public npm build still needs to provision that shared runtime, lift results and errors into idiomatic host calls, retain captured resources, and verify concurrent work and shutdown through the installed public API.
 
 The existing shared runtime and composition graph are unchanged. No native binding, registry identity, consumer prerequisite or language-neutral IR changes. For assurance and reproducibility this experiment records its own profile and strict-link inputs; it is not a signed or Nix-built release. Publishing would first require the same manifest and graph checks as every other target. No special API is exposed to other languages or to tools that consume the existing metadata.

@@ -43,6 +43,11 @@ export const exercise = async (api, plugins) => {
 		await closing;
 		const {live, resolved, cancelled, state} = engine.counts();
 		check(live === 0 && resolved === 1 && cancelled === 3 && state === "closed", "outstanding operations at shutdown");
+		// No ordinary job exists to keep the runtime alive here. The queued
+		// completion of an already-ready Task still owns two notifications.
+		const onlyObservers = await api.openProbe(plugins);
+		const outstanding = onlyObservers.alreadyReady(), shutdown = onlyObservers.close();
+		check(await outstanding === 2, "shutdown dropped standalone subscriptions"); await shutdown;
 		return {checks, resolved, cancelled, live};
 	} finally
 	{ await engine.close(); }

@@ -1,0 +1,51 @@
+/** @file Keep threaded notification and native readiness profiles distinct at generation time. */
+import assert from "node:assert/strict";
+import test from "node:test";
+import {generateCTaskExports} from "../src/backends/c/task-exports.mjs";
+import {generateSyncWire} from "../src/backends/c/sync-wire.mjs";
+import {generateTaskControl} from "../src/backends/javascript/task-control.mjs";
+import {javaScriptTaskAbi} from "../src/abi/javascript-wasm-tasks.mjs";
+import {reconcileHostExports} from "../src/analyze/host-export-model.mjs";
+
+const t = {kind: "primitive",name: "uint32"};
+const entries = [{name: "work",declaration: "Job.work",parameters: [{name: "n",type: t}],effect: "pure",result: t,delivery: "task"}];
+const config = {name: "job",modules: ["Job"],componentIdentity: "a".repeat(64),entries,integerMode: "words"};
+
+test("native fd readiness and Wasm owner tokens are distinct generated ABIs", () => {
+	const native = generateCTaskExports(config), wasm = generateCTaskExports({...config,wasmTasks: true});
+	const fd = generateSyncWire(native.prefix,entries,{tasks: true}), notify = generateSyncWire(wasm.prefix,entries,{tasks: true,wasmTasks: true});
+	assert.ok(fd.wait && fd.methods[0].names.poll); assert.match(fd.source, /epoll_create1/u);
+	assert.equal(notify.wait,undefined);
+	assert.deepEqual(Object.keys(notify.methods[0].names).sort(),["cancel","close","listen","start","take"]);
+	assert.doesNotMatch(notify.source, /eventfd|epoll|_poll\(/u); assert.match(notify.source,/args\[0\] > UINT32_MAX/u);
+	assert.match(wasm.source,/lean_io_cancel_core\(e->watch.source\)/u);
+	assert.notEqual(wasm.entryModule,generateCTaskExports({...config,wasmTasks: true,componentIdentity: "b".repeat(64)}).entryModule);
+	const control = generateTaskControl("lb_js_task_"+"a".repeat(64),notify);
+	assert.match(control,/base % 8/u); assert.throws(() => generateTaskControl("public_api",notify),TypeError);
+});
+
+test("threaded task generation refuses incompatible host and ownership contracts", () => {
+	for(const extra of [{integerMode: "gmp"},{phpDelivery: true},{synchronousIO: true}])
+		assert.throws(() => generateCTaskExports({...config,wasmTasks: true,...extra}),TypeError);
+	for(const extra of [{wasm32: true},{phpWasm: true},{tasks: false},{resources: [{}]}])
+		assert.throws(() => generateSyncWire("lbc_job",entries,{tasks: true,wasmTasks: true,...extra}),TypeError);
+	const callback = [{...entries[0],parameters: [{name: "cb",type: {kind: "io-callback",argument: t,reply: t}}]}];
+	assert.throws(() => generateCTaskExports({...config,entries: callback,wasmTasks: true}),TypeError);
+	assert.throws(() => generateSyncWire("lbc_job",callback,{tasks: true,wasmTasks: true}),TypeError);
+});
+
+test("public error identities and delivery phases cannot be interchanged", () => {
+	const name = "Job.work", id = "c".repeat(64);
+	const {api} = reconcileHostExports({component: {name: "jobs",id: "jobs@1.0.0",version: "1.0.0"}
+		, selection: {exports: [name],exportModules: ["Job"],taskExports: [name],taskIOErrors: [name],members: []}
+		, metadata: {kind: "lean-bridge-host-export-metadata"
+			, schemaVersion: 1, leanVersion: "4.32.2"
+			, entries: [{...entries[0],module: "Job",hostMembers: [],effect: "EIO",error: t,taskIO: true}]}});
+	const method = javaScriptTaskAbi(api,id).methods[0];
+	assert.equal(method.startId,"error:EIO.Job.work"); assert.equal(method.error,"uint32");
+	assert.equal(method.terminalId,"error:TaskIO.Error"); assert.equal(method.terminal,"string");
+	const wrong = structuredClone(api); wrong.errors.find(e => e.id === method.terminalId).payload = t;
+	assert.throws(() => javaScriptTaskAbi(wrong,id),/Unexpected typed payload/u);
+	const hidden = structuredClone(api); delete hidden.declarations[0].source.extensions["lean-bridge.dev/task-failure"];
+	assert.throws(() => javaScriptTaskAbi(hidden,id),/failure channels/u);
+});
