@@ -24,17 +24,27 @@ export const generatePhpWasmIOFiles = async (model, zend) => {
 		const args = m.parameters.map(p => "$"+p.name), fn = zend.transport+"\\call"+i;
 		// Reserve the application argument names: transport locals may not shadow them.
 		const temp = key => { let n = "$"+key; while(args.includes(n)) n += "_"; return n; };
-		const budget = temp("budget"), data = temp("data"), reply = temp("reply"), status = temp("status"), tags = temp("tags");
+		const budget = temp("budget"), data = temp("data");
+		const decl = quote(m.declaration), errorStatus = m.effect === "IO" ? 4 : 3;
 		return `    public static function call${i}(${args.map(v=>"mixed "+v).join(", ")}): mixed {
         ${budget}=new Budget();
         ${data}=[${m.args.map((k,j)=>`WireValues::input(${quote(k)},${args[j]},${budget})`).join(",")}];
         if (!function_exists(${quote(fn)})) \\LeanBridge\\CopiedPhpWasmV1\\Loader::load(${quote(zend.library)},${quote(fn)});
-        ${reply}=\\${fn}(...${data});
-        if (!is_string(${reply}) || strlen(${reply})<${1+m.tagBytes}) throw new \\${ns}\\LeanBridgeError('Malformed Lean response');
-        ${status}=ord(${reply}[0]); ${tags}=substr(${reply},1,${m.tagBytes}); ${data}=substr(${reply},${1+m.tagBytes});
-        if (${status}===0) return WireValues::output(${shape(m.result)},${tags},${data});
-        ${m.failure ? `if (${status}===${m.effect==="IO"?4:3}) throw new \\${ns}\\${m.failure}(${quote(m.declaration)},WireValues::output(${shape(m.error)},${tags},${data}));` : ""}
-        throw new \\${ns}\\LeanBridgeError(${quote("Bridge failure in "+m.declaration+" (status ")}.${status}.')');
+        return self::reply${i}(\\${fn}(...${data}));
+    }
+    private static function reply${i}(mixed $reply): mixed {
+        if (!is_string($reply) || strlen($reply)<${1+m.tagBytes}) self::malformed(${decl});
+        $status=ord($reply[0]);
+        if ($status!==0${m.failure ? " && $status!=="+errorStatus : ""}) {
+            if (!in_array($status,[5,9,10,11,12],true) || strlen($reply)!==${1+m.tagBytes}) self::malformed(${decl});
+            throw new \\${ns}\\LeanBridgeError(${quote("Bridge failure in "+m.declaration+" (status ")}.$status.')');
+        }
+        $tags=substr($reply,1,${m.tagBytes}); $data=substr($reply,${1+m.tagBytes});
+        try {
+            $value=WireValues::output(${m.failure ? `$status===0 ? ${shape(m.result)} : ${shape(m.error)}` : shape(m.result)},$tags,$data);
+        } catch (\\UnexpectedValueException $e) { self::malformed(${decl},$e); }
+        ${m.failure ? `if ($status===${errorStatus}) throw new \\${ns}\\${m.failure}(${decl},$value);` : ""}
+        return $value;
     }`;
 	});
 	const api = `<?php
@@ -52,6 +62,10 @@ ${phpConversionBudget}
 ${phpScalarCodec}
 ${phpValueSemantics({ namespace: ns, branches, surface: { copies: [] } })}
 final class Native {
+    private static function malformed(string $declaration, ?\\Throwable $cause=null): never {
+        \\${zend.transport}\\retire();
+        throw new \\${ns}\\LeanBridgeError('Malformed Lean response in '.$declaration.'; shared runtime retired',0,$cause);
+    }
 ${calls.join("\n")}
 }
 }

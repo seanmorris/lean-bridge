@@ -13,15 +13,21 @@ import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
  * @param options - Relocated consumer, pinned PHP distribution and Node test diagnostics.
  */
 export const exerciseInstalledIOBrowser = async options => {
-	const { app, host, t } = options;
+	const { app, host, t, callbacks } = options;
 	const roots = { "/component/": await realpath(join(app,"node_modules/php-wasm-ledger"))
 		, "/runtime/": await realpath(join(app,"node_modules/@lean-bridge/php-wasm-copied-runtime"))
 		, "/host/": await realpath(host) };
 	const vendorRoot = join(app,"vendor"), vendor = [];
 	for(const path of await nativeArtifactPaths(vendorRoot)) vendor.push([path,(await readFile(join(vendorRoot,path))).toString("base64")]);
 	const program = await readFile(join(app,"consumer.php"),"utf8");
-	const appCode = await readFile(join(app,"installed.mjs"));
+	const assets = new Map([["/installed.mjs",await readFile(join(app,"installed.mjs"))]]);
 	const imports = { "php-wasm-ledger": "/component/index.mjs", "@lean-bridge/php-wasm-copied-runtime": "/runtime/index.mjs" };
+	if(callbacks)
+	{
+		imports["php-wasm-switchboard"] = "/switchboard/index.mjs";
+		roots["/switchboard/"] = await realpath(join(app,"node_modules/php-wasm-switchboard"));
+		for(const p of ["callback-host.mjs","snapshot.so"]) assets.set("/"+p,await readFile(join(app,p)));
+	}
 	const server = createServer(async (req,res)=>{
 		try
 		{
@@ -32,8 +38,8 @@ export const exerciseInstalledIOBrowser = async options => {
 				res.end(`<!doctype html><link rel="icon" href="data:,"><script type="importmap">${JSON.stringify({imports})}</script>`);
 				return;
 			}
-			if(path === "/installed.mjs")
-			{ res.writeHead(200,{"Content-Type": "text/javascript"}); res.end(appCode); return; }
+			if(assets.has(path))
+			{ res.writeHead(200,{"Content-Type": path.endsWith(".mjs") ? "text/javascript" : "application/octet-stream"}); res.end(assets.get(path)); return; }
 			const [prefix, root] = Object.entries(roots).find(([key])=>path.startsWith(key)) ?? [];
 			if(!root) throw new Error("unknown asset");
 			const file = await realpath(resolve(root,path.slice(prefix.length)));
@@ -50,6 +56,23 @@ export const exerciseInstalledIOBrowser = async options => {
 	try
 	{
 		browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, headless: true, args: ["--no-sandbox","--disable-dev-shm-usage"] });
+		if(callbacks) for(const fault of ["pending","sum","padding"])
+		{
+			const page = await browser.newPage();
+			try
+			{
+				await page.route("**/*", r => new URL(r.request().url()).origin === origin ? r.continue() : r.abort());
+				await page.goto(origin);
+				const options = { fault, slots: JSON.parse(await readFile(join(app,"slots.json"))), program: await readFile(join(app,"callbacks.php"),"utf8") };
+				const result = await page.evaluate(async options=>{
+					const { PhpWeb: Host } = await import("/host/PhpWeb.mjs");
+					const { runCallbackHost } = await import("/callback-host.mjs");
+					return runCallbackHost({ ...options, Host, probe: new URL("/snapshot.so",globalThis.location.href).href });
+				},options);
+				assert.equal(result,"callbacks:"+fault+":retired:0"); t.diagnostic("Chromium/"+result);
+			} finally
+			{ await page.close(); }
+		}
 		for(const mode of ["embedded","composer"])
 		for(const loading of ["startup","lazy"])
 		{

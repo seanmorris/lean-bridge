@@ -44,7 +44,7 @@ export const exercisePhpWasmIOPublic = async options => {
 		const code = await php.run(`<?php require '${descriptor.autoload}'; try { \\LeanLedger\\add(1); } catch (TypeError $e) {}`);
 		assert.equal(code,0,stderr || stdout); assert.equal(seen.length,startup ? 1 : 0);
 		const vectors = await php.run("<?php require '/codec.php';");
-		assert.equal(vectors,0,stderr || stdout); assert.equal(stderr,""); assert.equal(stdout,"codec:21"); stdout="";
+		assert.equal(vectors,0,stderr || stdout); assert.equal(stderr,""); assert.equal(stdout,"codec:21:malformed:22:limit:1"); stdout="";
 		assert.equal(seen.length,startup ? 1 : 0);
 		const result = await php.run("<?php require '/consumer.php';");
 		assert.equal(result,0,stderr || stdout); assert.equal(stderr,""); assert.equal(stdout,"php-api:30");

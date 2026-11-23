@@ -775,6 +775,12 @@ The compiler checks its declarations and errors against the selected Lean
 source. This profile rejects filesystem and other OS grants; it does not
 turn synchronous IO into tasks. See the [consumer example](../php.md#ordinary-php-wasm-packages).
 
+If a synchronous callback in another package calls this one, ship both
+components with the same runtime dependency and load the IO extension
+before entering the callback. You do not need to wrap or translate declared
+exceptions. The [installed two-package check](../evidence/php-wasm-io-callback-failures-20261123.md)
+shows how to test nested failure propagation and cleanup.
+
 PHP-Wasm compiles concrete copied variants, Lists, options, results and nested binary products on ordinary-source and reviewed-IR paths. These compose with primitives, arrays and acyclic records, including in synchronous callbacks and captured closures. Generated `Some`, `Ok` and `Err` classes preserve branch identity; products use two-element arrays. The [PHP consumer guide](../php.md#options-results-and-products) documents payload validation and 32-bit integer mappings.
 
 Install a [prepared CLI](../lean/setup.md#install-a-prepared-cli) whose inventory has `phpWasmInputsIncluded: true`. It contains the prebuilt PHP-Wasm runtime and configured PHP 8.4.1 headers. Leave `LEAN_BRIDGE_PHP_INPUTS` unset to use those bundled inputs.

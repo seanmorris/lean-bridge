@@ -29,4 +29,29 @@ foreach ($vectors as [$kind,$value,$hex]) {
         : ($value instanceof Bytes ? $value->equals($decoded) : $value===$decoded);
     if (!$valid) throw new Exception("Wrong decoded ".$kind);
 }
-echo "codec:",count($vectors);
+// Bytes chosen independently of the encoder. Wire corruption is not an
+// application conversion limit, even when the malformed integer is large.
+$word = static fn(int $v): string => pack('V2',$v,$v<0?-1:0);
+$large = str_repeat("\0",6815)."\1";
+$malformed = [
+    ['unit',"\0",$word(1)], ['bool',"\0",$word(2)],
+    ['uint8',"\0",$word(-1)], ['int8',"\0",$word(128)],
+    ['uint16',"\0",$word(65536)], ['int16',"\0",$word(-32769)],
+    ['int32',"\0",pack('V2',-1,0)], ['uint32',"\0",pack('V2',0,1)],
+    ['char',"\0",$word(0xd800)], ['char',"\0",$word(0x110000)],
+    ['float32',"\0",pack('V2',0,1)], ['string',"\0","\xff"],
+    ['bytes',"\1",''], [['bool','string'],"\2",''],
+    [[['bool','string'],'uint8'],"\0\1",$word(3)],
+    ['int',"\0",''], ['nat',"\0",$word(0)."\0"],
+    ['int',"\0",$word(1)], ['nat',"\0",$word(1).$word(1)],
+    ['int',"\0",$word(0).$word(1).$word(0)],
+    ['int',"\0",$word(2).$large], ['int',"\0",$large.$word(0)]
+];
+foreach ($malformed as $i=>[$kind,$tags,$bytes]) {
+    try { WireValues::output($kind,$tags,$bytes); }
+    catch (UnexpectedValueException $e) { continue; }
+    throw new Exception("Accepted malformed output #".$i);
+}
+try { WireValues::output('int',"\0",$word(0).$large); throw new Exception('Accepted oversized integer'); }
+catch (ValueError $e) {}
+echo "codec:",count($vectors),":malformed:",count($malformed),":limit:1";

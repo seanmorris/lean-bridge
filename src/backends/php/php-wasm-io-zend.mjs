@@ -34,7 +34,8 @@ static PHP_FUNCTION(lb_call${i}) {
     int status = ${port.symbols[i+1]}(in, ${args}, &out, tags, sizeof(tags));
     if (out.length > 16777216 || (out.length && !out.data) || status < 0 || status > 12) {
         ${port.dispose}(&out); lean_bridge_native_runtime_retire();
-        zend_throw_error(NULL, "Malformed synchronous Lean output"); RETURN_THROWS();
+        /* Invalid envelope: let the public PHP decoder raise its own bridge exception. */
+        RETURN_EMPTY_STRING();
     }
     zend_try {
         size_t len = 1 + sizeof(tags) + (size_t)out.length;
@@ -57,7 +58,14 @@ static PHP_FUNCTION(lb_call${i}) {
 #endif
 _Static_assert(sizeof(zend_long) == 4 && sizeof(void *) == 4, "Expected wasm32 Zend ABI");
 ${calls.join("\n")}
+ZEND_BEGIN_ARG_INFO_EX(lb_no_args, 0, 0, 0)
+ZEND_END_ARG_INFO()
+static PHP_FUNCTION(lb_retire) {
+    ZEND_PARSE_PARAMETERS_NONE();
+    lean_bridge_native_runtime_retire(); RETURN_NULL();
+}
 static const zend_function_entry lb_methods[] = {
+    ZEND_NS_NAMED_FE(${JSON.stringify(transport)}, retire, zif_lb_retire, lb_no_args)
 ${model.methods.map((_, i) => `    ZEND_NS_NAMED_FE(${JSON.stringify(transport)}, call${i}, zif_lb_call${i}, lb_args${i})`).join("\n")}
     PHP_FE_END
 };

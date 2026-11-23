@@ -125,7 +125,7 @@ ${inputs.join("\n")}
     status=${start}(a,${async ? "h," : ""}w,tags);
     if (status==${prefix}_OK) ${async ? "goto finish" : "kind="+output(m.result,kinds)}; ${error}
     else goto finish;
-    { int packed=lbphp_pack(kind,w,out); if (packed) status=packed; }
+    { int packed=lbphp_pack(kind,w,out); if (packed) status=${phpWasm ? `packed==${prefix}_INVALID ? -1 : packed` : "packed"}; }
 finish:
     ${wire.clear}(w); for (unsigned int j=0;j<${slots};j++) free(owned[j]); return status;
 }`);

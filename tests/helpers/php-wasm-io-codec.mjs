@@ -15,8 +15,11 @@ test("PHP-Wasm IO codecs agree with independent byte vectors on 32-bit Zend", { 
 	php.addEventListener("output", event => { stdout += event.detail.join(""); });
 	php.addEventListener("error", event => { stderr += event.detail.join(""); });
 	await php.binary;
-	// An empty method list exercises only value conversion. This test never invokes Lean.
-	const key = "0".repeat(64), model = { namespace: "LeanLedger", methods: [], phpWasm: true };
+	// Generate the real Ok/Err value classes for sum vectors. No method is invoked.
+	const methods = [{ declaration: "Ledger.sample", publicName: "sample"
+		, effect: "BaseIO", parameters: [], args: [], result: ["bool","string"]
+		, tagBytes: 1, returnType: "Ok|Err" }];
+	const key = "0".repeat(64), model = { namespace: "LeanLedger", methods, phpWasm: true };
 	const files = await generatePhpWasmIOFiles(model,{ library: "php8.4-lb_wasm_io_"+key+".so", transport: "LeanBridge\\WasmIO\\C"+key });
 	const root = "/vendor/lean-bridge/ledger/", dirs = new Set();
 	const bootstrap = "<?php require_once __DIR__.'/dependencies/brick-math/autoload.php'; require_once __DIR__.'/src/Api.php';";
@@ -34,5 +37,5 @@ test("PHP-Wasm IO codecs agree with independent byte vectors on 32-bit Zend", { 
 	const sample = await readFile("tests/fixtures/php-wasm-sync-io-probe/codec.php","utf8");
 	await php.writeFile("/codec.php",sample);
 	const code = await php.run("<?php require '/codec.php';");
-	assert.equal(code,0,stderr || stdout); assert.equal(stderr,""); assert.equal(stdout,"codec:21");
+	assert.equal(code,0,stderr || stdout); assert.equal(stderr,""); assert.equal(stdout,"codec:21:malformed:22:limit:1");
 });

@@ -1,12 +1,14 @@
 /** @file Install and relocate an actual PHP-Wasm IO CLI release before exercising it. */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { cp, mkdir, mkdtemp, rename, rm, symlink, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rename, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
+import { readVerifiedPhpWasmCopiedRuntime } from "../../src/build/php-wasm-copied-artifacts.mjs";
+import { buildPhpWasmBrokerSnapshot } from "./php-wasm-broker-snapshot.mjs";
 import { brickMathRepository, composerFileUrl } from "./brick-math.mjs";
 import { exerciseInstalledIOBrowser } from "./php-wasm-io-installed-browser.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
@@ -43,15 +45,17 @@ test("installed PHP-Wasm synchronous IO survives relocation in both ecosystems",
 	}
 	assert.equal(npm.length,2); assert.equal(composer.name,"lean-bridge/ledger");
 	const peer = process.env.LEAN_BRIDGE_PHP_WASM_IO_PURE_PEER;
-	if(peer)
+	const callbacks = process.env.LEAN_BRIDGE_PHP_WASM_IO_CALLBACK_PEER;
+	for(const [root,name] of [[peer,"@example/willow-php-wasm"],[callbacks,"php-wasm-switchboard"]])
 	{
-		const other = (await readVerifiedPackageSetReceipt({receiptPath: join(peer,"package-set-receipt.json")})).receipt;
+		if(!root) continue;
+		const other = (await readVerifiedPackageSetReceipt({receiptPath: join(root,"package-set-receipt.json")})).receipt;
 		assert.deepEqual(other.profiles.map(p=>p.id),["php-wasm-copied-v1"]);
 		const runtime = set => set.packages.find(p=>p.role === "runtime").artifacts[0].sha256;
 		assert.equal(runtime(receipt),runtime(other));
-		const adapter = other.packages.find(p=>p.name === "@example/willow-php-wasm"), item = adapter.artifacts[0];
+		const adapter = other.packages.find(p=>p.name === name), item = adapter.artifacts[0];
 		const path = join(feed,item.path.split("/").pop());
-		await cp(join(peer,item.path),path); npm.push(path);
+		await cp(join(root,item.path),path); npm.push(path);
 	}
 	await writeFile(join(app,"package.json"),canonicalJson({private: true,type: "module"}));
 	await run("npm",["install","--offline","--ignore-scripts","--legacy-peer-deps","--no-fund","--no-audit",...npm],app,{...process.env,npm_config_cache: join(work,"npm-cache")});
@@ -65,7 +69,29 @@ test("installed PHP-Wasm synchronous IO survives relocation in both ecosystems",
 	const fixture = "tests/fixtures/php-wasm-sync-io-probe";
 	for(const path of ["consumer.php","installed.mjs","installed-node.mjs"]) await cp(join(fixture,path),join(app,path));
 	if(peer) await cp(join(fixture,"installed-peer.mjs"),join(app,"installed-peer.mjs"));
+	if(callbacks)
+	{
+		for(const path of ["callback-host.mjs","callback-node.mjs","callbacks.php"]) await cp(join(fixture,path),join(app,path));
+		const probe = process.env.LEAN_BRIDGE_PHP_WASM_IO_TEST_PROBE, output = join(app,"snapshot.so");
+		if(probe) await cp(probe,output);
+		else
+		{
+			const { LEAN_BRIDGE_PHP_WASM_IO_RUNTIME: runtimeRoot
+				, LEAN_BRIDGE_PHP_WASM_IO_HEADERS: phpSource
+				, LEAN_BRIDGE_PHP_WASM_EMSDK: emsdkRoot } = process.env;
+			if(!runtimeRoot || !phpSource || !emsdkRoot) throw new Error("Callback test needs a prebuilt snapshot or the IO runtime, PHP headers and Emscripten SDK");
+			const { manifest } = await readVerifiedPhpWasmCopiedRuntime(runtimeRoot);
+			await buildPhpWasmBrokerSnapshot({runtimeRoot,runtimeLibrary: manifest.library,phpSource,emsdkRoot,output});
+		}
+		const api = JSON.parse(await readFile(join(app,"node_modules/php-wasm-ledger/compiled/io/binding-ir.json")));
+		await writeFile(join(app,"slots.json"),canonicalJson(Object.fromEntries(api.declarations.map((d,i)=>[d.source.declaration,i]))));
+	}
 	await rename(app,moved); await rename(feed,join(work,"disabled-feed"));
+	if(callbacks) for(const fault of ["pending","sum","padding"])
+	{
+		const r = await run(process.execPath,["callback-node.mjs",fault],moved,{PATH: "/no-build-tools"});
+		assert.equal(r.stderr,""); assert.equal(r.stdout.trim(),"callbacks:"+fault+":retired:0"); t.diagnostic("Node/"+r.stdout.trim());
+	}
 	for(const mode of ["embedded","composer"])
 	for(const loading of ["startup","lazy"])
 	{
@@ -73,7 +99,7 @@ test("installed PHP-Wasm synchronous IO survives relocation in both ecosystems",
 		assert.equal(result.stdout.trim(),"php-api:30"); assert.equal(result.stderr,"");
 		t.diagnostic(mode+"/"+loading+": "+result.stdout.trim());
 	}
-	if(process.env.LEAN_BRIDGE_PHP_WASM_BROWSER_TEST === "1") await exerciseInstalledIOBrowser({app: moved,host,t});
+	if(process.env.LEAN_BRIDGE_PHP_WASM_BROWSER_TEST === "1") await exerciseInstalledIOBrowser({app: moved,host,t,callbacks});
 	if(peer) for(const order of ["io-first","pure-first"])
 	{
 		const result = await run(process.execPath,["installed-peer.mjs",order],moved,{PATH: "/no-build-tools"});

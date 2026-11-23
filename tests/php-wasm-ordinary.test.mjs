@@ -28,6 +28,7 @@ import { assertPackagedSourceNotices } from "./helpers/source-notices.mjs";
 import { tarGzipPackingIdentity } from "../src/release/deterministic-archive.mjs";
 import { brickMathMountSource } from "./helpers/brick-math.mjs";
 import { comparePhpWasmPreGraphArtifacts } from "./helpers/php-wasm-legacy-comparison.mjs";
+import { buildPhpWasmBrokerSnapshot } from "./helpers/php-wasm-broker-snapshot.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -205,38 +206,9 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 	const legacyComparison = await comparePhpWasmPreGraphArtifacts({ working, components, runtimeRoot: relocatedRuntime, releases, leanPrefix });
 	// A separate test-only extension observes the production broker. The public
 	// generated APIs do not expose a runtime, pointer, counter, or FFI object.
-	await saveLakeFile(working, "probe.c", `#include <php.h>
-#include "lean_bridge_native_runtime.h"
-ZEND_BEGIN_ARG_INFO_EX(probe_args, 0, 0, 0)
-ZEND_END_ARG_INFO()
-static ZEND_FUNCTION(lean_bridge_test_snapshot) {
-  lean_bridge_native_snapshot snapshot;
-  lean_bridge_native_snapshot_read(&snapshot);
-  array_init(return_value);
-  add_next_index_long(return_value, snapshot.abi_version);
-  add_next_index_long(return_value, snapshot.runtime_state);
-  add_next_index_long(return_value, snapshot.runtime_init_runs);
-  add_next_index_long(return_value, snapshot.component_init_runs);
-  add_next_index_long(return_value, snapshot.attached_components);
-  add_next_index_long(return_value, snapshot.live_identities);
-}
-static const zend_function_entry probe_functions[] = {
-  ZEND_FE(lean_bridge_test_snapshot, probe_args)
-  PHP_FE_END
-};
-zend_module_entry probe_module_entry = {
-  STANDARD_MODULE_HEADER, "lean_bridge_test_probe", probe_functions,
-  NULL, NULL, NULL, NULL, NULL, "1", STANDARD_MODULE_PROPERTIES
-};
-ZEND_GET_MODULE(probe)
-`);
-	const probeIncludes = [phpSource, ...["Zend", "main", "TSRM", "ext"].map(path => join(phpSource, path)), join(relocatedRuntime, "include")];
-	const probeArgs = ["-O2", "-shared", "-sSIDE_MODULE=2"
-		, "-sEXPORTED_FUNCTIONS=['_get_module']"
-		, ...probeIncludes.flatMap(path => ["-I", path])
-		, "probe.c", join(relocatedRuntime, runtime.manifest.library)
-		, "-o", "probe.so"];
-	await processBuildRunner.capture({ command: join(emsdkRoot, "upstream/emscripten/emcc"), args: probeArgs, cwd: working });
+	await buildPhpWasmBrokerSnapshot({ runtimeRoot: relocatedRuntime
+		, runtimeLibrary: runtime.manifest.library
+		, phpSource, emsdkRoot, output: join(working,"probe.so") });
 	const libraries = [{ name: basename(runtime.manifest.library), url: pathToFileURL(join(relocatedRuntime, runtime.manifest.library)).href, ini: false }
 		, { name: "probe.so", url: pathToFileURL(join(working, "probe.so")).href, ini: true }
 		, ...components.map(({ root, receipt }) => ({ name: basename(receipt.library), url: pathToFileURL(join(root, receipt.library)).href, ini: true }))];

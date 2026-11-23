@@ -1350,6 +1350,19 @@ exception with its typed `payload`; an `IO.Error` raises the package's
 `IOError`. Invalid arguments do not change state or trigger lazy loading.
 This profile admits in-memory effects only.
 
+A callback may call an IO function in another package on the same PHP
+instance. If that package loads on first use, call it once **before**
+entering the callback: PHP cannot load an extension inside a synchronous
+Lean callback. A PHP exception or typed Lean failure crossing nested callbacks
+comes back as the same exception object. Neither retires the runtime.
+
+If a compiled IO package returns a malformed reply, its `LeanBridgeError`
+names the declaration and says the shared runtime was retired. Stop using
+that instance for Lean calls, including calls through other packages or saved
+closures. You can still close those closures and read ordinary PHP values
+copied out earlier. To resume, create a fresh PHP-Wasm instance. See the
+[two-package failure and cleanup checks](evidence/php-wasm-io-callback-failures-20261123.md).
+
 Use `php-wasm` 0.1.0 with PHP 8.4's default variant, hosted in Node 22 or Chromium. Obtain the publisher's archives, `package-set-receipt.json`, and its `.json.sha256` sidecar through your trusted release channel. [Verify the package set](consume/receive-package.md#verify-a-local-package-set) before installation. It contains two npm archives, one component and its shared runtime, plus a companion Composer ZIP. No Lean tools, PHP headers or Emscripten installation are needed.
 
 The npm descriptor includes Brick Math 1.0.0 and loads its classes automatically. No Composer installation or GMP/BCMath extension is required. A Composer application uses the generated package's exact `brick/math` dependency instead. Include dependencies in your application lockfile; offline Composer installs need that locked dependency in their repository or cache.

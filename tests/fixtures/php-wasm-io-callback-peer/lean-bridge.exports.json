@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Switchboard"],
+  "exports": ["Switchboard.twice", "Switchboard.make_adder", "Switchboard.answer"],
+  "arities": { "Switchboard.make_adder": 1 },
+  "targets": { "php-wasm": { "composer": { "name": "lean-bridge/switchboard", "version": "1.0.0" } } }
+}

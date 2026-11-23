@@ -53,6 +53,11 @@ running the core test above. Inside its new `php-wasm-io-core-*` directory,
 `io-payload/` contains the compiled extension, three PHP wrappers, the
 Binding IR, Lean export evidence, and a receipt. The receipt SHA-256 for
 this fixture run was `110bf6e58b345c69a1c2cad17e90110a3c3be6e6e189eb7d60c77c64668472bf`.
+Use producer checkout `c32559b` to replay that historical digest. The reader
+regenerates the PHP bindings; a later generator need not reproduce their old
+identity. For a new build, pin its own receipt instead. The
+[fault-handling follow-up](php-wasm-io-callback-failures-20261123.md)
+identifies the newer packages independently.
 
 Set `LEAN_BRIDGE_PHP_WASM_IO_REPLAY` to that `io-payload` directory.
 Keep the pinned runtime and installed `php-wasm` host paths from the

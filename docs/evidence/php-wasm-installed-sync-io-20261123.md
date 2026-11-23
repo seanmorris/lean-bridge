@@ -3,7 +3,7 @@
 The public CLI built [Ledger](../../tests/fixtures/php-wasm-sync-io/Ledger.lean)
 with the pinned Lean 4.32.2 compiler and prepared PHP 8.4.1 Wasm inputs.
 The CLI verified all three archives against the `php-wasm-sync-io-v1`
-package-set receipt. Its SHA-256 was
+package-set receipt. At commit `9772fd5` its SHA-256 was
 `94f7a8fe229a57ec4fff5ced5a463d335d07af47cfbc825561d43eeb6e6df7a3`.
 This verifies local consistency, not a publisher signature.
 
@@ -41,6 +41,8 @@ retained the author's license file in the Composer package. Changing the
 reviewed result of `Ledger.add` from `USize` to `Bool` failed the build and
 wrote no release. Selecting `filesystem` failed before tool lookup.
 There are no tasks, host objects or retained callbacks in this IO profile.
+The [two-package failure check](php-wasm-io-callback-failures-20261123.md)
+records the subsequent build that retires the runtime on malformed replies.
 
 ## Reproduce
 

@@ -67,15 +67,17 @@ final class WireValues
             if ($tag==="\0") return new \__LB_PUBLIC__\Err(self::output($kind[1],$tags,$data,$at+1));
             throw new \UnexpectedValueException('Malformed Lean sum tag');
         }
+        if (trim(substr($tags,$at),"\0")!=='') throw new \UnexpectedValueException('Malformed Lean sum padding');
         if ($kind==='string') return preg_match('//u',$data)===1 ? $data : throw new \UnexpectedValueException('Invalid Lean UTF-8');
         if ($kind==='bytes') return \__LB_PUBLIC__\Bytes::fromString($data);
         if ($kind==='nat' || $kind==='int') {
             $n=strlen($data);
-            if ($n<8 || $n%8 || $n>6816) throw new \UnexpectedValueException('Malformed or oversized Lean integer');
+            if ($n<8 || $n%8) throw new \UnexpectedValueException('Malformed Lean integer width');
             $sign=substr($data,0,8); $minus=$sign==="\1\0\0\0\0\0\0\0";
             if ($sign!==self::ZERO && (!$minus || $kind!=='int' || $n===8)) throw new \UnexpectedValueException('Malformed integer sign');
             if ($n===8) return BigInteger::zero();
             if (substr($data,-8)===self::ZERO) throw new \UnexpectedValueException('Noncanonical magnitude');
+            if ($n>6816) throw new \ValueError('Oversized Lean integer');
             $v=BigInteger::fromBytes(strrev(substr($data,8)),false);
             if (strlen((string)$v)>16384) throw new \ValueError('Oversized Lean integer');
             return $minus ? $v->negated() : $v;
@@ -95,7 +97,11 @@ final class WireValues
         if (pack('V2',$v,$v<0?-1:0)!==$data) throw new \UnexpectedValueException('Malformed sign extension');
         if ($kind==='unit') return $v===0 ? null : throw new \UnexpectedValueException('Malformed Unit');
         if ($kind==='bool') return match ($v) {0=>false,1=>true,default=>throw new \UnexpectedValueException('Malformed Bool')};
-        if ($kind==='char') return ScalarCodec::text($v);
-        self::small($kind,$v); return $v;
+        if ($kind==='char') {
+            if ($v<0 || $v>0x10ffff || ($v>=0xd800 && $v<=0xdfff)) throw new \UnexpectedValueException('Malformed Lean Unicode scalar');
+            return ScalarCodec::text($v);
+        }
+        if (isset(self::SMALL[$kind]) && ($v<self::SMALL[$kind][0] || $v>self::SMALL[$kind][1])) throw new \UnexpectedValueException('Malformed narrow Lean integer');
+        return $v;
     }
 }
