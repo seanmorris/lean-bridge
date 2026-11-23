@@ -121,3 +121,12 @@ At `b76c483`, teardown still returned the count to zero. While the store was ope
 | --- | --- | --- |
 | Ordinary Depot | `a2e8ffc2991eb51f1e8a4f7fc42a96c86cdb94d43c1daddcaa7f03710c08b517` | `1a9b95b40cf1a78a5ff535596d814ca0b4fa001e63c41b5dfdd9e65c5d3d8483` |
 | Reviewed Depot | `246faae47d97dfbb804f51033dc8b99a91cf201bfc9f7f6757cafa8104862b76` | `aad72e35b5b4a8753b95998bbacde772ebe5f8de79cb53239cf1bfb24488e2b9` |
+
+The independent Depot/Peer test also passed after the [borrow repair](https://github.com/seanmorris/lean-bridge/commit/e9eb6803c78836c7ecb3cbd63c5d77482c0fcd48). Both relocated consumers exchanged the same mutable Ticket across stores, handled factory and cursor failures, then disposed all owners. The stale Peer review still produced no handoff.
+
+| Rebuilt package | Archive SHA-256 | Receipt SHA-256 |
+| --- | --- | --- |
+| Ordinary Depot | `e5309ea41f18090350af59c0fbcf1806a08277022dacb8c97486240e1b0a51a5` | `1cf2b99157d8451be81aab65de197d1992c86b2ec5c17e59e2a66e6591dd51f9` |
+| Ordinary Peer | `2159e841db489fa5fdae92573e040c93a2b087d26a796cb59071344bf21fe217` | `8ae4aed3915f664e7e984bdbd7d999f1ae6cd3933d36b2e3b541b476b4d27591` |
+| Reviewed Depot | `6bd40df05f7ea094787a03c04db63ef843abc15e4d810851d7cab641ef577f91` | `8e27fea2a9ec54f159ce23490b103a64c91bb56be860ed5ac93731bac7e2948b` |
+| Reviewed Peer | `ddd8a7924828b9f530f11ce716eb5c9cc3a26141e2f0755de2e22b709a454689` | `d1fbd4308de06601634e4f3e8a535cfb7f38c43af1a1043d1836e59f6791d56f` |
