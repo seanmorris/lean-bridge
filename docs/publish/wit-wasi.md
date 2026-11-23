@@ -77,6 +77,21 @@ as above. See [calling synchronous IO](../consume/wit-wasi.md#call-synchronous-i
 for results and traps, and the [installed archive checks](../evidence/wit-sync-io-packages-20261123.md)
 for the ordinary and reviewed builds.
 
+## Export asynchronous tasks
+
+For pure `Task α` and `BaseIO (Task α)` exports, select the Lean declarations with `taskExports`. Arguments and results may be copied values of type `Bool`, `Char`, `String`, fixed-width signed or unsigned integers (8–64 bits), `Float32`, or `Float`. This profile does not admit external effects, task errors, callback parameters, or iterator selections.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Meter"],
+  "taskExports": ["Meter.immediate", "Meter.parked", "Meter.resume"],
+  "targets": { "wit-wasi": { "name": "meter", "version": "1.0.0" } }
+}
+```
+
+Run `lean-bridge build --project . --target wit-wasi --output build/release` with the pinned Lean compiler, wasm-tools and Wasmtime C SDK described above. Verify the handoff with `lean-bridge verify --receipt build/release/package-set-receipt.json`. Distribute that receipt and the archive listed inside it. The prepared release includes the typed header, component, native libraries and `meter-wit.pc`; consumers do not repeat the producer build. A reviewed project can also supply a public `.binding-ir.json`; the CLI still checks it against fresh compiler output. See the [consumer example](../consume/wit-wasi.md#await-a-lean-task).
+
 ## Export resource-containing values
 
 Declare resource types and opt into aggregate ownership when records, variants,

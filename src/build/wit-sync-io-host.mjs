@@ -1,11 +1,13 @@
-/** @file Link checked Lean C objects to a Wasmtime native IO embedding library. */
+/** @file Link checked Lean C objects to a Wasmtime synchronous IO or task library. */
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { compileWitSyncIO } from "../backends/wit/sync-io-model.mjs";
 import { generateWitSyncHost } from "../backends/wit/sync-io-host.mjs";
-import { guardWitHostSource } from "../backends/wit/host-evidence.mjs";
+import { guardWitHostSource, witHostDependencyPrelude } from "../backends/wit/host-evidence.mjs";
+import { compileWitTaskResources } from "../backends/wit/task-model.mjs";
+import { generateWitTaskSession } from "../backends/wit/task-session.mjs";
 import { generateCTaskExports } from "../backends/c/task-exports.mjs";
 import { generateSyncWire } from "../backends/c/sync-wire.mjs";
 import { nativeDeliveryHeader } from "./jvm-io-owner.mjs";
@@ -18,11 +20,12 @@ import { snapshotWasmtimeCapi } from "./native-wit-projection.mjs";
  *
  * @param options - Fresh Lean objects and evidence, pinned toolchains, private workspace and process runner.
  */
-export const linkWitSyncHost = async options => {
+export const linkWitHost = async options => {
 	const {app,built,runtimeRoot,leanPrefix,run,settings,wasmTools} = options;
 	const {entries,api,evidence,objects,env} = built;
 	const cc = env.CC ?? "cc", bindingIrSha256 = hashBindingIr(api);
-	const model = compileWitSyncIO({api,evidence,bindingIrSha256,settings});
+	const tasks=options.tasks===true;
+	const model = (tasks ? compileWitTaskResources : compileWitSyncIO)({api,evidence,bindingIrSha256,settings});
 	const save = (path,data)=>writeFile(join(app,path),data,{flag: "wx"});
 	if(!/^wasm-tools 1\.245\.1\b/u.test((await run(wasmTools,["--version"],app,env)).stdout)) throw new Error("WIT IO requires wasm-tools 1.245.1");
 	await save("world.wit",model.wit); await save("component.wat",model.wat);
@@ -36,20 +39,22 @@ export const linkWitSyncHost = async options => {
 	const sdk = join(app,"wasmtime"), wasmtimeFiles = await snapshotWasmtimeCapi(options.wasmtimeRoot,sdk);
 	const config = { name: "wit-"+sha256(api.component.id)
 		, modules: evidence.selection.exportModules, entries
-		, synchronousIO: true, integerMode: "words" };
+		, synchronousIO: !tasks, integerMode: "words" };
 	const template = generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
-	if(template.prefix!==model.prefix || canonicalJson(generateSyncWire(template.prefix,entries))!==canonicalJson(model.wire)) throw new Error("WIT and native entry points disagree");
+	if(template.prefix!==model.prefix || canonicalJson(generateSyncWire(template.prefix,entries,{tasks}))!==canonicalJson(model.wire)) throw new Error("WIT and native entry points disagree");
 	const delivery = await nativeDeliveryHeader(false);
 	const integers = template.integerMode ? await readFile(new URL("../backends/c/task-integers.h",import.meta.url)) : null;
-	const host = await generateWitSyncHost(model,componentBytes), p = host.prefix;
+	const notification=tasks && await readFile(new URL("../backends/native/task-notification.h",import.meta.url));
+	const host = await (tasks ? generateWitTaskSession : generateWitSyncHost)(model,componentBytes), p = host.prefix;
 	const dependencies = ["liblean_bridge_native.so","libleanshared.so","libwasmtime.so"].map(name=>{
 		const id = (name==="libwasmtime.so"?wasmtimeFiles:manifest.files)["lib/"+name];
 		if(!id || !Number.isSafeInteger(id.bytes) || id.bytes<1 || !/^[a-f0-9]{64}$/u.test(id.sha256)) throw new Error("Missing native WIT IO dependency: "+name);
 		return {name,bytes: id.bytes,sha256: id.sha256};
 	});
-	const guarded = guardWitHostSource(host.source,p,dependencies);
+	const guarded = tasks ? witHostDependencyPrelude(dependencies)+host.source : guardWitHostSource(host.source,p,dependencies);
 	const identityInputs = { runtimeIdentity, bindingIrSha256, evidence, template
 		, delivery: sha256(delivery), integers: integers && sha256(integers)
+		, ...tasks ? {notification: sha256(notification)} : {}
 		, wire: sha256(model.wire.source)
 		, host: sha256(guarded)
 		, header: sha256(host.header)
@@ -61,9 +66,10 @@ export const linkWitSyncHost = async options => {
 	await save("checked-entry.c",'#include "entry.c"\n'+gen.declarations+"\n");
 	await save(gen.prefix+".h",gen.header); await save("adapter.c",gen.source);
 	await save("host-wire.c",model.wire.source); await save("task-delivery.h",delivery);
+	if(tasks) await save("task-notification.h",notification);
 	if(integers) await save("task-integers.h",integers);
 	await save(p+"_wasmtime.h",host.header); await save("wit-host.c",guarded);
-	const exported = ["open","call","call_instance","link","close"].map(n=>p+"_wasmtime_"+n);
+	const exported = tasks ? [...host.symbols] : ["open","call","call_instance","link","close"].map(n=>p+"_wasmtime_"+n);
 	exported.push("__lean_bridge_wit_host_process_origin_v1");
 	await save("exports.map","{ global: "+exported.join("; ")+"; local: *; };\n");
 	const library = "lib"+p+"_wasmtime.so", inc = ["-I",join(sdk,"include"),"-I",join(runtimeRoot,"include")];

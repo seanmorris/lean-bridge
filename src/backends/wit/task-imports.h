@@ -25,7 +25,7 @@ typedef struct { lb_tasks *s; size_t method, op; } lb_task_binding;
 struct lb_tasks {
     const lb_tasks *self; pid_t pid; pthread_t thread; wasmtime_context_t *ctx;
     lb_task_binding binds[LB_TASK_METHODS][3]; uint32_t tags[LB_TASK_METHODS], last_rep;
-    lb_task_slot slots[LB_TASK_MAX]; size_t live; int pending_fd;
+    lb_task_slot slots[LB_TASK_MAX]; size_t live; int pending_fd; bool import_failed;
 };
 static _Atomic uint32_t lb_task_next_tag;
 static bool lb_task_owner(lb_tasks *s,wasmtime_context_t *ctx) {
@@ -124,6 +124,12 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
 done:
     lb_scope_close(&scope); LB_TASK_CLEAR(words); return err;
 }
+static wasmtime_error_t *lb_task_dispatch(void *data,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *type,
+    lb_val *args,size_t count,lb_val *results,size_t nresults) {
+    wasmtime_error_t *error=lb_task_call(data,ctx,type,args,count,results,nresults);
+    if (error) ((lb_task_binding *)data)->s->import_failed=true;
+    return error;
+}
 /* The linker and store must not outlive s. Teardown is also required after
  * a trap: Wasmtime is not responsible for freeing embedder-owned Lean tasks. */
 static bool lb_tasks_shutdown(lb_tasks *s) {
@@ -148,7 +154,7 @@ static wasmtime_error_t *lb_tasks_link(lb_tasks *s,wasmtime_context_t *ctx,wasmt
         err=wasmtime_component_linker_instance_add_resource(child,m->resource,strlen(m->resource),ty,lb_task_dtor,&s->binds[i][0],NULL);
         wasmtime_component_resource_type_delete(ty);
         for (size_t j=0;j<3 && !err;j++)
-            err=wasmtime_component_linker_instance_add_func(child,m->names[j],strlen(m->names[j]),lb_task_call,&s->binds[i][j],NULL);
+            err=wasmtime_component_linker_instance_add_func(child,m->names[j],strlen(m->names[j]),lb_task_dispatch,&s->binds[i][j],NULL);
     }
     if (child) wasmtime_component_linker_instance_delete(child);
     wasmtime_component_linker_instance_delete(root); return err;

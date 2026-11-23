@@ -9,7 +9,7 @@ import { elaboratedComponent } from "../../src/analyze/semantic-model.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { compileWitSyncIO } from "../../src/backends/wit/sync-io-model.mjs";
 import { compileHostSources } from "../../src/build/host-elaboration.mjs";
-import { linkWitSyncHost } from "../../src/build/wit-sync-io-host.mjs";
+import { linkWitHost } from "../../src/build/wit-sync-io-host.mjs";
 import { testWitIOFailures } from "./wit-sync-io-failures.mjs";
 import { testRelocatedWitIO } from "./wit-sync-io-install.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
@@ -86,7 +86,7 @@ test("binary WIT IO world agrees with checked "+module+(wide ? " and 19 scalar e
 	{
 		const componentBytes = await readFile(join(work,"component.wasm"));
 		const wasmtimeRoot = process.env.LEAN_BRIDGE_WASMTIME_C_API;
-		const host = await linkWitSyncHost({app,built,runtimeRoot,leanPrefix,run,wasmtimeRoot,wasmTools: tools});
+		const host = await linkWitHost({app,built,runtimeRoot,leanPrefix,run,wasmtimeRoot,wasmTools: tools});
 		assert.equal(host.componentSha256,sha256(componentBytes));
 		const sdk = join(app,"wasmtime"), cc = process.env.CC ?? "cc";
 		const env = {...process.env,LD_LIBRARY_PATH: [app,join(runtimeRoot,"lib"),join(sdk,"lib")].join(":"),RAYON_NUM_THREADS: "1"};

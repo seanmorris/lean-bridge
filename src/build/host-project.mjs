@@ -23,7 +23,7 @@ import { CanonicalBuildError } from "./build-error.mjs";
 import { buildNativeSharedRuntime } from "./native-component.mjs";
 import { openHostProjectSource } from "./host-project-source.mjs";
 import { validateOrdinaryWasiSettings } from "../backends/wit/copied-model.mjs";
-import { buildWitSyncPackage } from "../release/wit-sync-io-package.mjs";
+import { buildWitHostPackage } from "../release/wit-sync-io-package.mjs";
 
 const fail = message => { throw new CanonicalBuildError("invalid-host-project", message); };
 const absent = async path => {
@@ -45,8 +45,10 @@ export const buildHostProject = async options => {
 	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
 	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, cpan, php-native, or wit-wasi");
 	const wit = target === "wit-wasi";
-	if(wit && (config.nativeEffects === undefined || config.taskExports?.length || config.asyncIterators?.length || config.resources?.length || config.taskIOErrors?.length))
-		fail("WIT IO requires standalone synchronous exports and explicit nativeEffects; tasks, iterators and resources need a different profile");
+	const witTasks=wit && Boolean(config.taskExports?.length);
+	if(wit && ((witTasks ? config.nativeEffects?.length : config.nativeEffects === undefined)
+		|| config.asyncIterators?.length || config.resources?.length || config.taskIOErrors?.length))
+		fail("WIT IO requires standalone synchronous exports and explicit nativeEffects, or scalar tasks without external capabilities, iterators, leases or declared task errors");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
@@ -86,7 +88,7 @@ export const buildHostProject = async options => {
 		let artifact, receipt;
 		if(target !== "pypi")
 		{
-			artifact = await (wit ? buildWitSyncPackage : buildCTaskPackage)({ ...common, target }); receipt = artifact.receipt;
+			artifact = await (wit ? buildWitHostPackage : buildCTaskPackage)({ ...common, target }); receipt = artifact.receipt;
 		}
 		else
 		{

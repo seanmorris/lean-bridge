@@ -30,4 +30,15 @@ The [embedding test](../../tests/fixtures/wit-tasks/host.c) loads the component 
 | Drop or shut down | Wasmtime’s resource destructor releases the native owner. Closing the store also releases outstanding tasks, even after a failed call. A descriptor borrowed from a disposed task is no longer valid. |
 | Retire the runtime | A pending wait wakes even without a result. Poll fails; the host tears down the store and its readiness subscription. |
 
-This is an embedding test, not yet an installable downstream WIT task package. It exercises nominal task resources; it does not implement canonical Component Model `future<T>` or `stream<T>`, async iterators, or typed terminal errors.
+The embedding test exercises nominal task resources, not canonical Component Model `future<T>` or `stream<T>`, async iterators, or typed terminal errors. The separate [release test](../../tests/helpers/wit-task-package.mjs) exercises the [prepared package](../consume/wit-wasi.md#await-a-lean-task): run `npm run test:wit-task-package` with the same producer tools. It builds the ordinary and reviewed archives with an offline-installed CLI, verifies the receipt, relocates the installation, compiles a consumer with just the installed header and `pkg-config`, and runs with no producer tools on `PATH`.
+
+### Installed package receipts
+
+The release test extends Meter to 13 exports, including text with an embedded NUL, a Unicode scalar, fixed-width signed and unsigned integers, and both floating-point widths. This larger package has semantic Binding IR hash `4c334f37fb578f50245fea8f6775beb873ab167e776eb098c6ff6ab7f52867b7`. The prepared `lean-bridge@0.1.0-rc.1` CLI and the development CLI produced identical receipts for each route. These are local Linux x86-64 results using the glibc 2.36 test floor; they do not record a hosted build or a public release.
+
+| Build | Archive bytes | Archive SHA-256 | Receipt SHA-256 |
+| --- | ---: | --- | --- |
+| Ordinary | 59,212,002 | `8c34b4f1197cd485c3d2adeef33821faee1aee8d20b5ec0e4fd5e136b6c7bc90` | `7840679f6c54ee80cadf0877960d37b0d11d13bb634a843f7629e54611384d8c` |
+| Reviewed | 59,213,246 | `eada7ff2f979790ddd979862482407f1b55a1edba61fe8bbaf432e436825fac9` | `175d3ef79965f8ed1bf8b4ac6b3e54e615245c89b2eb68470c19e7da4ec6cd7a` |
+
+The [consumer](../../tests/fixtures/wit-task-package/consumer.c) uses only the generated header and the standard C/POSIX library. It checks that a dropped reference cannot act on a new task, cancellation wins before delivery even if Lean already computed the value, a foreign session cannot borrow the task, and returned text survives store shutdown. A separate [fault-injection process](../../tests/fixtures/wit-task-package/retire.c) retires the runtime while the owner is waiting on a parked task and checks that closing the failed session releases its descriptor. The reviewed-result mismatch and the forbidden capability must each leave the release directory absent.

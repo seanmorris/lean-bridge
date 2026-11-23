@@ -163,6 +163,33 @@ of the store if the call reports that it trapped. A raw Wasmtime call that
 bypasses this guard cannot run the native effect. The component uses its
 native host's OS permissions, not a standalone WASI filesystem.
 
+### Await a Lean task
+
+A release marked `native-wit-task-v1` bundles a Wasmtime component, its native Lean runtime, and a typed C header. Extract the archive and put its `lib/pkgconfig` directory on `PKG_CONFIG_PATH`. The following program calls `Meter.immediate` from the example package; it does not need Lean, an engine installation, or a Wasmtime value converter.
+
+```c
+#include <meter_wasmtime.h>
+
+int main(void) {
+    meter_wit_session *session = NULL;
+    meter_wit_task_immediate task = {0};
+    meter_wit_state state;
+    uint32_t answer = 0;
+    if (meter_wit_open(&session) != meter_wit_OK) return 1;
+    int ok = meter_wit_start_immediate(session, 41, &task) == meter_wit_OK
+          && meter_wit_await_immediate(session, task, &state, &answer) == meter_wit_OK
+          && state == meter_wit_READY && answer == 42;
+    meter_wit_close(&session);
+    return ok ? 0 : 1;
+}
+```
+
+Build with `cc main.c $(pkg-config --cflags --libs meter-wit) -o main`. Open and use the session on the process main thread. `await` blocks that thread; if another task or a UI needs to run there, use the generated `poll` function instead. A pending poll returns a descriptor to register with your event loop. Do not read or close it. When it becomes readable, poll the task again.
+
+Each task delivers at most one value. Cancel stops delivery and returns whether this request won; it need not stop the Lean worker immediately. Drop a task to free its slot, or close the session to release all outstanding tasks. The limit is 256 live task resources per session, including completed tasks not yet dropped. A copied task refers to the same resource; it becomes stale on drop and cannot be used in another session. Returned strings are independent of the task and session; dispose them with the generated `string_dispose` function.
+
+The WIT interface exposes nominal task resources with typed start, poll and cancel operations. This profile is not the canonical Component Model `future<T>` or `stream<T>`. See [publishing a task package](../publish/wit-wasi.md#export-asynchronous-tasks) for the admitted Lean types.
+
 ### Packages containing resources
 
 An ownership-aware package ships named C records, variants, sequences and opaque
@@ -1157,6 +1184,8 @@ counts or establish hosted release-floor acceptance.
 Profiles: WIT/WASI. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
+
+Check the archive profile before using the table below. The prepared [synchronous IO](#call-synchronous-io) and [scalar task](#await-a-lean-task) packages have separate installed checks. The Alpha audit row for `Task` does not describe `native-wit-task-v1`.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers WIT/WASI in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 
