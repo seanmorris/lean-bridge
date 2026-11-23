@@ -10,6 +10,7 @@ import { decodeWitWireValue } from "./sync-io-host.mjs";
  */
 export const renderWitTaskImports = async model => {
 	const {wire,methods,prefix: p} = model, defs = [], rows = [];
+	if(methods?.some(m=>m.callbacks?.length)) throw new TypeError("Retained WIT requests require a store-owner dispatch adapter before packaging");
 	const heap=model.heap??[], leases=wire.leases??[];
 	if(heap.length!==leases.length || heap.some((r,i)=>r.hash!==leases[i].hash || leases[i].tag!==i+3))
 		throw new TypeError("WIT heap identities and native leases disagree");

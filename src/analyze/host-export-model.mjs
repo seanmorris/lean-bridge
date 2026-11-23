@@ -99,9 +99,9 @@ export const reconcileHostExports = options => {
 	const c = selection.cTaskCallbacks === true, ruby = selection.rubyTaskCallbacks === true;
 	const dotnet = selection.dotnetTaskCallbacks === true, jvm = selection.jvmTaskCallbacks === true;
 	const perl = selection.perlTaskCallbacks === true, php = selection.phpTaskCallbacks === true;
-	const js=selection.javascriptTaskCallbacks===true;
-	if([rust, cpp, c, ruby, dotnet, jvm, perl, php, js, selection.pythonTaskCallbacks === true].filter(Boolean).length > 1) fail("Ambiguous retained-callback host");
-	const publicErrorName = js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException";
+	const js=selection.javascriptTaskCallbacks===true, wit=selection.witTaskCallbacks===true;
+	if([rust, cpp, c, ruby, dotnet, jvm, perl, php, js, wit, selection.pythonTaskCallbacks === true].filter(Boolean).length > 1) fail("Ambiguous retained-callback host");
+	const publicErrorName = wit ? "WitCallbackError" : js ? "JavaScriptCallbackError" : php ? "PhpCallbackException" : perl ? "PerlHostException" : jvm ? "JvmCallbackException" : dotnet ? "DotNetCallbackException" : ruby ? "RubyHostException" : c ? "CCallbackError" : cpp ? "CppCallbackException" : rust ? "RustCallbackError" : "PythonHostException";
 	const hostError = "error:" + publicErrorName, terminal = "error:TaskIO.Error";
 	const callbackRef = t => {
 		const name = `Retained_${t.argument.name}_to_${t.reply.name}`, id = "bridge:" + name;
@@ -116,7 +116,7 @@ export const reconcileHostExports = options => {
 				, result: signature(t.reply)
 				, effects: [...js ? ["async"] : [], "fails", "host-call"]
 				, failure: { mode: "declared", errors: [hostError], unexpected: "poison-runtime" } }
-			, source: { producer: "lean", declaration: name, extensions: { "lean-bridge.dev/callback-scheduler": js ? "javascript-owner-agent" : jvm ? "jvm-virtual-thread" : "owner-event-loop" } }
+			, source: { producer: "lean", declaration: name, extensions: { "lean-bridge.dev/callback-scheduler": wit ? "wasmtime-store-owner" : js ? "javascript-owner-agent" : jvm ? "jvm-virtual-thread" : "owner-event-loop" } }
 			, documentation: doc(js ? "A callable on the JavaScript owner that may return a value or a promise; released on task settlement or cancellation." : "A synchronous host callable retained until its exporting task settles or is cancelled.") });
 		return { kind: "named", id };
 	};
@@ -132,7 +132,7 @@ export const reconcileHostExports = options => {
 		, name: publicErrorName
 		, category: "domain"
 		, payload: null
-		, documentation: doc(js ? "A JavaScript callback failure propagated through its original Lean IO error." : php ? "A PHP callback exception propagated through its original Lean IO error." : perl ? "A Perl exception propagated through its original Lean IO error." : jvm ? "A JVM exception propagated through its original Lean IO error." : dotnet ? "A C# exception propagated through its original Lean IO error." : ruby ? "A Ruby exception propagated through its original Lean IO error." : c ? "A C callback failure propagated through its original Lean IO error." : cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
+		, documentation: doc(wit ? "A callback failure reported by the Wasmtime store owner and propagated through its original Lean IO error." : js ? "A JavaScript callback failure propagated through its original Lean IO error." : php ? "A PHP callback exception propagated through its original Lean IO error." : perl ? "A Perl exception propagated through its original Lean IO error." : jvm ? "A JVM exception propagated through its original Lean IO error." : dotnet ? "A C# exception propagated through its original Lean IO error." : ruby ? "A Ruby exception propagated through its original Lean IO error." : c ? "A C callback failure propagated through its original Lean IO error." : cpp ? "A C++ callback exception propagated through the original Lean IO error." : rust ? "A Rust callback error propagated through the original Lean IO error." : metadata.entries.some(hasCallbacks) ? "A Python exception propagated through the original Lean IO error."
 			: "The bound Python object raised an exception that escaped the Lean call.") });
 	const startErrors = e => e.effect === "EIO" ? [`error:EIO.${e.declaration}`] : ["pure", "BaseIO"].includes(e.effect) ? []
 		: ["error:IO.Error", ...(e.hostMembers.length || hasCallbacks(e) ? [hostError] : [])];
@@ -148,7 +148,7 @@ export const reconcileHostExports = options => {
 		const selected = selection.asyncIterators?.find(s => s.open === e.declaration);
 		if(Boolean(e.taskIO) !== Boolean(selection.taskIOErrors?.includes(e.declaration)) || (e.taskIO && !task))
 			fail("Unverified terminal IO selection");
-		if(hasCallbacks(e) && (!task || !(selection.pythonTaskCallbacks || rust || cpp || c || ruby || dotnet || jvm || perl || php || js)))
+		if(hasCallbacks(e) && (!task || !(selection.pythonTaskCallbacks || rust || cpp || c || ruby || dotnet || jvm || perl || php || js || wit)))
 			fail("Unverified retained-callback selection");
 		for(const p of e.parameters) if(isCallback(p.type)) callbackRef(p.type);
 		if(!["IO", "EIO", "pure", ...(async || immediate ? ["BaseIO"] : [])].includes(e.effect) || !selection.exportModules.includes(e.module)

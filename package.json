@@ -1134,6 +1134,7 @@
     "test:wit-task-lease-host": "LEAN_BRIDGE_WIT_TASK_LEASE_HOST=1 node --test --test-concurrency=1 tests/helpers/wit-task-lease-world.mjs",
     "test:wit-task-lease-package": "LEAN_BRIDGE_WIT_LEASE_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-lease-package.mjs",
     "test:wit-task-lease-lifetime": "LEAN_BRIDGE_WIT_PARKED_LEASE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-lease-package.mjs",
+    "test:wit-task-callback-wire": "LEAN_BRIDGE_WIT_CALLBACK_WIRE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-callback-wire.mjs",
     "test:wit-task-host": "LEAN_BRIDGE_WIT_TASK_HOST=1 node --test --test-concurrency=1 tests/helpers/wit-task-resource-world.mjs",
     "test:wit-task-package": "LEAN_BRIDGE_WIT_TASK_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-package.mjs",
     "test:wit-cursor-package": "LEAN_BRIDGE_WIT_CURSOR_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-task-package.mjs",

@@ -77,6 +77,7 @@ export const compileHostSources = async options => {
 		, ...(options.target === "cpan" && projectContract.taskExports?.length ? { perlTaskCallbacks: true } : {})
 		, ...(options.target === "php-native" && projectContract.taskExports?.length ? { phpTaskCallbacks: true } : {})
 		, ...(options.target === "npm" && projectContract.taskExports?.length ? { javascriptTaskCallbacks: true } : {})
+		, ...(options.target === "wit-wasi" && projectContract.taskExports?.length ? { witTaskCallbacks: true } : {})
 		, ...(projectContract.taskIOErrors ? { taskIOErrors: projectContract.taskIOErrors } : {})
 		, taskExports: projectContract.taskExports ?? []
 		, asyncIterators: projectContract.asyncIterators ?? []

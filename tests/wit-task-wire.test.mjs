@@ -58,3 +58,17 @@ test("heap imports refuse missing, reordered or mistagged native lease kinds",as
 	for(const leases of [[],[{hash: badge,tag: 3},{hash: ticket,tag: 4}],[{hash: ticket,tag: 3},{hash: badge,tag: 3}]])
 		await assert.rejects(renderWitTaskImports({heap,wire: {leases}}),/heap identities and native leases disagree/u);
 });
+
+test("a retained WIT callback uses native readiness and preserves the failure phase without changing other hosts",()=>{
+	const cb={kind: "io-callback",argument: value,reply: value}, entries=[{...entry,parameters: [{name: "transform",type: cb}]}];
+	const gen=generateCTaskExports({...options,entries,witDelivery: true,witCallbacks: true});
+	const native=generateSyncWire(gen.prefix,entries,{tasks: true}),wit=generateSyncWire(gen.prefix,entries,{tasks: true,witCallbacks: true});
+	const [m]=wit.methods; assert.deepEqual(m.callbacks,[[0,"uint32","uint32"]]);
+	assert.equal(m.error,"string");assert.equal(m.terminal,"string");assert.ok(m.names.callbacks && wit.wait.open);
+	assert.equal(native.methods[0].terminal,undefined);assert.equal(native.methods[0].error,null);
+	assert.doesNotMatch(native.source,/tags\[0\] = phase/u);assert.match(wit.source,/tags\[0\] = phase/u);
+	for(const incompatible of [{witDelivery: false},{cppCallbacks: true},{integerMode: "gmp"},{wasmTasks: true},{wasmCallbacks: true}])
+		assert.throws(()=>generateCTaskExports({...options,entries,witCallbacks: true,witDelivery: true,...incompatible}),/WIT task delivery requires/u);
+	for(const incompatible of [{tasks: false},{wasmTasks: true},{wasm32: true},{phpWasm: true},{wasmCallbacks: true}])
+		assert.throws(()=>generateSyncWire(gen.prefix,entries,{tasks: true,witCallbacks: true,...incompatible}),/Wasmtime callbacks require/u);
+});

@@ -30,8 +30,9 @@ export const generateCTaskExports = options => {
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
 	const wasm = options.wasmTasks === true;
 	const hosts=[options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery, options.witDelivery];
-	if(options.witDelivery && (synchronous || wasm || gmp || retained || hosts.filter(Boolean).length!==1))
-		throw new TypeError("WIT task delivery requires native word carriers and cannot select retained callbacks or a second scheduler");
+	if((options.witCallbacks && !options.witDelivery) || (options.witDelivery
+		&& (synchronous || wasm || options.wasmCallbacks || gmp || (retained && !options.witCallbacks) || hosts.filter(Boolean).length!==1)))
+		throw new TypeError("WIT task delivery requires native word carriers, one store owner and an explicit retained callback adapter");
 	if(wasm && (synchronous || gmp || (retained && !options.wasmCallbacks)
 		|| [options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].some(Boolean)))
 		throw new TypeError("Threaded Wasm tasks require word carriers, the Wasm delivery profile and an explicit retained callback adapter");
@@ -80,7 +81,7 @@ export const generateCTaskExports = options => {
 		const n = `${p}_${e.name}`, h = `${n}_handle`;
 		if(retainedTask(e))
 		{
-			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, wordAliases: wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery, prototypes }); continue;
+			(host ? host.emit : emitRetainedTask)({ e, i, n, h, p, values, types, fn, lean, declarations, wasm, entryPrefix, witCallbacks: options.witCallbacks, wordAliases: wasm || options.cppCallbacks || options.rubyDelivery || options.dotnetDelivery || options.jvmDelivery || options.perlDelivery || options.phpDelivery || options.witCallbacks, prototypes }); continue;
 		}
 		const args = e.parameters.map(a => values.codec(a.type));
 		if(args.some(a => !a.arg)) throw new TypeError("C task arguments require scalar inputs");

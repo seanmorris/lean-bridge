@@ -27,6 +27,8 @@ export const linkWitHost = async options => {
 	const cc = env.CC ?? "cc", bindingIrSha256 = hashBindingIr(api);
 	const tasks=options.tasks===true;
 	const model = (tasks ? compileWitTaskResources : compileWitSyncIO)({api,evidence,bindingIrSha256,settings});
+	if(tasks && model.methods.some(m=>m.callbacks?.length))
+		throw new TypeError("A retained WIT callback requires the store-owner dispatch adapter before an installed package can be emitted");
 	const save = (path,data)=>writeFile(join(app,path),data,{flag: "wx"});
 	if(!/^wasm-tools 1\.245\.1\b/u.test((await run(wasmTools,["--version"],app,env)).stdout)) throw new Error("WIT IO requires wasm-tools 1.245.1");
 	await save("world.wit",model.wit); await save("component.wat",model.wat);

@@ -9,6 +9,7 @@ import { taskResourceTypes } from "../c/task-resources.mjs";
 import { renderCopiedWitComponent } from "./copied-component.mjs";
 import { validateOrdinaryWasiSettings } from "./copied-model.mjs";
 import { witVariantMember } from "./copied-variants.mjs";
+import { witTaskCallbackRequest } from "./task-callback-model.mjs";
 
 const scalarNames = new Map(Object.entries({
 	bool: "bool"
@@ -80,13 +81,17 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 		, ...methodLabels.flatMap((label,i)=>[label+"-observation"
 			, label+(entries[i].delivery==="async-iterator"?"-cursor":"-task")])]);
 	const heapLabels=new Set();
-	const heap=taskResourceTypes(api.types).map((r,i)=>{
+	const callbacks=new Map(api.types.filter(t=>t.kind==="callback").map(t=>[t.id,t]));
+	if(callbacks.size && selection.witTaskCallbacks!==true) fail("WIT retained callbacks require the Wasmtime store owner");
+	const heapTypes=api.types.filter(t=>t.kind!=="callback");
+	const heap=taskResourceTypes(heapTypes).map((r,i)=>{
 		let witName="lease-"+witVariantMember(r.name,heapLabels,fail,"heap resource");
 		while(reserved.has(witName)) witName="lease-"+witName;
 		reserved.add(witName);
 		return {...r,index: permitIndex+1+i,witName,nativeName: witName+"-h"+r.hash};
 	});
 	const lease=t=>t?.kind==="named" && heap.find(r=>r.id===t.id);
+	let requestIndex=permitIndex+1+heap.length;
 	const delivered=t=>lease(t)?resourceHandle(lease(t),false):copied(t);
 	const permit={index: permitIndex,witName: "request-outcome"
 		, wit: "request-outcome",wat: "$t"+permitIndex,variant: true
@@ -100,7 +105,7 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 			|| !["pure","BaseIO","IO","EIO"].includes(e.effect)
 			|| d.failure.unexpected !== "poison-runtime"
 			|| d.capabilities.length || d.result.ownership !== (lease(d.result.type)?"lease":"copy")
-			|| d.parameters.some(p => p.ownership !== (lease(p.type)?"borrow":"copy")))
+			|| d.parameters.some(p => p.ownership !== (callbacks.has(p.type.id)?"lease":lease(p.type)?"borrow":"copy")))
 			throw new TypeError("Unexpected delivery, effect or ownership in WIT task: " + d.source.declaration);
 		const label = methodLabels[index], r = api.declarations.length + index;
 		const resource = { index: r, witName: label + (stream?"-cursor":"-task") };
@@ -108,29 +113,59 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 		const result = delivered(d.result.type), parameters = new Set();
 		const text = scalar({kind: "primitive",name: "string"});
 		const startError = e.effect==="EIO" ? delivered(e.error) : e.effect==="IO" ? text : null;
-		const args = d.parameters.map(p => field(witVariantMember(p.name, parameters, fail), lease(p.type)?resourceHandle(lease(p.type),true):scalar(p.type)));
+		const calls=[],args=[];
+		for(const [slot,p] of d.parameters.entries())
+		{
+			if(callbacks.has(p.type.id))
+			{
+				if(stream || e.parameters[slot]?.type.kind!=="io-callback") fail("Retained WIT callback requires a checked task parameter");
+				calls.push(witTaskCallbackRequest({slot,parameter: p
+					, type: callbacks.get(p.type.id)
+					, label,index: requestIndex++
+					, scope: parameters
+					, scalar
+					, handle: resourceHandle
+					, field
+					, sig
+					, fail
+					, bool
+					, text}));
+			} else args.push(field(witVariantMember(p.name,parameters,fail),lease(p.type)?resourceHandle(lease(p.type),true):scalar(p.type)));
+		}
 		const item=stream?"item":"ready";
 		const states = ["pending",item,"cancelled","closed",...stream?["idle","end"]:[]].map(witName => ({witName
 			, fields: witName === item ? [{type: result}] : []
 			, payload: witName === item ? result : null}));
 		const witName = label + "-observation";
 		if(e.taskIO) states.push({witName: "failed",fields: [{type: text}],payload: text});
+		if(calls.length)
+		{
+			// A factory may itself invoke the host before it returns a Task. Its
+			// failure must be delivered after dispatch, not reported as worker IO.
+			if(startError) states.push({witName: "factory-failed",fields: [{type: startError}],payload: startError});
+			if(e.effect==="IO") states.push({witName: "factory-callback-failed",fields: [{type: text}],payload: text});
+			if(e.taskIO) states.push({witName: "worker-callback-failed",fields: [{type: text}],payload: text});
+			states.push(...calls.map(c=>c.state));
+		}
 		if(e.stepError)
 		{
 			const payload=delivered(e.stepError); states.push({witName: "failed",fields: [{type: payload}],payload});
 		}
 		const observation = { index, witName, wit: witName, wat: "$t"+index, variant: true, cases: states };
 		const owner = handle(false);
-		const start = sig((stream?"open-":"start-")+label, args, startError ? resultOf(owner,startError) : owner);
+		const start = sig((stream?"open-":"start-")+label, args, startError && !calls.length ? resultOf(owner,startError) : owner);
 		const borrow=[field(stream?"cursor":"task",handle(true))];
 		const poll = sig("poll-"+label, borrow, observation);
 		const cancel = sig("cancel-"+label, borrow, bool);
 		resources.push(resource); types.push(observation); functions.push(start,poll,cancel);
 		const request=stream && sig("request-"+label,borrow,permit);
 		if(request) functions.push(request);
+		for(const call of calls)
+		{ resources.push(call.resource); functions.push(...call.functions); }
 		methods.push({ declaration: e.declaration, resource: resource.witName
 			, start: start.witName, poll: poll.witName, cancel: cancel.witName
-			, ...request?{request: request.witName}:{} });
+			, ...request?{request: request.witName}:{}
+			, ...calls.length?{callbacks: calls.map(c=>c.descriptor)}:{} });
 	}
 	for(const r of heap)
 	{
@@ -163,6 +198,6 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 	].join("\n");
 	const wat = renderCopiedWitComponent({ surface: { functions }, functions, resources, types, typeBody, importName, exportName, preserveTypes: true });
 	const prefix = "lbc_wit_"+sha256(api.component.id);
-	const wire = generateSyncWire(prefix,entries,{tasks: true,resources: api.types});
+	const wire = generateSyncWire(prefix,entries,{tasks: true,resources: heapTypes,witCallbacks: callbacks.size>0});
 	return { wit, wat, methods, name, version, importName, exportName, bindingIrSha256, prefix, wire,heap };
 };

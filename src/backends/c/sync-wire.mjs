@@ -59,9 +59,11 @@ const emit = (v, expr, p, index = 0) => {
  * @param options.wasm32 - Check inputs for a single-threaded wasm32 synchronous transport.
  * @param options.wasmTasks - Use owner notifications for threaded wasm32 task and pull handles.
  * @param options.wasmCallbacks - Enable owner-agent requests only for checked pthread task declarations.
+ * @param options.witCallbacks - Preserve factory versus worker failures when dispatching on a Wasmtime store owner.
  */
-export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false } = {}) => {
+export const generateSyncWire = (prefix, entries, { tasks = false, resources = [], phpWasm = false, wasm32 = false, wasmTasks = false, wasmCallbacks = false, witCallbacks = false } = {}) => {
 	const checkedWasm = phpWasm || wasm32 || wasmTasks, host = phpWasm ? "PHP-Wasm" : "JavaScript-Wasm";
+	if(witCallbacks && (!tasks || checkedWasm || wasmCallbacks)) throw new TypeError("Wasmtime callbacks require a native task wire");
 	if((phpWasm || wasm32) && (tasks || resources.length)) throw new TypeError(`The ${host} sync wire does not admit task or resource handles`);
 	if(wasmTasks && (!tasks || phpWasm || wasm32 || !wasmCallbacks && entries?.some(e => e.parameters.some(a => a.type.kind === "io-callback"))))
 		throw new TypeError("Threaded Wasm requires task delivery without host callback arguments");
@@ -81,7 +83,7 @@ export const generateSyncWire = (prefix, entries, { tasks = false, resources = [
 		if(e.parameters.some(a => a.type.kind === "io-callback"))
 		{
 			if(!tasks || e.delivery !== "task") throw new TypeError("Retained host callbacks require a task");
-			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move, wasmTasks, wasmArgument });
+			const wire = retainedWireEntry({ p, n, symbol, e, values, shape: wireShape, depth, input, emit: move, wasmTasks, wasmArgument, witCallbacks });
 			methods.push(wire.method); symbols.push(...Object.values(wire.names)); return wire.source;
 		}
 		const args = e.parameters.map(a => wireShape(a.type));

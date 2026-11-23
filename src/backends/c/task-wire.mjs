@@ -118,7 +118,7 @@ int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
     if (s == ${p}_OK) { ${emit(result, "v", p)} }
     ${ec ? `else if (s == ${p}_TYPED_ERROR) { ${emit(err, "er", p)} }` : ""}
     else if (s == ${p}_IO_ERROR) {
-        if (origin) { out[0] = origin; ${a.wasmTasks ? "out[1] = phase; " : ""}s = 14; }
+        if (origin) { ${a.witCallbacks ? emit("string","msg",p)+" out[2] = origin; tags[0] = phase; " : "out[0] = origin; "+(a.wasmTasks ? "out[1] = phase; " : "")}s = 14; }
         else { ${emit("string", "msg", p)} if (phase == 2) s = 13; }
     }
     ${value.dispose ? n + "_value_dispose(&v);" : ""} ${ec?.dispose ? n + "_start_error_dispose(&er);" : ""} ${p}_buffer_dispose(&msg); return s;
@@ -126,10 +126,10 @@ int ${names.take}(uint64_t *h, uint64_t *out, uint8_t *tags) {
 	const method = { name: e.name, declaration: e.declaration, symbol, names
 		, args
 		, result
-		, error: err ?? (a.wasmTasks && e.effect==="IO" ? "string" : null)
+		, error: err ?? ((a.wasmTasks || a.witCallbacks) && e.effect==="IO" ? "string" : null)
 		, effect: e.effect
 		, delivery: e.delivery
-		, ...a.wasmTasks ? {terminal: e.taskIO ? "string" : null} : {}
+		, ...(a.wasmTasks || a.witCallbacks) ? {terminal: e.taskIO ? "string" : null} : {}
 		, callbacks: callbacks.map(({ j, arg, reply }) => [j, arg, reply])
 		, tagBytes: Math.max(1, depth(err), depth(result)) };
 	return { source, names, method };
