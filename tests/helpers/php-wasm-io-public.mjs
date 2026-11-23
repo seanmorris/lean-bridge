@@ -10,13 +10,13 @@ import { sha256 } from "../../src/capsule/node.mjs";
 /**
  * Mount real generated source files and call the user-facing functions from PHP.
  *
- * @param options - Fresh module, runtime and installed PhpNode constructor.
+ * @param options - Verified unpacked payload, runtime and installed PhpNode constructor.
  */
 export const exercisePhpWasmIOPublic = async options => {
-	const { PhpNode, core, app, t } = options;
-	const zend = core.zend, name = basename(zend.library), urls = {};
+	const { PhpNode, payload, root, runtimeLibrary, app, t } = options;
+	const { receipt, model, files } = payload, name = receipt.library, urls = {};
 	const bootstrap = "<?php require_once __DIR__.'/dependencies/brick-math/autoload.php'; require_once __DIR__.'/src/Api.php';";
-	for(const [key, data] of Object.entries({ ...bundledBrickMath(), ...zend.files, "bootstrap.php": bootstrap }))
+	for(const [key, data] of Object.entries({ ...bundledBrickMath(), ...files, "bootstrap.php": bootstrap }))
 	{
 		const path = join(app,"php",key); await mkdir(dirname(path),{recursive: true});
 		await writeFile(path,data,{flag: "wx"}); urls[key]=pathToFileURL(path);
@@ -24,9 +24,9 @@ export const exercisePhpWasmIOPublic = async options => {
 	const registration = join(app,"lazy-library.txt"); await writeFile(registration,name,{flag: "wx"});
 	const { "src/Api.php": api, "src/Internal/Native.php": native, ...extras } = urls;
 	const host = new URL("../../src/backends/php/php-wasm-copied-host.mjs",import.meta.url);
-	const runtime = { identity: core.runtimeIdentity, loaderIdentity: sha256(await readFile(host)), library: basename(core.runtimeLibrary), url: pathToFileURL(core.runtimeLibrary) };
-	const component = { id: core.api.component.id, identity: zend.zendIdentity, runtimeIdentity: core.runtimeIdentity, namespace: zend.model.namespace, library: name, composer: "lean-bridge/ledger" };
-	const descriptor = createPhpWasmCopiedDescriptor(runtime,component,{ library: pathToFileURL(zend.library), registration: pathToFileURL(registration), api, native, php: extras });
+	const runtime = { identity: receipt.runtimeIdentity, loaderIdentity: sha256(await readFile(host)), library: basename(runtimeLibrary), url: pathToFileURL(runtimeLibrary) };
+	const component = { id: payload.api.component.id, identity: receipt.zendIdentity, runtimeIdentity: receipt.runtimeIdentity, namespace: model.namespace, library: name, composer: receipt.name };
+	const descriptor = createPhpWasmCopiedDescriptor(runtime,component,{ library: pathToFileURL(join(root,name)), registration: pathToFileURL(registration), api, native, php: extras });
 	const consumer = await readFile("tests/fixtures/php-wasm-sync-io-probe/consumer.php","utf8");
 	const codec = await readFile("tests/fixtures/php-wasm-sync-io-probe/codec.php","utf8");
 	for(const loading of ["startup","lazy"])

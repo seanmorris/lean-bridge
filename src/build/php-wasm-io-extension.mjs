@@ -4,8 +4,7 @@ import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { hashBindingIr } from "../binding-ir/canonical.mjs";
 import { compilePhpWasmSyncSurface } from "../backends/php/io-surface.mjs";
-import { generatePhpWasmIOZend } from "../backends/php/php-wasm-io-zend.mjs";
-import { generatePhpWasmIOFiles } from "../backends/php/php-wasm-io-files.mjs";
+import { phpWasmIOZendRecipe } from "./php-wasm-io-replay.mjs";
 import { phpWasmHeaderPaths } from "../release/php-wasm-compiler-inputs.mjs";
 import { validatePhpWasmCopiedBinary } from "./php-wasm-copied-artifacts.mjs";
 
@@ -31,14 +30,8 @@ export const linkPhpWasmIOExtension = async options => {
 	const bindingIrSha256 = hashBindingIr(core.api), phpHeadersSha256 = await capture(phpSource);
 	const model = compilePhpWasmSyncSurface({ name, version, api: core.api, evidence: core.evidence, bindingIrSha256 });
 	if(model.wire.source !== core.wire.source) throw new Error("Reconstructed PHP-Wasm IO wire differs from the compiled component");
-	const template = generatePhpWasmIOZend(model, "0".repeat(64));
-	const php = await generatePhpWasmIOFiles(model, template);
-	const zendIdentity = sha256(canonicalJson({ componentIdentity: core.componentIdentity
-		, phpHeadersSha256, bindingIrSha256
-		, zend: sha256(template.source), port: sha256(template.port.source)
-		, header: sha256(template.port.header)
-		, php: Object.fromEntries(Object.entries(php).map(([p,src]) => [p,sha256(src)])) }));
-	const gen = generatePhpWasmIOZend(model, zendIdentity), objects = [...core.objects];
+	const { zendIdentity, gen, files } = await phpWasmIOZendRecipe({ model, componentIdentity: core.componentIdentity, phpHeadersSha256, bindingIrSha256 });
+	const objects = [...core.objects];
 	const inc = ["", "main", "Zend", "TSRM", "ext"].flatMap(d => ["-I", join(phpSource, d)]);
 	await writeFile(join(app, "php-io-port.h"), gen.port.header, { flag: "wx" });
 	for(const [file, src] of [["io-port", gen.port.source], ["io-zend", gen.source]])
@@ -51,6 +44,10 @@ export const linkPhpWasmIOExtension = async options => {
 	await compiler.run(compiler.emcc, ["-O2", "-g0", "-fPIC", "-sSIDE_MODULE=2", "-sEXPORTED_FUNCTIONS=['_get_module']", "-Wl,--no-entry", ...objects, core.runtimeLibrary, "-o", library]);
 	const bytes = await readFile(library); await validatePhpWasmCopiedBinary(bytes, true);
 	if(await capture(phpSource) !== phpHeadersSha256) throw new Error("PHP-Wasm IO Zend headers changed during compilation");
-	const files = await generatePhpWasmIOFiles(model, gen);
-	return { model, library, files, transport: gen.transport, sha256: sha256(bytes), zendIdentity, bindingIrSha256, phpHeadersSha256 };
+	const receipt = { schemaVersion: 1
+		, profile: "php-wasm-sync-io-v1"
+		, name, version, componentIdentity: core.componentIdentity
+		, runtimeIdentity: core.runtimeIdentity, phpHeadersSha256, bindingIrSha256
+		, zendIdentity, library: gen.library, librarySha256: sha256(bytes) };
+	return { model, library, files, transport: gen.transport, sha256: receipt.librarySha256, zendIdentity, bindingIrSha256, phpHeadersSha256, receipt };
 };

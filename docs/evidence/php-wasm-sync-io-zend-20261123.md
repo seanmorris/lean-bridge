@@ -45,3 +45,32 @@ with header inventory
 This run loaded the generated files through the shared host descriptor.
 It did not install a generated npm or Composer archive, run in Chromium,
 or exercise async calls or resource leases.
+
+### Replay the saved component without a compiler
+
+Set `LEAN_BRIDGE_PHP_WASM_IO_WORK` to an existing private directory before
+running the core test above. Inside its new `php-wasm-io-core-*` directory,
+`io-payload/` contains the compiled extension, three PHP wrappers, the
+Binding IR, Lean export evidence, and a receipt. The receipt SHA-256 for
+this fixture run was `110bf6e58b345c69a1c2cad17e90110a3c3be6e6e189eb7d60c77c64668472bf`.
+
+Set `LEAN_BRIDGE_PHP_WASM_IO_REPLAY` to that `io-payload` directory.
+Keep the pinned runtime and installed `php-wasm` host paths from the
+core setup. No toolchain paths are needed:
+
+```sh
+node_bin=$(command -v node)
+env -i PATH=/no-build-tools \
+  LEAN_BRIDGE_PHP_WASM_HOST="$LEAN_BRIDGE_PHP_WASM_HOST" \
+  LEAN_BRIDGE_PHP_WASM_IO_RUNTIME="$LEAN_BRIDGE_PHP_WASM_IO_RUNTIME" \
+  LEAN_BRIDGE_PHP_WASM_IO_REPLAY="$LEAN_BRIDGE_PHP_WASM_IO_REPLAY" \
+  LEAN_BRIDGE_PHP_WASM_IO_RECEIPT_SHA256=110bf6e58b345c69a1c2cad17e90110a3c3be6e6e189eb7d60c77c64668472bf \
+  "$node_bin" --test --test-name-pattern='relocated PHP-Wasm IO' tests/helpers/php-wasm-io-core.mjs
+```
+
+The replay copies the payload to a fresh directory, regenerates the
+bindings from the recorded Lean interface, and checks the extension digest
+and shared runtime identity. Both loading modes passed the same 30 PHP
+assertions there. The producer test also rejects changes to the runtime,
+configuration, headers, PHP wrapper, extension, receipt, and file list.
+The digest pins this particular build; it is not a publisher signature.

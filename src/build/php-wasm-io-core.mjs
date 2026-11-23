@@ -4,18 +4,15 @@
  *
  * @file
  */
-import { readFile, writeFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { generateCTaskExports } from "../backends/c/task-exports.mjs";
-import { generateSyncWire } from "../backends/c/sync-wire.mjs";
+import { canonicalJson } from "../capsule/node.mjs";
 import { compileHostSources } from "./host-elaboration.mjs";
 import { readVerifiedPhpWasmCopiedRuntime } from "./php-wasm-copied-artifacts.mjs";
 import { phpWasmToolchain } from "./php-wasm-copied-component.mjs";
 import { linkPhpWasmIOExtension } from "./php-wasm-io-extension.mjs";
+import { phpWasmIOCoreRecipe } from "./php-wasm-io-replay.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
-
-const asset = path => readFile(new URL("../backends/c/" + path, import.meta.url), "utf8");
 
 /**
  * Stage generated objects in the caller's private workspace. The caller owns
@@ -41,25 +38,7 @@ export const compilePhpWasmIOCore = async options => {
 	const built = await compileHostSources({ app
 		, sources: options.sources, projectContract: contract, ir: null
 		, environment, run, leanPrefix, signal, target: "php-wasm" });
-	const common = { name: "php-wasm-" + sha256(contract.component.id)
-		, modules: contract.modules
-		, entries: built.entries, synchronousIO: true, integerMode: "words" };
-	const skeleton = generateCTaskExports({ ...common, componentIdentity: "0".repeat(64) });
-	const wire = generateSyncWire(skeleton.prefix, built.entries, { phpWasm: true });
-	const delivery = await asset("task-delivery.h"), integers = skeleton.integerMode ? await asset("task-integers.h") : "";
-	const owner = `#if !defined(__wasm32__) || !defined(__EMSCRIPTEN__) || defined(__EMSCRIPTEN_PTHREADS__) || !LB_SYNC_ONLY
-#error Expected synchronous IO on a single-threaded PHP-Wasm instance
-#endif
-static int lb_context(void) { return lean_bridge_native_process_valid(); }
-`;
-	const componentIdentity = sha256(canonicalJson({ runtime: runtime.identity
-		, evidence: built.evidence
-		, skeleton
-		, wire: sha256(wire.source)
-		, delivery: sha256(delivery)
-		, owner: sha256(owner)
-		, integers: sha256(integers) }));
-	const gen = generateCTaskExports({ ...common, componentIdentity });
+	const { componentIdentity, gen, wire, delivery, owner, integers } = await phpWasmIOCoreRecipe({ ...built, runtimeIdentity: runtime.identity });
 	const save = (name, bytes) => writeFile(join(app, name), bytes, { flag: "wx" });
 	await save("BridgeCAsync.lean", gen.entryLean);
 	await run(join(leanPrefix, "bin/lean"), ["-j1", "-c", "entry.c", "BridgeCAsync.lean"], app, built.env);

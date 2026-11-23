@@ -1,7 +1,7 @@
 /** @file Exercise the private compiled IO core inside the pinned PHP-Wasm VM. */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { pathToFileURL } from "node:url";
@@ -9,10 +9,25 @@ import { inspectLeanProject } from "../../src/analyze/lean-project.mjs";
 import { elaboratedComponent } from "../../src/analyze/semantic-model.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { compilePhpWasmIOCore } from "../../src/build/php-wasm-io-core.mjs";
+import { readVerifiedPhpWasmCopiedRuntime } from "../../src/build/php-wasm-copied-artifacts.mjs";
+import { readPhpWasmIOPayload, verifyPhpWasmIOPayload, writePhpWasmIOPayload } from "../../src/build/php-wasm-io-replay.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { exercisePhpWasmIOPublic } from "./php-wasm-io-public.mjs";
 
 const environment = process.env, runtimeRoot = environment.LEAN_BRIDGE_PHP_WASM_IO_RUNTIME;
+test("relocated PHP-Wasm IO payload replays without invoking a compiler", { skip: !environment.LEAN_BRIDGE_PHP_WASM_IO_REPLAY }, async t => {
+	const app = await mkdtemp(join(tmpdir(),"php-wasm-io-readback-")), root = join(app,"relocated");
+	t.after(() => rm(app,{ recursive: true, force: true }));
+	await cp(environment.LEAN_BRIDGE_PHP_WASM_IO_REPLAY, root, { recursive: true });
+	const bytes = await readFile(join(root,"io-receipt.json"));
+	assert.equal(sha256(bytes),environment.LEAN_BRIDGE_PHP_WASM_IO_RECEIPT_SHA256);
+	const payload = await readPhpWasmIOPayload(root, JSON.parse(bytes));
+	const runtime = await readVerifiedPhpWasmCopiedRuntime(runtimeRoot);
+	assert.equal(runtime.identity,payload.receipt.runtimeIdentity);
+	const { PhpNode } = await import(pathToFileURL(join(resolve(environment.LEAN_BRIDGE_PHP_WASM_HOST),"PhpNode.mjs")));
+	await exercisePhpWasmIOPublic({ PhpNode, payload, root, runtimeLibrary: join(runtimeRoot,runtime.manifest.library), app, t });
+});
+
 test("PHP-Wasm IO core rejects unsupported effects and scheduling before compiling", async () => {
 	const base = { synchronousIO: true, nativeEffects: [], hostImportsSourceSha256: null };
 	for(const change of [{ nativeEffects: undefined }
@@ -78,6 +93,18 @@ test("PHP-Wasm IO core runs state and distinct typed failures in installed PHP 8
 	t.diagnostic(`${stdout} (runtime ${core.runtimeIdentity}, component ${core.componentIdentity})`);
 	if(core.zend)
 	{
+		const root = join(app, "io-payload"), payload = await writePhpWasmIOPayload(root, core);
+		assert.deepEqual(payload.model.methods, core.zend.model.methods);
+		const { receipt, evidence, files } = payload;
+		await assert.rejects(verifyPhpWasmIOPayload({ ...payload, receipt: { ...receipt, runtimeIdentity: "0".repeat(64) } }), /core identity/);
+		await assert.rejects(verifyPhpWasmIOPayload({ ...payload, evidence: { ...evidence, configurationSha256: "0".repeat(64) } }), /core identity/);
+		await assert.rejects(verifyPhpWasmIOPayload({ ...payload, receipt: { ...receipt, phpHeadersSha256: "0".repeat(64) } }), /Zend identity/);
+		await assert.rejects(verifyPhpWasmIOPayload({ ...payload, files: { ...files, "src/Api.php": Buffer.from("<?php") } }), /wrapper differs/);
+		await assert.rejects(verifyPhpWasmIOPayload({ ...payload, library: { ...payload.library, bytes: Buffer.from("bad") } }), /binary digest/);
+		await assert.rejects(readPhpWasmIOPayload(root, { ...receipt, version: "9.0.0" }), /Different.*receipt/);
+		await writeFile(join(root, "unrecorded.php"), "<?php", { flag: "wx" });
+		await assert.rejects(readPhpWasmIOPayload(root, receipt), /inventory/);
+		await rm(join(root, "unrecorded.php"));
 		const { model, library, transport } = core.zend;
 		const methods = Object.fromEntries(model.methods.map((m, i) => [m.declaration, { ...m, entry: "\\"+transport+"\\call"+i }]));
 		assert.equal(methods["Ledger.add"].returnType, "\\Brick\\Math\\BigInteger");
@@ -101,7 +128,7 @@ echo PHP_VERSION, ":", PHP_INT_SIZE, ":zend";
 `), 0, errors);
 		assert.equal(errors, ""); assert.equal(result, "8.4.1:4:zend");
 		t.diagnostic(`${result} (extension ${core.zend.sha256}, headers ${core.zend.phpHeadersSha256})`);
-		await exercisePhpWasmIOPublic({ PhpNode, core, app, t });
+		await exercisePhpWasmIOPublic({ PhpNode, payload, root, runtimeLibrary: core.runtimeLibrary, app, t });
 	}
 	const forbidden = await mkdtemp(join(app, "effect-policy-"));
 	const fileIO = source.replace("def add (amount : USize) : IO USize := do", 'def add (amount : USize) : IO USize := do\n  IO.FS.writeFile "unwanted" "effect"');

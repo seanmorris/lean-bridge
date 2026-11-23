@@ -49,7 +49,7 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks,phpWasm=
 	if(typeof name!=="string"||typeof version!=="string") fail("missing Composer coordinates");
 	validateOrdinaryPhpSettings({name,version});
 	const s=evidence?.selection;
-	if(phpWasm && (tasks || !Array.isArray(s?.nativeEffects) || s.nativeEffects.length || s.leanResources?.length))
+	if(phpWasm && (tasks || !Array.isArray(s?.nativeEffects) || s.nativeEffects.length || s.leanResources?.length || s.taskIOErrors?.length))
 		fail("expected an in-memory PHP-Wasm selection without leases or scheduled operations");
 	const async = Boolean(s?.taskExports?.length || s?.asyncIterators?.length);
 	if(!s || async!==tasks || (s.synchronousIO===true)===tasks
@@ -124,7 +124,7 @@ const compileSurface=({name,version,api,bindingIrSha256,evidence},tasks,phpWasm=
 		const phases=w.callbacks ? {error,terminal} : {};
 		return {...w,...phases,publicName: raw,parameters,returnType,failure,errorType,...step};
 	});
-	return {namespace,prefix,methods,wire,leases,...phpWasm ? { phpWasm: true } : {}};
+	return {namespace,prefix,methods,wire,leases,...phpWasm ? { phpWasm: true, entries } : {}};
 };
 
 /**
