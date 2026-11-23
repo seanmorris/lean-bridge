@@ -30,6 +30,7 @@ per handoff.
 | Node.js | IO first, callbacks first | Catch and return; rethrow | 4 × 23 | 8 before trap, 0 afterward |
 | Chromium | IO first, callbacks first | Catch and return; rethrow | 4 × 23 | 8 before trap, 0 afterward |
 | Node worker | Callbacks first | Rethrow | 1 × 23 | 8 before trap, 0 afterward |
+| Chromium module worker | IO first, callbacks first | Catch and return; rethrow | 4 × 23 | 8 before trap, 0 afterward |
 
 The rethrown trap retained its identity. Swallowing it did not allow the
 outer call to succeed. Later IO calls, callbacks, ticket methods, closure
@@ -39,9 +40,12 @@ Both leases and the owning component could still be closed idempotently.
 The Node `worker_threads` run kept a ticket and counter alive in
 the parent while the worker exercised the 23 checks and retired its own heap.
 After the worker exited, the parent could read the ticket and advance its
-counter from 20 to 21. Retirement applies to one runtime instance, not to
-the entire process. Across the two handoffs the nine realms each ran 23
-checks (414 total, excluding the parent assertions).
+counter from 20 to 21. In Chromium, Vite bundled the worker and page from
+the same offline installation. Four separate module workers each trapped;
+after every worker the parent read its original ticket and advanced its
+own counter, ending at 24. Retirement applies to one runtime instance.
+Across both handoffs, 26 realms ran 23 checks each (598 total, excluding
+the separate parent assertions).
 
 | Archive | SHA-256 |
 | --- | --- |
@@ -64,5 +68,5 @@ instead of rebuilding, set `LEAN_BRIDGE_JS_IO_RELEASE` and
 `LEAN_BRIDGE_JS_CALLBACK_RELEASE` to their npm package-set receipt directories.
 The test rejects different runtime archives. No registry or browser network
 service is needed. This evidence covers synchronous callbacks in Node,
-Node workers, and a Chromium page. It does not cover asynchronous settlement
-or browser workers.
+Node workers, Chromium pages and dedicated Chromium module workers. It
+does not cover asynchronous callback settlement.

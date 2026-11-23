@@ -120,8 +120,9 @@ both packages remain usable.
 An unexpected trap **inside a bridge component** retires every package using
 that runtime instance. Catching the trap inside a callback does not make the
 suspended call safe to resume. Discard the instance and its leases; don't
-retry on the same heap. A separate Node worker has its own runtime; retiring
-that worker's instance leaves the parent runtime usable.
+retry on the same heap. A Node worker or a dedicated browser module worker
+has its own runtime. Retiring the worker's instance leaves the parent’s
+runtime and its existing objects usable. See the [worker isolation checks](evidence/javascript-wasm-callback-io-retirement-20261123.md).
 
 ## TypeScript
 

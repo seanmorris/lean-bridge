@@ -45,7 +45,10 @@ const serve = async (consumer, names, isolated) => {
 export const runInstalledChromium = async options => {
 	const {root, consumer, names, evaluate, argument, isolated = false} = options;
 	const {chromium} = await import("playwright");
-	const site = await serve(consumer, names, isolated);
+	const site = options.assembledDirectory
+		? await (await import("../../site/serve.mjs")).startSiteServer({root: options.assembledDirectory, base: "/"})
+		: await serve(consumer, names, isolated);
+	const address = site.url ?? site.origin, origin = new URL(address).origin;
 	// Keep Chromium in the test's CPU-limited process group, not a detached job.
 	const userData = await mkdtemp(join(root, "chromium-"));
 	const proc = spawn(process.env.LEAN_BRIDGE_CHROMIUM ?? chromium.executablePath()
@@ -78,8 +81,8 @@ export const runInstalledChromium = async options => {
 		});
 		browser = await chromium.connectOverCDP(endpoint);
 		const page = await browser.contexts()[0].newPage();
-		await page.route("**/*", route => new URL(route.request().url()).origin === site.origin ? route.continue() : route.abort());
-		await page.goto(site.origin);
+		await page.route("**/*", route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
+		await page.goto(address);
 		const result = page.evaluate(evaluate, argument);
 		if(!options.timeoutMs) return await result;
 		let timer;

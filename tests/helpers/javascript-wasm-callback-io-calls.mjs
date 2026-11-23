@@ -26,18 +26,19 @@ const observeNativeFinish = () => {
  * Distinguish exceptions crossing a borrowed callback from retirement of its shared heap.
  *
  * @param options - Installed names, import order and digest of the test-only fault component.
+ * @param load - Optional bundler-resolved lazy imports for a dedicated browser worker.
  */
-export const exercise = async options => {
+export const exercise = async (options, load = name => import(name)) => {
 	const {ioName, ownedName, order, integrity, propagate} = options;
 	const modules = new Map();
 	const finishes = observeNativeFinish();
 	try
 	{
-		for(const name of (order === "io-first" ? [ioName, ownedName] : [ownedName, ioName])) modules.set(name, await import(name));
+		for(const name of (order === "io-first" ? [ioName, ownedName] : [ownedName, ioName])) modules.set(name, await load(name));
 	} finally
 	{ finishes.restore(); }
 	const io = modules.get(ioName), owned = modules.get(ownedName);
-	const {loadComponent} = await import("@lean-bridge/runtime");
+	const {loadComponent} = await load("@lean-bridge/runtime");
 	const unit = {kind: "primitive", name: "unit"}, id = "test:trap";
 	const scalar = {parameters: [], resultMode: "value"};
 	const descriptor = {id: "test-only-trap", buildHash: integrity, integrity

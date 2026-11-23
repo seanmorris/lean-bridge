@@ -11,6 +11,7 @@ import { buildOwnedJavaScriptWasmComponent } from "../../src/build/javascript-wa
 import { buildOwnedJavaScriptNpmPackages } from "../../src/release/owned-javascript-npm-package.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { runInstalledChromium } from "./javascript-wasm-installed-browser.mjs";
+import { checkCallbackWorker } from "./javascript-wasm-callback-io-browser-worker.mjs";
 
 const run = promisify(execFile);
 const fixture = path => resolve("tests/fixtures", path);
@@ -65,6 +66,7 @@ test("installed callbacks preserve host and IO exceptions; a swallowed guest tra
 	await copyFile(new URL("./javascript-wasm-callback-io-calls.mjs", import.meta.url), join(consumer, "calls.mjs"));
 	await copyFile(new URL("./javascript-wasm-callback-io-worker.mjs", import.meta.url), join(consumer, "worker.mjs"));
 	await writeFile(join(consumer, "consume.mjs"), 'import {exercise} from "./calls.mjs"; console.log(JSON.stringify(await exercise(JSON.parse(process.argv[2]))));\n');
+	const cases = [];
 	for(const order of ["io-first", "owned-first"]) for(const propagate of [false, true])
 	{
 		const options = {ioName: io.name, ownedName: owned.name, order, integrity, propagate};
@@ -73,6 +75,7 @@ test("installed callbacks preserve host and IO exceptions; a swallowed guest tra
 			, names: [io.name, owned.name], argument: options
 			, evaluate: async opts => (await import("/calls.mjs")).exercise(opts)});
 		assert.deepEqual(browser, node); assert.equal(node.order, order); assert.ok(node.checks >= 23);
+		cases.push({options, node});
 		t.diagnostic(JSON.stringify({node, chromium: browser, diagnosticWasm: integrity}));
 		if(order === "owned-first" && propagate)
 		{
@@ -81,4 +84,6 @@ test("installed callbacks preserve host and IO exceptions; a swallowed guest tra
 			t.diagnostic("An independent Node worker retired its own heap; the live parent retained its ticket and advanced its counter to 21.");
 		}
 	}
+	const dedicated = await checkCallbackWorker({root, consumer, names: [io.name, owned.name], cases});
+	t.diagnostic(JSON.stringify({chromiumWorkers: dedicated.workers.length, parentCounter: dedicated.parentCounter}));
 });
