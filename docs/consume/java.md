@@ -50,6 +50,50 @@ UInt8 and UInt16 use range-checked `int`; UInt32 uses range-checked `long`. UInt
 
 Calls copy nested inputs and outputs. Null, negative Nat, out-of-range unsigned values and malformed UTF-16 throw. Native input and output conversions share a 16 MiB budget; the Java input scratch budget is also bounded. An oversized result throws after Lean returns. Scoped native memory and deep owned results are released on failure. The loader checks bundled native hashes, shares a compatible runtime and removes its private extracted files at normal JVM shutdown.
 
+### Call synchronous IO
+
+An installed Maven package can expose Lean `BaseIO`, `IO` and `EIO` as
+ordinary Java methods. A write finishes before the method returns. You don't
+create a future, attach a native thread, or start a scheduler.
+
+The [Journal package](../publish/maven.md#export-synchronous-io) writes and
+reads a file. Its `choose` method can throw a Lean error containing a
+structured value. Run this example with a writable file path; it prints
+`ready` and then `37`:
+
+```java
+import org.leanbridge.journal.Api;
+import org.leanbridge.journal.ChooseError;
+import org.leanbridge.journal.Result;
+
+class Example {
+    public static void main(String[] args) {
+        Api.store(args[0], "ready");
+        System.out.println(Api.read(args[0]));
+        try {
+            Api.choose(true, false, "unused");
+        } catch (ChooseError e) {
+            Result<String, Long> payload = e.payload();
+            if (payload instanceof Result.Err<String, Long> err)
+                System.out.println(err.error());
+        }
+    }
+}
+```
+
+A returned `Except` is a `Result.Ok` or `Result.Err`; it does not throw.
+A thrown `EIO` raises the declaration's exception, such as `ChooseError`,
+with a typed `payload()`. A file I/O failure raises `LeanIOException`
+with the Lean declaration and an `IOException` cause. These failures leave
+the package usable. Invalid inputs are rejected before the call enters Lean.
+A malformed native result retires the shared runtime; later calls fail
+instead of reusing it.
+
+You can call from platform or virtual threads. Compatible packages serialize
+Lean work on one native thread. The [installed checks](../evidence/jvm-sync-io-20261123.json)
+cover both thread types, concurrent writes to a Lean counter, and both
+package load orders.
+
 ### Arrays and records
 
 Lean `Array T` uses a typed Java array. Primitive elements use primitive arrays, such as `long[]` for `Array UInt32`. Named copied structures become Java records with typed component accessors. Arrays and records can nest; calls copy their contents into independent returned values.
@@ -957,6 +1001,8 @@ The [hosted value-index matrix](../evidence/checked-record-value-index-matrix-pr
 Profiles: Java. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
+
+The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. It does not use futures or iterators.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Java in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

@@ -67,7 +67,8 @@ The npm builder accepts shared module/export selection, `arities`, `specializati
 If the package exports native tasks, pull iterators, Python host imports, or standalone synchronous C11, C++20, Rust, Ruby, C# or CPython IO functions,
 [declare the OS access its Lean code needs](export-decisions.md#declare-native-os-access).
 For standalone IO, specify `nativeEffects: []` if no OS access is needed. Use
-ordinary `exports` for those functions; there is nothing to await.
+ordinary `exports` for those functions; there is nothing to await. For Java
+and Kotlin, [publish synchronous IO in a Maven package](../publish/maven.md#export-synchronous-io).
 
 ### Select an explicit host-null projection
 

@@ -532,9 +532,10 @@ Analysis reports separate reasons for unresolved implicit, instance, dependent, 
 
 A Lean `IO` result tells the caller how an operation can fail. It doesn't say
 whether that operation reads a file, checks an environment variable, or only
-updates an in-memory reference. For Linux x86-64 C11, C++20, Rust and CPython
-packages that export synchronous IO, tasks or iterators, and for Python
-host-import packages, declare OS access separately
+updates an in-memory reference. Declare OS access separately for Linux x86-64
+C, C++, Rust, Python, Ruby and .NET packages that export native synchronous
+IO, tasks or iterators; for JVM [synchronous IO](../publish/maven.md#export-synchronous-io);
+and for Python host-import packages. List the grants
 in `lean-bridge.exports.json`. Here the module reads an environment variable at
 startup, and its worker reads a file:
 
@@ -576,7 +577,7 @@ API. For example, `Journal.read : String → IO String` reads a file:
 }
 ```
 
-Build one target (`c`, `cpp`, `cargo`, `rubygems`, `nuget` or `pypi`) at a time. No task, iterator or host import
+Build one target (`c`, `cpp`, `cargo`, `rubygems`, `nuget`, `maven` or `pypi`) at a time. No task, iterator or host import
 is required. Source discovery alone cannot check OS access; use the build's
 `binding-ir.json` to review the compiled interface. The functions finish
 before returning. A thrown `EIO` error

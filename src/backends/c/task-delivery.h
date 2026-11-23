@@ -36,9 +36,7 @@ static lb_entry *lb_entries;
 #endif
 static uint64_t lb_domain;
 
-static int lb_context(void) {
-    return getpid() == (pid_t)syscall(SYS_gettid) && lean_bridge_native_process_valid();
-}
+#include "task-owner-policy.h"
 static int lb_initialized_here;
 static void *lb_init(uint8_t b) {
     lean_object *r = initialize_BridgeCAsync(b); lb_initialized_here = lean_io_result_is_ok(r); return r;

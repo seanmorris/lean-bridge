@@ -36,6 +36,38 @@ Calls accept concrete copied values, synchronous callbacks and returned closures
 
 Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
+## Export synchronous IO
+
+Select the Lean declarations by name and declare their OS access. For
+example, `Journal.store : String → String → IO Unit` and
+`Journal.read : String → IO String` need the filesystem grant:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Journal"],
+  "exports": ["Journal.store", "Journal.read", "Journal.choose"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"maven": {"name": "com.acme:journal-io", "version": "1.2.0-rc.1"}}
+}
+```
+
+Use `nativeEffects: []` for in-memory-only I/O. Both ordinary selection
+and a reviewed Binding IR are checked against the current Lean source.
+Build with `lean-bridge build --project . --target maven --output release`.
+Publish the resulting JAR **and its POM** using the Maven instructions below.
+The POM declares the Kotlin standard library; the JAR contains both compiled
+language APIs and the verified native libraries.
+
+Select ordinary `exports` for these synchronous calls, not `taskExports`.
+The `native-jvm-io-v1` profile supports the nineteen scalar types and nested
+returned or thrown `Except` values. It does not turn a Lean task, iterator,
+or resource into a synchronous copied value. See the installed
+[Java](../consume/java.md#call-synchronous-io) and
+[Kotlin](../consume/kotlin.md#call-synchronous-io) examples, the
+[original package receipts](../evidence/jvm-sync-io-20261123.json), and the
+[native OS grant reference](../lean/export-decisions.md#declare-native-os-access).
+
 ## Export options, results and products
 
 Both ordinary-source and independently reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain admitted primitives, arrays and acyclic records. The Java API supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches and a binary `Pair<A, B>` record. The companion Kotlin API supplies sealed interfaces and final classes with non-nullable, covariant type parameters. Both compare nested array contents. Generic primitive payloads use boxed JVM types. None, Some Unit and nested options remain distinct; domain errors return `Err` values while bridge failures throw exceptions.

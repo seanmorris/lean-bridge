@@ -35,6 +35,38 @@ UInt8 and UInt16 use `Int`, UInt32 uses `Long`, and UInt64/Nat/Int use `java.mat
 
 Unit arguments use the generated Java enum. Import it with an alias, such as `import org.leanbridge.maple.Unit as LeanUnit`, then pass `LeanUnit.INSTANCE`. A Lean Unit result returns Kotlin `Unit`. The Kotlin API has non-nullable signatures; foreign JVM calls also encounter runtime null checks. Native loading, copying, limits and cleanup follow the [Java rules](java.md#call-an-ordinary-lean-package).
 
+### Call synchronous IO
+
+Import the generated `.kotlin.Api` object and call it directly. Lean
+`BaseIO`, `IO` and `EIO` methods return when the operation finishes; no
+coroutine scope or dispatcher is required. In this
+[Journal example](../publish/maven.md#export-synchronous-io), pass a writable
+file path. The output is `ready` followed by `37`.
+
+```kotlin
+import org.leanbridge.journal.kotlin.Api
+import org.leanbridge.journal.ChooseError
+import org.leanbridge.journal.Result
+
+fun main(args: Array<String>) {
+    Api.store(args[0], "ready")
+    println(Api.read(args[0]))
+    try {
+        Api.choose(true, false, "unused")
+    } catch (e: ChooseError) {
+        val payload: Result<String, Long> = e.payload()
+        if (payload is Result.Err) println(payload.error())
+    }
+}
+```
+
+An ordinary `Except` result is data. A thrown `EIO` has a declaration-specific
+exception with the declared payload type. File I/O failures raise
+`LeanIOException`, not a failed result or an asynchronous exception.
+Validation and native runtime loading are shared with the
+[Java API](java.md#call-synchronous-io). See the
+[installed Kotlin checks](../evidence/jvm-sync-io-20261123.json).
+
 ### Arrays and records
 
 New ordinary Maven packages include a Kotlin API in a `.kotlin` subpackage.
@@ -878,6 +910,8 @@ The [hosted value-index matrix](../evidence/checked-record-value-index-matrix-pr
 Profiles: Kotlin. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
+
+The Maven [synchronous IO profile](#call-synchronous-io) has separate installed checks for typed errors, nested returned `Except` values and all nineteen scalar types. It does not use futures or iterators.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Kotlin in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

@@ -29,6 +29,7 @@ import "./helpers/ruby-task-installed.mjs";
 import "./helpers/ruby-retained-task-installed.mjs";
 import "./helpers/ruby-resource-installed.mjs";
 import "./helpers/dotnet-io-installed.mjs";
+import "./helpers/jvm-io-installed.mjs";
 import "./helpers/dotnet-task-installed.mjs";
 import "./helpers/dotnet-task-managed-replay.mjs";
 import "./helpers/dotnet-resource-installed.mjs";

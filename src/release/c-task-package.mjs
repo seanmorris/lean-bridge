@@ -27,6 +27,9 @@ import { validateOrdinaryNugetSettings } from "../backends/dotnet/copied-model.m
 import { generateSyncWire } from "../backends/c/sync-wire.mjs";
 import { validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
 import { validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
+import { validateOrdinaryMavenSettings } from "../backends/jvm/copied-model.mjs";
+import { compileJvmIOOwner, jvmIOEntry, nativeDeliveryHeader } from "../build/jvm-io-owner.mjs";
+import { writeJvmIORelease } from "./jvm-io-package.mjs";
 
 const asset = path => readFile(new URL(path, import.meta.url));
 
@@ -38,9 +41,9 @@ const asset = path => readFile(new URL(path, import.meta.url));
 export const buildCTaskPackage = async options => {
 	const { projectContract, name, version, workRoot, runtimeRoot, leanPrefix, environment, signal } = options;
 	const target = options.target ?? "c", cpp = target === "cpp", rust = target === "cargo", ruby = target === "rubygems";
-	const dotnet = target === "nuget";
-	if(!["c", "cpp", "cargo", "rubygems", "nuget"].includes(target)) throw new TypeError("Invalid native delivery target");
-	(rust ? validateOrdinaryCargoSettings : ruby ? validateOrdinaryRubySettings : dotnet ? validateOrdinaryNugetSettings : validateNativeCSettings)({ name, version });
+	const dotnet = target === "nuget", jvm = target === "maven";
+	if(!["c", "cpp", "cargo", "rubygems", "nuget", "maven"].includes(target)) throw new TypeError("Invalid native delivery target");
+	(rust ? validateOrdinaryCargoSettings : ruby ? validateOrdinaryRubySettings : dotnet ? validateOrdinaryNugetSettings : jvm ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
 	if(options.ir || !name || !version || options.sources.some(s => /^(?:LeanBridge(?:\.|$)|BridgeCAsync$)/u.test(s.module))) throw new TypeError("Invalid C task source modules or coordinates");
 	const { identity: runtimeIdentity, manifest } = await readVerifiedNativeRuntime(runtimeRoot);
 	const run = (command, args, cwd, env = environment) => processBuildRunner.capture({ command, args, cwd, env, signal });
@@ -52,10 +55,12 @@ export const buildCTaskPackage = async options => {
 		const { entries, objects, api, env, evidence } = await compileHostSources({ ...options, app, run });
 		const synchronous = projectContract.synchronousIO === true;
 		const bindingIrSha256 = hashBindingIr(api), profile = `native-${cpp ? "cpp" : "c"}-${synchronous ? "io" : "task"}-v1`;
-		const delivery = await asset("../backends/c/task-delivery.h"), notification = await asset("../backends/native/task-notification.h");
+		const delivery = await nativeDeliveryHeader(jvm), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
+		if(jvm && (!synchronous || resources.length)) throw new TypeError("Expected copied synchronous JVM IO");
+		const owner = jvm && await compileJvmIOOwner({ app, runtimeRoot, runtimeIdentity, cc: environment.CC ?? "cc", run });
 		const threads = cpp && (!synchronous || resources.length > 0);
-		const config = { name: dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet ? "words" : "gmp" };
+		const config = { name: jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet || jvm ? "words" : "gmp" };
 		const callbackHeaders = new Map();
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
@@ -63,15 +68,17 @@ export const buildCTaskPackage = async options => {
 		const ledger = resources.length ? await taskResourceLedger(runtimeIdentity) : null;
 		const ledgerId = ledger && ledger.id, ledgerName = ledger?.name, ledgerFlag = ledger?.flag;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
-		const wire = (ruby || dotnet) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources });
+		const wire = (ruby || dotnet || jvm) && generateSyncWire(skeleton.prefix, entries, { tasks: !synchronous, resources });
+		const jvmEntry = jvm && jvmIOEntry(wire, skeleton.prefix);
 		const integers = skeleton.integerMode && await asset("../backends/c/task-integers.h");
-		const gmp = integers && !cpp && !rust && !ruby && !dotnet && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
+		const gmp = integers && !cpp && !rust && !ruby && !dotnet && !jvm && await taskGmpKit({ root: join(stage, "gmp"), environment, signal });
 		const boost = integers && cpp && boostSources();
 		const componentIdentity = sha256(canonicalJson({ runtimeIdentity
 			, bindingIrSha256
 			, evidence
 			, skeleton
 			, ...wire ? { hostWireSha256: sha256(wire.source) } : {}
+			, ...jvm ? { jvmOwner: owner.id, jvmEntry: sha256(jvmEntry.source) } : {}
 			, delivery: sha256(delivery), notification: sha256(notification)
 			, ...callbackHeaders.size ? { callbacks: Object.fromEntries([...callbackHeaders].map(([f, b]) => [f, sha256(b)])) } : {}
 			, ...ledger ? { resourceLedger: ledgerId } : {}
@@ -84,11 +91,13 @@ export const buildCTaskPackage = async options => {
 		await save("checked-entry.c", `#include "entry.c"\n${gen.declarations}\n`);
 		await save(`${p}.h`, gen.header); await save("adapter.c", gen.source);
 		if(wire) await save("host-wire.c", wire.source);
+		if(jvm) await save("jvm-entry.c", jvmEntry.source);
 		await save("task-delivery.h", delivery); await save("task-notification.h", notification);
 		for(const [file, bytes] of callbackHeaders) await save(file, bytes);
 		if(ledger) await compileTaskResourceLedger({ ledger, app, runtimeRoot, cc: environment.CC ?? "cc", run });
 		if(integers) await save("task-integers.h", integers);
-		await save("exports.map", `{ global: ${[...gen.symbols, ...wire ? wire.symbols : []].join("; ")}; local: *; };\n`);
+		const exported = jvm ? [jvmEntry.invoke, jvmEntry.retire, wire.clear] : [...gen.symbols, ...wire ? wire.symbols : []];
+		await save("exports.map", `{ global: ${exported.join("; ")}; local: *; };\n`);
 		const library = `lib${p}.so`;
 		await run(environment.CC ?? "cc", ["-std=gnu11"
 			, "-O1"
@@ -104,6 +113,7 @@ export const buildCTaskPackage = async options => {
 			, "checked-entry.c"
 			, "adapter.c"
 			, ...wire ? ["host-wire.c"] : []
+			, ...jvm ? ["jvm-entry.c", owner.flag, "-L.", "-l:" + owner.name] : []
 			, "-L"
 			, join(runtimeRoot, "lib")
 			, "-lleanshared"
@@ -122,6 +132,7 @@ export const buildCTaskPackage = async options => {
 		const files = new Map(gmp ? gmp.files : []), sharedLibs = Object.keys(manifest.files).filter(f => f.startsWith("lib/"));
 		const compiled = [[`lib/${library}`, join(app, library)], ...sharedLibs.map(f => [f, join(runtimeRoot, f)])];
 		if(ledger) compiled.push([`lib/${ledgerName}`, join(app, ledgerName)]);
+		if(jvm) compiled.push(["lib/" + owner.name, join(app, owner.name)]);
 		if(gmp) compiled.push(["lib/libgmp.so.10", join(gmp.root, "lib/libgmp.so.10")]);
 		for(const [path, file] of compiled)
 		{
@@ -133,6 +144,7 @@ export const buildCTaskPackage = async options => {
 			if(gmp && path === "lib/libgmp.so.10" && (!bytes.equals(gmp.files.get(path)) || !/\(SONAME\)\s+Library soname: \[libgmp\.so\.10\]/u.test((await run("readelf", ["-d", file], app)).stdout))) throw new Error("C task GMP library identity differs");
 			files.set(path, bytes);
 		}
+		if(jvm) return await writeJvmIORelease({ ...options, prefix: p, wire, jvmEntry, owner, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(rust) return await writeRustTaskRelease({ ...options, prefix: p, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(ruby) return await writeRubySyncRelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(dotnet) return await writeDotnetIORelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });

@@ -18,6 +18,7 @@ import { captureSourceNotices } from "../release/source-notices.mjs";
 import { buildPythonHostWheel, packagePythonHostRuntime, writePythonHostPackageSet } from "../release/host-pypi.mjs";
 import { buildCTaskPackage } from "../release/c-task-package.mjs";
 import { validateNativeCSettings } from "../release/native-c-family.mjs";
+import { validateOrdinaryMavenSettings } from "../backends/jvm/copied-model.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { prepareLakeDependencySnapshot, verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
 import { selectLakeEntryModules, verifyLakeEntryModules } from "./lake-entry-modules.mjs";
@@ -85,7 +86,9 @@ export const buildHostProject = async options => {
 	const { inventory, environment, signal, onProgress, targets } = options;
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
 	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
-	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, or nuget");
+	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, or maven");
+	if(target === "maven" && (config.hostImports || config.taskExports || config.asyncIterators || config.resources))
+		fail("The JVM synchronous IO profile requires copied IO values; task, resource and host-import selections need their own delivery profiles");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
@@ -94,10 +97,11 @@ export const buildHostProject = async options => {
 		, fields: ["modules", "exports", "hostImports", "taskExports", "taskIOErrors", "asyncIterators", "nativeEffects", "package", "resources"]
 		, targetFields: ["name", "version"] });
 	const component = elaboratedComponent(inventory.project);
-	const settings = config.targets?.[target] ?? {}, name = settings.name ?? (target === "nuget" ? dotnetComponentAssembly(component) : `lean-${component.name.toLowerCase().replaceAll("_", "-")}`);
+	const settings = config.targets?.[target] ?? {}, slug = component.name.toLowerCase().replaceAll("_", "-");
+	const name = settings.name ?? (target === "nuget" ? dotnetComponentAssembly(component) : target === "maven" ? "org.leanbridge:" + slug : "lean-" + slug);
 	const version = settings.version ?? (target === "rubygems" ? defaultRubyVersion(component.version)
 		: target === "pypi" && component.version === "0.0.0-local" ? "0.0.0+local" : component.version);
-	(target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : target === "rubygems" ? validateOrdinaryRubySettings : target === "nuget" ? validateOrdinaryNugetSettings : validateNativeCSettings)({ name, version });
+	(target === "pypi" ? validateOrdinaryPythonSettings : target === "cargo" ? validateOrdinaryCargoSettings : target === "rubygems" ? validateOrdinaryRubySettings : target === "nuget" ? validateOrdinaryNugetSettings : target === "maven" ? validateOrdinaryMavenSettings : validateNativeCSettings)({ name, version });
 	const contract = await captureContracts(project, inventory);
 	if(inventory.project.toolchain !== "leanprover/lean4:v4.32.2") fail("Host source and runtime require the same pinned Lean toolchain");
 	if(!inventory.project.lakefile) fail("Host imports require a Lake package so each module has a checked owner");
