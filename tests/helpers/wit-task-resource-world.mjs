@@ -101,7 +101,7 @@ test("compiled Lean tasks project to distinct owned WIT resources with borrowed 
 			const dir=join(archive,mode);await mkdir(dir);
 			for(const file of ["world.wit","component.wat","component.wasm","Meter.lean","Meter.olean",...built.objects])
 				await cp(join(app,file),join(dir,file),{errorOnExist: true,force: false});
-			if(host) for(const file of ["consumer","consumer.c","task-host.h","BridgeCAsync.lean","adapter.c","wire.c"])
+			if(host) for(const file of ["consumer","consumer.c","wasmtime-lab.h","task-host.h","BridgeCAsync.lean","adapter.c","wire.c"])
 				await cp(join(app,file),join(dir,file),{errorOnExist: true,force: false});
 			for(const [file,obj] of [["binding-ir.json",api],["evidence.json",evidence],["acceptance.json",result]])
 				await writeFile(join(dir,file),canonicalJson(obj),{flag: "wx"});

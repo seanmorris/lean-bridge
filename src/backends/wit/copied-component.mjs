@@ -150,7 +150,7 @@ ${typeBody}
   ))
   (import "${importName}" (instance $host (type $api)))
 ${types.map(copy => `  (alias export $host "${copy.witName}" (type $public${typeIndex(copy)}))`).join("\n")}
-${resources.length ? resources.map(resource => `  (alias export $host "${resource.witName}" (type $publicResource${resource.index}))\n  (type $publicBorrow${resource.index} (borrow $publicResource${resource.index}))\n  (type $publicOwn${resource.index} (own $publicResource${resource.index}))`).join("\n") + "\n" : ""}${functions.map(({ fn, index }) => `  (alias export $host "${fn.witName}" (func $host${index}))`).join("\n")}
+${resources.length ? resources.map(resource => `  (alias export $host "${resource.nativeName??resource.witName}" (type $publicResource${resource.index}))\n  (type $publicBorrow${resource.index} (borrow $publicResource${resource.index}))\n  (type $publicOwn${resource.index} (own $publicResource${resource.index}))`).join("\n") + "\n" : ""}${functions.map(({ fn, index }) => `  (alias export $host "${fn.witName}" (func $host${index}))`).join("\n")}
   ${allocator(resources.length > 0)}
 ${functions.map(({ index }) => `  (core func $lower${index} (canon lower (func $host${index}) (memory $memory) (realloc $realloc)))`).join("\n")}
 ${resources.length ? resources.map(resource => `  (core func $drop${resource.index} (canon resource.drop $publicResource${resource.index}))`).join("\n") + "\n" : ""}  (core module $forward

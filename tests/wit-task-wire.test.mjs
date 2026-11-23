@@ -51,3 +51,10 @@ test("selecting WIT task delivery cannot also select a worker callback or a diff
 	]) assert.throws(()=>generateCTaskExports({...options,witDelivery: true,...override}),/WIT task delivery requires/u);
 	assert.throws(()=>generateCTaskExports(options),/select exactly one host/u);
 });
+
+test("heap imports refuse missing, reordered or mistagged native lease kinds",async ()=>{
+	const ticket="a".repeat(64), badge="b".repeat(64);
+	const heap=[{hash: ticket},{hash: badge}];
+	for(const leases of [[],[{hash: badge,tag: 3},{hash: ticket,tag: 4}],[{hash: ticket,tag: 3},{hash: badge,tag: 3}]])
+		await assert.rejects(renderWitTaskImports({heap,wire: {leases}}),/heap identities and native leases disagree/u);
+});

@@ -77,3 +77,19 @@ The ordinary and reviewed archives contain the same component (`eedfdec63a824aef
 | Reviewed | `02c6048b951ab4b5944153d7a4fb6b39b29810dfd48b6d03ec4bb8265b163b46` | `32012eb25280e2fce504473db6a15e3d2e4ba0df8bf912137f570fc10914d2e3` |
 
 The [retirement probe](../../tests/fixtures/wit-task-package/retire.c) measured three broker identities during a pending pull: the session, its native owner and the worker notification. Dropping the owner closed its descriptor and left two identities. After resolving the promise and closing the session, the count returned to zero. In a separate run the probe retired the runtime while the promise was parked. Session close released the owner and descriptor; the one intentionally unresolved worker retained its safety lease. The same two cases passed for tasks.
+
+### Lean objects through a WIT task or cursor
+
+Run `npm run test:wit-task-lease-host` with the producer tools above. This exercises the binary Component Model exports through a native Wasmtime embedding. The public CLI does not yet package this resource-bearing profile.
+
+The [Lean source](../../tests/fixtures/javascript-wasm-resource-tasks/Shared.lean) defines two object types, Ticket and Badge, with the same fields. The [consumer](../../tests/fixtures/wit-tasks/heap.c) creates two Tickets with equal field values and checks that they are different objects. It retains one, drops the original owner, passes the surviving Ticket by borrow, then drops that owner too. The task result, the first cursor item, and the cursor's typed failure still identify the same Ticket. A rejected task factory also returns an owned Ticket. A Badge cannot stand in for any of these Tickets.
+
+The public name is `lease-ticket`. The private import includes the identity of its Lean declaration. The [four-build test](../../tests/helpers/wit-task-lease-world.mjs) recompiles an independent Peer against the same declaration, then modifies the defining module without changing its field layout and recompiles Peer. Each component validates against its own world; `wasm-tools component targets` rejects the changed Peer against the original Peer world.
+
+| Build | Ticket identity | Component SHA-256 |
+| --- | --- | --- |
+| Ordinary and reviewed Depot | `552d91582ffe8f1eae4f005addd6d79dc8d0e82411e2f2710d9d2dc8c746d940` | `8d3269ad3e023a8440de19a059f915c37ef6f5ee5b133a126453ed96b6b178c0` |
+| Independent Peer | Same as Depot | `eb87fa6d74502da302326bd9a2d83d66869e4182b59aaa3df7f33e141e851ca4` |
+| Changed Peer | `264ab3263dc5eaff8177defa24b11ac8f1d7f2f0bf02a0c12b8e51151c5e19df` | `22f6bfb046ffff2723a449cce4abb446a9ddd5d5153e63f6f03e6489ee7823a0` |
+
+Store shutdown releases the last outstanding native lease. The test also forces allocation of an outgoing result to fail after Lean delivers a Ticket. Wasmtime can keep the task borrowed after that trap, so the embedding shuts down the store rather than calling it again. No orphaned Ticket appears, and the live-identity count returns to zero. These checks establish ownership inside a store; passing an object between independently installed packages requires a separate consumer test.

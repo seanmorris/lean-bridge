@@ -1,9 +1,11 @@
 /** @file Project compiler-checked Lean tasks to nominal Component Model pollable resources. */
 import { reconcileHostExports } from "../../analyze/host-export-model.mjs";
+import { heapResourceIdentities } from "../../analyze/heap-resource-identity.mjs";
 import { nativeEffectPolicy } from "../../analyze/native-host-effects.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { generateSyncWire } from "../c/sync-wire.mjs";
+import { taskResourceTypes } from "../c/task-resources.mjs";
 import { renderCopiedWitComponent } from "./copied-component.mjs";
 import { validateOrdinaryWasiSettings } from "./copied-model.mjs";
 import { witVariantMember } from "./copied-variants.mjs";
@@ -23,8 +25,7 @@ const scalar = type => {
 	if(!wat) throw new TypeError("Unsupported WIT task boundary type");
 	return { scalarName: type.name, wit: wat, wat, fields: [] };
 };
-// Preserve both arms of returned Except values, including nested values. Handles
-// may occur only in the success arm of the generated factory result.
+// A fallible factory can return an owned task or a separately owned error.
 const resultOf = (ok, error) => ({
 	compound: "result", fields: [{type: ok},{type: error}]
 	, wit: "result<"+ok.wit+", "+error.wit+">"
@@ -38,6 +39,11 @@ const hex = value => typeof value === "string" && /^[a-f0-9]{64}$/u.test(value);
 const field = (witName, copy) => ({ witName, copy });
 const sig = (name, parameters, resultCopy) => ({ witName: name, parameters, resultCopy });
 const spell = name => "%" + name; // Explicit WIT identifier, including keywords.
+const resourceHandle=(r,borrowed)=>({resource: true,resourceIndex: r.index
+	, borrowed,fields: []
+	, wit: (borrowed?"borrow<":"own<")+r.witName+">"
+	, wat: (borrowed?"$borrow":"$own")+r.index
+	, publicWat: (borrowed?"$publicBorrow":"$publicOwn")+r.index});
 
 /**
  * Emit a finite typed protocol, not a canonical future or a new package admission.
@@ -56,18 +62,32 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 	const streams=selection?.asyncIterators??[], tasks=selection?.taskExports??[];
 	if(!(tasks.length || streams.length) || !evidence.interfaces?.length || evidence.hostImportsSourceSha256 !== null
 		|| selection.nativeEffectPolicy !== nativeEffectPolicy || !Array.isArray(selection.nativeEffects) || selection.nativeEffects.length
-		|| selection.leanResources?.length
 		|| ![evidence.sourceTreeSha256,evidence.configurationSha256,evidence.compilerSha256,evidence.extractorSha256].every(hex)
 		|| hashBindingIr(api) !== bindingIrSha256) throw new TypeError("WIT tasks require matched Lean compiler evidence");
 	if(!settings?.name || !settings.version || Object.keys(settings).some(k => !["name","version"].includes(k)))
 		throw new TypeError("Expected WIT task package coordinates");
 	validateOrdinaryWasiSettings(settings);
-	const { entries } = reconcileHostExports({ ...evidence, ir: null, component: api.component, review: { source: canonicalJson(api) } });
+	const declarations=evidence.metadata?.leanResources??[];
+	const owned=declarations.length?heapResourceIdentities({...evidence,resources: declarations}):[];
+	const { entries } = reconcileHostExports({ ...evidence, owned, ir: null, component: api.component, review: { source: canonicalJson(api) } });
 	if(entries.length !== tasks.length+streams.length || new Set([...tasks,...streams.map(s=>s.open)]).size !== entries.length)
 		throw new TypeError("Every WIT task export must map to one checked declaration");
 	const resources = [], types = [], functions = [], methods = [], labels = new Set();
 	const bool = scalar({ kind: "primitive", name: "bool" });
 	const permitIndex=2*entries.length;
+	const methodLabels=api.declarations.map(d=>witVariantMember(d.name,labels,fail));
+	const reserved=new Set(["request-outcome"
+		, ...methodLabels.flatMap((label,i)=>[label+"-observation"
+			, label+(entries[i].delivery==="async-iterator"?"-cursor":"-task")])]);
+	const heapLabels=new Set();
+	const heap=taskResourceTypes(api.types).map((r,i)=>{
+		let witName="lease-"+witVariantMember(r.name,heapLabels,fail,"heap resource");
+		while(reserved.has(witName)) witName="lease-"+witName;
+		reserved.add(witName);
+		return {...r,index: permitIndex+1+i,witName,nativeName: witName+"-h"+r.hash};
+	});
+	const lease=t=>t?.kind==="named" && heap.find(r=>r.id===t.id);
+	const delivered=t=>lease(t)?resourceHandle(lease(t),false):copied(t);
 	const permit={index: permitIndex,witName: "request-outcome"
 		, wit: "request-outcome",wat: "$t"+permitIndex,variant: true
 		, cases: ["accepted","busy","closed"].map(witName=>({witName,fields: [],payload: null}))};
@@ -79,19 +99,16 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 			: e.delivery!=="task" || d.resultMode!=="promise" || !tasks.includes(e.declaration))
 			|| !["pure","BaseIO","IO","EIO"].includes(e.effect)
 			|| d.failure.unexpected !== "poison-runtime"
-			|| d.capabilities.length || d.result.ownership !== "copy" || d.parameters.some(p => p.ownership !== "copy"))
+			|| d.capabilities.length || d.result.ownership !== (lease(d.result.type)?"lease":"copy")
+			|| d.parameters.some(p => p.ownership !== (lease(p.type)?"borrow":"copy")))
 			throw new TypeError("Unexpected delivery, effect or ownership in WIT task: " + d.source.declaration);
-		const label = witVariantMember(d.name, labels, fail), r = api.declarations.length + index;
+		const label = methodLabels[index], r = api.declarations.length + index;
 		const resource = { index: r, witName: label + (stream?"-cursor":"-task") };
-		const handle = borrowed => ({ resource: true, resourceIndex: r
-			, borrowed, fields: []
-			, wit: (borrowed ? "borrow<" : "own<") + resource.witName + ">"
-			, wat: (borrowed ? "$borrow" : "$own") + r
-			, publicWat: (borrowed ? "$publicBorrow" : "$publicOwn") + r });
-		const result = copied(d.result.type), parameters = new Set();
+		const handle = borrowed => resourceHandle(resource,borrowed);
+		const result = delivered(d.result.type), parameters = new Set();
 		const text = scalar({kind: "primitive",name: "string"});
-		const startError = e.effect==="EIO" ? copied(e.error) : e.effect==="IO" ? text : null;
-		const args = d.parameters.map(p => field(witVariantMember(p.name, parameters, fail), scalar(p.type)));
+		const startError = e.effect==="EIO" ? delivered(e.error) : e.effect==="IO" ? text : null;
+		const args = d.parameters.map(p => field(witVariantMember(p.name, parameters, fail), lease(p.type)?resourceHandle(lease(p.type),true):scalar(p.type)));
 		const item=stream?"item":"ready";
 		const states = ["pending",item,"cancelled","closed",...stream?["idle","end"]:[]].map(witName => ({witName
 			, fields: witName === item ? [{type: result}] : []
@@ -100,7 +117,7 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 		if(e.taskIO) states.push({witName: "failed",fields: [{type: text}],payload: text});
 		if(e.stepError)
 		{
-			const payload=copied(e.stepError); states.push({witName: "failed",fields: [{type: payload}],payload});
+			const payload=delivered(e.stepError); states.push({witName: "failed",fields: [{type: payload}],payload});
 		}
 		const observation = { index, witName, wit: witName, wat: "$t"+index, variant: true, cases: states };
 		const owner = handle(false);
@@ -115,6 +132,13 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 			, start: start.witName, poll: poll.witName, cancel: cancel.witName
 			, ...request?{request: request.witName}:{} });
 	}
+	for(const r of heap)
+	{
+		resources.push(r);
+		const borrow=resourceHandle(r,true);
+		functions.push(sig("retain-"+r.witName,[field("value",borrow)],resourceHandle(r,false)),
+			sig("same-"+r.witName,[field("left",borrow),field("right",borrow)],bool));
+	}
 	if(streams.length)
 	{
 		// A cursor named "outcome" exports the function "request-outcome".
@@ -127,15 +151,18 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 	const importName = packageName+"/native@"+version, exportName = packageName+"/api@"+version;
 	const witSigs = functions.map(f => `  ${f.witName}: func(${f.parameters.map(p => spell(p.witName)+": "+p.copy.wit).join(", ")}) -> ${f.resultCopy.wit};`).join("\n");
 	const typeDefs = types.map(t => "  variant "+t.witName+" { "+t.cases.map(c => c.witName+(c.payload?"("+c.payload.wit+")":"")).join(", ")+" }");
-	const uses = [...resources,...types].map(x => x.witName).join(", ");
-	const wit = `package ${packageName}@${version};\n\ninterface native {\n${resources.map(r=>"  resource "+r.witName+";").join("\n")}\n${typeDefs.join("\n")}\n${witSigs}\n}\n\ninterface api {\n  use native.{${uses}};\n${witSigs}\n}\n\nworld ${name} {\n  import native;\n  export api;\n}\n`;
+	const uses = [...resources,...types].map(x => x.nativeName?x.nativeName+" as "+x.witName:x.witName).join(", ");
+	const nativeSig=s=>s.replace(/(borrow|own)<([a-z0-9-]+)>/gu,(body,mode,name)=>{
+		const r=heap.find(v=>v.witName===name);return r?mode+"<"+r.nativeName+">":body;
+	});
+	const wit = `package ${packageName}@${version};\n\ninterface native {\n${resources.map(r=>"  resource "+(r.nativeName??r.witName)+";").join("\n")}\n${typeDefs.map(nativeSig).join("\n")}\n${nativeSig(witSigs)}\n}\n\ninterface api {\n  use native.{${uses}};\n${witSigs}\n}\n\nworld ${name} {\n  import native;\n  export api;\n}\n`;
 	const typeBody = [
-		...resources.map(r => `    (export "${r.witName}" (type $resource${r.index} (sub resource)))\n    (type $own${r.index} (own $resource${r.index}))\n    (type $borrow${r.index} (borrow $resource${r.index}))`)
+		...resources.map(r => `    (export "${r.nativeName??r.witName}" (type $resource${r.index} (sub resource)))\n    (type $own${r.index} (own $resource${r.index}))\n    (type $borrow${r.index} (borrow $resource${r.index}))`)
 		, ...types.map(t => `    (type $base${t.index} (variant ${t.cases.map(c => '(case "'+c.witName+'"'+(c.payload?" "+c.payload.wat:"")+')').join(" ")}))\n    (export "${t.witName}" (type ${t.wat} (eq $base${t.index})))`)
 		, ...functions.map(f => `    (export "${f.witName}" (func ${f.parameters.map(p => '(param "'+p.witName+'" '+p.copy.wat+')').join(" ")} (result ${f.resultCopy.wat})))`)
 	].join("\n");
 	const wat = renderCopiedWitComponent({ surface: { functions }, functions, resources, types, typeBody, importName, exportName, preserveTypes: true });
 	const prefix = "lbc_wit_"+sha256(api.component.id);
-	const wire = generateSyncWire(prefix,entries,{tasks: true});
-	return { wit, wat, methods, name, version, importName, exportName, bindingIrSha256, prefix, wire };
+	const wire = generateSyncWire(prefix,entries,{tasks: true,resources: api.types});
+	return { wit, wat, methods, name, version, importName, exportName, bindingIrSha256, prefix, wire,heap };
 };
