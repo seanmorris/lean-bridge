@@ -167,6 +167,23 @@ Both Relay routes passed strict TypeScript and 78 public checks in each of Node,
 
 In a separate Chromium realm for each route, the test injected an uncaught error into a real pthread while the factory awaited JavaScript. The public call, shutdown and subsequent admission observed the same failure. Frames, allocations, pending operations and notifications returned to zero without calling cleanup through the failed heap. This is a fatal worker failure, distinct from an application's rejected callback.
 
+## Exercise a production browser-worker deployment
+
+Use the same author kit as above, or reuse the original release handoffs from both suites:
+
+```sh
+LEAN_BRIDGE_TEST_TASK_INPUTS="$scratch/task-sdk" npm run test:javascript-task-web
+# Replay only, using the callback and resource suites' retained archives:
+LEAN_BRIDGE_JS_TASK_WEB_RELEASES="$scratch/callback-handoffs" \
+LEAN_BRIDGE_JS_TASK_WEB_RESOURCES="$scratch/resource-handoffs" npm run test:javascript-task-web
+```
+
+The test verifies the package receipts, installs the archives offline, bundles the [page and worker](../../tests/fixtures/javascript-wasm-task-web/page.mjs), and compares the deployed Wasm bytes with the installed binaries. It then removes the consumer's dependency directory and serves only the static deployment under `/tasks/nested/`. The positive case supplies cross-origin isolation headers; the negative case omits them.
+
+The Relay page holds a pending callback while its worker starts and closes a separate runtime. The Depot page keeps a ticket and a pending task, then passes the returned ticket to Peer after worker shutdown. In its worker, [two real `for await` loops](../../tests/fixtures/javascript-wasm-task-web/resource-calls.mjs) distinguish breaking after the first item from natural exhaustion.
+
+The ordinary and reviewed workers each passed 78 callback checks or 43 resource checks plus both loop exits. Every parent resumed with `42`; all four deployments ended with zero frames, allocations, pending operations, native owners and notifications. Without isolation each reported the shared-heap prerequisite. The worker sends a startup acknowledgement after its static imports: before that change, both callback applications loaded the correct pthreads but lost the first request.
+
 ## What this does not ship
 
 The three-package wire experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. Its driver knows both component signatures. The generated npm application instead imports ordinary package functions and uses the compiled component's own contract. The low-level wire test still creates a fixture-specific runtime; the author SDK is linked independently. Direct nominal resource arguments, returns, items and error payloads use the runtime's lease table. Threaded callbacks accept one copied scalar and return one copied scalar; they do not transport nested resources or returned functions. Emscripten 6.0.6 marks dynamic linking with pthreads experimental.

@@ -1334,6 +1334,8 @@ worker.onerror = event => console.error(event.message);
 worker.postMessage({ left: "20", right: "22", text: "" });
 ```
 
+This example installs the message listener *before* loading Lean, so the page can post immediately. If you use static imports that await runtime startup, have the worker send a `ready` message after installing its listener; send the first request in response. A worker's constructor returning does not mean the application handler is ready.
+
 #### Terminate the worker with its owner
 
 In React, create the worker inside an effect and terminate it during cleanup:

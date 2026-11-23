@@ -46,7 +46,9 @@ export const runInstalledChromium = async options => {
 	const {root, consumer, names, evaluate, argument, isolated = false} = options;
 	const {chromium} = await import("playwright");
 	const site = options.assembledDirectory
-		? await (await import("../../site/serve.mjs")).startSiteServer({root: options.assembledDirectory, base: "/"})
+		? await (await import("../../site/serve.mjs")).startSiteServer({
+			root: options.assembledDirectory, base: options.base ?? "/", isolated
+		})
 		: await serve(consumer, names, isolated);
 	const address = site.url ?? site.origin, origin = new URL(address).origin;
 	// Keep Chromium in the test's CPU-limited process group, not a detached job.
