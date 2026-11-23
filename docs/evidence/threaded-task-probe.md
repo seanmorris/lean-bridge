@@ -12,6 +12,12 @@ An earlier replay intermittently exited Node with code 13 and an unsettled top-l
 
 The [runtime-owned observer](../../src/backends/javascript/task-notification.c) takes a borrowed Lean task and an opaque token, not a host function or a result codec. The [JavaScript dispatcher](../../src/runtime/wasm-task-notifications.mjs) belongs to one Wasm instance. It never reuses a token or runs a subscriber twice. The consumer replay also attached two subscriptions to one already-finished Lean task; neither reentered the subscribing call. This brought each of the four Node runs and the Chromium run to 22 checks.
 
+## Two packages, one task manager
+
+The shared variant installs three different npm archives: the threaded runtime, a producer containing `ThreadProbe`, and a [peer component](../../tests/fixtures/javascript-wasm-task-components/TaskPeer.lean). Only the first archive contains the runtime and task manager. The [component builder](../../tests/helpers/javascript-wasm-task-plugins.mjs) compiles the other two as separate position-independent Wasm modules. The consumer loads them from their own installed locations. The driver resolves the module initializers and typed exports through separate `dlopen` handles; swapping the two packages must fail. The runtime binary must not export either implementation.
+
+The producer starts a gated Lean task. The peer accepts that same `Task UInt32` and schedules a `BaseIO.mapTask` continuation on its result. The continuation adds seven on a worker and returns a distinct sentinel on the main runtime thread. Nothing in JavaScript adds seven or passes a Lean pointer between packages. On 2026-11-23, four fresh Node processes and one isolated Chromium page each passed 22 checks on this path, including normal result **20**, cooperative cancellation with late native result **1008**, noncooperative cancellation with late native result **20**, and shutdown with late native result **10**. In every case cancellation targeted the original worker, not merely its derived task.
+
 ## Reproduce
 
 Start at the repository root with pinned Lean 4.32.2 source and host compiler, Emscripten 6.0.6, CMake, Make, npm, the repository's JS dependencies and Chromium. Use fresh writable scratch space. The source checkout must include `stage0/stdlib/Init`; the small Init archive below is compiled from its hash-checked bootstrap C. The helper records the archive digest, all five target-header digests and the runtime stamp beside it in `inputs.json`; the installed test checks them before linking. Do not substitute an archive from the unthreaded browser runtime.
@@ -36,6 +42,7 @@ node tests/helpers/javascript-wasm-task-probe-init.mjs "$LEAN_WASM_LEAN_SOURCE" 
 export LEAN_BRIDGE_JS_THREAD_INIT="$scratch/init/libProbeInit.a"
 export LEAN_BRIDGE_JS_EMSDK="$LEAN_WASM_EMSDK" LEAN_BRIDGE_LEAN_PREFIX="$LEAN_WASM_HOST_LEAN_PREFIX"
 npm run test:javascript-threaded-task-probe
+npm run test:javascript-shared-task-probe
 ```
 
 ## Why a separate runtime profile?
@@ -48,6 +55,6 @@ Pinned Lean `f3b06c705e6c85f5314019d5d3baab0fec5b580c` executes spawned work inl
 
 ## What this does not ship
 
-The experiment uses one outstanding worker per private instance, UInt32 payloads and a fixed shared heap. On close it drains the known task before retiring that instance's Emscripten pthread pool; it does not recycle or install a scheduler in a release runtime. A production generator must share the application's runtime, lift the declared result and error types, retain captured resources, and support multiple pending operations and orderly shutdown. This fixture does not admit arbitrary `taskExports`, host callbacks, iterators or cross-component tasks.
+The experiment uses one outstanding source task per instance, UInt32 payloads and a fixed shared heap. It demonstrates a cross-component task on one scheduler, but the test driver still knows both component signatures. On close it drains the known task before retiring that instance's pthread pool. Emscripten 6.0.6 marks dynamic linking with pthreads experimental. This does not change the existing browser or npm release profile. A production generator must provision the application's shared runtime, lift declared result and error types, retain captured resources, and support concurrent operations and orderly shutdown. The test does not admit arbitrary `taskExports`, retained callbacks or iterators.
 
 The existing shared runtime and composition graph are unchanged. No native binding, registry identity, consumer prerequisite or language-neutral IR changes. For assurance and reproducibility this experiment records its own profile and strict-link inputs; it is not a signed or Nix-built release. Publishing would first require the same manifest and graph checks as every other target. No special API is exposed to other languages or to tools that consume the existing metadata.

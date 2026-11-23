@@ -5,20 +5,33 @@
 #include <lean/lean.h>
 #include <stdint.h>
 #include "task-notification.h"
+#ifdef LEAN_BRIDGE_TASK_PLUGINS
+#include "plugins.h"
+#else
 #include "ThreadProbe.c"
+#endif
 
 extern void lean_initialize_runtime_module(void);
 static lean_object *gate, *entered, *task;
+static lean_object *source_task;
 static uint32_t current;
 static int active;
 
 EMSCRIPTEN_KEEPALIVE int probe_init(void) {
   if (active) return 0;
   lean_initialize_runtime_module();
+#ifdef LEAN_BRIDGE_TASK_PLUGINS
+  if (!load_plugins()) return 0;
+#endif
   lean_init_task_manager_using(1);
   lean_object *result = initialize_ThreadProbe(1);
   if (lean_io_result_is_error(result)) { lean_dec(result); return 0; }
   lean_dec(result);
+#ifdef LEAN_BRIDGE_TASK_PLUGINS
+  result = initialize_TaskPeer(1);
+  if (lean_io_result_is_error(result)) { lean_dec(result); return 0; }
+  lean_dec(result);
+#endif
   lean_io_mark_end_initialization();
   active = 1;
   return 1;
@@ -51,7 +64,13 @@ EMSCRIPTEN_KEEPALIVE uint32_t probe_open(int cooperative, uint32_t on_entry, uin
   entered = lean_bridge_probe_watch(arrived);
   lean_inc(gate);
   ++current;
-  task = lean_bridge_probe_start(gate, arrived, cooperative != 0);
+  source_task = lean_bridge_probe_start(gate, arrived, cooperative != 0);
+  lean_inc(source_task);
+#ifdef LEAN_BRIDGE_TASK_PLUGINS
+  task = lean_bridge_task_peer_map(source_task);
+#else
+  task = source_task;
+#endif
   lean_bridge_wasm_task_subscribe_v1(entered, on_entry);
   lean_bridge_wasm_task_subscribe_v1(task, on_result);
   return current;
@@ -73,7 +92,7 @@ EMSCRIPTEN_KEEPALIVE int probe_release(uint32_t key, uint32_t value) {
 
 EMSCRIPTEN_KEEPALIVE int probe_cancel(uint32_t key) {
   if (!task || key != current) return 0;
-  lean_io_cancel_core(task);
+  lean_io_cancel_core(source_task);
   return 1;
 }
 
@@ -81,8 +100,8 @@ EMSCRIPTEN_KEEPALIVE int probe_cancel(uint32_t key) {
 EMSCRIPTEN_KEEPALIVE double probe_take(uint32_t key) {
   if (probe_state(key) != 3) return -1;
   uint32_t value = lean_unbox_uint32(lean_task_get(task));
-  lean_dec(task); lean_dec(entered);
+  lean_dec(task); lean_dec(source_task); lean_dec(entered);
   if (gate) lean_dec(gate);
-  task = entered = gate = NULL;
+  task = source_task = entered = gate = NULL;
   return value;
 }

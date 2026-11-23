@@ -8,8 +8,10 @@ const plan = Object.freeze({kind: "pending-operation-v1", abiVersion: 1, declara
 /**
  * The gate makes cancellation races deterministic. The native continuation,
  * not a JavaScript timeout, notifies the owner of start and completion.
+ *
+ * @param plugins - Optional independently installed producer and peer artifacts.
  */
-export const openProbe = async () => {
+export const openProbe = async plugins => {
 	const domain = new PendingOperationRegistry({capacity: 1});
 	const notifications = createWasmTaskNotifications();
 	let job, closed = false, closing, module;
@@ -28,11 +30,20 @@ export const openProbe = async () => {
 		row.drain(result);
 	};
 	module = await createModule({onLeanTaskReady: notifications.notify});
-	if(module._probe_init() !== 1) throw new Error("Could not initialize threaded Lean");
-	if(!module._probe_check_temp_io())
+	try
+	{
+		if(plugins)
+		{
+			module.FS.writeFile("/task-producer.wasm", await plugins.producer.readComponent());
+			module.FS.writeFile("/task-peer.wasm", await plugins.peer.readComponent());
+		}
+		if(module._probe_init() !== 1) throw new Error("Could not initialize threaded Lean");
+		if(!module._probe_check_temp_io()) throw new Error("Lean temporary file/directory check failed");
+	}
+	catch(error)
 	{
 		module.PThread.terminateAllThreads();
-		throw new Error("Lean temporary file/directory check failed");
+		throw error;
 	}
 	const start = cooperative => {
 		if(closed || job || typeof cooperative !== "boolean") throw new Error("Closed, busy or invalid task");

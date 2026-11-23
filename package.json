@@ -1107,6 +1107,7 @@
     "test:javascript-sync-io-package": "LEAN_BRIDGE_JS_IO_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/javascript-wasm-io-package-flow.mjs",
     "test:javascript-callback-io": "LEAN_BRIDGE_JS_CALLBACK_IO_TEST=1 node --test --test-concurrency=1 tests/helpers/javascript-wasm-callback-io-installed.mjs",
     "test:javascript-threaded-task-probe": "LEAN_BRIDGE_JS_THREADED_TASK_TEST=1 node --test --test-concurrency=1 tests/helpers/javascript-wasm-threaded-task-installed.mjs",
+    "test:javascript-shared-task-probe": "LEAN_BRIDGE_JS_TASK_PLUGINS=1 npm run test:javascript-threaded-task-probe",
     "test:wit-sync-io-package": "LEAN_BRIDGE_WIT_IO_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/helpers/wit-sync-io-package-flow.mjs",
     "test:profile": "bash scripts/run-test-profile.sh",
     "test:managed-generators": "node --test tests/managed-generators.test.mjs",

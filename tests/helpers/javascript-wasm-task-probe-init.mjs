@@ -42,7 +42,7 @@ for(let i = 0; i < names.length; i += 12)
 	const group = names.slice(i, i + 12), files = group.map(name => name + ".c");
 	for(const name of group) await writeFile(join(out, name + ".c"), selected.get(name).bytes, {flag: "wx"});
 	const flags = ["-O0", "-g0", "-DNDEBUG", "-pthread", "-fwasm-exceptions"
-		, "-DLEAN_EMSCRIPTEN", "-DLEAN_MULTI_THREAD"
+		, "-fPIC", "-DLEAN_EMSCRIPTEN", "-DLEAN_MULTI_THREAD"
 		, "-ffunction-sections", "-fdata-sections"
 		, "-I", join(runtime, "cmake/include"), "-c", ...files];
 	await run(join(prefix, "emcc"), flags, {cwd: out, env, maxBuffer: 4 << 20});
