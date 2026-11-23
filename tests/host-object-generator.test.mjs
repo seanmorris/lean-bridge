@@ -53,6 +53,7 @@ import "./helpers/php-lease-contract.mjs";
 import "./helpers/php-task-installed.mjs";
 import "./helpers/php-task-consumers.mjs";
 import "./helpers/php-task-contract.mjs";
+import "./helpers/php-task-lease-contract.mjs";
 import "./helpers/perl-task-consumers.mjs";
 import "./helpers/dotnet-task-installed.mjs";
 import "./helpers/dotnet-task-managed-replay.mjs";

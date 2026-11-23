@@ -180,6 +180,53 @@ are distinct from the [session-owned aggregate API](#resource-containing-values)
 The [installed resource checks](evidence/php-heap-lease-20261123.json)
 record the packages, runtime versions, and broker counts after shutdown.
 
+### Pass a resource to a native PHP task
+
+The caller owns its ticket; the Lean worker holds its own reference as soon
+as the task starts. You can close the caller’s ticket before awaiting the
+result. This example prints `42`: the worker and the peer package each
+increment the counter that started at `40`.
+
+```php
+<?php
+declare(strict_types=1);
+require __DIR__.'/vendor/autoload.php';
+
+use LeanCounter as Counter;
+use LeanDepot as Depot;
+use Revolt\EventLoop;
+
+Depot\reset();
+$original = Counter\issue(40);
+try {
+    $work = Depot\pending($original, true);
+} finally {
+    $original->close(); // The worker now holds its own Lean reference.
+}
+EventLoop::delay(0.01, static function (): void { Depot\release(); });
+$result = $work->await();
+try {
+    $peer = Counter\bump($result);
+    try {
+        echo Depot\count($peer), PHP_EOL; // 42, on the same ticket.
+    } finally {
+        $peer->close();
+    }
+} finally {
+    $result->close();
+}
+```
+
+Awaiting the **same future** twice gives you the **same PHP wrapper**. Call
+`retain()` if two consumers need independently disposable leases. In contrast,
+each yielded resource and each typed failure payload has its own lease.
+Closing the cursor does not close an item you already received.
+
+Once the future reports cancellation, it will not deliver a ticket. A worker
+that ignores cancellation can still hold the underlying Lean object until it
+finishes. Do not infer that a file has closed from cancellation alone. See the
+[installed cross-package checks](evidence/php-task-leases-20261123.json).
+
 ### Arrays and records
 
 Native Composer packages expose nested `Array` values as consecutive-key PHP

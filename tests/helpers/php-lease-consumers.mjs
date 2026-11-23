@@ -11,8 +11,11 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { runNativeTool as run } from "./native-effect-consumers.mjs";
 import { installPhpIOComponents } from "./php-io-install.mjs";
+import { schedulerPackages, schedulerRepositories } from "./php-task-feed.mjs";
 
-const env = process.env, root = env.LEAN_BRIDGE_PHP_LEASE_CONSUME, fixture = resolve("tests/fixtures/php-io-resources");
+const env = process.env, asyncRoot = env.LEAN_BRIDGE_PHP_TASK_LEASE_CONSUME;
+const root = asyncRoot ?? env.LEAN_BRIDGE_PHP_LEASE_CONSUME, syncFixture=resolve("tests/fixtures/php-io-resources");
+const fixture = asyncRoot ? resolve("tests/fixtures/php-task-resources") : syncFixture;
 const json = async f => JSON.parse(await readFile(f,"utf8"));
 test("installed PHP resource identities cross independent packages, not incompatible Lean definitions"
 	, { skip: !root, timeout: 3_600_000 }
@@ -21,20 +24,26 @@ test("installed PHP resource identities cross independent packages, not incompat
 	const phps = JSON.parse(env.LEAN_BRIDGE_TEST_PHPS ?? '["/usr/bin/php"]');
 	assert.ok(phps.length > 0 && new Set(phps).size === phps.length);
 	const files = ["example.php","installed.php","integrity.php"];
-	for(const f of files) sources[f] = sha256(await readFile(join(fixture,f)));
+	if(asyncRoot) files.push("shutdown.php");
+	const source=f=>join(f==="integrity.php" ? syncFixture : fixture,f);
+	for(const f of files) sources[f] = sha256(await readFile(source(f)));
+	const scheduler=asyncRoot ? await schedulerRepositories(resolve(env.LEAN_BRIDGE_PHP_SCHEDULER_CACHE)) : [];
+	const peerRoot=asyncRoot ? resolve(env.LEAN_BRIDGE_PHP_LEASE_PEERS) : root;
 	for(const route of ["ordinary","reviewed"])
 	{
 		const stage = await mkdtemp(join(tmpdir(),"php-lease-client-"));
 		try
 		{
 			const local = join(stage,"install"), deploy = join(stage,"relocated app"); await mkdir(local);
-			for(const f of files) await copyFile(join(fixture,f),join(local,f));
+			for(const f of files) await copyFile(source(f),join(local,f));
 			const labels = [route,"peer","foreign"];
-			const { components, vendor } = await installPhpIOComponents(stage,local,deploy,labels.map(r => resolve(root,r,"handoff")));
+			const handoffs=labels.map((r,i)=>resolve(i===0 ? root : peerRoot,r,"handoff"));
+			const { components, vendor } = await installPhpIOComponents(stage,local,deploy,handoffs,scheduler);
 			let ledger;
 			for(const [i,r] of labels.entries())
 			{
 				const { pkg, receiptSha256 } = components[i], prefix = join(vendor,pkg.name);
+				assert.equal(pkg.profile,asyncRoot && !i ? "native-php-task-v1" : "native-php-io-v1");
 				const pin = await json(join(prefix,"lean-bridge/package-receipt.json"));
 				const ir = await json(join(prefix,"lean-bridge/binding-ir.json"));
 				ledger ??= pin.ledger; assert.deepEqual(ledger,pin.ledger);
@@ -58,13 +67,21 @@ test("installed PHP resource identities cross independent packages, not incompat
 				{ assert.equal(await run(php,[...flags,"integrity.php"],deploy,isolated),"modified ledger refused"); }
 				finally
 				{ await writeFile(path,lib); }
-				await run(php,[...flags,"example.php"],deploy,isolated);
+				const example=await run(php,[...flags,"example.php"],deploy,isolated);
+				if(asyncRoot)
+				{
+					assert.equal(example,"42");
+					assert.equal(await run(php,[...flags,"shutdown.php"],deploy,isolated),"released worker, stream and file");
+				}
 				for(const order of ["depot-first","peer-first"])
 				{
 					const row = JSON.parse(await run(php,[...flags,"installed.php",order],deploy,isolated));
 					assert.equal(row.order,order); assert.deepEqual(row.final,[3,1,3,0]);
-					assert.equal(typeof row.fork,"boolean"); assert.equal(row.checks,row.fork ? 35 : 34);
-					reports.push({ route,...row, flags, modifiedLedgerRefused: true });
+					if(asyncRoot)
+{ assert.equal(row.descriptorDelta,0); assert.equal(row.checks,59); }
+					else
+{ assert.equal(typeof row.fork,"boolean"); assert.equal(row.checks,row.fork ? 35 : 34); }
+					reports.push({ route,...row, flags, modifiedLedgerRefused: true,...asyncRoot ? {shutdown: true} : {} });
 					t.diagnostic(route+" / PHP "+row.php+" / "+order+": "+row.checks+" checks");
 				}
 			}
@@ -72,7 +89,7 @@ test("installed PHP resource identities cross independent packages, not incompat
 		finally
 		{ await rm(stage,{ recursive: true, force: true }); }
 	}
-	const record = canonicalJson({ sources, reports, releases });
+	const record = canonicalJson({ sources, reports, releases,...asyncRoot ? {scheduler: schedulerPackages} : {} });
 	if(env.LEAN_BRIDGE_PHP_LEASE_EXPECTED) assert.equal(record,await readFile(resolve(env.LEAN_BRIDGE_PHP_LEASE_EXPECTED),"utf8"));
 		else await writeFile(resolve(root,"installed-php-leases.json"),record,{ flag: "wx" });}
 );

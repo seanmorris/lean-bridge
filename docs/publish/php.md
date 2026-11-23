@@ -160,6 +160,30 @@ identifies both the shared ledger and each package’s compiled resource types.
 The [offline CLI rebuild](../evidence/php-heap-lease-rebuild-20261123.json)
 reproduced the resource ZIP and the previous copied-only ZIP byte-for-byte.
 
+### Export a resource through a task or stream
+
+List the resource declaration alongside the task or pull selection. For a
+Depot package that imports `Shared.Ticket`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Depot"],
+  "resources": ["Shared.Ticket"],
+  "exports": ["Depot.make", "Depot.pending", "Depot.release", "Depot.tickets"],
+  "taskExports": ["Depot.pending"],
+  "asyncIterators": [{"open": "Depot.tickets", "next": "Depot.next", "close": "Depot.close"}],
+  "nativeEffects": ["filesystem"],
+  "targets": {"php-native": {"name": "lean-bridge/depot", "version": "1.0.0"}}
+}
+```
+
+Use the normal `--target php-native` build. The generated package borrows
+ticket arguments without consuming the caller’s lease. A task result, stream
+item, or typed error that returns a ticket produces its own lease. An independent
+synchronous package can accept that ticket if it compiled the same resource
+definition and shares the runtime. See [the consumer example](../php.md#pass-a-resource-to-a-native-php-task).
+
 ### Export resource-containing values
 
 For native PHP or PHP-Wasm, declare resources and aggregate ownership explicitly. In a Lake
