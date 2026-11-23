@@ -23,6 +23,16 @@ const scalar = type => {
 	if(!wat) throw new TypeError("Unsupported WIT task boundary type");
 	return { scalarName: type.name, wit: wat, wat, fields: [] };
 };
+// Preserve both arms of returned Except values, including nested values. Handles
+// may occur only in the success arm of the generated factory result.
+const resultOf = (ok, error) => ({
+	compound: "result", fields: [{type: ok},{type: error}]
+	, wit: "result<"+ok.wit+", "+error.wit+">"
+	, wat: "(result "+ok.wat+" (error "+error.wat+"))"
+	, publicWat: "(result "+(ok.publicWat??ok.wat)+" (error "+(error.publicWat??error.wat)+"))"
+});
+const copied = t => t?.kind==="apply" && t.constructor==="result" && t.arguments.length===2
+	? resultOf(...t.arguments.map(copied)) : scalar(t);
 const fail = message => { throw new TypeError(message); };
 const hex = value => typeof value === "string" && /^[a-f0-9]{64}$/u.test(value);
 const field = (witName, copy) => ({ witName, copy });
@@ -45,7 +55,7 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 	const selection = evidence?.selection;
 	if(!selection?.taskExports?.length || !evidence.interfaces?.length || evidence.hostImportsSourceSha256 !== null
 		|| selection.nativeEffectPolicy !== nativeEffectPolicy || !Array.isArray(selection.nativeEffects) || selection.nativeEffects.length
-		|| [selection.asyncIterators,selection.leanResources,selection.taskIOErrors].some(s => s?.length)
+		|| [selection.asyncIterators,selection.leanResources].some(s => s?.length)
 		|| ![evidence.sourceTreeSha256,evidence.configurationSha256,evidence.compilerSha256,evidence.extractorSha256].every(hex)
 		|| hashBindingIr(api) !== bindingIrSha256) throw new TypeError("WIT tasks require matched Lean compiler evidence");
 	if(!settings?.name || !settings.version || Object.keys(settings).some(k => !["name","version"].includes(k)))
@@ -60,8 +70,8 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 	{
 		const e = entries[index];
 		if(e?.declaration !== d.source.declaration || e.delivery !== "task" || d.resultMode !== "promise"
-			|| !selection.taskExports.includes(e.declaration) || !["pure","BaseIO"].includes(e.effect)
-			|| d.failure.mode !== "none" || d.failure.errors.length || d.failure.unexpected !== "poison-runtime"
+			|| !selection.taskExports.includes(e.declaration) || !["pure","BaseIO","IO","EIO"].includes(e.effect)
+			|| d.failure.unexpected !== "poison-runtime"
 			|| d.capabilities.length || d.result.ownership !== "copy" || d.parameters.some(p => p.ownership !== "copy"))
 			throw new TypeError("Unexpected delivery, effect or ownership in WIT task: " + d.source.declaration);
 		const label = witVariantMember(d.name, labels, fail), r = api.declarations.length + index;
@@ -69,15 +79,20 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 		const handle = borrowed => ({ resource: true, resourceIndex: r
 			, borrowed, fields: []
 			, wit: (borrowed ? "borrow<" : "own<") + resource.witName + ">"
-			, wat: (borrowed ? "$borrow" : "$own") + r });
-		const result = scalar(d.result.type), parameters = new Set();
+			, wat: (borrowed ? "$borrow" : "$own") + r
+			, publicWat: (borrowed ? "$publicBorrow" : "$publicOwn") + r });
+		const result = copied(d.result.type), parameters = new Set();
+		const text = scalar({kind: "primitive",name: "string"});
+		const startError = e.effect==="EIO" ? copied(e.error) : e.effect==="IO" ? text : null;
 		const args = d.parameters.map(p => field(witVariantMember(p.name, parameters, fail), scalar(p.type)));
 		const states = ["pending","ready","cancelled","closed"].map(witName => ({witName
 			, fields: witName === "ready" ? [{type: result}] : []
 			, payload: witName === "ready" ? result : null}));
 		const witName = label + "-observation";
+		if(e.taskIO) states.push({witName: "failed",fields: [{type: text}],payload: text});
 		const observation = { index, witName, wit: witName, wat: "$t"+index, variant: true, cases: states };
-		const start = sig("start-"+label, args, handle(false));
+		const owner = handle(false);
+		const start = sig("start-"+label, args, startError ? resultOf(owner,startError) : owner);
 		const poll = sig("poll-"+label, [field("task",handle(true))], observation);
 		const cancel = sig("cancel-"+label, [field("task",handle(true))], bool);
 		resources.push(resource); types.push(observation); functions.push(start,poll,cancel);

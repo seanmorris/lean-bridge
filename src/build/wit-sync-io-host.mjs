@@ -39,7 +39,7 @@ export const linkWitHost = async options => {
 	const sdk = join(app,"wasmtime"), wasmtimeFiles = await snapshotWasmtimeCapi(options.wasmtimeRoot,sdk);
 	const config = { name: "wit-"+sha256(api.component.id)
 		, modules: evidence.selection.exportModules, entries
-		, synchronousIO: !tasks, integerMode: "words" };
+		, synchronousIO: !tasks, witDelivery: tasks, integerMode: "words" };
 	const template = generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
 	if(template.prefix!==model.prefix || canonicalJson(generateSyncWire(template.prefix,entries,{tasks}))!==canonicalJson(model.wire)) throw new Error("WIT and native entry points disagree");
 	const delivery = await nativeDeliveryHeader(false);

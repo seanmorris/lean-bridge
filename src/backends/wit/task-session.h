@@ -71,7 +71,7 @@ static LBP(status) lb_invoke(lb_session *s,const char *name,const lb_val *args,s
     if (err) { wasmtime_error_delete(err); return lb_fault(s,!s->tasks.import_failed); }
     return LBP(OK);
 }
-static LBP(status) lb_start(lb_session *s,size_t i,const lb_val *args,uint64_t *out) {
+static LBP(status) lb_start(lb_session *s,size_t i,const lb_val *args,uint64_t *out,lb_val *failure) {
     LBP(status) rc=lb_check(s); if (rc!=LBP(OK)) return rc;
     if (!out || out[0] || out[1]) return LBP(INVALID);
     if (s->tasks.live>=LB_TASK_MAX || s->tasks.last_rep==UINT32_MAX) return LBP(LIMIT);
@@ -79,6 +79,16 @@ static LBP(status) lb_start(lb_session *s,size_t i,const lb_val *args,uint64_t *
     for (size_t n=0;n<m->argc;n++) if (!lb_input(m->args[n],&args[n],&sc,NULL)) return LBP(INVALID);
     lb_val v={0}; rc=lb_invoke(s,m->names[0],args,m->argc,&v);
     if (rc!=LBP(OK)) return rc;
+    if (m->start_failure) {
+        if (!failure || v.kind!=WASMTIME_COMPONENT_RESULT || !v.of.result.val) {
+            wasmtime_component_val_delete(&v); return lb_fault(s,true);
+        }
+        bool ok=v.of.result.is_ok;
+        lb_val branch=*v.of.result.val; *v.of.result.val=(lb_val){0};
+        wasmtime_component_val_delete(&v);
+        if (!ok) { *failure=branch; return LBP(START_ERROR); }
+        v=branch;
+    }
     lb_task_slot *t=lb_task_find(&s->tasks,i,s->tasks.last_rep);
     if (!t || v.kind!=WASMTIME_COMPONENT_RESOURCE || !wasmtime_component_resource_any_owned(v.of.resource)) {
         wasmtime_component_val_delete(&v); return lb_fault(s,true);
@@ -121,12 +131,14 @@ static LBP(status) lb_observe(lb_session *s,size_t i,const uint64_t *h,bool wait
         if (result.kind!=WASMTIME_COMPONENT_VARIANT) goto malformed;
         wasm_name_t *label=&result.of.variant.discriminant;
         if (lb_name(label,"ready")) { next=LBP(READY); }
+        else if (lb_methods[i].terminal && lb_name(label,"failed")) { next=LBP(FAILED); }
         else if (lb_name(label,"pending")) { next=LBP(PENDING); gate=s->tasks.pending_fd; if (gate<0) goto malformed; }
         else if (lb_name(label,"cancelled")) { next=LBP(CANCELLED); }
         else if (lb_name(label,"closed")) { next=LBP(CLOSED); }
         else goto malformed;
-        if ((next==LBP(READY))!=(result.of.variant.val!=NULL)) goto malformed;
-        if (next==LBP(READY)) { *payload=*result.of.variant.val; *result.of.variant.val=(lb_val){0}; }
+        bool has_value=next==LBP(READY) || next==LBP(FAILED);
+        if (has_value!=(result.of.variant.val!=NULL)) goto malformed;
+        if (has_value) { *payload=*result.of.variant.val; *result.of.variant.val=(lb_val){0}; }
         wasmtime_component_val_delete(&result);
         if (wait && next==LBP(PENDING)) {
             struct pollfd p={gate,POLLIN,0}; int n;

@@ -29,10 +29,13 @@ export const generateCTaskExports = options => {
 	const retained = entries.some(retainedTask);
 	const terminal = entries.some(e => e.taskIO), publicC = options.cCallbacks === true;
 	const wasm = options.wasmTasks === true;
+	const hosts=[options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery, options.witDelivery];
+	if(options.witDelivery && (synchronous || wasm || gmp || retained || hosts.filter(Boolean).length!==1))
+		throw new TypeError("WIT task delivery requires native word carriers and cannot select retained callbacks or a second scheduler");
 	if(wasm && (synchronous || gmp || (retained && !options.wasmCallbacks)
 		|| [options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].some(Boolean)))
 		throw new TypeError("Threaded Wasm tasks require word carriers, the Wasm delivery profile and an explicit retained callback adapter");
-	if(!wasm && (retained || terminal) && ([options.rustCallbacks, options.cppCallbacks, publicC, options.rubyDelivery, options.dotnetDelivery, options.jvmDelivery, options.perlDelivery, options.phpDelivery].filter(Boolean).length !== 1 || publicC !== gmp))
+	if(!wasm && (retained || terminal) && (hosts.filter(Boolean).length !== 1 || publicC !== gmp))
 		throw new TypeError(options.phpDelivery ? "The PHP task ABI requires word carriers; select exactly one host"
 			: options.perlDelivery ? "The Perl task ABI requires word carriers; select exactly one host"
 				: options.jvmDelivery ? "The JVM task ABI requires word carriers; select exactly one host"

@@ -62,6 +62,10 @@ test("installed CLI ships typed Wasmtime tasks; ordinary and reviewed consumers 
 			await run("cc",["-std=c11","-Wall","-Wextra","-Werror","-DALL_SCALARS",fixture,...flags,"-pthread","-o","consumer"],cwd,clean);
 			const r=await run(join(cwd,"consumer"),[],cwd,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
 			assert.equal(r.stdout.trim(),"installed Wasmtime task consumer: passed");assert.equal(r.stderr,"");
+			await run("cc",["-std=c11","-Wall","-Wextra","-Werror",resolve("tests/fixtures/wit-task-package/effects.c"),...flags,"-o","effects"],cwd,clean);
+			const effects=await run(join(cwd,"effects"),[],cwd,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
+			assert.equal(effects.stdout.trim(),"factory failure, returned nested Except and worker failure are distinct");
+			assert.equal(effects.stderr,""); t.diagnostic(effects.stdout.trim());
 			await run("cc",["-std=c11","-Wall","-Wextra","-Werror",resolve("tests/fixtures/wit-task-package/retire.c"),...flags,"-pthread","-ldl","-o","retire"],cwd,clean);
 			const fault=await run(join(cwd,"retire"),[],cwd,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
 			assert.equal(fault.stdout.trim(),"parked await woke on retirement");assert.equal(fault.stderr,"");
@@ -72,7 +76,8 @@ test("installed CLI ships typed Wasmtime tasks; ordinary and reviewed consumers 
 	};
 	const source=join(root,"source");await cp(resolve("tests/fixtures/wit-tasks"),source,{recursive: true});
 	const mod=join(source,"Meter.lean"),config=join(source,"lean-bridge.exports.json"),cfg=JSON.parse(await readFile(config));
-	const extra=await readFile(resolve("tests/fixtures/wit-task-package/scalars.lean"),"utf8");
+	const extra=(await Promise.all(["scalars","effects"].map(f=>readFile(resolve("tests/fixtures/wit-task-package/"+f+".lean"),"utf8")))).join("\n");
+	cfg.taskIOErrors=["Meter.phase"];
 	await writeFile(mod,(await readFile(mod,"utf8")).replace("prelude\n","prelude\nimport Init.Data.Float32\n")+"\n"+extra);
 	for(const m of extra.matchAll(/^def (\w+) /gmu))
 {cfg.exports.push("Meter."+m[1]);cfg.taskExports.push("Meter."+m[1]);}
@@ -86,7 +91,14 @@ test("installed CLI ships typed Wasmtime tasks; ordinary and reviewed consumers 
 		await assert.rejects(build(refused),e=>re.test([e.details?.stderr,e.details?.stdout].join("\n")));
 		await assert.rejects(access(refused),{code: "ENOENT"});
 	};
-	ir.declarations.find(d=>d.source.declaration==="Meter.text").result.type.name="bool";
-	await writeFile(pub,canonicalJson(ir));await reject(/Reviewed API differs/u);
+	for(const change of [
+		x=>{x.declarations.find(d=>d.source.declaration==="Meter.text").result.type.name="bool";}
+		, x=>{x.errors.find(e=>e.id==="error:EIO.Meter.checked").payload.name="uint16";}
+		, x=>{x.declarations.find(d=>d.source.declaration==="Meter.phase").failure.errors=["error:IO.Error"];}
+	]){
+		const other=structuredClone(ir);change(other);
+		await writeFile(pub,canonicalJson(other));await reject(/Reviewed API differs/u);
+	}
+	await writeFile(pub,canonicalJson(ir));
 	await writeFile(config,canonicalJson({...cfg,nativeEffects: ["filesystem"]}));await reject(/without external capabilities/u);
 });

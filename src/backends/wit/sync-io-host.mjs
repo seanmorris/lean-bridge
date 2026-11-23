@@ -4,10 +4,16 @@ import { witConversionPrelude } from "./copied-conversions.mjs";
 import { renderWitHostHeader, renderWitValueSession } from "./copied-host.mjs";
 
 const leaf = type => "LB_"+type.toUpperCase();
-const decode = (type,at) => Array.isArray(type) ? `
+/**
+ * Decode one nested wire result into an owned Wasmtime value.
+ *
+ * @param type - Authenticated native wire shape (result pairs are ok/error).
+ * @param at - Next tag in the fixed-width native reply.
+ */
+export const decodeWitWireValue = (type,at) => Array.isArray(type) ? `
     if (tags[${at}]>1) return LB_MALFORMED;
     { bool ok=tags[${at}]!=0; int s=lb_result(out,ok,&out,scope); if (s) return s;
-      if (ok) { ${decode(type[0],at+1)} } else { ${decode(type[1],at+1)} } }` : `
+      if (ok) { ${decodeWitWireValue(type[0],at+1)} } else { ${decodeWitWireValue(type[1],at+1)} } }` : `
     for (size_t i=${at};i<ntags;i++) if (tags[i]) return LB_MALFORMED;
     return lb_output(${leaf(type)},w,scope,out);`;
 
@@ -34,8 +40,8 @@ static int lb_reply_${i}(int status,const uint64_t w[4],const uint8_t *tags,lb_s
         switch (status) { case 5: case 9: case 10: case 11: case 12: return LB_NATIVE_FAILURE; default: return LB_MALFORMED; }
     }
     ${m.error?`{ int s=lb_result(out,status==0,&out,scope); if (s) return s; }
-    if (status!=0) { ${decode(m.error,0)} }`:""}
-    ${decode(m.result,0)}
+    if (status!=0) { ${decodeWitWireValue(m.error,0)} }`:""}
+    ${decodeWitWireValue(m.result,0)}
 }
 static wasmtime_error_t *lb_call_${i}(void *data,wasmtime_context_t *context,const wasmtime_component_func_type_t *type,
     lb_val *args,size_t count,lb_val *results,size_t result_count) {

@@ -79,7 +79,9 @@ for the ordinary and reviewed builds.
 
 ## Export asynchronous tasks
 
-For pure `Task α` and `BaseIO (Task α)` exports, select the Lean declarations with `taskExports`. Arguments and results may be copied values of type `Bool`, `Char`, `String`, fixed-width signed or unsigned integers (8–64 bits), `Float32`, or `Float`. This profile does not admit external effects, task errors, callback parameters, or iterator selections.
+Select Lean declarations returning `Task α`, `BaseIO (Task α)`, `IO (Task α)` or `EIO ε (Task α)` with `taskExports`. Arguments can be `Bool`, `Char`, `String`, fixed-width signed or unsigned integers (8–64 bits), `Float32`, or `Float`. Results and typed factory errors can also contain nested `Except` over those types. An `IO` or `EIO` factory has a fallible start operation: success yields an owned task, and failure yields the error without creating a task.
+
+For a worker returning `Task (Except IO.Error α)`, also list the declaration in `taskIOErrors` to expose `IO.Error` as a terminal failure of that task. The host receives an `IO.Error` as text, not as a reconstruction of Lean’s error object. A normal returned `Except` remains a value, even when its error uses the same scalar type as a factory failure. The [Lean example](../../tests/fixtures/wit-task-package/effects.lean) shows both declarations. External capabilities, callback parameters and iterator selections are not part of this profile.
 
 ```json
 {

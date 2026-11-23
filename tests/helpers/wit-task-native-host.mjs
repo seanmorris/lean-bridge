@@ -30,7 +30,7 @@ export const exerciseWitTaskHost = async ({app,built,model,leanPrefix,runtimeRoo
 	const component=await readFile(join(app,"component.wasm"));
 	const imports=await renderWitTaskImports(model), delivery=await nativeDeliveryHeader(false);
 	const notification=await readFile(new URL("../../src/backends/native/task-notification.h",import.meta.url));
-	const config={name: "wit-"+sha256(api.component.id),modules: evidence.selection.exportModules,entries,integerMode: "words"};
+	const config={name: "wit-"+sha256(api.component.id),modules: evidence.selection.exportModules,entries,integerMode: "words",witDelivery: true};
 	const skeleton=generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
 	const componentIdentity=sha256(canonicalJson({evidence,identity
 		, skeleton,sdkFiles

@@ -135,7 +135,8 @@ export const renderCopiedWitComponent = ({ surface, functions: exports = surface
 	});
 	const typeIndex = copy => copy.witIndex ?? copy.index;
 	const explicitTypes = resources.length || preserveTypes;
-	const publicType = copy => copy.resource ? `$public${copy.borrowed ? "Borrow" : "Own"}${copy.resourceIndex}` : copy.witName ? `$public${typeIndex(copy)}` : copy.wat;
+	const publicType = copy => copy.resource ? `$public${copy.borrowed ? "Borrow" : "Own"}${copy.resourceIndex}`
+		: copy.witName ? `$public${typeIndex(copy)}` : (copy.publicWat ?? copy.wat);
 	// Type ascription gives re-exported aliases fresh IDs while preserving the
 	// imported resource identity. Direct duplicate exports confuse WIT decoders.
 	const publicResources = explicitTypes ? `  (type $public-api (instance

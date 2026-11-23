@@ -1,6 +1,7 @@
 /** @file Emit store-local Wasmtime resource imports for checked Lean task wires. */
 import { readFile } from "node:fs/promises";
 import { witConversionPrelude } from "./copied-conversions.mjs";
+import { decodeWitWireValue } from "./sync-io-host.mjs";
 
 /**
  * Generate private imports; the embedding owns the store, its event loop and teardown.
@@ -9,11 +10,11 @@ import { witConversionPrelude } from "./copied-conversions.mjs";
  */
 export const renderWitTaskImports = async model => {
 	const {wire,methods,prefix: p} = model, defs = [], rows = [];
-	let words=1;
+	let words=1, tags=1;
 	for(const [i,m] of wire.methods.entries())
 	{
 		const api=methods[i];
-		if(m.delivery!=="task" || m.declaration!==api.declaration || m.error || m.terminal)
+		if(m.delivery!=="task" || m.declaration!==api.declaration)
 			throw new TypeError("WIT method and native task wire disagree");
 		const n=m.names;
 		defs.push("extern int "+n.start+"(const uint64_t *,uint64_t *,uint64_t *,uint8_t *);",
@@ -22,8 +23,25 @@ export const renderWitTaskImports = async model => {
 			"extern int "+n.close+"(uint64_t *);");
 		const arg=m.args.length ? "(const enum lb_kind[]){"+m.args.map(t=>"LB_"+t.toUpperCase()).join(",")+"}" : "NULL";
 		words=Math.max(words,3*m.args.length);
+		tags=Math.max(tags,m.tagBytes);
+		const decoder=(shape,phase)=>{
+			if(!shape) return "NULL";
+			const name="lb_decode_"+i+"_"+phase;
+			defs.push(`static int ${name}(const uint64_t *w,const uint8_t *tags,lb_scope *scope,lb_val *out) {
+    const size_t ntags=${m.tagBytes}; ${decodeWitWireValue(shape,0)}
+}`);
+			return name;
+		};
 		rows.push("  {"+JSON.stringify(api.resource)+",{"+[api.start,api.poll,api.cancel].map(s=>JSON.stringify(s)).join(",")+"},"
-			+m.args.length+","+arg+",LB_"+m.result.toUpperCase()+","+[n.start,n.poll,n.take,n.close].join(",")+"}");
+			+[m.args.length,arg
+				, decoder(m.result,"ready")
+				, decoder(m.error,"start")
+				, decoder(m.terminal,"failed")
+				, m.error?p+(m.effect==="EIO"?"_TYPED_ERROR":"_IO_ERROR"):"0"
+				, n.start
+				, n.poll
+				, n.take
+				, n.close].join(",")+"}");
 	}
 	const asset = name=>readFile(new URL(name,import.meta.url),"utf8");
 	const imports = (await asset("task-imports.h")).replace("/* LB_GENERATED_METHOD_TABLE */",
@@ -33,6 +51,8 @@ export const renderWitTaskImports = async model => {
 		, "#include \""+p+".h\""
 		, "#define LB_TASK_METHODS "+methods.length
 		, "#define LB_TASK_WORDS "+words
+		, "#define LB_TASK_TAGS "+tags
+		, "#define LB_TASK_IO_ERROR "+p+"_IO_ERROR"
 		, "#define LB_TASK_IMPORT "+JSON.stringify(model.importName)
 		, "#define LB_TASK_API "+JSON.stringify(model.exportName)
 		, "#define LB_TASK_PENDING "+p+"_PENDING"

@@ -2,7 +2,7 @@
 
 A caller that starts `Meter.parked` gets an owned `parked-task`, not an integer handle. Polling or cancelling borrows that task. The readiness observation distinguishes `pending`, `ready(s64)`, `cancelled`, and `closed`. The other tasks in the same package have distinct resource types and their own result types.
 
-The [Lean fixture](../../tests/fixtures/wit-tasks/Meter.lean) declares a gated `BaseIO (Task Int64)`, a release operation returning `BaseIO (Task Bool)`, and an immediate `Task UInt32`. The [world generator](../../src/backends/wit/task-model.mjs) reconciles the original compiler evidence and the complete public contract before emitting the WIT and its canonical-ABI forwarding component. It refuses declared failures, unsupported payloads, and external native effects in this projection.
+The [Lean fixture](../../tests/fixtures/wit-tasks/Meter.lean) declares a gated `BaseIO (Task Int64)`, a release operation returning `BaseIO (Task Bool)`, and an immediate `Task UInt32`. The [world generator](../../src/backends/wit/task-model.mjs) reconciles the original compiler evidence and the complete public contract before emitting the WIT and its canonical-ABI forwarding component. These three exports do not declare failures. The generator rejects ungranted external native effects.
 
 ## Reproduce
 
@@ -34,7 +34,7 @@ The embedding test exercises nominal task resources, not canonical Component Mod
 
 ### Installed package receipts
 
-The release test extends Meter to 13 exports, including text with an embedded NUL, a Unicode scalar, fixed-width signed and unsigned integers, and both floating-point widths. This larger package has semantic Binding IR hash `4c334f37fb578f50245fea8f6775beb873ab167e776eb098c6ff6ab7f52867b7`. The prepared `lean-bridge@0.1.0-rc.1` CLI and the development CLI produced identical receipts for each route. These are local Linux x86-64 results using the glibc 2.36 test floor; they do not record a hosted build or a public release.
+At [the first installed milestone](https://github.com/seanmorris/lean-bridge/commit/744f1a69f21f6299bba0e5827f5eb99d3a331a46), the release test extended Meter to 13 exports, including text with an embedded NUL, a Unicode scalar, fixed-width signed and unsigned integers, and both floating-point widths. This larger package has semantic Binding IR hash `4c334f37fb578f50245fea8f6775beb873ab167e776eb098c6ff6ab7f52867b7`. The prepared `lean-bridge@0.1.0-rc.1` CLI and the development CLI produced identical receipts for each route. These are local Linux x86-64 results using the glibc 2.36 test floor; they do not record a hosted build or a public release.
 
 | Build | Archive bytes | Archive SHA-256 | Receipt SHA-256 |
 | --- | ---: | --- | --- |
@@ -42,3 +42,14 @@ The release test extends Meter to 13 exports, including text with an embedded NU
 | Reviewed | 59,213,246 | `eada7ff2f979790ddd979862482407f1b55a1edba61fe8bbaf432e436825fac9` | `175d3ef79965f8ed1bf8b4ac6b3e54e615245c89b2eb68470c19e7da4ec6cd7a` |
 
 The [consumer](../../tests/fixtures/wit-task-package/consumer.c) uses only the generated header and the standard C/POSIX library. It checks that a dropped reference cannot act on a new task, cancellation wins before delivery even if Lean already computed the value, a foreign session cannot borrow the task, and returned text survives store shutdown. A separate [fault-injection process](../../tests/fixtures/wit-task-package/retire.c) retires the runtime while the owner is waiting on a parked task and checks that closing the failed session releases its descriptor. The reviewed-result mismatch and the forbidden capability must each leave the release directory absent.
+
+### Factory errors, returned values and worker failures
+
+The [effect declarations](../../tests/fixtures/wit-task-package/effects.lean) extend the installed example to 16 exports. `Meter.phase` can throw the same `IO.userError` either before returning a task or inside its worker. Its WIT factory returns `result<own<phase-task>, string>`; the task's observation has a separate `failed(string)` case. `Meter.checked` instead returns nested `Except` values, including errors, as `ready(result<result<u32, string>, u32>)`. `Meter.branch` can throw either arm of `Except String UInt16` at startup.
+
+| Route | Archive bytes | Archive SHA-256 | Receipt SHA-256 |
+| --- | ---: | --- | --- |
+| Ordinary | 59,230,016 | `647bc1932eb9b75e91b431dd38f2e8ac99e6d6a65a77319a076b9eb54a2ca21a` | `f4cc5fb72ebd86e7a1dece5a07b2a2cce7a93d081297480bab91360a3c0daccd` |
+| Reviewed | 59,231,618 | `ffabfbe48b4ac02b1d85a74b4e2803f7800962f7d7a79aa419249b1177029d18` | `dde8c14eac1b7dffac40d977315286447982b7c763a90fa684d9ccc730442ced` |
+
+Both receipts identify the same semantic Binding IR (`46bc5aa19c03ed457250b2b7e67192147800ce1e92897508e600c2f789f931c6`). Both archives contain the same validated binary component (`50b19e3201b5ed29757181a4e1fbfa6a0e26b9cac67221245d7dda6ebedb5750`). Run `npm run test:wit-task-package` to compile and execute the [installed C consumer](../../tests/fixtures/wit-task-package/effects.c) against each archive. It checks 260 rejected starts without exhausting a 256-slot store, embedded NUL and UTF-8 in owned errors, exactly-once delivery, and recovery. Cancellation can win before delivery even if the worker would have reported an error. The package gate passed both clean installs and rejected three altered reviews (value type, startup error type, missing worker failure) and an ungranted filesystem capability before producing an archive. These tests do not establish callback or stream support.

@@ -188,6 +188,16 @@ Build with `cc main.c $(pkg-config --cflags --libs meter-wit) -o main`. Open and
 
 Each task delivers at most one value. Cancel stops delivery and returns whether this request won; it need not stop the Lean worker immediately. Drop a task to free its slot, or close the session to release all outstanding tasks. The limit is 256 live task resources per session, including completed tasks not yet dropped. A copied task refers to the same resource; it becomes stale on drop and cannot be used in another session. Returned strings are independent of the task and session; dispose them with the generated `string_dispose` function.
 
+The generated signature tells you where a failure can occur:
+
+| What Lean did | What the installed caller receives |
+| --- | --- |
+| An `IO` or `EIO` factory threw before returning a task | `start` returns `START_ERROR` and writes the message or typed error to its failure output. No task was created. |
+| A task returned `Except.error e` as its value | `await` returns `OK` with state `READY`. Its value has `ok == false` and contains `e` in its `error` field. |
+| A worker reported a declared terminal `IO.Error` | `await` or `poll` returns `OK` with state `FAILED` and writes the message to its failure output, leaving the value untouched. The next observation is `CLOSED`. |
+
+Zero-initialize outputs that can own strings. Dispose them with the generated function before reusing the slot. A declared failure does not retire the session. The [installed consumer](../../tests/fixtures/wit-task-package/effects.c) exercises all three cases.
+
 The WIT interface exposes nominal task resources with typed start, poll and cancel operations. This profile is not the canonical Component Model `future<T>` or `stream<T>`. See [publishing a task package](../publish/wit-wasi.md#export-asynchronous-tasks) for the admitted Lean types.
 
 ### Packages containing resources
@@ -1185,7 +1195,7 @@ Profiles: WIT/WASI. Installed checks apply only to the named positions and packa
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
-Check the archive profile before using the table below. The prepared [synchronous IO](#call-synchronous-io) and [scalar task](#await-a-lean-task) packages have separate installed checks. The Alpha audit row for `Task` does not describe `native-wit-task-v1`.
+Check the archive profile before using the table below. The prepared [synchronous IO](#call-synchronous-io) and [task](#await-a-lean-task) packages have separate installed checks. The Alpha audit row for `Task` does not describe `native-wit-task-v1`.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers WIT/WASI in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

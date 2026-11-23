@@ -5,9 +5,11 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
+typedef int (*lb_task_decoder)(const uint64_t *,const uint8_t *,lb_scope *,lb_val *);
 typedef struct {
     const char *resource, *names[3];
-    size_t argc; const enum lb_kind *args; enum lb_kind result;
+    size_t argc; const enum lb_kind *args;
+    lb_task_decoder ready,start_failure,terminal; int failure_status;
     int (*start)(const uint64_t *,uint64_t *,uint64_t *,uint8_t *);
     int (*poll)(uint64_t *,int *);
     int (*take)(uint64_t *,uint64_t *,uint8_t *);
@@ -76,7 +78,8 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
         return wasmtime_error_new("Invalid WIT task call or affinity");
     s->pending_fd=-1;
     lb_scope scope={.remaining=16u*1024u*1024u};
-    uint64_t words[4]={0}; uint8_t tag=0; wasmtime_error_t *err=NULL; lb_task_slot *t=NULL;
+    uint64_t words[4]={0}; uint8_t tags[LB_TASK_TAGS]={0}; wasmtime_error_t *err=NULL; lb_task_slot *t=NULL;
+    lb_val reply={0};
     if (b->op==0) {
         if (s->live==LB_TASK_MAX || s->last_rep==UINT32_MAX) return wasmtime_error_new("WIT task limit");
         uint64_t a[LB_TASK_WORDS]={0};
@@ -84,13 +87,28 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
             err=wasmtime_error_new("Invalid task input"); goto done;
         }
         for (size_t i=0;i<LB_TASK_MAX;i++) if (!s->slots[i].rep) { t=&s->slots[i]; break; }
-        if (!t || m->start(a,t->native,words,&tag)!=0) { err=wasmtime_error_new("Lean task start failed"); goto done; }
+        lb_val *branch=&reply;
+        if (!t || (m->start_failure && lb_result(&reply,true,&branch,&scope)!=LB_GOOD)) {
+            err=wasmtime_error_new("Cannot allocate WIT factory result"); goto done;
+        }
+        int started=m->start(a,t->native,words,tags);
+        if (started!=0) {
+            if (!m->start_failure || started!=m->failure_status || t->native[0] || t->native[1]) {
+                err=wasmtime_error_new("Lean task start failed"); goto done;
+            }
+            reply.of.result.is_ok=false;
+            if (m->start_failure(words,tags,&scope,branch)!=LB_GOOD) {
+                err=wasmtime_error_new("Invalid Lean factory error"); goto done;
+            }
+            *results=reply; reply=(lb_val){0}; goto done;
+        }
         t->rep=++s->last_rep; t->method=b->method; t->state=LB_TASK_RUNNING; ++s->live;
         wasmtime_component_resource_host_t *r=wasmtime_component_resource_host_new(true,t->rep,s->tags[b->method]);
         wasmtime_component_resource_any_t *handle=NULL;
         err=wasmtime_component_resource_host_to_any(ctx,r,&handle); wasmtime_component_resource_host_delete(r);
         if (err) { (void)lb_task_release(s,t); goto done; }
-        *results=(lb_val){.kind=WASMTIME_COMPONENT_RESOURCE,.of.resource=handle};
+        *branch=(lb_val){.kind=WASMTIME_COMPONENT_RESOURCE,.of.resource=handle};
+        *results=reply; reply=(lb_val){0};
     } else {
         err=lb_task_lookup(s,b->method,args,false,&t); if (err) goto done;
         if (b->op==2) {
@@ -107,14 +125,18 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
                     if (!t->waiting && LB_TASK_WAIT(fd,-1,t->gate)!=0) { err=wasmtime_error_new("Cannot subscribe to task readiness"); goto done; }
                     t->waiting=true; s->pending_fd=t->gate[0]; state="pending";
                 }
-                else if (status==0 && m->take(t->native,words,&tag)==0) {
+                else if (status==0) {
+                    int taken=m->take(t->native,words,tags); lb_task_decoder decode=m->ready; state="ready";
+                    if (m->terminal && taken==LB_TASK_IO_ERROR) { decode=m->terminal; state="failed"; }
+                    else if (taken!=0) { err=wasmtime_error_new("Lean task delivery failed"); goto done; }
                     lb_task_unwatch(t);
-                    t->state=LB_TASK_CLOSED; state="ready"; lb_val value={0};
-                    if (tag || lb_output(m->result,words,&scope,&value)!=LB_GOOD) {
+                    t->state=LB_TASK_CLOSED;
+                    if (decode(words,tags,&scope,&reply)!=LB_GOOD) {
                         err=wasmtime_error_new("Malformed Lean task result"); goto done;
                     }
-                    payload=wasmtime_component_val_new(&value);
+                    payload=wasmtime_component_val_new(&reply);
                     if (!payload) { err=wasmtime_error_new("Cannot allocate WIT task result"); goto done; }
+                    reply=(lb_val){0};
                 } else { err=wasmtime_error_new("Lean task poll or delivery failed"); goto done; }
             }
             *results=(lb_val){.kind=WASMTIME_COMPONENT_VARIANT,.of.variant.val=payload};
@@ -122,7 +144,7 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
         }
     }
 done:
-    lb_scope_close(&scope); LB_TASK_CLEAR(words); return err;
+    wasmtime_component_val_delete(&reply); lb_scope_close(&scope); LB_TASK_CLEAR(words); return err;
 }
 static wasmtime_error_t *lb_task_dispatch(void *data,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *type,
     lb_val *args,size_t count,lb_val *results,size_t nresults) {

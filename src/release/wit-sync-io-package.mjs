@@ -111,7 +111,7 @@ ${tasks ? `Open a main-thread session with ${p}_wit_open. Use the typed start, p
 
 These calls are synchronous. The outer result of a fallible export carries its declared Lean failure; returned Except values retain their own inner branches. A boundary error is not a Lean failure. Unexpected traps retire the shared process runtime; do not replay effectful calls. For your own store, register imports with ${p}_wasmtime_link and invoke exports with ${p}_wasmtime_call_instance. Destroy your store when discard_store is set. A raw call that bypasses this guard cannot execute the native effect.`}
 
-The component requires this native host; it is not a standalone WASI command. Declared native capabilities: ${projectContract.nativeEffects.join(", ") || "none"}. The host executes effects with the process's OS permissions. See share/lean-bridge/binding-ir.json for per-export capabilities.
+${tasks && model.wire.methods.some(m=>m.error || m.terminal || Array.isArray(m.result)) ? "A factory that throws returns START_ERROR instead of a task. A declared worker error delivers FAILED once. Both branches of a returned Except deliver READY. Initialize outputs that can own strings to zero and call their generated dispose function before reuse.\n\n" : ""}The component requires this native host; it is not a standalone WASI command. Declared native capabilities: ${projectContract.nativeEffects.join(", ") || "none"}. The host executes effects with the process's OS permissions. See share/lean-bridge/binding-ir.json for per-export capabilities.
 `);
 		const records = [...files].map(([path,v])=>({path,bytes: Buffer.isBuffer(v)?v:Buffer.from(v),mode: 0o644}));
 		const kind=tasks ? "lean-bridge-wit-task-package" : "lean-bridge-wit-io-package";

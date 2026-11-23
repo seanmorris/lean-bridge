@@ -47,8 +47,8 @@ export const buildHostProject = async options => {
 	const wit = target === "wit-wasi";
 	const witTasks=wit && Boolean(config.taskExports?.length);
 	if(wit && ((witTasks ? config.nativeEffects?.length : config.nativeEffects === undefined)
-		|| config.asyncIterators?.length || config.resources?.length || config.taskIOErrors?.length))
-		fail("WIT IO requires standalone synchronous exports and explicit nativeEffects, or scalar tasks without external capabilities, iterators, leases or declared task errors");
+		|| config.asyncIterators?.length || config.resources?.length || (!witTasks && config.taskIOErrors?.length)))
+		fail("WIT IO requires standalone synchronous exports and explicit nativeEffects, or tasks without external capabilities, iterators or leases");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");
