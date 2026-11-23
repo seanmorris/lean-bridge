@@ -33,6 +33,7 @@ test("offline npm consumer settles and cancels genuine pthread Lean tasks", {
 	await mkdir(pkg); await mkdir(consumer);
 	await command(lean, ["-j1", "-R", source, "-c", join(root, "ThreadProbe.c"), join(source, "ThreadProbe.lean")]);
 	const core = join(runtime, "cmake"), lib = join(core, "lib/lean");
+	const backend = resolve("src/backends/javascript");
 	const archive = process.env.LEAN_BRIDGE_JS_THREAD_INIT ?? join(lib, "libInit.a");
 	if(process.env.LEAN_BRIDGE_JS_THREAD_INIT)
 	{
@@ -42,7 +43,8 @@ test("offline npm consumer settles and cancels genuine pthread Lean tasks", {
 	}
 	const flags = ["-O2", "-g0", "-flto", "-pthread", "-fwasm-exceptions"
 		, "-DLEAN_EMSCRIPTEN", "-DLEAN_MULTI_THREAD", "-I", root
-		, "-I", join(core, "include"), join(source, "task-probe.c")
+		, "-I", join(core, "include"), "-I", backend
+		, join(source, "task-probe.c"), join(backend, "task-notification.c")
 		, join(lib, "libleanrt.a"), join(core, "libuv/src/libuv/libuv.a")
 		, archive
 		, "-sDEFAULT_TO_CXX=1", "-sMODULARIZE=1", "-sEXPORT_ES6=1"
@@ -52,6 +54,7 @@ test("offline npm consumer settles and cancels genuine pthread Lean tasks", {
 		, "-Wl,--no-entry", "-o", join(pkg, "task.mjs")];
 	await command(emcc, flags);
 	await copyFile(registry, join(pkg, "pending-operations.mjs"));
+	await copyFile(resolve("src/runtime/wasm-task-notifications.mjs"), join(pkg, "wasm-task-notifications.mjs"));
 	await copyFile(join(source, "index.mjs"), join(pkg, "index.mjs"));
 	await writeFile(join(pkg, "package.json"), JSON.stringify({name, version: "0.0.0", type: "module", private: true, exports: "./index.mjs"}));
 	const config = ["--offline", "--ignore-scripts", "--cache", join(root, "cache")];
@@ -60,7 +63,7 @@ test("offline npm consumer settles and cancels genuine pthread Lean tasks", {
 	await command("npm", ["install", "--no-audit", "--no-fund", ...config, join(pkg, filename)], consumer);
 	await copyFile(join(source, "consumer.mjs"), join(consumer, "calls.mjs"));
 	await writeFile(join(consumer, "node.mjs"), 'import * as api from "' + name + '";import {exercise} from "./calls.mjs";console.log(JSON.stringify(await exercise(api)));\n');
-	const result = {checks: 21, resolved: 1, cancelled: 3, live: 0};
+	const result = {checks: 22, resolved: 1, cancelled: 3, live: 0};
 	// Each fresh process has no server or test runner to keep a pending await
 	// alive. It must stay alive through native drain, then exit by itself.
 	const nodeProcesses = 4;

@@ -11,6 +11,7 @@ export const exercise = async api => {
 	const engine = await api.openProbe();
 	try
 	{
+		check(await engine.alreadyReady() === 2, "missed a subscriber on an already-finished Lean task");
 		for(const [cancel, cooperative] of [[false, false], [true, true], [true, false]])
 		{
 			let settlements = 0;

@@ -10,6 +10,8 @@ On 2026-11-23, four fresh Node 22.23.5 processes and one Chromium 156.0.8078.79 
 
 An earlier replay intermittently exited Node with code 13 and an unsettled top-level await. An unresolved Promise alone does not hold the process open, and the Emscripten loader unrefs idle pool workers. The Node adapter now keeps a message port referenced only from admission through native drain, including the interval after public cancellation. The fresh processes must finish and exit on their own; a lingering port also fails the test.
 
+The [runtime-owned observer](../../src/backends/javascript/task-notification.c) takes a borrowed Lean task and an opaque token, not a host function or a result codec. The [JavaScript dispatcher](../../src/runtime/wasm-task-notifications.mjs) belongs to one Wasm instance. It never reuses a token or runs a subscriber twice. The consumer replay also attached two subscriptions to one already-finished Lean task; neither reentered the subscribing call. This brought each of the four Node runs and the Chromium run to 22 checks.
+
 ## Reproduce
 
 Start at the repository root with pinned Lean 4.32.2 source and host compiler, Emscripten 6.0.6, CMake, Make, npm, the repository's JS dependencies and Chromium. Use fresh writable scratch space. The source checkout must include `stage0/stdlib/Init`; the small Init archive below is compiled from its hash-checked bootstrap C. The helper records the archive digest, all five target-header digests and the runtime stamp beside it in `inputs.json`; the installed test checks them before linking. Do not substitute an archive from the unthreaded browser runtime.

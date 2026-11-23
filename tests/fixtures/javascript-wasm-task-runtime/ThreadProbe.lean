@@ -3,6 +3,9 @@ import Init.System.Promise
 
 namespace ThreadProbe
 
+@[export lean_bridge_probe_ready]
+def ready (v : UInt32) : Task UInt32 := Task.pure v
+
 -- Exercise both corrected extern calls in the module's private Wasm filesystem.
 @[export lean_bridge_probe_temp_io]
 def tempIO : IO Unit := do

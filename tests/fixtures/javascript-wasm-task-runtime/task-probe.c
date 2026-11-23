@@ -4,33 +4,13 @@
 #include <emscripten.h>
 #include <lean/lean.h>
 #include <stdint.h>
+#include "task-notification.h"
 #include "ThreadProbe.c"
 
 extern void lean_initialize_runtime_module(void);
 static lean_object *gate, *entered, *task;
 static uint32_t current;
 static int active;
-
-/* A real Lean continuation posts to the owner agent. Scheduling the JS
-   delivery as a microtask also handles an already-complete mapped task. */
-static lean_object *wake(lean_object *key, lean_object *kind, lean_object *value) {
-  uint32_t token = lean_unbox_uint32(key), event = lean_unbox(kind);
-  lean_dec(key); lean_dec(value);
-  MAIN_THREAD_ASYNC_EM_ASM({
-    const key = $0 >>> 0;
-    const kind = $1;
-    queueMicrotask(() => Module['onTaskWake'](key, kind));
-  }, token, event);
-  return lean_box(0);
-}
-
-static void observe(lean_object *t, unsigned event) {
-  lean_object *f = lean_alloc_closure((void *)wake, 3, 2);
-  lean_closure_set(f, 0, lean_box_uint32(current));
-  lean_closure_set(f, 1, lean_box(event));
-  lean_inc(t);
-  lean_dec(lean_task_map_core(f, t, 0, true, true));
-}
 
 EMSCRIPTEN_KEEPALIVE int probe_init(void) {
   if (active) return 0;
@@ -53,8 +33,18 @@ EMSCRIPTEN_KEEPALIVE int probe_check_temp_io(void) {
   return ok;
 }
 
-EMSCRIPTEN_KEEPALIVE uint32_t probe_open(int cooperative) {
-  if (!active || task || current == UINT32_MAX) return 0;
+/* Two independent subscriptions to an already finished Lean Task. */
+EMSCRIPTEN_KEEPALIVE int probe_watch_ready(uint32_t first, uint32_t second) {
+  if (!active || !first || !second || first == second) return 0;
+  lean_object *t = lean_bridge_probe_ready(42);
+  lean_bridge_wasm_task_subscribe_v1(t, first);
+  lean_bridge_wasm_task_subscribe_v1(t, second);
+  lean_dec(t);
+  return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t probe_open(int cooperative, uint32_t on_entry, uint32_t on_result) {
+  if (!active || task || current == UINT32_MAX || !on_entry || !on_result || on_entry == on_result) return 0;
   gate = lean_bridge_probe_gate();
   lean_object *arrived = lean_bridge_probe_gate();
   lean_inc(arrived);
@@ -62,7 +52,8 @@ EMSCRIPTEN_KEEPALIVE uint32_t probe_open(int cooperative) {
   lean_inc(gate);
   ++current;
   task = lean_bridge_probe_start(gate, arrived, cooperative != 0);
-  observe(entered, 1); observe(task, 2);
+  lean_bridge_wasm_task_subscribe_v1(entered, on_entry);
+  lean_bridge_wasm_task_subscribe_v1(task, on_result);
   return current;
 }
 
