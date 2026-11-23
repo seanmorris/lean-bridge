@@ -7,6 +7,7 @@
 #include <poll.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "retained-quiescence.h"
 #define W(n) lbwire_lbc_witprobe_v1_0_##n
 #define STATUS(n) lbc_witprobe_##n
 enum action { VALUE, HOST_ERROR, LEAN_ERROR, CANCEL };
@@ -52,7 +53,6 @@ int main(void) {
     alarm(60);
     for (int factory=0;factory<=1;factory++)
         for (enum action mode=VALUE;mode<=CANCEL;mode++) check(factory,mode);
-    lean_bridge_native_snapshot snap={0}; lean_bridge_native_snapshot_read(&snap);
-    assert(snap.live_identities==0 && snap.runtime_init_runs==1);
+    check_quiescent();
     puts("Native WIT callback wire: 8 factory/worker outcomes passed");
 }

@@ -10,7 +10,7 @@ import { elaboratedComponent } from "../../src/analyze/semantic-model.mjs";
 import { generateSyncWire } from "../../src/backends/c/sync-wire.mjs";
 import { generateCTaskExports } from "../../src/backends/c/task-exports.mjs";
 import { compileWitTaskResources } from "../../src/backends/wit/task-model.mjs";
-import { renderWitTaskImports } from "../../src/backends/wit/task-host.mjs";
+import { exerciseRetainedStore } from "./wit-retained-store-probe.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { compileHostSources } from "../../src/build/host-elaboration.mjs";
 import { openHostProjectSource } from "../../src/build/host-project-source.mjs";
@@ -85,7 +85,8 @@ test("the WIT owner receives the original retained callback failure and its Lean
 		const [request]=model.methods[0].callbacks;
 		assert.equal(request.parameter,"transform");assert.equal(request.slot,2);
 		assert.equal(model.wire.methods[0].callbacks[0][0],request.slot);
-		const gen=generateCTaskExports({name: "witprobe",entries,modules: ["Meter"]
+		const gen=generateCTaskExports({name: "wit-"+sha256(api.component.id)
+			, entries,modules: ["Meter"]
 			, componentIdentity: sha256(canonicalJson(evidence))
 			, integerMode: "words",witDelivery: true,witCallbacks: true});
 		const wire=generateSyncWire(gen.prefix,entries,{tasks: true,witCallbacks: true}),[method]=wire.methods;
@@ -102,7 +103,7 @@ test("the WIT owner receives the original retained callback failure and its Lean
 		assert.ok(model.wit.includes(consuming));
 		await save("wrong.wit",model.wit.replaceAll(consuming,consuming.replace("own<","borrow<")));
 		await assert.rejects(processBuildRunner.capture({command: tools,cwd: app,args: ["component","targets","wrong.wit","world.wasm"]}));
-		await assert.rejects(renderWitTaskImports(model),/require a store-owner dispatch adapter/u);
+		assert.equal(model.prefix,gen.prefix);assert.deepEqual(model.wire,wire);
 		assert.equal((await exec(lean,["--githash"])).stdout.trim(),runtime.manifest.leanCommit);
 		await save("BridgeCAsync.lean",gen.entryLean);await exec(lean,["-j1","-c","entry.c","BridgeCAsync.lean"]);
 		await save("checked-entry.c",'#include "entry.c"\n'+gen.declarations+"\n");
@@ -110,7 +111,8 @@ test("the WIT owner receives the original retained callback failure and its Lean
 		await save("task-delivery.h",await nativeDeliveryHeader(false));
 		for(const [base,name] of [["c","task-callback-port.h"],["native","task-callback-queue.h"],["native","task-notification.h"]])
 			await cp(resolve("src/backends",base,name),join(app,name));
-		await cp(join(fx,"retained-wire.c"),join(app,"probe.c"));
+		await cp(join(fx,"retained-quiescence.h"),join(app,"retained-quiescence.h"));
+		await save("probe.c",(await readFile(join(fx,"retained-wire.c"),"utf8")).replaceAll("lbc_witprobe",gen.prefix));
 		const cc=env.CC??"cc",libs=join(runtimeRoot,"lib");
 		await exec(cc,["-std=gnu11","-O1","-g0","-I",join(runtimeRoot,"include")
 			, ...objects,"checked-entry.c","adapter.c","probe.c"
@@ -128,13 +130,16 @@ test("the WIT owner receives the original retained callback failure and its Lean
 		assert.match(result.stdout,/Native WIT callback wire: 8 factory\/worker outcomes passed/u);
 		const world=sha256(await readFile(join(app,"world.wasm")));
 		if(route==="ordinary") ordinaryWorld=world; else assert.equal(world,ordinaryWorld);
+		const store=process.env.LEAN_BRIDGE_WIT_CALLBACK_HOST==="1" && await exerciseRetainedStore({app,model,built,runtimeRoot,run,wasmtimeRoot: process.env.LEAN_BRIDGE_WASMTIME_C_API});
 		const report={route,api: hashBindingIr(api),runtime: runtime.identity,world
+			, ...store?{store,storeSha256: sha256(await readFile(join(app,"store")))}:{}
 			, probe: sha256(await readFile(join(app,"probe")))
 			, result: result.stdout.trim()};
 		if(keep)
 		{
 			const dir=join(keep,route);await mkdir(dir);
 			for(const name of ["world.wit","world.wasm","probe"]) await cp(join(app,name),join(dir,name));
+			if(store) await cp(join(app,"store"),join(dir,"store"));
 			for(const [file,data] of [["binding-ir",api],["host-evidence",evidence],["result",report]])
 				await writeFile(join(dir,file+".json"),canonicalJson(data),{flag: "wx"});
 		}

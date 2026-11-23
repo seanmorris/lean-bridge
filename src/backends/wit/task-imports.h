@@ -7,7 +7,19 @@
 
 typedef struct lb_tasks lb_tasks;
 typedef int (*lb_task_decoder)(lb_tasks *,uint64_t *,const uint8_t *,lb_scope *,lb_val *);
-enum { LB_HEAP_BASE=LB_FLOAT64+1, LB_KINDS=LB_TASK_METHODS+LB_HEAPS };
+#ifndef LB_CALLBACKS
+#define LB_CALLBACKS 0
+#endif
+enum { LB_HEAP_BASE=LB_FLOAT64+1, LB_CB_BASE=LB_TASK_METHODS+LB_HEAPS, LB_KINDS=LB_CB_BASE+LB_CALLBACKS };
+#if LB_CALLBACKS
+typedef struct {
+    const size_t *positions; int (*fd)(uint64_t *,int *); int (*next)(uint64_t *,uint32_t *);
+    int (*arg)(uint64_t *,uint32_t,uint64_t *); int (*reply)(uint64_t *,uint32_t,const uint64_t *);
+    int (*fail)(uint64_t *,const uint64_t *,uint32_t *); lb_task_decoder factory; int factory_status;
+    bool factory_host,worker_host;
+} lb_cb_port;
+typedef struct { size_t owner; uint32_t slot; const char *resource,*state,*read,*reply,*fail; int arg_kind,reply_kind; } lb_cb_method;
+#endif
 #if LB_HEAPS
 typedef struct {
     const char *name,*retain,*same;
@@ -32,12 +44,16 @@ typedef struct {
  * never reused within a store, even when a slot is reused. */
 enum { LB_TASK_MAX=256 };
 enum { LB_TASK_RUNNING, LB_TASK_CANCELLED, LB_TASK_CLOSED, LB_CURSOR_IDLE };
-typedef struct { uint32_t rep; size_t method; int state, gate[2]; bool waiting; uint64_t native[2]; } lb_task_slot;
+typedef struct { uint32_t rep; size_t method; int state, gate[2]; bool waiting; uint64_t native[2];
+#if LB_CALLBACKS
+    uint32_t parent,request; uint64_t argument[4];
+#endif
+} lb_task_slot;
 typedef struct { lb_tasks *s; size_t method, op; } lb_task_binding;
 struct lb_tasks {
     const lb_tasks *self; pid_t pid; pthread_t thread; wasmtime_context_t *ctx;
     lb_task_binding binds[LB_KINDS][4]; uint32_t tags[LB_KINDS], last_rep;
-    lb_task_slot slots[LB_TASK_MAX]; size_t live; int pending_fd; bool import_failed;
+    lb_task_slot slots[LB_TASK_MAX]; size_t live; int pending_fd; bool import_failed,closing;
 };
 static _Atomic uint32_t lb_task_next_tag;
 static bool lb_task_owner(lb_tasks *s,wasmtime_context_t *ctx) {
@@ -51,8 +67,16 @@ static lb_task_slot *lb_task_find(lb_tasks *s,size_t method,uint32_t rep) {
 static void lb_task_unwatch(lb_task_slot *t) {
     if (t->waiting) { LB_TASK_UNWAIT(t->gate); t->waiting=false; }
 }
+#if LB_CALLBACKS
+static bool lb_cb_dispose(lb_tasks *,lb_task_slot *);
+#endif
 static bool lb_task_release(lb_tasks *s,lb_task_slot *t) {
     if (!t || !t->rep) return false;
+#if LB_CALLBACKS
+    if (t->method>=LB_CB_BASE) {
+        if (!lb_cb_dispose(s,t)) return false;
+    } else
+#endif
 #if LB_HEAPS
     if (t->method>=LB_TASK_METHODS) {
         if (t->method>=LB_KINDS || lb_heap_methods[t->method-LB_TASK_METHODS].release(t->native)!=0) return false;
@@ -91,6 +115,7 @@ static wasmtime_error_t *lb_task_lookup(lb_tasks *s,size_t method,const lb_val *
     return *slot ? NULL : wasmtime_error_new("Expired native WIT task");
 }
 /* LB_HEAP_IMPORTS */
+/* LB_CALLBACK_IMPORTS */
 static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const wasmtime_component_func_type_t *type,
     lb_val *args,size_t count,lb_val *results,size_t nresults) {
     (void)type;
@@ -105,15 +130,19 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
         if (s->live==LB_TASK_MAX || s->last_rep==UINT32_MAX) return wasmtime_error_new("WIT task limit");
         uint64_t a[LB_TASK_WORDS]={0};
         for (size_t j=0;j<count;j++) {
+            size_t at=j;
+#if LB_CALLBACKS
+            if (lb_cb_ports[b->method].positions) at=lb_cb_ports[b->method].positions[j];
+#endif
 #if LB_HEAPS
             if (m->args[j]>=LB_HEAP_BASE) {
                 lb_task_slot *owned=NULL;
                 err=lb_task_lookup(s,LB_TASK_METHODS+m->args[j]-LB_HEAP_BASE,&args[j],false,&owned);
                 if (err) goto done;
-                a[j*3]=owned->native[0]; a[j*3+1]=owned->native[1]; continue;
+                a[at*3]=owned->native[0]; a[at*3+1]=owned->native[1]; continue;
             }
 #endif
-            if (!lb_input(m->args[j],&args[j],&scope,&a[j*3])) { err=wasmtime_error_new("Invalid task input"); goto done; }
+            if (!lb_input(m->args[j],&args[j],&scope,&a[at*3])) { err=wasmtime_error_new("Invalid task input"); goto done; }
         }
         for (size_t i=0;i<LB_TASK_MAX;i++) if (!s->slots[i].rep) { t=&s->slots[i]; break; }
         lb_val *branch=&reply;
@@ -162,11 +191,30 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
             else if (t->state==LB_TASK_RUNNING) {
                 int fd=-1,status=m->poll(t->native,&fd);
                 if (status==LB_TASK_PENDING && fd>=0) {
-                    if (!t->waiting && LB_TASK_WAIT(fd,-1,t->gate)!=0) { err=wasmtime_error_new("Cannot subscribe to task readiness"); goto done; }
+                    int callback=-1;
+#if LB_CALLBACKS
+                    if (lb_cb_ports[b->method].fd) {
+                        err=lb_cb_offer(s,t,&callback,&state,&payload);
+                        if (err) goto done;
+                        if (payload) goto observed;
+                    }
+#endif
+                    if (!t->waiting && LB_TASK_WAIT(fd,callback,t->gate)!=0) { err=wasmtime_error_new("Cannot subscribe to task readiness"); goto done; }
                     t->waiting=true; s->pending_fd=t->gate[0]; state="pending";
                 }
                 else if (status==0) {
                     int taken=m->take(t->native,words,tags); lb_task_decoder decode=m->ready; state=m->request?"item":"ready";
+#if LB_CALLBACKS
+                    const lb_cb_port *port=&lb_cb_ports[b->method];
+                    if (port->factory && taken==port->factory_status) { decode=port->factory; state="factory-failed"; }
+                    else if (port->fd && taken==14) {
+                        if (!words[2] || !((tags[0]==2 && port->factory_host) || (tags[0]==3 && port->worker_host))) {
+                            err=wasmtime_error_new("Unexpected retained callback failure origin"); goto done;
+                        }
+                        state=tags[0]==2?"factory-callback-failed":"worker-callback-failed";
+                        words[2]=0; decode=lb_cb_text;
+                    } else
+#endif
                     if (m->terminal && taken==m->terminal_status) { decode=m->terminal; state="failed"; }
                     else if (m->request && taken==LB_CURSOR_END) { decode=NULL; state="end"; }
                     else if (taken!=0) { err=wasmtime_error_new("Lean task delivery failed"); goto done; }
@@ -184,6 +232,9 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
                     }
                 } else { err=wasmtime_error_new("Lean task poll or delivery failed"); goto done; }
             }
+#if LB_CALLBACKS
+observed:
+#endif
             *results=(lb_val){.kind=WASMTIME_COMPONENT_VARIANT,.of.variant.val=payload};
             wasm_name_new(&results->of.variant.discriminant,strlen(state),state);
         }
@@ -201,6 +252,7 @@ static wasmtime_error_t *lb_task_dispatch(void *data,wasmtime_context_t *ctx,con
  * a trap: Wasmtime is not responsible for freeing embedder-owned Lean tasks. */
 static bool lb_tasks_shutdown(lb_tasks *s) {
     if (!lb_task_owner(s,s->ctx)) return false;
+    s->closing=true;
     for (size_t i=0;i<LB_TASK_MAX;i++) if (s->slots[i].rep && !lb_task_release(s,&s->slots[i])) return false;
     s->ctx=NULL; return true;
 }
@@ -216,6 +268,9 @@ static wasmtime_error_t *lb_tasks_link(lb_tasks *s,wasmtime_context_t *ctx,wasmt
         if (old==UINT32_MAX) { err=wasmtime_error_new("WIT task type identities exhausted"); break; }
         s->tags[i]=old+1;
         wasmtime_component_resource_type_t *ty=wasmtime_component_resource_type_new_host(s->tags[i]);
+#if LB_CALLBACKS
+        if (i>=LB_CB_BASE) { err=lb_cb_link(s,i,child,ty); wasmtime_component_resource_type_delete(ty); continue; }
+#endif
 #if LB_HEAPS
         if (i>=LB_TASK_METHODS) {
             err=lb_heap_link(s,i,child,ty); wasmtime_component_resource_type_delete(ty); continue;
