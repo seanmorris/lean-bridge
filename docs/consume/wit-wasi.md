@@ -200,6 +200,45 @@ Zero-initialize outputs that can own strings. Dispose them with the generated fu
 
 The WIT interface exposes nominal task resources with typed start, poll and cancel operations. This profile is not the canonical Component Model `future<T>` or `stream<T>`. See [publishing a task package](../publish/wit-wasi.md#export-asynchronous-tasks) for the admitted Lean types.
 
+### Pull an asynchronous sequence
+
+The [Meter example](../../tests/fixtures/wit-task-package/cursors.lean) exposes a feed that produces one item per request. Pass an open main-thread session to this function. It prints each integer, skips items that carry a text error, and drops the cursor on exit.
+
+```c
+#include <meter_wasmtime.h>
+#include <inttypes.h>
+#include <stdio.h>
+
+int print_feed(meter_wit_session *s, uint8_t mode, uint32_t limit) {
+    meter_wit_cursor_feed cursor = {0};
+    uint32_t start_error = 0;
+    meter_wit_status rc = meter_wit_open_feed(s, mode, limit, &cursor, &start_error);
+    if (rc == meter_wit_START_ERROR) fprintf(stderr, "open: %" PRIu32 "\n", start_error);
+    if (rc != meter_wit_OK) return 1;
+
+    int result = 1;
+    meter_wit_feed_value item = {0};
+    for (;;) {
+        meter_wit_state state;
+        uint16_t failure = 0;
+        rc = meter_wit_next_feed(s, cursor, &state, &item, &failure);
+        if (rc != meter_wit_OK) break;
+        if (state == meter_wit_END) { result = 0; break; }
+        if (state == meter_wit_FAILED) fprintf(stderr, "pull: %u\n", (unsigned)failure);
+        if (state != meter_wit_ITEM) break;
+        if (item.ok) printf("%" PRId64 "\n", item.value);
+        meter_wit_feed_value_dispose(&item);
+    }
+    return meter_wit_drop_feed(s, &cursor) == meter_wit_OK ? result : 1;
+}
+```
+
+`next` blocks the calling thread. In an event loop, call `request_feed`, then `poll_feed`. A `PENDING` observation supplies a borrowed readiness descriptor. When it becomes readable, poll again. Neither opening the cursor nor polling an idle cursor starts work. If a pull already owns the next delivery, another `request` or `next` returns `BUSY` without consuming it.
+
+`ITEM` can carry either arm of a returned Lean `Except`. `FAILED` reports a terminal pull error, and `END` reports exhaustion. After either, another request returns `FINISHED`. Drop the cursor if you break early. Closing the session also releases pending and never-requested cursors. A borrowed descriptor expires on delivery, cancellation, drop or session close.
+
+An unexpected runtime failure wakes a parked `await` with `UNAVAILABLE`. Close the session to release its owners. A Lean worker that ignores cancellation can keep the runtime alive until that worker finishes; it cannot publish another item to the closed session.
+
 ### Packages containing resources
 
 An ownership-aware package ships named C records, variants, sequences and opaque
@@ -1195,7 +1234,7 @@ Profiles: WIT/WASI. Installed checks apply only to the named positions and packa
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
-Check the archive profile before using the table below. The prepared [synchronous IO](#call-synchronous-io) and [task](#await-a-lean-task) packages have separate installed checks. The Alpha audit row for `Task` does not describe `native-wit-task-v1`.
+Check the archive profile before using the table below. The prepared packages have separate installed checks for [synchronous IO](#call-synchronous-io), [tasks](#await-a-lean-task) and [pull cursors](#pull-an-asynchronous-sequence). The Alpha audit rows for tasks and asynchronous iterators do not describe `native-wit-task-v1`.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers WIT/WASI in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

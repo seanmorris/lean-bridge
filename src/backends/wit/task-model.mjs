@@ -53,29 +53,36 @@ const spell = name => "%" + name; // Explicit WIT identifier, including keywords
  */
 export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settings }) => {
 	const selection = evidence?.selection;
-	if(!selection?.taskExports?.length || !evidence.interfaces?.length || evidence.hostImportsSourceSha256 !== null
+	const streams=selection?.asyncIterators??[], tasks=selection?.taskExports??[];
+	if(!(tasks.length || streams.length) || !evidence.interfaces?.length || evidence.hostImportsSourceSha256 !== null
 		|| selection.nativeEffectPolicy !== nativeEffectPolicy || !Array.isArray(selection.nativeEffects) || selection.nativeEffects.length
-		|| [selection.asyncIterators,selection.leanResources].some(s => s?.length)
+		|| selection.leanResources?.length
 		|| ![evidence.sourceTreeSha256,evidence.configurationSha256,evidence.compilerSha256,evidence.extractorSha256].every(hex)
 		|| hashBindingIr(api) !== bindingIrSha256) throw new TypeError("WIT tasks require matched Lean compiler evidence");
 	if(!settings?.name || !settings.version || Object.keys(settings).some(k => !["name","version"].includes(k)))
 		throw new TypeError("Expected WIT task package coordinates");
 	validateOrdinaryWasiSettings(settings);
 	const { entries } = reconcileHostExports({ ...evidence, ir: null, component: api.component, review: { source: canonicalJson(api) } });
-	if(entries.length !== selection.taskExports.length || new Set(selection.taskExports).size !== entries.length)
+	if(entries.length !== tasks.length+streams.length || new Set([...tasks,...streams.map(s=>s.open)]).size !== entries.length)
 		throw new TypeError("Every WIT task export must map to one checked declaration");
 	const resources = [], types = [], functions = [], methods = [], labels = new Set();
 	const bool = scalar({ kind: "primitive", name: "bool" });
+	const permitIndex=2*entries.length;
+	const permit={index: permitIndex,witName: "request-outcome"
+		, wit: "request-outcome",wat: "$t"+permitIndex,variant: true
+		, cases: ["accepted","busy","closed"].map(witName=>({witName,fields: [],payload: null}))};
 	for(const [index, d] of api.declarations.entries())
 	{
 		const e = entries[index];
-		if(e?.declaration !== d.source.declaration || e.delivery !== "task" || d.resultMode !== "promise"
-			|| !selection.taskExports.includes(e.declaration) || !["pure","BaseIO","IO","EIO"].includes(e.effect)
+		const stream=e?.delivery==="async-iterator";
+		if(e?.declaration !== d.source.declaration || (stream ? d.resultMode!=="async-iterator" || !streams.some(s=>s.open===e.declaration)
+			: e.delivery!=="task" || d.resultMode!=="promise" || !tasks.includes(e.declaration))
+			|| !["pure","BaseIO","IO","EIO"].includes(e.effect)
 			|| d.failure.unexpected !== "poison-runtime"
 			|| d.capabilities.length || d.result.ownership !== "copy" || d.parameters.some(p => p.ownership !== "copy"))
 			throw new TypeError("Unexpected delivery, effect or ownership in WIT task: " + d.source.declaration);
 		const label = witVariantMember(d.name, labels, fail), r = api.declarations.length + index;
-		const resource = { index: r, witName: label + "-task" };
+		const resource = { index: r, witName: label + (stream?"-cursor":"-task") };
 		const handle = borrowed => ({ resource: true, resourceIndex: r
 			, borrowed, fields: []
 			, wit: (borrowed ? "borrow<" : "own<") + resource.witName + ">"
@@ -85,18 +92,36 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 		const text = scalar({kind: "primitive",name: "string"});
 		const startError = e.effect==="EIO" ? copied(e.error) : e.effect==="IO" ? text : null;
 		const args = d.parameters.map(p => field(witVariantMember(p.name, parameters, fail), scalar(p.type)));
-		const states = ["pending","ready","cancelled","closed"].map(witName => ({witName
-			, fields: witName === "ready" ? [{type: result}] : []
-			, payload: witName === "ready" ? result : null}));
+		const item=stream?"item":"ready";
+		const states = ["pending",item,"cancelled","closed",...stream?["idle","end"]:[]].map(witName => ({witName
+			, fields: witName === item ? [{type: result}] : []
+			, payload: witName === item ? result : null}));
 		const witName = label + "-observation";
 		if(e.taskIO) states.push({witName: "failed",fields: [{type: text}],payload: text});
+		if(e.stepError)
+		{
+			const payload=copied(e.stepError); states.push({witName: "failed",fields: [{type: payload}],payload});
+		}
 		const observation = { index, witName, wit: witName, wat: "$t"+index, variant: true, cases: states };
 		const owner = handle(false);
-		const start = sig("start-"+label, args, startError ? resultOf(owner,startError) : owner);
-		const poll = sig("poll-"+label, [field("task",handle(true))], observation);
-		const cancel = sig("cancel-"+label, [field("task",handle(true))], bool);
+		const start = sig((stream?"open-":"start-")+label, args, startError ? resultOf(owner,startError) : owner);
+		const borrow=[field(stream?"cursor":"task",handle(true))];
+		const poll = sig("poll-"+label, borrow, observation);
+		const cancel = sig("cancel-"+label, borrow, bool);
 		resources.push(resource); types.push(observation); functions.push(start,poll,cancel);
-		methods.push({ declaration: e.declaration, resource: resource.witName, start: start.witName, poll: poll.witName, cancel: cancel.witName });
+		const request=stream && sig("request-"+label,borrow,permit);
+		if(request) functions.push(request);
+		methods.push({ declaration: e.declaration, resource: resource.witName
+			, start: start.witName, poll: poll.witName, cancel: cancel.witName
+			, ...request?{request: request.witName}:{} });
+	}
+	if(streams.length)
+	{
+		// A cursor named "outcome" exports the function "request-outcome".
+		// WIT types and functions share the same interface namespace.
+		const names=new Set([...resources,...types,...functions].map(x=>x.witName));
+		while(names.has(permit.witName)) permit.witName="cursor-"+permit.witName;
+		permit.wit=permit.witName; types.push(permit);
 	}
 	const {name,version} = settings, packageName = "lean-bridge:"+name;
 	const importName = packageName+"/native@"+version, exportName = packageName+"/api@"+version;

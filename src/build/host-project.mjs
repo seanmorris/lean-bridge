@@ -45,10 +45,10 @@ export const buildHostProject = async options => {
 	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
 	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, maven, cpan, php-native, or wit-wasi");
 	const wit = target === "wit-wasi";
-	const witTasks=wit && Boolean(config.taskExports?.length);
+	const witTasks=wit && Boolean(config.taskExports?.length || config.asyncIterators?.length);
 	if(wit && ((witTasks ? config.nativeEffects?.length : config.nativeEffects === undefined)
-		|| config.asyncIterators?.length || config.resources?.length || (!witTasks && config.taskIOErrors?.length)))
-		fail("WIT IO requires standalone synchronous exports and explicit nativeEffects, or tasks without external capabilities, iterators or leases");
+		|| config.resources?.length || (!witTasks && config.taskIOErrors?.length)))
+		fail("WIT IO requires standalone synchronous exports and explicit nativeEffects, or tasks and cursors without external capabilities or leases");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");

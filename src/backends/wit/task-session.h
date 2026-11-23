@@ -115,6 +115,19 @@ static LBP(status) lb_cancel(lb_session *s,size_t i,const uint64_t *h,bool *acce
     if (valid) *accepted=result.of.boolean;
     wasmtime_component_val_delete(&result); return valid ? LBP(OK) : lb_fault(s,true);
 }
+static inline LBP(status) lb_request_cursor(lb_session *s,size_t i,const uint64_t *h) {
+    lb_val *owner=NULL,result={0}; LBP(status) rc=lb_handle(s,i,h,&owner);
+    if (rc!=LBP(OK)) return rc;
+    rc=lb_invoke(s,lb_methods[i].names[3],owner,1,&result); if (rc!=LBP(OK)) return rc;
+    if (result.kind==WASMTIME_COMPONENT_VARIANT && !result.of.variant.val) {
+        wasm_name_t *label=&result.of.variant.discriminant;
+        if (lb_name(label,"accepted")) rc=LBP(OK);
+        else if (lb_name(label,"busy")) rc=LBP(BUSY);
+        else if (lb_name(label,"closed")) rc=LBP(FINISHED);
+        else rc=lb_fault(s,true);
+    } else rc=lb_fault(s,true);
+    wasmtime_component_val_delete(&result); return rc;
+}
 static LBP(status) lb_drop_owner(lb_session *s,size_t i,uint64_t *h) {
     lb_val *owner=NULL; LBP(status) rc=lb_handle(s,i,h,&owner); if (rc!=LBP(OK)) return rc;
     wasmtime_error_t *err=wasmtime_component_resource_any_drop(s->tasks.ctx,owner->of.resource);
@@ -130,13 +143,17 @@ static LBP(status) lb_observe(lb_session *s,size_t i,const uint64_t *h,bool wait
         LBP(state) next; int gate=-1;
         if (result.kind!=WASMTIME_COMPONENT_VARIANT) goto malformed;
         wasm_name_t *label=&result.of.variant.discriminant;
-        if (lb_name(label,"ready")) { next=LBP(READY); }
+        bool cursor=lb_methods[i].request!=NULL;
+        if (!cursor && lb_name(label,"ready")) { next=LBP(READY); }
+        else if (cursor && lb_name(label,"idle")) { next=LBP(IDLE); }
+        else if (cursor && lb_name(label,"end")) { next=LBP(END); }
+        else if (cursor && lb_name(label,"item")) { next=LBP(ITEM); }
         else if (lb_methods[i].terminal && lb_name(label,"failed")) { next=LBP(FAILED); }
         else if (lb_name(label,"pending")) { next=LBP(PENDING); gate=s->tasks.pending_fd; if (gate<0) goto malformed; }
         else if (lb_name(label,"cancelled")) { next=LBP(CANCELLED); }
         else if (lb_name(label,"closed")) { next=LBP(CLOSED); }
         else goto malformed;
-        bool has_value=next==LBP(READY) || next==LBP(FAILED);
+        bool has_value=next==LBP(READY) || next==LBP(ITEM) || next==LBP(FAILED);
         if (has_value!=(result.of.variant.val!=NULL)) goto malformed;
         if (has_value) { *payload=*result.of.variant.val; *result.of.variant.val=(lb_val){0}; }
         wasmtime_component_val_delete(&result);

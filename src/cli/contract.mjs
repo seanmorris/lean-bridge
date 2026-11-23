@@ -165,7 +165,7 @@ Build and publish options:
   --target nuget        Build ordinary C#/.NET copied-value NuGet packages
   --target maven        Build Java/Kotlin Maven packages, including native IO and tasks
   --target rubygems     Build ordinary Ruby copied-value gems
-  --target wit-wasi     Build WIT APIs with a native Wasmtime host for values, synchronous IO or tasks
+  --target wit-wasi     Build WIT APIs with a native Wasmtime host for values, synchronous IO, tasks or pull cursors
   --target pypi         Build ordinary Python APIs as prepared native wheels
   --target cargo        Build ordinary Rust copied-value crates
   --target php-native   Build ordinary PHP CLI copied-value Composer packages

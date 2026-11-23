@@ -7,26 +7,27 @@
 
 typedef int (*lb_task_decoder)(const uint64_t *,const uint8_t *,lb_scope *,lb_val *);
 typedef struct {
-    const char *resource, *names[3];
+    const char *resource, *names[4];
     size_t argc; const enum lb_kind *args;
-    lb_task_decoder ready,start_failure,terminal; int failure_status;
+    lb_task_decoder ready,start_failure,terminal; int failure_status,terminal_status;
     int (*start)(const uint64_t *,uint64_t *,uint64_t *,uint8_t *);
     int (*poll)(uint64_t *,int *);
     int (*take)(uint64_t *,uint64_t *,uint8_t *);
     int (*close)(uint64_t *);
+    int (*request)(uint64_t *);
 } lb_task_method;
 /* LB_GENERATED_METHOD_TABLE */
 
 /* Entries survive native completion until the WIT owner is dropped. Reps are
  * never reused within a store, even when a slot is reused. */
 enum { LB_TASK_MAX=256 };
-enum { LB_TASK_RUNNING, LB_TASK_CANCELLED, LB_TASK_CLOSED };
+enum { LB_TASK_RUNNING, LB_TASK_CANCELLED, LB_TASK_CLOSED, LB_CURSOR_IDLE };
 typedef struct { uint32_t rep; size_t method; int state, gate[2]; bool waiting; uint64_t native[2]; } lb_task_slot;
 typedef struct lb_tasks lb_tasks;
 typedef struct { lb_tasks *s; size_t method, op; } lb_task_binding;
 struct lb_tasks {
     const lb_tasks *self; pid_t pid; pthread_t thread; wasmtime_context_t *ctx;
-    lb_task_binding binds[LB_TASK_METHODS][3]; uint32_t tags[LB_TASK_METHODS], last_rep;
+    lb_task_binding binds[LB_TASK_METHODS][4]; uint32_t tags[LB_TASK_METHODS], last_rep;
     lb_task_slot slots[LB_TASK_MAX]; size_t live; int pending_fd; bool import_failed;
 };
 static _Atomic uint32_t lb_task_next_tag;
@@ -42,7 +43,12 @@ static void lb_task_unwatch(lb_task_slot *t) {
     if (t->waiting) { LB_TASK_UNWAIT(t->gate); t->waiting=false; }
 }
 static bool lb_task_release(lb_tasks *s,lb_task_slot *t) {
-    if (!t || !t->rep || (t->native[0] && lb_methods[t->method].close(t->native)!=0)) return false;
+    if (!t || !t->rep) return false;
+    if (t->native[0]) {
+        const lb_task_method *m=&lb_methods[t->method]; int status=m->close(t->native);
+        /* A failed native pull subscription may already have disposed its cursor. */
+        if (status!=0 && !(m->request && status==LB_NATIVE_CLOSED)) return false;
+    }
     lb_task_unwatch(t);
     *t=(lb_task_slot){0}; --s->live; return true;
 }
@@ -102,7 +108,7 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
             }
             *results=reply; reply=(lb_val){0}; goto done;
         }
-        t->rep=++s->last_rep; t->method=b->method; t->state=LB_TASK_RUNNING; ++s->live;
+        t->rep=++s->last_rep; t->method=b->method; t->state=m->request?LB_CURSOR_IDLE:LB_TASK_RUNNING; ++s->live;
         wasmtime_component_resource_host_t *r=wasmtime_component_resource_host_new(true,t->rep,s->tags[b->method]);
         wasmtime_component_resource_any_t *handle=NULL;
         err=wasmtime_component_resource_host_to_any(ctx,r,&handle); wasmtime_component_resource_host_delete(r);
@@ -111,14 +117,24 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
         *results=reply; reply=(lb_val){0};
     } else {
         err=lb_task_lookup(s,b->method,args,false,&t); if (err) goto done;
-        if (b->op==2) {
-            bool accepted=t->state==LB_TASK_RUNNING;
+        if (b->op==3 && m->request) {
+            const char *answer="closed";
+            if (t->state==LB_TASK_RUNNING) answer="busy";
+            if (t->state==LB_CURSOR_IDLE) {
+                if (m->request(t->native)!=0) { err=wasmtime_error_new("Lean cursor request failed"); goto done; }
+                t->state=LB_TASK_RUNNING; answer="accepted";
+            }
+            *results=(lb_val){.kind=WASMTIME_COMPONENT_VARIANT};
+            wasm_name_new(&results->of.variant.discriminant,strlen(answer),answer);
+        } else if (b->op==2) {
+            bool accepted=t->state==LB_TASK_RUNNING || t->state==LB_CURSOR_IDLE;
             if (accepted && m->close(t->native)!=0) { err=wasmtime_error_new("Lean task cancellation failed"); goto done; }
             if (accepted) { lb_task_unwatch(t); t->state=LB_TASK_CANCELLED; }
             *results=(lb_val){.kind=WASMTIME_COMPONENT_BOOL,.of.boolean=accepted};
         } else {
             const char *state="closed"; lb_val *payload=NULL;
             if (t->state==LB_TASK_CANCELLED) { state="cancelled"; t->state=LB_TASK_CLOSED; }
+            else if (t->state==LB_CURSOR_IDLE) state="idle";
             else if (t->state==LB_TASK_RUNNING) {
                 int fd=-1,status=m->poll(t->native,&fd);
                 if (status==LB_TASK_PENDING && fd>=0) {
@@ -126,17 +142,20 @@ static wasmtime_error_t *lb_task_call(void *data,wasmtime_context_t *ctx,const w
                     t->waiting=true; s->pending_fd=t->gate[0]; state="pending";
                 }
                 else if (status==0) {
-                    int taken=m->take(t->native,words,tags); lb_task_decoder decode=m->ready; state="ready";
-                    if (m->terminal && taken==LB_TASK_IO_ERROR) { decode=m->terminal; state="failed"; }
+                    int taken=m->take(t->native,words,tags); lb_task_decoder decode=m->ready; state=m->request?"item":"ready";
+                    if (m->terminal && taken==m->terminal_status) { decode=m->terminal; state="failed"; }
+                    else if (m->request && taken==LB_CURSOR_END) { decode=NULL; state="end"; }
                     else if (taken!=0) { err=wasmtime_error_new("Lean task delivery failed"); goto done; }
                     lb_task_unwatch(t);
-                    t->state=LB_TASK_CLOSED;
-                    if (decode(words,tags,&scope,&reply)!=LB_GOOD) {
-                        err=wasmtime_error_new("Malformed Lean task result"); goto done;
+                    t->state=m->request && taken==0 ? LB_CURSOR_IDLE : LB_TASK_CLOSED;
+                    if (decode) {
+                        if (decode(words,tags,&scope,&reply)!=LB_GOOD) {
+                            err=wasmtime_error_new("Malformed Lean task result"); goto done;
+                        }
+                        payload=wasmtime_component_val_new(&reply);
+                        if (!payload) { err=wasmtime_error_new("Cannot allocate WIT task result"); goto done; }
+                        reply=(lb_val){0};
                     }
-                    payload=wasmtime_component_val_new(&reply);
-                    if (!payload) { err=wasmtime_error_new("Cannot allocate WIT task result"); goto done; }
-                    reply=(lb_val){0};
                 } else { err=wasmtime_error_new("Lean task poll or delivery failed"); goto done; }
             }
             *results=(lb_val){.kind=WASMTIME_COMPONENT_VARIANT,.of.variant.val=payload};
@@ -171,11 +190,12 @@ static wasmtime_error_t *lb_tasks_link(lb_tasks *s,wasmtime_context_t *ctx,wasmt
         if (old==UINT32_MAX) { err=wasmtime_error_new("WIT task type identities exhausted"); break; }
         s->tags[i]=old+1;
         wasmtime_component_resource_type_t *ty=wasmtime_component_resource_type_new_host(s->tags[i]);
-        for (size_t j=0;j<3;j++) s->binds[i][j]=(lb_task_binding){s,i,j};
         const lb_task_method *m=&lb_methods[i];
+        size_t operations=m->request?4:3;
+        for (size_t j=0;j<operations;j++) s->binds[i][j]=(lb_task_binding){s,i,j};
         err=wasmtime_component_linker_instance_add_resource(child,m->resource,strlen(m->resource),ty,lb_task_dtor,&s->binds[i][0],NULL);
         wasmtime_component_resource_type_delete(ty);
-        for (size_t j=0;j<3 && !err;j++)
+        for (size_t j=0;j<operations && !err;j++)
             err=wasmtime_component_linker_instance_add_func(child,m->names[j],strlen(m->names[j]),lb_task_dispatch,&s->binds[i][j],NULL);
     }
     if (child) wasmtime_component_linker_instance_delete(child);

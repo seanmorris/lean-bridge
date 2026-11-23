@@ -81,7 +81,7 @@ for the ordinary and reviewed builds.
 
 Select Lean declarations returning `Task α`, `BaseIO (Task α)`, `IO (Task α)` or `EIO ε (Task α)` with `taskExports`. Arguments can be `Bool`, `Char`, `String`, fixed-width signed or unsigned integers (8–64 bits), `Float32`, or `Float`. Results and typed factory errors can also contain nested `Except` over those types. An `IO` or `EIO` factory has a fallible start operation: success yields an owned task, and failure yields the error without creating a task.
 
-For a worker returning `Task (Except IO.Error α)`, also list the declaration in `taskIOErrors` to expose `IO.Error` as a terminal failure of that task. The host receives an `IO.Error` as text, not as a reconstruction of Lean’s error object. A normal returned `Except` remains a value, even when its error uses the same scalar type as a factory failure. The [Lean example](../../tests/fixtures/wit-task-package/effects.lean) shows both declarations. External capabilities, callback parameters and iterator selections are not part of this profile.
+For a worker returning `Task (Except IO.Error α)`, also list the declaration in `taskIOErrors` to expose `IO.Error` as a terminal failure of that task. The host receives the message as text. A normal returned `Except` remains a value, even when its error uses the same scalar type as a factory failure. The [Lean example](../../tests/fixtures/wit-task-package/effects.lean) shows both declarations. This profile accepts tasks and pull cursors; it does not accept external capabilities or callback parameters.
 
 ```json
 {
@@ -93,6 +93,31 @@ For a worker returning `Task (Except IO.Error α)`, also list the declaration in
 ```
 
 Run `lean-bridge build --project . --target wit-wasi --output build/release` with the pinned Lean compiler, wasm-tools and Wasmtime C SDK described above. Verify the handoff with `lean-bridge verify --receipt build/release/package-set-receipt.json`. Distribute that receipt and the archive listed inside it. The prepared release includes the typed header, component, native libraries and `meter-wit.pc`; consumers do not repeat the producer build. A reviewed project can also supply a public `.binding-ir.json`; the CLI still checks it against fresh compiler output. See the [consumer example](../consume/wit-wasi.md#await-a-lean-task).
+
+## Export a pull cursor
+
+Select the three Lean declarations that open, advance and close your cursor in `lean-bridge.exports.json`. A package containing only cursors needs neither `taskExports` nor an `exports` list.
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Meter"],
+  "asyncIterators": [
+    { "open": "Meter.feed", "next": "Meter.advance", "close": "Meter.finish" }
+  ],
+  "targets": { "wit-wasi": { "name": "meter", "version": "1.0.0" } }
+}
+```
+
+The factory returns a concrete cursor type defined in your module, directly or in `BaseIO`, `IO` or `EIO`. For a cursor `C`, the other declarations have these signatures:
+
+| Declaration | Lean signature | Consumer behavior |
+| --- | --- | --- |
+| `next`, no declared pull failure | `C → BaseIO (Task (Option α))` | `some` delivers an item; `none` ends the sequence. |
+| `next`, typed pull failure | `C → BaseIO (Task (Except ε (Option α)))` | `Except.error` ends the sequence with a typed failure. |
+| `close` | `C → BaseIO Unit` | Releases the cursor on exhaustion, failure, cancellation or early drop. |
+
+The [Meter declarations](../../tests/fixtures/wit-task-package/cursors.lean) use `UInt32` for a factory failure and `UInt16` for a failed pull. An item of type `Except String Int64` still arrives as an item, including its text-error arm. The build checks the three selected declarations against Lean compiler output and any supplied review. Use the same build and verification commands as for tasks. The [consumer example](../consume/wit-wasi.md#pull-an-asynchronous-sequence) uses the generated header.
 
 ## Export resource-containing values
 

@@ -54,14 +54,14 @@ const bindings = model=>{
 		defs.push(proto+";"); symbols.push(name); if(body) code.push(proto+" {\n"+body+"\n}");
 	};
 	defs.push("typedef struct "+p+"session "+p+"session;",
-		"typedef enum { "+["OK","INVALID","STALE","LIMIT","UNAVAILABLE","TRAPPED","START_ERROR"].map(n=>p+n).join(", ")+" } "+p+"status;",
-		"typedef enum { "+["PENDING","READY","CANCELLED","CLOSED","FAILED"].map(n=>p+n).join(", ")+" } "+p+"state;",
+		"typedef enum { "+["OK","INVALID","STALE","LIMIT","UNAVAILABLE","TRAPPED","START_ERROR","BUSY","FINISHED"].map(n=>p+n).join(", ")+" } "+p+"status;",
+		"typedef enum { "+["PENDING","READY","CANCELLED","CLOSED","FAILED","IDLE","ITEM","END"].map(n=>p+n).join(", ")+" } "+p+"state;",
 		"typedef struct { const char *data; size_t size; } "+p+"text;",
 		"typedef struct { char *data; size_t size; } "+p+"string;");
 	add("open",[p+"session **out"]); add("close",[p+"session **owner"]);
 	for(const [i,m] of model.wire.methods.entries())
 	{
-		const h=p+"task_"+m.name,s=p+"session *s",own=h+" task",value=make(m.result,m.name+"_value");
+		const stream=m.delivery==="async-iterator", h=p+(stream?"cursor_":"task_")+m.name,s=p+"session *s",own=h+" task",value=make(m.result,m.name+"_value");
 		const error=m.error && make(m.error,m.name+"_start_error"), terminal=m.terminal && make(m.terminal,m.name+"_failure");
 		const result=value.type+" *value", state=p+"state *state";
 		defs.push("typedef struct { uint64_t _private[2]; } "+h+";");
@@ -69,7 +69,7 @@ const bindings = model=>{
 		const init=m.args.map((a,k)=>a==="string" ? "{.kind=WASMTIME_COMPONENT_STRING,.of.string={.size=v"+k+".size,.data=(char *)v"+k+".data}}"
 			: "{.kind=WASMTIME_COMPONENT_"+kinds[a][1]+",.of."+kinds[a][2]+"=v"+k+"}");
 		const call="lb_start(s,"+i+","+(args.length?"args":"NULL")+",out?out->_private:NULL,"+(error?"&v":"NULL")+")";
-		add("start_"+m.name,[s,...args,h+" *out",...error?[error.type+" *failure"]:[]],(args.length?"    const lb_val args[]={"+init.join(",")+"};\n":"")
+		add((stream?"open_":"start_")+m.name,[s,...args,h+" *out",...error?[error.type+" *failure"]:[]],(args.length?"    const lb_val args[]={"+init.join(",")+"};\n":"")
 			+(error?`    if (${occupied(error,"failure")}) return ${p}INVALID;
     lb_val v={0}; ${p}status rc=${call};
     if (rc==${p}START_ERROR) { ${receive(error,"failure")} }
@@ -80,10 +80,18 @@ const bindings = model=>{
     lb_val v={0}; ${p}state next; int gate=-1;
     ${p}status rc=lb_observe(s,${i},task._private,${wait},&next,&gate,&v);
     if (rc!=${p}OK) return rc;
-    if (next==${p}READY) {
+    if (next==${p}${stream?"ITEM":"READY"}) {
         ${receive(value,"value")}
     }${terminal?` else if (next==${p}FAILED) { ${receive(terminal,"failure")} }`:""}
     wasmtime_component_val_delete(&v); *state=next; ${wait?"":"*fd=gate; "}return ${p}OK;`);
+		}
+		if(stream)
+		{
+			add("request_"+m.name,[s,own],"    return lb_request_cursor(s,"+i+",task._private);");
+			add("next_"+m.name,[s,own,state,result,...terminal?[terminal.type+" *failure"]:[]],`    if (!state || ${occupied(value,"value")}${terminal?" || "+occupied(terminal,"failure"):""}) return ${p}INVALID;
+    ${p}status rc=${p}request_${m.name}(s,task);
+    if (rc!=${p}OK) return rc;
+    return ${p}await_${m.name}(s,task,state,value${terminal?",failure":""});`);
 		}
 		add("cancel_"+m.name,[s,own,"bool *accepted"],"    return lb_cancel(s,"+i+",task._private,accepted);");
 		add("drop_"+m.name,[s,h+" *task"],"    return lb_drop_owner(s,"+i+",task?task->_private:NULL);");
@@ -99,10 +107,13 @@ const bindings = model=>{
 extern "C" {
 #endif
 /* Open, use and close sessions on the process main thread. Start needs a fresh
- * zero-initialized task output. START_ERROR returns the typed factory error and
- * leaves that task empty. FAILED delivers a worker error once, leaving the value
- * untouched. A returned Except (either arm) is READY. Copies refer to the same resource and become stale on
- * drop. Poll writes the value only when READY. A PENDING fd is borrowed: do not
+ * zero-initialized owner output. START_ERROR returns the typed factory error and
+ * leaves that owner empty. FAILED delivers a terminal error once, leaving the
+ * value untouched. A returned Except is a value (READY for tasks, ITEM for cursors).
+ * Opening or observing an idle cursor does not pull. Request one item, then poll
+ * or await; next combines request and await. BUSY leaves the pending delivery
+ * untouched. END marks exhaustion; the next request returns FINISHED. Drop on
+ * early exit. Copies become stale together. A PENDING fd is borrowed: do not
  * read or close it; it expires on delivery, cancellation, drop, or session close.
  * Await blocks this thread; use poll to interleave work. Returned strings are
  * independent, nul-terminated byte spans (embedded NULs remain significant).

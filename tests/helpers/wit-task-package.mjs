@@ -5,18 +5,21 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
+import { linuxBrokerHeader } from "../../src/backends/native/runtime-broker.mjs";
 import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { buildCliNpmPackage } from "../../src/release/cli-npm-package.mjs";
 import { readVerifiedPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 
-const active=process.env.LEAN_BRIDGE_WIT_TASK_PACKAGE_TEST==="1";
-test("installed CLI ships typed Wasmtime tasks; ordinary and reviewed consumers need no producer tools", {skip: !active},async t=>{
+const tasks=process.env.LEAN_BRIDGE_WIT_TASK_PACKAGE_TEST==="1", cursors=process.env.LEAN_BRIDGE_WIT_CURSOR_PACKAGE_TEST==="1";
+const protocols=[{open: "Meter.feed",next: "Meter.advance",close: "Meter.finish"},{open: "Meter.gauge",next: "Meter.sample",close: "Meter.closeGauge"}];
+if(tasks && cursors) protocols.push({open: "Meter.outcome",next: "Meter.sample",close: "Meter.closeGauge"});
+test("installed CLI ships typed Wasmtime "+[tasks && "tasks",cursors && "cursors"].filter(Boolean).join(" and ")+" to ordinary and reviewed consumers", {skip: !tasks && !cursors},async t=>{
 	const env={...process.env}; delete env.NODE_TEST_CONTEXT;
 	const root=await mkdtemp(join(tmpdir(),"wit-tasks-install-"));t.after(()=>rm(root,{recursive: true,force: true}));
 	env.npm_config_cache=join(root,"npm-cache");
-	const evidence=env.LEAN_BRIDGE_WIT_TASK_RELEASE_EVIDENCE;
+	const evidence=(cursors && env.LEAN_BRIDGE_WIT_CURSOR_RELEASE_EVIDENCE) || env.LEAN_BRIDGE_WIT_TASK_RELEASE_EVIDENCE;
 	const out=evidence??join(root,"handoffs"); await mkdir(out);
 	const run=async(command,args,cwd=root,environment=env)=>{
 		try
@@ -57,18 +60,46 @@ test("installed CLI ships typed Wasmtime tasks; ordinary and reviewed consumers 
 			assert.equal(sha256(await read("component/meter.wasm")),manifest.componentSha256);
 			await run(env.LEAN_BRIDGE_WASM_TOOLS,["component","targets",join(dest,"wit/meter.wit"),join(dest,"component/meter.wasm")],cwd);
 			const clean={PATH: "/usr/bin:/bin",PKG_CONFIG_LIBDIR: join(dest,"lib/pkgconfig")};
+			// Only the retirement fault injector uses the private broker snapshot ABI.
+			await writeFile(join(cwd,"lean_bridge_native_runtime.h"),linuxBrokerHeader);
 			const flags=(await run("pkg-config",["--cflags","--libs","meter-wit"],cwd,clean)).stdout.trim().match(/(?:\\.|[^\s\\])+/gu).map(s=>s.replace(/\\(.)/gu,"$1"));
-			const fixture=resolve("tests/fixtures/wit-task-package/consumer.c");
-			await run("cc",["-std=c11","-Wall","-Wextra","-Werror","-DALL_SCALARS",fixture,...flags,"-pthread","-o","consumer"],cwd,clean);
-			const r=await run(join(cwd,"consumer"),[],cwd,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
-			assert.equal(r.stdout.trim(),"installed Wasmtime task consumer: passed");assert.equal(r.stderr,"");
-			await run("cc",["-std=c11","-Wall","-Wextra","-Werror",resolve("tests/fixtures/wit-task-package/effects.c"),...flags,"-o","effects"],cwd,clean);
-			const effects=await run(join(cwd,"effects"),[],cwd,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
-			assert.equal(effects.stdout.trim(),"factory failure, returned nested Except and worker failure are distinct");
-			assert.equal(effects.stderr,""); t.diagnostic(effects.stdout.trim());
-			await run("cc",["-std=c11","-Wall","-Wextra","-Werror",resolve("tests/fixtures/wit-task-package/retire.c"),...flags,"-pthread","-ldl","-o","retire"],cwd,clean);
-			const fault=await run(join(cwd,"retire"),[],cwd,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
-			assert.equal(fault.stdout.trim(),"parked await woke on retirement");assert.equal(fault.stderr,"");
+			const replay=async (name, message, opts=[])=>{
+				const fixture=resolve("tests/fixtures/wit-task-package/"+name+".c");
+				await run("cc",["-std=c11","-Wall","-Wextra","-Werror",fixture,...flags,...opts,"-o","probe"],cwd,clean);
+				const result=await run(join(cwd,"probe"),[],cwd,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
+				assert.equal(result.stdout.trim(),message); assert.equal(result.stderr,""); t.diagnostic(message);
+			};
+			if(tasks)
+{
+				await replay("consumer","installed Wasmtime task consumer: passed",["-DALL_SCALARS","-pthread"]);
+				await replay("effects","factory failure, returned nested Except and worker failure are distinct");
+				await replay("retire","parked await woke on retirement",["-DTEST_LEDGER","-I.","-pthread","-ldl"]);
+}
+			if(cursors)
+{
+				assert.deepEqual(proof.selection.asyncIterators,protocols);
+				if(!tasks)
+{
+					assert.deepEqual(proof.selection.taskExports,[]);
+					assert.deepEqual(proof.selection.exports,protocols.map(p=>p.open));
+}
+				assert.deepEqual(ir.declarations.filter(d=>d.resultMode==="async-iterator").map(d=>d.source.extensions["lean-bridge.dev/pull-protocol"]),protocols);
+				await replay("cursors","installed cursors: eight pulls; seven closes; no prefetch or late delivery",tasks?["-DTEST_MIXED"]:[]);
+				await replay("retire","parked await woke on retirement",["-DTEST_CURSOR","-DTEST_LEDGER","-I.","-pthread","-ldl"]);
+				const guide=await readFile(resolve("docs/consume/wit-wasi.md"),"utf8");
+				const snippet=guide.split("### Pull an asynchronous sequence\n")[1].split("\n```c\n")[1].split("\n```")[0];
+				await writeFile(join(cwd,"guide.c"),snippet+`
+int main(void) {
+    meter_wit_session *s=NULL;
+    if (meter_wit_open(&s)!=meter_wit_OK) return 1;
+    int valid=!print_feed(s,0,2) && !print_feed(s,2,1) && print_feed(s,1,1) && print_feed(s,255,7);
+    return meter_wit_close(&s)==meter_wit_OK && valid ? 0 : 1;
+}
+`);
+				await run("cc",["-std=c11","-Wall","-Wextra","-Werror","guide.c",...flags,"-o","guide"],cwd,clean);
+				const example=await run(join(cwd,"guide"),[],cwd,{PATH: "/no-producer-tools",RAYON_NUM_THREADS: "1"});
+				assert.equal(example.stdout,"0\n1\n"); assert.equal(example.stderr,"pull: 65535\nopen: 7\n");
+}
 			t.diagnostic(canonicalJson({review,archive: pkg.artifacts[0],component: manifest.componentSha256}).trim());
 			return ir;
 } finally
@@ -76,29 +107,57 @@ test("installed CLI ships typed Wasmtime tasks; ordinary and reviewed consumers 
 	};
 	const source=join(root,"source");await cp(resolve("tests/fixtures/wit-tasks"),source,{recursive: true});
 	const mod=join(source,"Meter.lean"),config=join(source,"lean-bridge.exports.json"),cfg=JSON.parse(await readFile(config));
-	const extra=(await Promise.all(["scalars","effects"].map(f=>readFile(resolve("tests/fixtures/wit-task-package/"+f+".lean"),"utf8")))).join("\n");
-	cfg.taskIOErrors=["Meter.phase"];
-	await writeFile(mod,(await readFile(mod,"utf8")).replace("prelude\n","prelude\nimport Init.Data.Float32\n")+"\n"+extra);
-	for(const m of extra.matchAll(/^def (\w+) /gmu))
-{cfg.exports.push("Meter."+m[1]);cfg.taskExports.push("Meter."+m[1]);}
+	const fixture=f=>readFile(resolve("tests/fixtures/wit-task-package/"+f+".lean"),"utf8");
+	let lean=await readFile(mod,"utf8");
+	if(tasks)
+{
+		const extra=(await Promise.all(["scalars","effects"].map(fixture))).join("\n");
+		cfg.taskIOErrors=["Meter.phase"]; lean=lean.replace("prelude\n","prelude\nimport Init.Data.Float32\n")+"\n"+extra;
+		for(const m of extra.matchAll(/^def (\w+) /gmu))
+{ cfg.exports.push("Meter."+m[1]);cfg.taskExports.push("Meter."+m[1]); }
+} else
+{ delete cfg.exports; delete cfg.taskExports; }
+	if(cursors)
+{
+		cfg.asyncIterators=protocols; lean+="\n"+await fixture("cursors");
+		if(tasks)
+{
+			lean+="\nnamespace Meter\ndef outcome (wake : Bool) : BaseIO Gauge := gauge wake\nend Meter\n";
+			cfg.exports.push(...protocols.map(p=>p.open));
+}
+}
+	await writeFile(mod,lean);
 	await writeFile(config,canonicalJson(cfg));
 	const build=path=>invoke(["build","--project",source,"--target","wit-wasi","--output",path]);
 	const ordinary=join(out,"ordinary"),reviewed=join(out,"reviewed");
 	await build(ordinary);const ir=await install(ordinary,false);
 	delete cfg.exports;await writeFile(config,canonicalJson(cfg));const pub=join(source,"public.binding-ir.json");
 	await writeFile(pub,canonicalJson(ir));await build(reviewed);assert.deepEqual(await install(reviewed,true),ir);
+	// Each isolated profile below checks its own rejected reviews and capability grants.
+	if(tasks && cursors) return;
 	const refused=join(root,"refused"),reject=async re=>{
 		await assert.rejects(build(refused),e=>re.test([e.details?.stderr,e.details?.stdout].join("\n")));
 		await assert.rejects(access(refused),{code: "ENOENT"});
 	};
-	for(const change of [
+	const taskDrift=[
 		x=>{x.declarations.find(d=>d.source.declaration==="Meter.text").result.type.name="bool";}
 		, x=>{x.errors.find(e=>e.id==="error:EIO.Meter.checked").payload.name="uint16";}
 		, x=>{x.declarations.find(d=>d.source.declaration==="Meter.phase").failure.errors=["error:IO.Error"];}
-	]){
+	];
+	const cursorDrift=[
+		x=>{x.declarations.find(d=>d.source.declaration==="Meter.feed").result.type.arguments[0].name="int32";}
+		, x=>{x.errors.find(e=>e.id==="error:AsyncStep.Meter.feed").payload.name="uint8";}
+	];
+	for(const change of [...tasks?taskDrift:[],...cursors?cursorDrift:[]])
+{
 		const other=structuredClone(ir);change(other);
 		await writeFile(pub,canonicalJson(other));await reject(/Reviewed API differs/u);
-	}
+}
 	await writeFile(pub,canonicalJson(ir));
+	if(cursors)
+{
+		const drift=structuredClone(cfg); drift.asyncIterators[0].close="Meter.alternateFinish";
+		await writeFile(config,canonicalJson(drift)); await reject(/Reviewed API differs/u);
+}
 	await writeFile(config,canonicalJson({...cfg,nativeEffects: ["filesystem"]}));await reject(/without external capabilities/u);
 });

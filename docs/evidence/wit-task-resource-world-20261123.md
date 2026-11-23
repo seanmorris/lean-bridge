@@ -53,3 +53,27 @@ The [effect declarations](../../tests/fixtures/wit-task-package/effects.lean) ex
 | Reviewed | 59,231,618 | `ffabfbe48b4ac02b1d85a74b4e2803f7800962f7d7a79aa419249b1177029d18` | `dde8c14eac1b7dffac40d977315286447982b7c763a90fa684d9ccc730442ced` |
 
 Both receipts identify the same semantic Binding IR (`46bc5aa19c03ed457250b2b7e67192147800ce1e92897508e600c2f789f931c6`). Both archives contain the same validated binary component (`50b19e3201b5ed29757181a4e1fbfa6a0e26b9cac67221245d7dda6ebedb5750`). Run `npm run test:wit-task-package` to compile and execute the [installed C consumer](../../tests/fixtures/wit-task-package/effects.c) against each archive. It checks 260 rejected starts without exhausting a 256-slot store, embedded NUL and UTF-8 in owned errors, exactly-once delivery, and recovery. Cancellation can win before delivery even if the worker would have reported an error. The package gate passed both clean installs and rejected three altered reviews (value type, startup error type, missing worker failure) and an ungranted filesystem capability before producing an archive. These tests do not establish callback or stream support.
+
+### Pull cursors
+
+Run `npm run test:wit-cursor-package` with the same producer tools. The standalone CLI builds [two Lean cursors](../../tests/fixtures/wit-task-package/cursors.lean) without any `exports` or `taskExports` list. The reviewed build also supplies the public Binding IR. Both receipts identify `ae8d45e08125820920ac17dd8a01ef55c9d5cd66c3503331ef829177bb8e049c`. Both components target the same WIT world: an owned resource per factory and a borrowed cursor on each request, poll or cancellation.
+
+| Route | Archive bytes | Archive SHA-256 | Receipt SHA-256 |
+| --- | ---: | --- | --- |
+| Ordinary | 59,202,727 | `cc693cd8eb6311d5df611fd3a59be2b3bff244f05f1200fb354539befa6af6f7` | `e07b39108ade9183525009dc7ff3179ffb1ad99835f38ab0aaa7b194cbc41ab0` |
+| Reviewed | 59,203,749 | `db9a9bd9e4c0a7b473eed7e094da57e3e1d0cd8bbfe3207537a5c2091d93a268` | `fca94870b846ff775de7c547d15bb0da77be13d6cc5b1c04d6520a68cd2e03aa` |
+
+The [installed consumer](../../tests/fixtures/wit-task-package/cursors.c) observes Lean's own pull and close counters through a second cursor in another store. It checks eight pulls and seven closes across normal exhaustion, early drop, typed pull failure, cancellation and session shutdown. Opening a cursor or observing it while idle leaves the pull count unchanged. An outstanding request retains its item until observation. A rejected factory creates no cursor. A returned text-error item outlives its owner, and a pending pull interrupted by runtime retirement wakes without publishing a value or failure.
+
+The ordinary and reviewed archives contain the same component (`eedfdec63a824aeffdfec1c711576c0076033b221580a43716b1915d49d442e5`). The gate rejected reviews that changed the item width or pull-error width, and rejected substituting a different close declaration with the same Lean type. A filesystem capability grant also stopped packaging. Each refusal left the requested output path absent.
+
+### Tasks and cursors in one store
+
+`npm run test:wit-mixed-package` combines 16 task factories and three cursor factories. The ordinary and reviewed installs ran the task and cursor consumers and compiled the [guide example](../consume/wit-wasi.md#pull-an-asynchronous-sequence). An immediate task returned `42` without waking a parked cursor. A cursor named `outcome` exported `request-outcome` without colliding with its WIT result type.
+
+| Route | Archive SHA-256 | Receipt SHA-256 |
+| --- | --- | --- |
+| Ordinary | `dadd7e6eb20df803f492a2ea3891693fdc485788f27e1e07403ad72318816a93` | `278dea192a7d8eb3fd86c3f0f7cb5b2c34a7afe1dc6a36bb2374fdd836c7c24b` |
+| Reviewed | `02c6048b951ab4b5944153d7a4fb6b39b29810dfd48b6d03ec4bb8265b163b46` | `32012eb25280e2fce504473db6a15e3d2e4ba0df8bf912137f570fc10914d2e3` |
+
+The [retirement probe](../../tests/fixtures/wit-task-package/retire.c) measured three broker identities during a pending pull: the session, its native owner and the worker notification. Dropping the owner closed its descriptor and left two identities. After resolving the promise and closing the session, the count returned to zero. In a separate run the probe retired the runtime while the promise was parked. Session close released the owner and descriptor; the one intentionally unresolved worker retained its safety lease. The same two cases passed for tasks.
