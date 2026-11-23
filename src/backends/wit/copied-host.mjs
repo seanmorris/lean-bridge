@@ -96,7 +96,20 @@ ${witConversionPrelude}
 ${renderWitConversions(model)}
 ${callbacks}
 
-static const uint8_t lb_component[] = {${[...componentBytes].join(",")}};
+${renderWitValueSession(model,componentBytes)}`;
+};
+
+/**
+ * Link the generated imports and call public exports in a Wasmtime-owned
+ * store. The copied and synchronous IO hosts supply different typed imports
+ * but share the same preflight validation and trap recovery.
+ *
+ * @param model - Host names, private argument validators and optional native IO trap guard.
+ * @param componentBytes - The binary implementing the advertised world.
+ */
+export const renderWitValueSession = (model,componentBytes) => {
+	const {surface,functions} = model, p = surface.prefix;
+	return `static const uint8_t lb_component[] = {${[...componentBytes].join(",")}};
 struct ${p}_wasmtime {
   wasm_engine_t *engine;
   wasmtime_component_t *component;
@@ -167,7 +180,7 @@ ${functions.map(fn => `  if (strcmp(name, "${fn.witName}") == 0) valid = count =
   wasmtime_component_export_index_delete(index);
   if (!found) return wasmtime_error_new("Component export is not a function");
   wasmtime_component_val_t result = {0};
-  wasmtime_error_t *error = wasmtime_component_func_call(&function, context, args, count, &result, 1);
+  ${model.trackIOTraps ? "lb_call_frame frame={.context=context,.previous=lb_active}; lb_active=&frame;\n  " : ""}wasmtime_error_t *error = wasmtime_component_func_call(&function, context, args, count, &result, 1);${model.trackIOTraps ? "\n  lb_active=frame.previous;\n  if (error && !frame.handled) lean_bridge_native_runtime_retire();" : ""}
   if (error) {
     wasmtime_component_val_delete(&result);
     /* A trap bypasses canonical post-return. Dispose its store and scratch memory. */

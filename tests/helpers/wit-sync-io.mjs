@@ -9,10 +9,16 @@ import { elaboratedComponent } from "../../src/analyze/semantic-model.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { compileWitSyncIO } from "../../src/backends/wit/sync-io-model.mjs";
 import { compileHostSources } from "../../src/build/host-elaboration.mjs";
+import { linkWitSyncHost } from "../../src/build/wit-sync-io-host.mjs";
+import { testWitIOFailures } from "./wit-sync-io-failures.mjs";
+import { testRelocatedWitIO } from "./wit-sync-io-install.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 
 const { LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_WASM_TOOLS: tools } = process.env;
+const requireHost = process.env.LEAN_BRIDGE_WIT_IO_HOST_TEST==="1";
+if(requireHost && (!leanPrefix || !tools || !process.env.LEAN_BRIDGE_WIT_IO_RUNTIME || !process.env.LEAN_BRIDGE_WASMTIME_C_API))
+	throw new Error("WIT IO host acceptance requires LEAN_BRIDGE_LEAN_PREFIX, LEAN_BRIDGE_WASM_TOOLS, LEAN_BRIDGE_WIT_IO_RUNTIME and LEAN_BRIDGE_WASMTIME_C_API");
 for(const [fixture,module,wide] of [["native-sync-io","Journal"],["php-wasm-sync-io","Ledger"],["native-sync-io","Journal",true]])
 test("binary WIT IO world agrees with checked "+module+(wide ? " and 19 scalar exports" : "")+" results and effects", {skip: !leanPrefix || !tools}, async t=>{
 	const work = await mkdtemp(join(tmpdir(),"wit-sync-io-")); t.after(()=>rm(work,{recursive: true,force: true}));
@@ -46,9 +52,10 @@ test("binary WIT IO world agrees with checked "+module+(wide ? " and 19 scalar e
 		, component: elaboratedComponent(facts), sourceTreeSha256
 		, configurationSha256: configurationRecord.sha256
 		, hostImportsSourceSha256: null };
-	const {api,evidence} = await compileHostSources({app,ir: null,sources
+	const built = await compileHostSources({app,ir: null,sources
 		, projectContract: contract, leanPrefix,run,environment: process.env
 		, target: "wit-wasi"});
+	const {api,evidence} = built;
 	const input = {api,evidence,bindingIrSha256: hashBindingIr(api)}, model = compileWitSyncIO(input);
 	assert.equal(model.bindingIrSha256,hashBindingIr(api));
 	assert.deepEqual(model.methods.map(m=>m.declaration),api.declarations.map(d=>d.source.declaration));
@@ -74,4 +81,16 @@ test("binary WIT IO world agrees with checked "+module+(wide ? " and 19 scalar e
 	assert.throws(()=>compileWitSyncIO({...input,evidence: task}),/standalone synchronous/u);
 	assert.throws(()=>compileWitSyncIO({...input,bindingIrSha256: "0".repeat(64)}),/digest/u);
 	t.diagnostic(model.methods.length+" source-checked exports; WIT world matched binary; component SHA-256 "+sha256(await readFile(join(work,"component.wasm"))));
+	const runtimeRoot = process.env.LEAN_BRIDGE_WIT_IO_RUNTIME;
+	if(runtimeRoot)
+	{
+		const componentBytes = await readFile(join(work,"component.wasm"));
+		const wasmtimeRoot = process.env.LEAN_BRIDGE_WASMTIME_C_API;
+		const host = await linkWitSyncHost({app,built,runtimeRoot,leanPrefix,run,wasmtimeRoot,wasmTools: tools});
+		assert.equal(host.componentSha256,sha256(componentBytes));
+		const sdk = join(app,"wasmtime"), cc = process.env.CC ?? "cc";
+		const env = {...process.env,LD_LIBRARY_PATH: [app,join(runtimeRoot,"lib"),join(sdk,"lib")].join(":"),RAYON_NUM_THREADS: "1"};
+		if(wide) await testWitIOFailures({model,app,work,objects: built.objects,tools,run,cc,runtimeRoot,env,t,dependencies: host.dependencies});
+		await testRelocatedWitIO({work,app,runtimeRoot,host,cc,run,t,module,wide});
+	}
 });
