@@ -68,6 +68,38 @@ or resource into a synchronous copied value. See the installed
 [original package receipts](../evidence/jvm-sync-io-20261123.json), and the
 [native OS grant reference](../lean/export-decisions.md#declare-native-os-access).
 
+### Export synchronous resource parameters and results
+
+Select a resource by its Lean declaration. For example, Desk allocates an
+open file inside `Shared.Ticket`, so its build needs the filesystem grant:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Desk"],
+  "exports": ["Desk.issue", "Desk.count", "Desk.checkTicket"],
+  "resources": ["Shared.Ticket"],
+  "nativeEffects": ["filesystem"],
+  "targets": {"maven": {"name": "com.acme:desk", "version": "1.0.0"}}
+}
+```
+
+A second package can import the same Lean module and select the same resource.
+The compiler and the source of the resource and its imports determine its
+identity, not the Maven coordinates or the spelling `Ticket`. Each JAR ships
+the same Java class for a compatible kind and verifies its native ledger at
+load time. Install the packages on the same application classpath. In a plugin
+host, the shared type needs a common defining classloader.
+
+A direct resource parameter is borrowed for the call. A direct result or
+declared `EIO` error carries its own lease. See the compiled
+[Java](../consume/java.md#share-a-lean-resource-between-packages) and
+[Kotlin](../consume/kotlin.md#share-a-lean-resource-between-packages) examples.
+This selection is for synchronous IO; it does not add resource-bearing tasks
+or streams. The [installed-package evidence](../evidence/jvm-sync-resources-20261123.json)
+records both load orders, the incompatible lookalike package, and cleanup
+after a typed error or runtime retirement.
+
 ## Export tasks and streams
 
 Select declarations returning a real Lean `Task` in `taskExports`. For a pull

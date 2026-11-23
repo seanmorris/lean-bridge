@@ -604,6 +604,12 @@ keeps its delegates until settlement. Propagating the original Lean callback
 error rethrows the C# exception; constructing a new error does not. Both profiles
 can [exchange resource leases](../publish/nuget.md#export-a-shared-lean-resource) across independently built packages.
 
+For synchronous Java and Kotlin IO, select a [shared Lean resource in the Maven
+configuration](../publish/maven.md#export-synchronous-resource-parameters-and-results)
+to expose a closeable object in both languages. A parameter borrows the object;
+a result or typed failure gives the caller a new lease. The prepared JARs
+provide the shared native owner and ledger.
+
 The same distinction holds when a module also exports a task. In the
 [installed C, C++, Python and Rust example](../evidence/native-task-companions-20261122.json),
 an application reads a pure result, updates Lean state, awaits a task, and

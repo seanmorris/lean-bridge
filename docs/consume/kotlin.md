@@ -67,6 +67,29 @@ Validation and native runtime loading are shared with the
 [Java API](java.md#call-synchronous-io). See the
 [installed Kotlin checks](../evidence/jvm-sync-io-20261123.json).
 
+### Share a Lean resource between packages
+
+Desk and Counter can use the same Lean ticket through their installed Kotlin
+APIs. Counter updates the ticket in place and returns another lease on it.
+Both `use` blocks close their own lease. This prints `42`:
+
+```kotlin
+import org.leanbridge.desk.kotlin.Api as Desk
+import org.leanbridge.counter.kotlin.Api as Counter
+
+fun main() {
+    Desk.issue(41).use { ticket ->
+        Counter.bump(ticket).use { updated -> println(Desk.count(updated)) }
+    }
+}
+```
+
+Passing a ticket borrows it for that call. Use `retain()` to keep an independent
+lease, `sameResource` to compare the underlying objects, and `use` on a resource
+received as an exception's `payload()`. A ticket of the same name from different
+Lean source is a different Kotlin type. See the
+[Maven author configuration](../publish/maven.md#export-synchronous-resource-parameters-and-results).
+
 ### Await tasks and consume streams
 
 A selected Lean task is a `suspend fun`; a cursor is a cold `kotlinx.coroutines.flow.Flow<T>`. Use them in a coroutine as you would any other suspend function or flow. This example prints `42` and then `2`.

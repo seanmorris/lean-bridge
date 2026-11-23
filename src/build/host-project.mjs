@@ -87,8 +87,8 @@ export const buildHostProject = async options => {
 	const record = inventory.configurationRecord, config = record.configuration, target = targets[0];
 	if(config.hostImports && (targets.length !== 1 || target !== "pypi")) fail("Python host imports require a pypi-only build");
 	if(targets.length !== 1 || !["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven"].includes(target)) fail("Select one native IO target: c, cpp, cargo, pypi, rubygems, nuget, or maven");
-	if(target === "maven" && (config.hostImports || config.resources))
-		fail("JVM IO and task delivery require copied values; resources and host imports need their own delivery profiles");
+	if(target === "maven" && config.resources?.length && (config.taskExports?.length || config.asyncIterators?.length))
+		fail("Resource-bearing JVM packages currently require synchronous IO exports");
 	const project = await realpath(options.projectRoot);
 	const output = resolve(options.outputRoot ?? join(project, "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) fail("Output cannot replace the source package");

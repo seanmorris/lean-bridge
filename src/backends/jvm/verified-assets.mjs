@@ -33,6 +33,14 @@ export const verifiedJvmAssets = (evidence, className, graph = false) => {
 		throw new TypeError("Invalid authenticated JVM native library evidence");
 	const order = ["libleanshared.so", "liblean_bridge_native.so"];
 	if(libraries.some(([name]) => name === "libgmp-lean-bridge.so.10")) order.push("libgmp-lean-bridge.so.10");
+	if(evidence.ledgerId !== undefined)
+	{
+		const owner = "liblb_jvm_owner_" + evidence.runtimeIdentity + ".so", ledger = "liblb_task_resources_" + evidence.ledgerId + ".so";
+		if(!/^[a-f0-9]{64}$/u.test(evidence.ledgerId) || ![owner, ledger].every(n => n !== evidence.library && Object.hasOwn(evidence.libraries, n)))
+			throw new TypeError("Missing authenticated JVM resource dependencies");
+		// The ledger calls into the shared owner. Load both before the component, regardless of filename order.
+		order.push(owner, ledger);
+	}
 	order.push(...libraries.map(([name]) => name).filter(name => !order.includes(name) && name !== evidence.library), evidence.library);
 	return `    private ${className}() { }
     private static final java.lang.String KEY = "lean.bridge.jvm.native-library-v1.";

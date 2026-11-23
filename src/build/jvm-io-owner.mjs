@@ -53,19 +53,36 @@ export const compileJvmIOOwner = async options => {
  * @param reactor - Private Linux readiness operations; included only in task components.
  */
 export const jvmIOEntry = (wire, p, reactor) => {
-	if(Boolean(wire.wait) !== Boolean(reactor) || wire.leases || !wire.methods.length
+	if(wire.leases && wire.wait) throw new TypeError("Resource-bearing JVM packages currently require synchronous IO exports");
+	if(Boolean(wire.wait) !== Boolean(reactor) || !wire.methods.length
 		|| wire.methods.some(m => m.callbacks?.length && (!wire.wait || m.delivery !== "task")))
 		throw new TypeError("The JVM callback port requires an actual task with copied carriers");
 	const invoke = p + "_jvm_invoke", retire = p + "_jvm_retire";
+	const leaseDecls = [], leaseCases = [];
+	if(wire.leases)
+	{
+		if(!wire.leases.length || wire.clear !== "lbwire_" + p + "_v1_clear") throw new TypeError("Invalid JVM resource wire");
+		leaseDecls.push(`extern void ${wire.clear}(uint64_t *);`);
+		leaseCases.push(`case INT32_MIN: ${wire.clear}(r->out); r->status = ${p}_OK; break;`);
+		for(const [i, w] of wire.leases.entries())
+		{
+			const s = w.symbol, base = -1 - 3 * i;
+			if(s !== wire.clear.slice(0,-6) + "_lease_" + i || w.tag !== i+3) throw new TypeError("Unverified JVM lease operations");
+			leaseDecls.push(`extern int ${s}_close(uint64_t *);`, `extern int ${s}_retain(const uint64_t *, uint64_t *);`, `extern int ${s}_same(const uint64_t *, const uint64_t *, uint8_t *);`);
+			leaseCases.push(`case ${base}: if(r->args){ uint64_t h[2]={r->args[0],r->args[1]}; r->status=${s}_close(h); } break;`
+				, `case ${base-1}: if(r->args && r->out){ r->status=${s}_retain(r->args,r->out); if(r->status==${p}_OK) r->out[3]=${w.tag}; } break;`
+				, `case ${base-2}: if(r->args && r->tags) r->status=${s}_same(r->args,r->args+3,r->tags); break;`);
+		}
+	}
 	const source = `#include "${p}.h"
 #include "io-owner.h"
-#include "lean_bridge_native_runtime.h"
+#include "lean_bridge_native_runtime.h"${leaseDecls.length ? "\n"+leaseDecls.join("\n") : ""}
 ${wire.methods.filter(m => !m.delivery).map(m => "extern int " + m.symbol + "(const uint64_t *, uint64_t *, uint8_t *);").join("\n")}
 typedef struct { int op, status; const uint64_t *args; uint64_t *out; uint8_t *tags; } lb_jvm_request;
 static void invoke_on_owner(void *context) {
     lb_jvm_request *r = context;
     switch (r->op) {
-${wire.methods.flatMap((m, i) => m.delivery ? [] : [`        case ${i}: r->status = ${m.symbol}(r->args, r->out, r->tags); break;`]).join("\n")}
+${wire.methods.flatMap((m, i) => m.delivery ? [] : [`        case ${i}: r->status = ${m.symbol}(r->args, r->out, r->tags); break;`]).concat(leaseCases).join("\n")}
         default: break;
     }
 }

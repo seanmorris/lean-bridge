@@ -94,6 +94,31 @@ Lean work on one native thread. The [installed checks](../evidence/jvm-sync-io-2
 cover both thread types, concurrent writes to a Lean counter, and both
 package load orders.
 
+### Share a Lean resource between packages
+
+Two installed Maven packages can work on the same Lean object. Here Desk
+creates a ticket; Counter increments its count. This prints `42`:
+
+```java
+import org.leanbridge.desk.Api;
+
+class Example {
+    public static void main(String[] args) {
+        try (var ticket = Api.issue(41); var updated = org.leanbridge.counter.Api.bump(ticket)) {
+            System.out.println(Api.count(updated));
+        }
+    }
+}
+```
+
+Each result is an independently closeable lease. Passing `ticket` borrows it;
+`bump` does not take it away. Use `sameResource` to compare Lean object identity
+and `retain()` when a second owner needs its own lifetime. A declared exception
+whose `payload()` is a resource also gives the catcher a lease to close.
+Packages built against different definitions of `Ticket` expose different
+Java types. The [Maven configuration](../publish/maven.md#export-synchronous-resource-parameters-and-results)
+shows how authors select the shared type.
+
 ### Await tasks and consume streams
 
 A selected Lean `Task α` returns a `CompletableFuture<T>`. A cursor returns a cold `Flow.Publisher<T>`: subscribing alone does not open the cursor, and Lean produces an item only when the subscriber requests one. This example prints `42` and then `2`.

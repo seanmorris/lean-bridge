@@ -80,8 +80,9 @@ const inspect = async (root, route, work, retained = false) => {
  * @param proj - Empty destination for this consumer's isolated Maven project.
  * @param work - Directory containing the offline repository settings.
  * @param packages - Verified package records and original JAR/POM files.
+ * @param tasks - Expect a pinned coroutine dependency (absent from synchronous packages).
  */
-const install = async (proj, work, packages) => {
+const install = async (proj, work, packages, tasks = true) => {
 	const repo = join(proj, "tool-repo"), dest = join(proj, "installed"), mvn = env.LEAN_BRIDGE_MAVEN ?? "mvn";
 	await mkdir(proj); await cp(resolve(env.LEAN_BRIDGE_JVM_TASK_M2_SEED), repo, { recursive: true, mode: constants.COPYFILE_FICLONE });
 	for(const p of packages) await assert.rejects(access(join(repo, "com/acme", p.proof.name.split(":")[1])), { code: "ENOENT" });
@@ -99,7 +100,11 @@ const install = async (proj, work, packages) => {
 		for(const a of p.proof.artifacts) assert.equal(await digest(join(dest, dirname(installed), basename(a.path))), a.sha256);
 	}
 	const coroutine = resolved.find(s => s.endsWith("/kotlinx-coroutines-core-jvm-1.8.0.jar"));
-	assert.ok(coroutine); assert.equal(await digest(join(dest, coroutine)), packages[0].proof.detail.coroutinesSha256);
+	if(tasks)
+	{
+		assert.ok(coroutine); assert.equal(await digest(join(dest, coroutine)), packages[0].proof.detail.coroutinesSha256);
+	}
+	else assert.equal(coroutine, undefined);
 	assert.ok(resolved.some(s => s.endsWith("/kotlin-stdlib-2.2.0.jar")));
 	return { resolved, classpath: resolved.map(s => join(dest, s)).join(delimiter) };
 };

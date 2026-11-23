@@ -57,7 +57,7 @@ export const buildCTaskPackage = async options => {
 		const bindingIrSha256 = hashBindingIr(api), profile = `native-${cpp ? "cpp" : "c"}-${synchronous ? "io" : "task"}-v1`;
 		const delivery = await nativeDeliveryHeader(jvm), notification = await asset("../backends/native/task-notification.h");
 		const resources = api.types.filter(t => t.kind === "resource");
-		if(jvm && resources.length) throw new TypeError("This JVM delivery profile does not admit resource-bearing values");
+		if(jvm && resources.length && !synchronous) throw new TypeError("Resource-bearing JVM packages currently require synchronous IO exports");
 		const owner = jvm && await compileJvmIOOwner({ app, runtimeRoot, runtimeIdentity, cc: environment.CC ?? "cc", run });
 		const threads = cpp && (!synchronous || resources.length > 0);
 		const config = { name: jvm ? "jvm-" + sha256(name) : dotnet ? name.toLowerCase() : name, modules: projectContract.modules, entries, resources, synchronousIO: synchronous, rustCallbacks: rust, cppCallbacks: cpp, cCallbacks: target === "c", rubyDelivery: ruby && !synchronous, dotnetDelivery: dotnet && !synchronous, integerMode: cpp || rust || ruby || dotnet || jvm ? "words" : "gmp" };
@@ -65,7 +65,7 @@ export const buildCTaskPackage = async options => {
 		if(entries.some(retainedTask)) for(const [file, path] of [["task-callback-queue.h", "../backends/native/"], ["task-callback-port.h", "../backends/c/"]])
 			callbackHeaders.set(file, await asset(path + file));
 		if(target === "c" && callbackHeaders.size) callbackHeaders.set("task-host-callback.h", await asset("../backends/c/task-host-callback.h"));
-		const ledger = resources.length ? await taskResourceLedger(runtimeIdentity) : null;
+		const ledger = resources.length ? await taskResourceLedger(runtimeIdentity, owner || null) : null;
 		const ledgerId = ledger && ledger.id, ledgerName = ledger?.name, ledgerFlag = ledger?.flag;
 		if(jvm && !synchronous) config.jvmDelivery = true;
 		const skeleton = generateCTaskExports({ ...config, componentIdentity: "0".repeat(64) });
@@ -97,7 +97,7 @@ export const buildCTaskPackage = async options => {
 		for(const [file, bytes] of callbackHeaders) await save(file, bytes);
 		if(ledger) await compileTaskResourceLedger({ ledger, app, runtimeRoot, cc: environment.CC ?? "cc", run });
 		if(integers) await save("task-integers.h", integers);
-		const exported = jvm ? [jvmEntry.invoke, jvmEntry.retire, wire.clear, ...jvmEntry.task ? [jvmEntry.task, jvmEntry.watch] : []] : [...gen.symbols, ...wire ? wire.symbols : []];
+		const exported = jvm ? [jvmEntry.invoke, jvmEntry.retire, ...ledger ? [] : [wire.clear], ...jvmEntry.task ? [jvmEntry.task, jvmEntry.watch] : []] : [...gen.symbols, ...wire ? wire.symbols : []];
 		await save("exports.map", `{ global: ${exported.join("; ")}; local: *; };\n`);
 		const library = `lib${p}.so`;
 		await run(environment.CC ?? "cc", ["-std=gnu11"
@@ -145,7 +145,7 @@ export const buildCTaskPackage = async options => {
 			if(gmp && path === "lib/libgmp.so.10" && (!bytes.equals(gmp.files.get(path)) || !/\(SONAME\)\s+Library soname: \[libgmp\.so\.10\]/u.test((await run("readelf", ["-d", file], app)).stdout))) throw new Error("C task GMP library identity differs");
 			files.set(path, bytes);
 		}
-		if(jvm) return await writeJvmIORelease({ ...options, prefix: p, wire, jvmEntry, owner, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
+		if(jvm) return await writeJvmIORelease({ ...options, prefix: p, wire, jvmEntry, owner, ledgerId, files, api, evidence, floor, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(rust) return await writeRustTaskRelease({ ...options, prefix: p, files, entries, api, evidence, floor, gen, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(ruby) return await writeRubySyncRelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });
 		if(dotnet) return await writeDotnetIORelease({ ...options, prefix: p, wire, files, api, evidence, floor, ledgerId, manifest, runtimeIdentity, bindingIrSha256, componentIdentity });

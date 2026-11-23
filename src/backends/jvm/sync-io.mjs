@@ -5,6 +5,7 @@
  */
 import { readFile } from "node:fs/promises";
 import { copiedJvmAssets } from "./copied-assets.mjs";
+import { jvmLeaseModels, jvmLeaseSource, verifyJvmLeaseSites } from "./io-resources.mjs";
 
 const types = { unit: ["Unit", "Unit"], bool: ["boolean", "Boolean"]
 	, char: ["int", "Int"], uint8: ["int", "Int"], uint16: ["int", "Int"]
@@ -22,6 +23,7 @@ const insertAt = (source, marker, replacement) => {
 	return source.replace(marker, () => replacement);
 };
 const spelling = (t, ns, k, nest = false) => {
+	if(t?.leaseClass) return t.leaseClass;
 	if(Array.isArray(t) && t.length === 2)
 		return (k ? ns + "." : "") + "Result<" + t.map(a => spelling(a, ns, k, true)).join(", ") + ">";
 	if(!Object.hasOwn(types, t)) throw new TypeError("Unsupported JVM IO value: " + t);
@@ -29,6 +31,7 @@ const spelling = (t, ns, k, nest = false) => {
 	const s = types[t][k ? 1 : 0]; return !k && nest ? boxed[s] ?? s : s;
 };
 const argument = (t, i, v) => {
+	if(t?.leaseClass) return `Resources.K${t.index}.borrow(f, ${i}, ${v});`;
 	const call = (f, arg) => `f.${f}(${i}, ${arg});`;
 	if(["uint8", "uint16", "uint32"].includes(t)) return call("bounded", v + ", " + ({ uint8: "255", uint16: "65535", uint32: "0xffffffffL" })[t]);
 	if(t === "uint64" || t === "usize") return call("unsigned64", v);
@@ -41,6 +44,7 @@ const argument = (t, i, v) => {
 	return call("word", value[t] ?? v);
 };
 const result = (t, d = 0) => {
+	if(t?.leaseClass) return `Resources.K${t.index}.take(f)`;
 	if(Array.isArray(t)) return `(f.tag(${d}) ? new Result.Ok<>(${result(t[0], d + 1)}) : new Result.Err<>(${result(t[1], d + 1)}))`;
 	const read = { unit: "f.unit()", bool: "Wire.bool(f.scalar())"
 		, char: "f.charValue()", bytes: "f.bytes()", string: "f.text()"
@@ -85,13 +89,15 @@ const callbackSpecs = (api, m, decl, ns) => {
 export const generateJvmIO = async options => {
 	const { api, wire, invoke, retire, evidence } = options, tasks = Boolean(wire.wait);
 	const retained = wire.methods.some(m => m.callbacks?.length);
-	if(tasks !== Boolean(options.task && options.watch) || wire.leases || retained && !tasks)
-		throw new TypeError("Inconsistent JVM delivery or unsupported resource");
+	if(tasks && wire.leases) throw new TypeError("Resource-bearing JVM packages currently require synchronous IO exports");
+	if(tasks !== Boolean(options.task && options.watch) || retained && !tasks) throw new TypeError("Inconsistent JVM task delivery");
 	const slug = api.component.name.toLowerCase().replaceAll(/[^a-z0-9]+/gu, "_");
 	if(!/^[a-z][a-z0-9_]*$/u.test(slug) || words.has(slug)) throw new TypeError("Invalid JVM IO component namespace");
 	const ns = "org.leanbridge." + slug, pkg = "package " + ns + ";\n";
 	const files = {}, dir = ns.replaceAll(".", "/");
 	const java = (name, source) => { files[`src/main/java/${dir}/${name}.java`] = pkg + source; };
+	const leases = jvmLeaseModels(api, wire, evidence, words);
+	const shape = t => leases.get(t) ?? t;
 	const names = new Set(), classes = new Set(["Api", "Wire", "Unit", "NativeAssets", "Result", "LeanEIOError", "LeanIOException"]);
 	const methods = [], kotlin = [];
 	const typedError = (ex, shape, decl) => {
@@ -105,12 +111,14 @@ export const generateJvmIO = async options => {
 }\n`);
 		return `if (status == 3) throw new ${ex}(${result(shape)});`;
 	};
-	for(const [i, m] of wire.methods.entries())
+	for(const [i, raw] of wire.methods.entries())
 	{
+		const m = leases.size ? { ...raw, args: raw.args.map(shape), result: shape(raw.result), error: shape(raw.error) } : raw;
 		const decl = api.declarations.find(d => d.name === m.name);
 		const mode = m.delivery === "task" ? "promise" : m.delivery === "async-iterator" ? m.delivery : "value";
 		if(!decl || decl.source.declaration !== m.declaration || decl.parameters.length !== m.args.length || decl.resultMode !== mode
 			|| (m.delivery && (!tasks || mode === "value"))) throw new TypeError("JVM delivery must match the compiler-checked Lean declarations");
+		verifyJvmLeaseSites(leases, raw, decl, api);
 		const name = ident(m.name);
 		if(!/^[a-z][A-Za-z0-9_]*$/u.test(name) || names.has(name)) throw new TypeError("Colliding JVM IO method: " + name);
 		names.add(name);
@@ -200,6 +208,33 @@ export const generateJvmIO = async options => {
 	files[`src/main/java/${dir}/NativeAssets.java`] = copiedJvmAssets({ namespace: ns }, evidence);
 	files[`src/main/java/${dir}/Wire.java`] = (await readFile(new URL("./io-wire.java", import.meta.url), "utf8"))
 		.replace("__PACKAGE__", ns).replace("__INVOKE__", invoke).replace("__CLEAR__", wire.clear).replace("__RETIRE__", retire);
+	if(leases.size)
+	{
+		const ports = [];
+		for(const r of leases.values())
+		{
+			files["src/main/java/" + r.leaseClass.replaceAll(".", "/") + ".java"] = jvmLeaseSource(r);
+			ports.push(`    static final ResourcePort<${r.leaseClass}> K${r.index} = new ResourcePort<>(${r.leaseClass}.class, "${r.ledger}", ${r.index}, ${r.tag});`);
+		}
+		java("Resources", "final class Resources {\n    private Resources() {}\n" + ports.join("\n") + "\n}\n");
+		java("ResourcePort", (await readFile(new URL("./resource-port.java", import.meta.url), "utf8")).split("package __PACKAGE__;\n")[1]);
+		const path = `src/main/java/${dir}/Wire.java`;
+		files[path] = insertAt(files[path], `        static final MethodHandle CLEAR = bind("${wire.clear}", FunctionDescriptor.ofVoid(ADDRESS));\n`, "");
+		files[path] = insertAt(files[path], "Native.CLEAR.invokeExact(out)", "success(call(Integer.MIN_VALUE))");
+		files[path] = insertAt(files[path], "            case 5:", '            case 6: throw new IllegalStateException("Lean resource is closed");\n            case 5:');
+		files[path] = insertAt(files[path], "    long scalar()", `    void leaseWords(int slot, long id, long scope) {
+        word(slot, id); args.set(JAVA_LONG, 24L * slot + 8, scope);
+    }
+    long leaseId(int tag) {
+        long id = out.get(JAVA_LONG, 0);
+        if (out.get(JAVA_LONG, 24) != tag || id == 0 || leaseDomain() == 0 || out.get(JAVA_LONG, 16) != 0)
+            throw corrupt("Invalid Lean resource identity");
+        return id;
+    }
+    long leaseDomain() { return out.get(JAVA_LONG, 8); }
+    void disownLease() { out.set(JAVA_LONG, 24, 0L); }
+    long scalar()`);
+	}
 	const imports = tasks ? "import kotlinx.coroutines.future.await\nimport kotlinx.coroutines.flow.map\n" : "";
 	files[`src/main/kotlin/${dir}/kotlin/Api.kt`] = `package ${ns}.kotlin\n${imports}object Api {\n${kotlin.join("\n")}\n}\n`;
 	if(tasks)

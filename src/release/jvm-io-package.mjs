@@ -22,15 +22,17 @@ export const writeJvmIORelease = async o => {
 	const { workRoot, projectContract, name, version, prefix, files, owner, api, evidence, runtimeIdentity, bindingIrSha256, componentIdentity, floor } = o;
 	const tasks = Boolean(o.wire.wait), profile = tasks ? "native-jvm-task-v1" : "native-jvm-io-v1", component = projectContract.component;
 	const library = "lib" + prefix + ".so", libraries = {};
-	for(const n of [library, owner.name, "liblean_bridge_native.so", "libleanshared.so"])
+	const ledger = o.ledgerId && { id: o.ledgerId, library: "liblb_task_resources_" + o.ledgerId + ".so" };
+	const built = [library, owner.name, ...ledger ? [ledger.library] : []];
+	for(const n of [...built, "liblean_bridge_native.so", "libleanshared.so"])
 	{
 		const path = "lib/" + n, bytes = files.get(path);
-		if(!bytes || (![library, owner.name].includes(n) && sha256(bytes) !== o.manifest.files[path]?.sha256))
+		if(!bytes || (!built.includes(n) && sha256(bytes) !== o.manifest.files[path]?.sha256))
 			throw new Error("Missing or inconsistent JVM IO native library: " + n);
 		libraries[n] = sha256(bytes);
 	}
 	if(files.size !== Object.keys(libraries).length) throw new Error("Unexpected JVM IO native payload");
-	const auth = { library, libraries, runtimeIdentity, componentId: component.id, componentReceiptSha256: componentIdentity };
+	const auth = { library, libraries, runtimeIdentity, componentId: component.id, componentReceiptSha256: componentIdentity, ...ledger ? { ledgerId: ledger.id } : {} };
 	const { namespace, files: sources } = await generateJvmIO({ api, wire: o.wire, ...o.jvmEntry, evidence: auth });
 	const stage = await mkdtemp(join(workRoot, ".jvm-io-")), root = join(stage, "jar"), compiler = join(stage, "compiler");
 	const write = async (dir, path, bytes) => { await mkdir(dirname(join(dir, path)), { recursive: true }); await writeFile(join(dir, path), bytes, { flag: "wx" }); };
@@ -69,6 +71,7 @@ export const writeJvmIORelease = async o => {
 			, bindingIrSha256, runtimeIdentity, componentIdentity
 			, glibcMinimumVersion: floor
 			, owner: { id: owner.id, library: owner.name }
+			, ...ledger ? { ledger } : {}
 			, libraries, files: inventory }));
 		const jar = await createDeterministicZip({ directory: root, sourceDateEpoch: 315532800 });
 		const repo = join(workRoot, "packages/maven/repository", ...group.split("."), artifact, version), artifacts = [];
