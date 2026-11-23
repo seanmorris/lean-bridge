@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Meter"],
+  "exports": ["Meter.parked", "Meter.resume", "Meter.immediate"],
+  "taskExports": ["Meter.parked", "Meter.resume", "Meter.immediate"],
+  "targets": {"wit-wasi": {"name": "meter", "version": "1.0.0"}}
+}
