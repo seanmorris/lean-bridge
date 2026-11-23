@@ -17,6 +17,18 @@ import {
 	copyPackageSetHandoff, createPackageSetHandoff, retainPackageSetEvidence
 } from "./helpers/package-set.mjs";
 
+test("synchronous PHP-Wasm receipts compose the runtime, npm adapter and Composer API", async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const packages = receipt.packages.filter(p => p.target === "php-wasm");
+	assert.equal(packages.length,3);
+	const compiled = receipt.profiles.find(p => p.id === packages[0].profile);
+	const profile = { ...compiled, id: "php-wasm-sync-io-v1" };
+	const set = { ...receipt, profiles: [profile], packages: packages.map(p => ({...p,profile: profile.id})) };
+	await assertJsonSchema("package-set-receipt",set); assert.equal(validatePackageSetReceipt(set),true);
+	set.packages[0].target = "php-native";
+	assert.throws(()=>validatePackageSetReceipt(set),/target, ecosystem and profile disagree/u);
+});
+
 test("Python host components require their pinned runtime; existing native wheels remain embedded", async t => {
 	const { receipt } = await createPackageSetHandoff(t);
 	const previous = receipt.packages.find(p => p.target === "pypi"), id = "native-python-host-v1";

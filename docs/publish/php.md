@@ -751,6 +751,30 @@ apply unchanged.
 
 ## Build an ordinary PHP-Wasm package
 
+For synchronous in-memory IO, select the Lean exports and set
+`"nativeEffects": []` in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Ledger"],
+  "exports": ["Ledger.add", "Ledger.readTotal"],
+  "nativeEffects": [],
+  "targets": {
+    "php-wasm": { "composer": { "name": "lean-bridge/ledger", "version": "1.0.0" } }
+  }
+}
+```
+
+Run `lean-bridge build --project . --target php-wasm --output release`,
+then `lean-bridge verify --receipt release/package-set-receipt.json`.
+The `php-wasm-sync-io-v1` receipt covers the npm component, its matching
+npm runtime dependency, and the Composer library. For a reviewed API, omit
+`exports` and supply one `.binding-ir.json` file alongside the configuration.
+The compiler checks its declarations and errors against the selected Lean
+source. This profile rejects filesystem and other OS grants; it does not
+turn synchronous IO into tasks. See the [consumer example](../php.md#ordinary-php-wasm-packages).
+
 PHP-Wasm compiles concrete copied variants, Lists, options, results and nested binary products on ordinary-source and reviewed-IR paths. These compose with primitives, arrays and acyclic records, including in synchronous callbacks and captured closures. Generated `Some`, `Ok` and `Err` classes preserve branch identity; products use two-element arrays. The [PHP consumer guide](../php.md#options-results-and-products) documents payload validation and 32-bit integer mappings.
 
 Install a [prepared CLI](../lean/setup.md#install-a-prepared-cli) whose inventory has `phpWasmInputsIncluded: true`. It contains the prebuilt PHP-Wasm runtime and configured PHP 8.4.1 headers. Leave `LEAN_BRIDGE_PHP_INPUTS` unset to use those bundled inputs.

@@ -80,7 +80,7 @@ export const writeNativePackageSet = async options => {
  */
 export const writePhpWasmPackageSet = async options => {
 	const { root, model, report, signal } = options;
-	const abi = profile("php-wasm-copied-v1", model.bindingIrSha256, report.runtimeIdentity);
+	const abi = profile(model.io ? "php-wasm-sync-io-v1" : "php-wasm-copied-v1", model.bindingIrSha256, report.runtimeIdentity);
 	const runtime = report.archives.find(item => item.role === "runtime"), component = report.archives.find(item => item.role === "component");
 	return writePackageSetReceipt({ root
 		, component: model.component

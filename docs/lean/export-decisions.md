@@ -564,6 +564,10 @@ changing the process working directory, terminating the host, networking, and
 unclassified native operations are not grantable on this route. A reviewed API
 cannot override a refusal.
 
+For `--target php-wasm`, the [synchronous IO package](../publish/php.md#build-an-ordinary-php-wasm-package)
+supports `"nativeEffects": []` only. Select it for state held in the PHP-Wasm
+instance, not for applications that need filesystem access.
+
 To publish synchronous `IO`, `BaseIO`, or `EIO` functions on their own, select
 them with `exports` and include `nativeEffects`. Use `[]` for an in-memory
 API. For example, `Journal.read : String → IO String` reads a file:

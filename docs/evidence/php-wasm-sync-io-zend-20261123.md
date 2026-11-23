@@ -74,3 +74,6 @@ and shared runtime identity. Both loading modes passed the same 30 PHP
 assertions there. The producer test also rejects changes to the runtime,
 configuration, headers, PHP wrapper, extension, receipt, and file list.
 The digest pins this particular build; it is not a publisher signature.
+
+The [public CLI and installed consumer run](php-wasm-installed-sync-io-20261123.md)
+checks the npm and Composer archives in Node and Chromium.

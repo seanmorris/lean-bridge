@@ -1329,6 +1329,27 @@ recursive result. Refined callbacks and owned graph values remain unsupported.
 
 ### Ordinary PHP-Wasm packages
 
+A package whose receipt names `php-wasm-sync-io-v1` exposes synchronous
+Lean effects. Install its npm descriptor (and its Composer ZIP if you use
+Composer) the same way as a copied-value package. Once the PHP autoloader
+is loaded, call the functions directly; they do not return promises.
+
+For example, the Ledger package keeps a running total in its PHP-Wasm
+instance:
+
+```php
+use Brick\Math\BigInteger;
+use function LeanLedger\{add, read_total};
+
+add(BigInteger::of('4000000000'));
+echo read_total(); // 4000000000
+```
+
+A returned `Err` is a value. A thrown `EIO` raises a declaration-specific
+exception with its typed `payload`; an `IO.Error` raises the package's
+`IOError`. Invalid arguments do not change state or trigger lazy loading.
+This profile admits in-memory effects only.
+
 Use `php-wasm` 0.1.0 with PHP 8.4's default variant, hosted in Node 22 or Chromium. Obtain the publisher's archives, `package-set-receipt.json`, and its `.json.sha256` sidecar through your trusted release channel. [Verify the package set](consume/receive-package.md#verify-a-local-package-set) before installation. It contains two npm archives, one component and its shared runtime, plus a companion Composer ZIP. No Lean tools, PHP headers or Emscripten installation are needed.
 
 The npm descriptor includes Brick Math 1.0.0 and loads its classes automatically. No Composer installation or GMP/BCMath extension is required. A Composer application uses the generated package's exact `brick/math` dependency instead. Include dependencies in your application lockfile; offline Composer installs need that locked dependency in their repository or cache.

@@ -993,10 +993,12 @@ export const buildCanonicalProject = async ({
 	const ownedNpm = root !== engine && (normalized.length === 0 || normalized.includes("npm")) && await usesOwnedJavaScript(root, signal);
 	if(mixed)
 	{
-		if(normalized.includes("npm") || phpWasm)
-			await preflightReview(root, signal, normalized.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "php-wasm", "wit-wasi", ...(ownedNpm ? ["npm"] : [])].includes(target)));
+		// Both PHP-Wasm frontends check the review against their own source
+		// contract. A synchronous effectful review is not a pure copied API.
 		if(normalized.length === 1 && phpWasm)
 			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
+		if(normalized.includes("npm") || phpWasm)
+			await preflightReview(root, signal, normalized.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "php-wasm", "wit-wasi", ...(ownedNpm ? ["npm"] : [])].includes(target)));
 		if(!normalized.includes("npm") && !phpWasm)
 			return buildNativeProject({ projectRoot: root, outputRoot, environment, targets: normalized, signal, onProgress, lakeSnapshot });
 		return buildMultiProfileProject({ projectRoot: root, engineRoot: engine
