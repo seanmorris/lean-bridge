@@ -1,8 +1,8 @@
 /** @file Recompile independent Lean applications and validate WIT heap-resource identity. */
 import assert from "node:assert/strict";
-import { appendFile, cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import test from "node:test";
 import { inspectLeanProject } from "../../src/analyze/lean-project.mjs";
 import { elaboratedComponent } from "../../src/analyze/semantic-model.mjs";
@@ -14,6 +14,7 @@ import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { buildNativeSharedRuntime } from "../../src/build/native-component.mjs";
 import { exerciseWitTaskHost } from "./wit-task-native-host.mjs";
+import { writeWitLeaseProject } from "./wit-task-lease-project.mjs";
 
 const host=process.env.LEAN_BRIDGE_WIT_TASK_LEASE_HOST==="1",requested=host || process.env.LEAN_BRIDGE_WIT_TASK_LEASE_WORLD==="1";
 test("WIT task, pull and failure resources bind to the declaring Lean module", {skip: !requested},async t=>{
@@ -35,25 +36,13 @@ test("WIT task, pull and failure resources bind to the declaring Lean module", {
 		{ t.diagnostic(error.details?.stderr??error.message);throw error; }
 	};
 	assert.match((await run(wasm,["--version"])).stdout,/^wasm-tools 1\.245\.1\b/u);
-	const fixture=resolve("tests/fixtures/javascript-wasm-resource-tasks");
 	const captured={};
 	for(const route of ["ordinary","reviewed","peer","changed"])
 	{
-		const depot=route==="ordinary" || route==="reviewed", module=depot?"Depot":"Peer",name=module.toLowerCase();
+		const depot=route==="ordinary" || route==="reviewed", module=depot?"Depot":"Peer";
 		const dir=join(work,route),app=join(dir,"build"),project=join(dir,"source");
-		await mkdir(app,{recursive: true});await mkdir(project);
-		for(const file of ["lean-toolchain","Shared.lean",module+".lean"]) await cp(join(fixture,file),join(project,file));
-		if(depot) await appendFile(join(project,"Depot.lean"),"\n"+await readFile(resolve("tests/fixtures/wit-task-package/lease-jobs.lean"),"utf8"));
-		if(route==="changed") await appendFile(join(project,"Shared.lean"),"\n-- Independent rebuild of a changed nominal source.\n");
-		await writeFile(join(project,"lakefile.toml"),`name = "${name}"\nversion = "1.0.0"\n[[lean_lib]]\nname = "Shared"\n[[lean_lib]]\nname = "${module}"\n`);
-		const settings={name,version: "1.0.0"};
-		const cfg={schemaVersion: 1,modules: [module]
-			, resources: depot?["Shared.Badge","Shared.Ticket"]:["Shared.Ticket"]
-			, taskExports: depot?["Depot.checked","Depot.issue","Depot.tag","Depot.view"]:["Peer.bump"]
-			, ...depot?{asyncIterators: [{open: "Depot.stream",next: "Depot.next",close: "Depot.close"}]}:{}
-			, targets: {"wit-wasi": settings}};
-		await writeFile(join(project,"lean-bridge.exports.json"),canonicalJson(cfg));
-		if(route==="reviewed") await writeFile(join(project,"public.binding-ir.json"),canonicalJson(captured.ordinary.api));
+		await mkdir(app,{recursive: true});
+		const settings=await writeWitLeaseProject(project,module,route==="reviewed"?captured.ordinary.api:null,route==="changed");
 		const inventory=await inspectLeanProject(project);
 		const src=await openHostProjectSource({project,inventory,component: elaboratedComponent(inventory.project),leanPrefix});
 		let built;

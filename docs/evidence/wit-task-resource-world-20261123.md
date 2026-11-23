@@ -80,7 +80,7 @@ The [retirement probe](../../tests/fixtures/wit-task-package/retire.c) measured 
 
 ### Lean objects through a WIT task or cursor
 
-Run `npm run test:wit-task-lease-host` with the producer tools above. This exercises the binary Component Model exports through a native Wasmtime embedding. The public CLI does not yet package this resource-bearing profile.
+Run `npm run test:wit-task-lease-host` with the producer tools above. This exercises the binary Component Model exports through a native Wasmtime embedding. The [installed-package test](#exchange-a-ticket-between-installed-packages) checks the public CLI and consumer API separately.
 
 The [Lean source](../../tests/fixtures/javascript-wasm-resource-tasks/Shared.lean) defines two object types, Ticket and Badge, with the same fields. The [consumer](../../tests/fixtures/wit-tasks/heap.c) creates two Tickets with equal field values and checks that they are different objects. It retains one, drops the original owner, passes the surviving Ticket by borrow, then drops that owner too. The task result, the first cursor item, and the cursor's typed failure still identify the same Ticket. A rejected task factory also returns an owned Ticket. A Badge cannot stand in for any of these Tickets.
 
@@ -92,4 +92,19 @@ The public name is `lease-ticket`. The private import includes the identity of i
 | Independent Peer | Same as Depot | `eb87fa6d74502da302326bd9a2d83d66869e4182b59aaa3df7f33e141e851ca4` |
 | Changed Peer | `264ab3263dc5eaff8177defa24b11ac8f1d7f2f0bf02a0c12b8e51151c5e19df` | `22f6bfb046ffff2723a449cce4abb446a9ddd5d5153e63f6f03e6489ee7823a0` |
 
-Store shutdown releases the last outstanding native lease. The test also forces allocation of an outgoing result to fail after Lean delivers a Ticket. Wasmtime can keep the task borrowed after that trap, so the embedding shuts down the store rather than calling it again. No orphaned Ticket appears, and the live-identity count returns to zero. These checks establish ownership inside a store; passing an object between independently installed packages requires a separate consumer test.
+Store shutdown releases the last outstanding native lease. The test also forces allocation of an outgoing result to fail after Lean delivers a Ticket. Wasmtime can keep the task borrowed after that trap, so the embedding shuts down the store rather than calling it again. No orphaned Ticket appears, and the live-identity count returns to zero.
+
+### Exchange a Ticket between installed packages
+
+Run `npm run test:wit-task-lease-package`. The [driver](../../tests/helpers/wit-task-lease-package.mjs) installs the author CLI offline, builds Depot and Peer separately, verifies their receipts, removes the producer projects and handoffs, and relocates both installs. It compiles the [consumer](../../tests/fixtures/wit-task-package/leases.c) with the two packages' headers and pkg-config files and runs it without producer tools on its path.
+
+Peer changes Depot's Ticket from 11 to 42. Depot sees the new count after its original owner has been dropped. A stale Ticket and a same-layout Badge are rejected before entering Lean. Factory failures, successful tasks, cursor items and terminal pull failures return independently disposable owners of the same Ticket. Owners remain usable after both sessions close. Disposing the last owner leaves zero live broker identities and one runtime initialization.
+
+| Independent build | Archive SHA-256 | Receipt SHA-256 |
+| --- | --- | --- |
+| Ordinary Depot | `aa40a6152acc6c291f1beaf2a68ee229153b15e2fe7575c6660ba50ec0dfc010` | `ff0da22e33c0afe4ae224456c6eecde434cab073350d2fdc96f1b9db3c07f19e` |
+| Ordinary Peer | `0597f558a4d9f7717a15f76b35d5d0552a670cd60858603e311ae35e68aeef45` | `d521630e6d30ab87a6990b71666c0067236055e3b01d32ffed63365fab68039d` |
+| Reviewed Depot | `d52348f96e293f925500675eeddc0217d4d1f85243c1dd165052673970f0161a` | `5e89820c49bede4b62851dc8bae25eb600f1870ce7fcabf5bbf7fa38de428460` |
+| Reviewed Peer | `689a6da09f0ac044f5f712936a624ecc06e87c3e31ac91ff7751f1ce44916ec7` | `00b853701842f9a40ba10bbdabd56c3e72bb90501a78e98400306a877ab238ab` |
+
+All four archives contained the same shared lease library (SHA-256 `39f751ace1626f07fe8ef74b757428d6c4fc7e7b87739ab252107122d2018381`). Reusing Peer's review after changing the Lean module defining Ticket failed before creating an output archive.

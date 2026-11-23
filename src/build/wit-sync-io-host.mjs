@@ -13,6 +13,7 @@ import { generateSyncWire } from "../backends/c/sync-wire.mjs";
 import { nativeDeliveryHeader } from "./jvm-io-owner.mjs";
 import { readVerifiedNativeRuntime, validateNativeElf } from "./native-artifacts.mjs";
 import { snapshotWasmtimeCapi } from "./native-wit-projection.mjs";
+import { compileTaskResourceLedger, taskResourceLedger } from "./task-resource-ledger.mjs";
 
 /**
  * Work inside the producer's private compileHostSources workspace. The SDK
@@ -37,11 +38,14 @@ export const linkWitHost = async options => {
 	if((await run(join(leanPrefix,"bin/lean"),["--githash"],app,env)).stdout.trim()!==manifest.leanCommit)
 		throw new Error("WIT IO host requires the compiler matching its Lean runtime");
 	const sdk = join(app,"wasmtime"), wasmtimeFiles = await snapshotWasmtimeCapi(options.wasmtimeRoot,sdk);
+	const ledger=model.heap?.length?await taskResourceLedger(runtimeIdentity):null;
+	if(ledger) await compileTaskResourceLedger({ledger,app,runtimeRoot,cc,run: (command,args,cwd)=>run(command,args,cwd,env)});
 	const config = { name: "wit-"+sha256(api.component.id)
 		, modules: evidence.selection.exportModules, entries
+		, ...ledger?{resources: api.types}:{}
 		, synchronousIO: !tasks, witDelivery: tasks, integerMode: "words" };
 	const template = generateCTaskExports({...config,componentIdentity: "0".repeat(64)});
-	if(template.prefix!==model.prefix || canonicalJson(generateSyncWire(template.prefix,entries,{tasks}))!==canonicalJson(model.wire)) throw new Error("WIT and native entry points disagree");
+	if(template.prefix!==model.prefix || canonicalJson(generateSyncWire(template.prefix,entries,{tasks,resources: config.resources}))!==canonicalJson(model.wire)) throw new Error("WIT and native entry points disagree");
 	const delivery = await nativeDeliveryHeader(false);
 	const integers = template.integerMode ? await readFile(new URL("../backends/c/task-integers.h",import.meta.url)) : null;
 	const notification=tasks && await readFile(new URL("../backends/native/task-notification.h",import.meta.url));
@@ -51,6 +55,11 @@ export const linkWitHost = async options => {
 		if(!id || !Number.isSafeInteger(id.bytes) || id.bytes<1 || !/^[a-f0-9]{64}$/u.test(id.sha256)) throw new Error("Missing native WIT IO dependency: "+name);
 		return {name,bytes: id.bytes,sha256: id.sha256};
 	});
+	if(ledger)
+	{
+		const bytes=await readFile(join(app,ledger.name));
+		dependencies.push({name: ledger.name,bytes: bytes.length,sha256: sha256(bytes)});
+	}
 	const guarded = tasks ? witHostDependencyPrelude(dependencies)+host.source : guardWitHostSource(host.source,p,dependencies);
 	const identityInputs = { runtimeIdentity, bindingIrSha256, evidence, template
 		, delivery: sha256(delivery), integers: integers && sha256(integers)
@@ -74,6 +83,7 @@ export const linkWitHost = async options => {
 	await save("exports.map","{ global: "+exported.join("; ")+"; local: *; };\n");
 	const library = "lib"+p+"_wasmtime.so", inc = ["-I",join(sdk,"include"),"-I",join(runtimeRoot,"include")];
 	const flags = ["-std=gnu11","-O1","-g0","-fPIC","-ffp-contract=off"
+		, ...ledger?[ledger.flag]:[]
 		, "-ffile-prefix-map="+app+"=/build/wit-io"
 		, "-ffile-prefix-map="+runtimeRoot+"=/build/wit-runtime",...inc];
 	// Apply strict diagnostics to the host, not to upstream compiler output.
@@ -86,6 +96,7 @@ export const linkWitHost = async options => {
 	}
 	await run(cc,[...flags,"-shared",...compiled
 		, "-L",join(runtimeRoot,"lib"),"-L",join(sdk,"lib")
+		, ...ledger?["-L.","-l:"+ledger.name]:[]
 		, "-lwasmtime","-llean_bridge_native","-lleanshared","-ldl","-lm","-pthread"
 		, "-Wl,-Bsymbolic-functions,-z,defs,-z,now,-z,nodelete"
 		, "-Wl,--build-id=none","-Wl,--version-script=exports.map"
@@ -95,5 +106,6 @@ export const linkWitHost = async options => {
 		throw new Error("WIT IO host retained a build path or runtime inputs changed");
 	return { library, header: p+"_wasmtime.h", prefix: p
 		, componentIdentity, runtimeIdentity, bindingIrSha256, dependencies
+		, ...ledger?{leaseLibrary: ledger.name}:{}
 		, librarySha256: sha256(bytes),componentSha256: sha256(componentBytes)};
 };

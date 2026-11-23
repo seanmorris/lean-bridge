@@ -44,9 +44,12 @@ const outputCodecs=(p,defs,code)=>{
 
 const bindings = model=>{
 	const p=model.name.replaceAll("-","_")+"_wit_", defs=[], code=[],symbols=[];
-	const make=outputCodecs(p,defs,code);
-	const occupied=(codec,v)=>"(!"+v+codec.paths.map(k=>" || (*"+v+")"+k+".data || (*"+v+")"+k+".size").join("")+")";
-	const receive=(c,out)=>`${c.type} fresh={0}; int read=${c.reader}(&v,&fresh);
+	const heap=new Map((model.heap??[]).map((r,kind)=>["lease:"+r.hash,{...r,kind,type: p+"lease_"+r.slug}]));
+	const copy=outputCodecs(p,defs,code);
+	const make=(shape,name)=>heap.get(shape)??copy(shape,name);
+	const occupied=(codec,v)=>codec.kind!==undefined?"(!"+v+" || "+v+"->_private[0] || "+v+"->_private[1])"
+		:"(!"+v+codec.paths.map(k=>" || (*"+v+")"+k+".data || (*"+v+")"+k+".size").join("")+")";
+	const receive=(c,out)=>`${c.type} fresh={0}; int read=${c.kind!==undefined?"lb_export_lease(s,"+c.kind+",&v,fresh._private)":c.reader+"(&v,&fresh)"};
         if (read!=LB_GOOD) { wasmtime_component_val_delete(&v); return lb_fault(s,read==LB_MALFORMED); }
         *${out}=fresh;`;
 	const add=(suffix,args,body)=>{
@@ -59,17 +62,37 @@ const bindings = model=>{
 		"typedef struct { const char *data; size_t size; } "+p+"text;",
 		"typedef struct { char *data; size_t size; } "+p+"string;");
 	add("open",[p+"session **out"]); add("close",[p+"session **owner"]);
+	for(const r of heap.values())
+	{
+		const {raw,type,hash,kind,slug}=r, m="lb_heap_methods["+kind+"]";
+		defs.push("#ifndef LB_LEASE_TYPE_"+hash,"#define LB_LEASE_TYPE_"+hash,
+			"typedef struct "+raw+" { uint64_t _private[2]; } "+raw+";","#endif","typedef "+raw+" "+type+";");
+		add("retain_lease_"+slug,[type+" value",type+" *out"],`    if (!lb_main()) return ${p}UNAVAILABLE;
+    if (!out || out->_private[0] || out->_private[1]) return ${p}INVALID;
+    return lb_lease_status(${m}.clone(value._private,out->_private));`);
+		add("drop_lease_"+slug,[type+" *owner"],`    if (!lb_main()) return ${p}UNAVAILABLE;
+    if (!owner) return ${p}INVALID;
+    return lb_lease_status(${m}.release(owner->_private));`);
+		add("same_lease_"+slug,[type+" left",type+" right","bool *equal"],`    if (!lb_main()) return ${p}UNAVAILABLE;
+    if (!equal) return ${p}INVALID;
+    uint8_t v=0; ${p}status rc=lb_lease_status(${m}.equal(left._private,right._private,&v));
+    if (rc==${p}OK) *equal=(v!=0);
+    return rc;`);
+	}
 	for(const [i,m] of model.wire.methods.entries())
 	{
 		const stream=m.delivery==="async-iterator", h=p+(stream?"cursor_":"task_")+m.name,s=p+"session *s",own=h+" task",value=make(m.result,m.name+"_value");
 		const error=m.error && make(m.error,m.name+"_start_error"), terminal=m.terminal && make(m.terminal,m.name+"_failure");
 		const result=value.type+" *value", state=p+"state *state";
 		defs.push("typedef struct { uint64_t _private[2]; } "+h+";");
-		const args=m.args.map((a,k)=>(kinds[a][0]??p+"text")+" v"+k);
-		const init=m.args.map((a,k)=>a==="string" ? "{.kind=WASMTIME_COMPONENT_STRING,.of.string={.size=v"+k+".size,.data=(char *)v"+k+".data}}"
+		const args=m.args.map((a,k)=>(heap.get(a)?.type??kinds[a]?.[0]??p+"text")+" v"+k);
+		const borrowed=m.args.some(a=>heap.has(a));
+		const init=m.args.map((a,k)=>heap.has(a)?"{0}":a==="string" ? "{.kind=WASMTIME_COMPONENT_STRING,.of.string={.size=v"+k+".size,.data=(char *)v"+k+".data}}"
 			: "{.kind=WASMTIME_COMPONENT_"+kinds[a][1]+",.of."+kinds[a][2]+"=v"+k+"}");
-		const call="lb_start(s,"+i+","+(args.length?"args":"NULL")+",out?out->_private:NULL,"+(error?"&v":"NULL")+")";
-		add((stream?"open_":"start_")+m.name,[s,...args,h+" *out",...error?[error.type+" *failure"]:[]],(args.length?"    const lb_val args[]={"+init.join(",")+"};\n":"")
+		const input=borrowed?"args,leases":args.length?"args":"NULL";
+		const call=(borrowed?"lb_start_leases":"lb_start")+"(s,"+i+","+input+",out?out->_private:NULL,"+(error?"&v":"NULL")+")";
+		add((stream?"open_":"start_")+m.name,[s,...args,h+" *out",...error?[error.type+" *failure"]:[]],(args.length?"    "+(borrowed?"":"const ")+"lb_val args[]={"+init.join(",")+"};\n":"")
+			+(borrowed?"    const uint64_t *leases[]={"+m.args.map((a,k)=>heap.has(a)?"v"+k+"._private":"NULL").join(",")+"};\n":"")
 			+(error?`    if (${occupied(error,"failure")}) return ${p}INVALID;
     lb_val v={0}; ${p}status rc=${call};
     if (rc==${p}START_ERROR) { ${receive(error,"failure")} }
@@ -118,7 +141,11 @@ extern "C" {
  * Await blocks this thread; use poll to interleave work. Returned strings are
  * independent, nul-terminated byte spans (embedded NULs remain significant).
  * Zero-initialize any output that can own strings, then dispose it with its
- * generated dispose function before reusing that slot. */
+ * generated dispose function before reusing that slot. */${heap.size?`
+/* Lean object results and typed failures are independently owned. Pass a
+ * borrowed value directly to another package built for the same declaration
+ * and runtime. Drop each owner exactly once, even after closing its session;
+ * copying the struct does not retain it. Use retain_lease for another owner. */`:""}
 ${defs.join("\n")}
 static inline void ${p}string_dispose(${p}string *s) { if (s) { free(s->data); s->data=NULL; s->size=0; } }
 #ifdef __cplusplus
@@ -145,6 +172,7 @@ export const renderWitTaskHeader = model=>bindings(model).header;
 export const generateWitTaskSession = async (model,component)=>{
 	const {header,code,symbols,p}=bindings(model), prefix=model.name.replaceAll("-","_");
 	const session=await readFile(new URL("task-session.h",import.meta.url),"utf8");
+	const heapSession=model.heap?.length?await readFile(new URL("task-lease-session.h",import.meta.url),"utf8"):null;
 	return {prefix,header,symbols
 		, source: [
 			'#include "'+prefix+'_wasmtime.h"',await renderWitTaskImports(model)
@@ -152,6 +180,11 @@ export const generateWitTaskSession = async (model,component)=>{
 			, "#define LB_SESSION_KIND "+JSON.stringify(model.prefix+".wit-session")
 			, "static const uint8_t lb_task_component[]={"+Array.from(component).join(",")+"};"
 			, session
+			, ...heapSession?[
+				...["STALE:CLOSED","INVALID:INVALID","LIMIT:LIMIT","MEMORY:NO_MEMORY"].map(pair=>{
+					const [local,native]=pair.split(":");return "#define LB_WIT_LEASE_"+local+" "+model.prefix+"_"+native;
+				})
+				, heapSession]:[]
 			, ...code
 			, ""
 		].join("\n")};

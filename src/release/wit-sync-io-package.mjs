@@ -75,8 +75,9 @@ export const buildWitHostPackage = async options => {
 		};
 		for(const dep of host.dependencies)
 		{
-			const file = "lib/"+dep.name, root = dep.name==="libwasmtime.so"?sdk:runtimeRoot;
-			await verifyElf(file,join(root,file),dep.sha256);
+			const file = "lib/"+dep.name, from=dep.name===host.leaseLibrary?join(app,dep.name)
+				:join(dep.name==="libwasmtime.so"?sdk:runtimeRoot,file);
+			await verifyElf(file,from,dep.sha256);
 		}
 		await verifyElf("lib/"+host.library,join(app,host.library),host.librarySha256);
 		const binary = await readFile(join(app,"component.wasm"));

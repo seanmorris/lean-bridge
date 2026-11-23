@@ -186,7 +186,7 @@ int main(void) {
 
 Build with `cc main.c $(pkg-config --cflags --libs meter-wit) -o main`. Open and use the session on the process main thread. `await` blocks that thread; if another task or a UI needs to run there, use the generated `poll` function instead. A pending poll returns a descriptor to register with your event loop. Do not read or close it. When it becomes readable, poll the task again.
 
-Each task delivers at most one value. Cancel stops delivery and returns whether this request won; it need not stop the Lean worker immediately. Drop a task to free its slot, or close the session to release all outstanding tasks. The limit is 256 live task resources per session, including completed tasks not yet dropped. A copied task refers to the same resource; it becomes stale on drop and cannot be used in another session. Returned strings are independent of the task and session; dispose them with the generated `string_dispose` function.
+Each task delivers at most one value. Cancel stops delivery and returns whether this request won; it need not stop the Lean worker immediately. Drop a task to free its slot, or close the session to release all outstanding tasks. A session has 256 resource slots, including completed tasks not yet dropped. Packages that pass Lean objects reserve space for delivery; a borrow temporarily uses a slot. If a start returns `LIMIT`, drop owners you no longer need before retrying. A copied task refers to the same resource; it becomes stale on drop and cannot be used in another session. Returned strings are independent of the task and session; dispose them with the generated `string_dispose` function.
 
 The generated signature tells you where a failure can occur:
 
@@ -238,6 +238,14 @@ int print_feed(meter_wit_session *s, uint8_t mode, uint32_t limit) {
 `ITEM` can carry either arm of a returned Lean `Except`. `FAILED` reports a terminal pull error, and `END` reports exhaustion. After either, another request returns `FINISHED`. Drop the cursor if you break early. Closing the session also releases pending and never-requested cursors. A borrowed descriptor expires on delivery, cancellation, drop or session close.
 
 An unexpected runtime failure wakes a parked `await` with `UNAVAILABLE`. Close the session to release its owners. A Lean worker that ignores cancellation can keep the runtime alive until that worker finishes; it cannot publish another item to the closed session.
+
+### Pass a Lean object between task packages
+
+If two packages use the same Lean resource declaration and runtime, their generated headers accept each other's values. For example, Depot issues a `depot_wit_lease_ticket`. Pass it directly to `peer_wit_start_bump` to update that Ticket in Peer. Depot will see the new count. The sessions remain separate; a task or cursor from one session cannot be polled in another.
+
+Put both packages' `lib/pkgconfig` directories on `PKG_CONFIG_PATH` and build the [two-package example](../../tests/fixtures/wit-task-package/leases.c) with `cc leases.c $(pkg-config --cflags --libs depot-wit peer-wit) -o leases`. The headers and shared libraries come from the releases. The consumer needs no Lean compiler or Wasmtime SDK.
+
+A task input is a borrow. Its result, an iterator item, and a typed failure can each hand back a separately owned Ticket. Initialize each output to zero; call `drop_lease_ticket` once for every owner you receive. To keep another owner, call `retain_lease_ticket`; assigning the C struct only copies the same lease. An owned Ticket outlives its session. `same_lease_ticket` compares object identity, not field values.
 
 ### Packages containing resources
 
@@ -1234,7 +1242,7 @@ Profiles: WIT/WASI. Installed checks apply only to the named positions and packa
 
 The [conversion rules](../reference/types.md#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](../type-surface.v1.json) records commands, source hashes, limitations and implementation owners.
 
-Check the archive profile before using the table below. The prepared packages have separate installed checks for [synchronous IO](#call-synchronous-io), [tasks](#await-a-lean-task) and [pull cursors](#pull-an-asynchronous-sequence). The Alpha audit rows for tasks and asynchronous iterators do not describe `native-wit-task-v1`.
+Check the archive profile before using the table below. The prepared packages have separate installed checks for [synchronous IO](#call-synchronous-io), [tasks](#await-a-lean-task), [pull cursors](#pull-an-asynchronous-sequence), and [Lean objects shared between task packages](#pass-a-lean-object-between-task-packages). The Alpha audit rows for tasks and asynchronous iterators do not describe `native-wit-task-v1`.
 
 [Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers WIT/WASI in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.
 

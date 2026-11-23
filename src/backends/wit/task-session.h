@@ -74,9 +74,17 @@ static LBP(status) lb_invoke(lb_session *s,const char *name,const lb_val *args,s
 static LBP(status) lb_start(lb_session *s,size_t i,const lb_val *args,uint64_t *out,lb_val *failure) {
     LBP(status) rc=lb_check(s); if (rc!=LBP(OK)) return rc;
     if (!out || out[0] || out[1]) return LBP(INVALID);
-    if (s->tasks.live>=LB_TASK_MAX || s->tasks.last_rep==UINT32_MAX) return LBP(LIMIT);
+    if (LB_TASK_MAX-s->tasks.live <= (LB_HEAPS!=0) || UINT32_MAX-s->tasks.last_rep <= (LB_HEAPS!=0)) return LBP(LIMIT);
     const lb_task_method *m=&lb_methods[i]; lb_scope sc={.remaining=16u*1024u*1024u};
-    for (size_t n=0;n<m->argc;n++) if (!lb_input(m->args[n],&args[n],&sc,NULL)) return LBP(INVALID);
+    for (size_t n=0;n<m->argc;n++) {
+#if LB_HEAPS
+        if (m->args[n]>=LB_HEAP_BASE) {
+            if (args[n].kind!=WASMTIME_COMPONENT_RESOURCE || !args[n].of.resource) return LBP(INVALID);
+            continue;
+        }
+#endif
+        if (!lb_input(m->args[n],&args[n],&sc,NULL)) return LBP(INVALID);
+    }
     lb_val v={0}; rc=lb_invoke(s,m->names[0],args,m->argc,&v);
     if (rc!=LBP(OK)) return rc;
     if (m->start_failure) {

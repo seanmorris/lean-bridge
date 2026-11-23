@@ -83,6 +83,10 @@ Select Lean declarations returning `Task α`, `BaseIO (Task α)`, `IO (Task α)`
 
 For a worker returning `Task (Except IO.Error α)`, also list the declaration in `taskIOErrors` to expose `IO.Error` as a terminal failure of that task. The host receives the message as text. A normal returned `Except` remains a value, even when its error uses the same scalar type as a factory failure. The [Lean example](../../tests/fixtures/wit-task-package/effects.lean) shows both declarations. This profile accepts tasks and pull cursors; it does not accept external capabilities or callback parameters.
 
+To pass a Lean object rather than a copy, add its qualified declaration to `resources` in each package that uses it. For example, Peer selects `"resources": ["Shared.Ticket"]` and `"taskExports": ["Peer.bump"]`. The [Lean implementation](../../tests/fixtures/javascript-wasm-resource-tasks/Peer.lean) takes a Ticket, changes its count, and returns the same Ticket in a task. A task argument borrows the object. A direct task result, cursor item, typed factory error, or terminal pull error can return an owned object. This does not admit arbitrary objects nested inside copied aggregates.
+
+Build both packages against the same defining module and compiler. Lean Bridge derives the resource identity from these inputs; matching field layouts are not enough. The build packages the shared lease library automatically. See [how consumers pass the object between packages](../consume/wit-wasi.md#pass-a-lean-object-between-task-packages).
+
 ```json
 {
   "schemaVersion": 1,
