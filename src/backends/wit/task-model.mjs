@@ -2,7 +2,8 @@
 import { reconcileHostExports } from "../../analyze/host-export-model.mjs";
 import { nativeEffectPolicy } from "../../analyze/native-host-effects.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
-import { canonicalJson } from "../../capsule/node.mjs";
+import { canonicalJson, sha256 } from "../../capsule/node.mjs";
+import { generateSyncWire } from "../c/sync-wire.mjs";
 import { renderCopiedWitComponent } from "./copied-component.mjs";
 import { validateOrdinaryWasiSettings } from "./copied-model.mjs";
 import { witVariantMember } from "./copied-variants.mjs";
@@ -94,5 +95,7 @@ export const compileWitTaskResources = ({ api, evidence, bindingIrSha256, settin
 		, ...functions.map(f => `    (export "${f.witName}" (func ${f.parameters.map(p => '(param "'+p.witName+'" '+p.copy.wat+')').join(" ")} (result ${f.resultCopy.wat})))`)
 	].join("\n");
 	const wat = renderCopiedWitComponent({ surface: { functions }, functions, resources, types, typeBody, importName, exportName, preserveTypes: true });
-	return { wit, wat, methods, name, version, importName, exportName, bindingIrSha256 };
+	const prefix = "lbc_wit_"+sha256(api.component.id);
+	const wire = generateSyncWire(prefix,entries,{tasks: true});
+	return { wit, wat, methods, name, version, importName, exportName, bindingIrSha256, prefix, wire };
 };

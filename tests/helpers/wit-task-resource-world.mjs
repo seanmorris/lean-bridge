@@ -9,11 +9,17 @@ import { elaboratedComponent } from "../../src/analyze/semantic-model.mjs";
 import { compileWitTaskResources } from "../../src/backends/wit/task-model.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { compileHostSources } from "../../src/build/host-elaboration.mjs";
+import { buildNativeSharedRuntime } from "../../src/build/native-component.mjs";
 import { openHostProjectSource } from "../../src/build/host-project-source.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { exerciseWitTaskHost } from "./wit-task-native-host.mjs";
 
 const { LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_WASM_TOOLS: tools } = process.env;
+const host=process.env.LEAN_BRIDGE_WIT_TASK_HOST==="1";
+const wasmtimeRoot=process.env.LEAN_BRIDGE_WASMTIME_C_API;
+if(host && (!leanPrefix || !tools || !wasmtimeRoot))
+	throw new Error("WIT task execution requires a Lean prefix, wasm-tools and the Wasmtime C API");
 if(process.env.LEAN_BRIDGE_WIT_TASK_WORLD==="1" && (!leanPrefix || !tools))
 	throw new Error("Set LEAN_BRIDGE_LEAN_PREFIX and LEAN_BRIDGE_WASM_TOOLS for the WIT task world check");
 test("compiled Lean tasks project to distinct owned WIT resources with borrowed typed poll and cancel", {
@@ -21,6 +27,8 @@ test("compiled Lean tasks project to distinct owned WIT resources with borrowed 
 }, async t => {
 	const work = await mkdtemp(join(tmpdir(), "wit-task-world-"));
 	t.after(() => rm(work, {recursive: true,force: true}));
+	const runtimeRoot=process.env.LEAN_BRIDGE_WIT_TASK_RUNTIME ?? join(work,"runtime");
+	if(host && !process.env.LEAN_BRIDGE_WIT_TASK_RUNTIME) await buildNativeSharedRuntime({leanPrefix,outputRoot: runtimeRoot});
 	const archive=process.env.LEAN_BRIDGE_WIT_TASK_WORLD_EVIDENCE;
 	if(archive) await mkdir(archive);
 	const project = join(work,"project"); await cp(resolve("tests/fixtures/wit-tasks"),project,{recursive: true});
@@ -87,10 +95,13 @@ test("compiled Lean tasks project to distinct owned WIT resources with borrowed 
 			, bindingIrSha256: model.bindingIrSha256
 			, world: sha256(model.wit)
 			, component: sha256(await readFile(join(app,"component.wasm")))};
+		if(host) result.native=await exerciseWitTaskHost({app,built,model,leanPrefix,runtimeRoot,wasmtimeRoot,run});
 		if(archive)
 		{
 			const dir=join(archive,mode);await mkdir(dir);
 			for(const file of ["world.wit","component.wat","component.wasm","Meter.lean","Meter.olean",...built.objects])
+				await cp(join(app,file),join(dir,file),{errorOnExist: true,force: false});
+			if(host) for(const file of ["consumer","consumer.c","task-host.h","BridgeCAsync.lean","adapter.c","wire.c"])
 				await cp(join(app,file),join(dir,file),{errorOnExist: true,force: false});
 			for(const [file,obj] of [["binding-ir.json",api],["evidence.json",evidence],["acceptance.json",result]])
 				await writeFile(join(dir,file),canonicalJson(obj),{flag: "wx"});

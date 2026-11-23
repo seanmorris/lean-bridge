@@ -16,4 +16,18 @@ The [driver](../../tests/helpers/wit-task-resource-world.mjs) first builds from 
 | WIT world | `4a1f172c47d0e4e7fa56f2961679bd1fb9f033f0abd7dff2bec4cb26ce0cedda` |
 | Binary component | `be64a9169ee1661ef2e8685a657ee051cb4ad6c0f40e0fb326ac6c32915f2334` |
 
-This verifies the binary interface. It does not run a Lean task through Wasmtime, deliver an OS wakeup, or establish an installable WIT task package. Those require a native host implementing the imported resources, including cancellation races and destruction with work pending. This protocol uses Component Model resources; it does not claim support for canonical `future<T>` or `stream<T>`.
+## Run the task through Wasmtime
+
+On Linux x86-64, set `LEAN_BRIDGE_WASMTIME_C_API` to the extracted Wasmtime 42.0.1 C SDK. With the same Lean and wasm-tools settings, run `npm run test:wit-task-host`. The test builds the shared native Lean runtime once. To reuse one, set `LEAN_BRIDGE_WIT_TASK_RUNTIME` to its directory containing `runtime.json`; the test verifies its contents and compiler commit before linking. The optional evidence directory also retains the compiled consumer, generated imports, and per-route hashes.
+
+The [embedding test](../../tests/fixtures/wit-tasks/host.c) loads the component above and invokes its **exports** in a Wasmtime store. The [generated imports](../../src/backends/wit/task-host.mjs) start real Lean tasks. A second store can resolve the Lean promise but cannot borrow the first store’s task. The host waits on a borrowed Linux descriptor for either completion or runtime retirement; it does not spin, and Lean workers do not call into Wasmtime.
+
+| Operation | Observable behavior |
+| --- | --- |
+| Poll a parked task | Returns `pending`; another poll reuses the same readiness descriptor. Resolving the promise wakes the host. |
+| Poll a completed task | Returns `ready(value)` exactly once, then `closed`. The consumer checks signed 64-bit minimum and unsigned 32-bit wraparound. |
+| Cancel before delivery | The first request returns `true`; a second returns `false`. Poll reports `cancelled` once, then `closed`. A late Lean result is not delivered. |
+| Drop or shut down | Wasmtime’s resource destructor releases the native owner. Closing the store also releases outstanding tasks, even after a failed call. A descriptor borrowed from a disposed task is no longer valid. |
+| Retire the runtime | A pending wait wakes even without a result. Poll fails; the host tears down the store and its readiness subscription. |
+
+This is an embedding test, not yet an installable downstream WIT task package. It exercises nominal task resources; it does not implement canonical Component Model `future<T>` or `stream<T>`, async iterators, or typed terminal errors.
